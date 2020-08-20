@@ -23,7 +23,7 @@
     pwd
     echo Lookup the tree
     tree
-    cd ../casemix_database
+    cd ../academically_database
     echo hopefully in database dir
     tree
   args:
@@ -40,5 +40,5 @@
   #  /opt/liquibase/liquibase --url="jdbc:sqlserver://{{my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.RDSEndId}};databaseName={{db_name}}" --username={{db_user}} --password={{db_master_user_password}} --changeLogFile=main.changelog.xml --classpath="sqljdbc42.jar" --driver=com.microsoft.sqlserver.jdbc.SQLServerDriver update
   args:
     executable: /bin/bash
-    chdir: "../casemix_database"
+    chdir: "../academically_database"
   delegate_to: localhost
