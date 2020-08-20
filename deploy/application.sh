@@ -19,7 +19,7 @@ echo lets check disk status
 df
 ls -la
 echo "install lambda functions"
-AWS_PROFILE=cloudformation ansible-playbook -i inventories/base application.yml --vault-password-file /tmp/.vault-pass -e 'env_name='${env,,}' app_name=casemix public_domain='${domain,,}' ansible_python_interpreter=/usr/bin/python3' -vvv
+AWS_PROFILE=cloudformation ansible-playbook -i inventories/base application.yml --vault-password-file /tmp/.vault-pass -e 'env_name='${env,,}' app_name=academically public_domain='${domain,,}' ansible_python_interpreter=/usr/bin/python3' -vvv
 errorlevel="$?"
 echo Errorlevel of playbook was $errorlevel
 

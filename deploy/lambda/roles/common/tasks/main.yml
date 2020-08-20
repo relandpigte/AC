@@ -20,14 +20,14 @@
 - name: Update appsettings settings for Public Lambda Function
   template:
     src: templates/appsettings.json.j2
-    dest: ../../casemix_pub_api/bin/release/netcoreapp3.1/casemix-pub-api/appsettings.json
+    dest: ../../academically_pub_api/bin/release/netcoreapp3.1/academically-pub-api/appsettings.json
   delegate_to: localhost
 
 
 - name: Archive Lambda Distribution ready for deployment
   archive:
-    path: ../../casemix_pub_api/bin/release/netcoreapp3.1/casemix-pub-api/*
-    dest: ../../casemix_pub_api/bin/release/netcoreapp3.1/casemix-pub-api.zip
+    path: ../../academically_pub_api/bin/release/netcoreapp3.1/academically-pub-api/*
+    dest: ../../academically_pub_api/bin/release/netcoreapp3.1/academically-pub-api.zip
     format: zip
   delegate_to: localhost
   become: yes
@@ -36,12 +36,12 @@
   shell: |
     echo DEBUG - where is serverless.yml
     pwd
-    sudo tree ../../casemix_pub_api/bin/release/netcoreapp3.1/casemix-pub-api
+    sudo tree ../../academically_pub_api/bin/release/netcoreapp3.1/academically-pub-api
   delegate_to: localhost
 
   # Update serverless settings for Lambda Function (Lambda packaged post website deploy)
 - name: Update serverless settings for Public Lambda Function
   template:
     src: templates/serverless.yml.j2
-    dest: ../../casemix_pub_api/serverless.yml
+    dest: ../../academically_pub_api/serverless.yml
   delegate_to: localhost

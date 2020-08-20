@@ -18,7 +18,7 @@ echo " - Domain: " $domain
 ls -la
 
 echo "install database schema"
-AWS_PROFILE=cloudformation ansible-playbook -i inventories/base schema.yml --vault-password-file /tmp/.vault-pass -e 'env_name='${env,,}' app_name=casemix database_path=databasePath public_domain='${domain,,}'' -vvv
+AWS_PROFILE=cloudformation ansible-playbook -i inventories/base schema.yml --vault-password-file /tmp/.vault-pass -e 'env_name='${env,,}' app_name=academically database_path=databasePath public_domain='${domain,,}'' -vvv
 
 errorlevel="$?"
 echo Errorlevel of playbook was $errorlevel

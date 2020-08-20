@@ -25,7 +25,7 @@ provider:
   name: aws
   endpointType: EDGE
   runtime: dotnetcore3.1
-  profile: casemix
+  profile: academically
   region: {{aws_region}}
   stage: {{env_name}}
   vpc:
@@ -52,7 +52,7 @@ provider:
       Action:
         - s3:*Object
         - s3:ListBucket
-      Resource: 'arn:aws:s3:::{{env_name}}-casemix-assets' 
+      Resource: 'arn:aws:s3:::{{env_name}}-academically-assets' 
   apiGateway:
     binaryMediaTypes:
       - 'multipart/form-data'
@@ -62,9 +62,9 @@ package:
 
 functions:
   api:
-    handler: CaseMix.Web.Host::CaseMix.Web.Host.Startup.LambdaEntryPoint::FunctionHandlerAsync
-    name: ${self:provider.stage}-casemix-pub-api
-    description: Casemix Public Facing API, v1 POC+
+    handler: XXXXXXXXX.Web.Host::XXXXXXXXX.Web.Host.Startup.LambdaEntryPoint::FunctionHandlerAsync
+    name: ${self:provider.stage}-academically-pub-api
+    description: Academically Public Facing API
     memorySize: 1024 
     timeout: 90
     environment:

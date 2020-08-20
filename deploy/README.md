@@ -1,9 +1,9 @@
 # MedFX #
 
-This script is used to provision all infrastructure for MedFX into the MedFX AWS Account
+This script is used to provision all infrastructure for Academically into the Academically AWS Account
 
 # History #
-30/07/2019  - RL - Initial version of script
+20/08/2020  - RL - Initial version of script
 
 ## Methodology ##
 This repo is made up of a number of Ansible Playbooks.  It is recommned to run the master playbook site.yml, this will call the infrastructure and selenium playbooks.
@@ -11,16 +11,11 @@ This repo is made up of a number of Ansible Playbooks.  It is recommned to run t
 ### ANSIBLE TAGS ###
 Ansible tags can be used to control updates
 
-infra - Infrastructure includes storage such as Mountable stateful drives and RDS
-casemix-app - Install MedFX Application
 
-site.yml            - master playbook includes the infrastructure and selenium playbooks
-infrastructure.yml  - calls Cloudformation Scripts to deploy all AWS infrastructure
-MedFX.yml    - installs IIS and MedFX on top of pre existing CloudFormation Stack.
 
 ```
-AWS_PROFILE=casemix-cf ansible-playbook site.yml
---vault-password-file ~/.vault-pass-sccoreservices -e 'env_name=ci app_name=casemix restore=false' --private-key ~/casemix-uat.pem -vvvv
+AWS_PROFILE=academically-cf ansible-playbook site.yml
+--vault-password-file ~/.vault-pass-sccoreservices -e 'env_name=ci app_name=academically restore=false' --private-key ~/academically-uat.pem -vvvv
 ```
 
 passwords are stored in group_vars/all.yml and encrypted using ansible-vault
@@ -30,14 +25,14 @@ passwords are stored in group_vars/all.yml and encrypted using ansible-vault
 Run the Cloudformation scripts only.
 
 ```
-AWS_PROFILE=casemix-cf ansible-playbook infrastructure/infrastructure.yml -
--vault-password-file ~/.vault-pass-casemix -e 'env_name=ci app_name=casemix' --private-key ~/casemix-ci.pem
+AWS_PROFILE=academically-cf ansible-playbook infrastructure/infrastructure.yml -
+-vault-password-file ~/.vault-pass-academically -e 'env_name=ci app_name=academically' --private-key ~/academically-ci.pem
 ```
 
 ### Deploy All Infrastructure ###
 Below will run all scripts for the environment UAT
 ```
-AWS_PROFILE=casemix-cf ansible-playbook site.yml --vault-password-file ~/.vault-pass-sccoreservices -e 'env_name=uat app_name=casemix' --private-key ~/casemix-uat.pem -v
+AWS_PROFILE=academically-cf ansible-playbook site.yml --vault-password-file ~/.vault-pass-sccoreservices -e 'env_name=uat app_name=academically' --private-key ~/academically-uat.pem -v
 ```
 
 ### Deploy / Update Web Application
@@ -45,7 +40,7 @@ With the following 'tag' you can deploy just the web application layer and creat
 This command line will also be called from Octopus to deploy updates.
 
 ```
-AWS_PROFILE=casemix-cf ansible-playbook site.yml --vault-password-file ~/.vault-pass-casemix -e 'env_name=ci app_name=casemix restore=false' --private-key ~/casemix-ci.pem --tags casemix-app -vvv
+AWS_PROFILE=academically-cf ansible-playbook site.yml --vault-password-file ~/.vault-pass-academically -e 'env_name=ci app_name=academically restore=false' --private-key ~/academically-ci.pem --tags academically-app -vvv
 ```
 
 
@@ -57,6 +52,6 @@ snapshot_name = name of snapshot created by RDS
 
 Example Command Line
 ```
-AWS_PROFILE=casemix-cf ansible-playbook site.yml --vault-password-file ~/.vault-pass-sccoreservices -e 'env_name=uat app_name=casemix restore=true snapshot_name=casemix-snapshot-db-ysl53v9x3g4w' --private-key ~/casemix-uat.pem -v
+AWS_PROFILE=academically-cf ansible-playbook site.yml --vault-password-file ~/.vault-pass-sccoreservices -e 'env_name=uat app_name=academically restore=true snapshot_name=academically-snapshot-db-ysl53v9x3g4w' --private-key ~/academically-uat.pem -v
 ```
 

@@ -3,9 +3,9 @@
     "Default": "server={{my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.RDSEndId}};database={{db_name}};uid={{db_app_user}};password={{db_app_password}};port={{database_port}}"
   },
   "App": {
-    "ServerRootAddress": " https://api-{{env_name}}.{{public_domain}}/{{env_name}}",
-    "ClientRootAddress": "https://admin-{{env_name}}.{{public_domain}}/",
-    "CorsOrigins": "https://{{env_name}}.{{public_domain}},https://admin-{{env_name}}.{{public_domain}},http://{{env_name}}.{{public_domain}},http://admin-{{env_name}}.{{public_domain}}",
+    "ServerRootAddress": " https://api-academically-{{env_name}}.{{public_domain}}/{{env_name}}",
+    "ClientRootAddress": "https://academically-{{env_name}}.{{public_domain}}/",
+    "CorsOrigins": "https://academically-{{env_name}}.{{public_domain}},http://academically-{{env_name}}.{{public_domain}}",
     "ServerBasePath": "/{{env_name}}"
   },
   "Aws": {
@@ -14,11 +14,8 @@
     "Region": ""
   },
   "Email": {    
-    "FromName": "CaseMix Team",
-    "FromEmail": "no-reply@casemix-dev.co.uk"
-  },
-  "SnomedApi": {
-    "BaseUrl": "https://browser.ihtsdotools.org/snowstorm/snomed-ct/"
+    "FromName": "Academically Team",
+    "FromEmail": "no-reply@sourcecloud-dev.co.uk"
   },
   "Memcached": {
     "Address": "{{my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.MemcachedEndpointAddr}}",
@@ -29,8 +26,8 @@
     "JwtBearer": {
       "IsEnabled": "true",
       "SecurityKey": "CaseMix_C421AAEE0D114E9C",
-      "Issuer": "CaseMix",
-      "Audience": "CaseMix"
+      "Issuer": "Academically",
+      "Audience": "Academically"
     }
   }
 }
