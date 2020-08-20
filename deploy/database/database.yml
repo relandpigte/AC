@@ -1,0 +1,11 @@
+---
+- name: STAGE2 - Deploy Database scripts
+  hosts: localhost
+  remote_user: deploy
+  gather_facts: true
+  vars_files:
+    - ../group_vars/all.yml # global variables
+    - ../group_vars/{{env_name}}-config.yml # global variables  
+
+  roles:
+    - database # create database and default users

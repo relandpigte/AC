@@ -1,0 +1,44 @@
+---
+# file: group_vars/uat-config.xml
+
+############################################
+# GLOBAL VARS - avaialble to all playbooks #
+############################################
+
+# Project Cost Code
+cost_code: casemix
+
+
+# SQL user
+db_user: deployAdmin
+db_app_user: dbUser  # This name is reference in liquibase scripts so must remain
+db_name: casemix_uat
+database_port: 3306
+
+aws_region: eu-west-2                  # London
+
+# Public Domain
+# This is not the FQDN, just the main domain, sub domain will be prepended with stack name
+# NOW PASSED FROM OCTOPUS AS A VARIABLE
+# public_domain: casemix-dev.co.uk
+
+web_server_port: 80
+
+#####################
+# Casemix Config
+#####################
+
+instance_type: t3.medium # smaller than m3.medium can cause memory issues on build
+ec2_keyname: casemix-uat
+ebs_optimized: "false" 
+cluster_node_min: 1
+cluster_node_max: 1
+cluster_node_desired: 1
+data_volume: 40 # Gb
+
+# Cloudfront Cache Settings
+default_ttl: 600
+max_ttl: 600
+min_ttl: 120
+
+acm_arn: arn:aws:acm:us-east-1:392566533389:certificate/09064fbc-bcce-4b7e-8781-701050939244 # ARN of SSL *.casemix-dev.co.uk NOTE must be in North Virginia for Cloudfront

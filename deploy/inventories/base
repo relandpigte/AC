@@ -1,0 +1,3 @@
+# To address localhost issue INFRA-908
+[base]
+localhost   ansible_connection=local

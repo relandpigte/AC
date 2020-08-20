@@ -1,0 +1,44 @@
+---
+
+- name: Looking up Stack Details
+  set_fact:
+    stack_name: "{{app_name}}{{env_name}}"
+
+- name: register cloudformation facts (run locally)
+  cloudformation_facts:
+    region: "{{aws_region}}"
+    stack_name: "{{stack_name}}"
+  delegate_to: localhost
+  register: my_stack
+
+# Lookup the Database Script path passed from Octopus
+- name: DEBUG Database Script Path (use local path if databasePath is not passed in from Octopus)
+  debug:
+    msg: "{{databasePath | default(playbook_dir) }}"
+    
+
+- name: DEBUG where are we do DB scripts look ok.
+  shell: |
+    echo DEBUG - where am I
+    pwd
+    echo Lookup the tree
+    tree
+    cd ../casemix_database
+    echo hopefully in database dir
+    tree
+  args:
+    executable: /bin/bash
+  delegate_to: localhost
+
+# Lets update database (run locally AnsibleWorker or laptop)
+- name: Run Liquibase Script to deploy any Database Schema Changes. (Need Liquibase Installed if running locally)
+  shell: |
+    echo update clearchecksums
+    /opt/liquibase/liquibase --url="jdbc:mysql://{{my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.RDSEndId}}:{{database_port}}/{{db_name}}" --username={{db_user}} --password={{db_master_user_password}} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver clearchecksums
+    echo update schema
+    /opt/liquibase/liquibase --url="jdbc:mysql://{{my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.RDSEndId}}:{{database_port}}/{{db_name}}" --username={{db_user}} --password={{db_master_user_password}} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver --contexts="{{env_name}}" update
+  #  /opt/liquibase/liquibase --url="jdbc:sqlserver://{{my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.RDSEndId}};databaseName={{db_name}}" --username={{db_user}} --password={{db_master_user_password}} --changeLogFile=main.changelog.xml --classpath="sqljdbc42.jar" --driver=com.microsoft.sqlserver.jdbc.SQLServerDriver update
+  args:
+    executable: /bin/bash
+    chdir: "../casemix_database"
+  delegate_to: localhost

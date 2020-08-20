@@ -1,0 +1,3 @@
+---    
+- name: STAGE1 - Deploy Database Schema
+  import_playbook: schema/schema.yml

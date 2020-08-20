@@ -1,0 +1,51 @@
+---
+####################################################################
+# Look up stack details so we can use CloudFormation Export values #
+####################################################################
+- name: Looking up Stack Details
+  set_fact:
+    stack_name: "{{app_name}}{{env_name}}"
+
+- name: register cloudformation facts (run locally)
+  cloudformation_facts:
+    region: "{{aws_region}}"
+    stack_name: "{{stack_name}}"
+  delegate_to: localhost
+  register: my_stack
+
+# Lookup the RDSid
+- name: DEBUG lookup database endpoint
+  debug:
+    msg: "{{my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.RDSEndId}}"
+
+# Create a new mysql database
+- name: create database
+  mysql_db:
+    name: "{{db_name}}"
+    login_host: "{{my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.RDSEndId}}"
+    login_port: "{{database_port | int}}"
+    login_user: "{{db_user}}"
+    login_password: "{{db_master_user_password}}"
+    collation: utf8_general_ci
+    encoding: utf8
+    state: present
+  delegate_to: localhost
+  run_once: yes
+  no_log: true
+
+
+# Create a new application user
+- name: create application user
+  mysql_user:
+    name: "{{db_app_user}}"
+    host: "%"
+    login_host: "{{my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.RDSEndId}}"
+    login_port: "{{database_port}}"
+    login_user: "{{db_user}}"
+    login_password: "{{db_master_user_password}}"
+    password: "{{db_app_password}}"
+    priv: "{{db_name}}.*:SELECT,INSERT,DELETE,UPDATE,EXECUTE"
+    state: present
+  delegate_to: localhost
+  run_once: yes
+  no_log: true

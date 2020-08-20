@@ -1,0 +1,6 @@
+---    
+- name: STAGE1 - Provision Infrastrucure (Database)
+  import_playbook: infrastructure/infrastructure.yml
+
+- name: STAGE2 - Deploy Database RDS, Accounts and Database (No schema)
+  import_playbook: database/database.yml

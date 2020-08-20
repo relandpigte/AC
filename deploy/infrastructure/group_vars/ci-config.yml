@@ -1,0 +1,41 @@
+---
+# file: group_vars/ci-config.xml
+
+##############################
+# Network and General Settings
+##############################
+prefered_availability_zone: eu-west-2a 
+vpc: vpc-0772df36203dbb156                      # 10.55.0.0/16
+local_subnets: subnet-0c148a8749b946234, subnet-0dac32ef71caf3325
+private_subnets: subnet-0844400c2c751d0de, subnet-0d2a8e5ff0a29bcae
+private_subnet_a: subnet-0844400c2c751d0de
+base_windows_ami: ami-0a2b07f79c45eeef1 # Windows 2016 Base
+base_ubuntu_ami: ami-09f0b8b3e41191524
+ansible_worker_cidr: 10.103.11.0/24
+sc_vpn_cidr: 10.100.0.0/16
+# elb_scheme: internal # or internet-facing
+# elb_port: 443
+
+
+#RDS Database Settings
+multi_az: 'false'
+database_encryption: 'false'  # Database encryption normally true, but false for mssql express 
+backup_retention: 1 # days
+
+# MSSQL
+# db_engine: sqlserver-web # sqlserver-web, sqlserver-se, mysql, postgres
+# db_engine_short: mssql # needed to detect an flavour of MSsql
+# db_engine_version: 12.00.5571.0.v1  # Database Engine Version (MSSQL)
+# db_parameter_family_version: '-12.0'   # Appended to db_engine
+
+# MYSQL
+db_engine: mysql # sqlserver-web, sqlserver-se, mysql, postgres
+db_engine_short: mysql # just a placehoder for MySQL
+db_engine_version: 5.7  # Database Engine Version (MYSQL)
+db_parameter_family_version: '5.7'   # Appended to db_engine
+
+snapshot_name: 'SNAPSHOT-NULL' # Placeholder value, used in conjunction with boolean 'restore'
+db_instance_class: 'db.t2.small'
+db_storage: 20 # 20Gb min
+restore: "false"
+

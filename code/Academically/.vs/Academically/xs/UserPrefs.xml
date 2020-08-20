@@ -1,0 +1,5 @@
+﻿<Properties StartupConfiguration="{CDA93E69-6948-49C9-BC7F-D501651BF5BB}|Academically.Web.Host">
+  <MonoDevelop.Ide.ItemProperties.Academically.Migrator PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.ItemProperties.Academically.Web.Host PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MultiItemStartupConfigurations />
+</Properties>

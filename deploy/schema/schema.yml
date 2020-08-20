@@ -1,0 +1,12 @@
+---
+- name: STAGE3 - Deploy Database scripts
+  hosts: localhost
+  remote_user: deploy
+  become_method: sudo # added to see if it fixes MEDFX-196
+  gather_facts: true
+  vars_files:
+    - ../group_vars/all.yml # global variables
+    - ../group_vars/{{env_name}}-config.yml # global variables  
+
+  roles:
+    - upgrade # run liquibase scripts

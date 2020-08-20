@@ -1,0 +1,11 @@
+---
+- name: STAGE1 - Infrastructure
+  hosts: "localhost"
+  gather_facts: false
+  vars_files:
+  - ../group_vars/all.yml # global variables
+  - ../group_vars/{{env_name}}-config.yml # global variables
+  - group_vars/{{env_name}}-config.yml
+
+  roles:
+    - infrastructure
