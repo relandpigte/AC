@@ -13,7 +13,7 @@
 #
 # Happy Coding!
 
-service: casemix-pub-api
+service: academically-pub-api
 #app: your-app-name
 #tenant: your-tenant-name
 
@@ -25,7 +25,7 @@ provider:
   name: aws
   endpointType: EDGE
   runtime: dotnetcore3.1
-  profile: casemix
+  profile: academically
   region: {{aws_region}}
   stage: {{env_name}}
   vpc:
@@ -52,7 +52,7 @@ provider:
       Action:
         - s3:*Object
         - s3:ListBucket
-      Resource: 'arn:aws:s3:::{{env_name}}-casemix-assets' 
+      Resource: 'arn:aws:s3:::academically-{{env_name}}-assets' 
   apiGateway:
     binaryMediaTypes:
       - 'multipart/form-data'
@@ -62,9 +62,9 @@ package:
 
 functions:
   api:
-    handler: CaseMix.Web.Host::CaseMix.Web.Host.Startup.LambdaEntryPoint::FunctionHandlerAsync
-    name: ${self:provider.stage}-casemix-pub-api
-    description: Casemix Public Facing API, v1 POC+
+    handler: XXXXXXXXX.Web.Host::XXXXXXXXX.Web.Host.Startup.LambdaEntryPoint::FunctionHandlerAsync
+    name: ${self:provider.stage}-academically-pub-api
+    description: Academically Public Facing API
     memorySize: 1024 
     timeout: 90
     environment:
@@ -84,7 +84,7 @@ functions:
 
     # you can add packaging information here
     package:
-      artifact: bin/release/netcoreapp3.1/casemix-pub-api.zip
+      artifact: bin/release/netcoreapp3.1/academically-pub-api.zip
     #  exclude:
     #    - exclude-me.js
     #    - exclude-me-dir/**
