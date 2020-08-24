@@ -14,7 +14,7 @@
         "outputPath": "/Users/queuetest/Work/SC/projects/academically/repository/code/Academically/Academically.Core/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/queuetest/.config/NuGet/NuGet.Config"
+          "/Users/queuetest/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
@@ -79,7 +79,7 @@
         "outputPath": "/Users/queuetest/Work/SC/projects/academically/repository/code/Academically/Academically.EntityFrameworkCore/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/queuetest/.config/NuGet/NuGet.Config"
+          "/Users/queuetest/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
@@ -120,6 +120,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[3.1.4, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[3.1.2, )"
             }
           },
           "imports": [

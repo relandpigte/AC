@@ -1,5 +1,48 @@
 ﻿<Properties StartupConfiguration="{CDA93E69-6948-49C9-BC7F-D501651BF5BB}|Academically.Web.Host">
   <MonoDevelop.Ide.ItemProperties.Academically.Migrator PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Academically.Migrator/appsettings.json">
+    <Files>
+      <File FileName="Academically.Core/Web/WebContentFolderHelper.cs" Line="27" Column="77" IsPinned="True" />
+      <File FileName="Academically.Migrator/appsettings.json" Line="1" Column="2" />
+      <File FileName="Academically.Web.Host/appsettings.json" Line="3" Column="65" />
+      <File FileName="Academically.Web.Host/appsettings.Development.json" Line="3" Column="65" />
+      <File FileName="Academically.EntityFrameworkCore/EntityFrameworkCore/Seed/Host/DefaultLanguagesCreator.cs" Line="12" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Academically" expanded="True">
+            <Node name="Academically.Core" expanded="True">
+              <Node name="Web" expanded="True" />
+            </Node>
+            <Node name="Academically.EntityFrameworkCore" expanded="True">
+              <Node name="EntityFrameworkCore" expanded="True">
+                <Node name="Seed" expanded="True">
+                  <Node name="Host" expanded="True" />
+                  <Node name="Tenants" expanded="True" />
+                </Node>
+              </Node>
+              <Node name="Migrations" expanded="True" />
+            </Node>
+            <Node name="Academically.Migrator" expanded="True">
+              <Node name="appsettings.json" selected="True" />
+            </Node>
+            <Node name="Academically.Web.Host" expanded="True">
+              <Node name="appsettings.json" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.ItemProperties.Academically.Web.Host PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
 </Properties>

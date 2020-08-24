@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "PS48tgd3h9IuN6feM97OeWzhuOAUcm/68RRBE7JF0NSqCUq+Oa2D+woCOm2GGlWxXzf+tkNZSq7n75FqH0Knbw==",
+  "dgSpecHash": "c3cSslOQxDQt6yjPAUQ0vE2HCug+IXp58XHDv1gT4Cm/yVsCseyy1ve2LPoaBMroppzSkXkxp8ekB98/wVa1/w==",
   "success": true,
   "projectFilePath": "/Users/queuetest/Work/SC/projects/academically/repository/code/Academically/Academically.Web.Core/Academically.Web.Core.csproj",
   "expectedPackageFiles": [
@@ -67,6 +67,7 @@
     "/Users/queuetest/.nuget/packages/microsoft.win32.primitives/4.3.0/microsoft.win32.primitives.4.3.0.nupkg.sha512",
     "/Users/queuetest/.nuget/packages/microsoft.win32.registry/4.5.0/microsoft.win32.registry.4.5.0.nupkg.sha512",
     "/Users/queuetest/.nuget/packages/microsoft.win32.systemevents/4.7.0/microsoft.win32.systemevents.4.7.0.nupkg.sha512",
+    "/Users/queuetest/.nuget/packages/mysqlconnector/0.61.0/mysqlconnector.0.61.0.nupkg.sha512",
     "/Users/queuetest/.nuget/packages/netstandard.library/1.6.1/netstandard.library.1.6.1.nupkg.sha512",
     "/Users/queuetest/.nuget/packages/newtonsoft.json/12.0.3/newtonsoft.json.12.0.3.nupkg.sha512",
     "/Users/queuetest/.nuget/packages/newtonsoft.json.bson/1.0.2/newtonsoft.json.bson.1.0.2.nupkg.sha512",
@@ -76,6 +77,8 @@
     "/Users/queuetest/.nuget/packages/nito.collections.deque/1.0.4/nito.collections.deque.1.0.4.nupkg.sha512",
     "/Users/queuetest/.nuget/packages/nito.disposables/2.0.0/nito.disposables.2.0.0.nupkg.sha512",
     "/Users/queuetest/.nuget/packages/nuglify/1.6.3/nuglify.1.6.3.nupkg.sha512",
+    "/Users/queuetest/.nuget/packages/pomelo.entityframeworkcore.mysql/3.1.2/pomelo.entityframeworkcore.mysql.3.1.2.nupkg.sha512",
+    "/Users/queuetest/.nuget/packages/pomelo.jsonobject/2.2.1/pomelo.jsonobject.2.2.1.nupkg.sha512",
     "/Users/queuetest/.nuget/packages/runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl/4.3.0/runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "/Users/queuetest/.nuget/packages/runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl/4.3.0/runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "/Users/queuetest/.nuget/packages/runtime.fedora.24-x64.runtime.native.system.security.cryptography.openssl/4.3.0/runtime.fedora.24-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
