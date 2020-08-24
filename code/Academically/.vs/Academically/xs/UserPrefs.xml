@@ -1,12 +1,10 @@
 ﻿<Properties StartupConfiguration="{CDA93E69-6948-49C9-BC7F-D501651BF5BB}|Academically.Web.Host">
   <MonoDevelop.Ide.ItemProperties.Academically.Migrator PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Academically.Migrator/appsettings.json">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Academically.Web.Host/Startup/Startup.cs">
     <Files>
-      <File FileName="Academically.Core/Web/WebContentFolderHelper.cs" Line="27" Column="77" IsPinned="True" />
-      <File FileName="Academically.Migrator/appsettings.json" Line="1" Column="2" />
-      <File FileName="Academically.Web.Host/appsettings.json" Line="3" Column="65" />
-      <File FileName="Academically.Web.Host/appsettings.Development.json" Line="3" Column="65" />
-      <File FileName="Academically.EntityFrameworkCore/EntityFrameworkCore/Seed/Host/DefaultLanguagesCreator.cs" Line="12" Column="1" />
+      <File FileName="Academically.Web.Host/Startup/Program.cs" Line="14" Column="1" />
+      <File FileName="Academically.Web.Host/Startup/LambdaEntryPoint.cs" Line="7" Column="2" />
+      <File FileName="Academically.Web.Host/Startup/Startup.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -24,10 +22,11 @@
               </Node>
               <Node name="Migrations" expanded="True" />
             </Node>
-            <Node name="Academically.Migrator" expanded="True">
-              <Node name="appsettings.json" selected="True" />
-            </Node>
+            <Node name="Academically.Migrator" expanded="True" />
             <Node name="Academically.Web.Host" expanded="True">
+              <Node name="Startup" expanded="True">
+                <Node name="Startup.cs" selected="True" />
+              </Node>
               <Node name="appsettings.json" expanded="True" />
             </Node>
           </Node>

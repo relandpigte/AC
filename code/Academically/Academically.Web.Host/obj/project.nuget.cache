@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ik4U5nv+mmLmYpYcYKCVCqTftI8p7nlTUq9ydNgXVDAo7NIeC+0A55Sxklsak5lTINrmBoqUT/RJ1fuuyRKCSg==",
+  "dgSpecHash": "h4Slhn5mEh5eqoTJwESbKB1/xB0h1WKM3Z+0KhxGraM1OFYh8zTlCSUuryPTlx2xbxK9KOqZaJzzr5Dw6ygeSg==",
   "success": true,
   "projectFilePath": "/Users/queuetest/Work/SC/projects/academically/repository/code/Academically/Academically.Web.Host/Academically.Web.Host.csproj",
   "expectedPackageFiles": [
@@ -15,6 +15,12 @@
     "/Users/queuetest/.nuget/packages/abp.zero.common/5.10.1/abp.zero.common.5.10.1.nupkg.sha512",
     "/Users/queuetest/.nuget/packages/abp.zerocore/5.10.1/abp.zerocore.5.10.1.nupkg.sha512",
     "/Users/queuetest/.nuget/packages/abp.zerocore.entityframeworkcore/5.10.1/abp.zerocore.entityframeworkcore.5.10.1.nupkg.sha512",
+    "/Users/queuetest/.nuget/packages/amazon.lambda.apigatewayevents/2.1.0/amazon.lambda.apigatewayevents.2.1.0.nupkg.sha512",
+    "/Users/queuetest/.nuget/packages/amazon.lambda.applicationloadbalancerevents/2.0.0/amazon.lambda.applicationloadbalancerevents.2.0.0.nupkg.sha512",
+    "/Users/queuetest/.nuget/packages/amazon.lambda.aspnetcoreserver/5.1.3/amazon.lambda.aspnetcoreserver.5.1.3.nupkg.sha512",
+    "/Users/queuetest/.nuget/packages/amazon.lambda.core/1.1.0/amazon.lambda.core.1.1.0.nupkg.sha512",
+    "/Users/queuetest/.nuget/packages/amazon.lambda.logging.aspnetcore/3.0.1/amazon.lambda.logging.aspnetcore.3.0.1.nupkg.sha512",
+    "/Users/queuetest/.nuget/packages/amazon.lambda.serialization.systemtextjson/2.0.1/amazon.lambda.serialization.systemtextjson.2.0.1.nupkg.sha512",
     "/Users/queuetest/.nuget/packages/automapper/9.0.0/automapper.9.0.0.nupkg.sha512",
     "/Users/queuetest/.nuget/packages/automapper.collection/6.0.0/automapper.collection.6.0.0.nupkg.sha512",
     "/Users/queuetest/.nuget/packages/castle.core/4.4.1/castle.core.4.4.1.nupkg.sha512",
