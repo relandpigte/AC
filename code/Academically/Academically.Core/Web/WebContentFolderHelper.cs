@@ -30,13 +30,13 @@ namespace Academically.Web
                 directoryInfo = directoryInfo.Parent;
             }
 
-            var webMvcFolder = Path.Combine(directoryInfo.FullName, "src", "Academically.Web.Mvc");
+            var webMvcFolder = Path.Combine(directoryInfo.FullName, "Academically.Web.Mvc");
             if (Directory.Exists(webMvcFolder))
             {
                 return webMvcFolder;
             }
 
-            var webHostFolder = Path.Combine(directoryInfo.FullName, "src", "Academically.Web.Host");
+            var webHostFolder = Path.Combine(directoryInfo.FullName, "Academically.Web.Host");
             if (Directory.Exists(webHostFolder))
             {
                 return webHostFolder;

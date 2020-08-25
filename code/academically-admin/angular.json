@@ -53,12 +53,6 @@
           },
           "configurations": {
             "production": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -75,13 +69,32 @@
                 }
               ]
             },
-            "hmr": {
-              "budgets": [
+            "uat": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
                 {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.uat.ts"
                 }
-              ],
+              ]
+            },
+            "ci": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.ci.ts"
+                }
+              ]
+            },
+            "hmr": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -94,7 +107,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "Academically:build"
+            "browserTarget": "Academically:build",
+            "port": 6360
           },
           "configurations": {
             "production": {
@@ -191,10 +205,21 @@
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
-      "style": "css"
+      "style": "less",
+      "skipTests": true
     },
     "@schematics/angular:directive": {
-      "prefix": "app"
+      "prefix": "app",
+      "skipTests": true
+    },
+    "@schematics/angular:class": {
+      "skipTests": true
+    },
+    "@schematics/angular:pipe": {
+      "skipTests": true
+    },
+    "@schematics/angular:service": {
+      "skipTests": true
     }
   }
 }

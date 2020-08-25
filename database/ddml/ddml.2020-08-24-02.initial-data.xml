@@ -1,0 +1,354 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.0.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet author="root (generated)" id="1598245951654-5">
+        <insert tableName="AbpRoles">
+            <column name="Id" valueNumeric="1"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:30.788219"/>
+            <column name="CreatorUserId"/>
+            <column name="LastModificationTime"/>
+            <column name="LastModifierUserId"/>
+            <column name="IsDeleted" valueBoolean="false"/>
+            <column name="DeleterUserId"/>
+            <column name="DeletionTime"/>
+            <column name="TenantId"/>
+            <column name="Name" value="Admin"/>
+            <column name="DisplayName" value="Admin"/>
+            <column name="IsStatic" valueBoolean="true"/>
+            <column name="IsDefault" valueBoolean="true"/>
+            <column name="NormalizedName" value="ADMIN"/>
+            <column name="ConcurrencyStamp" value="14a9b5b5-2cb3-4522-b259-267402b5828b"/>
+            <column name="Description"/>
+        </insert>
+        <insert tableName="AbpRoles">
+            <column name="Id" valueNumeric="2"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:31.068789"/>
+            <column name="CreatorUserId"/>
+            <column name="LastModificationTime"/>
+            <column name="LastModifierUserId"/>
+            <column name="IsDeleted" valueBoolean="false"/>
+            <column name="DeleterUserId"/>
+            <column name="DeletionTime"/>
+            <column name="TenantId" valueNumeric="1"/>
+            <column name="Name" value="Admin"/>
+            <column name="DisplayName" value="Admin"/>
+            <column name="IsStatic" valueBoolean="true"/>
+            <column name="IsDefault" valueBoolean="false"/>
+            <column name="NormalizedName" value="ADMIN"/>
+            <column name="ConcurrencyStamp" value="102f6672-0f65-47b4-9653-509cbccc2fcb"/>
+            <column name="Description"/>
+        </insert>
+    </changeSet>
+    <changeSet author="root (generated)" id="1598245951654-10">
+        <insert tableName="AbpUsers">
+            <column name="Id" valueNumeric="1"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:30.915532"/>
+            <column name="CreatorUserId"/>
+            <column name="LastModificationTime"/>
+            <column name="LastModifierUserId"/>
+            <column name="IsDeleted" valueBoolean="false"/>
+            <column name="DeleterUserId"/>
+            <column name="DeletionTime"/>
+            <column name="AuthenticationSource"/>
+            <column name="UserName" value="admin"/>
+            <column name="TenantId"/>
+            <column name="EmailAddress" value="admin@aspnetboilerplate.com"/>
+            <column name="Name" value="admin"/>
+            <column name="Surname" value="admin"/>
+            <column name="Password" value="AQAAAAEAACcQAAAAEECY9PkYS9EhYia7AOX02NbYmHckBdkM8FkZZ75Cj3ZkKXdjYeHkNF+RowEpr5+kEg=="/>
+            <column name="EmailConfirmationCode"/>
+            <column name="PasswordResetCode"/>
+            <column name="LockoutEndDateUtc"/>
+            <column name="AccessFailedCount" valueNumeric="0"/>
+            <column name="IsLockoutEnabled" valueBoolean="false"/>
+            <column name="PhoneNumber"/>
+            <column name="IsPhoneNumberConfirmed" valueBoolean="false"/>
+            <column name="SecurityStamp" value="0587e564-c174-944b-28b3-39f7310dc364"/>
+            <column name="IsTwoFactorEnabled" valueBoolean="false"/>
+            <column name="IsEmailConfirmed" valueBoolean="true"/>
+            <column name="IsActive" valueBoolean="true"/>
+            <column name="NormalizedUserName" value="ADMIN"/>
+            <column name="NormalizedEmailAddress" value="ADMIN@ASPNETBOILERPLATE.COM"/>
+            <column name="ConcurrencyStamp" value="2fa7a244-b7a5-45ca-9880-a14e391209e4"/>
+        </insert>
+        <insert tableName="AbpUsers">
+            <column name="Id" valueNumeric="2"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:31.087198"/>
+            <column name="CreatorUserId"/>
+            <column name="LastModificationTime"/>
+            <column name="LastModifierUserId"/>
+            <column name="IsDeleted" valueBoolean="false"/>
+            <column name="DeleterUserId"/>
+            <column name="DeletionTime"/>
+            <column name="AuthenticationSource"/>
+            <column name="UserName" value="admin"/>
+            <column name="TenantId" valueNumeric="1"/>
+            <column name="EmailAddress" value="admin@defaulttenant.com"/>
+            <column name="Name" value="admin"/>
+            <column name="Surname" value="admin"/>
+            <column name="Password" value="AQAAAAEAACcQAAAAEAHWlwIg0bPzmbOZuJxQt8RRKubeDAWbv/1atdCzUAwzXQivAVdPJXMtwthAelK1Vw=="/>
+            <column name="EmailConfirmationCode"/>
+            <column name="PasswordResetCode"/>
+            <column name="LockoutEndDateUtc"/>
+            <column name="AccessFailedCount" valueNumeric="0"/>
+            <column name="IsLockoutEnabled" valueBoolean="false"/>
+            <column name="PhoneNumber"/>
+            <column name="IsPhoneNumberConfirmed" valueBoolean="false"/>
+            <column name="SecurityStamp" value="563d7844-0553-ea57-07a0-39f7310dc40f"/>
+            <column name="IsTwoFactorEnabled" valueBoolean="false"/>
+            <column name="IsEmailConfirmed" valueBoolean="true"/>
+            <column name="IsActive" valueBoolean="true"/>
+            <column name="NormalizedUserName" value="ADMIN"/>
+            <column name="NormalizedEmailAddress" value="ADMIN@DEFAULTTENANT.COM"/>
+            <column name="ConcurrencyStamp" value="7a3ab6d5-6e8f-4b57-9ed3-867c8d283ac2"/>
+        </insert>
+    </changeSet>
+    <changeSet author="root (generated)" id="1598245951654-1">
+        <insert tableName="AbpAuditLogs">
+            <column name="Id" valueNumeric="1"/>
+            <column name="TenantId"/>
+            <column name="UserId"/>
+            <column name="ServiceName" value="Academically.Web.Host.Controllers.HomeController"/>
+            <column name="MethodName" value="Index"/>
+            <column name="Parameters" value="{}"/>
+            <column name="ReturnValue"/>
+            <column name="ExecutionTime" valueDate="2020-08-24T13:11:38.481491"/>
+            <column name="ExecutionDuration" valueNumeric="7"/>
+            <column name="ClientIpAddress" value="::1"/>
+            <column name="ClientName"/>
+            <column name="BrowserInfo" value="Visual%20Studio/8.7.3.13 CFNetwork/1128.0.1 Darwin/19.6.0 (x86_64)"/>
+            <column name="Exception"/>
+            <column name="ImpersonatorUserId"/>
+            <column name="ImpersonatorTenantId"/>
+            <column name="CustomData"/>
+        </insert>
+        <insert tableName="AbpAuditLogs">
+            <column name="Id" valueNumeric="2"/>
+            <column name="TenantId"/>
+            <column name="UserId"/>
+            <column name="ServiceName" value="Academically.Web.Host.Controllers.HomeController"/>
+            <column name="MethodName" value="Index"/>
+            <column name="Parameters" value="{}"/>
+            <column name="ReturnValue"/>
+            <column name="ExecutionTime" valueDate="2020-08-24T13:11:39.831116"/>
+            <column name="ExecutionDuration" valueNumeric="1"/>
+            <column name="ClientIpAddress" value="::1"/>
+            <column name="ClientName"/>
+            <column name="BrowserInfo" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36"/>
+            <column name="Exception"/>
+            <column name="ImpersonatorUserId"/>
+            <column name="ImpersonatorTenantId"/>
+            <column name="CustomData"/>
+        </insert>
+        <insert tableName="AbpAuditLogs">
+            <column name="Id" valueNumeric="3"/>
+            <column name="TenantId"/>
+            <column name="UserId"/>
+            <column name="ServiceName" value="Academically.Web.Host.Controllers.AntiForgeryController"/>
+            <column name="MethodName" value="SetCookie"/>
+            <column name="Parameters" value="{}"/>
+            <column name="ReturnValue"/>
+            <column name="ExecutionTime" valueDate="2020-08-24T13:11:40.108788"/>
+            <column name="ExecutionDuration" valueNumeric="10"/>
+            <column name="ClientIpAddress" value="::1"/>
+            <column name="ClientName"/>
+            <column name="BrowserInfo" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36"/>
+            <column name="Exception"/>
+            <column name="ImpersonatorUserId"/>
+            <column name="ImpersonatorTenantId"/>
+            <column name="CustomData"/>
+        </insert>
+    </changeSet>
+    <changeSet author="root (generated)" id="1598245951654-2">
+        <insert tableName="AbpEditions">
+            <column name="Id" valueNumeric="1"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:30.013205"/>
+            <column name="CreatorUserId"/>
+            <column name="LastModificationTime"/>
+            <column name="LastModifierUserId"/>
+            <column name="IsDeleted" valueBoolean="false"/>
+            <column name="DeleterUserId"/>
+            <column name="DeletionTime"/>
+            <column name="Name" value="Standard"/>
+            <column name="DisplayName" value="Standard"/>
+        </insert>
+    </changeSet>
+    <changeSet author="root (generated)" id="1598245951654-3">
+        <insert tableName="AbpLanguages">
+            <column name="Id" valueNumeric="1"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:30.742377"/>
+            <column name="CreatorUserId"/>
+            <column name="LastModificationTime"/>
+            <column name="LastModifierUserId"/>
+            <column name="IsDeleted" valueBoolean="false"/>
+            <column name="DeleterUserId"/>
+            <column name="DeletionTime"/>
+            <column name="TenantId"/>
+            <column name="Name" value="en"/>
+            <column name="DisplayName" value="English"/>
+            <column name="Icon" value="famfamfam-flags us"/>
+            <column name="IsDisabled" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+    <changeSet author="root (generated)" id="1598245951654-4">
+        <insert tableName="AbpPermissions">
+            <column name="Id" valueNumeric="1"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:30.865658"/>
+            <column name="CreatorUserId"/>
+            <column name="TenantId"/>
+            <column name="Name" value="Pages.Users"/>
+            <column name="IsGranted" valueBoolean="true"/>
+            <column name="Discriminator" value="RolePermissionSetting"/>
+            <column name="RoleId" valueNumeric="1"/>
+            <column name="UserId"/>
+        </insert>
+        <insert tableName="AbpPermissions">
+            <column name="Id" valueNumeric="2"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:30.887555"/>
+            <column name="CreatorUserId"/>
+            <column name="TenantId"/>
+            <column name="Name" value="Pages.Roles"/>
+            <column name="IsGranted" valueBoolean="true"/>
+            <column name="Discriminator" value="RolePermissionSetting"/>
+            <column name="RoleId" valueNumeric="1"/>
+            <column name="UserId"/>
+        </insert>
+        <insert tableName="AbpPermissions">
+            <column name="Id" valueNumeric="3"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:30.887974"/>
+            <column name="CreatorUserId"/>
+            <column name="TenantId"/>
+            <column name="Name" value="Pages.Tenants"/>
+            <column name="IsGranted" valueBoolean="true"/>
+            <column name="Discriminator" value="RolePermissionSetting"/>
+            <column name="RoleId" valueNumeric="1"/>
+            <column name="UserId"/>
+        </insert>
+        <insert tableName="AbpPermissions">
+            <column name="Id" valueNumeric="4"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:31.076657"/>
+            <column name="CreatorUserId"/>
+            <column name="TenantId" valueNumeric="1"/>
+            <column name="Name" value="Pages.Roles"/>
+            <column name="IsGranted" valueBoolean="true"/>
+            <column name="Discriminator" value="RolePermissionSetting"/>
+            <column name="RoleId" valueNumeric="2"/>
+            <column name="UserId"/>
+        </insert>
+        <insert tableName="AbpPermissions">
+            <column name="Id" valueNumeric="5"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:31.076523"/>
+            <column name="CreatorUserId"/>
+            <column name="TenantId" valueNumeric="1"/>
+            <column name="Name" value="Pages.Users"/>
+            <column name="IsGranted" valueBoolean="true"/>
+            <column name="Discriminator" value="RolePermissionSetting"/>
+            <column name="RoleId" valueNumeric="2"/>
+            <column name="UserId"/>
+        </insert>
+    </changeSet>
+    <changeSet author="root (generated)" id="1598245951654-6">
+        <insert tableName="AbpSettings">
+            <column name="Id" valueNumeric="1"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:31.001382"/>
+            <column name="CreatorUserId"/>
+            <column name="LastModificationTime"/>
+            <column name="LastModifierUserId"/>
+            <column name="TenantId"/>
+            <column name="UserId"/>
+            <column name="Name" value="Abp.Net.Mail.DefaultFromAddress"/>
+            <column name="Value" value="admin@mydomain.com"/>
+        </insert>
+        <insert tableName="AbpSettings">
+            <column name="Id" valueNumeric="2"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:31.020211"/>
+            <column name="CreatorUserId"/>
+            <column name="LastModificationTime"/>
+            <column name="LastModifierUserId"/>
+            <column name="TenantId"/>
+            <column name="UserId"/>
+            <column name="Name" value="Abp.Net.Mail.DefaultFromDisplayName"/>
+            <column name="Value" value="mydomain.com mailer"/>
+        </insert>
+        <insert tableName="AbpSettings">
+            <column name="Id" valueNumeric="3"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:31.02384"/>
+            <column name="CreatorUserId"/>
+            <column name="LastModificationTime"/>
+            <column name="LastModifierUserId"/>
+            <column name="TenantId"/>
+            <column name="UserId"/>
+            <column name="Name" value="Abp.Localization.DefaultLanguageName"/>
+            <column name="Value" value="en"/>
+        </insert>
+    </changeSet>
+    <changeSet author="root (generated)" id="1598245951654-7">
+        <insert tableName="AbpTenants">
+            <column name="Id" valueNumeric="1"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:31.035116"/>
+            <column name="CreatorUserId"/>
+            <column name="LastModificationTime"/>
+            <column name="LastModifierUserId"/>
+            <column name="IsDeleted" valueBoolean="false"/>
+            <column name="DeleterUserId"/>
+            <column name="DeletionTime"/>
+            <column name="TenancyName" value="Default"/>
+            <column name="Name" value="Default"/>
+            <column name="ConnectionString"/>
+            <column name="IsActive" valueBoolean="true"/>
+            <column name="EditionId" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+    <changeSet author="root (generated)" id="1598245951654-8">
+        <insert tableName="AbpUserAccounts">
+            <column name="Id" valueNumeric="1"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:31.407316"/>
+            <column name="CreatorUserId"/>
+            <column name="LastModificationTime"/>
+            <column name="LastModifierUserId"/>
+            <column name="IsDeleted" valueBoolean="false"/>
+            <column name="DeleterUserId"/>
+            <column name="DeletionTime"/>
+            <column name="TenantId"/>
+            <column name="UserId" valueNumeric="1"/>
+            <column name="UserLinkId"/>
+            <column name="UserName" value="admin"/>
+            <column name="EmailAddress" value="admin@aspnetboilerplate.com"/>
+        </insert>
+        <insert tableName="AbpUserAccounts">
+            <column name="Id" valueNumeric="2"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:32.169395"/>
+            <column name="CreatorUserId"/>
+            <column name="LastModificationTime"/>
+            <column name="LastModifierUserId"/>
+            <column name="IsDeleted" valueBoolean="false"/>
+            <column name="DeleterUserId"/>
+            <column name="DeletionTime"/>
+            <column name="TenantId" valueNumeric="1"/>
+            <column name="UserId" valueNumeric="2"/>
+            <column name="UserLinkId"/>
+            <column name="UserName" value="admin"/>
+            <column name="EmailAddress" value="admin@defaulttenant.com"/>
+        </insert>
+    </changeSet>
+    <changeSet author="root (generated)" id="1598245951654-9">
+        <insert tableName="AbpUserRoles">
+            <column name="Id" valueNumeric="1"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:30.980551"/>
+            <column name="CreatorUserId"/>
+            <column name="TenantId"/>
+            <column name="UserId" valueNumeric="1"/>
+            <column name="RoleId" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AbpUserRoles">
+            <column name="Id" valueNumeric="2"/>
+            <column name="CreationTime" valueDate="2020-08-24T13:11:31.10475"/>
+            <column name="CreatorUserId"/>
+            <column name="TenantId" valueNumeric="1"/>
+            <column name="UserId" valueNumeric="2"/>
+            <column name="RoleId" valueNumeric="2"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
