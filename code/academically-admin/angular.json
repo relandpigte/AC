@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Academically": {
+    "academically": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -36,7 +36,13 @@
               "node_modules/sweetalert2/dist/sweetalert2.css",
               "src/assets/freeze-ui/freeze-ui.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "node_modules/admin-lte-css-only/css/adminlte.min.css",
+
+              "src/assets/themes/dashkit/fonts/feather/feather.css",
+              "src/assets/themes/dashkit/libs/flatpickr/dist/flatpickr.min.css",
+              "src/assets/themes/dashkit/libs/quill/dist/quill.core.css",
+              "src/assets/themes/dashkit/libs/highlightjs/styles/vs2015.css",
+              "src/assets/themes/dashkit/css/theme.min.css",
+
               "src/shared/core.less"
             ],
             "scripts": [
@@ -45,10 +51,28 @@
               "node_modules/sweetalert2/dist/sweetalert2.js",
               "src/assets/freeze-ui/freeze-ui.js",
               "node_modules/push.js/bin/push.min.js",
+
+              "src/assets/themes/dashkit/libs/jquery/dist/jquery.min.js",
+              "src/assets/themes/dashkit/libs/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "src/assets/themes/dashkit/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js",
+              "src/assets/themes/dashkit/libs/autosize/dist/autosize.min.js",
+              "src/assets/themes/dashkit/libs/chart.js/dist/Chart.min.js",
+              "src/assets/themes/dashkit/libs/dropzone/dist/min/dropzone.min.js",
+              "src/assets/themes/dashkit/libs/flatpickr/dist/flatpickr.min.js",
+              "src/assets/themes/dashkit/libs/highlightjs/highlight.pack.min.js",
+              "src/assets/themes/dashkit/libs/jquery-mask-plugin/dist/jquery.mask.min.js",
+              "src/assets/themes/dashkit/libs/list.js/dist/list.min.js",
+              "src/assets/themes/dashkit/libs/quill/dist/quill.min.js",
+              "src/assets/themes/dashkit/libs/select2/dist/js/select2.full.min.js",
+              "src/assets/themes/dashkit/libs/chart.js/Chart.extension.js",
+
               "node_modules/abp-web-resources/Abp/Framework/scripts/abp.js",
               "src/assets/abp-web-resources/abp.sweet-alert.js",
               "src/assets/abp-web-resources/abp.freeze-ui.js",
-              "node_modules/abp-web-resources/Abp/Framework/scripts/libs/abp.moment.js"
+              "node_modules/abp-web-resources/Abp/Framework/scripts/libs/abp.moment.js",
+
+              "src/assets/themes/dashkit/js/theme.min.js",
+              "src/assets/themes/dashkit/js/dashkit.min.js"
             ]
           },
           "configurations": {
@@ -107,22 +131,22 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "Academically:build",
+            "browserTarget": "academically:build",
             "port": 6360
           },
           "configurations": {
             "production": {
-              "browserTarget": "Academically:build:production"
+              "browserTarget": "academically:build:production"
             },
             "hmr": {
-              "browserTarget": "Academically:build:hmr"
+              "browserTarget": "academically:build:hmr"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Academically:build"
+            "browserTarget": "academically:build"
           }
         },
         "test": {
@@ -177,7 +201,7 @@
         }
       }
     },
-    "Academically-e2e": {
+    "academically-e2e": {
       "root": "",
       "sourceRoot": "",
       "projectType": "application",
@@ -186,7 +210,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "Academically:serve"
+            "devServerTarget": "academically:serve"
           }
         },
         "lint": {
@@ -201,7 +225,7 @@
       }
     }
   },
-  "defaultProject": "Academically",
+  "defaultProject": "academically",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

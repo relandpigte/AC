@@ -1,6 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="FreeAccessToOurDashboard" value="Free access to our dashboard." />
+    <text name="ForgotPassword" value="Forgot password?" />
+    <text name="SignUp" value="Sign up" />
+    <text name="SignIn" value="Sign in" />
+    <text name="DontHaveAnAccountYet" value="Don't have an account yet?" />
+    <text name="EnterYourPassword" value="Enter your password" />
     <text name="HomePage" value="Home page" />
     <text name="About" value="About" />
     <text name="WelcomeMessage" value="Welcome to Academically!" />
