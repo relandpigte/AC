@@ -1,103 +1,96 @@
-﻿<!-- HEADER -->
-<div class="header">
-  <div class="container-fluid">
-
-    <!-- Body -->
-    <div class="header-body">
-      <div class="row align-items-end">
-        <div class="col">
-
-          <!-- Pretitle -->
-          <h6 class="header-pretitle">
-            Overview
-          </h6>
-
-          <!-- Title -->
-          <h1 class="header-title">
-            Dashboard
-          </h1>
-
+﻿<div [@routerTransition]>
+  <div class="header">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-end">
+          <div class="col">
+            <h6 class="header-pretitle">
+              {{ "Overview" | localize }}
+            </h6>
+            <h1 class="header-title">
+              {{ "Dashboard" | localize }}
+            </h1>
+          </div>
         </div>
-      </div> <!-- / .row -->
-    </div> <!-- / .header-body -->
-
+      </div>
+    </div>
   </div>
-</div> <!-- / .header -->
 
-<!-- CARDS -->
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-12 col-lg-4 col-xl">
+  <!-- CARDS -->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 col-lg-4 col-xl">
 
-      <!-- Value  -->
-      <div class="card">
-        <div class="card-body">
-          <div class="row align-items-center">
-            <div class="col">
+        <!-- Value  -->
+        <div class="card">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col">
 
-              <!-- Heading -->
-              <span class="h2 mb-0">
-                User Management
-              </span>
-            </div>
-            <div class="col-auto">
+                <!-- Heading -->
+                <span class="h2 mb-0">
+                  User Management
+                </span>
+              </div>
+              <div class="col-auto">
 
-              <!-- Icon -->
-              <span class="h2 fe fe-users text-muted mb-0"></span>
+                <!-- Icon -->
+                <span class="h2 fe fe-users text-muted mb-0"></span>
 
-            </div>
-          </div> <!-- / .row -->
+              </div>
+            </div> <!-- / .row -->
+          </div>
         </div>
+
       </div>
+      <div class="col-12 col-lg-4 col-xl">
 
-    </div>
-    <div class="col-12 col-lg-4 col-xl">
+        <!-- Hours -->
+        <div class="card">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col">
 
-      <!-- Hours -->
-      <div class="card">
-        <div class="card-body">
-          <div class="row align-items-center">
-            <div class="col">
+                <!-- Heading -->
+                <span class="h2 mb-0">
+                  Financials
+                </span>
 
-              <!-- Heading -->
-              <span class="h2 mb-0">
-                Financials
-              </span>
+              </div>
+              <div class="col-auto">
 
-            </div>
-            <div class="col-auto">
+                <!-- Icon -->
+                <span class="h2 fe fe-dollar-sign text-muted mb-0"></span>
 
-              <!-- Icon -->
-              <span class="h2 fe fe-dollar-sign text-muted mb-0"></span>
-
-            </div>
-          </div> <!-- / .row -->
+              </div>
+            </div> <!-- / .row -->
+          </div>
         </div>
+
       </div>
+      <div class="col-12 col-lg-4 col-xl">
 
-    </div>
-    <div class="col-12 col-lg-4 col-xl">
+        <!-- Exit -->
+        <div class="card">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col">
 
-      <!-- Exit -->
-      <div class="card">
-        <div class="card-body">
-          <div class="row align-items-center">
-            <div class="col">
+                <!-- Heading -->
+                <span class="h2 mb-0">
+                  Settings
+                </span>
 
-              <!-- Heading -->
-              <span class="h2 mb-0">
-                Settings
-              </span>
-
-            </div>
-            <div class="col-auto">
-              <!-- Icon -->
-              <span class="h2 fe fe-settings text-muted mb-0"></span>
-            </div>
-          </div> <!-- / .row -->
+              </div>
+              <div class="col-auto">
+                <!-- Icon -->
+                <span class="h2 fe fe-settings text-muted mb-0"></span>
+              </div>
+            </div> <!-- / .row -->
+          </div>
         </div>
-      </div>
 
-    </div>
-  </div> <!-- / .row -->
+      </div>
+    </div> <!-- / .row -->
+  </div>
 </div>

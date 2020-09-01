@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="ManageRoles" value="Manage roles" />
+    <text name="ManageUsers" value="Manage users" />
+    <text name="Overview" value="Overview" />
+    <text name="Dashboard" value="Dashboard" />
     <text name="FreeAccessToOurDashboard" value="Free access to our dashboard." />
     <text name="ForgotPassword" value="Forgot password?" />
     <text name="SignUp" value="Sign up" />
