@@ -1,71 +1,53 @@
-<nav class="mt-2">
-  <ul
-    class="nav nav-pills nav-sidebar flex-column nav-flat"
-    data-widget="treeview"
-    role="menu"
-    data-accordion="false"
-  >
-    <ng-container *ngFor="let item of menuItems">
-      <ng-container
-        *ngTemplateOutlet="sidebarInner; context: { item: item }"
-      ></ng-container>
-    </ng-container>
-  </ul>
-</nav>
+<!-- Navigation -->
+<ul class="navbar-nav">
+  <ng-container *ngFor="let item of menuItems; let i = index;">
+    <ng-container *ngTemplateOutlet="sidebarInner; context: { item: item, index: i }"></ng-container>
+  </ng-container>
+</ul>
 
-<ng-template #sidebarInner let-item="item">
+<ng-template #sidebarInner let-item="item" let-i="index">
   <li
     *ngIf="isMenuItemVisible(item)"
     class="nav-item"
     [class.menu-open]="!item.isCollapsed"
-    [class.has-treeview]="item.children"
-  >
+    [class.has-treeview]="item.children">
     <a
       *ngIf="item.route && item.route.indexOf('http') != 0"
       class="nav-link"
       [routerLink]="item.route"
-      [class.active]="item.isActive"
-    >
-      <i class="nav-icon {{ item.icon }}"></i>
-      <p>
-        {{ item.label }}
-      </p>
+      [class.active]="item.isActive">
+      <i class="{{ item.icon }}"></i> {{ item.label }}
     </a>
     <a
       *ngIf="item.route && item.route.indexOf('http') == 0 && !item.children"
       class="nav-link"
       target="_blank"
-      [href]="item.route"
-    >
-      <i class="nav-icon {{ item.icon }}"></i>
-      <p>
-        {{ item.label }}
-      </p>
+      [href]="item.route">
+      <i class="{{ item.icon }}"></i> {{ item.label }}
     </a>
     <a
       *ngIf="!item.route && item.children"
       class="nav-link"
-      href="javascript:;"
+      href="#sidebar{{i}}"
       [class.active]="item.isActive"
-      (click)="item.isCollapsed = !item.isCollapsed"
-    >
-      <i class="nav-icon {{ item.icon }}"></i>
-      <p>
-        {{ item.label }}
-        <i class="right fas fa-angle-left"></i>
-      </p>
+      data-toggle="collapse"
+      role="button"
+      [attr.aria-expanded]="item.isCollapsed ? 'false' : 'true'"
+      [attr.aria-controls]="'sidebar' + i">
+      <i class="{{ item.icon }}"></i> {{ item.label }}
     </a>
-    <ul
-      *ngIf="item.children"
-      class="nav nav-treeview"
-      [collapse]="item.isCollapsed"
-      [isAnimated]="true"
-    >
-      <ng-container *ngFor="let item of item.children">
-        <ng-container
-          *ngTemplateOutlet="sidebarInner; context: { item: item }"
-        ></ng-container>
-      </ng-container>
-    </ul>
+    <div
+      class="collapse"
+      [class.show]="!item.isCollapsed"
+      id="sidebar{{i}}"
+      *ngIf="item.children">
+      <ul class="nav nav-sm flex-column">
+        <ng-container *ngFor="let item of item.children">
+          <ng-container
+            *ngTemplateOutlet="sidebarInner; context: { item: item }"
+          ></ng-container>
+        </ng-container>
+      </ul>
+    </div>
   </li>
 </ng-template>
