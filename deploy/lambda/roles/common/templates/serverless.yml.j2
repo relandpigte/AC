@@ -32,8 +32,8 @@ provider:
     securityGroupIds:
       - {{my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.SGWebId}}
     subnetIds:
-      - subnet-0844400c2c751d0de
-      - subnet-0d2a8e5ff0a29bcae
+      - {{private_subnet_a}}
+      - {{private_subnet_b}}
   iamRoleStatements:
     - Effect: Allow
       Action:
