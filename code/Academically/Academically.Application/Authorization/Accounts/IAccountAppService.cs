@@ -9,5 +9,7 @@ namespace Academically.Authorization.Accounts
         Task<IsTenantAvailableOutput> IsTenantAvailable(IsTenantAvailableInput input);
 
         Task<RegisterOutput> Register(RegisterInput input);
+
+        Task<RegisterUserOutput> RegisterStudent(RegisterInput input);
     }
 }

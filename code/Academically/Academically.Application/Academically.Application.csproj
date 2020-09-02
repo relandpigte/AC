@@ -12,5 +12,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Academically.Core\Academically.Core.csproj" />
+    <ProjectReference Include="..\Academically.Aws\Academically.Aws.csproj" />
+    <ProjectReference Include="..\Academically.Application.Shared\Academically.Application.Shared.csproj" />
   </ItemGroup>
 </Project>

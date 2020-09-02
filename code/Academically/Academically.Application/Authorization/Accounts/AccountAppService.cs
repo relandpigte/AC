@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Abp.Configuration;
 using Abp.Zero.Configuration;
+using Academically.Application.Shared.Services;
 using Academically.Authorization.Accounts.Dto;
 using Academically.Authorization.Users;
 
@@ -12,11 +13,15 @@ namespace Academically.Authorization.Accounts
         public const string PasswordRegex = "(?=^.{8,}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s)[0-9a-zA-Z!@#$%^&*()]*$";
 
         private readonly UserRegistrationManager _userRegistrationManager;
+        private readonly IEmailService _emailService;
 
         public AccountAppService(
-            UserRegistrationManager userRegistrationManager)
+            UserRegistrationManager userRegistrationManager,
+            IEmailService emailService
+            )
         {
             _userRegistrationManager = userRegistrationManager;
+            _emailService = emailService;
         }
 
         public async Task<IsTenantAvailableOutput> IsTenantAvailable(IsTenantAvailableInput input)
@@ -38,19 +43,29 @@ namespace Academically.Authorization.Accounts
         public async Task<RegisterOutput> Register(RegisterInput input)
         {
             var user = await _userRegistrationManager.RegisterAsync(
-                input.Name,
-                input.Surname,
-                input.EmailAddress,
-                input.UserName,
-                input.Password,
-                true // Assumed email address is always confirmed. Change this if you want to implement email confirmation.
-            );
+                    input.Name,
+                    input.Surname,
+                    input.EmailAddress,
+                    input.UserName,
+                    input.Password,
+                    true // Assumed email address is always confirmed. Change this if you want to implement email confirmation.
+                );
 
             var isEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
 
             return new RegisterOutput
             {
                 CanLogin = user.IsActive && (user.IsEmailConfirmed || !isEmailConfirmationRequiredForLogin)
+            };
+        }
+
+        public async Task<RegisterUserOutput> RegisterStudent(RegisterInput input)
+        {
+            await _emailService.SendAsync("Daniel", "daniel.seville@sourcecloud.co.uk", "Hello World", "The quick brownfox");
+
+
+            return new RegisterUserOutput
+            {
             };
         }
     }

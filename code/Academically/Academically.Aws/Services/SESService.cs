@@ -1,0 +1,81 @@
+﻿using System;
+using System.IO;
+using System.Net.Mail;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using Abp.Configuration;
+using Academically.Application.Shared.Services;
+using Academically.Configuration;
+using Amazon.SimpleEmail;
+using Amazon.SimpleEmail.Model;
+using Microsoft.Extensions.Configuration;
+
+namespace Academically.Aws.Services
+{
+    public class SESService : IEmailService, IDisposable
+    {
+        private IAmazonSimpleEmailService _client;
+
+        private string fromName;
+        private string fromEmail;
+
+        public SESService(IConfiguration configuration, ISettingManager settingManager)
+        {
+            fromName = settingManager.GetSettingValue(AppSettingNames.Email_FromName);
+            fromEmail = settingManager.GetSettingValue(AppSettingNames.Email_FromEmail);
+            var options = configuration.GetAWSOptions();
+            _client = options.CreateServiceClient<IAmazonSimpleEmailService>();
+        }
+
+        public async Task SendAsync(string toName, string toEmail, string subject, string body)
+        {
+            var mailMessage = new MailMessage();
+            mailMessage.Sender = new MailAddress(fromEmail, fromName);
+            mailMessage.From = new MailAddress(fromEmail, fromName);
+            mailMessage.To.Add(new MailAddress(toEmail, toName));
+            mailMessage.Subject = subject;
+            mailMessage.Body = body;
+            mailMessage.BodyEncoding = Encoding.UTF8;
+            mailMessage.IsBodyHtml = true;
+
+            await _client.SendRawEmailAsync(
+                new SendRawEmailRequest
+                {
+                    RawMessage = new RawMessage
+                    {
+                        Data = MailMessageToStream(mailMessage)
+                    }
+                }
+            );
+        }
+
+        public void Dispose()
+        {
+            if (_client != null)
+                _client.Dispose();
+        }
+
+        private MemoryStream MailMessageToStream(MailMessage message)
+        {
+            var mStream = new MemoryStream();
+
+            var assembly = typeof(SmtpClient).Assembly;
+            var mailWriterType = assembly.GetType("System.Net.Mail.MailWriter");
+
+            var fileStream = new MemoryStream();
+
+            var mailWriterContructor = mailWriterType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { typeof(Stream) }, null);
+            var mailWriter = mailWriterContructor.Invoke(new object[] { fileStream });
+
+            var sendMethod = typeof(MailMessage).GetMethod("Send", BindingFlags.Instance | BindingFlags.NonPublic);
+            sendMethod.Invoke(message, BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { mailWriter, true, true }, null);
+
+            var closeMethod = mailWriter.GetType().GetMethod("Close", BindingFlags.Instance | BindingFlags.NonPublic);
+            fileStream.WriteTo(mStream);
+            closeMethod.Invoke(mailWriter, BindingFlags.Instance | BindingFlags.NonPublic, null, new object[] { }, null);
+
+            return mStream;
+        }
+    }
+}
