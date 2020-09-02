@@ -1,16 +1,12 @@
-﻿{
+{
   "ConnectionStrings": {
     "Default": "server={{my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.RDSEndId}};database={{db_name}};uid={{db_app_user}};password={{db_app_password}};port={{database_port}}"
   },
   "App": {
-    "ServerRootAddress": " https://api-academically-{{env_name}}.{{public_domain}}/{{env_name}}",
+    "ServerRootAddress": "https://api-academically-{{env_name}}.{{public_domain}}/{{env_name}}",
     "ClientRootAddress": "https://academically-{{env_name}}.{{public_domain}}/",
     "CorsOrigins": "https://academically-{{env_name}}.{{public_domain}},http://academically-{{env_name}}.{{public_domain}}",
     "ServerBasePath": "/{{env_name}}"
-  },
-  "Email": {    
-    "FromName": "Academically Team",
-    "FromEmail": "no-reply@sourcecloud-dev.co.uk"
   },
   "Authentication": {
     "JwtBearer": {
@@ -18,6 +14,13 @@
       "SecurityKey": "CaseMix_C421AAEE0D114E9C",
       "Issuer": "Academically",
       "Audience": "Academically"
+    }
+  },
+  "Kestrel": {
+    "Endpoints": {
+      "Http": {
+        "Url": "https://api-academically-{{env_name}}.{{public_domain}}"
+      }
     }
   }
 }
