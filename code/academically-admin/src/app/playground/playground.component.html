@@ -1,0 +1,173 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">
+                Overview
+              </h6>
+              <h1 class="header-title text-truncate">
+                Contacts
+              </h1>
+            </div>
+            <div class="col-auto">
+              <a href="#!" class="btn btn-primary ml-2">
+                Add contact
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" role="tabpanel">
+          <div class="card">
+            <div class="card-header">
+              <div class="row align-items-center">
+                <div class="col">
+                  <form>
+                    <div class="input-group input-group-flush">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fe fe-search"></i>
+                        </span>
+                      </div>
+                      <input class="list-search form-control" type="search" name="Search" placeholder="Search"
+                        [(ngModel)]="keyword" (keyup.enter)="getDataPage(1)">
+                    </div>
+                  </form>
+
+                </div>
+                <div class="col-auto mr-n3">
+                  <form>
+                    <select select2 class="custom-select custom-select-sm form-control-flush" data-toggle="select">
+                      <option value="5">5 per page</option>
+                      <option value="10" selected>10 per page</option>
+                      <option value="*">All</option>
+                    </select>
+                  </form>
+
+                </div>
+                <div class="col-auto">
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-white" type="button" data-toggle="dropdown" aria-haspopup="true"
+                      aria-expanded="false">
+                      <i class="fe fe-sliders mr-1"></i> Filter <span class="badge badge-primary ml-1 d-none">0</span>
+                    </button>
+                    <form class="dropdown-menu dropdown-menu-right dropdown-menu-card" (ngSubmit)="getDataPage(1)">
+                      <div class="card-header">
+                        <h4 class="card-header-title">
+                          Filters
+                        </h4>
+                        <button class="btn btn-sm btn-link text-reset d-none" type="reset">
+                          <small>Clear filters</small>
+                        </button>
+                      </div>
+                      <div class="card-body">
+                        <div class="list-group list-group-flush mt-n4 mb-4">
+                          <div class="list-group-item">
+                            <div class="row">
+                              <div class="col">
+                                <small>{{ "IsActive" | localize }}</small>
+                              </div>
+                              <div class="col-auto">
+                                <div class="custom-control custom-radio d-inline">
+                                  <input type="radio" class="custom-control-input" id="isActiveAll" name="isActive"
+                                    [(ngModel)]="isActive" [value]="undefined" checked />
+                                  <label class="custom-control-label" for="isActiveAll">
+                                    {{ "All" | localize }}
+                                  </label>
+                                </div>
+                                <div class="custom-control custom-radio d-inline mx-3">
+                                  <input type="radio" class="custom-control-input" id="isActiveActive" name="isActive"
+                                    [(ngModel)]="isActive" [value]="true" />
+                                  <label class="custom-control-label" for="isActiveActive">
+                                    {{ "Yes" | localize }}
+                                  </label>
+                                </div>
+                                <div class="custom-control custom-radio d-inline">
+                                  <input type="radio" class="custom-control-input" id="isActivePassive" name="isActive"
+                                    [(ngModel)]="isActive" [value]="false" />
+                                  <label class="custom-control-label" for="isActivePassive">
+                                    {{ "No" | localize }}
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <button class="btn btn-block btn-primary" type="submit" data-toggle="dropdown"
+                          aria-haspopup="true" aria-expanded="false">
+                          Apply filter
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-sm table-hover table-nowrap card-table">
+                <thead>
+                  <tr>
+                    <th>
+                      <a class="list-sort text-muted" data-sort="item-name" href="#">{{ "UserName" | localize }}</a>
+                    </th>
+                    <th>
+                      <a class="list-sort text-muted" data-sort="item-title" href="#">{{ "FullName" | localize }}</a>
+                    </th>
+                    <th>
+                      <a class="list-sort text-muted" data-sort="item-email"
+                        href="#">{{ "EmailAddress" | localize }}</a>
+                    </th>
+                    <th colspan="2">
+                      <a class="list-sort text-muted" data-sort="item-company" href="#">{{ "IsActive" | localize }}</a>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="list font-size-base">
+                  <tr
+                    *ngFor="let user of users | paginate : { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }">
+                    <td>{{ user.userName }}</td>
+                    <td>{{ user.fullName }}</td>
+                    <td>{{ user.emailAddress }}</td>
+                    <td>
+                      <div class="custom-control custom-checkbox ml-4">
+                        <input type="checkbox" class="custom-control-input" disabled [checked]="user.isActive" />
+                        <label class="custom-control-label"></label>
+                      </div>
+                    </td>
+                    <td class="text-right">
+                      <div class="dropdown">
+                        <a class="dropdown-ellipses dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                          aria-haspopup="true" aria-expanded="false">
+                          <i class="fe fe-more-vertical"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                          <a href="#!" class="dropdown-item">
+                            Action
+                          </a>
+                          <a href="#!" class="dropdown-item">
+                            Another action
+                          </a>
+                          <a href="#!" class="dropdown-item">
+                            Something else here
+                          </a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <abp-pagination-controls id="server" (pageChange)="getDataPage($event)">
+            </abp-pagination-controls>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

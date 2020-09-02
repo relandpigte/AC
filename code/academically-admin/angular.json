@@ -70,9 +70,6 @@
               "src/assets/abp-web-resources/abp.sweet-alert.js",
               "src/assets/abp-web-resources/abp.freeze-ui.js",
               "node_modules/abp-web-resources/Abp/Framework/scripts/libs/abp.moment.js",
-
-              "src/assets/themes/dashkit/js/theme.min.js",
-              "src/assets/themes/dashkit/js/dashkit.min.js"
             ]
           },
           "configurations": {
