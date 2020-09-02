@@ -1,6 +1,6 @@
 {
-  "remoteServiceBaseUrl": "http://localhost:21023",
-  "appBaseUrl": "http://localhost:6360",
+  "remoteServiceBaseUrl": "https://api-academically-uat.sourcecloud-dev.uk/uat",
+  "appBaseUrl": "https://academically-uat.sourcecloud-dev.uk",
   "localeMappings": [
     {
       "from": "pt-BR",
