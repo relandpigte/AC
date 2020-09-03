@@ -9,7 +9,7 @@ import { TenantsComponent } from './tenants/tenants.component';
 import { RolesComponent } from 'app/roles/roles.component';
 import { ChangePasswordComponent } from './users/change-password/change-password.component';
 import { PlaygroundComponent } from './playground/playground.component';
-
+import { StudentDashboardComponent } from './student/student-dashboard/student-dashboard.component';
 @NgModule({
     imports: [
         RouterModule.forChild([
@@ -18,12 +18,21 @@ import { PlaygroundComponent } from './playground/playground.component';
                 component: AppComponent,
                 children: [
                     { path: 'playground', component: PlaygroundComponent },
-                    { path: 'home', component: HomeComponent,  canActivate: [AppRouteGuard] },
+                    { path: 'home', component: HomeComponent, data: { permission: 'Pages.Dashboard' }, canActivate: [AppRouteGuard] },
                     { path: 'users', component: UsersComponent, data: { permission: 'Pages.Users' }, canActivate: [AppRouteGuard] },
                     { path: 'roles', component: RolesComponent, data: { permission: 'Pages.Roles' }, canActivate: [AppRouteGuard] },
                     { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
                     { path: 'about', component: AboutComponent },
-                    { path: 'update-password', component: ChangePasswordComponent }
+                    { path: 'update-password', component: ChangePasswordComponent },
+                    {
+                      path: 'student',
+                      children: [
+                        {
+                            path: 'dashboard', component: StudentDashboardComponent,
+                            data: { permission: 'Pages.Student.Dashboard' }, canActivate: [AppRouteGuard]
+                        },
+                      ]
+                    },
                 ]
             }
         ])

@@ -95,7 +95,7 @@ export class AppAuthService {
         );
 
         let initialUrl = UrlHelper.initialUrl;
-        if (initialUrl.indexOf('/login') > 0) {
+        if (initialUrl.indexOf('/login') > 0 || initialUrl.indexOf('/complete-registration')) {
             initialUrl = AppConsts.appBaseUrl;
         }
 

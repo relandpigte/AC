@@ -43,7 +43,18 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
 
   getMenuItems(): MenuItem[] {
     return [
-      new MenuItem(this.l('Dashboard'), '/app/home', 'fe fe-home'),
+      new MenuItem(
+        this.l('Dashboard'),
+        '/app/home',
+        'fe fe-home',
+        'Pages.Dashboard'
+      ),
+      new MenuItem(
+        this.l('Dashboard'),
+        '/app/student/dashboard',
+        'fe fe-home',
+        'Pages.Student.Dashboard'
+      ),
       new MenuItem(
         this.l('Tenants'),
         '/app/tenants',
@@ -128,9 +139,20 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
   }
 
   isMenuItemVisible(item: MenuItem): boolean {
-    if (!item.permissionName) {
-      return true;
+    if (item.children && item.children.length > 0) {
+      let isGranted = true;
+      item.children.forEach(child => {
+        isGranted = this.isMenuItemVisible(child);
+        if (!isGranted) {
+          return false;
+        }
+      });
+      return isGranted;
+    } else {
+      if (!item.permissionName) {
+        return true;
+      }
+      return this.permission.isGranted(item.permissionName);
     }
-    return this.permission.isGranted(item.permissionName);
   }
 }

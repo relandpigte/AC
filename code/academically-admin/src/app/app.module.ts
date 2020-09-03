@@ -41,6 +41,7 @@ import { SidebarLogoComponent } from './layout/sidebar-logo.component';
 import { SidebarUserPanelComponent } from './layout/sidebar-user-panel.component';
 import { SidebarMenuComponent } from './layout/sidebar-menu.component';
 import { PlaygroundComponent } from './playground/playground.component';
+import { StudentDashboardComponent } from './student/student-dashboard/student-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { PlaygroundComponent } from './playground/playground.component';
     SidebarLogoComponent,
     SidebarUserPanelComponent,
     SidebarMenuComponent,
+    StudentDashboardComponent,
     // directives
     Select2Directive,
     PlaygroundComponent
