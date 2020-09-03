@@ -6,7 +6,7 @@
     <text name="CompleteRegistration" value="Complete Registration" />
     <text name="RegistrationCompletionLinkExpiredDomainError" value="The registration completion link has expired. Please register again to request a new link." />
     <text name="RegistrationRequestNullDomainErrorMessage" value="The registration completion link you are trying to access does not exist." />
-    <text name="InvalidRequestDomainError">In"alid request</text>
+    <text name="InvalidRequestDomainError">Invalid request</text>
     <text name="AcceptTermsAndConditions" value="Accept terms and conditions" />
     <text name="RegistrationEmailMessage">
       <![CDATA[

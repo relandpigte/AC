@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using Abp.Auditing;
@@ -39,6 +40,9 @@ namespace Academically.Authorization.Accounts.Dto
 
         [DisableAuditing]
         public string CaptchaResponse { get; set; }
+
+        [Required]
+        public Guid RegistrationId { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

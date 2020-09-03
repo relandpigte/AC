@@ -66,6 +66,7 @@ export class CompleteRegistrationComponent extends AppComponentBase implements O
         this.model.surname = registration.lastName;
         this.model.userName = registration.emailAddress;
         this.model.emailAddress = registration.emailAddress;
+        this.model.registrationId = this.registrationId;
       }, (err) => {
         this._router.navigate(['/account/login']);
       });

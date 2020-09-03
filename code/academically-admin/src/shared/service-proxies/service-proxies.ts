@@ -1940,6 +1940,7 @@ export class RegisterInput implements IRegisterInput {
     password: string;
     passwordConfirmation: string;
     captchaResponse: string | undefined;
+    registrationId: string;
 
     constructor(data?: IRegisterInput) {
         if (data) {
@@ -1959,6 +1960,7 @@ export class RegisterInput implements IRegisterInput {
             this.password = _data["password"];
             this.passwordConfirmation = _data["passwordConfirmation"];
             this.captchaResponse = _data["captchaResponse"];
+            this.registrationId = _data["registrationId"];
         }
     }
 
@@ -1978,6 +1980,7 @@ export class RegisterInput implements IRegisterInput {
         data["password"] = this.password;
         data["passwordConfirmation"] = this.passwordConfirmation;
         data["captchaResponse"] = this.captchaResponse;
+        data["registrationId"] = this.registrationId;
         return data; 
     }
 
@@ -1997,6 +2000,7 @@ export interface IRegisterInput {
     password: string;
     passwordConfirmation: string;
     captchaResponse: string | undefined;
+    registrationId: string;
 }
 
 export class RegisterOutput implements IRegisterOutput {
