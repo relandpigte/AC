@@ -5,20 +5,20 @@
       <p class="text-muted text-center mb-5">
         {{ 'FreeAccessToOurDashboard' | localize }}
       </p>
-      <form autocomplete="off" #registerForm="ngForm" (ngSubmit)="save()">
+      <form autocomplete="off" #registerForm="ngForm" (ngSubmit)="onFormSubmit()">
 
         <div class="form-group required">
           <label class="col-form-label" for="FirstName">{{ 'FirstName' | localize }}</label>
           <input type="text" class="form-control" placeholder="{{ 'FirstName' | localize }}" id="FirstName"
-            name="FirstName" [(ngModel)]="model.name" #nameModel="ngModel" #nameEl required>
-          <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+            name="FirstName" [(ngModel)]="model.firstName" #firstNameModel="ngModel" #firstNameEl required>
+          <abp-validation-summary [control]="firstNameModel" [controlEl]="firstNameEl"></abp-validation-summary>
         </div>
 
         <div class="form-group required">
           <label class="col-form-label" for="LastName">{{ 'LastName' | localize }}</label>
           <input type="text" class="form-control" placeholder="{{ 'LastName' | localize }}" id="LastName"
-            name="LastName" [(ngModel)]="model.surname" #surnameModel="ngModel" #surnameEl required>
-          <abp-validation-summary [control]="surnameModel" [controlEl]="surnameEl"></abp-validation-summary>
+            name="LastName" [(ngModel)]="model.lastName" #lastNameModel="ngModel" #lastNameEl required>
+          <abp-validation-summary [control]="lastNameModel" [controlEl]="lastNameEl"></abp-validation-summary>
         </div>
 
         <div class="form-group required">
@@ -35,12 +35,21 @@
           </div>
           <abp-validation-summary [control]="emailAddressModel" [controlEl]="emailAddressEl"></abp-validation-summary>
         </div>
+
+        <div class="form-group">
+          <div class="form-check">
+            <input [(ngModel)]="isTAndCAccepted" class="form-check-input" type="checkbox" value="" id="AcceptTAndC" name="AcceptTAndC" required="">
+            <label class="form-check-label" for="AcceptTAndC">
+              {{ 'AcceptTermsAndConditions' | localize }}
+            </label>
+          </div>
+        </div>
         
-        <button class="btn btn-lg btn-block btn-primary mb-3" [disabled]="saving || !registerForm.valid">{{ 'Register' | localize }}</button>
+        <button class="btn btn-lg btn-block btn-primary mb-3" [disabled]="saving || !registerForm.valid || !isTAndCAccepted">{{ 'Register' | localize }}</button>
 
         <div class="text-center">
           <small class="text-muted text-center">
-            Already have an account? <a href="#" [routerLink]="['/account/login']">Log in</a>.
+            {{ 'AlreadyHaveAnAccount' | localize }} <a href="#" [routerLink]="['/account/login']">{{ 'LogIn' | localize }}</a>.
           </small>
         </div>
 

@@ -18,6 +18,7 @@ namespace Academically.Configuration
             return new[]
             {
                 new SettingDefinition(AppSettingNames.UiTheme, "red", scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User, isVisibleToClients: true),
+                new SettingDefinition(AppSettingNames.App_ClientRootAddress, GetFromSettings("App:ClientRootAddress")),
                 new SettingDefinition(AppSettingNames.Email_FromName, GetFromSettings("Email:FromName")),
                 new SettingDefinition(AppSettingNames.Email_FromEmail, GetFromSettings("Email:FromEmail")),
             };

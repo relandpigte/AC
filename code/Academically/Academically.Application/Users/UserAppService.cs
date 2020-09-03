@@ -14,7 +14,6 @@ using Abp.Localization;
 using Abp.Runtime.Session;
 using Abp.UI;
 using Academically.Authorization;
-using Academically.Authorization.Accounts;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 using Academically.Roles.Dto;
@@ -181,7 +180,7 @@ namespace Academically.Users
             {
                 throw new UserFriendlyException("Your 'Existing Password' did not match the one on record.  Please try again or contact an administrator for assistance in resetting your password.");
             }
-            if (!new Regex(AccountAppService.PasswordRegex).IsMatch(input.NewPassword))
+            if (!new Regex(AcademicallyConsts.PasswordRegexValidator).IsMatch(input.NewPassword))
             {
                 throw new UserFriendlyException("Passwords must be at least 8 characters, contain a lowercase, uppercase, and number.");
             }

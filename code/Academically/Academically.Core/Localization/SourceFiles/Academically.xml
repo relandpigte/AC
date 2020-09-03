@@ -1,6 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="StudentDashboard" value="Student Dashboard" />
+    <text name="Complete" value="Complete" />
+    <text name="CompleteRegistration" value="Complete Registration" />
+    <text name="RegistrationCompletionLinkExpiredDomainError" value="The registration completion link has expired. Please register again to request a new link." />
+    <text name="RegistrationRequestNullDomainErrorMessage" value="The registration completion link you are trying to access does not exist." />
+    <text name="InvalidRequestDomainError">In"alid request</text>
+    <text name="AcceptTermsAndConditions" value="Accept terms and conditions" />
+    <text name="RegistrationEmailMessage">
+      <![CDATA[
+          <p>We received your request to register on our site.</p>
+          <p>Please click this link to complete your registration: <a href="{0}">Complete registration link<a/></p>
+          <br />
+          <p>If for some reason the link is not clickable, please copy and paste the url below to your browser:<p>
+          <br />
+          <p>{0}<p/>
+      ]]>
+    </text>
+    <text name="RegistrationEmailSubject">Academically - Complete your Registration</text>
+    <text name="RegistrationEmailSent" value="A registration completion link has been sent to your email account, please check your junk/spam folders." />
     <text name="LastName" value="Last name" />
     <text name="FirstName" value="First name" />
     <text name="ManageRoles" value="Manage roles" />
@@ -11,6 +30,7 @@
     <text name="ForgotPassword" value="Forgot password?" />
     <text name="SignUp" value="Sign up" />
     <text name="SignIn" value="Sign in" />
+    <text name="AlreadyHaveAnAccount" value="Already have an account?" />
     <text name="DontHaveAnAccountYet" value="Don't have an account yet?" />
     <text name="EnterYourPassword" value="Enter your password" />
     <text name="HomePage" value="Home page" />

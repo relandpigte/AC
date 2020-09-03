@@ -15,4 +15,13 @@
     <ProjectReference Include="..\Academically.Aws\Academically.Aws.csproj" />
     <ProjectReference Include="..\Academically.Application.Shared\Academically.Application.Shared.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BackgroundJobs\" />
+    <Folder Include="BackgroundJobs\JobArgs\" />
+    <Folder Include="Events\" />
+    <Folder Include="Events\Handlers\" />
+    <Folder Include="Services\" />
+    <Folder Include="Services\Registrations\" />
+    <Folder Include="Services\Registrations\Dto\" />
+  </ItemGroup>
 </Project>
