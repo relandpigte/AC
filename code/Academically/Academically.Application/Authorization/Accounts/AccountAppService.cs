@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Abp.Configuration;
 using Abp.Zero.Configuration;
 using Academically.Authorization.Accounts.Dto;
+using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 
 namespace Academically.Authorization.Accounts
@@ -14,7 +15,8 @@ namespace Academically.Authorization.Accounts
         private readonly UserRegistrationManager _userRegistrationManager;
 
         public AccountAppService(
-            UserRegistrationManager userRegistrationManager)
+            UserRegistrationManager userRegistrationManager
+            )
         {
             _userRegistrationManager = userRegistrationManager;
         }
@@ -38,13 +40,14 @@ namespace Academically.Authorization.Accounts
         public async Task<RegisterOutput> Register(RegisterInput input)
         {
             var user = await _userRegistrationManager.RegisterAsync(
-                input.Name,
-                input.Surname,
-                input.EmailAddress,
-                input.UserName,
-                input.Password,
-                true // Assumed email address is always confirmed. Change this if you want to implement email confirmation.
-            );
+                    input.Name,
+                    input.Surname,
+                    input.EmailAddress,
+                    input.UserName,
+                    input.Password,
+                    true, // Assumed email address is always confirmed. Change this if you want to implement email confirmation.
+                    StaticRoleNames.Tenants.Student
+                );
 
             var isEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
 

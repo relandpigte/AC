@@ -28,6 +28,36 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
             CreateRolesAndUsers();
         }
 
+        private void GrantPermissions(Role role, string[] permissionNames)
+        {
+            var grantedAdminPermissions = _context.Permissions.IgnoreQueryFilters()
+                .OfType<RolePermissionSetting>()
+                .Where(p => p.TenantId == _tenantId && p.RoleId == role.Id)
+                .Select(p => p.Name)
+                .ToList();
+
+            var permissions = PermissionFinder
+                .GetAllPermissions(new AcademicallyAuthorizationProvider())
+                .Where(p => p.MultiTenancySides.HasFlag(MultiTenancySides.Tenant) &&
+                            !grantedAdminPermissions.Contains(p.Name) &&
+                            permissionNames.Contains(p.Name))
+                .ToList();
+
+            if (permissions.Any())
+            {
+                _context.Permissions.AddRange(
+                    permissions.Select(permission => new RolePermissionSetting
+                    {
+                        TenantId = _tenantId,
+                        Name = permission.Name,
+                        IsGranted = true,
+                        RoleId = role.Id
+                    })
+                );
+                _context.SaveChanges();
+            }
+        }
+
         private void CreateRolesAndUsers()
         {
             // Admin role
@@ -39,33 +69,34 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 _context.SaveChanges();
             }
 
-            // Grant all permissions to admin role
+            // Student role
 
-            var grantedPermissions = _context.Permissions.IgnoreQueryFilters()
-                .OfType<RolePermissionSetting>()
-                .Where(p => p.TenantId == _tenantId && p.RoleId == adminRole.Id)
-                .Select(p => p.Name)
-                .ToList();
-
-            var permissions = PermissionFinder
-                .GetAllPermissions(new AcademicallyAuthorizationProvider())
-                .Where(p => p.MultiTenancySides.HasFlag(MultiTenancySides.Tenant) &&
-                            !grantedPermissions.Contains(p.Name))
-                .ToList();
-
-            if (permissions.Any())
+            var studentRole = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.Student);
+            if (studentRole == null)
             {
-                _context.Permissions.AddRange(
-                    permissions.Select(permission => new RolePermissionSetting
-                    {
-                        TenantId = _tenantId,
-                        Name = permission.Name,
-                        IsGranted = true,
-                        RoleId = adminRole.Id
-                    })
-                );
+                studentRole = _context.Roles.Add(new Role(_tenantId, StaticRoleNames.Tenants.Student, StaticRoleNames.Tenants.Student) { IsStatic = true }).Entity;
                 _context.SaveChanges();
             }
+
+
+
+            // Grant admin specficic permissions to admin role
+
+            string[] adminPermissions = new string[] {
+                PermissionNames.Pages_Dashboard,
+                PermissionNames.Pages_Roles,
+                PermissionNames.Pages_Users,
+            };
+            GrantPermissions(adminRole, adminPermissions);
+
+            // Grant student specficic permissions to student role
+
+            string[] studentPermissions = new string[] {
+                PermissionNames.Pages_Student_Dashboard,
+            };
+            GrantPermissions(studentRole, studentPermissions);
+
+
 
             // Admin user
 

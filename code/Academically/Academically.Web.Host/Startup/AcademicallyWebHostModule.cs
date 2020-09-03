@@ -3,6 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Academically.Configuration;
+using Academically.Application.Shared.Services;
+using Academically.Aws.Services;
 
 namespace Academically.Web.Host.Startup
 {
@@ -22,6 +24,7 @@ namespace Academically.Web.Host.Startup
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(typeof(AcademicallyWebHostModule).GetAssembly());
+            IocManager.Register<IEmailService, SESService>(Abp.Dependency.DependencyLifeStyle.Singleton);
         }
     }
 }

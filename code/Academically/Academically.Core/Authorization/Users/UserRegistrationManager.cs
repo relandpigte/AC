@@ -11,6 +11,7 @@ using Abp.Runtime.Session;
 using Abp.UI;
 using Academically.Authorization.Roles;
 using Academically.MultiTenancy;
+using Abp.Extensions;
 
 namespace Academically.Authorization.Users
 {
@@ -37,7 +38,7 @@ namespace Academically.Authorization.Users
             AbpSession = NullAbpSession.Instance;
         }
 
-        public async Task<User> RegisterAsync(string name, string surname, string emailAddress, string userName, string plainPassword, bool isEmailConfirmed)
+        public async Task<User> RegisterAsync(string name, string surname, string emailAddress, string userName, string plainPassword, bool isEmailConfirmed, string roleName = "")
         {
             CheckForTenant();
 
@@ -56,10 +57,18 @@ namespace Academically.Authorization.Users
             };
 
             user.SetNormalizedNames();
-           
-            foreach (var defaultRole in await _roleManager.Roles.Where(r => r.IsDefault).ToListAsync())
+
+            if (!roleName.IsNullOrWhiteSpace())
             {
-                user.Roles.Add(new UserRole(tenant.Id, user.Id, defaultRole.Id));
+                var role = await _roleManager.GetRoleByNameAsync(roleName);
+                user.Roles.Add(new UserRole(tenant.Id, user.Id, role.Id));
+            }
+            else
+            {
+                foreach (var defaultRole in await _roleManager.Roles.Where(r => r.IsDefault).ToListAsync())
+                {
+                    user.Roles.Add(new UserRole(tenant.Id, user.Id, defaultRole.Id));
+                }
             }
 
             await _userManager.InitializeOptionsAsync(tenant.Id);
