@@ -157,11 +157,6 @@ namespace Academically.Users
             return user;
         }
 
-        protected override IQueryable<User> ApplySorting(IQueryable<User> query, PagedUserResultRequestDto input)
-        {
-            return query.OrderBy(r => r.UserName);
-        }
-
         protected virtual void CheckErrors(IdentityResult identityResult)
         {
             identityResult.CheckErrors(LocalizationManager);

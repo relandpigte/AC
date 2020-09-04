@@ -1,0 +1,13 @@
+
+  <tr>
+    <th *ngFor="let header of headers; let i = index;" colspan="2" [colSpan]="!header.colspan ? 1 : header.colspan">
+      <a *ngIf="header.sortColumn" class="list-sort text-muted" href="#"
+        (click)="$event.preventDefault(); onSortOrderChange(header.sortColumn);">
+        {{ header.title | localize }}
+        <i *ngIf="header.sortColumn !== sortColumn" class="fa fa-sort"></i>
+        <i *ngIf="header.sortColumn === sortColumn && sortOrder === 'asc'" class="fa fa-sort-up"></i>
+        <i *ngIf="header.sortColumn === sortColumn && sortOrder === 'desc'" class="fa fa-sort-down"></i>
+      </a>
+      <span *ngIf="!header.sortColumn" class="list-sort text-muted">{{ header.title | localize }}</span>
+    </th>
+  </tr>

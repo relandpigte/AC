@@ -18,6 +18,7 @@ import { LayoutStoreService } from './layout/layout-store.service';
 import { BusyDirective } from './directives/busy.directive';
 import { EqualValidator } from './directives/equal-validator.directive';
 import { BodyClassDirective } from './directives/body-class.directive';
+import { TableHeaderSortComponent } from './components/table-header-sort/table-header-sort.component';
 
 @NgModule({
     imports: [
@@ -34,6 +35,7 @@ import { BodyClassDirective } from './directives/body-class.directive';
         BusyDirective,
         EqualValidator,
         BodyClassDirective,
+        TableHeaderSortComponent,
     ],
     exports: [
         AbpPaginationControlsComponent,
@@ -44,6 +46,7 @@ import { BodyClassDirective } from './directives/body-class.directive';
         BusyDirective,
         EqualValidator,
         BodyClassDirective,
+        TableHeaderSortComponent,
     ]
 })
 export class SharedModule {

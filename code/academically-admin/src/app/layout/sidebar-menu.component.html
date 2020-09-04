@@ -28,18 +28,17 @@
     <a
       *ngIf="!item.route && item.children"
       class="nav-link"
-      href="#sidebar{{i}}"
       [class.active]="item.isActive"
       data-toggle="collapse"
       role="button"
-      [attr.aria-expanded]="item.isCollapsed ? 'false' : 'true'"
-      [attr.aria-controls]="'sidebar' + i">
+      (click)="item.isCollapsed = !item.isCollapsed"
+      [attr.aria-expanded]="item.isCollapsed ? 'false' : 'true'">
       <i class="{{ item.icon }}"></i> {{ item.label }}
     </a>
     <div
       class="collapse"
-      [class.show]="!item.isCollapsed"
-      id="sidebar{{i}}"
+      [collapse]="item.isCollapsed"
+      [isAnimated]="true"
       *ngIf="item.children">
       <ul class="nav nav-sm flex-column">
         <ng-container *ngFor="let item of item.children">

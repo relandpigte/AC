@@ -2,7 +2,7 @@
 
 namespace Academically.Roles.Dto
 {
-    public class PagedRoleResultRequestDto : PagedResultRequestDto
+    public class PagedRoleResultRequestDto : PagedAndSortedResultRequestDto
     {
         public string Keyword { get; set; }
     }

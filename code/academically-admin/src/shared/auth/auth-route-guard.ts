@@ -32,8 +32,6 @@ export class AppRouteGuard implements CanActivate, CanActivateChild {
             return true;
         }
 
-        console.log(route.data['permission']);
-
         this._router.navigate([this.selectBestRoute()]);
         return false;
     }
@@ -48,7 +46,6 @@ export class AppRouteGuard implements CanActivate, CanActivateChild {
         }
 
         if (this._permissionChecker.isGranted('Pages.Student.Dashboard')) {
-            console.log('here');
             return '/app/student/dashboard';
         }
 

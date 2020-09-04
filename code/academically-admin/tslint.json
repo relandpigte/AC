@@ -107,7 +107,6 @@
       "camelCase"
     ],
     "component-selector": [
-      true,
       "element",
       "",
       "kebab-case"
@@ -120,6 +119,6 @@
     "use-lifecycle-interface": true,
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
-    "directive-class-suffix": true
+    "directive-class-suffix": true,
   }
 }

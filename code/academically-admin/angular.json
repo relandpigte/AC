@@ -53,7 +53,6 @@
               "node_modules/push.js/bin/push.min.js",
 
               "src/assets/themes/dashkit/libs/jquery/dist/jquery.min.js",
-              "src/assets/themes/dashkit/libs/bootstrap/dist/js/bootstrap.bundle.min.js",
               "src/assets/themes/dashkit/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js",
               "src/assets/themes/dashkit/libs/autosize/dist/autosize.min.js",
               "src/assets/themes/dashkit/libs/chart.js/dist/Chart.min.js",

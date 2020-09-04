@@ -28,6 +28,7 @@ form.poll-form {
 .chat-box {
   .list-group {
     border-right: 1px solid #edf2f9;
+    height      : 100%;
   }
 
   .list-group-item {
@@ -36,5 +37,12 @@ form.poll-form {
     &.active-chat {
       background-color: #f9fbfd;
     }
+  }
+
+  .conversations {
+    min-height     : 300px;
+    display        : flex;
+    flex-flow      : column;
+    justify-content: space-between;
   }
 }
