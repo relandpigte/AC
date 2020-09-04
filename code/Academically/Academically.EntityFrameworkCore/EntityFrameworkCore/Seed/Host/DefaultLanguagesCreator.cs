@@ -18,6 +18,7 @@ namespace Academically.EntityFrameworkCore.Seed.Host
             return new List<ApplicationLanguage>
             {
                 new ApplicationLanguage(tenantId, "en", "English", "famfamfam-flags us"),
+                new ApplicationLanguage(tenantId, "es", "Español", "famfamfam-flags es"),
             };
         }
 

@@ -1,88 +1,92 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
-    <text name="StudentDashboard" value="Student Dashboard" />
-    <text name="Complete" value="Complete" />
-    <text name="CompleteRegistration" value="Complete Registration" />
-    <text name="RegistrationCompletionLinkExpiredDomainError" value="The registration completion link has expired. Please register again to request a new link." />
-    <text name="RegistrationRequestNullDomainErrorMessage" value="The registration completion link you are trying to access does not exist." />
+    <text name="ApplyFilter">Apply filter</text>
+    <text name="ClearFilters">Clear filters</text>
+    <text name="Filters">Filters</text>
+    <text name="PerPage">per page</text>
+    <text name="StudentDashboard">Student Dashboard</text>
+    <text name="Complete">Complete</text>
+    <text name="CompleteRegistration">Complete Registration</text>
+    <text name="RegistrationCompletionLinkExpiredDomainError">The registration completion link has expired. Please register again to request a new link.</text>
+    <text name="RegistrationRequestNullDomainErrorMessage">The registration completion link you are trying to access does not exist.</text>
     <text name="InvalidRequestDomainError">Invalid request</text>
-    <text name="AcceptTermsAndConditions" value="Accept terms and conditions" />
+    <text name="AcceptTermsAndConditions">Accept terms and conditions</text>
     <text name="RegistrationEmailMessage">
       <![CDATA[
-          <p>We received your request to register on our site.</p>
-          <p>Please click this link to complete your registration: <a href="{0}">Complete registration link<a/></p>
-          <br />
-          <p>If for some reason the link is not clickable, please copy and paste the url below to your browser:<p>
-          <br />
-          <p>{0}<p/>
+        <p>We received your request to register on our site.</p>
+        <p>Please click this link to complete your registration: <a href="{0}">Complete registration link<a/></p>
+        <br />
+        <p>If for some reason the link is not clickable, please copy and paste the url below to your browser:<p>
+        <br />
+        <p>{0}<p/>
       ]]>
     </text>
     <text name="RegistrationEmailSubject">Academically - Complete your Registration</text>
-    <text name="RegistrationEmailSent" value="A registration completion link has been sent to your email account, please check your junk/spam folders." />
-    <text name="LastName" value="Last name" />
-    <text name="FirstName" value="First name" />
-    <text name="ManageRoles" value="Manage roles" />
-    <text name="ManageUsers" value="Manage users" />
-    <text name="Overview" value="Overview" />
-    <text name="Dashboard" value="Dashboard" />
-    <text name="FreeAccessToOurDashboard" value="Free access to our dashboard." />
-    <text name="ForgotPassword" value="Forgot password?" />
-    <text name="SignUp" value="Sign up" />
-    <text name="SignIn" value="Sign in" />
-    <text name="AlreadyHaveAnAccount" value="Already have an account?" />
-    <text name="DontHaveAnAccountYet" value="Don't have an account yet?" />
-    <text name="EnterYourPassword" value="Enter your password" />
-    <text name="HomePage" value="Home page" />
-    <text name="About" value="About" />
-    <text name="WelcomeMessage" value="Welcome to Academically!" />
-    <text name="FormIsNotValidMessage" value="Form is not valid. Please check and fix errors." />
-    <text name="TenantNameCanNotBeEmpty" value="Tenant name can not be empty" />
-    <text name="InvalidUserNameOrPassword" value="Invalid user name or password" />
-    <text name="ThereIsNoTenantDefinedWithName{0}" value="There is no tenant defined with name {0}" />
-    <text name="TenantIsNotActive" value="Tenant {0} is not active." />
-    <text name="UserIsNotActiveAndCanNotLogin" value="User {0} is not active and can not log in." />
+    <text name="RegistrationEmailSent">A registration completion link has been sent to your email account, please check your junk/spam folders.</text>
+    <text name="LastName">Last name</text>
+    <text name="FirstName">First name</text>
+    <text name="ManageRoles">Manage roles</text>
+    <text name="ManageUsers">Manage users</text>
+    <text name="Overview">Overview</text>
+    <text name="Dashboard">Dashboard</text>
+    <text name="FreeAccessToOurDashboard">Free access to our dashboard.</text>
+    <text name="ForgotPassword">Forgot password?</text>
+    <text name="SignUp">Sign up</text>
+    <text name="SignIn">Sign in</text>
+    <text name="AlreadyHaveAnAccount">Already have an account?</text>
+    <text name="DontHaveAnAccountYet">Don't have an account yet?</text>
+    <text name="EnterYourPassword">Enter your password</text>
+    <text name="HomePage">Home page</text>
+    <text name="About">About</text>
+    <text name="WelcomeMessage">Welcome to Academically!</text>
+    <text name="FormIsNotValidMessage">Form is not valid. Please check and fix errors.</text>
+    <text name="TenantNameCanNotBeEmpty">Tenant name can not be empty</text>
+    <text name="InvalidUserNameOrPassword">Invalid user name or password</text>
+    <text name="ThereIsNoTenantDefinedWithName{0}">There is no tenant defined with name {0}</text>
+    <text name="TenantIsNotActive">Tenant {0} is not active.</text>
+    <text name="UserIsNotActiveAndCanNotLogin">User {0} is not active and can not log in.</text>
     <text name="UserEmailIsNotConfirmedAndCanNotLogin">Your email address is not confirmed. You can not login.</text>
     <text name="UserLockedOutMessage">The user account has been locked out. Please try again later.</text>
-    <text name="PleaseEnterLoginInformation" value="Please enter login information" />
-    <text name="TenancyName" value="Tenancy name" />
-    <text name="UserNameOrEmail" value="User name or email" />
-    <text name="Password" value="Password" />
-    <text name="ResetPassword" value="Reset Password" />
-    <text name="UpdatePassword" value="Update Password" />
-    <text name="RememberMe" value="Remember me" />
-    <text name="LogIn" value="Log in" />
-    <text name="LoginFailed" value="Login failed!" />
-    <text name="NameSurname" value="Name surname" />
-    <text name="UserName" value="User name" />
-    <text name="Name" value="Name" />
-    <text name="Surname" value="Surname" />
-    <text name="EmailAddress" value="Email address" />
-    <text name="Tenants" value="Tenants" />
-    <text name="SavedSuccessfully" value="Saved successfully" />
-    <text name="CreateNewTenant" value="Create new tenant" />
-    <text name="AdminEmailAddress" value="Admin email address" />
-    <text name="AdminPassword" value="Admin password" />
-    <text name="Save" value="Save" />
-    <text name="Cancel" value="Cancel" />
-    <text name="TenantName_Regex_Description" value="Tenant name must be at least 2 chars, starts with a letter and continue with letter, number, dash or underscore." />
-    <text name="DefaultPasswordIs" value="Default password is {0}" />
-    <text name="CanBeEmptyToLoginAsHost" value="Can be empty to login as host." />
-    <text name="Register" value="Register" />
-    <text name="OrLoginWith" value="Or login with" />
-    <text name="WaitingForActivationMessage" value="Your account is waiting to be activated by system admin." />
-    <text name="TenantSelection" value="Tenant Selection" />
-    <text name="TenantSelection_Detail" value="Please select one of the following tenants." />
-    <text name="Logout" value="Logout" />
+    <text name="PleaseEnterLoginInformation">Please enter login information</text>
+    <text name="TenancyName">Tenancy name</text>
+    <text name="UserNameOrEmail">User name or email</text>
+    <text name="Password">Password</text>
+    <text name="ResetPassword">Reset Password</text>
+    <text name="UpdatePassword">Update Password</text>
+    <text name="RememberMe">Remember me</text>
+    <text name="LogIn">Log in</text>
+    <text name="LoginFailed">Login failed!</text>
+    <text name="NameSurname">Name surname</text>
+    <text name="UserName">User name</text>
+    <text name="Name">Name</text>
+    <text name="Surname">Surname</text>
+    <text name="EmailAddress">Email address</text>
+    <text name="Tenants">Tenants</text>
+    <text name="SavedSuccessfully">Saved successfully</text>
+    <text name="CreateNewTenant">Create new tenant</text>
+    <text name="AdminEmailAddress">Admin email address</text>
+    <text name="AdminPassword">Admin password</text>
+    <text name="Save">Save</text>
+    <text name="Cancel">Cancel</text>
+    <text name="TenantName_Regex_Description">Tenant name must be at least 2 chars, starts with a letter and continue with letter, number, dash or underscore.</text>
+    <text name="DefaultPasswordIs">Default password is {0}</text>
+    <text name="CanBeEmptyToLoginAsHost">Can be empty to login as host.</text>
+    <text name="Register">Register</text>
+    <text name="OrLoginWith">Or login with</text>
+    <text name="WaitingForActivationMessage">Your account is waiting to be activated by system admin.</text>
+    <text name="TenantSelection">Tenant Selection</text>
+    <text name="TenantSelection_Detail">Please select one of the following tenants.</text>
+    <text name="Logout">Logout</text>
     <text name="RegisterFormUserNameInvalidMessage">Please don't enter an email address for username.</text>
-    <text name="DatabaseConnectionString" value="Database connection string" />
-    <text name="Users" value="Users" />
-    <text name="IsActive" value="Is active" />
-    <text name="FullName" value="Full name" />
-    <text name="CreateNewUser" value="Create new user" />
-    <text name="Yes" value="Yes" />
-    <text name="No" value="No" />
-    <text name="Optional" value="Optional" />
+    <text name="DatabaseConnectionString">Database connection string</text>
+    <text name="Users">Users</text>
+    <text name="IsActive">Is active</text>
+    <text name="FullName">Full name</text>
+    <text name="CreateNewUser">Create new user</text>
+    <text name="Yes">Yes</text>
+    <text name="No">No</text>
+    <text name="Optional">Optional</text>
     <text name="LeaveEmptyToSwitchToHost">Leave empty to switch to the host</text>
     <text name="CurrentTenant">Current tenant</text>
     <text name="NotSelected">Not selected</text>

@@ -32,7 +32,6 @@
                     [(ngModel)]="keyword" (keyup.enter)="getDataPage(1)">
                 </div>
               </form>
-
             </div>
             <div class="col-auto mr-n3">
               <form>
@@ -40,24 +39,23 @@
                   (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
                   class="custom-select custom-select-sm form-control-flush" data-toggle="select">
                   <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
-                    {{pageSizeSelection}} per page
+                    {{pageSizeSelection}} {{ 'PerPage' | localize }}
                   </option>
                 </select>
               </form>
-
             </div>
             <div class="col-auto">
-              <div class="dropdown" dropdown #filterDropdown="bs-dropdown" [isAnimated]="true" [autoClose]="false">
+              <div class="dropdown" dropdown #filterDropdown="bs-dropdown" container="body" [isAnimated]="true" [autoClose]="false">
                 <button class="btn btn-sm btn-white" type="button" dropdownToggle>
-                  <i class="fe fe-sliders mr-1"></i> Filter <span class="badge badge-primary ml-1 d-none">0</span>
+                  <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }} <span class="badge badge-primary ml-1 d-none">0</span>
                 </button>
                 <form *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-card"
                   (ngSubmit)="getDataPage(1)">
                   <div class="card-header">
-                    <h4 class="card-header-title">Filters</h4>
+                    <h4 class="card-header-title">{{ 'Filters' | localize }}</h4>
                     <button class="btn btn-sm btn-link text-reset btn-white" type="submit"
                       (click)="filterDropdown.hide(); onClearFiltersClick();">
-                      <small>Clear filters</small>
+                      <small>{{ 'ClearFilters' | localize }}</small>
                     </button>
                   </div>
                   <div class="card-body">
@@ -94,7 +92,7 @@
                       </div>
                     </div>
                     <button class="btn btn-block btn-primary" type="submit" (click)="filterDropdown.hide()">
-                      Apply filter
+                      {{ "ApplyFilter" | localize }}
                     </button>
                   </div>
                 </form>

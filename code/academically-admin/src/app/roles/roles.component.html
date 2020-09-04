@@ -33,6 +33,17 @@
                 </div>
               </form>
             </div>
+            <div class="col-auto mr-n3">
+              <form>
+                <select [(ngModel)]="pageNumber" select2 [select2defaultValue]="pageSize"
+                  (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
+                  class="custom-select custom-select-sm form-control-flush" data-toggle="select">
+                  <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
+                    {{pageSizeSelection}} {{ 'PerPage' | localize }}
+                  </option>
+                </select>
+              </form>
+            </div>
           </div>
         </div>
 

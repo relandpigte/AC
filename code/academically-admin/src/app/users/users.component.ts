@@ -31,7 +31,7 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
   isActive: boolean;
   advancedFiltersVisible = false;
   headers: TableHeaderSortData[] = [
-    { title: 'Username', sortColumn: 'username' },
+    { title: 'UserName', sortColumn: 'username' },
     { title: 'FullName', sortColumn: 'name' },
     { title: 'EmailAddress', sortColumn: 'emailAddress' },
     { title: 'IsActive', colspan: 2 },
