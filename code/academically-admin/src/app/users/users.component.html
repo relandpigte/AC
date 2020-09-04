@@ -45,7 +45,7 @@
               </form>
             </div>
             <div class="col-auto">
-              <div class="dropdown" dropdown #filterDropdown="bs-dropdown" container="body" [isAnimated]="true" [autoClose]="false">
+              <div class="dropdown" dropdown #filterDropdown="bs-dropdown" [isAnimated]="true" [autoClose]="false">
                 <button class="btn btn-sm btn-white" type="button" dropdownToggle>
                   <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }} <span class="badge badge-primary ml-1 d-none">0</span>
                 </button>
@@ -94,7 +94,7 @@
                     <button class="btn btn-block btn-primary" type="submit" (click)="filterDropdown.hide()">
                       {{ "ApplyFilter" | localize }}
                     </button>
-                  </div>
+                  </div>&nbsp;
                 </form>
               </div>
             </div>
