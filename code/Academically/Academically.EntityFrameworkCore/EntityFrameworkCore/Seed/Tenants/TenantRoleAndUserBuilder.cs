@@ -28,7 +28,98 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
             CreateRolesAndUsers();
         }
 
-        private void GrantPermissions(Role role, string[] permissionNames)
+        private void CreateRolesAndUsers()
+        {
+            #region Admin
+
+            var adminRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.Admin);
+            GrantPermissions(
+                adminRole,
+                PermissionNames.Pages_Dashboard,
+                PermissionNames.Pages_Roles,
+                PermissionNames.Pages_Users
+            );
+
+            var adminUser = _context.Users.IgnoreQueryFilters().FirstOrDefault(u => u.TenantId == _tenantId && u.UserName == AbpUserBase.AdminUserName);
+            if (adminUser == null)
+            {
+                adminUser = User.CreateTenantAdminUser(_tenantId, "admin@defaulttenant.com");
+                adminUser.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(adminUser, "123qwe");
+                adminUser.IsEmailConfirmed = true;
+                adminUser.IsActive = true;
+
+                _context.Users.Add(adminUser);
+                _context.SaveChanges();
+
+                _context.UserRoles.Add(new UserRole(_tenantId, adminUser.Id, adminRole.Id));
+                _context.SaveChanges();
+            }
+
+            #endregion
+
+            #region SuperAdmin
+
+            var superAdminRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.SuperAdmin);
+            GrantPermissions(
+                superAdminRole,
+                PermissionNames.Pages_Dashboard
+            );
+
+            #endregion
+
+            #region AccountManager
+
+            var accountManagerRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.AccountManager);
+            GrantPermissions(
+                accountManagerRole,
+                PermissionNames.Pages_Dashboard
+            );
+
+            #endregion
+
+            #region Tutor
+
+            var tutorRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.Tutor);
+            GrantPermissions(
+                tutorRole,
+                PermissionNames.Pages_Dashboard
+            );
+
+            #endregion
+
+            #region Student
+
+            var studentRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.Student);
+            GrantPermissions(
+                studentRole,
+                PermissionNames.Pages_Student_Dashboard
+            );
+
+            #endregion
+
+            #region Applicant
+
+            var applicantRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.Applicant);
+            GrantPermissions(
+                applicantRole,
+                PermissionNames.Pages_Dashboard
+            );
+
+            #endregion
+        }
+
+        private Role CreateRoleIfNotExisting(string roleName)
+        {
+            var role = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == roleName);
+            if (role == null)
+            {
+                role = _context.Roles.Add(new Role(_tenantId, roleName, roleName) { IsStatic = true }).Entity;
+                _context.SaveChanges();
+            }
+            return role;
+        }
+
+        private void GrantPermissions(Role role, params string[] permissionNames)
         {
             var grantedAdminPermissions = _context.Permissions.IgnoreQueryFilters()
                 .OfType<RolePermissionSetting>()
@@ -54,65 +145,6 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                         RoleId = role.Id
                     })
                 );
-                _context.SaveChanges();
-            }
-        }
-
-        private void CreateRolesAndUsers()
-        {
-            // Admin role
-
-            var adminRole = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.Admin);
-            if (adminRole == null)
-            {
-                adminRole = _context.Roles.Add(new Role(_tenantId, StaticRoleNames.Tenants.Admin, StaticRoleNames.Tenants.Admin) { IsStatic = true }).Entity;
-                _context.SaveChanges();
-            }
-
-            // Student role
-
-            var studentRole = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.Student);
-            if (studentRole == null)
-            {
-                studentRole = _context.Roles.Add(new Role(_tenantId, StaticRoleNames.Tenants.Student, StaticRoleNames.Tenants.Student) { IsStatic = true }).Entity;
-                _context.SaveChanges();
-            }
-
-
-
-            // Grant admin specficic permissions to admin role
-
-            string[] adminPermissions = new string[] {
-                PermissionNames.Pages_Dashboard,
-                PermissionNames.Pages_Roles,
-                PermissionNames.Pages_Users,
-            };
-            GrantPermissions(adminRole, adminPermissions);
-
-            // Grant student specficic permissions to student role
-
-            string[] studentPermissions = new string[] {
-                PermissionNames.Pages_Student_Dashboard,
-            };
-            GrantPermissions(studentRole, studentPermissions);
-
-
-
-            // Admin user
-
-            var adminUser = _context.Users.IgnoreQueryFilters().FirstOrDefault(u => u.TenantId == _tenantId && u.UserName == AbpUserBase.AdminUserName);
-            if (adminUser == null)
-            {
-                adminUser = User.CreateTenantAdminUser(_tenantId, "admin@defaulttenant.com");
-                adminUser.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(adminUser, "123qwe");
-                adminUser.IsEmailConfirmed = true;
-                adminUser.IsActive = true;
-
-                _context.Users.Add(adminUser);
-                _context.SaveChanges();
-
-                // Assign Admin role to admin user
-                _context.UserRoles.Add(new UserRole(_tenantId, adminUser.Id, adminRole.Id));
                 _context.SaveChanges();
             }
         }

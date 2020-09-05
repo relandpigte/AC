@@ -37,6 +37,7 @@ export class RolesComponent extends PagedListingComponentBase<RoleDto> {
     private _modalService: BsModalService
   ) {
     super(injector);
+    this.sorting = 'name';
   }
 
   list(

@@ -15,7 +15,7 @@
       </div>
     </div>
   </div>
-  <div class="container-fluid">
+  <div class="container-fluid" *ngIf="permission.isGranted('Pages.Users')">
     <div class="row">
       <div class="col-12 col-lg-4 col-xl">
         <a href="#" [routerLink]="['/app/users']">
