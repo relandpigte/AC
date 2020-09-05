@@ -3473,6 +3473,7 @@ export class UserDto implements IUserDto {
     lastLoginTime: moment.Moment | undefined;
     creationTime: moment.Moment;
     roleNames: string[] | undefined;
+    roleDisplayNames: string[] | undefined;
     id: number;
 
     constructor(data?: IUserDto) {
@@ -3498,6 +3499,11 @@ export class UserDto implements IUserDto {
                 this.roleNames = [] as any;
                 for (let item of _data["roleNames"])
                     this.roleNames.push(item);
+            }
+            if (Array.isArray(_data["roleDisplayNames"])) {
+                this.roleDisplayNames = [] as any;
+                for (let item of _data["roleDisplayNames"])
+                    this.roleDisplayNames.push(item);
             }
             this.id = _data["id"];
         }
@@ -3525,6 +3531,11 @@ export class UserDto implements IUserDto {
             for (let item of this.roleNames)
                 data["roleNames"].push(item);
         }
+        if (Array.isArray(this.roleDisplayNames)) {
+            data["roleDisplayNames"] = [];
+            for (let item of this.roleDisplayNames)
+                data["roleDisplayNames"].push(item);
+        }
         data["id"] = this.id;
         return data; 
     }
@@ -3547,6 +3558,7 @@ export interface IUserDto {
     lastLoginTime: moment.Moment | undefined;
     creationTime: moment.Moment;
     roleNames: string[] | undefined;
+    roleDisplayNames: string[] | undefined;
     id: number;
 }
 

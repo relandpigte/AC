@@ -130,10 +130,11 @@ namespace Academically.Users
         {
             var roleIds = user.Roles.Select(x => x.RoleId).ToArray();
 
-            var roles = _roleManager.Roles.Where(r => roleIds.Contains(r.Id)).Select(r => r.NormalizedName);
+            var roles = _roleManager.Roles.Where(r => roleIds.Contains(r.Id)).ToList();
 
             var userDto = base.MapToEntityDto(user);
-            userDto.RoleNames = roles.ToArray();
+            userDto.RoleNames = roles.Select(e => e.NormalizedName).ToArray();
+            userDto.RoleDisplayNames = roles.Select(e => e.DisplayName).ToArray();
 
             return userDto;
         }
@@ -141,7 +142,10 @@ namespace Academically.Users
         protected override IQueryable<User> CreateFilteredQuery(PagedUserResultRequestDto input)
         {
             return Repository.GetAllIncluding(x => x.Roles)
-                .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.UserName.Contains(input.Keyword) || x.Name.Contains(input.Keyword) || x.EmailAddress.Contains(input.Keyword))
+                .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(input.Keyword)
+                    || x.Surname.Contains(input.Keyword)
+                    || x.EmailAddress.Contains(input.Keyword)
+                    || x.Id.ToString().Contains(input.Keyword))
                 .WhereIf(input.IsActive.HasValue, x => x.IsActive == input.IsActive);
         }
 
@@ -155,6 +159,27 @@ namespace Academically.Users
             }
 
             return user;
+        }
+
+        protected override IQueryable<User> ApplySorting(IQueryable<User> query, PagedUserResultRequestDto input)
+        {
+            if (input.Sorting.Contains("role"))
+            {
+                var roles = _roleManager.Roles;
+                var sortParts = input.Sorting.Split(" ");
+                var userQuery = query.Select(u => new
+                {
+                    User = u,
+                    Role = roles.Where(r => u.Roles.Any(ur => ur.RoleId == r.Id)).Select(r => r.DisplayName).FirstOrDefault()
+                });
+
+                if (sortParts.Length > 1 && sortParts[1] == "desc")
+                    return userQuery.OrderByDescending(s => s.Role).Select(s => s.User);
+                else
+                    return userQuery.OrderBy(s => s.Role).Select(s => s.User);
+            }
+
+            return base.ApplySorting(query, input);
         }
 
         protected virtual void CheckErrors(IdentityResult identityResult)

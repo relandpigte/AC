@@ -9,6 +9,8 @@ namespace Academically.Authorization.Users
     {
         public const string DefaultPassword = "123qwe";
 
+        public virtual DateTime? LastLoginTime { get; set; }
+
         public static string CreateRandomPassword()
         {
             return Guid.NewGuid().ToString("N").Truncate(16);

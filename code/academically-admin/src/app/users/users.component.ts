@@ -31,9 +31,11 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
   isActive: boolean;
   advancedFiltersVisible = false;
   headers: TableHeaderSortData[] = [
-    { title: 'UserName', sortColumn: 'username' },
-    { title: 'FullName', sortColumn: 'name' },
+    { title: 'AccountNumber', sortColumn: 'id' },
+    { title: 'Name', sortColumn: 'name' },
     { title: 'EmailAddress', sortColumn: 'emailAddress' },
+    { title: 'Roles', sortColumn: 'role' },
+    { title: 'LastLoginTime', sortColumn: 'lastLoginTime' },
     { title: 'IsActive', colspan: 2 },
   ];
 
@@ -44,6 +46,10 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
   ) {
     super(injector);
     this.sorting = 'username';
+  }
+
+  getRoleNames(user: UserDto): string {
+    return user.roleDisplayNames.join(', ');
   }
 
   onCreateClick(): void {

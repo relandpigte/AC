@@ -3,4 +3,5 @@
 	<include file="ddml/ddml.2020-08-24-01.initial-migration.xml"/>
 	<include file="ddml/ddml.2020-08-24-02.initial-data.xml"/>
 	<include file="ddml/ddml.2020-09-02-01.add-registrations-table.xml"/>
+	<include file="ddml/ddml.2020-09-04-01.add-lastloggedintime-column.xml"/>
 </databaseChangeLog>

@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="LastLoginTime">Last login time</text>
+    <text name="AccountNumber">Account number</text>
     <text name="ApplyFilter">Apply filter</text>
     <text name="ClearFilters">Clear filters</text>
     <text name="Filters">Filters</text>

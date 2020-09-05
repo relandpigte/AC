@@ -106,9 +106,11 @@
             <tbody class="list font-size-base">
               <tr
                 *ngFor="let user of users | paginate : { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }">
-                <td>{{ user.userName }}</td>
+                <td>{{ user.id }}</td>
                 <td>{{ user.fullName }}</td>
                 <td>{{ user.emailAddress }}</td>
+                <td>{{ getRoleNames(user) }}</td>
+                <td>{{ user.lastLoginTime | date: 'dd/MM/yyyy HH:mm' }}</td>
                 <td>
                   <div class="custom-control custom-checkbox ml-4">
                     <input type="checkbox" class="custom-control-input" disabled [checked]="user.isActive" />
