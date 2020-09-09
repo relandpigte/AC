@@ -47,7 +47,7 @@
     <text name="InvalidUserNameOrPassword">Invalid user name or password</text>
     <text name="ThereIsNoTenantDefinedWithName{0}">There is no tenant defined with name {0}</text>
     <text name="TenantIsNotActive">Tenant {0} is not active.</text>
-    <text name="UserIsNotActiveAndCanNotLogin">User {0} is not active and can not log in.</text>
+    <text name="UserIsNotActiveAndCanNotLogin">User {0} is not active and can not log in. Please contact our support {1}</text>
     <text name="UserEmailIsNotConfirmedAndCanNotLogin">Your email address is not confirmed. You can not login.</text>
     <text name="UserLockedOutMessage">The user account has been locked out. Please try again later.</text>
     <text name="PleaseEnterLoginInformation">Please enter login information</text>

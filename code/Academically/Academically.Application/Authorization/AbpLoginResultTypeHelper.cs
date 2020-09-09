@@ -1,16 +1,20 @@
 ﻿using System;
 using Abp;
 using Abp.Authorization;
+using Abp.Configuration;
 using Abp.Dependency;
 using Abp.UI;
+using Academically.Configuration;
 
 namespace Academically.Authorization
 {
     public class AbpLoginResultTypeHelper : AbpServiceBase, ITransientDependency
     {
-        public AbpLoginResultTypeHelper()
+        private string SupportEmail;
+        public AbpLoginResultTypeHelper(ISettingManager settingManager)
         {
             LocalizationSourceName = AcademicallyConsts.LocalizationSourceName;
+            SupportEmail = settingManager.GetSettingValue(AppSettingNames.Email_SupportEmail);
         }
 
         public Exception CreateExceptionForFailedLoginAttempt(AbpLoginResultType result, string usernameOrEmailAddress, string tenancyName)
@@ -27,7 +31,7 @@ namespace Academically.Authorization
                 case AbpLoginResultType.TenantIsNotActive:
                     return new UserFriendlyException(L("LoginFailed"), L("TenantIsNotActive", tenancyName));
                 case AbpLoginResultType.UserIsNotActive:
-                    return new UserFriendlyException(L("LoginFailed"), L("UserIsNotActiveAndCanNotLogin", usernameOrEmailAddress));
+                    return new UserFriendlyException(L("LoginFailed"), L("UserIsNotActiveAndCanNotLogin", usernameOrEmailAddress, SupportEmail));
                 case AbpLoginResultType.UserEmailIsNotConfirmed:
                     return new UserFriendlyException(L("LoginFailed"), L("UserEmailIsNotConfirmedAndCanNotLogin"));
                 case AbpLoginResultType.LockedOut:
