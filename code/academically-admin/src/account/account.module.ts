@@ -18,6 +18,7 @@ import { AccountFooterComponent } from './layout/account-footer.component';
 import { TenantChangeComponent } from './tenant/tenant-change.component';
 import { TenantChangeDialogComponent } from './tenant/tenant-change-dialog.component';
 import { CompleteRegistrationComponent } from './complete-registration/complete-registration.component';
+import { TermsAndConditionsComponent } from './terms-and-conditions/terms-and-conditions.component';
 
 @NgModule({
     imports: [
@@ -41,6 +42,7 @@ import { CompleteRegistrationComponent } from './complete-registration/complete-
         TenantChangeComponent,
         TenantChangeDialogComponent,
         CompleteRegistrationComponent,
+        TermsAndConditionsComponent,
     ],
     entryComponents: [
         // tenant
