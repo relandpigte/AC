@@ -556,7 +556,7 @@ export class RoleServiceProxy {
     /**
      * @return Success
      */
-    getAllPermissions(): Observable<PermissionDtoListResultDto> {
+    getAllPermissions(): Observable<GroupedPermissionDtoListResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Role/GetAllPermissions";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -575,14 +575,14 @@ export class RoleServiceProxy {
                 try {
                     return this.processGetAllPermissions(<any>response_);
                 } catch (e) {
-                    return <Observable<PermissionDtoListResultDto>><any>_observableThrow(e);
+                    return <Observable<GroupedPermissionDtoListResultDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<PermissionDtoListResultDto>><any>_observableThrow(response_);
+                return <Observable<GroupedPermissionDtoListResultDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAllPermissions(response: HttpResponseBase): Observable<PermissionDtoListResultDto> {
+    protected processGetAllPermissions(response: HttpResponseBase): Observable<GroupedPermissionDtoListResultDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -593,7 +593,7 @@ export class RoleServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PermissionDtoListResultDto.fromJS(resultData200);
+            result200 = GroupedPermissionDtoListResultDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -601,7 +601,7 @@ export class RoleServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<PermissionDtoListResultDto>(<any>null);
+        return _observableOf<GroupedPermissionDtoListResultDto>(<any>null);
     }
 
     /**
@@ -2398,171 +2398,6 @@ export interface IRoleListDtoListResultDto {
     items: RoleListDto[] | undefined;
 }
 
-export class PermissionDto implements IPermissionDto {
-    name: string | undefined;
-    displayName: string | undefined;
-    description: string | undefined;
-    id: number;
-
-    constructor(data?: IPermissionDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.displayName = _data["displayName"];
-            this.description = _data["description"];
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): PermissionDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new PermissionDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["displayName"] = this.displayName;
-        data["description"] = this.description;
-        data["id"] = this.id;
-        return data; 
-    }
-
-    clone(): PermissionDto {
-        const json = this.toJSON();
-        let result = new PermissionDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IPermissionDto {
-    name: string | undefined;
-    displayName: string | undefined;
-    description: string | undefined;
-    id: number;
-}
-
-export class PermissionDtoListResultDto implements IPermissionDtoListResultDto {
-    items: PermissionDto[] | undefined;
-
-    constructor(data?: IPermissionDtoListResultDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items.push(PermissionDto.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): PermissionDtoListResultDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new PermissionDtoListResultDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
-        return data; 
-    }
-
-    clone(): PermissionDtoListResultDto {
-        const json = this.toJSON();
-        let result = new PermissionDtoListResultDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IPermissionDtoListResultDto {
-    items: PermissionDto[] | undefined;
-}
-
-export class RoleEditDto implements IRoleEditDto {
-    name: string;
-    displayName: string;
-    description: string | undefined;
-    isStatic: boolean;
-    id: number;
-
-    constructor(data?: IRoleEditDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.displayName = _data["displayName"];
-            this.description = _data["description"];
-            this.isStatic = _data["isStatic"];
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): RoleEditDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new RoleEditDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["displayName"] = this.displayName;
-        data["description"] = this.description;
-        data["isStatic"] = this.isStatic;
-        data["id"] = this.id;
-        return data; 
-    }
-
-    clone(): RoleEditDto {
-        const json = this.toJSON();
-        let result = new RoleEditDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IRoleEditDto {
-    name: string;
-    displayName: string;
-    description: string | undefined;
-    isStatic: boolean;
-    id: number;
-}
-
 export class GroupedPermissionDto implements IGroupedPermissionDto {
     name: string | undefined;
     displayName: string | undefined;
@@ -2631,6 +2466,116 @@ export interface IGroupedPermissionDto {
     description: string | undefined;
     parent: GroupedPermissionDto;
     children: GroupedPermissionDto[] | undefined;
+    id: number;
+}
+
+export class GroupedPermissionDtoListResultDto implements IGroupedPermissionDtoListResultDto {
+    items: GroupedPermissionDto[] | undefined;
+
+    constructor(data?: IGroupedPermissionDtoListResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(GroupedPermissionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GroupedPermissionDtoListResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GroupedPermissionDtoListResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): GroupedPermissionDtoListResultDto {
+        const json = this.toJSON();
+        let result = new GroupedPermissionDtoListResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGroupedPermissionDtoListResultDto {
+    items: GroupedPermissionDto[] | undefined;
+}
+
+export class RoleEditDto implements IRoleEditDto {
+    name: string;
+    displayName: string;
+    description: string | undefined;
+    isStatic: boolean;
+    id: number;
+
+    constructor(data?: IRoleEditDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.displayName = _data["displayName"];
+            this.description = _data["description"];
+            this.isStatic = _data["isStatic"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): RoleEditDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RoleEditDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["displayName"] = this.displayName;
+        data["description"] = this.description;
+        data["isStatic"] = this.isStatic;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): RoleEditDto {
+        const json = this.toJSON();
+        let result = new RoleEditDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IRoleEditDto {
+    name: string;
+    displayName: string;
+    description: string | undefined;
+    isStatic: boolean;
     id: number;
 }
 

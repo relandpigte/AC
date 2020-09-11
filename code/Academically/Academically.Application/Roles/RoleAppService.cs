@@ -100,12 +100,12 @@ namespace Academically.Roles
             CheckErrors(await _roleManager.DeleteAsync(role));
         }
 
-        public Task<ListResultDto<PermissionDto>> GetAllPermissions()
+        public Task<ListResultDto<GroupedPermissionDto>> GetAllPermissions()
         {
             var permissions = PermissionManager.GetAllPermissions();
 
-            return Task.FromResult(new ListResultDto<PermissionDto>(
-                ObjectMapper.Map<List<PermissionDto>>(permissions).OrderBy(p => p.DisplayName).ToList()
+            return Task.FromResult(new ListResultDto<GroupedPermissionDto>(
+                ObjectMapper.Map<List<GroupedPermissionDto>>(permissions).OrderBy(p => p.DisplayName).Where(e => e.Parent == null).ToList()
             ));
         }
 
