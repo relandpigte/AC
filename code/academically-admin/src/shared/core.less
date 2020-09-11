@@ -71,5 +71,10 @@ app-root {
 
 .table-action {
   text-align: right;
-  width: 1%;
+  width     : 1%;
+}
+
+.custom-control-input:disabled~.custom-control-label::before,
+.custom-control-input[disabled]~.custom-control-label::before {
+  background-color: #e3ebf6;
 }

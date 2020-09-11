@@ -41,7 +41,6 @@ import { SidebarMenuComponent } from './layout/sidebar-menu.component';
 // directives
 import { Select2Directive } from '@shared/directives/select2.directive';
 // components
-import { StudentDashboardComponent } from './student/student-dashboard/student-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +74,6 @@ import { StudentDashboardComponent } from './student/student-dashboard/student-d
     // directives
     Select2Directive,
     // components
-    StudentDashboardComponent,
   ],
   imports: [
     CommonModule,

@@ -9,7 +9,8 @@
               <h1 class="header-title">{{ "Users" | localize }}</h1>
             </div>
             <div class="col-auto">
-              <a href="javascript:;" class="btn btn-primary ml-2" (click)="onCreateClick()">
+              <a href="javascript:;" class="btn btn-primary ml-2" (click)="onCreateClick()"
+                *ngIf="permission.isGranted('Pages.Users.Create')">
                 {{ "Create" | localize }}
               </a>
             </div>
@@ -123,12 +124,18 @@
                       <i class="fe fe-more-vertical"></i>
                     </a>
                     <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
-                      <a href="javascript:;" class="dropdown-item" (click)="onEditClick(user)"><i
-                          class="fe fe-edit"></i> {{ 'Edit' | localize }}</a>
-                      <a href="javascript:;" class="dropdown-item" (click)="onDeleteClick(user)"><i
-                          class="fe fe-trash"></i> {{ 'Delete' | localize }}</a>
-                      <a href="javascript:;" class="dropdown-item" (click)="onResetPasswordClick(user)"><i
-                          class="fe fe-lock"></i> {{ 'ResetPassword' | localize }}</a>
+                      <a href="javascript:;" class="dropdown-item" (click)="onEditClick(user)"
+                        *ngIf="permission.isGranted('Pages.Users.Update')">
+                        <i class="fe fe-edit"></i> {{ 'Edit' | localize }}
+                      </a>
+                      <a href="javascript:;" class="dropdown-item" (click)="onDeleteClick(user)"
+                        *ngIf="permission.isGranted('Pages.Users.Delete')">
+                        <i class="fe fe-trash"></i> {{ 'Delete' | localize }}
+                      </a>
+                      <a href="javascript:;" class="dropdown-item" (click)="onResetPasswordClick(user)"
+                        *ngIf="permission.isGranted('Pages.Users.ResetPassword')">
+                        <i class="fe fe-lock"></i> {{ 'ResetPassword' | localize }}
+                      </a>
                     </div>
                   </div>
                 </td>

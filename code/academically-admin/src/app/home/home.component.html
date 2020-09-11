@@ -15,9 +15,11 @@
       </div>
     </div>
   </div>
-  <div class="container-fluid" *ngIf="permission.isGranted('Pages.Users')">
-    <div class="row">
-      <div class="col-12 col-lg-4 col-xl">
+  <div class="container-fluid">
+
+    <div class="row" *ngIf="permission.isGranted('Pages.Dashboard.Navigations')">
+
+      <div class="col-12 col-lg-4 col-xl" *ngIf="permission.isGranted('Pages.Dashboard.Navigations.UserManagement')">
         <a href="#" [routerLink]="['/app/users']">
           <div class="card">
             <div class="card-body">
@@ -35,7 +37,8 @@
           </div>
         </a>
       </div>
-      <div class="col-12 col-lg-4 col-xl">
+
+      <div class="col-12 col-lg-4 col-xl" *ngIf="permission.isGranted('Pages.Dashboard.Navigations.Financials')">
         <div class="card">
           <div class="card-body">
             <div class="row align-items-center">
@@ -51,7 +54,8 @@
           </div>
         </div>
       </div>
-      <div class="col-12 col-lg-4 col-xl">
+
+      <div class="col-12 col-lg-4 col-xl" *ngIf="permission.isGranted('Pages.Dashboard.Navigations.Settings')">
         <div class="card">
           <div class="card-body">
             <div class="row align-items-center">
@@ -67,6 +71,466 @@
           </div>
         </div>
       </div>
+
     </div>
+
+    <div class="row" *ngIf="permission.isGranted('Pages.Dashboard.Widgets')">
+
+      <div class="col-12 col-xl-8">
+
+        <div class="card" *ngIf="permission.isGranted('Pages.Dashboard.Widgets.RecentProjects')">
+          <div class="card-header">
+            <h4 class="card-header-title">Recent Projects</h4>
+            <a href="javascript:;" class="btn btn-sm btn-white">Export</a>
+          </div>
+          <div class="table-responsive mb-0">
+            <table class="table table-sm table-nowrap card-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Schedule</th>
+                  <th>Hours Billed</th>
+                  <th>Completion</th>
+                  <th>Effective Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>MedFx</td>
+                  <td><span class="text-success">●</span> On Schedule</td>
+                  <td>271</td>
+                  <td>
+                    <div class="row align-items-center no-gutters">
+                      <div class="col-auto"><span class="mr-2">55%</span>
+                      </div>
+                      <div class="col">
+                        <div class="progress progress-sm">
+                          <div class="progress-bar bg-secondary" role="progressbar" style="width: 55%"
+                            aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>$55.25%</td>
+                </tr>
+                <tr>
+                  <td>OmniPixel</td>
+                  <td><span class="text-warning">●</span> Delayed</td>
+                  <td>44</td>
+                  <td>
+                    <div class="row align-items-center no-gutters">
+                      <div class="col-auto"><span class="mr-2">25%</span></div>
+                      <div class="col">
+                        <div class="progress progress-sm">
+                          <div class="progress-bar bg-secondary" role="progressbar" style="width: 25%"
+                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>$122.52%</td>
+                </tr>
+                <tr>
+                  <td>CaseMix</td>
+                  <td><span class="text-success">●</span> On Schedule</td>
+                  <td>271</td>
+                  <td>
+                    <div class="row align-items-center no-gutters">
+                      <div class="col-auto"><span class="mr-2">55%</span>
+                      </div>
+                      <div class="col">
+                        <div class="progress progress-sm">
+                          <div class="progress-bar bg-secondary" role="progressbar" style="width: 55%"
+                            aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>$55.25%</td>
+                </tr>
+                <tr>
+                  <td>AgeUK</td>
+                  <td><span class="text-warning">●</span> Delayed</td>
+                  <td>44</td>
+                  <td>
+                    <div class="row align-items-center no-gutters">
+                      <div class="col-auto"><span class="mr-2">25%</span></div>
+                      <div class="col">
+                        <div class="progress progress-sm">
+                          <div class="progress-bar bg-secondary" role="progressbar" style="width: 25%"
+                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>$122.52%</td>
+                </tr>
+                <tr>
+                  <td>HashtagQuiz</td>
+                  <td><span class="text-success">●</span> On Schedule</td>
+                  <td>271</td>
+                  <td>
+                    <div class="row align-items-center no-gutters">
+                      <div class="col-auto"><span class="mr-2">55%</span>
+                      </div>
+                      <div class="col">
+                        <div class="progress progress-sm">
+                          <div class="progress-bar bg-secondary" role="progressbar" style="width: 55%"
+                            aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>$55.25%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card chat-box" *ngIf="permission.isGranted('Pages.Dashboard.Widgets.MessageHub')">
+          <div class="card-header">
+            <h4 class="card-header-title">Message Hub</h4>
+            <a href="javascript:;" class="btn btn-sm btn-white">View More</a>
+          </div>
+
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="list-group list-group-flush my-n3">
+                  <div class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+                        <a href="javascript:;" class="avatar avatar-lg">
+                          <img src="assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..."
+                            class="avatar-img rounded-circle">
+                        </a>
+                      </div>
+                      <div class="col ml-n2">
+                        <h4 class="mb-1">
+                          <a href="javascript:;">Ab Hadley</a>
+                        </h4>
+                        <p class="card-text small text-muted mb-1">
+                          Working from home
+                        </p>
+                        <p class="card-text small">
+                          <span class="text-success">●</span> Online
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="list-group-item active-chat">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+                        <a href="javascript:;" class="avatar avatar-lg">
+                          <img src="assets/themes/dashkit/img/avatars/profiles/avatar-4.jpg" alt="..."
+                            class="avatar-img rounded-circle">
+                        </a>
+                      </div>
+                      <div class="col ml-n2">
+                        <h4 class="mb-1">
+                          <a href="javascript:;">Daniela Dewitt</a>
+                        </h4>
+                        <p class="card-text small text-muted mb-1">
+                          In the office
+                        </p>
+                        <p class="card-text small">
+                          <span class="text-warning">●</span> Busy
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+                        <a href="javascript:;" class="avatar avatar-lg">
+                          <img src="assets/themes/dashkit/img/avatars/profiles/avatar-5.jpg" alt="..."
+                            class="avatar-img rounded-circle">
+                        </a>
+                      </div>
+                      <div class="col ml-n2">
+                        <h4 class="mb-1">
+                          <a href="javascript:;">Miyah Myles</a>
+                        </h4>
+                        <p class="card-text small text-muted mb-1">
+                          Away
+                        </p>
+                        <p class="card-text small">
+                          <span class="text-danger">●</span> Offline
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-8 conversations">
+                <div class="messages">
+                  <div class="comment mb-3">
+                    <div class="row">
+                      <div class="col-auto">
+                        <a class="avatar" href="javascript:;">
+                          <img src="assets/themes/dashkit/img/avatars/profiles/avatar-4.jpg" alt="..."
+                            class="avatar-img rounded-circle">
+                        </a>
+                      </div>
+                      <div class="col ml-n2">
+                        <div class="comment-body">
+                          <div class="row">
+                            <div class="col">
+                              <h5 class="comment-title">Daniela Dewitt</h5>
+                            </div>
+                            <div class="col-auto">
+                              <time class="comment-time">11:12 AM</time>
+                            </div>
+                          </div>
+                          <p class="comment-text">I love this Joemelle! Let's add to our wiki tomorrow!</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="comment mb-3">
+                    <div class="row">
+                      <div class="col-auto">
+                        <a class="avatar" href="javascript:;">
+                          <img src="assets/themes/dashkit/img/avatars/profiles/avatar-4.jpg" alt="..."
+                            class="avatar-img rounded-circle">
+                        </a>
+                      </div>
+                      <div class="col ml-n2">
+                        <div class="comment-body">
+                          <div class="row">
+                            <div class="col">
+                              <h5 class="comment-title">Daniela Dewitt</h5>
+                            </div>
+                            <div class="col-auto">
+                              <time class="comment-time">11:14 AM</time>
+                            </div>
+                          </div>
+                          <p class="comment-text">I'm onboard for sure. Sign me up to prototype anytime.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="reply">
+                  <hr />
+                  <div class="row">
+                    <div class="col-auto">
+                      <div class="avatar avatar-sm">
+                        <img src="assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" alt="..."
+                          class="avatar-img rounded-circle">
+                      </div>
+                    </div>
+                    <div class="col ml-n2">
+                      <form class="mt-1">
+                        <label class="sr-only">Reply to this conversation...</label>
+                        <textarea class="form-control form-control-flush" data-toggle="autosize" rows="1"
+                          placeholder="Reply to this conversation"
+                          style="overflow: hidden; overflow-wrap: break-word; height: 40px;"></textarea>
+                      </form>
+                    </div>
+                    <div class="col-auto align-self-end">
+                      <div class="text-muted mb-2">
+                        <a class="text-reset mr-3" href="javascript:;" data-toggle="tooltip" title=""
+                          data-original-title="Send">
+                          <i class="fe fe-send"></i>
+                        </a>
+                        <a class="text-reset mr-3" href="javascript:;" data-toggle="tooltip" title=""
+                          data-original-title="Add photo">
+                          <i class="fe fe-camera"></i>
+                        </a>
+                        <a class="text-reset mr-3" href="javascript:;" data-toggle="tooltip" title=""
+                          data-original-title="Attach file">
+                          <i class="fe fe-paperclip"></i>
+                        </a>
+                        <a class="text-reset" href="javascript:;" data-toggle="tooltip" title=""
+                          data-original-title="Record audio">
+                          <i class="fe fe-mic"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-12 col-xl-4">
+
+        <div class="card" *ngIf="permission.isGranted('Pages.Dashboard.Widgets.ProfileSummary')">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <a href="javascript:;" class="avatar avatar-lg avatar-4by3">
+                  <img src="assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" alt="..."
+                    class="avatar-img rounded">
+                </a>
+              </div>
+              <div class="col ml-n2">
+                <h4 class="mb-1">
+                  <a href="javascript:;">Joemelle Delima</a>
+                </h4>
+                <p class="small text-muted mb-1">
+                  <time datetime="2018-06-21">Tutor Profile ● Active</time>
+                </p>
+                <div class="row align-items-center no-gutters">
+                  <div class="col-auto">
+                    <div class="small mr-2">95%</div>
+                  </div>
+                  <div class="col">
+                    <div class="progress progress-sm">
+                      <div class="progress-bar" role="progressbar" style="width: 95%" aria-valuenow="95"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" *ngIf="permission.isGranted('Pages.Dashboard.Widgets.Polls')">
+          <div class="card-header">
+            <h4 class="card-header-title">
+              Pools
+            </h4>
+          </div>
+          <div class="card-body">
+            <div class="list-group list-group-flush my-n3">
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <h5 class="mb-0 text-normal">What is your highest level of education?</h5>
+                    <form class="poll-form">
+                      <div class="form-group">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="pollRadio" checked>
+                          <label class="form-check-label">Primary School</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="pollRadio">
+                          <label class="form-check-label">High School</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="pollRadio">
+                          <label class="form-check-label">Diploma Certificate</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="pollRadio">
+                          <label class="form-check-label">Bachelors Degree </label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="pollRadio">
+                          <label class="form-check-label">Masters Degree</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="pollRadio">
+                          <label class="form-check-label">Doctorate Degree (PhD)</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="pollRadio">
+                          <label class="form-check-label">Other</label>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="card" *ngIf="permission.isGranted('Pages.Dashboard.Widgets.Verifications')">
+          <div class="card-header">
+            <h4 class="card-header-title">
+              Verifications
+            </h4>
+          </div>
+          <div class="card-body">
+            <div class="list-group list-group-flush my-n3">
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <i class="fa fa-user-plus"></i>
+                    <h5 class="mb-0 text-normal">Preferred Freelancer</h5>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <i class="fa fa-user"></i>
+                    <h5 class="mb-0 text-normal">Identity Verified</h5>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <i class="fa fa-money-bill-alt"></i>
+                    <h5 class="mb-0 text-normal">Payment Verified</h5>
+                  </div>
+                  <div class="col-auto">
+                    <span class="text-muted"><i class="fe fe-check"></i></span>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <i class="fa fa-phone"></i>
+                    <h5 class="mb-0 text-normal">Phone Verified</h5>
+                  </div>
+                  <div class="col-auto">
+                    <span class="text-muted"><a href="javascript:;" class="small">Verify</a></span>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <i class="fa fa-envelope"></i>
+                    <h5 class="mb-0 text-normal">Email Verified</h5>
+                  </div>
+                  <div class="col-auto">
+                    <span class="text-muted"><i class="fe fe-check"></i></span>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <i class="fab fa-facebook-square"></i>
+                    <h5 class="mb-0 text-normal">Facebook Connected</h5>
+                  </div>
+                  <div class="col-auto">
+                    <span class="text-muted"><i class="fe fe-check"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
-</div>

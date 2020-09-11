@@ -8,10 +8,34 @@ namespace Academically.Authorization
     {
         public override void SetPermissions(IPermissionDefinitionContext context)
         {
-            context.CreatePermission(PermissionNames.Pages_Dashboard, L("Dashboard"));
-            context.CreatePermission(PermissionNames.Pages_Student_Dashboard, L("StudentDashboard"));
-            context.CreatePermission(PermissionNames.Pages_Users, L("Users"));
-            context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
+            var dashboardPermission = context.CreatePermission(PermissionNames.Pages_Dashboard, L("Dashboard"));
+
+            var dashboardNavigationPermission = dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Navigations, L("Navigations"));
+            dashboardNavigationPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Navigations_UserManagement, L("UserManagement"));
+            dashboardNavigationPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Navigations_Financials, L("Financials"));
+            dashboardNavigationPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Navigations_Settings, L("Settings"));
+
+            var dashboardWidgetPermission = dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets, L("Widgets"));
+            dashboardWidgetPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets_ProfileSummary, L("ProfileSummary"));
+            dashboardWidgetPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets_Polls, L("Polls"));
+            dashboardWidgetPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets_Verifications, L("Verifications"));
+            dashboardWidgetPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets_RecentProjects, L("RecentProjects"));
+            dashboardWidgetPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets_MessageHub, L("MessageHub"));
+
+
+            var userPermission = context.CreatePermission(PermissionNames.Pages_Users, L("Users"));
+            userPermission.CreateChildPermission(PermissionNames.Pages_Users_Create, L("CreateUser"));
+            userPermission.CreateChildPermission(PermissionNames.Pages_Users_Update, L("UpdateUser"));
+            userPermission.CreateChildPermission(PermissionNames.Pages_Users_Delete, L("DeleteUser"));
+            userPermission.CreateChildPermission(PermissionNames.Pages_Users_ResetPassword, L("ResetPassword"));
+
+
+            var rolePermission = context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
+            rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Create, L("CreateRole"));
+            rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Update, L("UpdateRole"));
+            rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Delete, L("DeleteRole"));
+
+
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
         }
 

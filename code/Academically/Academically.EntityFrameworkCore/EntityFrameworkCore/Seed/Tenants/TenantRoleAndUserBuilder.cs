@@ -30,14 +30,48 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
 
         private void CreateRolesAndUsers()
         {
+            #region SuperAdmin
+
+            var superAdminRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.SuperAdmin);
+            GrantPermissions(
+                superAdminRole,
+                PermissionNames.Pages_Dashboard,
+                PermissionNames.Pages_Dashboard_Navigations,
+                PermissionNames.Pages_Dashboard_Navigations_UserManagement,
+                PermissionNames.Pages_Dashboard_Navigations_Financials,
+                PermissionNames.Pages_Dashboard_Navigations_Settings,
+                PermissionNames.Pages_Users,
+                PermissionNames.Pages_Users_Create,
+                PermissionNames.Pages_Users_Update,
+                PermissionNames.Pages_Users_Delete,
+                PermissionNames.Pages_Users_ResetPassword,
+                PermissionNames.Pages_Roles,
+                PermissionNames.Pages_Roles_Create,
+                PermissionNames.Pages_Roles_Update,
+                PermissionNames.Pages_Roles_Delete
+            );
+
+            #endregion
+
             #region Admin
 
             var adminRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.Admin);
             GrantPermissions(
                 adminRole,
                 PermissionNames.Pages_Dashboard,
+                PermissionNames.Pages_Dashboard_Navigations,
+                PermissionNames.Pages_Dashboard_Navigations_UserManagement,
+                PermissionNames.Pages_Dashboard_Navigations_Financials,
+                PermissionNames.Pages_Dashboard_Navigations_Settings,
+                PermissionNames.Pages_Users,
+                PermissionNames.Pages_Users_Create,
+                PermissionNames.Pages_Users_Update,
+                PermissionNames.Pages_Users_Delete,
+                PermissionNames.Pages_Users_ResetPassword,
                 PermissionNames.Pages_Roles,
-                PermissionNames.Pages_Users
+                PermissionNames.Pages_Roles_Create,
+                PermissionNames.Pages_Roles_Update,
+                PermissionNames.Pages_Roles_Delete
             );
 
             var adminUser = _context.Users.IgnoreQueryFilters().FirstOrDefault(u => u.TenantId == _tenantId && u.UserName == AbpUserBase.AdminUserName);
@@ -57,22 +91,16 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
 
             #endregion
 
-            #region SuperAdmin
-
-            var superAdminRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.SuperAdmin);
-            GrantPermissions(
-                superAdminRole,
-                PermissionNames.Pages_Dashboard
-            );
-
-            #endregion
-
             #region AccountManager
 
             var accountManagerRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.AccountManager);
             GrantPermissions(
                 accountManagerRole,
-                PermissionNames.Pages_Dashboard
+                PermissionNames.Pages_Dashboard,
+                PermissionNames.Pages_Users,
+                PermissionNames.Pages_Users_Create,
+                PermissionNames.Pages_Users_Update,
+                PermissionNames.Pages_Users_Delete
             );
 
             #endregion
@@ -92,7 +120,13 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
             var studentRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.Student);
             GrantPermissions(
                 studentRole,
-                PermissionNames.Pages_Student_Dashboard
+                PermissionNames.Pages_Dashboard,
+                PermissionNames.Pages_Dashboard_Widgets,
+                PermissionNames.Pages_Dashboard_Widgets_ProfileSummary,
+                PermissionNames.Pages_Dashboard_Widgets_Polls,
+                PermissionNames.Pages_Dashboard_Widgets_Verifications,
+                PermissionNames.Pages_Dashboard_Widgets_RecentProjects,
+                PermissionNames.Pages_Dashboard_Widgets_MessageHub
             );
 
             #endregion

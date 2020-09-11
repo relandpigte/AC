@@ -2563,12 +2563,15 @@ export interface IRoleEditDto {
     id: number;
 }
 
-export class FlatPermissionDto implements IFlatPermissionDto {
+export class GroupedPermissionDto implements IGroupedPermissionDto {
     name: string | undefined;
     displayName: string | undefined;
     description: string | undefined;
+    parent: GroupedPermissionDto;
+    children: GroupedPermissionDto[] | undefined;
+    id: number;
 
-    constructor(data?: IFlatPermissionDto) {
+    constructor(data?: IGroupedPermissionDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2582,12 +2585,19 @@ export class FlatPermissionDto implements IFlatPermissionDto {
             this.name = _data["name"];
             this.displayName = _data["displayName"];
             this.description = _data["description"];
+            this.parent = _data["parent"] ? GroupedPermissionDto.fromJS(_data["parent"]) : <any>undefined;
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(GroupedPermissionDto.fromJS(item));
+            }
+            this.id = _data["id"];
         }
     }
 
-    static fromJS(data: any): FlatPermissionDto {
+    static fromJS(data: any): GroupedPermissionDto {
         data = typeof data === 'object' ? data : {};
-        let result = new FlatPermissionDto();
+        let result = new GroupedPermissionDto();
         result.init(data);
         return result;
     }
@@ -2597,26 +2607,36 @@ export class FlatPermissionDto implements IFlatPermissionDto {
         data["name"] = this.name;
         data["displayName"] = this.displayName;
         data["description"] = this.description;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
+        data["id"] = this.id;
         return data; 
     }
 
-    clone(): FlatPermissionDto {
+    clone(): GroupedPermissionDto {
         const json = this.toJSON();
-        let result = new FlatPermissionDto();
+        let result = new GroupedPermissionDto();
         result.init(json);
         return result;
     }
 }
 
-export interface IFlatPermissionDto {
+export interface IGroupedPermissionDto {
     name: string | undefined;
     displayName: string | undefined;
     description: string | undefined;
+    parent: GroupedPermissionDto;
+    children: GroupedPermissionDto[] | undefined;
+    id: number;
 }
 
 export class GetRoleForEditOutput implements IGetRoleForEditOutput {
     role: RoleEditDto;
-    permissions: FlatPermissionDto[] | undefined;
+    permissions: GroupedPermissionDto[] | undefined;
     grantedPermissionNames: string[] | undefined;
 
     constructor(data?: IGetRoleForEditOutput) {
@@ -2634,7 +2654,7 @@ export class GetRoleForEditOutput implements IGetRoleForEditOutput {
             if (Array.isArray(_data["permissions"])) {
                 this.permissions = [] as any;
                 for (let item of _data["permissions"])
-                    this.permissions.push(FlatPermissionDto.fromJS(item));
+                    this.permissions.push(GroupedPermissionDto.fromJS(item));
             }
             if (Array.isArray(_data["grantedPermissionNames"])) {
                 this.grantedPermissionNames = [] as any;
@@ -2677,7 +2697,7 @@ export class GetRoleForEditOutput implements IGetRoleForEditOutput {
 
 export interface IGetRoleForEditOutput {
     role: RoleEditDto;
-    permissions: FlatPermissionDto[] | undefined;
+    permissions: GroupedPermissionDto[] | undefined;
     grantedPermissionNames: string[] | undefined;
 }
 

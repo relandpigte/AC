@@ -15,7 +15,7 @@ import {
   RoleDto,
   PermissionDto,
   RoleEditDto,
-  FlatPermissionDto
+  GroupedPermissionDto
 } from '@shared/service-proxies/service-proxies';
 
 @Component({
@@ -26,7 +26,7 @@ export class EditRoleDialogComponent extends AppComponentBase
   saving = false;
   id: number;
   role = new RoleEditDto();
-  permissions: FlatPermissionDto[];
+  permissions: GroupedPermissionDto[];
   grantedPermissionNames: string[];
   checkedPermissionsMap: { [key: string]: boolean } = {};
 

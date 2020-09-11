@@ -1,6 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="MessageHub">Message Hub</text>
+    <text name="RecentProjects">Recent Projects</text>
+    <text name="Verifications">Verifications</text>
+    <text name="Polls">Polls</text>
+    <text name="ProfileSummary">Profile Summary</text>
+    <text name="Widgets">Widgets</text>
+    <text name="Financials">Financials</text>
+    <text name="UserManagement">User Management</text>
+    <text name="Navigations">Navigations</text>
+    <text name="DeleteRole">Delete role</text>
+    <text name="UpdateRole">Update role</text>
+    <text name="CreateRole">Create role</text>
+    <text name="DeleteUser">Delete user</text>
+    <text name="UpdateUser">Update user</text>
+    <text name="CreateUser">Create user</text>
     <text name="LastLoginTime">Last login time</text>
     <text name="AccountNumber">Account number</text>
     <text name="ApplyFilter">Apply filter</text>
