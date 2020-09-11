@@ -13,7 +13,8 @@
         public const string Pages_Dashboard_Widgets_ProfileSummary = "Pages.Dashboard.Widgets.ProfileSummary";
         public const string Pages_Dashboard_Widgets_Polls = "Pages.Dashboard.Widgets.Polls";
         public const string Pages_Dashboard_Widgets_Verifications = "Pages.Dashboard.Widgets.Verifications";
-        public const string Pages_Dashboard_Widgets_RecentProjects = "Pages.Dashboard.Widgets.RecentProjects";
+        public const string Pages_Dashboard_Widgets_RecentProjectsReceivingHelp = "Pages.Dashboard.Widgets.RecentProjectsReceveivingHelp";
+        public const string Pages_Dashboard_Widgets_RecentProjectsProvidingHelp = "Pages.Dashboard.Widgets.RecentProjectsProvidingHelp";
         public const string Pages_Dashboard_Widgets_MessageHub = "Pages.Dashboard.Widgets.MessageHub";
 
 

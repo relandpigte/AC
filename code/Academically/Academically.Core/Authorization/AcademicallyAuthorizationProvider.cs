@@ -19,7 +19,8 @@ namespace Academically.Authorization
             dashboardWidgetPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets_ProfileSummary, L("ProfileSummary"));
             dashboardWidgetPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets_Polls, L("Polls"));
             dashboardWidgetPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets_Verifications, L("Verifications"));
-            dashboardWidgetPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets_RecentProjects, L("RecentProjects"));
+            dashboardWidgetPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets_RecentProjectsReceivingHelp, L("RecentProjectsReceivingHelp"));
+            dashboardWidgetPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets_RecentProjectsProvidingHelp, L("RecentProjectsProvidingHelp"));
             dashboardWidgetPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets_MessageHub, L("MessageHub"));
 
 

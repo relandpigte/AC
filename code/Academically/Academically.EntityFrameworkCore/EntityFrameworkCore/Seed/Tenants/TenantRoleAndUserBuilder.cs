@@ -110,7 +110,14 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
             var tutorRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.Tutor);
             GrantPermissions(
                 tutorRole,
-                PermissionNames.Pages_Dashboard
+                PermissionNames.Pages_Dashboard,
+                PermissionNames.Pages_Dashboard_Widgets,
+                PermissionNames.Pages_Dashboard_Widgets_ProfileSummary,
+                PermissionNames.Pages_Dashboard_Widgets_Polls,
+                PermissionNames.Pages_Dashboard_Widgets_Verifications,
+                PermissionNames.Pages_Dashboard_Widgets_RecentProjectsProvidingHelp,
+                PermissionNames.Pages_Dashboard_Widgets_RecentProjectsReceivingHelp,
+                PermissionNames.Pages_Dashboard_Widgets_MessageHub
             );
 
             #endregion
@@ -125,7 +132,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Widgets_ProfileSummary,
                 PermissionNames.Pages_Dashboard_Widgets_Polls,
                 PermissionNames.Pages_Dashboard_Widgets_Verifications,
-                PermissionNames.Pages_Dashboard_Widgets_RecentProjects,
+                PermissionNames.Pages_Dashboard_Widgets_RecentProjectsReceivingHelp,
                 PermissionNames.Pages_Dashboard_Widgets_MessageHub
             );
 

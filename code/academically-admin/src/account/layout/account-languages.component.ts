@@ -26,7 +26,6 @@ export class AccountLanguagesComponent extends AppComponentBase
       this.localization.languages,
       (l) => !l.isDisabled
     );
-    console.log(this.localization.languages);
     this.currentLanguage = this.localization.currentLanguage;
   }
 
