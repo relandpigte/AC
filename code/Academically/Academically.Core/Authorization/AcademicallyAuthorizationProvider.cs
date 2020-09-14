@@ -37,6 +37,9 @@ namespace Academically.Authorization
             rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Delete, L("DeleteRole"));
 
 
+            var profilePermission = context.CreatePermission(PermissionNames.Pages_Profile, L("Profile"));
+
+
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
         }
 

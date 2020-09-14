@@ -117,7 +117,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Widgets_Verifications,
                 PermissionNames.Pages_Dashboard_Widgets_RecentProjectsProvidingHelp,
                 PermissionNames.Pages_Dashboard_Widgets_RecentProjectsReceivingHelp,
-                PermissionNames.Pages_Dashboard_Widgets_MessageHub
+                PermissionNames.Pages_Dashboard_Widgets_MessageHub,
+                PermissionNames.Pages_Profile
             );
 
             #endregion
@@ -133,7 +134,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Widgets_Polls,
                 PermissionNames.Pages_Dashboard_Widgets_Verifications,
                 PermissionNames.Pages_Dashboard_Widgets_RecentProjectsReceivingHelp,
-                PermissionNames.Pages_Dashboard_Widgets_MessageHub
+                PermissionNames.Pages_Dashboard_Widgets_MessageHub,
+                PermissionNames.Pages_Profile
             );
 
             #endregion
@@ -143,7 +145,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
             var applicantRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.Applicant);
             GrantPermissions(
                 applicantRole,
-                PermissionNames.Pages_Dashboard
+                PermissionNames.Pages_Dashboard,
+                PermissionNames.Pages_Profile
             );
 
             #endregion

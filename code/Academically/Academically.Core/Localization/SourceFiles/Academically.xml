@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="BecomeATutor">Become a Tutor</text>
+    <text name="PrivacyAndNotifications">Privacy &amp; Notifications</text>
+    <text name="Service">Service</text>
+    <text name="AreasOfStudy">Areas of Study</text>
+    <text name="Publication">Publication</text>
+    <text name="Education">Education</text>
+    <text name="Details">Details</text>
+    <text name="ManageYourSettings">Manage your settings</text>
+    <text name="Profile">Profile</text>
     <text name="RecentProjectsProvidingHelp">Recent Project (Providing Help)</text>
     <text name="RecentProjectsReceivingHelp">Recent Project (Receiving Help)</text>
     <text name="MessageHub">Message Hub</text>
