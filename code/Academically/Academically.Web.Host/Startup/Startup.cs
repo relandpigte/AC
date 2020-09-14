@@ -18,6 +18,7 @@ using Abp.Dependency;
 using Abp.Json;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Academically.Web.Host.Startup
 {
@@ -46,8 +47,10 @@ namespace Academically.Web.Host.Startup
             {
                 options.SerializerSettings.ContractResolver = new AbpMvcContractResolver(IocManager.Instance)
                 {
-                    NamingStrategy = new CamelCaseNamingStrategy()
+                    NamingStrategy = new CamelCaseNamingStrategy(),
                 };
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
+                options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
             });
 
 

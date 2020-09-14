@@ -30,9 +30,10 @@
 
         <!-- Menu -->
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="sidebarIcon">
-          <a href="./profile-posts.html" class="dropdown-item">Profile</a>
-          <a href="./account-general.html" class="dropdown-item">Settings</a>
-          <hr class="dropdown-divider">
+          <ng-container *ngIf="permission.isGranted('Pages.Profile')">
+            <a href="#" [routerLink]="['/app/profile']" class="dropdown-item">Profile</a>
+            <hr class="dropdown-divider">
+          </ng-container>
           <a href="javascript:;" class="dropdown-item" (click)="onLogoutClick()">Logout</a>
         </div>
 
@@ -88,9 +89,10 @@
 
           <!-- Menu -->
           <div class="dropdown-menu" aria-labelledby="sidebarIconCopy">
-            <a href="./profile-posts.html" class="dropdown-item">Profile</a>
-            <a href="./account-general.html" class="dropdown-item">Settings</a>
-            <hr class="dropdown-divider">
+            <ng-container *ngIf="permission.isGranted('Pages.Profile')">
+              <a href="#" [routerLink]="['/app/profile']" class="dropdown-item">Profile</a>
+              <hr class="dropdown-divider">
+            </ng-container>
             <a href="javascript:;" class="dropdown-item" (click)="onLogoutClick()">Logout</a>
           </div>
 

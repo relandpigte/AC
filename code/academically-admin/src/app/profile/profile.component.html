@@ -1,0 +1,79 @@
+<div class="container-fluid" [@routerTransition]>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ "ManageYourSettings" | localize }}</h6>
+              <h1 class="header-title">{{ "Profile" | localize }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <div class="col-12 col-xl-8 profile-settings">
+          <tabset>
+            <tab *ngIf="permission.isGranted('Pages.Profile.Details')" heading="{{ 'Details' | localize }}">
+              <profile-details></profile-details>
+            </tab>
+            <tab *ngIf="true" heading="{{ 'Education' | localize }}">
+              <h1>Education - Coming Soon</h1>
+            </tab>
+            <tab *ngIf="true" heading="{{ 'Publication' | localize }}">
+              <h1>Publication - Coming Soon</h1>
+            </tab>
+            <tab *ngIf="true" heading="{{ 'AreasOfStudy' | localize }}">
+              <h1>Areas of Study - Coming Soon</h1>
+            </tab>
+            <tab *ngIf="true" heading="{{ 'Service' | localize }}">
+              <h1>Service - Coming Soon</h1>
+            </tab>
+            <tab *ngIf="true" heading="{{ 'PrivacyAndNotifications' | localize }}">
+              <h1>Privacy & Notifications - Coming Soon</h1>
+            </tab>
+            <tab *ngIf="true" heading="{{ 'Financials' | localize }}">
+              <h1>Financials - Coming Soon</h1>
+            </tab>
+          </tabset>
+        </div>
+
+        <div class="col-12 col-xl-4">
+          <div class="card profile-card">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <a href="javascript:;" class="avatar avatar-lg avatar-4by3">
+                    <img src="assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" alt="..."
+                      class="avatar-img rounded">
+                  </a>
+                </div>
+                <div class="col ml-n2">
+                  <h4 class="mb-1">
+                    <a href="javascript:;">Joemelle Delima</a>
+                  </h4>
+                  <p class="small text-muted mb-1">
+                    <time datetime="2018-06-21">Tutor Profile ● Active</time>
+                  </p>
+                  <div class="row align-items-center no-gutters">
+                    <div class="col-auto">
+                      <div class="small mr-2">95%</div>
+                    </div>
+                    <div class="col">
+                      <div class="progress progress-sm">
+                        <div class="progress-bar" role="progressbar" style="width: 95%" aria-valuenow="95"
+                          aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

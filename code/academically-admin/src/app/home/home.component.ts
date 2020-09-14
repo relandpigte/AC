@@ -4,6 +4,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 
 @Component({
   templateUrl: './home.component.html',
+  styleUrls: ['./home.component.less'],
   animations: [appModuleAnimation()],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

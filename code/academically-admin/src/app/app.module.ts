@@ -40,8 +40,9 @@ import { SidebarUserPanelComponent } from './layout/sidebar-user-panel.component
 import { SidebarMenuComponent } from './layout/sidebar-menu.component';
 // directives
 import { Select2Directive } from '@shared/directives/select2.directive';
+import { ProfileComponent } from './profile/profile.component';
+import { ProfileDetailsComponent } from './profile/profile-details/profile-details.component';
 // components
-import { StudentDashboardComponent } from './student/student-dashboard/student-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -74,8 +75,9 @@ import { StudentDashboardComponent } from './student/student-dashboard/student-d
     SidebarMenuComponent,
     // directives
     Select2Directive,
+    ProfileComponent,
+    ProfileDetailsComponent,
     // components
-    StudentDashboardComponent,
   ],
   imports: [
     CommonModule,

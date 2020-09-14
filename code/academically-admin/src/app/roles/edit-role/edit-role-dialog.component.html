@@ -37,17 +37,9 @@
         </tab>
         <tab [heading]="'Permissions' | localize" class="pt-3 px-2">
           <div class="form-group row mb-0">
-            <ng-container *ngFor="let permission of permissions; let i = index">
-              <div class="col-md-6">
-                <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" [id]="'permission_' + i"
-                    [checked]="isPermissionChecked(permission.name)" [disabled]="role.isStatic"
-                    (change)="onPermissionChange(permission, $event)" />
-                  <label class="custom-control-label" [for]="'permission_' + i">
-                    {{ permission.displayName }}
-                  </label>
-                </div>
-              </div>
+            <ng-container *ngFor="let permission of permissions; let i = index;">
+              <ng-container *ngTemplateOutlet="permissionTemplate; context: { permission: permission, index: i + 1 }">
+              </ng-container>
             </ng-container>
           </div>
         </tab>
@@ -57,3 +49,19 @@
       (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
   </div>
 </form>
+
+<ng-template #permissionTemplate let-permission="permission" let-i="index">
+  <div class="col-md-12">
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" [id]="'permission_' + i"
+        [checked]="isPermissionChecked(permission.name)" (change)="onPermissionChange(permission, $event)" />
+      <label class="custom-control-label" [for]="'permission_' + i">
+        {{ permission.displayName }}
+      </label>
+    </div>
+    <ng-container *ngFor="let child of permission.children; let j = index;">
+      <ng-container *ngTemplateOutlet="permissionTemplate; context: { permission: child, index: i * 100 + j }">
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-template>

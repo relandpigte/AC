@@ -8,7 +8,7 @@ import { UsersComponent } from './users/users.component';
 import { TenantsComponent } from './tenants/tenants.component';
 import { RolesComponent } from 'app/roles/roles.component';
 import { ChangePasswordComponent } from './users/change-password/change-password.component';
-import { StudentDashboardComponent } from './student/student-dashboard/student-dashboard.component';
+import { ProfileComponent } from './profile/profile.component';
 @NgModule({
   imports: [
     RouterModule.forChild([
@@ -22,15 +22,7 @@ import { StudentDashboardComponent } from './student/student-dashboard/student-d
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent },
-          {
-            path: 'student',
-            children: [
-              {
-                path: 'dashboard', component: StudentDashboardComponent,
-                data: { permission: 'Pages.Student.Dashboard' }, canActivate: [AppRouteGuard]
-              },
-            ]
-          },
+          { path: 'profile', component: ProfileComponent, data: { permission: 'Pages.Profile' }, canActivate: [AppRouteGuard] },
         ]
       }
     ])

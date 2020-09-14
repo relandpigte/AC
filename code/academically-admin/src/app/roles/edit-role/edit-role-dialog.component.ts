@@ -13,9 +13,8 @@ import {
   RoleServiceProxy,
   GetRoleForEditOutput,
   RoleDto,
-  PermissionDto,
   RoleEditDto,
-  FlatPermissionDto
+  GroupedPermissionDto
 } from '@shared/service-proxies/service-proxies';
 
 @Component({
@@ -26,7 +25,7 @@ export class EditRoleDialogComponent extends AppComponentBase
   saving = false;
   id: number;
   role = new RoleEditDto();
-  permissions: FlatPermissionDto[];
+  permissions: GroupedPermissionDto[];
   grantedPermissionNames: string[];
   checkedPermissionsMap: { [key: string]: boolean } = {};
 
@@ -47,15 +46,16 @@ export class EditRoleDialogComponent extends AppComponentBase
         this.role = result.role;
         this.permissions = result.permissions;
         this.grantedPermissionNames = result.grantedPermissionNames;
-        this.setInitialPermissionsStatus();
+        this.setInitialPermissionsStatus(this.permissions);
       });
   }
 
-  setInitialPermissionsStatus(): void {
-    _.map(this.permissions, (item) => {
+  setInitialPermissionsStatus(permissions: GroupedPermissionDto[]): void {
+    _.map(permissions, (item) => {
       this.checkedPermissionsMap[item.name] = this.isPermissionChecked(
         item.name
       );
+      this.setInitialPermissionsStatus(item.children);
     });
   }
 
@@ -63,7 +63,7 @@ export class EditRoleDialogComponent extends AppComponentBase
     return _.includes(this.grantedPermissionNames, permissionName);
   }
 
-  onPermissionChange(permission: PermissionDto, $event) {
+  onPermissionChange(permission: GroupedPermissionDto, $event) {
     this.checkedPermissionsMap[permission.name] = $event.target.checked;
   }
 

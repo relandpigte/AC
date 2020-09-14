@@ -12,9 +12,8 @@ import { AppComponentBase } from '@shared/app-component-base';
 import {
   RoleServiceProxy,
   RoleDto,
-  PermissionDto,
   CreateRoleDto,
-  PermissionDtoListResultDto
+  GroupedPermissionDto, GroupedPermissionDtoListResultDto
 } from '@shared/service-proxies/service-proxies';
 
 @Component({
@@ -24,9 +23,9 @@ export class CreateRoleDialogComponent extends AppComponentBase
   implements OnInit {
   saving = false;
   role = new RoleDto();
-  permissions: PermissionDto[] = [];
+  permissions: GroupedPermissionDto[] = [];
   checkedPermissionsMap: { [key: string]: boolean } = {};
-  defaultPermissionCheckedStatus = true;
+  defaultPermissionCheckedStatus = false;
 
   @Output() onSave = new EventEmitter<any>();
 
@@ -41,17 +40,18 @@ export class CreateRoleDialogComponent extends AppComponentBase
   ngOnInit(): void {
     this._roleService
       .getAllPermissions()
-      .subscribe((result: PermissionDtoListResultDto) => {
+      .subscribe((result: GroupedPermissionDtoListResultDto) => {
         this.permissions = result.items;
-        this.setInitialPermissionsStatus();
+        this.setInitialPermissionsStatus(this.permissions);
       });
   }
 
-  setInitialPermissionsStatus(): void {
-    _.map(this.permissions, (item) => {
+  setInitialPermissionsStatus(permissions: GroupedPermissionDto[]): void {
+    _.map(permissions, (item) => {
       this.checkedPermissionsMap[item.name] = this.isPermissionChecked(
         item.name
       );
+      this.setInitialPermissionsStatus(item.children);
     });
   }
 
@@ -61,7 +61,7 @@ export class CreateRoleDialogComponent extends AppComponentBase
     return this.defaultPermissionCheckedStatus;
   }
 
-  onPermissionChange(permission: PermissionDto, $event) {
+  onPermissionChange(permission: GroupedPermissionDto, $event) {
     this.checkedPermissionsMap[permission.name] = $event.target.checked;
   }
 

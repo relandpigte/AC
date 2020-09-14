@@ -63,7 +63,9 @@ app-root {
       padding-top: 0;
     }
   }
+}
 
+.card {
   .card-footer {
     display: flex;
   }
@@ -71,5 +73,66 @@ app-root {
 
 .table-action {
   text-align: right;
-  width: 1%;
+  width     : 1%;
+}
+
+.custom-control-input:disabled~.custom-control-label::before,
+.custom-control-input[disabled]~.custom-control-label::before {
+  background-color: #e3ebf6;
+}
+
+.tab-container {
+  .nav-link {
+    padding-top: 0;
+  }
+}
+
+.image-panel {
+  margin-bottom: 0;
+  padding-left: 10px;
+  padding-right: 5px;
+
+  .image-container {
+    outline         : 2px dashed #92b0b3;
+    background-color: #c8dadf;
+    position        : relative;
+    display         : flex;
+    justify-content : center;
+    flex-flow       : column;
+
+    &:hover {
+      .image-placeholder-text {
+        color: #39BFD3;
+      }
+    }
+
+    input {
+      height : 160px;
+      width  : 100%;
+      opacity: 0;
+      cursor : pointer;
+    }
+
+    .image-placeholder {
+      display   : inline-block;
+      text-align: center;
+      position  : absolute;
+      cursor    : pointer;
+      width     : 100%;
+
+      .image-placeholder-icon {
+        color        : #92b0b3;
+        font-size    : 50px;
+        height       : auto;
+        width        : 80px;
+        margin-bottom: 10px;
+        margin-top   : 10px;
+      }
+
+      .image-placeholder-text {
+        display   : block;
+        word-break: break-all;
+      }
+    }
+  }
 }

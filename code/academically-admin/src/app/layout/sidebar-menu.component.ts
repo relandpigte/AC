@@ -50,12 +50,6 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
         'Pages.Dashboard'
       ),
       new MenuItem(
-        this.l('Dashboard'),
-        '/app/student/dashboard',
-        'fe fe-home',
-        'Pages.Student.Dashboard'
-      ),
-      new MenuItem(
         this.l('Tenants'),
         '/app/tenants',
         'fas fa-building',

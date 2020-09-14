@@ -30,6 +30,7 @@ namespace Academically.Roles
             _userManager = userManager;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Roles_Create)]
         public override async Task<RoleDto> CreateAsync(CreateRoleDto input)
         {
             CheckCreatePermission();
@@ -62,6 +63,7 @@ namespace Academically.Roles
             return new ListResultDto<RoleListDto>(ObjectMapper.Map<List<RoleListDto>>(roles));
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Roles_Update)]
         public override async Task<RoleDto> UpdateAsync(RoleDto input)
         {
             CheckUpdatePermission();
@@ -82,6 +84,7 @@ namespace Academically.Roles
             return MapToEntityDto(role);
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Roles_Delete)]
         public override async Task DeleteAsync(EntityDto<int> input)
         {
             CheckDeletePermission();
@@ -97,12 +100,12 @@ namespace Academically.Roles
             CheckErrors(await _roleManager.DeleteAsync(role));
         }
 
-        public Task<ListResultDto<PermissionDto>> GetAllPermissions()
+        public Task<ListResultDto<GroupedPermissionDto>> GetAllPermissions()
         {
             var permissions = PermissionManager.GetAllPermissions();
 
-            return Task.FromResult(new ListResultDto<PermissionDto>(
-                ObjectMapper.Map<List<PermissionDto>>(permissions).OrderBy(p => p.DisplayName).ToList()
+            return Task.FromResult(new ListResultDto<GroupedPermissionDto>(
+                ObjectMapper.Map<List<GroupedPermissionDto>>(permissions).OrderBy(p => p.DisplayName).Where(e => e.Parent == null).ToList()
             ));
         }
 
@@ -134,7 +137,7 @@ namespace Academically.Roles
             return new GetRoleForEditOutput
             {
                 Role = roleEditDto,
-                Permissions = ObjectMapper.Map<List<FlatPermissionDto>>(permissions).OrderBy(p => p.DisplayName).ToList(),
+                Permissions = ObjectMapper.Map<List<GroupedPermissionDto>>(permissions).OrderBy(p => p.DisplayName).Where(e => e.Parent == null).ToList(),
                 GrantedPermissionNames = grantedPermissions.Select(p => p.Name).ToList()
             };
         }
