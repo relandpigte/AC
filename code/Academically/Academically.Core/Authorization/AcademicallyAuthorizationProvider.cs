@@ -38,6 +38,7 @@ namespace Academically.Authorization
 
 
             var profilePermission = context.CreatePermission(PermissionNames.Pages_Profile, L("Profile"));
+            profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Details, L("Details"));
 
 
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);

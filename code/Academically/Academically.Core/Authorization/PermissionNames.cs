@@ -32,6 +32,7 @@
 
 
         public const string Pages_Profile = "Pages.Profile";
+        public const string Pages_Profile_Details = "Pages.Profile.Details";
 
 
         public const string Pages_Tenants = "Pages.Tenants";
