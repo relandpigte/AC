@@ -46,7 +46,7 @@
         </div>
         
         <div class="form-group">
-         <a href="">Terms and conditions</a>
+         <a href="#" [routerLink]="['/account/terms-and-conditions']">{{ 'TermsAndConditions' | localize }}</a>
         </div>
         
         <button class="btn btn-lg btn-block btn-primary mb-3" [disabled]="saving || !registerForm.valid || !isTAndCAccepted">{{ 'Register' | localize }}</button>
