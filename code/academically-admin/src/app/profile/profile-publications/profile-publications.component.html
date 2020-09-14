@@ -1,1 +1,70 @@
-<p>profile-publications works!</p>
+<form class="horizontal" autocomplete="off" #createProfileEducation="ngForm" (ngSubmit)="onFormSubmit()">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-header-title">
+                {{ 'Education' | localize }}
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="">{{ 'PublicationCertificateOrAward' | localize }}</label>
+                    <input type="text" class="form-control" placeholder="Enter the publication title">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">{{ 'Publisher' | localize }}</label>
+                    <input type="text" class="form-control" placeholder="Enter conferring organization">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-10">
+                    <label for="">{{ 'Summary' | localize }}</label>
+                    <textarea class="form-control" data-toggle="autosize" rows="5" placeholder="Try typing something..."></textarea>
+                </div>
+                <div class="form-group col-md-2 add-new-summary">
+                    <button type="submit" class="btn btn-primary">
+                        {{ 'Add' | localize }}
+                    </button> 
+                </div>                
+            </div>
+            <div class="form-row">
+            </div>
+            <div class="table-responsive">
+                <table class="table table-sm table-hover table-nowrap card-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">{{ 'Certificate' | localize }}</th>
+                            <th scope="col">{{ 'Organization' | localize }}</th>
+                            <th scope="col">{{ 'Actions' | localize }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="list font-size-base">
+                        <tr>
+                            <td>The Meaning of Life</td>
+                            <td>Ladybird</td>
+                            <td class="table-action">
+                                <div dropdown class="dropdown" container="body">
+                                    <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;" role="button">
+                                    <i class="fe fe-more-vertical"></i>
+                                    </a>
+                                    <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
+                                    <a href="#" class="dropdown-item">
+                                        <i class="fe fe-edit"></i> {{ 'Edit' | localize }}</a>
+                                    <a href="#" class="dropdown-item">
+                                        <i class="fe fe-trash"></i> {{ 'Delete' | localize }}</a>
+                                    </div>
+                                </div>
+                                </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        <div class="card-footer justify-content-between ml-auto">
+            <button type="submit" class="btn btn-primary">
+              {{ 'Save & Next' | localize }}
+            </button>
+        </div>
+    </div>
+</form>

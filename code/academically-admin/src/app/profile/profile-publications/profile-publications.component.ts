@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-profile-publications',
+  selector: 'profile-publications',
   templateUrl: './profile-publications.component.html',
   styleUrls: ['./profile-publications.component.less']
 })
@@ -12,4 +12,7 @@ export class ProfilePublicationsComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onFormSubmit(): void {
+
+  }
 }

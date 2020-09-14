@@ -180,5 +180,10 @@
     <text name="Clear">Clear</text>
     <text name="ResetPasswordStepOneInfo">1. Enter your administrator password</text>
     <text name="ResetPasswordStepTwoInfo">2. Copy this random password so you can send it to the user</text>
+    <text name="PublicationCertificateOrAward">Publication Certificate or Award</text>
+    <text name="Publisher">Publisher</text>
+    <text name="Summary">Summary</text>
+    <text name="Certificate">Certificate</text>
+    <text name="Organization">Organization</text>
   </texts>
 </localizationDictionary>
