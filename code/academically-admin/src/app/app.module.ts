@@ -42,6 +42,7 @@ import { SidebarMenuComponent } from './layout/sidebar-menu.component';
 import { Select2Directive } from '@shared/directives/select2.directive';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileDetailsComponent } from './profile/profile-details/profile-details.component';
+import { ProfileEducationComponent } from './profile/profile-education/profile-education.component';
 // components
 
 @NgModule({
@@ -77,6 +78,7 @@ import { ProfileDetailsComponent } from './profile/profile-details/profile-detai
     Select2Directive,
     ProfileComponent,
     ProfileDetailsComponent,
+    ProfileEducationComponent,
     // components
   ],
   imports: [
