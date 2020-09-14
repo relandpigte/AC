@@ -21,6 +21,7 @@ namespace Academically.Configuration
                 new SettingDefinition(AppSettingNames.App_ClientRootAddress, GetFromSettings("App:ClientRootAddress")),
                 new SettingDefinition(AppSettingNames.Email_FromName, GetFromSettings("Email:FromName")),
                 new SettingDefinition(AppSettingNames.Email_FromEmail, GetFromSettings("Email:FromEmail")),
+                new SettingDefinition(AppSettingNames.Email_SupportEmail, GetFromSettings("Email:SupportEmail")),
             };
         }
 
