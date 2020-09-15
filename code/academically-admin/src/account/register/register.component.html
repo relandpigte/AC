@@ -40,13 +40,10 @@
           <div class="form-check">
             <input [(ngModel)]="isTAndCAccepted" class="form-check-input" type="checkbox" value="" id="AcceptTAndC" name="AcceptTAndC" required="">
             <label class="form-check-label" for="AcceptTAndC">
-              {{ 'AcceptTermsAndConditions' | localize }}
+              <!-- {{ 'AcceptTermsAndConditions' | localize }} -->
+              Accept <a href="#" [routerLink]="['/account/terms-and-conditions']">{{ 'TermsAndConditions' | localize }}</a>
             </label>
           </div>
-        </div>
-        
-        <div class="form-group">
-         <a href="#" [routerLink]="['/account/terms-and-conditions']">{{ 'TermsAndConditions' | localize }}</a>
         </div>
         
         <button class="btn btn-lg btn-block btn-primary mb-3" [disabled]="saving || !registerForm.valid || !isTAndCAccepted">{{ 'Register' | localize }}</button>
