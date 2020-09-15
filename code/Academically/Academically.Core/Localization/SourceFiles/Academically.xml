@@ -180,7 +180,7 @@
     <text name="Clear">Clear</text>
     <text name="ResetPasswordStepOneInfo">1. Enter your administrator password</text>
     <text name="ResetPasswordStepTwoInfo">2. Copy this random password so you can send it to the user</text>
-    <text name="TermsAndConditions">Terms and conditions</text>
+    <text name="TermsAndConditions">terms and conditions</text>
     <text name="Add">Add</text>
     <text name="Country">Country</text>
     <text name="Degree">Degree</text>
@@ -188,5 +188,10 @@
     <text name="EndYear">End Year</text>
     <text name="Level">Level</text>
     <text name="UniversityCollege">University/College</text>
+    <text name="PublicationCertificateOrAward">Publication Certificate or Award</text>
+    <text name="Publisher">Publisher</text>
+    <text name="Summary">Summary</text>
+    <text name="Certificate">Certificate</text>
+    <text name="Organization">Organization</text>
   </texts>
 </localizationDictionary>

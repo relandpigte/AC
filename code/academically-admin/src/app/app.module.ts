@@ -43,6 +43,7 @@ import { Select2Directive } from '@shared/directives/select2.directive';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileDetailsComponent } from './profile/profile-details/profile-details.component';
 import { ProfileEducationComponent } from './profile/profile-education/profile-education.component';
+import { ProfilePublicationsComponent } from './profile/profile-publications/profile-publications.component';
 // components
 
 @NgModule({
@@ -79,6 +80,7 @@ import { ProfileEducationComponent } from './profile/profile-education/profile-e
     ProfileComponent,
     ProfileDetailsComponent,
     ProfileEducationComponent,
+    ProfilePublicationsComponent,
     // components
   ],
   imports: [
