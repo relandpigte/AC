@@ -181,5 +181,12 @@
     <text name="ResetPasswordStepOneInfo">1. Enter your administrator password</text>
     <text name="ResetPasswordStepTwoInfo">2. Copy this random password so you can send it to the user</text>
     <text name="TermsAndConditions">Terms and conditions</text>
+    <text name="Add">Add</text>
+    <text name="Country">Country</text>
+    <text name="Degree">Degree</text>
+    <text name="StartYear">Start Year</text>
+    <text name="EndYear">End Year</text>
+    <text name="Level">Level</text>
+    <text name="UniversityCollege">University/College</text>
   </texts>
 </localizationDictionary>
