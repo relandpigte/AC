@@ -50,9 +50,10 @@ provider:
       Resource: "arn:aws:ses:${self:provider.region}:*:*"
     - Effect: Allow
       Action:
-        - s3:*Object
-        - s3:ListBucket
-      Resource: 'arn:aws:s3:::academically-{{env_name}}-assets' 
+        - s3:*
+      Resource: 
+        - "arn:aws:s3:::academically-{{env_name}}-assets"
+        - "arn:aws:s3:::academically-{{env_name}}-assets/*"
   apiGateway:
     binaryMediaTypes:
       - 'multipart/form-data'
