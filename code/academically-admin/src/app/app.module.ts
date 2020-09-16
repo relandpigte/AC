@@ -80,10 +80,10 @@ import { ProfilePublicationsComponent } from './profile/profile-publications/pro
     SidebarMenuComponent,
     // directives
     Select2Directive,
+    // components
     ProfileComponent,
     ProfileEducationComponent,
     ProfilePublicationsComponent,
-    // components
     ProfileDetailsComponent,
     ProfileSummaryWidgetComponent,
   ],
