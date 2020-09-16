@@ -148,6 +148,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
             GrantPermissions(
                 applicantRole,
                 PermissionNames.Pages_Dashboard,
+                PermissionNames.Pages_Dashboard_Widgets,
+                PermissionNames.Pages_Dashboard_Widgets_ProfileSummary,
                 PermissionNames.Pages_Profile,
                 PermissionNames.Pages_Profile_Details
             );

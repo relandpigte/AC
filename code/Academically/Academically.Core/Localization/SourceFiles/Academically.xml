@@ -9,7 +9,6 @@
     <text name="City">City</text>
     <text name="AddressLine2">Address Line 2</text>
     <text name="AddressLine1">Address Line 1</text>
-    <text name="Country">Country</text>
     <text name="SelectACountry">Select a Country</text>
     <text name="DateOfBirth">Date of Birth</text>
     <text name="BecomeATutor">Become a Tutor</text>
