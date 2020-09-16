@@ -84,7 +84,7 @@
     <text name="InvalidUserNameOrPassword">Invalid user name or password</text>
     <text name="ThereIsNoTenantDefinedWithName{0}">There is no tenant defined with name {0}</text>
     <text name="TenantIsNotActive">Tenant {0} is not active.</text>
-    <text name="UserIsNotActiveAndCanNotLogin">User {0} is not active and can not log in.</text>
+    <text name="UserIsNotActiveAndCanNotLogin">User {0} is not active and can not log in. Please contact our support {1}.</text>
     <text name="UserEmailIsNotConfirmedAndCanNotLogin">Your email address is not confirmed. You can not login.</text>
     <text name="UserLockedOutMessage">The user account has been locked out. Please try again later.</text>
     <text name="PleaseEnterLoginInformation">Please enter login information</text>
@@ -191,5 +191,18 @@
     <text name="Clear">Clear</text>
     <text name="ResetPasswordStepOneInfo">1. Enter your administrator password</text>
     <text name="ResetPasswordStepTwoInfo">2. Copy this random password so you can send it to the user</text>
+    <text name="TermsAndConditions">terms and conditions</text>
+    <text name="Add">Add</text>
+    <text name="Country">Country</text>
+    <text name="Degree">Degree</text>
+    <text name="StartYear">Start Year</text>
+    <text name="EndYear">End Year</text>
+    <text name="Level">Level</text>
+    <text name="UniversityCollege">University/College</text>
+    <text name="PublicationCertificateOrAward">Publication Certificate or Award</text>
+    <text name="Publisher">Publisher</text>
+    <text name="Summary">Summary</text>
+    <text name="Certificate">Certificate</text>
+    <text name="Organization">Organization</text>
   </texts>
 </localizationDictionary>
