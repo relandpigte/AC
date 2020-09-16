@@ -1,12 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Auditing;
+using Abp.Domain.Repositories;
+using Academically.Application.Shared.Services;
+using Academically.Configuration;
+using Academically.Entities;
 using Academically.Sessions.Dto;
 
 namespace Academically.Sessions
 {
     public class SessionAppService : AcademicallyAppServiceBase, ISessionAppService
     {
+        private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
+        private readonly IFileManagerService _fileManagerService;
+
+        public SessionAppService(
+            IRepository<UserProfile, Guid> userProfilesRepository,
+            IFileManagerService fileManagerService
+            )
+        {
+            _userProfilesRepository = userProfilesRepository;
+            _fileManagerService = fileManagerService;
+        }
+
         [DisableAuditing]
         public async Task<GetCurrentLoginInformationsOutput> GetCurrentLoginInformations()
         {
@@ -28,6 +45,11 @@ namespace Academically.Sessions
             if (AbpSession.UserId.HasValue)
             {
                 output.User = ObjectMapper.Map<UserLoginInfoDto>(await GetCurrentUserAsync());
+                var userProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
+                if (userProfile != null)
+                {
+                    output.User.ProfilePictureUrl = _fileManagerService.GetFileUrl(userProfile.ProfilePictureFileName, AppSettingNames.Aws_S3_Folders_ProfilePictures);
+                }
             }
 
             return output;

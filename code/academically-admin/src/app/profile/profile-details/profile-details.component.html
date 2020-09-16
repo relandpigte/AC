@@ -1,5 +1,5 @@
-<form class="form-horizontal" autocomplete="off" #createUserModal="ngForm" (ngSubmit)="onFormSubmit()">
-  <div class="card">
+<form class="form-horizontal" autocomplete="off" #profileDetailForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="card" [busy]="isLoading">
     <div class="card-header">
       <h4 class="card-header-title">
         {{ 'Details' | localize }}
@@ -8,74 +8,110 @@
     <div class="card-body">
 
       <div class="form-row">
-        <div class="col-md-8">
-          <div class="form-group">
-            <label for="">First Name</label>
-            <input type="text" class="form-control">
-          </div>
-          <div class="form-group">
-            <label for="">Last Name</label>
-            <input type="text" class="form-control">
-          </div>
-        </div>
         <div class="col-md-4">
-          <div class="form-group image-panel">
-            <label for="">Profile Picture</label>
-            <div class="image-container">
-              <label for="File" class="image-placeholder">
-                <i class="image-placeholder-icon fe fe-upload"></i>
-                <span class="image-placeholder-text">{{ 'Click or drag file to upload' }}</span>
-              </label>
-              <input type="file" />
+          <div class="form-group profile-image">
+            <label class="col-form-label" for="">Profile Picture</label>
+            <div class="dropzone">
+              <div class="dz-message">
+                <i class="fe fe-upload"></i>
+                <button class="dz-button" type="button">
+                  {{ profilePicturePlaceholderText }}
+                </button>
+                <input type="file" #profilePictureInput (change)="onFileChange($event.target.files);" id="Logo" name="Logo" required
+                  [accept]="fileUploadSettings.allowedExtensions" />
+              </div>
+              <div *ngIf="model.profilePictureUrl" class="dz-preview"
+                [style.background-image]="'url(' + model.profilePictureUrl + ')'"></div>
             </div>
           </div>
         </div>
-      </div>
+        <div class="col-md-8">
 
-      <div class="form-group">
-        <label for="">Date of Birth</label>
-        <input type="text" class="form-control">
-      </div>
+          <div class="form-group required">
+            <label class="col-form-label" for="FirstName">{{ 'FirstName' | localize }}</label>
+            <input [(ngModel)]="model.firstName" id="FirstName" name="FirstName" type="text" class="form-control"
+              #firstNameModel="ngModel" #firstNameEl required>
+            <abp-validation-summary [control]="firstNameModel" [controlEl]="firstNameEl"></abp-validation-summary>
+          </div>
 
-      <div class="form-group">
-        <label for="">Address Line 1</label>
-        <input type="text" class="form-control">
-      </div>
+          <div class="form-group required">
+            <label class="col-form-label" for="LastName">{{ 'LastName' | localize }}</label>
+            <input [(ngModel)]="model.lastName" id="LastName" name="LastName" type="text" class="form-control"
+              #lastNameModel="ngModel" #lastNameEl required>
+            <abp-validation-summary [control]="lastNameModel" [controlEl]="lastNameEl"></abp-validation-summary>
+          </div>
 
-      <div class="form-group">
-        <label for="">Address Line 2</label>
-        <input type="text" class="form-control">
-      </div>
+          <div class="form-group required">
+            <label class="col-form-label" for="DateOfBirth">{{ 'DateOfBirth' | localize }}</label>
+            <div class="input-group input-group-merge" (click)="dp.show()">
+              <input [(ngModel)]="dateOfBirth" id="DateOfBirth" name="DateOfBirth" type="text"
+                class="form-control form-control-appended" #dateOfBirthModel="ngModel" #dateOfBirthEl #dp="bsDatepicker"
+                required bsDatepicker [bsConfig]="datePickerConfig">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-calendar"></span>
+                </div>
+              </div>
+            </div>
+            <abp-validation-summary [control]="dateOfBirthModel" [controlEl]="dateOfBirthEl"></abp-validation-summary>
+          </div>
 
-      <div class="form-group">
-        <label for="">City</label>
-        <input type="text" class="form-control">
-      </div>
-
-      <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="">Zip/Postal Code</label>
-          <input type="text" class="form-control">
         </div>
-        <div class="form-group col-md-6">
-          <label for="">State/Province</label>
-          <input type="text" class="form-control">
-        </div>
       </div>
 
-      <div class="form-group">
-        <label for="">Country</label>
-        <select class="form-control">
-          <option></option>
+      <div class="form-group required">
+        <label class="col-form-label" for="Country">{{ 'Country' | localize }}</label>
+        <select [(ngModel)]="model.country" id="Country" name="Country" type="text" class="form-control"
+          #countryModel="ngModel" #countryEl required (change)="onCountryChange()">
+          <option [value]="''">{{ 'SelectACountry' | localize }}</option>
+          <option *ngFor="let country of countries" [value]="country.name">{{ country.name }}</option>
         </select>
+        <abp-validation-summary [control]="countryModel" [controlEl]="countryEl"></abp-validation-summary>
       </div>
+
+      <ng-container *ngIf="model.country">
+        <div class="form-group required">
+          <label class="col-form-label" for="AddressLine1">{{ 'AddressLine1' | localize }}</label>
+          <input [(ngModel)]="model.addressLine1" id="AddressLine1" name="AddressLine1" type="text" class="form-control"
+            #addressLine1Model="ngModel" #addressLine1El required>
+          <abp-validation-summary [control]="addressLine1Model" [controlEl]="addressLine1El"></abp-validation-summary>
+        </div>
+
+        <div class="form-group">
+          <label class="col-form-label" for="AddressLine2">{{ 'AddressLine2' | localize }}</label>
+          <input [(ngModel)]="model.addressLine2" id="AddressLine2" name="AddressLine2" type="text"
+            class="form-control">
+        </div>
+
+        <div class="form-group required">
+          <label class="col-form-label" for="City">{{ 'City' | localize }}</label>
+          <input [(ngModel)]="model.city" id="City" name="City" type="text" class="form-control">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6" [class.required]="isFullAddressRequired">
+            <label class="col-form-label" for="ZipOrPostCode">{{ 'ZipOrPostCode' | localize }}</label>
+            <input [(ngModel)]="model.zipOrPostCode" id="ZipOrPostCode" name="ZipOrPostCode" type="text"
+              class="form-control" #zipOrPostCodeModel="ngModel" #zipOrPostCodeEl>
+            <abp-validation-summary *ngIf="isFullAddressRequired" [control]="zipOrPostCodeModel"
+              [controlEl]="zipOrPostCodeEl"></abp-validation-summary>
+          </div>
+          <div class="form-group col-md-6" [class.required]="isFullAddressRequired">
+            <label class="col-form-label" for="StateOrProvince">{{ 'StateOrProvince' | localize }}</label>
+            <input [(ngModel)]="model.stateOrProvince" id="StateOrProvince" name="StateOrProvince" type="text"
+              class="form-control" #stateOrProvinceModel="ngModel" #stateOrProvinceEl>
+            <abp-validation-summary *ngIf="isFullAddressRequired" [control]="stateOrProvinceModel"
+              [controlEl]="stateOrProvinceEl"></abp-validation-summary>
+          </div>
+        </div>
+      </ng-container>
 
     </div>
     <div class="card-footer justify-content-between">
       <button type="button" class="btn btn-secondary">
         {{ 'BecomeATutor' | localize }}
       </button>
-      <button type="submit" class="btn btn-primary">
+      <button type="submit" class="btn btn-primary" [disabled]="isLoading || !profileDetailForm.valid">
         {{ 'Save' | localize }}
       </button>
     </div>

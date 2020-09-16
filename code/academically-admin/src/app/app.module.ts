@@ -1,3 +1,4 @@
+// modules
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -9,11 +10,11 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
 import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module';
 import { SharedModule } from '@shared/shared.module';
-import { HomeComponent } from '@app/home/home.component';
-import { AboutComponent } from '@app/about/about.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+// directives
+import { Select2Directive } from '@shared/directives/select2.directive';
 // tenants
 import { TenantsComponent } from '@app/tenants/tenants.component';
 import { CreateTenantDialogComponent } from './tenants/create-tenant/create-tenant-dialog.component';
@@ -38,11 +39,13 @@ import { SidebarComponent } from './layout/sidebar.component';
 import { SidebarLogoComponent } from './layout/sidebar-logo.component';
 import { SidebarUserPanelComponent } from './layout/sidebar-user-panel.component';
 import { SidebarMenuComponent } from './layout/sidebar-menu.component';
-// directives
-import { Select2Directive } from '@shared/directives/select2.directive';
+// components
+import { AppComponent } from './app.component';
+import { HomeComponent } from '@app/home/home.component';
+import { AboutComponent } from '@app/about/about.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileDetailsComponent } from './profile/profile-details/profile-details.component';
-// components
+import { ProfileSummaryWidgetComponent } from './widgets/profile-summary-widget/profile-summary-widget.component';
 
 @NgModule({
   declarations: [
@@ -76,8 +79,9 @@ import { ProfileDetailsComponent } from './profile/profile-details/profile-detai
     // directives
     Select2Directive,
     ProfileComponent,
-    ProfileDetailsComponent,
     // components
+    ProfileDetailsComponent,
+    ProfileSummaryWidgetComponent,
   ],
   imports: [
     CommonModule,
@@ -93,6 +97,7 @@ import { ProfileDetailsComponent } from './profile/profile-details/profile-detai
     ServiceProxyModule,
     SharedModule,
     NgxPaginationModule,
+    BsDatepickerModule.forRoot(),
   ],
   providers: [],
   entryComponents: [
@@ -108,4 +113,4 @@ import { ProfileDetailsComponent } from './profile/profile-details/profile-detai
     ResetPasswordDialogComponent,
   ],
 })
-export class AppModule {}
+export class AppModule { }

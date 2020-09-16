@@ -1,6 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Inactive">Inactive</text>
+    <text name="Active">Active</text>
+    <text name="DropOrClickToUpload">Drop or click to upload</text>
+    <text name="StateOrProvince">State/Province</text>
+    <text name="ZipOrPostCode">Zip/Post Code</text>
+    <text name="City">City</text>
+    <text name="AddressLine2">Address Line 2</text>
+    <text name="AddressLine1">Address Line 1</text>
+    <text name="Country">Country</text>
+    <text name="SelectACountry">Select a Country</text>
+    <text name="DateOfBirth">Date of Birth</text>
     <text name="BecomeATutor">Become a Tutor</text>
     <text name="PrivacyAndNotifications">Privacy &amp; Notifications</text>
     <text name="Service">Service</text>

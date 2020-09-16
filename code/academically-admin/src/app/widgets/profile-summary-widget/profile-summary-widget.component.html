@@ -1,0 +1,31 @@
+<div class="card profile-card" [busy]="isLoading">
+  <div class="card-body">
+    <div class="row align-items-center">
+      <div class="col-auto">
+        <a href="javascript:;" class="avatar avatar-lg avatar-4by3">
+          <img *ngIf="model.profilePictureUrl" [src]="model.profilePictureUrl" alt="profile" class="avatar-img rounded">
+          <img *ngIf="!model.profilePictureUrl" src="assets/img/anonymous.png" alt="avatar" class="avatar-img rounded">
+        </a>
+      </div>
+      <div class="col ml-n2">
+        <h4 class="mb-1">
+          <a href="javascript:;">{{ model.fullName }}</a>
+        </h4>
+        <p class="small text-muted mb-1">
+          <time datetime="2018-06-21">{{ model.role }} ● {{ model.status }}</time>
+        </p>
+        <div class="row align-items-center no-gutters">
+          <div class="col-auto">
+            <div class="small mr-2">{{ model.progress }}%</div>
+          </div>
+          <div class="col">
+            <div class="progress progress-sm">
+              <div class="progress-bar" role="progressbar" [style.width]="model.progress + '%'"
+                [attr.aria-valuenow]="model.progress" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -45,7 +45,7 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
     private _modalService: BsModalService
   ) {
     super(injector);
-    this.sorting = 'username';
+    this.sorting = this.headers[0].sortColumn;
   }
 
   getRoleNames(user: UserDto): string {

@@ -1,6 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
+import { AppSessionService } from '@shared/session/app-session.service';
 
 @Component({
   selector: 'app-profile',
@@ -10,7 +11,9 @@ import { AppComponentBase } from '@shared/app-component-base';
 })
 export class ProfileComponent extends AppComponentBase implements OnInit {
 
-  constructor(injector: Injector) {
+  constructor(
+    injector: Injector,
+    ) {
     super(injector);
   }
 

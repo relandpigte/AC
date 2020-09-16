@@ -8,11 +8,11 @@ namespace Academically.Entities
     [Table("AcademicallyRegistrations")]
     public class Registration : Entity<Guid>
     {
-        public virtual string FirstName { get; set; }
-        public virtual string LastName { get; set; }
-        public virtual string EmailAddress { get; set; }
-        public virtual DateTime DateRegistered { get; set; }
-        public virtual DateTime? DateConfirmed { get; set; }
-        public virtual RegistrationStatus RegistrationStatus { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string EmailAddress { get; set; }
+        public DateTime DateRegistered { get; set; }
+        public DateTime? DateConfirmed { get; set; }
+        public RegistrationStatus RegistrationStatus { get; set; }
     }
 }

@@ -36,6 +36,7 @@
               "node_modules/sweetalert2/dist/sweetalert2.css",
               "src/assets/freeze-ui/freeze-ui.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
 
               "src/assets/themes/dashkit/fonts/feather/feather.css",
               "src/assets/themes/dashkit/libs/flatpickr/dist/flatpickr.min.css",

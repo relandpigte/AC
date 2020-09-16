@@ -3,12 +3,15 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { SignalRAspNetCoreHelper } from '@shared/helpers/SignalRAspNetCoreHelper';
 import { LayoutStoreService } from '@shared/layout/layout-store.service';
 import { AppAuthService } from '@shared/auth/app-auth.service';
+import { GetProfileDetailDto, UserLoginInfoDto } from '@shared/service-proxies/service-proxies';
+import { uiEvents } from '@shared/constants/ui-events';
 
 @Component({
   templateUrl: './app.component.html'
 })
 export class AppComponent extends AppComponentBase implements OnInit {
   sidebarExpanded: boolean;
+  user: UserLoginInfoDto = new UserLoginInfoDto();
 
   constructor(
     injector: Injector,
@@ -17,6 +20,10 @@ export class AppComponent extends AppComponentBase implements OnInit {
     private _authService: AppAuthService,
   ) {
     super(injector);
+    this.user = this.appSession.user;
+    abp.event.on(uiEvents.profileDetailsUpdated, (item: GetProfileDetailDto) => {
+      this.user.profilePictureUrl = item.profilePictureUrl;
+    });
   }
 
   ngOnInit(): void {

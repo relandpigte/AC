@@ -23,5 +23,9 @@
     <Folder Include="Services\" />
     <Folder Include="Services\Registrations\" />
     <Folder Include="Services\Registrations\Dto\" />
+    <Folder Include="Services\UserProfiles\" />
+    <Folder Include="Services\UserProfiles\Dto\" />
+    <Folder Include="Services\Widgets\" />
+    <Folder Include="Services\Widgets\Dto\" />
   </ItemGroup>
 </Project>

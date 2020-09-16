@@ -4,4 +4,6 @@
 	<include file="ddml/ddml.2020-08-24-02.initial-data.xml"/>
 	<include file="ddml/ddml.2020-09-02-01.add-registrations-table.xml"/>
 	<include file="ddml/ddml.2020-09-04-01.add-lastloggedintime-column.xml"/>
+	<include file="ddml/ddml.2020-09-14-01.add-userprofiles-table.xml"/>
+	<include file="ddml/ddml.2020-09-15-01.add-userprofile-profilepicturefilename.xml"/>
 </databaseChangeLog>

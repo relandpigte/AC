@@ -23,8 +23,10 @@
         <a href="#" id="sidebarIcon" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
           aria-expanded="false">
           <div class="avatar avatar-sm avatar-online">
-            <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" class="avatar-img rounded-circle"
-              alt="...">
+            <img *ngIf="user.profilePictureUrl" [src]="user.profilePictureUrl" class="avatar-img rounded-circle"
+              alt="profile">
+            <img *ngIf="!user.profilePictureUrl" src="assets/img/anonymous.png" class="avatar-img rounded-circle"
+              alt="avatar">
           </div>
         </a>
 
@@ -82,8 +84,10 @@
           <a href="#" id="sidebarIconCopy" class="dropdown-toggle" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
             <div class="avatar avatar-sm avatar-online">
-              <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" class="avatar-img rounded-circle"
-                alt="...">
+              <img *ngIf="user.profilePictureUrl" [src]="user.profilePictureUrl" class="avatar-img rounded-circle"
+                alt="profile">
+              <img *ngIf="!user.profilePictureUrl" src="assets/img/anonymous.png" class="avatar-img rounded-circle"
+                alt="avatar">
             </div>
           </a>
 

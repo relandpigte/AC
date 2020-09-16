@@ -25,6 +25,7 @@ namespace Academically.Web.Host.Startup
         {
             IocManager.RegisterAssemblyByConvention(typeof(AcademicallyWebHostModule).GetAssembly());
             IocManager.Register<IEmailService, SESService>(Abp.Dependency.DependencyLifeStyle.Singleton);
+            IocManager.Register<IFileManagerService, S3Service>(Abp.Dependency.DependencyLifeStyle.Singleton);
         }
     }
 }

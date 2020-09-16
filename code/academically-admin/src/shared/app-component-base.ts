@@ -26,6 +26,8 @@ export abstract class AppComponentBase {
     appSession: AppSessionService;
     elementRef: ElementRef;
 
+    imageUploadPlaceholderText: string;
+
     constructor(injector: Injector) {
         this.localization = injector.get(LocalizationService);
         this.permission = injector.get(PermissionCheckerService);
@@ -36,6 +38,8 @@ export abstract class AppComponentBase {
         this.multiTenancy = injector.get(AbpMultiTenancyService);
         this.appSession = injector.get(AppSessionService);
         this.elementRef = injector.get(ElementRef);
+
+        this.imageUploadPlaceholderText = this.l('DropOrClickToUpload');
     }
 
     l(key: string, ...args: any[]): string {

@@ -14,5 +14,6 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.101" />
     <PackageReference Include="AWSSDK.SimpleEmail" Version="3.5.0.7" />
+    <PackageReference Include="AWSSDK.S3" Version="3.5.1.3" />
   </ItemGroup>
 </Project>
