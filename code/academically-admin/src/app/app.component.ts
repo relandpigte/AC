@@ -27,7 +27,7 @@ export class AppComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    SignalRAspNetCoreHelper.initSignalR();
+    // SignalRAspNetCoreHelper.initSignalR(); @TODO: Enable signalR or something similar of chat app
 
     abp.event.on('abp.notifications.received', (userNotification) => {
       abp.notifications.showUiNotifyForUserNotification(userNotification);
