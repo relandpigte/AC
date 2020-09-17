@@ -1,6 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="ProfilePictureFileSizeUploadError">
+      <![CDATA[
+          <p>Invalid advert image. The image file size must be less than <b>2MB</b>.</p>
+      ]]>
+    </text>
+    <text name="InvalidFileExtensionUploadError">
+      <![CDATA[
+          <p>Invalid file extension. The file must be an image with the a <b>.png</b> or <b>.jpg</b> file extension.</p>
+      ]]>
+    </text>
+    <text name="InvalidFileUploadErrorTitle" value="Invalid File" />
     <text name="Educations">Educations</text>
     <text name="DeleteUserEducation">Delete User Education</text>
     <text name="UpdateUserEducation">Update User Education</text>

@@ -1,4 +1,4 @@
 export const fileUploadConfiguration = {
-  allowedExtensions: ['.jpg', '.png'],
+  allowedExtensions: ['.jpg', '.jpeg', '.png'],
   profilePictureMaxFileSize: 2000000,
 };
