@@ -28,6 +28,19 @@
     <text name="Polls">Polls</text>
     <text name="ProfileSummary">Profile Summary</text>
     <text name="Widgets">Widgets</text>
+    <text name="EditPublication">Edit Publication</text>
+    <text name="CreatePublication">Create Publication</text>
+    <text name="Country">Country</text>
+    <text name="Degree">Degree</text>
+    <text name="StartYear">Start Year</text>
+    <text name="EndYear">End Year</text>
+    <text name="Level">Level</text>
+    <text name="UniversityCollege">University/College</text>
+    <text name="PublicationCertificateOrAward">Publication Certificate or Award</text>
+    <text name="Publisher">Publisher</text>
+    <text name="Summary">Summary</text>
+    <text name="Certificate">Certificate</text>
+    <text name="Organization">Organization</text>
     <text name="Financials">Financials</text>
     <text name="UserManagement">User Management</text>
     <text name="Navigations">Navigations</text>
@@ -192,16 +205,5 @@
     <text name="ResetPasswordStepTwoInfo">2. Copy this random password so you can send it to the user</text>
     <text name="TermsAndConditions">terms and conditions</text>
     <text name="Add">Add</text>
-    <text name="Country">Country</text>
-    <text name="Degree">Degree</text>
-    <text name="StartYear">Start Year</text>
-    <text name="EndYear">End Year</text>
-    <text name="Level">Level</text>
-    <text name="UniversityCollege">University/College</text>
-    <text name="PublicationCertificateOrAward">Publication Certificate or Award</text>
-    <text name="Publisher">Publisher</text>
-    <text name="Summary">Summary</text>
-    <text name="Certificate">Certificate</text>
-    <text name="Organization">Organization</text>
   </texts>
 </localizationDictionary>

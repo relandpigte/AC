@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="root (generated)" id="160009688340542-1">
+        <createTable tableName="AcademicallyUserPublications">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="PublicationCertificate" type="VARCHAR(250)"/>
+            <column name="Publisher" type="VARCHAR(250)"/>
+            <column name="Summary" type="LONGTEXT" />
+            <column name="UserId" type="BIGINT" />
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="160009688340542-2">
+        <createIndex indexName="FK_UserPublications_User_UserId_idx" tableName="AcademicallyUserPublications">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="160009688340542-3">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="AcademicallyUserPublications" constraintName="FK_UserPublications_User_UserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

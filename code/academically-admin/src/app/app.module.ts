@@ -48,6 +48,7 @@ import { ProfileDetailsComponent } from './profile/profile-details/profile-detai
 import { ProfileSummaryWidgetComponent } from './widgets/profile-summary-widget/profile-summary-widget.component';
 import { ProfileEducationComponent } from './profile/profile-education/profile-education.component';
 import { ProfilePublicationsComponent } from './profile/profile-publications/profile-publications.component';
+import { CreateEditPublicationComponent } from './profile/profile-publications/create-edit-publication/create-edit-publication.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import { ProfilePublicationsComponent } from './profile/profile-publications/pro
     ProfilePublicationsComponent,
     ProfileDetailsComponent,
     ProfileSummaryWidgetComponent,
+    CreateEditPublicationComponent,
   ],
   imports: [
     CommonModule,

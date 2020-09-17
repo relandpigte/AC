@@ -11,7 +11,7 @@ namespace Academically.EntityFrameworkCore
     {
         public virtual DbSet<Registration> Registrations { get; set; }
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
-
+        public virtual DbSet<UserPublication> UserPublications { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {
