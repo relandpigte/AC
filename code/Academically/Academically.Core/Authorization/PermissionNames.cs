@@ -33,7 +33,12 @@
 
         public const string Pages_Profile = "Pages.Profile";
         public const string Pages_Profile_Details = "Pages.Profile.Details";
+
+
         public const string Pages_Profile_Publications = "Pages.Profile.Publications";
+        public const string Pages_Profile_Publications_Create = "Pages.Profile.Publications.Create";
+        public const string Pages_Profile_Publications_Update = "Pages.Profile.Publications.Update";
+        public const string Pages_Profile_Publications_Delete = "Pages.Profile.Publications.Delete";
 
 
         public const string Pages_Tenants = "Pages.Tenants";

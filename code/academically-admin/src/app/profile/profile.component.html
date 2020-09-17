@@ -22,7 +22,7 @@
             <tab *ngIf="true" heading="{{ 'Education' | localize }}">
               <profile-education></profile-education>
             </tab>
-            <tab *ngIf="true" heading="{{ 'Publication' | localize }}">
+            <tab *ngIf="permission.isGranted('Pages.Profile.Publications')" heading="{{ 'Publication' | localize }}">
               <profile-publications></profile-publications>
             </tab>
             <tab *ngIf="true" heading="{{ 'AreasOfStudy' | localize }}">

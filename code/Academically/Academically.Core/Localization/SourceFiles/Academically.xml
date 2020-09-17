@@ -15,8 +15,6 @@
     <text name="PrivacyAndNotifications">Privacy &amp; Notifications</text>
     <text name="Service">Service</text>
     <text name="AreasOfStudy">Areas of Study</text>
-    <text name="Publication">Publication</text>
-    <text name="Publications">Publications</text>
     <text name="Education">Education</text>
     <text name="Details">Details</text>
     <text name="ManageYourSettings">Manage your settings</text>
@@ -36,10 +34,15 @@
     <text name="StartYear">Start Year</text>
     <text name="EndYear">End Year</text>
     <text name="Level">Level</text>
+    <text name="Publication">Publication</text>
+    <text name="Publications">Publications</text>
     <text name="UniversityCollege">University/College</text>
     <text name="PublicationCertificateOrAward">Publication Certificate or Award</text>
     <text name="Publisher">Publisher</text>
     <text name="Summary">Summary</text>
+    <text name="CreateUserPublication">Create User Publication</text>
+    <text name="UpdateUserPublication">Update User Publication</text>
+    <text name="DeleteUserPublication">Delete User Publication</text>
     <text name="Certificate">Certificate</text>
     <text name="Organization">Organization</text>
     <text name="Financials">Financials</text>

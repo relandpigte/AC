@@ -39,7 +39,12 @@ namespace Academically.Authorization
 
             var profilePermission = context.CreatePermission(PermissionNames.Pages_Profile, L("Profile"));
             profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Details, L("Details"));
-            profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Publications, L("Publications"));
+
+            var profilePublicationsPermission = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Publications, L("Publications"));
+            profilePublicationsPermission.CreateChildPermission(PermissionNames.Pages_Profile_Publications_Create, L("CreateUserPublication"));
+            profilePublicationsPermission.CreateChildPermission(PermissionNames.Pages_Profile_Publications_Update, L("UpdateUserPublication"));
+            profilePublicationsPermission.CreateChildPermission(PermissionNames.Pages_Profile_Publications_Delete, L("DeleteUserPublication"));
+
 
 
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
