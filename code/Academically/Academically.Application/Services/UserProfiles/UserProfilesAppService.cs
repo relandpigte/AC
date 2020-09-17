@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using Abp.Authorization;
@@ -52,7 +53,7 @@ namespace Academically.Services.UserProfiles
             }
             output.FirstName = user.Name;
             output.LastName = user.Surname;
-            output.ProfilePictureUrl = _fileManagerService.GetFileUrl(userProfile?.ProfilePictureFileName, AppSettingNames.Aws_S3_Folders_ProfilePictures);
+            output.ProfilePictureUrl = _fileManagerService.GetFileUrl(userProfile?.ProfilePictureFileName, userId, AppSettingNames.Aws_S3_Folders_ProfilePictures);
 
             return output;
         }
@@ -72,6 +73,8 @@ namespace Academically.Services.UserProfiles
 
             string oldFileName = "";
             string folder = await _settingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_ProfilePictures);
+            folder = $"{userId}/{folder}";
+            string thumbnailsFolder = $"{folder}/thumbs";
 
             ObjectMapper.Map(input, userProfile);
             userProfile.UserId = user.Id;
@@ -86,6 +89,9 @@ namespace Academically.Services.UserProfiles
                     await _fileManagerService.UploadAsync(fileName, fileBytes, folder);
                     oldFileName = userProfile.ProfilePictureFileName;
                     userProfile.ProfilePictureFileName = fileName;
+
+                    var thumbsFileBytes = MakeThumbnail(fileBytes, 100, 100);
+                    await _fileManagerService.UploadAsync(fileName, thumbsFileBytes, thumbnailsFolder);
                 }
             }
 
@@ -94,6 +100,17 @@ namespace Academically.Services.UserProfiles
             if (!oldFileName.IsNullOrWhiteSpace())
             {
                 await _fileManagerService.DeleteAsync(folder, oldFileName);
+                await _fileManagerService.DeleteAsync(thumbnailsFolder, oldFileName);
+            }
+        }
+
+        public byte[] MakeThumbnail(byte[] myImage, int thumbWidth, int thumbHeight)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            using (Image thumbnail = Image.FromStream(new MemoryStream(myImage)).GetThumbnailImage(thumbWidth, thumbHeight, null, new IntPtr()))
+            {
+                thumbnail.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                return ms.ToArray();
             }
         }
     }

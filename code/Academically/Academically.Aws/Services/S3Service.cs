@@ -100,7 +100,7 @@ namespace Academically.Aws.Services
                 _client.Dispose();
         }
 
-        public string GetFileUrl(string fileName, string folderSetting = null)
+        public string GetFileUrl(string fileName, long userId, string folderSetting = null)
         {
             if (!fileName.IsNullOrWhiteSpace())
             {
@@ -109,7 +109,7 @@ namespace Academically.Aws.Services
                 if (!folderSetting.IsNullOrWhiteSpace())
                 {
                     string folder = _settingManager.GetSettingValue(folderSetting);
-                    return $"https://{bucket}.s3.{region}.amazonaws.com/{folder}/{fileName}";
+                    return $"https://{bucket}.s3.{region}.amazonaws.com/{userId}/{folder}/{fileName}";
                 }
 
                 return $"https://{bucket}.s3.{region}.amazonaws.com/{fileName}";

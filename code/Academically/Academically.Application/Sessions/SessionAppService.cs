@@ -50,7 +50,7 @@ namespace Academically.Sessions
                 var userProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
                 if (userProfile != null)
                 {
-                    output.User.ProfilePictureUrl = _fileManagerService.GetFileUrl(userProfile.ProfilePictureFileName, AppSettingNames.Aws_S3_Folders_ProfilePictures);
+                    output.User.ProfilePictureUrl = _fileManagerService.GetFileUrl(userProfile.ProfilePictureFileName, user.Id, AppSettingNames.Aws_S3_Folders_ProfilePictures);
                 }
             }
 

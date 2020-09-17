@@ -42,7 +42,6 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
     this.datePickerConfig.dateInputFormat = 'DD/MM/YYYY';
     this.profilePicturePlaceholderText = this.imageUploadPlaceholderText;
     this.isStudent = this.appSession.user.roles.includes('Student');
-    console.log(this.isStudent);
   }
 
   ngOnInit(): void {
