@@ -1,8 +1,10 @@
 ﻿using Abp.Application.Services;
+using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Academically.Authorization;
 using Academically.Entities;
 using Academically.Services.UserPublications.Dto;
 using Academically.Users;
@@ -13,6 +15,7 @@ using System.Text;
 
 namespace Academically.Services.UserPublications
 {
+    [AbpAuthorize(PermissionNames.Pages_Profile_Publications)]
     public class UserPublicationsAppService  : AsyncCrudAppService<UserPublication, GetPublicationDto, Guid, PagedPublicationResultRequestDto, SavePublicationDto, GetPublicationDto>, IUserPublicationsAppService
     {
         public UserPublicationsAppService(IRepository<UserPublication, Guid> repository) : base(repository)
