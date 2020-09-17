@@ -1,0 +1,39 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="root (generated)" id="1600310160365-1">
+        <createTable tableName="AcademicallyUserEducations">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Country" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UniversityOrCollege" type="VARCHAR(75)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Degree" type="VARCHAR(75)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="StartYear" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EndYear" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Level" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1600310160365-2">
+        <createIndex indexName="FK_UserEducations_User_UserId_idx" tableName="AcademicallyUserEducations">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1600310160365-3">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="AcademicallyUserEducations" constraintName="FK_UserEducations_User_UserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

@@ -58,7 +58,7 @@ namespace Academically.Web.Host.Startup
             IdentityRegistrar.Register(services);
             AuthConfigurer.Configure(services, _appConfiguration);
 
-            services.AddSignalR();
+            //services.AddSignalR(); @TODO: Enable signalR or something similar of chat app
 
             // Configure CORS for angular2 UI
             services.AddCors(
@@ -137,7 +137,7 @@ namespace Academically.Web.Host.Startup
           
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<AbpCommonHub>("/signalr");
+                //endpoints.MapHub<AbpCommonHub>("/signalr"); @TODO: Enable signalR or something similar of chat app
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
             });

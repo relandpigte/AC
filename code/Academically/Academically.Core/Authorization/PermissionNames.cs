@@ -32,7 +32,13 @@
 
 
         public const string Pages_Profile = "Pages.Profile";
+
         public const string Pages_Profile_Details = "Pages.Profile.Details";
+
+        public const string Pages_Profile_Educations = "Pages.Profile.Educations";
+        public const string Pages_Profile_Educations_Create = "Pages.Profile.Educations.Create";
+        public const string Pages_Profile_Educations_Update = "Pages.Profile.Educations.Update";
+        public const string Pages_Profile_Educations_Delete = "Pages.Profile.Educations.Delete";
 
 
         public const string Pages_Profile_Publications = "Pages.Profile.Publications";

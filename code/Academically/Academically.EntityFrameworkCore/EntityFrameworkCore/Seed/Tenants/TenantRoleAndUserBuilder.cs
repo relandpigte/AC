@@ -120,6 +120,10 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Widgets_MessageHub,
                 PermissionNames.Pages_Profile,
                 PermissionNames.Pages_Profile_Details,
+                PermissionNames.Pages_Profile_Educations,
+                PermissionNames.Pages_Profile_Educations_Create,
+                PermissionNames.Pages_Profile_Educations_Update,
+                PermissionNames.Pages_Profile_Educations_Delete
                 PermissionNames.Pages_Profile_Publications,
                 PermissionNames.Pages_Profile_Publications_Create,
                 PermissionNames.Pages_Profile_Publications_Update,
@@ -142,6 +146,10 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Widgets_MessageHub,
                 PermissionNames.Pages_Profile,
                 PermissionNames.Pages_Profile_Details,
+                PermissionNames.Pages_Profile_Educations,
+                PermissionNames.Pages_Profile_Educations_Create,
+                PermissionNames.Pages_Profile_Educations_Update,
+                PermissionNames.Pages_Profile_Educations_Delete
                 PermissionNames.Pages_Profile_Publications,
                 PermissionNames.Pages_Profile_Publications_Create,
                 PermissionNames.Pages_Profile_Publications_Update,
@@ -159,7 +167,15 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Widgets,
                 PermissionNames.Pages_Dashboard_Widgets_ProfileSummary,
                 PermissionNames.Pages_Profile,
-                PermissionNames.Pages_Profile_Details
+                PermissionNames.Pages_Profile_Details,
+                PermissionNames.Pages_Profile_Educations,
+                PermissionNames.Pages_Profile_Educations_Create,
+                PermissionNames.Pages_Profile_Educations_Update,
+                PermissionNames.Pages_Profile_Educations_Delete,
+                PermissionNames.Pages_Profile_Publications,
+                PermissionNames.Pages_Profile_Publications_Create,
+                PermissionNames.Pages_Profile_Publications_Update,
+                PermissionNames.Pages_Profile_Publications_Delete
             );
 
             #endregion

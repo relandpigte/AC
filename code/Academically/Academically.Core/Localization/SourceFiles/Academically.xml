@@ -1,6 +1,46 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="ProfilePictureFileSizeUploadError">
+      <![CDATA[
+          <p>Invalid advert image. The image file size must be less than <b>2MB</b>.</p>
+      ]]>
+    </text>
+    <text name="InvalidFileExtensionUploadError">
+      <![CDATA[
+          <p>Invalid file extension. The file must be an image with the a <b>.png</b> or <b>.jpg</b> file extension.</p>
+      ]]>
+    </text>
+    <text name="InvalidFileUploadErrorTitle" value="Invalid File" />
+    <text name="Educations">Educations</text>
+    <text name="DeleteUserEducation">Delete User Education</text>
+    <text name="UpdateUserEducation">Update User Education</text>
+    <text name="SelectLevel">Select Level</text>
+    <text name="SelectYear">Select Year</text>
+    <text name="EditUserEducation">Edit User Education</text>
+    <text name="CreateUserEducation">Create User Education</text>
+    <text name="NoEducationAvailable">No Education available</text>
+    <text name="EducationLevel1">Level 1 (GCSE - grades 1,2,3 or G,F,E,D or equivalent)</text>
+    <text name="EducationLevel2">Level 2 (GCSE - grades 6,7,8,9 or C,B,A,A* or equivalent)</text>
+    <text name="EducationLevel3">Level 3 (A-level or equivalent)</text>
+    <text name="EducationLevel4">Level 4 (Higher National Certificate or equivalent)</text>
+    <text name="EducationLevel5">Level 5 (Higher National Diploma or equivalent)</text>
+    <text name="EducationLevel6">Level 6 (Non-honours Batchelor’s degree or equivalent)</text>
+    <text name="EducationLevel7">Level 7 (Masters degree or equivalent)</text>
+    <text name="EducationLevel8">Level 8 (Doctoral degree or equivalent)</text>
+    <text name="TermsAndConditions">terms and conditions</text>
+    <text name="Add">Add</text>
+    <text name="Country">Country</text>
+    <text name="Degree">Degree</text>
+    <text name="StartYear">Start Year</text>
+    <text name="EndYear">End Year</text>
+    <text name="Level">Level</text>
+    <text name="UniversityOrCollege">University/College</text>
+    <text name="PublicationCertificateOrAward">Publication Certificate or Award</text>
+    <text name="Publisher">Publisher</text>
+    <text name="Summary">Summary</text>
+    <text name="Certificate">Certificate</text>
+    <text name="Organization">Organization</text>
     <text name="Inactive">Inactive</text>
     <text name="Active">Active</text>
     <text name="DropOrClickToUpload">Drop or click to upload</text>
@@ -9,7 +49,7 @@
     <text name="City">City</text>
     <text name="AddressLine2">Address Line 2</text>
     <text name="AddressLine1">Address Line 1</text>
-    <text name="SelectACountry">Select a Country</text>
+    <text name="SelectCountry">Select Country</text>
     <text name="DateOfBirth">Date of Birth</text>
     <text name="BecomeATutor">Become a Tutor</text>
     <text name="PrivacyAndNotifications">Privacy &amp; Notifications</text>
@@ -207,7 +247,5 @@
     <text name="Clear">Clear</text>
     <text name="ResetPasswordStepOneInfo">1. Enter your administrator password</text>
     <text name="ResetPasswordStepTwoInfo">2. Copy this random password so you can send it to the user</text>
-    <text name="TermsAndConditions">terms and conditions</text>
-    <text name="Add">Add</text>
   </texts>
 </localizationDictionary>

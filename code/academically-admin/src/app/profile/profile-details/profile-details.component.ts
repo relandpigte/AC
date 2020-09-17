@@ -8,6 +8,7 @@ import { fileUploadConfiguration } from '@shared/constants/configurations/file-u
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { AbstractControl, NgForm, ValidatorFn, Validators } from '@angular/forms';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'profile-details',
@@ -28,6 +29,7 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
   fileUploadSettings = fileUploadConfiguration;
   isLoading = false;
   isFullAddressRequired = false;
+  isStudent = false;
 
   constructor(
     injector: Injector,
@@ -39,6 +41,7 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
     this.datePickerConfig.showWeekNumbers = false;
     this.datePickerConfig.dateInputFormat = 'DD/MM/YYYY';
     this.profilePicturePlaceholderText = this.imageUploadPlaceholderText;
+    this.isStudent = this.appSession.user.roles.includes('Student');
   }
 
   ngOnInit(): void {
@@ -46,8 +49,52 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
   }
 
   onCountryChange(): void {
+    this.setRequiredFields();
+  }
+
+  onFileChange(files: FileList): void {
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (this.validateFile(file)) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = event => {
+          this.model.profilePictureUrl = reader.result.toString();
+        };
+        this.profilePicturePlaceholderText = file.name;
+        this.profilePicture = {
+          fileName: file.name,
+          data: file
+        };
+      } else {
+        this.clearUploader();
+      }
+    }
+  }
+
+  onFormSubmit(): void {
+    this.saveDetails();
+  }
+
+  private setRequiredFields(): void {
     const strictCountries = ['United States', 'United Kingdom'];
-    if (strictCountries.includes(this.model.country)) {
+    if (!this.isStudent) {
+      setTimeout(() => {
+        this.setControlValidators(this.profileDetailForm.controls.DateOfBirth, [Validators.required]);
+        this.setControlValidators(this.profileDetailForm.controls.Country, [Validators.required]);
+        this.setControlValidators(this.profileDetailForm.controls.AddressLine1, [Validators.required]);
+        this.setControlValidators(this.profileDetailForm.controls.City, [Validators.required]);
+      });
+    } else {
+      setTimeout(() => {
+        this.clearControlValidators(this.profileDetailForm.controls.DateOfBirth);
+        this.clearControlValidators(this.profileDetailForm.controls.Country);
+        this.clearControlValidators(this.profileDetailForm.controls.AddressLine1);
+        this.clearControlValidators(this.profileDetailForm.controls.City);
+      });
+    }
+
+    if (strictCountries.includes(this.model.country) && !this.isStudent) {
       setTimeout(() => {
         this.setControlValidators(this.profileDetailForm.controls.ZipOrPostCode, [Validators.required]);
         this.setControlValidators(this.profileDetailForm.controls.StateOrProvince, [Validators.required]);
@@ -62,26 +109,6 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
     }
   }
 
-  onFileChange(files: FileList): void {
-    if (files && files.length > 0) {
-      const file = files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = event => {
-        this.model.profilePictureUrl = reader.result.toString();
-      };
-      this.profilePicturePlaceholderText = file.name;
-      this.profilePicture = {
-        fileName: file.name,
-        data: file
-      };
-    }
-  }
-
-  onFormSubmit(): void {
-    this.saveDetails();
-  }
-
   private getDetails(): void {
     this.isLoading = true;
     this._userProfilesService.getDetail()
@@ -90,20 +117,21 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
         if (this.model.dateOfBirth) {
           this.dateOfBirth = this.model.dateOfBirth.toDate();
         }
+        this.setRequiredFields();
         this.isLoading = false;
       });
   }
 
   private saveDetails(): void {
     this.isLoading = true;
-    this.model.dateOfBirth = moment(moment(this.dateOfBirth).format('YYYY-MM-DD'));
-    const blob = new Blob([JSON.stringify(this.model)]);
+    if (this.dateOfBirth) {
+      this.model.dateOfBirth = moment(moment(this.dateOfBirth).format('YYYY-MM-DD'));
+    }
     this._userProfilesService.saveDetail(this.model.firstName, this.model.lastName,
       this.model.dateOfBirth, this.model.addressLine1, this.model.addressLine2, this.model.city, this.model.zipOrPostCode,
       this.model.stateOrProvince, this.model.country, this.profilePicture)
       .subscribe(() => {
-        this.profilePictureInput.nativeElement.value = '';
-        this.profilePicturePlaceholderText = this.imageUploadPlaceholderText;
+        this.clearUploader();
         this.notify.info(this.l('SavedSuccessfully'));
         abp.event.trigger(uiEvents.profileDetailsUpdated, this.model);
         this.isLoading = false;
@@ -111,12 +139,52 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
   }
 
   private setControlValidators(control: AbstractControl, validators: ValidatorFn[]): void {
-    control.setValidators(validators);
-    control.updateValueAndValidity();
+    if (control) {
+      control.setValidators(validators);
+      control.updateValueAndValidity();
+    }
   }
 
   private clearControlValidators(control: AbstractControl): void {
-    control.clearValidators();
-    control.updateValueAndValidity();
+    if (control) {
+      control.clearValidators();
+      control.updateValueAndValidity();
+    }
+  }
+
+  private validateFile(file: File): boolean {
+    const invalidUploadMessageTitle = this.l('InvalidFileUploadErrorTitle');
+
+    if (!this.validateFileExtension(file)) {
+      this.message.error(this.l('InvalidFileExtensionUploadError'), invalidUploadMessageTitle, true);
+      return false;
+    }
+
+    if (!this.validateFileSize(file.size, this.fileUploadSettings.profilePictureMaxFileSize)) {
+      this.message.error(this.l('ProfilePictureFileSizeUploadError'), invalidUploadMessageTitle, true);
+      return false;
+    }
+
+    return true;
+  }
+
+  private validateFileExtension(file: File): boolean {
+    const fileExtension = this.getFileExtension(file.name).toLocaleLowerCase();
+    const index = this.fileUploadSettings.allowedExtensions.indexOf(`.${fileExtension}`);
+    return index >= 0;
+  }
+
+  private validateFileSize(size: number, maxLimit: number) {
+    return size <= maxLimit;
+  }
+
+  private getFileExtension(fileName: string): string {
+    const fileNameArray = fileName.split('.');
+    return fileNameArray[fileNameArray.length - 1];
+  }
+
+  private clearUploader(): void {
+    this.profilePictureInput.nativeElement.value = '';
+    this.profilePicturePlaceholderText = this.imageUploadPlaceholderText;
   }
 }

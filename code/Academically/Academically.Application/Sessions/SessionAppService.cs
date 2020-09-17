@@ -44,11 +44,13 @@ namespace Academically.Sessions
 
             if (AbpSession.UserId.HasValue)
             {
-                output.User = ObjectMapper.Map<UserLoginInfoDto>(await GetCurrentUserAsync());
+                var user = await GetCurrentUserAsync();
+                output.User = ObjectMapper.Map<UserLoginInfoDto>(user);
+                output.User.Roles = await UserManager.GetRolesAsync(user);
                 var userProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
                 if (userProfile != null)
                 {
-                    output.User.ProfilePictureUrl = _fileManagerService.GetFileUrl(userProfile.ProfilePictureFileName, AppSettingNames.Aws_S3_Folders_ProfilePictures);
+                    output.User.ProfilePictureUrl = _fileManagerService.GetFileUrl(userProfile.ProfilePictureFileName, user.Id, AppSettingNames.Aws_S3_Folders_ProfilePictures);
                 }
             }
 

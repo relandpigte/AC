@@ -1,0 +1,70 @@
+<form class="form-horizontal" autocomplete="off" #createEditPofileEducationForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card" [busy]="isLoading">
+    <abp-modal-header [title]="(id ? 'EditUserEducation' : 'CreateUserEducation') | localize"
+      (onCloseClick)="onCloseClick()"></abp-modal-header>
+    <div class="card-body">
+
+      <div class="form-group required">
+        <label class="col-form-label" for="Country">{{ 'Country' | localize }}</label>
+        <select [(ngModel)]="model.country" id="Country" name="Country" type="text" class="form-control"
+          #countryModel="ngModel" #countryEl required>
+          <option [ngValue]="undefined">{{ 'SelectCountry' | localize }}</option>
+          <option *ngFor="let country of countries" [value]="country.name">{{ country.name }}</option>
+        </select>
+        <abp-validation-summary [control]="countryModel" [controlEl]="countryEl"></abp-validation-summary>
+      </div>
+
+      <div class="form-group required">
+        <label class="col-form-label" for="UniversityOrCollege">{{ 'UniversityOrCollege' | localize }}</label>
+        <input [(ngModel)]="model.universityOrCollege" id="UniversityOrCollege" name="UniversityOrCollege" type="text"
+          class="form-control" #universityOrCollegeModel="ngModel" #universityOrCollegeEl required maxlength="75">
+        <abp-validation-summary [control]="universityOrCollegeModel" [controlEl]="universityOrCollegeEl">
+        </abp-validation-summary>
+      </div>
+
+      <div class="form-group required">
+        <label class="col-form-label" for="Degree">{{ 'Degree' | localize }}</label>
+        <input [(ngModel)]="model.degree" id="Degree" name="Degree" type="text"
+          class="form-control" #degreeModel="ngModel" #degreeEl required maxlength="75">
+        <abp-validation-summary [control]="degreeModel" [controlEl]="degreeEl">
+        </abp-validation-summary>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="StartYear">{{ 'StartYear' | localize }}</label>
+          <select [(ngModel)]="model.startYear" id="StartYear" name="StartYear" type="number" class="form-control"
+            #startYearModel="ngModel" #startYearEl (change)="onStartYearChange()" required>
+            <option [ngValue]="undefined">{{ 'SelectYear' | localize }}</option>
+            <option *ngFor="let year of yearSelections" [value]="year">{{ year }}</option>
+          </select>
+          <abp-validation-summary [control]="startYearModel" [controlEl]="startYearEl"></abp-validation-summary>
+        </div>
+
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="EndYear">{{ 'EndYear' | localize }}</label>
+          <select [(ngModel)]="model.endYear" id="EndYear" name="EndYear" type="number" class="form-control"
+            #endYearModel="ngModel" #endYearEl (change)="onEndYearChange()" required>
+            <option [ngValue]="undefined">{{ 'SelectYear' | localize }}</option>
+            <option *ngFor="let year of yearSelections" [value]="year">{{ year }}</option>
+          </select>
+          <abp-validation-summary [control]="endYearModel" [controlEl]="endYearEl"></abp-validation-summary>
+        </div>
+      </div>
+
+      <div class="form-group required">
+        <label class="col-form-label" for="Level">{{ 'Level' | localize }}</label>
+        <select [(ngModel)]="model.level" id="Level" name="Level" type="text" class="form-control"
+          #levelModel="ngModel" #levelEl required>
+          <option [ngValue]="undefined">{{ 'SelectLevel' | localize }}</option>
+          <option *ngFor="let educationLevel of educationLevels" [value]="educationLevel.value">
+            {{ educationLevel.text }}</option>
+        </select>
+        <abp-validation-summary [control]="levelModel" [controlEl]="levelEl"></abp-validation-summary>
+      </div>
+
+    </div>
+    <abp-modal-footer [cancelDisabled]="isLoading" [saveDisabled]="!createEditPofileEducationForm.form.valid || isLoading"
+      (onCancelClick)="onCloseClick()"></abp-modal-footer>
+  </div>
+</form>
