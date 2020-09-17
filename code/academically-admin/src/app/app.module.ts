@@ -48,6 +48,7 @@ import { ProfileDetailsComponent } from './profile/profile-details/profile-detai
 import { ProfileSummaryWidgetComponent } from './widgets/profile-summary-widget/profile-summary-widget.component';
 import { ProfileEducationComponent } from './profile/profile-education/profile-education.component';
 import { ProfilePublicationsComponent } from './profile/profile-publications/profile-publications.component';
+import { CreateEditProfileEducationComponent } from './profile/profile-education/create-edit-profile-education/create-edit-profile-education.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import { ProfilePublicationsComponent } from './profile/profile-publications/pro
     ProfilePublicationsComponent,
     ProfileDetailsComponent,
     ProfileSummaryWidgetComponent,
+    CreateEditProfileEducationComponent,
   ],
   imports: [
     CommonModule,
@@ -115,6 +117,8 @@ import { ProfilePublicationsComponent } from './profile/profile-publications/pro
     CreateUserDialogComponent,
     EditUserDialogComponent,
     ResetPasswordDialogComponent,
+    // academically
+    CreateEditProfileEducationComponent,
   ],
 })
 export class AppModule { }

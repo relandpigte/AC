@@ -119,7 +119,11 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Widgets_RecentProjectsReceivingHelp,
                 PermissionNames.Pages_Dashboard_Widgets_MessageHub,
                 PermissionNames.Pages_Profile,
-                PermissionNames.Pages_Profile_Details
+                PermissionNames.Pages_Profile_Details,
+                PermissionNames.Pages_Profile_Educations,
+                PermissionNames.Pages_Profile_Educations_Create,
+                PermissionNames.Pages_Profile_Educations_Update,
+                PermissionNames.Pages_Profile_Educations_Delete
             );
 
             #endregion
@@ -137,7 +141,11 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Widgets_RecentProjectsReceivingHelp,
                 PermissionNames.Pages_Dashboard_Widgets_MessageHub,
                 PermissionNames.Pages_Profile,
-                PermissionNames.Pages_Profile_Details
+                PermissionNames.Pages_Profile_Details,
+                PermissionNames.Pages_Profile_Educations,
+                PermissionNames.Pages_Profile_Educations_Create,
+                PermissionNames.Pages_Profile_Educations_Update,
+                PermissionNames.Pages_Profile_Educations_Delete
             );
 
             #endregion
@@ -151,7 +159,11 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Widgets,
                 PermissionNames.Pages_Dashboard_Widgets_ProfileSummary,
                 PermissionNames.Pages_Profile,
-                PermissionNames.Pages_Profile_Details
+                PermissionNames.Pages_Profile_Details,
+                PermissionNames.Pages_Profile_Educations,
+                PermissionNames.Pages_Profile_Educations_Create,
+                PermissionNames.Pages_Profile_Educations_Update,
+                PermissionNames.Pages_Profile_Educations_Delete
             );
 
             #endregion
