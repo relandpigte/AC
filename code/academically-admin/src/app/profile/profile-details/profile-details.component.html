@@ -70,10 +70,18 @@
       </div>
 
       <ng-container *ngIf="isStudent || model.country">
-        <div class="form-group" [class.required]="!isStudent">
+        <div class="form-group" [class.required]="!isStudent" *ngIf="model.country !== 'United Kingdom'">
           <label class="col-form-label" for="AddressLine1">{{ 'AddressLine1' | localize }}</label>
           <input [(ngModel)]="model.addressLine1" id="AddressLine1" name="AddressLine1" type="text" class="form-control"
             #addressLine1Model="ngModel" #addressLine1El>
+          <abp-validation-summary *ngIf="!isStudent" [control]="addressLine1Model" [controlEl]="addressLine1El"></abp-validation-summary>
+        </div>
+
+        <div class="form-group" [class.required]="!isStudent" *ngIf="model.country === 'United Kingdom'">
+          <label class="col-form-label" for="AddressLine1">{{ 'AddressLine1' | localize }}</label>
+          <input [(ngModel)]="model.addressLine1" id="AddressLine1" name="AddressLine1" 
+            typeaheadOptionField="address" [typeahead]="addressDataSource" [typeaheadAsync]="true" [typeaheadMinLength]="3"
+            (typeaheadOnSelect)="onAddressSelected($event)" type="text" class="form-control" #addressLine1Model="ngModel" #addressLine1El>
           <abp-validation-summary *ngIf="!isStudent" [control]="addressLine1Model" [controlEl]="addressLine1El"></abp-validation-summary>
         </div>
 

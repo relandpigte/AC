@@ -141,6 +141,130 @@ export class AccountServiceProxy {
 }
 
 @Injectable()
+export class AddressLookupServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @param keyword (optional) 
+     * @return Success
+     */
+    getAddress(keyword: string | null | undefined): Observable<SuggestionDataDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/AddressLookup/GetAddress?";
+        if (keyword !== undefined)
+            url_ += "keyword=" + encodeURIComponent("" + keyword) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAddress(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAddress(<any>response_);
+                } catch (e) {
+                    return <Observable<SuggestionDataDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<SuggestionDataDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAddress(response: HttpResponseBase): Observable<SuggestionDataDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(SuggestionDataDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<SuggestionDataDto[]>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getAddressDetail(id: string | null | undefined): Observable<AddressDetailDto> {
+        let url_ = this.baseUrl + "/api/services/app/AddressLookup/GetAddressDetail?";
+        if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAddressDetail(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAddressDetail(<any>response_);
+                } catch (e) {
+                    return <Observable<AddressDetailDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AddressDetailDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAddressDetail(response: HttpResponseBase): Observable<AddressDetailDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AddressDetailDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AddressDetailDto>(<any>null);
+    }
+}
+
+@Injectable()
 export class ConfigurationServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -5046,6 +5170,129 @@ export interface IProfileSummaryWidgetDto {
 export interface FileParameter {
     data: any;
     fileName: string;
+}
+
+
+export class SuggestionDataDto implements ISuggestionDataDto {
+    address: string | undefined;
+    url: string | undefined;
+    id: string | undefined;
+
+    constructor(data?: ISuggestionDataDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.address = _data["address"];
+            this.url = _data["url"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): SuggestionDataDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SuggestionDataDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["address"] = this.address;
+        data["url"] = this.url;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): SuggestionDataDto {
+        const json = this.toJSON();
+        let result = new SuggestionDataDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISuggestionDataDto {
+    address: string | undefined;
+    url: string | undefined;
+    id: string | undefined;
+}
+
+export class AddressDetailDto implements IAddressDetailDto {
+    postcode: string | undefined;
+    latitude: string | undefined;
+    longitude: string | undefined;
+    line_1: string | undefined;
+    line_2: string | undefined;
+    town_Or_City: string | undefined;
+    county: string | undefined;
+    district: string | undefined;
+
+    constructor(data?: IAddressDetailDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.postcode = _data["postcode"];
+            this.latitude = _data["latitude"];
+            this.longitude = _data["longitude"];
+            this.line_1 = _data["line_1"];
+            this.line_2 = _data["line_2"];
+            this.town_Or_City = _data["town_Or_City"];
+            this.county = _data["county"];
+            this.district = _data["district"];
+        }
+    }
+
+    static fromJS(data: any): AddressDetailDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddressDetailDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["postcode"] = this.postcode;
+        data["latitude"] = this.latitude;
+        data["longitude"] = this.longitude;
+        data["line_1"] = this.line_1;
+        data["line_2"] = this.line_2;
+        data["town_Or_City"] = this.town_Or_City;
+        data["county"] = this.county;
+        data["district"] = this.district;
+        return data; 
+    }
+
+    clone(): AddressDetailDto {
+        const json = this.toJSON();
+        let result = new AddressDetailDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAddressDetailDto {
+    postcode: string | undefined;
+    latitude: string | undefined;
+    longitude: string | undefined;
+    line_1: string | undefined;
+    line_2: string | undefined;
+    town_Or_City: string | undefined;
+    county: string | undefined;
+    district: string | undefined;
 }
 
 export class ApiException extends Error {

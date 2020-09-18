@@ -1,14 +1,17 @@
 import { Component, ElementRef, inject, Injector, Input, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { GetProfileDetailDto, UserProfilesServiceProxy, FileParameter } from '@shared/service-proxies/service-proxies';
+import { GetProfileDetailDto, UserProfilesServiceProxy, FileParameter, AddressLookupServiceProxy, SuggestionDataDto } from '@shared/service-proxies/service-proxies';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { countries } from '@shared/constants/countries';
 import { uiEvents } from '@shared/constants/ui-events';
+import { TypeaheadMatch } from 'ngx-bootstrap/typeahead/ngx-bootstrap-typeahead';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { AbstractControl, NgForm, ValidatorFn, Validators } from '@angular/forms';
 import { environment } from 'environments/environment';
+import { Observable, Observer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'profile-details',
@@ -30,10 +33,12 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
   isLoading = false;
   isFullAddressRequired = false;
   isStudent = false;
+  addressDataSource: Observable<SuggestionDataDto[]>;
 
   constructor(
     injector: Injector,
     private _userProfilesService: UserProfilesServiceProxy,
+    private _addressLookupService: AddressLookupServiceProxy
   ) {
     super(injector);
     this.userId = this.appSession.userId;
@@ -46,6 +51,11 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
 
   ngOnInit(): void {
     this.getDetails();
+    this.getAddressLookup();
+  }
+
+  onAddressSelected(e: TypeaheadMatch): void {
+    this.getAddressDetails(e.item.id);
   }
 
   onCountryChange(): void {
@@ -74,6 +84,29 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
 
   onFormSubmit(): void {
     this.saveDetails();
+  }
+
+  private getAddressLookup(): void {
+    this.addressDataSource = new Observable((observer: Observer<string>) => {
+      observer.next(this.model.addressLine1);
+    }).pipe(
+      switchMap((query: string) => {
+        return this._addressLookupService.getAddress(query);
+      })
+    );
+  }
+
+  private getAddressDetails(id: string): void {
+    this._addressLookupService.getAddressDetail(id)
+      .subscribe((result) => {
+        if (result) {
+          this.model.addressLine1 = result.line_1;
+          this.model.addressLine2 = result.line_2;
+          this.model.city = result.town_Or_City;
+          this.model.zipOrPostCode = result.postcode;
+          this.model.stateOrProvince = result.county;
+        }
+      });
   }
 
   private setRequiredFields(): void {

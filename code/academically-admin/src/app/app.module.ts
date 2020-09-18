@@ -13,6 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module';
 import { SharedModule } from '@shared/shared.module';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 // directives
 import { Select2Directive } from '@shared/directives/select2.directive';
 // tenants
@@ -105,6 +106,7 @@ import { CreateEditPublicationComponent } from './profile/profile-publications/c
     ServiceProxyModule,
     SharedModule,
     NgxPaginationModule,
+    TypeaheadModule.forRoot(),
     BsDatepickerModule.forRoot(),
   ],
   providers: [],
