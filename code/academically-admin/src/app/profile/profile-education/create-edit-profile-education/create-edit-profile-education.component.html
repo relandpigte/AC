@@ -24,8 +24,8 @@
 
       <div class="form-group required">
         <label class="col-form-label" for="Degree">{{ 'Degree' | localize }}</label>
-        <input [(ngModel)]="model.degree" id="Degree" name="Degree" type="text"
-          class="form-control" #degreeModel="ngModel" #degreeEl required maxlength="75">
+        <input [(ngModel)]="model.degree" id="Degree" name="Degree" type="text" class="form-control"
+          #degreeModel="ngModel" #degreeEl required maxlength="75">
         <abp-validation-summary [control]="degreeModel" [controlEl]="degreeEl">
         </abp-validation-summary>
       </div>
@@ -54,17 +54,18 @@
 
       <div class="form-group required">
         <label class="col-form-label" for="Level">{{ 'Level' | localize }}</label>
-        <select [(ngModel)]="model.level" id="Level" name="Level" type="text" class="form-control"
-          #levelModel="ngModel" #levelEl required>
+        <select [(ngModel)]="model.level" id="Level" name="Level" type="text" class="form-control" #levelModel="ngModel"
+          #levelEl required>
           <option [ngValue]="undefined">{{ 'SelectLevel' | localize }}</option>
-          <option *ngFor="let educationLevel of educationLevels" [value]="educationLevel.value">
-            {{ educationLevel.text }}</option>
+          <option *ngFor="let educationLevel of educationLevels" [value]="educationLevel">
+            {{ 'EducationLevel' + educationLevel | localize }}</option>
         </select>
         <abp-validation-summary [control]="levelModel" [controlEl]="levelEl"></abp-validation-summary>
       </div>
 
     </div>
-    <abp-modal-footer [cancelDisabled]="isLoading" [saveDisabled]="!createEditPofileEducationForm.form.valid || isLoading"
-      (onCancelClick)="onCloseClick()"></abp-modal-footer>
+    <abp-modal-footer [cancelDisabled]="isLoading"
+      [saveDisabled]="!createEditPofileEducationForm.form.valid || isLoading" (onCancelClick)="onCloseClick()">
+    </abp-modal-footer>
   </div>
 </form>

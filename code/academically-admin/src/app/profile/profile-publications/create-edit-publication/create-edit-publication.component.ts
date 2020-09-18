@@ -1,7 +1,7 @@
 import { Component, OnInit, Injector, Output, EventEmitter, inject } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { GetPublicationDto, UserPublicationsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { UserPublicationDto, UserPublicationsServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-create-edit-publication',
@@ -13,7 +13,7 @@ export class CreateEditPublicationComponent extends AppComponentBase implements 
   id: string;
   userId: number;
   isSaving = false;
-  publication: GetPublicationDto = new GetPublicationDto();
+  publication: UserPublicationDto = new UserPublicationDto();
   summaryMaxWordCount = 1500;
 
   constructor(
@@ -26,7 +26,6 @@ export class CreateEditPublicationComponent extends AppComponentBase implements 
 
   ngOnInit(): void {
     if (!this.id) {
-      this.publication.userId = this.userId;
     } else {
       this.getPublication();
     }

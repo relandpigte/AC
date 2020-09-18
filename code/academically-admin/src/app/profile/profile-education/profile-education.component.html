@@ -3,10 +3,13 @@
     <h4 class="card-header-title">
       {{ 'Education' | localize }}
     </h4>
-    <a href="#" class="btn btn-sm btn-primary" (click)="$event.preventDefault(); onCreateClick();">{{ 'Create' | localize }}</a>
+    <a href="#" class="btn btn-sm btn-primary" (click)="$event.preventDefault(); onCreateClick();"
+      *ngIf="permission.isGranted('Pages.Profile.Educations.Create')">
+      {{ 'Create' | localize }}
+    </a>
   </div>
   <div class="table-responsive" [busy]="isTableLoading">
-    <table class="table table-sm table-hover table-nowrap card-table" [busy]="isTableLoading">
+    <table class="table table-sm table-hover table-nowrap card-table">
       <thead table-header-sort [headers]="headers" (sortChange)="sortChange($event)"></thead>
       <tbody class="list font-size-base">
         <tr
@@ -15,7 +18,7 @@
           <td>{{ userEducation.degree }}</td>
           <td>{{ userEducation.startYear }}</td>
           <td>{{ userEducation.endYear }}</td>
-          <td>{{ userEducation.levelText }}</td>
+          <td>{{ 'EducationLevel' + userEducation.level | localize }}</td>
           <td class="table-action">
             <div dropdown class="dropdown" container="body">
               <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;" role="button">

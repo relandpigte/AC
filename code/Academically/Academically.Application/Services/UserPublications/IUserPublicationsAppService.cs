@@ -1,15 +1,11 @@
 using System;
-using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using Academically.Entities;
-using Academically.Roles.Dto;
 using Academically.Services.UserPublications.Dto;
-using Academically.Users.Dto;
 
-namespace Academically.Users
+namespace Academically.Services.UserPublications
 {
-    public interface IUserPublicationsAppService : IAsyncCrudAppService<GetPublicationDto, Guid ,PagedPublicationResultRequestDto, SavePublicationDto, GetPublicationDto>
+    public interface IUserPublicationsAppService : IAsyncCrudAppService<UserPublicationDto, Guid, PagedAndSortedResultRequestDto>
     {
     }
 }

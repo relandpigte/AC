@@ -1,12 +1,11 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { CreateEditPublicationComponent } from './create-edit-publication/create-edit-publication.component';
-import { AppComponentBase } from '@shared/app-component-base';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
 import {
+  UserPublicationDto,
+  UserPublicationDtoPagedResultDto,
   UserPublicationsServiceProxy,
-  GetPublicationDto,
-  GetPublicationDtoPagedResultDto
 } from '@shared/service-proxies/service-proxies';
 import { TableHeaderSortData } from '@shared/components/table-header-sort/table-header-sort.component';
 import { finalize } from 'rxjs/operators';
@@ -20,10 +19,9 @@ class PagedPublicationsRequestDto extends PagedAndSortedRequestDto {
   templateUrl: './profile-publications.component.html',
   styleUrls: ['./profile-publications.component.less']
 })
-export class ProfilePublicationsComponent extends PagedListingComponentBase<GetPublicationDto> {
-  publications: GetPublicationDto[] = [];
+export class ProfilePublicationsComponent extends PagedListingComponentBase<UserPublicationDto> {
+  publications: UserPublicationDto[] = [];
   keyword: '';
-  userId: number;
   headers: TableHeaderSortData[] = [
     { title: 'Certificate', sortColumn: 'publicationCertificate' },
     { title: 'Organization', sortColumn: 'publisher', colspan: 2 },
@@ -34,7 +32,6 @@ export class ProfilePublicationsComponent extends PagedListingComponentBase<GetP
     private _userPublicationsService: UserPublicationsServiceProxy
   ) {
     super(injector);
-    this.userId = this.appSession.userId;
     this.sorting = this.headers[0].sortColumn;
   }
 
@@ -47,18 +44,16 @@ export class ProfilePublicationsComponent extends PagedListingComponentBase<GetP
 
     this._userPublicationsService
       .getAll(
-        this.userId,
-        request.keyword,
-        request.sort,
         request.skipCount,
-        request.maxResultCount
+        request.maxResultCount,
+        request.sort,
       )
       .pipe(
         finalize(() => {
           finishedCallback();
         })
       )
-      .subscribe((result: GetPublicationDtoPagedResultDto) => {
+      .subscribe((result: UserPublicationDtoPagedResultDto) => {
         this.publications = result.items;
         this.showPaging(result, pageNumber);
       });
@@ -90,7 +85,6 @@ export class ProfilePublicationsComponent extends PagedListingComponentBase<GetP
     modalSettings.class = 'modal-lg';
     modalSettings.initialState = {
       id: id,
-      userId: this.userId
     };
     const modalRef: BsModalRef = this._modalService.show(CreateEditPublicationComponent, modalSettings);
     const modal: CreateEditPublicationComponent = modalRef.content;

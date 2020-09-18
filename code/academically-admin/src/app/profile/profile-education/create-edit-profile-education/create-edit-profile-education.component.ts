@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { countries } from '@shared/constants/countries';
-import { EnumItem, UserEducationDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { EducationLevel, UserEducationDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { pipe } from 'rxjs';
 import { finalize } from 'rxjs/operators';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-create-edit-profile-education',
@@ -18,7 +18,7 @@ export class CreateEditProfileEducationComponent extends AppComponentBase implem
   model: UserEducationDto = new UserEducationDto();
   countries = countries;
   yearSelections: number[] = [];
-  educationLevels: EnumItem[] = [];
+  educationLevels: number[] = [];
   isLoading = false;
 
   constructor(
@@ -84,10 +84,7 @@ export class CreateEditProfileEducationComponent extends AppComponentBase implem
   }
 
   private getEducationLevels(): void {
-    this._userEducationsService.getLevels()
-      .subscribe(educationLevels => {
-        this.educationLevels = educationLevels;
-      });
+    this.educationLevels = this.enumToArray(EducationLevel).reverse();
   }
 
   private close(): void {

@@ -67,4 +67,10 @@ export abstract class AppComponentBase {
   isGranted(permissionName: string): boolean {
     return this.permission.isGranted(permissionName);
   }
+
+  protected enumToArray(enumeraton) {
+    return Object.keys(enumeraton)
+      .filter(e => isNaN(Number(e)) === true)
+      .map(key => enumeraton[key]);
+  }
 }

@@ -24,6 +24,5 @@
     <Folder Include="Entities\Enums\" />
     <Folder Include="DomainServices\" />
     <Folder Include="DomainServices\Registrations\" />
-    <Folder Include="Extensions\" />
   </ItemGroup>
 </Project>

@@ -16,7 +16,5 @@ namespace Academically.Services.UserEducations.Dto
         public int EndYear { get; set; }
         public EducationLevel Level { get; set; }
         public long UserId { get; set; }
-
-        public string LevelText { get; set; }
     }
 }

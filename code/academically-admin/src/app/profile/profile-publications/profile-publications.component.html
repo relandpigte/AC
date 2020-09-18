@@ -8,7 +8,7 @@
       {{ "Create" | localize }}
     </a>
   </div>
-  <div class="table-responsive">
+  <div class="table-responsive" [busy]="isTableLoading">
     <table class="table table-sm table-hover table-nowrap card-table">
       <thead table-header-sort [headers]="headers" (sortChange)="sortChange($event)"></thead>
       <tbody class="list font-size-base">
