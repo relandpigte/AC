@@ -8,19 +8,21 @@ import { GetPublicationDto, UserPublicationsServiceProxy } from '@shared/service
   templateUrl: './create-edit-publication.component.html',
   styleUrls: ['./create-edit-publication.component.less']
 })
-export class CreateEditPublicationComponent extends AppComponentBase implements OnInit  {
+export class CreateEditPublicationComponent extends AppComponentBase implements OnInit {
   @Output() onSave = new EventEmitter<any>();
   id: string;
   userId: number;
   isSaving = false;
   publication: GetPublicationDto = new GetPublicationDto();
+  summaryMaxWordCount = 1500;
+
   constructor(
     injector: Injector,
     private _modal: BsModalRef,
     private _userPublicationService: UserPublicationsServiceProxy
   ) {
     super(injector);
-   }
+  }
 
   ngOnInit(): void {
     if (!this.id) {
@@ -48,11 +50,21 @@ export class CreateEditPublicationComponent extends AppComponentBase implements 
   }
 
   onKeyup(summary: string): void {
-    const words = summary.match(/\S+/g).length;
-    if (words > 1500) {
-      const trimmed = summary.split(/\s+/, 1500).join(' ');
-      this.publication.summary = trimmed + ' ';
+    if (summary) {
+      const words = summary.match(/\S+/g).length;
+      if (words > this.summaryMaxWordCount) {
+        const trimmed = summary.split(/\s+/, this.summaryMaxWordCount).join(' ');
+        this.publication.summary = trimmed + ' ';
+      }
     }
+  }
+
+  getSummaryWordCount(): number {
+    const wordCount = this.publication.summary ? this.publication.summary.match(/\S+/g).length : 0;
+    if (wordCount > this.summaryMaxWordCount) {
+      return this.summaryMaxWordCount;
+    }
+    return wordCount;
   }
 
   private close(): void {

@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="NoPublicationAvailable">No Publication available</text>
     <text name="ProfilePictureFileSizeUploadError">
       <![CDATA[
           <p>Invalid advert image. The image file size must be less than <b>2MB</b>.</p>
@@ -30,17 +31,6 @@
     <text name="EducationLevel8">Level 8 (Doctoral degree or equivalent)</text>
     <text name="TermsAndConditions">terms and conditions</text>
     <text name="Add">Add</text>
-    <text name="Country">Country</text>
-    <text name="Degree">Degree</text>
-    <text name="StartYear">Start Year</text>
-    <text name="EndYear">End Year</text>
-    <text name="Level">Level</text>
-    <text name="UniversityOrCollege">University/College</text>
-    <text name="PublicationCertificateOrAward">Publication Certificate or Award</text>
-    <text name="Publisher">Publisher</text>
-    <text name="Summary">Summary</text>
-    <text name="Certificate">Certificate</text>
-    <text name="Organization">Organization</text>
     <text name="Inactive">Inactive</text>
     <text name="Active">Active</text>
     <text name="DropOrClickToUpload">Drop or click to upload</text>
@@ -76,7 +66,7 @@
     <text name="Level">Level</text>
     <text name="Publication">Publication</text>
     <text name="Publications">Publications</text>
-    <text name="UniversityCollege">University/College</text>
+    <text name="UniversityOrCollege">University/College</text>
     <text name="PublicationCertificateOrAward">Publication Certificate or Award</text>
     <text name="Publisher">Publisher</text>
     <text name="Summary">Summary</text>

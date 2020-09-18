@@ -123,7 +123,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_Educations,
                 PermissionNames.Pages_Profile_Educations_Create,
                 PermissionNames.Pages_Profile_Educations_Update,
-                PermissionNames.Pages_Profile_Educations_Delete
+                PermissionNames.Pages_Profile_Educations_Delete,
                 PermissionNames.Pages_Profile_Publications,
                 PermissionNames.Pages_Profile_Publications_Create,
                 PermissionNames.Pages_Profile_Publications_Update,
@@ -149,7 +149,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_Educations,
                 PermissionNames.Pages_Profile_Educations_Create,
                 PermissionNames.Pages_Profile_Educations_Update,
-                PermissionNames.Pages_Profile_Educations_Delete
+                PermissionNames.Pages_Profile_Educations_Delete,
                 PermissionNames.Pages_Profile_Publications,
                 PermissionNames.Pages_Profile_Publications_Create,
                 PermissionNames.Pages_Profile_Publications_Update,

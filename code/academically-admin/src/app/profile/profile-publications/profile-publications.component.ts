@@ -26,7 +26,7 @@ export class ProfilePublicationsComponent extends PagedListingComponentBase<GetP
   userId: number;
   headers: TableHeaderSortData[] = [
     { title: 'Certificate', sortColumn: 'publicationCertificate' },
-    { title: 'Organization', sortColumn: 'publisher', colspan: 2  },
+    { title: 'Organization', sortColumn: 'publisher', colspan: 2 },
   ];
   constructor(
     injector: Injector,
@@ -64,15 +64,14 @@ export class ProfilePublicationsComponent extends PagedListingComponentBase<GetP
       });
   }
 
-  onFormSubmit(): void {
-  }
-
   onCreateClick(): void {
     this.showCreateOrEditUserDialog();
   }
+
   onEditClick(id: string): void {
     this.showCreateOrEditUserDialog(id);
   }
+
   onDeleteClick(id: string): void {
     this.message.confirm('', undefined,
       (result: boolean) => {
@@ -87,19 +86,15 @@ export class ProfilePublicationsComponent extends PagedListingComponentBase<GetP
   }
 
   private showCreateOrEditUserDialog(id?: string): void {
-    let createOrEditUserDialog: BsModalRef;
-      createOrEditUserDialog = this._modalService.show(
-        CreateEditPublicationComponent,
-        {
-          class: 'modal-lg',
-          initialState: {
-            id: id,
-            userId: this.userId
-          },
-        }
-      );
-
-    createOrEditUserDialog.content.onSave.subscribe(() => {
+    const modalSettings = this.defaultModalSettings;
+    modalSettings.class = 'modal-lg';
+    modalSettings.initialState = {
+      id: id,
+      userId: this.userId
+    };
+    const modalRef: BsModalRef = this._modalService.show(CreateEditPublicationComponent, modalSettings);
+    const modal: CreateEditPublicationComponent = modalRef.content;
+    modal.onSave.subscribe(() => {
       this.refresh();
     });
   }

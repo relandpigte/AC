@@ -1,38 +1,43 @@
 <form class="form-horizontal" autocomplete="off" #createEditPublicationForm="ngForm" (ngSubmit)="onFormSubmit()">
-    <div class="modal-card card">
-        <abp-modal-header [title]="(id ? 'EditPublication' : 'CreatePublication') | localize" (onCloseClick)="onCloseClick()"></abp-modal-header>
-        <div class="modal-body">
-          <div class="form-group row required">
-            <div class="col-md-6">
-                <label class="col-form-label" for="Publication_Certificate">
-                    {{ "PublicationCertificateOrAward" | localize }}
-                </label>
-                <input type="text" class="form-control" name="Publication_Certificate" id="Publication_Certificate" [(ngModel)]="publication.publicationCertificate"
-                    #publicationCertificate="ngModel" #publicationCertificateEl required maxlength="300" />
-                <abp-validation-summary [control]="publicationCertificate" [controlEl]="publicationCertificateEl"></abp-validation-summary>
-            </div>
-            <div class="col-md-6">
-                <label class="col-form-label" for="Publisher">
-                    {{ "Publisher" | localize }}
-                </label>
-                <input type="text" class="form-control" name="Publisher" id="Publisher" [(ngModel)]="publication.publisher"
-                  #publisher="ngModel" #publisherEl required maxlength="75" />
-                <abp-validation-summary [control]="publisher" [controlEl]="publisherEl"></abp-validation-summary>
-            </div>
-          </div>
-          <div class="form-group row required">
-              <div class="col-md-12">
-                <label class="col-form-label" for="Summary">
-                    {{ "Summary" | localize }}
-                </label>
-                <textarea class="form-control" data-toggle="autosize" rows="5" name="Summary" id="Summary" [(ngModel)]="publication.summary" 
-                    #summary="ngModel" #summaryEl required (keyup)="onKeyup(publication.summary)"></textarea>
-                <abp-validation-summary [control]="summary" [controlEl]="summaryEl"></abp-validation-summary>
-              </div>
-          </div>
-        </div>
-        <abp-modal-footer [cancelDisabled]="isSaving" [saveDisabled]="!createEditPublicationForm.form.valid || isSaving"
-          (onCancelClick)="onCloseClick()"></abp-modal-footer>
-    </div>
-    
+	<div class="modal-card card">
+		<abp-modal-header [title]="(id ? 'EditPublication' : 'CreatePublication') | localize"
+			(onCloseClick)="onCloseClick()"></abp-modal-header>
+		<div class="modal-body">
+			<div class="form-group row required">
+				<div class="col-md-6">
+					<label class="col-form-label" for="Publication_Certificate">
+						{{ "PublicationCertificateOrAward" | localize }}
+					</label>
+					<input type="text" class="form-control" name="Publication_Certificate" id="Publication_Certificate"
+						[(ngModel)]="publication.publicationCertificate" #publicationCertificate="ngModel" #publicationCertificateEl
+						required maxlength="300" />
+					<abp-validation-summary [control]="publicationCertificate" [controlEl]="publicationCertificateEl">
+					</abp-validation-summary>
+				</div>
+				<div class="col-md-6">
+					<label class="col-form-label" for="Publisher">
+						{{ "Publisher" | localize }}
+					</label>
+					<input type="text" class="form-control" name="Publisher" id="Publisher" [(ngModel)]="publication.publisher"
+						#publisher="ngModel" #publisherEl required maxlength="75" />
+					<abp-validation-summary [control]="publisher" [controlEl]="publisherEl"></abp-validation-summary>
+				</div>
+			</div>
+			<div class="form-group row required">
+				<div class="col-md-12">
+					<label class="col-form-label" for="Summary">
+						{{ "Summary" | localize }}
+					</label>
+					<textarea class="form-control" data-toggle="autosize" rows="5" name="Summary" id="Summary"
+						[(ngModel)]="publication.summary" #summary="ngModel" #summaryEl required
+						(keyup)="onKeyup(publication.summary)"></textarea>
+					<span class="badge badge-secondary m-0">{{ getSummaryWordCount() }}/{{ summaryMaxWordCount }}</span>
+					<abp-validation-summary [control]="summary" [controlEl]="summaryEl"></abp-validation-summary>
+				</div>
+			</div>
+		</div>
+		<abp-modal-footer [cancelDisabled]="isSaving" [saveDisabled]="!createEditPublicationForm.form.valid || isSaving"
+			(onCancelClick)="onCloseClick()"></abp-modal-footer>
+	</div>
+
 </form>
