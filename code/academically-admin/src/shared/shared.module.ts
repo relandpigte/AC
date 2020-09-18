@@ -27,25 +27,25 @@ import { TableHeaderSortComponent } from './components/table-header-sort/table-h
         NgxPaginationModule
     ],
     declarations: [
+        EqualValidator,
+        BusyDirective,
+        BodyClassDirective,
         AbpPaginationControlsComponent,
         AbpValidationSummaryComponent,
         AbpModalHeaderComponent,
         AbpModalFooterComponent,
         LocalizePipe,
-        BusyDirective,
-        EqualValidator,
-        BodyClassDirective,
         TableHeaderSortComponent,
     ],
     exports: [
+        EqualValidator,
+        BusyDirective,
+        BodyClassDirective,
         AbpPaginationControlsComponent,
         AbpValidationSummaryComponent,
         AbpModalHeaderComponent,
         AbpModalFooterComponent,
         LocalizePipe,
-        BusyDirective,
-        EqualValidator,
-        BodyClassDirective,
         TableHeaderSortComponent,
     ]
 })

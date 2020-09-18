@@ -17,7 +17,7 @@
         <div class="col-12 col-xl-8 profile-settings">
           <tabset>
             <tab *ngIf="permission.isGranted('Pages.Profile.Details')" heading="{{ 'Details' | localize }}">
-              <profile-details></profile-details>
+              <profile-details #profileDetailsComponent></profile-details>
             </tab>
             <tab *ngIf="permission.isGranted('Pages.Profile.Educations')" heading="{{ 'Education' | localize }}">
               <profile-education></profile-education>

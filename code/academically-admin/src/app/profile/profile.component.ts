@@ -1,7 +1,9 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { AppSessionService } from '@shared/session/app-session.service';
+import { FormCanDeactive } from '@shared/models/can-deactivate/form-can-deactivate';
+import { ProfileDetailsComponent } from './profile-details/profile-details.component';
 
 @Component({
   selector: 'app-profile',
@@ -9,12 +11,18 @@ import { AppSessionService } from '@shared/session/app-session.service';
   styleUrls: ['./profile.component.less'],
   animations: [appModuleAnimation()]
 })
-export class ProfileComponent extends AppComponentBase implements OnInit {
+export class ProfileComponent extends FormCanDeactive implements OnInit {
+  @ViewChild('profileDetailsComponent') profileDetailsComponent: ProfileDetailsComponent;
 
   constructor(
     injector: Injector,
-    ) {
+  ) {
     super(injector);
+    this.changesNotYetSavedMessage = this.l('ProfileDetailsNotSavedWarning');
+  }
+
+  get form(): NgForm {
+    return this.profileDetailsComponent.form;
   }
 
   ngOnInit(): void {

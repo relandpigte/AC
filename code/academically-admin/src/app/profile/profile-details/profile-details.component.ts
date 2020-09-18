@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, Injector, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Injector, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { GetProfileDetailDto, UserProfilesServiceProxy, FileParameter, AddressLookupServiceProxy, SuggestionDataDto } from '@shared/service-proxies/service-proxies';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
@@ -9,9 +9,9 @@ import { fileUploadConfiguration } from '@shared/constants/configurations/file-u
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { AbstractControl, NgForm, ValidatorFn, Validators } from '@angular/forms';
-import { environment } from 'environments/environment';
 import { Observable, Observer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { FormCanDeactive } from '@shared/models/can-deactivate/form-can-deactivate';
 
 @Component({
   selector: 'profile-details',
@@ -19,7 +19,7 @@ import { switchMap } from 'rxjs/operators';
   styleUrls: ['./profile-details.component.less']
 })
 export class ProfileDetailsComponent extends AppComponentBase implements OnInit {
-  @ViewChild('profileDetailForm') profileDetailForm: NgForm;
+  @ViewChild('profileDetailForm') public form: NgForm;
   @ViewChild('profilePictureInput', { static: true }) profilePictureInput: ElementRef;
 
   userId: number;
@@ -113,30 +113,34 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
     const strictCountries = ['United States', 'United Kingdom'];
     if (!this.isStudent) {
       setTimeout(() => {
-        this.setControlValidators(this.profileDetailForm.controls.DateOfBirth, [Validators.required]);
-        this.setControlValidators(this.profileDetailForm.controls.Country, [Validators.required]);
-        this.setControlValidators(this.profileDetailForm.controls.AddressLine1, [Validators.required]);
-        this.setControlValidators(this.profileDetailForm.controls.City, [Validators.required]);
+        this.setControlValidators(this.form.controls.DateOfBirth, [Validators.required]);
+        this.setControlValidators(this.form.controls.Country, [Validators.required]);
+        this.setControlValidators(this.form.controls.AddressLine1, [Validators.required]);
+        this.setControlValidators(this.form.controls.City, [Validators.required]);
       });
     } else {
       setTimeout(() => {
-        this.clearControlValidators(this.profileDetailForm.controls.DateOfBirth);
-        this.clearControlValidators(this.profileDetailForm.controls.Country);
-        this.clearControlValidators(this.profileDetailForm.controls.AddressLine1);
-        this.clearControlValidators(this.profileDetailForm.controls.City);
+        this.clearControlValidators(this.form.controls.DateOfBirth);
+        this.clearControlValidators(this.form.controls.Country);
+        this.clearControlValidators(this.form.controls.AddressLine1);
+        this.clearControlValidators(this.form.controls.City);
       });
     }
 
-    if (strictCountries.includes(this.model.country) && !this.isStudent) {
+    if (strictCountries.includes(this.model.country)) {
       setTimeout(() => {
-        this.setControlValidators(this.profileDetailForm.controls.ZipOrPostCode, [Validators.required]);
-        this.setControlValidators(this.profileDetailForm.controls.StateOrProvince, [Validators.required]);
+        this.setControlValidators(this.form.controls.ZipOrPostCode, [Validators.required]);
+        if (!this.isStudent) {
+          this.setControlValidators(this.form.controls.StateOrProvince, [Validators.required]);
+        }
         this.isFullAddressRequired = true;
       });
     } else {
       setTimeout(() => {
-        this.clearControlValidators(this.profileDetailForm.controls.ZipOrPostCode);
-        this.clearControlValidators(this.profileDetailForm.controls.StateOrProvince);
+        this.clearControlValidators(this.form.controls.ZipOrPostCode);
+        if (!this.isStudent) {
+          this.clearControlValidators(this.form.controls.StateOrProvince);
+        }
         this.isFullAddressRequired = false;
       });
     }
@@ -167,6 +171,8 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
         this.clearUploader();
         this.notify.info(this.l('SavedSuccessfully'));
         abp.event.trigger(uiEvents.profileDetailsUpdated, this.model);
+        this.form.reset();
+        this.getDetails();
         this.isLoading = false;
       });
   }
