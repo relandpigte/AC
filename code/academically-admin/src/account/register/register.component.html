@@ -36,6 +36,22 @@
           <abp-validation-summary [control]="emailAddressModel" [controlEl]="emailAddressEl"></abp-validation-summary>
         </div>
 
+        <div class="form-group required">
+          <label class="col-form-label" for="DateOfBirth">{{ 'DateOfBirth' | localize }}</label>
+          <div class="input-group input-group-merge" (click)="dp.show()">
+            <input [(ngModel)]="dateOfBirth" id="DateOfBirth" name="DateOfBirth" type="text"
+              class="form-control form-control-appended" #dateOfBirthModel="ngModel" #dateOfBirthEl #dp="bsDatepicker"
+              bsDatepicker [bsConfig]="datePickerConfig">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-calendar"></span>
+              </div>
+            </div>
+          </div>
+          <abp-validation-summary [control]="dateOfBirthModel" [controlEl]="dateOfBirthEl">
+          </abp-validation-summary>
+        </div>
+
         <div class="form-group">
           <div class="form-check">
             <input [(ngModel)]="isTAndCAccepted" class="form-check-input" type="checkbox" value="" id="AcceptTAndC" name="AcceptTAndC" required="">

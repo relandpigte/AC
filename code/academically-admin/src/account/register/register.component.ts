@@ -7,6 +7,8 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { accountModuleAnimation } from '@shared/animations/routerTransition';
 import { AppAuthService } from '@shared/auth/app-auth.service';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import * as moment from 'moment';
 
 @Component({
   templateUrl: './register.component.html',
@@ -16,6 +18,8 @@ export class RegisterComponent extends AppComponentBase {
   model: RegistrationDto = new RegistrationDto();
   saving = false;
   isTAndCAccepted = false;
+  dateOfBirth: Date;
+  datePickerConfig: BsDatepickerConfig;
 
   constructor(
     injector: Injector,
@@ -25,10 +29,16 @@ export class RegisterComponent extends AppComponentBase {
     private authService: AppAuthService
   ) {
     super(injector);
+    this.datePickerConfig = new BsDatepickerConfig();
+    this.datePickerConfig.showWeekNumbers = false;
+    this.datePickerConfig.dateInputFormat = 'DD/MM/YYYY';
   }
 
   onFormSubmit(): void {
     this.saving = true;
+    if (this.dateOfBirth) {
+      this.model.dateOfBirth = moment.utc(moment.utc(this.dateOfBirth).format('YYYY-MM-DD'));
+    }
     this._registrationsService
       .create(this.model)
       .pipe(

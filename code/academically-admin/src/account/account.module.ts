@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientJsonpModule } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AccountRoutingModule } from './account-routing.module';
 import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module';
 import { SharedModule } from '@shared/shared.module';
@@ -29,7 +30,8 @@ import { TermsAndConditionsComponent } from './terms-and-conditions/terms-and-co
         SharedModule,
         ServiceProxyModule,
         AccountRoutingModule,
-        ModalModule.forChild()
+        ModalModule.forChild(),
+        BsDatepickerModule.forRoot()
     ],
     declarations: [
         AccountComponent,
