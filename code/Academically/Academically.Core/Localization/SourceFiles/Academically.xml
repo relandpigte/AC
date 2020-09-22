@@ -15,6 +15,7 @@
       ]]>
     </text>
     <text name="InvalidFileUploadErrorTitle" value="Invalid File" />
+    <text name="PrivacyAndDataProtection">Privacy &amp; Data Protection</text>
     <text name="Educations">Educations</text>
     <text name="DeleteUserEducation">Delete User Education</text>
     <text name="UpdateUserEducation">Update User Education</text>

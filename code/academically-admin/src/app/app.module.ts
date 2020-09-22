@@ -51,6 +51,7 @@ import { ProfileEducationComponent } from './profile/profile-education/profile-e
 import { ProfilePublicationsComponent } from './profile/profile-publications/profile-publications.component';
 import { CreateEditProfileEducationComponent } from './profile/profile-education/create-edit-profile-education/create-edit-profile-education.component';
 import { CreateEditPublicationComponent } from './profile/profile-publications/create-edit-publication/create-edit-publication.component';
+import { ProfilePrivacyAndDataProtectionComponent } from './profile/profile-privacy-and-data-protection/profile-privacy-and-data-protection.component';
 
 @NgModule({
   declarations: [
@@ -91,6 +92,7 @@ import { CreateEditPublicationComponent } from './profile/profile-publications/c
     ProfileSummaryWidgetComponent,
     CreateEditProfileEducationComponent,
     CreateEditPublicationComponent,
+    ProfilePrivacyAndDataProtectionComponent,
   ],
   imports: [
     CommonModule,
