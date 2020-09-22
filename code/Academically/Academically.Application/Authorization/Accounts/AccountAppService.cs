@@ -19,14 +19,17 @@ namespace Academically.Authorization.Accounts
 
         private readonly UserRegistrationManager _userRegistrationManager;
         private readonly IRepository<Registration, Guid> _registrationsRepository;
+        private readonly IRepository<UserProfile, Guid> _userProfileRepository;
 
         public AccountAppService(
             UserRegistrationManager userRegistrationManager,
-            IRepository<Registration, Guid> registrationsRepository
+            IRepository<Registration, Guid> registrationsRepository,
+            IRepository<UserProfile, Guid> userProfileRepository
             )
         {
             _userRegistrationManager = userRegistrationManager;
             _registrationsRepository = registrationsRepository;
+            _userProfileRepository = userProfileRepository;
         }
 
         public async Task<IsTenantAvailableOutput> IsTenantAvailable(IsTenantAvailableInput input)
@@ -62,6 +65,15 @@ namespace Academically.Authorization.Accounts
             var registration = await _registrationsRepository.GetAsync(input.RegistrationId);
             registration.DateConfirmed = Clock.Now;
             registration.RegistrationStatus = RegistrationStatus.Confirmed;
+
+            if(user.Id != 0)
+            {
+                var userProfile = new UserProfile();
+                userProfile.UserId = user.Id;
+                userProfile.DateOfBirth = registration.DateOfBirth;
+
+                await _userProfileRepository.InsertAsync(userProfile);
+            }
 
             return new RegisterOutput
             {

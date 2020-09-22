@@ -3087,6 +3087,7 @@ export class RegistrationDto implements IRegistrationDto {
     firstName: string | undefined;
     lastName: string | undefined;
     emailAddress: string | undefined;
+    dateOfBirth: moment.Moment | undefined;
 
     constructor(data?: IRegistrationDto) {
         if (data) {
@@ -3102,6 +3103,7 @@ export class RegistrationDto implements IRegistrationDto {
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
             this.emailAddress = _data["emailAddress"];
+            this.dateOfBirth = _data["dateOfBirth"] ? moment(_data["dateOfBirth"].toString()) : <any>undefined;
         }
     }
 
@@ -3117,6 +3119,7 @@ export class RegistrationDto implements IRegistrationDto {
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
         data["emailAddress"] = this.emailAddress;
+        data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
         return data; 
     }
 
@@ -3132,6 +3135,7 @@ export interface IRegistrationDto {
     firstName: string | undefined;
     lastName: string | undefined;
     emailAddress: string | undefined;
+    dateOfBirth: moment.Moment | undefined;
 }
 
 export class CreateRoleDto implements ICreateRoleDto {

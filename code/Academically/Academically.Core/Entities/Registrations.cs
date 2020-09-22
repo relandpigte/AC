@@ -14,5 +14,6 @@ namespace Academically.Entities
         public DateTime DateRegistered { get; set; }
         public DateTime? DateConfirmed { get; set; }
         public RegistrationStatus RegistrationStatus { get; set; }
+        public DateTime? DateOfBirth { get; set; }
     }
 }
