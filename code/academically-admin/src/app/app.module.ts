@@ -52,6 +52,7 @@ import { ProfilePublicationsComponent } from './profile/profile-publications/pro
 import { CreateEditProfileEducationComponent } from './profile/profile-education/create-edit-profile-education/create-edit-profile-education.component';
 import { CreateEditPublicationComponent } from './profile/profile-publications/create-edit-publication/create-edit-publication.component';
 import { ProfilePrivacyAndDataProtectionComponent } from './profile/profile-privacy-and-data-protection/profile-privacy-and-data-protection.component';
+import { TutorialComponent } from './peer-support/tutorial/tutorial.component';
 
 @NgModule({
   declarations: [
@@ -93,6 +94,7 @@ import { ProfilePrivacyAndDataProtectionComponent } from './profile/profile-priv
     CreateEditProfileEducationComponent,
     CreateEditPublicationComponent,
     ProfilePrivacyAndDataProtectionComponent,
+    TutorialComponent,
   ],
   imports: [
     CommonModule,

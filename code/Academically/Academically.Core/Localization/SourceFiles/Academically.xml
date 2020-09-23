@@ -87,6 +87,16 @@
     <text name="DeleteUser">Delete user</text>
     <text name="UpdateUser">Update user</text>
     <text name="CreateUser">Create user</text>
+    <text name="AcademicSupport">Academic Support</text>
+    <text name="PeerSupport">Peer Support</text>
+    <text name="StudySkills">Study Skills</text>
+    <text name="Tutorial">Tutorial</text>
+    <text name="NativeLanguage">Native Language</text>
+    <text name="MinEducationLevel">Min Education Level</text>
+    <text name="MinRating">Min Rating</text>
+    <text name="Distance">Distance</text>
+    <text name="LastSeen">Last Seen</text>
+    <text name="SortBy">SortBy</text>
     <text name="LastLoginTime">Last login time</text>
     <text name="AccountNumber">Account number</text>
     <text name="ApplyFilter">Apply filter</text>

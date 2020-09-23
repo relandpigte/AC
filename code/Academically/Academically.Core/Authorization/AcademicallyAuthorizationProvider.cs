@@ -14,6 +14,7 @@ namespace Academically.Authorization
             dashboardNavigationPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Navigations_UserManagement, L("UserManagement"));
             dashboardNavigationPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Navigations_Financials, L("Financials"));
             dashboardNavigationPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Navigations_Settings, L("Settings"));
+            dashboardNavigationPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Navigation_AcademicSupport, L("AcademicSupport"));
 
             var dashboardWidgetPermission = dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets, L("Widgets"));
             dashboardWidgetPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets_ProfileSummary, L("ProfileSummary"));
@@ -36,6 +37,8 @@ namespace Academically.Authorization
             rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Update, L("UpdateRole"));
             rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Delete, L("DeleteRole"));
 
+            var peerSupportPermission = context.CreatePermission(PermissionNames.Pages_PeerSupport, L("PeerSupport"));
+            peerSupportPermission.CreateChildPermission(PermissionNames.Pages_PeerSupport_Tutorial, L("Tutorial"));
 
             var profilePermission = context.CreatePermission(PermissionNames.Pages_Profile, L("Profile"));
 
