@@ -8,6 +8,7 @@
         public const string Pages_Dashboard_Navigations_UserManagement = "Pages.Dashboard.Navigations.UserManagement";
         public const string Pages_Dashboard_Navigations_Financials = "Pages.Dashboard.Navigations.Financials";
         public const string Pages_Dashboard_Navigations_Settings = "Pages.Dashboard.Navigations.Settings";
+        public const string Pages_Dashboard_Navigation_AcademicSupport = "Pages.Dashboard.Navigations.AcademicSupport";
 
         public const string Pages_Dashboard_Widgets = "Pages.Dashboard.Widgets";
         public const string Pages_Dashboard_Widgets_ProfileSummary = "Pages.Dashboard.Widgets.ProfileSummary";
@@ -30,6 +31,8 @@
         public const string Pages_Roles_Update = "Pages.Roles.Update";
         public const string Pages_Roles_Delete = "Pages.Roles.Delete";
 
+        public const string Pages_PeerSupport = "Pages.PeerSupport";
+        public const string Pages_PeerSupport_Tutorial = "Pages.PeerSupport.Tutorial";
 
         public const string Pages_Profile = "Pages.Profile";
 
@@ -40,12 +43,10 @@
         public const string Pages_Profile_Educations_Update = "Pages.Profile.Educations.Update";
         public const string Pages_Profile_Educations_Delete = "Pages.Profile.Educations.Delete";
 
-
         public const string Pages_Profile_Publications = "Pages.Profile.Publications";
         public const string Pages_Profile_Publications_Create = "Pages.Profile.Publications.Create";
         public const string Pages_Profile_Publications_Update = "Pages.Profile.Publications.Update";
         public const string Pages_Profile_Publications_Delete = "Pages.Profile.Publications.Delete";
-
 
         public const string Pages_Tenants = "Pages.Tenants";
     }

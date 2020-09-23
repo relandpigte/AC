@@ -10,6 +10,7 @@ import { TenantsComponent } from './tenants/tenants.component';
 import { RolesComponent } from 'app/roles/roles.component';
 import { ChangePasswordComponent } from './users/change-password/change-password.component';
 import { ProfileComponent } from './profile/profile.component';
+import { TutorialComponent } from './peer-support/tutorial/tutorial.component';
 
 @NgModule({
   imports: [
@@ -24,6 +25,11 @@ import { ProfileComponent } from './profile/profile.component';
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent },
+          { path: 'peer-support/tutorial',
+            component: TutorialComponent,
+            data: { permission: 'Pages.PeerSupport.Tutorial'},
+            canActivate: [AppRouteGuard]
+          },
           {
             path: 'profile',
             component: ProfileComponent,

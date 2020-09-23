@@ -144,6 +144,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Widgets_Verifications,
                 PermissionNames.Pages_Dashboard_Widgets_RecentProjectsReceivingHelp,
                 PermissionNames.Pages_Dashboard_Widgets_MessageHub,
+                PermissionNames.Pages_Dashboard_Navigation_AcademicSupport,
                 PermissionNames.Pages_Profile,
                 PermissionNames.Pages_Profile_Details,
                 PermissionNames.Pages_Profile_Educations,
@@ -153,7 +154,9 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_Publications,
                 PermissionNames.Pages_Profile_Publications_Create,
                 PermissionNames.Pages_Profile_Publications_Update,
-                PermissionNames.Pages_Profile_Publications_Delete
+                PermissionNames.Pages_Profile_Publications_Delete,
+                PermissionNames.Pages_PeerSupport,
+                PermissionNames.Pages_PeerSupport_Tutorial
             );
 
             #endregion
