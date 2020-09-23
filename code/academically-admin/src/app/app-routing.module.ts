@@ -25,7 +25,7 @@ import { TutorialComponent } from './peer-support/tutorial/tutorial.component';
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent },
-          { path: 'peer-support/tutorial',
+          { path: 'tutorial',
             component: TutorialComponent,
             data: { permission: 'Pages.PeerSupport.Tutorial'},
             canActivate: [AppRouteGuard]
