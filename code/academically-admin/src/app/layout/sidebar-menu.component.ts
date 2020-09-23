@@ -57,7 +57,7 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
           'Pages.PeerSupport', [
             new MenuItem(
               this.l('Tutorial'),
-              '/app/peer-support/tutorial',
+              '/app/tutorial',
               'fe fe-book-open',
               'Pages.PeerSupport.Tutorial'
             )
