@@ -8,4 +8,5 @@
 	<include file="ddml/ddml.2020-09-15-01.add-userprofile-profilepicturefilename.xml"/>
 	<include file="ddml/ddml.2020-09-16-01.add-usereducations-table.xml"/>
 	<include file="ddml/ddml.2020-09-17-01.add-userpublications-table.xml"/>
+	<include file="ddml/ddml.2020-09-25-01.add-dateofbirth-column.xml" />
 </databaseChangeLog>
