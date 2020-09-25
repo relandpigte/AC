@@ -10,7 +10,8 @@ namespace Academically
         {
             CreateMap<UserProfile, GetProfileDetailDto>();
             CreateMap<SaveProfileDetailDto, UserProfile>()
-                .ForMember(dest => dest.ProfilePictureFileName, opt => opt.Ignore());
+                .ForMember(dest => dest.ProfilePictureFileName, opt => opt.Ignore())
+                .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth.Value.Date));
         }
     }
 }
