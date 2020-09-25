@@ -95,6 +95,9 @@
     <text name="MinEducationLevel">Min Education Level</text>
     <text name="MinRating">Min Rating</text>
     <text name="Distance">Distance</text>
+    <text name="BestMatch">Best Match</text>
+    <text name="Contacts">Contacts</text>
+    <text name="Availability">Availability</text>
     <text name="LastSeen">Last Seen</text>
     <text name="SortBy">SortBy</text>
     <text name="LastLoginTime">Last login time</text>

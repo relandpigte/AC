@@ -53,6 +53,7 @@ import { CreateEditProfileEducationComponent } from './profile/profile-education
 import { CreateEditPublicationComponent } from './profile/profile-publications/create-edit-publication/create-edit-publication.component';
 import { ProfilePrivacyAndDataProtectionComponent } from './profile/profile-privacy-and-data-protection/profile-privacy-and-data-protection.component';
 import { TutorialComponent } from './peer-support/tutorial/tutorial.component';
+import { ProposalsContactsWidgetsComponent } from './widgets/proposals-contacts-widgets/proposals-contacts-widgets.component';
 
 @NgModule({
   declarations: [
@@ -95,6 +96,7 @@ import { TutorialComponent } from './peer-support/tutorial/tutorial.component';
     CreateEditPublicationComponent,
     ProfilePrivacyAndDataProtectionComponent,
     TutorialComponent,
+    ProposalsContactsWidgetsComponent,
   ],
   imports: [
     CommonModule,
