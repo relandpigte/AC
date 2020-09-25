@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using Abp.Authorization;
@@ -15,6 +14,8 @@ using Academically.Configuration;
 using Academically.Entities;
 using Academically.Services.UserProfiles.Dto;
 using Microsoft.AspNetCore.Mvc;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace Academically.Services.UserProfiles
 {
@@ -104,12 +105,19 @@ namespace Academically.Services.UserProfiles
             }
         }
 
-        public byte[] MakeThumbnail(byte[] myImage, int thumbWidth, int thumbHeight)
+        public byte[] MakeThumbnail(byte[] imageBytes, int thumbWidth, int thumbHeight)
         {
             using (MemoryStream ms = new MemoryStream())
-            using (Image thumbnail = Image.FromStream(new MemoryStream(myImage)).GetThumbnailImage(thumbWidth, thumbHeight, null, new IntPtr()))
+            using (Image image = Image.Load(imageBytes))
             {
-                thumbnail.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                var resizeOptions = new ResizeOptions
+                {
+                    Size = new SixLabors.ImageSharp.Size { Width = thumbWidth, Height = thumbHeight },
+                    Mode = ResizeMode.Stretch
+                };
+                image.Mutate(x => x.Resize(resizeOptions));
+                image.Save(ms, new SixLabors.ImageSharp.Formats.Jpeg.JpegEncoder());
+                ms.Position = 0;
                 return ms.ToArray();
             }
         }
