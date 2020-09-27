@@ -9,4 +9,6 @@
 	<include file="ddml/ddml.2020-09-16-01.add-usereducations-table.xml"/>
 	<include file="ddml/ddml.2020-09-17-01.add-userpublications-table.xml"/>
 	<include file="ddml/ddml.2020-09-25-01.add-dateofbirth-column.xml" />
+	<include file="ddml/ddml.2020-09-26-01.add-disciplinetaxonomies-table.xml" />
+	<include file="ddml/ddml.2020-09-26-02.add-disciplinetaxonomies-data.xml" />
 </databaseChangeLog>
