@@ -1,7 +1,6 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { AppComponentBase } from '@shared/app-component-base';
 import { FormCanDeactive } from '@shared/models/can-deactivate/form-can-deactivate';
 import { ProfileDetailsComponent } from './profile-details/profile-details.component';
 

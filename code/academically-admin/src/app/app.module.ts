@@ -54,6 +54,7 @@ import { CreateEditPublicationComponent } from './profile/profile-publications/c
 import { ProfilePrivacyAndDataProtectionComponent } from './profile/profile-privacy-and-data-protection/profile-privacy-and-data-protection.component';
 import { TutorialComponent } from './peer-support/tutorial/tutorial.component';
 import { ProposalsContactsWidgetsComponent } from './widgets/proposals-contacts-widgets/proposals-contacts-widgets.component';
+import { ProfileAreasOfStudyComponent } from './profile/profile-areas-of-study/profile-areas-of-study.component';
 
 @NgModule({
   declarations: [
@@ -97,6 +98,7 @@ import { ProposalsContactsWidgetsComponent } from './widgets/proposals-contacts-
     ProfilePrivacyAndDataProtectionComponent,
     TutorialComponent,
     ProposalsContactsWidgetsComponent,
+    ProfileAreasOfStudyComponent,
   ],
   imports: [
     CommonModule,

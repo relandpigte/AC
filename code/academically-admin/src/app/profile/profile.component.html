@@ -5,15 +5,14 @@
         <div class="header-body">
           <div class="row align-items-center">
             <div class="col">
-              <h6 class="header-pretitle">{{ "ManageYourSettings" | localize }}</h6>
-              <h1 class="header-title">{{ "Profile" | localize }}</h1>
+              <h6 class="header-pretitle">{{ 'ManageYourSettings' | localize }}</h6>
+              <h1 class="header-title">{{ 'Profile' | localize }}</h1>
             </div>
           </div>
         </div>
       </div>
 
       <div class="row">
-
         <div class="col-12 col-xl-8 profile-settings">
           <tabset>
             <tab *ngIf="permission.isGranted('Pages.Profile.Details')" heading="{{ 'Details' | localize }}">
@@ -26,7 +25,7 @@
               <profile-publications></profile-publications>
             </tab>
             <tab *ngIf="true" heading="{{ 'AreasOfStudy' | localize }}">
-              <h1>Areas of Study - Coming Soon</h1>
+              <profile-areas-of-study></profile-areas-of-study>
             </tab>
             <tab *ngIf="true" heading="{{ 'Service' | localize }}">
               <h1>Service - Coming Soon</h1>

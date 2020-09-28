@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="ResearchMethodologies">Research Methodologies</text>
+    <text name="AddResearchMethodologies">Add Research Methodologies</text>
+    <text name="KnowledgeBase">Knowledge Base</text>
+    <text name="AddAreaOfStudy">Add Area of Study</text>
     <text name="ProfileDetailsNotSavedWarning">Your changes on Prfoile Details tab were not yet saved. If you leave, your changes will be lost.</text>
     <text name="LostChangesWarning">You have unsaved changes! If you leave, your changes will be lost.</text>
     <text name="NoPublicationAvailable">No Publication available</text>
