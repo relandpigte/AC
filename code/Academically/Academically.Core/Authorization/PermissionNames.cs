@@ -49,6 +49,11 @@
         public const string Pages_Profile_Publications_Update = "Pages.Profile.Publications.Update";
         public const string Pages_Profile_Publications_Delete = "Pages.Profile.Publications.Delete";
 
+        public const string Pages_Profile_AreasOfStudy = "Pages.Profile.AreasOfStudy";
+        public const string Pages_Profile_AreasOfStudy_KnowledgeBase = "Pages.Profile.AreasOfStudy.KnowledgeBase";
+        public const string Pages_Profile_AreasOfStudy_KnowledgeBase_Create = "Pages.Profile.AreasOfStudy.KnowledgeBase.Create";
+        public const string Pages_Profile_AreasOfStudy_KnowledgeBase_Delete = "Pages.Profile.AreasOfStudy.KnowledgeBase.Delete";
+
         public const string Pages_Tenants = "Pages.Tenants";
     }
 }

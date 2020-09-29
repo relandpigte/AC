@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Configuration;
@@ -14,6 +16,7 @@ using Academically.Configuration;
 using Academically.Entities;
 using Academically.Services.UserProfiles.Dto;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
@@ -24,18 +27,21 @@ namespace Academically.Services.UserProfiles
     {
         private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
         private readonly IRepository<User, long> _usersRepository;
+        private readonly IRepository<UserDisciplineTaxonomy, Guid> _userDisciplineTaxonomiesRepository;
         private readonly ISettingManager _settingManager;
         private readonly IFileManagerService _fileManagerService;
 
         public UserProfilesAppService(
             IRepository<UserProfile, Guid> userProfilesRepository,
             IRepository<User, long> usersRepository,
+            IRepository<UserDisciplineTaxonomy, Guid> userDisciplineTaxonomiesRepository,
             ISettingManager settingManager,
             IFileManagerService fileManagerService
             )
         {
             _userProfilesRepository = userProfilesRepository;
             _usersRepository = usersRepository;
+            _userDisciplineTaxonomiesRepository = userDisciplineTaxonomiesRepository;
             _settingManager = settingManager;
             _fileManagerService = fileManagerService;
         }
@@ -59,6 +65,7 @@ namespace Academically.Services.UserProfiles
             return output;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Profile_Details)]
         public async Task SaveDetail([FromForm] SaveProfileDetailDto input)
         {
             var userId = AbpSession.UserId.Value;
@@ -105,7 +112,36 @@ namespace Academically.Services.UserProfiles
             }
         }
 
-        public byte[] MakeThumbnail(byte[] imageBytes, int thumbWidth, int thumbHeight)
+        [AbpAuthorize(PermissionNames.Pages_Profile_AreasOfStudy, PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase)]
+        public async Task<IEnumerable<GetUserDisciplineTaxonomyDto>> GetDisciplineTaxonomies()
+        {
+            var userDisciplineTaxonomies = await _userDisciplineTaxonomiesRepository.GetAll()
+                .Include(e => e.DisciplineTaxonomy)
+                .Where(e => e.UserId == AbpSession.UserId.Value)
+                .Select(e => ObjectMapper.Map<GetUserDisciplineTaxonomyDto>(e))
+                .ToListAsync();
+
+            return userDisciplineTaxonomies;
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create)]
+        public async Task CreateDisciplineTaxonomy(Guid disciplineTaxonomyId)
+        {
+            var userDisciplineTaxonomy = new UserDisciplineTaxonomy()
+            {
+                UserId = AbpSession.UserId.Value,
+                DisciplineTaxonomyId = disciplineTaxonomyId,
+            };
+            await _userDisciplineTaxonomiesRepository.InsertAsync(userDisciplineTaxonomy);
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete)]
+        public async Task DeleteDisciplineTaxonomy(Guid userDisciplineTaxonomyId)
+        {
+            await _userDisciplineTaxonomiesRepository.DeleteAsync(userDisciplineTaxonomyId);
+        }
+
+        private byte[] MakeThumbnail(byte[] imageBytes, int thumbWidth, int thumbHeight)
         {
             using (MemoryStream ms = new MemoryStream())
             using (Image image = Image.Load(imageBytes))

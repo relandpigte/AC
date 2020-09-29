@@ -56,6 +56,7 @@ import { TutorialComponent } from './peer-support/tutorial/tutorial.component';
 import { ProposalsContactsWidgetsComponent } from './widgets/proposals-contacts-widgets/proposals-contacts-widgets.component';
 import { ProfileAreasOfStudyComponent } from './profile/profile-areas-of-study/profile-areas-of-study.component';
 import { ProposalsComponent } from './peer-support/proposals/proposals.component';
+import { ProfileKnowledgeBaseComponent } from './profile/profile-areas-of-study/profile-knowledge-base/profile-knowledge-base.component';
 
 @NgModule({
   declarations: [
@@ -101,6 +102,7 @@ import { ProposalsComponent } from './peer-support/proposals/proposals.component
     ProposalsContactsWidgetsComponent,
     ProfileAreasOfStudyComponent,
     ProposalsComponent,
+    ProfileKnowledgeBaseComponent,
   ],
   imports: [
     CommonModule,

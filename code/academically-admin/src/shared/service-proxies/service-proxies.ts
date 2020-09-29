@@ -157,7 +157,7 @@ export class AddressLookupServiceProxy {
      */
     getAddress(keyword: string | null | undefined): Observable<SuggestionDataDto[]> {
         let url_ = this.baseUrl + "/api/services/app/AddressLookup/GetAddress?";
-        if (keyword !== undefined)
+        if (keyword !== undefined && keyword !== null)
             url_ += "keyword=" + encodeURIComponent("" + keyword) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -215,7 +215,7 @@ export class AddressLookupServiceProxy {
      */
     getAddressDetail(id: string | null | undefined): Observable<AddressDetailDto> {
         let url_ = this.baseUrl + "/api/services/app/AddressLookup/GetAddressDetail?";
-        if (id !== undefined)
+        if (id !== undefined && id !== null)
             url_ += "id=" + encodeURIComponent("" + id) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -325,6 +325,76 @@ export class ConfigurationServiceProxy {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
+export class DisciplineTaxonomiesServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @param keyword (optional) 
+     * @return Success
+     */
+    search(keyword: string | null | undefined): Observable<DisciplineTaxonomyDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/Search?";
+        if (keyword !== undefined && keyword !== null)
+            url_ += "keyword=" + encodeURIComponent("" + keyword) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSearch(<any>response_);
+                } catch (e) {
+                    return <Observable<DisciplineTaxonomyDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DisciplineTaxonomyDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSearch(response: HttpResponseBase): Observable<DisciplineTaxonomyDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(DisciplineTaxonomyDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DisciplineTaxonomyDto[]>(<any>null);
     }
 }
 
@@ -2405,50 +2475,35 @@ export class UserProfilesServiceProxy {
     }
 
     /**
-     * @param thumbWidth (optional) 
-     * @param thumbHeight (optional) 
-     * @param body (optional) 
      * @return Success
      */
-    makeThumbnail(thumbWidth: number | undefined, thumbHeight: number | undefined, body: string | null | undefined): Observable<string> {
-        let url_ = this.baseUrl + "/api/services/app/UserProfiles/MakeThumbnail?";
-        if (thumbWidth === null)
-            throw new Error("The parameter 'thumbWidth' cannot be null.");
-        else if (thumbWidth !== undefined)
-            url_ += "thumbWidth=" + encodeURIComponent("" + thumbWidth) + "&";
-        if (thumbHeight === null)
-            throw new Error("The parameter 'thumbHeight' cannot be null.");
-        else if (thumbHeight !== undefined)
-            url_ += "thumbHeight=" + encodeURIComponent("" + thumbHeight) + "&";
+    getDisciplineTaxonomies(): Observable<GetUserDisciplineTaxonomyDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/UserProfiles/GetDisciplineTaxonomies";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
-
         let options_ : any = {
-            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Content-Type": "application/json-patch+json",
                 "Accept": "text/plain"
             })
         };
 
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processMakeThumbnail(response_);
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetDisciplineTaxonomies(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processMakeThumbnail(<any>response_);
+                    return this.processGetDisciplineTaxonomies(<any>response_);
                 } catch (e) {
-                    return <Observable<string>><any>_observableThrow(e);
+                    return <Observable<GetUserDisciplineTaxonomyDto[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<string>><any>_observableThrow(response_);
+                return <Observable<GetUserDisciplineTaxonomyDto[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processMakeThumbnail(response: HttpResponseBase): Observable<string> {
+    protected processGetDisciplineTaxonomies(response: HttpResponseBase): Observable<GetUserDisciplineTaxonomyDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2459,7 +2514,11 @@ export class UserProfilesServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(GetUserDisciplineTaxonomyDto.fromJS(item));
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2467,7 +2526,111 @@ export class UserProfilesServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<string>(<any>null);
+        return _observableOf<GetUserDisciplineTaxonomyDto[]>(<any>null);
+    }
+
+    /**
+     * @param disciplineTaxonomyId (optional) 
+     * @return Success
+     */
+    createDisciplineTaxonomy(disciplineTaxonomyId: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserProfiles/CreateDisciplineTaxonomy?";
+        if (disciplineTaxonomyId === null)
+            throw new Error("The parameter 'disciplineTaxonomyId' cannot be null.");
+        else if (disciplineTaxonomyId !== undefined)
+            url_ += "disciplineTaxonomyId=" + encodeURIComponent("" + disciplineTaxonomyId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateDisciplineTaxonomy(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateDisciplineTaxonomy(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateDisciplineTaxonomy(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param userDisciplineTaxonomyId (optional) 
+     * @return Success
+     */
+    deleteDisciplineTaxonomy(userDisciplineTaxonomyId: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserProfiles/DeleteDisciplineTaxonomy?";
+        if (userDisciplineTaxonomyId === null)
+            throw new Error("The parameter 'userDisciplineTaxonomyId' cannot be null.");
+        else if (userDisciplineTaxonomyId !== undefined)
+            url_ += "userDisciplineTaxonomyId=" + encodeURIComponent("" + userDisciplineTaxonomyId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteDisciplineTaxonomy(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteDisciplineTaxonomy(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeleteDisciplineTaxonomy(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -3040,6 +3203,128 @@ export interface IRegisterOutput {
     canLogin: boolean;
 }
 
+export class SuggestionDataDto implements ISuggestionDataDto {
+    address: string | undefined;
+    url: string | undefined;
+    id: string | undefined;
+
+    constructor(data?: ISuggestionDataDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.address = _data["address"];
+            this.url = _data["url"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): SuggestionDataDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SuggestionDataDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["address"] = this.address;
+        data["url"] = this.url;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): SuggestionDataDto {
+        const json = this.toJSON();
+        let result = new SuggestionDataDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISuggestionDataDto {
+    address: string | undefined;
+    url: string | undefined;
+    id: string | undefined;
+}
+
+export class AddressDetailDto implements IAddressDetailDto {
+    postcode: string | undefined;
+    latitude: string | undefined;
+    longitude: string | undefined;
+    line_1: string | undefined;
+    line_2: string | undefined;
+    town_Or_City: string | undefined;
+    county: string | undefined;
+    district: string | undefined;
+
+    constructor(data?: IAddressDetailDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.postcode = _data["postcode"];
+            this.latitude = _data["latitude"];
+            this.longitude = _data["longitude"];
+            this.line_1 = _data["line_1"];
+            this.line_2 = _data["line_2"];
+            this.town_Or_City = _data["town_Or_City"];
+            this.county = _data["county"];
+            this.district = _data["district"];
+        }
+    }
+
+    static fromJS(data: any): AddressDetailDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddressDetailDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["postcode"] = this.postcode;
+        data["latitude"] = this.latitude;
+        data["longitude"] = this.longitude;
+        data["line_1"] = this.line_1;
+        data["line_2"] = this.line_2;
+        data["town_Or_City"] = this.town_Or_City;
+        data["county"] = this.county;
+        data["district"] = this.district;
+        return data; 
+    }
+
+    clone(): AddressDetailDto {
+        const json = this.toJSON();
+        let result = new AddressDetailDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAddressDetailDto {
+    postcode: string | undefined;
+    latitude: string | undefined;
+    longitude: string | undefined;
+    line_1: string | undefined;
+    line_2: string | undefined;
+    town_Or_City: string | undefined;
+    county: string | undefined;
+    district: string | undefined;
+}
+
 export class ChangeUiThemeInput implements IChangeUiThemeInput {
     theme: string;
 
@@ -3081,6 +3366,73 @@ export class ChangeUiThemeInput implements IChangeUiThemeInput {
 
 export interface IChangeUiThemeInput {
     theme: string;
+}
+
+export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
+    name: string | undefined;
+    parentId: string | undefined;
+    parent: DisciplineTaxonomyDto;
+    children: DisciplineTaxonomyDto[] | undefined;
+    id: string;
+
+    constructor(data?: IDisciplineTaxonomyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.parentId = _data["parentId"];
+            this.parent = _data["parent"] ? DisciplineTaxonomyDto.fromJS(_data["parent"]) : <any>undefined;
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(DisciplineTaxonomyDto.fromJS(item));
+            }
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): DisciplineTaxonomyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DisciplineTaxonomyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["parentId"] = this.parentId;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): DisciplineTaxonomyDto {
+        const json = this.toJSON();
+        let result = new DisciplineTaxonomyDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDisciplineTaxonomyDto {
+    name: string | undefined;
+    parentId: string | undefined;
+    parent: DisciplineTaxonomyDto;
+    children: DisciplineTaxonomyDto[] | undefined;
+    id: string;
 }
 
 export class RegistrationDto implements IRegistrationDto {
@@ -4998,6 +5350,53 @@ export interface IGetProfileDetailDto {
     profilePictureUrl: string | undefined;
 }
 
+export class GetUserDisciplineTaxonomyDto implements IGetUserDisciplineTaxonomyDto {
+    disciplineTaxonomy: DisciplineTaxonomyDto;
+    id: string;
+
+    constructor(data?: IGetUserDisciplineTaxonomyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomyDto.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): GetUserDisciplineTaxonomyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetUserDisciplineTaxonomyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): GetUserDisciplineTaxonomyDto {
+        const json = this.toJSON();
+        let result = new GetUserDisciplineTaxonomyDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetUserDisciplineTaxonomyDto {
+    disciplineTaxonomy: DisciplineTaxonomyDto;
+    id: string;
+}
+
 export class UserPublicationDto implements IUserPublicationDto {
     publicationCertificate: string;
     publisher: string;
@@ -5174,129 +5573,6 @@ export interface IProfileSummaryWidgetDto {
 export interface FileParameter {
     data: any;
     fileName: string;
-}
-
-
-export class SuggestionDataDto implements ISuggestionDataDto {
-    address: string | undefined;
-    url: string | undefined;
-    id: string | undefined;
-
-    constructor(data?: ISuggestionDataDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.address = _data["address"];
-            this.url = _data["url"];
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): SuggestionDataDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new SuggestionDataDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["address"] = this.address;
-        data["url"] = this.url;
-        data["id"] = this.id;
-        return data; 
-    }
-
-    clone(): SuggestionDataDto {
-        const json = this.toJSON();
-        let result = new SuggestionDataDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface ISuggestionDataDto {
-    address: string | undefined;
-    url: string | undefined;
-    id: string | undefined;
-}
-
-export class AddressDetailDto implements IAddressDetailDto {
-    postcode: string | undefined;
-    latitude: string | undefined;
-    longitude: string | undefined;
-    line_1: string | undefined;
-    line_2: string | undefined;
-    town_Or_City: string | undefined;
-    county: string | undefined;
-    district: string | undefined;
-
-    constructor(data?: IAddressDetailDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.postcode = _data["postcode"];
-            this.latitude = _data["latitude"];
-            this.longitude = _data["longitude"];
-            this.line_1 = _data["line_1"];
-            this.line_2 = _data["line_2"];
-            this.town_Or_City = _data["town_Or_City"];
-            this.county = _data["county"];
-            this.district = _data["district"];
-        }
-    }
-
-    static fromJS(data: any): AddressDetailDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new AddressDetailDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["postcode"] = this.postcode;
-        data["latitude"] = this.latitude;
-        data["longitude"] = this.longitude;
-        data["line_1"] = this.line_1;
-        data["line_2"] = this.line_2;
-        data["town_Or_City"] = this.town_Or_City;
-        data["county"] = this.county;
-        data["district"] = this.district;
-        return data; 
-    }
-
-    clone(): AddressDetailDto {
-        const json = this.toJSON();
-        let result = new AddressDetailDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IAddressDetailDto {
-    postcode: string | undefined;
-    latitude: string | undefined;
-    longitude: string | undefined;
-    line_1: string | undefined;
-    line_2: string | undefined;
-    town_Or_City: string | undefined;
-    county: string | undefined;
-    district: string | undefined;
 }
 
 export class ApiException extends Error {

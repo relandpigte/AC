@@ -26,16 +26,16 @@ namespace Academically.Authorization
 
 
             var userPermission = context.CreatePermission(PermissionNames.Pages_Users, L("Users"));
-            userPermission.CreateChildPermission(PermissionNames.Pages_Users_Create, L("CreateUser"));
-            userPermission.CreateChildPermission(PermissionNames.Pages_Users_Update, L("UpdateUser"));
-            userPermission.CreateChildPermission(PermissionNames.Pages_Users_Delete, L("DeleteUser"));
+            userPermission.CreateChildPermission(PermissionNames.Pages_Users_Create, L("Create"));
+            userPermission.CreateChildPermission(PermissionNames.Pages_Users_Update, L("Update"));
+            userPermission.CreateChildPermission(PermissionNames.Pages_Users_Delete, L("Delete"));
             userPermission.CreateChildPermission(PermissionNames.Pages_Users_ResetPassword, L("ResetPassword"));
 
 
             var rolePermission = context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
-            rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Create, L("CreateRole"));
-            rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Update, L("UpdateRole"));
-            rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Delete, L("DeleteRole"));
+            rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Create, L("Create"));
+            rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Update, L("Update"));
+            rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Delete, L("Delete"));
 
             var peerSupportPermission = context.CreatePermission(PermissionNames.Pages_PeerSupport, L("PeerSupport"));
             peerSupportPermission.CreateChildPermission(PermissionNames.Pages_PeerSupport_Tutorial, L("Tutorial"));
@@ -46,16 +46,20 @@ namespace Academically.Authorization
             profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Details, L("Details"));
 
             var profileEducationPermission = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Educations, L("Educations"));
-            profileEducationPermission.CreateChildPermission(PermissionNames.Pages_Profile_Educations_Create, L("CreateUserEducation"));
-            profileEducationPermission.CreateChildPermission(PermissionNames.Pages_Profile_Educations_Update, L("UpdateUserEducation"));
-            profileEducationPermission.CreateChildPermission(PermissionNames.Pages_Profile_Educations_Delete, L("DeleteUserEducation"));
+            profileEducationPermission.CreateChildPermission(PermissionNames.Pages_Profile_Educations_Create, L("Create"));
+            profileEducationPermission.CreateChildPermission(PermissionNames.Pages_Profile_Educations_Update, L("Update"));
+            profileEducationPermission.CreateChildPermission(PermissionNames.Pages_Profile_Educations_Delete, L("Delete"));
 
             var profilePublicationsPermission = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Publications, L("Publications"));
-            profilePublicationsPermission.CreateChildPermission(PermissionNames.Pages_Profile_Publications_Create, L("CreateUserPublication"));
-            profilePublicationsPermission.CreateChildPermission(PermissionNames.Pages_Profile_Publications_Update, L("UpdateUserPublication"));
-            profilePublicationsPermission.CreateChildPermission(PermissionNames.Pages_Profile_Publications_Delete, L("DeleteUserPublication"));
+            profilePublicationsPermission.CreateChildPermission(PermissionNames.Pages_Profile_Publications_Create, L("Create"));
+            profilePublicationsPermission.CreateChildPermission(PermissionNames.Pages_Profile_Publications_Update, L("Update"));
+            profilePublicationsPermission.CreateChildPermission(PermissionNames.Pages_Profile_Publications_Delete, L("Delete"));
 
+            var profileAreasOfStudyPermission = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_AreasOfStudy, L("AreasOfStudy"));
 
+            var profileAreasOfStudyKnowledgeBasePermission = profileAreasOfStudyPermission.CreateChildPermission(PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase, L("KnowledgeBase"));
+            profileAreasOfStudyKnowledgeBasePermission.CreateChildPermission(PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create, L("Create"));
+            profileAreasOfStudyKnowledgeBasePermission.CreateChildPermission(PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete, L("Delete"));
 
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
         }

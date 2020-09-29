@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 	<include file="ddml/ddml.2020-08-24-01.initial-migration.xml"/>
 	<include file="ddml/ddml.2020-08-24-02.initial-data.xml"/>
 	<include file="ddml/ddml.2020-09-02-01.add-registrations-table.xml"/>
@@ -11,4 +13,5 @@
 	<include file="ddml/ddml.2020-09-25-01.add-dateofbirth-column.xml" />
 	<include file="ddml/ddml.2020-09-26-01.add-disciplinetaxonomies-table.xml" />
 	<include file="ddml/ddml.2020-09-26-02.add-disciplinetaxonomies-data.xml" />
+	<include file="ddml/ddml.2020-09-86-01.add-userdisciplinetaxonomies-table.xml" />
 </databaseChangeLog>
