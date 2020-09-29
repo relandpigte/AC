@@ -37,7 +37,7 @@ export class RegisterComponent extends AppComponentBase {
   onFormSubmit(): void {
     this.saving = true;
     if (this.dateOfBirth) {
-      this.model.dateOfBirth = moment.utc(moment.utc(this.dateOfBirth).format('YYYY-MM-DD'));
+      this.model.dateOfBirth = moment.utc(moment(this.dateOfBirth).format('YYYY-MM-DD'));
     }
     this._registrationsService
       .create(this.model)
