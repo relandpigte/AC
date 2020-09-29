@@ -1,27 +1,22 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Academically.Application", "Academically.Application\Academically.Application.csproj", "{95B1ED1A-E72C-4813-878B-FD727362AC6A}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30406.217
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Academically.Application", "Academically.Application\Academically.Application.csproj", "{95B1ED1A-E72C-4813-878B-FD727362AC6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Academically.Core", "Academically.Core\Academically.Core.csproj", "{4C98D48F-5A9D-4B85-A74F-D3E403901D6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Academically.Core", "Academically.Core\Academically.Core.csproj", "{4C98D48F-5A9D-4B85-A74F-D3E403901D6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Academically.EntityFrameworkCore", "Academically.EntityFrameworkCore\Academically.EntityFrameworkCore.csproj", "{1649DD54-3EC3-4DEE-A048-B4BCAAB738CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Academically.EntityFrameworkCore", "Academically.EntityFrameworkCore\Academically.EntityFrameworkCore.csproj", "{1649DD54-3EC3-4DEE-A048-B4BCAAB738CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Academically.Migrator", "Academically.Migrator\Academically.Migrator.csproj", "{3395F842-1573-43E9-805A-3A7D51C2F1A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Academically.Migrator", "Academically.Migrator\Academically.Migrator.csproj", "{3395F842-1573-43E9-805A-3A7D51C2F1A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Academically.Web.Core", "Academically.Web.Core\Academically.Web.Core.csproj", "{D710102F-9B8A-4582-92E8-0E87F03C4E23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Academically.Web.Core", "Academically.Web.Core\Academically.Web.Core.csproj", "{D710102F-9B8A-4582-92E8-0E87F03C4E23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Academically.Web.Host", "Academically.Web.Host\Academically.Web.Host.csproj", "{CDA93E69-6948-49C9-BC7F-D501651BF5BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Academically.Web.Host", "Academically.Web.Host\Academically.Web.Host.csproj", "{CDA93E69-6948-49C9-BC7F-D501651BF5BB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{856805CC-4048-481E-B025-C4AAD275E36D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Academically.Aws", "Academically.Aws\Academically.Aws.csproj", "{91D4C04C-5336-4FF2-A62C-02EE1FCF3357}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Academically.Tests", "test\Academically.Tests\Academically.Tests.csproj", "{E66D2CAA-3636-423E-8294-9A45D150AAF4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Academically.Web.Tests", "test\Academically.Web.Tests\Academically.Web.Tests.csproj", "{D8082E45-2695-43FE-91C4-F6B94A7273B2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Academically.Aws", "Academically.Aws\Academically.Aws.csproj", "{91D4C04C-5336-4FF2-A62C-02EE1FCF3357}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Academically.Application.Shared", "Academically.Application.Shared\Academically.Application.Shared.csproj", "{9FC71624-FD79-4034-B155-3E3382FAAACD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Academically.Application.Shared", "Academically.Application.Shared\Academically.Application.Shared.csproj", "{9FC71624-FD79-4034-B155-3E3382FAAACD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,14 +48,6 @@ Global
 		{CDA93E69-6948-49C9-BC7F-D501651BF5BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDA93E69-6948-49C9-BC7F-D501651BF5BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDA93E69-6948-49C9-BC7F-D501651BF5BB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E66D2CAA-3636-423E-8294-9A45D150AAF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E66D2CAA-3636-423E-8294-9A45D150AAF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E66D2CAA-3636-423E-8294-9A45D150AAF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E66D2CAA-3636-423E-8294-9A45D150AAF4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D8082E45-2695-43FE-91C4-F6B94A7273B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D8082E45-2695-43FE-91C4-F6B94A7273B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D8082E45-2695-43FE-91C4-F6B94A7273B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D8082E45-2695-43FE-91C4-F6B94A7273B2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{91D4C04C-5336-4FF2-A62C-02EE1FCF3357}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{91D4C04C-5336-4FF2-A62C-02EE1FCF3357}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91D4C04C-5336-4FF2-A62C-02EE1FCF3357}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -70,8 +57,10 @@ Global
 		{9FC71624-FD79-4034-B155-3E3382FAAACD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FC71624-FD79-4034-B155-3E3382FAAACD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{E66D2CAA-3636-423E-8294-9A45D150AAF4} = {856805CC-4048-481E-B025-C4AAD275E36D}
-		{D8082E45-2695-43FE-91C4-F6B94A7273B2} = {856805CC-4048-481E-B025-C4AAD275E36D}
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0A9A800C-A6B3-4F8E-A5C1-B1D8D7926717}
 	EndGlobalSection
 EndGlobal
