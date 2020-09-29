@@ -127,7 +127,11 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_Publications,
                 PermissionNames.Pages_Profile_Publications_Create,
                 PermissionNames.Pages_Profile_Publications_Update,
-                PermissionNames.Pages_Profile_Publications_Delete
+                PermissionNames.Pages_Profile_Publications_Delete,
+                PermissionNames.Pages_Profile_AreasOfStudy,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete
             );
 
             #endregion
@@ -157,7 +161,11 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_Publications_Delete,
                 PermissionNames.Pages_PeerSupport,
                 PermissionNames.Pages_PeerSupport_Tutorial,
-                PermissionNames.Pages_PeerSupport_Proposals
+                PermissionNames.Pages_PeerSupport_Proposals,
+                PermissionNames.Pages_Profile_AreasOfStudy,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete
             );
 
             #endregion
@@ -179,7 +187,11 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_Publications,
                 PermissionNames.Pages_Profile_Publications_Create,
                 PermissionNames.Pages_Profile_Publications_Update,
-                PermissionNames.Pages_Profile_Publications_Delete
+                PermissionNames.Pages_Profile_Publications_Delete,
+                PermissionNames.Pages_Profile_AreasOfStudy,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete
             );
 
             #endregion

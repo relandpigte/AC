@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Abp.Application.Services;
 using Academically.Services.UserProfiles.Dto;
 
@@ -8,5 +10,9 @@ namespace Academically.Services.UserProfiles
     {
         Task<GetProfileDetailDto> GetDetail();
         Task SaveDetail(SaveProfileDetailDto input);
+
+        Task<IEnumerable<GetUserDisciplineTaxonomyDto>> GetDisciplineTaxonomies();
+        Task CreateDisciplineTaxonomy(Guid disciplineTaxonomyId);
+        Task DeleteDisciplineTaxonomy(Guid userDisciplineTaxonomyId);
     }
 }

@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Update">Update</text>
+    <text name="NoAreaOfStudy">No Area of Study</text>
+    <text name="TheAreaOfStudyWasRemoved">The Area of Study was removed.</text>
+    <text name="TheAreaOfStudyWasAdded">The Area of Study was added.</text>
     <text name="ResearchMethodologies">Research Methodologies</text>
     <text name="AddResearchMethodologies">Add Research Methodologies</text>
     <text name="KnowledgeBase">Knowledge Base</text>

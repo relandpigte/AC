@@ -57,6 +57,7 @@ import { ProposalsContactsWidgetsComponent } from './widgets/proposals-contacts-
 import { ProfileAreasOfStudyComponent } from './profile/profile-areas-of-study/profile-areas-of-study.component';
 import { ProposalsComponent } from './academic-support/peer-support/proposals/proposals.component';
 import { AcademicSupportComponent } from './academic-support/academic-support.component';
+import { ProfileKnowledgeBaseComponent } from './profile/profile-areas-of-study/profile-knowledge-base/profile-knowledge-base.component';
 
 @NgModule({
   declarations: [
@@ -102,7 +103,8 @@ import { AcademicSupportComponent } from './academic-support/academic-support.co
     ProposalsContactsWidgetsComponent,
     ProfileAreasOfStudyComponent,
     ProposalsComponent,
-    AcademicSupportComponent
+    AcademicSupportComponent,
+    ProfileKnowledgeBaseComponent,
   ],
   imports: [
     CommonModule,

@@ -29,6 +29,8 @@
     <Folder Include="Services\Widgets\Dto\" />
     <Folder Include="Services\UserEducations\" />
     <Folder Include="Services\UserEducations\Dto\" />
+    <Folder Include="Services\DisciplineTaxonomies\" />
+    <Folder Include="Services\DisciplineTaxonomies\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />

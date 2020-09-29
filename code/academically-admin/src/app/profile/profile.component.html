@@ -24,7 +24,7 @@
             <tab *ngIf="permission.isGranted('Pages.Profile.Publications')" heading="{{ 'Publication' | localize }}">
               <profile-publications></profile-publications>
             </tab>
-            <tab *ngIf="true" heading="{{ 'AreasOfStudy' | localize }}">
+            <tab *ngIf="permission.isGranted('Pages.Profile.AreasOfStudy')" heading="{{ 'AreasOfStudy' | localize }}">
               <profile-areas-of-study></profile-areas-of-study>
             </tab>
             <tab *ngIf="true" heading="{{ 'Service' | localize }}">

@@ -17,8 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{856805CC-4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Academically.Tests", "test\Academically.Tests\Academically.Tests.csproj", "{E66D2CAA-3636-423E-8294-9A45D150AAF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Academically.Web.Tests", "test\Academically.Web.Tests\Academically.Web.Tests.csproj", "{D8082E45-2695-43FE-91C4-F6B94A7273B2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Academically.Aws", "Academically.Aws\Academically.Aws.csproj", "{91D4C04C-5336-4FF2-A62C-02EE1FCF3357}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Academically.Application.Shared", "Academically.Application.Shared\Academically.Application.Shared.csproj", "{9FC71624-FD79-4034-B155-3E3382FAAACD}"
@@ -57,10 +55,6 @@ Global
 		{E66D2CAA-3636-423E-8294-9A45D150AAF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E66D2CAA-3636-423E-8294-9A45D150AAF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E66D2CAA-3636-423E-8294-9A45D150AAF4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D8082E45-2695-43FE-91C4-F6B94A7273B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D8082E45-2695-43FE-91C4-F6B94A7273B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D8082E45-2695-43FE-91C4-F6B94A7273B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D8082E45-2695-43FE-91C4-F6B94A7273B2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{91D4C04C-5336-4FF2-A62C-02EE1FCF3357}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{91D4C04C-5336-4FF2-A62C-02EE1FCF3357}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91D4C04C-5336-4FF2-A62C-02EE1FCF3357}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -72,6 +66,5 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E66D2CAA-3636-423E-8294-9A45D150AAF4} = {856805CC-4048-481E-B025-C4AAD275E36D}
-		{D8082E45-2695-43FE-91C4-F6B94A7273B2} = {856805CC-4048-481E-B025-C4AAD275E36D}
 	EndGlobalSection
 EndGlobal
