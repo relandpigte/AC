@@ -1,146 +1,91 @@
 <div class="container-fluid" [@routerTransition]>
-    <div class="row justify-content-center">
-        <div class="col-12">
-            <div class="header">
-                <div class="header-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                        <h1 class="header-title">{{ "Proposals" | localize }}</h1>
-                        </div>
+    <div class="col-12">
+        <div class="header">
+            <div class="header-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                    <h1 class="header-title">{{ "Tutorial" | localize }}</h1>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="form-row">
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="col-form-label" for="Native Language">{{ 'NativeLanguage' | localize }}</label>
-                                <select class="custom-select" data-toggle="select">
-                                    <option>English</option>
-                                    <option>Chinese</option>
-                                    <option>Korean</option>
-                                </select>
-                            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label class="col-form-label" for="Suitor"> {{ "SuitorLabel" | localize }} </label>
+                    <p class="small text-muted mb-1"> {{ 'SuitorSubLabel' | localize}} </p>
+                    <textarea class="form-control" data-toggle="autosize" rows="5" name="Suitor" id="Suitor" placeholder="Please provide some information on what you would like to help with"></textarea>
+                </div>
+                <div class="form-group" >
+                    <label class="col-form-label" for="SupportLevel">{{ 'LevelOfSupport' | localize }}</label>
+                    <select id="SupportLevel" name="SupportLevel" type="text" class="form-control" >
+                      <option>ComboBox</option>
+                    </select>
+                </div>
+                <div class="form-group" >
+                    <label class="col-form-label" for="MethodologyLabel">{{ 'Methodology' | localize }}</label>
+                    <select id="Methodology" name="Methodology" type="text" class="form-control" >
+                      <option>ComboBox</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="dropzone">
+                        <div class="dz-message">
+                          <i class="fe fe-upload"></i>
+                          <button class="dz-button" type="button">
+                            {{ "DropOrClickToUpload" | localize  }}
+                          </button>
                         </div>
-                        <div class="col-md-2">
-                            <label class="col-form-label" for="Min Education Level">{{ 'MinEducationLevel' | localize }}</label>
-                            <select class="custom-select" data-toggle="select">
-                                <option>Degree</option>
-                            </select>
+                        <div class="dz-preview"></div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-10">
+                        <label class="col-form-label" for="MainTopic">{{ 'MainTopicLabel' | localize }}</label>
+                        <p class="small text-muted mb-1"> {{ 'MainTopicSubLabel' | localize}} </p>
+                        <select class="form-control" data-toggle="select">
+                            <option>Physics</option>
+                            <option>Asto Physics</option>
+                            <option>Greek Methodology</option>
+                            <option>Chemistry</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 browse-skills">
+                        <button type="button" class="btn btn-primary">Browse Skills</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label" for="MainTopic">{{ 'MainConcernLabel' | localize }}</label>
+                    <p class="small text-muted mb-1"> {{ 'MainConcernSubLabel' | localize}} </p>
+                    <textarea class="form-control" data-toggle="autosize" rows="5" name="Concern" id="Concern" placeholder="Please provide your main concers or questions"></textarea>
+                </div>
+                <div class="form-group">
+                    <label> {{ 'UrgencyLevelLabel' | localize }} </label>
+                    <div class="btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-white">
+                          <input type="radio" name="options" id="option1" checked=""> <i class="fe fe-check-circle"></i> Urgent
+                        </label>
+                        <label class="btn btn-white active">
+                          <input type="radio" name="options" id="option2"> <i class="fe fe-check-circle"></i> Average
+                        </label>
+                        <label class="btn btn-white">
+                          <input type="radio" name="options" id="option3"> <i class="fe fe-check-circle"></i> Not Urgent
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label" for="DeadlineLabel">{{ 'DeadlineLabel' | localize }}</label>
+                    <div class="input-group input-group-merge">
+                      <input id="DeadLine" name="DeadLine" type="text"
+                        class="form-control form-control-appended" >
+                      <div class="input-group-append">
+                        <div class="input-group-text">
+                          <span class="fas fa-calendar"></span>
                         </div>
-                        <div class="col-md-1">
-                            <label class="col-form-label" for="Min Rating">{{ 'MinRating' | localize }}</label>
-                            <select class="custom-select" data-toggle="select">
-                                <option>4</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="col-form-label" for="Distance">{{ 'Distance' | localize }}</label>
-                            <select class="custom-select" data-toggle="select">
-                                <option>25 miles</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="col-form-label" for="Last Seen">{{ 'LastSeen' | localize }}</label>
-                            <select class="custom-select" data-toggle="select">
-                                <option>7 days</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="col-form-label" for="Sort By">{{ 'SortBy' | localize }}</label>
-                            <select class="custom-select" data-toggle="select">
-                                <option>Best Match</option>
-                            </select>
-                        </div>
-                        
-                        <div class="col-md-1">
-                            <label class="col-form-label" for="Availability">{{ 'Availability' | localize }}</label>
-                            <select class="custom-select" data-toggle="select">
-                                <option>Any</option>
-                            </select>
-                        </div>
+                      </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12 col-xl-8">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="col-12">
-                                {{ 'BestMatch' | localize }}
-                            </div>
-                            <div class="row align-items-center">
-                                <div class="col-1">
-                                    <a href="" class="avatar avatar-lg">
-                                        <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
-                                    </a>
-                                </div>
-                                <div class="col-6">
-                                    <h4 class="mb-1">
-                                        <a href="">Jane Pixton @OnePixie</a>
-                                    </h4>
-                                    <p class="small text-muted mb-1">
-                                        5.0
-                                    </p>
-                                </div>
-                                <div class="col-2">
-                                    <span class="badge badge-success">Interested</span>
-                                </div>
-                                <div class="col-3 amount">
-                                    <label for="">£ 13.00 GBP per hour</label>
-                                </div>
-                            </div>
-                            <div class="row align-items-center description">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary ml-auto">
-                                {{ 'Contact' | localize }}
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row align-items-center">
-                                <div class="col-1">
-                                    <a href="" class="avatar avatar-lg">
-                                        <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
-                                    </a>
-                                </div>
-                                <div class="col-6">
-                                    <h4 class="mb-1">
-                                        <a href="">Fran Polinsky @FrabTuto</a>
-                                    </h4>
-                                    <p class="small text-muted mb-1">
-                                        5.0
-                                    </p>
-                                </div>
-                                <div class="col-2">
-                                    <span class="badge badge-danger">Not Interested</span>
-                                </div>
-                                <div class="col-3 amount">
-                                    <label for="">£ 12.00 GBP per hour</label>
-                                </div>
-                            </div>
-                            <div class="row align-items-center description">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary ml-auto">
-                                {{ 'Contact' | localize }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-xl-4">
-                    <profile-summary-widget></profile-summary-widget>
-                    <proposals-contacts-widgets></proposals-contacts-widgets>
-                </div>
-            </div>
-           
         </div>
     </div>
 </div>
