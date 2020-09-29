@@ -33,7 +33,6 @@
 
         public const string Pages_PeerSupport = "Pages.PeerSupport";
         public const string Pages_PeerSupport_Tutorial = "Pages.PeerSupport.Tutorial";
-        public const string Pages_PeerSupport_Proposals = "Pages.PeerSupport.Proposals";
 
         public const string Pages_Profile = "Pages.Profile";
 

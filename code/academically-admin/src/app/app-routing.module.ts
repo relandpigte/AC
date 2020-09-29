@@ -11,7 +11,6 @@ import { RolesComponent } from 'app/roles/roles.component';
 import { ChangePasswordComponent } from './users/change-password/change-password.component';
 import { ProfileComponent } from './profile/profile.component';
 import { TutorialComponent } from './peer-support/tutorial/tutorial.component';
-import { ProposalsComponent } from './peer-support/proposals/proposals.component';
 
 @NgModule({
   imports: [
@@ -29,11 +28,6 @@ import { ProposalsComponent } from './peer-support/proposals/proposals.component
           { path: 'tutorial',
             component: TutorialComponent,
             data: { permission: 'Pages.PeerSupport.Tutorial'},
-            canActivate: [AppRouteGuard]
-          },
-          { path: 'proposals',
-            component: ProposalsComponent,
-            data: { permission: 'Pages.PeerSupport.Proposals'},
             canActivate: [AppRouteGuard]
           },
           {

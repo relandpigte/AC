@@ -156,8 +156,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_Publications_Update,
                 PermissionNames.Pages_Profile_Publications_Delete,
                 PermissionNames.Pages_PeerSupport,
-                PermissionNames.Pages_PeerSupport_Tutorial,
-                PermissionNames.Pages_PeerSupport_Proposals
+                PermissionNames.Pages_PeerSupport_Tutorial
             );
 
             #endregion

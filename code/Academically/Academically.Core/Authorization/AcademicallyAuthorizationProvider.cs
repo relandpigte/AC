@@ -39,7 +39,6 @@ namespace Academically.Authorization
 
             var peerSupportPermission = context.CreatePermission(PermissionNames.Pages_PeerSupport, L("PeerSupport"));
             peerSupportPermission.CreateChildPermission(PermissionNames.Pages_PeerSupport_Tutorial, L("Tutorial"));
-            peerSupportPermission.CreateChildPermission(PermissionNames.Pages_PeerSupport_Proposals, L("Proposals"));
 
             var profilePermission = context.CreatePermission(PermissionNames.Pages_Profile, L("Profile"));
 

@@ -37,11 +37,13 @@
               "src/assets/freeze-ui/freeze-ui.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
+
               "src/assets/themes/dashkit/fonts/feather/feather.css",
               "src/assets/themes/dashkit/libs/flatpickr/dist/flatpickr.min.css",
               "src/assets/themes/dashkit/libs/quill/dist/quill.core.css",
               "src/assets/themes/dashkit/libs/highlightjs/styles/vs2015.css",
               "src/assets/themes/dashkit/css/theme.min.css",
+
               "src/shared/core.less"
             ],
             "scripts": [
@@ -50,6 +52,7 @@
               "node_modules/sweetalert2/dist/sweetalert2.js",
               "src/assets/freeze-ui/freeze-ui.js",
               "node_modules/push.js/bin/push.min.js",
+
               "src/assets/themes/dashkit/libs/jquery/dist/jquery.min.js",
               "src/assets/themes/dashkit/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js",
               "src/assets/themes/dashkit/libs/autosize/dist/autosize.min.js",
@@ -62,10 +65,11 @@
               "src/assets/themes/dashkit/libs/quill/dist/quill.min.js",
               "src/assets/themes/dashkit/libs/select2/dist/js/select2.full.min.js",
               "src/assets/themes/dashkit/libs/chart.js/Chart.extension.js",
+
               "node_modules/abp-web-resources/Abp/Framework/scripts/abp.js",
               "src/assets/abp-web-resources/abp.sweet-alert.js",
               "src/assets/abp-web-resources/abp.freeze-ui.js",
-              "node_modules/abp-web-resources/Abp/Framework/scripts/libs/abp.moment.js"
+              "node_modules/abp-web-resources/Abp/Framework/scripts/libs/abp.moment.js",
             ]
           },
           "configurations": {
@@ -238,8 +242,5 @@
     "@schematics/angular:service": {
       "skipTests": true
     }
-  },
-  "cli": {
-    "analytics": false
   }
 }
