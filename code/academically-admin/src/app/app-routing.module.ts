@@ -10,8 +10,8 @@ import { TenantsComponent } from './tenants/tenants.component';
 import { RolesComponent } from 'app/roles/roles.component';
 import { ChangePasswordComponent } from './users/change-password/change-password.component';
 import { ProfileComponent } from './profile/profile.component';
-import { TutorialComponent } from './peer-support/tutorial/tutorial.component';
-import { ProposalsComponent } from './peer-support/proposals/proposals.component';
+import { TutorialComponent } from './academic-support/peer-support/tutorial/tutorial.component';
+import { ProposalsComponent } from './academic-support/peer-support/proposals/proposals.component';
 
 @NgModule({
   imports: [
