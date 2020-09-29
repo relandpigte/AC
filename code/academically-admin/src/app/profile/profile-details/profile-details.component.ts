@@ -162,7 +162,7 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
   private saveDetails(): void {
     this.isLoading = true;
     if (this.dateOfBirth) {
-      this.model.dateOfBirth = moment.utc(moment.utc(this.dateOfBirth).format('YYYY-MM-DD'));
+      this.model.dateOfBirth = moment.utc(moment(this.dateOfBirth).format('YYYY-MM-DD'));
     }
     this._userProfilesService.saveDetail(this.model.firstName, this.model.lastName,
       this.model.dateOfBirth, this.model.addressLine1, this.model.addressLine2, this.model.city, this.model.zipOrPostCode,
