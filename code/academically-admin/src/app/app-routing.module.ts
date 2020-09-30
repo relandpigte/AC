@@ -12,6 +12,7 @@ import { ChangePasswordComponent } from './users/change-password/change-password
 import { ProfileComponent } from './profile/profile.component';
 import { TutorialComponent } from './academic-support/peer-support/tutorial/tutorial.component';
 import { ProposalsComponent } from './academic-support/peer-support/proposals/proposals.component';
+import { AcademicSupportComponent } from './academic-support/academic-support.component';
 
 @NgModule({
   imports: [
@@ -26,6 +27,11 @@ import { ProposalsComponent } from './academic-support/peer-support/proposals/pr
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent },
+          { path: 'academic-support',
+            component: AcademicSupportComponent,
+            data: { permission: 'Pages.Dashboard.Navigations.AcademicSupport'},
+            canActivate: [AppRouteGuard]
+          },
           { path: 'tutorial',
             component: TutorialComponent,
             data: { permission: 'Pages.PeerSupport.Tutorial'},
