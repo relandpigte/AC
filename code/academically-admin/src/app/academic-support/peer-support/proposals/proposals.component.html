@@ -1,0 +1,146 @@
+<div class="container-fluid" [@routerTransition]>
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="header">
+                <div class="header-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                        <h1 class="header-title">{{ "Proposals" | localize }}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="col-form-label" for="Native Language">{{ 'NativeLanguage' | localize }}</label>
+                                <select class="custom-select" data-toggle="select">
+                                    <option>English</option>
+                                    <option>Chinese</option>
+                                    <option>Korean</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="col-form-label" for="Min Education Level">{{ 'MinEducationLevel' | localize }}</label>
+                            <select class="custom-select" data-toggle="select">
+                                <option>Degree</option>
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="col-form-label" for="Min Rating">{{ 'MinRating' | localize }}</label>
+                            <select class="custom-select" data-toggle="select">
+                                <option>4</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="col-form-label" for="Distance">{{ 'Distance' | localize }}</label>
+                            <select class="custom-select" data-toggle="select">
+                                <option>25 miles</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="col-form-label" for="Last Seen">{{ 'LastSeen' | localize }}</label>
+                            <select class="custom-select" data-toggle="select">
+                                <option>7 days</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="col-form-label" for="Sort By">{{ 'SortBy' | localize }}</label>
+                            <select class="custom-select" data-toggle="select">
+                                <option>Best Match</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-1">
+                            <label class="col-form-label" for="Availability">{{ 'Availability' | localize }}</label>
+                            <select class="custom-select" data-toggle="select">
+                                <option>Any</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-xl-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="col-12">
+                                {{ 'BestMatch' | localize }}
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="col-1">
+                                    <a href="" class="avatar avatar-lg">
+                                        <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <h4 class="mb-1">
+                                        <a href="">Jane Pixton @OnePixie</a>
+                                    </h4>
+                                    <p class="small text-muted mb-1">
+                                        5.0
+                                    </p>
+                                </div>
+                                <div class="col-2">
+                                    <span class="badge badge-success">Interested</span>
+                                </div>
+                                <div class="col-3 amount">
+                                    <label for="">£ 13.00 GBP per hour</label>
+                                </div>
+                            </div>
+                            <div class="row align-items-center description">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary ml-auto">
+                                {{ 'Contact' | localize }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-1">
+                                    <a href="" class="avatar avatar-lg">
+                                        <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <h4 class="mb-1">
+                                        <a href="">Fran Polinsky @FrabTuto</a>
+                                    </h4>
+                                    <p class="small text-muted mb-1">
+                                        5.0
+                                    </p>
+                                </div>
+                                <div class="col-2">
+                                    <span class="badge badge-danger">Not Interested</span>
+                                </div>
+                                <div class="col-3 amount">
+                                    <label for="">£ 12.00 GBP per hour</label>
+                                </div>
+                            </div>
+                            <div class="row align-items-center description">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary ml-auto">
+                                {{ 'Contact' | localize }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-xl-4">
+                    <profile-summary-widget></profile-summary-widget>
+                    <proposals-contacts-widgets></proposals-contacts-widgets>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
