@@ -52,7 +52,7 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
       new MenuItem(this.l('AcademicSupport'), '/app/academic-support', 'fe fe-book', 'Pages.Dashboard.Navigations.AcademicSupport', [
         new MenuItem(
           this.l('PeerSupport'),
-          '',
+          '/app/peer-support',
           'fe fe-users',
           'Pages.PeerSupport', [
             new MenuItem(

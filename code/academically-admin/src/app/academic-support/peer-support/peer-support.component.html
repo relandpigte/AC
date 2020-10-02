@@ -4,7 +4,7 @@
             <div class="header-body">
                 <div class="row align-items-center">
                     <div class="col">
-                    <h1 class="header-title">{{ "AcademicSupport" | localize }}</h1>
+                    <h1 class="header-title">{{ "PeerSupport" | localize }}</h1>
                     </div>
                 </div>
             </div>
@@ -12,9 +12,14 @@
         <div class="row">
             <div class="col-12">
                 <ul class="list-group list-group-lg">
-                    <a [routerLink]="['/app/peer-support']">
+                    <a [routerLink]="['/app/tutorial']">
                         <li class="list-group-item active">
-                            <label for="">{{ "PeerSupport" | localize }}</label>
+                            <label for="">{{ "Tutorial" | localize }}</label>
+                        </li>
+                    </a>
+                    <a [routerLink]="['/app/proposals']">
+                        <li class="list-group-item active">
+                            <label for="">{{ "Proposals" | localize }}</label>
                         </li>
                     </a>
                 </ul>

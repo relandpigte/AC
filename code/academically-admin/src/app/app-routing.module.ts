@@ -13,6 +13,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { TutorialComponent } from './academic-support/peer-support/tutorial/tutorial.component';
 import { ProposalsComponent } from './academic-support/peer-support/proposals/proposals.component';
 import { AcademicSupportComponent } from './academic-support/academic-support.component';
+import { PeerSupportComponent } from './academic-support/peer-support/peer-support.component';
 
 @NgModule({
   imports: [
@@ -30,6 +31,11 @@ import { AcademicSupportComponent } from './academic-support/academic-support.co
           { path: 'academic-support',
             component: AcademicSupportComponent,
             data: { permission: 'Pages.Dashboard.Navigations.AcademicSupport'},
+            canActivate: [AppRouteGuard]
+          },
+          { path: 'peer-support',
+            component: PeerSupportComponent,
+            data: { permission: 'Pages.PeerSupport'},
             canActivate: [AppRouteGuard]
           },
           { path: 'tutorial',
