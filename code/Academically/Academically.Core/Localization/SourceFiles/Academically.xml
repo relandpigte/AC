@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="AreaOfStudy">Area of Study</text>
     <text name="AreasOfStudyNotSavedWarning">The areas of study you selected has not been saved yet. If you leave, your changes will be lost.</text>
     <text name="NoAreaOfStudySelected">No Area of Study Selected</text>
-    <text name="SearchTaxonomy">Search Taxonomy</text>
+    <text name="SearchAreasOfStudy">Search Areas of Study</text>
     <text name="Update">Update</text>
     <text name="NoAreaOfStudy">No Area of Study</text>
     <text name="TheAreaOfStudyWasRemoved">The Area of Study was removed.</text>

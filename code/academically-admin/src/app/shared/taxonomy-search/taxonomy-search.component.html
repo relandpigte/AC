@@ -13,7 +13,7 @@
               <input
                 class="list-search form-control"
                 type="search"
-                placeholder="{{ 'SearchTaxonomy' | localize }}"
+                placeholder="{{ 'SearchAreasOfStudy' | localize }}"
                 id="SearchKeyword"
                 name="SearchKeyword"
                 [(ngModel)]="searchKeyword"
@@ -49,7 +49,7 @@
         id="taxonomy-chart"
         class="sunburst-chart"
         sunburtChart
-        rootNodeLabel="Taxonomies"
+        rootNodeLabel="{{ 'AreaOfStudy' | localize }}"
         [busy]="isLoading"
         [chartData]="taxonomies"
         [searchKeyword]="searchKeyword"
