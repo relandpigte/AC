@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DisciplineTaxonomiesServiceProxy, GetAllDisciplineTaxonomyDto } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -9,7 +9,8 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   styleUrls: ['./taxonomy-search.component.less'],
 })
 export class TaxonomySearchComponent extends AppComponentBase implements OnInit {
-  @Output() modalSave = new EventEmitter<string[]>();
+  @Input() userId: number;
+  @Output() modalSave = new EventEmitter<GetAllDisciplineTaxonomyDto[]>();
   taxonomies: GetAllDisciplineTaxonomyDto[] = [];
   selectedTaxonomies: GetAllDisciplineTaxonomyDto[] = [];
   searchKeyword = '';
@@ -42,10 +43,9 @@ export class TaxonomySearchComponent extends AppComponentBase implements OnInit 
   }
 
   onFormSubmit(): void {
-    const taxonomyIds = this.selectedTaxonomies.map((e) => e.id);
     this._modalRef.hide();
     setTimeout(() => {
-      this.modalSave.emit(taxonomyIds);
+      this.modalSave.emit(this.selectedTaxonomies);
     }, 300);
   }
 
@@ -63,7 +63,7 @@ export class TaxonomySearchComponent extends AppComponentBase implements OnInit 
 
   private getTaxonomies(): void {
     this.isLoading = true;
-    this._disciplineTaxonomiesService.getAll().subscribe((taxonomies) => {
+    this._disciplineTaxonomiesService.getAll(this.userId).subscribe((taxonomies) => {
       this.taxonomies = taxonomies;
       this.isLoading = false;
     });

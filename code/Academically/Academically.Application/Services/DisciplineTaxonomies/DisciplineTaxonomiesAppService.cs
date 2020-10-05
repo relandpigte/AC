@@ -28,35 +28,54 @@ namespace Academically.Services.DisciplineTaxonomies
             _userDisciplieTaxonomiesRespository = userDisciplieTaxonomiesRespository;
         }
 
-        public async Task<IEnumerable<GetAllDisciplineTaxonomyDto>> GetAll()
+        public async Task<IEnumerable<GetAllDisciplineTaxonomyDto>> GetAll(long? userId)
         {
-            var userDisciplineTaxonomyIds = GetUserDisciplineTaxonomies();
-            var discplineTaxonomies = await _disciplieTaxonomiesRespository.GetAll()
-                .Where(e => !userDisciplineTaxonomyIds.Any(t => e.ParentIdMap.Contains(t)))
-                .ToListAsync();
-            var rootTaxonomies = GetChildren(discplineTaxonomies, null)
+            List<DisciplineTaxonomy> disciplineTaxonomies;
+            if (userId.HasValue)
+            {
+                var userDisciplineTaxonomyIds = GetUserDisciplineTaxonomies(userId.Value);
+                disciplineTaxonomies = await _disciplieTaxonomiesRespository.GetAll()
+                    .Where(e => !userDisciplineTaxonomyIds.Any(t => e.ParentIdMap.Contains(t)))
+                    .ToListAsync();
+            } else
+            {
+                disciplineTaxonomies = await _disciplieTaxonomiesRespository.GetAll().ToListAsync();
+            }
+            var rootTaxonomies = GetChildren(disciplineTaxonomies, null)
                 .Select(e => ObjectMapper.Map<GetAllDisciplineTaxonomyDto>(e));
 
             return rootTaxonomies;
         }
 
-        public async Task<IEnumerable<DisciplineTaxonomyDto>> Search(string keyword)
+        public async Task<IEnumerable<DisciplineTaxonomyDto>> Search(long? userId, string keyword)
         {
-            var userDisciplineTaxonomyIds = GetUserDisciplineTaxonomies();
-            var disciplineTaxonomies = await _disciplieTaxonomiesRespository.GetAll()
-                .WhereIf(!keyword.IsNullOrWhiteSpace(), e => e.Name.ToLower().Contains(keyword.ToLower()))
-                .Where(e => !userDisciplineTaxonomyIds.Any(t => e.ParentIdMap.Contains(t)))
-                .OrderBy(e => e.Name)
-                .Take(10)
-                .Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e))
-                .ToListAsync();
+            List<DisciplineTaxonomyDto> disciplineTaxonomies;
+            if (userId.HasValue)
+            {
+                var userDisciplineTaxonomyIds = GetUserDisciplineTaxonomies(userId.Value);
+                disciplineTaxonomies = await _disciplieTaxonomiesRespository.GetAll()
+                    .WhereIf(!keyword.IsNullOrWhiteSpace(), e => e.Name.ToLower().Contains(keyword.ToLower()))
+                    .Where(e => !userDisciplineTaxonomyIds.Any(t => e.ParentIdMap.Contains(t)))
+                    .OrderBy(e => e.Name)
+                    .Take(10)
+                    .Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e))
+                    .ToListAsync();
+            } else
+            {
+                disciplineTaxonomies = await _disciplieTaxonomiesRespository.GetAll()
+                    .WhereIf(!keyword.IsNullOrWhiteSpace(), e => e.Name.ToLower().Contains(keyword.ToLower()))
+                    .OrderBy(e => e.Name)
+                    .Take(10)
+                    .Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e))
+                    .ToListAsync();
+            }
             return disciplineTaxonomies;
         }
 
-        private IQueryable<string> GetUserDisciplineTaxonomies()
+        private IQueryable<string> GetUserDisciplineTaxonomies(long userId)
         {
             return _userDisciplieTaxonomiesRespository.GetAll()
-                .Where(e => e.UserId == AbpSession.UserId.Value)
+                .Where(e => e.UserId == userId)
                 .Select(e => e.DisciplineTaxonomyId.ToString());
         }
 

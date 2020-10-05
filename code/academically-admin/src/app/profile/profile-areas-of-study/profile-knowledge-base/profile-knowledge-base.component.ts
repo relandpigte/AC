@@ -4,6 +4,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import {
   DisciplineTaxonomiesServiceProxy,
   DisciplineTaxonomyDto,
+  GetAllDisciplineTaxonomyDto,
   GetUserDisciplineTaxonomyDto,
   UserProfilesServiceProxy,
 } from '@shared/service-proxies/service-proxies';
@@ -54,7 +55,7 @@ export class ProfileKnowledgeBaseComponent extends AppComponentBase implements O
       observer.next(this.disciplineTaxonomyName);
     }).pipe(
       switchMap((query: string) => {
-        return this._disciplineTaxonomiesService.search(query);
+        return this._disciplineTaxonomiesService.search(this.appSession.userId, query);
       })
     );
   }
@@ -100,10 +101,14 @@ export class ProfileKnowledgeBaseComponent extends AppComponentBase implements O
   private showTaxonomySearchModal(): void {
     const modalSettings = this.defaultModalSettings;
     modalSettings.class = 'modal-xl';
+    modalSettings.initialState = {
+      userId: this.appSession.userId,
+    };
     const modalRef = this._modalService.show(TaxonomySearchComponent, modalSettings);
     const modal: TaxonomySearchComponent = modalRef.content;
-    modal.modalSave.subscribe((disciplineTaxonomyIds: string[]) => {
-      this.addDisciplineTaxonomiesToUser(disciplineTaxonomyIds);
+    modal.modalSave.subscribe((selectedTaxonomies: GetAllDisciplineTaxonomyDto[]) => {
+      const taxonomyIds = selectedTaxonomies.map((e) => e.id);
+      this.addDisciplineTaxonomiesToUser(taxonomyIds);
     });
   }
 }

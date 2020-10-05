@@ -340,10 +340,13 @@ export class DisciplineTaxonomiesServiceProxy {
     }
 
     /**
+     * @param userId (optional) 
      * @return Success
      */
-    getAll(): Observable<GetAllDisciplineTaxonomyDto[]> {
-        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/GetAll";
+    getAll(userId: number | null | undefined): Observable<GetAllDisciplineTaxonomyDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/GetAll?";
+        if (userId !== undefined && userId !== null)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -395,11 +398,14 @@ export class DisciplineTaxonomiesServiceProxy {
     }
 
     /**
+     * @param userId (optional) 
      * @param keyword (optional) 
      * @return Success
      */
-    search(keyword: string | null | undefined): Observable<DisciplineTaxonomyDto[]> {
+    search(userId: number | null | undefined, keyword: string | null | undefined): Observable<DisciplineTaxonomyDto[]> {
         let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/Search?";
+        if (userId !== undefined && userId !== null)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
         if (keyword !== undefined && keyword !== null)
             url_ += "keyword=" + encodeURIComponent("" + keyword) + "&";
         url_ = url_.replace(/[?&]$/, "");
