@@ -2,13 +2,14 @@
 {
     public enum EducationLevel
     {
-        Level8 = 8,
-        Level7 = 7,
-        Level6 = 6,
-        Level5 = 5,
-        Level4 = 4,
-        Level3 = 3,
-        Level2 = 2,
-        Level1 = 1,
+        Level8 = 108,
+        Level7 = 107,
+        Level6 = 106,
+        Level5 = 105,
+        Level4 = 104,
+        Level3 = 103,
+        Level2 = 102,
+        Level1 = 101,
+        Level0 = 100,
     }
 }
