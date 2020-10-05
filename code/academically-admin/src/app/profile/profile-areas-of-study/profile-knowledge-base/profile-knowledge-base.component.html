@@ -7,7 +7,7 @@
       *ngIf="permission.isGranted('Pages.Profile.AreasOfStudy.KnowledgeBase.Create')"
       href="#"
       class="btn btn-sm btn-primary"
-      (click)="$event.preventDefault()"
+      (click)="$event.preventDefault(); onAddAreaOfStudyClick()"
     >
       {{ 'AddAreaOfStudy' | localize }}
     </a>

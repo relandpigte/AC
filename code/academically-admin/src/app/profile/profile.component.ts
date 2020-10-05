@@ -8,14 +8,12 @@ import { ProfileDetailsComponent } from './profile-details/profile-details.compo
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.less'],
-  animations: [appModuleAnimation()]
+  animations: [appModuleAnimation()],
 })
 export class ProfileComponent extends FormCanDeactive implements OnInit {
   @ViewChild('profileDetailsComponent') profileDetailsComponent: ProfileDetailsComponent;
 
-  constructor(
-    injector: Injector,
-  ) {
+  constructor(injector: Injector) {
     super(injector);
     this.changesNotYetSavedMessage = this.l('ProfileDetailsNotSavedWarning');
   }
@@ -24,7 +22,5 @@ export class ProfileComponent extends FormCanDeactive implements OnInit {
     return this.profileDetailsComponent.form;
   }
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

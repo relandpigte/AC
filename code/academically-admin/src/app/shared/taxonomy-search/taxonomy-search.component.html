@@ -1,0 +1,66 @@
+<form class="form-horizontal" autocomplete="off" #taxonomySearchForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <div class="card-header">
+      <div class="row align-items-center">
+        <div class="col">
+          <form>
+            <div class="input-group input-group-flush">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fe fe-search"></i>
+                </span>
+              </div>
+              <input
+                class="list-search form-control"
+                type="search"
+                placeholder="{{ 'SearchTaxonomy' | localize }}"
+                id="SearchKeyword"
+                name="SearchKeyword"
+                [(ngModel)]="searchKeyword"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+      <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="card-body position-relative">
+      <div class="selected-taxonomies">
+        <div *ngFor="let selectedTaxonomy of selectedTaxonomies" class="alert alert-info alert-dismissible discipline" role="alert">
+          {{ selectedTaxonomy.name }}
+          <button
+            *ngIf="permission.isGranted('Pages.Profile.AreasOfStudy.KnowledgeBase.Delete')"
+            (click)="onRemoveTaxonomyClick(selectedTaxonomy.id)"
+            type="button"
+            class="close"
+            data-dismiss="alert"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div *ngIf="selectedTaxonomies.length === 0">
+          <h4 class="text-center text-muted">{{ 'NoAreaOfStudySelected' | localize }}</h4>
+        </div>
+      </div>
+      <div
+        id="taxonomy-chart"
+        class="sunburst-chart"
+        sunburtChart
+        rootNodeLabel="Taxonomies"
+        [busy]="isLoading"
+        [chartData]="taxonomies"
+        [searchKeyword]="searchKeyword"
+        (nodeClick)="onTaxonomySelect($event)"
+      ></div>
+    </div>
+    <abp-modal-footer
+      [cancelDisabled]="isLoading"
+      [saveDisabled]="!taxonomySearchForm.form.valid || isLoading || selectedTaxonomies.length === 0"
+      (onCancelClick)="onCloseClick()"
+    >
+    </abp-modal-footer>
+  </div>
+</form>

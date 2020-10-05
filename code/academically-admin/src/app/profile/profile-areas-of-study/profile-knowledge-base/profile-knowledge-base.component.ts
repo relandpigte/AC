@@ -1,4 +1,5 @@
 import { Component, Injector, OnInit } from '@angular/core';
+import { TaxonomySearchComponent } from '@app/shared/taxonomy-search/taxonomy-search.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   DisciplineTaxonomiesServiceProxy,
@@ -6,6 +7,7 @@ import {
   GetUserDisciplineTaxonomyDto,
   UserProfilesServiceProxy,
 } from '@shared/service-proxies/service-proxies';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { Observable, Observer } from 'rxjs';
 import { finalize, switchMap } from 'rxjs/operators';
@@ -24,7 +26,8 @@ export class ProfileKnowledgeBaseComponent extends AppComponentBase implements O
   constructor(
     injector: Injector,
     private _disciplineTaxonomiesService: DisciplineTaxonomiesServiceProxy,
-    private _userProfilesService: UserProfilesServiceProxy
+    private _userProfilesService: UserProfilesServiceProxy,
+    private _modalService: BsModalService
   ) {
     super(injector);
   }
@@ -35,11 +38,15 @@ export class ProfileKnowledgeBaseComponent extends AppComponentBase implements O
   }
 
   onTaxonomySelect(e: TypeaheadMatch): void {
-    this.addDisciplineTaxonomyToUser(e.item.id);
+    this.addDisciplineTaxonomiesToUser([e.item.id]);
   }
 
   onRemoveDisciplineTaxonomyClick(userDisciplineTaxonomyId: string) {
     this.removeDisciplineTaxonomyFromUser(userDisciplineTaxonomyId);
+  }
+
+  onAddAreaOfStudyClick(): void {
+    this.showTaxonomySearchModal();
   }
 
   private getDisciplineTaxonomies(): void {
@@ -60,10 +67,10 @@ export class ProfileKnowledgeBaseComponent extends AppComponentBase implements O
     });
   }
 
-  private addDisciplineTaxonomyToUser(disciplineTaxonomyId: string): void {
+  private addDisciplineTaxonomiesToUser(disciplineTaxonomyIds: string[]): void {
     this.isLoading = true;
     this._userProfilesService
-      .createDisciplineTaxonomy(disciplineTaxonomyId)
+      .createManyDisciplineTaxonomy(disciplineTaxonomyIds)
       .pipe(
         finalize(() => {
           this.disciplineTaxonomyName = '';
@@ -88,5 +95,15 @@ export class ProfileKnowledgeBaseComponent extends AppComponentBase implements O
         this.notify.success(this.l('TheAreaOfStudyWasRemoved'));
         this.getDiscplineTaxonomiesOfUser();
       });
+  }
+
+  private showTaxonomySearchModal(): void {
+    const modalSettings = this.defaultModalSettings;
+    modalSettings.class = 'modal-xl';
+    const modalRef = this._modalService.show(TaxonomySearchComponent, modalSettings);
+    const modal: TaxonomySearchComponent = modalRef.content;
+    modal.modalSave.subscribe((disciplineTaxonomyIds: string[]) => {
+      this.addDisciplineTaxonomiesToUser(disciplineTaxonomyIds);
+    });
   }
 }

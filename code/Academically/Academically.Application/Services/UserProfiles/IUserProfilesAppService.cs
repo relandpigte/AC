@@ -12,7 +12,7 @@ namespace Academically.Services.UserProfiles
         Task SaveDetail(SaveProfileDetailDto input);
 
         Task<IEnumerable<GetUserDisciplineTaxonomyDto>> GetDisciplineTaxonomies();
-        Task CreateDisciplineTaxonomy(Guid disciplineTaxonomyId);
+        Task CreateManyDisciplineTaxonomy(IEnumerable<Guid> disciplineTaxonomyIds);
         Task DeleteDisciplineTaxonomy(Guid userDisciplineTaxonomyId);
     }
 }

@@ -28,20 +28,46 @@ namespace Academically.Services.DisciplineTaxonomies
             _userDisciplieTaxonomiesRespository = userDisciplieTaxonomiesRespository;
         }
 
+        public async Task<IEnumerable<GetAllDisciplineTaxonomyDto>> GetAll()
+        {
+            var userDisciplineTaxonomyIds = GetUserDisciplineTaxonomies();
+            var discplineTaxonomies = await _disciplieTaxonomiesRespository.GetAll()
+                .Where(e => !userDisciplineTaxonomyIds.Any(t => e.ParentIdMap.Contains(t)))
+                .ToListAsync();
+            var rootTaxonomies = GetChildren(discplineTaxonomies, null)
+                .Select(e => ObjectMapper.Map<GetAllDisciplineTaxonomyDto>(e));
+
+            return rootTaxonomies;
+        }
+
         public async Task<IEnumerable<DisciplineTaxonomyDto>> Search(string keyword)
         {
-            var userDisciplineTaxonomies = await _userDisciplieTaxonomiesRespository.GetAll()
-                .Where(e => e.UserId == AbpSession.UserId.Value)
-                .Select(e => e.DisciplineTaxonomyId)
-                .ToListAsync();
+            var userDisciplineTaxonomyIds = GetUserDisciplineTaxonomies();
             var disciplineTaxonomies = await _disciplieTaxonomiesRespository.GetAll()
                 .WhereIf(!keyword.IsNullOrWhiteSpace(), e => e.Name.ToLower().Contains(keyword.ToLower()))
-                .Where(e => !userDisciplineTaxonomies.Any(t => t == e.Id))
+                .Where(e => !userDisciplineTaxonomyIds.Any(t => e.ParentIdMap.Contains(t)))
                 .OrderBy(e => e.Name)
                 .Take(10)
                 .Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e))
                 .ToListAsync();
             return disciplineTaxonomies;
+        }
+
+        private IQueryable<string> GetUserDisciplineTaxonomies()
+        {
+            return _userDisciplieTaxonomiesRespository.GetAll()
+                .Where(e => e.UserId == AbpSession.UserId.Value)
+                .Select(e => e.DisciplineTaxonomyId.ToString());
+        }
+
+        private List<DisciplineTaxonomy> GetChildren(IEnumerable<DisciplineTaxonomy> taxonomies, Guid? parentId)
+        {
+            var children = taxonomies.Where(e => e.ParentId == parentId).ToList();
+            foreach (var child in children)
+            {
+                child.Children = GetChildren(taxonomies, child.Id);
+            }
+            return children;
         }
     }
 }

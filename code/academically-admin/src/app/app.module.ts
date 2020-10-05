@@ -16,6 +16,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 // directives
 import { Select2Directive } from '@shared/directives/select2.directive';
+import { SunburstChartDirective } from '@shared/directives/sunburst-chart.directive';
 // tenants
 import { TenantsComponent } from '@app/tenants/tenants.component';
 import { CreateTenantDialogComponent } from './tenants/create-tenant/create-tenant-dialog.component';
@@ -57,6 +58,8 @@ import { ProposalsContactsWidgetsComponent } from './widgets/proposals-contacts-
 import { ProfileAreasOfStudyComponent } from './profile/profile-areas-of-study/profile-areas-of-study.component';
 import { ProposalsComponent } from './peer-support/proposals/proposals.component';
 import { ProfileKnowledgeBaseComponent } from './profile/profile-areas-of-study/profile-knowledge-base/profile-knowledge-base.component';
+import { TaxonomySearchComponent } from './shared/taxonomy-search/taxonomy-search.component';
+import SunburstChart from 'sunburst-chart';
 
 @NgModule({
   declarations: [
@@ -89,6 +92,7 @@ import { ProfileKnowledgeBaseComponent } from './profile/profile-areas-of-study/
     SidebarMenuComponent,
     // directives
     Select2Directive,
+    SunburstChartDirective,
     // components
     ProfileComponent,
     ProfileEducationComponent,
@@ -103,6 +107,7 @@ import { ProfileKnowledgeBaseComponent } from './profile/profile-areas-of-study/
     ProfileAreasOfStudyComponent,
     ProposalsComponent,
     ProfileKnowledgeBaseComponent,
+    TaxonomySearchComponent,
   ],
   imports: [
     CommonModule,
@@ -135,6 +140,7 @@ import { ProfileKnowledgeBaseComponent } from './profile/profile-areas-of-study/
     ResetPasswordDialogComponent,
     // academically
     CreateEditProfileEducationComponent,
+    TaxonomySearchComponent,
   ],
 })
-export class AppModule { }
+export class AppModule {}

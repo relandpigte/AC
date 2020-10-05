@@ -125,14 +125,17 @@ namespace Academically.Services.UserProfiles
         }
 
         [AbpAuthorize(PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create)]
-        public async Task CreateDisciplineTaxonomy(Guid disciplineTaxonomyId)
+        public async Task CreateManyDisciplineTaxonomy(IEnumerable<Guid> disciplineTaxonomyIds)
         {
-            var userDisciplineTaxonomy = new UserDisciplineTaxonomy()
+            foreach (var disciplineTaxonomyId in disciplineTaxonomyIds)
             {
-                UserId = AbpSession.UserId.Value,
-                DisciplineTaxonomyId = disciplineTaxonomyId,
-            };
-            await _userDisciplineTaxonomiesRepository.InsertAsync(userDisciplineTaxonomy);
+                var userDisciplineTaxonomy = new UserDisciplineTaxonomy()
+                {
+                    UserId = AbpSession.UserId.Value,
+                    DisciplineTaxonomyId = disciplineTaxonomyId,
+                };
+                await _userDisciplineTaxonomiesRepository.InsertAsync(userDisciplineTaxonomy);
+            }
         }
 
         [AbpAuthorize(PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete)]

@@ -1,23 +1,23 @@
 @media (min-width: 576px) {
   .nav-user-menu .user-image {
-    float      : none;
+    float: none;
     line-height: 10px;
-    margin-top : -8px;
+    margin-top: -8px;
   }
 }
 
 .nav-user-menu .user-image {
   border-radius: 50%;
-  float        : left;
-  height       : 2rem;
-  margin-top   : -4px;
-  width        : 2rem;
+  float: left;
+  height: 2rem;
+  margin-top: -4px;
+  width: 2rem;
 }
 
 .form-group.required .col-form-label:after {
-  color      : #d00;
-  content    : "*";
-  position   : absolute;
+  color: #d00;
+  content: '*';
+  position: absolute;
   margin-left: 3px;
 }
 
@@ -39,7 +39,7 @@ body.swal2-height-auto {
 .swal2-popup.swal2-toast .swal2-title,
 .swal2-popup.swal2-toast .swal2-content {
   text-align: left !important;
-  margin    : 0 !important;
+  margin: 0 !important;
 }
 
 .swal2-popup.swal2-toast .swal2-title {
@@ -51,7 +51,7 @@ app-root {
 }
 
 .freeze-ui:before {
-  top : calc(50% - 50px);
+  top: calc(50% - 50px);
   left: calc(50% - 40px);
 }
 
@@ -73,11 +73,11 @@ app-root {
 
 .table-action {
   text-align: right;
-  width     : 1%;
+  width: 1%;
 }
 
-.custom-control-input:disabled~.custom-control-label::before,
-.custom-control-input[disabled]~.custom-control-label::before {
+.custom-control-input:disabled ~ .custom-control-label::before,
+.custom-control-input[disabled] ~ .custom-control-label::before {
   background-color: #e3ebf6;
 }
 
@@ -92,37 +92,37 @@ app-root {
     height: 227px;
 
     .dz-message {
-      height         : 100%;
-      display        : flex;
-      flex-direction : column;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
       justify-content: center;
-      padding        : 0;
-      z-index        : 2;
-      background     : transparent;
+      padding: 0;
+      z-index: 2;
+      background: transparent;
 
       i.fe {
-        display  : block;
+        display: block;
         font-size: 40px;
       }
 
-      input[type="file"] {
+      input[type='file'] {
         position: absolute;
-        width   : 100%;
-        height  : 100%;
-        opacity : 0;
-        cursor  : pointer;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
       }
     }
 
     .dz-preview {
-      position           : absolute;
-      background-repeat  : no-repeat;
-      background-size    : contain;
+      position: absolute;
+      background-repeat: no-repeat;
+      background-size: contain;
       background-position: center;
-      height             : 100%;
-      width              : 100%;
-      z-index            : 1;
-      opacity            : 10%;
+      height: 100%;
+      width: 100%;
+      z-index: 1;
+      opacity: 10%;
     }
   }
 }
@@ -136,5 +136,31 @@ form {
 .avatar-online {
   .avatar-img {
     object-fit: contain;
+  }
+}
+
+.discipline {
+  margin: 5px;
+  padding: 5px 25px 5px 5px;
+  display: inline-block;
+
+  .close {
+    padding: 5px;
+  }
+}
+
+.sunburst-chart {
+  & * {
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
+
+    /* Rules below not implemented in browsers yet */
+    -o-user-select: none;
+    user-select: none;
+  }
+
+  .sunburst-tooltip {
+    max-width: fit-content !important;
   }
 }

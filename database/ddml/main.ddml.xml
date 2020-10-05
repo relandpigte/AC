@@ -14,4 +14,6 @@
 	<include file="ddml/ddml.2020-09-26-01.add-disciplinetaxonomies-table.xml" />
 	<include file="ddml/ddml.2020-09-26-02.add-disciplinetaxonomies-data.xml" />
 	<include file="ddml/ddml.2020-09-86-01.add-userdisciplinetaxonomies-table.xml" />
+	<include file="ddml/ddml.2020-10-02-01.add-disciplinetaxonomies-parentidmap.xml" />
+	<include file="ddml/ddml.2020-10-02-02.regenerate-disciplinetaxonomies-data.xml" />
 </databaseChangeLog>

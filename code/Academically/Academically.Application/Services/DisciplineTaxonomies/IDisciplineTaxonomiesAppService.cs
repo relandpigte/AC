@@ -7,6 +7,7 @@ namespace Academically.Services.DisciplineTaxonomies
 {
     public interface IDisciplineTaxonomiesAppService : IApplicationService
     {
+        Task<IEnumerable<GetAllDisciplineTaxonomyDto>> GetAll();
         Task<IEnumerable<DisciplineTaxonomyDto>> Search(string keyword);
     }
 }

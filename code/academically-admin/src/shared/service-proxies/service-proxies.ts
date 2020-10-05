@@ -340,6 +340,61 @@ export class DisciplineTaxonomiesServiceProxy {
     }
 
     /**
+     * @return Success
+     */
+    getAll(): Observable<GetAllDisciplineTaxonomyDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/GetAll";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<GetAllDisciplineTaxonomyDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetAllDisciplineTaxonomyDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<GetAllDisciplineTaxonomyDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(GetAllDisciplineTaxonomyDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetAllDisciplineTaxonomyDto[]>(<any>null);
+    }
+
+    /**
      * @param keyword (optional) 
      * @return Success
      */
@@ -2530,30 +2585,30 @@ export class UserProfilesServiceProxy {
     }
 
     /**
-     * @param disciplineTaxonomyId (optional) 
+     * @param body (optional) 
      * @return Success
      */
-    createDisciplineTaxonomy(disciplineTaxonomyId: string | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/UserProfiles/CreateDisciplineTaxonomy?";
-        if (disciplineTaxonomyId === null)
-            throw new Error("The parameter 'disciplineTaxonomyId' cannot be null.");
-        else if (disciplineTaxonomyId !== undefined)
-            url_ += "disciplineTaxonomyId=" + encodeURIComponent("" + disciplineTaxonomyId) + "&";
+    createManyDisciplineTaxonomy(body: string[] | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserProfiles/CreateManyDisciplineTaxonomy";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(body);
+
         let options_ : any = {
+            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
             })
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreateDisciplineTaxonomy(response_);
+            return this.processCreateManyDisciplineTaxonomy(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCreateDisciplineTaxonomy(<any>response_);
+                    return this.processCreateManyDisciplineTaxonomy(<any>response_);
                 } catch (e) {
                     return <Observable<void>><any>_observableThrow(e);
                 }
@@ -2562,7 +2617,7 @@ export class UserProfilesServiceProxy {
         }));
     }
 
-    protected processCreateDisciplineTaxonomy(response: HttpResponseBase): Observable<void> {
+    protected processCreateManyDisciplineTaxonomy(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3368,11 +3423,76 @@ export interface IChangeUiThemeInput {
     theme: string;
 }
 
+export class GetAllDisciplineTaxonomyDto implements IGetAllDisciplineTaxonomyDto {
+    id: string;
+    name: string | undefined;
+    parentIdMap: string | undefined;
+    size: number;
+    children: GetAllDisciplineTaxonomyDto[] | undefined;
+
+    constructor(data?: IGetAllDisciplineTaxonomyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.parentIdMap = _data["parentIdMap"];
+            this.size = _data["size"];
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(GetAllDisciplineTaxonomyDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetAllDisciplineTaxonomyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetAllDisciplineTaxonomyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["parentIdMap"] = this.parentIdMap;
+        data["size"] = this.size;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): GetAllDisciplineTaxonomyDto {
+        const json = this.toJSON();
+        let result = new GetAllDisciplineTaxonomyDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetAllDisciplineTaxonomyDto {
+    id: string;
+    name: string | undefined;
+    parentIdMap: string | undefined;
+    size: number;
+    children: GetAllDisciplineTaxonomyDto[] | undefined;
+}
+
 export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
     name: string | undefined;
     parentId: string | undefined;
-    parent: DisciplineTaxonomyDto;
-    children: DisciplineTaxonomyDto[] | undefined;
     id: string;
 
     constructor(data?: IDisciplineTaxonomyDto) {
@@ -3388,12 +3508,6 @@ export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
         if (_data) {
             this.name = _data["name"];
             this.parentId = _data["parentId"];
-            this.parent = _data["parent"] ? DisciplineTaxonomyDto.fromJS(_data["parent"]) : <any>undefined;
-            if (Array.isArray(_data["children"])) {
-                this.children = [] as any;
-                for (let item of _data["children"])
-                    this.children.push(DisciplineTaxonomyDto.fromJS(item));
-            }
             this.id = _data["id"];
         }
     }
@@ -3409,12 +3523,6 @@ export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["parentId"] = this.parentId;
-        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
-        if (Array.isArray(this.children)) {
-            data["children"] = [];
-            for (let item of this.children)
-                data["children"].push(item.toJSON());
-        }
         data["id"] = this.id;
         return data; 
     }
@@ -3430,8 +3538,6 @@ export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
 export interface IDisciplineTaxonomyDto {
     name: string | undefined;
     parentId: string | undefined;
-    parent: DisciplineTaxonomyDto;
-    children: DisciplineTaxonomyDto[] | undefined;
     id: string;
 }
 
