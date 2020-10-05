@@ -1,18 +1,13 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import {
-  Router,
-  RouterEvent,
-  NavigationEnd,
-  PRIMARY_OUTLET
-} from '@angular/router';
+import { Router, RouterEvent, NavigationEnd, PRIMARY_OUTLET } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { MenuItem } from '@shared/layout/menu-item';
 
 @Component({
   selector: 'sidebar-menu',
-  templateUrl: './sidebar-menu.component.html'
+  templateUrl: './sidebar-menu.component.html',
 })
 export class SidebarMenuComponent extends AppComponentBase implements OnInit {
   menuItems: MenuItem[];
@@ -29,73 +24,30 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
     this.menuItems = this.getMenuItems();
     this.patchMenuItems(this.menuItems);
-    this.routerEvents
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((event) => {
-        const currentUrl = event.url !== '/' ? event.url : this.homeRoute;
-        const primaryUrlSegmentGroup = this.router.parseUrl(currentUrl).root
-          .children[PRIMARY_OUTLET];
-        if (primaryUrlSegmentGroup) {
-          this.activateMenuItems('/' + primaryUrlSegmentGroup.toString());
-        }
-      });
+    this.routerEvents.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
+      const currentUrl = event.url !== '/' ? event.url : this.homeRoute;
+      const primaryUrlSegmentGroup = this.router.parseUrl(currentUrl).root.children[PRIMARY_OUTLET];
+      if (primaryUrlSegmentGroup) {
+        this.activateMenuItems('/' + primaryUrlSegmentGroup.toString());
+      }
+    });
   }
 
   getMenuItems(): MenuItem[] {
     return [
-      new MenuItem(
-        this.l('Dashboard'),
-        '/app/home',
-        'fe fe-home',
-        'Pages.Dashboard'
-      ),
-      new MenuItem(this.l('AcademicSupport'), '/app/academic-support', 'fe fe-book', 'Pages.Dashboard.Navigations.AcademicSupport', [
-        new MenuItem(
-          this.l('PeerSupport'),
-          '/app/peer-support',
-          'fe fe-users',
-          'Pages.PeerSupport', [
-            new MenuItem(
-              this.l('Tutorial'),
-              '/app/tutorial',
-              'fe fe-book-open',
-              'Pages.PeerSupport.Tutorial'
-            ),
-            new MenuItem(
-              this.l('Proposals'),
-              '/app/proposals',
-              'fe fe-bell',
-              'Pages.PeerSupport.Proposals'
-            )
-          ]
-        ),
-        new MenuItem(
-          this.l('StudySkills'),
-          '/app/home',
-          'fe fe-grid',
-          'Pages.Profile'
-        )
+      new MenuItem(this.l('Dashboard'), '/app/home', 'fe fe-home', 'Pages.Dashboard'),
+      new MenuItem(this.l('AcademicSupport'), '', 'fe fe-book', 'Pages.Dashboard.Navigations.AcademicSupport', [
+        new MenuItem(this.l('PeerSupport'), '', 'fe fe-users', 'Pages.PeerSupport', [
+          new MenuItem(this.l('Tutorial'), '/app/tutorial', 'fe fe-book-open', 'Pages.PeerSupport.Tutorial'),
+          new MenuItem(this.l('Proposals'), '/app/proposals', 'fe fe-bell', 'Pages.PeerSupport.Proposals'),
+        ]),
+        new MenuItem(this.l('StudySkills'), '/app/study-skils', 'fe fe-grid', 'Pages.Profile'),
       ]),
-      new MenuItem(
-        this.l('Tenants'),
-        '/app/tenants',
-        'fas fa-building',
-        'Pages.Tenants'
-      ),
+      new MenuItem(this.l('Tenants'), '/app/tenants', 'fas fa-building', 'Pages.Tenants'),
       new MenuItem(this.l('Settings'), '', 'fe fe-settings', '', [
-        new MenuItem(
-          this.l('Users'),
-          '/app/users',
-          'fe fe-users',
-          'Pages.Users'
-        ),
-        new MenuItem(
-          this.l('Roles'),
-          '/app/roles',
-          'fe fe-lock',
-          'Pages.Roles'
-        ),
-      ])
+        new MenuItem(this.l('Users'), '/app/users', 'fe fe-users', 'Pages.Users'),
+        new MenuItem(this.l('Roles'), '/app/roles', 'fe fe-lock', 'Pages.Roles'),
+      ]),
     ];
   }
 
@@ -133,11 +85,7 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
     });
   }
 
-  findMenuItemsByUrl(
-    url: string,
-    items: MenuItem[],
-    foundedItems: MenuItem[] = []
-  ): MenuItem[] {
+  findMenuItemsByUrl(url: string, items: MenuItem[], foundedItems: MenuItem[] = []): MenuItem[] {
     items.forEach((item: MenuItem) => {
       if (item.route === url) {
         foundedItems.push(item);
@@ -162,7 +110,7 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
   isMenuItemVisible(item: MenuItem): boolean {
     if (item.children && item.children.length > 0) {
       let isGranted = true;
-      item.children.forEach(child => {
+      item.children.forEach((child) => {
         isGranted = this.isMenuItemVisible(child);
         if (!isGranted) {
           return false;
