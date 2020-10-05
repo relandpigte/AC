@@ -53,11 +53,13 @@ import { ProfilePublicationsComponent } from './profile/profile-publications/pro
 import { CreateEditProfileEducationComponent } from './profile/profile-education/create-edit-profile-education/create-edit-profile-education.component';
 import { CreateEditPublicationComponent } from './profile/profile-publications/create-edit-publication/create-edit-publication.component';
 import { ProfilePrivacyAndDataProtectionComponent } from './profile/profile-privacy-and-data-protection/profile-privacy-and-data-protection.component';
-import { TutorialComponent } from './peer-support/tutorial/tutorial.component';
+import { TutorialComponent } from './academic-support/peer-support/tutorial/tutorial.component';
 import { ProposalsContactsWidgetsComponent } from './widgets/proposals-contacts-widgets/proposals-contacts-widgets.component';
 import { ProfileAreasOfStudyComponent } from './profile/profile-areas-of-study/profile-areas-of-study.component';
-import { ProposalsComponent } from './peer-support/proposals/proposals.component';
+import { ProposalsComponent } from './academic-support/peer-support/proposals/proposals.component';
+import { AcademicSupportComponent } from './academic-support/academic-support.component';
 import { ProfileKnowledgeBaseComponent } from './profile/profile-areas-of-study/profile-knowledge-base/profile-knowledge-base.component';
+import { PeerSupportComponent } from './academic-support/peer-support/peer-support.component';
 import { TaxonomySearchComponent } from './shared/taxonomy-search/taxonomy-search.component';
 import SunburstChart from 'sunburst-chart';
 
@@ -106,7 +108,9 @@ import SunburstChart from 'sunburst-chart';
     ProposalsContactsWidgetsComponent,
     ProfileAreasOfStudyComponent,
     ProposalsComponent,
+    AcademicSupportComponent,
     ProfileKnowledgeBaseComponent,
+    PeerSupportComponent,
     TaxonomySearchComponent,
   ],
   imports: [
