@@ -120,6 +120,8 @@
     <text name="MinRating">Min Rating</text>
     <text name="Distance">Distance</text>
     <text name="BestMatch">Best Match</text>
+    <text name="Feedback">Feedback</text>
+    <text name="Proofreading">Proofreading</text>
     <text name="Contacts">Contacts</text>
     <text name="Availability">Availability</text>
     <text name="LastSeen">Last Seen</text>

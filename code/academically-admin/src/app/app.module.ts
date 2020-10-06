@@ -53,10 +53,10 @@ import { ProfilePublicationsComponent } from './profile/profile-publications/pro
 import { CreateEditProfileEducationComponent } from './profile/profile-education/create-edit-profile-education/create-edit-profile-education.component';
 import { CreateEditPublicationComponent } from './profile/profile-publications/create-edit-publication/create-edit-publication.component';
 import { ProfilePrivacyAndDataProtectionComponent } from './profile/profile-privacy-and-data-protection/profile-privacy-and-data-protection.component';
-import { TutorialComponent } from './academic-support/peer-support/tutorial/tutorial.component';
+import { PeerSupportTutorialComponent } from './academic-support/peer-support/peer-support-tutorial/peer-support-tutorial.component';
 import { ProposalsContactsWidgetsComponent } from './widgets/proposals-contacts-widgets/proposals-contacts-widgets.component';
 import { ProfileAreasOfStudyComponent } from './profile/profile-areas-of-study/profile-areas-of-study.component';
-import { ProposalsComponent } from './academic-support/peer-support/proposals/proposals.component';
+import { PeerSupportProposalsComponent } from './academic-support/peer-support/peer-support-proposals/peer-support-proposals.component';
 import { AcademicSupportComponent } from './academic-support/academic-support.component';
 import { ProfileKnowledgeBaseComponent } from './profile/profile-areas-of-study/profile-knowledge-base/profile-knowledge-base.component';
 import { PeerSupportComponent } from './academic-support/peer-support/peer-support.component';
@@ -104,14 +104,14 @@ import SunburstChart from 'sunburst-chart';
     CreateEditProfileEducationComponent,
     CreateEditPublicationComponent,
     ProfilePrivacyAndDataProtectionComponent,
-    TutorialComponent,
+    PeerSupportTutorialComponent,
     ProposalsContactsWidgetsComponent,
     ProfileAreasOfStudyComponent,
-    ProposalsComponent,
+    PeerSupportProposalsComponent,
     AcademicSupportComponent,
     ProfileKnowledgeBaseComponent,
     PeerSupportComponent,
-    TaxonomySearchComponent,
+    TaxonomySearchComponent
   ],
   imports: [
     CommonModule,
@@ -128,7 +128,7 @@ import SunburstChart from 'sunburst-chart';
     SharedModule,
     NgxPaginationModule,
     TypeaheadModule.forRoot(),
-    BsDatepickerModule.forRoot(),
+    BsDatepickerModule.forRoot()
   ],
   providers: [],
   entryComponents: [
@@ -144,7 +144,7 @@ import SunburstChart from 'sunburst-chart';
     ResetPasswordDialogComponent,
     // academically
     CreateEditProfileEducationComponent,
-    TaxonomySearchComponent,
-  ],
+    TaxonomySearchComponent
+  ]
 })
 export class AppModule {}
