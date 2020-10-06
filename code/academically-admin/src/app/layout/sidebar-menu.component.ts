@@ -7,7 +7,7 @@ import { MenuItem } from '@shared/layout/menu-item';
 
 @Component({
   selector: 'sidebar-menu',
-  templateUrl: './sidebar-menu.component.html',
+  templateUrl: './sidebar-menu.component.html'
 })
 export class SidebarMenuComponent extends AppComponentBase implements OnInit {
   menuItems: MenuItem[];
@@ -24,7 +24,7 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
     this.menuItems = this.getMenuItems();
     this.patchMenuItems(this.menuItems);
-    this.routerEvents.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
+    this.routerEvents.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
       const currentUrl = event.url !== '/' ? event.url : this.homeRoute;
       const primaryUrlSegmentGroup = this.router.parseUrl(currentUrl).root.children[PRIMARY_OUTLET];
       if (primaryUrlSegmentGroup) {
@@ -36,18 +36,16 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
   getMenuItems(): MenuItem[] {
     return [
       new MenuItem(this.l('Dashboard'), '/app/home', 'fe fe-home', 'Pages.Dashboard'),
-      new MenuItem(this.l('AcademicSupport'), '', 'fe fe-book', 'Pages.Dashboard.Navigations.AcademicSupport', [
-        new MenuItem(this.l('PeerSupport'), '', 'fe fe-users', 'Pages.PeerSupport', [
-          new MenuItem(this.l('Tutorial'), '/app/tutorial', 'fe fe-book-open', 'Pages.PeerSupport.Tutorial'),
-          new MenuItem(this.l('Proposals'), '/app/proposals', 'fe fe-bell', 'Pages.PeerSupport.Proposals'),
-        ]),
-        new MenuItem(this.l('StudySkills'), '/app/study-skils', 'fe fe-grid', 'Pages.Profile'),
+      new MenuItem(this.l('PeerSupport'), '/app/peer-support', 'fe fe-home', 'Pages.PeerSupport', [
+        new MenuItem(this.l('Feedback'), '/app/feedback', '', ''),
+        new MenuItem(this.l('Tutorial'), '/app/tutorial', '', ''),
+        new MenuItem(this.l('Proofreading'), '/app/proposals', '', '')
       ]),
       new MenuItem(this.l('Tenants'), '/app/tenants', 'fas fa-building', 'Pages.Tenants'),
       new MenuItem(this.l('Settings'), '', 'fe fe-settings', '', [
         new MenuItem(this.l('Users'), '/app/users', 'fe fe-users', 'Pages.Users'),
-        new MenuItem(this.l('Roles'), '/app/roles', 'fe fe-lock', 'Pages.Roles'),
-      ]),
+        new MenuItem(this.l('Roles'), '/app/roles', 'fe fe-lock', 'Pages.Roles')
+      ])
     ];
   }
 
@@ -70,7 +68,7 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
     this.deactivateMenuItems(this.menuItems);
     this.activatedMenuItems = [];
     const foundedItems = this.findMenuItemsByUrl(url, this.menuItems);
-    foundedItems.forEach((item) => {
+    foundedItems.forEach(item => {
       this.activateMenuItem(item);
     });
   }
@@ -110,7 +108,7 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
   isMenuItemVisible(item: MenuItem): boolean {
     if (item.children && item.children.length > 0) {
       let isGranted = true;
-      item.children.forEach((child) => {
+      item.children.forEach(child => {
         isGranted = this.isMenuItemVisible(child);
         if (!isGranted) {
           return false;
