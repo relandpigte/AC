@@ -14,6 +14,7 @@ import { PeerSupportTutorialComponent } from './academic-support/peer-support/pe
 import { PeerSupportProposalsComponent } from './academic-support/peer-support/peer-support-proposals/peer-support-proposals.component';
 import { AcademicSupportComponent } from './academic-support/academic-support.component';
 import { PeerSupportComponent } from './academic-support/peer-support/peer-support.component';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   imports: [
@@ -58,6 +59,12 @@ import { PeerSupportComponent } from './academic-support/peer-support/peer-suppo
             data: { permission: 'Pages.Profile' },
             canActivate: [AppRouteGuard],
             canDeactivate: [CanDeactivateComponentGuard]
+          },
+          {
+            path: 'settings',
+            component: SettingsComponent,
+            data: { permission: 'Pages.Settings' },
+            canActivate: [AppRouteGuard]
           }
         ]
       }

@@ -131,7 +131,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_AreasOfStudy,
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase,
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create,
-                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete,
+                PermissionNames.Pages_Settings
             );
 
             #endregion
@@ -165,7 +166,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_AreasOfStudy,
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase,
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create,
-                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete,
+                PermissionNames.Pages_Settings
             );
 
             #endregion

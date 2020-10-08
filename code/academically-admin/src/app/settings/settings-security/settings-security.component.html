@@ -1,0 +1,47 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Security' | localize }}
+    </h4>
+  </div>
+  <div class="card-body">
+    <div class="form-group">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" required="" />
+        <label class="form-check-label" for="Enable2FA">
+          {{ 'Enable2FA' | localize }}
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <h1>{{ '2FA' | localize }}</h1>
+      <h4>{{ '2FASteps' | localize }}</h4>
+    </div>
+    <div class="row mx-5">
+      <div class="form-group">
+        <label class="col-form-label">
+          1. Download a two-factor authenticator app like Microsoft Authenticator for <a class="text-decoration-underline">Android</a> and
+          <a class="text-decoration-underline">iOS</a> or Google Authenticator for <a class="text-decoration-underline">Android</a> and
+          <a class="text-decoration-underline">iOS</a>
+        </label>
+      </div>
+      <div class="form-group">
+        <label class="col-form-label">
+          2. Scan the QR Code or enter this key ici2 wcom i4pk pj6z xbmx tjvm ehil into your two factor authenticator app. Spaces and casing
+          do not matter.
+        </label>
+      </div>
+      <div class="form-group">
+        <label class="col-form-label">
+          3. Once you have scanned the QR code or input the key above, your two factor authenticator app will provide you with a unique
+          code. Enter the code int he confirmation box below.
+        </label>
+        <label class="col-form-label" for="VerificationCode">{{ 'VerificationCode' | localize }}</label>
+        <input type="text" class="form-control" />
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <button class="btn btn-primary">Verify</button>
+  </div>
+</div>
