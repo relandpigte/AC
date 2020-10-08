@@ -62,6 +62,8 @@ import { ProfileKnowledgeBaseComponent } from './profile/profile-areas-of-study/
 import { PeerSupportComponent } from './academic-support/peer-support/peer-support.component';
 import { TaxonomySearchComponent } from './shared/taxonomy-search/taxonomy-search.component';
 import SunburstChart from 'sunburst-chart';
+import { SettingsComponent } from './settings/settings.component';
+import { SettingsSecurityComponent } from './settings/settings-security/settings-security.component';
 
 @NgModule({
   declarations: [
@@ -111,7 +113,9 @@ import SunburstChart from 'sunburst-chart';
     AcademicSupportComponent,
     ProfileKnowledgeBaseComponent,
     PeerSupportComponent,
-    TaxonomySearchComponent
+    TaxonomySearchComponent,
+    SettingsComponent,
+    SettingsSecurityComponent
   ],
   imports: [
     CommonModule,

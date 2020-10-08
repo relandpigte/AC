@@ -55,5 +55,8 @@
         public const string Pages_Profile_AreasOfStudy_KnowledgeBase_Delete = "Pages.Profile.AreasOfStudy.KnowledgeBase.Delete";
 
         public const string Pages_Tenants = "Pages.Tenants";
+
+        public const string Pages_Settings = "Pages.Settings";
+        public const string Pages_Settings_Security = "Pages.Settings.Security";
     }
 }

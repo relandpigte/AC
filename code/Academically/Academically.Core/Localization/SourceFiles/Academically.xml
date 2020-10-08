@@ -127,6 +127,11 @@
     <text name="LastSeen">Last Seen</text>
     <text name="SortBy">SortBy</text>
     <text name="LastLoginTime">Last login time</text>
+    <text name="Security">Security</text>
+    <text name="Enable2FA">Enable 2FA</text>
+    <text name="2FA">Two Factor Authentication</text>
+    <text name="2FASteps">To use an authenticator app go through the following steps: </text>
+    <text name="VerificationCode">Verification Code</text>
     <text name="AccountNumber">Account number</text>
     <text name="ApplyFilter">Apply filter</text>
     <text name="ClearFilters">Clear filters</text>
