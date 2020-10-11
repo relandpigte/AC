@@ -13,5 +13,8 @@ namespace Academically.Users
         Task ChangeLanguage(ChangeUserLanguageDto input);
 
         Task<bool> ChangePassword(ChangePasswordDto input);
+        Task<bool> GetUserTwoFactorAuthenticationStatus(long userId);
+        Task<EnableAuthenticatorModelDto> GetUserTwoFactorAuthenticationAsync(long userId);
+        Task<EnableAuthenticatorModelDto> EnableUserTwoFactorAuthenticationAsync(long userId, string code);
     }
 }

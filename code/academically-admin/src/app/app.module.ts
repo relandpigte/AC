@@ -14,6 +14,7 @@ import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module
 import { SharedModule } from '@shared/shared.module';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { NgxQRCodeModule } from '@techiediaries/ngx-qrcode';
 // directives
 import { Select2Directive } from '@shared/directives/select2.directive';
 import { SunburstChartDirective } from '@shared/directives/sunburst-chart.directive';
@@ -132,7 +133,8 @@ import { SettingsSecurityComponent } from './settings/settings-security/settings
     SharedModule,
     NgxPaginationModule,
     TypeaheadModule.forRoot(),
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    NgxQRCodeModule
   ],
   providers: [],
   entryComponents: [

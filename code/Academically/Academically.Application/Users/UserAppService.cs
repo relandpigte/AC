@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.AutoMapper;
+using Abp.Configuration;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -16,6 +20,7 @@ using Abp.UI;
 using Academically.Authorization;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
+using Academically.Configuration;
 using Academically.Roles.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Identity;
@@ -32,6 +37,8 @@ namespace Academically.Users
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IAbpSession _abpSession;
         private readonly LogInManager _logInManager;
+        private readonly UrlEncoder _urlEncoder;
+        private readonly ISettingManager _settingManager;
 
         public UserAppService(
             IRepository<User, long> repository,
@@ -40,7 +47,9 @@ namespace Academically.Users
             IRepository<Role> roleRepository,
             IPasswordHasher<User> passwordHasher,
             IAbpSession abpSession,
-            LogInManager logInManager)
+            LogInManager logInManager,
+            UrlEncoder urlEncoder,
+            ISettingManager settingManager)
             : base(repository)
         {
             _userManager = userManager;
@@ -49,6 +58,9 @@ namespace Academically.Users
             _passwordHasher = passwordHasher;
             _abpSession = abpSession;
             _logInManager = logInManager;
+            _urlEncoder = urlEncoder;
+            _settingManager = settingManager;
+
         }
 
         [AbpAuthorize(PermissionNames.Pages_Users_Create)]
@@ -243,6 +255,110 @@ namespace Academically.Users
             }
 
             return true;
+        }
+
+        [AbpAllowAnonymous]
+        public async Task<bool> GetUserTwoFactorAuthenticationStatus(long userId)
+        {
+            var user = await _userManager.GetUserByIdAsync(userId);
+            
+            return user.IsTwoFactorEnabled;
+        }
+
+        [AbpAllowAnonymous]
+        public async Task<EnableAuthenticatorModelDto> GetUserTwoFactorAuthenticationAsync(long userId)
+        {
+            var user = await _userManager.GetUserByIdAsync(userId);
+            var result = await LoadSharedKeyAndQrCodeUriAsync(user);
+
+            return result;
+        }
+
+        [AbpAllowAnonymous]
+        public async Task<EnableAuthenticatorModelDto> EnableUserTwoFactorAuthenticationAsync(long userId, string code)
+        {
+            var user = await _userManager.GetUserByIdAsync(userId);
+            var verificationCode = code.Replace(" ", string.Empty).Replace("-", string.Empty);
+
+            var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
+                user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
+
+            if (!is2faTokenValid)
+            {
+                return new EnableAuthenticatorModelDto
+                {
+                    StatusMessage = "Verification Code is not recognised please try again",
+                    Status = false
+                };
+            }
+
+            await _userManager.SetTwoFactorEnabledAsync(user, true);
+
+            return new EnableAuthenticatorModelDto
+            {
+                StatusMessage = "2FA is enabled, uncheck to disable, if you have a new device or need to reset then uncheck and recheck the checkbox.",
+                Status = true
+            };
+
+        }
+
+        [AbpAllowAnonymous]
+        public async Task<bool> DisableUserTwoFactorAuthentication(long userId)
+        {
+            var user = await _userManager.GetUserByIdAsync(userId);
+
+            await _userManager.SetTwoFactorEnabledAsync(user, false);
+
+            return true;
+        }
+
+        public async Task<EnableAuthenticatorModelDto> LoadSharedKeyAndQrCodeUriAsync(User user)
+        {
+            var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+            if (string.IsNullOrEmpty(unformattedKey))
+            {
+                await _userManager.ResetAuthenticatorKeyAsync(user);
+                unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+            }
+            var sharedKey = FormatKey(unformattedKey);
+
+            var email = await _userManager.GetEmailAsync(user);
+            var AuthenticationUri = GenerateQrCodeUri(email, unformattedKey);
+
+            return new EnableAuthenticatorModelDto
+            {
+                SharedKey = sharedKey,
+                AuthenticationUri = AuthenticationUri,
+                Status = true
+            };
+        }
+
+        private string FormatKey(string unformattedKey)
+        {
+            var result = new StringBuilder();
+            int currentPosition = 0;
+            while (currentPosition + 4 < unformattedKey.Length)
+            {
+                result.Append(unformattedKey.Substring(currentPosition, 4)).Append(" ");
+                currentPosition += 4;
+            }
+            if (currentPosition < unformattedKey.Length)
+            {
+                result.Append(unformattedKey.Substring(currentPosition));
+            }
+
+            return result.ToString().ToLowerInvariant();
+        }
+
+        private string GenerateQrCodeUri(string email, string unformattedKey)
+        {
+            var AuthenticatorUriFormat = _settingManager.GetSettingValue(AppSettingNames.TwoFactorAuthentication_Uri);
+
+            return string.Format(
+                AuthenticatorUriFormat,
+                _urlEncoder.Encode("casemix"),
+                _urlEncoder.Encode(email),
+                unformattedKey);
         }
     }
 }
