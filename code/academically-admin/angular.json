@@ -238,8 +238,5 @@
     "@schematics/angular:service": {
       "skipTests": true
     }
-  },
-  "cli": {
-    "analytics": false
   }
 }
