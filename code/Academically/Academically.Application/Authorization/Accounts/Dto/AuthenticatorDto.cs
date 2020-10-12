@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Academically.Users.Dto
+namespace Academically.Accounts.Dto
 {
-    public class EnableAuthenticatorModelDto
+    public class AuthenticatorDto
     {
         public string SharedKey { get; set; }
         public string AuthenticationUri { get; set;}

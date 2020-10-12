@@ -1,6 +1,6 @@
 import { Component, Inject, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { UserServiceProxy, EnableAuthenticatorModelDto, UserDto } from '@shared/service-proxies/service-proxies';
+import { UserServiceProxy, AuthenticatorDto, UserDto, AccountServiceProxy } from '@shared/service-proxies/service-proxies';
 import { NgxQrcodeElementTypes, NgxQrcodeErrorCorrectionLevels } from '@techiediaries/ngx-qrcode';
 
 @Component({
@@ -12,9 +12,9 @@ export class SettingsSecurityComponent extends AppComponentBase implements OnIni
   elementType = NgxQrcodeElementTypes.URL;
   correctionLevel = NgxQrcodeErrorCorrectionLevels.HIGH;
   verificationCode: string;
-  enableAuthenticator: EnableAuthenticatorModelDto;
+  enableAuthenticator: AuthenticatorDto;
   twoFactorAuthenticationStatus: boolean;
-  constructor(injector: Injector, private _userService: UserServiceProxy) {
+  constructor(injector: Injector, private _accountService: AccountServiceProxy) {
     super(injector);
   }
 
@@ -24,24 +24,24 @@ export class SettingsSecurityComponent extends AppComponentBase implements OnIni
   }
 
   onFormSubmit(): void {
-    this._userService.enableUserTwoFactorAuthentication(this.appSession.userId, this.verificationCode).subscribe(response => {
+    this._accountService.enableUserTwoFactorAuthentication(this.appSession.userId, this.verificationCode).subscribe(response => {
       if (response.status) {
-        this.notify.success(this.l(response.statusMessage));
+        this.message.success(this.l(response.statusMessage));
         this.verificationCode = null;
       } else {
-        this.notify.error(this.l(response.statusMessage));
+        this.message.error(this.l(response.statusMessage));
       }
     });
   }
 
   getUserAuthentication() {
-    this._userService.getUserTwoFactorAuthentication(this.appSession.userId).subscribe(response => {
+    this._accountService.getUserTwoFactorAuthentication(this.appSession.userId).subscribe(response => {
       this.enableAuthenticator = response;
     });
   }
 
   getUser() {
-    this._userService.getUserTwoFactorAuthenticationStatus(this.appSession.userId).subscribe(status => {
+    this._accountService.getUserTwoFactorAuthenticationStatus(this.appSession.userId).subscribe(status => {
       this.twoFactorAuthenticationStatus = status;
     });
   }
@@ -50,7 +50,7 @@ export class SettingsSecurityComponent extends AppComponentBase implements OnIni
     if (!status) {
       this.message.confirm('This will disable two factor authentication. Would you like to continue?', undefined, (result: boolean) => {
         if (result) {
-          this._userService.disableUserTwoFactorAuthentication(this.appSession.userId).subscribe(response => {
+          this._accountService.disableUserTwoFactorAuthentication(this.appSession.userId).subscribe(response => {
             if (response) {
               this.message.success(this.l('DisabledSuccessfully'));
             }
