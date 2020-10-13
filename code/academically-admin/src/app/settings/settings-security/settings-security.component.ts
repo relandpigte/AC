@@ -26,7 +26,7 @@ export class SettingsSecurityComponent extends AppComponentBase implements OnIni
   onFormSubmit(): void {
     this._accountService.enableUserTwoFactorAuthentication(this.appSession.userId, this.verificationCode).subscribe(response => {
       if (response.status) {
-        this.message.success(this.l(response.statusMessage));
+        this.message.success(this.l('EnabledSuccessfully'));
         this.verificationCode = null;
       } else {
         this.message.error(this.l(response.statusMessage));

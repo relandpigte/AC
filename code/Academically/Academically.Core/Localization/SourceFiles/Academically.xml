@@ -131,8 +131,10 @@
     <text name="Enable2FA">Enable 2FA</text>
     <text name="2FA">Two Factor Authentication</text>
     <text name="2FASteps">To use an authenticator app go through the following steps: </text>
+    <text name="2FAEnabled">2FA is enabled, uncheck to disable, if you have a new device or need to reset then uncheck and recheck the checkbox.</text>
     <text name="VerificationCode">Verification Code</text>
     <text name="DisabledSuccessfully">Disabled Successfully</text>
+    <text name="EnabledSuccessfully">Enabled Successfully</text>
     <text name="AccountNumber">Account number</text>
     <text name="ApplyFilter">Apply filter</text>
     <text name="ClearFilters">Clear filters</text>
