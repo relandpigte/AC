@@ -6812,6 +6812,8 @@ export class UserTutorialDto implements IUserTutorialDto {
     concerns: string | undefined;
     urgencyLevel: number;
     deadline: moment.Moment;
+    picture: string | undefined;
+    pictureFileName: string | undefined;
     disciplineTaxonomyIds: string[] | undefined;
     id: string;
 
@@ -6832,6 +6834,8 @@ export class UserTutorialDto implements IUserTutorialDto {
             this.concerns = _data["concerns"];
             this.urgencyLevel = _data["urgencyLevel"];
             this.deadline = _data["deadline"] ? moment(_data["deadline"].toString()) : <any>undefined;
+            this.picture = _data["picture"];
+            this.pictureFileName = _data["pictureFileName"];
             if (Array.isArray(_data["disciplineTaxonomyIds"])) {
                 this.disciplineTaxonomyIds = [] as any;
                 for (let item of _data["disciplineTaxonomyIds"])
@@ -6856,6 +6860,8 @@ export class UserTutorialDto implements IUserTutorialDto {
         data["concerns"] = this.concerns;
         data["urgencyLevel"] = this.urgencyLevel;
         data["deadline"] = this.deadline ? this.deadline.toISOString() : <any>undefined;
+        data["picture"] = this.picture;
+        data["pictureFileName"] = this.pictureFileName;
         if (Array.isArray(this.disciplineTaxonomyIds)) {
             data["disciplineTaxonomyIds"] = [];
             for (let item of this.disciplineTaxonomyIds)
@@ -6880,6 +6886,8 @@ export interface IUserTutorialDto {
     concerns: string | undefined;
     urgencyLevel: number;
     deadline: moment.Moment;
+    picture: string | undefined;
+    pictureFileName: string | undefined;
     disciplineTaxonomyIds: string[] | undefined;
     id: string;
 }

@@ -16,6 +16,7 @@ namespace Academically.Entities
         public string Concerns { get; set; }
         public int UrgencyLevel { get; set; }
         public DateTime DeadLine { get; set; }
+        public string PictureFileName { get; set; }
         public virtual User User { get; set; }
     }
 }

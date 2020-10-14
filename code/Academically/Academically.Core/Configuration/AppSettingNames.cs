@@ -10,6 +10,7 @@
         public const string Aws_Region = "Aws.Region";
         public const string Aws_S3_AssetsBucket = "Aws.S3.AssetsBucket";
         public const string Aws_S3_Folders_ProfilePictures = "Aws.S3.Folders.ProfilePictures";
+        public const string Aws_S3_Folders_UserTutorialPictures = "Aws.S3.Folders.UserTutorialPictures";
         public const string Address_SuggestUrl = "Address.SuggestUrl";
         public const string Address_GetDetailsUrl = "Address.GetDetailsUrl";
         public const string Address_ApiKey = "Address.ApiKey";

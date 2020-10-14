@@ -1,11 +1,20 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Configuration;
+using Abp.Domain.Repositories;
+using Abp.IO.Extensions;
+using Abp.Timing;
+using Academically.Application.Shared.Services;
+using Academically.Configuration;
 using Academically.Entities;
 using Academically.Services.UserTutorials.Dto;
 using Amazon.Runtime.Internal;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,24 +26,52 @@ namespace Academically.Services.UserTutorials
         private readonly IRepository<UserTutorial, Guid> _userTutorialsRepository;
         private readonly IRepository<UserTutorialDisciplineTaxonomy, Guid> _userTutorialsDisciplineTaxonomiesRepository;
         private readonly IRepository<SupportLevel, int> _supportLevelRepository;
-
+        private readonly ISettingManager _settingManager;
+        private readonly IFileManagerService _fileManagerService;
         public UserTutorialsAppService
         (
             IRepository<UserTutorial, Guid> userTutorialsRepository, 
             IRepository<UserTutorialDisciplineTaxonomy, Guid> userTutorialsDisciplineTaxonomiesRepository,
-            IRepository<SupportLevel, int> supportLevelRepository
+            IRepository<SupportLevel, int> supportLevelRepository,
+            ISettingManager settingManager,
+            IFileManagerService fileManagerservice
         )
         {
             _userTutorialsRepository = userTutorialsRepository;
             _userTutorialsDisciplineTaxonomiesRepository = userTutorialsDisciplineTaxonomiesRepository;
             _supportLevelRepository = supportLevelRepository;
+            _settingManager = settingManager;
+            _fileManagerService = fileManagerservice;
         }
 
 
-        public async Task CreateAsync(UserTutorialDto inputs)
+        public async Task CreateAsync([FromForm] UserTutorialDto inputs)
         {
-           var userTutorial = ObjectMapper.Map<UserTutorial>(inputs);
-           await _userTutorialsRepository.InsertAsync(userTutorial);
+            var userId = AbpSession.UserId.Value;
+            var userTutorial = ObjectMapper.Map<UserTutorial>(inputs);
+            
+            userTutorial.UserId = userId;
+
+            var folder = await _settingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_UserTutorialPictures);
+            folder = $"{userId}/{folder}";
+            var thumbnailsFolder = $"{folder}/thumbs";
+
+            if (inputs.Picture != null)
+            {
+                var fileName = $"{Clock.Now.Ticks}{Path.GetExtension(inputs.Picture.FileName)}";
+
+                using (var stream = inputs.Picture.OpenReadStream())
+                {
+                    var fileBytes = stream.GetAllBytes();
+                    await _fileManagerService.UploadAsync(fileName, fileBytes, folder);
+                    userTutorial.PictureFileName = fileName;
+
+                    var thumbsFileBytes = MakeThumbnail(fileBytes, 100, 100);
+                    await _fileManagerService.UploadAsync(fileName, thumbsFileBytes, thumbnailsFolder);
+                }
+            }
+
+            await _userTutorialsRepository.InsertAsync(userTutorial);
 
             if (userTutorial.Id != null && inputs.DisciplineTaxonomyIds.Count() > 0)
             {
@@ -57,6 +94,23 @@ namespace Academically.Services.UserTutorials
                 .ToListAsync();
 
             return supportLevels;
+        }
+
+        private byte[] MakeThumbnail(byte[] imageBytes, int thumbWidth, int thumbHeight)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            using (Image image = Image.Load(imageBytes))
+            {
+                var resizeOptions = new ResizeOptions
+                {
+                    Size = new SixLabors.ImageSharp.Size { Width = thumbWidth, Height = thumbHeight },
+                    Mode = ResizeMode.Stretch
+                };
+                image.Mutate(x => x.Resize(resizeOptions));
+                image.Save(ms, new SixLabors.ImageSharp.Formats.Jpeg.JpegEncoder());
+                ms.Position = 0;
+                return ms.ToArray();
+            }
         }
     }
 }
