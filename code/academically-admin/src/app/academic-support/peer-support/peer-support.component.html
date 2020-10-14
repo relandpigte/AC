@@ -1,29 +1,165 @@
-<div class="container-fluid" [@routerTransition]>
-    <div class="col-12">
-        <div class="header">
-            <div class="header-body">
-                <div class="row align-items-center">
-                    <div class="col">
-                    <h1 class="header-title">{{ "PeerSupport" | localize }}</h1>
+<div class="main-content">
+  <div class="header">
+    <img src="/assets/img/team-cover.jpg" class="header-img-top" alt="..." />
+    <div class="container-fluid">
+      <div class="header-body mt-n5 mt-md-n6">
+        <div class="row align-items-end">
+          <div class="col-auto">
+            <div class="avatar avatar-xxl header-avatar-top">
+              <img src="assets/img/team-logo-1.jpg" alt="..." class="avatar-img rounded border border-4 border-body" />
+            </div>
+          </div>
+          <div class="col mb-3 ml-n3 ml-md-n2">
+            <h6 class="header-pretitle">
+              Groups
+            </h6>
+
+            <h1 class="header-title">
+              Launchday
+            </h1>
+          </div>
+          <div class="col-12 col-md-auto">
+            <span class="fe fe-instagram social-media"></span>
+            <span class="fe fe-facebook social-media"></span>
+            <span class="fe fe-twitter social-media"></span>
+          </div>
+        </div>
+      </div>
+      <div class="row align-items-center tabs">
+        <div class="col">
+          <tabset>
+            <tab *ngIf="true" heading="{{ 'PeerSupport' | localize }}">
+              <div class="row searchbar">
+                <div class="col-12">
+                  <span class="search-text">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
+                    aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+                    occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                  </span>
+                  <div class="row">
+                    <div class="col-md-10">
+                      <form class="search">
+                        <div class="input-group input-group-lg input-group-merge">
+                          <input type="text" class="form-control form-control-prepended list-search" placeholder="Search" />
+                          <div class="input-group-prepend">
+                            <div class="input-group-text">
+                              <span class="fe fe-search"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
                     </div>
+                    <div class="col-md-2 grid-list-view">
+                      <div class="nav btn-group" role="tablist">
+                        <button
+                          class="btn btn-lg btn-white active"
+                          data-toggle="tab"
+                          data-target="#tabPaneOne"
+                          role="tab"
+                          aria-controls="tabPaneOne"
+                          aria-selected="true"
+                        >
+                          <span class="fe fe-grid"></span>
+                        </button>
+                        <button
+                          class="btn btn-lg btn-white"
+                          data-toggle="tab"
+                          data-target="#tabPaneTwo"
+                          role="tab"
+                          aria-controls="tabPaneTwo"
+                          aria-selected="false"
+                        >
+                          <span class="fe fe-list"></span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-            </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="card">
+                        <div class="avatar avatar-xl">
+                          <span class="avatar-title rounded-circle">CF</span>
+                        </div>
+                        <div class="card-header">
+                          <h4 class="card-header-title">
+                            {{ 'Feedback' | localize }}
+                          </h4>
+                        </div>
+                        <div class="card-body">
+                          <p class="text-muted mb-1">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis tempora architecto, sit a repellat
+                            dignissimos consequatur mollitia qui consequuntur recusandae numquam voluptate maiores, non cumque illo
+                            laboriosam sint dolores. Nostrum.
+                          </p>
+                        </div>
+                        <div class="card-footer">
+                          <button class="btn btn-primary">Go somewhere</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="card">
+                        <div class="avatar avatar-xl">
+                          <span class="avatar-title rounded-circle">CF</span>
+                        </div>
+                        <div class="card-header">
+                          <h4 class="card-header-title">
+                            {{ 'Proofreading' | localize }}
+                          </h4>
+                        </div>
+                        <div class="card-body">
+                          <p class="text-muted mb-1">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis tempora architecto, sit a repellat
+                            dignissimos consequatur mollitia qui consequuntur recusandae numquam voluptate maiores, non cumque illo
+                            laboriosam sint dolores. Nostrum.
+                          </p>
+                        </div>
+                        <div class="card-footer">
+                          <button class="btn btn-primary">Go somewhere</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="card">
+                        <div class="avatar avatar-xl">
+                          <span class="avatar-title rounded-circle">CF</span>
+                        </div>
+                        <div class="card-header">
+                          <h4 class="card-header-title">
+                            {{ 'Tutorial' | localize }}
+                          </h4>
+                        </div>
+                        <div class="card-body">
+                          <p class="text-muted mb-1">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis tempora architecto, sit a repellat
+                            dignissimos consequatur mollitia qui consequuntur recusandae numquam voluptate maiores, non cumque illo
+                            laboriosam sint dolores. Nostrum.
+                          </p>
+                        </div>
+                        <div class="card-footer">
+                          <button class="btn btn-primary">Go somewhere</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </tab>
+            <tab *ngIf="true" heading="{{ 'Feedback' | localize }}"> </tab>
+            <tab *ngIf="true" heading="{{ 'Proofreading' | localize }}">
+              <peer-support-proposals></peer-support-proposals>
+            </tab>
+            <tab *ngIf="true" heading="{{ 'Tutorial' | localize }}">
+              <peer-support-tutorial></peer-support-tutorial>
+            </tab>
+          </tabset>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <ul class="list-group list-group-lg">
-                    <a [routerLink]="['/app/tutorial']">
-                        <li class="list-group-item active">
-                            <label for="">{{ "Tutorial" | localize }}</label>
-                        </li>
-                    </a>
-                    <a [routerLink]="['/app/proposals']">
-                        <li class="list-group-item active">
-                            <label for="">{{ "Proposals" | localize }}</label>
-                        </li>
-                    </a>
-                </ul>
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 </div>

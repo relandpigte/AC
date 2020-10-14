@@ -5,19 +5,19 @@ import { AppComponentBase } from '@shared/app-component-base';
 import {
   DisciplineTaxonomiesServiceProxy,
   DisciplineTaxonomyDto,
-  GetAllDisciplineTaxonomyDto,
+  GetAllDisciplineTaxonomyDto
 } from '@shared/service-proxies/service-proxies';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { Observable, Observer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 @Component({
-  selector: 'app-tutorial',
-  templateUrl: './tutorial.component.html',
-  styleUrls: ['./tutorial.component.less'],
-  animations: [appModuleAnimation()],
+  selector: 'peer-support-tutorial',
+  templateUrl: './peer-support-tutorial.component.html',
+  styleUrls: ['./peer-support-tutorial.component.less'],
+  animations: [appModuleAnimation()]
 })
-export class TutorialComponent extends AppComponentBase implements OnInit {
+export class PeerSupportTutorialComponent extends AppComponentBase implements OnInit {
   disciplineTaxonomyName = '';
   disciplineTaxonomiesDataSource: Observable<DisciplineTaxonomyDto[]>;
   selectedDisciplineTaxonomies: DisciplineTaxonomyDto[] = [];
@@ -36,7 +36,7 @@ export class TutorialComponent extends AppComponentBase implements OnInit {
 
   onTaxonomySelect(e: TypeaheadMatch): void {
     const disciplineTaxonomy: DisciplineTaxonomyDto = e.item;
-    const index = this.selectedDisciplineTaxonomies.findIndex((t) => t.id === disciplineTaxonomy.id);
+    const index = this.selectedDisciplineTaxonomies.findIndex(t => t.id === disciplineTaxonomy.id);
     if (index < 0) {
       this.selectedDisciplineTaxonomies.push(disciplineTaxonomy);
     }
@@ -44,7 +44,7 @@ export class TutorialComponent extends AppComponentBase implements OnInit {
   }
 
   onRemoveDisciplineTaxonomyClick(id: string): void {
-    const index = this.selectedDisciplineTaxonomies.findIndex((e) => e.id === id);
+    const index = this.selectedDisciplineTaxonomies.findIndex(e => e.id === id);
     if (index > -1) {
       this.selectedDisciplineTaxonomies.splice(index, 1);
     }
@@ -70,8 +70,8 @@ export class TutorialComponent extends AppComponentBase implements OnInit {
     const modalRef = this._modalService.show(TaxonomySearchComponent, modalSettings);
     const modal: TaxonomySearchComponent = modalRef.content;
     modal.modalSave.subscribe((selectedTaxonomies: GetAllDisciplineTaxonomyDto[]) => {
-      selectedTaxonomies.forEach((e) => {
-        const index = this.selectedDisciplineTaxonomies.findIndex((t) => t.id === e.id);
+      selectedTaxonomies.forEach(e => {
+        const index = this.selectedDisciplineTaxonomies.findIndex(t => t.id === e.id);
         if (index < 0) {
           const taxonomy = new DisciplineTaxonomyDto();
           taxonomy.id = e.id;

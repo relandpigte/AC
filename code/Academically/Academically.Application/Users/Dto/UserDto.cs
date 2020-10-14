@@ -37,5 +37,6 @@ namespace Academically.Users.Dto
 
         public string[] RoleNames { get; set; }
         public string[] RoleDisplayNames { get; set; }
+        public bool IsTwoFactorEnabled { get; set; }
     }
 }

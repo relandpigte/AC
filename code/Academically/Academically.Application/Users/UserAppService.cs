@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.AutoMapper;
+using Abp.Configuration;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -16,6 +20,7 @@ using Abp.UI;
 using Academically.Authorization;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
+using Academically.Configuration;
 using Academically.Roles.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Identity;
@@ -32,6 +37,8 @@ namespace Academically.Users
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IAbpSession _abpSession;
         private readonly LogInManager _logInManager;
+        private readonly UrlEncoder _urlEncoder;
+        private readonly ISettingManager _settingManager;
 
         public UserAppService(
             IRepository<User, long> repository,
@@ -40,7 +47,9 @@ namespace Academically.Users
             IRepository<Role> roleRepository,
             IPasswordHasher<User> passwordHasher,
             IAbpSession abpSession,
-            LogInManager logInManager)
+            LogInManager logInManager,
+            UrlEncoder urlEncoder,
+            ISettingManager settingManager)
             : base(repository)
         {
             _userManager = userManager;
@@ -49,6 +58,9 @@ namespace Academically.Users
             _passwordHasher = passwordHasher;
             _abpSession = abpSession;
             _logInManager = logInManager;
+            _urlEncoder = urlEncoder;
+            _settingManager = settingManager;
+
         }
 
         [AbpAuthorize(PermissionNames.Pages_Users_Create)]

@@ -5,6 +5,7 @@ import { RegisterComponent } from './register/register.component';
 import { AccountComponent } from './account.component';
 import { CompleteRegistrationComponent } from './complete-registration/complete-registration.component';
 import { TermsAndConditionsComponent } from './terms-and-conditions/terms-and-conditions.component';
+import { TwoFactorAuthenticationComponent } from './two-factor-authentication/two-factor-authentication.component';
 
 @NgModule({
   imports: [
@@ -16,13 +17,12 @@ import { TermsAndConditionsComponent } from './terms-and-conditions/terms-and-co
           { path: 'login', component: LoginComponent },
           { path: 'register', component: RegisterComponent },
           { path: 'complete-registration/:id', component: CompleteRegistrationComponent },
-          { path: 'terms-and-conditions', component: TermsAndConditionsComponent}
+          { path: 'terms-and-conditions', component: TermsAndConditionsComponent },
+          { path: 'two-factor-authentication', component: TwoFactorAuthenticationComponent }
         ]
       }
     ])
   ],
-  exports: [
-    RouterModule
-  ]
+  exports: [RouterModule]
 })
-export class AccountRoutingModule { }
+export class AccountRoutingModule {}
