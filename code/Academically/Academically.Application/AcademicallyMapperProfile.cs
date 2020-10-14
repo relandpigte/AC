@@ -19,7 +19,7 @@ namespace Academically
                     opt.PreCondition(src => src.Children == null || src.Children.Count == 0);
                     opt.MapFrom(src => 1);
                 });
-            CreateMap<UserTutorialDto, UserTutorial>();
+            CreateMap<SaveUserTutorialDto, UserTutorial>();
         }
     }
 }
