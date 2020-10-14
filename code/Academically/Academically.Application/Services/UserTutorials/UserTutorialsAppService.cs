@@ -30,7 +30,7 @@ namespace Academically.Services.UserTutorials
         private readonly IFileManagerService _fileManagerService;
         public UserTutorialsAppService
         (
-            IRepository<UserTutorial, Guid> userTutorialsRepository, 
+            IRepository<UserTutorial, Guid> userTutorialsRepository,
             IRepository<UserTutorialDisciplineTaxonomy, Guid> userTutorialsDisciplineTaxonomiesRepository,
             IRepository<SupportLevel, int> supportLevelRepository,
             ISettingManager settingManager,
@@ -45,11 +45,12 @@ namespace Academically.Services.UserTutorials
         }
 
 
-        public async Task CreateAsync([FromForm] UserTutorialDto inputs)
+        public async Task CreateAsync([FromForm] SaveUserTutorialDto inputs)
         {
             var userId = AbpSession.UserId.Value;
-            var userTutorial = ObjectMapper.Map<UserTutorial>(inputs);
-            
+            var userTutorial = new UserTutorial();
+            ObjectMapper.Map(inputs, userTutorial);
+
             userTutorial.UserId = userId;
 
             var folder = await _settingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_UserTutorialPictures);
@@ -94,6 +95,15 @@ namespace Academically.Services.UserTutorials
                 .ToListAsync();
 
             return supportLevels;
+        }
+
+        public async Task<IEnumerable<UserTutorialDto>> GetAsync()
+        {
+            var userTutorials = await _userTutorialsRepository.GetAll()
+                .Select(e => ObjectMapper.Map<UserTutorialDto>(e))
+                .ToListAsync();
+
+            return userTutorials;
         }
 
         private byte[] MakeThumbnail(byte[] imageBytes, int thumbWidth, int thumbHeight)

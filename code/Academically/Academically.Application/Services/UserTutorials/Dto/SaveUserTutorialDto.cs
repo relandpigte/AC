@@ -8,8 +8,7 @@ using System.Text;
 
 namespace Academically.Services.UserTutorials.Dto
 {
-    [AutoMap(typeof(UserTutorial))]
-    public class UserTutorialDto : EntityDto<Guid>
+    public class SaveUserTutorialDto 
     {
         public string Information { get; set; }
         public int SupportLevel { get; set; }
@@ -17,7 +16,6 @@ namespace Academically.Services.UserTutorials.Dto
         public int UrgencyLevel { get; set; }
         public DateTime Deadline { get; set; }
         public IFormFile Picture { get; set; }
-        public string PictureFileName { get; set; }
         public IEnumerable<Guid> DisciplineTaxonomyIds { get; set; }
     }
 }

@@ -2,6 +2,9 @@ import { Component, OnInit, Injector, ViewChild, ElementRef } from '@angular/cor
 import { TaxonomySearchComponent } from '@app/shared/taxonomy-search/taxonomy-search.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
+import * as moment from 'moment';
+import { NgForm } from '@angular/forms';
+import * as _ from 'lodash';
 import {
   DisciplineTaxonomiesServiceProxy,
   DisciplineTaxonomyDto,
@@ -24,6 +27,7 @@ import { fileUploadConfiguration } from '@shared/constants/configurations/file-u
   animations: [appModuleAnimation()]
 })
 export class PeerSupportTutorialComponent extends AppComponentBase implements OnInit {
+  @ViewChild('peerSupportTutorialForm') public form: NgForm;
   @ViewChild('tutorialPictureInput', { static: true }) tutorialPictureInput: ElementRef;
 
   disciplineTaxonomyName = '';
@@ -35,6 +39,7 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
   tutorialPicturePlaceholderText: string;
   fileUploadSettings = fileUploadConfiguration;
   picture: FileParameter;
+  userTutorialDisciplineTaxonomiesIds: string[] = [];
 
   constructor(
     injector: Injector,
@@ -93,6 +98,37 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
         this.clearUploader();
       }
     }
+  }
+
+  onFormSubmit(): void {
+    this.saveTutorial();
+  }
+
+  private saveTutorial(): void {
+    if (this.userTutorials.deadline) {
+      this.userTutorials.deadline = moment.utc(moment(this.userTutorials.deadline).format('YYYY-MM-DD'));
+    }
+    if (this.selectedDisciplineTaxonomies.length > 0) {
+      _.forEach(this.selectedDisciplineTaxonomies, disciplineTaxonomies => {
+        this.userTutorialDisciplineTaxonomiesIds.push(disciplineTaxonomies.id);
+      });
+    }
+    this._userTutorialsService
+      .create(
+        this.userTutorials.information,
+        this.userTutorials.supportLevel,
+        this.userTutorials.concerns,
+        this.userTutorials.urgencyLevel,
+        this.userTutorials.deadline,
+        this.picture,
+        this.userTutorialDisciplineTaxonomiesIds
+      )
+      .subscribe(() => {
+        this.clearUploader();
+        this.notify.success(this.l('SavedSuccessfully'));
+        this.form.reset();
+        this.userTutorialDisciplineTaxonomiesIds = [];
+      });
   }
 
   private getDisciplineTaxonomies(): void {

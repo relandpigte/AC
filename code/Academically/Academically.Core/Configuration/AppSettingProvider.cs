@@ -25,6 +25,7 @@ namespace Academically.Configuration
                 new SettingDefinition(AppSettingNames.Aws_Region, GetFromSettings("Aws:Region")),
                 new SettingDefinition(AppSettingNames.Aws_S3_AssetsBucket, GetFromSettings("Aws:S3:AssetsBucket")),
                 new SettingDefinition(AppSettingNames.Aws_S3_Folders_ProfilePictures, GetFromSettings("Aws:S3:Folders:ProfilePictures")),
+                new SettingDefinition(AppSettingNames.Aws_S3_Folders_UserTutorialPictures, GetFromSettings("Aws:S3:Folders:UserTutorialPictures")),
                 new SettingDefinition(AppSettingNames.Address_SuggestUrl, GetFromSettings("Address:SuggestUrl")),
                 new SettingDefinition(AppSettingNames.Address_GetDetailsUrl, GetFromSettings("Address:GetDetailsUrl")),
                 new SettingDefinition(AppSettingNames.Address_ApiKey, GetFromSettings("Address:ApiKey")),

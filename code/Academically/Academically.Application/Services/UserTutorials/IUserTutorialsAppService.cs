@@ -10,7 +10,8 @@ namespace Academically.Services.UserTutorials
 {
     public interface IUserTutorialsAppService : IApplicationService
     {
-        Task CreateAsync(UserTutorialDto inputs);
+        Task CreateAsync(SaveUserTutorialDto inputs);
+        Task<IEnumerable<UserTutorialDto>> GetAsync();
         Task<IEnumerable<SupportLevelDto>> GetSupportLevelsAsync();
     }
 }
