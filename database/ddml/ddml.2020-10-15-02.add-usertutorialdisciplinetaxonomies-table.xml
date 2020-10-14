@@ -1,0 +1,32 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="root (generated)" id="18013633557458-1">
+        <createTable tableName="AcademicallyUserTutorialDisciplineTaxonomies">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="TutorialId" type="CHAR(36)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="DisciplineTaxonomyId" type="CHAR(36)" >
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="18013633557458-2">
+        <createIndex indexName="FK_UTDT_UserTutorials_TutorialId_idx" tableName="AcademicallyUserTutorialDisciplineTaxonomies">
+            <column name="TutorialId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="18013633557458-3">
+        <addForeignKeyConstraint baseColumnNames="TutorialId" baseTableName="AcademicallyUserTutorialDisciplineTaxonomies" constraintName="FK_UTDT_UserTutorials_TutorialId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT"  referencedColumnNames="Id" referencedTableName="AcademicallyUserTutorials" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="18013633557458-4">
+        <createIndex indexName="FK_UTDT_DisciplineTaxonomies_DisciplineTaxonomyId_idx" tableName="AcademicallyUserTutorialDisciplineTaxonomies">
+            <column name="DisciplineTaxonomyId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="18013633557458-5">
+        <addForeignKeyConstraint baseColumnNames="DisciplineTaxonomyId" baseTableName="AcademicallyUserTutorialDisciplineTaxonomies" constraintName="FK_UTDT_DisciplineTaxonomies_DisciplineTaxonomyId" deferrable="false"  initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT"  referencedColumnNames="Id" referencedTableName="AcademicallyDisciplineTaxonomies" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
