@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="root (generated)" id="17013633583787-1">
+        <createTable tableName="AcademicallyUserTutorials">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UserId" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Information" type="longtext" />
+            <column name="SupportLevel" type="int" />
+            <column name="Concerns" type="longtext" />
+            <column name="UrgencyLevel" type="int" />
+            <column name="Deadline" type="datetime"/>
+            <column name="PictureFileName" type="varchar(250)"/>
+        </createTable>
+    </changeSet>
+     <changeSet author="root (generated)" id="17013633583787-2">
+        <createIndex indexName="FK_UserTutorials_User_UserId_idx" tableName="AcademicallyUserTutorials">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="17013633583787-3">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="AcademicallyUserTutorials" constraintName="FK_UserTutorials_User_UserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
