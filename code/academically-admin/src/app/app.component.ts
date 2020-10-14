@@ -1,59 +1,36 @@
-import { Component, Injector, OnInit, Renderer2 } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { SignalRAspNetCoreHelper } from '@shared/helpers/SignalRAspNetCoreHelper';
-import { LayoutStoreService } from '@shared/layout/layout-store.service';
-import { AppAuthService } from '@shared/auth/app-auth.service';
-import { GetProfileDetailDto, UserLoginInfoDto } from '@shared/service-proxies/service-proxies';
 import { uiEvents } from '@shared/constants/ui-events';
+import { IThemeSettings } from '@shared/models/theme-settings/theme-settings.interface';
+import { ThemeManagerService } from '@shared/services/theme-manager.service';
+import { NavigationPosition } from '@shared/enums/theme-settings/navigation-position.enum';
+import { BehaviorSubject } from 'rxjs';
+import { NavigationEnd, Router, RouterEvent } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { SidebarSize } from '@shared/enums/theme-settings/sidebar-size.enum';
 
 @Component({
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
 })
 export class AppComponent extends AppComponentBase implements OnInit {
-  sidebarExpanded: boolean;
-  user: UserLoginInfoDto = new UserLoginInfoDto();
+  NavigationPosition = NavigationPosition;
+  SidebarSize = SidebarSize;
+  themeSettings: IThemeSettings;
+  routerEvents: BehaviorSubject<RouterEvent> = new BehaviorSubject(undefined);
+  routerEvent: RouterEvent;
 
-  constructor(
-    injector: Injector,
-    private renderer: Renderer2,
-    private _layoutStore: LayoutStoreService,
-    private _authService: AppAuthService,
-  ) {
+  constructor(themeSettingsService: ThemeManagerService, router: Router, injector: Injector) {
     super(injector);
-    this.user = this.appSession.user;
-    abp.event.on(uiEvents.profileDetailsUpdated, (item: GetProfileDetailDto) => {
-      this.user.profilePictureUrl = item.profilePictureUrl;
+    this.themeSettings = themeSettingsService.getConfiguration();
+    router.events.subscribe(this.routerEvents);
+    abp.event.on(uiEvents.themeSettingsSaved, () => {
+      this.themeSettings = themeSettingsService.getConfiguration();
     });
   }
 
   ngOnInit(): void {
-    // SignalRAspNetCoreHelper.initSignalR(); @TODO: Enable signalR or something similar of chat app
-
-    abp.event.on('abp.notifications.received', (userNotification) => {
-      abp.notifications.showUiNotifyForUserNotification(userNotification);
-
-      // Desktop notification
-      Push.create('AbpZeroTemplate', {
-        body: userNotification.notification.data.message,
-        icon: abp.appPath + 'assets/app-logo-small.png',
-        timeout: 6000,
-        onClick: function () {
-          window.focus();
-          this.close();
-        }
-      });
+    this.routerEvents.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
+      this.routerEvent = event;
     });
-
-    this._layoutStore.sidebarExpanded.subscribe((value) => {
-      this.sidebarExpanded = value;
-    });
-  }
-
-  toggleSidebar(): void {
-    this._layoutStore.setSidebarExpanded(!this.sidebarExpanded);
-  }
-
-  onLogoutClick(): void {
-    this._authService.logout();
   }
 }

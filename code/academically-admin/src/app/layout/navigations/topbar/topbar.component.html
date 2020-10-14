@@ -1,0 +1,35 @@
+<nav
+  *ngIf="themeSettings.navigationPosition === NavigationPosition.Combo"
+  class="navbar navbar-expand-md navbar-light d-none d-md-flex"
+  id="topbar"
+>
+  <div class="container-fluid justify-content-end">
+    <!-- User -->
+    <div class="navbar-user mr-3">
+      <!-- Dropdown -->
+      <div class="dropdown">
+        <!-- Toggle -->
+        <a
+          href="#"
+          class="avatar avatar-sm avatar-online dropdown-toggle"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <img *ngIf="user.profilePictureUrl" [src]="user.profilePictureUrl" class="avatar-img rounded-circle" alt="profile" />
+          <img *ngIf="!user.profilePictureUrl" src="assets/img/anonymous.png" class="avatar-img rounded-circle" alt="avatar" />
+        </a>
+
+        <!-- Menu -->
+        <div class="dropdown-menu dropdown-menu-right">
+          <ng-container *ngIf="permission.isGranted('Pages.Profile')">
+            <a href="#" [routerLink]="['/app/profile']" class="dropdown-item">Profile</a>
+            <hr class="dropdown-divider" />
+          </ng-container>
+          <a href="javascript:;" class="dropdown-item" (click)="onLogoutClick()">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

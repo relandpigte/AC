@@ -1,39 +1,29 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Injector, Input } from '@angular/core';
+import { PRIMARY_OUTLET, Router, RouterEvent } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { Router, RouterEvent, NavigationEnd, PRIMARY_OUTLET } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
-import { filter } from 'rxjs/operators';
 import { MenuItem } from '@shared/layout/menu-item';
 
-@Component({
-  selector: 'sidebar-menu',
-  templateUrl: './sidebar-menu.component.html',
-})
-export class SidebarMenuComponent extends AppComponentBase implements OnInit {
+export abstract class BaseMenu extends AppComponentBase {
   menuItems: MenuItem[];
   menuItemsMap: { [key: number]: MenuItem } = {};
   activatedMenuItems: MenuItem[] = [];
-  routerEvents: BehaviorSubject<RouterEvent> = new BehaviorSubject(undefined);
   homeRoute = '/app/home';
 
-  constructor(injector: Injector, private router: Router) {
+  constructor(injector: Injector, private _router: Router) {
     super(injector);
-    this.router.events.subscribe(this.routerEvents);
-  }
-
-  ngOnInit(): void {
     this.menuItems = this.getMenuItems();
     this.patchMenuItems(this.menuItems);
-    this.routerEvents.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
-      const currentUrl = event.url !== '/' ? event.url : this.homeRoute;
-      const primaryUrlSegmentGroup = this.router.parseUrl(currentUrl).root.children[PRIMARY_OUTLET];
-      if (primaryUrlSegmentGroup) {
-        this.activateMenuItems('/' + primaryUrlSegmentGroup.toString());
-      }
-    });
   }
 
-  getMenuItems(): MenuItem[] {
+  @Input() set routerEvent(event: RouterEvent) {
+    const currentUrl = event.url !== '/' ? event.url : this.homeRoute;
+    const primaryUrlSegmentGroup = this._router.parseUrl(currentUrl).root.children[PRIMARY_OUTLET];
+    if (primaryUrlSegmentGroup) {
+      this.activateMenuItems('/' + primaryUrlSegmentGroup.toString());
+    }
+  }
+
+  protected getMenuItems(): MenuItem[] {
     return [
       new MenuItem(this.l('Dashboard'), '/app/home', 'fe fe-home', 'Pages.Dashboard'),
       new MenuItem(this.l('AcademicSupport'), '', 'fe fe-book', 'Pages.Dashboard.Navigations.AcademicSupport', [
@@ -51,7 +41,7 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
     ];
   }
 
-  patchMenuItems(items: MenuItem[], parentId?: number): void {
+  protected patchMenuItems(items: MenuItem[], parentId?: number): void {
     items.forEach((item: MenuItem, index: number) => {
       item.id = parentId ? Number(parentId + '' + (index + 1)) : index + 1;
       if (parentId) {
@@ -66,7 +56,7 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
     });
   }
 
-  activateMenuItems(url: string): void {
+  protected activateMenuItems(url: string): void {
     this.deactivateMenuItems(this.menuItems);
     this.activatedMenuItems = [];
     const foundedItems = this.findMenuItemsByUrl(url, this.menuItems);
@@ -75,7 +65,7 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
     });
   }
 
-  deactivateMenuItems(items: MenuItem[]): void {
+  protected deactivateMenuItems(items: MenuItem[]): void {
     items.forEach((item: MenuItem) => {
       item.isActive = false;
       item.isCollapsed = true;
@@ -85,7 +75,7 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
     });
   }
 
-  findMenuItemsByUrl(url: string, items: MenuItem[], foundedItems: MenuItem[] = []): MenuItem[] {
+  protected findMenuItemsByUrl(url: string, items: MenuItem[], foundedItems: MenuItem[] = []): MenuItem[] {
     items.forEach((item: MenuItem) => {
       if (item.route === url) {
         foundedItems.push(item);
@@ -96,7 +86,7 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
     return foundedItems;
   }
 
-  activateMenuItem(item: MenuItem): void {
+  protected activateMenuItem(item: MenuItem): void {
     item.isActive = true;
     if (item.children) {
       item.isCollapsed = false;
@@ -107,7 +97,7 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
     }
   }
 
-  isMenuItemVisible(item: MenuItem): boolean {
+  protected isMenuItemVisible(item: MenuItem): boolean {
     if (item.children && item.children.length > 0) {
       let isGranted = true;
       item.children.forEach((child) => {

@@ -57,10 +57,10 @@ app-root {
 
 .modal-card {
   .card-body {
-    max-height: initial;
+    max-height: initial !important;
 
     .nav-link {
-      padding-top: 0;
+      padding-top: 0 !important;
     }
   }
 }
@@ -141,11 +141,11 @@ form {
 
 .discipline {
   margin: 5px;
-  padding: 5px 25px 5px 5px;
+  padding: 5px 25px 5px 5px !important;
   display: inline-block;
 
   .close {
-    padding: 5px;
+    padding: 5px !important;
   }
 }
 
@@ -162,5 +162,19 @@ form {
 
   .sunburst-tooltip {
     max-width: fit-content !important;
+  }
+}
+
+.navbar-brand {
+  order: -2;
+}
+
+@media (min-width: 768px) {
+  sidebar:not([style*='display: none']) ~ .main-content {
+    margin-left: 250px;
+  }
+
+  sidebar-small:not([style*='display: none']) ~ .main-content {
+    margin-left: 66px;
   }
 }

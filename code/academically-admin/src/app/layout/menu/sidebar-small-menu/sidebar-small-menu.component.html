@@ -1,0 +1,52 @@
+<!-- Navigation -->
+
+<ul class="navbar-nav">
+  <ng-container *ngFor="let item of menuItems; let i = index">
+    <ng-container *ngTemplateOutlet="sidebarInner; context: { item: item, root: true }"></ng-container>
+  </ng-container>
+</ul>
+
+<ng-template #sidebarInner let-item="item" let-root="root">
+  <li *ngIf="isMenuItemVisible(item)" class="dropright" [class.nav-item]="root">
+    <a
+      *ngIf="item.route && item.route.indexOf('http') != 0"
+      [class.nav-link]="root"
+      [class.dropdown-item]="!root"
+      [routerLink]="item.route"
+      [class.active]="item.isActive"
+    >
+      <i *ngIf="root" class="{{ item.icon }}"></i> <span *ngIf="!root">{{ item.label }}</span>
+    </a>
+    <a
+      *ngIf="item.route && item.route.indexOf('http') == 0 && !item.children"
+      [class.nav-link]="root"
+      [class.dropdown-item]="!root"
+      target="_blank"
+      [href]="item.route"
+      [class.active]="item.isActive"
+    >
+      <i *ngIf="root" class="{{ item.icon }}"></i> <span *ngIf="!root">{{ item.label }}</span>
+    </a>
+    <a
+      *ngIf="!item.route && item.children"
+      class="dropdown-toggle"
+      [class.nav-link]="root"
+      [class.dropdown-item]="!root"
+      data-toggle="dropdown"
+      role="button"
+      aria-haspopup="true"
+      aria-expanded="false"
+      [class.active]="item.isActive"
+    >
+      <i *ngIf="root" class="{{ item.icon }}"></i> <span *ngIf="!root">{{ item.label }}</span>
+    </a>
+    <ul *ngIf="!item.route && item.children" class="dropdown-menu">
+      <li *ngIf="root" class="dropdown-header d-none d-md-block">
+        <h6 class="text-uppercase mb-0">{{ item.label }}</h6>
+      </li>
+      <ng-container *ngFor="let item of item.children">
+        <ng-container *ngTemplateOutlet="sidebarInner; context: { item: item, root: false }"></ng-container>
+      </ng-container>
+    </ul>
+  </li>
+</ng-template>

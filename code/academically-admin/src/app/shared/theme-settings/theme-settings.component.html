@@ -1,0 +1,154 @@
+<!-- Modal: Demo -->
+<div
+  bsModal
+  #themeSettingsModal="bs-modal"
+  class="modal fade fixed-right"
+  id="modalDemo"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+  [busy]="isLoading"
+>
+  <div class="modal-dialog modal-dialog-vertical" role="document">
+    <form class="modal-content" (ngSubmit)="onFormSubmit()">
+      <div class="modal-body">
+        <!-- Close -->
+        <a href="#" (click)="$event.preventDefault(); onCloseClick()" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </a>
+
+        <!-- Heading -->
+        <h2 class="text-center mb-2">Update your Layout</h2>
+
+        <!-- Text -->
+        <p class="text-center mb-4">Your preferences will be saved on this specific device.</p>
+
+        <!-- Divider -->
+        <hr class="mb-4" />
+
+        <!-- Heading -->
+        <h4 class="mb-1">Color Scheme</h4>
+
+        <!-- Text -->
+        <p class="small text-muted mb-3">Overall light or dark presentation.</p>
+
+        <!-- Button group -->
+        <div class="btn-group-toggle d-flex mb-4" data-toggle="buttons">
+          <label class="btn btn-white col" [class.active]="themeSettings.colorScheme === ColorScheme.Light">
+            <input (click)="onColorSchemeChange(ColorScheme.Light)" type="radio" name="colorScheme" id="colorSchemeLight" value="light" />
+            <i class="fe fe-sun mr-2"></i> Light Mode
+          </label>
+          <label class="btn btn-white col ml-2" [class.active]="themeSettings.colorScheme === ColorScheme.Dark">
+            <input (click)="onColorSchemeChange(ColorScheme.Dark)" type="radio" name="colorScheme" id="colorSchemeDark" value="dark" />
+            <i class="fe fe-moon mr-2"></i> Dark Mode
+          </label>
+        </div>
+
+        <!-- Heading -->
+        <h4 class="mb-1">Navigation Position</h4>
+
+        <!-- Text -->
+        <p class="small text-muted mb-3">Select the primary navigation paradigm.</p>
+
+        <!-- Button group -->
+        <div class="btn-group-toggle d-flex mb-4" data-toggle="buttons">
+          <label class="btn btn-white col" [class.active]="themeSettings.navigationPosition === NavigationPosition.Sidenav">
+            <input
+              (click)="onNavigationPositionChange(NavigationPosition.Sidenav)"
+              type="radio"
+              name="navPosition"
+              id="navPositionSidenav"
+              value="sidenav"
+            />
+            Sidenav
+          </label>
+          <label class="btn btn-white col ml-2" [class.active]="themeSettings.navigationPosition === NavigationPosition.Topnav">
+            <input
+              (click)="onNavigationPositionChange(NavigationPosition.Topnav)"
+              type="radio"
+              name="navPosition"
+              id="navPositionTopnav"
+              value="topnav"
+            />
+            Topnav
+          </label>
+          <label class="btn btn-white col ml-2" [class.active]="themeSettings.navigationPosition === NavigationPosition.Combo">
+            <input
+              (click)="onNavigationPositionChange(NavigationPosition.Combo)"
+              type="radio"
+              name="navPosition"
+              id="navPositionCombo"
+              value="combo"
+            />
+            Combo
+          </label>
+        </div>
+
+        <!-- Collapse -->
+        <div class="collapse show" id="sidebarSizeContainer" *ngIf="themeSettings.navigationPosition !== NavigationPosition.Topnav">
+          <!-- Heading -->
+          <h4 class="mb-1">Sidenav Sizing</h4>
+
+          <!-- Text -->
+          <p class="small text-muted mb-3">Standard navigation sizing or minified icons with dropdowns.</p>
+
+          <!-- Button group -->
+          <div class="btn-group-toggle d-flex mb-4" data-toggle="buttons">
+            <label class="btn btn-white col" [class.active]="themeSettings.sidenavSizing === SidebarSize.Base">
+              <input (click)="onSidebarSizeChange(SidebarSize.Base)" type="radio" name="sidebarSize" id="sidebarSizeBase" value="base" />
+              Fullsize
+            </label>
+            <label class="btn btn-white col ml-2" [class.active]="themeSettings.sidenavSizing === SidebarSize.Small">
+              <input (click)="onSidebarSizeChange(SidebarSize.Small)" type="radio" name="sidebarSize" id="sidebarSizeSmall" value="small" />
+              Icons
+            </label>
+          </div>
+        </div>
+
+        <!-- Heading -->
+        <h4 class="mb-1">Navigation Color</h4>
+
+        <!-- Text -->
+        <p class="small text-muted mb-3">Usually dictated by the color scheme, but can be overriden.</p>
+
+        <!-- Button group -->
+        <div class="btn-group-toggle d-flex" data-toggle="buttons">
+          <label class="btn btn-white col" [class.active]="themeSettings.navigationColor === NavibationColor.Default">
+            <input
+              (click)="onNavigationColorChange(NavibationColor.Default)"
+              type="radio"
+              name="navColor"
+              id="navColorDefault"
+              value="default"
+            />
+            Default
+          </label>
+          <label class="btn btn-white col ml-2" [class.active]="themeSettings.navigationColor === NavibationColor.Inverted">
+            <input
+              (click)="onNavigationColorChange(NavibationColor.Inverted)"
+              type="radio"
+              name="navColor"
+              id="navColorInverted"
+              value="inverted"
+            />
+            Inverted
+          </label>
+          <label class="btn btn-white col ml-2" [class.active]="themeSettings.navigationColor === NavibationColor.Vibrant">
+            <input
+              (click)="onNavigationColorChange(NavibationColor.Vibrant)"
+              type="radio"
+              name="navColor"
+              id="navColorVibrant"
+              value="vibrant"
+            />
+            Vibrant
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer border-0">
+        <!-- Button -->
+        <button type="submit" class="btn btn-block btn-primary mt-auto">Save</button>
+      </div>
+    </form>
+  </div>
+</div>

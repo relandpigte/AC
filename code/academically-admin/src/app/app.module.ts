@@ -37,10 +37,15 @@ import { HeaderLeftNavbarComponent } from './layout/header-left-navbar.component
 import { HeaderLanguageMenuComponent } from './layout/header-language-menu.component';
 import { HeaderUserMenuComponent } from './layout/header-user-menu.component';
 import { FooterComponent } from './layout/footer.component';
-import { SidebarComponent } from './layout/sidebar.component';
 import { SidebarLogoComponent } from './layout/sidebar-logo.component';
 import { SidebarUserPanelComponent } from './layout/sidebar-user-panel.component';
-import { SidebarMenuComponent } from './layout/sidebar-menu.component';
+import { SidebarMenuComponent } from './layout/menu/sidebar-menu/sidebar-menu.component';
+import { TopbarMenuComponent } from './layout/menu/topbar-menu/topbar-menu.component';
+import { SidebarSmallMenuComponent } from './layout/menu/sidebar-small-menu/sidebar-small-menu.component';
+import { SidebarComponent } from './layout/navigations/sidebar/sidebar.component';
+import { TopnavComponent } from './layout/navigations/topnav/topnav.component';
+import { TopbarComponent } from './layout/navigations/topbar/topbar.component';
+import { SidebarSmallComponent } from './layout/navigations/sidebar-small/sidebar-small.component';
 // components
 import { AppComponent } from './app.component';
 import { HomeComponent } from '@app/home/home.component';
@@ -61,7 +66,7 @@ import { AcademicSupportComponent } from './academic-support/academic-support.co
 import { ProfileKnowledgeBaseComponent } from './profile/profile-areas-of-study/profile-knowledge-base/profile-knowledge-base.component';
 import { PeerSupportComponent } from './academic-support/peer-support/peer-support.component';
 import { TaxonomySearchComponent } from './shared/taxonomy-search/taxonomy-search.component';
-import SunburstChart from 'sunburst-chart';
+import { ThemeSettingsComponent } from './shared/theme-settings/theme-settings.component';
 
 @NgModule({
   declarations: [
@@ -92,6 +97,8 @@ import SunburstChart from 'sunburst-chart';
     SidebarLogoComponent,
     SidebarUserPanelComponent,
     SidebarMenuComponent,
+    TopbarMenuComponent,
+    TopnavComponent,
     // directives
     Select2Directive,
     SunburstChartDirective,
@@ -112,6 +119,10 @@ import SunburstChart from 'sunburst-chart';
     ProfileKnowledgeBaseComponent,
     PeerSupportComponent,
     TaxonomySearchComponent,
+    ThemeSettingsComponent,
+    TopbarComponent,
+    SidebarSmallComponent,
+    SidebarSmallMenuComponent,
   ],
   imports: [
     CommonModule,
@@ -145,6 +156,7 @@ import SunburstChart from 'sunburst-chart';
     // academically
     CreateEditProfileEducationComponent,
     TaxonomySearchComponent,
+    ThemeSettingsComponent,
   ],
 })
 export class AppModule {}
