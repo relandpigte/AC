@@ -5,8 +5,12 @@ import { AppComponentBase } from '@shared/app-component-base';
 import {
   DisciplineTaxonomiesServiceProxy,
   DisciplineTaxonomyDto,
-  GetAllDisciplineTaxonomyDto
+  GetAllDisciplineTaxonomyDto,
+  SupportLevelDto,
+  UserTutorialDto,
+  UserTutorialsServiceProxy
 } from '@shared/service-proxies/service-proxies';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { Observable, Observer } from 'rxjs';
@@ -21,17 +25,26 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
   disciplineTaxonomyName = '';
   disciplineTaxonomiesDataSource: Observable<DisciplineTaxonomyDto[]>;
   selectedDisciplineTaxonomies: DisciplineTaxonomyDto[] = [];
+  userTutorials: UserTutorialDto;
+  supportLevels: SupportLevelDto[];
+  datePickerConfig: BsDatepickerConfig;
 
   constructor(
     injector: Injector,
     private _disciplineTaxonomiesService: DisciplineTaxonomiesServiceProxy,
+    private _userTutorialsService: UserTutorialsServiceProxy,
     private _modalService: BsModalService
   ) {
     super(injector);
+    this.datePickerConfig = new BsDatepickerConfig();
+    this.datePickerConfig.showWeekNumbers = false;
+    this.datePickerConfig.dateInputFormat = 'DD/MM/YYYY';
+    this.userTutorials = new UserTutorialDto();
   }
 
   ngOnInit(): void {
     this.getDisciplineTaxonomies();
+    this.getSupportLevels();
   }
 
   onTaxonomySelect(e: TypeaheadMatch): void {
@@ -79,6 +92,13 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
           this.selectedDisciplineTaxonomies.push(taxonomy);
         }
       });
+    });
+  }
+
+  private getSupportLevels(): void {
+    this._userTutorialsService.getSupportLevels().subscribe(supportLevels => {
+      this.supportLevels = supportLevels;
+      console.log(this.supportLevels);
     });
   }
 }

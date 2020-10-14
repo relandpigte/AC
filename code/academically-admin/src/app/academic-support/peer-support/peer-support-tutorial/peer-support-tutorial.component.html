@@ -16,29 +16,30 @@
           <div class="row">
             <div class="col-12">
               <div class="form-group">
-                <label class="col-form-label" for="Suitor"> {{ 'SuitorLabel' | localize }} </label>
+                <label class="col-form-label" for="Information"> {{ 'SuitorLabel' | localize }} </label>
                 <p class="small text-muted mb-1">{{ 'SuitorSubLabel' | localize }}</p>
                 <textarea
                   class="form-control"
                   data-toggle="autosize"
                   rows="5"
-                  name="Suitor"
-                  id="Suitor"
+                  name="Information"
+                  [(ngModel)]="userTutorials.information"
+                  id="Information"
                   placeholder="Please provide some information on what you would like to help with"
                 ></textarea>
               </div>
               <div class="form-group">
                 <label class="col-form-label" for="SupportLevel">{{ 'LevelOfSupport' | localize }}</label>
-                <select id="SupportLevel" name="SupportLevel" type="text" class="form-control">
-                  <option>ComboBox</option>
+                <select class="form-control" id="id" [(ngModel)]="userTutorials.supportLevel" name="id" required>
+                  <option *ngFor="let spLevel of supportLevels" [ngValue]="spLevel.id"> {{ spLevel.level }} </option>
                 </select>
               </div>
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label class="col-form-label" for="MethodologyLabel">{{ 'Methodology' | localize }}</label>
                 <select id="Methodology" name="Methodology" type="text" class="form-control">
                   <option>ComboBox</option>
                 </select>
-              </div>
+              </div> -->
               <div class="form-group">
                 <div class="dropzone">
                   <div class="dz-message">
@@ -98,38 +99,58 @@
                   class="form-control"
                   data-toggle="autosize"
                   rows="5"
-                  name="Concern"
-                  id="Concern"
+                  name="Concerns"
+                  [(ngModel)]="userTutorials.concerns"
+                  id="Concerns"
                   placeholder="Please provide your main concers or questions"
+                  maxlength="4000"
                 ></textarea>
               </div>
-              <div class="form-group">
-                <label> {{ 'UrgencyLevelLabel' | localize }} </label>
-                <div class="btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-white">
-                    <input type="radio" name="options" id="option1" checked="" /> <i class="fe fe-check-circle"></i> Urgent
-                  </label>
-                  <label class="btn btn-white active">
-                    <input type="radio" name="options" id="option2" /> <i class="fe fe-check-circle"></i> Average
-                  </label>
-                  <label class="btn btn-white">
-                    <input type="radio" name="options" id="option3" /> <i class="fe fe-check-circle"></i> Not Urgent
-                  </label>
+              <div class="form-row">
+                <div class="col-md-12">
+                  <label> {{ 'UrgencyLevelLabel' | localize }} </label>
+                </div>
+                <div class="col-md-4">
+                  <input type="radio" name="urgencyLevel" value="urgent" [(ngModel)]="userTutorials.urgencyLevel" />
+                  <label for="urgent" class="urgency-level-labels">Urgent</label>
+                </div>
+                <div class="col-md-4">
+                  <input type="radio" name="urgencyLevel" value="average" [(ngModel)]="userTutorials.urgencyLevel" />
+                  <label for="average" class="urgency-level-labels">Average</label>
+                </div>
+                <div class="col-md-4">
+                  <input type="radio" name="urgencyLevel" value="not urgent" [(ngModel)]="userTutorials.urgencyLevel" />
+                  <label for="notUrgent" class="urgency-level-labels">Not Urgent</label>
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-form-label" for="DeadlineLabel">{{ 'DeadlineLabel' | localize }}</label>
-                <div class="input-group input-group-merge">
-                  <input id="DeadLine" name="DeadLine" type="text" class="form-control form-control-appended" />
+                <div class="input-group input-group-merge" (click)="dp.show()">
+                  <input
+                    [(ngModel)]="userTutorials.deadline"
+                    id="DeadLine"
+                    name="DeadLine"
+                    type="text"
+                    class="form-control form-control-appended"
+                    #DeadLineModel="ngModel"
+                    #DeadLineEl
+                    #dp="bsDatepicker"
+                    bsDatepicker
+                    [bsConfig]="datePickerConfig"
+                  />
                   <div class="input-group-append">
                     <div class="input-group-text">
                       <span class="fas fa-calendar"></span>
                     </div>
                   </div>
                 </div>
+                <abp-validation-summary [control]="DeadLineModel" [controlEl]="DeadLineEl"> </abp-validation-summary>
               </div>
             </div>
           </div>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-primary" type="submit" [disabled]="">Save</button>
         </div>
       </div>
     </div>
