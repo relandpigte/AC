@@ -3334,6 +3334,205 @@ export class UserPublicationsServiceProxy {
 }
 
 @Injectable()
+export class UserTutorialsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @param information (optional) 
+     * @param supportLevel (optional) 
+     * @param concerns (optional) 
+     * @param urgencyLevel (optional) 
+     * @param deadline (optional) 
+     * @param picture (optional) 
+     * @param disciplineTaxonomyIds (optional) 
+     * @return Success
+     */
+    create(information: string | null | undefined, supportLevel: number | undefined, concerns: string | null | undefined, urgencyLevel: number | undefined, deadline: moment.Moment | undefined, picture: FileParameter | null | undefined, disciplineTaxonomyIds: string[] | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserTutorials/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (information !== null && information !== undefined)
+            content_.append("Information", information.toString());
+        if (supportLevel === null || supportLevel === undefined)
+            throw new Error("The parameter 'supportLevel' cannot be null.");
+        else
+            content_.append("SupportLevel", supportLevel.toString());
+        if (concerns !== null && concerns !== undefined)
+            content_.append("Concerns", concerns.toString());
+        if (urgencyLevel === null || urgencyLevel === undefined)
+            throw new Error("The parameter 'urgencyLevel' cannot be null.");
+        else
+            content_.append("UrgencyLevel", urgencyLevel.toString());
+        if (deadline === null || deadline === undefined)
+            throw new Error("The parameter 'deadline' cannot be null.");
+        else
+            content_.append("Deadline", deadline.toJSON());
+        if (picture !== null && picture !== undefined)
+            content_.append("Picture", picture.data, picture.fileName ? picture.fileName : "Picture");
+        if (disciplineTaxonomyIds !== null && disciplineTaxonomyIds !== undefined)
+            content_.append("DisciplineTaxonomyIds", disciplineTaxonomyIds.toString());
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getSupportLevels(): Observable<SupportLevelDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/UserTutorials/GetSupportLevels";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSupportLevels(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSupportLevels(<any>response_);
+                } catch (e) {
+                    return <Observable<SupportLevelDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<SupportLevelDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetSupportLevels(response: HttpResponseBase): Observable<SupportLevelDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(SupportLevelDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<SupportLevelDto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    get(): Observable<UserTutorialDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/UserTutorials/Get";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<UserTutorialDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserTutorialDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<UserTutorialDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(UserTutorialDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserTutorialDto[]>(<any>null);
+    }
+}
+
+@Injectable()
 export class WidgetsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -6684,6 +6883,136 @@ export class UserPublicationDtoPagedResultDto implements IUserPublicationDtoPage
 export interface IUserPublicationDtoPagedResultDto {
     totalCount: number;
     items: UserPublicationDto[] | undefined;
+}
+
+export class SupportLevelDto implements ISupportLevelDto {
+    level: number;
+    id: number;
+
+    constructor(data?: ISupportLevelDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.level = _data["level"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): SupportLevelDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SupportLevelDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["level"] = this.level;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): SupportLevelDto {
+        const json = this.toJSON();
+        let result = new SupportLevelDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISupportLevelDto {
+    level: number;
+    id: number;
+}
+
+export class UserTutorialDto implements IUserTutorialDto {
+    information: string | undefined;
+    supportLevel: number;
+    concerns: string | undefined;
+    urgencyLevel: number;
+    deadline: moment.Moment;
+    picture: string | undefined;
+    pictureFileName: string | undefined;
+    disciplineTaxonomyIds: string[] | undefined;
+    id: string;
+
+    constructor(data?: IUserTutorialDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.information = _data["information"];
+            this.supportLevel = _data["supportLevel"];
+            this.concerns = _data["concerns"];
+            this.urgencyLevel = _data["urgencyLevel"];
+            this.deadline = _data["deadline"] ? moment(_data["deadline"].toString()) : <any>undefined;
+            this.picture = _data["picture"];
+            this.pictureFileName = _data["pictureFileName"];
+            if (Array.isArray(_data["disciplineTaxonomyIds"])) {
+                this.disciplineTaxonomyIds = [] as any;
+                for (let item of _data["disciplineTaxonomyIds"])
+                    this.disciplineTaxonomyIds.push(item);
+            }
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserTutorialDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserTutorialDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["information"] = this.information;
+        data["supportLevel"] = this.supportLevel;
+        data["concerns"] = this.concerns;
+        data["urgencyLevel"] = this.urgencyLevel;
+        data["deadline"] = this.deadline ? this.deadline.toISOString() : <any>undefined;
+        data["picture"] = this.picture;
+        data["pictureFileName"] = this.pictureFileName;
+        if (Array.isArray(this.disciplineTaxonomyIds)) {
+            data["disciplineTaxonomyIds"] = [];
+            for (let item of this.disciplineTaxonomyIds)
+                data["disciplineTaxonomyIds"].push(item);
+        }
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): UserTutorialDto {
+        const json = this.toJSON();
+        let result = new UserTutorialDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserTutorialDto {
+    information: string | undefined;
+    supportLevel: number;
+    concerns: string | undefined;
+    urgencyLevel: number;
+    deadline: moment.Moment;
+    picture: string | undefined;
+    pictureFileName: string | undefined;
+    disciplineTaxonomyIds: string[] | undefined;
+    id: string;
 }
 
 export class ProfileSummaryWidgetDto implements IProfileSummaryWidgetDto {

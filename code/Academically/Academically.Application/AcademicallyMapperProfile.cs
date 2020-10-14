@@ -1,6 +1,7 @@
 ﻿using Academically.Entities;
 using Academically.Services.DisciplineTaxonomies.Dto;
 using Academically.Services.UserProfiles.Dto;
+using Academically.Services.UserTutorials.Dto;
 using AutoMapper;
 
 namespace Academically
@@ -18,6 +19,7 @@ namespace Academically
                     opt.PreCondition(src => src.Children == null || src.Children.Count == 0);
                     opt.MapFrom(src => 1);
                 });
+            CreateMap<SaveUserTutorialDto, UserTutorial>();
         }
     }
 }

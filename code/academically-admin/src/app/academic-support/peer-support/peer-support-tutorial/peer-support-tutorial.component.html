@@ -11,127 +11,165 @@
           </div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-body">
-          <div class="row">
-            <div class="col-12">
-              <div class="form-group">
-                <label class="col-form-label" for="Suitor"> {{ 'SuitorLabel' | localize }} </label>
-                <p class="small text-muted mb-1">{{ 'SuitorSubLabel' | localize }}</p>
-                <textarea
-                  class="form-control"
-                  data-toggle="autosize"
-                  rows="5"
-                  name="Suitor"
-                  id="Suitor"
-                  placeholder="Please provide some information on what you would like to help with"
-                ></textarea>
-              </div>
-              <div class="form-group">
-                <label class="col-form-label" for="SupportLevel">{{ 'LevelOfSupport' | localize }}</label>
-                <select id="SupportLevel" name="SupportLevel" type="text" class="form-control">
-                  <option>ComboBox</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="col-form-label" for="MethodologyLabel">{{ 'Methodology' | localize }}</label>
-                <select id="Methodology" name="Methodology" type="text" class="form-control">
-                  <option>ComboBox</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <div class="dropzone">
-                  <div class="dz-message">
-                    <i class="fe fe-upload"></i>
-                    <button class="dz-button" type="button">
-                      {{ 'DropOrClickToUpload' | localize }}
-                    </button>
+      <form class="form-horizontal" autocomplete="off" #peerSupportTutorialForm="ngForm" (ngSubmit)="onFormSubmit()">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group required">
+                  <label class="col-form-label" for="Information"> {{ 'SuitorLabel' | localize }} </label>
+                  <p class="small text-muted mb-1">{{ 'SuitorSubLabel' | localize }}</p>
+                  <textarea
+                    class="form-control"
+                    data-toggle="autosize"
+                    rows="5"
+                    name="Information"
+                    [(ngModel)]="userTutorials.information"
+                    id="Information"
+                    maxlength="4000"
+                    placeholder="Please provide some information on what you would like to help with"
+                    required
+                    #informationModel="ngModel"
+                    #informationEl
+                  ></textarea>
+                  <abp-validation-summary [control]="informationModel" [controlEl]="informationEl"></abp-validation-summary>
+                </div>
+                <div class="form-group">
+                  <label class="col-form-label" for="SupportLevel">{{ 'LevelOfSupport' | localize }}</label>
+                  <select class="form-control" id="id" [(ngModel)]="userTutorials.supportLevel" name="id" required>
+                    <option *ngFor="let spLevel of supportLevels" [ngValue]="spLevel.level"> {{ spLevel.level }} </option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <div class="dropzone">
+                    <div class="dz-message">
+                      <i class="fe fe-upload"></i>
+                      <button class="dz-button" type="button">
+                        {{ tutorialPicturePlaceholderText }}
+                      </button>
+                      <input
+                        type="file"
+                        #tutorialPictureInput
+                        (change)="onFileChange($event.target.files)"
+                        id="Logo"
+                        name="Logo"
+                        [accept]="fileUploadSettings.allowedExtensions"
+                      />
+                    </div>
+                    <div
+                      *ngIf="userTutorials.pictureFileName"
+                      class="dz-preview"
+                      [style.background-image]="'url(' + userTutorials.pictureFileName + ')'"
+                    ></div>
                   </div>
-                  <div class="dz-preview"></div>
                 </div>
-              </div>
-              <div class="form-row">
-                <div class="col-md-10">
-                  <label class="col-form-label" for="AreaOfStudy">{{ 'MainTopicLabel' | localize }}</label>
-                  <p class="small text-muted mb-1">{{ 'MainTopicSubLabel' | localize }}</p>
-                  <input
-                    class="list-search form-control"
-                    type="search"
-                    placeholder="{{ 'SearchAreasOfStudy' | localize }}"
-                    [(ngModel)]="disciplineTaxonomyName"
-                    id="AreaOfStudy"
-                    name="AreaOfStudy"
-                    typeaheadOptionField="name"
-                    [typeahead]="disciplineTaxonomiesDataSource"
-                    [typeaheadAsync]="true"
-                    [typeaheadMinLength]="0"
-                    (typeaheadOnSelect)="onTaxonomySelect($event)"
-                  />
-                </div>
-                <div class="col-md-2 browse-skills">
-                  <button type="button" class="btn btn-primary" (click)="onBrowseSkillsClick()">Browse Skills</button>
-                </div>
-                <div class="col-md-12 mt-2">
-                  <div
-                    *ngFor="let disciplineTaxonomy of selectedDisciplineTaxonomies"
-                    class="alert alert-info alert-dismissible discipline"
-                    role="alert"
-                  >
-                    {{ disciplineTaxonomy.name }}
-                    <button
-                      *ngIf="permission.isGranted('Pages.Profile.AreasOfStudy.KnowledgeBase.Delete')"
-                      (click)="onRemoveDisciplineTaxonomyClick(disciplineTaxonomy.id)"
-                      type="button"
-                      class="close"
-                      data-dismiss="alert"
-                      aria-label="Close"
+                <div class="form-row">
+                  <div class="col-md-10">
+                    <label class="col-form-label" for="AreaOfStudy">{{ 'MainTopicLabel' | localize }}</label>
+                    <p class="small text-muted mb-1">{{ 'MainTopicSubLabel' | localize }}</p>
+                    <input
+                      class="list-search form-control"
+                      type="search"
+                      placeholder="{{ 'SearchAreasOfStudy' | localize }}"
+                      [(ngModel)]="disciplineTaxonomyName"
+                      id="AreaOfStudy"
+                      name="AreaOfStudy"
+                      typeaheadOptionField="name"
+                      [typeahead]="disciplineTaxonomiesDataSource"
+                      [typeaheadAsync]="true"
+                      [typeaheadMinLength]="0"
+                      (typeaheadOnSelect)="onTaxonomySelect($event)"
+                    />
+                  </div>
+                  <div class="col-md-2 browse-skills">
+                    <button type="button" class="btn btn-primary" (click)="onBrowseSkillsClick()">Browse Skills</button>
+                  </div>
+                  <div class="col-md-12 mt-2">
+                    <div
+                      *ngFor="let disciplineTaxonomy of selectedDisciplineTaxonomies"
+                      class="alert alert-info alert-dismissible discipline"
+                      role="alert"
                     >
-                      <span aria-hidden="true">×</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-form-label" for="MainTopic">{{ 'MainConcernLabel' | localize }}</label>
-                <p class="small text-muted mb-1">{{ 'MainConcernSubLabel' | localize }}</p>
-                <textarea
-                  class="form-control"
-                  data-toggle="autosize"
-                  rows="5"
-                  name="Concern"
-                  id="Concern"
-                  placeholder="Please provide your main concers or questions"
-                ></textarea>
-              </div>
-              <div class="form-group">
-                <label> {{ 'UrgencyLevelLabel' | localize }} </label>
-                <div class="btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-white">
-                    <input type="radio" name="options" id="option1" checked="" /> <i class="fe fe-check-circle"></i> Urgent
-                  </label>
-                  <label class="btn btn-white active">
-                    <input type="radio" name="options" id="option2" /> <i class="fe fe-check-circle"></i> Average
-                  </label>
-                  <label class="btn btn-white">
-                    <input type="radio" name="options" id="option3" /> <i class="fe fe-check-circle"></i> Not Urgent
-                  </label>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-form-label" for="DeadlineLabel">{{ 'DeadlineLabel' | localize }}</label>
-                <div class="input-group input-group-merge">
-                  <input id="DeadLine" name="DeadLine" type="text" class="form-control form-control-appended" />
-                  <div class="input-group-append">
-                    <div class="input-group-text">
-                      <span class="fas fa-calendar"></span>
+                      {{ disciplineTaxonomy.name }}
+                      <button
+                        *ngIf="permission.isGranted('Pages.Profile.AreasOfStudy.KnowledgeBase.Delete')"
+                        (click)="onRemoveDisciplineTaxonomyClick(disciplineTaxonomy.id)"
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
+                        aria-label="Close"
+                      >
+                        <span aria-hidden="true">×</span>
+                      </button>
                     </div>
                   </div>
+                </div>
+                <div class="form-group required">
+                  <label class="col-form-label" for="MainTopic">{{ 'MainConcernLabel' | localize }}</label>
+                  <p class="small text-muted mb-1">{{ 'MainConcernSubLabel' | localize }}</p>
+                  <textarea
+                    class="form-control"
+                    data-toggle="autosize"
+                    rows="5"
+                    name="Concerns"
+                    [(ngModel)]="userTutorials.concerns"
+                    id="Concerns"
+                    placeholder="Please provide your main concers or questions"
+                    maxlength="4000"
+                    required
+                    #concernsModel="ngModel"
+                    #concernsEl
+                  ></textarea>
+                  <abp-validation-summary [control]="concernsModel" [controlEl]="concernsEl"></abp-validation-summary>
+                </div>
+                <div class="form-row">
+                  <div class="col-md-12">
+                    <label> {{ 'UrgencyLevelLabel' | localize }} </label>
+                  </div>
+                  <div class="col-md-4">
+                    <input type="radio" name="urgencyLevel" value="1" [(ngModel)]="userTutorials.urgencyLevel" />
+                    <label for="urgent" class="urgency-level-labels">Urgent</label>
+                  </div>
+                  <div class="col-md-4">
+                    <input type="radio" name="urgencyLevel" value="2" [(ngModel)]="userTutorials.urgencyLevel" />
+                    <label for="average" class="urgency-level-labels">Average</label>
+                  </div>
+                  <div class="col-md-4">
+                    <input type="radio" name="urgencyLevel" value="3" [(ngModel)]="userTutorials.urgencyLevel" />
+                    <label for="notUrgent" class="urgency-level-labels">Not Urgent</label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-form-label" for="DeadlineLabel">{{ 'DeadlineLabel' | localize }}</label>
+                  <div class="input-group input-group-merge" (click)="dp.show()">
+                    <input
+                      [(ngModel)]="userTutorials.deadline"
+                      id="DeadLine"
+                      name="DeadLine"
+                      type="text"
+                      class="form-control form-control-appended"
+                      #DeadLineModel="ngModel"
+                      #DeadLineEl
+                      #dp="bsDatepicker"
+                      bsDatepicker
+                      [bsConfig]="datePickerConfig"
+                    />
+                    <div class="input-group-append">
+                      <div class="input-group-text">
+                        <span class="fas fa-calendar"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <abp-validation-summary [control]="DeadLineModel" [controlEl]="DeadLineEl"> </abp-validation-summary>
                 </div>
               </div>
             </div>
           </div>
+          <div class="card-footer">
+            <button class="btn btn-primary" type="submit" [disabled]="!peerSupportTutorialForm.valid">Save</button>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </div>

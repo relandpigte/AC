@@ -1,16 +1,25 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, ViewChild, ElementRef } from '@angular/core';
 import { TaxonomySearchComponent } from '@app/shared/taxonomy-search/taxonomy-search.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
+import * as moment from 'moment';
+import { NgForm } from '@angular/forms';
+import * as _ from 'lodash';
 import {
   DisciplineTaxonomiesServiceProxy,
   DisciplineTaxonomyDto,
-  GetAllDisciplineTaxonomyDto
+  GetAllDisciplineTaxonomyDto,
+  SupportLevelDto,
+  UserTutorialDto,
+  UserTutorialsServiceProxy,
+  FileParameter
 } from '@shared/service-proxies/service-proxies';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { Observable, Observer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 @Component({
   selector: 'peer-support-tutorial',
   templateUrl: './peer-support-tutorial.component.html',
@@ -18,20 +27,37 @@ import { switchMap } from 'rxjs/operators';
   animations: [appModuleAnimation()]
 })
 export class PeerSupportTutorialComponent extends AppComponentBase implements OnInit {
+  @ViewChild('peerSupportTutorialForm') public form: NgForm;
+  @ViewChild('tutorialPictureInput', { static: true }) tutorialPictureInput: ElementRef;
+
   disciplineTaxonomyName = '';
   disciplineTaxonomiesDataSource: Observable<DisciplineTaxonomyDto[]>;
   selectedDisciplineTaxonomies: DisciplineTaxonomyDto[] = [];
+  userTutorials: UserTutorialDto;
+  supportLevels: SupportLevelDto[];
+  datePickerConfig: BsDatepickerConfig;
+  tutorialPicturePlaceholderText: string;
+  fileUploadSettings = fileUploadConfiguration;
+  picture: FileParameter;
+  userTutorialDisciplineTaxonomiesIds: string[] = [];
 
   constructor(
     injector: Injector,
     private _disciplineTaxonomiesService: DisciplineTaxonomiesServiceProxy,
+    private _userTutorialsService: UserTutorialsServiceProxy,
     private _modalService: BsModalService
   ) {
     super(injector);
+    this.datePickerConfig = new BsDatepickerConfig();
+    this.datePickerConfig.showWeekNumbers = false;
+    this.datePickerConfig.dateInputFormat = 'DD/MM/YYYY';
+    this.tutorialPicturePlaceholderText = this.imageUploadPlaceholderText;
+    this.userTutorials = new UserTutorialDto();
   }
 
   ngOnInit(): void {
     this.getDisciplineTaxonomies();
+    this.getSupportLevels();
   }
 
   onTaxonomySelect(e: TypeaheadMatch): void {
@@ -52,6 +78,57 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
 
   onBrowseSkillsClick(): void {
     this.showTaxonomySearchModal();
+  }
+
+  onFileChange(files: FileList): void {
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (this.validateFile(file)) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = event => {
+          this.userTutorials.picture = reader.result.toString();
+        };
+        this.tutorialPicturePlaceholderText = file.name;
+        this.picture = {
+          fileName: file.name,
+          data: file
+        };
+      } else {
+        this.clearUploader();
+      }
+    }
+  }
+
+  onFormSubmit(): void {
+    this.saveTutorial();
+  }
+
+  private saveTutorial(): void {
+    if (this.userTutorials.deadline) {
+      this.userTutorials.deadline = moment.utc(moment(this.userTutorials.deadline).format('YYYY-MM-DD'));
+    }
+    if (this.selectedDisciplineTaxonomies.length > 0) {
+      _.forEach(this.selectedDisciplineTaxonomies, disciplineTaxonomies => {
+        this.userTutorialDisciplineTaxonomiesIds.push(disciplineTaxonomies.id);
+      });
+    }
+    this._userTutorialsService
+      .create(
+        this.userTutorials.information,
+        this.userTutorials.supportLevel,
+        this.userTutorials.concerns,
+        this.userTutorials.urgencyLevel,
+        this.userTutorials.deadline,
+        this.picture,
+        this.userTutorialDisciplineTaxonomiesIds
+      )
+      .subscribe(() => {
+        this.clearUploader();
+        this.notify.success(this.l('SavedSuccessfully'));
+        this.form.reset();
+        this.userTutorialDisciplineTaxonomiesIds = [];
+      });
   }
 
   private getDisciplineTaxonomies(): void {
@@ -80,5 +157,46 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
         }
       });
     });
+  }
+
+  private getSupportLevels(): void {
+    this._userTutorialsService.getSupportLevels().subscribe(supportLevels => {
+      this.supportLevels = supportLevels;
+      console.log(this.supportLevels);
+    });
+  }
+  private validateFile(file: File): boolean {
+    const invalidUploadMessageTitle = this.l('InvalidFileUploadErrorTitle');
+
+    if (!this.validateFileExtension(file)) {
+      this.message.error(this.l('InvalidFileExtensionUploadError'), invalidUploadMessageTitle, true);
+      return false;
+    }
+
+    if (!this.validateFileSize(file.size, this.fileUploadSettings.profilePictureMaxFileSize)) {
+      this.message.error(this.l('ProfilePictureFileSizeUploadError'), invalidUploadMessageTitle, true);
+      return false;
+    }
+
+    return true;
+  }
+
+  private validateFileSize(size: number, maxLimit: number) {
+    return size <= maxLimit;
+  }
+
+  private validateFileExtension(file: File): boolean {
+    const fileExtension = this.getFileExtension(file.name).toLocaleLowerCase();
+    const index = this.fileUploadSettings.allowedExtensions.indexOf(`.${fileExtension}`);
+    return index >= 0;
+  }
+
+  private getFileExtension(fileName: string): string {
+    const fileNameArray = fileName.split('.');
+    return fileNameArray[fileNameArray.length - 1];
+  }
+  private clearUploader(): void {
+    this.tutorialPictureInput.nativeElement.value = '';
+    this.tutorialPicturePlaceholderText = this.imageUploadPlaceholderText;
   }
 }
