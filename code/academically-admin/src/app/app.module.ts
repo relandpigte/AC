@@ -14,6 +14,7 @@ import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module
 import { SharedModule } from '@shared/shared.module';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { NgxQRCodeModule } from '@techiediaries/ngx-qrcode';
 // directives
 import { Select2Directive } from '@shared/directives/select2.directive';
 import { SunburstChartDirective } from '@shared/directives/sunburst-chart.directive';
@@ -68,7 +69,7 @@ import { ThemeSettingsComponent } from './shared/theme-settings/theme-settings.c
 import { PeerSupportTutorialComponent } from './academic-support/peer-support/peer-support-tutorial/peer-support-tutorial.component';
 import { PeerSupportProposalsComponent } from './academic-support/peer-support/peer-support-proposals/peer-support-proposals.component';
 import { SettingsComponent } from './settings/settings.component';
-
+import { SettingsSecurityComponent } from './settings/settings-security/settings-security.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -125,6 +126,7 @@ import { SettingsComponent } from './settings/settings.component';
     PeerSupportTutorialComponent,
     PeerSupportProposalsComponent,
     SettingsComponent,
+    SettingsSecurityComponent
   ],
   imports: [
     CommonModule,
@@ -142,6 +144,7 @@ import { SettingsComponent } from './settings/settings.component';
     NgxPaginationModule,
     TypeaheadModule.forRoot(),
     BsDatepickerModule.forRoot(),
+    NgxQRCodeModule
   ],
   providers: [],
   entryComponents: [
@@ -158,7 +161,7 @@ import { SettingsComponent } from './settings/settings.component';
     // academically
     CreateEditProfileEducationComponent,
     TaxonomySearchComponent,
-    ThemeSettingsComponent,
-  ],
+    ThemeSettingsComponent
+  ]
 })
 export class AppModule {}

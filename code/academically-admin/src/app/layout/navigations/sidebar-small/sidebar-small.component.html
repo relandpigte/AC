@@ -44,6 +44,10 @@
             <a href="#" [routerLink]="['/app/profile']" class="dropdown-item">Profile</a>
             <hr class="dropdown-divider" />
           </ng-container>
+          <ng-container *ngIf="permission.isGranted('Pages.Settings')">
+            <a href="#" [routerLink]="['/app/settings']" class="dropdown-item">Settings</a>
+            <hr class="dropdown-divider" />
+          </ng-container>
           <a href="javascript:;" class="dropdown-item" (click)="onLogoutClick()">Logout</a>
         </div>
       </div>
