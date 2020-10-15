@@ -40,6 +40,7 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
   fileUploadSettings = fileUploadConfiguration;
   picture: FileParameter;
   userTutorialDisciplineTaxonomiesIds: string[] = [];
+  deadline: Date;
 
   constructor(
     injector: Injector,
@@ -105,8 +106,8 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
   }
 
   private saveTutorial(): void {
-    if (this.userTutorials.deadline) {
-      this.userTutorials.deadline = moment.utc(moment(this.userTutorials.deadline).format('YYYY-MM-DD'));
+    if (this.deadline) {
+      this.userTutorials.deadline = moment.utc(moment(this.deadline).format('YYYY-MM-DD'));
     }
     if (this.selectedDisciplineTaxonomies.length > 0) {
       _.forEach(this.selectedDisciplineTaxonomies, disciplineTaxonomies => {
@@ -128,6 +129,7 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
         this.notify.success(this.l('SavedSuccessfully'));
         this.form.reset();
         this.userTutorialDisciplineTaxonomiesIds = [];
+        this.selectedDisciplineTaxonomies = [];
       });
   }
 
