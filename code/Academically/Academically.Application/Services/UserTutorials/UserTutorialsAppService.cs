@@ -25,21 +25,18 @@ namespace Academically.Services.UserTutorials
     {
         private readonly IRepository<UserTutorial, Guid> _userTutorialsRepository;
         private readonly IRepository<UserTutorialDisciplineTaxonomy, Guid> _userTutorialsDisciplineTaxonomiesRepository;
-        private readonly IRepository<SupportLevel, int> _supportLevelRepository;
         private readonly ISettingManager _settingManager;
         private readonly IFileManagerService _fileManagerService;
         public UserTutorialsAppService
         (
             IRepository<UserTutorial, Guid> userTutorialsRepository,
             IRepository<UserTutorialDisciplineTaxonomy, Guid> userTutorialsDisciplineTaxonomiesRepository,
-            IRepository<SupportLevel, int> supportLevelRepository,
             ISettingManager settingManager,
             IFileManagerService fileManagerservice
         )
         {
             _userTutorialsRepository = userTutorialsRepository;
             _userTutorialsDisciplineTaxonomiesRepository = userTutorialsDisciplineTaxonomiesRepository;
-            _supportLevelRepository = supportLevelRepository;
             _settingManager = settingManager;
             _fileManagerService = fileManagerservice;
         }
@@ -86,15 +83,6 @@ namespace Academically.Services.UserTutorials
                     await _userTutorialsDisciplineTaxonomiesRepository.InsertAsync(userTutorialDisciplineTaxonomy);
                 }
             }
-        }
-
-        public async Task<IEnumerable<SupportLevelDto>> GetSupportLevelsAsync()
-        {
-            var supportLevels = await _supportLevelRepository.GetAll()
-                .Select(e => ObjectMapper.Map<SupportLevelDto>(e))
-                .ToListAsync();
-
-            return supportLevels;
         }
 
         public async Task<IEnumerable<UserTutorialDto>> GetAsync()

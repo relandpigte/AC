@@ -3424,61 +3424,6 @@ export class UserTutorialsServiceProxy {
     /**
      * @return Success
      */
-    getSupportLevels(): Observable<SupportLevelDto[]> {
-        let url_ = this.baseUrl + "/api/services/app/UserTutorials/GetSupportLevels";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetSupportLevels(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetSupportLevels(<any>response_);
-                } catch (e) {
-                    return <Observable<SupportLevelDto[]>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<SupportLevelDto[]>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetSupportLevels(response: HttpResponseBase): Observable<SupportLevelDto[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200.push(SupportLevelDto.fromJS(item));
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<SupportLevelDto[]>(<any>null);
-    }
-
-    /**
-     * @return Success
-     */
     get(): Observable<UserTutorialDto[]> {
         let url_ = this.baseUrl + "/api/services/app/UserTutorials/Get";
         url_ = url_.replace(/[?&]$/, "");
@@ -6883,53 +6828,6 @@ export class UserPublicationDtoPagedResultDto implements IUserPublicationDtoPage
 export interface IUserPublicationDtoPagedResultDto {
     totalCount: number;
     items: UserPublicationDto[] | undefined;
-}
-
-export class SupportLevelDto implements ISupportLevelDto {
-    level: number;
-    id: number;
-
-    constructor(data?: ISupportLevelDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.level = _data["level"];
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): SupportLevelDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new SupportLevelDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["level"] = this.level;
-        data["id"] = this.id;
-        return data; 
-    }
-
-    clone(): SupportLevelDto {
-        const json = this.toJSON();
-        let result = new SupportLevelDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface ISupportLevelDto {
-    level: number;
-    id: number;
 }
 
 export class UserTutorialDto implements IUserTutorialDto {

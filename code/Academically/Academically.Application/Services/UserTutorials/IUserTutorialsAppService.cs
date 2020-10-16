@@ -12,6 +12,5 @@ namespace Academically.Services.UserTutorials
     {
         Task CreateAsync(SaveUserTutorialDto inputs);
         Task<IEnumerable<UserTutorialDto>> GetAsync();
-        Task<IEnumerable<SupportLevelDto>> GetSupportLevelsAsync();
     }
 }

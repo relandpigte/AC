@@ -5,14 +5,15 @@ import { AppComponentBase } from '@shared/app-component-base';
 import * as moment from 'moment';
 import { NgForm } from '@angular/forms';
 import * as _ from 'lodash';
+import { Router } from '@angular/router';
 import {
   DisciplineTaxonomiesServiceProxy,
   DisciplineTaxonomyDto,
   GetAllDisciplineTaxonomyDto,
-  SupportLevelDto,
   UserTutorialDto,
   UserTutorialsServiceProxy,
-  FileParameter
+  FileParameter,
+  EducationLevel
 } from '@shared/service-proxies/service-proxies';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -34,19 +35,21 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
   disciplineTaxonomiesDataSource: Observable<DisciplineTaxonomyDto[]>;
   selectedDisciplineTaxonomies: DisciplineTaxonomyDto[] = [];
   userTutorials: UserTutorialDto;
-  supportLevels: SupportLevelDto[];
   datePickerConfig: BsDatepickerConfig;
   tutorialPicturePlaceholderText: string;
   fileUploadSettings = fileUploadConfiguration;
   picture: FileParameter;
   userTutorialDisciplineTaxonomiesIds: string[] = [];
   deadline: Date;
+  educationLevels: number[] = [];
+  isLoading = false;
 
   constructor(
     injector: Injector,
     private _disciplineTaxonomiesService: DisciplineTaxonomiesServiceProxy,
     private _userTutorialsService: UserTutorialsServiceProxy,
-    private _modalService: BsModalService
+    private _modalService: BsModalService,
+    private router: Router
   ) {
     super(injector);
     this.datePickerConfig = new BsDatepickerConfig();
@@ -58,7 +61,7 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
 
   ngOnInit(): void {
     this.getDisciplineTaxonomies();
-    this.getSupportLevels();
+    this.getEducationLevels();
   }
 
   onTaxonomySelect(e: TypeaheadMatch): void {
@@ -106,6 +109,7 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
   }
 
   private saveTutorial(): void {
+    this.isLoading = true;
     if (this.deadline) {
       this.userTutorials.deadline = moment.utc(moment(this.deadline).format('YYYY-MM-DD'));
     }
@@ -130,6 +134,8 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
         this.form.reset();
         this.userTutorialDisciplineTaxonomiesIds = [];
         this.selectedDisciplineTaxonomies = [];
+        this.isLoading = false;
+        this.router.navigate(['/app/proposals']);
       });
   }
 
@@ -161,11 +167,8 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
     });
   }
 
-  private getSupportLevels(): void {
-    this._userTutorialsService.getSupportLevels().subscribe(supportLevels => {
-      this.supportLevels = supportLevels;
-      console.log(this.supportLevels);
-    });
+  private getEducationLevels(): void {
+    this.educationLevels = this.enumToArray(EducationLevel).reverse();
   }
   private validateFile(file: File): boolean {
     const invalidUploadMessageTitle = this.l('InvalidFileUploadErrorTitle');

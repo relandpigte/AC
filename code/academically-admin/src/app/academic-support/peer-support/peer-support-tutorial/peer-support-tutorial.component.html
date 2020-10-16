@@ -12,7 +12,7 @@
         </div>
       </div>
       <form class="form-horizontal" autocomplete="off" #peerSupportTutorialForm="ngForm" (ngSubmit)="onFormSubmit()">
-        <div class="card">
+        <div class="card" [busy]="isLoading">
           <div class="card-body">
             <div class="row">
               <div class="col-12">
@@ -34,11 +34,15 @@
                   ></textarea>
                   <abp-validation-summary [control]="informationModel" [controlEl]="informationEl"></abp-validation-summary>
                 </div>
-                <div class="form-group">
-                  <label class="col-form-label" for="SupportLevel">{{ 'LevelOfSupport' | localize }}</label>
-                  <select class="form-control" id="id" [(ngModel)]="userTutorials.supportLevel" name="id" required>
-                    <option *ngFor="let spLevel of supportLevels" [ngValue]="spLevel.level"> {{ spLevel.level }} </option>
+                <div class="form-group required">
+                  <label class="col-form-label" for="Level">{{ 'LevelOfSupport' | localize }}</label>
+                  <select [(ngModel)]="userTutorials.supportLevel" id="Level" name="Level" type="text" class="form-control" #levelModel="ngModel"
+                    #levelEl required>
+                    <option [ngValue]="undefined">{{ 'SelectLevel' | localize }}</option>
+                    <option *ngFor="let educationLevel of educationLevels" [value]="educationLevel">
+                      {{ 'EducationLevel' + educationLevel | localize }}</option>
                   </select>
+                  <abp-validation-summary [control]="levelModel" [controlEl]="levelEl"></abp-validation-summary>
                 </div>
                 <div class="form-group">
                   <div class="dropzone">
@@ -166,7 +170,7 @@
             </div>
           </div>
           <div class="card-footer">
-            <button class="btn btn-primary" type="submit" [disabled]="!peerSupportTutorialForm.valid">Save</button>
+            <button class="btn btn-primary" type="submit" [disabled]="isLoading || !peerSupportTutorialForm.valid">Save</button>
           </div>
         </div>
       </form>
