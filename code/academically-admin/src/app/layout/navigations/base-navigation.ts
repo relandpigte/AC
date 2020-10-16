@@ -6,6 +6,7 @@ import { uiEvents } from '@shared/constants/ui-events';
 import { ColorScheme } from '@shared/enums/theme-settings/color-scheme.enum';
 import { NavigationColor } from '@shared/enums/theme-settings/navigation-color.enum';
 import { NavigationPosition } from '@shared/enums/theme-settings/navigation-position.enum';
+import { SidebarSize } from '@shared/enums/theme-settings/sidebar-size.enum';
 import { IThemeSettings } from '@shared/models/theme-settings/theme-settings.interface';
 import { GetProfileDetailDto, UserLoginInfoDto } from '@shared/service-proxies/service-proxies';
 import { ThemeManagerService } from '@shared/services/theme-manager.service';
@@ -17,6 +18,7 @@ export abstract class BaseNavigation extends AppComponentBase {
   user: UserLoginInfoDto = new UserLoginInfoDto();
   themeSettings: IThemeSettings;
   navigationColor = '';
+  appLogo = '';
 
   constructor(injector: Injector, themeSettingsService: ThemeManagerService, cd: ChangeDetectorRef, private _authService: AppAuthService) {
     super(injector);
@@ -52,5 +54,8 @@ export abstract class BaseNavigation extends AppComponentBase {
     } else {
       this.navigationColor = vibrantNavigationColor;
     }
+    const lightLogo = this.themeSettings.sidenavSizing === SidebarSize.Small ? 'ac-logo-light' : 'ac-full-logo-light';
+    const darkLogo = this.themeSettings.sidenavSizing === SidebarSize.Small ? 'ac-logo-dark' : 'ac-full-logo-dark';
+    this.appLogo = this.themeSettings.colorScheme === ColorScheme.Light ? lightLogo : darkLogo;
   }
 }
