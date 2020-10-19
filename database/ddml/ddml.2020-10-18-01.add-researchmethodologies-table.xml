@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
-    <changeSet author="root (generated)" id="160122334589-1">
+    <changeSet author="root (generated)" id="160122334534589345-1">
         <createTable tableName="AcademicallyResearchMethodologies">
             <column name="Id" type="CHAR(36)">
                 <constraints nullable="false" primaryKey="true"/>
@@ -9,16 +9,16 @@
                 <constraints nullable="false"/>
             </column>
             <column name="ParentId" type="CHAR(36)"/>
-            <column name="ParentIdMap" type="VARCHAR(184 BYTE)"/>
+            <column name="ParentIdMap" type="LONGTEXT"/>
             <column name="IsEditable" type="boolean" />
         </createTable>
     </changeSet>
-    <changeSet author="root (generated)" id="160122334589-2">
+    <changeSet author="root (generated)" id="160122334534589345-2">
         <createIndex indexName="FK_ReseachMethodology_ReseachMethodology__ParentId_idx" tableName="AcademicallyResearchMethodologies">
             <column name="ParentId"/>
         </createIndex>
     </changeSet>
-    <changeSet author="root (generated)" id="160122334589-3">
+    <changeSet author="root (generated)" id="160122334534589345-3">
         <addForeignKeyConstraint baseColumnNames="ParentId" baseTableName="AcademicallyResearchMethodologies" constraintName="FK_ResearchMethodology_ResearchMethodology_ParentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyResearchMethodologies" validate="true"/>
     </changeSet>
 </databaseChangeLog>
