@@ -1,21 +1,18 @@
 import { Injectable, Injector } from '@angular/core';
 import { PlatformLocation, registerLocaleData } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { AppConsts } from '@shared/AppConsts';
 import { AppSessionService } from '@shared/session/app-session.service';
 import { environment } from './environments/environment';
+import { MessageService } from 'abp-ng2-module';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppInitializer {
-  constructor(
-    private _injector: Injector,
-    private _platformLocation: PlatformLocation,
-    private _httpClient: HttpClient
-  ) { }
+  constructor(private _injector: Injector, private _platformLocation: PlatformLocation, private _httpClient: HttpClient) {}
 
   init(): () => Promise<boolean> {
     return () => {
@@ -32,16 +29,11 @@ export class AppInitializer {
               (result) => {
                 abp.ui.clearBusy();
                 if (this.shouldLoadLocale()) {
-                  const angularLocale = this.convertAbpLocaleToAngularLocale(
-                    abp.localization.currentLanguage.name
-                  );
-                  import(`@angular/common/locales/${angularLocale}.js`).then(
-                    (module) => {
-                      registerLocaleData(module.default);
-                      resolve(result);
-                    },
-                    reject
-                  );
+                  const angularLocale = this.convertAbpLocaleToAngularLocale(abp.localization.currentLanguage.name);
+                  import(`@angular/common/locales/${angularLocale}.js`).then((module) => {
+                    registerLocaleData(module.default);
+                    resolve(result);
+                  }, reject);
                 } else {
                   resolve(result);
                 }
@@ -69,19 +61,14 @@ export class AppInitializer {
   private getDocumentOrigin(): string {
     if (!document.location.origin) {
       const port = document.location.port ? ':' + document.location.port : '';
-      return (
-        document.location.protocol + '//' + document.location.hostname + port
-      );
+      return document.location.protocol + '//' + document.location.hostname + port;
     }
 
     return document.location.origin;
   }
 
   private shouldLoadLocale(): boolean {
-    return (
-      abp.localization.currentLanguage.name &&
-      abp.localization.currentLanguage.name !== 'en-US'
-    );
+    return abp.localization.currentLanguage.name && abp.localization.currentLanguage.name !== 'en-US';
   }
 
   private convertAbpLocaleToAngularLocale(locale: string): string {
@@ -97,9 +84,7 @@ export class AppInitializer {
     return locale;
   }
 
-  private getCurrentClockProvider(
-    currentProviderName: string
-  ): abp.timing.IClockProvider {
+  private getCurrentClockProvider(currentProviderName: string): abp.timing.IClockProvider {
     if (currentProviderName === 'unspecifiedClockProvider') {
       return abp.timing.unspecifiedClockProvider;
     }
@@ -112,9 +97,7 @@ export class AppInitializer {
   }
 
   private getUserConfiguration(callback: () => void): void {
-    const cookieLangValue = abp.utils.getCookieValue(
-      'Abp.Localization.CultureName'
-    );
+    const cookieLangValue = abp.utils.getCookieValue('Abp.Localization.CultureName');
     const token = abp.auth.getToken();
 
     const requestHeaders = {
@@ -127,29 +110,46 @@ export class AppInitializer {
     }
 
     this._httpClient
-      .get<any>(
-        `${AppConsts.remoteServiceBaseUrl}/AbpUserConfiguration/GetAll`,
-        {
-          headers: requestHeaders,
+      .get<any>(`${AppConsts.remoteServiceBaseUrl}/AbpUserConfiguration/GetAll`, {
+        headers: requestHeaders,
+      })
+      .subscribe(
+        (response) => {
+          const result = response.result;
+
+          _.merge(abp, result);
+
+          abp.clock.provider = this.getCurrentClockProvider(result.clock.provider);
+
+          moment.locale(abp.localization.currentLanguage.name);
+
+          if (abp.clock.provider.supportsMultipleTimezone) {
+            moment.tz.setDefault(abp.timing.timeZoneInfo.iana.timeZoneId);
+          }
+
+          callback();
+        },
+        (err: HttpErrorResponse) => {
+          const messageService = this._injector.get(MessageService);
+          if (err.status === 500) {
+            messageService.error(
+              'The service provider failed to connect to the database server. Please contact support.',
+              'Database server error'
+            );
+          } else {
+            messageService.error(
+              'The application failed to connect to the service provider. Please contact support.',
+              'Service provider not found',
+              {
+                allowOutsideClick: false,
+                closeOnClickOutside: false,
+              }
+            );
+          }
+
+          abp.ui.clearBusy();
         }
-      )
-      .subscribe((response) => {
-        const result = response.result;
-
-        _.merge(abp, result);
-
-        abp.clock.provider = this.getCurrentClockProvider(
-          result.clock.provider
-        );
-
-        moment.locale(abp.localization.currentLanguage.name);
-
-        if (abp.clock.provider.supportsMultipleTimezone) {
-          moment.tz.setDefault(abp.timing.timeZoneInfo.iana.timeZoneId);
-        }
-
-        callback();
-      });
+      );
   }
 
   private getApplicationConfig(appRootUrl: string, callback: () => void) {
