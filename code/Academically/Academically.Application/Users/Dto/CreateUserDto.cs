@@ -30,6 +30,7 @@ namespace Academically.Users.Dto
         public bool IsActive { get; set; }
 
         public string[] RoleNames { get; set; }
+        public bool IsRecommended { get; set; }
 
         [Required]
         [StringLength(AbpUserBase.MaxPlainPasswordLength)]

@@ -22,4 +22,5 @@
 	<include file="ddml/ddml.2020-10-15-04.add-supportlevels-data.xml" />
 	<include file="ddml/ddml.2020-10-18-01.add-researchmethodologies-table.xml"/>
 	<include file="ddml/ddml.2020-10-18-02.add-researchmethodologies-data.xml"/>
+	<include file="ddml/ddml.2020-10-23.alter-table-abpusers.xml"/>
 </databaseChangeLog>
