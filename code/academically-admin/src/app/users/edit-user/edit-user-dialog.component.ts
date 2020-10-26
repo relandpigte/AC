@@ -1,25 +1,14 @@
-import {
-  Component,
-  Injector,
-  OnInit,
-  EventEmitter,
-  Output
-} from '@angular/core';
+import { Component, Injector, OnInit, EventEmitter, Output } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import * as _ from 'lodash';
 import { AppComponentBase } from '@shared/app-component-base';
-import {
-  UserServiceProxy,
-  UserDto,
-  RoleDto
-} from '@shared/service-proxies/service-proxies';
+import { UserServiceProxy, UserDto, RoleDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   templateUrl: './edit-user-dialog.component.html'
 })
-export class EditUserDialogComponent extends AppComponentBase
-  implements OnInit {
+export class EditUserDialogComponent extends AppComponentBase implements OnInit {
   saving = false;
   user = new UserDto();
   roles: RoleDto[] = [];
@@ -28,19 +17,14 @@ export class EditUserDialogComponent extends AppComponentBase
 
   @Output() onSave = new EventEmitter<any>();
 
-  constructor(
-    injector: Injector,
-    public _userService: UserServiceProxy,
-    public bsModalRef: BsModalRef
-  ) {
+  constructor(injector: Injector, public _userService: UserServiceProxy, public bsModalRef: BsModalRef) {
     super(injector);
   }
 
   ngOnInit(): void {
-    this._userService.get(this.id).subscribe((result) => {
+    this._userService.get(this.id).subscribe(result => {
       this.user = result;
-
-      this._userService.getRoles().subscribe((result2) => {
+      this._userService.getRoles().subscribe(result2 => {
         this.roles = result2.items;
         this.setInitialRolesStatus();
       });
@@ -48,10 +32,8 @@ export class EditUserDialogComponent extends AppComponentBase
   }
 
   setInitialRolesStatus(): void {
-    _.map(this.roles, (item) => {
-      this.checkedRolesMap[item.normalizedName] = this.isRoleChecked(
-        item.normalizedName
-      );
+    _.map(this.roles, item => {
+      this.checkedRolesMap[item.normalizedName] = this.isRoleChecked(item.normalizedName);
     });
   }
 
@@ -60,12 +42,13 @@ export class EditUserDialogComponent extends AppComponentBase
   }
 
   onRoleChange(role: RoleDto, $event) {
+    debugger;
     this.checkedRolesMap[role.normalizedName] = $event.target.checked;
   }
 
   getCheckedRoles(): string[] {
     const roles: string[] = [];
-    _.forEach(this.checkedRolesMap, function (value, key) {
+    _.forEach(this.checkedRolesMap, function(value, key) {
       if (value) {
         roles.push(key);
       }

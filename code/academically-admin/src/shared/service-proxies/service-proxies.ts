@@ -4217,6 +4217,7 @@ export interface ISetting {
 
 export class User implements IUser {
     lastLoginTime: moment.Moment | undefined;
+    isRecommended: boolean | undefined;
     normalizedUserName: string;
     normalizedEmailAddress: string;
     concurrencyStamp: string | undefined;
@@ -4269,6 +4270,7 @@ export class User implements IUser {
     init(_data?: any) {
         if (_data) {
             this.lastLoginTime = _data["lastLoginTime"] ? moment(_data["lastLoginTime"].toString()) : <any>undefined;
+            this.isRecommended = _data["isRecommended"];
             this.normalizedUserName = _data["normalizedUserName"];
             this.normalizedEmailAddress = _data["normalizedEmailAddress"];
             this.concurrencyStamp = _data["concurrencyStamp"];
@@ -4345,6 +4347,7 @@ export class User implements IUser {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["lastLoginTime"] = this.lastLoginTime ? this.lastLoginTime.toISOString() : <any>undefined;
+        data["isRecommended"] = this.isRecommended;
         data["normalizedUserName"] = this.normalizedUserName;
         data["normalizedEmailAddress"] = this.normalizedEmailAddress;
         data["concurrencyStamp"] = this.concurrencyStamp;
@@ -4421,6 +4424,7 @@ export class User implements IUser {
 
 export interface IUser {
     lastLoginTime: moment.Moment | undefined;
+    isRecommended: boolean | undefined;
     normalizedUserName: string;
     normalizedEmailAddress: string;
     concurrencyStamp: string | undefined;
@@ -6034,6 +6038,7 @@ export class CreateUserDto implements ICreateUserDto {
     emailAddress: string;
     isActive: boolean;
     roleNames: string[] | undefined;
+    isRecommended: boolean;
     password: string;
 
     constructor(data?: ICreateUserDto) {
@@ -6057,6 +6062,7 @@ export class CreateUserDto implements ICreateUserDto {
                 for (let item of _data["roleNames"])
                     this.roleNames.push(item);
             }
+            this.isRecommended = _data["isRecommended"];
             this.password = _data["password"];
         }
     }
@@ -6080,6 +6086,7 @@ export class CreateUserDto implements ICreateUserDto {
             for (let item of this.roleNames)
                 data["roleNames"].push(item);
         }
+        data["isRecommended"] = this.isRecommended;
         data["password"] = this.password;
         return data; 
     }
@@ -6099,6 +6106,7 @@ export interface ICreateUserDto {
     emailAddress: string;
     isActive: boolean;
     roleNames: string[] | undefined;
+    isRecommended: boolean;
     password: string;
 }
 
@@ -6114,6 +6122,7 @@ export class UserDto implements IUserDto {
     roleNames: string[] | undefined;
     roleDisplayNames: string[] | undefined;
     isTwoFactorEnabled: boolean;
+    isRecommended: boolean;
     id: number;
 
     constructor(data?: IUserDto) {
@@ -6146,6 +6155,7 @@ export class UserDto implements IUserDto {
                     this.roleDisplayNames.push(item);
             }
             this.isTwoFactorEnabled = _data["isTwoFactorEnabled"];
+            this.isRecommended = _data["isRecommended"];
             this.id = _data["id"];
         }
     }
@@ -6178,6 +6188,7 @@ export class UserDto implements IUserDto {
                 data["roleDisplayNames"].push(item);
         }
         data["isTwoFactorEnabled"] = this.isTwoFactorEnabled;
+        data["isRecommended"] = this.isRecommended;
         data["id"] = this.id;
         return data; 
     }
@@ -6202,6 +6213,7 @@ export interface IUserDto {
     roleNames: string[] | undefined;
     roleDisplayNames: string[] | undefined;
     isTwoFactorEnabled: boolean;
+    isRecommended: boolean;
     id: number;
 }
 

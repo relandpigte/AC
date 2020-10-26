@@ -233,6 +233,8 @@
     <text name="WaitingForEmailActivation">Your email address should be activated</text>
     <text name="Roles">Roles</text>
     <text name="DisplayName">Display Name</text>
+    <text name="Recommended">Recommended</text>
+    <text name="TutorSettings">Tutor Settings</text>
     <text name="Edit">Edit</text>
     <text name="Delete">Delete</text>
     <text name="CreateNewRole">Create new role</text>
