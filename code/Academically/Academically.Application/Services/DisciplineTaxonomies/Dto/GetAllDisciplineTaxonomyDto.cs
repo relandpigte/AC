@@ -9,6 +9,7 @@ namespace Academically.Services.DisciplineTaxonomies.Dto
         public string Name { get; set; }
         public string ParentIdMap { get; set; }
         public int Size { get; set; }
+        public int TotalDisciplines { get; set; }
 
         public IEnumerable<GetAllDisciplineTaxonomyDto> Children { get; set; }
     }

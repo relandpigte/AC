@@ -64,6 +64,12 @@ export class ThemeManagerService {
     } else {
       link.href = colorSchemeCssUrl;
     }
+
+    const body = this.document.getElementsByTagName('body')[0];
+    const themeName = colorSchemeSetting.split('.')[0];
+    body.classList.remove('theme');
+    body.classList.remove('theme-dark');
+    body.classList.add(themeName);
   }
 
   private getLocalStorageSetting(key: string, defaultValue?: string): string {

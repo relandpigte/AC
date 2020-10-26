@@ -41,8 +41,7 @@ namespace Academically.Services.DisciplineTaxonomies
             {
                 disciplineTaxonomies = await _disciplieTaxonomiesRespository.GetAll().ToListAsync();
             }
-            var rootTaxonomies = GetChildren(disciplineTaxonomies, null)
-                .Select(e => ObjectMapper.Map<GetAllDisciplineTaxonomyDto>(e));
+            var rootTaxonomies = GetChildren(disciplineTaxonomies, null);
 
             return rootTaxonomies;
         }
@@ -79,14 +78,24 @@ namespace Academically.Services.DisciplineTaxonomies
                 .Select(e => e.DisciplineTaxonomyId.ToString());
         }
 
-        private List<DisciplineTaxonomy> GetChildren(IEnumerable<DisciplineTaxonomy> taxonomies, Guid? parentId)
+        private List<GetAllDisciplineTaxonomyDto> GetChildren(IEnumerable<DisciplineTaxonomy> taxonomies, Guid? parentId)
         {
-            var children = taxonomies.Where(e => e.ParentId == parentId).ToList();
+            var children = taxonomies.Where(e => e.ParentId == parentId)
+                .Select(e => ObjectMapper.Map<GetAllDisciplineTaxonomyDto>(e))
+                .ToList();
             foreach (var child in children)
             {
                 child.Children = GetChildren(taxonomies, child.Id);
+                if (child.Children == null || child.Children.Count() == 0)
+                {
+                    child.Size = 1;
+                    child.TotalDisciplines = 1;
+                } else
+                {
+                    child.TotalDisciplines = taxonomies.Where(e => e.ParentIdMap.Contains(child.Id.ToString())).Count();
+                }
             }
-            return children;
+            return children.OrderByDescending(e => e.TotalDisciplines).ToList();
         }
     }
 }
