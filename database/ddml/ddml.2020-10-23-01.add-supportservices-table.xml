@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="root (generated)" id="2357092387123-1">
+        <createTable tableName="AcademicallySupportServices">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ParentId" type="CHAR(36)"/>
+            <column name="ParentIdMap" type="LONGTEXT"/>
+            <column name="IsEditable" type="boolean" />
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="2357092387123-2">
+        <createIndex indexName="FK_SupportService_SupportService__ParentId_idx" tableName="AcademicallySupportServices">
+            <column name="ParentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="2357092387123-3">
+        <addForeignKeyConstraint baseColumnNames="ParentId" baseTableName="AcademicallySupportServices" constraintName="FK_SupportService_SupportService_ParentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallySupportServices" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
