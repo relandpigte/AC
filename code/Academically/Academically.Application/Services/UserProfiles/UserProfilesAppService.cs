@@ -28,6 +28,7 @@ namespace Academically.Services.UserProfiles
         private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
         private readonly IRepository<User, long> _usersRepository;
         private readonly IRepository<UserDisciplineTaxonomy, Guid> _userDisciplineTaxonomiesRepository;
+        private readonly IRepository<UserDisciplineTaxonomyStudyLevel, int> _userDisciplineTaxonomyStudyLevelsRepository;
         private readonly ISettingManager _settingManager;
         private readonly IFileManagerService _fileManagerService;
 
@@ -36,7 +37,8 @@ namespace Academically.Services.UserProfiles
             IRepository<User, long> usersRepository,
             IRepository<UserDisciplineTaxonomy, Guid> userDisciplineTaxonomiesRepository,
             ISettingManager settingManager,
-            IFileManagerService fileManagerService
+            IFileManagerService fileManagerService,
+            IRepository<UserDisciplineTaxonomyStudyLevel, int> userDisciplineTaxonomyStudyLevelsRepository
             )
         {
             _userProfilesRepository = userProfilesRepository;
@@ -44,6 +46,7 @@ namespace Academically.Services.UserProfiles
             _userDisciplineTaxonomiesRepository = userDisciplineTaxonomiesRepository;
             _settingManager = settingManager;
             _fileManagerService = fileManagerService;
+            _userDisciplineTaxonomyStudyLevelsRepository = userDisciplineTaxonomyStudyLevelsRepository;
         }
 
         [AbpAuthorize(PermissionNames.Pages_Profile_Details)]
@@ -142,6 +145,39 @@ namespace Academically.Services.UserProfiles
         public async Task DeleteDisciplineTaxonomy(Guid userDisciplineTaxonomyId)
         {
             await _userDisciplineTaxonomiesRepository.DeleteAsync(userDisciplineTaxonomyId);
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create)]
+        public async Task CreateManyDisciplineTaxonomyStudyLevel(Guid disciplineTaxonomyId, IEnumerable<int> studyLevelIds)
+        {
+            foreach(var levelId in studyLevelIds)
+            {
+                var userDisciplineStudyLevel = new UserDisciplineTaxonomyStudyLevel()
+                {
+                    UserId = AbpSession.UserId.Value,
+                    DisciplineTaxonomyId = disciplineTaxonomyId,
+                    LevelId = levelId
+                };
+
+                await _userDisciplineTaxonomyStudyLevelsRepository.InsertAsync(userDisciplineStudyLevel);
+            }
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete)]
+        public async Task DeleteDisciplineTaxonomyStudyLevel(int id)
+        {
+            await _userDisciplineTaxonomyStudyLevelsRepository.DeleteAsync(id);
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_Profile_AreasOfStudy, PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase)]
+        public async Task<IEnumerable<GetUserDisciplineTaxonomyStudyLevelDto>> GetDisciplineTaxonomyStudyLevels()
+        {
+            var userDisciplineTaxonomies = await _userDisciplineTaxonomyStudyLevelsRepository.GetAll()
+                .Where(e => e.UserId == AbpSession.UserId.Value)
+                .Select(e => ObjectMapper.Map<GetUserDisciplineTaxonomyStudyLevelDto>(e))
+                .ToListAsync();
+
+            return userDisciplineTaxonomies;
         }
 
         private byte[] MakeThumbnail(byte[] imageBytes, int thumbWidth, int thumbHeight)
