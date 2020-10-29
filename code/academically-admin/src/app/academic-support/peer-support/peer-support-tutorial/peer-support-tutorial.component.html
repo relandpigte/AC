@@ -36,11 +36,20 @@
                 </div>
                 <div class="form-group required">
                   <label class="col-form-label" for="Level">{{ 'LevelOfSupport' | localize }}</label>
-                  <select [(ngModel)]="userTutorials.supportLevel" id="Level" name="Level" type="text" class="form-control" #levelModel="ngModel"
-                    #levelEl required>
+                  <select
+                    [(ngModel)]="userTutorials.supportLevel"
+                    id="Level"
+                    name="Level"
+                    type="text"
+                    class="form-control"
+                    #levelModel="ngModel"
+                    #levelEl
+                    required
+                  >
                     <option [ngValue]="undefined">{{ 'SelectLevel' | localize }}</option>
                     <option *ngFor="let educationLevel of educationLevels" [value]="educationLevel">
-                      {{ 'EducationLevel' + educationLevel | localize }}</option>
+                      {{ 'EducationLevel' + educationLevel | localize }}
+                    </option>
                   </select>
                   <abp-validation-summary [control]="levelModel" [controlEl]="levelEl"></abp-validation-summary>
                 </div>
@@ -91,7 +100,7 @@
                   <div class="col-md-12 mt-2">
                     <div
                       *ngFor="let disciplineTaxonomy of selectedDisciplineTaxonomies"
-                      class="alert alert-info alert-dismissible discipline"
+                      class="alert alert-info alert-dismissible ac-alert"
                       role="alert"
                     >
                       {{ disciplineTaxonomy.name }}

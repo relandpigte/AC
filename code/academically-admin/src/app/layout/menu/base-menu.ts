@@ -31,7 +31,7 @@ export abstract class BaseMenu extends AppComponentBase {
           new MenuItem(this.l('Tutorial'), '/app/tutorial', 'fe fe-book-open', 'Pages.PeerSupport.Tutorial'),
           new MenuItem(this.l('Proposals'), '/app/proposals', 'fe fe-bell', 'Pages.PeerSupport.Proposals'),
         ]),
-        new MenuItem(this.l('StudySkills'), '/app/study-skils', 'fe fe-grid', 'Pages.Profile'),
+        new MenuItem(this.l('StudySkills'), '/app/study-skils', 'fe fe-grid', 'Pages.Account'),
       ]),
       new MenuItem(this.l('Tenants'), '/app/tenants', 'fas fa-building', 'Pages.Tenants'),
       new MenuItem(this.l('Settings'), '', 'fe fe-settings', '', [

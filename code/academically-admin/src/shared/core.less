@@ -139,10 +139,11 @@ form {
   }
 }
 
-.discipline {
-  margin: 5px;
-  padding: 5px 25px 5px 5px !important;
+.ac-alert {
+  margin: 0 10px 10px 0 !important;
+  padding: 5px 20px 5px 5px !important;
   display: inline-block;
+  font-size: 0.8125rem;
 
   .close {
     padding: 5px !important;
@@ -191,5 +192,23 @@ body.theme-dark {
 
   sidebar-small:not([style*='display: none']) ~ .main-content {
     margin-left: 66px;
+  }
+}
+
+@media (min-width: 768px) {
+  sidebar ~ .main-content .container,
+  sidebar ~ .main-content .container-fluid,
+  sidebar ~ .main-content .container-lg,
+  sidebar ~ .main-content .container-md,
+  sidebar ~ .main-content .container-sm,
+  sidebar ~ .main-content .container-xl,
+  sidebar ~ .main-content .container,
+  sidebar ~ .main-content .container-fluid,
+  sidebar ~ .main-content .container-lg,
+  sidebar ~ .main-content .container-md,
+  sidebar ~ .main-content .container-sm,
+  sidebar ~ .main-content .container-xl {
+    padding-left: 36px !important;
+    padding-right: 36px !important;
   }
 }

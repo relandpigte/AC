@@ -3,8 +3,7 @@
     <div class="row align-items-center">
       <div class="col-auto">
         <a href="javascript:;" class="avatar avatar-lg avatar-4by3">
-          <img *ngIf="model.profilePictureUrl" [src]="model.profilePictureUrl" alt="profile" class="avatar-img rounded">
-          <img *ngIf="!model.profilePictureUrl" src="assets/img/anonymous.png" alt="avatar" class="avatar-img rounded">
+          <img *ngIf="model.profilePictureUrl" [src]="model.profilePictureUrl" alt="profile" class="avatar-img rounded" />
         </a>
       </div>
       <div class="col ml-n2">
@@ -20,8 +19,14 @@
           </div>
           <div class="col">
             <div class="progress progress-sm">
-              <div class="progress-bar" role="progressbar" [style.width]="model.progress + '%'"
-                [attr.aria-valuenow]="model.progress" aria-valuemin="0" aria-valuemax="100"></div>
+              <div
+                class="progress-bar"
+                role="progressbar"
+                [style.width]="model.progress + '%'"
+                [attr.aria-valuenow]="model.progress"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
             </div>
           </div>
         </div>

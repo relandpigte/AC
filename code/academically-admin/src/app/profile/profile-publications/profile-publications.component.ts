@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { CreateEditPublicationComponent } from './create-edit-publication/create-edit-publication.component';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
@@ -10,44 +10,35 @@ import {
 import { TableHeaderSortData } from '@shared/components/table-header-sort/table-header-sort.component';
 import { finalize } from 'rxjs/operators';
 
-class PagedPublicationsRequestDto extends PagedAndSortedRequestDto {
-  UserId: number;
-  keyword: string;
+class PagedUserPublicationsRequestDto extends PagedAndSortedRequestDto {
+  userId: number;
 }
+
 @Component({
   selector: 'profile-publications',
   templateUrl: './profile-publications.component.html',
-  styleUrls: ['./profile-publications.component.less']
+  styleUrls: ['./profile-publications.component.less'],
 })
 export class ProfilePublicationsComponent extends PagedListingComponentBase<UserPublicationDto> {
+  @Input() userId: number;
+  @Input() isViewOnly = false;
+
   publications: UserPublicationDto[] = [];
   keyword: '';
   headers: TableHeaderSortData[] = [
     { title: 'Certificate', sortColumn: 'publicationCertificate' },
     { title: 'Organization', sortColumn: 'publisher', colspan: 2 },
   ];
-  constructor(
-    injector: Injector,
-    private _modalService: BsModalService,
-    private _userPublicationsService: UserPublicationsServiceProxy
-  ) {
+  constructor(injector: Injector, private _modalService: BsModalService, private _userPublicationsService: UserPublicationsServiceProxy) {
     super(injector);
     this.sorting = this.headers[0].sortColumn;
   }
 
-  list(
-    request: PagedPublicationsRequestDto,
-    pageNumber: number,
-    finishedCallback: Function
-  ): void {
-    request.keyword = this.keyword;
+  list(request: PagedUserPublicationsRequestDto, pageNumber: number, finishedCallback: Function): void {
+    request.userId = this.userId;
 
     this._userPublicationsService
-      .getAll(
-        request.skipCount,
-        request.maxResultCount,
-        request.sort,
-      )
+      .getAll(this.userId, request.sort, request.skipCount, request.maxResultCount)
       .pipe(
         finalize(() => {
           finishedCallback();
@@ -68,16 +59,14 @@ export class ProfilePublicationsComponent extends PagedListingComponentBase<User
   }
 
   onDeleteClick(id: string): void {
-    this.message.confirm('', undefined,
-      (result: boolean) => {
-        if (result) {
-          this._userPublicationsService.delete(id).subscribe(() => {
-            this.notify.success(this.l('SuccessfullyDeleted'));
-            this.refresh();
-          });
-        }
+    this.message.confirm('', undefined, (result: boolean) => {
+      if (result) {
+        this._userPublicationsService.delete(id).subscribe(() => {
+          this.notify.success(this.l('SuccessfullyDeleted'));
+          this.refresh();
+        });
       }
-    );
+    });
   }
 
   private showCreateOrEditUserDialog(id?: string): void {

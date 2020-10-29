@@ -19,47 +19,40 @@ import { BusyDirective } from './directives/busy.directive';
 import { EqualValidator } from './directives/equal-validator.directive';
 import { BodyClassDirective } from './directives/body-class.directive';
 import { TableHeaderSortComponent } from './components/table-header-sort/table-header-sort.component';
+import { ChartDirective } from './directives/chart.directive';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule,
-        NgxPaginationModule
-    ],
-    declarations: [
-        EqualValidator,
-        BusyDirective,
-        BodyClassDirective,
-        AbpPaginationControlsComponent,
-        AbpValidationSummaryComponent,
-        AbpModalHeaderComponent,
-        AbpModalFooterComponent,
-        LocalizePipe,
-        TableHeaderSortComponent,
-    ],
-    exports: [
-        EqualValidator,
-        BusyDirective,
-        BodyClassDirective,
-        AbpPaginationControlsComponent,
-        AbpValidationSummaryComponent,
-        AbpModalHeaderComponent,
-        AbpModalFooterComponent,
-        LocalizePipe,
-        TableHeaderSortComponent,
-    ]
+  imports: [CommonModule, RouterModule, NgxPaginationModule],
+  declarations: [
+    EqualValidator,
+    BusyDirective,
+    BodyClassDirective,
+    AbpPaginationControlsComponent,
+    AbpValidationSummaryComponent,
+    AbpModalHeaderComponent,
+    AbpModalFooterComponent,
+    LocalizePipe,
+    TableHeaderSortComponent,
+    ChartDirective,
+  ],
+  exports: [
+    EqualValidator,
+    BusyDirective,
+    BodyClassDirective,
+    AbpPaginationControlsComponent,
+    AbpValidationSummaryComponent,
+    AbpModalHeaderComponent,
+    AbpModalFooterComponent,
+    LocalizePipe,
+    TableHeaderSortComponent,
+    ChartDirective,
+  ],
 })
 export class SharedModule {
-    static forRoot(): ModuleWithProviders<SharedModule> {
-        return {
-            ngModule: SharedModule,
-            providers: [
-                AppSessionService,
-                AppUrlService,
-                AppAuthService,
-                AppRouteGuard,
-                LayoutStoreService
-            ]
-        };
-    }
+  static forRoot(): ModuleWithProviders<SharedModule> {
+    return {
+      ngModule: SharedModule,
+      providers: [AppSessionService, AppUrlService, AppAuthService, AppRouteGuard, LayoutStoreService],
+    };
+  }
 }

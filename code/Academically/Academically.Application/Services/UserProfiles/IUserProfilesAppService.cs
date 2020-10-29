@@ -8,10 +8,10 @@ namespace Academically.Services.UserProfiles
 {
     public interface IUserProfilesAppService : IApplicationService
     {
-        Task<GetProfileDetailDto> GetDetail();
+        Task<GetProfileDetailDto> GetDetail(long userId);
         Task SaveDetail(SaveProfileDetailDto input);
 
-        Task<IEnumerable<GetUserDisciplineTaxonomyDto>> GetDisciplineTaxonomies();
+        Task<IEnumerable<GetUserDisciplineTaxonomyDto>> GetDisciplineTaxonomies(long userId);
         Task CreateManyDisciplineTaxonomy(IEnumerable<Guid> disciplineTaxonomyIds);
         Task DeleteDisciplineTaxonomy(Guid userDisciplineTaxonomyId);
     }

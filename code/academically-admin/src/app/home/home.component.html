@@ -572,75 +572,7 @@
           </div>
         </div>
 
-        <div class="card" *ngIf="permission.isGranted('Pages.Dashboard.Widgets.Verifications')">
-          <div class="card-header">
-            <h4 class="card-header-title">Verifications</h4>
-          </div>
-          <div class="card-body">
-            <div class="list-group list-group-flush my-n3">
-              <div class="list-group-item">
-                <div class="row align-items-center">
-                  <div class="col">
-                    <i class="fa fa-user-plus"></i>
-                    <h5 class="mb-0 text-normal">Preferred Freelancer</h5>
-                  </div>
-                </div>
-              </div>
-              <div class="list-group-item">
-                <div class="row align-items-center">
-                  <div class="col">
-                    <i class="fa fa-user"></i>
-                    <h5 class="mb-0 text-normal">Identity Verified</h5>
-                  </div>
-                </div>
-              </div>
-              <div class="list-group-item">
-                <div class="row align-items-center">
-                  <div class="col">
-                    <i class="fa fa-money-bill-alt"></i>
-                    <h5 class="mb-0 text-normal">Payment Verified</h5>
-                  </div>
-                  <div class="col-auto">
-                    <span class="text-muted"><i class="fe fe-check"></i></span>
-                  </div>
-                </div>
-              </div>
-              <div class="list-group-item">
-                <div class="row align-items-center">
-                  <div class="col">
-                    <i class="fa fa-phone"></i>
-                    <h5 class="mb-0 text-normal">Phone Verified</h5>
-                  </div>
-                  <div class="col-auto">
-                    <span class="text-muted"><a href="javascript:;" class="small">Verify</a></span>
-                  </div>
-                </div>
-              </div>
-              <div class="list-group-item">
-                <div class="row align-items-center">
-                  <div class="col">
-                    <i class="fa fa-envelope"></i>
-                    <h5 class="mb-0 text-normal">Email Verified</h5>
-                  </div>
-                  <div class="col-auto">
-                    <span class="text-muted"><i class="fe fe-check"></i></span>
-                  </div>
-                </div>
-              </div>
-              <div class="list-group-item">
-                <div class="row align-items-center">
-                  <div class="col">
-                    <i class="fab fa-facebook-square"></i>
-                    <h5 class="mb-0 text-normal">Facebook Connected</h5>
-                  </div>
-                  <div class="col-auto">
-                    <span class="text-muted"><i class="fe fe-check"></i></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <verifications-widget *ngIf="permission.isGranted('Pages.Dashboard.Widgets.Verifications')"></verifications-widget>
       </div>
     </div>
   </div>

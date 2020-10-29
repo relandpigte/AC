@@ -1,6 +1,12 @@
 import { Component, ElementRef, inject, Injector, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { GetProfileDetailDto, UserProfilesServiceProxy, FileParameter, AddressLookupServiceProxy, SuggestionDataDto } from '@shared/service-proxies/service-proxies';
+import {
+  GetProfileDetailDto,
+  UserProfilesServiceProxy,
+  FileParameter,
+  AddressLookupServiceProxy,
+  SuggestionDataDto,
+} from '@shared/service-proxies/service-proxies';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { countries } from '@shared/constants/countries';
 import { uiEvents } from '@shared/constants/ui-events';
@@ -11,19 +17,19 @@ import * as _ from 'lodash';
 import { AbstractControl, NgForm, ValidatorFn, Validators } from '@angular/forms';
 import { Observable, Observer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { FormCanDeactive } from '@shared/models/can-deactivate/form-can-deactivate';
+import { AppSessionService } from '@shared/session/app-session.service';
 
 @Component({
-  selector: 'profile-details',
-  templateUrl: './profile-details.component.html',
-  styleUrls: ['./profile-details.component.less']
+  selector: 'account-details',
+  templateUrl: './account-details.component.html',
+  styleUrls: ['./account-details.component.less'],
 })
-export class ProfileDetailsComponent extends AppComponentBase implements OnInit {
+export class AccountDetailsComponent extends AppComponentBase implements OnInit {
   @ViewChild('profileDetailForm') public form: NgForm;
   @ViewChild('profilePictureInput', { static: true }) profilePictureInput: ElementRef;
 
   userId: number;
-  model: GetProfileDetailDto = new GetProfileDetailDto;
+  model: GetProfileDetailDto = new GetProfileDetailDto();
   datePickerConfig: BsDatepickerConfig;
   countries = countries;
   dateOfBirth: Date;
@@ -38,7 +44,8 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
   constructor(
     injector: Injector,
     private _userProfilesService: UserProfilesServiceProxy,
-    private _addressLookupService: AddressLookupServiceProxy
+    private _addressLookupService: AddressLookupServiceProxy,
+    private _sessionService: AppSessionService
   ) {
     super(injector);
     this.userId = this.appSession.userId;
@@ -68,13 +75,13 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
       if (this.validateFile(file)) {
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = event => {
+        reader.onload = (event) => {
           this.model.profilePictureUrl = reader.result.toString();
         };
         this.profilePicturePlaceholderText = file.name;
         this.profilePicture = {
           fileName: file.name,
-          data: file
+          data: file,
         };
       } else {
         this.clearUploader();
@@ -97,16 +104,15 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
   }
 
   private getAddressDetails(id: string): void {
-    this._addressLookupService.getAddressDetail(id)
-      .subscribe((result) => {
-        if (result) {
-          this.model.addressLine1 = result.line_1;
-          this.model.addressLine2 = result.line_2;
-          this.model.city = result.town_Or_City;
-          this.model.zipOrPostCode = result.postcode;
-          this.model.stateOrProvince = result.county;
-        }
-      });
+    this._addressLookupService.getAddressDetail(id).subscribe((result) => {
+      if (result) {
+        this.model.addressLine1 = result.line_1;
+        this.model.addressLine2 = result.line_2;
+        this.model.city = result.town_Or_City;
+        this.model.zipOrPostCode = result.postcode;
+        this.model.stateOrProvince = result.county;
+      }
+    });
   }
 
   private setRequiredFields(): void {
@@ -148,15 +154,14 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
 
   private getDetails(): void {
     this.isLoading = true;
-    this._userProfilesService.getDetail()
-      .subscribe(profileDetail => {
-        this.model = profileDetail;
-        if (this.model.dateOfBirth) {
-          this.dateOfBirth = this.model.dateOfBirth.toDate();
-        }
-        this.setRequiredFields();
-        this.isLoading = false;
-      });
+    this._userProfilesService.getDetail(this._sessionService.userId).subscribe((profileDetail) => {
+      this.model = profileDetail;
+      if (this.model.dateOfBirth) {
+        this.dateOfBirth = this.model.dateOfBirth.toDate();
+      }
+      this.setRequiredFields();
+      this.isLoading = false;
+    });
   }
 
   private saveDetails(): void {
@@ -164,9 +169,19 @@ export class ProfileDetailsComponent extends AppComponentBase implements OnInit 
     if (this.dateOfBirth) {
       this.model.dateOfBirth = moment.utc(moment(this.dateOfBirth).format('YYYY-MM-DD'));
     }
-    this._userProfilesService.saveDetail(this.model.firstName, this.model.lastName,
-      this.model.dateOfBirth, this.model.addressLine1, this.model.addressLine2, this.model.city, this.model.zipOrPostCode,
-      this.model.stateOrProvince, this.model.country, this.profilePicture)
+    this._userProfilesService
+      .saveDetail(
+        this.model.firstName,
+        this.model.lastName,
+        this.model.dateOfBirth,
+        this.model.addressLine1,
+        this.model.addressLine2,
+        this.model.city,
+        this.model.zipOrPostCode,
+        this.model.stateOrProvince,
+        this.model.country,
+        this.profilePicture
+      )
       .subscribe(() => {
         this.clearUploader();
         this.notify.info(this.l('SavedSuccessfully'));

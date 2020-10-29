@@ -1,46 +1,322 @@
-<div class="container-fluid" [@routerTransition]>
-  <div class="row justify-content-center">
-    <div class="col-12">
-      <div class="header">
-        <div class="header-body">
+<div [busy]="isLoading" class="header">
+  <img src="assets/themes/dashkit/img/covers/profile-cover-1.jpg" class="header-img-top" alt="..." />
+
+  <div class="container-fluid">
+    <div class="header-body mt-n5 mt-md-n6">
+      <div class="row align-items-end">
+        <div class="col-auto">
+          <div class="avatar avatar-xxl header-avatar-top">
+            <img
+              alt="..."
+              class="avatar-img rounded-circle border border-4 border-body"
+              [src]="getImageUrl(profileDetail.profilePictureUrl)"
+              [class.no-picture-border]="!profileDetail.profilePictureUrl"
+            />
+          </div>
+        </div>
+        <div class="col mb-3 ml-n3 ml-md-n2">
+          <h6 class="header-pretitle">{{ profileDetail.role }}</h6>
+          <h1 class="header-title">{{ profileDetail.firstName }} {{ profileDetail.lastName ? profileDetail.lastName[0] : '' }}</h1>
+        </div>
+        <div *ngIf="!isViewOnly" class="col-12 col-md-auto mt-2 mt-md-0 mb-md-3">
+          <a href="#!" class="btn btn-primary d-block d-md-inline-block lift"> {{ 'CreateNewProject' | localize }} </a>
+        </div>
+      </div>
+
+      <div class="row align-items-center">
+        <div class="col">
+          <ul class="nav nav-tabs nav-overflow header-tabs">
+            <li class="nav-item">
+              <a href="#overview" (click)="onScrollClick($event, overview)" class="nav-link active"> {{ 'Overview' | localize }} </a>
+            </li>
+            <li class="nav-item">
+              <a href="#reviews" (click)="onScrollClick($event, reviews)" class="nav-link"> {{ 'Reviews' | localize }} </a>
+            </li>
+            <li class="nav-item">
+              <a href="#educations" (click)="onScrollClick($event, educations)" class="nav-link"> {{ 'Education' | localize }} </a>
+            </li>
+            <li class="nav-item">
+              <a href="#publications" (click)="onScrollClick($event, publications)" class="nav-link"> {{ 'Publications' | localize }} </a>
+            </li>
+            <li class="nav-item">
+              <a href="#experiences" (click)="onScrollClick($event, experiences)" class="nav-link"> {{ 'Experience' | localize }} </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div [busy]="isLoading" class="container-fluid">
+  <div class="row">
+    <div class="col-12 col-lg-6 col-xl">
+      <div class="card">
+        <div class="card-body">
           <div class="row align-items-center">
             <div class="col">
-              <h6 class="header-pretitle">{{ 'ManageYourSettings' | localize }}</h6>
-              <h1 class="header-title">{{ 'Profile' | localize }}</h1>
+              <h6 class="text-uppercase text-muted mb-2">Total hours</h6>
+              <span class="h2 mb-0"> 763.5 </span>
+            </div>
+            <div class="col-auto">
+              <span class="h2 fe fe-briefcase text-muted mb-0"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6 col-xl">
+      <div class="card">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="text-uppercase text-muted mb-2">Response Time</h6>
+              <span class="h2 mb-0"> 763.5 </span>
+            </div>
+            <div class="col-auto">
+              <span class="h2 fe fe-clock text-muted mb-0"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6 col-xl">
+      <div class="card">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="text-uppercase text-muted mb-2">Vark Style</h6>
+              <span class="h2 mb-0"> 35.5% </span>
+            </div>
+            <div class="col-auto">
+              <div class="chart chart-sparkline">
+                <canvas class="chart-canvas" chart [chartSettings]="varkStyleChartSettings"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6 col-xl">
+      <div class="card">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="text-uppercase text-muted mb-2">Average Rating</h6>
+              <span class="h2 mb-0"> 2:37 </span>
+            </div>
+            <div class="col-auto">
+              <span class="h2 fe fe-clock text-muted mb-0"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-xl-8">
+      <div #overview class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">{{ 'About' | localize }} {{ profileDetail.firstName }}</h4>
+        </div>
+        <div class="card-body">
+          <p class="text-secondary">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+            enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+            in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+            sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+          <div class="alert alert-success alert-dismissible ac-alert ac-alert-service pr-2" role="alert">UX Team</div>
+          <div class="alert alert-success alert-dismissible ac-alert ac-alert-service pr-2" role="alert">Research Team</div>
+        </div>
+      </div>
+
+      <div #reviews class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">{{ 'StudentsReviews' | localize }}</h4>
+        </div>
+        <div class="card-body">
+          <div class="comment mb-3">
+            <div class="row">
+              <div class="col-auto">
+                <a class="avatar" href="profile-posts.html">
+                  <img src="assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..." class="avatar-img rounded-circle" />
+                </a>
+              </div>
+              <div class="col ml-n2">
+                <div class="comment-body">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="comment-title">Ab Hadley</h5>
+                    </div>
+                    <div class="col-auto">
+                      <time class="comment-time"> 11:12 </time>
+                    </div>
+                  </div>
+
+                  <p class="comment-text">
+                    Looking good Dianna! I like the image grid on the left, but it feels like a lot to process and doesn't really
+                    <em>show</em> me what the product does? I think using a short looping video or something similar demo'ing the product
+                    might be better?
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="comment mb-3">
+            <div class="row">
+              <div class="col-auto">
+                <a class="avatar" href="profile-posts.html">
+                  <img src="assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" alt="..." class="avatar-img rounded-circle" />
+                </a>
+              </div>
+              <div class="col ml-n2">
+                <div class="comment-body">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="comment-title">Adolfo Hess</h5>
+                    </div>
+                    <div class="col-auto">
+                      <time class="comment-time"> 11:12 </time>
+                    </div>
+                  </div>
+                  <p class="comment-text">Any chance you're going to link the grid up to a public gallery of sites built with Launchday?</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-12 col-xl-8 profile-settings">
-          <tabset>
-            <tab *ngIf="permission.isGranted('Pages.Profile.Details')" heading="{{ 'Details' | localize }}">
-              <profile-details #profileDetailsComponent></profile-details>
-            </tab>
-            <tab *ngIf="permission.isGranted('Pages.Profile.Educations')" heading="{{ 'Education' | localize }}">
-              <profile-education></profile-education>
-            </tab>
-            <tab *ngIf="permission.isGranted('Pages.Profile.Publications')" heading="{{ 'Publication' | localize }}">
-              <profile-publications></profile-publications>
-            </tab>
-            <tab *ngIf="permission.isGranted('Pages.Profile.AreasOfStudy')" heading="{{ 'AreasOfStudy' | localize }}">
-              <profile-areas-of-study></profile-areas-of-study>
-            </tab>
-            <tab *ngIf="true" heading="{{ 'Service' | localize }}">
-              <h1>Service - Coming Soon</h1>
-            </tab>
-            <tab *ngIf="true" heading="{{ 'PrivacyAndNotifications' | localize }}">
-              <profile-privacy-and-data-protection></profile-privacy-and-data-protection>
-            </tab>
-            <tab *ngIf="true" heading="{{ 'Financials' | localize }}">
-              <h1>Financials - Coming Soon</h1>
-            </tab>
-          </tabset>
-        </div>
+      <div #educations>
+        <profile-education *ngIf="userId" [userId]="userId" [isViewOnly]="isViewOnly"></profile-education>
+      </div>
 
-        <div class="col-12 col-xl-4">
-          <profile-summary-widget></profile-summary-widget>
+      <div #publications>
+        <profile-publications *ngIf="userId" [userId]="userId" [isViewOnly]="isViewOnly"></profile-publications>
+      </div>
+
+      <div #experiences class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'MyExperience' | localize }}
+          </h4>
+          <a *ngIf="!isViewOnly" href="#" class="btn btn-sm btn-primary" (click)="$event.preventDefault()">
+            {{ 'Add' | localize }}
+          </a>
+        </div>
+        <div class="card-body">
+          <h3>Coming Soon!</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-xl-4">
+      <!-- Card -->
+      <div class="card">
+        <div class="card-body">
+          <div class="list-group list-group-flush my-n3">
+            <div class="list-group-item">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h5 class="mb-0">{{ 'Birthday' | localize }}</h5>
+                </div>
+                <div class="col-auto">
+                  <time class="small text-muted"> {{ profileDetail.dateOfBirth | date: 'dd/MM/yyyy' }} </time>
+                </div>
+              </div>
+            </div>
+
+            <div class="list-group-item">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h5 class="mb-0">{{ 'Joined' | localize }}</h5>
+                </div>
+                <div class="col-auto">
+                  <time class="small text-muted"> {{ profileDetail.dateJoined | date: 'dd/MM/yyyy' }} </time>
+                </div>
+              </div>
+            </div>
+
+            <div class="list-group-item">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h5 class="mb-0">{{ 'Location' | localize }}</h5>
+                </div>
+                <div class="col-auto">
+                  <small class="text-muted"> {{ profileDetail.city }}, {{ profileDetail.country }} </small>
+                </div>
+              </div>
+            </div>
+
+            <div class="list-group-item">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h5 class="mb-0">{{ 'Website' | localize }}</h5>
+                </div>
+                <div class="col-auto">
+                  <small class="text-muted"> <a target="_blank" href="http://www.example.com">www.example.com</a> </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <verifications-widget></verifications-widget>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">{{ 'Availability' | localize }}</h4>
+        </div>
+        <div class="card-body">
+          <div class="chart chart-sm">
+            <canvas class="chart-canvas" chart [chartSettings]="availabilityChartSettings"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <profile-knowledge-base *ngIf="userId" [userId]="userId" [isViewOnly]="isViewOnly"></profile-knowledge-base>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'ResearchMethods' | localize }}
+          </h4>
+          <a *ngIf="!isViewOnly" href="#" class="btn btn-sm btn-primary" (click)="$event.preventDefault()">
+            {{ 'Add' | localize }}
+          </a>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-secondary alert-dismissible ac-alert" role="alert">
+            Survey
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Services' | localize }}
+          </h4>
+          <a *ngIf="!isViewOnly" href="#" class="btn btn-sm btn-primary" (click)="$event.preventDefault()">
+            {{ 'Add' | localize }}
+          </a>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-success alert-dismissible ac-alert" role="alert">
+            Tutorial
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

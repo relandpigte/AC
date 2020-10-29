@@ -1,6 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="ViewTutor">View Tutor</text>
+    <text name="Experience">Experience</text>
+    <text name="Reviews">Reviews</text>
+    <text name="CreateNewProject">Create New Project</text>
+    <text name="StudentsReviews">Student's Reviews</text>
+    <text name="MyExperience">My Experience</text>
+    <text name="MyPublications">My Publications</text>
+    <text name="MyEducation">My Education</text>
+    <text name="Website">Website</text>
+    <text name="Services">Services</text>
+    <text name="ResearchMethods">Research Methods</text>
+    <text name="Location">Location</text>
+    <text name="Joined">Joined</text>
+    <text name="Birthday">Birthday</text>
+    <text name="Account">Account</text>
     <text name="AreaOfStudy">Area of Study</text>
     <text name="AreasOfStudyNotSavedWarning">The areas of study you selected has not been saved yet. If you leave, your changes will be lost.</text>
     <text name="NoAreaOfStudySelected">No Area of Study Selected</text>

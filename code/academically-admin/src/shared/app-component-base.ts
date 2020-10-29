@@ -7,14 +7,13 @@ import {
   NotifyService,
   SettingService,
   MessageService,
-  AbpMultiTenancyService
+  AbpMultiTenancyService,
 } from 'abp-ng2-module';
 
 import { AppSessionService } from '@shared/session/app-session.service';
 import { ModalOptions } from 'ngx-bootstrap/modal';
 
 export abstract class AppComponentBase {
-
   localizationSourceName = AppConsts.localization.defaultLocalizationSourceName;
 
   localization: LocalizationService;
@@ -68,9 +67,13 @@ export abstract class AppComponentBase {
     return this.permission.isGranted(permissionName);
   }
 
+  getImageUrl(defaultUrl: string): string {
+    return defaultUrl ? defaultUrl : 'assets/img/anonymous.png';
+  }
+
   protected enumToArray(enumeraton) {
     return Object.keys(enumeraton)
-      .filter(e => isNaN(Number(e)) === true)
-      .map(key => enumeraton[key]);
+      .filter((e) => isNaN(Number(e)) === true)
+      .map((key) => enumeraton[key]);
   }
 }

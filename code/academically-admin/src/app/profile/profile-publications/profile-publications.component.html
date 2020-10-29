@@ -1,11 +1,15 @@
 <div class="card">
   <div class="card-header">
     <h4 class="card-header-title">
-      {{ 'Publication' | localize }}
+      {{ 'MyPublications' | localize }}
     </h4>
-    <a href="#" class="btn btn-sm btn-primary" (click)="$event.preventDefault(); onCreateClick();"
-      *ngIf="permission.isGranted('Pages.Profile.Publications.Create')">
-      {{ "Create" | localize }}
+    <a
+      href="#"
+      class="btn btn-sm btn-primary"
+      (click)="$event.preventDefault(); onCreateClick()"
+      *ngIf="!isViewOnly && permission.isGranted('Pages.Profile.Publications.Create')"
+    >
+      {{ 'Add' | localize }}
     </a>
   </div>
   <div class="table-responsive" [busy]="isTableLoading">
@@ -13,21 +17,35 @@
       <thead table-header-sort [headers]="headers" (sortChange)="sortChange($event)"></thead>
       <tbody class="list font-size-base">
         <tr
-          *ngFor="let publication of publications | paginate : { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }">
-          <td>{{publication.publicationCertificate}}</td>
-          <td>{{publication.publisher}}</td>
+          *ngFor="
+            let publication of publications
+              | paginate: { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }
+          "
+        >
+          <td>{{ publication.publicationCertificate }}</td>
+          <td>{{ publication.publisher }}</td>
           <td class="table-action">
             <div dropdown class="dropdown" container="body">
               <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;" role="button">
                 <i class="fe fe-more-vertical"></i>
               </a>
               <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
-                <a href="javascript:;" class="dropdown-item" (click)="onEditClick(publication.id)"
-                  *ngIf="permission.isGranted('Pages.Profile.Publications.Update')">
-                  <i class="fe fe-edit"></i> {{ 'Edit' | localize }}</a>
-                <a href="javascript:;" class="dropdown-item" (click)="onDeleteClick(publication.id)"
-                  *ngIf="permission.isGranted('Pages.Profile.Publications.Delete')">
-                  <i class="fe fe-trash"></i> {{ 'Delete' | localize }}</a>
+                <a
+                  href="javascript:;"
+                  class="dropdown-item"
+                  (click)="onEditClick(publication.id)"
+                  *ngIf="permission.isGranted('Pages.Profile.Publications.Update')"
+                >
+                  <i class="fe fe-edit"></i> {{ 'Edit' | localize }}</a
+                >
+                <a
+                  href="javascript:;"
+                  class="dropdown-item"
+                  (click)="onDeleteClick(publication.id)"
+                  *ngIf="permission.isGranted('Pages.Profile.Publications.Delete')"
+                >
+                  <i class="fe fe-trash"></i> {{ 'Delete' | localize }}</a
+                >
               </div>
             </div>
           </td>
@@ -39,7 +57,6 @@
         </tr>
       </tbody>
     </table>
-    <abp-pagination-controls id="server" (pageChange)="getDataPage($event)">
-    </abp-pagination-controls>
+    <abp-pagination-controls id="server" (pageChange)="getDataPage($event)"> </abp-pagination-controls>
   </div>
 </div>

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
-using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Academically.Authorization;
@@ -12,7 +11,7 @@ using Academically.Services.UserPublications.Dto;
 namespace Academically.Services.UserPublications
 {
     [AbpAuthorize(PermissionNames.Pages_Profile_Publications)]
-    public class UserPublicationsAppService : AsyncCrudAppService<UserPublication, UserPublicationDto, Guid, PagedAndSortedResultRequestDto>, IUserPublicationsAppService
+    public class UserPublicationsAppService : AsyncCrudAppService<UserPublication, UserPublicationDto, Guid, PagedAndSortedUserPublicationResultRequestDto>, IUserPublicationsAppService
     {
         public UserPublicationsAppService(IRepository<UserPublication, Guid> repository) : base(repository)
         {
@@ -21,10 +20,10 @@ namespace Academically.Services.UserPublications
             DeletePermissionName = PermissionNames.Pages_Profile_Publications_Delete;
         }
 
-        protected override IQueryable<UserPublication> CreateFilteredQuery(PagedAndSortedResultRequestDto input)
+        protected override IQueryable<UserPublication> CreateFilteredQuery(PagedAndSortedUserPublicationResultRequestDto input)
         {
             return base.CreateFilteredQuery(input)
-                .Where(e => e.UserId == AbpSession.UserId.Value);
+                .Where(e => e.UserId == input.UserId);
         }
 
         public override Task<UserPublicationDto> CreateAsync(UserPublicationDto input)
