@@ -59,6 +59,8 @@
         public const string Pages_Profile_AreasOfStudy_KnowledgeBase = "Pages.Profile.AreasOfStudy.KnowledgeBase";
         public const string Pages_Profile_AreasOfStudy_KnowledgeBase_Create = "Pages.Profile.AreasOfStudy.KnowledgeBase.Create";
         public const string Pages_Profile_AreasOfStudy_KnowledgeBase_Delete = "Pages.Profile.AreasOfStudy.KnowledgeBase.Delete";
+        public const string Pages_Profile_AreasOfStudy_KnowledgeBase_Study_Level_Create = "Pages.Profile.AreasOfStudy.KnowledgeBase.StudyLevel.Create";
+        public const string Pages_Profile_AreasOfStudy_KnowledgeBase_Study_Level_Delete = "Pages.Profile.AreasOfStudy.KnowledgeBase.StudyLevel.Delete";
 
         public const string Pages_Tenants = "Pages.Tenants";
 

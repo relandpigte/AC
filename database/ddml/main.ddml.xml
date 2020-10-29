@@ -25,4 +25,7 @@
 	<include file="ddml/ddml.2020-10-23.alter-table-abpusers.xml"/>
 	<include file="ddml/ddml.2020-10-23-01.add-supportservices-table.xml"/>
 	<include file="ddml/ddml.2020-10-23-02.add-supportservices-data.xml"/>
+	<include file="ddml/ddml.2020-10-29-01.add-disciplinetaxonomystudylevels-table.xml"/>
+	<include file="ddml/ddml.2020-10-29-02.add-disciplinetaxonomystudylevels-data.xml"/>
+	<include file="ddml/ddml.2020-10-29-03.add-userdisciplinetaxonomystudylevels-table.xml"/>
 </databaseChangeLog>

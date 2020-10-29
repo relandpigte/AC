@@ -134,6 +134,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase,
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create,
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Study_Level_Create,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Study_Level_Delete,
                 PermissionNames.Pages_Settings
             );
 
@@ -161,7 +163,9 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_AreasOfStudy,
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase,
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create,
-                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Study_Level_Create,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Study_Level_Delete
             );
 
             #endregion
@@ -198,6 +202,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase,
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create,
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Study_Level_Create,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Study_Level_Delete,
                 PermissionNames.Pages_Settings
             );
 

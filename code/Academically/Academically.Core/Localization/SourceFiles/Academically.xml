@@ -78,9 +78,11 @@
     <text name="StudyLevelValue106">6</text>
     <text name="StudyLevelValue107">7</text>
     <text name="StudyLevelValue108">8</text>
+    <text name="StudyLevels">Study Levels</text>
+    <text name="AreaOfStudyLevelsWasUpdated">Area of study levels was updated successfully.</text>
     <text name="TermsAndConditions">terms and conditions</text>
     <text name="Add">Add</text>
-    <text name="Inactive">Inactive</text>
+    <text name="Inactive">Inactive</text> 
     <text name="Active">Active</text>
     <text name="DropOrClickToUpload">Drop or click to upload</text>
     <text name="StateOrProvince">State/Province</text>

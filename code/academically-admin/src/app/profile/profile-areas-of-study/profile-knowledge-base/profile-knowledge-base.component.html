@@ -33,7 +33,10 @@
       </ng-container>
 
       <ng-container *ngIf="userDisciplineTaxonomy.levelId === 0">
-        <span class="discipline-taxonomy-name">
+        <span
+          (click)="$event.preventDefault(); onSelectStudyLevels(userDisciplineTaxonomy.disciplineTaxonomy.id)"
+          class="discipline-taxonomy-name"
+        >
           {{ userDisciplineTaxonomy.disciplineTaxonomy.name }}
         </span>
       </ng-container>

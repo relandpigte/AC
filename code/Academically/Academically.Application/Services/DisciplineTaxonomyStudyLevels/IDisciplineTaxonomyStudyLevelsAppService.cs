@@ -10,8 +10,5 @@ namespace Academically.Services.DisciplineTaxonomyStudyLevels
     public interface IDisciplineTaxonomyStudyLevelsAppService : IApplicationService
     {
         Task<IEnumerable<DisciplineTaxonomyStudyLevelDto>> GetAll(long? userId, Guid? disciplineTaxonomyId);
-        Task<IEnumerable<DisciplineTaxonomyStudyLevelDto>> GetUserDisciplineTaxonomyStudyLevels(long userId, Guid disciplineTaxonomyId);
-        Task CreateManyDisciplineTaxonomyStudyLevel(Guid disciplineTaxonomyId, IEnumerable<int> studyLevelIds);
-        Task DeleteDisciplineTaxonomyStudyLevel(int id);
     }
 }

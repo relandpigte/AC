@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Application.Services;
+using Academically.Services.DisciplineTaxonomyStudyLevels.Dto;
 using Academically.Services.UserProfiles.Dto;
 
 namespace Academically.Services.UserProfiles
@@ -14,5 +15,7 @@ namespace Academically.Services.UserProfiles
         Task<IEnumerable<GetUserDisciplineTaxonomyDto>> GetDisciplineTaxonomies(long userId);
         Task CreateManyDisciplineTaxonomy(IEnumerable<Guid> disciplineTaxonomyIds);
         Task DeleteDisciplineTaxonomy(Guid userDisciplineTaxonomyId);
+        Task<IEnumerable<DisciplineTaxonomyStudyLevelDto>> GetUserDisciplineTaxonomyStudyLevels(long userId, Guid disciplineTaxonomyId);
+        Task CreateManyDisciplineTaxonomyStudyLevel(Guid disciplineTaxonomyId, IEnumerable<int> studyLevelIds);
     }
 }

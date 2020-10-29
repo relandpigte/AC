@@ -872,180 +872,6 @@ export class DisciplineTaxonomyStudyLevelsServiceProxy {
         }
         return _observableOf<DisciplineTaxonomyStudyLevelDto[]>(<any>null);
     }
-
-    /**
-     * @param userId (optional) 
-     * @param disciplineTaxonomyId (optional) 
-     * @return Success
-     */
-    getUserDisciplineTaxonomyStudyLevels(userId: number | undefined, disciplineTaxonomyId: string | undefined): Observable<DisciplineTaxonomyStudyLevelDto[]> {
-        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomyStudyLevels/GetUserDisciplineTaxonomyStudyLevels?";
-        if (userId === null)
-            throw new Error("The parameter 'userId' cannot be null.");
-        else if (userId !== undefined)
-            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
-        if (disciplineTaxonomyId === null)
-            throw new Error("The parameter 'disciplineTaxonomyId' cannot be null.");
-        else if (disciplineTaxonomyId !== undefined)
-            url_ += "disciplineTaxonomyId=" + encodeURIComponent("" + disciplineTaxonomyId) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetUserDisciplineTaxonomyStudyLevels(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetUserDisciplineTaxonomyStudyLevels(<any>response_);
-                } catch (e) {
-                    return <Observable<DisciplineTaxonomyStudyLevelDto[]>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<DisciplineTaxonomyStudyLevelDto[]>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetUserDisciplineTaxonomyStudyLevels(response: HttpResponseBase): Observable<DisciplineTaxonomyStudyLevelDto[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200.push(DisciplineTaxonomyStudyLevelDto.fromJS(item));
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<DisciplineTaxonomyStudyLevelDto[]>(<any>null);
-    }
-
-    /**
-     * @param disciplineTaxonomyId (optional) 
-     * @param body (optional) 
-     * @return Success
-     */
-    createManyDisciplineTaxonomyStudyLevel(disciplineTaxonomyId: string | undefined, body: number[] | null | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomyStudyLevels/CreateManyDisciplineTaxonomyStudyLevel?";
-        if (disciplineTaxonomyId === null)
-            throw new Error("The parameter 'disciplineTaxonomyId' cannot be null.");
-        else if (disciplineTaxonomyId !== undefined)
-            url_ += "disciplineTaxonomyId=" + encodeURIComponent("" + disciplineTaxonomyId) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json-patch+json",
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreateManyDisciplineTaxonomyStudyLevel(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCreateManyDisciplineTaxonomyStudyLevel(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processCreateManyDisciplineTaxonomyStudyLevel(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
-
-    /**
-     * @param id (optional) 
-     * @return Success
-     */
-    deleteDisciplineTaxonomyStudyLevel(id: number | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomyStudyLevels/DeleteDisciplineTaxonomyStudyLevel?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDeleteDisciplineTaxonomyStudyLevel(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDeleteDisciplineTaxonomyStudyLevel(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processDeleteDisciplineTaxonomyStudyLevel(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
 }
 
 @Injectable()
@@ -3280,6 +3106,128 @@ export class UserProfilesServiceProxy {
     }
 
     protected processDeleteDisciplineTaxonomy(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @param disciplineTaxonomyId (optional) 
+     * @return Success
+     */
+    getUserDisciplineTaxonomyStudyLevels(userId: number | undefined, disciplineTaxonomyId: string | undefined): Observable<DisciplineTaxonomyStudyLevelDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/UserProfiles/GetUserDisciplineTaxonomyStudyLevels?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (disciplineTaxonomyId === null)
+            throw new Error("The parameter 'disciplineTaxonomyId' cannot be null.");
+        else if (disciplineTaxonomyId !== undefined)
+            url_ += "disciplineTaxonomyId=" + encodeURIComponent("" + disciplineTaxonomyId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUserDisciplineTaxonomyStudyLevels(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUserDisciplineTaxonomyStudyLevels(<any>response_);
+                } catch (e) {
+                    return <Observable<DisciplineTaxonomyStudyLevelDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DisciplineTaxonomyStudyLevelDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetUserDisciplineTaxonomyStudyLevels(response: HttpResponseBase): Observable<DisciplineTaxonomyStudyLevelDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(DisciplineTaxonomyStudyLevelDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DisciplineTaxonomyStudyLevelDto[]>(<any>null);
+    }
+
+    /**
+     * @param disciplineTaxonomyId (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    createManyDisciplineTaxonomyStudyLevel(disciplineTaxonomyId: string | undefined, body: number[] | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserProfiles/CreateManyDisciplineTaxonomyStudyLevel?";
+        if (disciplineTaxonomyId === null)
+            throw new Error("The parameter 'disciplineTaxonomyId' cannot be null.");
+        else if (disciplineTaxonomyId !== undefined)
+            url_ += "disciplineTaxonomyId=" + encodeURIComponent("" + disciplineTaxonomyId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateManyDisciplineTaxonomyStudyLevel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateManyDisciplineTaxonomyStudyLevel(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateManyDisciplineTaxonomyStudyLevel(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
