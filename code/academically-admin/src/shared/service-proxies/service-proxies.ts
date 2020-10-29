@@ -2563,13 +2563,20 @@ export class UserEducationsServiceProxy {
     }
 
     /**
+     * @param userId (optional) 
+     * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
-     * @param sorting (optional) 
      * @return Success
      */
-    getAll(skipCount: number | undefined, maxResultCount: number | undefined, sorting: string | null | undefined): Observable<UserEducationDtoPagedResultDto> {
+    getAll(userId: number | undefined, sorting: string | null | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserEducationDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/UserEducations/GetAll?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "UserId=" + encodeURIComponent("" + userId) + "&";
+        if (sorting !== undefined && sorting !== null)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -2578,8 +2585,6 @@ export class UserEducationsServiceProxy {
             throw new Error("The parameter 'maxResultCount' cannot be null.");
         else if (maxResultCount !== undefined)
             url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
-        if (sorting !== undefined && sorting !== null)
-            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -2747,10 +2752,15 @@ export class UserProfilesServiceProxy {
     }
 
     /**
+     * @param userId (optional) 
      * @return Success
      */
-    getDetail(): Observable<GetProfileDetailDto> {
-        let url_ = this.baseUrl + "/api/services/app/UserProfiles/GetDetail";
+    getDetail(userId: number | undefined): Observable<GetProfileDetailDto> {
+        let url_ = this.baseUrl + "/api/services/app/UserProfiles/GetDetail?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -2878,10 +2888,15 @@ export class UserProfilesServiceProxy {
     }
 
     /**
+     * @param userId (optional) 
      * @return Success
      */
-    getDisciplineTaxonomies(): Observable<GetUserDisciplineTaxonomyDto[]> {
-        let url_ = this.baseUrl + "/api/services/app/UserProfiles/GetDisciplineTaxonomies";
+    getDisciplineTaxonomies(userId: number | undefined): Observable<GetUserDisciplineTaxonomyDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/UserProfiles/GetDisciplineTaxonomies?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -3161,13 +3176,20 @@ export class UserPublicationsServiceProxy {
     }
 
     /**
+     * @param userId (optional) 
+     * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
-     * @param sorting (optional) 
      * @return Success
      */
-    getAll(skipCount: number | undefined, maxResultCount: number | undefined, sorting: string | null | undefined): Observable<UserPublicationDtoPagedResultDto> {
+    getAll(userId: number | undefined, sorting: string | null | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserPublicationDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/UserPublications/GetAll?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "UserId=" + encodeURIComponent("" + userId) + "&";
+        if (sorting !== undefined && sorting !== null)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -3176,8 +3198,6 @@ export class UserPublicationsServiceProxy {
             throw new Error("The parameter 'maxResultCount' cannot be null.");
         else if (maxResultCount !== undefined)
             url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
-        if (sorting !== undefined && sorting !== null)
-            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -4636,6 +4656,7 @@ export class GetAllDisciplineTaxonomyDto implements IGetAllDisciplineTaxonomyDto
     name: string | undefined;
     parentIdMap: string | undefined;
     size: number;
+    totalDisciplines: number;
     children: GetAllDisciplineTaxonomyDto[] | undefined;
 
     constructor(data?: IGetAllDisciplineTaxonomyDto) {
@@ -4653,6 +4674,7 @@ export class GetAllDisciplineTaxonomyDto implements IGetAllDisciplineTaxonomyDto
             this.name = _data["name"];
             this.parentIdMap = _data["parentIdMap"];
             this.size = _data["size"];
+            this.totalDisciplines = _data["totalDisciplines"];
             if (Array.isArray(_data["children"])) {
                 this.children = [] as any;
                 for (let item of _data["children"])
@@ -4674,6 +4696,7 @@ export class GetAllDisciplineTaxonomyDto implements IGetAllDisciplineTaxonomyDto
         data["name"] = this.name;
         data["parentIdMap"] = this.parentIdMap;
         data["size"] = this.size;
+        data["totalDisciplines"] = this.totalDisciplines;
         if (Array.isArray(this.children)) {
             data["children"] = [];
             for (let item of this.children)
@@ -4695,6 +4718,7 @@ export interface IGetAllDisciplineTaxonomyDto {
     name: string | undefined;
     parentIdMap: string | undefined;
     size: number;
+    totalDisciplines: number;
     children: GetAllDisciplineTaxonomyDto[] | undefined;
 }
 
@@ -6613,6 +6637,8 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
     stateOrProvince: string | undefined;
     country: string | undefined;
     profilePictureUrl: string | undefined;
+    dateJoined: moment.Moment;
+    role: string | undefined;
 
     constructor(data?: IGetProfileDetailDto) {
         if (data) {
@@ -6635,6 +6661,8 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
             this.stateOrProvince = _data["stateOrProvince"];
             this.country = _data["country"];
             this.profilePictureUrl = _data["profilePictureUrl"];
+            this.dateJoined = _data["dateJoined"] ? moment(_data["dateJoined"].toString()) : <any>undefined;
+            this.role = _data["role"];
         }
     }
 
@@ -6657,6 +6685,8 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
         data["stateOrProvince"] = this.stateOrProvince;
         data["country"] = this.country;
         data["profilePictureUrl"] = this.profilePictureUrl;
+        data["dateJoined"] = this.dateJoined ? this.dateJoined.toISOString() : <any>undefined;
+        data["role"] = this.role;
         return data; 
     }
 
@@ -6679,6 +6709,8 @@ export interface IGetProfileDetailDto {
     stateOrProvince: string | undefined;
     country: string | undefined;
     profilePictureUrl: string | undefined;
+    dateJoined: moment.Moment;
+    role: string | undefined;
 }
 
 export class GetUserDisciplineTaxonomyDto implements IGetUserDisciplineTaxonomyDto {

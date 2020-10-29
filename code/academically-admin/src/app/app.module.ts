@@ -52,13 +52,11 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from '@app/home/home.component';
 import { AboutComponent } from '@app/about/about.component';
 import { ProfileComponent } from './profile/profile.component';
-import { ProfileDetailsComponent } from './profile/profile-details/profile-details.component';
 import { ProfileSummaryWidgetComponent } from './widgets/profile-summary-widget/profile-summary-widget.component';
 import { ProfileEducationComponent } from './profile/profile-education/profile-education.component';
 import { ProfilePublicationsComponent } from './profile/profile-publications/profile-publications.component';
 import { CreateEditProfileEducationComponent } from './profile/profile-education/create-edit-profile-education/create-edit-profile-education.component';
 import { CreateEditPublicationComponent } from './profile/profile-publications/create-edit-publication/create-edit-publication.component';
-import { ProfilePrivacyAndDataProtectionComponent } from './profile/profile-privacy-and-data-protection/profile-privacy-and-data-protection.component';
 import { ProposalsContactsWidgetsComponent } from './widgets/proposals-contacts-widgets/proposals-contacts-widgets.component';
 import { ProfileAreasOfStudyComponent } from './profile/profile-areas-of-study/profile-areas-of-study.component';
 import { AcademicSupportComponent } from './academic-support/academic-support.component';
@@ -70,6 +68,12 @@ import { PeerSupportTutorialComponent } from './academic-support/peer-support/pe
 import { PeerSupportProposalsComponent } from './academic-support/peer-support/peer-support-proposals/peer-support-proposals.component';
 import { SettingsComponent } from './settings/settings.component';
 import { SettingsSecurityComponent } from './settings/settings-security/settings-security.component';
+import { UserNavigationComponent } from './layout/navigations/user-navigation/user-navigation.component';
+import { VerificationsWidgetComponent } from './widgets/verifications-widget/verifications-widget.component';
+import { AccountComponent } from './account/account.component';
+import { AccountDetailsComponent } from './account/account-details/account-details.component';
+import { AccountPrivacyAndDataProtectionComponent } from './account/account-privacy-and-data-protection/account-privacy-and-data-protection.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -101,19 +105,20 @@ import { SettingsSecurityComponent } from './settings/settings-security/settings
     SidebarMenuComponent,
     TopbarMenuComponent,
     TopnavComponent,
+    UserNavigationComponent,
     // directives
     Select2Directive,
     SunburstChartDirective,
+    // widgets
+    ProfileSummaryWidgetComponent,
+    ProposalsContactsWidgetsComponent,
+    VerificationsWidgetComponent,
     // components
     ProfileComponent,
     ProfileEducationComponent,
     ProfilePublicationsComponent,
-    ProfileDetailsComponent,
-    ProfileSummaryWidgetComponent,
     CreateEditProfileEducationComponent,
     CreateEditPublicationComponent,
-    ProfilePrivacyAndDataProtectionComponent,
-    ProposalsContactsWidgetsComponent,
     ProfileAreasOfStudyComponent,
     AcademicSupportComponent,
     ProfileKnowledgeBaseComponent,
@@ -126,7 +131,10 @@ import { SettingsSecurityComponent } from './settings/settings-security/settings
     PeerSupportTutorialComponent,
     PeerSupportProposalsComponent,
     SettingsComponent,
-    SettingsSecurityComponent
+    SettingsSecurityComponent,
+    AccountComponent,
+    AccountDetailsComponent,
+    AccountPrivacyAndDataProtectionComponent,
   ],
   imports: [
     CommonModule,
@@ -144,7 +152,7 @@ import { SettingsSecurityComponent } from './settings/settings-security/settings
     NgxPaginationModule,
     TypeaheadModule.forRoot(),
     BsDatepickerModule.forRoot(),
-    NgxQRCodeModule
+    NgxQRCodeModule,
   ],
   providers: [],
   entryComponents: [
@@ -161,7 +169,7 @@ import { SettingsSecurityComponent } from './settings/settings-security/settings
     // academically
     CreateEditProfileEducationComponent,
     TaxonomySearchComponent,
-    ThemeSettingsComponent
-  ]
+    ThemeSettingsComponent,
+  ],
 })
 export class AppModule {}

@@ -21,6 +21,7 @@ import { TenantChangeDialogComponent } from './tenant/tenant-change-dialog.compo
 import { CompleteRegistrationComponent } from './complete-registration/complete-registration.component';
 import { TermsAndConditionsComponent } from './terms-and-conditions/terms-and-conditions.component';
 import { TwoFactorAuthenticationComponent } from './two-factor-authentication/two-factor-authentication.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
     imports: [
@@ -47,6 +48,7 @@ import { TwoFactorAuthenticationComponent } from './two-factor-authentication/tw
         CompleteRegistrationComponent,
         TermsAndConditionsComponent,
         TwoFactorAuthenticationComponent,
+        NotFoundComponent,
     ],
     entryComponents: [
         // tenant

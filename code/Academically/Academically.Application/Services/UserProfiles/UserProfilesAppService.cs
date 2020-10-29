@@ -11,6 +11,7 @@ using Abp.IO.Extensions;
 using Abp.Timing;
 using Academically.Application.Shared.Services;
 using Academically.Authorization;
+using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 using Academically.Configuration;
 using Academically.Entities;
@@ -22,13 +23,14 @@ using SixLabors.ImageSharp.Processing;
 
 namespace Academically.Services.UserProfiles
 {
-    [AbpAuthorize(PermissionNames.Pages_Profile)]
+    [AbpAuthorize(PermissionNames.Pages_Account, PermissionNames.Pages_Profile)]
     public class UserProfilesAppService : AcademicallyAppServiceBase, IUserProfilesAppService
     {
         private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
         private readonly IRepository<User, long> _usersRepository;
         private readonly IRepository<UserDisciplineTaxonomy, Guid> _userDisciplineTaxonomiesRepository;
         private readonly IRepository<UserDisciplineTaxonomyStudyLevel, int> _userDisciplineTaxonomyStudyLevelsRepository;
+        private readonly RoleManager _roleManager;
         private readonly ISettingManager _settingManager;
         private readonly IFileManagerService _fileManagerService;
 
@@ -36,6 +38,7 @@ namespace Academically.Services.UserProfiles
             IRepository<UserProfile, Guid> userProfilesRepository,
             IRepository<User, long> usersRepository,
             IRepository<UserDisciplineTaxonomy, Guid> userDisciplineTaxonomiesRepository,
+            RoleManager roleManager,
             ISettingManager settingManager,
             IFileManagerService fileManagerService,
             IRepository<UserDisciplineTaxonomyStudyLevel, int> userDisciplineTaxonomyStudyLevelsRepository
@@ -44,17 +47,20 @@ namespace Academically.Services.UserProfiles
             _userProfilesRepository = userProfilesRepository;
             _usersRepository = usersRepository;
             _userDisciplineTaxonomiesRepository = userDisciplineTaxonomiesRepository;
+            _roleManager = roleManager;
             _settingManager = settingManager;
             _fileManagerService = fileManagerService;
             _userDisciplineTaxonomyStudyLevelsRepository = userDisciplineTaxonomyStudyLevelsRepository;
         }
 
-        [AbpAuthorize(PermissionNames.Pages_Profile_Details)]
-        public async Task<GetProfileDetailDto> GetDetail()
+        [AbpAuthorize(PermissionNames.Pages_Account_Details)]
+        public async Task<GetProfileDetailDto> GetDetail(long userId)
         {
-            var userId = AbpSession.UserId.Value;
-            var user = await _usersRepository.GetAsync(userId);
+            var user = await _usersRepository.GetAll()
+                .Include(e => e.Roles)
+                .FirstOrDefaultAsync(e => e.Id == userId);
             var userProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == userId);
+            var role = await _roleManager.GetRoleByIdAsync(user.Roles.FirstOrDefault().RoleId);
 
             var output = ObjectMapper.Map<GetProfileDetailDto>(userProfile);
             if (output == null)
@@ -64,11 +70,13 @@ namespace Academically.Services.UserProfiles
             output.FirstName = user.Name;
             output.LastName = user.Surname;
             output.ProfilePictureUrl = _fileManagerService.GetFileUrl(userProfile?.ProfilePictureFileName, userId, AppSettingNames.Aws_S3_Folders_ProfilePictures);
+            output.DateJoined = user.CreationTime;
+            output.Role = role.DisplayName;
 
             return output;
         }
 
-        [AbpAuthorize(PermissionNames.Pages_Profile_Details)]
+        [AbpAuthorize(PermissionNames.Pages_Account_Details)]
         public async Task SaveDetail([FromForm] SaveProfileDetailDto input)
         {
             var userId = AbpSession.UserId.Value;
@@ -116,11 +124,11 @@ namespace Academically.Services.UserProfiles
         }
 
         [AbpAuthorize(PermissionNames.Pages_Profile_AreasOfStudy, PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase)]
-        public async Task<IEnumerable<GetUserDisciplineTaxonomyDto>> GetDisciplineTaxonomies()
+        public async Task<IEnumerable<GetUserDisciplineTaxonomyDto>> GetDisciplineTaxonomies(long userId)
         {
             var userDisciplineTaxonomies = await _userDisciplineTaxonomiesRepository.GetAll()
                 .Include(e => e.DisciplineTaxonomy)
-                .Where(e => e.UserId == AbpSession.UserId.Value)
+                .Where(e => e.UserId == userId)
                 .Select(e => ObjectMapper.Map<GetUserDisciplineTaxonomyDto>(e))
                 .ToListAsync();
 

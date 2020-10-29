@@ -1,0 +1,36 @@
+<div class="container-fluid" [@routerTransition]>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ 'ManageYourSettings' | localize }}</h6>
+              <h1 class="header-title">{{ 'Profile' | localize }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-xl-8 account-settings">
+          <tabset>
+            <tab *ngIf="permission.isGranted('Pages.Account.Details')" heading="{{ 'Details' | localize }}">
+              <account-details #accountDetailsComponent></account-details>
+            </tab>
+            <tab *ngIf="true" heading="{{ 'PrivacyAndNotifications' | localize }}">
+              <account-privacy-and-data-protection></account-privacy-and-data-protection>
+            </tab>
+            <tab *ngIf="true" heading="{{ 'Financials' | localize }}">
+              <h1>Financials - Coming Soon</h1>
+            </tab>
+          </tabset>
+        </div>
+
+        <div class="col-12 col-xl-4">
+          <profile-summary-widget></profile-summary-widget>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

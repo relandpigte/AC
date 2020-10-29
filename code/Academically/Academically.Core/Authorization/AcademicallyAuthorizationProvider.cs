@@ -41,9 +41,15 @@ namespace Academically.Authorization
             peerSupportPermission.CreateChildPermission(PermissionNames.Pages_PeerSupport_Tutorial, L("Tutorial"));
             peerSupportPermission.CreateChildPermission(PermissionNames.Pages_PeerSupport_Proposals, L("Proposals"));
 
+
+            var accountPermission = context.CreatePermission(PermissionNames.Pages_Account, L("Account"));
+
+            accountPermission.CreateChildPermission(PermissionNames.Pages_Account_Details, L("Details"));
+
+
             var profilePermission = context.CreatePermission(PermissionNames.Pages_Profile, L("Profile"));
 
-            profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Details, L("Details"));
+            profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_ViewTutor, L("ViewTutor"));
 
             var settingsPermission = context.CreatePermission(PermissionNames.Pages_Settings, L("Settings"));
             settingsPermission.CreateChildPermission(PermissionNames.Pages_Settings_Security, L("Security"));

@@ -35,9 +35,15 @@
         public const string Pages_PeerSupport_Tutorial = "Pages.PeerSupport.Tutorial";
         public const string Pages_PeerSupport_Proposals = "Pages.PeerSupport.Proposals";
 
+
+        public const string Pages_Account = "Pages.Account";
+
+        public const string Pages_Account_Details = "Pages.Account.Details";
+
+
         public const string Pages_Profile = "Pages.Profile";
 
-        public const string Pages_Profile_Details = "Pages.Profile.Details";
+        public const string Pages_Profile_ViewTutor = "Pages.Profile.ViewTutor";
 
         public const string Pages_Profile_Educations = "Pages.Profile.Educations";
         public const string Pages_Profile_Educations_Create = "Pages.Profile.Educations.Create";

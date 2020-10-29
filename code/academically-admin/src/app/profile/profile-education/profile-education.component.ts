@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { TableHeaderSortData } from '@shared/components/table-header-sort/table-header-sort.component';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
 import { UserEducationDto, UserEducationDtoPagedResultDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -6,12 +6,19 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { CreateEditProfileEducationComponent } from './create-edit-profile-education/create-edit-profile-education.component';
 
+class PagedUserEducationsRequestDto extends PagedAndSortedRequestDto {
+  userId: number;
+}
+
 @Component({
   selector: 'profile-education',
   templateUrl: './profile-education.component.html',
-  styleUrls: ['./profile-education.component.less']
+  styleUrls: ['./profile-education.component.less'],
 })
 export class ProfileEducationComponent extends PagedListingComponentBase<UserEducationDto> {
+  @Input() userId: number;
+  @Input() isViewOnly = false;
+
   userEducations: UserEducationDto[] = [];
   headers: TableHeaderSortData[] = [
     { title: 'UniversityOrCollege', sortColumn: 'universityOrCollege' },
@@ -21,19 +28,16 @@ export class ProfileEducationComponent extends PagedListingComponentBase<UserEdu
     { title: 'Level', sortColumn: 'level', colspan: 2 },
   ];
 
-  constructor(
-    injector: Injector,
-    private _userEducations: UserEducationsServiceProxy,
-    private _modalService: BsModalService,
-  ) {
+  constructor(injector: Injector, private _userEducations: UserEducationsServiceProxy, private _modalService: BsModalService) {
     super(injector);
     this.sorting = this.headers[0].sortColumn;
   }
 
-  list(request: PagedAndSortedRequestDto, pageNumber: number, finishedCallback: Function): void {
+  list(request: PagedUserEducationsRequestDto, pageNumber: number, finishedCallback: Function): void {
+    request.userId = this.userId;
 
     this._userEducations
-      .getAll(request.skipCount, request.maxResultCount, request.sort)
+      .getAll(request.userId, request.sort, request.skipCount, request.maxResultCount)
       .pipe(
         finalize(() => {
           finishedCallback();
@@ -54,16 +58,14 @@ export class ProfileEducationComponent extends PagedListingComponentBase<UserEdu
   }
 
   onDeleteClick(id: string): void {
-    abp.message.confirm('', undefined,
-      (result: boolean) => {
-        if (result) {
-          this._userEducations.delete(id).subscribe(() => {
-            abp.notify.success(this.l('SuccessfullyDeleted'));
-            this.refresh();
-          });
-        }
+    abp.message.confirm('', undefined, (result: boolean) => {
+      if (result) {
+        this._userEducations.delete(id).subscribe(() => {
+          abp.notify.success(this.l('SuccessfullyDeleted'));
+          this.refresh();
+        });
       }
-    );
+    });
   }
 
   private showCreateEditModal(id = ''): void {

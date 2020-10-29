@@ -15,5 +15,7 @@ namespace Academically.Services.UserProfiles.Dto
         public string Country { get; set; }
 
         public string ProfilePictureUrl { get; set; }
+        public DateTime DateJoined { get; set; }
+        public string Role { get; set; }
     }
 }

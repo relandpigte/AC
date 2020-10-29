@@ -118,8 +118,10 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Widgets_RecentProjectsProvidingHelp,
                 PermissionNames.Pages_Dashboard_Widgets_RecentProjectsReceivingHelp,
                 PermissionNames.Pages_Dashboard_Widgets_MessageHub,
+                PermissionNames.Pages_Account,
+                PermissionNames.Pages_Account_Details,
                 PermissionNames.Pages_Profile,
-                PermissionNames.Pages_Profile_Details,
+                PermissionNames.Pages_Profile_ViewTutor,
                 PermissionNames.Pages_Profile_Educations,
                 PermissionNames.Pages_Profile_Educations_Create,
                 PermissionNames.Pages_Profile_Educations_Update,
@@ -128,41 +130,6 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_Publications_Create,
                 PermissionNames.Pages_Profile_Publications_Update,
                 PermissionNames.Pages_Profile_Publications_Delete,
-                PermissionNames.Pages_Profile_AreasOfStudy,
-                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase,
-                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create,
-                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete,
-                PermissionNames.Pages_Settings
-            );
-
-            #endregion
-
-            #region Student
-
-            var studentRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.Student);
-            GrantPermissions(
-                studentRole,
-                PermissionNames.Pages_Dashboard,
-                PermissionNames.Pages_Dashboard_Widgets,
-                PermissionNames.Pages_Dashboard_Widgets_ProfileSummary,
-                PermissionNames.Pages_Dashboard_Widgets_Polls,
-                PermissionNames.Pages_Dashboard_Widgets_Verifications,
-                PermissionNames.Pages_Dashboard_Widgets_RecentProjectsReceivingHelp,
-                PermissionNames.Pages_Dashboard_Widgets_MessageHub,
-                PermissionNames.Pages_Dashboard_Navigation_AcademicSupport,
-                PermissionNames.Pages_Profile,
-                PermissionNames.Pages_Profile_Details,
-                PermissionNames.Pages_Profile_Educations,
-                PermissionNames.Pages_Profile_Educations_Create,
-                PermissionNames.Pages_Profile_Educations_Update,
-                PermissionNames.Pages_Profile_Educations_Delete,
-                PermissionNames.Pages_Profile_Publications,
-                PermissionNames.Pages_Profile_Publications_Create,
-                PermissionNames.Pages_Profile_Publications_Update,
-                PermissionNames.Pages_Profile_Publications_Delete,
-                PermissionNames.Pages_PeerSupport,
-                PermissionNames.Pages_PeerSupport_Tutorial,
-                PermissionNames.Pages_PeerSupport_Proposals,
                 PermissionNames.Pages_Profile_AreasOfStudy,
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase,
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create,
@@ -180,8 +147,9 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard,
                 PermissionNames.Pages_Dashboard_Widgets,
                 PermissionNames.Pages_Dashboard_Widgets_ProfileSummary,
+                PermissionNames.Pages_Account,
+                PermissionNames.Pages_Account_Details,
                 PermissionNames.Pages_Profile,
-                PermissionNames.Pages_Profile_Details,
                 PermissionNames.Pages_Profile_Educations,
                 PermissionNames.Pages_Profile_Educations_Create,
                 PermissionNames.Pages_Profile_Educations_Update,
@@ -194,6 +162,43 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase,
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create,
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete
+            );
+
+            #endregion
+
+            #region Student
+
+            var studentRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.Student);
+            GrantPermissions(
+                studentRole,
+                PermissionNames.Pages_Dashboard,
+                PermissionNames.Pages_Dashboard_Widgets,
+                PermissionNames.Pages_Dashboard_Widgets_ProfileSummary,
+                PermissionNames.Pages_Dashboard_Widgets_Polls,
+                PermissionNames.Pages_Dashboard_Widgets_Verifications,
+                PermissionNames.Pages_Dashboard_Widgets_RecentProjectsReceivingHelp,
+                PermissionNames.Pages_Dashboard_Widgets_MessageHub,
+                PermissionNames.Pages_Dashboard_Navigation_AcademicSupport,
+                PermissionNames.Pages_Account,
+                PermissionNames.Pages_Account_Details,
+                PermissionNames.Pages_Profile,
+                PermissionNames.Pages_Profile_ViewTutor,
+                PermissionNames.Pages_Profile_Educations,
+                PermissionNames.Pages_Profile_Educations_Create,
+                PermissionNames.Pages_Profile_Educations_Update,
+                PermissionNames.Pages_Profile_Educations_Delete,
+                PermissionNames.Pages_Profile_Publications,
+                PermissionNames.Pages_Profile_Publications_Create,
+                PermissionNames.Pages_Profile_Publications_Update,
+                PermissionNames.Pages_Profile_Publications_Delete,
+                PermissionNames.Pages_PeerSupport,
+                PermissionNames.Pages_PeerSupport_Tutorial,
+                PermissionNames.Pages_PeerSupport_Proposals,
+                PermissionNames.Pages_Profile_AreasOfStudy,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create,
+                PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete,
+                PermissionNames.Pages_Settings
             );
 
             #endregion

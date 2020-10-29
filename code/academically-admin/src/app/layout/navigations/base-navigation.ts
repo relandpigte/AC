@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Injector, Input } from '@angular/core';
 import { RouterEvent } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { AppAuthService } from '@shared/auth/app-auth.service';
 import { uiEvents } from '@shared/constants/ui-events';
 import { ColorScheme } from '@shared/enums/theme-settings/color-scheme.enum';
 import { NavigationColor } from '@shared/enums/theme-settings/navigation-color.enum';
@@ -20,7 +19,7 @@ export abstract class BaseNavigation extends AppComponentBase {
   navigationColor = '';
   appLogo = '';
 
-  constructor(injector: Injector, themeSettingsService: ThemeManagerService, cd: ChangeDetectorRef, private _authService: AppAuthService) {
+  constructor(injector: Injector, themeSettingsService: ThemeManagerService, cd: ChangeDetectorRef) {
     super(injector);
     this.themeSettings = themeSettingsService.getConfiguration();
     this.initNavigationColor();
@@ -33,10 +32,6 @@ export abstract class BaseNavigation extends AppComponentBase {
       this.initNavigationColor();
       cd.detectChanges();
     });
-  }
-
-  onLogoutClick(): void {
-    this._authService.logout();
   }
 
   onCustomizeClick(): void {

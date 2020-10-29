@@ -28,7 +28,7 @@
     </div>
     <div class="card-body position-relative">
       <div class="selected-taxonomies">
-        <div *ngFor="let selectedTaxonomy of selectedTaxonomies" class="alert alert-info alert-dismissible discipline" role="alert">
+        <div *ngFor="let selectedTaxonomy of selectedTaxonomies" class="alert alert-info alert-dismissible ac-alert" role="alert">
           {{ selectedTaxonomy.name }}
           <button
             *ngIf="permission.isGranted('Pages.Profile.AreasOfStudy.KnowledgeBase.Delete')"
