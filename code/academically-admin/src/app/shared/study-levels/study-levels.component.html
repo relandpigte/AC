@@ -1,0 +1,22 @@
+<form class="form-horizontal" autocomplete="off" #studyLevelsForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="card" [busy]="isLoading">
+    <div class="card-header">
+      <h4 class="card-header-title"></h4>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <label class="col-form-label" for="MainTopic">{{ 'StudyLevels' | localize }}</label>
+        <!-- <input
+          [typeahead]="studyLevels"
+          typeaheadOptionField="name"
+          class="list-search form-control"
+          [typeaheadMinLength]="0"
+          (typeaheadOnSelect)="onStudyLevelSelect($event)"
+        /> -->
+      </div>
+      <div *ngFor="let studyLevel of selectedStudyLevels" class="alert alert-info alert-dismissible ac-alert" role="alert">
+        {{ studyLevel.name }}
+      </div>
+    </div>
+  </div>
+</form>

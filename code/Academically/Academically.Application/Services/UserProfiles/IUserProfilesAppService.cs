@@ -14,7 +14,5 @@ namespace Academically.Services.UserProfiles
         Task<IEnumerable<GetUserDisciplineTaxonomyDto>> GetDisciplineTaxonomies(long userId);
         Task CreateManyDisciplineTaxonomy(IEnumerable<Guid> disciplineTaxonomyIds);
         Task DeleteDisciplineTaxonomy(Guid userDisciplineTaxonomyId);
-        Task CreateManyDisciplineTaxonomyStudyLevel(Guid disciplineTaxonomyId, IEnumerable<int> studyLevelIds);
-        Task DeleteDisciplineTaxonomyStudyLevel(int id);
     }
 }

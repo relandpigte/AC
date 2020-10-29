@@ -10,5 +10,6 @@ namespace Academically.Entities
     public class DisciplineTaxonomyStudylevel : Entity<int>
     {
         public string Name { get; set; }
+        public int LevelId { get; set; }
     }
 }

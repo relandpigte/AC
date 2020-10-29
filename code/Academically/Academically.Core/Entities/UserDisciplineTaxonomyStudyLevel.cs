@@ -9,10 +9,8 @@ namespace Academically.Entities
     [Table("AcademicallyUserDisciplineTaxonomyStudyLevels")]
     public class UserDisciplineTaxonomyStudyLevel : Entity<int>
     {
-        public int LevelId { get; set; }
+        public int DisciplineTaxonomyStudyLevelId { get; set; }
         public long UserId { get; set; }
-        public Guid? DisciplineTaxonomyId { get; set; }
-        public DateTime? CreationTime { get; set; }
-
+        public Guid DisciplineTaxonomyId { get; set; }
     }
 }

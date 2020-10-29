@@ -7,9 +7,10 @@ using System.Text;
 
 namespace Academically.Services.DisciplineTaxonomyStudyLevels.Dto
 {
-    [AutoMap(typeof(UserDisciplineTaxonomyStudyLevel))]
+    [AutoMap(typeof(DisciplineTaxonomyStudylevel))]
     public class DisciplineTaxonomyStudyLevelDto  : EntityDto<int>
     {
         public string Name { get; set; }
+        public int LevelId { get; set; }
     }
 }

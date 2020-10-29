@@ -802,6 +802,253 @@ export class DisciplineTaxonomiesServiceProxy {
 }
 
 @Injectable()
+export class DisciplineTaxonomyStudyLevelsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @param userId (optional) 
+     * @param disciplineTaxonomyId (optional) 
+     * @return Success
+     */
+    getAll(userId: number | null | undefined, disciplineTaxonomyId: string | null | undefined): Observable<DisciplineTaxonomyStudyLevelDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomyStudyLevels/GetAll?";
+        if (userId !== undefined && userId !== null)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (disciplineTaxonomyId !== undefined && disciplineTaxonomyId !== null)
+            url_ += "disciplineTaxonomyId=" + encodeURIComponent("" + disciplineTaxonomyId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<DisciplineTaxonomyStudyLevelDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DisciplineTaxonomyStudyLevelDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<DisciplineTaxonomyStudyLevelDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(DisciplineTaxonomyStudyLevelDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DisciplineTaxonomyStudyLevelDto[]>(<any>null);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @param disciplineTaxonomyId (optional) 
+     * @return Success
+     */
+    getUserDisciplineTaxonomyStudyLevels(userId: number | undefined, disciplineTaxonomyId: string | undefined): Observable<DisciplineTaxonomyStudyLevelDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomyStudyLevels/GetUserDisciplineTaxonomyStudyLevels?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (disciplineTaxonomyId === null)
+            throw new Error("The parameter 'disciplineTaxonomyId' cannot be null.");
+        else if (disciplineTaxonomyId !== undefined)
+            url_ += "disciplineTaxonomyId=" + encodeURIComponent("" + disciplineTaxonomyId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUserDisciplineTaxonomyStudyLevels(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUserDisciplineTaxonomyStudyLevels(<any>response_);
+                } catch (e) {
+                    return <Observable<DisciplineTaxonomyStudyLevelDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DisciplineTaxonomyStudyLevelDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetUserDisciplineTaxonomyStudyLevels(response: HttpResponseBase): Observable<DisciplineTaxonomyStudyLevelDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(DisciplineTaxonomyStudyLevelDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DisciplineTaxonomyStudyLevelDto[]>(<any>null);
+    }
+
+    /**
+     * @param disciplineTaxonomyId (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    createManyDisciplineTaxonomyStudyLevel(disciplineTaxonomyId: string | undefined, body: number[] | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomyStudyLevels/CreateManyDisciplineTaxonomyStudyLevel?";
+        if (disciplineTaxonomyId === null)
+            throw new Error("The parameter 'disciplineTaxonomyId' cannot be null.");
+        else if (disciplineTaxonomyId !== undefined)
+            url_ += "disciplineTaxonomyId=" + encodeURIComponent("" + disciplineTaxonomyId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateManyDisciplineTaxonomyStudyLevel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateManyDisciplineTaxonomyStudyLevel(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateManyDisciplineTaxonomyStudyLevel(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    deleteDisciplineTaxonomyStudyLevel(id: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomyStudyLevels/DeleteDisciplineTaxonomyStudyLevel?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteDisciplineTaxonomyStudyLevel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteDisciplineTaxonomyStudyLevel(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeleteDisciplineTaxonomyStudyLevel(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class RegistrationsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -4773,6 +5020,57 @@ export interface IDisciplineTaxonomyDto {
     id: string;
 }
 
+export class DisciplineTaxonomyStudyLevelDto implements IDisciplineTaxonomyStudyLevelDto {
+    name: string | undefined;
+    levelId: number;
+    id: number;
+
+    constructor(data?: IDisciplineTaxonomyStudyLevelDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.levelId = _data["levelId"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): DisciplineTaxonomyStudyLevelDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DisciplineTaxonomyStudyLevelDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["levelId"] = this.levelId;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): DisciplineTaxonomyStudyLevelDto {
+        const json = this.toJSON();
+        let result = new DisciplineTaxonomyStudyLevelDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDisciplineTaxonomyStudyLevelDto {
+    name: string | undefined;
+    levelId: number;
+    id: number;
+}
+
 export class RegistrationDto implements IRegistrationDto {
     firstName: string | undefined;
     lastName: string | undefined;
@@ -6715,6 +7013,7 @@ export interface IGetProfileDetailDto {
 
 export class GetUserDisciplineTaxonomyDto implements IGetUserDisciplineTaxonomyDto {
     disciplineTaxonomy: DisciplineTaxonomyDto;
+    levelId: number;
     id: string;
 
     constructor(data?: IGetUserDisciplineTaxonomyDto) {
@@ -6729,6 +7028,7 @@ export class GetUserDisciplineTaxonomyDto implements IGetUserDisciplineTaxonomyD
     init(_data?: any) {
         if (_data) {
             this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomyDto.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
+            this.levelId = _data["levelId"];
             this.id = _data["id"];
         }
     }
@@ -6743,6 +7043,7 @@ export class GetUserDisciplineTaxonomyDto implements IGetUserDisciplineTaxonomyD
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
+        data["levelId"] = this.levelId;
         data["id"] = this.id;
         return data; 
     }
@@ -6757,6 +7058,7 @@ export class GetUserDisciplineTaxonomyDto implements IGetUserDisciplineTaxonomyD
 
 export interface IGetUserDisciplineTaxonomyDto {
     disciplineTaxonomy: DisciplineTaxonomyDto;
+    levelId: number;
     id: string;
 }
 

@@ -73,6 +73,7 @@ import { VerificationsWidgetComponent } from './widgets/verifications-widget/ver
 import { AccountComponent } from './account/account.component';
 import { AccountDetailsComponent } from './account/account-details/account-details.component';
 import { AccountPrivacyAndDataProtectionComponent } from './account/account-privacy-and-data-protection/account-privacy-and-data-protection.component';
+import { StudyLevelsComponent } from './shared/study-levels/study-levels.component';
 
 @NgModule({
   declarations: [
@@ -135,6 +136,7 @@ import { AccountPrivacyAndDataProtectionComponent } from './account/account-priv
     AccountComponent,
     AccountDetailsComponent,
     AccountPrivacyAndDataProtectionComponent,
+    StudyLevelsComponent,
   ],
   imports: [
     CommonModule,

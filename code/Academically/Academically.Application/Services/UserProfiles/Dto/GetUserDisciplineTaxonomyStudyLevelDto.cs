@@ -11,6 +11,7 @@ namespace Academically.Services.UserProfiles.Dto
     [AutoMapFrom(typeof(UserDisciplineTaxonomyStudyLevel))]
     public class GetUserDisciplineTaxonomyStudyLevelDto : EntityDto<int>
     {
-       public DisciplineTaxonomyStudyLevelDto StudyLevels { get; set; }
+        public int LevelId { get; set; }
+        public string Name { get; set; }
     }
 }
