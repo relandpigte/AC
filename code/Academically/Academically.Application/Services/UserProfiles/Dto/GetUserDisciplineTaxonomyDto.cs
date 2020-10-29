@@ -10,5 +10,6 @@ namespace Academically.Services.UserProfiles.Dto
     public class GetUserDisciplineTaxonomyDto : EntityDto<Guid>
     {
         public DisciplineTaxonomyDto DisciplineTaxonomy { get; set; }
+        public int LevelId { get; set; }
     }
 }

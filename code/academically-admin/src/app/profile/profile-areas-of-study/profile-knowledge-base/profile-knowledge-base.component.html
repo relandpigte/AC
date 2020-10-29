@@ -19,7 +19,27 @@
       role="alert"
       [class.pr-2]="isViewOnly"
     >
-      {{ userDisciplineTaxonomy.disciplineTaxonomy.name }}
+      <ng-container *ngIf="userDisciplineTaxonomy.levelId !== 0">
+        <span
+          class="discipline-taxonomy-name"
+          data-toggle="tooltip"
+          data-toggle="tooltip"
+          [title]="'StudyLevel' + userDisciplineTaxonomy.levelId | localize"
+          (click)="$event.preventDefault(); onSelectStudyLevels(userDisciplineTaxonomy.disciplineTaxonomy.id)"
+        >
+          {{ userDisciplineTaxonomy.disciplineTaxonomy.name }}
+          <span>({{ 'StudyLevelValue' + userDisciplineTaxonomy.levelId | localize }})</span>
+        </span>
+      </ng-container>
+
+      <ng-container *ngIf="userDisciplineTaxonomy.levelId === 0">
+        <span
+          (click)="$event.preventDefault(); onSelectStudyLevels(userDisciplineTaxonomy.disciplineTaxonomy.id)"
+          class="discipline-taxonomy-name"
+        >
+          {{ userDisciplineTaxonomy.disciplineTaxonomy.name }}
+        </span>
+      </ng-container>
       <button
         *ngIf="!isViewOnly && permission.isGranted('Pages.Profile.AreasOfStudy.KnowledgeBase.Delete')"
         (click)="onRemoveDisciplineTaxonomyClick(userDisciplineTaxonomy.id)"

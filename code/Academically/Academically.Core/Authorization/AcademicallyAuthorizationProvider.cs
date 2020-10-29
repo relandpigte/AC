@@ -69,6 +69,8 @@ namespace Academically.Authorization
             var profileAreasOfStudyKnowledgeBasePermission = profileAreasOfStudyPermission.CreateChildPermission(PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase, L("KnowledgeBase"));
             profileAreasOfStudyKnowledgeBasePermission.CreateChildPermission(PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Create, L("Create"));
             profileAreasOfStudyKnowledgeBasePermission.CreateChildPermission(PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete, L("Delete"));
+            profileAreasOfStudyKnowledgeBasePermission.CreateChildPermission(PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Study_Level_Create, L("Create"));
+            profileAreasOfStudyKnowledgeBasePermission.CreateChildPermission(PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Study_Level_Delete, L("Delete"));
 
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
         }
