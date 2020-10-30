@@ -74,6 +74,7 @@ import { VerificationsWidgetComponent } from './widgets/verifications-widget/ver
 import { AccountComponent } from './account/account.component';
 import { AccountDetailsComponent } from './account/account-details/account-details.component';
 import { AccountPrivacyAndDataProtectionComponent } from './account/account-privacy-and-data-protection/account-privacy-and-data-protection.component';
+import { StudyLevelsComponent } from './shared/study-levels/study-levels.component';
 import { ProfileResearchMethodsComponent } from './profile/profile-research-methods/profile-research-methods.component';
 import { ResearchMethodsSearchComponent } from './shared/research-methods-search/research-methods-search.component';
 import { SupportServicesSearchComponent } from './shared/support-services-search/support-services-search.component';
@@ -140,6 +141,7 @@ import { ProfileSupportServicesComponent } from './profile/profile-support-servi
     AccountComponent,
     AccountDetailsComponent,
     AccountPrivacyAndDataProtectionComponent,
+    StudyLevelsComponent,
     ProfileResearchMethodsComponent,
     ResearchMethodsSearchComponent,
     SupportServicesSearchComponent,

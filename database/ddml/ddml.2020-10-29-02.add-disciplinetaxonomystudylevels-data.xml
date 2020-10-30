@@ -1,0 +1,19 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="root (generated)" id="34237942312-1">
+        <sql>
+            INSERT INTO AcademicallyDisciplineTaxonomyStudyLevels (Id, Name, LevelId) VALUES (100, 'Entry Level (Skills for life)', 0);
+            INSERT INTO AcademicallyDisciplineTaxonomyStudyLevels (Id, Name, LevelId) VALUES (101, 'Level 1 (GCSE - grades 1,2,3 or G,F,E,D or equivalent)', 1);
+            INSERT INTO AcademicallyDisciplineTaxonomyStudyLevels (Id, Name, LevelId) VALUES (102, 'Level 2 (GCSE - grades 6,7,8,9 or C,B,A,A* or equivalent)', 2);
+            INSERT INTO AcademicallyDisciplineTaxonomyStudyLevels (Id, Name, LevelId) VALUES (103, 'Level 3 (A-level or equivalent)', 3);
+            INSERT INTO AcademicallyDisciplineTaxonomyStudyLevels (Id, Name, LevelId) VALUES (104, 'Level 4 (Higher National Certificate or equivalent)', 4);
+            INSERT INTO AcademicallyDisciplineTaxonomyStudyLevels (Id, Name, LevelId) VALUES (105, 'Level 5 (Higher National Diploma or equivalent)', 5);
+            INSERT INTO AcademicallyDisciplineTaxonomyStudyLevels (Id, Name, LevelId) VALUES (106, 'Level 6 (Bachelor''s degree or equivalent)', 6);
+            INSERT INTO AcademicallyDisciplineTaxonomyStudyLevels (Id, Name, LevelId) VALUES (107, 'Level 7 (Masters degree or equivalent)', 7);
+            INSERT INTO AcademicallyDisciplineTaxonomyStudyLevels (Id, Name, LevelId) VALUES (108, 'Level 8 (Doctoral degree or equivalent)', 8);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

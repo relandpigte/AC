@@ -15,6 +15,7 @@ using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 using Academically.Configuration;
 using Academically.Entities;
+using Academically.Services.DisciplineTaxonomyStudyLevels.Dto;
 using Academically.Services.ResearchMethods.Dto;
 using Academically.Services.SupportServices.Dto;
 using Academically.Services.UserProfiles.Dto;
@@ -31,6 +32,8 @@ namespace Academically.Services.UserProfiles
         private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
         private readonly IRepository<User, long> _usersRepository;
         private readonly IRepository<UserDisciplineTaxonomy, Guid> _userDisciplineTaxonomiesRepository;
+        private readonly IRepository<UserDisciplineTaxonomyStudyLevel, int> _userDisciplineTaxonomyStudyLevelsRepository;
+        private readonly IRepository<DisciplineTaxonomyStudylevel, int> _disciplineTaxonomyStudyLevelsRepository;
         private readonly IRepository<UserResearchMethod, Guid> _userResearchMethodsRepository;
         private readonly IRepository<UserSupportService, Guid> _userSupportServicesRepository;
         private readonly RoleManager _roleManager;
@@ -45,7 +48,9 @@ namespace Academically.Services.UserProfiles
             IRepository<UserSupportService, Guid> userSupportServicesRepository,
             RoleManager roleManager,
             ISettingManager settingManager,
-            IFileManagerService fileManagerService
+            IFileManagerService fileManagerService,
+            IRepository<UserDisciplineTaxonomyStudyLevel, int> userDisciplineTaxonomyStudyLevelsRepository,
+            IRepository<DisciplineTaxonomyStudylevel, int> disciplineTaxonomyStudyLevelsRepository
             )
         {
             _userProfilesRepository = userProfilesRepository;
@@ -56,6 +61,8 @@ namespace Academically.Services.UserProfiles
             _roleManager = roleManager;
             _settingManager = settingManager;
             _fileManagerService = fileManagerService;
+            _userDisciplineTaxonomyStudyLevelsRepository = userDisciplineTaxonomyStudyLevelsRepository;
+            _disciplineTaxonomyStudyLevelsRepository = disciplineTaxonomyStudyLevelsRepository;
         }
 
         [AbpAuthorize(PermissionNames.Pages_Account_Details)]
@@ -137,6 +144,16 @@ namespace Academically.Services.UserProfiles
                 .Select(e => ObjectMapper.Map<GetUserDisciplineTaxonomyDto>(e))
                 .ToListAsync();
 
+            foreach(var disciplineTaxonomies in userDisciplineTaxonomies)
+            {
+                var studyLevel = await _userDisciplineTaxonomyStudyLevelsRepository.GetAll()
+                    .Where(e => e.UserId == userId && e.DisciplineTaxonomyId == disciplineTaxonomies.DisciplineTaxonomy.Id)
+                    .ToListAsync();
+
+                if(studyLevel.Any())
+                    disciplineTaxonomies.LevelId = studyLevel.OrderByDescending(e => e.DisciplineTaxonomyStudyLevelId).FirstOrDefault().DisciplineTaxonomyStudyLevelId;
+            }
+
             return userDisciplineTaxonomies;
         }
 
@@ -157,7 +174,46 @@ namespace Academically.Services.UserProfiles
         [AbpAuthorize(PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Delete)]
         public async Task DeleteDisciplineTaxonomy(Guid userDisciplineTaxonomyId)
         {
+            var userDisciplineTaxonomy = _userDisciplineTaxonomiesRepository.Get(userDisciplineTaxonomyId);
             await _userDisciplineTaxonomiesRepository.DeleteAsync(userDisciplineTaxonomyId);
+            await _userDisciplineTaxonomyStudyLevelsRepository.DeleteAsync(e => e.DisciplineTaxonomyId == userDisciplineTaxonomy.DisciplineTaxonomyId && e.UserId == AbpSession.UserId.Value);
+        }
+
+        public async Task<IEnumerable<DisciplineTaxonomyStudyLevelDto>> GetUserDisciplineTaxonomyStudyLevels(long userId, Guid disciplineTaxonomyId)
+        {
+            var disciplineStudyLevels = new List<DisciplineTaxonomyStudyLevelDto>();
+
+            var userDiscplineStudyLevels = GetUserDisciplineTaxonomyStudyLevelIds(userId, disciplineTaxonomyId);
+            disciplineStudyLevels = await _disciplineTaxonomyStudyLevelsRepository.GetAll()
+                .Where(e => userDiscplineStudyLevels.Any(t => t == e.Id))
+                .Select(e => ObjectMapper.Map<DisciplineTaxonomyStudyLevelDto>(e))
+                .ToListAsync();
+
+            return disciplineStudyLevels;
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Study_Level_Create)]
+        public async Task CreateManyDisciplineTaxonomyStudyLevel(Guid disciplineTaxonomyId, IEnumerable<int> studyLevelIds)
+        {
+            var userDisciplineStudyLevels = _userDisciplineTaxonomyStudyLevelsRepository.DeleteAsync(e => e.DisciplineTaxonomyId == disciplineTaxonomyId && e.UserId == AbpSession.UserId.Value);
+            foreach (var levelId in studyLevelIds)
+            {
+                var userDisciplineStudyLevel = new UserDisciplineTaxonomyStudyLevel()
+                {
+                    UserId = AbpSession.UserId.Value,
+                    DisciplineTaxonomyId = disciplineTaxonomyId,
+                    DisciplineTaxonomyStudyLevelId = levelId
+                };
+
+                await _userDisciplineTaxonomyStudyLevelsRepository.InsertAsync(userDisciplineStudyLevel);
+            }
+        }
+
+        private IQueryable<int> GetUserDisciplineTaxonomyStudyLevelIds(long userId, Guid disciplineTaxonomyId)
+        {
+            return _userDisciplineTaxonomyStudyLevelsRepository.GetAll()
+                .Where(e => e.UserId == userId && e.DisciplineTaxonomyId == disciplineTaxonomyId)
+                .Select(e => e.DisciplineTaxonomyStudyLevelId);
         }
 
         public async Task<IEnumerable<ResearchMethodDto>> GetResearchMethods(long userId)
@@ -196,7 +252,6 @@ namespace Academically.Services.UserProfiles
                 .Where(e => e.UserId == userId)
                 .Select(e => ObjectMapper.Map<SupportServiceDto>(e.SupportService))
                 .ToListAsync();
-
             return userSupportServices;
         }
 

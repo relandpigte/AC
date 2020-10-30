@@ -1,0 +1,36 @@
+<form class="form-horizontal" autocomplete="off" #studyLevelsForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="card" [busy]="isLoading">
+    <div class="card-header">
+      <h4 class="card-header-title"></h4>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <label class="col-form-label" for="MainTopic">{{ 'StudyLevels' | localize }}</label>
+        <input
+          [(ngModel)]="studyLevelName"
+          name="studyLevel_Name"
+          id="studyLevel_Name"
+          [typeahead]="studyLevels"
+          typeaheadOptionField="name"
+          class="list-search form-control"
+          [typeaheadMinLength]="0"
+          (typeaheadOnSelect)="onStudyLevelSelect($event.item)"
+        />
+      </div>
+      <div *ngFor="let studyLevel of selectedStudyLevels" class="alert alert-info alert-dismissible ac-alert" role="alert">
+        {{ studyLevel.name }}
+        <button
+          *ngIf="permission.isGranted('Pages.Profile.AreasOfStudy.KnowledgeBase.StudyLevel.Delete')"
+          (click)="onRemoveStudyLevelClick(studyLevel)"
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+    </div>
+    <abp-modal-footer [cancelDisabled]="isLoading" (onCancelClick)="onCloseClick()"> </abp-modal-footer>
+  </div>
+</form>

@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="mlabio (generated)" id="2893674872634-1">
+        <createTable tableName="AcademicallyUserDisciplineTaxonomyStudyLevels">
+            <column name="Id" type="int" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="DisciplineTaxonomyStudyLevelId" type="int" />
+            <column name="UserId" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DisciplineTaxonomyId" type="char(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="mlabio (generated)" id="2893674872634-2">
+        <createIndex indexName="FK_UDTSL_User_UserId_idx" tableName="AcademicallyUserDisciplineTaxonomyStudyLevels">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="2893674872634-3">
+        <createIndex indexName="FK_UDTSL_DisciplineTaxonomy_DisciplineTaxonomyId_idx" tableName="AcademicallyUserDisciplineTaxonomyStudyLevels">
+            <column name="DisciplineTaxonomyId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="mlabio (generated)" id="2893674872634-4">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="AcademicallyUserDisciplineTaxonomyStudyLevels" constraintName="FK_UDTSL_User_UserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="mlabio (generated)" id="2893674872634-5">
+        <addForeignKeyConstraint baseColumnNames="DisciplineTaxonomyId" baseTableName="AcademicallyUserDisciplineTaxonomyStudyLevels" constraintName="FK_UDTSL_DisciplineTaxonomy_DisciplineTaxonomyId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyDisciplineTaxonomies" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
