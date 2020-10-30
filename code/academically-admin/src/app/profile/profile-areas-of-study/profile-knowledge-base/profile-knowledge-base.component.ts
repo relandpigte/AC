@@ -71,7 +71,7 @@ export class ProfileKnowledgeBaseComponent extends AppComponentBase implements O
         })
       )
       .subscribe(() => {
-        this.notify.success(this.l('TheAreaOfStudyWasRemoved'));
+        this.notify.success(this.l('TheAreasOfStudyWereAdded'));
         this.getDiscplineTaxonomiesOfUser();
       });
   }

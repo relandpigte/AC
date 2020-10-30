@@ -1,0 +1,32 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="root (generated)" id="1604054591720-1">
+        <createTable tableName="AcademicallyUserSupportServices">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SupportServiceId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1604054591720-2">
+        <createIndex indexName="FK_USSs_SupportService_SupportServiceId_idx" tableName="AcademicallyUserSupportServices">
+            <column name="SupportServiceId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1604054591720-3">
+        <createIndex indexName="SK_USSs_User_UserId_idx" tableName="AcademicallyUserSupportServices">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1604054591720-4">
+        <addForeignKeyConstraint baseColumnNames="SupportServiceId" baseTableName="AcademicallyUserSupportServices" constraintName="FK_USSs_SupportService_SupportServiceId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallySupportServices" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1604054591720-5">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="AcademicallyUserSupportServices" constraintName="SK_USSs_User_UserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

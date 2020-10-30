@@ -15,6 +15,8 @@ using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 using Academically.Configuration;
 using Academically.Entities;
+using Academically.Services.ResearchMethods.Dto;
+using Academically.Services.SupportServices.Dto;
 using Academically.Services.UserProfiles.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +31,8 @@ namespace Academically.Services.UserProfiles
         private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
         private readonly IRepository<User, long> _usersRepository;
         private readonly IRepository<UserDisciplineTaxonomy, Guid> _userDisciplineTaxonomiesRepository;
+        private readonly IRepository<UserResearchMethod, Guid> _userResearchMethodsRepository;
+        private readonly IRepository<UserSupportService, Guid> _userSupportServicesRepository;
         private readonly RoleManager _roleManager;
         private readonly ISettingManager _settingManager;
         private readonly IFileManagerService _fileManagerService;
@@ -37,6 +41,8 @@ namespace Academically.Services.UserProfiles
             IRepository<UserProfile, Guid> userProfilesRepository,
             IRepository<User, long> usersRepository,
             IRepository<UserDisciplineTaxonomy, Guid> userDisciplineTaxonomiesRepository,
+            IRepository<UserResearchMethod, Guid> userResearchMethodsRepository,
+            IRepository<UserSupportService, Guid> userSupportServicesRepository,
             RoleManager roleManager,
             ISettingManager settingManager,
             IFileManagerService fileManagerService
@@ -45,6 +51,8 @@ namespace Academically.Services.UserProfiles
             _userProfilesRepository = userProfilesRepository;
             _usersRepository = usersRepository;
             _userDisciplineTaxonomiesRepository = userDisciplineTaxonomiesRepository;
+            _userResearchMethodsRepository = userResearchMethodsRepository;
+            _userSupportServicesRepository = userSupportServicesRepository;
             _roleManager = roleManager;
             _settingManager = settingManager;
             _fileManagerService = fileManagerService;
@@ -150,6 +158,64 @@ namespace Academically.Services.UserProfiles
         public async Task DeleteDisciplineTaxonomy(Guid userDisciplineTaxonomyId)
         {
             await _userDisciplineTaxonomiesRepository.DeleteAsync(userDisciplineTaxonomyId);
+        }
+
+        public async Task<IEnumerable<ResearchMethodDto>> GetResearchMethods(long userId)
+        {
+            var userResearchMethods = await _userResearchMethodsRepository.GetAll()
+                .Include(e => e.ResearchMethod)
+                .Where(e => e.UserId == userId)
+                .Select(e => ObjectMapper.Map<ResearchMethodDto>(e.ResearchMethod))
+                .ToListAsync();
+
+            return userResearchMethods;
+        }
+
+        public async Task CreateManyResearchMethods(IEnumerable<Guid> researchMethodIds)
+        {
+            foreach (var researchMethodId in researchMethodIds)
+            {
+                var userResearchMethod = new UserResearchMethod()
+                {
+                    UserId = AbpSession.UserId.Value,
+                    ResearchMethodId = researchMethodId,
+                };
+                await _userResearchMethodsRepository.InsertAsync(userResearchMethod);
+            }
+        }
+
+        public async Task DeleteResearchMethod(long userId, Guid researchMethodId)
+        {
+            await _userResearchMethodsRepository.DeleteAsync(e => e.UserId == userId && e.ResearchMethodId == researchMethodId);
+        }
+
+        public async Task<IEnumerable<SupportServiceDto>> GetSupportServices(long userId)
+        {
+            var userSupportServices = await _userSupportServicesRepository.GetAll()
+                .Include(e => e.SupportService)
+                .Where(e => e.UserId == userId)
+                .Select(e => ObjectMapper.Map<SupportServiceDto>(e.SupportService))
+                .ToListAsync();
+
+            return userSupportServices;
+        }
+
+        public async Task CreateManySupportServices(IEnumerable<Guid> supportServiceIds)
+        {
+            foreach (var supportServiceId in supportServiceIds)
+            {
+                var userSupportService = new UserSupportService()
+                {
+                    UserId = AbpSession.UserId.Value,
+                    SupportServiceId = supportServiceId,
+                };
+                await _userSupportServicesRepository.InsertAsync(userSupportService);
+            }
+        }
+
+        public async Task DeleteSupportService(long userId, Guid supportServiceId)
+        {
+            await _userSupportServicesRepository.DeleteAsync(e => e.UserId == userId && e.SupportServiceId == supportServiceId);
         }
 
         private byte[] MakeThumbnail(byte[] imageBytes, int thumbWidth, int thumbHeight)

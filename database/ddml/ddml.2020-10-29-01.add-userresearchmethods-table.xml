@@ -1,0 +1,32 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="root (generated)" id="1604046165249-1">
+        <createTable tableName="AcademicallyUserResearchMethods">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ResearchMethodId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1604046165249-2">
+        <createIndex indexName="FK_URMs_ResearchMethod_ResearchMethodId_idx" tableName="AcademicallyUserResearchMethods">
+            <column name="ResearchMethodId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1604046165249-3">
+        <createIndex indexName="FK_URMs_User_UserId_idx" tableName="AcademicallyUserResearchMethods">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1604046165249-4">
+        <addForeignKeyConstraint baseColumnNames="ResearchMethodId" baseTableName="AcademicallyUserResearchMethods" constraintName="FK_URMs_ResearchMethod_ResearchMethodId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyResearchMethodologies" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1604046165249-5">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="AcademicallyUserResearchMethods" constraintName="FK_URMs_User_UserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,47 @@
+<form class="form-horizontal" autocomplete="off" #taxonomySearchForm="ngForm" (ngSubmit)="onFormSubmit()" [busy]="isLoading">
+  <div class="modal-card card">
+    <div class="card-header">
+      <h4 class="card-header-title">
+        {{ 'ResearchMethods' | localize }}
+      </h4>
+      <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="card-body">
+      <div
+        *ngFor="let selectedResearchMethod of selectedResearchMethods"
+        class="alert alert-secondary alert-dismissible ac-alert"
+        role="alert"
+      >
+        {{ selectedResearchMethod.label }}
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+          (click)="$event.preventDefault(); onRemoveClick(selectedResearchMethod.key)"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <p-tree
+        [value]="researchMethods"
+        [propagateSelectionUp]="false"
+        [propagateSelectionDown]="false"
+        [emptyMessage]="''"
+        [(selection)]="selectedResearchMethods"
+        [filter]="true"
+        selectionMode="checkbox"
+      >
+        <ng-template let-node pTemplate="editable">
+          {{ node.label }}
+          <button type="button" class="btn btn-sm btn-primary ml-5" (click)="$event.preventDefault(); $event.stopPropagation()">
+            <i class="fe fe-plus"></i>
+          </button>
+        </ng-template>
+      </p-tree>
+    </div>
+    <abp-modal-footer [saveDisabled]="!taxonomySearchForm.form.valid || isLoading" (onCancelClick)="onCloseClick()"> </abp-modal-footer>
+  </div>
+</form>

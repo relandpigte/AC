@@ -282,43 +282,9 @@
 
       <profile-knowledge-base *ngIf="userId" [userId]="userId" [isViewOnly]="isViewOnly"></profile-knowledge-base>
 
-      <div class="card">
-        <div class="card-header">
-          <h4 class="card-header-title">
-            {{ 'ResearchMethods' | localize }}
-          </h4>
-          <a *ngIf="!isViewOnly" href="#" class="btn btn-sm btn-primary" (click)="$event.preventDefault()">
-            {{ 'Add' | localize }}
-          </a>
-        </div>
-        <div class="card-body">
-          <div class="alert alert-secondary alert-dismissible ac-alert" role="alert">
-            Survey
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-        </div>
-      </div>
+      <profile-research-methods *ngIf="userId" [userId]="userId" [isViewOnly]="isViewOnly"></profile-research-methods>
 
-      <div class="card">
-        <div class="card-header">
-          <h4 class="card-header-title">
-            {{ 'Services' | localize }}
-          </h4>
-          <a *ngIf="!isViewOnly" href="#" class="btn btn-sm btn-primary" (click)="$event.preventDefault()">
-            {{ 'Add' | localize }}
-          </a>
-        </div>
-        <div class="card-body">
-          <div class="alert alert-success alert-dismissible ac-alert" role="alert">
-            Tutorial
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-        </div>
-      </div>
+      <profile-support-services *ngIf="userId" [userId]="userId" [isViewOnly]="isViewOnly"></profile-support-services>
     </div>
   </div>
 </div>

@@ -15,6 +15,7 @@ import { SharedModule } from '@shared/shared.module';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NgxQRCodeModule } from '@techiediaries/ngx-qrcode';
+import { TreeModule } from 'primeng/tree';
 // directives
 import { Select2Directive } from '@shared/directives/select2.directive';
 import { SunburstChartDirective } from '@shared/directives/sunburst-chart.directive';
@@ -73,6 +74,10 @@ import { VerificationsWidgetComponent } from './widgets/verifications-widget/ver
 import { AccountComponent } from './account/account.component';
 import { AccountDetailsComponent } from './account/account-details/account-details.component';
 import { AccountPrivacyAndDataProtectionComponent } from './account/account-privacy-and-data-protection/account-privacy-and-data-protection.component';
+import { ProfileResearchMethodsComponent } from './profile/profile-research-methods/profile-research-methods.component';
+import { ResearchMethodsSearchComponent } from './shared/research-methods-search/research-methods-search.component';
+import { SupportServicesSearchComponent } from './shared/support-services-search/support-services-search.component';
+import { ProfileSupportServicesComponent } from './profile/profile-support-services/profile-support-services.component';
 
 @NgModule({
   declarations: [
@@ -135,6 +140,10 @@ import { AccountPrivacyAndDataProtectionComponent } from './account/account-priv
     AccountComponent,
     AccountDetailsComponent,
     AccountPrivacyAndDataProtectionComponent,
+    ProfileResearchMethodsComponent,
+    ResearchMethodsSearchComponent,
+    SupportServicesSearchComponent,
+    ProfileSupportServicesComponent,
   ],
   imports: [
     CommonModule,
@@ -153,6 +162,7 @@ import { AccountPrivacyAndDataProtectionComponent } from './account/account-priv
     TypeaheadModule.forRoot(),
     BsDatepickerModule.forRoot(),
     NgxQRCodeModule,
+    TreeModule,
   ],
   providers: [],
   entryComponents: [
@@ -170,6 +180,8 @@ import { AccountPrivacyAndDataProtectionComponent } from './account/account-priv
     CreateEditProfileEducationComponent,
     TaxonomySearchComponent,
     ThemeSettingsComponent,
+    ResearchMethodsSearchComponent,
+    SupportServicesSearchComponent,
   ],
 })
 export class AppModule {}
