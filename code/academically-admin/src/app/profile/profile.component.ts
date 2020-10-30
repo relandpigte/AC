@@ -78,7 +78,7 @@ export class ProfileComponent extends AppComponentBase implements OnInit {
   private getUserProfile(): void {
     this.isLoading = true;
     this._userProfilesService.getDetail(this.userId).subscribe((profileDetail) => {
-      if (this.isViewOnly && profileDetail.role.toLowerCase() !== 'tutor') {
+      if (!profileDetail.userId || (this.isViewOnly && profileDetail.role.toLowerCase() !== 'tutor')) {
         this._router.navigate(['/account/404']);
       }
       this.profileDetail = profileDetail;

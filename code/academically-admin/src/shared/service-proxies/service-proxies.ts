@@ -7505,6 +7505,7 @@ export interface IUserEducationDtoPagedResultDto {
 }
 
 export class GetProfileDetailDto implements IGetProfileDetailDto {
+    userId: number;
     firstName: string | undefined;
     lastName: string | undefined;
     dateOfBirth: moment.Moment | undefined;
@@ -7529,6 +7530,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
 
     init(_data?: any) {
         if (_data) {
+            this.userId = _data["userId"];
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
             this.dateOfBirth = _data["dateOfBirth"] ? moment(_data["dateOfBirth"].toString()) : <any>undefined;
@@ -7553,6 +7555,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
         data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
@@ -7577,6 +7580,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
 }
 
 export interface IGetProfileDetailDto {
+    userId: number;
     firstName: string | undefined;
     lastName: string | undefined;
     dateOfBirth: moment.Moment | undefined;

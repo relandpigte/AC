@@ -71,6 +71,12 @@ namespace Academically.Services.UserProfiles
             var user = await _usersRepository.GetAll()
                 .Include(e => e.Roles)
                 .FirstOrDefaultAsync(e => e.Id == userId);
+
+            if (user == null)
+            {
+                return new GetProfileDetailDto();
+            }
+
             var userProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == userId);
             var role = await _roleManager.GetRoleByIdAsync(user.Roles.FirstOrDefault().RoleId);
 
@@ -79,6 +85,7 @@ namespace Academically.Services.UserProfiles
             {
                 output = new GetProfileDetailDto();
             }
+            output.UserId = user.Id;
             output.FirstName = user.Name;
             output.LastName = user.Surname;
             output.ProfilePictureUrl = _fileManagerService.GetFileUrl(userProfile?.ProfilePictureFileName, userId, AppSettingNames.Aws_S3_Folders_ProfilePictures);
