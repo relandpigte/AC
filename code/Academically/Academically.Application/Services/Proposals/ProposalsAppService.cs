@@ -8,6 +8,7 @@ using Academically.Application.Shared.Services;
 using Academically.Authorization.Roles;
 using Academically.Configuration;
 using Academically.Entities;
+using Academically.Entities.Enums;
 using Academically.Services.Proposals.Dto;
 using GeoCoordinatePortable;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +34,7 @@ namespace Academically.Services.Proposals
             _fileManagerService = fileManagerService;
         }
 
-        public async Task<IEnumerable<SearchTutorDto>> SearchTutors(int distance)
+        public async Task<IEnumerable<SearchTutorDto>> SearchTutors(int distance, int? level)
         {
             var tutorRole = _roleManager.GetRoleByName(StaticRoleNames.Tenants.Tutor);
             var currentUserProfile = await _userProfilesAppService.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
@@ -54,6 +55,7 @@ namespace Academically.Services.Proposals
                     gc = (new GeoCoordinate(e.Latitude ?? 0, e.Longitude ?? 0).GetDistanceTo(userLocationCoordinate)) * METER_TO_MILE_CONVERSION
                 })
                 .WhereIf(distance >= 0, e => e.gc <= distance)
+                .WhereIf(level != 0, e => e.up.User.UserEducations.Any(t => (int)t.Level == level))
                 .OrderBy(e => e.gc)
                 .Select(e => new UserProfile { 
                     User = e.up.User,
