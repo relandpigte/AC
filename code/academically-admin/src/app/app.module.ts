@@ -79,6 +79,7 @@ import { ProfileResearchMethodsComponent } from './profile/profile-research-meth
 import { ResearchMethodsSearchComponent } from './shared/research-methods-search/research-methods-search.component';
 import { SupportServicesSearchComponent } from './shared/support-services-search/support-services-search.component';
 import { ProfileSupportServicesComponent } from './profile/profile-support-services/profile-support-services.component';
+import { GoogleMapsService } from '@shared/services/google-maps.service';
 
 @NgModule({
   declarations: [
@@ -166,7 +167,7 @@ import { ProfileSupportServicesComponent } from './profile/profile-support-servi
     NgxQRCodeModule,
     TreeModule,
   ],
-  providers: [],
+  providers: [GoogleMapsService],
   entryComponents: [
     // tenants
     CreateTenantDialogComponent,

@@ -30,16 +30,23 @@ namespace Academically.AddressLookup
         {
             var result = new SuggestionDto();
 
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri(SuggestUrl + keyword);
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(SuggestUrl + keyword);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage response = await client.GetAsync(UrlParameters + ApiKey);
-                response.EnsureSuccessStatusCode();
-                var responseAsString = await response.Content.ReadAsStringAsync();
-                result = JsonConvert.DeserializeObject<SuggestionDto>(responseAsString);
+                    HttpResponseMessage response = await client.GetAsync(UrlParameters + ApiKey);
+                    response.EnsureSuccessStatusCode();
+                    var responseAsString = await response.Content.ReadAsStringAsync();
+                    result = JsonConvert.DeserializeObject<SuggestionDto>(responseAsString);
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
 
             return result.Suggestions;
