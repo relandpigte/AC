@@ -887,14 +887,17 @@ export class ProposalsServiceProxy {
 
     /**
      * @param distance (optional) 
+     * @param level (optional) 
      * @return Success
      */
-    searchTutors(distance: number | undefined): Observable<SearchTutorDto[]> {
+    searchTutors(distance: number | undefined, level: number | null | undefined): Observable<SearchTutorDto[]> {
         let url_ = this.baseUrl + "/api/services/app/Proposals/SearchTutors?";
         if (distance === null)
             throw new Error("The parameter 'distance' cannot be null.");
         else if (distance !== undefined)
             url_ += "distance=" + encodeURIComponent("" + distance) + "&";
+        if (level !== undefined && level !== null)
+            url_ += "level=" + encodeURIComponent("" + level) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -943,65 +946,6 @@ export class ProposalsServiceProxy {
             }));
         }
         return _observableOf<SearchTutorDto[]>(<any>null);
-    }
-
-    /**
-     * @param profilePictureName (optional) 
-     * @param userId (optional) 
-     * @return Success
-     */
-    getProfilePicture(profilePictureName: string | null | undefined, userId: number | undefined): Observable<string> {
-        let url_ = this.baseUrl + "/api/services/app/Proposals/GetProfilePicture?";
-        if (profilePictureName !== undefined && profilePictureName !== null)
-            url_ += "profilePictureName=" + encodeURIComponent("" + profilePictureName) + "&";
-        if (userId === null)
-            throw new Error("The parameter 'userId' cannot be null.");
-        else if (userId !== undefined)
-            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetProfilePicture(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetProfilePicture(<any>response_);
-                } catch (e) {
-                    return <Observable<string>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<string>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetProfilePicture(response: HttpResponseBase): Observable<string> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<string>(<any>null);
     }
 }
 
@@ -4651,6 +4595,93 @@ export interface IAuthenticatorDto {
     status: boolean;
 }
 
+export enum EducationLevel {
+    _100 = 100,
+    _101 = 101,
+    _102 = 102,
+    _103 = 103,
+    _104 = 104,
+    _105 = 105,
+    _106 = 106,
+    _107 = 107,
+    _108 = 108,
+}
+
+export class UserEducation implements IUserEducation {
+    country: string | undefined;
+    universityOrCollege: string | undefined;
+    degree: string | undefined;
+    startYear: number;
+    endYear: number;
+    level: EducationLevel;
+    userId: number;
+    user: User;
+    id: string;
+
+    constructor(data?: IUserEducation) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.country = _data["country"];
+            this.universityOrCollege = _data["universityOrCollege"];
+            this.degree = _data["degree"];
+            this.startYear = _data["startYear"];
+            this.endYear = _data["endYear"];
+            this.level = _data["level"];
+            this.userId = _data["userId"];
+            this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserEducation {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserEducation();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["country"] = this.country;
+        data["universityOrCollege"] = this.universityOrCollege;
+        data["degree"] = this.degree;
+        data["startYear"] = this.startYear;
+        data["endYear"] = this.endYear;
+        data["level"] = this.level;
+        data["userId"] = this.userId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): UserEducation {
+        const json = this.toJSON();
+        let result = new UserEducation();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserEducation {
+    country: string | undefined;
+    universityOrCollege: string | undefined;
+    degree: string | undefined;
+    startYear: number;
+    endYear: number;
+    level: EducationLevel;
+    userId: number;
+    user: User;
+    id: string;
+}
+
 export class UserToken implements IUserToken {
     tenantId: number | undefined;
     userId: number;
@@ -5052,6 +5083,7 @@ export interface ISetting {
 export class User implements IUser {
     lastLoginTime: moment.Moment | undefined;
     isRecommended: boolean | undefined;
+    userEducations: UserEducation[] | undefined;
     normalizedUserName: string;
     normalizedEmailAddress: string;
     concurrencyStamp: string | undefined;
@@ -5105,6 +5137,11 @@ export class User implements IUser {
         if (_data) {
             this.lastLoginTime = _data["lastLoginTime"] ? moment(_data["lastLoginTime"].toString()) : <any>undefined;
             this.isRecommended = _data["isRecommended"];
+            if (Array.isArray(_data["userEducations"])) {
+                this.userEducations = [] as any;
+                for (let item of _data["userEducations"])
+                    this.userEducations.push(UserEducation.fromJS(item));
+            }
             this.normalizedUserName = _data["normalizedUserName"];
             this.normalizedEmailAddress = _data["normalizedEmailAddress"];
             this.concurrencyStamp = _data["concurrencyStamp"];
@@ -5182,6 +5219,11 @@ export class User implements IUser {
         data = typeof data === 'object' ? data : {};
         data["lastLoginTime"] = this.lastLoginTime ? this.lastLoginTime.toISOString() : <any>undefined;
         data["isRecommended"] = this.isRecommended;
+        if (Array.isArray(this.userEducations)) {
+            data["userEducations"] = [];
+            for (let item of this.userEducations)
+                data["userEducations"].push(item.toJSON());
+        }
         data["normalizedUserName"] = this.normalizedUserName;
         data["normalizedEmailAddress"] = this.normalizedEmailAddress;
         data["concurrencyStamp"] = this.concurrencyStamp;
@@ -5259,6 +5301,7 @@ export class User implements IUser {
 export interface IUser {
     lastLoginTime: moment.Moment | undefined;
     isRecommended: boolean | undefined;
+    userEducations: UserEducation[] | undefined;
     normalizedUserName: string;
     normalizedEmailAddress: string;
     concurrencyStamp: string | undefined;
@@ -5638,6 +5681,77 @@ export interface IDisciplineTaxonomyStudyLevelDto {
     id: number;
 }
 
+export class UserEducationDto implements IUserEducationDto {
+    country: string | undefined;
+    universityOrCollege: string | undefined;
+    degree: string | undefined;
+    startYear: number;
+    endYear: number;
+    level: EducationLevel;
+    userId: number;
+    id: string;
+
+    constructor(data?: IUserEducationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.country = _data["country"];
+            this.universityOrCollege = _data["universityOrCollege"];
+            this.degree = _data["degree"];
+            this.startYear = _data["startYear"];
+            this.endYear = _data["endYear"];
+            this.level = _data["level"];
+            this.userId = _data["userId"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserEducationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserEducationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["country"] = this.country;
+        data["universityOrCollege"] = this.universityOrCollege;
+        data["degree"] = this.degree;
+        data["startYear"] = this.startYear;
+        data["endYear"] = this.endYear;
+        data["level"] = this.level;
+        data["userId"] = this.userId;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): UserEducationDto {
+        const json = this.toJSON();
+        let result = new UserEducationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserEducationDto {
+    country: string | undefined;
+    universityOrCollege: string | undefined;
+    degree: string | undefined;
+    startYear: number;
+    endYear: number;
+    level: EducationLevel;
+    userId: number;
+    id: string;
+}
+
 export class UserDto implements IUserDto {
     userName: string;
     name: string;
@@ -5651,6 +5765,7 @@ export class UserDto implements IUserDto {
     roleDisplayNames: string[] | undefined;
     isTwoFactorEnabled: boolean;
     isRecommended: boolean;
+    userEducations: UserEducationDto[] | undefined;
     id: number;
 
     constructor(data?: IUserDto) {
@@ -5684,6 +5799,11 @@ export class UserDto implements IUserDto {
             }
             this.isTwoFactorEnabled = _data["isTwoFactorEnabled"];
             this.isRecommended = _data["isRecommended"];
+            if (Array.isArray(_data["userEducations"])) {
+                this.userEducations = [] as any;
+                for (let item of _data["userEducations"])
+                    this.userEducations.push(UserEducationDto.fromJS(item));
+            }
             this.id = _data["id"];
         }
     }
@@ -5717,6 +5837,11 @@ export class UserDto implements IUserDto {
         }
         data["isTwoFactorEnabled"] = this.isTwoFactorEnabled;
         data["isRecommended"] = this.isRecommended;
+        if (Array.isArray(this.userEducations)) {
+            data["userEducations"] = [];
+            for (let item of this.userEducations)
+                data["userEducations"].push(item.toJSON());
+        }
         data["id"] = this.id;
         return data; 
     }
@@ -5742,6 +5867,7 @@ export interface IUserDto {
     roleDisplayNames: string[] | undefined;
     isTwoFactorEnabled: boolean;
     isRecommended: boolean;
+    userEducations: UserEducationDto[] | undefined;
     id: number;
 }
 
@@ -7548,89 +7674,6 @@ export class UserDtoPagedResultDto implements IUserDtoPagedResultDto {
 export interface IUserDtoPagedResultDto {
     totalCount: number;
     items: UserDto[] | undefined;
-}
-
-export enum EducationLevel {
-    _100 = 100,
-    _101 = 101,
-    _102 = 102,
-    _103 = 103,
-    _104 = 104,
-    _105 = 105,
-    _106 = 106,
-    _107 = 107,
-    _108 = 108,
-}
-
-export class UserEducationDto implements IUserEducationDto {
-    country: string | undefined;
-    universityOrCollege: string | undefined;
-    degree: string | undefined;
-    startYear: number;
-    endYear: number;
-    level: EducationLevel;
-    userId: number;
-    id: string;
-
-    constructor(data?: IUserEducationDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.country = _data["country"];
-            this.universityOrCollege = _data["universityOrCollege"];
-            this.degree = _data["degree"];
-            this.startYear = _data["startYear"];
-            this.endYear = _data["endYear"];
-            this.level = _data["level"];
-            this.userId = _data["userId"];
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): UserEducationDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UserEducationDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["country"] = this.country;
-        data["universityOrCollege"] = this.universityOrCollege;
-        data["degree"] = this.degree;
-        data["startYear"] = this.startYear;
-        data["endYear"] = this.endYear;
-        data["level"] = this.level;
-        data["userId"] = this.userId;
-        data["id"] = this.id;
-        return data; 
-    }
-
-    clone(): UserEducationDto {
-        const json = this.toJSON();
-        let result = new UserEducationDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IUserEducationDto {
-    country: string | undefined;
-    universityOrCollege: string | undefined;
-    degree: string | undefined;
-    startYear: number;
-    endYear: number;
-    level: EducationLevel;
-    userId: number;
-    id: string;
 }
 
 export class UserEducationDtoPagedResultDto implements IUserEducationDtoPagedResultDto {
