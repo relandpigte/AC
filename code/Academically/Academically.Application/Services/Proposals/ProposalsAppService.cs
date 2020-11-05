@@ -45,6 +45,7 @@ namespace Academically.Services.Proposals
             // 2.) find a propery way to do this using LINQ
             var userProfiles = (await _userProfilesAppService.GetAll()
                 .Include(e => e.User)
+                    .ThenInclude(e => e.UserEducations)
                 .Where(e => e.User.Roles.Any(e => e.RoleId == tutorRole.Id))
                 .ToListAsync())
                 .Select(e => new
@@ -54,12 +55,13 @@ namespace Academically.Services.Proposals
                 })
                 .WhereIf(distance >= 0, e => e.gc <= distance)
                 .OrderBy(e => e.gc)
-                .Select(e => new SearchTutorDto { 
+                .Select(e => new UserProfile { 
                     User = e.up.User,
-                    ProfilePictureFileName = e.up.ProfilePictureFileName != null
+                    ProfilePictureFileName  = e.up.ProfilePictureFileName != null
                         ? _fileManagerService.GetFileUrl(e.up.ProfilePictureFileName, e.up.User.Id, AppSettingNames.Aws_S3_Folders_ProfilePictures)
                         : "assets/img/anonymous.png"
-                });
+                })
+                .Select(e => ObjectMapper.Map<SearchTutorDto>(e));
 
             return userProfiles;
         }

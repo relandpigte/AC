@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Abp.Authorization.Users;
 using Abp.Extensions;
+using Academically.Entities;
 
 namespace Academically.Authorization.Users
 {
@@ -17,6 +18,7 @@ namespace Academically.Authorization.Users
         }
 
         public bool? IsRecommended { get; set; }
+        public virtual ICollection<UserEducation> UserEducations { get; set; }
 
         public static User CreateTenantAdminUser(int tenantId, string emailAddress)
         {
