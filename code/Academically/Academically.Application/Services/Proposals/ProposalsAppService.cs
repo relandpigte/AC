@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Academically.Application.Shared.Services;
 using Academically.Authorization.Roles;
+using Academically.Configuration;
 using Academically.Entities;
 using Academically.Services.Proposals.Dto;
 using GeoCoordinatePortable;
@@ -17,15 +19,18 @@ namespace Academically.Services.Proposals
         private const double METER_TO_MILE_CONVERSION = 0.00062137;
 
         private readonly IRepository<UserProfile, Guid> _userProfilesAppService;
+        private readonly IFileManagerService _fileManagerService;
         private readonly RoleManager _roleManager;
 
         public ProposalsAppService(
             IRepository<UserProfile, Guid> userProfilesAppService,
-            RoleManager roleManager
+            RoleManager roleManager,
+            IFileManagerService fileManagerService
             )
         {
             _userProfilesAppService = userProfilesAppService;
             _roleManager = roleManager;
+            _fileManagerService = fileManagerService;
         }
 
         public async Task<IEnumerable<SearchTutorDto>> SearchTutors(int distance)
@@ -49,11 +54,14 @@ namespace Academically.Services.Proposals
                 })
                 .WhereIf(distance >= 0, e => e.gc <= distance)
                 .OrderBy(e => e.gc)
-                .Select(e => ObjectMapper.Map<SearchTutorDto>(e.up));
+                .Select(e => new SearchTutorDto { 
+                    User = e.up.User,
+                    ProfilePictureFileName = e.up.ProfilePictureFileName != null
+                        ? _fileManagerService.GetFileUrl(e.up.ProfilePictureFileName, e.up.User.Id, AppSettingNames.Aws_S3_Folders_ProfilePictures)
+                        : "assets/img/anonymous.png"
+                });
 
             return userProfiles;
         }
-
-
     }
 }

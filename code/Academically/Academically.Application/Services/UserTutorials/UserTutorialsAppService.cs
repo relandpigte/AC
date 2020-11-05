@@ -25,12 +25,14 @@ namespace Academically.Services.UserTutorials
     {
         private readonly IRepository<UserTutorial, Guid> _userTutorialsRepository;
         private readonly IRepository<UserTutorialDisciplineTaxonomy, Guid> _userTutorialsDisciplineTaxonomiesRepository;
+        private readonly IRepository<UserProfile, Guid> _userProfileRepository;
         private readonly ISettingManager _settingManager;
         private readonly IFileManagerService _fileManagerService;
         public UserTutorialsAppService
         (
             IRepository<UserTutorial, Guid> userTutorialsRepository,
             IRepository<UserTutorialDisciplineTaxonomy, Guid> userTutorialsDisciplineTaxonomiesRepository,
+            IRepository<UserProfile, Guid> userProfileRepository,
             ISettingManager settingManager,
             IFileManagerService fileManagerservice
         )
@@ -39,6 +41,7 @@ namespace Academically.Services.UserTutorials
             _userTutorialsDisciplineTaxonomiesRepository = userTutorialsDisciplineTaxonomiesRepository;
             _settingManager = settingManager;
             _fileManagerService = fileManagerservice;
+            _userProfileRepository = userProfileRepository;
         }
 
 
@@ -46,10 +49,14 @@ namespace Academically.Services.UserTutorials
         {
             var userId = AbpSession.UserId.Value;
             var userTutorial = new UserTutorial();
+            var userprofile =  _userProfileRepository.GetAll()
+                .Where(e => e.UserId == userId)
+                .FirstOrDefault();
             ObjectMapper.Map(inputs, userTutorial);
 
             userTutorial.UserId = userId;
-
+            userTutorial.CreatedDate = DateTime.UtcNow;
+            userTutorial.UserProfileId = userprofile.Id;
             var folder = await _settingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_UserTutorialPictures);
             folder = $"{userId}/{folder}";
             var thumbnailsFolder = $"{folder}/thumbs";

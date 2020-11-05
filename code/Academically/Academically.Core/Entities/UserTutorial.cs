@@ -17,6 +17,13 @@ namespace Academically.Entities
         public int UrgencyLevel { get; set; }
         public DateTime DeadLine { get; set; }
         public string PictureFileName { get; set; }
-        public virtual User User { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public Guid UserProfileId { get; set; }
+
+        [ForeignKey("UserId")]
+        public User User { get; set; }
+
+        [ForeignKey("UserProfileId")]
+        public UserProfile UserProfile { get; set; }
     }
 }
