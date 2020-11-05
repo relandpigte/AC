@@ -944,6 +944,65 @@ export class ProposalsServiceProxy {
         }
         return _observableOf<SearchTutorDto[]>(<any>null);
     }
+
+    /**
+     * @param profilePictureName (optional) 
+     * @param userId (optional) 
+     * @return Success
+     */
+    getProfilePicture(profilePictureName: string | null | undefined, userId: number | undefined): Observable<string> {
+        let url_ = this.baseUrl + "/api/services/app/Proposals/GetProfilePicture?";
+        if (profilePictureName !== undefined && profilePictureName !== null)
+            url_ += "profilePictureName=" + encodeURIComponent("" + profilePictureName) + "&";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetProfilePicture(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetProfilePicture(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetProfilePicture(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
+    }
 }
 
 @Injectable()
@@ -5687,6 +5746,7 @@ export interface IUserDto {
 }
 
 export class SearchTutorDto implements ISearchTutorDto {
+    profilePictureFileName: string | undefined;
     user: UserDto;
 
     constructor(data?: ISearchTutorDto) {
@@ -5700,6 +5760,7 @@ export class SearchTutorDto implements ISearchTutorDto {
 
     init(_data?: any) {
         if (_data) {
+            this.profilePictureFileName = _data["profilePictureFileName"];
             this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
         }
     }
@@ -5713,6 +5774,7 @@ export class SearchTutorDto implements ISearchTutorDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["profilePictureFileName"] = this.profilePictureFileName;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         return data; 
     }
@@ -5726,6 +5788,7 @@ export class SearchTutorDto implements ISearchTutorDto {
 }
 
 export interface ISearchTutorDto {
+    profilePictureFileName: string | undefined;
     user: UserDto;
 }
 
