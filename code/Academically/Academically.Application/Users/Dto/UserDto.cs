@@ -1,9 +1,12 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Abp.Application.Services.Dto;
 using Abp.Authorization.Users;
 using Abp.AutoMapper;
 using Academically.Authorization.Users;
+using Academically.Services.UserEducations.Dto;
 
 namespace Academically.Users.Dto
 {
@@ -39,5 +42,6 @@ namespace Academically.Users.Dto
         public string[] RoleDisplayNames { get; set; }
         public bool IsTwoFactorEnabled { get; set; }
         public bool IsRecommended { get; set; }
+        public IEnumerable<UserEducationDto> UserEducations { get; set; }
     }
 }

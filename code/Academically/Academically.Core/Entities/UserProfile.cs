@@ -15,6 +15,8 @@ namespace Academically.Entities
         public string ZipOrPostCode { get; set; }
         public string StateOrProvince { get; set; }
         public string Country { get; set; }
+        public double? Longitude { get; set; }
+        public double? Latitude { get; set; }
         public string ProfilePictureFileName { get; set; }
         public long UserId { get; set; }
 

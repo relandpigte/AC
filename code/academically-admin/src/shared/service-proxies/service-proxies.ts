@@ -875,6 +875,137 @@ export class DisciplineTaxonomyStudyLevelsServiceProxy {
 }
 
 @Injectable()
+export class ProposalsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @param distance (optional) 
+     * @return Success
+     */
+    searchTutors(distance: number | undefined): Observable<SearchTutorDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Proposals/SearchTutors?";
+        if (distance === null)
+            throw new Error("The parameter 'distance' cannot be null.");
+        else if (distance !== undefined)
+            url_ += "distance=" + encodeURIComponent("" + distance) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSearchTutors(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSearchTutors(<any>response_);
+                } catch (e) {
+                    return <Observable<SearchTutorDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<SearchTutorDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSearchTutors(response: HttpResponseBase): Observable<SearchTutorDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(SearchTutorDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<SearchTutorDto[]>(<any>null);
+    }
+
+    /**
+     * @param profilePictureName (optional) 
+     * @param userId (optional) 
+     * @return Success
+     */
+    getProfilePicture(profilePictureName: string | null | undefined, userId: number | undefined): Observable<string> {
+        let url_ = this.baseUrl + "/api/services/app/Proposals/GetProfilePicture?";
+        if (profilePictureName !== undefined && profilePictureName !== null)
+            url_ += "profilePictureName=" + encodeURIComponent("" + profilePictureName) + "&";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetProfilePicture(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetProfilePicture(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetProfilePicture(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
+    }
+}
+
+@Injectable()
 export class RegistrationsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -3034,10 +3165,12 @@ export class UserProfilesServiceProxy {
      * @param zipOrPostCode (optional) 
      * @param stateOrProvince (optional) 
      * @param country (optional) 
+     * @param longitude (optional) 
+     * @param latitude (optional) 
      * @param profilePicture (optional) 
      * @return Success
      */
-    saveDetail(firstName: string | null | undefined, lastName: string | null | undefined, dateOfBirth: moment.Moment | null | undefined, addressLine1: string | null | undefined, addressLine2: string | null | undefined, city: string | null | undefined, zipOrPostCode: string | null | undefined, stateOrProvince: string | null | undefined, country: string | null | undefined, profilePicture: FileParameter | null | undefined): Observable<void> {
+    saveDetail(firstName: string | null | undefined, lastName: string | null | undefined, dateOfBirth: moment.Moment | null | undefined, addressLine1: string | null | undefined, addressLine2: string | null | undefined, city: string | null | undefined, zipOrPostCode: string | null | undefined, stateOrProvince: string | null | undefined, country: string | null | undefined, longitude: number | null | undefined, latitude: number | null | undefined, profilePicture: FileParameter | null | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/UserProfiles/SaveDetail";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3060,6 +3193,10 @@ export class UserProfilesServiceProxy {
             content_.append("StateOrProvince", stateOrProvince.toString());
         if (country !== null && country !== undefined)
             content_.append("Country", country.toString());
+        if (longitude !== null && longitude !== undefined)
+            content_.append("Longitude", longitude.toString());
+        if (latitude !== null && latitude !== undefined)
+            content_.append("Latitude", latitude.toString());
         if (profilePicture !== null && profilePicture !== undefined)
             content_.append("ProfilePicture", profilePicture.data, profilePicture.fileName ? profilePicture.fileName : "ProfilePicture");
 
@@ -5501,6 +5638,160 @@ export interface IDisciplineTaxonomyStudyLevelDto {
     id: number;
 }
 
+export class UserDto implements IUserDto {
+    userName: string;
+    name: string;
+    surname: string;
+    emailAddress: string;
+    isActive: boolean;
+    fullName: string | undefined;
+    lastLoginTime: moment.Moment | undefined;
+    creationTime: moment.Moment;
+    roleNames: string[] | undefined;
+    roleDisplayNames: string[] | undefined;
+    isTwoFactorEnabled: boolean;
+    isRecommended: boolean;
+    id: number;
+
+    constructor(data?: IUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userName = _data["userName"];
+            this.name = _data["name"];
+            this.surname = _data["surname"];
+            this.emailAddress = _data["emailAddress"];
+            this.isActive = _data["isActive"];
+            this.fullName = _data["fullName"];
+            this.lastLoginTime = _data["lastLoginTime"] ? moment(_data["lastLoginTime"].toString()) : <any>undefined;
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            if (Array.isArray(_data["roleNames"])) {
+                this.roleNames = [] as any;
+                for (let item of _data["roleNames"])
+                    this.roleNames.push(item);
+            }
+            if (Array.isArray(_data["roleDisplayNames"])) {
+                this.roleDisplayNames = [] as any;
+                for (let item of _data["roleDisplayNames"])
+                    this.roleDisplayNames.push(item);
+            }
+            this.isTwoFactorEnabled = _data["isTwoFactorEnabled"];
+            this.isRecommended = _data["isRecommended"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userName"] = this.userName;
+        data["name"] = this.name;
+        data["surname"] = this.surname;
+        data["emailAddress"] = this.emailAddress;
+        data["isActive"] = this.isActive;
+        data["fullName"] = this.fullName;
+        data["lastLoginTime"] = this.lastLoginTime ? this.lastLoginTime.toISOString() : <any>undefined;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        if (Array.isArray(this.roleNames)) {
+            data["roleNames"] = [];
+            for (let item of this.roleNames)
+                data["roleNames"].push(item);
+        }
+        if (Array.isArray(this.roleDisplayNames)) {
+            data["roleDisplayNames"] = [];
+            for (let item of this.roleDisplayNames)
+                data["roleDisplayNames"].push(item);
+        }
+        data["isTwoFactorEnabled"] = this.isTwoFactorEnabled;
+        data["isRecommended"] = this.isRecommended;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): UserDto {
+        const json = this.toJSON();
+        let result = new UserDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserDto {
+    userName: string;
+    name: string;
+    surname: string;
+    emailAddress: string;
+    isActive: boolean;
+    fullName: string | undefined;
+    lastLoginTime: moment.Moment | undefined;
+    creationTime: moment.Moment;
+    roleNames: string[] | undefined;
+    roleDisplayNames: string[] | undefined;
+    isTwoFactorEnabled: boolean;
+    isRecommended: boolean;
+    id: number;
+}
+
+export class SearchTutorDto implements ISearchTutorDto {
+    profilePictureFileName: string | undefined;
+    user: UserDto;
+
+    constructor(data?: ISearchTutorDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.profilePictureFileName = _data["profilePictureFileName"];
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): SearchTutorDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SearchTutorDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["profilePictureFileName"] = this.profilePictureFileName;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): SearchTutorDto {
+        const json = this.toJSON();
+        let result = new SearchTutorDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISearchTutorDto {
+    profilePictureFileName: string | undefined;
+    user: UserDto;
+}
+
 export class RegistrationDto implements IRegistrationDto {
     firstName: string | undefined;
     lastName: string | undefined;
@@ -7012,113 +7303,6 @@ export interface ICreateUserDto {
     password: string;
 }
 
-export class UserDto implements IUserDto {
-    userName: string;
-    name: string;
-    surname: string;
-    emailAddress: string;
-    isActive: boolean;
-    fullName: string | undefined;
-    lastLoginTime: moment.Moment | undefined;
-    creationTime: moment.Moment;
-    roleNames: string[] | undefined;
-    roleDisplayNames: string[] | undefined;
-    isTwoFactorEnabled: boolean;
-    isRecommended: boolean;
-    id: number;
-
-    constructor(data?: IUserDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.userName = _data["userName"];
-            this.name = _data["name"];
-            this.surname = _data["surname"];
-            this.emailAddress = _data["emailAddress"];
-            this.isActive = _data["isActive"];
-            this.fullName = _data["fullName"];
-            this.lastLoginTime = _data["lastLoginTime"] ? moment(_data["lastLoginTime"].toString()) : <any>undefined;
-            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
-            if (Array.isArray(_data["roleNames"])) {
-                this.roleNames = [] as any;
-                for (let item of _data["roleNames"])
-                    this.roleNames.push(item);
-            }
-            if (Array.isArray(_data["roleDisplayNames"])) {
-                this.roleDisplayNames = [] as any;
-                for (let item of _data["roleDisplayNames"])
-                    this.roleDisplayNames.push(item);
-            }
-            this.isTwoFactorEnabled = _data["isTwoFactorEnabled"];
-            this.isRecommended = _data["isRecommended"];
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): UserDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UserDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["userName"] = this.userName;
-        data["name"] = this.name;
-        data["surname"] = this.surname;
-        data["emailAddress"] = this.emailAddress;
-        data["isActive"] = this.isActive;
-        data["fullName"] = this.fullName;
-        data["lastLoginTime"] = this.lastLoginTime ? this.lastLoginTime.toISOString() : <any>undefined;
-        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-        if (Array.isArray(this.roleNames)) {
-            data["roleNames"] = [];
-            for (let item of this.roleNames)
-                data["roleNames"].push(item);
-        }
-        if (Array.isArray(this.roleDisplayNames)) {
-            data["roleDisplayNames"] = [];
-            for (let item of this.roleDisplayNames)
-                data["roleDisplayNames"].push(item);
-        }
-        data["isTwoFactorEnabled"] = this.isTwoFactorEnabled;
-        data["isRecommended"] = this.isRecommended;
-        data["id"] = this.id;
-        return data; 
-    }
-
-    clone(): UserDto {
-        const json = this.toJSON();
-        let result = new UserDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IUserDto {
-    userName: string;
-    name: string;
-    surname: string;
-    emailAddress: string;
-    isActive: boolean;
-    fullName: string | undefined;
-    lastLoginTime: moment.Moment | undefined;
-    creationTime: moment.Moment;
-    roleNames: string[] | undefined;
-    roleDisplayNames: string[] | undefined;
-    isTwoFactorEnabled: boolean;
-    isRecommended: boolean;
-    id: number;
-}
-
 export class RoleDtoListResultDto implements IRoleDtoListResultDto {
     items: RoleDto[] | undefined;
 
@@ -7515,6 +7699,8 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
     zipOrPostCode: string | undefined;
     stateOrProvince: string | undefined;
     country: string | undefined;
+    longitude: number | undefined;
+    latitude: number | undefined;
     profilePictureUrl: string | undefined;
     dateJoined: moment.Moment;
     role: string | undefined;
@@ -7540,6 +7726,8 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
             this.zipOrPostCode = _data["zipOrPostCode"];
             this.stateOrProvince = _data["stateOrProvince"];
             this.country = _data["country"];
+            this.longitude = _data["longitude"];
+            this.latitude = _data["latitude"];
             this.profilePictureUrl = _data["profilePictureUrl"];
             this.dateJoined = _data["dateJoined"] ? moment(_data["dateJoined"].toString()) : <any>undefined;
             this.role = _data["role"];
@@ -7565,6 +7753,8 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
         data["zipOrPostCode"] = this.zipOrPostCode;
         data["stateOrProvince"] = this.stateOrProvince;
         data["country"] = this.country;
+        data["longitude"] = this.longitude;
+        data["latitude"] = this.latitude;
         data["profilePictureUrl"] = this.profilePictureUrl;
         data["dateJoined"] = this.dateJoined ? this.dateJoined.toISOString() : <any>undefined;
         data["role"] = this.role;
@@ -7590,6 +7780,8 @@ export interface IGetProfileDetailDto {
     zipOrPostCode: string | undefined;
     stateOrProvince: string | undefined;
     country: string | undefined;
+    longitude: number | undefined;
+    latitude: number | undefined;
     profilePictureUrl: string | undefined;
     dateJoined: moment.Moment;
     role: string | undefined;

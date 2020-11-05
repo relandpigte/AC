@@ -1,7 +1,8 @@
 // "Hot Module Replacement" enabled environment
 
 export const environment = {
-    production: false,
-    hmr: true,
-    appConfig: 'appconfig.json'
+  production: false,
+  hmr: true,
+  appConfig: 'appconfig.json',
+  googleApiKey: 'AIzaSyBtYaldOOmA-wNFOI7f32MvYSYGkaLAz6k',
 };

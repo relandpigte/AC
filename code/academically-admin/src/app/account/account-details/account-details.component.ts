@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, Injector, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Injector, NgZone, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   GetProfileDetailDto,
@@ -18,6 +18,7 @@ import { AbstractControl, NgForm, ValidatorFn, Validators } from '@angular/forms
 import { Observable, Observer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AppSessionService } from '@shared/session/app-session.service';
+import { GoogleMapsService } from '@shared/services/google-maps.service';
 
 @Component({
   selector: 'account-details',
@@ -45,7 +46,9 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
     injector: Injector,
     private _userProfilesService: UserProfilesServiceProxy,
     private _addressLookupService: AddressLookupServiceProxy,
-    private _sessionService: AppSessionService
+    private _sessionService: AppSessionService,
+    private _googleMapsService: GoogleMapsService,
+    private _cdRef: ChangeDetectorRef
   ) {
     super(injector);
     this.userId = this.appSession.userId;
@@ -90,7 +93,28 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
   }
 
   onFormSubmit(): void {
-    this.saveDetails();
+    const addresses = [];
+    this.pushIfNotEmpty(addresses, this.model.zipOrPostCode);
+    this.pushIfNotEmpty(addresses, this.model.city);
+    this.pushIfNotEmpty(addresses, this.model.country);
+    const address = addresses.join(',');
+    this._googleMapsService.geocoder.geocode({ address }, (results, status) => {
+      const place = results[0];
+      if (place) {
+        const location = place.geometry.location;
+        this.model.longitude = location.lng();
+        this.model.latitude = location.lat();
+        if (this.model.longitude && this.model.latitude) {
+          this.saveDetails();
+          return;
+        }
+      }
+      if (!this.isStudent) {
+        this.message.error(this.l('LocationNotFoundErrorMessage'), this.l('LocationNotFoundErrortitle'));
+      } else {
+        this.saveDetails();
+      }
+    });
   }
 
   private getAddressLookup(): void {
@@ -161,11 +185,13 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
       }
       this.setRequiredFields();
       this.isLoading = false;
+      this._cdRef.detectChanges();
     });
   }
 
   private saveDetails(): void {
     this.isLoading = true;
+    this._cdRef.detectChanges();
     if (this.dateOfBirth) {
       this.model.dateOfBirth = moment.utc(moment(this.dateOfBirth).format('YYYY-MM-DD'));
     }
@@ -180,15 +206,16 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
         this.model.zipOrPostCode,
         this.model.stateOrProvince,
         this.model.country,
+        this.model.longitude,
+        this.model.latitude,
         this.profilePicture
       )
       .subscribe(() => {
         this.clearUploader();
         this.notify.info(this.l('SavedSuccessfully'));
         abp.event.trigger(uiEvents.profileDetailsUpdated, this.model);
-        this.form.reset();
+        this.form.form.markAsPristine();
         this.getDetails();
-        this.isLoading = false;
       });
   }
 
@@ -240,5 +267,11 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
   private clearUploader(): void {
     this.profilePictureInput.nativeElement.value = '';
     this.profilePicturePlaceholderText = this.imageUploadPlaceholderText;
+  }
+
+  private pushIfNotEmpty(addresses: string[], address: string): void {
+    if (address) {
+      addresses.push(address);
+    }
   }
 }

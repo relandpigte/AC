@@ -31,4 +31,7 @@
 	<include file="ddml/ddml.2020-10-29-01.add-userresearchmethods-table.xml"/>
 	<include file="ddml/ddml.2020-10-29-01.fix-researchmethods-data.xml"/>
 	<include file="ddml/ddml.2020-10-29-03.add-usersupportservices-table.xml"/>
+	<include file="ddml/ddml.2020-11-03-01.add-userprofile-latlang-fields.xml"/>
+	<include file="ddml/ddml.2020-11-05-01.alter-table-usertutorials.xml"/>
+	<include file="ddml/ddml.2020-11-05-02.alter-table-usertutorials.xml"/>
 </databaseChangeLog>

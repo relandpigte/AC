@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="LocationNotFoundErrorMessage">City or Post Code you entered does not exist.</text>
+    <text name="LocationNotFoundErrortitle">Location Not Found</text>
     <text name="EditProfile">Edit Profile</text>
     <text name="SupportServicesNotSavedWarning">The support services you selected has not been saved yet. If you leave, your changes will be lost.</text>
     <text name="TheSupportServiceWasRemoved">The Support Service was removed.</text>

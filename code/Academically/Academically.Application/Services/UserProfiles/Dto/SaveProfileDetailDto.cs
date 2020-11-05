@@ -14,6 +14,8 @@ namespace Academically.Services.UserProfiles.Dto
         public string ZipOrPostCode { get; set; }
         public string StateOrProvince { get; set; }
         public string Country { get; set; }
+        public double? Longitude { get; set; }
+        public double? Latitude { get; set; }
 
         public IFormFile ProfilePicture { get; set; }
     }
