@@ -12,14 +12,17 @@ namespace Academically.Services.ResearchMethods
     public class ResearchMethodsAppService : AcademicallyAppServiceBase, IResearchMethodsAppService
     {
         private readonly IRepository<ResearchMethod, Guid> _researchMethodsRepository;
+        private readonly IRepository<ResearchMethodRequest, Guid> _researchMethodRequestsRepository;
         private readonly IRepository<UserResearchMethod, Guid> _userResearchMethodsRepository;
 
         public ResearchMethodsAppService(
             IRepository<ResearchMethod, Guid> researchMethodsRepository,
+            IRepository<ResearchMethodRequest, Guid> researchMethodRequestsRepository,
             IRepository<UserResearchMethod, Guid> userResearchMethodsRepository
             )
         {
             _researchMethodsRepository = researchMethodsRepository;
+            _researchMethodRequestsRepository = researchMethodRequestsRepository;
             _userResearchMethodsRepository = userResearchMethodsRepository;
         }
 
@@ -35,6 +38,12 @@ namespace Academically.Services.ResearchMethods
                 .Select(e => ObjectMapper.Map<ResearchMethodDto>(e));
 
             return rootResearchMethods;
+        }
+
+        public async Task RequestResearchMethod(ResearchMethodRequestDto input)
+        {
+            var researchMethod = ObjectMapper.Map<ResearchMethodRequest>(input);
+            await _researchMethodRequestsRepository.InsertAsync(researchMethod);
         }
     }
 }

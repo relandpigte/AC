@@ -36,7 +36,11 @@
       >
         <ng-template let-node pTemplate="editable">
           {{ node.label }}
-          <button type="button" class="btn btn-sm btn-primary ml-5" (click)="$event.preventDefault(); $event.stopPropagation()">
+          <button
+            type="button"
+            class="btn btn-sm btn-primary ml-5"
+            (click)="$event.preventDefault(); $event.stopPropagation(); onAddClick(node.data)"
+          >
             <i class="fe fe-plus"></i>
           </button>
         </ng-template>

@@ -61,7 +61,7 @@ namespace Academically.Controllers
                 GetTenancyNameOrNull()
             );
 
-            var isTwoFactorEnabled =  _userManager.FindByNameAsync(model.UserNameOrEmailAddress).Result.IsTwoFactorEnabled;
+            var isTwoFactorEnabled =  loginResult.User.IsTwoFactorEnabled;
 
             var accessToken = CreateAccessToken(CreateJwtClaims(loginResult.Identity));
 

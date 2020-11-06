@@ -1,0 +1,44 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="root (generated)" id="1604637757179-1">
+        <createTable tableName="AcademicallyResearchMethodRequests">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Comments" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ParentId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1604637757179-2">
+        <createIndex indexName="FK_RMR_ResearchMethod_ResearchMethodId_idx" tableName="AcademicallyResearchMethodRequests">
+            <column name="ParentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1604637757179-3">
+        <createIndex indexName="FK_RMR_User_UserId_idx" tableName="AcademicallyResearchMethodRequests">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1604637757179-4">
+        <addForeignKeyConstraint baseColumnNames="ParentId" baseTableName="AcademicallyResearchMethodRequests" constraintName="FK_RMRs_ResearchMethod_ResearchMethodId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyResearchMethodologies" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1604637757179-5">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="AcademicallyResearchMethodRequests" constraintName="FK_RMRs_User_UserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

@@ -8,5 +8,6 @@ namespace Academically.Services.ResearchMethods
     public interface IResearchMethodsAppService : IApplicationService
     {
         Task<IEnumerable<ResearchMethodDto>> GetAll(long userId);
+        Task RequestResearchMethod(ResearchMethodRequestDto input);
     }
 }

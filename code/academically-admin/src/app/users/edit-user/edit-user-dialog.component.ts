@@ -6,7 +6,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { UserServiceProxy, UserDto, RoleDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
-  templateUrl: './edit-user-dialog.component.html'
+  templateUrl: './edit-user-dialog.component.html',
 })
 export class EditUserDialogComponent extends AppComponentBase implements OnInit {
   saving = false;
@@ -22,9 +22,9 @@ export class EditUserDialogComponent extends AppComponentBase implements OnInit 
   }
 
   ngOnInit(): void {
-    this._userService.get(this.id).subscribe(result => {
+    this._userService.get(this.id).subscribe((result) => {
       this.user = result;
-      this._userService.getRoles().subscribe(result2 => {
+      this._userService.getRoles().subscribe((result2) => {
         this.roles = result2.items;
         this.setInitialRolesStatus();
       });
@@ -32,7 +32,7 @@ export class EditUserDialogComponent extends AppComponentBase implements OnInit 
   }
 
   setInitialRolesStatus(): void {
-    _.map(this.roles, item => {
+    _.map(this.roles, (item) => {
       this.checkedRolesMap[item.normalizedName] = this.isRoleChecked(item.normalizedName);
     });
   }
@@ -42,13 +42,12 @@ export class EditUserDialogComponent extends AppComponentBase implements OnInit 
   }
 
   onRoleChange(role: RoleDto, $event) {
-    debugger;
     this.checkedRolesMap[role.normalizedName] = $event.target.checked;
   }
 
   getCheckedRoles(): string[] {
     const roles: string[] = [];
-    _.forEach(this.checkedRolesMap, function(value, key) {
+    _.forEach(this.checkedRolesMap, function (value, key) {
       if (value) {
         roles.push(key);
       }

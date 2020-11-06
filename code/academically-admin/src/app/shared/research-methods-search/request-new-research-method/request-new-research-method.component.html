@@ -1,0 +1,33 @@
+<form class="form-horizontal" autocomplete="off" #taxonomySearchForm="ngForm" (ngSubmit)="onFormSubmit()" [busy]="isLoading">
+  <div class="modal-card card">
+    <div class="card-header">
+      <h4 class="card-header-title">
+        {{ 'RequestNewResearchMethod' | localize }}
+      </h4>
+      <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="card-body">
+      <div class="form-group required">
+        <label class="col-form-label" for="Name">{{ 'Name' | localize }}</label>
+        <input [(ngModel)]="model.name" id="Name" name="Name" type="text" class="form-control" #nameModel="ngModel" #nameEl required />
+        <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+      </div>
+      <div class="form-group required">
+        <label class="col-form-label" for="Comments">{{ 'Comments' | localize }}</label>
+        <textarea
+          [(ngModel)]="model.comments"
+          id="Comments"
+          name="Comments"
+          class="form-control"
+          #commentsModel="ngModel"
+          #commentsEl
+          required
+        ></textarea>
+        <abp-validation-summary [control]="commentsModel" [controlEl]="commentsEl"></abp-validation-summary>
+      </div>
+    </div>
+    <abp-modal-footer [saveDisabled]="!taxonomySearchForm.form.valid || isLoading" (onCancelClick)="onCloseClick()"> </abp-modal-footer>
+  </div>
+</form>
