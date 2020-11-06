@@ -31,21 +31,10 @@ namespace Academically.Services.ResearchMethods
             var researchMethods = await _researchMethodsRepository.GetAll()
                 .Where(e => !userResearchMethodIds.Any(t => e.ParentIdMap.Contains(t)))
                 .ToListAsync();
-            var rootResearchMethods = GetChildren(researchMethods, null);
+            var rootResearchMethods = researchMethods.Where(e => e.ParentId == null)
+                .Select(e => ObjectMapper.Map<ResearchMethodDto>(e));
 
             return rootResearchMethods;
-        }
-
-        private IEnumerable<ResearchMethodDto> GetChildren(IEnumerable<ResearchMethod> researchMethods, Guid? parentId)
-        {
-            var children = researchMethods.Where(e => e.ParentId == parentId)
-                .Select(e => ObjectMapper.Map<ResearchMethodDto>(e))
-                .ToList();
-            foreach (var child in children)
-            {
-                child.Children = GetChildren(researchMethods, child.Id);
-            }
-            return children;
         }
     }
 }

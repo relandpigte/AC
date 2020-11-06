@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.UI;
 using Academically.Application.Shared.Services;
 using Academically.Authorization.Roles;
 using Academically.Configuration;
@@ -37,6 +38,10 @@ namespace Academically.Services.Proposals
         {
             var tutorRole = _roleManager.GetRoleByName(StaticRoleNames.Tenants.Tutor);
             var currentUserProfile = await _userProfilesAppService.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
+            if (currentUserProfile == null)
+            {
+                throw new UserFriendlyException(L("AddressNotDefinedErrorMessage"));
+            }
             var userLocationCoordinate = new GeoCoordinate(currentUserProfile.Latitude ?? 0, currentUserProfile.Longitude ?? 0);
 
             // TODO: this query is not optimized. new version of EF for .NET Core does not support GenoCoordinate.GetDistanceTo method

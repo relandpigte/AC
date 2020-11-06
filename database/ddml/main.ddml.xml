@@ -34,4 +34,5 @@
 	<include file="ddml/ddml.2020-11-03-01.add-userprofile-latlang-fields.xml"/>
 	<include file="ddml/ddml.2020-11-05-01.alter-table-usertutorials.xml"/>
 	<include file="ddml/ddml.2020-11-05-02.alter-table-usertutorials.xml"/>
+	<include file="ddml/ddml.2020-11-06-01.regenerate-researchmethodologies-data.xml"/>
 </databaseChangeLog>
