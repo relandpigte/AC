@@ -13,14 +13,17 @@ namespace Academically.Services.SupportServices
     {
         private readonly IRepository<SupportService, Guid> _supportServicesRepository;
         private readonly IRepository<UserSupportService, Guid> _userSupportServicesRepository;
+        private readonly IRepository<SupportServiceRequest, Guid> _supportServiceRequestsRepository;
 
         public SupportServicesAppService(
             IRepository<SupportService, Guid> supportServicesRepository,
-            IRepository<UserSupportService, Guid> userSupportServicesRepository
+            IRepository<UserSupportService, Guid> userSupportServicesRepository,
+            IRepository<SupportServiceRequest, Guid> supportServiceRequestsRepository
             )
         {
             _supportServicesRepository = supportServicesRepository;
             _userSupportServicesRepository = userSupportServicesRepository;
+            _supportServiceRequestsRepository = supportServiceRequestsRepository;
         }
 
         public async Task<IEnumerable<SupportServiceDto>> GetAll(long userId)
@@ -46,6 +49,12 @@ namespace Academically.Services.SupportServices
                 child.Children = GetChildren(supportServices, child.Id);
             }
             return children;
+        }
+
+        public async Task RequestSupportService(SupportServiceRequestDto input)
+        {
+            var supportService = ObjectMapper.Map<SupportServiceRequest>(input);
+            await _supportServiceRequestsRepository.InsertAsync(supportService);
         }
     }
 }

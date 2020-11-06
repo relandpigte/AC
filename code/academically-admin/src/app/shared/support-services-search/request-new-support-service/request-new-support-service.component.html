@@ -1,8 +1,8 @@
-<form class="form-horizontal" autocomplete="off" #newResearchMethodForm="ngForm" (ngSubmit)="onFormSubmit()" [busy]="isLoading">
+<form class="form-horizontal" autocomplete="off" #newSupportServiceForm="ngForm" (ngSubmit)="onFormSubmit()" [busy]="isLoading">
   <div class="modal-card card">
     <div class="card-header">
       <h4 class="card-header-title">
-        {{ 'RequestNewResearchMethod' | localize }}
+        {{ 'RequestNewSupportService' | localize }}
       </h4>
       <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
         <span aria-hidden="true">×</span>
@@ -28,6 +28,6 @@
         <abp-validation-summary [control]="commentsModel" [controlEl]="commentsEl"></abp-validation-summary>
       </div>
     </div>
-    <abp-modal-footer [saveDisabled]="!newResearchMethodForm.form.valid || isLoading" (onCancelClick)="onCloseClick()"> </abp-modal-footer>
+    <abp-modal-footer [saveDisabled]="!newSupportServiceForm.form.valid || isLoading" (onCancelClick)="onCloseClick()"> </abp-modal-footer>
   </div>
 </form>

@@ -8,5 +8,6 @@ namespace Academically.Services.SupportServices
     public interface ISupportServicesAppService : IApplicationService
     {
         Task<IEnumerable<SupportServiceDto>> GetAll(long userId);
+        Task RequestSupportService(SupportServiceRequestDto input);
     }
 }

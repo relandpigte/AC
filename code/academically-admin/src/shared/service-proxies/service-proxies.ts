@@ -1786,6 +1786,58 @@ export class SupportServicesServiceProxy {
         }
         return _observableOf<SupportServiceDto[]>(<any>null);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    requestSupportService(body: SupportServiceRequestDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/SupportServices/RequestSupportService";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRequestSupportService(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRequestSupportService(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRequestSupportService(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
 }
 
 @Injectable()
@@ -7022,6 +7074,61 @@ export interface ISupportServiceDto {
     isEditable: boolean;
     parent: SupportServiceDto;
     children: SupportServiceDto[] | undefined;
+    id: string;
+}
+
+export class SupportServiceRequestDto implements ISupportServiceRequestDto {
+    name: string;
+    comments: string;
+    parentId: string;
+    id: string;
+
+    constructor(data?: ISupportServiceRequestDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.comments = _data["comments"];
+            this.parentId = _data["parentId"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): SupportServiceRequestDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SupportServiceRequestDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["comments"] = this.comments;
+        data["parentId"] = this.parentId;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): SupportServiceRequestDto {
+        const json = this.toJSON();
+        let result = new SupportServiceRequestDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISupportServiceRequestDto {
+    name: string;
+    comments: string;
+    parentId: string;
     id: string;
 }
 

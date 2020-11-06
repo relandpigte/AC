@@ -35,6 +35,7 @@ export class RequestNewResearchMethodComponent extends AppComponentBase implemen
   }
 
   private saveResearchMethodRequest(): void {
+    this.isLoading = true;
     this._researchMethodsService
       .requestResearchMethod(this.model)
       .pipe(
@@ -43,7 +44,7 @@ export class RequestNewResearchMethodComponent extends AppComponentBase implemen
         })
       )
       .subscribe(() => {
-        this.notify.success('NewResearchMethodRequestSent');
+        this.notify.success(this.l('NewResearchMethodRequestSent'));
         this.close();
       });
   }

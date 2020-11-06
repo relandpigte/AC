@@ -81,6 +81,7 @@ import { SupportServicesSearchComponent } from './shared/support-services-search
 import { ProfileSupportServicesComponent } from './profile/profile-support-services/profile-support-services.component';
 import { GoogleMapsService } from '@shared/services/google-maps.service';
 import { RequestNewResearchMethodComponent } from './shared/research-methods-search/request-new-research-method/request-new-research-method.component';
+import { RequestNewSupportServiceComponent } from './shared/support-services-search/request-new-support-service/request-new-support-service.component';
 
 @NgModule({
   declarations: [
@@ -149,6 +150,7 @@ import { RequestNewResearchMethodComponent } from './shared/research-methods-sea
     SupportServicesSearchComponent,
     ProfileSupportServicesComponent,
     RequestNewResearchMethodComponent,
+    RequestNewSupportServiceComponent,
   ],
   imports: [
     CommonModule,
@@ -188,6 +190,7 @@ import { RequestNewResearchMethodComponent } from './shared/research-methods-sea
     ResearchMethodsSearchComponent,
     SupportServicesSearchComponent,
     RequestNewResearchMethodComponent,
+    RequestNewSupportServiceComponent,
   ],
 })
 export class AppModule {}

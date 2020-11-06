@@ -2,8 +2,9 @@ import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angul
 import { AppComponentBase } from '@shared/app-component-base';
 import { SupportServiceDto, SupportServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { TreeNode } from 'primeng/api';
+import { RequestNewSupportServiceComponent } from './request-new-support-service/request-new-support-service.component';
 
 @Component({
   selector: 'app-support-services-search',
@@ -17,7 +18,12 @@ export class SupportServicesSearchComponent extends AppComponentBase implements 
   selectedSupportServices: TreeNode[] = [];
   isLoading = false;
 
-  constructor(injector: Injector, private _supportServicesService: SupportServicesServiceProxy, private _modalRef: BsModalRef) {
+  constructor(
+    injector: Injector,
+    private _supportServicesService: SupportServicesServiceProxy,
+    private _modalRef: BsModalRef,
+    private _modalService: BsModalService
+  ) {
     super(injector);
   }
 
@@ -42,6 +48,10 @@ export class SupportServicesSearchComponent extends AppComponentBase implements 
     if (index >= 0) {
       this.selectedSupportServices.splice(index, 1);
     }
+  }
+
+  onAddClick(supportService: SupportServiceDto): void {
+    this.showSupportServiceRequestModal(supportService.id);
   }
 
   private getSupportServices(): void {
@@ -81,5 +91,14 @@ export class SupportServicesSearchComponent extends AppComponentBase implements 
     } else {
       this._modalRef.hide();
     }
+  }
+
+  private showSupportServiceRequestModal(supportServiceId: string): void {
+    const modalSettings = this.defaultModalSettings;
+    modalSettings.initialState = {
+      supportServiceId: supportServiceId,
+    };
+    const modalRef = this._modalService.show(RequestNewSupportServiceComponent, modalSettings);
+    const modal: RequestNewSupportServiceComponent = modalRef.content;
   }
 }

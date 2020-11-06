@@ -9,20 +9,20 @@ using Academically.Entities;
 
 namespace Academically.Events.Handlers
 {
-    public class ResearchMethodRequestEventHandler :
-        IAsyncEventHandler<EntityCreatedEventData<ResearchMethodRequest>>,
+    public class SupportServiceRequestEventHandler :
+        IAsyncEventHandler<EntityCreatedEventData<SupportServiceRequest>>,
         ITransientDependency
     {
         private readonly IBackgroundJobManager _backgroundJobManager;
 
-        public ResearchMethodRequestEventHandler(IBackgroundJobManager backgroundJobManager)
+        public SupportServiceRequestEventHandler(IBackgroundJobManager backgroundJobManager)
         {
             _backgroundJobManager = backgroundJobManager;
         }
 
-        public async Task HandleEventAsync(EntityCreatedEventData<ResearchMethodRequest> eventData)
+        public async Task HandleEventAsync(EntityCreatedEventData<SupportServiceRequest> eventData)
         {
-            await _backgroundJobManager.EnqueueAsync<SendResearchMethodRequestEmailJob, SendResearchMethodRequestEmailJobArgs>(new SendResearchMethodRequestEmailJobArgs()
+            await _backgroundJobManager.EnqueueAsync<SendSupportServiceRequestEmailJob, SendSupportServiceRequestEmailJobArgs>(new SendSupportServiceRequestEmailJobArgs()
             {
                 Name = eventData.Entity.Name,
                 Comments = eventData.Entity.Comments,

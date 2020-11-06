@@ -51,7 +51,7 @@ export class ResearchMethodsSearchComponent extends AppComponentBase implements 
   }
 
   onAddClick(researchMethod: ResearchMethodDto): void {
-    this.showResearchMethodsSearchModal(researchMethod.id);
+    this.showResearchMethodRequestModal(researchMethod.id);
   }
 
   private getResearchMethods(): void {
@@ -93,7 +93,7 @@ export class ResearchMethodsSearchComponent extends AppComponentBase implements 
     }
   }
 
-  private showResearchMethodsSearchModal(researchMethodId: string): void {
+  private showResearchMethodRequestModal(researchMethodId: string): void {
     const modalSettings = this.defaultModalSettings;
     modalSettings.initialState = {
       researchMethodId: researchMethodId,

@@ -37,4 +37,5 @@
 	<include file="ddml/ddml.2020-11-06-01.regenerate-researchmethodologies-data.xml"/>
 	<include file="ddml/ddml.2020-11-06-02.regenerate-researchmethodologies-data.xml"/>
 	<include file="ddml/ddml.2020-11-06-03.add-researchmethodrequests-table.xml"/>
+	<include file="ddml/ddml.2020-11-06-04.add-supportservicerequests-table.xml"/>
 </databaseChangeLog>

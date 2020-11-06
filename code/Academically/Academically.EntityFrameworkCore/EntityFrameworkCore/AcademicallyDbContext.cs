@@ -9,6 +9,7 @@ namespace Academically.EntityFrameworkCore
 {
     public class AcademicallyDbContext : AbpZeroDbContext<Tenant, Role, User, AcademicallyDbContext>
     {
+        public virtual DbSet<SupportServiceRequest> SupportServiceRequests { get; set; }
         public virtual DbSet<ResearchMethodRequest> ResearchMethodRequests { get; set; }
         public virtual DbSet<UserSupportService> UserSupportServices { get; set; }
         public virtual DbSet<SupportService> SupportServices { get; set; }
