@@ -2,6 +2,7 @@
 
 namespace Academically.BackgroundJobs.JobArgs
 {
+    [Serializable]
     public class SendResearchMethodRequestEmailJobArgs
     {
         public string Name { get; set; }

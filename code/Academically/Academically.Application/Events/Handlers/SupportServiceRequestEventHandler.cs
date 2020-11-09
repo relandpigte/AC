@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Abp.BackgroundJobs;
-using Abp.Dependency;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Academically.BackgroundJobs;
@@ -10,19 +9,16 @@ using Academically.Entities;
 namespace Academically.Events.Handlers
 {
     public class SupportServiceRequestEventHandler :
-        IAsyncEventHandler<EntityCreatedEventData<SupportServiceRequest>>,
-        ITransientDependency
+        BackgroundJobEventHandler,
+        IAsyncEventHandler<EntityCreatedEventData<SupportServiceRequest>>
     {
-        private readonly IBackgroundJobManager _backgroundJobManager;
-
-        public SupportServiceRequestEventHandler(IBackgroundJobManager backgroundJobManager)
+        public SupportServiceRequestEventHandler(IBackgroundJobManager backgroundJobManager) : base(backgroundJobManager)
         {
-            _backgroundJobManager = backgroundJobManager;
         }
 
         public async Task HandleEventAsync(EntityCreatedEventData<SupportServiceRequest> eventData)
         {
-            await _backgroundJobManager.EnqueueAsync<SendSupportServiceRequestEmailJob, SendSupportServiceRequestEmailJobArgs>(new SendSupportServiceRequestEmailJobArgs()
+            await EnqueueAsync<SendSupportServiceRequestEmailJob, SendSupportServiceRequestEmailJobArgs>(new SendSupportServiceRequestEmailJobArgs()
             {
                 Name = eventData.Entity.Name,
                 Comments = eventData.Entity.Comments,
