@@ -7,6 +7,11 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="root (generated)" id="c736f87f-2259-11eb-896c-1831bf981123-4">
+        <update tableName="academicallyusertutorials">
+            <column name="ServiceTypeId" value="6aa5d07a-171b-11eb-87b4-1831bf981123"/>
+        </update>
+    </changeSet>
     <changeSet author="mlabio" id="c736f87f-2259-11eb-896c-1831bf981123-2">
         <createIndex indexName="FK_UserTutorials_Supportservices_ServiceTypeId_idx" tableName="AcademicallyUserTutorials">
             <column name="ServiceTypeId"/>
