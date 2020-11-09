@@ -6,6 +6,7 @@ using Abp.Application.Services.Dto;
 using Abp.Authorization.Users;
 using Abp.AutoMapper;
 using Academically.Authorization.Users;
+using Academically.Services.DisciplineTaxonomyStudyLevels.Dto;
 using Academically.Services.UserEducations.Dto;
 
 namespace Academically.Users.Dto
@@ -43,5 +44,6 @@ namespace Academically.Users.Dto
         public bool IsTwoFactorEnabled { get; set; }
         public bool IsRecommended { get; set; }
         public IEnumerable<UserEducationDto> UserEducations { get; set; }
+        public IEnumerable<UserDisciplineTaxonomyStudyLevelDto> UserDisciplineTaxonomyStudyLevels { get; set; }
     }
 }

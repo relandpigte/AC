@@ -51,7 +51,7 @@ namespace Academically.Services.Proposals
             // 2.) find a propery way to do this using LINQ
             var userProfiles = (await _userProfilesAppService.GetAll()
                 .Include(e => e.User)
-                    .ThenInclude(e => e.UserEducations)
+                    .ThenInclude(e => e.UserDisciplineTaxonomyStudyLevels)
                 .Where(e => e.User.Roles.Any(e => e.RoleId == tutorRole.Id))
                 .ToListAsync())
                 .Select(e => new
@@ -60,7 +60,7 @@ namespace Academically.Services.Proposals
                     gc = (new GeoCoordinate(e.Latitude ?? 0, e.Longitude ?? 0).GetDistanceTo(userLocationCoordinate)) * METER_TO_MILE_CONVERSION
                 })
                 .WhereIf(distance >= 0, e => e.gc <= distance)
-                .WhereIf(level != 0, e => e.up.User.UserEducations.Any(t => (int)t.Level == level))
+                .WhereIf(level != 0, e => e.up.User.UserDisciplineTaxonomyStudyLevels.Any(t => t.DisciplineTaxonomyStudyLevelId == level))
                 .OrderBy(e => e.gc)
                 .Select(e => new UserProfile { 
                     User = e.up.User,
