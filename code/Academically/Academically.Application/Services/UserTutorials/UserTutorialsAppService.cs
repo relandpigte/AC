@@ -57,6 +57,7 @@ namespace Academically.Services.UserTutorials
             userTutorial.UserId = userId;
             userTutorial.CreatedDate = DateTime.UtcNow;
             userTutorial.UserProfileId = userprofile.Id;
+            userTutorial.ServiceTypeId = Guid.Parse(await _settingManager.GetSettingValueAsync(AppSettingNames.Services_Tutorial));
             var folder = await _settingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_UserTutorialPictures);
             folder = $"{userId}/{folder}";
             var thumbnailsFolder = $"{folder}/thumbs";

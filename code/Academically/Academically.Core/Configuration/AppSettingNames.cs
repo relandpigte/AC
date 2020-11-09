@@ -15,5 +15,6 @@
         public const string Address_GetDetailsUrl = "Address.GetDetailsUrl";
         public const string Address_ApiKey = "Address.ApiKey";
         public const string Address_UrlParameters = "Address.UrlParameters";
+        public const string Services_Tutorial = "Services.Tutorial";
      }
 }

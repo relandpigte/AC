@@ -30,6 +30,7 @@ namespace Academically.Configuration
                 new SettingDefinition(AppSettingNames.Address_GetDetailsUrl, GetFromSettings("Address:GetDetailsUrl")),
                 new SettingDefinition(AppSettingNames.Address_ApiKey, GetFromSettings("Address:ApiKey")),
                 new SettingDefinition(AppSettingNames.Address_UrlParameters, GetFromSettings("Address:UrlParameters")),
+                new SettingDefinition(AppSettingNames.Services_Tutorial, GetFromSettings("Services:Tutorial")),
             };
         }
 
