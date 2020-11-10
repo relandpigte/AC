@@ -1,4 +1,5 @@
 ﻿using Abp.Configuration;
+using Abp.Domain.Uow;
 using Academically.Application.Shared.Services;
 using Academically.BackgroundJobs.JobArgs;
 using Academically.Configuration;
@@ -16,6 +17,7 @@ namespace Academically.BackgroundJobs
             _emailService = emailService;
         }
 
+        [UnitOfWork]
         public override void Execute(SendRegistrationEmailJobArgs args)
         {
             string clientRootAddress = _settingManager.GetSettingValue(AppSettingNames.App_ClientRootAddress);

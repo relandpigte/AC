@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Academically.Authorization.Users;
 using Academically.BackgroundJobs.JobArgs;
 
@@ -13,6 +14,7 @@ namespace Academically.BackgroundJobs
             _usersRepository = usersRepository;
         }
 
+        [UnitOfWork]
         public override void Execute(SaveUserLastLoginTimeJobArgs args)
         {
             var user = _usersRepository.Get(args.UserId);
