@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Academically.Application.Shared.Services;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
@@ -29,6 +30,7 @@ namespace Academically.BackgroundJobs
             _roleManager = roleManager;
         }
 
+        [UnitOfWork]
         public override void Execute(SendResearchMethodRequestEmailJobArgs args)
         {
             var parentMethod = _researchMethodsRepository.Get(args.ParentId);

@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Abp.BackgroundJobs;
-using Abp.Dependency;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Academically.BackgroundJobs;
@@ -10,19 +9,16 @@ using Academically.Entities;
 namespace Academically.Events.Handlers
 {
     public class ResearchMethodRequestEventHandler :
-        IAsyncEventHandler<EntityCreatedEventData<ResearchMethodRequest>>,
-        ITransientDependency
+        BackgroundJobEventHandler,
+        IAsyncEventHandler<EntityCreatedEventData<ResearchMethodRequest>>
     {
-        private readonly IBackgroundJobManager _backgroundJobManager;
-
-        public ResearchMethodRequestEventHandler(IBackgroundJobManager backgroundJobManager)
+        public ResearchMethodRequestEventHandler(IBackgroundJobManager backgroundJobManager) : base(backgroundJobManager)
         {
-            _backgroundJobManager = backgroundJobManager;
         }
 
         public async Task HandleEventAsync(EntityCreatedEventData<ResearchMethodRequest> eventData)
         {
-            await _backgroundJobManager.EnqueueAsync<SendResearchMethodRequestEmailJob, SendResearchMethodRequestEmailJobArgs>(new SendResearchMethodRequestEmailJobArgs()
+            await EnqueueAsync<SendResearchMethodRequestEmailJob, SendResearchMethodRequestEmailJobArgs>(new SendResearchMethodRequestEmailJobArgs()
             {
                 Name = eventData.Entity.Name,
                 Comments = eventData.Entity.Comments,
