@@ -15,6 +15,7 @@ namespace Academically
                 .ForMember(dest => dest.ProfilePictureFileName, opt => opt.Ignore());
             CreateMap<DisciplineTaxonomy, GetAllDisciplineTaxonomyDto>();
             CreateMap<SaveUserTutorialDto, UserTutorial>();
+            CreateMap<UserSupportServiceSessionRateDto, UserSupportServiceSessionRate>();
         }
     }
 }

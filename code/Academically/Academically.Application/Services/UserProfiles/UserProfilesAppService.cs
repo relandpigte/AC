@@ -36,6 +36,7 @@ namespace Academically.Services.UserProfiles
         private readonly IRepository<DisciplineTaxonomyStudylevel, int> _disciplineTaxonomyStudyLevelsRepository;
         private readonly IRepository<UserResearchMethod, Guid> _userResearchMethodsRepository;
         private readonly IRepository<UserSupportService, Guid> _userSupportServicesRepository;
+        private readonly IRepository<UserSupportServiceSessionRate, Guid> _userSupportServiceSessionRateRepository;
         private readonly RoleManager _roleManager;
         private readonly ISettingManager _settingManager;
         private readonly IFileManagerService _fileManagerService;
@@ -50,7 +51,8 @@ namespace Academically.Services.UserProfiles
             ISettingManager settingManager,
             IFileManagerService fileManagerService,
             IRepository<UserDisciplineTaxonomyStudyLevel, int> userDisciplineTaxonomyStudyLevelsRepository,
-            IRepository<DisciplineTaxonomyStudylevel, int> disciplineTaxonomyStudyLevelsRepository
+            IRepository<DisciplineTaxonomyStudylevel, int> disciplineTaxonomyStudyLevelsRepository,
+            IRepository<UserSupportServiceSessionRate, Guid> userSupportServiceSerssionRateRepository
             )
         {
             _userProfilesRepository = userProfilesRepository;
@@ -63,6 +65,7 @@ namespace Academically.Services.UserProfiles
             _fileManagerService = fileManagerService;
             _userDisciplineTaxonomyStudyLevelsRepository = userDisciplineTaxonomyStudyLevelsRepository;
             _disciplineTaxonomyStudyLevelsRepository = disciplineTaxonomyStudyLevelsRepository;
+            _userSupportServiceSessionRateRepository = userSupportServiceSerssionRateRepository;
         }
 
         [AbpAuthorize(PermissionNames.Pages_Account_Details)]
@@ -277,7 +280,44 @@ namespace Academically.Services.UserProfiles
 
         public async Task DeleteSupportService(long userId, Guid supportServiceId)
         {
+            var userSupportService = await _userSupportServicesRepository.FirstOrDefaultAsync(e => e.UserId == userId && e.SupportServiceId == supportServiceId);
+
+            await _userSupportServiceSessionRateRepository.DeleteAsync(e => e.UserSupportServiceId == userSupportService.Id);
             await _userSupportServicesRepository.DeleteAsync(e => e.UserId == userId && e.SupportServiceId == supportServiceId);
+        }
+
+        public async Task<UserSupportServiceSessionRateDto> GetUserSupportServiceSessionRate(Guid supportServiceId)
+        {
+            var userSupportService = await _userSupportServicesRepository.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value && e.SupportServiceId == supportServiceId);
+            
+            var result = new UserSupportServiceSessionRateDto();
+            result.UserSupportServiceId = userSupportService.Id;
+
+            var userSupportServiceSessionRate = await _userSupportServiceSessionRateRepository.GetAll()
+                .Where(e => e.UserSupportServiceId == userSupportService.Id)
+                .Select(e => ObjectMapper.Map<UserSupportServiceSessionRateDto>(e))
+                .ToListAsync();
+
+            
+
+            return userSupportServiceSessionRate.Any() ? userSupportServiceSessionRate.FirstOrDefault() : result;
+        }
+
+        public async Task SaveUserSupportServiceSessionRate(UserSupportServiceSessionRateDto input)
+        {
+            var userSupportServiceSessionRate = await _userSupportServiceSessionRateRepository.FirstOrDefaultAsync(e => e.UserSupportServiceId == input.UserSupportServiceId);
+
+            if (userSupportServiceSessionRate == null)
+            {
+                userSupportServiceSessionRate = new UserSupportServiceSessionRate();
+                ObjectMapper.Map(input, userSupportServiceSessionRate);
+                await _userSupportServiceSessionRateRepository.InsertAsync(userSupportServiceSessionRate);
+            }
+            else
+            {
+                ObjectMapper.Map(input, userSupportServiceSessionRate);
+                await _userSupportServiceSessionRateRepository.UpdateAsync(userSupportServiceSessionRate);
+            }
         }
 
         private byte[] MakeThumbnail(byte[] imageBytes, int thumbWidth, int thumbHeight)
