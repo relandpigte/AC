@@ -18,13 +18,9 @@ namespace Academically.Entities
         public DateTime DeadLine { get; set; }
         public string PictureFileName { get; set; }
         public DateTime? CreatedDate { get; set; }
-        public Guid UserProfileId { get; set; }
         public Guid ServiceTypeId { get; set; }
 
         [ForeignKey("UserId")]
         public User User { get; set; }
-
-        [ForeignKey("UserProfileId")]
-        public UserProfile UserProfile { get; set; }
     }
 }
