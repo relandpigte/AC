@@ -105,6 +105,10 @@
           <p>Invalid file extension. The file must be an image with the a <b>.png</b> or <b>.jpg</b> file extension.</p>
       ]]>
     </text>
+    <text name="EditSessionRates">Edit Session Rates</text>
+    <text name="EnableFreeSession">Enable a free 15 min session</text>
+    <text name="SingleSession">Single Session</text>
+    <text name="MultipleSessions">Multiple Sessions</text>
     <text name="InvalidFileUploadErrorTitle" value="Invalid File" />
     <text name="PrivacyAndDataProtection">Privacy &amp; Data Protection</text>
     <text name="Educations">Educations</text>

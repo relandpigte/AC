@@ -1,0 +1,25 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="root (generated)" id="979495a9-239d-11eb-896c-1831bf981123-1">
+        <createTable tableName="AcademicallyUserSupportServiceSessionRates">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UserSupportServiceId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SingleSessionRate" type="DECIMAL(10,2)" />
+            <column name="MultipleSessionRate" type="DECIMAL(10,2)" />
+            <column name="MultipleSessionCount" type="INT" />
+            <column name="FreeSession" type="BIT(1)" />
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="979495a9-239d-11eb-896c-1831bf981123-2">
+        <createIndex indexName="FK_UserSessionRates_UserSupportService_UserSupportServiceId_idx" tableName="AcademicallyUserSupportServiceSessionRates">
+            <column name="UserSupportServiceId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="979495a9-239d-11eb-896c-1831bf981123-4">
+        <addForeignKeyConstraint baseColumnNames="UserSupportServiceId" baseTableName="AcademicallyUserSupportServiceSessionRates" constraintName="FK_UserSessionRates_UserSupportService_UserSupportServiceId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyUserSupportServices" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

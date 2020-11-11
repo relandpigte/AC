@@ -3912,6 +3912,114 @@ export class UserProfilesServiceProxy {
         }
         return _observableOf<void>(<any>null);
     }
+
+    /**
+     * @param supportServiceId (optional) 
+     * @return Success
+     */
+    getUserSupportServiceSessionRate(supportServiceId: string | undefined): Observable<UserSupportServiceSessionRateDto> {
+        let url_ = this.baseUrl + "/api/services/app/UserProfiles/GetUserSupportServiceSessionRate?";
+        if (supportServiceId === null)
+            throw new Error("The parameter 'supportServiceId' cannot be null.");
+        else if (supportServiceId !== undefined)
+            url_ += "supportServiceId=" + encodeURIComponent("" + supportServiceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUserSupportServiceSessionRate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUserSupportServiceSessionRate(<any>response_);
+                } catch (e) {
+                    return <Observable<UserSupportServiceSessionRateDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserSupportServiceSessionRateDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetUserSupportServiceSessionRate(response: HttpResponseBase): Observable<UserSupportServiceSessionRateDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserSupportServiceSessionRateDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserSupportServiceSessionRateDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    saveUserSupportServiceSessionRate(body: UserSupportServiceSessionRateDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserProfiles/SaveUserSupportServiceSessionRate";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveUserSupportServiceSessionRate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveUserSupportServiceSessionRate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSaveUserSupportServiceSessionRate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
 }
 
 @Injectable()
@@ -4786,6 +4894,65 @@ export interface IUserEducation {
     id: string;
 }
 
+export class UserDisciplineTaxonomyStudyLevel implements IUserDisciplineTaxonomyStudyLevel {
+    disciplineTaxonomyStudyLevelId: number;
+    userId: number;
+    disciplineTaxonomyId: string;
+    user: User;
+    id: number;
+
+    constructor(data?: IUserDisciplineTaxonomyStudyLevel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.disciplineTaxonomyStudyLevelId = _data["disciplineTaxonomyStudyLevelId"];
+            this.userId = _data["userId"];
+            this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserDisciplineTaxonomyStudyLevel {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserDisciplineTaxonomyStudyLevel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["disciplineTaxonomyStudyLevelId"] = this.disciplineTaxonomyStudyLevelId;
+        data["userId"] = this.userId;
+        data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): UserDisciplineTaxonomyStudyLevel {
+        const json = this.toJSON();
+        let result = new UserDisciplineTaxonomyStudyLevel();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserDisciplineTaxonomyStudyLevel {
+    disciplineTaxonomyStudyLevelId: number;
+    userId: number;
+    disciplineTaxonomyId: string;
+    user: User;
+    id: number;
+}
+
 export class UserToken implements IUserToken {
     tenantId: number | undefined;
     userId: number;
@@ -5188,6 +5355,7 @@ export class User implements IUser {
     lastLoginTime: moment.Moment | undefined;
     isRecommended: boolean | undefined;
     userEducations: UserEducation[] | undefined;
+    userDisciplineTaxonomyStudyLevels: UserDisciplineTaxonomyStudyLevel[] | undefined;
     normalizedUserName: string;
     normalizedEmailAddress: string;
     concurrencyStamp: string | undefined;
@@ -5245,6 +5413,11 @@ export class User implements IUser {
                 this.userEducations = [] as any;
                 for (let item of _data["userEducations"])
                     this.userEducations.push(UserEducation.fromJS(item));
+            }
+            if (Array.isArray(_data["userDisciplineTaxonomyStudyLevels"])) {
+                this.userDisciplineTaxonomyStudyLevels = [] as any;
+                for (let item of _data["userDisciplineTaxonomyStudyLevels"])
+                    this.userDisciplineTaxonomyStudyLevels.push(UserDisciplineTaxonomyStudyLevel.fromJS(item));
             }
             this.normalizedUserName = _data["normalizedUserName"];
             this.normalizedEmailAddress = _data["normalizedEmailAddress"];
@@ -5328,6 +5501,11 @@ export class User implements IUser {
             for (let item of this.userEducations)
                 data["userEducations"].push(item.toJSON());
         }
+        if (Array.isArray(this.userDisciplineTaxonomyStudyLevels)) {
+            data["userDisciplineTaxonomyStudyLevels"] = [];
+            for (let item of this.userDisciplineTaxonomyStudyLevels)
+                data["userDisciplineTaxonomyStudyLevels"].push(item.toJSON());
+        }
         data["normalizedUserName"] = this.normalizedUserName;
         data["normalizedEmailAddress"] = this.normalizedEmailAddress;
         data["concurrencyStamp"] = this.concurrencyStamp;
@@ -5406,6 +5584,7 @@ export interface IUser {
     lastLoginTime: moment.Moment | undefined;
     isRecommended: boolean | undefined;
     userEducations: UserEducation[] | undefined;
+    userDisciplineTaxonomyStudyLevels: UserDisciplineTaxonomyStudyLevel[] | undefined;
     normalizedUserName: string;
     normalizedEmailAddress: string;
     concurrencyStamp: string | undefined;
@@ -5856,6 +6035,57 @@ export interface IUserEducationDto {
     id: string;
 }
 
+export class UserDisciplineTaxonomyStudyLevelDto implements IUserDisciplineTaxonomyStudyLevelDto {
+    userId: number;
+    disciplineTaxonomyId: string;
+    id: number;
+
+    constructor(data?: IUserDisciplineTaxonomyStudyLevelDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userId = _data["userId"];
+            this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserDisciplineTaxonomyStudyLevelDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserDisciplineTaxonomyStudyLevelDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): UserDisciplineTaxonomyStudyLevelDto {
+        const json = this.toJSON();
+        let result = new UserDisciplineTaxonomyStudyLevelDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserDisciplineTaxonomyStudyLevelDto {
+    userId: number;
+    disciplineTaxonomyId: string;
+    id: number;
+}
+
 export class UserDto implements IUserDto {
     userName: string;
     name: string;
@@ -5870,6 +6100,7 @@ export class UserDto implements IUserDto {
     isTwoFactorEnabled: boolean;
     isRecommended: boolean;
     userEducations: UserEducationDto[] | undefined;
+    userDisciplineTaxonomyStudyLevels: UserDisciplineTaxonomyStudyLevelDto[] | undefined;
     id: number;
 
     constructor(data?: IUserDto) {
@@ -5907,6 +6138,11 @@ export class UserDto implements IUserDto {
                 this.userEducations = [] as any;
                 for (let item of _data["userEducations"])
                     this.userEducations.push(UserEducationDto.fromJS(item));
+            }
+            if (Array.isArray(_data["userDisciplineTaxonomyStudyLevels"])) {
+                this.userDisciplineTaxonomyStudyLevels = [] as any;
+                for (let item of _data["userDisciplineTaxonomyStudyLevels"])
+                    this.userDisciplineTaxonomyStudyLevels.push(UserDisciplineTaxonomyStudyLevelDto.fromJS(item));
             }
             this.id = _data["id"];
         }
@@ -5946,6 +6182,11 @@ export class UserDto implements IUserDto {
             for (let item of this.userEducations)
                 data["userEducations"].push(item.toJSON());
         }
+        if (Array.isArray(this.userDisciplineTaxonomyStudyLevels)) {
+            data["userDisciplineTaxonomyStudyLevels"] = [];
+            for (let item of this.userDisciplineTaxonomyStudyLevels)
+                data["userDisciplineTaxonomyStudyLevels"].push(item.toJSON());
+        }
         data["id"] = this.id;
         return data; 
     }
@@ -5972,6 +6213,7 @@ export interface IUserDto {
     isTwoFactorEnabled: boolean;
     isRecommended: boolean;
     userEducations: UserEducationDto[] | undefined;
+    userDisciplineTaxonomyStudyLevels: UserDisciplineTaxonomyStudyLevelDto[] | undefined;
     id: number;
 }
 
@@ -8092,6 +8334,69 @@ export class GetUserDisciplineTaxonomyDto implements IGetUserDisciplineTaxonomyD
 export interface IGetUserDisciplineTaxonomyDto {
     disciplineTaxonomy: DisciplineTaxonomyDto;
     levelId: number;
+    id: string;
+}
+
+export class UserSupportServiceSessionRateDto implements IUserSupportServiceSessionRateDto {
+    userSupportServiceId: string;
+    singleSessionRate: number;
+    multipleSessionRate: number;
+    multipleSessionCount: number;
+    freeSession: boolean;
+    id: string;
+
+    constructor(data?: IUserSupportServiceSessionRateDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userSupportServiceId = _data["userSupportServiceId"];
+            this.singleSessionRate = _data["singleSessionRate"];
+            this.multipleSessionRate = _data["multipleSessionRate"];
+            this.multipleSessionCount = _data["multipleSessionCount"];
+            this.freeSession = _data["freeSession"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserSupportServiceSessionRateDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserSupportServiceSessionRateDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userSupportServiceId"] = this.userSupportServiceId;
+        data["singleSessionRate"] = this.singleSessionRate;
+        data["multipleSessionRate"] = this.multipleSessionRate;
+        data["multipleSessionCount"] = this.multipleSessionCount;
+        data["freeSession"] = this.freeSession;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): UserSupportServiceSessionRateDto {
+        const json = this.toJSON();
+        let result = new UserSupportServiceSessionRateDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserSupportServiceSessionRateDto {
+    userSupportServiceId: string;
+    singleSessionRate: number;
+    multipleSessionRate: number;
+    multipleSessionCount: number;
+    freeSession: boolean;
     id: string;
 }
 

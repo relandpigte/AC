@@ -28,5 +28,7 @@ namespace Academically.Services.UserProfiles
         Task<IEnumerable<SupportServiceDto>> GetSupportServices(long userId);
         Task CreateManySupportServices(IEnumerable<Guid> supportServiceIds);
         Task DeleteSupportService(long userId, Guid supportServiceId);
+        Task<UserSupportServiceSessionRateDto> GetUserSupportServiceSessionRate(Guid supportServiceId);
+        Task SaveUserSupportServiceSessionRate(UserSupportServiceSessionRateDto input);
     }
 }

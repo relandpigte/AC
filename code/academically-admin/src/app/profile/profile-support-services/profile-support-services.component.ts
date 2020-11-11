@@ -1,7 +1,8 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
+import { SessionRatesComponent } from '@app/shared/session-rates/session-rates.component';
 import { SupportServicesSearchComponent } from '@app/shared/support-services-search/support-services-search.component';
 import { AppComponentBase } from '@shared/app-component-base';
-import { SupportServiceDto, UserProfilesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { SupportServiceDto, UserProfilesServiceProxy, UserSupportServiceSessionRateDto } from '@shared/service-proxies/service-proxies';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 
@@ -30,6 +31,10 @@ export class ProfileSupportServicesComponent extends AppComponentBase implements
 
   onRemoveClick(supportServiceId: string): void {
     this.removeSupportServiceFromUser(supportServiceId);
+  }
+
+  onSelectSupportService(supportServiceId: string): void {
+    this.showUserSupportServiceSessionRateModal(supportServiceId);
   }
 
   private getSupportServicesOfUser(): void {
@@ -87,6 +92,18 @@ export class ProfileSupportServicesComponent extends AppComponentBase implements
     modal.modalSave.subscribe((selectedMethods: SupportServiceDto[]) => {
       const methodIds = selectedMethods.map((e) => e.id);
       this.addSupportServicesToUser(methodIds);
+    });
+  }
+
+  private showUserSupportServiceSessionRateModal(supportServiceId: string): void {
+    const modalSettings = this.defaultModalSettings;
+    modalSettings.initialState = {
+      userId: this.appSession.userId,
+      supportServiceId: supportServiceId
+    };
+    const modalRef = this._modalService.show(SessionRatesComponent, modalSettings);
+    const modal: SessionRatesComponent = modalRef.content;
+    modal.modalSave.subscribe(() => {
     });
   }
 }

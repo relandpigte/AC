@@ -14,7 +14,9 @@
       role="alert"
       [class.pr-2]="isViewOnly"
     >
-      {{ supportService.name }}
+      <span class="session-rate" (click)="$event.preventDefault(); onSelectSupportService(supportService.id)">
+        {{ supportService.name }}
+      </span>
       <button
         *ngIf="!isViewOnly"
         type="button"
