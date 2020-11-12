@@ -1,28 +1,41 @@
 ﻿using System.Threading.Tasks;
-using Abp.BackgroundJobs;
+using Abp.Configuration;
+using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
-using Academically.BackgroundJobs;
-using Academically.BackgroundJobs.JobArgs;
+using Abp.Localization;
+using Academically.Application.Shared.Services;
+using Academically.Configuration;
 using Academically.Entities;
 
 namespace Academically.Events.Handlers
 {
     public class RegistrationsEventHandler :
-        BackgroundJobEventHandler,
+        EventHandlerBase,
         IAsyncEventHandler<EntityCreatedEventData<Registration>>
     {
-        public RegistrationsEventHandler(IBackgroundJobManager backgroundJobManager) : base(backgroundJobManager)
+        private readonly ISettingManager _settingManager;
+        private readonly IEmailService _emailService;
+
+        public RegistrationsEventHandler(
+            ISettingManager settingManager,
+            IEmailService emailService,
+            ILocalizationManager localizationManager
+            ) : base(localizationManager)
         {
+            _settingManager = settingManager;
+            _emailService = emailService;
         }
 
+        [UnitOfWork]
         public async Task HandleEventAsync(EntityCreatedEventData<Registration> eventData)
         {
-            await EnqueueAsync<SendRegistrationEmailJob, SendRegistrationEmailJobArgs>(new SendRegistrationEmailJobArgs()
-            {
-                RegistrationId = eventData.Entity.Id,
-                EmailAddress = eventData.Entity.EmailAddress,
-            });
+            string clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
+            string registrationLink = $"{clientRootAddress}account/complete-registration/{eventData.Entity.Id}";
+            string subject = L("RegistrationEmailSubject");
+            string body = L("RegistrationEmailMessage", registrationLink);
+
+            await _emailService.SendAsync(eventData.Entity.EmailAddress, eventData.Entity.EmailAddress, subject, body);
         }
     }
 }
