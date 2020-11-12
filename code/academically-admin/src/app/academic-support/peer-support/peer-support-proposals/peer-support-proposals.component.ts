@@ -13,7 +13,7 @@ export class PeerSupportProposalsComponent extends AppComponentBase implements O
   tutors: SearchTutorDto[] = [];
   educationLevels: number[] = [];
   distanceFilter = -1;
-  educationLevelFilter = 100;
+  educationLevelFilter = 0;
 
   constructor(
     injector: Injector,

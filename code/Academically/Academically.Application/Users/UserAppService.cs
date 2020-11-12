@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -21,6 +22,7 @@ using Academically.Authorization;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 using Academically.Configuration;
+using Academically.Entities;
 using Academically.Roles.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Identity;
@@ -39,6 +41,7 @@ namespace Academically.Users
         private readonly LogInManager _logInManager;
         private readonly UrlEncoder _urlEncoder;
         private readonly ISettingManager _settingManager;
+        private readonly IRepository<UserProfile, Guid> _userProfileRepository;
 
         public UserAppService(
             IRepository<User, long> repository,
@@ -49,7 +52,8 @@ namespace Academically.Users
             IAbpSession abpSession,
             LogInManager logInManager,
             UrlEncoder urlEncoder,
-            ISettingManager settingManager)
+            ISettingManager settingManager,
+            IRepository<UserProfile, Guid> userProfileRepository)
             : base(repository)
         {
             _userManager = userManager;
@@ -60,6 +64,7 @@ namespace Academically.Users
             _logInManager = logInManager;
             _urlEncoder = urlEncoder;
             _settingManager = settingManager;
+            _userProfileRepository = userProfileRepository;
 
         }
 
@@ -80,6 +85,14 @@ namespace Academically.Users
             if (input.RoleNames != null)
             {
                 CheckErrors(await _userManager.SetRolesAsync(user, input.RoleNames));
+            }
+
+            if (user.Id != 0)
+            {
+                var userProfile = new UserProfile();
+                userProfile.UserId = user.Id;
+
+                await _userProfileRepository.InsertAsync(userProfile);
             }
 
             CurrentUnitOfWork.SaveChanges();
