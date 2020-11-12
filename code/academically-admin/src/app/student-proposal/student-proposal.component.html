@@ -1,0 +1,29 @@
+<div class="row" [@routerTransition]>
+  <div class="container-fluid">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ 'Tutorial' | localize }}</h6>
+              <h1 class="header-title">Title of work to be supported</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-xl-12 student-proposal-tabs">
+          <tabset>
+            <tab *ngIf="true" heading="{{ 'Overview' | localize }}">
+              <div class="row tabs-custom">
+                <student-proposal-overview></student-proposal-overview>
+              </div>
+            </tab>
+            <tab *ngIf="true" heading="{{ 'Live Sessions' | localize }}"> </tab>
+          </tabset>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

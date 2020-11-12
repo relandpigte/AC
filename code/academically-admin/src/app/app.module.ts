@@ -83,6 +83,8 @@ import { GoogleMapsService } from '@shared/services/google-maps.service';
 import { RequestNewResearchMethodComponent } from './shared/research-methods-search/request-new-research-method/request-new-research-method.component';
 import { RequestNewSupportServiceComponent } from './shared/support-services-search/request-new-support-service/request-new-support-service.component';
 import { SessionRatesComponent } from './shared/session-rates/session-rates.component';
+import { StudentProposalComponent } from './student-proposal/student-proposal.component';
+import { StudentProposalOverviewComponent } from './student-proposal/student-proposal-overview/student-proposal-overview.component';
 
 @NgModule({
   declarations: [
@@ -153,6 +155,8 @@ import { SessionRatesComponent } from './shared/session-rates/session-rates.comp
     RequestNewResearchMethodComponent,
     RequestNewSupportServiceComponent,
     SessionRatesComponent,
+    StudentProposalComponent,
+    StudentProposalOverviewComponent,
   ],
   imports: [
     CommonModule,
