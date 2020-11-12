@@ -11,6 +11,7 @@ namespace Academically.Entities
         public long UserId { get; set; }
         public Guid SupportServiceId { get; set; }
 
+        [ForeignKey("UserId")]
         public virtual User User { get; set; }
         public virtual SupportService SupportService { get; set; }
     }

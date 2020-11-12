@@ -20,6 +20,7 @@ namespace Academically.Authorization.Users
         public bool? IsRecommended { get; set; }
         public virtual ICollection<UserEducation> UserEducations { get; set; }
         public virtual ICollection<UserDisciplineTaxonomyStudyLevel> UserDisciplineTaxonomyStudyLevels { get; set; }
+        public virtual ICollection<UserSupportService> UserSupportServices { get; set; }
 
         public static User CreateTenantAdminUser(int tenantId, string emailAddress)
         {
