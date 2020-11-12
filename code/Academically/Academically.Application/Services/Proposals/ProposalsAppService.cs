@@ -57,15 +57,15 @@ namespace Academically.Services.Proposals
             var profiles = await _userProfilesAppService.GetAll()
                 .ToListAsync();
             var userProfiles = (await _userProfilesAppService.GetAll()
-                .Include(e => e.User)
-                    .ThenInclude(e => e.UserDisciplineTaxonomyStudyLevels)
-                .Include(e => e.User)
-                    .ThenInclude(e => e.UserSupportServices)
+                //.Include(e => e.User)
+                //    .ThenInclude(e => e.UserDisciplineTaxonomyStudyLevels) 
+                //.Include(e => e.User)
+                //    .ThenInclude(e => e.UserSupportServices) These will be needed for later matching
                 .Include(e => e.User)
                     .ThenInclude(e => e.UserEducations)
                 .Where(
                     e => e.User.Roles.Any(e => e.RoleId == tutorRole.Id)
-                //&& e.User.UserSupportServices.Any(e => e.SupportServiceId == tutorialServiceTypeId)
+                //&& e.User.UserSupportServices.Any(e => e.SupportServiceId == tutorialServiceTypeId) This will be needed  for later matching
                 )
                 .ToListAsync())
                 .Select(e => new
@@ -75,7 +75,7 @@ namespace Academically.Services.Proposals
                 })
                 .WhereIf(distance >= 0, e => e.gc <= distance)
                 .WhereIf(level != 0, e => e.up.User.UserEducations.Any(t => (int)t.Level == level))
-                //.WhereIf(level != 0, e => e.up.User.UserDisciplineTaxonomyStudyLevels.Any(t => t.DisciplineTaxonomyStudyLevelId == level))
+                //.WhereIf(level != 0, e => e.up.User.UserDisciplineTaxonomyStudyLevels.Any(t => t.DisciplineTaxonomyStudyLevelId == level)) This will be for needed later matching
                 .OrderBy(e => e.gc)
                 .Select(e => new UserProfile { 
                     User = e.up.User,
