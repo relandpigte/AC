@@ -947,6 +947,215 @@ export class ProposalsServiceProxy {
         }
         return _observableOf<SearchTutorDto[]>(<any>null);
     }
+
+    /**
+     * @param tutorialId (optional) 
+     * @return Success
+     */
+    getStudentProposal(tutorialId: string | undefined): Observable<GetStudentProposalDto> {
+        let url_ = this.baseUrl + "/api/services/app/Proposals/GetStudentProposal?";
+        if (tutorialId === null)
+            throw new Error("The parameter 'tutorialId' cannot be null.");
+        else if (tutorialId !== undefined)
+            url_ += "tutorialId=" + encodeURIComponent("" + tutorialId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetStudentProposal(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetStudentProposal(<any>response_);
+                } catch (e) {
+                    return <Observable<GetStudentProposalDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetStudentProposalDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetStudentProposal(response: HttpResponseBase): Observable<GetStudentProposalDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetStudentProposalDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetStudentProposalDto>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getTutorProfileDetail(): Observable<GetTutorDto> {
+        let url_ = this.baseUrl + "/api/services/app/Proposals/GetTutorProfileDetail";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTutorProfileDetail(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTutorProfileDetail(<any>response_);
+                } catch (e) {
+                    return <Observable<GetTutorDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetTutorDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTutorProfileDetail(response: HttpResponseBase): Observable<GetTutorDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetTutorDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetTutorDto>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getTutorSupportService(): Observable<UserSupportServiceDto> {
+        let url_ = this.baseUrl + "/api/services/app/Proposals/GetTutorSupportService";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTutorSupportService(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTutorSupportService(<any>response_);
+                } catch (e) {
+                    return <Observable<UserSupportServiceDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserSupportServiceDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTutorSupportService(response: HttpResponseBase): Observable<UserSupportServiceDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserSupportServiceDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserSupportServiceDto>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getTutorDisciplineTaxonomies(): Observable<string> {
+        let url_ = this.baseUrl + "/api/services/app/Proposals/GetTutorDisciplineTaxonomies";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTutorDisciplineTaxonomies(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTutorDisciplineTaxonomies(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTutorDisciplineTaxonomies(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
+    }
 }
 
 @Injectable()
@@ -4953,6 +5162,211 @@ export interface IUserDisciplineTaxonomyStudyLevel {
     id: number;
 }
 
+export class SupportService implements ISupportService {
+    name: string | undefined;
+    parentId: string | undefined;
+    parentIdMap: string | undefined;
+    isEditable: boolean;
+    parent: SupportService;
+    children: SupportService[] | undefined;
+    id: string;
+
+    constructor(data?: ISupportService) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.parentId = _data["parentId"];
+            this.parentIdMap = _data["parentIdMap"];
+            this.isEditable = _data["isEditable"];
+            this.parent = _data["parent"] ? SupportService.fromJS(_data["parent"]) : <any>undefined;
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(SupportService.fromJS(item));
+            }
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): SupportService {
+        data = typeof data === 'object' ? data : {};
+        let result = new SupportService();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["parentId"] = this.parentId;
+        data["parentIdMap"] = this.parentIdMap;
+        data["isEditable"] = this.isEditable;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): SupportService {
+        const json = this.toJSON();
+        let result = new SupportService();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISupportService {
+    name: string | undefined;
+    parentId: string | undefined;
+    parentIdMap: string | undefined;
+    isEditable: boolean;
+    parent: SupportService;
+    children: SupportService[] | undefined;
+    id: string;
+}
+
+export class UserSupportServiceSessionRate implements IUserSupportServiceSessionRate {
+    userSupportServiceId: string;
+    singleSessionRate: number;
+    multipleSessionRate: number;
+    multipleSessionCount: number;
+    freeSession: boolean;
+    userSupportService: UserSupportService;
+    id: string;
+
+    constructor(data?: IUserSupportServiceSessionRate) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userSupportServiceId = _data["userSupportServiceId"];
+            this.singleSessionRate = _data["singleSessionRate"];
+            this.multipleSessionRate = _data["multipleSessionRate"];
+            this.multipleSessionCount = _data["multipleSessionCount"];
+            this.freeSession = _data["freeSession"];
+            this.userSupportService = _data["userSupportService"] ? UserSupportService.fromJS(_data["userSupportService"]) : <any>undefined;
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserSupportServiceSessionRate {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserSupportServiceSessionRate();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userSupportServiceId"] = this.userSupportServiceId;
+        data["singleSessionRate"] = this.singleSessionRate;
+        data["multipleSessionRate"] = this.multipleSessionRate;
+        data["multipleSessionCount"] = this.multipleSessionCount;
+        data["freeSession"] = this.freeSession;
+        data["userSupportService"] = this.userSupportService ? this.userSupportService.toJSON() : <any>undefined;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): UserSupportServiceSessionRate {
+        const json = this.toJSON();
+        let result = new UserSupportServiceSessionRate();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserSupportServiceSessionRate {
+    userSupportServiceId: string;
+    singleSessionRate: number;
+    multipleSessionRate: number;
+    multipleSessionCount: number;
+    freeSession: boolean;
+    userSupportService: UserSupportService;
+    id: string;
+}
+
+export class UserSupportService implements IUserSupportService {
+    userId: number;
+    supportServiceId: string;
+    user: User;
+    supportService: SupportService;
+    userSupportServiceSessionRate: UserSupportServiceSessionRate;
+    id: string;
+
+    constructor(data?: IUserSupportService) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userId = _data["userId"];
+            this.supportServiceId = _data["supportServiceId"];
+            this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
+            this.supportService = _data["supportService"] ? SupportService.fromJS(_data["supportService"]) : <any>undefined;
+            this.userSupportServiceSessionRate = _data["userSupportServiceSessionRate"] ? UserSupportServiceSessionRate.fromJS(_data["userSupportServiceSessionRate"]) : <any>undefined;
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserSupportService {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserSupportService();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["supportServiceId"] = this.supportServiceId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        data["supportService"] = this.supportService ? this.supportService.toJSON() : <any>undefined;
+        data["userSupportServiceSessionRate"] = this.userSupportServiceSessionRate ? this.userSupportServiceSessionRate.toJSON() : <any>undefined;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): UserSupportService {
+        const json = this.toJSON();
+        let result = new UserSupportService();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserSupportService {
+    userId: number;
+    supportServiceId: string;
+    user: User;
+    supportService: SupportService;
+    userSupportServiceSessionRate: UserSupportServiceSessionRate;
+    id: string;
+}
+
 export class UserToken implements IUserToken {
     tenantId: number | undefined;
     userId: number;
@@ -5356,6 +5770,7 @@ export class User implements IUser {
     isRecommended: boolean | undefined;
     userEducations: UserEducation[] | undefined;
     userDisciplineTaxonomyStudyLevels: UserDisciplineTaxonomyStudyLevel[] | undefined;
+    userSupportServices: UserSupportService[] | undefined;
     normalizedUserName: string;
     normalizedEmailAddress: string;
     concurrencyStamp: string | undefined;
@@ -5418,6 +5833,11 @@ export class User implements IUser {
                 this.userDisciplineTaxonomyStudyLevels = [] as any;
                 for (let item of _data["userDisciplineTaxonomyStudyLevels"])
                     this.userDisciplineTaxonomyStudyLevels.push(UserDisciplineTaxonomyStudyLevel.fromJS(item));
+            }
+            if (Array.isArray(_data["userSupportServices"])) {
+                this.userSupportServices = [] as any;
+                for (let item of _data["userSupportServices"])
+                    this.userSupportServices.push(UserSupportService.fromJS(item));
             }
             this.normalizedUserName = _data["normalizedUserName"];
             this.normalizedEmailAddress = _data["normalizedEmailAddress"];
@@ -5506,6 +5926,11 @@ export class User implements IUser {
             for (let item of this.userDisciplineTaxonomyStudyLevels)
                 data["userDisciplineTaxonomyStudyLevels"].push(item.toJSON());
         }
+        if (Array.isArray(this.userSupportServices)) {
+            data["userSupportServices"] = [];
+            for (let item of this.userSupportServices)
+                data["userSupportServices"].push(item.toJSON());
+        }
         data["normalizedUserName"] = this.normalizedUserName;
         data["normalizedEmailAddress"] = this.normalizedEmailAddress;
         data["concurrencyStamp"] = this.concurrencyStamp;
@@ -5585,6 +6010,7 @@ export interface IUser {
     isRecommended: boolean | undefined;
     userEducations: UserEducation[] | undefined;
     userDisciplineTaxonomyStudyLevels: UserDisciplineTaxonomyStudyLevel[] | undefined;
+    userSupportServices: UserSupportService[] | undefined;
     normalizedUserName: string;
     normalizedEmailAddress: string;
     concurrencyStamp: string | undefined;
@@ -6086,6 +6512,203 @@ export interface IUserDisciplineTaxonomyStudyLevelDto {
     id: number;
 }
 
+export class SupportServiceDto implements ISupportServiceDto {
+    name: string | undefined;
+    parentId: string | undefined;
+    parentIdMap: string | undefined;
+    isEditable: boolean;
+    parent: SupportServiceDto;
+    children: SupportServiceDto[] | undefined;
+    id: string;
+
+    constructor(data?: ISupportServiceDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.parentId = _data["parentId"];
+            this.parentIdMap = _data["parentIdMap"];
+            this.isEditable = _data["isEditable"];
+            this.parent = _data["parent"] ? SupportServiceDto.fromJS(_data["parent"]) : <any>undefined;
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(SupportServiceDto.fromJS(item));
+            }
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): SupportServiceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SupportServiceDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["parentId"] = this.parentId;
+        data["parentIdMap"] = this.parentIdMap;
+        data["isEditable"] = this.isEditable;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): SupportServiceDto {
+        const json = this.toJSON();
+        let result = new SupportServiceDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISupportServiceDto {
+    name: string | undefined;
+    parentId: string | undefined;
+    parentIdMap: string | undefined;
+    isEditable: boolean;
+    parent: SupportServiceDto;
+    children: SupportServiceDto[] | undefined;
+    id: string;
+}
+
+export class UserSupportServiceSessionRateDto implements IUserSupportServiceSessionRateDto {
+    userSupportServiceId: string;
+    singleSessionRate: number;
+    multipleSessionRate: number;
+    multipleSessionCount: number;
+    freeSession: boolean;
+    id: string;
+
+    constructor(data?: IUserSupportServiceSessionRateDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userSupportServiceId = _data["userSupportServiceId"];
+            this.singleSessionRate = _data["singleSessionRate"];
+            this.multipleSessionRate = _data["multipleSessionRate"];
+            this.multipleSessionCount = _data["multipleSessionCount"];
+            this.freeSession = _data["freeSession"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserSupportServiceSessionRateDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserSupportServiceSessionRateDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userSupportServiceId"] = this.userSupportServiceId;
+        data["singleSessionRate"] = this.singleSessionRate;
+        data["multipleSessionRate"] = this.multipleSessionRate;
+        data["multipleSessionCount"] = this.multipleSessionCount;
+        data["freeSession"] = this.freeSession;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): UserSupportServiceSessionRateDto {
+        const json = this.toJSON();
+        let result = new UserSupportServiceSessionRateDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserSupportServiceSessionRateDto {
+    userSupportServiceId: string;
+    singleSessionRate: number;
+    multipleSessionRate: number;
+    multipleSessionCount: number;
+    freeSession: boolean;
+    id: string;
+}
+
+export class UserSupportServiceDto implements IUserSupportServiceDto {
+    userId: number;
+    supportServiceId: string;
+    supportService: SupportServiceDto;
+    userSupportServiceSessionRate: UserSupportServiceSessionRateDto;
+    id: string;
+
+    constructor(data?: IUserSupportServiceDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userId = _data["userId"];
+            this.supportServiceId = _data["supportServiceId"];
+            this.supportService = _data["supportService"] ? SupportServiceDto.fromJS(_data["supportService"]) : <any>undefined;
+            this.userSupportServiceSessionRate = _data["userSupportServiceSessionRate"] ? UserSupportServiceSessionRateDto.fromJS(_data["userSupportServiceSessionRate"]) : <any>undefined;
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserSupportServiceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserSupportServiceDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["supportServiceId"] = this.supportServiceId;
+        data["supportService"] = this.supportService ? this.supportService.toJSON() : <any>undefined;
+        data["userSupportServiceSessionRate"] = this.userSupportServiceSessionRate ? this.userSupportServiceSessionRate.toJSON() : <any>undefined;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): UserSupportServiceDto {
+        const json = this.toJSON();
+        let result = new UserSupportServiceDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserSupportServiceDto {
+    userId: number;
+    supportServiceId: string;
+    supportService: SupportServiceDto;
+    userSupportServiceSessionRate: UserSupportServiceSessionRateDto;
+    id: string;
+}
+
 export class UserDto implements IUserDto {
     userName: string;
     name: string;
@@ -6101,6 +6724,7 @@ export class UserDto implements IUserDto {
     isRecommended: boolean;
     userEducations: UserEducationDto[] | undefined;
     userDisciplineTaxonomyStudyLevels: UserDisciplineTaxonomyStudyLevelDto[] | undefined;
+    userSupportServices: UserSupportServiceDto[] | undefined;
     id: number;
 
     constructor(data?: IUserDto) {
@@ -6143,6 +6767,11 @@ export class UserDto implements IUserDto {
                 this.userDisciplineTaxonomyStudyLevels = [] as any;
                 for (let item of _data["userDisciplineTaxonomyStudyLevels"])
                     this.userDisciplineTaxonomyStudyLevels.push(UserDisciplineTaxonomyStudyLevelDto.fromJS(item));
+            }
+            if (Array.isArray(_data["userSupportServices"])) {
+                this.userSupportServices = [] as any;
+                for (let item of _data["userSupportServices"])
+                    this.userSupportServices.push(UserSupportServiceDto.fromJS(item));
             }
             this.id = _data["id"];
         }
@@ -6187,6 +6816,11 @@ export class UserDto implements IUserDto {
             for (let item of this.userDisciplineTaxonomyStudyLevels)
                 data["userDisciplineTaxonomyStudyLevels"].push(item.toJSON());
         }
+        if (Array.isArray(this.userSupportServices)) {
+            data["userSupportServices"] = [];
+            for (let item of this.userSupportServices)
+                data["userSupportServices"].push(item.toJSON());
+        }
         data["id"] = this.id;
         return data; 
     }
@@ -6214,6 +6848,7 @@ export interface IUserDto {
     isRecommended: boolean;
     userEducations: UserEducationDto[] | undefined;
     userDisciplineTaxonomyStudyLevels: UserDisciplineTaxonomyStudyLevelDto[] | undefined;
+    userSupportServices: UserSupportServiceDto[] | undefined;
     id: number;
 }
 
@@ -6260,6 +6895,179 @@ export class SearchTutorDto implements ISearchTutorDto {
 }
 
 export interface ISearchTutorDto {
+    profilePictureFileName: string | undefined;
+    user: UserDto;
+}
+
+export class UserTutorialDisciplineTaxonomyDto implements IUserTutorialDisciplineTaxonomyDto {
+    disciplineTaxonomy: DisciplineTaxonomyDto;
+
+    constructor(data?: IUserTutorialDisciplineTaxonomyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomyDto.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserTutorialDisciplineTaxonomyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserTutorialDisciplineTaxonomyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): UserTutorialDisciplineTaxonomyDto {
+        const json = this.toJSON();
+        let result = new UserTutorialDisciplineTaxonomyDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserTutorialDisciplineTaxonomyDto {
+    disciplineTaxonomy: DisciplineTaxonomyDto;
+}
+
+export class GetStudentProposalDto implements IGetStudentProposalDto {
+    information: string | undefined;
+    supportLevel: number;
+    concerns: string | undefined;
+    urgencyLevel: number;
+    deadline: moment.Moment;
+    subjectArea: string | undefined;
+    userTutorialDisciplineTaxonomies: UserTutorialDisciplineTaxonomyDto[] | undefined;
+    profilePictureFileName: string | undefined;
+    user: UserDto;
+
+    constructor(data?: IGetStudentProposalDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.information = _data["information"];
+            this.supportLevel = _data["supportLevel"];
+            this.concerns = _data["concerns"];
+            this.urgencyLevel = _data["urgencyLevel"];
+            this.deadline = _data["deadline"] ? moment(_data["deadline"].toString()) : <any>undefined;
+            this.subjectArea = _data["subjectArea"];
+            if (Array.isArray(_data["userTutorialDisciplineTaxonomies"])) {
+                this.userTutorialDisciplineTaxonomies = [] as any;
+                for (let item of _data["userTutorialDisciplineTaxonomies"])
+                    this.userTutorialDisciplineTaxonomies.push(UserTutorialDisciplineTaxonomyDto.fromJS(item));
+            }
+            this.profilePictureFileName = _data["profilePictureFileName"];
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): GetStudentProposalDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetStudentProposalDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["information"] = this.information;
+        data["supportLevel"] = this.supportLevel;
+        data["concerns"] = this.concerns;
+        data["urgencyLevel"] = this.urgencyLevel;
+        data["deadline"] = this.deadline ? this.deadline.toISOString() : <any>undefined;
+        data["subjectArea"] = this.subjectArea;
+        if (Array.isArray(this.userTutorialDisciplineTaxonomies)) {
+            data["userTutorialDisciplineTaxonomies"] = [];
+            for (let item of this.userTutorialDisciplineTaxonomies)
+                data["userTutorialDisciplineTaxonomies"].push(item.toJSON());
+        }
+        data["profilePictureFileName"] = this.profilePictureFileName;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): GetStudentProposalDto {
+        const json = this.toJSON();
+        let result = new GetStudentProposalDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetStudentProposalDto {
+    information: string | undefined;
+    supportLevel: number;
+    concerns: string | undefined;
+    urgencyLevel: number;
+    deadline: moment.Moment;
+    subjectArea: string | undefined;
+    userTutorialDisciplineTaxonomies: UserTutorialDisciplineTaxonomyDto[] | undefined;
+    profilePictureFileName: string | undefined;
+    user: UserDto;
+}
+
+export class GetTutorDto implements IGetTutorDto {
+    profilePictureFileName: string | undefined;
+    user: UserDto;
+
+    constructor(data?: IGetTutorDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.profilePictureFileName = _data["profilePictureFileName"];
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): GetTutorDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetTutorDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["profilePictureFileName"] = this.profilePictureFileName;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): GetTutorDto {
+        const json = this.toJSON();
+        let result = new GetTutorDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetTutorDto {
     profilePictureFileName: string | undefined;
     user: UserDto;
 }
@@ -7242,81 +8050,6 @@ export interface IGetCurrentLoginInformationsOutput {
     application: ApplicationInfoDto;
     user: UserLoginInfoDto;
     tenant: TenantLoginInfoDto;
-}
-
-export class SupportServiceDto implements ISupportServiceDto {
-    name: string | undefined;
-    parentId: string | undefined;
-    parentIdMap: string | undefined;
-    isEditable: boolean;
-    parent: SupportServiceDto;
-    children: SupportServiceDto[] | undefined;
-    id: string;
-
-    constructor(data?: ISupportServiceDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.parentId = _data["parentId"];
-            this.parentIdMap = _data["parentIdMap"];
-            this.isEditable = _data["isEditable"];
-            this.parent = _data["parent"] ? SupportServiceDto.fromJS(_data["parent"]) : <any>undefined;
-            if (Array.isArray(_data["children"])) {
-                this.children = [] as any;
-                for (let item of _data["children"])
-                    this.children.push(SupportServiceDto.fromJS(item));
-            }
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): SupportServiceDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new SupportServiceDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["parentId"] = this.parentId;
-        data["parentIdMap"] = this.parentIdMap;
-        data["isEditable"] = this.isEditable;
-        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
-        if (Array.isArray(this.children)) {
-            data["children"] = [];
-            for (let item of this.children)
-                data["children"].push(item.toJSON());
-        }
-        data["id"] = this.id;
-        return data; 
-    }
-
-    clone(): SupportServiceDto {
-        const json = this.toJSON();
-        let result = new SupportServiceDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface ISupportServiceDto {
-    name: string | undefined;
-    parentId: string | undefined;
-    parentIdMap: string | undefined;
-    isEditable: boolean;
-    parent: SupportServiceDto;
-    children: SupportServiceDto[] | undefined;
-    id: string;
 }
 
 export class SupportServiceRequestDto implements ISupportServiceRequestDto {
@@ -8334,69 +9067,6 @@ export class GetUserDisciplineTaxonomyDto implements IGetUserDisciplineTaxonomyD
 export interface IGetUserDisciplineTaxonomyDto {
     disciplineTaxonomy: DisciplineTaxonomyDto;
     levelId: number;
-    id: string;
-}
-
-export class UserSupportServiceSessionRateDto implements IUserSupportServiceSessionRateDto {
-    userSupportServiceId: string;
-    singleSessionRate: number;
-    multipleSessionRate: number;
-    multipleSessionCount: number;
-    freeSession: boolean;
-    id: string;
-
-    constructor(data?: IUserSupportServiceSessionRateDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.userSupportServiceId = _data["userSupportServiceId"];
-            this.singleSessionRate = _data["singleSessionRate"];
-            this.multipleSessionRate = _data["multipleSessionRate"];
-            this.multipleSessionCount = _data["multipleSessionCount"];
-            this.freeSession = _data["freeSession"];
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): UserSupportServiceSessionRateDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UserSupportServiceSessionRateDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["userSupportServiceId"] = this.userSupportServiceId;
-        data["singleSessionRate"] = this.singleSessionRate;
-        data["multipleSessionRate"] = this.multipleSessionRate;
-        data["multipleSessionCount"] = this.multipleSessionCount;
-        data["freeSession"] = this.freeSession;
-        data["id"] = this.id;
-        return data; 
-    }
-
-    clone(): UserSupportServiceSessionRateDto {
-        const json = this.toJSON();
-        let result = new UserSupportServiceSessionRateDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IUserSupportServiceSessionRateDto {
-    userSupportServiceId: string;
-    singleSessionRate: number;
-    multipleSessionRate: number;
-    multipleSessionCount: number;
-    freeSession: boolean;
     id: string;
 }
 

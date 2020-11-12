@@ -14,5 +14,8 @@ namespace Academically.Entities
         public decimal MultipleSessionRate { get; set; }
         public int MultipleSessionCount { get; set; }
         public bool FreeSession { get; set; }
+
+        [ForeignKey("UserSupportServiceId")]
+        public UserSupportService UserSupportService { get; set; }
     }
 }

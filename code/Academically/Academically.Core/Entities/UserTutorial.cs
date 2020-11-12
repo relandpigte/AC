@@ -22,5 +22,7 @@ namespace Academically.Entities
 
         [ForeignKey("UserId")]
         public User User { get; set; }
+
+        public virtual ICollection<UserTutorialDisciplineTaxonomy> UserTutorialDisciplineTaxonomies { get; set; }
     }
 }

@@ -14,5 +14,6 @@ namespace Academically.Entities
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
         public virtual SupportService SupportService { get; set; }
+        public virtual UserSupportServiceSessionRate UserSupportServiceSessionRate { get; set; }
     }
 }

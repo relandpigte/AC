@@ -1,20 +1,13 @@
-<div class="row">
+<div class="row" [busy]="isLoading">
   <div class="col-12 col-xl-8">
     <div class="card">
       <div class="card-header">
         <h4 class="card-header-title">
-          Project Summary
+          {{ 'ProjectSummary' | localize }}
         </h4>
       </div>
       <div class="card-body">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed lobortis sollicitudin leo, sed semper dui volutpat sed. Fusce vitae
-        turpis quis nisi sollicitudin commodo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;
-        Pellentesque ac odio vel ligula consequat rutrum in mattis ex. Vivamus vel lobortis lorem. Donec a nunc luctus, luctus neque eget,
-        tristique ligula. Donec fringilla malesuada augue, et condimentum ex maximus sit amet. Suspendisse potenti. Morbi purus diam,
-        condimentum vel fringilla vel, tincidunt ac mauris. Etiam sagittis, purus quis porttitor accumsan, leo libero imperdiet turpis, eu
-        vehicula est libero in lectus. Phasellus augue nunc, efficitur cursus lacus non, efficitur malesuada neque. Maecenas a libero vel
-        justo semper hendrerit quis nec nunc. Quisque non elementum justo. Quisque id dui vitae ipsum consectetur eleifend sit amet non
-        velit. Mauris finibus velit vel turpis tristique pretium. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+        {{ studentProposal.information }}
       </div>
     </div>
     <div class="card">
@@ -125,20 +118,17 @@
       <img src="../../assets/img/profile-cover-2.jpg" alt="..." class="card-img-top" />
       <div class="card-body text-center">
         <a href="profile-posts.html" class="avatar avatar-xl card-avatar card-avatar-top">
-          <img src="../../assets/img/user.png" class="avatar-img rounded-circle border border-4 border-card" alt="..." />
+          <img [src]="studentProposal.profilePictureFileName" class="avatar-img rounded-circle border border-4 border-card" alt="..." />
         </a>
         <h2 class="card-title">
-          <a href="profile-posts.html">Ab Hadley</a>
+          <a href="profile-posts.html">{{ studentFullName }}</a>
         </h2>
         <p class="small text-muted mb-3">
-          Woprking on the latest API integration.
+          Student
         </p>
-        <p class="card-text">
+        <p class="card-text" *ngFor="let disciplineTaxonomy of studentProposal.userTutorialDisciplineTaxonomies">
           <span class="badge badge-soft-secondary">
-            UX Team
-          </span>
-          <span class="badge badge-soft-secondary">
-            Research Team
+            {{ disciplineTaxonomy.disciplineTaxonomy.name }}
           </span>
         </p>
       </div>
@@ -147,37 +137,48 @@
       <div class="card-body">
         <div class="row proposal-row">
           <div class="col-md-6">
-            Your Proposal
+            {{ 'YourProposal' | localize }}
           </div>
           <div class="col-md-6 button-revise">
             <a href="#!" class="btn btn-sm btn-primary">
-              Revise
+              {{ 'Revise' | localize }}
             </a>
           </div>
         </div>
         <div class="row no-gutters border-top border-bottom">
-          <div class="col-6 py-4 text-center">
-            <h6 class="text-uppercase text-muted">
-              1 SESSION
-            </h6>
+          <ng-container *ngIf="tutorSupportService.userSupportServiceSessionRate?.multipleSessionCount > 0">
+            <div class="col-6 py-4 text-center">
+              <h6 class="text-uppercase text-muted">1 {{ 'Session' | localize }}</h6>
 
-            <h2 class="mb-0">£ 19/hr</h2>
-          </div>
-          <div class="col-6 py-4 text-center border-left">
-            <h6 class="text-uppercase text-muted">
-              10 SESSIONS
-            </h6>
+              <h2 class="mb-0">£ {{ tutorSupportService.userSupportServiceSessionRate?.singleSessionRate }}/hr</h2>
+            </div>
+            <div class="col-6 py-4 text-center border-left">
+              <h6 class="text-uppercase text-muted">
+                {{ tutorSupportService.userSupportServiceSessionRate?.multipleSessionCount }} {{ 'Sessions' | localize }}
+              </h6>
 
-            <h2 class="mb-0">£ 17/hr</h2>
-          </div>
+              <h2 class="mb-0">£ {{ tutorSupportService.userSupportServiceSessionRate?.multipleSessionRate }}/hr</h2>
+            </div>
+          </ng-container>
+          <ng-container
+            *ngIf="
+              tutorSupportService.userSupportServiceSessionRate?.multipleSessionCount === 0 &&
+              tutorSupportService.userSupportServiceSessionRate?.singleSessionRate > 0
+            "
+          >
+            <div class="col-12 py-4 text-center">
+              <h6 class="text-uppercase text-muted">1 {{ 'Session' | localize }}</h6>
+              <h2 class="mb-0">£ {{ tutorSupportService.userSupportServiceSessionRate?.singleSessionRate }}/hr</h2>
+            </div>
+          </ng-container>
         </div>
-        <div class="row no-gutters border-top border-bottom">
+        <div *ngIf="tutorSupportService.userSupportServiceSessionRate?.freeSession" class="row no-gutters border-top border-bottom">
           <div class="col-12 py-4 text-center">
             <h6 class="text-uppercase text-muted">
-              15 MIN CONSULTATION
+              {{ 'FreeConsulation' | localize }}
             </h6>
 
-            <h2 class="mb-0">£ FREE</h2>
+            <h2 class="mb-0">£ {{ 'Free' | localize }}</h2>
           </div>
         </div>
 
@@ -185,11 +186,11 @@
           <div class="list-group-item">
             <div class="row align-items-center">
               <div class="col">
-                <small>Service</small>
+                <small>{{ 'Service' | localize }}</small>
               </div>
               <div class="col-auto">
                 <time class="small text-muted" datetime="1988-10-24">
-                  10/24/88
+                  {{ 'Tutorial' | localize }}
                 </time>
               </div>
             </div>
@@ -197,11 +198,11 @@
           <div class="list-group-item">
             <div class="row align-items-center">
               <div class="col">
-                <small>Subject Area</small>
+                <small>{{ 'SubjectArea' | localize }}</small>
               </div>
               <div class="col-auto">
                 <small class="text-muted">
-                  Los Angeles, CA
+                  {{ tutorAreasOfStudies }}
                 </small>
               </div>
             </div>
@@ -209,11 +210,11 @@
           <div class="list-group-item">
             <div class="row align-items-center">
               <div class="col">
-                <small>Level</small>
+                <small>{{ 'Level' | localize }}</small>
               </div>
               <div class="col-auto">
                 <a class="small text-muted">
-                  Landkit
+                  {{ 'EducationLevel' + studentProposal.supportLevel | localize }}
                 </a>
               </div>
             </div>
@@ -221,23 +222,21 @@
           <div class="list-group-item">
             <div class="row align-items-center">
               <div class="col">
-                <small>Urgency Level</small>
+                <small>{{ 'UrgencyLevel' | localize }}</small>
               </div>
               <div class="col-auto">
-                <a class="small text-muted">
-                  Landkit
-                </a>
+                <a class="small text-muted"> {{ 'Level' | localize }} {{ studentProposal.urgencyLevel }} </a>
               </div>
             </div>
           </div>
           <div class="list-group-item">
             <div class="row align-items-center">
               <div class="col">
-                <small>Deadline</small>
+                <small>{{ 'Deadline' | localize }}</small>
               </div>
               <div class="col-auto">
                 <a class="small text-muted">
-                  Landkit
+                  {{ moment(studentProposal.deadline).format('LL') }}
                 </a>
               </div>
             </div>
@@ -248,12 +247,12 @@
           <div class="col-12">
             <a href="#!" class="btn btn-sm btn-light proposal-button-decline">
               <label>
-                Decline project
+                {{ 'DeclineProject' | localize }}
               </label>
             </a>
             <a href="#!" class="btn btn-sm btn-primary proposal-button-submit">
               <label>
-                Submit Offer
+                {{ 'SubmitOffer' | localize }}
               </label>
             </a>
           </div>

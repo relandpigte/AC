@@ -17,6 +17,7 @@ import { PeerSupportComponent } from './academic-support/peer-support/peer-suppo
 import { SettingsComponent } from './settings/settings.component';
 import { AccountComponent } from './account/account.component';
 import { StudentProposalComponent } from './student-proposal/student-proposal.component';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 @NgModule({
   imports: [
@@ -80,7 +81,9 @@ import { StudentProposalComponent } from './student-proposal/student-proposal.co
             component: SettingsComponent,
             data: { permission: 'Pages.Settings' },
             canActivate: [AppRouteGuard]
-          }
+          },
+          { path: 'not-found', component: ErrorPageComponent },
+          { path: '**', redirectTo: 'not-found' }
         ]
       }
     ])

@@ -85,6 +85,7 @@ import { RequestNewSupportServiceComponent } from './shared/support-services-sea
 import { SessionRatesComponent } from './shared/session-rates/session-rates.component';
 import { StudentProposalComponent } from './student-proposal/student-proposal.component';
 import { StudentProposalOverviewComponent } from './student-proposal/student-proposal-overview/student-proposal-overview.component';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 @NgModule({
   declarations: [
@@ -157,6 +158,7 @@ import { StudentProposalOverviewComponent } from './student-proposal/student-pro
     SessionRatesComponent,
     StudentProposalComponent,
     StudentProposalOverviewComponent,
+    ErrorPageComponent
   ],
   imports: [
     CommonModule,
@@ -175,7 +177,7 @@ import { StudentProposalOverviewComponent } from './student-proposal/student-pro
     TypeaheadModule.forRoot(),
     BsDatepickerModule.forRoot(),
     NgxQRCodeModule,
-    TreeModule,
+    TreeModule
   ],
   providers: [GoogleMapsService],
   entryComponents: [
@@ -196,7 +198,7 @@ import { StudentProposalOverviewComponent } from './student-proposal/student-pro
     ResearchMethodsSearchComponent,
     SupportServicesSearchComponent,
     RequestNewResearchMethodComponent,
-    RequestNewSupportServiceComponent,
-  ],
+    RequestNewSupportServiceComponent
+  ]
 })
 export class AppModule {}
