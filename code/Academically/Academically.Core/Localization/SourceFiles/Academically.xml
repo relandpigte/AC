@@ -48,6 +48,19 @@
         <p>Parent Method: {2}<p>
       ]]>
     </text>
+    <text name="Sessions">SESSIONS</text>
+    <text name="Session">SESSION</text>
+    <text name="YourProposal">Your Proposal</text>
+    <text name="Revise">Revise</text>
+    <text name="FreeConsulation">15 MIN CONSULTATION</text>
+    <text name="Free">FREE</text>
+    <text name="SubjectArea">Subject Area</text>
+    <text name="UrgencyLevel">Urgency Level</text>
+    <text name="Deadline">Deadline</text>
+    <text name="DeclineProject">Decline Project</text>
+    <text name="SubmitOffer">Submit Offer</text>
+    <text name="ProjectSummary">Project Summary</text>
+    <text name="TutorialRequest">Tutorial Request</text>
     <text name="ResearchMethodRequestEmailSubject">Academically - Research Method Request Sent</text>
     <text name="NewResearchMethodRequestSent">New Research Method request sent.</text>
     <text name="RequestNewResearchMethod">Request New Research Method</text>

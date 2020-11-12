@@ -16,6 +16,8 @@ import { AcademicSupportComponent } from './academic-support/academic-support.co
 import { PeerSupportComponent } from './academic-support/peer-support/peer-support.component';
 import { SettingsComponent } from './settings/settings.component';
 import { AccountComponent } from './account/account.component';
+import { StudentProposalComponent } from './student-proposal/student-proposal.component';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 @NgModule({
   imports: [
@@ -30,59 +32,62 @@ import { AccountComponent } from './account/account.component';
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent },
+          { path: 'student-proposal/:tutorialId', component: StudentProposalComponent },
           {
             path: 'academic-support',
             component: AcademicSupportComponent,
             data: { permission: 'Pages.Dashboard.Navigations.AcademicSupport' },
-            canActivate: [AppRouteGuard],
+            canActivate: [AppRouteGuard]
           },
           {
             path: 'peer-support',
             component: PeerSupportComponent,
             data: { permission: 'Pages.PeerSupport' },
-            canActivate: [AppRouteGuard],
+            canActivate: [AppRouteGuard]
           },
           {
             path: 'tutorial',
             component: PeerSupportTutorialComponent,
             data: { permission: 'Pages.PeerSupport.Tutorial' },
-            canActivate: [AppRouteGuard],
+            canActivate: [AppRouteGuard]
           },
           {
             path: 'proposals',
             component: PeerSupportProposalsComponent,
             data: { permission: 'Pages.PeerSupport.Proposals' },
-            canActivate: [AppRouteGuard],
+            canActivate: [AppRouteGuard]
           },
           {
             path: 'account',
             component: AccountComponent,
             data: { permission: 'Pages.Account' },
             canActivate: [AppRouteGuard],
-            canDeactivate: [CanDeactivateComponentGuard],
+            canDeactivate: [CanDeactivateComponentGuard]
           },
           {
             path: 'profile',
             component: ProfileComponent,
             data: { permission: 'Pages.Profile' },
-            canActivate: [AppRouteGuard],
+            canActivate: [AppRouteGuard]
           },
           {
             path: 'profile/:userId',
             component: ProfileComponent,
             data: { permission: 'Pages.Profile.ViewTutor' },
-            canActivate: [AppRouteGuard],
+            canActivate: [AppRouteGuard]
           },
           {
             path: 'settings',
             component: SettingsComponent,
             data: { permission: 'Pages.Settings' },
-            canActivate: [AppRouteGuard],
+            canActivate: [AppRouteGuard]
           },
-        ],
-      },
-    ]),
+          { path: 'not-found', component: ErrorPageComponent },
+          { path: '**', redirectTo: 'not-found' }
+        ]
+      }
+    ])
   ],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {}

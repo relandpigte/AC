@@ -80,12 +80,13 @@ namespace Academically.Services.UserTutorials
 
             if (userTutorial.Id != null && inputs.DisciplineTaxonomyIds.Count() > 0)
             {
-                foreach (var disciplineTaxonomyId in inputs.DisciplineTaxonomyIds)
+                var ids = inputs.DisciplineTaxonomyIds.SelectMany(x => x.Split(","));
+                foreach (var disciplineTaxonomyId in ids)
                 {
                     var userTutorialDisciplineTaxonomy = new UserTutorialDisciplineTaxonomy()
                     {
                         TutorialId = userTutorial.Id,
-                        DisciplineTaxonomyId = disciplineTaxonomyId
+                        DisciplineTaxonomyId = Guid.Parse(disciplineTaxonomyId)
                     };
                     await _userTutorialsDisciplineTaxonomiesRepository.InsertAsync(userTutorialDisciplineTaxonomy);
                 }

@@ -16,6 +16,6 @@ namespace Academically.Services.UserTutorials.Dto
         public int UrgencyLevel { get; set; }
         public DateTime Deadline { get; set; }
         public IFormFile Picture { get; set; }
-        public IEnumerable<Guid> DisciplineTaxonomyIds { get; set; }
+        public IEnumerable<string> DisciplineTaxonomyIds { get; set; }
     }
 }
