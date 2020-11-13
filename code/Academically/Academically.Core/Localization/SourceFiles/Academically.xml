@@ -48,6 +48,9 @@
         <p>Parent Method: {2}<p>
       ]]>
     </text>
+    <text name="UrgencyLevel1">Urgent</text>
+    <text name="UrgencyLevel2">Average</text>
+    <text name="UrgencyLevel3">Not Urgent</text>
     <text name="Sessions">SESSIONS</text>
     <text name="Session">SESSION</text>
     <text name="YourProposal">Your Proposal</text>

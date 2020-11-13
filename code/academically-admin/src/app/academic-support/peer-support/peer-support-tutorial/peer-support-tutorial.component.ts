@@ -57,6 +57,7 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
     this.datePickerConfig.dateInputFormat = 'DD/MM/YYYY';
     this.tutorialPicturePlaceholderText = this.imageUploadPlaceholderText;
     this.userTutorials = new UserTutorialDto();
+    this.userTutorials.urgencyLevel = 1;
   }
 
   ngOnInit(): void {
