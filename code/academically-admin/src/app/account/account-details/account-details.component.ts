@@ -5,7 +5,7 @@ import {
   UserProfilesServiceProxy,
   FileParameter,
   AddressLookupServiceProxy,
-  SuggestionDataDto,
+  SuggestionDataDto
 } from '@shared/service-proxies/service-proxies';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { countries } from '@shared/constants/countries';
@@ -23,7 +23,7 @@ import { GoogleMapsService } from '@shared/services/google-maps.service';
 @Component({
   selector: 'account-details',
   templateUrl: './account-details.component.html',
-  styleUrls: ['./account-details.component.less'],
+  styleUrls: ['./account-details.component.less']
 })
 export class AccountDetailsComponent extends AppComponentBase implements OnInit {
   @ViewChild('profileDetailForm') public form: NgForm;
@@ -78,13 +78,13 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
       if (this.validateFile(file)) {
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = (event) => {
+        reader.onload = event => {
           this.model.profilePictureUrl = reader.result.toString();
         };
         this.profilePicturePlaceholderText = file.name;
         this.profilePicture = {
           fileName: file.name,
-          data: file,
+          data: file
         };
       } else {
         this.clearUploader();
@@ -128,7 +128,7 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
   }
 
   private getAddressDetails(id: string): void {
-    this._addressLookupService.getAddressDetail(id).subscribe((result) => {
+    this._addressLookupService.getAddressDetail(id).subscribe(result => {
       if (result) {
         this.model.addressLine1 = result.line_1;
         this.model.addressLine2 = result.line_2;
@@ -178,7 +178,7 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
 
   private getDetails(): void {
     this.isLoading = true;
-    this._userProfilesService.getDetail(this._sessionService.userId).subscribe((profileDetail) => {
+    this._userProfilesService.getDetail(this._sessionService.userId).subscribe(profileDetail => {
       this.model = profileDetail;
       if (this.model.dateOfBirth) {
         this.dateOfBirth = this.model.dateOfBirth.toDate();
@@ -208,6 +208,7 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
         this.model.country,
         this.model.longitude,
         this.model.latitude,
+        this.model.about,
         this.profilePicture
       )
       .subscribe(() => {

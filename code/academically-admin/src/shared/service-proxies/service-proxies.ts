@@ -1007,57 +1007,6 @@ export class ProposalsServiceProxy {
     /**
      * @return Success
      */
-    getTutorProfileDetail(): Observable<GetTutorDto> {
-        let url_ = this.baseUrl + "/api/services/app/Proposals/GetTutorProfileDetail";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetTutorProfileDetail(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetTutorProfileDetail(<any>response_);
-                } catch (e) {
-                    return <Observable<GetTutorDto>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<GetTutorDto>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetTutorProfileDetail(response: HttpResponseBase): Observable<GetTutorDto> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = GetTutorDto.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<GetTutorDto>(<any>null);
-    }
-
-    /**
-     * @return Success
-     */
     getTutorSupportService(): Observable<UserSupportServiceDto> {
         let url_ = this.baseUrl + "/api/services/app/Proposals/GetTutorSupportService";
         url_ = url_.replace(/[?&]$/, "");
@@ -3424,10 +3373,11 @@ export class UserProfilesServiceProxy {
      * @param country (optional) 
      * @param longitude (optional) 
      * @param latitude (optional) 
+     * @param about (optional) 
      * @param profilePicture (optional) 
      * @return Success
      */
-    saveDetail(firstName: string | null | undefined, lastName: string | null | undefined, dateOfBirth: moment.Moment | null | undefined, addressLine1: string | null | undefined, addressLine2: string | null | undefined, city: string | null | undefined, zipOrPostCode: string | null | undefined, stateOrProvince: string | null | undefined, country: string | null | undefined, longitude: number | null | undefined, latitude: number | null | undefined, profilePicture: FileParameter | null | undefined): Observable<void> {
+    saveDetail(firstName: string | null | undefined, lastName: string | null | undefined, dateOfBirth: moment.Moment | null | undefined, addressLine1: string | null | undefined, addressLine2: string | null | undefined, city: string | null | undefined, zipOrPostCode: string | null | undefined, stateOrProvince: string | null | undefined, country: string | null | undefined, longitude: number | null | undefined, latitude: number | null | undefined, about: string | null | undefined, profilePicture: FileParameter | null | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/UserProfiles/SaveDetail";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3454,6 +3404,8 @@ export class UserProfilesServiceProxy {
             content_.append("Longitude", longitude.toString());
         if (latitude !== null && latitude !== undefined)
             content_.append("Latitude", latitude.toString());
+        if (about !== null && about !== undefined)
+            content_.append("About", about.toString());
         if (profilePicture !== null && profilePicture !== undefined)
             content_.append("ProfilePicture", profilePicture.data, profilePicture.fileName ? profilePicture.fileName : "ProfilePicture");
 
@@ -7025,53 +6977,6 @@ export interface IGetStudentProposalDto {
     user: UserDto;
 }
 
-export class GetTutorDto implements IGetTutorDto {
-    profilePictureFileName: string | undefined;
-    user: UserDto;
-
-    constructor(data?: IGetTutorDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.profilePictureFileName = _data["profilePictureFileName"];
-            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): GetTutorDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new GetTutorDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["profilePictureFileName"] = this.profilePictureFileName;
-        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
-        return data; 
-    }
-
-    clone(): GetTutorDto {
-        const json = this.toJSON();
-        let result = new GetTutorDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IGetTutorDto {
-    profilePictureFileName: string | undefined;
-    user: UserDto;
-}
-
 export class RegistrationDto implements IRegistrationDto {
     firstName: string | undefined;
     lastName: string | undefined;
@@ -8933,6 +8838,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
     country: string | undefined;
     longitude: number | undefined;
     latitude: number | undefined;
+    about: string | undefined;
     profilePictureUrl: string | undefined;
     dateJoined: moment.Moment;
     role: string | undefined;
@@ -8960,6 +8866,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
             this.country = _data["country"];
             this.longitude = _data["longitude"];
             this.latitude = _data["latitude"];
+            this.about = _data["about"];
             this.profilePictureUrl = _data["profilePictureUrl"];
             this.dateJoined = _data["dateJoined"] ? moment(_data["dateJoined"].toString()) : <any>undefined;
             this.role = _data["role"];
@@ -8987,6 +8894,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
         data["country"] = this.country;
         data["longitude"] = this.longitude;
         data["latitude"] = this.latitude;
+        data["about"] = this.about;
         data["profilePictureUrl"] = this.profilePictureUrl;
         data["dateJoined"] = this.dateJoined ? this.dateJoined.toISOString() : <any>undefined;
         data["role"] = this.role;
@@ -9014,6 +8922,7 @@ export interface IGetProfileDetailDto {
     country: string | undefined;
     longitude: number | undefined;
     latitude: number | undefined;
+    about: string | undefined;
     profilePictureUrl: string | undefined;
     dateJoined: moment.Moment;
     role: string | undefined;
