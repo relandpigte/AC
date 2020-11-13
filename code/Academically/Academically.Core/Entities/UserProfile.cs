@@ -18,6 +18,7 @@ namespace Academically.Entities
         public double? Longitude { get; set; }
         public double? Latitude { get; set; }
         public string ProfilePictureFileName { get; set; }
+        public string About { get; set; }
         public long UserId { get; set; }
 
         [ForeignKey("UserId")]

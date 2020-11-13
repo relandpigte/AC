@@ -90,6 +90,13 @@
         </div>
       </div>
 
+      <div class="form-group">
+        <label class="col-form-label" for="Summary">
+          {{ 'About' | localize }}
+        </label>
+        <textarea class="form-control" data-toggle="autosize" rows="5" name="about" id="about" [(ngModel)]="model.about"></textarea>
+      </div>
+
       <div class="form-group" [class.required]="!isStudent">
         <label class="col-form-label" for="Country">{{ 'Country' | localize }}</label>
         <select
