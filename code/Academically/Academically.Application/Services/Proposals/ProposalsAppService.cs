@@ -71,13 +71,13 @@ namespace Academically.Services.Proposals
             var userProfiles = (await _userProfilesAppService.GetAll()
                 //.Include(e => e.User)
                 //    .ThenInclude(e => e.UserDisciplineTaxonomyStudyLevels) 
-                //.Include(e => e.User)
-                //    .ThenInclude(e => e.UserSupportServices) These will be needed for later matching
+                .Include(e => e.User)
+                    .ThenInclude(e => e.UserSupportServices)
                 .Include(e => e.User)
                     .ThenInclude(e => e.UserEducations)
                 .Where(
-                    e => e.User.Roles.Any(e => e.RoleId == tutorRole.Id)
-                //&& e.User.UserSupportServices.Any(e => e.SupportServiceId == tutorialServiceTypeId) This will be needed  for later matching
+                    e => e.User.Roles.Any(e => e.RoleId == tutorRole.Id) &&
+                    e.User.UserSupportServices.Any(e => e.SupportServiceId == tutorialServiceTypeId) 
                 )
                 .ToListAsync())
                 .Select(e => new
@@ -86,7 +86,7 @@ namespace Academically.Services.Proposals
                     gc = (new GeoCoordinate(e.Latitude ?? 0, e.Longitude ?? 0).GetDistanceTo(userLocationCoordinate)) * METER_TO_MILE_CONVERSION
                 })
                 .WhereIf(distance >= 0, e => e.gc <= distance)
-                .WhereIf(level != 0, e => e.up.User.UserEducations.Any(t => (int)t.Level == level))
+                .WhereIf(level != 0, e => e.up.User.UserEducations.Any(t => (int)t.Level >= level))
                 //.WhereIf(level != 0, e => e.up.User.UserDisciplineTaxonomyStudyLevels.Any(t => t.DisciplineTaxonomyStudyLevelId == level)) This will be for needed later matching
                 .OrderBy(e => e.gc)
                 .Select(e => new UserProfile { 
