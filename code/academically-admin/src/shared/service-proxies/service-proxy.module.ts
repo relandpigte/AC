@@ -25,7 +25,8 @@ import * as ApiServiceProxies from './service-proxies';
     ApiServiceProxies.AddressLookupServiceProxy,
     ApiServiceProxies.UserTutorialsServiceProxy,
     ApiServiceProxies.DisciplineTaxonomyStudyLevelsServiceProxy,
-    { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true },
-  ],
+    ApiServiceProxies.TutorOffersServiceProxy,
+    { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
+  ]
 })
 export class ServiceProxyModule {}

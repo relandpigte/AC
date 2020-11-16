@@ -48,6 +48,17 @@
         <p>Parent Method: {2}<p>
       ]]>
     </text>
+    <text name="TutorOfferEmailSubject">Offer Received Tutorial Project</text>
+    <text name="TutorOfferEmailMessage">
+      <![CDATA[
+        <p>Hello {0}</p>
+        <br />
+        <p>Please see the following offer that maybe of interest to you</p>
+        <p><a href="{1}">Complete offer link<a/></p>
+      ]]>
+    </text>
+    <text name="SubmitOfferMessage">The offer has been submitted.</text>
+    <text name="DecineOfferMessage">The proposal has been declined.</text>
     <text name="UrgencyLevel1">Urgent</text>
     <text name="UrgencyLevel2">Average</text>
     <text name="UrgencyLevel3">Not Urgent</text>

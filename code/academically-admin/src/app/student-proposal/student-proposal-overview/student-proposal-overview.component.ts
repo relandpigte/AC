@@ -1,7 +1,13 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { GetStudentProposalDto, ProposalsServiceProxy, UserSupportServiceDto } from '@shared/service-proxies/service-proxies';
+import {
+  CreateTutorOfferDto,
+  GetStudentProposalDto,
+  ProposalsServiceProxy,
+  TutorOffersServiceProxy,
+  UserSupportServiceDto
+} from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 
 @Component({
@@ -13,12 +19,19 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
   id: string;
   studentProposal: GetStudentProposalDto = new GetStudentProposalDto();
   tutorSupportService: UserSupportServiceDto = new UserSupportServiceDto();
+  offer: CreateTutorOfferDto = new CreateTutorOfferDto();
   isLoading = false;
   studentFullName = '';
   tutorAreasOfStudies = '';
   moment: any = moment;
 
-  constructor(injector: Injector, private proposalsService: ProposalsServiceProxy, private _acativatedRoute: ActivatedRoute) {
+  constructor(
+    injector: Injector,
+    private _proposalsService: ProposalsServiceProxy,
+    private _acativatedRoute: ActivatedRoute,
+    private _tutorOfferService: TutorOffersServiceProxy,
+    private _router: Router
+  ) {
     super(injector);
   }
 
@@ -35,18 +48,42 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
     });
   }
 
+  onAcceptProposalClick(): void {
+    debugger;
+    this.isLoading = true;
+    this.offer.isSubmitted = true;
+    this._tutorOfferService.create(this.offer).subscribe(() => {
+      this.isLoading = false;
+      abp.notify.info(this.l('SubmitOfferMessage'));
+      this._router.navigate(['app/home']);
+    });
+  }
+
+  onDeclineProposalClick(): void {
+    debugger;
+    this.isLoading = true;
+    this.offer.isSubmitted = false;
+    this._tutorOfferService.create(this.offer).subscribe(() => {
+      this.isLoading = false;
+      abp.notify.info(this.l('DecineOfferMessage'));
+      this._router.navigate(['app/home']);
+    });
+  }
+
   private getStudentProposal() {
     this.isLoading = true;
-    this.proposalsService.getStudentProposal(this.id).subscribe(proposal => {
+    this._proposalsService.getStudentProposal(this.id).subscribe(proposal => {
       this.isLoading = false;
       this.studentProposal = proposal;
       this.studentFullName = proposal.user.fullName;
+      this.offer.tutorialId = this.id;
+      this.offer.studentId = this.studentProposal.user.id;
     });
   }
 
   private getTutorAreasOfStudy() {
     this.isLoading = true;
-    this.proposalsService.getTutorDisciplineTaxonomies().subscribe(areasOfStudy => {
+    this._proposalsService.getTutorDisciplineTaxonomies().subscribe(areasOfStudy => {
       this.isLoading = false;
       this.tutorAreasOfStudies = areasOfStudy;
     });
@@ -54,7 +91,7 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
 
   private getTutorSupportService() {
     this.isLoading = true;
-    this.proposalsService.getTutorSupportService().subscribe(supportService => {
+    this._proposalsService.getTutorSupportService().subscribe(supportService => {
       this.isLoading = false;
       this.tutorSupportService = supportService;
     });

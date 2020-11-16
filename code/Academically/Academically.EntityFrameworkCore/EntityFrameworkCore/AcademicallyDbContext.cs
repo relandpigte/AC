@@ -27,6 +27,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<DisciplineTaxonomyStudylevel> DisciplineTaxonomyStudylevels { get; set; }
         public virtual DbSet<UserDisciplineTaxonomyStudyLevel> UserDisciplineTaxonomyStudyLevels { get; set; }
         public virtual DbSet<UserSupportServiceSessionRate> UserSupportServiceSessionRates { get; set; }
+        public virtual DbSet<TutorOffer> TutorOffers { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

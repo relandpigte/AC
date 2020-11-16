@@ -245,12 +245,12 @@
 
         <div class="row align-items-center justify-content-between">
           <div class="col-12">
-            <a href="#!" class="btn btn-sm btn-light proposal-button-decline">
+            <a href="javascript:;" (click)="onDeclineProposalClick()" class="btn btn-sm btn-light proposal-button-decline">
               <label>
                 {{ 'DeclineProject' | localize }}
               </label>
             </a>
-            <a href="#!" class="btn btn-sm btn-primary proposal-button-submit">
+            <a href="javascript:;" (click)="onAcceptProposalClick()" class="btn btn-sm btn-primary proposal-button-submit">
               <label>
                 {{ 'SubmitOffer' | localize }}
               </label>

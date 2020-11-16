@@ -2477,6 +2477,70 @@ export class TokenAuthServiceProxy {
 }
 
 @Injectable()
+export class TutorOffersServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateTutorOfferDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/TutorOffers/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class UserServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -8442,6 +8506,57 @@ export interface IExternalAuthenticateResultModel {
     encryptedAccessToken: string | undefined;
     expireInSeconds: number;
     waitingForActivation: boolean;
+}
+
+export class CreateTutorOfferDto implements ICreateTutorOfferDto {
+    tutorialId: string;
+    studentId: number;
+    isSubmitted: boolean;
+
+    constructor(data?: ICreateTutorOfferDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.tutorialId = _data["tutorialId"];
+            this.studentId = _data["studentId"];
+            this.isSubmitted = _data["isSubmitted"];
+        }
+    }
+
+    static fromJS(data: any): CreateTutorOfferDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateTutorOfferDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["tutorialId"] = this.tutorialId;
+        data["studentId"] = this.studentId;
+        data["isSubmitted"] = this.isSubmitted;
+        return data; 
+    }
+
+    clone(): CreateTutorOfferDto {
+        const json = this.toJSON();
+        let result = new CreateTutorOfferDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateTutorOfferDto {
+    tutorialId: string;
+    studentId: number;
+    isSubmitted: boolean;
 }
 
 export class CreateUserDto implements ICreateUserDto {
