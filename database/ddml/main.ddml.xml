@@ -39,5 +39,6 @@
 	<include file="ddml/ddml.2020-11-06-04.add-supportservicerequests-table.xml"/>
 	<include file="ddml/ddml.2020-11-09-01.alter-table-usertutorials.xml"/>
 	<include file="ddml/ddml.2020-11-11-01.add-usersupportservicesessionrates-table.xml"/>
-	<include file="ddml/ddml.2020-11-13-01.alter-table-userprofiles.xml"/>	
+	<include file="ddml/ddml.2020-11-13-01.alter-table-userprofiles.xml"/>
+	<include file="ddml/ddml.2020-11-16-01.add-tutoroffers-table.xml"/>	
 </databaseChangeLog>
