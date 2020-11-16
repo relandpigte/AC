@@ -140,16 +140,16 @@
                     <label> {{ 'UrgencyLevelLabel' | localize }} </label>
                   </div>
                   <div class="col-md-4">
-                    <input type="radio" name="urgencyLevel" value="1" [(ngModel)]="userTutorials.urgencyLevel" />
-                    <label for="urgent" class="urgency-level-labels">Urgent</label>
+                    <input type="radio" name="urgencyLevel" [value]="1" [(ngModel)]="userTutorials.urgencyLevel" />
+                    <label for="urgent" class="urgency-level-labels">{{ 'UrgencyLevel' + 1 | localize }}</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="radio" name="urgencyLevel" value="2" [(ngModel)]="userTutorials.urgencyLevel" />
-                    <label for="average" class="urgency-level-labels">Average</label>
+                    <input type="radio" name="urgencyLevel" [value]="2" [(ngModel)]="userTutorials.urgencyLevel" />
+                    <label for="average" class="urgency-level-labels">{{ 'UrgencyLevel' + 2 | localize }}</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="radio" name="urgencyLevel" value="3" [(ngModel)]="userTutorials.urgencyLevel" />
-                    <label for="notUrgent" class="urgency-level-labels">Not Urgent</label>
+                    <input type="radio" name="urgencyLevel" [value]="3" [(ngModel)]="userTutorials.urgencyLevel" />
+                    <label for="notUrgent" class="urgency-level-labels">{{ 'UrgencyLevel' + 3 | localize }} </label>
                   </div>
                 </div>
                 <div class="form-group">
