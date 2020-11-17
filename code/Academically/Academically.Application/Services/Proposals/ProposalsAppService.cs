@@ -28,6 +28,7 @@ namespace Academically.Services.Proposals
         private readonly IRepository<UserSupportService, Guid> _userSupportService;
         private readonly IRepository<UserDisciplineTaxonomy, Guid> _userDisciplineTaxonomy;
         private readonly IRepository<DisciplineTaxonomy, Guid> _disciplineTaxonomy;
+        private readonly IRepository<UserTutorialDisciplineTaxonomy, Guid> _userTutorialDisciplineTaxonomy;
         private readonly IFileManagerService _fileManagerService;
         private readonly ISettingManager _settingManager;
         private readonly RoleManager _roleManager;
@@ -40,7 +41,8 @@ namespace Academically.Services.Proposals
             IRepository<UserTutorial, Guid> userTutorialRepository,
             IRepository<UserSupportService, Guid> userSupportService,
             IRepository<UserDisciplineTaxonomy, Guid> userDisciplineTaxonomy,
-            IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomy
+            IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomy,
+            IRepository<UserTutorialDisciplineTaxonomy, Guid> userTutorialDisciplineTaxonomy
             )
         {
             _userProfilesAppService = userProfilesAppService;
@@ -51,6 +53,7 @@ namespace Academically.Services.Proposals
             _userSupportService = userSupportService;
             _userDisciplineTaxonomy = userDisciplineTaxonomy;
             _disciplineTaxonomy = disciplineTaxonomy;
+            _userTutorialDisciplineTaxonomy = userTutorialDisciplineTaxonomy;
         }
 
         public async Task<IEnumerable<SearchTutorDto>> SearchTutors(int distance, int? level)
@@ -111,6 +114,8 @@ namespace Academically.Services.Proposals
                 .Select(e => ObjectMapper.Map<GetStudentProposalDto>(e))
                 .FirstOrDefaultAsync();
 
+            var userDisciplineTaxonomies = tutorial.UserTutorialDisciplineTaxonomies.Select(e => e.DisciplineTaxonomy.ParentIdMap.Remove(36));
+
             if (tutorial != null)
             {
                 var userProfile = await _userProfilesAppService.FirstOrDefaultAsync(e => e.UserId == tutorial.User.Id);
@@ -121,6 +126,23 @@ namespace Academically.Services.Proposals
             
             return tutorial;
 
+        }
+
+        public async Task<IEnumerable<string>> getTutorialHighestLevelAreaOfStudies(long studentId, Guid tutorialId)
+        {
+            var tutorialDisciplineTaxonomies = await _userTutorialDisciplineTaxonomy.GetAll()
+                .Include(e => e.DisciplineTaxonomy)
+                .Include(e => e.UserTutorial)
+                .Where(e => e.TutorialId == tutorialId && e.UserTutorial.UserId == studentId)
+                .Select(e => e.DisciplineTaxonomy.ParentIdMap.Remove(36))
+                .ToListAsync();
+
+            var studentTutorialdisciplineTaxonomies = await _disciplineTaxonomy.GetAll()
+                .Where(e => tutorialDisciplineTaxonomies.Any(t => t == e.Id.ToString()))
+                .Select(e => e.Name)
+                .ToListAsync();
+
+            return studentTutorialdisciplineTaxonomies;
         }
 
         public async Task<UserSupportServiceDto> GetTutorSupportService()

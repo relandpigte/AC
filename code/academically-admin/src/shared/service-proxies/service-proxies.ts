@@ -1005,6 +1005,71 @@ export class ProposalsServiceProxy {
     }
 
     /**
+     * @param studentId (optional) 
+     * @param tutorialId (optional) 
+     * @return Success
+     */
+    getTutorialHighestLevelAreaOfStudies(studentId: number | undefined, tutorialId: string | undefined): Observable<string[]> {
+        let url_ = this.baseUrl + "/api/services/app/Proposals/getTutorialHighestLevelAreaOfStudies?";
+        if (studentId === null)
+            throw new Error("The parameter 'studentId' cannot be null.");
+        else if (studentId !== undefined)
+            url_ += "studentId=" + encodeURIComponent("" + studentId) + "&";
+        if (tutorialId === null)
+            throw new Error("The parameter 'tutorialId' cannot be null.");
+        else if (tutorialId !== undefined)
+            url_ += "tutorialId=" + encodeURIComponent("" + tutorialId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTutorialHighestLevelAreaOfStudies(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTutorialHighestLevelAreaOfStudies(<any>response_);
+                } catch (e) {
+                    return <Observable<string[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTutorialHighestLevelAreaOfStudies(response: HttpResponseBase): Observable<string[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(item);
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string[]>(<any>null);
+    }
+
+    /**
      * @return Success
      */
     getTutorSupportService(): Observable<UserSupportServiceDto> {
@@ -6307,6 +6372,7 @@ export interface IGetAllDisciplineTaxonomyDto {
 export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
     name: string | undefined;
     parentId: string | undefined;
+    parentIdMap: string | undefined;
     id: string;
 
     constructor(data?: IDisciplineTaxonomyDto) {
@@ -6322,6 +6388,7 @@ export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
         if (_data) {
             this.name = _data["name"];
             this.parentId = _data["parentId"];
+            this.parentIdMap = _data["parentIdMap"];
             this.id = _data["id"];
         }
     }
@@ -6337,6 +6404,7 @@ export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["parentId"] = this.parentId;
+        data["parentIdMap"] = this.parentIdMap;
         data["id"] = this.id;
         return data; 
     }
@@ -6352,6 +6420,7 @@ export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
 export interface IDisciplineTaxonomyDto {
     name: string | undefined;
     parentId: string | undefined;
+    parentIdMap: string | undefined;
     id: string;
 }
 

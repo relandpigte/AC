@@ -126,9 +126,9 @@
         <p class="small text-muted mb-3">
           Student
         </p>
-        <p class="card-text" *ngFor="let disciplineTaxonomy of studentProposal.userTutorialDisciplineTaxonomies">
-          <span class="badge badge-soft-secondary">
-            {{ disciplineTaxonomy.disciplineTaxonomy.name }}
+        <p class="card-text">
+          <span class="badge badge-soft-secondary" *ngFor="let disciplineTaxonomy of highLevelTutorialAreasOfStudies">
+            {{ disciplineTaxonomy }}
           </span>
         </p>
       </div>
@@ -192,18 +192,6 @@
                 <time class="small text-muted" datetime="1988-10-24">
                   {{ 'Tutorial' | localize }}
                 </time>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col">
-                <small>{{ 'SubjectArea' | localize }}</small>
-              </div>
-              <div class="col-auto">
-                <small class="text-muted">
-                  {{ tutorAreasOfStudies }}
-                </small>
               </div>
             </div>
           </div>
