@@ -145,7 +145,7 @@
             <tbody class="list font-size-base">
               <tr
                 *ngFor="
-                  let user of users | paginate: { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }
+                  let user of (users | paginate: { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
                 "
               >
                 <td>{{ user.id }}</td>
@@ -180,22 +180,6 @@
                         *ngIf="permission.isGranted('Pages.Users.Delete')"
                       >
                         <i class="fe fe-trash"></i> {{ 'Delete' | localize }}
-                      </a>
-                      <a
-                        href="javascript:;"
-                        class="dropdown-item"
-                        (click)="onResetPasswordClick(user)"
-                        *ngIf="permission.isGranted('Pages.Users.ResetPassword')"
-                      >
-                        <i class="fe fe-lock"></i> {{ 'ResetPassword' | localize }}
-                      </a>
-                      <a
-                        href="javascript:;"
-                        class="dropdown-item"
-                        (click)="onResetPasswordClick(user)"
-                        *ngIf="permission.isGranted('Pages.Users.ResetPassword')"
-                      >
-                        <i class="fe fe-lock"></i> {{ 'ResetPassword' | localize }}
                       </a>
                     </div>
                   </div>
