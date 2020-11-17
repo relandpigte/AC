@@ -10,5 +10,6 @@ namespace Academically.Services.DisciplineTaxonomies.Dto
     {
         public string Name { get; set; }
         public Guid? ParentId { get; set; }
+        public string ParentIdMap { get; set; }
     }
 }

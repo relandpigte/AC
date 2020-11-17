@@ -20,6 +20,7 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
   studentProposal: GetStudentProposalDto = new GetStudentProposalDto();
   tutorSupportService: UserSupportServiceDto = new UserSupportServiceDto();
   offer: CreateTutorOfferDto = new CreateTutorOfferDto();
+  highLevelTutorialAreasOfStudies: string[] = [];
   isLoading = false;
   studentFullName = '';
   tutorAreasOfStudies = '';
@@ -49,7 +50,6 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
   }
 
   onAcceptProposalClick(): void {
-    debugger;
     this.isLoading = true;
     this.offer.isSubmitted = true;
     this._tutorOfferService.create(this.offer).subscribe(() => {
@@ -60,7 +60,6 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
   }
 
   onDeclineProposalClick(): void {
-    debugger;
     this.isLoading = true;
     this.offer.isSubmitted = false;
     this._tutorOfferService.create(this.offer).subscribe(() => {
@@ -70,7 +69,7 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
     });
   }
 
-  private getStudentProposal() {
+  private getStudentProposal(): void {
     this.isLoading = true;
     this._proposalsService.getStudentProposal(this.id).subscribe(proposal => {
       this.isLoading = false;
@@ -78,10 +77,11 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
       this.studentFullName = proposal.user.fullName;
       this.offer.tutorialId = this.id;
       this.offer.studentId = this.studentProposal.user.id;
+      this.getStudentTutorialHighestLevlAreasOfStudy(proposal.user.id, this.id);
     });
   }
 
-  private getTutorAreasOfStudy() {
+  private getTutorAreasOfStudy(): void {
     this.isLoading = true;
     this._proposalsService.getTutorDisciplineTaxonomies().subscribe(areasOfStudy => {
       this.isLoading = false;
@@ -89,11 +89,18 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
     });
   }
 
-  private getTutorSupportService() {
+  private getTutorSupportService(): void {
     this.isLoading = true;
     this._proposalsService.getTutorSupportService().subscribe(supportService => {
       this.isLoading = false;
       this.tutorSupportService = supportService;
+    });
+  }
+
+  private getStudentTutorialHighestLevlAreasOfStudy(studentId: number, tutorialId: string): void {
+    this.isLoading = true;
+    this._proposalsService.getTutorialHighestLevelAreaOfStudies(studentId, tutorialId).subscribe(studentTutorialAreasOfStudies => {
+      this.highLevelTutorialAreasOfStudies = studentTutorialAreasOfStudies;
     });
   }
 }
