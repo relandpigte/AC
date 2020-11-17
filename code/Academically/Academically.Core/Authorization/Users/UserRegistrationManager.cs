@@ -53,6 +53,7 @@ namespace Academically.Authorization.Users
                 IsActive = true,
                 UserName = userName,
                 IsEmailConfirmed = isEmailConfirmed,
+                IsLockoutEnabled = false,
                 Roles = new List<UserRole>()
             };
 
