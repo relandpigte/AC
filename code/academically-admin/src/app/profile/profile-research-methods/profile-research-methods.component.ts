@@ -8,7 +8,7 @@ import { finalize } from 'rxjs/operators';
 @Component({
   selector: 'profile-research-methods',
   templateUrl: './profile-research-methods.component.html',
-  styleUrls: ['./profile-research-methods.component.less'],
+  styleUrls: ['./profile-research-methods.component.less']
 })
 export class ProfileResearchMethodsComponent extends AppComponentBase implements OnInit {
   @Input() userId: number;
@@ -41,7 +41,7 @@ export class ProfileResearchMethodsComponent extends AppComponentBase implements
           this.isLoading = false;
         })
       )
-      .subscribe((researchMethods) => {
+      .subscribe(researchMethods => {
         this.researchMethods = researchMethods;
       });
   }
@@ -56,7 +56,7 @@ export class ProfileResearchMethodsComponent extends AppComponentBase implements
         })
       )
       .subscribe(() => {
-        this.notify.success(this.l('TheResearchMethodsWereAdded'));
+        this.message.success(this.l('TheResearchMethodsWereAdded'));
         this.getResearchMethodsOfUser();
       });
   }
@@ -71,7 +71,7 @@ export class ProfileResearchMethodsComponent extends AppComponentBase implements
         })
       )
       .subscribe(() => {
-        this.notify.success(this.l('TheResearchMethodWasRemoved'));
+        this.message.success(this.l('TheResearchMethodWasRemoved'));
         this.getResearchMethodsOfUser();
       });
   }
@@ -80,12 +80,12 @@ export class ProfileResearchMethodsComponent extends AppComponentBase implements
     const modalSettings = this.defaultModalSettings;
     modalSettings.class = 'modal-lg';
     modalSettings.initialState = {
-      userId: this.userId,
+      userId: this.userId
     };
     const modalRef = this._modalService.show(ResearchMethodsSearchComponent, modalSettings);
     const modal: ResearchMethodsSearchComponent = modalRef.content;
     modal.modalSave.subscribe((selectedMethods: ResearchMethodDto[]) => {
-      const methodIds = selectedMethods.map((e) => e.id);
+      const methodIds = selectedMethods.map(e => e.id);
       this.addResearchMethodsToUser(methodIds);
     });
   }

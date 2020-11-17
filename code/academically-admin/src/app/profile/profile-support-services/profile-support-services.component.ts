@@ -9,7 +9,7 @@ import { finalize } from 'rxjs/operators';
 @Component({
   selector: 'profile-support-services',
   templateUrl: './profile-support-services.component.html',
-  styleUrls: ['./profile-support-services.component.less'],
+  styleUrls: ['./profile-support-services.component.less']
 })
 export class ProfileSupportServicesComponent extends AppComponentBase implements OnInit {
   @Input() userId: number;
@@ -46,7 +46,7 @@ export class ProfileSupportServicesComponent extends AppComponentBase implements
           this.isLoading = false;
         })
       )
-      .subscribe((supportServices) => {
+      .subscribe(supportServices => {
         this.supportServices = supportServices;
       });
   }
@@ -61,7 +61,7 @@ export class ProfileSupportServicesComponent extends AppComponentBase implements
         })
       )
       .subscribe(() => {
-        this.notify.success(this.l('TheSupportServicesWereAdded'));
+        this.message.success(this.l('TheSupportServicesWereAdded'));
         this.getSupportServicesOfUser();
       });
   }
@@ -76,7 +76,7 @@ export class ProfileSupportServicesComponent extends AppComponentBase implements
         })
       )
       .subscribe(() => {
-        this.notify.success(this.l('TheSupportServiceWasRemoved'));
+        this.message.success(this.l('TheSupportServiceWasRemoved'));
         this.getSupportServicesOfUser();
       });
   }
@@ -85,12 +85,12 @@ export class ProfileSupportServicesComponent extends AppComponentBase implements
     const modalSettings = this.defaultModalSettings;
     modalSettings.class = 'modal-lg';
     modalSettings.initialState = {
-      userId: this.userId,
+      userId: this.userId
     };
     const modalRef = this._modalService.show(SupportServicesSearchComponent, modalSettings);
     const modal: SupportServicesSearchComponent = modalRef.content;
     modal.modalSave.subscribe((selectedMethods: SupportServiceDto[]) => {
-      const methodIds = selectedMethods.map((e) => e.id);
+      const methodIds = selectedMethods.map(e => e.id);
       this.addSupportServicesToUser(methodIds);
     });
   }
@@ -103,7 +103,6 @@ export class ProfileSupportServicesComponent extends AppComponentBase implements
     };
     const modalRef = this._modalService.show(SessionRatesComponent, modalSettings);
     const modal: SessionRatesComponent = modalRef.content;
-    modal.modalSave.subscribe(() => {
-    });
+    modal.modalSave.subscribe(() => {});
   }
 }
