@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   animations: [accountModuleAnimation()]
 })
 export class CompleteResetPasswordComponent extends AppComponentBase implements OnInit {
-  passwordReset: PasswordResetInputDto;
+  passwordReset: PasswordResetInputDto = new PasswordResetInputDto();
   saving = false;
   constructor(
     injector: Injector,
