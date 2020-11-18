@@ -43,21 +43,6 @@ namespace Academically.Services.Offers
             };
 
             await _tutorOffersRepository.InsertAsync(offer);
-
-            if (offer.IsSubmitted)
-                await SendTutorOfferEmail(offer.Id, input.StudentId);
-        }
-
-        private async Task SendTutorOfferEmail(Guid offerId, long studentId)
-        {
-            var student = await _userRepository.FirstOrDefaultAsync(e => e.Id == studentId);
-
-            var clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
-            var offerLink = $"{clientRootAddress}app/tutor-proposal/{offerId}";
-            var subject = L("TutorOfferEmailSubject");
-            var body = L("TutorOfferEmailMessage", student.FullName, offerLink);
-
-            await _emailService.SendAsync(student.FullName, student.EmailAddress, subject, body);
         }
     }
 }

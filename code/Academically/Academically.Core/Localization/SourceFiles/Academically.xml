@@ -1,6 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="PaswordResetSucessful">Password reset has been sucessful</text>
+    <text name="PasswordResetLinkExpiredDomainError" value="The password reset link has expired. Please request a new password reset link." />
+    <text name="PasswordResetNullDomainErrorMessage">The password reset link does not exist. Please request a new password reset link.</text>
+    <text name="PasswordResetEmailMessage">
+      <![CDATA[
+          <p>We received your request to reset your password.</p>
+          <p>Please click this link reset your password: <a href="{0}">Password reset link<a/></p>
+          <br />
+          <p>If for some reason the link is not clickable, please copy and paste the url below to your browser:<p>
+          <br />
+          <p>{0}<p/>
+      ]]>
+    </text>
+    <text name="PasswordResetEmailSubject">Academically - Password Reset</text>
+    <text name="PasswordResetEmailSent" value="A password reset email has been sent to your email account, please check your junk/spam folders." />
+    <text name="PasswordResetEmailDomainErrorMessage" value="The user associated with the email address does not exist." />
+    <text name="PasswordReset">Password Reset</text>
+    <text name="PasswordResetEnterEmail">Enter your email to get a password reset link.</text>
     <text name="SupportServiceRequestAdminEmailMessage">
       <![CDATA[
         <p>A request to add a new Support Service was created.</p>
@@ -402,6 +420,8 @@
     <text name="CurrentPassword">Current Password</text>
     <text name="NewPassword">New Password</text>
     <text name="ConfirmNewPassword">Confirm New Password</text>
+    <text name="EnterNewPassword">Enter your new password</text>
+    <text name="EnterConfirmNewPassword">Enter confirm password</text>
     <text name="PasswordsDoNotMatch">Passwords do not match</text>
     <text name="PasswordsMustBeAtLeast8CharactersContainLowercaseUppercaseNumber">Passwords must be at least 8 characters, contain a lowercase, uppercase, and number</text>
     <text name="UserDeleteWarningMessage">User {0} will be deleted.</text>

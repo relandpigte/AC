@@ -22,6 +22,8 @@ import { CompleteRegistrationComponent } from './complete-registration/complete-
 import { TermsAndConditionsComponent } from './terms-and-conditions/terms-and-conditions.component';
 import { TwoFactorAuthenticationComponent } from './two-factor-authentication/two-factor-authentication.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { CompleteResetPasswordComponent } from './reset-password/complete-reset-password/complete-reset-password.component';
 
 @NgModule({
     imports: [
@@ -49,6 +51,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
         TermsAndConditionsComponent,
         TwoFactorAuthenticationComponent,
         NotFoundComponent,
+        ResetPasswordComponent,
+        CompleteResetPasswordComponent,
     ],
     entryComponents: [
         // tenant
