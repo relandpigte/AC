@@ -29,7 +29,7 @@
               <label for="password">{{ 'Password' | localize }}</label>
             </div>
             <div class="col-auto">
-              <a href="javascript:;" class="form-text small text-muted">
+              <a [routerLink]="['/account/reset-password']" class="form-text small text-muted">
                 {{ 'ForgotPassword' | localize }}
               </a>
             </div>
