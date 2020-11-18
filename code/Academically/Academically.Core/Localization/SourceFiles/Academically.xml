@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="PaswordResetSucessful">Password reset has been sucessful</text>
     <text name="PasswordResetLinkExpiredDomainError" value="The password reset link has expired. Please request a new password reset link." />
     <text name="PasswordResetNullDomainErrorMessage">The password reset link does not exist. Please request a new password reset link.</text>
     <text name="PasswordResetEmailMessage">
@@ -419,6 +420,8 @@
     <text name="CurrentPassword">Current Password</text>
     <text name="NewPassword">New Password</text>
     <text name="ConfirmNewPassword">Confirm New Password</text>
+    <text name="EnterNewPassword">Enter your new password</text>
+    <text name="EnterConfirmNewPassword">Enter confirm password</text>
     <text name="PasswordsDoNotMatch">Passwords do not match</text>
     <text name="PasswordsMustBeAtLeast8CharactersContainLowercaseUppercaseNumber">Passwords must be at least 8 characters, contain a lowercase, uppercase, and number</text>
     <text name="UserDeleteWarningMessage">User {0} will be deleted.</text>

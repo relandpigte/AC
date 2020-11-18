@@ -34,7 +34,7 @@ export class CompleteResetPasswordComponent extends AppComponentBase implements 
     this._passwordResetService.resetPassword(this.passwordReset).subscribe(
       () => {
         this.saving = false;
-        this.notify.info(this.l('SavedSuccessfully'));
+        this.notify.info(this.l('PaswordResetSucessful'));
         this._router.navigate(['/account/login']);
       },
       error => {
