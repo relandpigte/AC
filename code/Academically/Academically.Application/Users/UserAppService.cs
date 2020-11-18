@@ -87,7 +87,6 @@ namespace Academically.Users
                 CheckErrors(await _userManager.SetRolesAsync(user, input.RoleNames));
             }
 
-            user.IsLockoutEnabled = false;
             await UpdateLockOutEnabled(user);
 
             if (user.Id != 0)
