@@ -1,18 +1,12 @@
-﻿using Abp.BackgroundJobs;
-using Abp.Configuration;
+﻿using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Localization;
 using Academically.Application.Shared.Services;
-using Academically.BackgroundJobs;
-using Academically.BackgroundJobs.JobArgs;
 using Academically.Configuration;
 using Academically.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Academically.Events.Handlers
@@ -41,7 +35,7 @@ namespace Academically.Events.Handlers
             string subject = L("PasswordResetEmailSubject");
             string body = L("PasswordResetEmailMessage", registrationLink);
 
-            _emailService.SendAsync(eventData.Entity.Email, eventData.Entity.Email, subject, body).Wait();
+            await _emailService.SendAsync(eventData.Entity.Email, eventData.Entity.Email, subject, body);
         }
     }
 }
