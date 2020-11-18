@@ -87,6 +87,9 @@ namespace Academically.Users
                 CheckErrors(await _userManager.SetRolesAsync(user, input.RoleNames));
             }
 
+            user.IsLockoutEnabled = false;
+            await UpdateLockOutEnabled(user);
+
             if (user.Id != 0)
             {
                 var userProfile = new UserProfile();
@@ -268,6 +271,12 @@ namespace Academically.Users
             }
 
             return true;
+        }
+
+        private async Task UpdateLockOutEnabled(User user)
+        {
+            user.IsLockoutEnabled = false;
+            await _userManager.UpdateAsync(user);
         }
     }
 }

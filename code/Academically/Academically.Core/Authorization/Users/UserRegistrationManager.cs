@@ -53,7 +53,7 @@ namespace Academically.Authorization.Users
                 IsActive = true,
                 UserName = userName,
                 IsEmailConfirmed = isEmailConfirmed,
-                IsLockoutEnabled = false,
+               
                 Roles = new List<UserRole>()
             };
 
@@ -73,9 +73,9 @@ namespace Academically.Authorization.Users
             }
 
             await _userManager.InitializeOptionsAsync(tenant.Id);
-
             CheckErrors(await _userManager.CreateAsync(user, plainPassword));
             await CurrentUnitOfWork.SaveChangesAsync();
+            await UpdateLockOutEnabled(user);
 
             return user;
         }
@@ -117,6 +117,12 @@ namespace Academically.Authorization.Users
         protected virtual void CheckErrors(IdentityResult identityResult)
         {
             identityResult.CheckErrors(LocalizationManager);
+        }
+
+        private async Task UpdateLockOutEnabled(User user)
+        {
+            user.IsLockoutEnabled = false;
+            await _userManager.UpdateAsync(user);
         }
     }
 }
