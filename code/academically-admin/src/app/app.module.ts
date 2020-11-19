@@ -48,6 +48,9 @@ import { SidebarComponent } from './layout/navigations/sidebar/sidebar.component
 import { TopnavComponent } from './layout/navigations/topnav/topnav.component';
 import { TopbarComponent } from './layout/navigations/topbar/topbar.component';
 import { SidebarSmallComponent } from './layout/navigations/sidebar-small/sidebar-small.component';
+// services
+import { GoogleMapsService } from '@shared/services/google-maps.service';
+import { ProfileService } from '@shared/services/profile.service';
 // components
 import { AppComponent } from './app.component';
 import { HomeComponent } from '@app/home/home.component';
@@ -79,7 +82,6 @@ import { ProfileResearchMethodsComponent } from './profile/profile-research-meth
 import { ResearchMethodsSearchComponent } from './shared/research-methods-search/research-methods-search.component';
 import { SupportServicesSearchComponent } from './shared/support-services-search/support-services-search.component';
 import { ProfileSupportServicesComponent } from './profile/profile-support-services/profile-support-services.component';
-import { GoogleMapsService } from '@shared/services/google-maps.service';
 import { RequestNewResearchMethodComponent } from './shared/research-methods-search/request-new-research-method/request-new-research-method.component';
 import { RequestNewSupportServiceComponent } from './shared/support-services-search/request-new-support-service/request-new-support-service.component';
 import { SessionRatesComponent } from './shared/session-rates/session-rates.component';
@@ -87,6 +89,8 @@ import { StudentProposalComponent } from './student-proposal/student-proposal.co
 import { StudentProposalOverviewComponent } from './student-proposal/student-proposal-overview/student-proposal-overview.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { ReviseStudentProposalComponent } from './student-proposal/student-proposal-overview/revise-student-proposal/revise-student-proposal.component';
+import { WrapperComponent } from './layout/wrapper/wrapper.component';
+import { ProfileHeaderComponent } from './profile/profile-header/profile-header.component';
 
 @NgModule({
   declarations: [
@@ -161,6 +165,8 @@ import { ReviseStudentProposalComponent } from './student-proposal/student-propo
     StudentProposalOverviewComponent,
     ErrorPageComponent,
     ReviseStudentProposalComponent
+    WrapperComponent,
+    ProfileHeaderComponent
   ],
   imports: [
     CommonModule,
@@ -181,7 +187,7 @@ import { ReviseStudentProposalComponent } from './student-proposal/student-propo
     NgxQRCodeModule,
     TreeModule
   ],
-  providers: [GoogleMapsService],
+  providers: [GoogleMapsService, ProfileService],
   entryComponents: [
     // tenants
     CreateTenantDialogComponent,

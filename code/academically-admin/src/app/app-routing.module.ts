@@ -18,6 +18,8 @@ import { SettingsComponent } from './settings/settings.component';
 import { AccountComponent } from './account/account.component';
 import { StudentProposalComponent } from './student-proposal/student-proposal.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
+import { WrapperComponent } from './layout/wrapper/wrapper.component';
+import { ProfileHeaderComponent } from './profile/profile-header/profile-header.component';
 
 @NgModule({
   imports: [
@@ -26,68 +28,188 @@ import { ErrorPageComponent } from './error-page/error-page.component';
         path: '',
         component: AppComponent,
         children: [
-          { path: 'home', component: HomeComponent, data: { permission: 'Pages.Dashboard' }, canActivate: [AppRouteGuard] },
-          { path: 'users', component: UsersComponent, data: { permission: 'Pages.Users' }, canActivate: [AppRouteGuard] },
-          { path: 'roles', component: RolesComponent, data: { permission: 'Pages.Roles' }, canActivate: [AppRouteGuard] },
-          { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
-          { path: 'about', component: AboutComponent },
-          { path: 'update-password', component: ChangePasswordComponent },
-          { path: 'student-proposal/:tutorialId', component: StudentProposalComponent },
+          {
+            path: 'home',
+            component: WrapperComponent,
+            data: { permission: 'Pages.Dashboard' },
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: HomeComponent,
+                outlet: 'content',
+              },
+            ],
+          },
+          {
+            path: 'users',
+            component: WrapperComponent,
+            data: { permission: 'Pages.Users' },
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: UsersComponent,
+                outlet: 'content',
+              },
+            ],
+          },
+          {
+            path: 'roles',
+            component: WrapperComponent,
+            data: { permission: 'Pages.Roles' },
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: RolesComponent,
+                outlet: 'content',
+              },
+            ],
+          },
+          {
+            path: 'tenants',
+            component: WrapperComponent,
+            data: { permission: 'Pages.Tenants' },
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: TenantsComponent,
+                outlet: 'content',
+              },
+            ],
+          },
           {
             path: 'academic-support',
-            component: AcademicSupportComponent,
+            component: WrapperComponent,
             data: { permission: 'Pages.Dashboard.Navigations.AcademicSupport' },
-            canActivate: [AppRouteGuard]
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: AcademicSupportComponent,
+                outlet: 'content',
+              },
+            ],
           },
           {
             path: 'peer-support',
-            component: PeerSupportComponent,
+            component: WrapperComponent,
             data: { permission: 'Pages.PeerSupport' },
-            canActivate: [AppRouteGuard]
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: PeerSupportComponent,
+                outlet: 'content',
+              },
+            ],
           },
           {
             path: 'tutorial',
-            component: PeerSupportTutorialComponent,
+            component: WrapperComponent,
             data: { permission: 'Pages.PeerSupport.Tutorial' },
-            canActivate: [AppRouteGuard]
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: PeerSupportTutorialComponent,
+                outlet: 'content',
+              },
+            ],
           },
           {
             path: 'proposals',
-            component: PeerSupportProposalsComponent,
+            component: WrapperComponent,
             data: { permission: 'Pages.PeerSupport.Proposals' },
-            canActivate: [AppRouteGuard]
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: PeerSupportProposalsComponent,
+                outlet: 'content',
+              },
+            ],
           },
           {
             path: 'account',
-            component: AccountComponent,
+            component: WrapperComponent,
             data: { permission: 'Pages.Account' },
             canActivate: [AppRouteGuard],
-            canDeactivate: [CanDeactivateComponentGuard]
+            children: [
+              {
+                path: '',
+                component: AccountComponent,
+                canDeactivate: [CanDeactivateComponentGuard],
+                outlet: 'content',
+              },
+            ],
           },
           {
             path: 'profile',
-            component: ProfileComponent,
+            component: WrapperComponent,
             data: { permission: 'Pages.Profile' },
-            canActivate: [AppRouteGuard]
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: ProfileComponent,
+                outlet: 'content',
+              },
+              {
+                path: '',
+                component: ProfileHeaderComponent,
+                outlet: 'header',
+              },
+            ],
           },
           {
             path: 'profile/:userId',
-            component: ProfileComponent,
+            component: WrapperComponent,
             data: { permission: 'Pages.Profile.ViewTutor' },
-            canActivate: [AppRouteGuard]
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: ProfileComponent,
+                outlet: 'content',
+              },
+            ],
           },
           {
             path: 'settings',
-            component: SettingsComponent,
+            component: WrapperComponent,
             data: { permission: 'Pages.Settings' },
-            canActivate: [AppRouteGuard]
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: SettingsComponent,
+                outlet: 'content',
+              },
+            ],
           },
+          {
+            path: 'student-proposal/:tutorialId',
+            component: WrapperComponent,
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: StudentProposalComponent,
+                outlet: 'content',
+              },
+            ],
+          },
+          { path: 'about', component: AboutComponent },
+          { path: 'update-password', component: ChangePasswordComponent },
           { path: 'not-found', component: ErrorPageComponent },
-          { path: '**', redirectTo: 'not-found' }
-        ]
-      }
-    ])
+          { path: '**', redirectTo: 'not-found' },
+        ],
+      },
+    ]),
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}
