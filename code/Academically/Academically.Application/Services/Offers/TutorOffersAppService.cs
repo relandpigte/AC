@@ -39,28 +39,13 @@ namespace Academically.Services.Offers
 
             if(offer == null)
             {
-                offer = new TutorOffer
-                {
-                    TutorialId = input.TutorialId,
-                    TutorId = tutorId,
-                    IsAccepted = false,
-                    IsSubmitted = input.IsSubmitted,
-                    CreationTime = DateTime.UtcNow,
-                    CoverLetter = input.CoverLetter,
-                    SingleSessionRate = input.SingleSessionRate,
-                    MultipleSessionRate = input.MultipleSessionRate,
-                    MultipleSessionCount = input.MultipleSessionCount
-                };
-                await _tutorOffersRepository.InsertAsync(offer);
-            } 
-            else
-            {
-                offer.CoverLetter = input.CoverLetter;
-                offer.SingleSessionRate = input.SingleSessionRate;
-                offer.MultipleSessionCount = input.MultipleSessionCount;
-                offer.MultipleSessionRate = input.MultipleSessionRate;
-                await _tutorOffersRepository.UpdateAsync(offer);
+                offer = new TutorOffer();
+                offer.TutorId = tutorId;
             }
+
+            ObjectMapper.Map(input, offer);
+            
+            await _tutorOffersRepository.InsertOrUpdateAsync(offer);
         }
 
         public async Task<GetTutorOfferDto> GetAsync(Guid tutorialId)
