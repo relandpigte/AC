@@ -1,0 +1,36 @@
+<sidebar
+  *ngIf="
+    (themeSettings.navigationPosition === NavigationPosition.Sidenav || themeSettings.navigationPosition === NavigationPosition.Combo) &&
+    themeSettings.sidenavSizing === SidebarSize.Base
+  "
+  [routerEvent]="routerEvent"
+></sidebar>
+
+<topnav *ngIf="themeSettings.navigationPosition === NavigationPosition.Topnav" [routerEvent]="routerEvent"></topnav>
+
+<sidebar-small
+  *ngIf="
+    (themeSettings.navigationPosition === NavigationPosition.Sidenav || themeSettings.navigationPosition === NavigationPosition.Combo) &&
+    themeSettings.sidenavSizing === SidebarSize.Small
+  "
+  [routerEvent]="routerEvent"
+></sidebar-small>
+
+<!-- MAIN CONTENT
+================================================== -->
+<div class="main-content">
+  <topbar *ngIf="themeSettings.navigationPosition === NavigationPosition.Combo"></topbar>
+  <ng-container *ngIf="themeSettings.navigationPosition === NavigationPosition.Topnav">
+    <router-outlet name="header"></router-outlet>
+    <div class="container p-0">
+      <router-outlet name="content"></router-outlet>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="themeSettings.navigationPosition !== NavigationPosition.Topnav">
+    <router-outlet name="header"></router-outlet>
+    <router-outlet name="content"></router-outlet>
+  </ng-container>
+</div>
+<!-- / .main-content -->
+
+<theme-settings></theme-settings>
