@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="CoverLetter">Cover Letter</text>
+    <text name="ReviseSessionRateMessage">Session Rates Changed Successfully</text>
     <text name="PaswordResetSucessful">Password reset has been sucessful</text>
     <text name="PasswordResetLinkExpiredDomainError" value="The password reset link has expired. Please request a new password reset link." />
     <text name="PasswordResetNullDomainErrorMessage">The password reset link does not exist. Please request a new password reset link.</text>

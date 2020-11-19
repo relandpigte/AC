@@ -1,19 +1,18 @@
-﻿using Abp.Domain.Entities;
+﻿using Abp.Application.Services.Dto;
+using Abp.AutoMapper;
+using Academically.Entities;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Academically.Entities
+namespace Academically.Services.Offers.Dto
 {
-    [Table("AcademicallyTutorOffers")]
-    public class TutorOffer : Entity<Guid>
+    [AutoMap(typeof(TutorOffer))]
+    public class GetTutorOfferDto : EntityDto<Guid>
     {
         public Guid TutorialId { get; set; }
-        public long TutorId { get; set; }
-        public bool IsAccepted { get; set; }
+        public long StudentId { get; set; }
         public bool IsSubmitted { get; set; }
-        public DateTime CreationTime { get; set; }
         public string CoverLetter { get; set; }
         public decimal SingleSessionRate { get; set; }
         public decimal MultipleSessionRate { get; set; }

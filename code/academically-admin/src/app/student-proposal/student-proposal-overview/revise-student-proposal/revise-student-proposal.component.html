@@ -1,0 +1,99 @@
+<form class="form-horizontal" autocomplete="off" #reviseStudentProposalForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card" [busy]="isLoading">
+    <abp-modal-header [title]="'EditSessionRates' | localize" (onCloseClick)="onCloseClick()"></abp-modal-header>
+    <div class="card-body">
+      <div class="form-group">
+        <label class="col-form-label" for="Single_Session">
+          {{ 'SingleSession' | localize }}
+        </label>
+        <div class="col-12">
+          <div class="form-group row">
+            <div class="col-md-1">
+              <label class="col-form-label session-rates-currency-labels" for="Currency">
+                £
+              </label>
+            </div>
+            <div class="col-md-5">
+              <input
+                type="number"
+                class="form-control"
+                name="Single_Session_Rate"
+                id="Single_Session_Rate"
+                [(ngModel)]="offer.singleSessionRate"
+                #singleSessionRate="ngModel"
+                #singleSessionRateEl
+                placeholder="0.00"
+                step="0.01"
+                required
+              />
+            </div>
+            <div class="col-md-6">
+              <label class="col-form-label session-rates-labels" for="Per_Session">
+                per session
+              </label>
+            </div>
+            <abp-validation-summary [control]="singleSessionRate" [controlEl]="singleSessionRateEl"> </abp-validation-summary>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-form-label" for="Single_Session">
+          {{ 'MultipleSessions' | localize }}
+        </label>
+        <div class="col-12">
+          <div class="form-group row">
+            <div class="col-md-1">
+              <label class="col-form-label session-rates-currency-labels" for="Currency">
+                £
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input
+                type="number"
+                class="form-control"
+                name="Multiple_Session_Rate"
+                id="Multiple_Session_Rate"
+                [(ngModel)]="offer.multipleSessionRate"
+                #multipleSessionRate="ngModel"
+                #multipleSessionRateEl
+                placeholder="0.00"
+                step="0.01"
+                required
+              />
+            </div>
+            <abp-validation-summary [control]="multipleSessionRate" [controlEl]="multipleSessionRateEl"> </abp-validation-summary>
+            <div class="col-md-2">
+              <label class="col-form-label session-rates-labels" for="Per_Session">
+                per
+              </label>
+            </div>
+            <div class="col-md-3">
+              <input
+                type="number"
+                class="form-control"
+                name="Multiple_Session_Count"
+                id="Multiple_Session_Rate"
+                [(ngModel)]="offer.multipleSessionCount"
+                #multipleSessionCount="ngModel"
+                #multipleSessionCountEl
+                placeholder="0"
+                required
+              />
+            </div>
+            <abp-validation-summary [control]="multipleSessionCount" [controlEl]="multipleSessionCountEl"> </abp-validation-summary>
+            <div class="col-md-2">
+              <label class="col-form-label session-rates-labels" for="Per_Session">
+                sessions
+              </label>
+            </div>
+            <abp-validation-summary [control]="singleSessionRate" [controlEl]="singleSessionRateEl"> </abp-validation-summary>
+          </div>
+        </div>
+      </div>
+    </div>
+    <abp-modal-footer
+      [saveDisabled]="!reviseStudentProposalForm.form.valid || isLoading"
+      (onCancelClick)="onCloseClick()"
+    ></abp-modal-footer>
+  </div>
+</form>

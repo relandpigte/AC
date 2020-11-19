@@ -4,11 +4,15 @@ import { AppComponentBase } from '@shared/app-component-base';
 import {
   CreateTutorOfferDto,
   GetStudentProposalDto,
+  GetTutorOfferDto,
   ProposalsServiceProxy,
   TutorOffersServiceProxy,
   UserSupportServiceDto
 } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { off } from 'process';
+import { ReviseStudentProposalComponent } from './revise-student-proposal/revise-student-proposal.component';
 
 @Component({
   selector: 'student-proposal-overview',
@@ -25,13 +29,15 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
   studentFullName = '';
   tutorAreasOfStudies = '';
   moment: any = moment;
+  coverLetterMaxWordCount = 500;
 
   constructor(
     injector: Injector,
     private _proposalsService: ProposalsServiceProxy,
     private _acativatedRoute: ActivatedRoute,
     private _tutorOfferService: TutorOffersServiceProxy,
-    private _router: Router
+    private _router: Router,
+    private _modalService: BsModalService
   ) {
     super(injector);
   }
@@ -42,15 +48,12 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
       this.id = paramMap.get('tutorialId');
       if (this.id) {
         this.getStudentProposal();
-        this.getTutorAreasOfStudy();
-        this.getTutorSupportService();
         this.isLoading = false;
       }
     });
   }
 
   onAcceptProposalClick(): void {
-    this.isLoading = true;
     this.offer.isSubmitted = true;
     this._tutorOfferService.create(this.offer).subscribe(() => {
       this.isLoading = false;
@@ -60,7 +63,6 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
   }
 
   onDeclineProposalClick(): void {
-    this.isLoading = true;
     this.offer.isSubmitted = false;
     this._tutorOfferService.create(this.offer).subscribe(() => {
       this.isLoading = false;
@@ -69,20 +71,41 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
     });
   }
 
+  onReviseClick(): void {
+    this.showReviseStudentProposalModal();
+  }
+
+  onKeyup(coverLeter: string): void {
+    if (coverLeter) {
+      const words = coverLeter.match(/\S+/g).length;
+      if (words > this.coverLetterMaxWordCount) {
+        const trimmed = coverLeter.split(/\s+/, this.coverLetterMaxWordCount).join(' ');
+        this.offer.coverLetter = trimmed + ' ';
+      }
+    }
+  }
+
+  getCoverLetterWordCount(): number {
+    const wordCount = this.offer.coverLetter ? this.offer.coverLetter.match(/\S+/g).length : 0;
+    if (wordCount > this.coverLetterMaxWordCount) {
+      return this.coverLetterMaxWordCount;
+    }
+    return wordCount;
+  }
+
   private getStudentProposal(): void {
-    this.isLoading = true;
     this._proposalsService.getStudentProposal(this.id).subscribe(proposal => {
       this.isLoading = false;
       this.studentProposal = proposal;
       this.studentFullName = proposal.user.fullName;
-      this.offer.tutorialId = this.id;
-      this.offer.studentId = this.studentProposal.user.id;
-      this.getStudentTutorialHighestLevlAreasOfStudy(proposal.user.id, this.id);
+      this.getStudentTutorialHighestLevlAreasOfStudy();
+      this.getTutorOffer();
+      this.getTutorAreasOfStudy();
+      this.getTutorSupportService();
     });
   }
 
   private getTutorAreasOfStudy(): void {
-    this.isLoading = true;
     this._proposalsService.getTutorDisciplineTaxonomies().subscribe(areasOfStudy => {
       this.isLoading = false;
       this.tutorAreasOfStudies = areasOfStudy;
@@ -90,17 +113,51 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
   }
 
   private getTutorSupportService(): void {
-    this.isLoading = true;
     this._proposalsService.getTutorSupportService().subscribe(supportService => {
       this.isLoading = false;
       this.tutorSupportService = supportService;
+      this.offer.singleSessionRate = !this.offer.singleSessionRate
+        ? this.tutorSupportService.userSupportServiceSessionRate.singleSessionRate
+        : this.offer.singleSessionRate;
+
+      this.offer.multipleSessionRate = !this.offer.multipleSessionRate
+        ? this.tutorSupportService.userSupportServiceSessionRate.multipleSessionRate
+        : this.offer.multipleSessionRate;
+
+      this.offer.multipleSessionCount = !this.offer.multipleSessionCount
+        ? this.tutorSupportService.userSupportServiceSessionRate.multipleSessionCount
+        : this.offer.multipleSessionCount;
     });
   }
 
-  private getStudentTutorialHighestLevlAreasOfStudy(studentId: number, tutorialId: string): void {
-    this.isLoading = true;
-    this._proposalsService.getTutorialHighestLevelAreaOfStudies(studentId, tutorialId).subscribe(studentTutorialAreasOfStudies => {
-      this.highLevelTutorialAreasOfStudies = studentTutorialAreasOfStudies;
+  private getStudentTutorialHighestLevlAreasOfStudy(): void {
+    this._proposalsService
+      .getTutorialHighestLevelAreaOfStudies(this.studentProposal.user.id, this.id)
+      .subscribe(studentTutorialAreasOfStudies => {
+        this.highLevelTutorialAreasOfStudies = studentTutorialAreasOfStudies;
+      });
+  }
+
+  private getTutorOffer(): void {
+    this._tutorOfferService.get(this.id).subscribe(offer => {
+      if (Object.keys(offer).length === 0) {
+        this.offer.tutorialId = this.id;
+        this.offer.studentId = this.studentProposal.user.id;
+      } else {
+        this.offer = offer;
+      }
+    });
+  }
+
+  private showReviseStudentProposalModal(): void {
+    const modalSettings = this.defaultModalSettings;
+    modalSettings.initialState = {
+      offer: this.offer
+    };
+    const modalRef = this._modalService.show(ReviseStudentProposalComponent, modalSettings);
+    const modal: ReviseStudentProposalComponent = modalRef.content;
+    modal.modalSave.subscribe((offer: CreateTutorOfferDto) => {
+      this.offer = offer;
     });
   }
 }
