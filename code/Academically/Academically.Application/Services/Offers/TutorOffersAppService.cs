@@ -5,8 +5,10 @@ using Academically.Authorization.Users;
 using Academically.Configuration;
 using Academically.Entities;
 using Academically.Services.Offers.Dto;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,31 +35,42 @@ namespace Academically.Services.Offers
         public async Task CreateAsync(CreateTutorOfferDto input)
         {
             var tutorId = AbpSession.UserId.Value;
-            var offer = new TutorOffer
+            var offer = await _tutorOffersRepository.FirstOrDefaultAsync(e => e.TutorialId == input.TutorialId && e.TutorId == tutorId);
+
+            if(offer == null)
             {
-                TutorialId = input.TutorialId,
-                TutorId = tutorId,
-                IsAccepted = false,
-                IsSubmitted = input.IsSubmitted,
-                CreationTime = DateTime.UtcNow
-            };
-
-            await _tutorOffersRepository.InsertAsync(offer);
-
-            if (offer.IsSubmitted)
-                await SendTutorOfferEmail(offer.Id, input.StudentId);
+                offer = new TutorOffer
+                {
+                    TutorialId = input.TutorialId,
+                    TutorId = tutorId,
+                    IsAccepted = false,
+                    IsSubmitted = input.IsSubmitted,
+                    CreationTime = DateTime.UtcNow,
+                    CoverLetter = input.CoverLetter,
+                    SingleSessionRate = input.SingleSessionRate,
+                    MultipleSessionRate = input.MultipleSessionRate,
+                    MultipleSessionCount = input.MultipleSessionCount
+                };
+                await _tutorOffersRepository.InsertAsync(offer);
+            } 
+            else
+            {
+                offer.CoverLetter = input.CoverLetter;
+                offer.SingleSessionRate = input.SingleSessionRate;
+                offer.MultipleSessionCount = input.MultipleSessionCount;
+                offer.MultipleSessionRate = input.MultipleSessionRate;
+                await _tutorOffersRepository.UpdateAsync(offer);
+            }
         }
 
-        private async Task SendTutorOfferEmail(Guid offerId, long studentId)
+        public async Task<GetTutorOfferDto> GetAsync(Guid tutorialId)
         {
-            var student = await _userRepository.FirstOrDefaultAsync(e => e.Id == studentId);
+            var offer = await _tutorOffersRepository.GetAll()
+                .Where(e => e.TutorId == AbpSession.UserId.Value && e.TutorialId == tutorialId)
+                .Select(e => ObjectMapper.Map<GetTutorOfferDto>(e))
+                .FirstOrDefaultAsync();
 
-            var clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
-            var offerLink = $"{clientRootAddress}app/tutor-proposal/{offerId}";
-            var subject = L("TutorOfferEmailSubject");
-            var body = L("TutorOfferEmailMessage", student.FullName, offerLink);
-
-            await _emailService.SendAsync(student.FullName, student.EmailAddress, subject, body);
+            return offer;
         }
     }
 }

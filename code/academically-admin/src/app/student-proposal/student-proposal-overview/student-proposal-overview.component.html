@@ -13,6 +13,29 @@
     <div class="card">
       <div class="card-header">
         <h4 class="card-header-title">
+          {{ 'CoverLetter' | localize }}
+        </h4>
+      </div>
+      <div class="card-body">
+        <textarea
+          class="form-control"
+          data-toggle="autosize"
+          rows="5"
+          name="CoverLetter"
+          id="CoverLetter"
+          [(ngModel)]="offer.coverLetter"
+          #summary="ngModel"
+          #coverLetterEl
+          placeholder="Please enter your cover letter"
+          required
+          (keyup)="onKeyup(offer.coverLetter)"
+        ></textarea>
+        <span class="badge badge-secondary m-0">{{ getCoverLetterWordCount() }}/{{ coverLetterMaxWordCount }}</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-header-title">
           Notifications
         </h4>
         <a href="#!" class="btn btn-sm btn-white">
@@ -140,35 +163,34 @@
             {{ 'YourProposal' | localize }}
           </div>
           <div class="col-md-6 button-revise">
-            <a href="#!" class="btn btn-sm btn-primary">
+            <button (click)="$event.preventDefault(); onReviseClick()" class="btn btn-sm btn-primary">
               {{ 'Revise' | localize }}
-            </a>
+            </button>
           </div>
         </div>
         <div class="row no-gutters border-top border-bottom">
-          <ng-container *ngIf="tutorSupportService.userSupportServiceSessionRate?.multipleSessionCount > 0">
+          <ng-container *ngIf="offer.multipleSessionCount > 0">
             <div class="col-6 py-4 text-center">
               <h6 class="text-uppercase text-muted">1 {{ 'Session' | localize }}</h6>
 
-              <h2 class="mb-0">£ {{ tutorSupportService.userSupportServiceSessionRate?.singleSessionRate }}/hr</h2>
+              <h2 class="mb-0">
+                £
+                {{ offer.singleSessionRate }}/hr
+              </h2>
             </div>
             <div class="col-6 py-4 text-center border-left">
-              <h6 class="text-uppercase text-muted">
-                {{ tutorSupportService.userSupportServiceSessionRate?.multipleSessionCount }} {{ 'Sessions' | localize }}
-              </h6>
+              <h6 class="text-uppercase text-muted">{{ offer.multipleSessionCount }} {{ 'Sessions' | localize }}</h6>
 
-              <h2 class="mb-0">£ {{ tutorSupportService.userSupportServiceSessionRate?.multipleSessionRate }}/hr</h2>
+              <h2 class="mb-0">£ {{ offer.multipleSessionRate }}/hr</h2>
             </div>
           </ng-container>
-          <ng-container
-            *ngIf="
-              tutorSupportService.userSupportServiceSessionRate?.multipleSessionCount === 0 &&
-              tutorSupportService.userSupportServiceSessionRate?.singleSessionRate > 0
-            "
-          >
+          <ng-container *ngIf="offer.multipleSessionCount === 0 && offer.singleSessionRate > 0">
             <div class="col-12 py-4 text-center">
               <h6 class="text-uppercase text-muted">1 {{ 'Session' | localize }}</h6>
-              <h2 class="mb-0">£ {{ tutorSupportService.userSupportServiceSessionRate?.singleSessionRate }}/hr</h2>
+              <h2 class="mb-0">
+                £
+                {{ offer.singleSessionRate }}/hr
+              </h2>
             </div>
           </ng-container>
         </div>
@@ -233,16 +255,20 @@
 
         <div class="row align-items-center justify-content-between">
           <div class="col-12">
-            <a href="javascript:;" (click)="onDeclineProposalClick()" class="btn btn-sm btn-light proposal-button-decline">
+            <button (click)="onDeclineProposalClick()" class="btn btn-sm btn-light proposal-button-decline">
               <label>
                 {{ 'DeclineProject' | localize }}
               </label>
-            </a>
-            <a href="javascript:;" (click)="onAcceptProposalClick()" class="btn btn-sm btn-primary proposal-button-submit">
+            </button>
+            <button
+              [disabled]="getCoverLetterWordCount() < 50"
+              (click)="onAcceptProposalClick()"
+              class="btn btn-sm btn-primary proposal-button-submit"
+            >
               <label>
                 {{ 'SubmitOffer' | localize }}
               </label>
-            </a>
+            </button>
           </div>
         </div>
       </div>
