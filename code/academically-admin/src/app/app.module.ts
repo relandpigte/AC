@@ -86,6 +86,7 @@ import { SessionRatesComponent } from './shared/session-rates/session-rates.comp
 import { StudentProposalComponent } from './student-proposal/student-proposal.component';
 import { StudentProposalOverviewComponent } from './student-proposal/student-proposal-overview/student-proposal-overview.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
+import { ReviseStudentProposalComponent } from './student-proposal/student-proposal-overview/revise-student-proposal/revise-student-proposal.component';
 
 @NgModule({
   declarations: [
@@ -158,7 +159,8 @@ import { ErrorPageComponent } from './error-page/error-page.component';
     SessionRatesComponent,
     StudentProposalComponent,
     StudentProposalOverviewComponent,
-    ErrorPageComponent
+    ErrorPageComponent,
+    ReviseStudentProposalComponent
   ],
   imports: [
     CommonModule,

@@ -2769,6 +2769,62 @@ export class TutorOffersServiceProxy {
         }
         return _observableOf<void>(<any>null);
     }
+
+    /**
+     * @param tutorialId (optional) 
+     * @return Success
+     */
+    get(tutorialId: string | undefined): Observable<GetTutorOfferDto> {
+        let url_ = this.baseUrl + "/api/services/app/TutorOffers/Get?";
+        if (tutorialId === null)
+            throw new Error("The parameter 'tutorialId' cannot be null.");
+        else if (tutorialId !== undefined)
+            url_ += "tutorialId=" + encodeURIComponent("" + tutorialId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<GetTutorOfferDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetTutorOfferDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<GetTutorOfferDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetTutorOfferDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetTutorOfferDto>(<any>null);
+    }
 }
 
 @Injectable()
@@ -8798,6 +8854,10 @@ export class CreateTutorOfferDto implements ICreateTutorOfferDto {
     tutorialId: string;
     studentId: number;
     isSubmitted: boolean;
+    coverLetter: string | undefined;
+    singleSessionRate: number;
+    multipleSessionRate: number;
+    multipleSessionCount: number;
 
     constructor(data?: ICreateTutorOfferDto) {
         if (data) {
@@ -8813,6 +8873,10 @@ export class CreateTutorOfferDto implements ICreateTutorOfferDto {
             this.tutorialId = _data["tutorialId"];
             this.studentId = _data["studentId"];
             this.isSubmitted = _data["isSubmitted"];
+            this.coverLetter = _data["coverLetter"];
+            this.singleSessionRate = _data["singleSessionRate"];
+            this.multipleSessionRate = _data["multipleSessionRate"];
+            this.multipleSessionCount = _data["multipleSessionCount"];
         }
     }
 
@@ -8828,6 +8892,10 @@ export class CreateTutorOfferDto implements ICreateTutorOfferDto {
         data["tutorialId"] = this.tutorialId;
         data["studentId"] = this.studentId;
         data["isSubmitted"] = this.isSubmitted;
+        data["coverLetter"] = this.coverLetter;
+        data["singleSessionRate"] = this.singleSessionRate;
+        data["multipleSessionRate"] = this.multipleSessionRate;
+        data["multipleSessionCount"] = this.multipleSessionCount;
         return data; 
     }
 
@@ -8843,6 +8911,81 @@ export interface ICreateTutorOfferDto {
     tutorialId: string;
     studentId: number;
     isSubmitted: boolean;
+    coverLetter: string | undefined;
+    singleSessionRate: number;
+    multipleSessionRate: number;
+    multipleSessionCount: number;
+}
+
+export class GetTutorOfferDto implements IGetTutorOfferDto {
+    tutorialId: string;
+    studentId: number;
+    isSubmitted: boolean;
+    coverLetter: string | undefined;
+    singleSessionRate: number;
+    multipleSessionRate: number;
+    multipleSessionCount: number;
+    id: string;
+
+    constructor(data?: IGetTutorOfferDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.tutorialId = _data["tutorialId"];
+            this.studentId = _data["studentId"];
+            this.isSubmitted = _data["isSubmitted"];
+            this.coverLetter = _data["coverLetter"];
+            this.singleSessionRate = _data["singleSessionRate"];
+            this.multipleSessionRate = _data["multipleSessionRate"];
+            this.multipleSessionCount = _data["multipleSessionCount"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): GetTutorOfferDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetTutorOfferDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["tutorialId"] = this.tutorialId;
+        data["studentId"] = this.studentId;
+        data["isSubmitted"] = this.isSubmitted;
+        data["coverLetter"] = this.coverLetter;
+        data["singleSessionRate"] = this.singleSessionRate;
+        data["multipleSessionRate"] = this.multipleSessionRate;
+        data["multipleSessionCount"] = this.multipleSessionCount;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): GetTutorOfferDto {
+        const json = this.toJSON();
+        let result = new GetTutorOfferDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetTutorOfferDto {
+    tutorialId: string;
+    studentId: number;
+    isSubmitted: boolean;
+    coverLetter: string | undefined;
+    singleSessionRate: number;
+    multipleSessionRate: number;
+    multipleSessionCount: number;
+    id: string;
 }
 
 export class CreateUserDto implements ICreateUserDto {

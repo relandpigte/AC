@@ -12,5 +12,9 @@ namespace Academically.Services.Offers.Dto
         public Guid TutorialId { get; set; }
         public long StudentId { get; set; }
         public bool IsSubmitted { get; set; }
+        public string CoverLetter { get; set; }
+        public decimal SingleSessionRate { get; set; }
+        public decimal MultipleSessionRate { get; set; }
+        public int MultipleSessionCount { get; set; }
     }
 }
