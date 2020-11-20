@@ -107,6 +107,7 @@
     <text name="SupportServicesNotSavedWarning">The support services you selected has not been saved yet. If you leave, your changes will be lost.</text>
     <text name="TheSupportServiceWasRemoved">The Support Service was removed.</text>
     <text name="TheSupportServicesWereAdded">The Support Services were added.</text>
+    <text name="SupportServices">Services</text>
     <text name="NoSupportService">No Support Service</text>
     <text name="ResearchMethodsNotSavedWarning">The research methods you selected has not been saved yet. If you leave, your changes will be lost.</text>
     <text name="TheResearchMethodWasRemoved">The Research Method was removed.</text>
