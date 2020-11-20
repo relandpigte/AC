@@ -61,7 +61,7 @@ export class ProfileSupportServicesComponent extends AppComponentBase implements
         })
       )
       .subscribe(() => {
-        this.message.success(this.l('NewSupportServiceRequestSent'));
+        this.message.success(this.l('TheSupportServicesWereAdded'));
         this.getSupportServicesOfUser();
       });
   }
