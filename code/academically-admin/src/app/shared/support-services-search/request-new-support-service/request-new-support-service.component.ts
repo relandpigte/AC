@@ -7,7 +7,7 @@ import { finalize } from 'rxjs/operators';
 @Component({
   selector: 'app-request-new-support-service',
   templateUrl: './request-new-support-service.component.html',
-  styleUrls: ['./request-new-support-service.component.less'],
+  styleUrls: ['./request-new-support-service.component.less']
 })
 export class RequestNewSupportServiceComponent extends AppComponentBase implements OnInit {
   @Input() supportServiceId: string;
@@ -44,7 +44,7 @@ export class RequestNewSupportServiceComponent extends AppComponentBase implemen
         })
       )
       .subscribe(() => {
-        this.notify.success(this.l('NewSupportServiceRequestSent'));
+        this.message.success(this.l('NewSupportServiceRequestSent'));
         this.close();
       });
   }
