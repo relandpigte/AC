@@ -1,4 +1,5 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { GetProfileDetailDto } from '@shared/service-proxies/service-proxies';
 import { ProfileService } from '@shared/services/profile.service';
@@ -12,7 +13,7 @@ export class ProfileHeaderComponent extends AppComponentBase implements OnInit {
   profileDetail: GetProfileDetailDto = new GetProfileDetailDto();
   isViewOnly = false;
 
-  constructor(injector: Injector, private _profileServie: ProfileService) {
+  constructor(injector: Injector, @Inject(DOCUMENT) private _document: Document, private _profileServie: ProfileService) {
     super(injector);
   }
 
@@ -29,6 +30,6 @@ export class ProfileHeaderComponent extends AppComponentBase implements OnInit {
 
   onScrollClick(e: any, el: string): void {
     e.preventDefault();
-    // el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    this._document.getElementById(el).scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 }

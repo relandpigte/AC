@@ -164,9 +164,9 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
     StudentProposalComponent,
     StudentProposalOverviewComponent,
     ErrorPageComponent,
-    ReviseStudentProposalComponent
+    ReviseStudentProposalComponent,
     WrapperComponent,
-    ProfileHeaderComponent
+    ProfileHeaderComponent,
   ],
   imports: [
     CommonModule,
@@ -185,7 +185,7 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
     TypeaheadModule.forRoot(),
     BsDatepickerModule.forRoot(),
     NgxQRCodeModule,
-    TreeModule
+    TreeModule,
   ],
   providers: [GoogleMapsService, ProfileService],
   entryComponents: [
@@ -206,7 +206,7 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
     ResearchMethodsSearchComponent,
     SupportServicesSearchComponent,
     RequestNewResearchMethodComponent,
-    RequestNewSupportServiceComponent
-  ]
+    RequestNewSupportServiceComponent,
+  ],
 })
 export class AppModule {}

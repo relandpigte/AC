@@ -69,7 +69,7 @@
 
   <div class="row">
     <div class="col-12 col-xl-8">
-      <div #overview class="card">
+      <div id="overview" class="card">
         <div class="card-header">
           <h4 class="card-header-title">{{ 'About' | localize }} {{ profileDetail.firstName }}</h4>
         </div>
@@ -82,7 +82,7 @@
         </div>
       </div>
 
-      <div #reviews class="card">
+      <div id="reviews" class="card">
         <div class="card-header">
           <h4 class="card-header-title">{{ 'StudentsReviews' | localize }}</h4>
         </div>
@@ -140,15 +140,15 @@
         </div>
       </div>
 
-      <div #educations>
+      <div id="educations">
         <profile-education *ngIf="userId" [userId]="userId" [isViewOnly]="isViewOnly"></profile-education>
       </div>
 
-      <div #publications>
+      <div id="publications">
         <profile-publications *ngIf="userId" [userId]="userId" [isViewOnly]="isViewOnly"></profile-publications>
       </div>
 
-      <div #experiences class="card">
+      <div id="experiences" class="card">
         <div class="card-header">
           <h4 class="card-header-title">
             {{ 'MyExperience' | localize }}
