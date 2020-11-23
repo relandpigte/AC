@@ -13,13 +13,11 @@ export class PeerSupportProposalsComponent extends AppComponentBase implements O
   tutors: SearchTutorDto[] = [];
   educationLevels: number[] = [];
   distanceFilter = -1;
-  educationLevelFilter = 0;
+  educationLevelFilter = 100;
 
-  constructor(
-    injector: Injector,
-    private _proposalsServiceProxy: ProposalsServiceProxy) {
-      super(injector);
-    }
+  constructor(injector: Injector, private _proposalsServiceProxy: ProposalsServiceProxy) {
+    super(injector);
+  }
 
   ngOnInit(): void {
     this.searchTutors();
