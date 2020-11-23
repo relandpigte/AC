@@ -14,6 +14,7 @@ export class PeerSupportProposalsComponent extends AppComponentBase implements O
   educationLevels: number[] = [];
   distanceFilter = -1;
   educationLevelFilter = 100;
+  isLoading = false;
 
   constructor(injector: Injector, private _proposalsServiceProxy: ProposalsServiceProxy) {
     super(injector);
@@ -37,8 +38,10 @@ export class PeerSupportProposalsComponent extends AppComponentBase implements O
   }
 
   private searchTutors(): void {
+    this.isLoading = true;
     this._proposalsServiceProxy.searchTutors(this.distanceFilter, this.educationLevelFilter).subscribe(tutors => {
       this.tutors = tutors;
+      this.isLoading = false;
     });
   }
 }

@@ -87,7 +87,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" [busy]="!isLoading">
         <div class="col-12 col-xl-8">
           <div class="card" *ngFor="let tutor of tutors">
             <div class="card-body">
