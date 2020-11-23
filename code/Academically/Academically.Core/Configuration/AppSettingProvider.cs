@@ -31,6 +31,10 @@ namespace Academically.Configuration
                 new SettingDefinition(AppSettingNames.Address_ApiKey, GetFromSettings("Address:ApiKey")),
                 new SettingDefinition(AppSettingNames.Address_UrlParameters, GetFromSettings("Address:UrlParameters")),
                 new SettingDefinition(AppSettingNames.Services_Tutorial, GetFromSettings("Services:Tutorial")),
+                new SettingDefinition(AppSettingNames.RankingWeightings_AreaOfStudyScore, GetFromSettings("RankingWeightings:AreaOfStudyScore")),
+                new SettingDefinition(AppSettingNames.RankingWeightings_AreaOfStudyLevelScore, GetFromSettings("RankingWeightings:AreaOfStudyLevelScore")),
+                new SettingDefinition(AppSettingNames.RankingWeightings_AreaOfStudyLevelAndAboveScore, GetFromSettings("RankingWeightings:AreaOfStudyLevelAndAboveScore")),
+                new SettingDefinition(AppSettingNames.RankingWeightings_MethodologyScore, GetFromSettings("RankingWeightings:MethodologyScore")),
             };
         }
 

@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Application.Services;
-using Academically.Entities.Enums;
 using Academically.Services.Proposals.Dto;
-using Academically.Services.UserProfiles.Dto;
 
 namespace Academically.Services.Proposals
 {
@@ -14,5 +12,8 @@ namespace Academically.Services.Proposals
         Task<GetStudentProposalDto> GetStudentProposal(Guid tutorialId);
         Task<string> GetTutorDisciplineTaxonomies();
         Task<UserSupportServiceDto> GetTutorSupportService();
+
+        //TODO: this endpoint will replace the SearchTutors
+        Task<IEnumerable<FindMatchDto>> FindMatch(Guid userTutorialId);
     }
 }

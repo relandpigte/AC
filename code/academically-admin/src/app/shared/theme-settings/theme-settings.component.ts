@@ -65,13 +65,9 @@ export class ThemeSettingsComponent implements OnInit {
 
   onFormSubmit(): void {
     this.isLoading = true;
-    setTimeout(() => {
-      this._themeManagerService.saveConfiguration(this.themeSettings);
-      setTimeout(() => {
-        this.isLoading = false;
-        this.close();
-      }, 1000);
-    }, 1000);
+    this._themeManagerService.saveConfiguration(this.themeSettings);
+    this.isLoading = false;
+    this.close();
   }
 
   private close(): void {

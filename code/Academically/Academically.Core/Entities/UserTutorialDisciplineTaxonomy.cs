@@ -11,8 +11,10 @@ namespace Academically.Entities
     {
         public Guid TutorialId { get; set; }
         public Guid DisciplineTaxonomyId { get; set; }
+
         [ForeignKey("TutorialId")] 
         public UserTutorial UserTutorial { get; set; }
+
         [ForeignKey("DisciplineTaxonomyId")]
         public DisciplineTaxonomy DisciplineTaxonomy { get; set; }
     }

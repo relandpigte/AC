@@ -16,5 +16,9 @@
         public const string Address_ApiKey = "Address.ApiKey";
         public const string Address_UrlParameters = "Address.UrlParameters";
         public const string Services_Tutorial = "Services.Tutorial";
-     }
+        public const string RankingWeightings_AreaOfStudyScore = "RankingWeightings.AreaOfStudyScore";
+        public const string RankingWeightings_AreaOfStudyLevelScore = "RankingWeightings.AreaOfStudyLevelScore";
+        public const string RankingWeightings_AreaOfStudyLevelAndAboveScore = "RankingWeightings.AreaOfStudyLevelAndAboveScore";
+        public const string RankingWeightings_MethodologyScore = "RankingWeightings.MethodologyScore";
+    }
 }

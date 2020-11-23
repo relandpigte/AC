@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
-using Academically.Authorization.Users;
+using Abp.AutoMapper;
+using Academically.Entities;
+using Academically.Users.Dto;
 
-namespace Academically.Entities
+namespace Academically.Services.UserProfiles.Dto
 {
-    [Table("AcademicallyUserProfiles")]
-    public class UserProfile : Entity<Guid>
+    [AutoMap(typeof(UserProfile))]
+    public class UserProfileDto
     {
         public DateTime? DateOfBirth { get; set; }
         public string AddressLine1 { get; set; }
@@ -22,7 +21,6 @@ namespace Academically.Entities
         public string About { get; set; }
         public long UserId { get; set; }
 
-        [ForeignKey("UserId")]
-        public virtual User User { get; set; }
+        public UserDto User { get; set; }
     }
 }

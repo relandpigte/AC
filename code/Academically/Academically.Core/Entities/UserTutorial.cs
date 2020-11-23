@@ -1,9 +1,8 @@
-﻿using Abp.Domain.Entities;
-using Academically.Authorization.Users;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+using Abp.Domain.Entities;
+using Academically.Authorization.Users;
 
 namespace Academically.Entities
 {

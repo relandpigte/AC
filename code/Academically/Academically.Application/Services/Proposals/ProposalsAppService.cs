@@ -9,8 +9,8 @@ using Abp.UI;
 using Academically.Application.Shared.Services;
 using Academically.Authorization.Roles;
 using Academically.Configuration;
+using Academically.DomainServices.Tutorials;
 using Academically.Entities;
-using Academically.Entities.Enums;
 using Academically.Services.Proposals.Dto;
 using Academically.Services.UserProfiles.Dto;
 using GeoCoordinatePortable;
@@ -32,6 +32,7 @@ namespace Academically.Services.Proposals
         private readonly IFileManagerService _fileManagerService;
         private readonly ISettingManager _settingManager;
         private readonly RoleManager _roleManager;
+        private readonly ITutorialsDomainService _tutorialsDomainService;
 
         public ProposalsAppService(
             IRepository<UserProfile, Guid> userProfilesAppService,
@@ -42,7 +43,8 @@ namespace Academically.Services.Proposals
             IRepository<UserSupportService, Guid> userSupportService,
             IRepository<UserDisciplineTaxonomy, Guid> userDisciplineTaxonomy,
             IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomy,
-            IRepository<UserTutorialDisciplineTaxonomy, Guid> userTutorialDisciplineTaxonomy
+            IRepository<UserTutorialDisciplineTaxonomy, Guid> userTutorialDisciplineTaxonomy,
+            ITutorialsDomainService tutorialsDomainService
             )
         {
             _userProfilesAppService = userProfilesAppService;
@@ -54,6 +56,7 @@ namespace Academically.Services.Proposals
             _userDisciplineTaxonomy = userDisciplineTaxonomy;
             _disciplineTaxonomy = disciplineTaxonomy;
             _userTutorialDisciplineTaxonomy = userTutorialDisciplineTaxonomy;
+            _tutorialsDomainService = tutorialsDomainService;
         }
 
         public async Task<IEnumerable<SearchTutorDto>> SearchTutors(int distance, int? level)
@@ -80,7 +83,7 @@ namespace Academically.Services.Proposals
                     .ThenInclude(e => e.UserEducations)
                 .Where(
                     e => e.User.Roles.Any(e => e.RoleId == tutorRole.Id) &&
-                    e.User.UserSupportServices.Any(e => e.SupportServiceId == tutorialServiceTypeId) 
+                    e.User.UserSupportServices.Any(e => e.SupportServiceId == tutorialServiceTypeId)
                 )
                 .ToListAsync())
                 .Select(e => new
@@ -92,9 +95,10 @@ namespace Academically.Services.Proposals
                 .WhereIf(level != 0, e => e.up.User.UserEducations.Any(t => (int)t.Level >= level))
                 //.WhereIf(level != 0, e => e.up.User.UserDisciplineTaxonomyStudyLevels.Any(t => t.DisciplineTaxonomyStudyLevelId == level)) This will be for needed later matching
                 .OrderBy(e => e.gc)
-                .Select(e => new UserProfile { 
+                .Select(e => new UserProfile
+                {
                     User = e.up.User,
-                    ProfilePictureFileName  = e.up.ProfilePictureFileName != null
+                    ProfilePictureFileName = e.up.ProfilePictureFileName != null
                         ? _fileManagerService.GetFileUrl(e.up.ProfilePictureFileName, e.up.User.Id, AppSettingNames.Aws_S3_Folders_ProfilePictures)
                         : "assets/img/anonymous.png"
                 })
@@ -123,7 +127,7 @@ namespace Academically.Services.Proposals
                     _fileManagerService.GetFileUrl(userProfile.ProfilePictureFileName, userProfile.UserId, AppSettingNames.Aws_S3_Folders_ProfilePictures)
                     : "assets/img/anonymous.png";
             }
-            
+
             return tutorial;
 
         }
@@ -171,6 +175,14 @@ namespace Academically.Services.Proposals
             var result = string.Join(",", discplines);
 
             return result;
+        }
+
+        //TODO: this endpoint will replace the SearchTutors
+        public async Task<IEnumerable<FindMatchDto>> FindMatch(Guid userTutorialId)
+        {
+            var tutors = await _tutorialsDomainService.SearchTutors(userTutorialId);
+            var results = ObjectMapper.Map<IEnumerable<FindMatchDto>>(tutors);
+            return results;
         }
     }
 }
