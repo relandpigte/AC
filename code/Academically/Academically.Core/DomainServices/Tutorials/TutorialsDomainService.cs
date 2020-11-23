@@ -19,6 +19,7 @@ namespace Academically.DomainServices.Tutorials
         private readonly IRepository<UserDisciplineTaxonomyStudyLevel, int> _userDisciplineTaxonomiesStudyLevelsRepository;
         private readonly ISettingManager _settingManager;
         private const int TOTAL_NUMBER_OF_LEVELS = 9;
+        private const int LEVEL_ID_INCREMENT = 100;
 
         public TutorialsDomainService(
             IRepository<UserTutorial, Guid> userTutorialsRepository,
@@ -51,6 +52,7 @@ namespace Academically.DomainServices.Tutorials
                 .Include(e => e.User)
                     .ThenInclude(e => e.UserDisciplineTaxonomies)
                 .Where(x => x.User.UserDisciplineTaxonomies.Any(y => tutorialDisciplineTaxonomiesQuery.Any(z => z.DisciplineTaxonomyId == y.DisciplineTaxonomyId)))
+                .Take(20)
                 .ToListAsync();
 
             var tutorialDisciplineTaxonomies = await tutorialDisciplineTaxonomiesQuery.ToListAsync();
@@ -82,8 +84,8 @@ namespace Academically.DomainServices.Tutorials
                                 .ToListAsync();
 
                             var countDifference = TOTAL_NUMBER_OF_LEVELS - allUserTaxonomyLevels.Count;
-                            var baseLevel = (allUserTaxonomyLevels.FirstOrDefault().DisciplineTaxonomyStudyLevelId - 100);
-                            if (countDifference == baseLevel)
+                            var lowestLevel = (allUserTaxonomyLevels.FirstOrDefault().DisciplineTaxonomyStudyLevelId - LEVEL_ID_INCREMENT);
+                            if (countDifference == lowestLevel)
                             {
                                 score = score * aosLevelAndAboveScore;
                             }

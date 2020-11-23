@@ -1,6 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="StudentProposalEmailMessage">
+      <![CDATA[
+          <p>Hello {0},</p>
+          <p>Please see the following project that maybe of interest to you:</p>
+          <br />
+          <p>{1}</p>
+          <br />
+          <p>Proposal: <a href="{2}">Proposal link<a/></p>
+          <p>If for some reason the link is not clickable, please copy and paste the url below to your browser:<p>
+          <br />
+          <p>{2}<p/>
+          <br />
+          <p>Regards,<p/>
+          <p>Academically<p/>
+      ]]>
+    </text>
+    <text name="StudentProposalEmailSubject">New {0} Project Posted</text>
     <text name="CoverLetter">Cover Letter</text>
     <text name="ReviseSessionRateMessage">Session Rates Changed Successfully</text>
     <text name="PaswordResetSucessful">Password reset has been sucessful</text>

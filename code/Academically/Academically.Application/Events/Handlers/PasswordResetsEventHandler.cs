@@ -13,12 +13,13 @@ namespace Academically.Events.Handlers
 {
     public class PasswordResetsEventHandler :
         EventHandlerBase,
-    IAsyncEventHandler<EntityCreatedEventData<PasswordReset>>,
+        IAsyncEventHandler<EntityCreatedEventData<PasswordReset>>,
         ITransientDependency
     {
         private readonly ISettingManager _settingManager;
         private readonly IEmailService _emailService;
-        public PasswordResetsEventHandler(        
+
+        public PasswordResetsEventHandler(
             ISettingManager settingManager,
             IEmailService emailService,
             ILocalizationManager localizationManager) : base(localizationManager)
