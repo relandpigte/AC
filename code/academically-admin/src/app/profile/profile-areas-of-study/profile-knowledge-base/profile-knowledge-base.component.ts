@@ -68,7 +68,7 @@ export class ProfileKnowledgeBaseComponent extends AppComponentBase implements O
         })
       )
       .subscribe(() => {
-        this.notify.success(this.l('TheAreaOfStudyWasAdded'));
+        this.notify.success(this.l('TheAreasOfStudyWereAdded'));
         this.getDiscplineTaxonomiesOfUser();
       });
   }
@@ -83,7 +83,7 @@ export class ProfileKnowledgeBaseComponent extends AppComponentBase implements O
         })
       )
       .subscribe(() => {
-        this.message.success(this.l('TheAreasOfStudyWereAdded'));
+        this.message.success(this.l('TheAreaOfStudyWasRemoved'));
         this.getDiscplineTaxonomiesOfUser();
       });
   }
