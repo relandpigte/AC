@@ -7,12 +7,12 @@ namespace Academically.EntityFrameworkCore
     {
         public static void Configure(DbContextOptionsBuilder<AcademicallyDbContext> builder, string connectionString)
         {
-            builder.UseMySql(connectionString).EnableSensitiveDataLogging();
+            builder.UseMySql(connectionString);
         }
 
         public static void Configure(DbContextOptionsBuilder<AcademicallyDbContext> builder, DbConnection connection)
         {
-            builder.UseMySql(connection).EnableSensitiveDataLogging();
+            builder.UseMySql(connection);
         }
     }
 }
