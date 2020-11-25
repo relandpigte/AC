@@ -1236,10 +1236,13 @@ export class ProposalsServiceProxy {
     }
 
     /**
+     * @param tutorId (optional) 
      * @return Success
      */
-    getTutorSupportService(): Observable<UserSupportServiceDto> {
-        let url_ = this.baseUrl + "/api/services/app/Proposals/GetTutorSupportService";
+    getTutorSupportService(tutorId: number | null | undefined): Observable<UserSupportServiceDto> {
+        let url_ = this.baseUrl + "/api/services/app/Proposals/GetTutorSupportService?";
+        if (tutorId !== undefined && tutorId !== null)
+            url_ += "tutorId=" + encodeURIComponent("" + tutorId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1335,6 +1338,66 @@ export class ProposalsServiceProxy {
             }));
         }
         return _observableOf<string>(<any>null);
+    }
+
+    /**
+     * @param userTutorialId (optional) 
+     * @return Success
+     */
+    findMatch(userTutorialId: string | undefined): Observable<FindMatchDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Proposals/FindMatch?";
+        if (userTutorialId === null)
+            throw new Error("The parameter 'userTutorialId' cannot be null.");
+        else if (userTutorialId !== undefined)
+            url_ += "userTutorialId=" + encodeURIComponent("" + userTutorialId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processFindMatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFindMatch(<any>response_);
+                } catch (e) {
+                    return <Observable<FindMatchDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FindMatchDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processFindMatch(response: HttpResponseBase): Observable<FindMatchDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(FindMatchDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FindMatchDto[]>(<any>null);
     }
 }
 
@@ -2719,6 +2782,62 @@ export class TutorOffersServiceProxy {
     }
 
     /**
+     * @param offerId (optional) 
+     * @return Success
+     */
+    get(offerId: string | undefined): Observable<GetTutorOfferDto> {
+        let url_ = this.baseUrl + "/api/services/app/TutorOffers/Get?";
+        if (offerId === null)
+            throw new Error("The parameter 'offerId' cannot be null.");
+        else if (offerId !== undefined)
+            url_ += "offerId=" + encodeURIComponent("" + offerId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<GetTutorOfferDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetTutorOfferDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<GetTutorOfferDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetTutorOfferDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetTutorOfferDto>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -2771,11 +2890,72 @@ export class TutorOffersServiceProxy {
     }
 
     /**
+     * @param offerId (optional) 
+     * @param isAccepted (optional) 
+     * @return Success
+     */
+    acceptOffer(offerId: string | undefined, isAccepted: boolean | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/services/app/TutorOffers/AcceptOffer?";
+        if (offerId === null)
+            throw new Error("The parameter 'offerId' cannot be null.");
+        else if (offerId !== undefined)
+            url_ += "offerId=" + encodeURIComponent("" + offerId) + "&";
+        if (isAccepted === null)
+            throw new Error("The parameter 'isAccepted' cannot be null.");
+        else if (isAccepted !== undefined)
+            url_ += "isAccepted=" + encodeURIComponent("" + isAccepted) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAcceptOffer(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAcceptOffer(<any>response_);
+                } catch (e) {
+                    return <Observable<boolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<boolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAcceptOffer(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(<any>null);
+    }
+
+    /**
      * @param tutorialId (optional) 
      * @return Success
      */
-    get(tutorialId: string | undefined): Observable<GetTutorOfferDto> {
-        let url_ = this.baseUrl + "/api/services/app/TutorOffers/Get?";
+    getOffer(tutorialId: string | undefined): Observable<GetTutorOfferDto> {
+        let url_ = this.baseUrl + "/api/services/app/TutorOffers/GetOffer?";
         if (tutorialId === null)
             throw new Error("The parameter 'tutorialId' cannot be null.");
         else if (tutorialId !== undefined)
@@ -2791,11 +2971,11 @@ export class TutorOffersServiceProxy {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet(response_);
+            return this.processGetOffer(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGet(<any>response_);
+                    return this.processGetOffer(<any>response_);
                 } catch (e) {
                     return <Observable<GetTutorOfferDto>><any>_observableThrow(e);
                 }
@@ -2804,7 +2984,7 @@ export class TutorOffersServiceProxy {
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<GetTutorOfferDto> {
+    protected processGetOffer(response: HttpResponseBase): Observable<GetTutorOfferDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2824,6 +3004,62 @@ export class TutorOffersServiceProxy {
             }));
         }
         return _observableOf<GetTutorOfferDto>(<any>null);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @return Success
+     */
+    getTutorHighestEducationLevel(userId: number | undefined): Observable<number> {
+        let url_ = this.baseUrl + "/api/services/app/TutorOffers/GetTutorHighestEducationLevel?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTutorHighestEducationLevel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTutorHighestEducationLevel(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTutorHighestEducationLevel(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
     }
 }
 
@@ -5670,6 +5906,136 @@ export interface IUserSupportService {
     id: string;
 }
 
+export class DisciplineTaxonomy implements IDisciplineTaxonomy {
+    name: string | undefined;
+    parentId: string | undefined;
+    parentIdMap: string | undefined;
+    parent: DisciplineTaxonomy;
+    children: DisciplineTaxonomy[] | undefined;
+    id: string;
+
+    constructor(data?: IDisciplineTaxonomy) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.parentId = _data["parentId"];
+            this.parentIdMap = _data["parentIdMap"];
+            this.parent = _data["parent"] ? DisciplineTaxonomy.fromJS(_data["parent"]) : <any>undefined;
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(DisciplineTaxonomy.fromJS(item));
+            }
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): DisciplineTaxonomy {
+        data = typeof data === 'object' ? data : {};
+        let result = new DisciplineTaxonomy();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["parentId"] = this.parentId;
+        data["parentIdMap"] = this.parentIdMap;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): DisciplineTaxonomy {
+        const json = this.toJSON();
+        let result = new DisciplineTaxonomy();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDisciplineTaxonomy {
+    name: string | undefined;
+    parentId: string | undefined;
+    parentIdMap: string | undefined;
+    parent: DisciplineTaxonomy;
+    children: DisciplineTaxonomy[] | undefined;
+    id: string;
+}
+
+export class UserDisciplineTaxonomy implements IUserDisciplineTaxonomy {
+    userId: number;
+    disciplineTaxonomyId: string;
+    user: User;
+    disciplineTaxonomy: DisciplineTaxonomy;
+    id: string;
+
+    constructor(data?: IUserDisciplineTaxonomy) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userId = _data["userId"];
+            this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
+            this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomy.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserDisciplineTaxonomy {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserDisciplineTaxonomy();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): UserDisciplineTaxonomy {
+        const json = this.toJSON();
+        let result = new UserDisciplineTaxonomy();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserDisciplineTaxonomy {
+    userId: number;
+    disciplineTaxonomyId: string;
+    user: User;
+    disciplineTaxonomy: DisciplineTaxonomy;
+    id: string;
+}
+
 export class UserToken implements IUserToken {
     tenantId: number | undefined;
     userId: number;
@@ -6074,6 +6440,7 @@ export class User implements IUser {
     userEducations: UserEducation[] | undefined;
     userDisciplineTaxonomyStudyLevels: UserDisciplineTaxonomyStudyLevel[] | undefined;
     userSupportServices: UserSupportService[] | undefined;
+    userDisciplineTaxonomies: UserDisciplineTaxonomy[] | undefined;
     normalizedUserName: string;
     normalizedEmailAddress: string;
     concurrencyStamp: string | undefined;
@@ -6141,6 +6508,11 @@ export class User implements IUser {
                 this.userSupportServices = [] as any;
                 for (let item of _data["userSupportServices"])
                     this.userSupportServices.push(UserSupportService.fromJS(item));
+            }
+            if (Array.isArray(_data["userDisciplineTaxonomies"])) {
+                this.userDisciplineTaxonomies = [] as any;
+                for (let item of _data["userDisciplineTaxonomies"])
+                    this.userDisciplineTaxonomies.push(UserDisciplineTaxonomy.fromJS(item));
             }
             this.normalizedUserName = _data["normalizedUserName"];
             this.normalizedEmailAddress = _data["normalizedEmailAddress"];
@@ -6234,6 +6606,11 @@ export class User implements IUser {
             for (let item of this.userSupportServices)
                 data["userSupportServices"].push(item.toJSON());
         }
+        if (Array.isArray(this.userDisciplineTaxonomies)) {
+            data["userDisciplineTaxonomies"] = [];
+            for (let item of this.userDisciplineTaxonomies)
+                data["userDisciplineTaxonomies"].push(item.toJSON());
+        }
         data["normalizedUserName"] = this.normalizedUserName;
         data["normalizedEmailAddress"] = this.normalizedEmailAddress;
         data["concurrencyStamp"] = this.concurrencyStamp;
@@ -6314,6 +6691,7 @@ export interface IUser {
     userEducations: UserEducation[] | undefined;
     userDisciplineTaxonomyStudyLevels: UserDisciplineTaxonomyStudyLevel[] | undefined;
     userSupportServices: UserSupportService[] | undefined;
+    userDisciplineTaxonomies: UserDisciplineTaxonomy[] | undefined;
     normalizedUserName: string;
     normalizedEmailAddress: string;
     concurrencyStamp: string | undefined;
@@ -7381,6 +7759,53 @@ export interface IGetStudentProposalDto {
     userTutorialDisciplineTaxonomies: UserTutorialDisciplineTaxonomyDto[] | undefined;
     profilePictureFileName: string | undefined;
     user: UserDto;
+}
+
+export class FindMatchDto implements IFindMatchDto {
+    user: UserDto;
+    score: number;
+
+    constructor(data?: IFindMatchDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
+            this.score = _data["score"];
+        }
+    }
+
+    static fromJS(data: any): FindMatchDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new FindMatchDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        data["score"] = this.score;
+        return data; 
+    }
+
+    clone(): FindMatchDto {
+        const json = this.toJSON();
+        let result = new FindMatchDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IFindMatchDto {
+    user: UserDto;
+    score: number;
 }
 
 export class RegistrationDto implements IRegistrationDto {
@@ -8850,6 +9275,85 @@ export interface IExternalAuthenticateResultModel {
     waitingForActivation: boolean;
 }
 
+export class GetTutorOfferDto implements IGetTutorOfferDto {
+    tutorialId: string;
+    studentId: number;
+    isSubmitted: boolean;
+    coverLetter: string | undefined;
+    singleSessionRate: number;
+    multipleSessionRate: number;
+    multipleSessionCount: number;
+    isAccepted: boolean | undefined;
+    tutorId: number;
+    id: string;
+
+    constructor(data?: IGetTutorOfferDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.tutorialId = _data["tutorialId"];
+            this.studentId = _data["studentId"];
+            this.isSubmitted = _data["isSubmitted"];
+            this.coverLetter = _data["coverLetter"];
+            this.singleSessionRate = _data["singleSessionRate"];
+            this.multipleSessionRate = _data["multipleSessionRate"];
+            this.multipleSessionCount = _data["multipleSessionCount"];
+            this.isAccepted = _data["isAccepted"];
+            this.tutorId = _data["tutorId"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): GetTutorOfferDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetTutorOfferDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["tutorialId"] = this.tutorialId;
+        data["studentId"] = this.studentId;
+        data["isSubmitted"] = this.isSubmitted;
+        data["coverLetter"] = this.coverLetter;
+        data["singleSessionRate"] = this.singleSessionRate;
+        data["multipleSessionRate"] = this.multipleSessionRate;
+        data["multipleSessionCount"] = this.multipleSessionCount;
+        data["isAccepted"] = this.isAccepted;
+        data["tutorId"] = this.tutorId;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): GetTutorOfferDto {
+        const json = this.toJSON();
+        let result = new GetTutorOfferDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetTutorOfferDto {
+    tutorialId: string;
+    studentId: number;
+    isSubmitted: boolean;
+    coverLetter: string | undefined;
+    singleSessionRate: number;
+    multipleSessionRate: number;
+    multipleSessionCount: number;
+    isAccepted: boolean | undefined;
+    tutorId: number;
+    id: string;
+}
+
 export class CreateTutorOfferDto implements ICreateTutorOfferDto {
     tutorialId: string;
     studentId: number;
@@ -8915,77 +9419,6 @@ export interface ICreateTutorOfferDto {
     singleSessionRate: number;
     multipleSessionRate: number;
     multipleSessionCount: number;
-}
-
-export class GetTutorOfferDto implements IGetTutorOfferDto {
-    tutorialId: string;
-    studentId: number;
-    isSubmitted: boolean;
-    coverLetter: string | undefined;
-    singleSessionRate: number;
-    multipleSessionRate: number;
-    multipleSessionCount: number;
-    id: string;
-
-    constructor(data?: IGetTutorOfferDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.tutorialId = _data["tutorialId"];
-            this.studentId = _data["studentId"];
-            this.isSubmitted = _data["isSubmitted"];
-            this.coverLetter = _data["coverLetter"];
-            this.singleSessionRate = _data["singleSessionRate"];
-            this.multipleSessionRate = _data["multipleSessionRate"];
-            this.multipleSessionCount = _data["multipleSessionCount"];
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): GetTutorOfferDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new GetTutorOfferDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["tutorialId"] = this.tutorialId;
-        data["studentId"] = this.studentId;
-        data["isSubmitted"] = this.isSubmitted;
-        data["coverLetter"] = this.coverLetter;
-        data["singleSessionRate"] = this.singleSessionRate;
-        data["multipleSessionRate"] = this.multipleSessionRate;
-        data["multipleSessionCount"] = this.multipleSessionCount;
-        data["id"] = this.id;
-        return data; 
-    }
-
-    clone(): GetTutorOfferDto {
-        const json = this.toJSON();
-        let result = new GetTutorOfferDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IGetTutorOfferDto {
-    tutorialId: string;
-    studentId: number;
-    isSubmitted: boolean;
-    coverLetter: string | undefined;
-    singleSessionRate: number;
-    multipleSessionRate: number;
-    multipleSessionCount: number;
-    id: string;
 }
 
 export class CreateUserDto implements ICreateUserDto {

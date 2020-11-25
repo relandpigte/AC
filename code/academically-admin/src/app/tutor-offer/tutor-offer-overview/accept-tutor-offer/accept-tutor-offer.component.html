@@ -1,0 +1,38 @@
+<form class="form-horizontal" autocomplete="off" #acceptTutorForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card" [busy]="isLoading">
+    <abp-modal-header [title]="'AcceptOffer' | localize" (onCloseClick)="onCloseClick()"></abp-modal-header>
+    <div class="card-body">
+      <h6 class="text-uppercase text-muted my-4">
+        {{ 'CoverLetter' | localize }}
+      </h6>
+      <div class="row no-gutters align-items-center justify-content-center">
+        <div class="col-auto">
+          <div class="h2 mb-0"></div>
+        </div>
+        <div class="col-auto">
+          <div class="display-2 mb-0"></div>
+        </div>
+      </div>
+      <div class="h3 mb-5">
+        {{ offer.coverLetter }}
+      </div>
+      <div class="mb-3">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <small>{{ 'SingleSession' | localize }}</small> <small class="text">£{{ offer.singleSessionRate }}/hr</small>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <small>{{ 'MultipleSessions' | localize }}</small>
+            <small
+              >£{{ offer.multipleSessionRate }}/hr
+              <small class="text-muted">({{ offer.multipleSessionCount }} {{ 'sessions' | localize }})</small></small
+            >
+          </li>
+        </ul>
+      </div>
+      <button type="submit" class="btn btn-block btn-primary">
+        Book
+      </button>
+    </div>
+  </div>
+</form>

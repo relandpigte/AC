@@ -91,6 +91,9 @@ import { ErrorPageComponent } from './error-page/error-page.component';
 import { ReviseStudentProposalComponent } from './student-proposal/student-proposal-overview/revise-student-proposal/revise-student-proposal.component';
 import { WrapperComponent } from './layout/wrapper/wrapper.component';
 import { ProfileHeaderComponent } from './profile/profile-header/profile-header.component';
+import { TutorOfferComponent } from './tutor-offer/tutor-offer.component';
+import { TutorOfferOverviewComponent } from './tutor-offer/tutor-offer-overview/tutor-offer-overview.component';
+import { AcceptTutorOfferComponent } from './tutor-offer/tutor-offer-overview/accept-tutor-offer/accept-tutor-offer.component';
 
 @NgModule({
   declarations: [
@@ -167,6 +170,9 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
     ReviseStudentProposalComponent,
     WrapperComponent,
     ProfileHeaderComponent,
+    TutorOfferComponent,
+    TutorOfferOverviewComponent,
+    AcceptTutorOfferComponent,
   ],
   imports: [
     CommonModule,
