@@ -20,6 +20,7 @@ import { StudentProposalComponent } from './student-proposal/student-proposal.co
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { WrapperComponent } from './layout/wrapper/wrapper.component';
 import { ProfileHeaderComponent } from './profile/profile-header/profile-header.component';
+import { TutorOfferComponent } from './tutor-offer/tutor-offer.component';
 
 @NgModule({
   imports: [
@@ -37,9 +38,9 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
               {
                 path: '',
                 component: HomeComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'users',
@@ -50,9 +51,9 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
               {
                 path: '',
                 component: UsersComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'roles',
@@ -63,9 +64,9 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
               {
                 path: '',
                 component: RolesComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'tenants',
@@ -76,9 +77,9 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
               {
                 path: '',
                 component: TenantsComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'academic-support',
@@ -89,9 +90,9 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
               {
                 path: '',
                 component: AcademicSupportComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'peer-support',
@@ -102,9 +103,9 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
               {
                 path: '',
                 component: PeerSupportComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'tutorial',
@@ -115,9 +116,9 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
               {
                 path: '',
                 component: PeerSupportTutorialComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'proposals',
@@ -128,9 +129,9 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
               {
                 path: '',
                 component: PeerSupportProposalsComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'account',
@@ -142,9 +143,9 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
                 path: '',
                 component: AccountComponent,
                 canDeactivate: [CanDeactivateComponentGuard],
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'profile',
@@ -155,14 +156,14 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
               {
                 path: '',
                 component: ProfileComponent,
-                outlet: 'content',
+                outlet: 'content'
               },
               {
                 path: '',
                 component: ProfileHeaderComponent,
-                outlet: 'header',
-              },
-            ],
+                outlet: 'header'
+              }
+            ]
           },
           {
             path: 'profile/:userId',
@@ -173,9 +174,9 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
               {
                 path: '',
                 component: ProfileComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'settings',
@@ -186,9 +187,9 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
               {
                 path: '',
                 component: SettingsComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'student-proposal/:tutorialId',
@@ -198,18 +199,30 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
               {
                 path: '',
                 component: StudentProposalComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
+          },
+          {
+            path: 'tutor-offer/:offerId',
+            component: WrapperComponent,
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: TutorOfferComponent,
+                outlet: 'content'
+              }
+            ]
           },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent },
           { path: 'not-found', component: ErrorPageComponent },
-          { path: '**', redirectTo: 'not-found' },
-        ],
-      },
-    ]),
+          { path: '**', redirectTo: 'not-found' }
+        ]
+      }
+    ])
   ],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {}

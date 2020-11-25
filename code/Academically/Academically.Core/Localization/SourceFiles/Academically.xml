@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="PerSession">per session</text>
+    <text name="PerSessions">per sessions</text>
+    <text name="AcceptTutorOfferMessage">The booking of tutor is successful.</text>
+    <text name="TutorOffer">Tutor Offer</text>
+    <text name="AcceptOffer">Accept Offer</text>
+    <text name="DeclineOffer">Decline Offer</text>
+    <text name="HaveExistingTutorialRequestOfferAccepted">Tutorial request has already been booked with the same tutor</text>
     <text name="StudentProposalEmailMessage">
       <![CDATA[
           <p>Hello {0},</p>

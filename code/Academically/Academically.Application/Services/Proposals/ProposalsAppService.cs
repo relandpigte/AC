@@ -118,8 +118,6 @@ namespace Academically.Services.Proposals
                 .Select(e => ObjectMapper.Map<GetStudentProposalDto>(e))
                 .FirstOrDefaultAsync();
 
-            var userDisciplineTaxonomies = tutorial.UserTutorialDisciplineTaxonomies.Select(e => e.DisciplineTaxonomy.ParentIdMap.Remove(36));
-
             if (tutorial != null)
             {
                 var userProfile = await _userProfilesAppService.FirstOrDefaultAsync(e => e.UserId == tutorial.User.Id);
@@ -127,9 +125,7 @@ namespace Academically.Services.Proposals
                     _fileManagerService.GetFileUrl(userProfile.ProfilePictureFileName, userProfile.UserId, AppSettingNames.Aws_S3_Folders_ProfilePictures)
                     : "assets/img/anonymous.png";
             }
-
             return tutorial;
-
         }
 
         public async Task<IEnumerable<string>> getTutorialHighestLevelAreaOfStudies(long studentId, Guid tutorialId)
@@ -149,14 +145,15 @@ namespace Academically.Services.Proposals
             return studentTutorialdisciplineTaxonomies;
         }
 
-        public async Task<UserSupportServiceDto> GetTutorSupportService()
+        public async Task<UserSupportServiceDto> GetTutorSupportService(long? tutorId)
         {
             var tutorialServiceTypeId = Guid.Parse(await _settingManager.GetSettingValueAsync(AppSettingNames.Services_Tutorial));
+            tutorId = tutorId == null ? AbpSession.UserId.Value : tutorId;
 
             var supportService = await _userSupportService.GetAll()
                 .Include(e => e.SupportService)
                 .Include(e => e.UserSupportServiceSessionRate)
-                .Where(e => e.UserId == AbpSession.UserId.Value && e.SupportService.Id == tutorialServiceTypeId)
+                .Where(e => e.UserId == tutorId && e.SupportService.Id == tutorialServiceTypeId)
                 .Select(e => ObjectMapper.Map<UserSupportServiceDto>(e))
                 .FirstOrDefaultAsync();
 
