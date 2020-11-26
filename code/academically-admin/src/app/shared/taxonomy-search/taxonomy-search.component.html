@@ -21,6 +21,11 @@
             </div>
           </form>
         </div>
+        <div class="col-auto suggest-new-item">
+          <button (click)="$event.preventDefault(); $event.stopPropagation(); onAddClick()" class="btn btn-sm btn-white" type="button">
+            <i class="fe fe-plus mr-1"></i> {{ 'SuggestNewItem' | localize }}
+          </button>
+        </div>
       </div>
       <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
         <span aria-hidden="true">×</span>
@@ -53,7 +58,8 @@
         [busy]="isLoading"
         [chartData]="taxonomies"
         [searchKeyword]="searchKeyword"
-        (nodeClick)="onTaxonomySelect($event)"
+        (nodeSelectClick)="onTaxonomySelect($event)"
+        (nodeClick)="onTaxonomySelectParent($event)"
       ></div>
     </div>
     <abp-modal-footer

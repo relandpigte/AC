@@ -1,0 +1,42 @@
+<form class="form-horizontal" autocomplete="off" #newTaxonomyForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card" [busy]="isLoading">
+    <div class="card-header">
+      <div class="card-header-title">
+        <h4>
+          {{ 'RequestNewTaxonomy' | localize }}
+        </h4>
+      </div>
+      <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="card-body">
+      <label class="col-form-label" for="Name">{{ 'ParentAreaofStudy' | localize }}</label>
+      <div class="form-group">
+        <input
+          class="list-search form-control"
+          type="search"
+          placeholder="{{ 'SearchAreasOfStudy' | localize }}"
+          [(ngModel)]="disciplineTaxonomyName"
+          id="AreaOfStudy"
+          name="AreaOfStudy"
+          typeaheadOptionField="name"
+          [typeahead]="disciplineTaxonomies"
+          [typeaheadMinLength]="0"
+          (typeaheadOnSelect)="onTaxonomySelect($event)"
+        />
+      </div>
+      <div class="form-group required">
+        <label class="col-form-label" for="Name">{{ 'Name' | localize }}</label>
+        <input [(ngModel)]="model.name" id="Name" name="Name" type="text" class="form-control" #nameModel="ngModel" #nameEl required />
+        <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+      </div>
+      <div class="form-group required">
+        <label class="col-form-label" for="Notes">{{ 'Notes' | localize }}</label>
+        <textarea [(ngModel)]="model.notes" id="Notes" name="Notes" class="form-control" #notesModel="ngModel" #notesEl required></textarea>
+        <abp-validation-summary [control]="notesModel" [controlEl]="notesEl"></abp-validation-summary>
+      </div>
+    </div>
+    <abp-modal-footer [saveDisabled]="!newTaxonomyForm.form.valid || isLoading" (onCancelClick)="onCloseClick()"> </abp-modal-footer>
+  </div>
+</form>

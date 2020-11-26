@@ -9,5 +9,6 @@ namespace Academically.Services.DisciplineTaxonomies
     {
         Task<IEnumerable<GetAllDisciplineTaxonomyDto>> GetAll(long? userId);
         Task<IEnumerable<DisciplineTaxonomyDto>> Search(long? userId, string keyword);
+        Task RequestDisciplineTaxonomy(DisciplineTaxonomyRequestDto input);
     }
 }

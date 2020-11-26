@@ -94,6 +94,7 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
 import { TutorOfferComponent } from './tutor-offer/tutor-offer.component';
 import { TutorOfferOverviewComponent } from './tutor-offer/tutor-offer-overview/tutor-offer-overview.component';
 import { AcceptTutorOfferComponent } from './tutor-offer/tutor-offer-overview/accept-tutor-offer/accept-tutor-offer.component';
+import { RequestNewTaxonomyComponent } from './shared/taxonomy-search/request-new-taxonomy/request-new-taxonomy.component';
 
 @NgModule({
   declarations: [
@@ -173,6 +174,7 @@ import { AcceptTutorOfferComponent } from './tutor-offer/tutor-offer-overview/ac
     TutorOfferComponent,
     TutorOfferOverviewComponent,
     AcceptTutorOfferComponent,
+    RequestNewTaxonomyComponent,
   ],
   imports: [
     CommonModule,
