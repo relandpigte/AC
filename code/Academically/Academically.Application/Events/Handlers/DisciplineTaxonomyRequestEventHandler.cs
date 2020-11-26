@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Configuration;
+using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
@@ -6,6 +7,7 @@ using Abp.Localization;
 using Academically.Application.Shared.Services;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
+using Academically.Configuration;
 using Academically.Entities;
 using System;
 using System.Collections.Generic;
@@ -23,11 +25,14 @@ namespace Academically.Events.Handlers
         private readonly IRepository<User, long> _usersRepository;
         private readonly IEmailService _emailService;
         private readonly RoleManager _roleManager;
+        private string fromName;
+        private string fromEmail;
         public DisciplineTaxonomyRequestEventHandler(
             IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomiesRepository,
             IRepository<User, long> usersRepository,
             IEmailService emailService,
             RoleManager roleManager,
+            ISettingManager settingManager,
             ILocalizationManager localizationManager
             ) : base(localizationManager)
         {
@@ -35,6 +40,8 @@ namespace Academically.Events.Handlers
             _usersRepository = usersRepository;
             _emailService = emailService;
             _roleManager = roleManager;
+            fromName = settingManager.GetSettingValue(AppSettingNames.Email_FromName);
+            fromEmail = settingManager.GetSettingValue(AppSettingNames.Email_FromEmail);
         }
 
         [UnitOfWork]
@@ -52,10 +59,8 @@ namespace Academically.Events.Handlers
 
             string adminEmailSubject = L("DisciplineTaxonomyRequestAdminEmailSubject");
             string adminEmailBody = L("DisciplineTaxonomyRequestAdminEmailMessage", eventData.Entity.Name, eventData.Entity.Notes, parentDisciplineTaxonomy.Name, requester.FullName);
-            foreach (var admin in adminUsers)
-            {
-                await _emailService.SendAsync(admin.EmailAddress, admin.EmailAddress, adminEmailSubject, adminEmailBody);
-            }
+            
+            await _emailService.SendAsync(fromName, fromEmail, adminEmailSubject, adminEmailBody);
         }
     }
 }
