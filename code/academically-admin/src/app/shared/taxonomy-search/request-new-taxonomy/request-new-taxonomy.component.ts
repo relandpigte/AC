@@ -30,6 +30,7 @@ export class RequestNewTaxonomyComponent extends AppComponentBase implements OnI
 
   ngOnInit(): void {
     this.model.parentId = this.parentTaxonomy.id;
+    this.disciplineTaxonomyName = this.parentTaxonomy.name;
     this.getDisciplineTaxonomies();
   }
 
@@ -45,7 +46,6 @@ export class RequestNewTaxonomyComponent extends AppComponentBase implements OnI
     const disciplineTaxonomy: DisciplineTaxonomyDto = e.item;
     this.model.parentId = disciplineTaxonomy.id;
     this.disciplineTaxonomyName = disciplineTaxonomy.name;
-    console.log(this.model.parentId);
   }
 
   private close(): void {

@@ -5,12 +5,13 @@
         <h4>
           {{ 'RequestNewTaxonomy' | localize }}
         </h4>
-        <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
-          <span aria-hidden="true">×</span>
-        </button>
       </div>
+      <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
+        <span aria-hidden="true">×</span>
+      </button>
     </div>
     <div class="card-body">
+      <label class="col-form-label" for="Name">{{ 'ParentAreaofStudy' | localize }}</label>
       <div class="form-group">
         <input
           class="list-search form-control"

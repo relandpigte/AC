@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="ParentAreaofStudy">Parent Area of Study</text>
     <text name="SuggestNewItem">Suggest New Item</text>
     <text name="RequestNewTaxonomy">Request New Taxonomy</text>
     <text name="NewDisciplineTaxonomyRequestSent">New Discipline Taxonomy request sent.</text>
