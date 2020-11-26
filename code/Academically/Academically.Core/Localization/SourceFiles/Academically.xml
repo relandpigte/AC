@@ -1,6 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="SuggestNewItem">Suggest New Item</text>
+    <text name="RequestNewTaxonomy">Request New Taxonomy</text>
+    <text name="NewDisciplineTaxonomyRequestSent">New Discipline Taxonomy request sent.</text>
+    <text name="DisciplineTaxonomyRequestEmailSubject">Academically - Area Of Study Request Sent</text>
+    <text name="DisciplineTaxonomyRequestEmailMessage">
+      <![CDATA[
+        <p>Your request to add a new Area of Study was sent and is being reviewed by our administrators.</p>
+        <p>The details of your requests are:</p>
+        <br />
+        <p>Name: {0}<p>
+        <p>Notes: {1}<p>
+        <p>Parent Area of Study: {2}<p>
+      ]]>
+    </text>
+    <text name="DisciplineTaxonomyRequestAdminEmailSubject">Academically - Area Of Study Request Received</text>
+    <text name="DisciplineTaxonomyRequestAdminEmailMessage">
+      <![CDATA[
+        <p>A request to add a new Area of Study was created.</p>
+        <p>The details of the request are:</p>
+        <br />
+        <p>Name: {0}<p>
+        <p>Notes: {1}<p>
+        <p>Parent Service: {2}<p>
+        <p>Requested By: {3}<p>
+      ]]>
+    </text>
     <text name="PerSession">per session</text>
     <text name="PerSessions">per sessions</text>
     <text name="AcceptTutorOfferMessage">The booking of tutor is successful.</text>
