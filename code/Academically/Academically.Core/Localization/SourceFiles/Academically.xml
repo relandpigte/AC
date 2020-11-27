@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="NoRecentProject">No Recent Project</text>
     <text name="StudentProposalEmailMessage">
       <![CDATA[
           <p>Hello {0},</p>

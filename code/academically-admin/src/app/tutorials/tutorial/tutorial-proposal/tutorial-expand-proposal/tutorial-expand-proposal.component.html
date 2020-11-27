@@ -1,0 +1,210 @@
+<div class="modal-card card">
+  <abp-modal-header [title]="'Tutor Offer'" (onCloseClick)="onCloseClick()"></abp-modal-header>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-header-title">
+              {{ 'CoverLetter' | localize }}
+            </h4>
+          </div>
+          <div class="card-body">
+            <p>{{ tutorOffer.coverLetter }}</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="row align-items-center">
+              <div class="col">
+                <h4 class="card-header-title">Messages</h4>
+              </div>
+              <div class="col-auto mr-n3">
+                <!-- Avatar group -->
+                <div class="avatar-group d-none d-sm-flex">
+                  <a href="profile-posts.html" class="avatar avatar-xs" data-toggle="tooltip" title="" data-original-title="Ab Hadley">
+                    <img src="assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..." class="avatar-img rounded-circle" />
+                  </a>
+                  <a href="profile-posts.html" class="avatar avatar-xs" data-toggle="tooltip" title="" data-original-title="Adolfo Hess">
+                    <img src="assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" alt="..." class="avatar-img rounded-circle" />
+                  </a>
+                  <a href="profile-posts.html" class="avatar avatar-xs" data-toggle="tooltip" title="" data-original-title="Daniela Dewitt">
+                    <img src="assets/themes/dashkit/img/avatars/profiles/avatar-4.jpg" alt="..." class="avatar-img rounded-circle" />
+                  </a>
+                  <a href="profile-posts.html" class="avatar avatar-xs" data-toggle="tooltip" title="" data-original-title="Miyah Myles">
+                    <img src="assets/themes/dashkit/img/avatars/profiles/avatar-5.jpg" alt="..." class="avatar-img rounded-circle" />
+                  </a>
+                </div>
+              </div>
+              <div class="col-auto">
+                <!-- Button -->
+                <a href="#!" class="btn btn-sm btn-white"> Share </a>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="comment mb-3">
+              <div class="row">
+                <div class="col-auto">
+                  <a class="avatar" href="profile-posts.html">
+                    <img src="assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..." class="avatar-img rounded-circle" />
+                  </a>
+                </div>
+                <div class="col ml-n2">
+                  <div class="comment-body">
+                    <div class="row">
+                      <div class="col">
+                        <h5 class="comment-title">Ab Hadley</h5>
+                      </div>
+                      <div class="col-auto">
+                        <time class="comment-time"> 11:12 </time>
+                      </div>
+                    </div>
+                    <p class="comment-text">
+                      Looking good Dianna! I like the image grid on the left, but it feels like a lot to process and doesn't really
+                      <em>show</em> me what the product does? I think using a short looping video or something similar demo'ing the product
+                      might be better?
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="comment mb-3">
+              <div class="row">
+                <div class="col-auto">
+                  <a class="avatar" href="profile-posts.html">
+                    <img src="assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" alt="..." class="avatar-img rounded-circle" />
+                  </a>
+                </div>
+                <div class="col ml-n2">
+                  <div class="comment-body">
+                    <div class="row">
+                      <div class="col">
+                        <h5 class="comment-title">Adolfo Hess</h5>
+                      </div>
+                      <div class="col-auto">
+                        <time class="comment-time"> 11:12 </time>
+                      </div>
+                    </div>
+                    <p class="comment-text">
+                      Any chance you're going to link the grid up to a public gallery of sites built with Launchday?
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr />
+
+            <div class="row">
+              <div class="col-auto">
+                <div class="avatar avatar-sm">
+                  <img src="assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" alt="..." class="avatar-img rounded-circle" />
+                </div>
+              </div>
+              <div class="col ml-n2">
+                <form class="mt-1">
+                  <label class="sr-only">Leave a comment...</label>
+                  <textarea
+                    class="form-control form-control-flush"
+                    data-toggle="autosize"
+                    rows="1"
+                    placeholder="Leave a comment"
+                    style="overflow: hidden; overflow-wrap: break-word; height: 40px"
+                  ></textarea>
+                </form>
+              </div>
+              <div class="col-auto align-self-end">
+                <div class="text-muted mb-2">
+                  <a class="text-reset mr-3" href="#!" data-toggle="tooltip" title="" data-original-title="Add photo">
+                    <i class="fe fe-camera"></i>
+                  </a>
+                  <a class="text-reset mr-3" href="#!" data-toggle="tooltip" title="" data-original-title="Attach file">
+                    <i class="fe fe-paperclip"></i>
+                  </a>
+                  <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Record audio">
+                    <i class="fe fe-mic"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <img src="assets/img/profile-cover-2.jpg" alt="..." class="card-img-top" />
+          <div class="card-body card-avatar-body text-center">
+            <a href="javascript:;" class="avatar avatar-xl card-avatar card-avatar-top">
+              <img
+                [src]="getImageUrl(tutorOffer.tutorProfile.profilePictureFileName)"
+                class="avatar-img rounded-circle border border-4 border-card"
+                alt="..."
+              />
+            </a>
+            <h2 class="card-title">
+              <a href="profile-posts.html">{{ tutorOffer.tutor.fullName }}</a>
+            </h2>
+            <p class="small text-muted mb-3">Tutor</p>
+            <div *ngIf="tutorOffer.tutor.userDisciplineTaxonomies" class="text-center mb-3">
+              <span *ngFor="let userDisciplineTaxonomy of tutorOffer.tutor.userDisciplineTaxonomies" class="badge badge-info ml-1 mr-1">
+                {{ userDisciplineTaxonomy.disciplineTaxonomy.name }}
+              </span>
+            </div>
+
+            <div class="row no-gutters border-top border-bottom">
+              <div class="col-6 py-4 text-center">
+                <h6 class="text-uppercase text-muted">TOTAL HOURS</h6>
+                <h2 class="mb-0">10.2k</h2>
+              </div>
+              <div class="col-6 py-4 text-center border-left">
+                <h6 class="text-uppercase text-muted">AVERAGE RATING</h6>
+
+                <h2 class="mb-0">2.7k</h2>
+              </div>
+            </div>
+
+            <div class="list-group list-group-flush mb-4 text-left">
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <small class="font-weight-bold">30 min consultation</small>
+                  </div>
+                  <div class="col-auto">
+                    <time class="small text-muted"> FREE </time>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <small class="font-weight-bold">Session price</small>
+                  </div>
+                  <div class="col-auto">
+                    <time class="small text-muted"> &#163;{{ tutorOffer.singleSessionRate }}/hr </time>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <small class="font-weight-bold">{{ tutorOffer.multipleSessionCount }}x price (optional)</small>
+                  </div>
+                  <div class="col-auto">
+                    <time class="small text-muted"> &#163;{{ tutorOffer.multipleSessionRate }}/hr </time>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex flex-column">
+              <button class="btn btn-light btn-block">Decline Offer</button>
+              <button class="btn btn-primary btn-block">Accept Offer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

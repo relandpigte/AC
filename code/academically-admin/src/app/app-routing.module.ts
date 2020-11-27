@@ -20,6 +20,7 @@ import { StudentProposalComponent } from './student-proposal/student-proposal.co
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { WrapperComponent } from './layout/wrapper/wrapper.component';
 import { ProfileHeaderComponent } from './profile/profile-header/profile-header.component';
+import { TutorialComponent } from './tutorials/tutorial/tutorial.component';
 
 @NgModule({
   imports: [
@@ -198,6 +199,18 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
               {
                 path: '',
                 component: StudentProposalComponent,
+                outlet: 'content',
+              },
+            ],
+          },
+          {
+            path: 'tutorial/:id',
+            component: WrapperComponent,
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: TutorialComponent,
                 outlet: 'content',
               },
             ],

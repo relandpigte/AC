@@ -91,6 +91,10 @@ import { ErrorPageComponent } from './error-page/error-page.component';
 import { ReviseStudentProposalComponent } from './student-proposal/student-proposal-overview/revise-student-proposal/revise-student-proposal.component';
 import { WrapperComponent } from './layout/wrapper/wrapper.component';
 import { ProfileHeaderComponent } from './profile/profile-header/profile-header.component';
+import { RecentProjectsWidgetComponent } from './widgets/recent-projects-widget/recent-projects-widget.component';
+import { TutorialComponent } from './tutorials/tutorial/tutorial.component';
+import { TutorialProposalComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-proposal.component';
+import { TutorialExpandProposalComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-expand-proposal/tutorial-expand-proposal.component';
 
 @NgModule({
   declarations: [
@@ -167,6 +171,10 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
     ReviseStudentProposalComponent,
     WrapperComponent,
     ProfileHeaderComponent,
+    RecentProjectsWidgetComponent,
+    TutorialComponent,
+    TutorialProposalComponent,
+    TutorialExpandProposalComponent,
   ],
   imports: [
     CommonModule,
@@ -207,6 +215,7 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
     SupportServicesSearchComponent,
     RequestNewResearchMethodComponent,
     RequestNewSupportServiceComponent,
+    TutorialExpandProposalComponent,
   ],
 })
 export class AppModule {}

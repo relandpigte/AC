@@ -1,16 +1,14 @@
-﻿using Abp.Application.Services;
-using Academically.Services.UserTutorials.Dto;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using Abp.Application.Services;
+using Academically.Services.UserTutorials.Dto;
 
 namespace Academically.Services.UserTutorials
 {
     public interface IUserTutorialsAppService : IApplicationService
     {
-        Task CreateAsync(SaveUserTutorialDto inputs);
-        Task<IEnumerable<UserTutorialDto>> GetAsync();
+        Task<Guid> CreateAsync(SaveUserTutorialDto inputs);
+        Task<IEnumerable<UserTutorialDto>> GetRecent();
     }
 }

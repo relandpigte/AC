@@ -9,6 +9,7 @@ using Academically.Authorization.Users;
 using Academically.Services.DisciplineTaxonomyStudyLevels.Dto;
 using Academically.Services.Proposals.Dto;
 using Academically.Services.UserEducations.Dto;
+using Academically.Services.UserProfiles.Dto;
 
 namespace Academically.Users.Dto
 {
@@ -47,5 +48,6 @@ namespace Academically.Users.Dto
         public IEnumerable<UserEducationDto> UserEducations { get; set; }
         public IEnumerable<UserDisciplineTaxonomyStudyLevelDto> UserDisciplineTaxonomyStudyLevels { get; set; }
         public IEnumerable<UserSupportServiceDto> UserSupportServices { get; set; }
+        public IEnumerable<GetUserDisciplineTaxonomyDto> UserDisciplineTaxonomies { get; set; }
     }
 }

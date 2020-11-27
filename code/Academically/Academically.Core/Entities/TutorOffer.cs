@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities;
+using Academically.Authorization.Users;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,5 +19,8 @@ namespace Academically.Entities
         public decimal SingleSessionRate { get; set; }
         public decimal MultipleSessionRate { get; set; }
         public int MultipleSessionCount { get; set; }
+
+        [ForeignKey("TutorId")]
+        public virtual User Tutor { get; set; }
     }
 }

@@ -1,9 +1,9 @@
-﻿using Abp.Application.Services.Dto;
+﻿using System;
+using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Academically.Services.UserProfiles.Dto;
+using Academically.Users.Dto;
 
 namespace Academically.Services.Offers.Dto
 {
@@ -17,5 +17,8 @@ namespace Academically.Services.Offers.Dto
         public decimal SingleSessionRate { get; set; }
         public decimal MultipleSessionRate { get; set; }
         public int MultipleSessionCount { get; set; }
+
+        public UserDto Tutor { get; set; }
+        public UserProfileDto TutorProfile { get; set; }
     }
 }

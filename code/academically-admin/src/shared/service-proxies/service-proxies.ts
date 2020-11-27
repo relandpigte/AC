@@ -1336,6 +1336,66 @@ export class ProposalsServiceProxy {
         }
         return _observableOf<string>(<any>null);
     }
+
+    /**
+     * @param userTutorialId (optional) 
+     * @return Success
+     */
+    findMatch(userTutorialId: string | undefined): Observable<FindMatchDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Proposals/FindMatch?";
+        if (userTutorialId === null)
+            throw new Error("The parameter 'userTutorialId' cannot be null.");
+        else if (userTutorialId !== undefined)
+            url_ += "userTutorialId=" + encodeURIComponent("" + userTutorialId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processFindMatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFindMatch(<any>response_);
+                } catch (e) {
+                    return <Observable<FindMatchDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FindMatchDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processFindMatch(response: HttpResponseBase): Observable<FindMatchDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(FindMatchDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FindMatchDto[]>(<any>null);
+    }
 }
 
 @Injectable()
@@ -2824,6 +2884,66 @@ export class TutorOffersServiceProxy {
             }));
         }
         return _observableOf<GetTutorOfferDto>(<any>null);
+    }
+
+    /**
+     * @param tutorialId (optional) 
+     * @return Success
+     */
+    getAll(tutorialId: string | undefined): Observable<GetTutorOfferDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/TutorOffers/GetAll?";
+        if (tutorialId === null)
+            throw new Error("The parameter 'tutorialId' cannot be null.");
+        else if (tutorialId !== undefined)
+            url_ += "tutorialId=" + encodeURIComponent("" + tutorialId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<GetTutorOfferDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetTutorOfferDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<GetTutorOfferDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(GetTutorOfferDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetTutorOfferDto[]>(<any>null);
     }
 }
 
@@ -4856,7 +4976,7 @@ export class UserTutorialsServiceProxy {
      * @param disciplineTaxonomyIds (optional) 
      * @return Success
      */
-    create(information: string | null | undefined, supportLevel: number | undefined, concerns: string | null | undefined, urgencyLevel: number | undefined, deadline: moment.Moment | undefined, picture: FileParameter | null | undefined, disciplineTaxonomyIds: string[] | null | undefined): Observable<void> {
+    create(information: string | null | undefined, supportLevel: number | undefined, concerns: string | null | undefined, urgencyLevel: number | undefined, deadline: moment.Moment | undefined, picture: FileParameter | null | undefined, disciplineTaxonomyIds: string[] | null | undefined): Observable<string> {
         let url_ = this.baseUrl + "/api/services/app/UserTutorials/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -4887,6 +5007,7 @@ export class UserTutorialsServiceProxy {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "text/plain"
             })
         };
 
@@ -4897,14 +5018,14 @@ export class UserTutorialsServiceProxy {
                 try {
                     return this.processCreate(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<string>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<string>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<void> {
+    protected processCreate(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4913,21 +5034,24 @@ export class UserTutorialsServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<string>(<any>null);
     }
 
     /**
      * @return Success
      */
-    get(): Observable<UserTutorialDto[]> {
-        let url_ = this.baseUrl + "/api/services/app/UserTutorials/Get";
+    getRecent(): Observable<UserTutorialDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/UserTutorials/GetRecent";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -4939,11 +5063,11 @@ export class UserTutorialsServiceProxy {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet(response_);
+            return this.processGetRecent(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGet(<any>response_);
+                    return this.processGetRecent(<any>response_);
                 } catch (e) {
                     return <Observable<UserTutorialDto[]>><any>_observableThrow(e);
                 }
@@ -4952,7 +5076,7 @@ export class UserTutorialsServiceProxy {
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<UserTutorialDto[]> {
+    protected processGetRecent(response: HttpResponseBase): Observable<UserTutorialDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -5670,6 +5794,136 @@ export interface IUserSupportService {
     id: string;
 }
 
+export class DisciplineTaxonomy implements IDisciplineTaxonomy {
+    name: string | undefined;
+    parentId: string | undefined;
+    parentIdMap: string | undefined;
+    parent: DisciplineTaxonomy;
+    children: DisciplineTaxonomy[] | undefined;
+    id: string;
+
+    constructor(data?: IDisciplineTaxonomy) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.parentId = _data["parentId"];
+            this.parentIdMap = _data["parentIdMap"];
+            this.parent = _data["parent"] ? DisciplineTaxonomy.fromJS(_data["parent"]) : <any>undefined;
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(DisciplineTaxonomy.fromJS(item));
+            }
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): DisciplineTaxonomy {
+        data = typeof data === 'object' ? data : {};
+        let result = new DisciplineTaxonomy();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["parentId"] = this.parentId;
+        data["parentIdMap"] = this.parentIdMap;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): DisciplineTaxonomy {
+        const json = this.toJSON();
+        let result = new DisciplineTaxonomy();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDisciplineTaxonomy {
+    name: string | undefined;
+    parentId: string | undefined;
+    parentIdMap: string | undefined;
+    parent: DisciplineTaxonomy;
+    children: DisciplineTaxonomy[] | undefined;
+    id: string;
+}
+
+export class UserDisciplineTaxonomy implements IUserDisciplineTaxonomy {
+    userId: number;
+    disciplineTaxonomyId: string;
+    user: User;
+    disciplineTaxonomy: DisciplineTaxonomy;
+    id: string;
+
+    constructor(data?: IUserDisciplineTaxonomy) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userId = _data["userId"];
+            this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
+            this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomy.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserDisciplineTaxonomy {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserDisciplineTaxonomy();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): UserDisciplineTaxonomy {
+        const json = this.toJSON();
+        let result = new UserDisciplineTaxonomy();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserDisciplineTaxonomy {
+    userId: number;
+    disciplineTaxonomyId: string;
+    user: User;
+    disciplineTaxonomy: DisciplineTaxonomy;
+    id: string;
+}
+
 export class UserToken implements IUserToken {
     tenantId: number | undefined;
     userId: number;
@@ -6074,6 +6328,7 @@ export class User implements IUser {
     userEducations: UserEducation[] | undefined;
     userDisciplineTaxonomyStudyLevels: UserDisciplineTaxonomyStudyLevel[] | undefined;
     userSupportServices: UserSupportService[] | undefined;
+    userDisciplineTaxonomies: UserDisciplineTaxonomy[] | undefined;
     normalizedUserName: string;
     normalizedEmailAddress: string;
     concurrencyStamp: string | undefined;
@@ -6141,6 +6396,11 @@ export class User implements IUser {
                 this.userSupportServices = [] as any;
                 for (let item of _data["userSupportServices"])
                     this.userSupportServices.push(UserSupportService.fromJS(item));
+            }
+            if (Array.isArray(_data["userDisciplineTaxonomies"])) {
+                this.userDisciplineTaxonomies = [] as any;
+                for (let item of _data["userDisciplineTaxonomies"])
+                    this.userDisciplineTaxonomies.push(UserDisciplineTaxonomy.fromJS(item));
             }
             this.normalizedUserName = _data["normalizedUserName"];
             this.normalizedEmailAddress = _data["normalizedEmailAddress"];
@@ -6234,6 +6494,11 @@ export class User implements IUser {
             for (let item of this.userSupportServices)
                 data["userSupportServices"].push(item.toJSON());
         }
+        if (Array.isArray(this.userDisciplineTaxonomies)) {
+            data["userDisciplineTaxonomies"] = [];
+            for (let item of this.userDisciplineTaxonomies)
+                data["userDisciplineTaxonomies"].push(item.toJSON());
+        }
         data["normalizedUserName"] = this.normalizedUserName;
         data["normalizedEmailAddress"] = this.normalizedEmailAddress;
         data["concurrencyStamp"] = this.concurrencyStamp;
@@ -6314,6 +6579,7 @@ export interface IUser {
     userEducations: UserEducation[] | undefined;
     userDisciplineTaxonomyStudyLevels: UserDisciplineTaxonomyStudyLevel[] | undefined;
     userSupportServices: UserSupportService[] | undefined;
+    userDisciplineTaxonomies: UserDisciplineTaxonomy[] | undefined;
     normalizedUserName: string;
     normalizedEmailAddress: string;
     concurrencyStamp: string | undefined;
@@ -7067,6 +7333,57 @@ export interface IUserSupportServiceDto {
     id: string;
 }
 
+export class GetUserDisciplineTaxonomyDto implements IGetUserDisciplineTaxonomyDto {
+    disciplineTaxonomy: DisciplineTaxonomyDto;
+    levelId: number;
+    id: string;
+
+    constructor(data?: IGetUserDisciplineTaxonomyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomyDto.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
+            this.levelId = _data["levelId"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): GetUserDisciplineTaxonomyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetUserDisciplineTaxonomyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
+        data["levelId"] = this.levelId;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): GetUserDisciplineTaxonomyDto {
+        const json = this.toJSON();
+        let result = new GetUserDisciplineTaxonomyDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetUserDisciplineTaxonomyDto {
+    disciplineTaxonomy: DisciplineTaxonomyDto;
+    levelId: number;
+    id: string;
+}
+
 export class UserDto implements IUserDto {
     userName: string;
     name: string;
@@ -7083,6 +7400,7 @@ export class UserDto implements IUserDto {
     userEducations: UserEducationDto[] | undefined;
     userDisciplineTaxonomyStudyLevels: UserDisciplineTaxonomyStudyLevelDto[] | undefined;
     userSupportServices: UserSupportServiceDto[] | undefined;
+    userDisciplineTaxonomies: GetUserDisciplineTaxonomyDto[] | undefined;
     id: number;
 
     constructor(data?: IUserDto) {
@@ -7130,6 +7448,11 @@ export class UserDto implements IUserDto {
                 this.userSupportServices = [] as any;
                 for (let item of _data["userSupportServices"])
                     this.userSupportServices.push(UserSupportServiceDto.fromJS(item));
+            }
+            if (Array.isArray(_data["userDisciplineTaxonomies"])) {
+                this.userDisciplineTaxonomies = [] as any;
+                for (let item of _data["userDisciplineTaxonomies"])
+                    this.userDisciplineTaxonomies.push(GetUserDisciplineTaxonomyDto.fromJS(item));
             }
             this.id = _data["id"];
         }
@@ -7179,6 +7502,11 @@ export class UserDto implements IUserDto {
             for (let item of this.userSupportServices)
                 data["userSupportServices"].push(item.toJSON());
         }
+        if (Array.isArray(this.userDisciplineTaxonomies)) {
+            data["userDisciplineTaxonomies"] = [];
+            for (let item of this.userDisciplineTaxonomies)
+                data["userDisciplineTaxonomies"].push(item.toJSON());
+        }
         data["id"] = this.id;
         return data; 
     }
@@ -7207,6 +7535,7 @@ export interface IUserDto {
     userEducations: UserEducationDto[] | undefined;
     userDisciplineTaxonomyStudyLevels: UserDisciplineTaxonomyStudyLevelDto[] | undefined;
     userSupportServices: UserSupportServiceDto[] | undefined;
+    userDisciplineTaxonomies: GetUserDisciplineTaxonomyDto[] | undefined;
     id: number;
 }
 
@@ -7381,6 +7710,53 @@ export interface IGetStudentProposalDto {
     userTutorialDisciplineTaxonomies: UserTutorialDisciplineTaxonomyDto[] | undefined;
     profilePictureFileName: string | undefined;
     user: UserDto;
+}
+
+export class FindMatchDto implements IFindMatchDto {
+    user: UserDto;
+    score: number;
+
+    constructor(data?: IFindMatchDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
+            this.score = _data["score"];
+        }
+    }
+
+    static fromJS(data: any): FindMatchDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new FindMatchDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        data["score"] = this.score;
+        return data; 
+    }
+
+    clone(): FindMatchDto {
+        const json = this.toJSON();
+        let result = new FindMatchDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IFindMatchDto {
+    user: UserDto;
+    score: number;
 }
 
 export class RegistrationDto implements IRegistrationDto {
@@ -8917,6 +9293,97 @@ export interface ICreateTutorOfferDto {
     multipleSessionCount: number;
 }
 
+export class UserProfileDto implements IUserProfileDto {
+    dateOfBirth: moment.Moment | undefined;
+    addressLine1: string | undefined;
+    addressLine2: string | undefined;
+    city: string | undefined;
+    zipOrPostCode: string | undefined;
+    stateOrProvince: string | undefined;
+    country: string | undefined;
+    longitude: number | undefined;
+    latitude: number | undefined;
+    profilePictureFileName: string | undefined;
+    about: string | undefined;
+    userId: number;
+    user: UserDto;
+
+    constructor(data?: IUserProfileDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.dateOfBirth = _data["dateOfBirth"] ? moment(_data["dateOfBirth"].toString()) : <any>undefined;
+            this.addressLine1 = _data["addressLine1"];
+            this.addressLine2 = _data["addressLine2"];
+            this.city = _data["city"];
+            this.zipOrPostCode = _data["zipOrPostCode"];
+            this.stateOrProvince = _data["stateOrProvince"];
+            this.country = _data["country"];
+            this.longitude = _data["longitude"];
+            this.latitude = _data["latitude"];
+            this.profilePictureFileName = _data["profilePictureFileName"];
+            this.about = _data["about"];
+            this.userId = _data["userId"];
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserProfileDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserProfileDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
+        data["addressLine1"] = this.addressLine1;
+        data["addressLine2"] = this.addressLine2;
+        data["city"] = this.city;
+        data["zipOrPostCode"] = this.zipOrPostCode;
+        data["stateOrProvince"] = this.stateOrProvince;
+        data["country"] = this.country;
+        data["longitude"] = this.longitude;
+        data["latitude"] = this.latitude;
+        data["profilePictureFileName"] = this.profilePictureFileName;
+        data["about"] = this.about;
+        data["userId"] = this.userId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): UserProfileDto {
+        const json = this.toJSON();
+        let result = new UserProfileDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserProfileDto {
+    dateOfBirth: moment.Moment | undefined;
+    addressLine1: string | undefined;
+    addressLine2: string | undefined;
+    city: string | undefined;
+    zipOrPostCode: string | undefined;
+    stateOrProvince: string | undefined;
+    country: string | undefined;
+    longitude: number | undefined;
+    latitude: number | undefined;
+    profilePictureFileName: string | undefined;
+    about: string | undefined;
+    userId: number;
+    user: UserDto;
+}
+
 export class GetTutorOfferDto implements IGetTutorOfferDto {
     tutorialId: string;
     studentId: number;
@@ -8925,6 +9392,8 @@ export class GetTutorOfferDto implements IGetTutorOfferDto {
     singleSessionRate: number;
     multipleSessionRate: number;
     multipleSessionCount: number;
+    tutor: UserDto;
+    tutorProfile: UserProfileDto;
     id: string;
 
     constructor(data?: IGetTutorOfferDto) {
@@ -8945,6 +9414,8 @@ export class GetTutorOfferDto implements IGetTutorOfferDto {
             this.singleSessionRate = _data["singleSessionRate"];
             this.multipleSessionRate = _data["multipleSessionRate"];
             this.multipleSessionCount = _data["multipleSessionCount"];
+            this.tutor = _data["tutor"] ? UserDto.fromJS(_data["tutor"]) : <any>undefined;
+            this.tutorProfile = _data["tutorProfile"] ? UserProfileDto.fromJS(_data["tutorProfile"]) : <any>undefined;
             this.id = _data["id"];
         }
     }
@@ -8965,6 +9436,8 @@ export class GetTutorOfferDto implements IGetTutorOfferDto {
         data["singleSessionRate"] = this.singleSessionRate;
         data["multipleSessionRate"] = this.multipleSessionRate;
         data["multipleSessionCount"] = this.multipleSessionCount;
+        data["tutor"] = this.tutor ? this.tutor.toJSON() : <any>undefined;
+        data["tutorProfile"] = this.tutorProfile ? this.tutorProfile.toJSON() : <any>undefined;
         data["id"] = this.id;
         return data; 
     }
@@ -8985,6 +9458,8 @@ export interface IGetTutorOfferDto {
     singleSessionRate: number;
     multipleSessionRate: number;
     multipleSessionCount: number;
+    tutor: UserDto;
+    tutorProfile: UserProfileDto;
     id: string;
 }
 
@@ -9470,57 +9945,6 @@ export interface IGetProfileDetailDto {
     profilePictureUrl: string | undefined;
     dateJoined: moment.Moment;
     role: string | undefined;
-}
-
-export class GetUserDisciplineTaxonomyDto implements IGetUserDisciplineTaxonomyDto {
-    disciplineTaxonomy: DisciplineTaxonomyDto;
-    levelId: number;
-    id: string;
-
-    constructor(data?: IGetUserDisciplineTaxonomyDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomyDto.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
-            this.levelId = _data["levelId"];
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): GetUserDisciplineTaxonomyDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new GetUserDisciplineTaxonomyDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
-        data["levelId"] = this.levelId;
-        data["id"] = this.id;
-        return data; 
-    }
-
-    clone(): GetUserDisciplineTaxonomyDto {
-        const json = this.toJSON();
-        let result = new GetUserDisciplineTaxonomyDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IGetUserDisciplineTaxonomyDto {
-    disciplineTaxonomy: DisciplineTaxonomyDto;
-    levelId: number;
-    id: string;
 }
 
 export class UserPublicationDto implements IUserPublicationDto {

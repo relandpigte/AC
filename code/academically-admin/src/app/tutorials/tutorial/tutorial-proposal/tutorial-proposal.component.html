@@ -1,0 +1,284 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <form>
+          <div class="input-group input-group-flush">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fe fe-search"></i>
+              </span>
+            </div>
+            <input class="list-search form-control" type="search" name="Search" placeholder="Search" />
+          </div>
+        </form>
+      </div>
+      <div class="col-auto mr-n3">
+        <ul class="nav nav-tabs nav-overflow" role="tablist">
+          <li class="nav-item">
+            <a
+              href="#all-proposals"
+              id="all-proposals-tab"
+              class="nav-link active"
+              data-toggle="tab"
+              role="tab"
+              aria-controls="all-proposals"
+              aria-selected="false"
+            >
+              All Proposals <span *ngIf="tutorOffers.length !== 0">({{ tutorOffers.length }})</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              href="#shortlisted"
+              id="shortlisted-tab"
+              class="nav-link disabled"
+              data-toggle="tab"
+              role="tab"
+              aria-controls="shortlisted"
+              aria-selected="true"
+            >
+              Shortlisted
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              href="#messaged"
+              id="messaged-tab"
+              class="nav-link disabled"
+              data-toggle="tab"
+              role="tab"
+              aria-controls="messaged"
+              aria-selected="false"
+            >
+              Messaged
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="tutorOffers.length !== 0" class="card-header filter">
+    <form>
+      <div class="form-row align-items-center">
+        <div class="col">
+          <label class="text-muted text-uppercase small font-weight-bold" for="NativeLanguage">Native Language</label>
+          <select class="form-control" id="NativeLanguage" name="NativeLanguage">
+            <option>English</option>
+            <option>Chinese</option>
+            <option>Korean</option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="text-muted text-uppercase small font-weight-bold" for="EducationLevel">Min Education Level</label>
+          <select id="EducationLevel" name="EducationLevel" type="text" class="form-control" required>
+            <option [ngValue]="undefined">{{ 'SelectLevel' | localize }}</option>
+            <option *ngFor="let educationLevel of educationLevels" [value]="educationLevel">
+              {{ 'EducationLevel' + educationLevel | localize }}
+            </option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="text-muted text-uppercase small font-weight-bold" for="Rating">Min Rating</label>
+          <select class="form-control" id="Rating" name="Rating">
+            <option [value]="5">5 Stars</option>
+            <option [value]="4">4 Stars</option>
+            <option [value]="3">3 Stars</option>
+            <option [value]="2">2 Stars</option>
+            <option [value]="1">1 Star</option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="text-muted text-uppercase small font-weight-bold" for="Distance">Distance</label>
+          <select class="form-control" id="Distance" name="Distance">
+            <option [value]="-1">All</option>
+            <option [value]="5">5 miles</option>
+            <option [value]="10">10 miles</option>
+            <option [value]="25">25 miles</option>
+            <option [value]="50">50 miles</option>
+            <option [value]="100">100 miles</option>
+            <option [value]="200">200 miles</option>
+            <option [value]="500">500 miles</option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="text-muted text-uppercase small font-weight-bold" for="Availability">Availability</label>
+          <select class="form-control" id="Availability" name="Availability">
+            <option>Any</option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="text-muted text-uppercase small font-weight-bold" for="SortBy">Sort By</label>
+          <select class="form-control" id="SortBy" name="SortBy">
+            <option>Best Match</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="card-body tutor-offers">
+    <div *ngFor="let tutorOffer of tutorOffers" class="row">
+      <div class="col-md-8 d-flex">
+        <div class="card tutor-offer">
+          <div class="card-body">
+            <div class="mb-3">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <a href="#!" class="avatar">
+                    <img [src]="getImageUrl(tutorOffer.tutorProfile.profilePictureFileName)" alt="..." class="avatar-img rounded-circle" />
+                  </a>
+                </div>
+                <div class="col ml-n2">
+                  <h4 class="mb-1">
+                    {{ tutorOffer.tutor.name }} {{ tutorOffer.tutor.surname[0] }}
+                    <span class="small rating">
+                      <i class="fe fe-star"></i>
+                      <i class="fe fe-star"></i>
+                      <i class="fe fe-star"></i>
+                      <i class="fe fe-star"></i>
+                      <i class="fe fe-star"></i>
+                    </span>
+                    <span class="small text-muted font-weight-bold">561</span>
+                  </h4>
+                  <p class="card-text small text-muted font-weight-bold m-0">University of Cambridge</p>
+                  <p class="card-text small text-muted">
+                    <span class="fe fe-clock"></span>&nbsp;<time datetime="2018-05-24">4hr ago</time>
+                  </p>
+                </div>
+                <div class="col-auto align-self-baseline">
+                  <span class="text-muted small font-weight-bold">200+ Hours taught</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="mb-3">
+              {{ tutorOffer.coverLetter }}
+            </p>
+
+            <div *ngIf="tutorOffer.tutor.userDisciplineTaxonomies" class="tutor-aos">
+              <span *ngFor="let userDisciplineTaxonomy of tutorOffer.tutor.userDisciplineTaxonomies" class="badge badge-info">
+                {{ userDisciplineTaxonomy.disciplineTaxonomy.name }}
+              </span>
+            </div>
+          </div>
+          <div class="card-footer tutorial-actions">
+            <button class="btn btn-outline-light tutorial-action"><i class="fe fe-heart"></i>&nbsp;Shortlist</button>
+            <button class="btn btn-outline-light tutorial-action"><i class="fe fe-mail"></i>&nbsp;Message</button>
+            <button class="btn btn-outline-light tutorial-action"><i class="fe fe-phone"></i>&nbsp;Free Call</button>
+            <button class="btn btn-outline-light tutorial-action" (click)="onFullDetailsClick(tutorOffer)">
+              <i class="fe fe-maximize-2"></i>&nbsp;Full Details
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <div class="list-group list-group-flush list-group-focus tutor-offer-list">
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <i class="fe fe-book-open"></i>
+                  </div>
+                  <div class="col ml-n2">
+                    <h4 class="text-body text-focus mb-1 name">Proofreading</h4>
+                    <p class="small text-muted mb-0">&#163;19 / 1000 words</p>
+                  </div>
+                  <div class="col-auto">
+                    <div class="custom-control custom-checkbox">
+                      <input class="custom-control-input" id="proofreadingCheck" type="checkbox" />
+                      <label class="custom-control-label" for="proofreadingCheck"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <i class="fe fe-edit-3"></i>
+                  </div>
+                  <div class="col ml-n2">
+                    <h4 class="text-body text-focus mb-1 name">Written Feedback</h4>
+                    <p class="small text-muted mb-0">&#163;15 / 1000 words</p>
+                  </div>
+                  <div class="col-auto">
+                    <div class="custom-control custom-checkbox">
+                      <input class="custom-control-input" id="writtenFeedbackCheck" type="checkbox" />
+                      <label class="custom-control-label" for="writtenFeedbackCheck"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <i class="fe fe-airplay"></i>
+                  </div>
+                  <div class="col ml-n2">
+                    <h4 class="text-body text-focus mb-1 name">Live Feedback</h4>
+                    <p class="small text-muted mb-0">&#163;19 / hour</p>
+                  </div>
+                  <div class="col-auto">
+                    <div class="custom-control custom-checkbox">
+                      <input class="custom-control-input" id="liveFeedbackCheck" type="checkbox" />
+                      <label class="custom-control-label" for="liveFeedbackCheck"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <i class="fe fe-monitor"></i>
+                  </div>
+                  <div class="col ml-n2">
+                    <h4 class="text-body text-focus mb-1 name">Tutorial</h4>
+                    <p class="small text-muted mb-0">&#163;{{ tutorOffer.singleSessionRate }} / hour</p>
+                  </div>
+                  <div class="col-auto">
+                    <div class="custom-control custom-checkbox">
+                      <input class="custom-control-input" id="tutorialCheck" type="checkbox" />
+                      <label class="custom-control-label" for="tutorialCheck"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item border-0">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <i class="fe fe-percent"></i>
+                  </div>
+                  <div class="col ml-n2">
+                    <h4 class="text-body text-focus mb-1 name">{{ tutorOffer.multipleSessionCount }}-Session Discount</h4>
+                    <p class="small text-muted mb-0">&#163;{{ tutorOffer.multipleSessionRate }} / hour</p>
+                  </div>
+                  <div class="col-auto">
+                    <div class="custom-control custom-checkbox">
+                      <input class="custom-control-input" id="discountCheck" type="checkbox" />
+                      <label class="custom-control-label" for="discountCheck"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item border-0">
+                <button class="btn btn-primary btn-block">Accept Offer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <hr />
+      </div>
+    </div>
+    <nav *ngIf="tutorOffers.length !== 0" aria-label="Pagination">
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" href="javascript:;">1</a></li>
+        <li class="page-item"><a class="page-link" href="javascript:;">2</a></li>
+      </ul>
+    </nav>
+    <div *ngIf="tutorOffers.length === 0" class="text-center">
+      <h3 class="text-muted mb-0">No Proposal Available</h3>
+    </div>
+  </div>
+</div>

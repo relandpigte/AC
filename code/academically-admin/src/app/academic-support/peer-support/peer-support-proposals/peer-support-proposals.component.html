@@ -35,8 +35,8 @@
                 (change)="onEducationLevelFilterChange()"
               >
                 <option *ngFor="let educationLevel of educationLevels; let i = index" [value]="educationLevel">
-                  Level {{ 'StudyLevelValue' + educationLevel | localize }}</option
-                >
+                  Level {{ 'StudyLevelValue' + educationLevel | localize }}
+                </option>
               </select>
             </div>
             <div class="col-md-1">
@@ -87,7 +87,7 @@
           </div>
         </div>
       </div>
-      <div class="row" [busy]="!isLoading">
+      <div class="row">
         <div class="col-12 col-xl-8">
           <div class="card" *ngFor="let tutor of tutors">
             <div class="card-body">

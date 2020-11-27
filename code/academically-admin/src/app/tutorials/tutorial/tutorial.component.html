@@ -1,0 +1,64 @@
+<div [@routerTransition]>
+  <div class="header">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-end">
+          <div class="col">
+            <h6 class="header-pretitle">
+              {{ 'Tutorial' | localize }}
+            </h6>
+            <h1 class="header-title">
+              {{ 'Title' | localize }}
+            </h1>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col">
+            <ul class="nav nav-tabs nav-overflow header-tabs" role="tablist">
+              <li class="nav-item">
+                <a
+                  href="#project-brief"
+                  id="project-brief-tab"
+                  class="nav-link"
+                  data-toggle="tab"
+                  role="tab"
+                  aria-controls="project-brief"
+                  aria-selected="false"
+                >
+                  Project brief
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="#proposals"
+                  id="proposals-tab"
+                  class="nav-link active"
+                  data-toggle="tab"
+                  role="tab"
+                  aria-controls="proposals"
+                  aria-selected="true"
+                >
+                  Proposals
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#hired" id="hired-tab" class="nav-link" data-toggle="tab" role="tab" aria-controls="hired" aria-selected="false">
+                  Hired
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="tab-content">
+      <div id="project-brief" class="tab-pane fade" role="tabpanel" aria-labelledby="project-brief-tab">Coming Soon!</div>
+      <div id="proposals" class="tab-pane fade show active" role="tabpanel" aria-labelledby="proposals-tab">
+        <tutorial-proposal [id]="id"></tutorial-proposal>
+      </div>
+      <div id="hired" class="tab-pane fade" role="tabpanel" aria-labelledby="hired-tab">Coming Soon!</div>
+    </div>
+  </div>
+</div>

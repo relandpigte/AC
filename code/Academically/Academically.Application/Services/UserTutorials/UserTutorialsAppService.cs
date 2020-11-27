@@ -1,4 +1,9 @@
-﻿using Abp.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.IO.Extensions;
 using Abp.Timing;
@@ -6,18 +11,10 @@ using Academically.Application.Shared.Services;
 using Academically.Configuration;
 using Academically.Entities;
 using Academically.Services.UserTutorials.Dto;
-using Amazon.Runtime.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Academically.Services.UserTutorials
 {
@@ -45,7 +42,7 @@ namespace Academically.Services.UserTutorials
         }
 
 
-        public async Task CreateAsync([FromForm] SaveUserTutorialDto inputs)
+        public async Task<Guid> CreateAsync([FromForm] SaveUserTutorialDto inputs)
         {
             var userId = AbpSession.UserId.Value;
             var userTutorial = new UserTutorial();
@@ -76,7 +73,7 @@ namespace Academically.Services.UserTutorials
                 }
             }
 
-            await _userTutorialsRepository.InsertAsync(userTutorial);
+            var id = await _userTutorialsRepository.InsertAndGetIdAsync(userTutorial);
 
             if (userTutorial.Id != null && inputs.DisciplineTaxonomyIds.Count() > 0)
             {
@@ -91,11 +88,16 @@ namespace Academically.Services.UserTutorials
                     await _userTutorialsDisciplineTaxonomiesRepository.InsertAsync(userTutorialDisciplineTaxonomy);
                 }
             }
+
+            return id;
         }
 
-        public async Task<IEnumerable<UserTutorialDto>> GetAsync()
+        public async Task<IEnumerable<UserTutorialDto>> GetRecent()
         {
             var userTutorials = await _userTutorialsRepository.GetAll()
+                .Where(e => e.UserId == AbpSession.UserId.Value)
+                .OrderByDescending(e => e.CreatedDate)
+                .Take(5)
                 .Select(e => ObjectMapper.Map<UserTutorialDto>(e))
                 .ToListAsync();
 
