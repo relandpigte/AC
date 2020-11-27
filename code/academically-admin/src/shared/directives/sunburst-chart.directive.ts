@@ -3,11 +3,12 @@ import Sunburst, { Node, SunburstChartInstance } from 'sunburst-chart';
 import * as d3 from 'd3';
 
 @Directive({
-  selector: '[sunburtChart]',
+  selector: '[sunburtChart]'
 })
 export class SunburstChartDirective {
   @Input() rootNodeLabel = 'root';
   @Output() nodeClick = new EventEmitter<any>();
+  @Output() nodeSelectClick = new EventEmitter<any>();
 
   private _chart: SunburstChartInstance;
   private _data: any[];
@@ -22,7 +23,7 @@ export class SunburstChartDirective {
     'e05d2ce7-1724-42ab-aa28-f4fb85ba4a30': ['#11760D', '#138D0D', '#16AA11'],
     'c40fe45e-e5c2-46ec-b062-7dbdd31f2db5': ['#992B81', '#B7339A', '#CD4DB0'],
     'c2d5e455-b3ed-4b38-a1a1-c43a998da61f': ['#876202', '#A17700', '#C18E03'],
-    '56e9e6fc-371c-4921-9474-886a4f8b84d0': ['#97400E', '#B54C0F', '#B54C0F'],
+    '56e9e6fc-371c-4921-9474-886a4f8b84d0': ['#97400E', '#B54C0F', '#B54C0F']
   };
 
   constructor(private _el: ElementRef) {}
@@ -57,7 +58,7 @@ export class SunburstChartDirective {
 
   private getNodsFromIds(data: any[], ids: string[]): any[] {
     const results: any[] = [];
-    data.forEach((d) => {
+    data.forEach(d => {
       if (ids.includes(d.id)) {
         const result = Object.assign({}, d);
         result.children = this.getNodsFromIds([...d.children], ids);
@@ -69,7 +70,7 @@ export class SunburstChartDirective {
 
   private getNodeIdsByKeyword(data: any[], searchKeyword: string): string[] {
     const filteredIds: string[] = [];
-    data.forEach((d) => {
+    data.forEach(d => {
       if (d.name.toLowerCase().indexOf(searchKeyword.toLowerCase()) > -1) {
         const ids = d.parentIdMap.split('.');
         filteredIds.push(...ids);
@@ -86,7 +87,7 @@ export class SunburstChartDirective {
     const self = this;
     const rootNode: Node = {
       name: self.rootNodeLabel,
-      children: data,
+      children: data
     };
     return rootNode;
   }
@@ -123,12 +124,13 @@ export class SunburstChartDirective {
         if (node) {
           clickCount++;
           if (clickCount === 1) {
-            setTimeout(function () {
+            setTimeout(function() {
               if (clickCount === 1) {
                 self._chart.focusOnNode(node);
+                self.nodeClick.emit(node);
               } else {
                 if (node.id) {
-                  self.nodeClick.emit(node);
+                  self.nodeSelectClick.emit(node);
                 }
               }
               clickCount = 0;

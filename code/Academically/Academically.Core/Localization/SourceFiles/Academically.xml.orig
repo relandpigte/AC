@@ -1,8 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
-    <text name="ParentAreaofStudy">Parent Area of Study</text>
+<<<<<<< HEAD
     <text name="NoRecentProject">No Recent Project</text>
+=======
+    <text name="ParentAreaofStudy">Parent Area of Study</text>
     <text name="SuggestNewItem">Suggest New Item</text>
     <text name="RequestNewTaxonomy">Request New Taxonomy</text>
     <text name="NewDisciplineTaxonomyRequestSent">New Discipline Taxonomy request sent.</text>
@@ -36,6 +38,7 @@
     <text name="AcceptOffer">Accept Offer</text>
     <text name="DeclineOffer">Decline Offer</text>
     <text name="HaveExistingTutorialRequestOfferAccepted">Tutorial request has already been booked with the same tutor</text>
+>>>>>>> d1cd34f59078e6933cc30ac79ba41f009c784f2d
     <text name="StudentProposalEmailMessage">
       <![CDATA[
           <p>Hello {0},</p>

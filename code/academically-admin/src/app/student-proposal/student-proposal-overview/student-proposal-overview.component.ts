@@ -4,14 +4,12 @@ import { AppComponentBase } from '@shared/app-component-base';
 import {
   CreateTutorOfferDto,
   GetStudentProposalDto,
-  GetTutorOfferDto,
   ProposalsServiceProxy,
   TutorOffersServiceProxy,
   UserSupportServiceDto
 } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { off } from 'process';
 import { ReviseStudentProposalComponent } from './revise-student-proposal/revise-student-proposal.component';
 
 @Component({
@@ -54,6 +52,7 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
   }
 
   onAcceptProposalClick(): void {
+    this.isLoading = true;
     this.offer.isSubmitted = true;
     this._tutorOfferService.create(this.offer).subscribe(() => {
       this.isLoading = false;
@@ -113,7 +112,7 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
   }
 
   private getTutorSupportService(): void {
-    this._proposalsService.getTutorSupportService().subscribe(supportService => {
+    this._proposalsService.getTutorSupportService(null).subscribe(supportService => {
       this.isLoading = false;
       this.tutorSupportService = supportService;
       this.offer.singleSessionRate = !this.offer.singleSessionRate
@@ -139,7 +138,7 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
   }
 
   private getTutorOffer(): void {
-    this._tutorOfferService.get(this.id).subscribe(offer => {
+    this._tutorOfferService.getOffer(this.id).subscribe(offer => {
       if (Object.keys(offer).length === 0) {
         this.offer.tutorialId = this.id;
         this.offer.studentId = this.studentProposal.user.id;

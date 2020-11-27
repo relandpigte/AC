@@ -799,6 +799,113 @@ export class DisciplineTaxonomiesServiceProxy {
         }
         return _observableOf<DisciplineTaxonomyDto[]>(<any>null);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    requestDisciplineTaxonomy(body: DisciplineTaxonomyRequestDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/RequestDisciplineTaxonomy";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRequestDisciplineTaxonomy(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRequestDisciplineTaxonomy(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRequestDisciplineTaxonomy(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAllEditableTaxonomies(): Observable<GetAllDisciplineTaxonomyDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/GetAllEditableTaxonomies";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllEditableTaxonomies(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllEditableTaxonomies(<any>response_);
+                } catch (e) {
+                    return <Observable<GetAllDisciplineTaxonomyDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetAllDisciplineTaxonomyDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllEditableTaxonomies(response: HttpResponseBase): Observable<GetAllDisciplineTaxonomyDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(GetAllDisciplineTaxonomyDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetAllDisciplineTaxonomyDto[]>(<any>null);
+    }
 }
 
 @Injectable()
@@ -1236,10 +1343,13 @@ export class ProposalsServiceProxy {
     }
 
     /**
+     * @param tutorId (optional) 
      * @return Success
      */
-    getTutorSupportService(): Observable<UserSupportServiceDto> {
-        let url_ = this.baseUrl + "/api/services/app/Proposals/GetTutorSupportService";
+    getTutorSupportService(tutorId: number | null | undefined): Observable<UserSupportServiceDto> {
+        let url_ = this.baseUrl + "/api/services/app/Proposals/GetTutorSupportService?";
+        if (tutorId !== undefined && tutorId !== null)
+            url_ += "tutorId=" + encodeURIComponent("" + tutorId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -2779,6 +2889,62 @@ export class TutorOffersServiceProxy {
     }
 
     /**
+     * @param offerId (optional) 
+     * @return Success
+     */
+    get(offerId: string | undefined): Observable<GetTutorOfferDto> {
+        let url_ = this.baseUrl + "/api/services/app/TutorOffers/Get?";
+        if (offerId === null)
+            throw new Error("The parameter 'offerId' cannot be null.");
+        else if (offerId !== undefined)
+            url_ += "offerId=" + encodeURIComponent("" + offerId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<GetTutorOfferDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetTutorOfferDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<GetTutorOfferDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetTutorOfferDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetTutorOfferDto>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -2831,11 +2997,72 @@ export class TutorOffersServiceProxy {
     }
 
     /**
+     * @param offerId (optional) 
+     * @param isAccepted (optional) 
+     * @return Success
+     */
+    acceptOffer(offerId: string | undefined, isAccepted: boolean | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/services/app/TutorOffers/AcceptOffer?";
+        if (offerId === null)
+            throw new Error("The parameter 'offerId' cannot be null.");
+        else if (offerId !== undefined)
+            url_ += "offerId=" + encodeURIComponent("" + offerId) + "&";
+        if (isAccepted === null)
+            throw new Error("The parameter 'isAccepted' cannot be null.");
+        else if (isAccepted !== undefined)
+            url_ += "isAccepted=" + encodeURIComponent("" + isAccepted) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAcceptOffer(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAcceptOffer(<any>response_);
+                } catch (e) {
+                    return <Observable<boolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<boolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAcceptOffer(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(<any>null);
+    }
+
+    /**
      * @param tutorialId (optional) 
      * @return Success
      */
-    get(tutorialId: string | undefined): Observable<GetTutorOfferDto> {
-        let url_ = this.baseUrl + "/api/services/app/TutorOffers/Get?";
+    getOffer(tutorialId: string | undefined): Observable<GetTutorOfferDto> {
+        let url_ = this.baseUrl + "/api/services/app/TutorOffers/GetOffer?";
         if (tutorialId === null)
             throw new Error("The parameter 'tutorialId' cannot be null.");
         else if (tutorialId !== undefined)
@@ -2851,11 +3078,11 @@ export class TutorOffersServiceProxy {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet(response_);
+            return this.processGetOffer(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGet(<any>response_);
+                    return this.processGetOffer(<any>response_);
                 } catch (e) {
                     return <Observable<GetTutorOfferDto>><any>_observableThrow(e);
                 }
@@ -2864,7 +3091,7 @@ export class TutorOffersServiceProxy {
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<GetTutorOfferDto> {
+    protected processGetOffer(response: HttpResponseBase): Observable<GetTutorOfferDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2944,6 +3171,62 @@ export class TutorOffersServiceProxy {
             }));
         }
         return _observableOf<GetTutorOfferDto[]>(<any>null);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @return Success
+     */
+    getTutorHighestEducationLevel(userId: number | undefined): Observable<number> {
+        let url_ = this.baseUrl + "/api/services/app/TutorOffers/GetTutorHighestEducationLevel?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTutorHighestEducationLevel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTutorHighestEducationLevel(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTutorHighestEducationLevel(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
     }
 }
 
@@ -5798,6 +6081,7 @@ export class DisciplineTaxonomy implements IDisciplineTaxonomy {
     name: string | undefined;
     parentId: string | undefined;
     parentIdMap: string | undefined;
+    isEditable: boolean;
     parent: DisciplineTaxonomy;
     children: DisciplineTaxonomy[] | undefined;
     id: string;
@@ -5816,6 +6100,7 @@ export class DisciplineTaxonomy implements IDisciplineTaxonomy {
             this.name = _data["name"];
             this.parentId = _data["parentId"];
             this.parentIdMap = _data["parentIdMap"];
+            this.isEditable = _data["isEditable"];
             this.parent = _data["parent"] ? DisciplineTaxonomy.fromJS(_data["parent"]) : <any>undefined;
             if (Array.isArray(_data["children"])) {
                 this.children = [] as any;
@@ -5838,6 +6123,7 @@ export class DisciplineTaxonomy implements IDisciplineTaxonomy {
         data["name"] = this.name;
         data["parentId"] = this.parentId;
         data["parentIdMap"] = this.parentIdMap;
+        data["isEditable"] = this.isEditable;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         if (Array.isArray(this.children)) {
             data["children"] = [];
@@ -5860,6 +6146,7 @@ export interface IDisciplineTaxonomy {
     name: string | undefined;
     parentId: string | undefined;
     parentIdMap: string | undefined;
+    isEditable: boolean;
     parent: DisciplineTaxonomy;
     children: DisciplineTaxonomy[] | undefined;
     id: string;
@@ -6909,6 +7196,61 @@ export interface IDisciplineTaxonomyDto {
     name: string | undefined;
     parentId: string | undefined;
     parentIdMap: string | undefined;
+    id: string;
+}
+
+export class DisciplineTaxonomyRequestDto implements IDisciplineTaxonomyRequestDto {
+    name: string;
+    notes: string;
+    parentId: string;
+    id: string;
+
+    constructor(data?: IDisciplineTaxonomyRequestDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.notes = _data["notes"];
+            this.parentId = _data["parentId"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): DisciplineTaxonomyRequestDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DisciplineTaxonomyRequestDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["notes"] = this.notes;
+        data["parentId"] = this.parentId;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): DisciplineTaxonomyRequestDto {
+        const json = this.toJSON();
+        let result = new DisciplineTaxonomyRequestDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDisciplineTaxonomyRequestDto {
+    name: string;
+    notes: string;
+    parentId: string;
     id: string;
 }
 
@@ -9226,73 +9568,6 @@ export interface IExternalAuthenticateResultModel {
     waitingForActivation: boolean;
 }
 
-export class CreateTutorOfferDto implements ICreateTutorOfferDto {
-    tutorialId: string;
-    studentId: number;
-    isSubmitted: boolean;
-    coverLetter: string | undefined;
-    singleSessionRate: number;
-    multipleSessionRate: number;
-    multipleSessionCount: number;
-
-    constructor(data?: ICreateTutorOfferDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.tutorialId = _data["tutorialId"];
-            this.studentId = _data["studentId"];
-            this.isSubmitted = _data["isSubmitted"];
-            this.coverLetter = _data["coverLetter"];
-            this.singleSessionRate = _data["singleSessionRate"];
-            this.multipleSessionRate = _data["multipleSessionRate"];
-            this.multipleSessionCount = _data["multipleSessionCount"];
-        }
-    }
-
-    static fromJS(data: any): CreateTutorOfferDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateTutorOfferDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["tutorialId"] = this.tutorialId;
-        data["studentId"] = this.studentId;
-        data["isSubmitted"] = this.isSubmitted;
-        data["coverLetter"] = this.coverLetter;
-        data["singleSessionRate"] = this.singleSessionRate;
-        data["multipleSessionRate"] = this.multipleSessionRate;
-        data["multipleSessionCount"] = this.multipleSessionCount;
-        return data; 
-    }
-
-    clone(): CreateTutorOfferDto {
-        const json = this.toJSON();
-        let result = new CreateTutorOfferDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface ICreateTutorOfferDto {
-    tutorialId: string;
-    studentId: number;
-    isSubmitted: boolean;
-    coverLetter: string | undefined;
-    singleSessionRate: number;
-    multipleSessionRate: number;
-    multipleSessionCount: number;
-}
-
 export class UserProfileDto implements IUserProfileDto {
     dateOfBirth: moment.Moment | undefined;
     addressLine1: string | undefined;
@@ -9392,6 +9667,8 @@ export class GetTutorOfferDto implements IGetTutorOfferDto {
     singleSessionRate: number;
     multipleSessionRate: number;
     multipleSessionCount: number;
+    isAccepted: boolean | undefined;
+    tutorId: number;
     tutor: UserDto;
     tutorProfile: UserProfileDto;
     id: string;
@@ -9414,6 +9691,8 @@ export class GetTutorOfferDto implements IGetTutorOfferDto {
             this.singleSessionRate = _data["singleSessionRate"];
             this.multipleSessionRate = _data["multipleSessionRate"];
             this.multipleSessionCount = _data["multipleSessionCount"];
+            this.isAccepted = _data["isAccepted"];
+            this.tutorId = _data["tutorId"];
             this.tutor = _data["tutor"] ? UserDto.fromJS(_data["tutor"]) : <any>undefined;
             this.tutorProfile = _data["tutorProfile"] ? UserProfileDto.fromJS(_data["tutorProfile"]) : <any>undefined;
             this.id = _data["id"];
@@ -9436,6 +9715,8 @@ export class GetTutorOfferDto implements IGetTutorOfferDto {
         data["singleSessionRate"] = this.singleSessionRate;
         data["multipleSessionRate"] = this.multipleSessionRate;
         data["multipleSessionCount"] = this.multipleSessionCount;
+        data["isAccepted"] = this.isAccepted;
+        data["tutorId"] = this.tutorId;
         data["tutor"] = this.tutor ? this.tutor.toJSON() : <any>undefined;
         data["tutorProfile"] = this.tutorProfile ? this.tutorProfile.toJSON() : <any>undefined;
         data["id"] = this.id;
@@ -9458,9 +9739,78 @@ export interface IGetTutorOfferDto {
     singleSessionRate: number;
     multipleSessionRate: number;
     multipleSessionCount: number;
+    isAccepted: boolean | undefined;
+    tutorId: number;
     tutor: UserDto;
     tutorProfile: UserProfileDto;
     id: string;
+}
+
+export class CreateTutorOfferDto implements ICreateTutorOfferDto {
+    tutorialId: string;
+    studentId: number;
+    isSubmitted: boolean;
+    coverLetter: string | undefined;
+    singleSessionRate: number;
+    multipleSessionRate: number;
+    multipleSessionCount: number;
+
+    constructor(data?: ICreateTutorOfferDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.tutorialId = _data["tutorialId"];
+            this.studentId = _data["studentId"];
+            this.isSubmitted = _data["isSubmitted"];
+            this.coverLetter = _data["coverLetter"];
+            this.singleSessionRate = _data["singleSessionRate"];
+            this.multipleSessionRate = _data["multipleSessionRate"];
+            this.multipleSessionCount = _data["multipleSessionCount"];
+        }
+    }
+
+    static fromJS(data: any): CreateTutorOfferDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateTutorOfferDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["tutorialId"] = this.tutorialId;
+        data["studentId"] = this.studentId;
+        data["isSubmitted"] = this.isSubmitted;
+        data["coverLetter"] = this.coverLetter;
+        data["singleSessionRate"] = this.singleSessionRate;
+        data["multipleSessionRate"] = this.multipleSessionRate;
+        data["multipleSessionCount"] = this.multipleSessionCount;
+        return data; 
+    }
+
+    clone(): CreateTutorOfferDto {
+        const json = this.toJSON();
+        let result = new CreateTutorOfferDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateTutorOfferDto {
+    tutorialId: string;
+    studentId: number;
+    isSubmitted: boolean;
+    coverLetter: string | undefined;
+    singleSessionRate: number;
+    multipleSessionRate: number;
+    multipleSessionCount: number;
 }
 
 export class CreateUserDto implements ICreateUserDto {

@@ -91,6 +91,10 @@ import { ErrorPageComponent } from './error-page/error-page.component';
 import { ReviseStudentProposalComponent } from './student-proposal/student-proposal-overview/revise-student-proposal/revise-student-proposal.component';
 import { WrapperComponent } from './layout/wrapper/wrapper.component';
 import { ProfileHeaderComponent } from './profile/profile-header/profile-header.component';
+import { TutorOfferComponent } from './tutor-offer/tutor-offer.component';
+import { TutorOfferOverviewComponent } from './tutor-offer/tutor-offer-overview/tutor-offer-overview.component';
+import { AcceptTutorOfferComponent } from './tutor-offer/tutor-offer-overview/accept-tutor-offer/accept-tutor-offer.component';
+import { RequestNewTaxonomyComponent } from './shared/taxonomy-search/request-new-taxonomy/request-new-taxonomy.component';
 import { RecentProjectsWidgetComponent } from './widgets/recent-projects-widget/recent-projects-widget.component';
 import { TutorialComponent } from './tutorials/tutorial/tutorial.component';
 import { TutorialProposalComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-proposal.component';
@@ -171,6 +175,10 @@ import { TutorialExpandProposalComponent } from './tutorials/tutorial/tutorial-p
     ReviseStudentProposalComponent,
     WrapperComponent,
     ProfileHeaderComponent,
+    TutorOfferComponent,
+    TutorOfferOverviewComponent,
+    AcceptTutorOfferComponent,
+    RequestNewTaxonomyComponent,
     RecentProjectsWidgetComponent,
     TutorialComponent,
     TutorialProposalComponent,

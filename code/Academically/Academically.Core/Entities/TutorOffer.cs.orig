@@ -19,9 +19,12 @@ namespace Academically.Entities
         public decimal SingleSessionRate { get; set; }
         public decimal MultipleSessionRate { get; set; }
         public int MultipleSessionCount { get; set; }
-        public DateTime? AcceptedDate { get; set; }
+<<<<<<< HEAD
 
         [ForeignKey("TutorId")]
         public virtual User Tutor { get; set; }
+=======
+        public DateTime? AcceptedDate { get; set; }
+>>>>>>> d1cd34f59078e6933cc30ac79ba41f009c784f2d
     }
 }

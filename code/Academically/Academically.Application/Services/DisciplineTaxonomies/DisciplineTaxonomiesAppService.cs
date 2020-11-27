@@ -18,14 +18,17 @@ namespace Academically.Services.DisciplineTaxonomies
     {
         private readonly IRepository<DisciplineTaxonomy, Guid> _disciplieTaxonomiesRespository;
         private readonly IRepository<UserDisciplineTaxonomy, Guid> _userDisciplieTaxonomiesRespository;
+        private readonly IRepository<DisciplineTaxonomyRequest, Guid> _disciplineTaxonomyRequestsRepository;
 
         public DisciplineTaxonomiesAppService(
             IRepository<DisciplineTaxonomy, Guid> disciplieTaxonomiesRespository,
-            IRepository<UserDisciplineTaxonomy, Guid> userDisciplieTaxonomiesRespository
+            IRepository<UserDisciplineTaxonomy, Guid> userDisciplieTaxonomiesRespository,
+            IRepository<DisciplineTaxonomyRequest, Guid> disciplineTaxonomyRequestsRepository
             )
         {
             _disciplieTaxonomiesRespository = disciplieTaxonomiesRespository;
             _userDisciplieTaxonomiesRespository = userDisciplieTaxonomiesRespository;
+            _disciplineTaxonomyRequestsRepository = disciplineTaxonomyRequestsRepository;
         }
 
         public async Task<IEnumerable<GetAllDisciplineTaxonomyDto>> GetAll(long? userId)
@@ -96,6 +99,22 @@ namespace Academically.Services.DisciplineTaxonomies
                 }
             }
             return children.OrderByDescending(e => e.TotalDisciplines).ToList();
+        }
+
+        public async Task RequestDisciplineTaxonomy(DisciplineTaxonomyRequestDto input)
+        {
+            var disicplineTaxonomy = ObjectMapper.Map<DisciplineTaxonomyRequest>(input);
+            await _disciplineTaxonomyRequestsRepository.InsertAsync(disicplineTaxonomy);
+        }
+
+        public async Task<IEnumerable<GetAllDisciplineTaxonomyDto>> GetAllEditableTaxonomies()
+        {
+             var disciplineTaxonomies = await _disciplieTaxonomiesRespository.GetAll()
+                    .Where(e => e.IsEditable)
+                    .ToListAsync();
+            var rootTaxonomies = GetChildren(disciplineTaxonomies, null);
+
+            return rootTaxonomies;
         }
     }
 }

@@ -43,5 +43,8 @@
 	<include file="ddml/ddml.2020-11-16-01.add-tutoroffers-table.xml"/>	
 	<include file="ddml/ddml.2020-11-17-01.update-abpusers-data.xml"/>	
 	<include file="ddml/ddml.2020-11-17-02.add-passwordresets-table.xml"/>
-	<include file="ddml/ddml.2020-11-19-01.alter-table-tutoroffers.xml"/>	
+	<include file="ddml/ddml.2020-11-19-01.alter-table-tutoroffers.xml"/>
+	<include file="ddml/ddml.2020-11-25-01.alter-table-tutoroffers.xml"/>
+	<include file="ddml/ddml.2020-11-26-01.add-taxonomyrequests-table.xml"/>
+	<include file="ddml/ddml.2020-11-26-02.alter-table-disciplinetaxonomies.xml"/>	
 </databaseChangeLog>

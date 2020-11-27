@@ -11,7 +11,7 @@ namespace Academically.Services.Proposals
         Task<IEnumerable<SearchTutorDto>> SearchTutors(int distance, int? level);
         Task<GetStudentProposalDto> GetStudentProposal(Guid tutorialId);
         Task<string> GetTutorDisciplineTaxonomies();
-        Task<UserSupportServiceDto> GetTutorSupportService();
+        Task<UserSupportServiceDto> GetTutorSupportService(long? tutorId);
 
         //TODO: this endpoint will replace the SearchTutors
         Task<IEnumerable<FindMatchDto>> FindMatch(Guid userTutorialId);

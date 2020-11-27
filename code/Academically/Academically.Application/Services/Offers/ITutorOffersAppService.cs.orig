@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Abp.Application.Services;
+using Academically.Services.Offers.Dto;
+
+namespace Academically.Services.Offers
+{
+    public interface ITutorOffersAppService : IApplicationService
+    {
+        Task<GetTutorOfferDto> GetAsync(Guid offerId);
+        Task CreateAsync(CreateTutorOfferDto inputs);
+<<<<<<< HEAD
+        Task<GetTutorOfferDto> GetAsync(Guid tutorialId);
+        Task<IEnumerable<GetTutorOfferDto>> GetAllAsync(Guid tutorialId);
+=======
+        Task<bool> AcceptOfferAsync(Guid offerId, bool isAccepted);
+        Task<GetTutorOfferDto> GetOfferAsync(Guid tutorialId);
+        Task<int> GetTutorHighestEducationLevel(long userId);
+>>>>>>> d1cd34f59078e6933cc30ac79ba41f009c784f2d
+    }
+}

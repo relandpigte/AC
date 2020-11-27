@@ -17,10 +17,13 @@ namespace Academically.Services.Offers.Dto
         public decimal SingleSessionRate { get; set; }
         public decimal MultipleSessionRate { get; set; }
         public int MultipleSessionCount { get; set; }
-        public bool? IsAccepted { get; set; }
-        public long TutorId { get; set; }
+<<<<<<< HEAD
 
         public UserDto Tutor { get; set; }
         public UserProfileDto TutorProfile { get; set; }
+=======
+        public bool? IsAccepted { get; set; }
+        public long TutorId { get; set; }
+>>>>>>> d1cd34f59078e6933cc30ac79ba41f009c784f2d
     }
 }

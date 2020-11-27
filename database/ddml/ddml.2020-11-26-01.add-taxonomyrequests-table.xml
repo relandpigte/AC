@@ -1,0 +1,41 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="root (generated)" id="c5d50c5b-2fa8-11eb-9472-1831bf981123-1">
+        <createTable tableName="AcademicallyDisciplineTaxonomyRequests">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Notes" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ParentId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="c5d50c5b-2fa8-11eb-9472-1831bf981123-2">
+        <createIndex indexName="FK_DTRs_DisciplineTaxonomy_DisciplineTaxonomyId_idx" tableName="AcademicallyDisciplineTaxonomyRequests">
+            <column name="ParentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="c5d50c5b-2fa8-11eb-9472-1831bf981123-3">
+        <createIndex indexName="FK_DTRs_User_UserId_idx" tableName="AcademicallyDisciplineTaxonomyRequests">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="c5d50c5b-2fa8-11eb-9472-1831bf981123-4">
+        <addForeignKeyConstraint baseColumnNames="ParentId" baseTableName="AcademicallyDisciplineTaxonomyRequests" constraintName="FK_DTRs_DisciplineTaxonomy_DisciplineTaxonomyId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallydisciplinetaxonomies" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="c5d50c5b-2fa8-11eb-9472-1831bf981123-5">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="AcademicallyDisciplineTaxonomyRequests" constraintName="FK_DTRs_User_UserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

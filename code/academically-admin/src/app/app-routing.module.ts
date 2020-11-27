@@ -20,6 +20,7 @@ import { StudentProposalComponent } from './student-proposal/student-proposal.co
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { WrapperComponent } from './layout/wrapper/wrapper.component';
 import { ProfileHeaderComponent } from './profile/profile-header/profile-header.component';
+import { TutorOfferComponent } from './tutor-offer/tutor-offer.component';
 import { TutorialComponent } from './tutorials/tutorial/tutorial.component';
 
 @NgModule({
@@ -211,6 +212,18 @@ import { TutorialComponent } from './tutorials/tutorial/tutorial.component';
               {
                 path: '',
                 component: TutorialComponent,
+                outlet: 'content',
+              },
+            ],
+          },
+          {
+            path: 'tutor-offer/:offerId',
+            component: WrapperComponent,
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: TutorOfferComponent,
                 outlet: 'content',
               },
             ],

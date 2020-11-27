@@ -1,9 +1,15 @@
-﻿using Abp.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
+<<<<<<< HEAD
+=======
+using Abp.UI;
+using Academically.Application.Shared.Services;
+using Academically.Authorization.Users;
+using Academically.Configuration;
+>>>>>>> d1cd34f59078e6933cc30ac79ba41f009c784f2d
 using Academically.Entities;
 using Academically.Services.Offers.Dto;
 using Academically.Services.UserProfiles.Dto;
@@ -14,17 +20,23 @@ namespace Academically.Services.Offers
     public class TutorOffersAppService : AcademicallyAppServiceBase, ITutorOffersAppService
     {
         private readonly IRepository<TutorOffer, Guid> _tutorOffersRepository;
-        private readonly IRepository<UserEducation, Guid> _userEducationsRepository;
+<<<<<<< HEAD
         private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
 
         public TutorOffersAppService(
             IRepository<TutorOffer, Guid> tutorOffersRepository,
-            IRepository<UserEducation, Guid> userEducationsRepository,
             IRepository<UserProfile, Guid> userProfilesRepository
             )
         {
             _tutorOffersRepository = tutorOffersRepository;
             _userProfilesRepository = userProfilesRepository;
+=======
+        private readonly IRepository<UserEducation, Guid> _userEducationsRepository;
+        public TutorOffersAppService(
+            IRepository<TutorOffer, Guid> tutorOffersRepository,
+            IRepository<UserEducation, Guid> userEducationsRepository)
+        {
+            _tutorOffersRepository = tutorOffersRepository;
             _userEducationsRepository = userEducationsRepository;
         }
 
@@ -41,14 +53,20 @@ namespace Academically.Services.Offers
             }
 
             return offer;
+>>>>>>> d1cd34f59078e6933cc30ac79ba41f009c784f2d
         }
 
         public async Task CreateAsync(CreateTutorOfferDto input)
         {
             var tutorId = AbpSession.UserId.Value;
             var offer = await _tutorOffersRepository.FirstOrDefaultAsync(e => e.TutorialId == input.TutorialId && e.TutorId == tutorId);
-            
+<<<<<<< HEAD
+
             if (offer == null)
+=======
+            
+            if(offer == null)
+>>>>>>> d1cd34f59078e6933cc30ac79ba41f009c784f2d
             {
                 offer = new TutorOffer();
                 offer.CreationTime = DateTime.UtcNow;
@@ -86,6 +104,7 @@ namespace Academically.Services.Offers
             return offer;
         }
 
+<<<<<<< HEAD
         public async Task<IEnumerable<GetTutorOfferDto>> GetAllAsync(Guid tutorialId)
         {
             var offers = await _tutorOffersRepository.GetAll()
@@ -99,14 +118,13 @@ namespace Academically.Services.Offers
             foreach (var offer in offers)
             {
                 offer.TutorProfile = await _userProfilesRepository.GetAll()
-                    .Where(e => e.UserId == offer.TutorId)
+                    .Where(e => e.UserId == offer.Tutor.Id)
                     .Select(e => ObjectMapper.Map<UserProfileDto>(e))
                     .FirstOrDefaultAsync();
             }
 
             return offers;
-        }
-        
+=======
         public async Task<int> GetTutorHighestEducationLevel(long userId)
         {
             var educationLevel = await _userEducationsRepository.GetAll()
@@ -117,6 +135,7 @@ namespace Academically.Services.Offers
 
 
             return educationLevel;
+>>>>>>> d1cd34f59078e6933cc30ac79ba41f009c784f2d
         }
     }
 }
