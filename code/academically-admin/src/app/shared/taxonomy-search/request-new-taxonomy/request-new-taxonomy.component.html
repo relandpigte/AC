@@ -21,7 +21,8 @@
           id="AreaOfStudy"
           name="AreaOfStudy"
           typeaheadOptionField="name"
-          [typeahead]="disciplineTaxonomies"
+          [typeahead]="disciplineTaxonomiesDataSource"
+          [typeaheadAsync]="true"
           [typeaheadMinLength]="0"
           (typeaheadOnSelect)="onTaxonomySelect($event)"
         />

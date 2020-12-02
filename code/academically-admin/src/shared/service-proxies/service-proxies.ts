@@ -853,10 +853,16 @@ export class DisciplineTaxonomiesServiceProxy {
     }
 
     /**
+     * @param userId (optional) 
+     * @param keyword (optional) 
      * @return Success
      */
-    getAllEditableTaxonomies(): Observable<GetAllDisciplineTaxonomyDto[]> {
-        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/GetAllEditableTaxonomies";
+    searchAllEditable(userId: number | null | undefined, keyword: string | null | undefined): Observable<DisciplineTaxonomyDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/SearchAllEditable?";
+        if (userId !== undefined && userId !== null)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (keyword !== undefined && keyword !== null)
+            url_ += "keyword=" + encodeURIComponent("" + keyword) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -867,21 +873,21 @@ export class DisciplineTaxonomiesServiceProxy {
             })
         };
 
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetAllEditableTaxonomies(response_);
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSearchAllEditable(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetAllEditableTaxonomies(<any>response_);
+                    return this.processSearchAllEditable(<any>response_);
                 } catch (e) {
-                    return <Observable<GetAllDisciplineTaxonomyDto[]>><any>_observableThrow(e);
+                    return <Observable<DisciplineTaxonomyDto[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<GetAllDisciplineTaxonomyDto[]>><any>_observableThrow(response_);
+                return <Observable<DisciplineTaxonomyDto[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAllEditableTaxonomies(response: HttpResponseBase): Observable<GetAllDisciplineTaxonomyDto[]> {
+    protected processSearchAllEditable(response: HttpResponseBase): Observable<DisciplineTaxonomyDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -895,7 +901,7 @@ export class DisciplineTaxonomiesServiceProxy {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(GetAllDisciplineTaxonomyDto.fromJS(item));
+                    result200.push(DisciplineTaxonomyDto.fromJS(item));
             }
             return _observableOf(result200);
             }));
@@ -904,7 +910,7 @@ export class DisciplineTaxonomiesServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<GetAllDisciplineTaxonomyDto[]>(<any>null);
+        return _observableOf<DisciplineTaxonomyDto[]>(<any>null);
     }
 }
 
@@ -7079,6 +7085,7 @@ export class GetAllDisciplineTaxonomyDto implements IGetAllDisciplineTaxonomyDto
     parentIdMap: string | undefined;
     size: number;
     totalDisciplines: number;
+    isEditable: boolean;
     children: GetAllDisciplineTaxonomyDto[] | undefined;
 
     constructor(data?: IGetAllDisciplineTaxonomyDto) {
@@ -7097,6 +7104,7 @@ export class GetAllDisciplineTaxonomyDto implements IGetAllDisciplineTaxonomyDto
             this.parentIdMap = _data["parentIdMap"];
             this.size = _data["size"];
             this.totalDisciplines = _data["totalDisciplines"];
+            this.isEditable = _data["isEditable"];
             if (Array.isArray(_data["children"])) {
                 this.children = [] as any;
                 for (let item of _data["children"])
@@ -7119,6 +7127,7 @@ export class GetAllDisciplineTaxonomyDto implements IGetAllDisciplineTaxonomyDto
         data["parentIdMap"] = this.parentIdMap;
         data["size"] = this.size;
         data["totalDisciplines"] = this.totalDisciplines;
+        data["isEditable"] = this.isEditable;
         if (Array.isArray(this.children)) {
             data["children"] = [];
             for (let item of this.children)
@@ -7141,6 +7150,7 @@ export interface IGetAllDisciplineTaxonomyDto {
     parentIdMap: string | undefined;
     size: number;
     totalDisciplines: number;
+    isEditable: boolean;
     children: GetAllDisciplineTaxonomyDto[] | undefined;
 }
 

@@ -36,7 +36,9 @@ export class TaxonomySearchComponent extends AppComponentBase implements OnInit 
   }
 
   onTaxonomySelectParent(taxonomy: GetAllDisciplineTaxonomyDto): void {
-    this.selectedParentTaxonomy = taxonomy;
+    if (taxonomy.isEditable) {
+      this.selectedParentTaxonomy = taxonomy;
+    }
   }
 
   onAddClick(): void {

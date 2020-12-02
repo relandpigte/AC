@@ -53,9 +53,13 @@ export class RequestNewTaxonomyComponent extends AppComponentBase implements OnI
   }
 
   private getDisciplineTaxonomies(): void {
-    this._disciplineTaxonomiesService.getAllEditableTaxonomies().subscribe(disciplineTaxonomies => {
-      this.disciplineTaxonomies = disciplineTaxonomies;
-    });
+    this.disciplineTaxonomiesDataSource = new Observable((observer: Observer<string>) => {
+      observer.next(this.disciplineTaxonomyName);
+    }).pipe(
+      switchMap((query: string) => {
+        return this._disciplineTaxonomiesService.searchAllEditable(undefined, query);
+      })
+    );
   }
 
   private saveDisciplineTaxonomyRequest(): void {

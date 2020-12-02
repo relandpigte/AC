@@ -107,14 +107,32 @@ namespace Academically.Services.DisciplineTaxonomies
             await _disciplineTaxonomyRequestsRepository.InsertAsync(disicplineTaxonomy);
         }
 
-        public async Task<IEnumerable<GetAllDisciplineTaxonomyDto>> GetAllEditableTaxonomies()
+        public async Task<IEnumerable<DisciplineTaxonomyDto>> SearchAllEditable(long? userId, string keyword)
         {
-             var disciplineTaxonomies = await _disciplieTaxonomiesRespository.GetAll()
+            List<DisciplineTaxonomyDto> disciplineTaxonomies;
+            if (userId.HasValue)
+            {
+                var userDisciplineTaxonomyIds = GetUserDisciplineTaxonomies(userId.Value);
+                disciplineTaxonomies = await _disciplieTaxonomiesRespository.GetAll()
+                    .WhereIf(!keyword.IsNullOrWhiteSpace(), e => e.Name.ToLower().Contains(keyword.ToLower()))
+                    .Where(e => !userDisciplineTaxonomyIds.Any(t => e.ParentIdMap.Contains(t)))
                     .Where(e => e.IsEditable)
+                    .OrderBy(e => e.Name)
+                    .Take(10)
+                    .Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e))
                     .ToListAsync();
-            var rootTaxonomies = GetChildren(disciplineTaxonomies, null);
-
-            return rootTaxonomies;
+            }
+            else
+            {
+                disciplineTaxonomies = await _disciplieTaxonomiesRespository.GetAll()
+                    .WhereIf(!keyword.IsNullOrWhiteSpace(), e => e.Name.ToLower().Contains(keyword.ToLower()))
+                    .Where(e => e.IsEditable)
+                    .OrderBy(e => e.Name)
+                    .Take(10)
+                    .Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e))
+                    .ToListAsync();
+            }
+            return disciplineTaxonomies;
         }
     }
 }
