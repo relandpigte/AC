@@ -99,6 +99,7 @@ import { RecentProjectsWidgetComponent } from './widgets/recent-projects-widget/
 import { TutorialComponent } from './tutorials/tutorial/tutorial.component';
 import { TutorialProposalComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-proposal.component';
 import { TutorialExpandProposalComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-expand-proposal/tutorial-expand-proposal.component';
+import { FinancialDashboardComponent } from './home/financial-dashboard/financial-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -183,6 +184,7 @@ import { TutorialExpandProposalComponent } from './tutorials/tutorial/tutorial-p
     TutorialComponent,
     TutorialProposalComponent,
     TutorialExpandProposalComponent,
+    FinancialDashboardComponent,
   ],
   imports: [
     CommonModule,

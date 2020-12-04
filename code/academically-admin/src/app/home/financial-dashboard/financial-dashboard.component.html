@@ -1,0 +1,410 @@
+<div class="row">
+  <div class="col-12 col-lg-6 col-xl">
+    <div class="card">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col">
+            <h6 class="text-uppercase text-muted mb-2">
+              {{ 'TotalIncome' | localize }}
+            </h6>
+            <span class="h2 mb-0">
+              $24,500
+            </span>
+            <span class="badge badge-soft-success mt-n1">
+              +3.5%
+            </span>
+          </div>
+          <div class="col-auto">
+            <span class="h2 fe fe-dollar-sign text-muted mb-0"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6 col-xl">
+    <div class="card">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col">
+            <h6 class="text-uppercase text-muted mb-2">
+              {{ 'TotalExpenditure' | localize }}
+            </h6>
+            <span class="h2 mb-0">
+              $24,500
+            </span>
+            <span class="badge badge-soft-success mt-n1">
+              +3.5%
+            </span>
+          </div>
+          <div class="col-auto">
+            <span class="h2 fe fe-dollar-sign text-muted mb-0"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6 col-xl">
+    <div class="card">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col">
+            <h6 class="text-uppercase text-muted mb-2">{{ 'ProfitLoss' | localize }}</h6>
+            <span class="h2 mb-0"> 35.5% </span>
+          </div>
+          <div class="col-auto">
+            <div class="chart chart-sparkline">
+              <canvas class="chart-canvas" chart [chartSettings]="varkStyleChartSettings"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6 col-xl">
+    <div class="card">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col">
+            <h6 class="text-uppercase text-muted mb-2">
+              {{ 'ConversionRate' | localize }}
+            </h6>
+
+            <div class="row align-items-center no-gutters">
+              <div class="col-auto">
+                <span class="h2 mr-2 mb-0">
+                  84.5%
+                </span>
+              </div>
+              <div class="col">
+                <div class="progress progress-sm">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    style="width: 85%"
+                    aria-valuenow="85"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <span class="h2 fe fe-clipboard text-muted mb-0"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12 col-lg-12 col-xl">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+          <h1 class="header-title">
+            {{ 'Overview' | localize }}
+          </h1>
+        </div>
+        <div class="col-auto">
+          <ng-container *ngIf="profile.role === 'Tutor'">
+            <ul class="nav nav-tabs header-tabs">
+              <li
+                class="nav-item"
+                data-toggle="chart"
+                data-target="#earningsChart"
+                data-trigger="click"
+                data-action="toggle"
+                data-dataset="0"
+              >
+                <a href="#" class="nav-link text-center active" data-toggle="tab">
+                  <h6 class="header-pretitle text-secondary">
+                    CASH POSITION
+                  </h6>
+                  <h3 class="mb-0">
+                    £ 24.00
+                  </h3>
+                </a>
+              </li>
+              <li
+                class="nav-item"
+                data-toggle="chart"
+                data-target="#earningsChart"
+                data-trigger="click"
+                data-action="toggle"
+                data-dataset="1"
+              >
+                <a href="#" class="nav-link text-center" data-toggle="tab">
+                  <h6 class="header-pretitle text-secondary">
+                    LIVE SESSIONS
+                  </h6>
+                  <h3 class="mb-0">
+                    14 hrs
+                  </h3>
+                </a>
+              </li>
+              <li
+                class="nav-item"
+                data-toggle="chart"
+                data-target="#earningsChart"
+                data-trigger="click"
+                data-action="toggle"
+                data-dataset="2"
+              >
+                <a href="#" class="nav-link text-center" data-toggle="tab">
+                  <h6 class="header-pretitle text-secondary">
+                    OFFLINE WORK
+                  </h6>
+                  <h3 class="mb-0">
+                    3
+                  </h3>
+                </a>
+              </li>
+            </ul>
+          </ng-container>
+
+          <ng-container *ngIf="profile.role === 'Student'">
+            <ul class="nav nav-tabs header-tabs">
+              <li
+                class="nav-item"
+                data-toggle="chart"
+                data-target="#earningsChart"
+                data-trigger="click"
+                data-action="toggle"
+                data-dataset="1"
+              >
+                <a href="#" class="nav-link text-center active" data-toggle="tab">
+                  <h6 class="header-pretitle text-secondary">
+                    LIVE SESSIONS
+                  </h6>
+                  <h3 class="mb-0">
+                    14 hrs
+                  </h3>
+                </a>
+              </li>
+              <li
+                class="nav-item"
+                data-toggle="chart"
+                data-target="#earningsChart"
+                data-trigger="click"
+                data-action="toggle"
+                data-dataset="2"
+              >
+                <a href="#" class="nav-link text-center" data-toggle="tab">
+                  <h6 class="header-pretitle text-secondary">
+                    OFFLINE WORK
+                  </h6>
+                  <h3 class="mb-0">
+                    3
+                  </h3>
+                </a>
+              </li>
+            </ul>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="header-footer">
+      <div class="chart">
+        <canvas class="chart-canvas" chart [chartSettings]="barChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12 col-xl-8 col-xl">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-header-title">
+          This month
+        </h4>
+
+        <ng-container *ngIf="profile.role === 'Tutor'">
+          <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+            <li class="nav-item" data-toggle="chart" data-target="#salesChart" data-trigger="click" data-action="toggle" data-dataset="0">
+              <a class="nav-link active" href="#" data-toggle="tab">
+                Cash Position
+              </a>
+            </li>
+            <li class="nav-item" data-toggle="chart" data-target="#salesChart" data-trigger="click" data-action="toggle" data-dataset="1">
+              <a class="nav-link" href="#" data-toggle="tab">
+                Live Sessions
+              </a>
+            </li>
+            <li class="nav-item" data-toggle="chart" data-target="#salesChart" data-trigger="click" data-action="toggle" data-dataset="2">
+              <a class="nav-link" href="#" data-toggle="tab">
+                Offline Work
+              </a>
+            </li>
+          </ul>
+        </ng-container>
+
+        <ng-container *ngIf="profile.role === 'Student'">
+          <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+            <li class="nav-item" data-toggle="chart" data-target="#salesChart" data-trigger="click" data-action="toggle" data-dataset="1">
+              <a class="nav-link active" href="#" data-toggle="tab">
+                Live Sessions
+              </a>
+            </li>
+            <li class="nav-item" data-toggle="chart" data-target="#salesChart" data-trigger="click" data-action="toggle" data-dataset="2">
+              <a class="nav-link" href="#" data-toggle="tab">
+                Offline Work
+              </a>
+            </li>
+          </ul>
+        </ng-container>
+      </div>
+      <div class="card-body">
+        <div class="chart">
+          <canvas class="chart-canvas" chart [chartSettings]="lineChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-xl-4 col-xl">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-header-title">
+          Traffic Channels
+        </h4>
+
+        <ul class="nav nav-tabs nav-tabs-sm card-header-tabs" *ngIf="profile.role === 'Tutor'">
+          <li class="nav-item" data-toggle="chart" data-target="#trafficChart" data-trigger="click" data-action="toggle" data-dataset="0">
+            <a href="#" class="nav-link active" data-toggle="tab">
+              Teaching
+            </a>
+          </li>
+          <li class="nav-item" data-toggle="chart" data-target="#trafficChart" data-trigger="click" data-action="toggle" data-dataset="1">
+            <a href="#" class="nav-link" data-toggle="tab">
+              Learning
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="card-body">
+        <div class="chart chart-appended">
+          <canvas
+            chart
+            [chartSettings]="doughnutChart"
+            class="chart-canvas"
+            data-toggle="legend"
+            data-target="#trafficChartLegend"
+          ></canvas>
+        </div>
+
+        <div id="trafficChartLegend" class="chart-legend">
+          <span class="chart-legend-item"><i class="chart-legend-indicator" style="background-color: #2C7BE5"></i>Direct</span
+          ><span class="chart-legend-item"><i class="chart-legend-indicator" style="background-color: #A6C5F7"></i>Organic</span
+          ><span class="chart-legend-item"><i class="chart-legend-indicator" style="background-color: #D2DDEC"></i>Referral</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12 col-lg-12 col-xl">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-header-title">
+          {{ 'Invoices' | localize }}
+        </h4>
+        <ng-container *ngIf="profile.role === 'Tutor'">
+          <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+            <li class="nav-item" data-toggle="chart" data-target="#trafficChart" data-trigger="click" data-action="toggle" data-dataset="0">
+              <a href="#" class="nav-link active" data-toggle="tab">
+                {{ 'Teaching' | localize }}
+              </a>
+            </li>
+            <li class="nav-item" data-toggle="chart" data-target="#trafficChart" data-trigger="click" data-action="toggle" data-dataset="1">
+              <a href="#" class="nav-link" data-toggle="tab">
+                {{ 'Learning' | localize }}
+              </a>
+            </li>
+          </ul>
+        </ng-container>
+        <ng-container *ngIf="profile.role === 'Student'">
+          <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+            <li class="nav-item" data-toggle="chart" data-target="#trafficChart" data-trigger="click" data-action="toggle" data-dataset="1">
+              <a href="#" class="nav-link active" data-toggle="tab">
+                {{ 'Learning' | localize }}
+              </a>
+            </li>
+          </ul>
+        </ng-container>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-sm table-nowrap card-table">
+          <thead>
+            <tr>
+              <th>Invoice ID</th>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody class="font-size-base">
+            <tr>
+              <td>
+                <a href="invoice.html">Invoice #10395</a>
+              </td>
+              <td>
+                <time datetime="2020-04-24">Apr. 24, 2020</time>
+              </td>
+              <td>
+                $29.00
+              </td>
+              <td>
+                <span class="badge badge-secondary">Outstanding</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="invoice.html">Invoice #10244</a>
+              </td>
+              <td>
+                <time datetime="2020-03-24">Mar. 24, 2020</time>
+              </td>
+              <td>
+                $29.00
+              </td>
+              <td>
+                <span class="badge badge-success">Paid</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="invoice.html">Invoice #10119</a>
+              </td>
+              <td>
+                <time datetime="2020-02-24">Feb. 24, 2020</time>
+              </td>
+              <td>
+                $29.00
+              </td>
+              <td>
+                <span class="badge badge-success">Paid</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="invoice.html">Invoice #10062</a>
+              </td>
+              <td>
+                <time datetime="2020-01-24">Jan. 24, 2020</time>
+              </td>
+              <td>
+                $29.00
+              </td>
+              <td>
+                <span class="badge badge-success">Paid</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

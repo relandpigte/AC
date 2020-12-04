@@ -1,6 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="FinancialDashboard">Financial Dashboard</text>
+    <text name="TotalIncome">Total Income</text>
+    <text name="TotalExpenditure">Total Expenditure</text>
+    <text name="ProfitLoss">Profit/Loss</text>
+    <text name="ConversionRate">Conversion Rate</text>
+    <text name="CashPosition">Cash Position</text>
+    <text name="LiveSessions">Live Sessions</text>
+    <text name="OfflineWord">Offline Work</text>
+    <text name="Conversions">Conversions</text>
+    <text name="Teaching">Teaching</text>
+    <text name="Learning">Learning</text>
     <text name="ParentAreaofStudy">Parent Area of Study</text>
     <text name="NoRecentProject">No Recent Project</text>
     <text name="SuggestNewItem">Suggest New Item</text>
