@@ -51,7 +51,7 @@ namespace Academically.Services.Widgets
                 Role = role.DisplayName,
                 Status = user.IsActive ? L("Active") : L("Inactive"),
                 Progress = 83, // @TODO: Change this value to the actual percentage of the profile setup process
-                ProfilePictureUrl = _fileManagerService.GetFileUrl(userProfile?.ProfilePictureFileName, userId, AppSettingNames.Aws_S3_Folders_ProfilePictures),
+                ProfilePictureFileName = userProfile?.ProfilePictureFileName,
             };
 
             return output;

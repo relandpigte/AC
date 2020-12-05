@@ -128,10 +128,10 @@
       <img src="../../assets/img/profile-cover-2.jpg" alt="..." class="card-img-top" />
       <div class="card-body text-center">
         <a href="profile-posts.html" class="avatar avatar-xl card-avatar card-avatar-top">
-          <img [src]="tutorProfile.profilePictureUrl" class="avatar-img rounded-circle border border-4 border-card" alt="..." />
+          <img [src]="getProfilePicture(offer.tutor.profilePictureFileName, offer.tutor.userId)" class="avatar-img rounded-circle border border-4 border-card" alt="..." />
         </a>
         <h2 class="card-title">
-          <a href="profile-posts.html">{{ tutorProfile.firstName }} {{ tutorProfile.lastName }}</a>
+          <a href="profile-posts.html">{{ offer.tutor.user.name }} {{ offer.tutor.user.name }}</a>
         </h2>
         <p class="small text-muted mb-3">
           Tutor

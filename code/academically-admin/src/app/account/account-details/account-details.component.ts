@@ -41,6 +41,7 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
   isFullAddressRequired = false;
   isStudent = false;
   addressDataSource: Observable<SuggestionDataDto[]>;
+  profilePictureUrl: string;
 
   constructor(
     injector: Injector,
@@ -79,7 +80,7 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = event => {
-          this.model.profilePictureUrl = reader.result.toString();
+          this.profilePictureUrl = reader.result.toString();
         };
         this.profilePicturePlaceholderText = file.name;
         this.profilePicture = {
@@ -183,6 +184,9 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
       if (this.model.dateOfBirth) {
         this.dateOfBirth = this.model.dateOfBirth.toDate();
       }
+      if (this.model.profilePictureFileName) {
+        this.profilePictureUrl = this.getProfilePicture(this.model.profilePictureFileName, this.model.userId);
+      }
       this.setRequiredFields();
       this.isLoading = false;
       this._cdRef.detectChanges();
@@ -214,7 +218,7 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
       .subscribe(() => {
         this.clearUploader();
         this.notify.info(this.l('SavedSuccessfully'));
-        abp.event.trigger(uiEvents.profileDetailsUpdated, this.model);
+        abp.event.trigger(uiEvents.profileDetailsUpdated, this.model, this.profilePictureUrl);
         this.form.form.markAsPristine();
         this.getDetails();
       });

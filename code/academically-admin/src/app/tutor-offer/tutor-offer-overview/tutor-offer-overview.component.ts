@@ -22,9 +22,8 @@ import { AcceptTutorOfferComponent } from './accept-tutor-offer/accept-tutor-off
 export class TutorOfferOverviewComponent extends AppComponentBase implements OnInit {
   id: string;
   tutorialId: string;
-  tutorId: number;
+  tutorId: string;
   offer: GetTutorOfferDto = new GetTutorOfferDto();
-  tutorProfile: GetProfileDetailDto = new GetProfileDetailDto();
   studentProposal: GetStudentProposalDto = new GetStudentProposalDto();
   tutorSupportService: UserSupportServiceDto = new UserSupportServiceDto();
   highestEducationLevel: number;
@@ -62,16 +61,9 @@ export class TutorOfferOverviewComponent extends AppComponentBase implements OnI
       this.offer = offer;
       this.tutorId = this.offer.tutorId;
       this.tutorialId = this.offer.tutorialId;
-      this.getTutorProfile(this.offer.tutorId);
       this.getStudentProposal(this.offer.tutorialId);
-      this.getTutorSupportService(this.offer.tutorId);
-      this.getTutorHighestEducationLevel(this.offer.tutorId);
-    });
-  }
-
-  private getTutorProfile(userId: number): void {
-    this._userProfileService.getDetail(userId).subscribe(profile => {
-      this.tutorProfile = profile;
+      this.getTutorSupportService(this.offer.tutor.userId);
+      this.getTutorHighestEducationLevel(this.offer.tutor.userId);
     });
   }
 

@@ -6,16 +6,17 @@ import {
   GetStudentProposalDto,
   ProposalsServiceProxy,
   TutorOffersServiceProxy,
-  UserSupportServiceDto
+  UserSupportServiceDto,
 } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ReviseStudentProposalComponent } from './revise-student-proposal/revise-student-proposal.component';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'student-proposal-overview',
   templateUrl: './student-proposal-overview.component.html',
-  styleUrls: ['./student-proposal-overview.component.less']
+  styleUrls: ['./student-proposal-overview.component.less'],
 })
 export class StudentProposalOverviewComponent extends AppComponentBase implements OnInit {
   id: string;
@@ -42,7 +43,7 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
 
   ngOnInit(): void {
     this.isLoading = true;
-    this._acativatedRoute.paramMap.subscribe(paramMap => {
+    this._acativatedRoute.paramMap.subscribe((paramMap) => {
       this.id = paramMap.get('tutorialId');
       if (this.id) {
         this.getStudentProposal();
@@ -93,7 +94,7 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
   }
 
   private getStudentProposal(): void {
-    this._proposalsService.getStudentProposal(this.id).subscribe(proposal => {
+    this._proposalsService.getStudentProposal(this.id).subscribe((proposal) => {
       this.isLoading = false;
       this.studentProposal = proposal;
       this.studentFullName = proposal.user.fullName;
@@ -105,40 +106,42 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
   }
 
   private getTutorAreasOfStudy(): void {
-    this._proposalsService.getTutorDisciplineTaxonomies().subscribe(areasOfStudy => {
+    this._proposalsService.getTutorDisciplineTaxonomies().subscribe((areasOfStudy) => {
       this.isLoading = false;
       this.tutorAreasOfStudies = areasOfStudy;
     });
   }
 
   private getTutorSupportService(): void {
-    this._proposalsService.getTutorSupportService(null).subscribe(supportService => {
+    this._proposalsService.getTutorSupportService(null).subscribe((supportService) => {
       this.isLoading = false;
-      this.tutorSupportService = supportService;
-      this.offer.singleSessionRate = !this.offer.singleSessionRate
-        ? this.tutorSupportService.userSupportServiceSessionRate.singleSessionRate
-        : this.offer.singleSessionRate;
+      if (!_.isEmpty(supportService)) {
+        this.tutorSupportService = supportService;
+        this.offer.singleSessionRate = !this.offer.singleSessionRate
+          ? this.tutorSupportService.userSupportServiceSessionRate.singleSessionRate
+          : this.offer.singleSessionRate;
 
-      this.offer.multipleSessionRate = !this.offer.multipleSessionRate
-        ? this.tutorSupportService.userSupportServiceSessionRate.multipleSessionRate
-        : this.offer.multipleSessionRate;
+        this.offer.multipleSessionRate = !this.offer.multipleSessionRate
+          ? this.tutorSupportService.userSupportServiceSessionRate.multipleSessionRate
+          : this.offer.multipleSessionRate;
 
-      this.offer.multipleSessionCount = !this.offer.multipleSessionCount
-        ? this.tutorSupportService.userSupportServiceSessionRate.multipleSessionCount
-        : this.offer.multipleSessionCount;
+        this.offer.multipleSessionCount = !this.offer.multipleSessionCount
+          ? this.tutorSupportService.userSupportServiceSessionRate.multipleSessionCount
+          : this.offer.multipleSessionCount;
+      }
     });
   }
 
   private getStudentTutorialHighestLevlAreasOfStudy(): void {
     this._proposalsService
       .getTutorialHighestLevelAreaOfStudies(this.studentProposal.user.id, this.id)
-      .subscribe(studentTutorialAreasOfStudies => {
+      .subscribe((studentTutorialAreasOfStudies) => {
         this.highLevelTutorialAreasOfStudies = studentTutorialAreasOfStudies;
       });
   }
 
   private getTutorOffer(): void {
-    this._tutorOfferService.getOffer(this.id).subscribe(offer => {
+    this._tutorOfferService.getOffer(this.id).subscribe((offer) => {
       if (Object.keys(offer).length === 0) {
         this.offer.tutorialId = this.id;
         this.offer.studentId = this.studentProposal.user.id;
@@ -151,7 +154,7 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
   private showReviseStudentProposalModal(): void {
     const modalSettings = this.defaultModalSettings;
     modalSettings.initialState = {
-      offer: this.offer
+      offer: this.offer,
     };
     const modalRef = this._modalService.show(ReviseStudentProposalComponent, modalSettings);
     const modal: ReviseStudentProposalComponent = modalRef.content;

@@ -91,7 +91,6 @@ namespace Academically.Services.UserProfiles
             output.UserId = user.Id;
             output.FirstName = user.Name;
             output.LastName = user.Surname;
-            output.ProfilePictureUrl = _fileManagerService.GetFileUrl(userProfile?.ProfilePictureFileName, userId, AppSettingNames.Aws_S3_Folders_ProfilePictures);
             output.DateJoined = user.CreationTime;
             output.Role = role.DisplayName;
 

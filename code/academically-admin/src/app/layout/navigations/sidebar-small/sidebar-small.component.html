@@ -33,7 +33,7 @@
           aria-expanded="false"
         >
           <div class="avatar avatar-sm avatar-online">
-            <img [src]="getImageUrl(user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
+            <img [src]="getProfilePicture(user.profilePictureUrl, user.id)" class="avatar-img rounded-circle" alt="profile" />
           </div>
         </a>
 
@@ -72,7 +72,7 @@
             aria-expanded="false"
           >
             <div class="avatar avatar-sm avatar-online">
-              <img [src]="getImageUrl(user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
+              <img [src]="getProfilePicture(user.profilePictureUrl, user.id)" class="avatar-img rounded-circle" alt="profile" />
             </div>
           </a>
 

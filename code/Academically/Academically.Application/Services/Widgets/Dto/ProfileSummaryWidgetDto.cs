@@ -6,6 +6,6 @@
         public string Role { get; set; }
         public string Status { get; set; }
         public int Progress { get; set; }
-        public string ProfilePictureUrl { get; set; }
+        public string ProfilePictureFileName { get; set; }
     }
 }

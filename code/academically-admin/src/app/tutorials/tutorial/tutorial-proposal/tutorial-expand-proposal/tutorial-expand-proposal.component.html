@@ -138,17 +138,20 @@
           <div class="card-body card-avatar-body text-center">
             <a href="javascript:;" class="avatar avatar-xl card-avatar card-avatar-top">
               <img
-                [src]="getImageUrl(tutorOffer.tutorProfile.profilePictureFileName)"
+                [src]="getProfilePicture(tutorOffer.tutor.profilePictureFileName, tutorOffer.tutor.userId)"
                 class="avatar-img rounded-circle border border-4 border-card"
                 alt="..."
               />
             </a>
             <h2 class="card-title">
-              <a href="profile-posts.html">{{ tutorOffer.tutor.fullName }}</a>
+              <a href="profile-posts.html">{{ tutorOffer.tutor.user.fullName }}</a>
             </h2>
             <p class="small text-muted mb-3">Tutor</p>
-            <div *ngIf="tutorOffer.tutor.userDisciplineTaxonomies" class="text-center mb-3">
-              <span *ngFor="let userDisciplineTaxonomy of tutorOffer.tutor.userDisciplineTaxonomies" class="badge badge-info ml-1 mr-1">
+            <div *ngIf="tutorOffer.tutor.user.userDisciplineTaxonomies" class="text-center mb-3">
+              <span
+                *ngFor="let userDisciplineTaxonomy of tutorOffer.tutor.user.userDisciplineTaxonomies"
+                class="badge badge-info ml-1 mr-1"
+              >
                 {{ userDisciplineTaxonomy.disciplineTaxonomy.name }}
               </span>
             </div>

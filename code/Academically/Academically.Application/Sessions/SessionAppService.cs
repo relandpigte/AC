@@ -51,6 +51,7 @@ namespace Academically.Sessions
                 if (userProfile != null)
                 {
                     output.User.ProfilePictureUrl = _fileManagerService.GetFileUrl(userProfile.ProfilePictureFileName, user.Id, AppSettingNames.Aws_S3_Folders_ProfilePictures);
+                    output.User.DirectoryBaseUrl = _fileManagerService.GetDirectoryUrl();
                 }
             }
 

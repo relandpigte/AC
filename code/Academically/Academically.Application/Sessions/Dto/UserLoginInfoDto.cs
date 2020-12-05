@@ -18,6 +18,8 @@ namespace Academically.Sessions.Dto
 
         public string ProfilePictureUrl { get; set; }
 
+        public string DirectoryBaseUrl { get; set; }
+
         public IEnumerable<string> Roles { get; set; }
     }
 }

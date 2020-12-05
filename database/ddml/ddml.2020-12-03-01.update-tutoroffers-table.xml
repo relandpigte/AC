@@ -1,0 +1,19 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1607086419758-1">
+        <sql>
+            SET foreign_key_checks = 0;
+            TRUNCATE AcademicallyTutorOffers;
+            SET foreign_key_checks = 1;
+        </sql>    
+    </changeSet>
+    <changeSet author="root (generated)" id="1607086419758-2">
+        <dropForeignKeyConstraint baseTableName="AcademicallyTutorOffers" constraintName="FK_TutorOffers_User_UserId"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1607086419758-3">
+        <modifyDataType columnName="TutorId" newDataType="char(36)" tableName="AcademicallyTutorOffers"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1607086419758-4">
+        <addForeignKeyConstraint baseColumnNames="TutorId" baseTableName="AcademicallyTutorOffers" constraintName="FK_TutorOffers_UserProfiles_TutorId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyUserProfiles" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

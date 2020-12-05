@@ -9,18 +9,21 @@ import { AppComponentBase } from '@shared/app-component-base';
   styleUrls: ['./profile-summary-widget.component.less'],
 })
 export class ProfileSummaryWidgetComponent extends AppComponentBase implements OnInit {
+  userId: number;
   model: ProfileSummaryWidgetDto = new ProfileSummaryWidgetDto();
   isLoading = false;
 
   constructor(injector: Injector, private _widgetsServiceProxy: WidgetsServiceProxy, private cd: ChangeDetectorRef) {
     super(injector);
-    abp.event.on(uiEvents.profileDetailsUpdated, (item: GetProfileDetailDto) => {
-      this.model.profilePictureUrl = item.profilePictureUrl;
-      this.model.fullName = `${item.firstName} ${item.lastName}`;
+    abp.event.on(uiEvents.profileDetailsUpdated, (profile: GetProfileDetailDto, profilePictureUrl: string) => {
+      this.model.profilePictureFileName = profilePictureUrl;
+      this.model.fullName = `${profile.firstName} ${profile.lastName}`;
+      this.cd.detectChanges();
     });
   }
 
   ngOnInit(): void {
+    this.userId = this.appSession.userId;
     this.getProfileSummaryWidget();
   }
 

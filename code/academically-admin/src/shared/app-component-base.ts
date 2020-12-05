@@ -67,13 +67,30 @@ export abstract class AppComponentBase {
     return this.permission.isGranted(permissionName);
   }
 
-  getImageUrl(defaultUrl: string): string {
-    return defaultUrl ? defaultUrl : 'assets/img/anonymous.png';
+  getProfilePicture(fileNameOrUrl: string, userId?: number): string {
+    if (fileNameOrUrl) {
+      if (this.isValidUrl(fileNameOrUrl)) {
+        return fileNameOrUrl;
+      } else {
+        return `${this.appSession.user.directoryBaseUrl}/${userId}/profile-pictures/${fileNameOrUrl}`;
+      }
+    }
+    return 'assets/img/anonymous.png';
   }
 
   protected enumToArray(enumeraton) {
     return Object.keys(enumeraton)
       .filter((e) => isNaN(Number(e)) === true)
       .map((key) => enumeraton[key]);
+  }
+
+  private isValidUrl(string): boolean {
+    try {
+      new URL(string);
+    } catch (_) {
+      return false;
+    }
+
+    return true;
   }
 }

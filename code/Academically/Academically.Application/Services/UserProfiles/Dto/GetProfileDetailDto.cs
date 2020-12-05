@@ -17,8 +17,8 @@ namespace Academically.Services.UserProfiles.Dto
         public double? Longitude { get; set; }
         public double? Latitude { get; set; }
         public string About { get; set; }
+        public string ProfilePictureFileName { get; set; }
 
-        public string ProfilePictureUrl { get; set; }
         public DateTime DateJoined { get; set; }
         public string Role { get; set; }
     }

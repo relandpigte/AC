@@ -9,8 +9,8 @@
             <img
               alt="..."
               class="avatar-img rounded-circle border border-4 border-body"
-              [src]="getImageUrl(profileDetail.profilePictureUrl)"
-              [class.no-picture-border]="!profileDetail.profilePictureUrl"
+              [src]="getProfilePicture(profileDetail.profilePictureFileName, profileDetail.userId)"
+              [class.no-picture-border]="!profileDetail.profilePictureFileName"
             />
           </div>
         </div>

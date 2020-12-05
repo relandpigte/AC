@@ -1,9 +1,6 @@
-﻿using Abp.Domain.Entities;
-using Academically.Authorization.Users;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+using Abp.Domain.Entities;
 
 namespace Academically.Entities
 {
@@ -11,7 +8,7 @@ namespace Academically.Entities
     public class TutorOffer : Entity<Guid>
     {
         public Guid TutorialId { get; set; }
-        public long TutorId { get; set; }
+        public Guid TutorId { get; set; }
         public bool? IsAccepted { get; set; }
         public bool IsSubmitted { get; set; }
         public DateTime CreationTime { get; set; }
@@ -22,6 +19,6 @@ namespace Academically.Entities
         public DateTime? AcceptedDate { get; set; }
 
         [ForeignKey("TutorId")]
-        public virtual User Tutor { get; set; }
+        public virtual UserProfile Tutor { get; set; }
     }
 }

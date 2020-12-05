@@ -104,18 +104,23 @@ namespace Academically.Aws.Services
         {
             if (!fileName.IsNullOrWhiteSpace())
             {
-                string region = _settingManager.GetSettingValue(AppSettingNames.Aws_Region);
-                string bucket = _settingManager.GetSettingValue(AppSettingNames.Aws_S3_AssetsBucket);
+                var s3Bucket = GetDirectoryUrl();
                 if (!folderSetting.IsNullOrWhiteSpace())
                 {
                     string folder = _settingManager.GetSettingValue(folderSetting);
-                    return $"https://{bucket}.s3.{region}.amazonaws.com/{userId}/{folder}/{fileName}";
+                    return $"{s3Bucket}/{userId}/{folder}/{fileName}";
                 }
-
-                return $"https://{bucket}.s3.{region}.amazonaws.com/{fileName}";
+                return $"{s3Bucket}/{userId}/{fileName}";
             }
 
             return string.Empty;
+        }
+
+        public string GetDirectoryUrl()
+        {
+            string region = _settingManager.GetSettingValue(AppSettingNames.Aws_Region);
+            string bucket = _settingManager.GetSettingValue(AppSettingNames.Aws_S3_AssetsBucket);
+            return $"https://{bucket}.s3.{region}.amazonaws.com";
         }
     }
 }

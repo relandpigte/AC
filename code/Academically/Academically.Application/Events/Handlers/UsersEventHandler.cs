@@ -26,10 +26,12 @@ namespace Academically.Events.Handlers
         [UnitOfWork]
         public async Task HandleEventAsync(EntityCreatedEventData<UserLoginAttempt> eventData)
         {
-
-            var user = await _usersRepository.GetAsync(eventData.Entity.UserId.Value);
-            user.LastLoginTime = eventData.Entity.CreationTime;
-            await _usersRepository.UpdateAsync(user);
+            if (eventData.Entity.UserId.HasValue)
+            {
+                var user = await _usersRepository.GetAsync(eventData.Entity.UserId.Value);
+                user.LastLoginTime = eventData.Entity.CreationTime;
+                await _usersRepository.UpdateAsync(user);
+            }
         }
     }
 }

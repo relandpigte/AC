@@ -8920,6 +8920,7 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
     userName: string | undefined;
     emailAddress: string | undefined;
     profilePictureUrl: string | undefined;
+    directoryBaseUrl: string | undefined;
     roles: string[] | undefined;
     id: number;
 
@@ -8939,6 +8940,7 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
             this.userName = _data["userName"];
             this.emailAddress = _data["emailAddress"];
             this.profilePictureUrl = _data["profilePictureUrl"];
+            this.directoryBaseUrl = _data["directoryBaseUrl"];
             if (Array.isArray(_data["roles"])) {
                 this.roles = [] as any;
                 for (let item of _data["roles"])
@@ -8962,6 +8964,7 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
         data["userName"] = this.userName;
         data["emailAddress"] = this.emailAddress;
         data["profilePictureUrl"] = this.profilePictureUrl;
+        data["directoryBaseUrl"] = this.directoryBaseUrl;
         if (Array.isArray(this.roles)) {
             data["roles"] = [];
             for (let item of this.roles)
@@ -8985,6 +8988,7 @@ export interface IUserLoginInfoDto {
     userName: string | undefined;
     emailAddress: string | undefined;
     profilePictureUrl: string | undefined;
+    directoryBaseUrl: string | undefined;
     roles: string[] | undefined;
     id: number;
 }
@@ -9678,9 +9682,8 @@ export class GetTutorOfferDto implements IGetTutorOfferDto {
     multipleSessionRate: number;
     multipleSessionCount: number;
     isAccepted: boolean | undefined;
-    tutorId: number;
-    tutor: UserDto;
-    tutorProfile: UserProfileDto;
+    tutorId: string;
+    tutor: UserProfileDto;
     id: string;
 
     constructor(data?: IGetTutorOfferDto) {
@@ -9703,8 +9706,7 @@ export class GetTutorOfferDto implements IGetTutorOfferDto {
             this.multipleSessionCount = _data["multipleSessionCount"];
             this.isAccepted = _data["isAccepted"];
             this.tutorId = _data["tutorId"];
-            this.tutor = _data["tutor"] ? UserDto.fromJS(_data["tutor"]) : <any>undefined;
-            this.tutorProfile = _data["tutorProfile"] ? UserProfileDto.fromJS(_data["tutorProfile"]) : <any>undefined;
+            this.tutor = _data["tutor"] ? UserProfileDto.fromJS(_data["tutor"]) : <any>undefined;
             this.id = _data["id"];
         }
     }
@@ -9728,7 +9730,6 @@ export class GetTutorOfferDto implements IGetTutorOfferDto {
         data["isAccepted"] = this.isAccepted;
         data["tutorId"] = this.tutorId;
         data["tutor"] = this.tutor ? this.tutor.toJSON() : <any>undefined;
-        data["tutorProfile"] = this.tutorProfile ? this.tutorProfile.toJSON() : <any>undefined;
         data["id"] = this.id;
         return data; 
     }
@@ -9750,9 +9751,8 @@ export interface IGetTutorOfferDto {
     multipleSessionRate: number;
     multipleSessionCount: number;
     isAccepted: boolean | undefined;
-    tutorId: number;
-    tutor: UserDto;
-    tutorProfile: UserProfileDto;
+    tutorId: string;
+    tutor: UserProfileDto;
     id: string;
 }
 
@@ -10218,7 +10218,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
     longitude: number | undefined;
     latitude: number | undefined;
     about: string | undefined;
-    profilePictureUrl: string | undefined;
+    profilePictureFileName: string | undefined;
     dateJoined: moment.Moment;
     role: string | undefined;
 
@@ -10246,7 +10246,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
             this.longitude = _data["longitude"];
             this.latitude = _data["latitude"];
             this.about = _data["about"];
-            this.profilePictureUrl = _data["profilePictureUrl"];
+            this.profilePictureFileName = _data["profilePictureFileName"];
             this.dateJoined = _data["dateJoined"] ? moment(_data["dateJoined"].toString()) : <any>undefined;
             this.role = _data["role"];
         }
@@ -10274,7 +10274,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
         data["longitude"] = this.longitude;
         data["latitude"] = this.latitude;
         data["about"] = this.about;
-        data["profilePictureUrl"] = this.profilePictureUrl;
+        data["profilePictureFileName"] = this.profilePictureFileName;
         data["dateJoined"] = this.dateJoined ? this.dateJoined.toISOString() : <any>undefined;
         data["role"] = this.role;
         return data; 
@@ -10302,7 +10302,7 @@ export interface IGetProfileDetailDto {
     longitude: number | undefined;
     latitude: number | undefined;
     about: string | undefined;
-    profilePictureUrl: string | undefined;
+    profilePictureFileName: string | undefined;
     dateJoined: moment.Moment;
     role: string | undefined;
 }
@@ -10509,7 +10509,7 @@ export class ProfileSummaryWidgetDto implements IProfileSummaryWidgetDto {
     role: string | undefined;
     status: string | undefined;
     progress: number;
-    profilePictureUrl: string | undefined;
+    profilePictureFileName: string | undefined;
 
     constructor(data?: IProfileSummaryWidgetDto) {
         if (data) {
@@ -10526,7 +10526,7 @@ export class ProfileSummaryWidgetDto implements IProfileSummaryWidgetDto {
             this.role = _data["role"];
             this.status = _data["status"];
             this.progress = _data["progress"];
-            this.profilePictureUrl = _data["profilePictureUrl"];
+            this.profilePictureFileName = _data["profilePictureFileName"];
         }
     }
 
@@ -10543,7 +10543,7 @@ export class ProfileSummaryWidgetDto implements IProfileSummaryWidgetDto {
         data["role"] = this.role;
         data["status"] = this.status;
         data["progress"] = this.progress;
-        data["profilePictureUrl"] = this.profilePictureUrl;
+        data["profilePictureFileName"] = this.profilePictureFileName;
         return data; 
     }
 
@@ -10560,7 +10560,7 @@ export interface IProfileSummaryWidgetDto {
     role: string | undefined;
     status: string | undefined;
     progress: number;
-    profilePictureUrl: string | undefined;
+    profilePictureFileName: string | undefined;
 }
 
 export interface FileParameter {

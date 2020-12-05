@@ -125,12 +125,12 @@
               <div class="row align-items-center">
                 <div class="col-auto">
                   <a href="#!" class="avatar">
-                    <img [src]="getImageUrl(tutorOffer.tutorProfile.profilePictureFileName)" alt="..." class="avatar-img rounded-circle" />
+                    <img [src]="getProfilePicture(tutorOffer.tutor.profilePictureFileName, tutorOffer.tutor.userId)" alt="..." class="avatar-img rounded-circle" />
                   </a>
                 </div>
                 <div class="col ml-n2">
                   <h4 class="mb-1">
-                    {{ tutorOffer.tutor.name }} {{ tutorOffer.tutor.surname[0] }}
+                    {{ tutorOffer.tutor.user.name }} {{ tutorOffer.tutor.user.surname[0] }}
                     <span class="small rating">
                       <i class="fe fe-star"></i>
                       <i class="fe fe-star"></i>
@@ -155,8 +155,8 @@
               {{ tutorOffer.coverLetter }}
             </p>
 
-            <div *ngIf="tutorOffer.tutor.userDisciplineTaxonomies" class="tutor-aos">
-              <span *ngFor="let userDisciplineTaxonomy of tutorOffer.tutor.userDisciplineTaxonomies" class="badge badge-info">
+            <div *ngIf="tutorOffer.tutor.user.userDisciplineTaxonomies" class="tutor-aos">
+              <span *ngFor="let userDisciplineTaxonomy of tutorOffer.tutor.user.userDisciplineTaxonomies" class="badge badge-info">
                 {{ userDisciplineTaxonomy.disciplineTaxonomy.name }}
               </span>
             </div>

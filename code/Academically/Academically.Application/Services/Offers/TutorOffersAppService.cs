@@ -1,12 +1,11 @@
-﻿using Abp.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
+using Abp.UI;
 using Academically.Entities;
 using Academically.Services.Offers.Dto;
-using Academically.Services.UserProfiles.Dto;
 using Microsoft.EntityFrameworkCore;
 
 namespace Academically.Services.Offers
@@ -32,6 +31,7 @@ namespace Academically.Services.Offers
         {
             var offer = await _tutorOffersRepository.GetAll()
                 .Where(e => e.Id == offerId)
+                .Include(e => e.Tutor)
                 .Select(e => ObjectMapper.Map<GetTutorOfferDto>(e))
                 .FirstOrDefaultAsync();
 
@@ -45,14 +45,14 @@ namespace Academically.Services.Offers
 
         public async Task CreateAsync(CreateTutorOfferDto input)
         {
-            var tutorId = AbpSession.UserId.Value;
-            var offer = await _tutorOffersRepository.FirstOrDefaultAsync(e => e.TutorialId == input.TutorialId && e.TutorId == tutorId);
+            var tutor = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
+            var offer = await _tutorOffersRepository.FirstOrDefaultAsync(e => e.TutorialId == input.TutorialId && e.TutorId == tutor.Id);
             
             if (offer == null)
             {
                 offer = new TutorOffer();
                 offer.CreationTime = DateTime.UtcNow;
-                offer.TutorId = tutorId;
+                offer.TutorId = tutor.Id;
             }
 
             ObjectMapper.Map(input, offer);
@@ -78,8 +78,9 @@ namespace Academically.Services.Offers
 
         public async Task<GetTutorOfferDto> GetOfferAsync(Guid tutorialId)
         {
+            var tutor = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
             var offer = await _tutorOffersRepository.GetAll()
-                .Where(e => e.TutorId == AbpSession.UserId.Value && e.TutorialId == tutorialId)
+                .Where(e => e.TutorId == tutor.Id && e.TutorialId == tutorialId)
                 .Select(e => ObjectMapper.Map<GetTutorOfferDto>(e))
                 .FirstOrDefaultAsync();
 
@@ -91,18 +92,11 @@ namespace Academically.Services.Offers
             var offers = await _tutorOffersRepository.GetAll()
                 .Where(e => e.TutorialId == tutorialId)
                 .Include(e => e.Tutor)
-                    .ThenInclude(e => e.UserDisciplineTaxonomies)
-                        .ThenInclude(e => e.DisciplineTaxonomy)
+                    .ThenInclude(e => e.User)
+                        .ThenInclude(e => e.UserDisciplineTaxonomies)
+                            .ThenInclude(e => e.DisciplineTaxonomy)
                 .Select(e => ObjectMapper.Map<GetTutorOfferDto>(e))
                 .ToListAsync();
-
-            foreach (var offer in offers)
-            {
-                offer.TutorProfile = await _userProfilesRepository.GetAll()
-                    .Where(e => e.UserId == offer.TutorId)
-                    .Select(e => ObjectMapper.Map<UserProfileDto>(e))
-                    .FirstOrDefaultAsync();
-            }
 
             return offers;
         }

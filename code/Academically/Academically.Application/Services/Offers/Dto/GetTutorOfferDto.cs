@@ -3,7 +3,6 @@ using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Entities;
 using Academically.Services.UserProfiles.Dto;
-using Academically.Users.Dto;
 
 namespace Academically.Services.Offers.Dto
 {
@@ -18,9 +17,8 @@ namespace Academically.Services.Offers.Dto
         public decimal MultipleSessionRate { get; set; }
         public int MultipleSessionCount { get; set; }
         public bool? IsAccepted { get; set; }
-        public long TutorId { get; set; }
+        public Guid TutorId { get; set; }
 
-        public UserDto Tutor { get; set; }
-        public UserProfileDto TutorProfile { get; set; }
+        public UserProfileDto Tutor { get; set; }
     }
 }
