@@ -8,6 +8,8 @@ using Academically.Entities;
 using Academically.Services.Offers.Dto;
 using Academically.Services.UserProfiles.Dto;
 using Microsoft.EntityFrameworkCore;
+using Academically.Application.Shared.Services;
+using Academically.Configuration;
 
 namespace Academically.Services.Offers
 {
@@ -16,16 +18,19 @@ namespace Academically.Services.Offers
         private readonly IRepository<TutorOffer, Guid> _tutorOffersRepository;
         private readonly IRepository<UserEducation, Guid> _userEducationsRepository;
         private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
+        private readonly IFileManagerService _fileManagerService;
 
         public TutorOffersAppService(
             IRepository<TutorOffer, Guid> tutorOffersRepository,
             IRepository<UserEducation, Guid> userEducationsRepository,
-            IRepository<UserProfile, Guid> userProfilesRepository
+            IRepository<UserProfile, Guid> userProfilesRepository,
+            IFileManagerService fileManagerService
             )
         {
             _tutorOffersRepository = tutorOffersRepository;
             _userProfilesRepository = userProfilesRepository;
             _userEducationsRepository = userEducationsRepository;
+            _fileManagerService = fileManagerService;
         }
 
         public async Task<GetTutorOfferDto> GetAsync(Guid offerId)
@@ -102,6 +107,7 @@ namespace Academically.Services.Offers
                     .Where(e => e.UserId == offer.TutorId)
                     .Select(e => ObjectMapper.Map<UserProfileDto>(e))
                     .FirstOrDefaultAsync();
+                offer.TutorProfile.ProfilePictureFileName = _fileManagerService.GetFileUrl(offer.TutorProfile.ProfilePictureFileName, offer.TutorProfile.UserId, AppSettingNames.Aws_S3_Folders_ProfilePictures);
             }
 
             return offers;
