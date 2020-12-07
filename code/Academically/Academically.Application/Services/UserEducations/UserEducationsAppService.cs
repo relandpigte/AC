@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Academically.Authorization;
@@ -30,6 +31,11 @@ namespace Academically.Services.UserEducations
         {
             input.UserId = AbpSession.UserId.Value;
             return base.CreateAsync(input);
+        }
+
+        public override Task<PagedResultDto<UserEducationDto>> GetAllAsync(PagedAndSortedUserEducationResultRequestDto input)
+        {
+            return base.GetAllAsync(input);
         }
     }
 }

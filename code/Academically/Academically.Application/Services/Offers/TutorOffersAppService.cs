@@ -1,17 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Application.Services.Dto;
+using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Abp.UI;
 using Academically.Entities;
 using Academically.Services.Offers.Dto;
+using GeoCoordinatePortable;
 using Microsoft.EntityFrameworkCore;
 
 namespace Academically.Services.Offers
 {
     public class TutorOffersAppService : AcademicallyAppServiceBase, ITutorOffersAppService
     {
+        private const double METER_TO_MILE_CONVERSION = 0.00062137;
+
         private readonly IRepository<TutorOffer, Guid> _tutorOffersRepository;
         private readonly IRepository<UserEducation, Guid> _userEducationsRepository;
         private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
@@ -47,7 +52,7 @@ namespace Academically.Services.Offers
         {
             var tutor = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
             var offer = await _tutorOffersRepository.FirstOrDefaultAsync(e => e.TutorialId == input.TutorialId && e.TutorId == tutor.Id);
-            
+
             if (offer == null)
             {
                 offer = new TutorOffer();
@@ -87,26 +92,52 @@ namespace Academically.Services.Offers
             return offer;
         }
 
-        public async Task<IEnumerable<GetTutorOfferDto>> GetAllAsync(Guid tutorialId)
+        public async Task<PagedResultDto<GetTutorOfferDto>> GetAllAsync(PagedAndSortedTutorOfferResultRequestDto input)
         {
-            var offers = await _tutorOffersRepository.GetAll()
-                .Where(e => e.TutorialId == tutorialId)
+            var offersQuery = _tutorOffersRepository.GetAll()
                 .Include(e => e.Tutor)
                     .ThenInclude(e => e.User)
                         .ThenInclude(e => e.UserDisciplineTaxonomies)
                             .ThenInclude(e => e.DisciplineTaxonomy)
-                .Select(e => ObjectMapper.Map<GetTutorOfferDto>(e))
-                .ToListAsync();
+                .Where(e => e.TutorialId == input.TutorialIdFilter)
+                .WhereIf(input.EducationLevelFilter.HasValue, e => e.Tutor.User.UserEducations.Any(t => t.Level >= input.EducationLevelFilter.Value));
 
-            return offers;
+            var allOffers = await offersQuery.Select(e => ObjectMapper.Map<GetTutorOfferDto>(e)).ToListAsync();
+
+            var currentUserProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
+            if (currentUserProfile == null)
+            {
+                throw new UserFriendlyException(L("AddressNotDefinedErrorMessage"));
+            }
+            var userLocationCoordinate = new GeoCoordinate(currentUserProfile.Latitude ?? 0, currentUserProfile.Longitude ?? 0);
+
+            var allOffersQuery = allOffers.Select(e => new
+            {
+                to = e,
+                gc = (new GeoCoordinate(e.Tutor.Latitude ?? 0, e.Tutor.Longitude ?? 0).GetDistanceTo(userLocationCoordinate)) * METER_TO_MILE_CONVERSION
+            })
+            .WhereIf(input.DistanceFilter.HasValue, e => e.gc <= input.DistanceFilter.Value)
+            .OrderBy(e => e.gc)
+            .Select(e => e.to)
+            .AsQueryable();
+
+            var totalOffersCount = allOffersQuery.Count();
+
+            var offers = allOffersQuery
+                .PageBy(input)
+                .Take(input.MaxResultCount)
+                .ToList();
+
+
+            return new PagedResultDto<GetTutorOfferDto>(totalOffersCount, offers);
         }
-        
+
         public async Task<int> GetTutorHighestEducationLevel(long userId)
         {
             var educationLevel = await _userEducationsRepository.GetAll()
                 .Where(e => e.UserId == userId)
                 .OrderByDescending(e => e.Level)
-                .Select(e => (int) e.Level)
+                .Select(e => (int)e.Level)
                 .FirstOrDefaultAsync();
 
 

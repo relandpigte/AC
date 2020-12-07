@@ -3120,15 +3120,36 @@ export class TutorOffersServiceProxy {
     }
 
     /**
-     * @param tutorialId (optional) 
+     * @param tutorialIdFilter (optional) 
+     * @param educationLevelFilter (optional) 
+     * @param distanceFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(tutorialId: string | undefined): Observable<GetTutorOfferDto[]> {
+    getAll(tutorialIdFilter: string | undefined, educationLevelFilter: EducationLevel | undefined, distanceFilter: number | null | undefined, sorting: string | null | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<GetTutorOfferDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/TutorOffers/GetAll?";
-        if (tutorialId === null)
-            throw new Error("The parameter 'tutorialId' cannot be null.");
-        else if (tutorialId !== undefined)
-            url_ += "tutorialId=" + encodeURIComponent("" + tutorialId) + "&";
+        if (tutorialIdFilter === null)
+            throw new Error("The parameter 'tutorialIdFilter' cannot be null.");
+        else if (tutorialIdFilter !== undefined)
+            url_ += "TutorialIdFilter=" + encodeURIComponent("" + tutorialIdFilter) + "&";
+        if (educationLevelFilter === null)
+            throw new Error("The parameter 'educationLevelFilter' cannot be null.");
+        else if (educationLevelFilter !== undefined)
+            url_ += "EducationLevelFilter=" + encodeURIComponent("" + educationLevelFilter) + "&";
+        if (distanceFilter !== undefined && distanceFilter !== null)
+            url_ += "DistanceFilter=" + encodeURIComponent("" + distanceFilter) + "&";
+        if (sorting !== undefined && sorting !== null)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -3146,14 +3167,14 @@ export class TutorOffersServiceProxy {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<GetTutorOfferDto[]>><any>_observableThrow(e);
+                    return <Observable<GetTutorOfferDtoPagedResultDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<GetTutorOfferDto[]>><any>_observableThrow(response_);
+                return <Observable<GetTutorOfferDtoPagedResultDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<GetTutorOfferDto[]> {
+    protected processGetAll(response: HttpResponseBase): Observable<GetTutorOfferDtoPagedResultDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3164,11 +3185,7 @@ export class TutorOffersServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200.push(GetTutorOfferDto.fromJS(item));
-            }
+            result200 = GetTutorOfferDtoPagedResultDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3176,7 +3193,7 @@ export class TutorOffersServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<GetTutorOfferDto[]>(<any>null);
+        return _observableOf<GetTutorOfferDtoPagedResultDto>(<any>null);
     }
 
     /**
@@ -3821,62 +3838,6 @@ export class UserEducationsServiceProxy {
     }
 
     /**
-     * @param id (optional) 
-     * @return Success
-     */
-    get(id: string | undefined): Observable<UserEducationDto> {
-        let url_ = this.baseUrl + "/api/services/app/UserEducations/Get?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "Id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGet(<any>response_);
-                } catch (e) {
-                    return <Observable<UserEducationDto>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<UserEducationDto>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGet(response: HttpResponseBase): Observable<UserEducationDto> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = UserEducationDto.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<UserEducationDto>(<any>null);
-    }
-
-    /**
      * @param userId (optional) 
      * @param sorting (optional) 
      * @param skipCount (optional) 
@@ -3943,6 +3904,62 @@ export class UserEducationsServiceProxy {
             }));
         }
         return _observableOf<UserEducationDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<UserEducationDto> {
+        let url_ = this.baseUrl + "/api/services/app/UserEducations/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<UserEducationDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserEducationDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<UserEducationDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserEducationDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserEducationDto>(<any>null);
     }
 
     /**
@@ -9821,6 +9838,61 @@ export interface ICreateTutorOfferDto {
     singleSessionRate: number;
     multipleSessionRate: number;
     multipleSessionCount: number;
+}
+
+export class GetTutorOfferDtoPagedResultDto implements IGetTutorOfferDtoPagedResultDto {
+    totalCount: number;
+    items: GetTutorOfferDto[] | undefined;
+
+    constructor(data?: IGetTutorOfferDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(GetTutorOfferDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetTutorOfferDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetTutorOfferDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): GetTutorOfferDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new GetTutorOfferDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetTutorOfferDtoPagedResultDto {
+    totalCount: number;
+    items: GetTutorOfferDto[] | undefined;
 }
 
 export class CreateUserDto implements ICreateUserDto {

@@ -25,7 +25,7 @@
               aria-controls="all-proposals"
               aria-selected="false"
             >
-              All Proposals <span *ngIf="tutorOffers.length !== 0">({{ tutorOffers.length }})</span>
+              All Proposals <span *ngIf="tutorOffers.length !== 0">({{ totalItems }})</span>
             </a>
           </li>
           <li class="nav-item">
@@ -58,8 +58,8 @@
       </div>
     </div>
   </div>
-  <div *ngIf="tutorOffers.length !== 0" class="card-header filter">
-    <form>
+  <div class="card-header filter">
+    <form #filterForm="ngForm" (ngSubmit)="refresh()">
       <div class="form-row align-items-center">
         <div class="col">
           <label class="text-muted text-uppercase small font-weight-bold" for="NativeLanguage">Native Language</label>
@@ -71,7 +71,15 @@
         </div>
         <div class="col">
           <label class="text-muted text-uppercase small font-weight-bold" for="EducationLevel">Min Education Level</label>
-          <select id="EducationLevel" name="EducationLevel" type="text" class="form-control" required>
+          <select
+            [(ngModel)]="educationLevelFilter"
+            id="EducationLevel"
+            name="EducationLevel"
+            type="text"
+            class="form-control"
+            required
+            (change)="filterForm.ngSubmit.emit()"
+          >
             <option [ngValue]="undefined">{{ 'SelectLevel' | localize }}</option>
             <option *ngFor="let educationLevel of educationLevels" [value]="educationLevel">
               {{ 'EducationLevel' + educationLevel | localize }}
@@ -90,8 +98,14 @@
         </div>
         <div class="col">
           <label class="text-muted text-uppercase small font-weight-bold" for="Distance">Distance</label>
-          <select class="form-control" id="Distance" name="Distance">
-            <option [value]="-1">All</option>
+          <select
+            [(ngModel)]="distanceFilter"
+            class="form-control"
+            id="Distance"
+            name="Distance"
+            (change)="filterForm.ngSubmit.emit()"
+          >
+            <option [ngValue]="undefined">All</option>
             <option [value]="5">5 miles</option>
             <option [value]="10">10 miles</option>
             <option [value]="25">25 miles</option>
@@ -116,8 +130,13 @@
       </div>
     </form>
   </div>
-  <div class="card-body tutor-offers">
-    <div *ngFor="let tutorOffer of tutorOffers" class="row">
+  <div class="card-body tutor-offers" [busy]="isTableLoading">
+    <div
+      *ngFor="
+        let tutorOffer of tutorOffers | paginate: { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }
+      "
+      class="row tutor-offer-container"
+    >
       <div class="col-md-8 d-flex">
         <div class="card tutor-offer">
           <div class="card-body">
@@ -125,7 +144,11 @@
               <div class="row align-items-center">
                 <div class="col-auto">
                   <a href="#!" class="avatar">
-                    <img [src]="getProfilePicture(tutorOffer.tutor.profilePictureFileName, tutorOffer.tutor.userId)" alt="..." class="avatar-img rounded-circle" />
+                    <img
+                      [src]="getProfilePicture(tutorOffer.tutor.profilePictureFileName, tutorOffer.tutor.userId)"
+                      alt="..."
+                      class="avatar-img rounded-circle"
+                    />
                   </a>
                 </div>
                 <div class="col ml-n2">
@@ -268,17 +291,12 @@
         </div>
       </div>
       <div class="col">
-        <hr />
+        <hr class="divider" />
       </div>
     </div>
-    <nav *ngIf="tutorOffers.length !== 0" aria-label="Pagination">
-      <ul class="pagination">
-        <li class="page-item"><a class="page-link" href="javascript:;">1</a></li>
-        <li class="page-item"><a class="page-link" href="javascript:;">2</a></li>
-      </ul>
-    </nav>
     <div *ngIf="tutorOffers.length === 0" class="text-center">
       <h3 class="text-muted mb-0">No Proposal Available</h3>
     </div>
   </div>
+  <abp-pagination-controls id="server" (pageChange)="getDataPage($event)"></abp-pagination-controls>
 </div>

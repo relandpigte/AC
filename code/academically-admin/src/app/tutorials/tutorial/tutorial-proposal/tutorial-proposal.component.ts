@@ -1,41 +1,79 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
-import { EducationLevel, GetTutorOfferDto, TutorOffersServiceProxy } from '@shared/service-proxies/service-proxies';
+import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
+import {
+  EducationLevel,
+  GetTutorOfferDto,
+  GetTutorOfferDtoPagedResultDto,
+  TutorOffersServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { finalize } from 'rxjs/operators';
 import { TutorialExpandProposalComponent } from './tutorial-expand-proposal/tutorial-expand-proposal.component';
+
+class PagedAndSortedOffersRequestDto extends PagedAndSortedRequestDto {
+  tutorialIdFilter: string;
+  educationLevelFilter?: EducationLevel;
+  distanceFilter?: number;
+}
 
 @Component({
   selector: 'tutorial-proposal',
   templateUrl: './tutorial-proposal.component.html',
   styleUrls: ['./tutorial-proposal.component.less'],
 })
-export class TutorialProposalComponent extends AppComponentBase implements OnInit {
+export class TutorialProposalComponent extends PagedListingComponentBase<GetTutorOfferDto> {
   @Input() id: string;
+  educationLevelFilter?: EducationLevel;
+  distanceFilter?: number;
   educationLevels: number[] = [];
   tutorOffers: GetTutorOfferDto[] = [];
   keyword: string;
 
   constructor(injector: Injector, private _tutorOffersService: TutorOffersServiceProxy, private _modalService: BsModalService) {
     super(injector);
-  }
-
-  ngOnInit(): void {
     this.getEducationLevels();
-    this.getTutorOffers();
+    this.pageSize = 5;
   }
 
   onFullDetailsClick(tutorOffer: GetTutorOfferDto): void {
     this.showProposalModal(tutorOffer);
   }
 
-  private getEducationLevels(): void {
-    this.educationLevels = this.enumToArray(EducationLevel).reverse();
+  onEducationLevelChange(): void {
+    this.refresh();
   }
 
-  private getTutorOffers(): void {
-    this._tutorOffersService.getAll(this.id).subscribe((tutorOffers) => {
-      this.tutorOffers = tutorOffers;
-    });
+  onDistanceChange(): void {
+    this.refresh();
+  }
+
+  list(request: PagedAndSortedOffersRequestDto, pageNumber: number, finishedCallback: Function): void {
+    request.tutorialIdFilter = this.id;
+    request.educationLevelFilter = this.educationLevelFilter;
+    request.distanceFilter = this.distanceFilter;
+
+    this._tutorOffersService
+      .getAll(
+        request.tutorialIdFilter,
+        request.educationLevelFilter,
+        request.distanceFilter,
+        request.sort,
+        request.skipCount,
+        request.maxResultCount
+      )
+      .pipe(
+        finalize(() => {
+          finishedCallback();
+        })
+      )
+      .subscribe((result: GetTutorOfferDtoPagedResultDto) => {
+        this.tutorOffers = result.items;
+        this.showPaging(result, pageNumber);
+      });
+  }
+
+  private getEducationLevels(): void {
+    this.educationLevels = this.enumToArray(EducationLevel).reverse();
   }
 
   private showProposalModal(tutorOffer: GetTutorOfferDto): void {
