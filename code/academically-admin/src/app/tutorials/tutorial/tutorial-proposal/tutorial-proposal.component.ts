@@ -4,10 +4,11 @@ import {
   EducationLevel,
   GetTutorOfferDto,
   GetTutorOfferDtoPagedResultDto,
-  TutorOffersServiceProxy,
+  TutorOffersServiceProxy
 } from '@shared/service-proxies/service-proxies';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
+import { TutorialAcceptProposalComponent } from './tutorial-accept-proposal/tutorial-accept-proposal.component';
 import { TutorialExpandProposalComponent } from './tutorial-expand-proposal/tutorial-expand-proposal.component';
 
 class PagedAndSortedOffersRequestDto extends PagedAndSortedRequestDto {
@@ -19,7 +20,7 @@ class PagedAndSortedOffersRequestDto extends PagedAndSortedRequestDto {
 @Component({
   selector: 'tutorial-proposal',
   templateUrl: './tutorial-proposal.component.html',
-  styleUrls: ['./tutorial-proposal.component.less'],
+  styleUrls: ['./tutorial-proposal.component.less']
 })
 export class TutorialProposalComponent extends PagedListingComponentBase<GetTutorOfferDto> {
   @Input() id: string;
@@ -37,6 +38,10 @@ export class TutorialProposalComponent extends PagedListingComponentBase<GetTuto
 
   onFullDetailsClick(tutorOffer: GetTutorOfferDto): void {
     this.showProposalModal(tutorOffer);
+  }
+
+  onAcceptOfferDetailsClick(tutor: GetTutorOfferDto): void {
+    this.showOfferModal(tutor);
   }
 
   onEducationLevelChange(): void {
@@ -80,8 +85,17 @@ export class TutorialProposalComponent extends PagedListingComponentBase<GetTuto
     const modalSettings = this.defaultModalSettings;
     modalSettings.class = 'modal-xl';
     modalSettings.initialState = {
-      tutorOffer,
+      tutorOffer
     };
     const modal = this._modalService.show(TutorialExpandProposalComponent, modalSettings);
+  }
+
+  private showOfferModal(tutorOffer: GetTutorOfferDto): void {
+    const modalSettings = this.defaultModalSettings;
+    modalSettings.class = 'modal-xl';
+    modalSettings.initialState = {
+      tutorOffer: tutorOffer
+    };
+    const modal = this._modalService.show(TutorialAcceptProposalComponent, modalSettings);
   }
 }
