@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="SessionDate">Session Date</text>
     <text name="FinancialDashboard">Financial Dashboard</text>
     <text name="TotalIncome">Total Income</text>
     <text name="TotalExpenditure">Total Expenditure</text>
