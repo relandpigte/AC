@@ -10,11 +10,25 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class TutorialAcceptProposalOverviewComponent extends AppComponentBase implements OnInit {
   @Input() tutorOffer: GetTutorOfferDto;
+  acceptTutorialOverViewCheck = false;
+  acceptDiscountOverViewCheck = false;
   constructor(injector: Injector, private modal: BsModalRef) {
     super(injector);
   }
 
-  ngOnInit(): void {
-    console.log(this.tutorOffer);
+  ngOnInit(): void {}
+
+  getTotal(): any {
+    let total = 0;
+    if (this.acceptTutorialOverViewCheck) {
+      total += this.tutorOffer.singleSessionRate;
+    }
+
+    if (this.acceptDiscountOverViewCheck) {
+      const multipleSessionTotal = this.tutorOffer.multipleSessionCount * this.tutorOffer.multipleSessionRate;
+      total += multipleSessionTotal;
+    }
+
+    return total;
   }
 }

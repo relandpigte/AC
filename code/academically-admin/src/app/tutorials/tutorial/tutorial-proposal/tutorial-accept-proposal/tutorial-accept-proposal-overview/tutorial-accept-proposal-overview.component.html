@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-md-8">
+  <div class="col-md-12">
     <div class="card">
       <div class="card-header">
         <h4 class="card-header-title">
@@ -125,83 +125,6 @@
               </a>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <div class="card">
-      <img src="assets/img/profile-cover-2.jpg" alt="..." class="card-img-top" />
-      <div class="card-body card-avatar-body text-center">
-        <a href="javascript:;" class="avatar avatar-xl card-avatar card-avatar-top">
-          <img
-            [src]="getImageUrl(tutorOffer.tutorProfile.profilePictureFileName)"
-            class="avatar-img rounded-circle border border-4 border-card"
-            alt="..."
-          />
-        </a>
-        <h2 class="card-title">
-          <a href="profile-posts.html">{{ tutorOffer.tutor.fullName }}</a>
-        </h2>
-        <p class="small text-muted mb-3">Tutor</p>
-        <div *ngIf="tutorOffer.tutor.userDisciplineTaxonomies" class="text-center mb-3">
-          <span *ngFor="let userDisciplineTaxonomy of tutorOffer.tutor.userDisciplineTaxonomies" class="badge badge-info ml-1 mr-1">
-            {{ userDisciplineTaxonomy.disciplineTaxonomy.name }}
-          </span>
-        </div>
-
-        <div class="row no-gutters border-top border-bottom">
-          <div class="col-6 py-4 text-center">
-            <h6 class="text-uppercase text-muted">TOTAL HOURS</h6>
-            <h2 class="mb-0">10.2k</h2>
-          </div>
-          <div class="col-6 py-4 text-center border-left">
-            <h6 class="text-uppercase text-muted">AVERAGE RATING</h6>
-
-            <h2 class="mb-0">2.7k</h2>
-          </div>
-        </div>
-
-        <div class="list-group list-group-flush mb-4 text-left">
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-auto">
-                <i class="fe fe-monitor"></i>
-              </div>
-              <div class="col ml-n2">
-                <h4 class="text-body text-focus mb-1 name">Tutorial</h4>
-                <p class="small text-muted mb-0">&#163;{{ tutorOffer.singleSessionRate }} / hour</p>
-              </div>
-              <div class="col-auto">
-                <div class="custom-control custom-checkbox">
-                  <input class="custom-control-input" id="acceptTutorialCheck" type="checkbox" />
-                  <label class="custom-control-label" for="acceptTutorialCheck"></label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item border-0">
-            <div class="row align-items-center">
-              <div class="col-auto">
-                <i class="fe fe-percent"></i>
-              </div>
-              <div class="col ml-n2">
-                <h4 class="text-body text-focus mb-1 name">{{ tutorOffer.multipleSessionCount }}-Session Discount</h4>
-                <p class="small text-muted mb-0">&#163;{{ tutorOffer.multipleSessionRate }} / hour</p>
-              </div>
-              <div class="col-auto">
-                <div class="custom-control custom-checkbox">
-                  <input class="custom-control-input" id="acceptDiscountCheck" type="checkbox" />
-                  <label class="custom-control-label" for="acceptDiscountCheck"></label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="d-flex flex-column">
-          <button class="btn btn-light btn-block">Free call</button>
-          <button class="btn btn-primary btn-block">Book session</button>
         </div>
       </div>
     </div>

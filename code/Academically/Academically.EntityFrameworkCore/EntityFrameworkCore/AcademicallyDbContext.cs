@@ -30,6 +30,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<TutorOffer> TutorOffers { get; set; }
         public virtual DbSet<PasswordReset> PasswordResets { get; set; }
         public virtual DbSet<DisciplineTaxonomyRequest> DisciplineTaxonomyRequests { get; set; }
+        public virtual DbSet<Session> Sessions { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

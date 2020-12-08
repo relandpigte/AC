@@ -1,229 +1,340 @@
-<div class="row">
-  <div class="col-md-8">
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-header-title">
-          {{ 'Tutorial' | localize }}
-        </h4>
-      </div>
-      <div class="card-body">
-        <div class="form-row">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="col-form-label" for="SessionDate">{{ 'SessionDate' | localize }}</label>
-              <input id="SessionDate" name="SessionDate" type="text" class="form-control" required />
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="col-form-label" for="StartTime">{{ 'Start time' | localize }}</label>
-              <input id="StartTime" name="StartTime" type="text" class="form-control" required />
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="col-form-label" for="SessionDuration">{{ 'Start time' | localize }}</label>
-              <input id="SessionDuration" name="SessionDuration" type="text" class="form-control" required />
-            </div>
-          </div>
+<form class="form-horizontal" autocomplete="off" #tutorialBookSessionForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Tutorial' | localize }}
+          </h4>
         </div>
-        <div class="form-group">
-          <div class="custom-control custom-checkbox">
-            <input class="custom-control-input" id="addAnotherSessionCheck" type="checkbox" />
-            <label class="custom-control-label" for="addAnotherSessionCheck">Add another session</label>
+        <div class="card-body">
+          <div class="form-group">
+            <h5 class="col-form-label" for="SessionDate">{{ 'YourTimeZone' | localize }}: {{ userSession.timeZone }}</h5>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header">
-        <div class="row align-items-center">
-          <div class="col">
-            <!-- Title -->
-            <h4 class="card-header-title">
-              Payment methods
-            </h4>
-          </div>
-          <div class="col-auto">
-            <!-- Button -->
-            <a class="btn btn-sm btn-primary" href="#!">
-              Add method
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="card-body">
-        <!-- List group -->
-        <div class="list-group list-group-flush my-n3">
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-auto">
-                <!-- Image -->
-                <img class="img-fluid" src="assets/themes/dashkit/img/payment-methods/visa.svg" alt="..." style="max-width: 38px;" />
+          <div class="form-row">
+            <div class="col-md-4">
+              <div class="form-group required">
+                <label class="col-form-label" for="DateOfBirth">{{ 'DateOfBirth' | localize }}</label>
+                <div class="input-group input-group-merge" (click)="dp.show()">
+                  <input
+                    [(ngModel)]="userSession.sessionDate"
+                    id="DateOfBirth"
+                    name="DateOfBirth"
+                    type="text"
+                    class="form-control form-control-appended"
+                    #sessionDateModel="ngModel"
+                    #sessionDateEl
+                    #dp="bsDatepicker"
+                    bsDatepicker
+                    [bsConfig]="datePickerConfig"
+                    required
+                  />
+                  <div class="input-group-append">
+                    <div class="input-group-text">
+                      <span class="fas fa-calendar"></span>
+                    </div>
+                  </div>
+                </div>
+                <abp-validation-summary [control]="sessionDateModel" [controlEl]="sessionDateEl"> </abp-validation-summary>
               </div>
-              <div class="col ml-n2">
-                <h4 class="mb-1">
-                  Visa ending in 1234
-                </h4>
-
-                <small class="text-muted">
-                  Expires 3/2024
-                </small>
-              </div>
-              <div class="col-auto mr-n3">
-                <span class="badge badge-light">
-                  Default
-                </span>
-              </div>
-              <div class="col-auto">
-                <div class="dropdown">
-                  <a
-                    class="dropdown-ellipses dropdown-toggle"
-                    href="#"
-                    role="button"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    <i class="fe fe-more-vertical"></i>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#!">
-                      Action
-                    </a>
-                    <a class="dropdown-item" href="#!">
-                      Another action
-                    </a>
-                    <a class="dropdown-item" href="#!">
-                      Something else here
-                    </a>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group required start-time">
+                <label class="col-form-label" for="StartTime">{{ 'Start time' | localize }}</label>
+                <div class="form-row">
+                  <div class="col-xs-2">
+                    <select
+                      [(ngModel)]="hourInput"
+                      id="Country"
+                      name="Country"
+                      type="text"
+                      class="form-control"
+                      #hourInputModel="ngModel"
+                      #hourInputEl
+                      required
+                    >
+                      <option *ngFor="let hour of hours" [value]="hour">{{ hour }}</option>
+                    </select>
+                    <abp-validation-summary [control]="hourInputModel" [controlEl]="hourInputEl"> </abp-validation-summary>
+                  </div>
+                  <div class="col-xs-2">
+                    <select
+                      [(ngModel)]="minuteInput"
+                      id="minuteInput"
+                      name="minuteInput"
+                      type="text"
+                      class="form-control"
+                      #minuteInputModel="ngModel"
+                      #minuteInputEl
+                      required
+                    >
+                      <option *ngFor="let minute of minutes" [value]="minute">{{ minute }}</option>
+                    </select>
+                    <abp-validation-summary [control]="minuteInputModel" [controlEl]="minuteInputEl"> </abp-validation-summary>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- / .row -->
-          </div>
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-auto">
-                <!-- Image -->
-                <img class="img-fluid" src="assets/themes/dashkit/img/payment-methods/mastercard.svg" alt="..." style="max-width: 38px;" />
-              </div>
-              <div class="col ml-n2">
-                <h4 class="mb-1">
-                  Mastercard ending in 1234
-                </h4>
-
-                <small class="text-muted">
-                  Expires 3/2024
-                </small>
-              </div>
-              <div class="col-auto">
-                <div class="dropdown">
-                  <a
-                    class="dropdown-ellipses dropdown-toggle"
-                    href="#"
-                    role="button"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    <i class="fe fe-more-vertical"></i>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#!">
-                      Action
-                    </a>
-                    <a class="dropdown-item" href="#!">
-                      Another action
-                    </a>
-                    <a class="dropdown-item" href="#!">
-                      Something else here
-                    </a>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="col-form-label" for="SessionDuration">{{ 'SessionDuration' | localize }}</label>
+                <div class="form-row">
+                  <div class="col-xs-2">
+                    <select
+                      [(ngModel)]="hourSessionDurationInput"
+                      id="hourSessionDurationInput"
+                      name="hourSessionDurationInput"
+                      type="text"
+                      class="form-control"
+                      #hourSessionDurationInputModel="ngModel"
+                      #hourSessionDurationInputEl
+                    >
+                      <option *ngFor="let hour of hours" [value]="hour">{{ hour }}</option>
+                    </select>
+                    <abp-validation-summary [control]="hourSessionDurationInputModel" [controlEl]="hourSessionDurationInputEl">
+                    </abp-validation-summary>
+                  </div>
+                  <div class="col-xs-2">
+                    <select
+                      [(ngModel)]="minuteSessionDurationInput"
+                      id="minuteSessionDurationInput"
+                      name="minuteSessionDurationInput"
+                      type="text"
+                      class="form-control"
+                      #minuteSessionDurationInputModel="ngModel"
+                      #minuteSessionDurationInputEl
+                    >
+                      <option *ngFor="let minute of minutesSessionDuration" [value]="minute">{{ minute }}</option>
+                    </select>
+                    <abp-validation-summary [control]="minuteSessionDurationInputModel" [controlEl]="minuteSessionDurationInputEl">
+                    </abp-validation-summary>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          <div class="form-group">
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" id="addAnotherSessionCheck" type="checkbox" />
+              <label class="custom-control-label" for="addAnotherSessionCheck">Add another session</label>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <div class="card">
-      <img src="assets/img/profile-cover-2.jpg" alt="..." class="card-img-top" />
-      <div class="card-body card-avatar-body text-center">
-        <a href="javascript:;" class="avatar avatar-xl card-avatar card-avatar-top">
-          <img
-            [src]="getImageUrl(tutorOffer.tutorProfile.profilePictureFileName)"
-            class="avatar-img rounded-circle border border-4 border-card"
-            alt="..."
-          />
-        </a>
-        <h2 class="card-title">
-          <a href="profile-posts.html">{{ tutorOffer.tutor.fullName }}</a>
-        </h2>
-        <p class="small text-muted mb-3">Tutor</p>
-        <div *ngIf="tutorOffer.tutor.userDisciplineTaxonomies" class="text-center mb-3">
-          <span *ngFor="let userDisciplineTaxonomy of tutorOffer.tutor.userDisciplineTaxonomies" class="badge badge-info ml-1 mr-1">
-            {{ userDisciplineTaxonomy.disciplineTaxonomy.name }}
-          </span>
-        </div>
-
-        <div class="row no-gutters border-top border-bottom">
-          <div class="col-6 py-4 text-center">
-            <h6 class="text-uppercase text-muted">TOTAL HOURS</h6>
-            <h2 class="mb-0">10.2k</h2>
-          </div>
-          <div class="col-6 py-4 text-center border-left">
-            <h6 class="text-uppercase text-muted">AVERAGE RATING</h6>
-
-            <h2 class="mb-0">2.7k</h2>
+      <div class="card">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <!-- Title -->
+              <h4 class="card-header-title">
+                Payment methods
+              </h4>
+            </div>
+            <div class="col-auto">
+              <!-- Button -->
+              <a class="btn btn-sm btn-primary" href="#!">
+                Add method
+              </a>
+            </div>
           </div>
         </div>
+        <div class="card-body">
+          <!-- List group -->
+          <div class="list-group list-group-flush my-n3">
+            <div class="list-group-item">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <!-- Image -->
+                  <img class="img-fluid" src="assets/themes/dashkit/img/payment-methods/visa.svg" alt="..." style="max-width: 38px;" />
+                </div>
+                <div class="col ml-n2">
+                  <h4 class="mb-1">
+                    Visa ending in 1234
+                  </h4>
 
-        <div class="list-group list-group-flush mb-4 text-left">
-          <div class="list-group-item">
-            <div class="row align-items-center">
-              <div class="col-auto">
-                <i class="fe fe-monitor"></i>
+                  <small class="text-muted">
+                    Expires 3/2024
+                  </small>
+                </div>
+                <div class="col-auto mr-n3">
+                  <span class="badge badge-light">
+                    Default
+                  </span>
+                </div>
+                <div class="col-auto">
+                  <div class="dropdown">
+                    <a
+                      class="dropdown-ellipses dropdown-toggle"
+                      href="#"
+                      role="button"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <i class="fe fe-more-vertical"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <a class="dropdown-item" href="#!">
+                        Action
+                      </a>
+                      <a class="dropdown-item" href="#!">
+                        Another action
+                      </a>
+                      <a class="dropdown-item" href="#!">
+                        Something else here
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="col ml-n2">
-                <h4 class="text-body text-focus mb-1 name">Tutorial</h4>
-                <p class="small text-muted mb-0">&#163;{{ tutorOffer.singleSessionRate }} / hour</p>
-              </div>
-              <div class="col-auto">
-                <div class="custom-control custom-checkbox">
-                  <input class="custom-control-input" id="acceptTutorialCheck" type="checkbox" />
-                  <label class="custom-control-label" for="acceptTutorialCheck"></label>
+              <!-- / .row -->
+            </div>
+            <div class="list-group-item">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <!-- Image -->
+                  <img
+                    class="img-fluid"
+                    src="assets/themes/dashkit/img/payment-methods/mastercard.svg"
+                    alt="..."
+                    style="max-width: 38px;"
+                  />
+                </div>
+                <div class="col ml-n2">
+                  <h4 class="mb-1">
+                    Mastercard ending in 1234
+                  </h4>
+
+                  <small class="text-muted">
+                    Expires 3/2024
+                  </small>
+                </div>
+                <div class="col-auto">
+                  <div class="dropdown">
+                    <a
+                      class="dropdown-ellipses dropdown-toggle"
+                      href="#"
+                      role="button"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <i class="fe fe-more-vertical"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <a class="dropdown-item" href="#!">
+                        Action
+                      </a>
+                      <a class="dropdown-item" href="#!">
+                        Another action
+                      </a>
+                      <a class="dropdown-item" href="#!">
+                        Something else here
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="list-group-item border-0">
-            <div class="row align-items-center">
-              <div class="col-auto">
-                <i class="fe fe-percent"></i>
-              </div>
-              <div class="col ml-n2">
-                <h4 class="text-body text-focus mb-1 name">{{ tutorOffer.multipleSessionCount }}-Session Discount</h4>
-                <p class="small text-muted mb-0">&#163;{{ tutorOffer.multipleSessionRate }} / hour</p>
-              </div>
-              <div class="col-auto">
-                <div class="custom-control custom-checkbox">
-                  <input class="custom-control-input" id="acceptDiscountCheck" type="checkbox" />
-                  <label class="custom-control-label" for="acceptDiscountCheck"></label>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <img src="assets/img/profile-cover-2.jpg" alt="..." class="card-img-top" />
+        <div class="card-body card-avatar-body text-center">
+          <a href="javascript:;" class="avatar avatar-xl card-avatar card-avatar-top">
+            <img [src]="tutorOffer.tutor.profilePictureFileName" class="avatar-img rounded-circle border border-4 border-card" alt="..." />
+          </a>
+          <h2 class="card-title">
+            <a href="profile-posts.html">{{ tutorOffer.tutor.user.fullName }}</a>
+          </h2>
+          <p class="small text-muted mb-3">Tutor</p>
+          <div *ngIf="tutorOffer.tutor.user.userDisciplineTaxonomies" class="text-center mb-3">
+            <span *ngFor="let userDisciplineTaxonomy of tutorOffer.tutor.user.userDisciplineTaxonomies" class="badge badge-info ml-1 mr-1">
+              {{ userDisciplineTaxonomy.disciplineTaxonomy.name }}
+            </span>
+          </div>
+
+          <div class="row no-gutters border-top border-bottom">
+            <div class="col-6 py-4 text-center">
+              <h6 class="text-uppercase text-muted">TOTAL HOURS</h6>
+              <h2 class="mb-0">10.2k</h2>
+            </div>
+            <div class="col-6 py-4 text-center border-left">
+              <h6 class="text-uppercase text-muted">AVERAGE RATING</h6>
+
+              <h2 class="mb-0">2.7k</h2>
+            </div>
+          </div>
+
+          <div class="list-group list-group-flush mb-4 text-left">
+            <div class="list-group-item border-0">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <i class="fe fe-monitor"></i>
+                </div>
+                <div class="col ml-n2">
+                  <h4 class="text-body text-focus mb-1 name">Tutorial</h4>
+                  <p class="small text-muted mb-0">&#163;{{ tutorOffer.singleSessionRate }} / hour</p>
+                </div>
+                <div class="col-auto">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      class="custom-control-input"
+                      [(ngModel)]="acceptTutorialBookSessionCheck"
+                      name="acceptTutorialBookSessionCheck"
+                      id="acceptTutorialBookSessionCheck"
+                      type="checkbox"
+                    />
+                    <label class="custom-control-label" for="acceptTutorialBookSessionCheck"></label>
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="list-group-item">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <i class="fe fe-percent"></i>
+                </div>
+                <div class="col ml-n2">
+                  <h4 class="text-body text-focus mb-1 name">{{ tutorOffer.multipleSessionCount }}-Session Discount</h4>
+                  <p class="small text-muted mb-0">&#163;{{ tutorOffer.multipleSessionRate }} / hour</p>
+                </div>
+                <div class="col-auto">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      class="custom-control-input"
+                      [(ngModel)]="acceptDiscountBookSessionCheck"
+                      name="acceptDiscountBookSessionCheck"
+                      id="acceptDiscountBookSessionCheck"
+                      type="checkbox"
+                    />
+                    <label class="custom-control-label" for="acceptDiscountBookSessionCheck"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="list-group-item">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <i class="fe fe-percent"></i>
+                </div>
+                <div class="col ml-n2">
+                  <h4 class="text-body text-focus mb-1 name">Total</h4>
+                </div>
+                <div class="col-auto">£ {{ getTotal() }}</div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div class="d-flex flex-column">
-          <button class="btn btn-light btn-block">Free call</button>
-          <button class="btn btn-primary btn-block">Book session</button>
+          <div class="d-flex flex-column">
+            <button class="btn btn-light btn-block">Free call</button>
+            <button type="submit" [disabled]="!tutorialBookSessionForm.valid" class="btn btn-primary btn-block">Book session</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</form>
