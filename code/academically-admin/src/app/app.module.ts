@@ -100,7 +100,9 @@ import { TutorialComponent } from './tutorials/tutorial/tutorial.component';
 import { TutorialProposalComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-proposal.component';
 import { TutorialExpandProposalComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-expand-proposal/tutorial-expand-proposal.component';
 import { FinancialDashboardComponent } from './home/financial-dashboard/financial-dashboard.component';
-
+import { TutorialAcceptProposalComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-accept-proposal/tutorial-accept-proposal.component';
+import { TutorialAcceptProposalOverviewComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-accept-proposal/tutorial-accept-proposal-overview/tutorial-accept-proposal-overview.component';
+import { TutorialAcceptProposalBookSessionComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-accept-proposal/tutorial-accept-proposal-book-session/tutorial-accept-proposal-book-session.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -185,6 +187,9 @@ import { FinancialDashboardComponent } from './home/financial-dashboard/financia
     TutorialProposalComponent,
     TutorialExpandProposalComponent,
     FinancialDashboardComponent,
+    TutorialAcceptProposalComponent,
+    TutorialAcceptProposalOverviewComponent,
+    TutorialAcceptProposalBookSessionComponent
   ],
   imports: [
     CommonModule,
@@ -203,7 +208,7 @@ import { FinancialDashboardComponent } from './home/financial-dashboard/financia
     TypeaheadModule.forRoot(),
     BsDatepickerModule.forRoot(),
     NgxQRCodeModule,
-    TreeModule,
+    TreeModule
   ],
   providers: [GoogleMapsService, ProfileService],
   entryComponents: [
@@ -225,7 +230,7 @@ import { FinancialDashboardComponent } from './home/financial-dashboard/financia
     SupportServicesSearchComponent,
     RequestNewResearchMethodComponent,
     RequestNewSupportServiceComponent,
-    TutorialExpandProposalComponent,
-  ],
+    TutorialExpandProposalComponent
+  ]
 })
 export class AppModule {}

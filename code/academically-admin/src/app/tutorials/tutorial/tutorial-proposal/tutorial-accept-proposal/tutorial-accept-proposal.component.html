@@ -1,0 +1,30 @@
+<div class="modal-card card">
+  <div class="card-body">
+    <div class="row align-items-center">
+      <div class="col">
+        <a href="#" (click)="$event.preventDefault(); onCloseClick()" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </a>
+        <h6 class="header-pretitle">{{ 'Tutorial' | localize }}</h6>
+        <h3 class="header-title">{{ tutor.user.name }} 's Offer</h3>
+      </div>
+    </div>
+
+    <div class="row tabs">
+      <div class="col-12 col-xl-12">
+        <tabset>
+          <tab *ngIf="true" heading="{{ 'Overview' | localize }}">
+            <div class="tabs-custom">
+              <app-tutorial-accept-proposal-overview [tutorOffer]="tutorOffer"></app-tutorial-accept-proposal-overview>
+            </div>
+          </tab>
+          <tab *ngIf="true" heading="{{ 'Book session' | localize }}">
+            <div class="tabs-custom">
+              <app-tutorial-accept-proposal-book-session [tutorOffer]="tutorOffer"></app-tutorial-accept-proposal-book-session>
+            </div>
+          </tab>
+        </tabset>
+      </div>
+    </div>
+  </div>
+</div>

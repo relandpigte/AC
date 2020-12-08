@@ -2,6 +2,7 @@
 using Academically.Services.DisciplineTaxonomies.Dto;
 using Academically.Services.Offers.Dto;
 using Academically.Services.UserProfiles.Dto;
+using Academically.Services.UserSessions.Dto;
 using Academically.Services.UserTutorials.Dto;
 using AutoMapper;
 
@@ -18,6 +19,7 @@ namespace Academically
             CreateMap<SaveUserTutorialDto, UserTutorial>();
             CreateMap<UserSupportServiceSessionRateDto, UserSupportServiceSessionRate>();
             CreateMap<CreateTutorOfferDto, TutorOffer>();
+            CreateMap<SessionDto, Session>();
         }
     }
 }

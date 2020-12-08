@@ -27,6 +27,7 @@ import * as ApiServiceProxies from './service-proxies';
     ApiServiceProxies.DisciplineTaxonomyStudyLevelsServiceProxy,
     ApiServiceProxies.TutorOffersServiceProxy,
     ApiServiceProxies.PasswordResetsServiceProxy,
+    ApiServiceProxies.UserSessionsServiceProxy,
     { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
   ]
 })
