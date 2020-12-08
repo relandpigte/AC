@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1607387137167-2">
+        <createTable tableName="AcademicallySessions">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="TimeZone" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SessionDate" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Duration" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TutorOfferId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1607387137167-3">
+        <createIndex indexName="FK_Sesssions_TutorOffer_TutorOfferId_idx" tableName="AcademicallySessions">
+            <column name="TutorOfferId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1607387137167-4">
+        <addForeignKeyConstraint baseColumnNames="TutorOfferId" baseTableName="AcademicallySessions" constraintName="FK_Sesssions_TutorOffer_TutorOfferId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyTutorOffers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1607387137167-1">
+        <addNotNullConstraint columnDataType="char(36)" columnName="TutorId" tableName="AcademicallyTutorOffers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
