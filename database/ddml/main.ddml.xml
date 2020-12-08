@@ -49,4 +49,5 @@
 	<include file="ddml/ddml.2020-11-26-02.alter-table-disciplinetaxonomies.xml"/>
 	<include file="ddml/ddml.2020-12-03-01.update-tutoroffers-table.xml"/>
 	<include file="ddml/ddml.2020-12-07-01.added-sessions-table.xml"/>
+	<include file="ddml/ddml.2020-12-07-02.alter-sessions-table.xml"/>
 </databaseChangeLog>
