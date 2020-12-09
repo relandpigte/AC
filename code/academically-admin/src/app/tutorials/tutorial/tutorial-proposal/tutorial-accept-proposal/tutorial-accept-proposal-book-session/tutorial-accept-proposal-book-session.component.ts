@@ -2,7 +2,7 @@ import { Component, Injector, Input, OnInit, Output, EventEmitter } from '@angul
 import { AppComponentBase } from '@shared/app-component-base';
 import { GetTutorOfferDto, SessionDto, UserSessionsServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, DateFormatter } from 'ngx-bootstrap/datepicker';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -56,10 +56,12 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
   }
 
   onFormSubmit(): void {
-    const sessionDateTime = this.hourInput + ':' + this.minuteInput;
+    const date = moment(this.userSession.sessionDate).format('YYYY-MM-DD');
+    const sessionDateTime = this.hourInput + ':' + this.minuteInput + ':00  ';
+    const sessionDateStart = new Date(date + ' ' + sessionDateTime);
     const sessionDuration = Number(this.hourSessionDurationInput) * 60 + Number(this.minuteSessionDurationInput);
-    this.userSession.sessionDate = moment(moment(this.userSession.sessionDate).format('YYYY-MM-DD') + ' ' + sessionDateTime);
     this.userSession.duration = sessionDuration;
+    this.userSession.sessionDate = moment(sessionDateStart);
 
     this._userSessionService.saveSessionDetail(this.userSession).subscribe(() => {
       this.notify.success(this.l('SavedSuccessfully'));

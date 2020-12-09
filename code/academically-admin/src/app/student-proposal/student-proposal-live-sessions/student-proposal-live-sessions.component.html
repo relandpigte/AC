@@ -13,7 +13,12 @@
           </div>
           <div class="col-auto">
             <time class="small text-muted">
-              {{ moment(session.sessionDate).format('YYYY-MM-DD') }}
+              {{
+                moment
+                  .utc(session.sessionDate)
+                  .local()
+                  .format('YYYY-MM-DD')
+              }}
             </time>
           </div>
         </div>
@@ -25,7 +30,12 @@
           </div>
           <div class="col-auto">
             <small class="text-muted">
-              {{ moment(session.sessionDate).format('HH:mm') }}
+              {{
+                moment
+                  .utc(session.sessionDate)
+                  .local()
+                  .format('HH:mm')
+              }}
             </small>
           </div>
         </div>
