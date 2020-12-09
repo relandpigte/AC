@@ -104,7 +104,7 @@ namespace Academically.Services.Offers
                             .ThenInclude(e => e.DisciplineTaxonomy)
                 .Include(e => e.Sessions)
                 .Where(e => e.TutorialId == input.TutorialIdFilter)
-                .Where(e => !e.Sessions.Any(s => s.Status == SessionStatus.Pending || s.Status == SessionStatus.Completed))
+                .Where(e => !e.Sessions.Any(s => s.Status == SessionStatus.Pending || s.Status == SessionStatus.Confirmed))
                 .WhereIf(input.EducationLevelFilter.HasValue, e => e.Tutor.User.UserEducations.Any(t => t.Level >= input.EducationLevelFilter.Value));
 
             var allOffers = await offersQuery.Select(e => ObjectMapper.Map<GetTutorOfferDto>(e)).ToListAsync();
