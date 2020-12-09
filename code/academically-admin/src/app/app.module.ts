@@ -103,6 +103,7 @@ import { FinancialDashboardComponent } from './home/financial-dashboard/financia
 import { TutorialAcceptProposalComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-accept-proposal/tutorial-accept-proposal.component';
 import { TutorialAcceptProposalOverviewComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-accept-proposal/tutorial-accept-proposal-overview/tutorial-accept-proposal-overview.component';
 import { TutorialAcceptProposalBookSessionComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-accept-proposal/tutorial-accept-proposal-book-session/tutorial-accept-proposal-book-session.component';
+import { StudentProposalLiveSessionsComponent } from './student-proposal/student-proposal-live-sessions/student-proposal-live-sessions.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -189,7 +190,8 @@ import { TutorialAcceptProposalBookSessionComponent } from './tutorials/tutorial
     FinancialDashboardComponent,
     TutorialAcceptProposalComponent,
     TutorialAcceptProposalOverviewComponent,
-    TutorialAcceptProposalBookSessionComponent
+    TutorialAcceptProposalBookSessionComponent,
+    StudentProposalLiveSessionsComponent
   ],
   imports: [
     CommonModule,

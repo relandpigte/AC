@@ -23,19 +23,16 @@ namespace Academically.Services.Offers
         private readonly IRepository<TutorOffer, Guid> _tutorOffersRepository;
         private readonly IRepository<UserEducation, Guid> _userEducationsRepository;
         private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
-        private readonly IRepository<Session, Guid> _sessionRepository;
 
         public TutorOffersAppService(
             IRepository<TutorOffer, Guid> tutorOffersRepository,
             IRepository<UserEducation, Guid> userEducationsRepository,
-            IRepository<UserProfile, Guid> userProfilesRepository,
-            IRepository<Session, Guid> sessionRepository
+            IRepository<UserProfile, Guid> userProfilesRepository
             )
         {
             _tutorOffersRepository = tutorOffersRepository;
             _userProfilesRepository = userProfilesRepository;
             _userEducationsRepository = userEducationsRepository;
-            _sessionRepository = sessionRepository;
         }
 
         public async Task<GetTutorOfferDto> GetAsync(Guid offerId)
@@ -105,9 +102,9 @@ namespace Academically.Services.Offers
                     .ThenInclude(e => e.User)
                         .ThenInclude(e => e.UserDisciplineTaxonomies)
                             .ThenInclude(e => e.DisciplineTaxonomy)
-                .Include(e => e.Session)
+                .Include(e => e.Sessions)
                 .Where(e => e.TutorialId == input.TutorialIdFilter)
-                .Where(e => e.Session.Status != SessionStatus.Pending)
+                .Where(e => !e.Sessions.Any(s => s.Status == SessionStatus.Pending || s.Status == SessionStatus.Completed))
                 .WhereIf(input.EducationLevelFilter.HasValue, e => e.Tutor.User.UserEducations.Any(t => t.Level >= input.EducationLevelFilter.Value));
 
             var allOffers = await offersQuery.Select(e => ObjectMapper.Map<GetTutorOfferDto>(e)).ToListAsync();
@@ -150,6 +147,18 @@ namespace Academically.Services.Offers
 
 
             return educationLevel;
+        }
+
+        public async Task<GetTutorOfferDto> GetTutorOfferSessionsAsync(Guid tutorialId)
+        {
+            var tutor = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
+            var offer = await _tutorOffersRepository.GetAll()
+                .Include(e => e.Sessions)
+                .Where(e => e.TutorId == tutor.Id && e.TutorialId == tutorialId)
+                .Select(e => ObjectMapper.Map<GetTutorOfferDto>(e))
+                .FirstOrDefaultAsync();
+
+            return offer;
         }
     }
 }
