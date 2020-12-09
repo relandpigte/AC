@@ -15,5 +15,8 @@ namespace Academically.Entities
         public int Duration { get; set; }
         public Guid TutorOfferId { get; set; }
         public SessionStatus Status { get; set; }
+
+        [ForeignKey("TutorOfferId")]
+        public virtual TutorOffer TutorOffer { get; set; }
     }
 }
