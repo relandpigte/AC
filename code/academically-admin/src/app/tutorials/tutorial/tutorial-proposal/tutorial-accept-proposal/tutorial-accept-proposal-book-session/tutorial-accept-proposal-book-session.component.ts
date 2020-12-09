@@ -90,7 +90,7 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
   }
 
   private getMinutesSessionDuration(): void {
-    for (let x = 0; x < 60; x += 5) {
+    for (let x = 0; x <= 60; x += 5) {
       if (x >= 10) {
         this.minutesSessionDuration.push(x);
       } else {
