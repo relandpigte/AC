@@ -16,11 +16,15 @@
         <div class="col-12 col-xl-12 student-proposal-tabs">
           <tabset>
             <tab *ngIf="true" heading="{{ 'Overview' | localize }}">
-              <div class="row tabs-custom">
+              <div class="tabs-custom">
                 <student-proposal-overview></student-proposal-overview>
               </div>
             </tab>
-            <tab *ngIf="true" heading="{{ 'Live Sessions' | localize }}"> </tab>
+            <tab *ngIf="true" heading="{{ 'Live Sessions' | localize }}">
+              <div class="tabs-custom">
+                <student-proposal-live-sessions></student-proposal-live-sessions>
+              </div>
+            </tab>
           </tabset>
         </div>
       </div>

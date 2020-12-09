@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Entities;
 using Academically.Services.UserProfiles.Dto;
+using Academically.Services.UserSessions.Dto;
+using Academically.Services.UserTutorials.Dto;
 
 namespace Academically.Services.Offers.Dto
 {
@@ -20,5 +23,7 @@ namespace Academically.Services.Offers.Dto
         public Guid TutorId { get; set; }
 
         public UserProfileDto Tutor { get; set; }
+
+        public IEnumerable<SessionDto> Sessions { get; set; }
     }
 }
