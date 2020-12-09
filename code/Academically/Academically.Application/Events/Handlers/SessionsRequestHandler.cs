@@ -54,44 +54,35 @@ namespace Academically.Events.Handlers
         [UnitOfWork]
         public async Task HandleEventAsync(EntityChangedEventData<Session> eventData)
         {
-            if(eventData.Entity.Status == SessionStatus.Confirmed)
-            {
-                var tutorOffer = await _tutorOffersRepository.FirstOrDefaultAsync(e => e.Id == eventData.Entity.TutorOfferId);
-                var userTutorial = await _userTutorialsRepository.FirstOrDefaultAsync(e => e.Id == tutorOffer.TutorialId);
-                var student = await _usersRepository.FirstOrDefaultAsync(e => e.Id == userTutorial.UserId);
-                var tutorProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.Id == tutorOffer.TutorId);
-                var tutor = await _usersRepository.FirstOrDefaultAsync(e => e.Id == tutorProfile.UserId);
-                var clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
-                var studentProposalLink = $"{clientRootAddress}app/student-proposal/{userTutorial.Id}";
-                var sessionDate = ConvertToLocal(eventData.Entity.SessionDate, eventData.Entity.TimeZone);
-                var sessionDuration = GetDuration(eventData.Entity.Duration);
+            var tutorOffer = await _tutorOffersRepository.FirstOrDefaultAsync(e => e.Id == eventData.Entity.TutorOfferId);
+            var userTutorial = await _userTutorialsRepository.FirstOrDefaultAsync(e => e.Id == tutorOffer.TutorialId);
+            var student = await _usersRepository.FirstOrDefaultAsync(e => e.Id == userTutorial.UserId);
+            var tutorProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.Id == tutorOffer.TutorId);
+            var tutor = await _usersRepository.FirstOrDefaultAsync(e => e.Id == tutorProfile.UserId);
+            var clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
+            var studentProposalLink = $"{clientRootAddress}app/student-proposal/{userTutorial.Id}";
+            var sessionDate = ConvertToLocal(eventData.Entity.SessionDate, eventData.Entity.TimeZone);
+            var sessionDuration = GetDuration(eventData.Entity.Duration);
+            var sessionName = "Tutorial Session with " + student.FullName;
 
+            if (eventData.Entity.Status == SessionStatus.Confirmed)
+            {
                 var subject = L("ConfirmSessionEmailSubject");
                 var body = L("ConfirmSessionEmailMessage", tutor.FullName, sessionDate, sessionDuration, eventData.Entity.TimeZone);
                 await _emailService.SendAsync(student.EmailAddress, student.EmailAddress, subject, body);
 
                 var adminSubject = L("ConfirmSessionAdminEmailSubject");
-                var adminBody = L("ConfirmSessionAdminEmailMessage", student.FullName, sessionDate, sessionDuration, eventData.Entity.TimeZone, studentProposalLink);
+                var adminBody = L("ConfirmSessionAdminEmailMessage", sessionName, sessionDate, sessionDuration, eventData.Entity.TimeZone);
                 await _emailService.SendAsync(tutor.EmailAddress, tutor.EmailAddress, adminSubject, adminBody);
             } 
             else if(eventData.Entity.Status == SessionStatus.Pending)
             {
-                var tutorOffer = await _tutorOffersRepository.FirstOrDefaultAsync(e => e.Id == eventData.Entity.TutorOfferId);
-                var userTutorial = await _userTutorialsRepository.FirstOrDefaultAsync(e => e.Id == tutorOffer.TutorialId);
-                var student = await _usersRepository.FirstOrDefaultAsync(e => e.Id == userTutorial.UserId);
-                var tutorProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.Id == tutorOffer.TutorId);
-                var tutor = await _usersRepository.FirstOrDefaultAsync(e => e.Id == tutorProfile.UserId);
-                var clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
-                var studentProposalLink = $"{clientRootAddress}app/student-proposal/{userTutorial.Id}";
-                var sessionDate = ConvertToLocal(eventData.Entity.SessionDate, eventData.Entity.TimeZone);
-                var sessionDuration = GetDuration(eventData.Entity.Duration);
-
                 var subject = L("BookSessionEmailSubject");
                 var body = L("BookSessionEmailMessage", tutor.FullName, sessionDate, sessionDuration, eventData.Entity.TimeZone);
                 await _emailService.SendAsync(student.EmailAddress, student.EmailAddress, subject, body);
 
                 var adminSubject = L("BookSessionAminEmailSubject");
-                var adminBody = L("BookSessionAminEmailMessage", student.FullName, sessionDate, sessionDuration, eventData.Entity.TimeZone, studentProposalLink);
+                var adminBody = L("BookSessionAminEmailMessage", sessionName, sessionDate, sessionDuration, eventData.Entity.TimeZone, studentProposalLink);
                 await _emailService.SendAsync(tutor.EmailAddress, tutor.EmailAddress, adminSubject, adminBody);
             }
         }

@@ -7,7 +7,7 @@
         <p>A request to book a session was confirmed.</p>
         <p>The details of the request are:</p>
         <br />
-        <p>(Student) Name: {0}<p>
+        <p>Session: {0}<p>
         <p>Start Date/Time: {1}<p>
         <p>Duration: {2}<p>
         <p>Timezone: {3}<p>
@@ -34,7 +34,7 @@
         <p>A request to book a session was created.</p>
         <p>The details of the request are:</p>
         <br />
-        <p>(Student) Name: {0}<p>
+        <p>Session: {0}<p>
         <p>Start Date/Time: {1}<p>
         <p>Duration: {2}<p>
         <p>Timezone: {3}<p>
