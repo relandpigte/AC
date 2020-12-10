@@ -1,89 +1,75 @@
-<div class="card" *ngIf="sessions.length > 0">
-  <div class="card-header">
-    <h4 class="card-header-title">
-      {{ 'Session' | localize }}
-    </h4>
-  </div>
-  <div class="card-body" *ngFor="let session of sessions">
-    <div class="list-group list-group-flush mb-4">
-      <div class="list-group-item">
-        <div class="row align-items-center">
-          <div class="col">
-            <small>{{ 'StartDate' | localize }}</small>
-          </div>
-          <div class="col-auto">
-            <ng-container *ngIf="moment.duration(session.sessionDate.diff(today)).asHours() < 24 && session.status === 2">
-              <small class="text-danger">
-                {{ session.sessionDate | date: 'dd/MM/yyyy' }}
-              </small>
-            </ng-container>
-            <ng-container *ngIf="session.status !== 2">
-              <small class="small text-muted">
-                {{ session.sessionDate | date: 'dd/MM/yyyy' }}
-              </small>
-            </ng-container>
-          </div>
+<div class="row justify-content-center" *ngIf="sessions.length > 0">
+  <div class="col-12 col-lg-12 col-xl-12">
+    <div class="card" *ngFor="let session of sessions">
+      <div class="card-body">
+        <div class="row">
+          <p class="small">
+            <span *ngIf="session.status === 1" class="badge badge-soft-danger"> <span class="text-danger">●</span> Pending </span>
+            <span *ngIf="session.status === 2" class="badge badge-soft-success"> <span class="text-success">●</span> Confirmed </span>
+          </p>
         </div>
-      </div>
-      <div class="list-group-item">
         <div class="row align-items-center">
-          <div class="col">
-            <small>{{ 'StartTime' | localize }}</small>
-          </div>
-          <div class="col-auto">
-            <small class="text-muted">
-              {{ session.sessionDate | date: 'hh:mm a' }}
-            </small>
-          </div>
-        </div>
-      </div>
-      <div class="list-group-item">
-        <div class="row align-items-center">
-          <div class="col">
-            <small>{{ 'SessionDuration' | localize }}</small>
-          </div>
-          <div class="col-auto">
-            <a class="small text-muted">
-              {{ getDuration(session.duration) }}
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="list-group-item">
-        <div class="row align-items-center">
-          <div class="col">
-            <small>{{ 'Timezone' | localize }}</small>
-          </div>
-          <div class="col-auto">
-            <a class="small text-muted">
-              {{ session.timeZone }}
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+          <div class="col ml-n2">
+            <p class="mb-0">
+              <label>{{ 'StartDate' | localize }}</label>
+            </p>
 
-    <div class="row align-items-center justify-content-between">
-      <ng-container *ngIf="session.status === 1">
-        <div class="col-auto">
-          <small> <span class="text-danger">●</span> Pending </small>
+            <p
+              class="small text-danger mb-0"
+              *ngIf="moment.duration(session.sessionDate.diff(today)).asHours() < 24 && session.status === 2"
+            >
+              {{ session.sessionDate | date: 'dd/MM/yyyy' }}
+            </p>
+
+            <p
+              class="small text-muted mb-0"
+              *ngIf="session.status == 2 && moment.duration(session.sessionDate.diff(today)).asHours() >= 24"
+            >
+              {{ session.sessionDate | date: 'dd/MM/yyyy' }}
+            </p>
+
+            <p class="small text-muted mb-0" *ngIf="session.status == 1">
+              {{ session.sessionDate | date: 'dd/MM/yyyy' }}
+            </p>
+
+            <p class="mb-0">
+              <label>{{ 'Duration' | localize }}</label>
+            </p>
+
+            <p class="small text-muted mb-0">
+              {{ getDuration(session.duration) }}
+            </p>
+          </div>
+
+          <div class="col ml-n2">
+            <p class="mb-0">
+              <label>{{ 'StartTime' | localize }}</label>
+            </p>
+
+            <p class="small text-muted mb-0">
+              {{ session.sessionDate | date: 'hh:mm a' }}
+            </p>
+
+            <p class="mb-0">
+              <label>{{ 'Timezone' | localize }}</label>
+            </p>
+
+            <p class="small text-muted mb-0">
+              {{ session.timeZone }}
+            </p>
+          </div>
+          <div *ngIf="session.status === 1" class="col-auto">
+            <button href="javascript:;" (click)="onConfirmClick(session)" class="btn btn-primary">
+              Confirm
+            </button>
+          </div>
+          <div *ngIf="session.status === 2" class="col-auto">
+            <button class="btn btn-primary">
+              Open Session
+            </button>
+          </div>
         </div>
-        <div class="col-auto">
-          <a href="javascript:;" (click)="onConfirmClick(session)" class="btn btn-sm btn-primary">
-            Confirm
-          </a>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="session.status === 2">
-        <div class="col-auto">
-          <small> <span class="text-success">●</span> Confirmed </small>
-        </div>
-        <div class="col-auto">
-          <a href="#!" class="btn btn-sm btn-primary">
-            Open Session
-          </a>
-        </div>
-      </ng-container>
+      </div>
     </div>
   </div>
 </div>
