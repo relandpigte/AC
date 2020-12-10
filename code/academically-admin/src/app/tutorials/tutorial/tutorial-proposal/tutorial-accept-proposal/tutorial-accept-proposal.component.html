@@ -20,7 +20,10 @@
           </tab>
           <tab active="true" *ngIf="true" heading="{{ 'Book session' | localize }}">
             <div class="tabs-custom">
-              <app-tutorial-accept-proposal-book-session [tutorOffer]="tutorOffer"></app-tutorial-accept-proposal-book-session>
+              <app-tutorial-accept-proposal-book-session
+                [tutorOffer]="tutorOffer"
+                (sessionBooked)="onSessionBooked($event)"
+              ></app-tutorial-accept-proposal-book-session>
             </div>
           </tab>
         </tabset>

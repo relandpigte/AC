@@ -45,6 +45,7 @@ export class StudentProposalLiveSessionsComponent extends AppComponentBase imple
   onConfirmClick(session: SessionDto): void {
     this.isLoading = true;
     session.status = 2;
+    session.tutorOffer = null;
     this.userSerssionServic.save(session).subscribe(() => {
       this.isLoading = false;
       this.notify.success(this.l('SavedSuccessfully'));

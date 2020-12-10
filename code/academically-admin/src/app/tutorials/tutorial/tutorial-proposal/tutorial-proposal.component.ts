@@ -96,6 +96,12 @@ export class TutorialProposalComponent extends PagedListingComponentBase<GetTuto
     modalSettings.initialState = {
       tutorOffer: tutorOffer
     };
-    const modal = this._modalService.show(TutorialAcceptProposalComponent, modalSettings);
+    const modalRef = this._modalService.show(TutorialAcceptProposalComponent, modalSettings);
+    const modal: TutorialAcceptProposalComponent = modalRef.content;
+    modal.sessionBooked.subscribe((isBooked: boolean) => {
+      if (isBooked) {
+        this.refresh();
+      }
+    });
   }
 }

@@ -172,7 +172,7 @@ namespace Academically.Services.Offers
                 return offer;
             }
 
-            return new GetTutorOfferDto();
+            return offer;
         }
     }
 }
