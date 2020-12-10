@@ -15,6 +15,7 @@ export class StudentProposalLiveSessionsComponent extends AppComponentBase imple
   isLoading = false;
   moment: any = moment;
   id: string;
+  today: moment.Moment;
   constructor(
     injector: Injector,
     private _tutorOfferService: TutorOffersServiceProxy,
@@ -25,6 +26,8 @@ export class StudentProposalLiveSessionsComponent extends AppComponentBase imple
   }
 
   ngOnInit(): void {
+    this.today = moment(new Date());
+    console.log(this.today);
     this._activatedRoute.paramMap.subscribe(paramMap => {
       this.id = paramMap.get('tutorialId');
       if (this.id) {

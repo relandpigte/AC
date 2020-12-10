@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Academically.Application.Shared.Services;
 using Academically.Configuration;
 using Academically.Entities.Enums;
+using Academically.DomainServices.Timezone;
 
 namespace Academically.Services.Offers
 {
@@ -23,16 +24,19 @@ namespace Academically.Services.Offers
         private readonly IRepository<TutorOffer, Guid> _tutorOffersRepository;
         private readonly IRepository<UserEducation, Guid> _userEducationsRepository;
         private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
+        private readonly ITimezoneDomainService _timezoneDomainService;
 
         public TutorOffersAppService(
             IRepository<TutorOffer, Guid> tutorOffersRepository,
             IRepository<UserEducation, Guid> userEducationsRepository,
-            IRepository<UserProfile, Guid> userProfilesRepository
+            IRepository<UserProfile, Guid> userProfilesRepository,
+            ITimezoneDomainService timezoneDomainService
             )
         {
             _tutorOffersRepository = tutorOffersRepository;
             _userProfilesRepository = userProfilesRepository;
             _userEducationsRepository = userEducationsRepository;
+            _timezoneDomainService = timezoneDomainService;
         }
 
         public async Task<GetTutorOfferDto> GetAsync(Guid offerId)
@@ -157,6 +161,11 @@ namespace Academically.Services.Offers
                 .Where(e => e.TutorId == tutor.Id && e.TutorialId == tutorialId)
                 .Select(e => ObjectMapper.Map<GetTutorOfferDto>(e))
                 .FirstOrDefaultAsync();
+
+            foreach(var session in offer.Sessions)
+            {
+                session.SessionDate = _timezoneDomainService.ConvertToLocal(session.SessionDate, session.TimeZone);
+            }
 
             return offer;
         }

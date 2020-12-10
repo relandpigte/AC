@@ -12,14 +12,16 @@
             <small>{{ 'StartDate' | localize }}</small>
           </div>
           <div class="col-auto">
-            <time class="small text-muted">
-              {{
-                moment
-                  .utc(session.sessionDate)
-                  .local()
-                  .format('YYYY-MM-DD')
-              }}
-            </time>
+            <ng-container *ngIf="moment.duration(session.sessionDate.diff(today)).asHours() < 24 && session.status === 2">
+              <small class="text-danger">
+                {{ session.sessionDate | date: 'dd/MM/yyyy' }}
+              </small>
+            </ng-container>
+            <ng-container *ngIf="session.status !== 2">
+              <small class="small text-muted">
+                {{ session.sessionDate | date: 'dd/MM/yyyy' }}
+              </small>
+            </ng-container>
           </div>
         </div>
       </div>
@@ -30,12 +32,7 @@
           </div>
           <div class="col-auto">
             <small class="text-muted">
-              {{
-                moment
-                  .utc(session.sessionDate)
-                  .local()
-                  .format('hh:mm a')
-              }}
+              {{ session.sessionDate | date: 'hh:mm a' }}
             </small>
           </div>
         </div>
