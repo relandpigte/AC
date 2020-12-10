@@ -59,14 +59,14 @@
             </p>
           </div>
           <div *ngIf="session.status === 1" class="col-auto">
-            <a href="javascript:;" (click)="onConfirmClick(session)" class="btn btn-sm btn-primary">
+            <button href="javascript:;" (click)="onConfirmClick(session)" class="btn btn-primary">
               Confirm
-            </a>
+            </button>
           </div>
           <div *ngIf="session.status === 2" class="col-auto">
-            <a href="#!" class="btn btn-sm btn-primary">
+            <button class="btn btn-primary">
               Open Session
-            </a>
+            </button>
           </div>
         </div>
       </div>
