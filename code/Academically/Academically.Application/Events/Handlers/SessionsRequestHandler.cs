@@ -8,6 +8,7 @@ using Academically.Application.Shared.Services;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 using Academically.Configuration;
+using Academically.DomainServices.Timezone;
 using Academically.Entities;
 using Academically.Entities.Enums;
 using System;
@@ -26,6 +27,7 @@ namespace Academically.Events.Handlers
         private readonly IRepository<TutorOffer, Guid> _tutorOffersRepository;
         private readonly IRepository<UserTutorial, Guid> _userTutorialsRepository;
         private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
+        private readonly ITimezoneDomainService _timezoneDomainService;
         private readonly ISettingManager _settingManager;
         private readonly IEmailService _emailService;
         private readonly RoleManager _roleManager;
@@ -39,6 +41,7 @@ namespace Academically.Events.Handlers
             IRepository<TutorOffer, Guid> tutorOffersRepository,
             IRepository<UserTutorial, Guid> userTutorialsRepository,
             IRepository<UserProfile, Guid> userProfilesRepository,
+            ITimezoneDomainService timezoneDomainService,
             ILocalizationManager localizationManager
             ) : base(localizationManager)
         {
@@ -49,6 +52,7 @@ namespace Academically.Events.Handlers
             _userTutorialsRepository = userTutorialsRepository;
             _userProfilesRepository = userProfilesRepository;
             _settingManager = settingManager;
+            _timezoneDomainService = timezoneDomainService;
         }
         
         [UnitOfWork]
@@ -61,7 +65,7 @@ namespace Academically.Events.Handlers
             var tutor = await _usersRepository.FirstOrDefaultAsync(e => e.Id == tutorProfile.UserId);
             var clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
             var studentProposalLink = $"{clientRootAddress}app/student-proposal/{userTutorial.Id}";
-            var sessionDate = ConvertToLocal(eventData.Entity.SessionDate, eventData.Entity.TimeZone);
+            var sessionDate = _timezoneDomainService.ConvertToLocal(eventData.Entity.SessionDate, eventData.Entity.TimeZone);
             var sessionDuration = GetDuration(eventData.Entity.Duration);
             var sessionName = "Tutorial Session with " + student.FullName;
 
@@ -95,14 +99,6 @@ namespace Academically.Events.Handlers
 
             return duration;
 
-        }
-        private DateTime ConvertToLocal(DateTime? dateStart, string timezone)
-        {
-            var timeZone = TZConvert.GetTimeZoneInfo(timezone);
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone.Id);
-            var dateStartUtc = TimeZoneInfo.ConvertTimeFromUtc(dateStart.Value, timeZoneInfo);
-
-            return dateStartUtc;
         }
     }
 }
