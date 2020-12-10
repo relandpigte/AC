@@ -3,29 +3,25 @@
     <h4 class="card-header-title">Upcoming Sessions</h4>
   </div>
   <div class="card-body">
-    <!-- List group -->
     <div *ngFor="let session of sessions" class="list-group list-group-flush my-n3">
-      <ng-container
-        [ngTemplateOutlet]="sessionUserTemplate"
-        [ngTemplateOutletContext]="{ userProfile: isStudent ? session.tutorOffer.tutor : session.tutorOffer.tutorial.student }"
-      >
+      <ng-container [ngTemplateOutlet]="sessionUserTemplate"
+        [ngTemplateOutletContext]="{ session: session, userProfile: isStudent ? session.tutorOffer.tutor : session.tutorOffer.tutorial.student }">
       </ng-container>
     </div>
     <p *ngIf="sessions.length === 0" class="text-center text-muted p-0 m-0 text-small">No Upcoming Session</p>
   </div>
 </div>
 
-<ng-template #sessionUserTemplate let-userProfile="userProfile" let-user="userProfile.user">
+<ng-template #sessionUserTemplate let-session="session" let-userProfile="userProfile" let-user="userProfile.user">
   <div class="list-group-item">
     <div class="row align-items-center">
       <div class="col-auto">
-        <!-- Image -->
         <a href="javsacript:;" class="avatar">
-          <img [src]="getProfilePicture(userProfile.profilePictureFileName, user.id)" alt="..." class="avatar-img rounded" />
+          <img [src]="getProfilePicture(userProfile.profilePictureFileName, user.id)" alt="..."
+            class="avatar-img rounded" />
         </a>
       </div>
       <div class="col ml-n2">
-        <!-- Heading -->
         <h4 class="mb-1">
           <a href="team-overview.html">{{ user.fullName }}</a>
         </h4>
@@ -35,7 +31,7 @@
       </div>
       <div class="col-auto">
         <!-- Dropdown -->
-        <a href="#" [routerLink]="['/app/session']" class="btn btn-sm btn-primary"> Join </a>
+        <a href="javascript:;" (click)="onJoinSessionClick(session)" class="btn btn-sm btn-primary"> Join </a>
       </div>
     </div>
   </div>

@@ -1,144 +1,83 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { AgoraClient, ClientEvent, NgxAgoraService, Stream, StreamEvent, } from 'ngx-agora';
-import { environment } from 'environments/environment';
-import { UserSessionsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { GetTutorOfferDto, SessionDto, UserProfileDto, UserSessionsServiceProxy, UserTutorialDto } from '@shared/service-proxies/service-proxies';
+import { VideoConferenceService } from '@shared/services/video-conference.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
 
 @Component({
   selector: 'app-session',
   templateUrl: './session.component.html',
   styleUrls: ['./session.component.less'],
+  animations: [appModuleAnimation()],
 })
-export class SessionComponent extends AppComponentBase implements OnInit {
+export class SessionComponent extends AppComponentBase implements OnInit, OnDestroy {
+  id: string;
   localCallId = 'agora_local';
-  remoteCalls: string[] = [];
-  uid: number;
-  channelName: string;
-  channelToken: string;
-
-  private client: AgoraClient;
-  private localStream: Stream;
+  remoteCalls: string[];
+  isVideoEnabled = false;
+  isMicEnabled = true;
+  isRemoteVideEnabled = false;
+  session: SessionDto = new SessionDto();
+  localParticipant: UserProfileDto;
+  remoteParticipant: UserProfileDto;
 
   constructor(
     injector: Injector,
-    private _agoraService: NgxAgoraService,
+    private _videoConferenceService: VideoConferenceService,
     private _sessionsService: UserSessionsServiceProxy,
+    private _activatedRoute: ActivatedRoute,
+    private _router: Router,
   ) {
     super(injector);
-    this.uid = this.appSession.userId;
-
-    this.channelName = `test-vc`;
-    const expirationInSeconds = 3600;
-    const currentTimestamp = Math.floor(new Date(2020, 12, 9, 13, 0, 0, 0).getMilliseconds() / 1000);
-    const totalExpirationTimestamp = currentTimestamp + expirationInSeconds;
-    console.log(this.channelToken);
+    this.session.tutorOffer = new GetTutorOfferDto();
+    this.session.tutorOffer.tutorial = new UserTutorialDto();
+    this._videoConferenceService.initialize(this.appSession.userId, this.localCallId);
+    this._videoConferenceService.remoteCallsUpdate.subscribe(remoteCalls => {
+      this.remoteCalls = remoteCalls;
+    });
+    this._videoConferenceService.remoteVideoToggle.subscribe(isEnabled => {
+      this.isRemoteVideEnabled = isEnabled;
+    });
   }
 
   ngOnInit(): void {
-    this.client = this._agoraService.createClient({ mode: 'rtc', codec: 'h264' });
-    this.assignClientHandlers();
-
-    // Added in this step to initialize the local A/V stream
-    this.localStream = this._agoraService.createStream({ streamID: this.uid, audio: true, video: true, screen: false });
-    this.assignLocalStreamHandlers();
-    // Join and publish methods added in this step
-
-    this._sessionsService.join('c2f14e2f-8c82-494e-bfb5-29eab07c08b2').subscribe(joinSessionResult => {
-      this.initLocalStream(() => this.join("vc-test", joinSessionResult.channelToken, uid => this.publish(), error => console.error(error)));
-    });
+    this._activatedRoute.paramMap.subscribe(paramMap => {
+      this.id = paramMap.get('id');
+      this.getSession();
+    })
   }
 
-  /**
- * Attempts to connect to an online chat room where users can host and receive A/V streams.
- */
-  join(channelName: string, channelToken: string, onSuccess?: (uid: number | string) => void, onFailure?: (error: Error) => void): void {
-    this.client.join(channelToken, channelName, this.uid, onSuccess, onFailure);
+  ngOnDestroy(): void {
+    this._videoConferenceService.leave();
   }
 
-  /**
-   * Attempts to upload the created local A/V stream to a joined chat room.
-   */
-  publish(): void {
-    this.client.publish(this.localStream, err => console.log('Publish local stream error: ' + err));
+  onToggleVideo(): void {
+    this.isVideoEnabled = !this.isVideoEnabled;
+    this._videoConferenceService.toggleVideo(this.isVideoEnabled);
   }
 
-  private assignClientHandlers(): void {
-    this.client.on(ClientEvent.LocalStreamPublished, (evt) => {
-      console.log('Publish local stream successfully');
-    });
+  onToggleMic(): void {
+    this.isMicEnabled = !this.isMicEnabled;
+    this._videoConferenceService.toggleAudio(this.isMicEnabled);
+  }
 
-    this.client.on(ClientEvent.Error, (error) => {
-      console.log('Got error msg:', error.reason);
-      if (error.reason === 'DYNAMIC_KEY_TIMEOUT') {
-        this.client.renewChannelKey(
-          '',
-          () => console.log('Renewed the channel key successfully.'),
-          (renewError) => console.error('Renew channel key failed: ', renewError)
-        );
+  onLeaveClick(): void {
+    this._videoConferenceService.leave();
+    this._router.navigate(['/app/home']);
+  }
+
+  private getSession(): void {
+    this._sessionsService.join(this.id).subscribe(joinSessionResult => {
+      this.session = joinSessionResult.session;
+      if (joinSessionResult.session.tutorOffer.tutor.userId === this.appSession.userId) {
+        this.localParticipant = joinSessionResult.session.tutorOffer.tutor;
+        this.remoteParticipant = joinSessionResult.session.tutorOffer.tutorial.student;
+      } else {
+        this.localParticipant = joinSessionResult.session.tutorOffer.tutorial.student;
+        this.remoteParticipant = joinSessionResult.session.tutorOffer.tutor;
       }
+      this._videoConferenceService.join(joinSessionResult.channelName, joinSessionResult.channelToken);
     });
-
-    this.client.on(ClientEvent.RemoteStreamAdded, (evt) => {
-      const stream = evt.stream as Stream;
-      this.client.subscribe(stream, { audio: true, video: true }, (err) => {
-        console.log('Subscribe stream failed', err);
-      });
-    });
-
-    this.client.on(ClientEvent.RemoteStreamSubscribed, (evt) => {
-      const stream = evt.stream as Stream;
-      const id = this.getRemoteId(stream);
-      if (!this.remoteCalls.length) {
-        this.remoteCalls.push(id);
-        setTimeout(() => stream.play(id), 1000);
-      }
-    });
-
-    this.client.on(ClientEvent.RemoteStreamRemoved, (evt) => {
-      const stream = evt.stream as Stream;
-      if (stream) {
-        stream.stop();
-        this.remoteCalls = [];
-        console.log(`Remote stream is removed ${stream.getId()}`);
-      }
-    });
-
-    this.client.on(ClientEvent.PeerLeave, (evt) => {
-      const stream = evt.stream as Stream;
-      if (stream) {
-        stream.stop();
-        this.remoteCalls = this.remoteCalls.filter((call) => call !== `${this.getRemoteId(stream)}`);
-        console.log(`${evt.uid} left from this channel`);
-      }
-    });
-
-  }
-
-  private assignLocalStreamHandlers(): void {
-    this.localStream.on(StreamEvent.MediaAccessAllowed, () => {
-      console.log('accessAllowed');
-    });
-
-    // The user has denied access to the camera and mic.
-    this.localStream.on(StreamEvent.MediaAccessDenied, () => {
-      console.log('accessDenied');
-    });
-  }
-
-  private initLocalStream(onSuccess?: () => any): void {
-    this.localStream.init(
-      () => {
-        // The user has granted access to the camera and mic.
-        this.localStream.play(this.localCallId);
-        if (onSuccess) {
-          onSuccess();
-        }
-      },
-      err => console.error('getUserMedia failed', err)
-    );
-  }
-
-  private getRemoteId(stream: Stream): string {
-    return `agora_remote-${stream.getId()}`;
   }
 }

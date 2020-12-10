@@ -17,6 +17,7 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NgxQRCodeModule } from '@techiediaries/ngx-qrcode';
 import { TreeModule } from 'primeng/tree';
 import { NgxAgoraModule } from 'ngx-agora';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 // directives
 import { Select2Directive } from '@shared/directives/select2.directive';
 import { SunburstChartDirective } from '@shared/directives/sunburst-chart.directive';
@@ -52,6 +53,7 @@ import { SidebarSmallComponent } from './layout/navigations/sidebar-small/sideba
 // services
 import { GoogleMapsService } from '@shared/services/google-maps.service';
 import { ProfileService } from '@shared/services/profile.service';
+import { VideoConferenceService } from '@shared/services/video-conference.service';
 // environment
 import { environment } from 'environments/environment';
 // components
@@ -220,8 +222,9 @@ import { UpcomingSessionsWidgetComponent } from './widgets/upcoming-sessions-wid
     NgxQRCodeModule,
     TreeModule,
     NgxAgoraModule.forRoot({ AppID: environment.agora.appId }),
+    TooltipModule.forRoot(),
   ],
-  providers: [GoogleMapsService, ProfileService],
+  providers: [GoogleMapsService, ProfileService, VideoConferenceService],
   entryComponents: [
     // tenants
     CreateTenantDialogComponent,

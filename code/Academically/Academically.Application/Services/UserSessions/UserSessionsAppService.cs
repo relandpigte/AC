@@ -7,6 +7,7 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Academically.Configuration;
 using Academically.Entities;
+using Academically.Services.UserProfiles.Dto;
 using Academically.Services.UserSessions.Dto;
 using AgoraIO.Media;
 using Microsoft.EntityFrameworkCore;
@@ -72,14 +73,27 @@ namespace Academically.Services.UserSessions
             uint expirationInSeconds = 3600;
             uint currentTimestamp = (uint)DateTime.Now.ToUnixTimestamp();
             uint previledgeTimestamp = currentTimestamp + expirationInSeconds;
-
+            string channelName = id.ToString();
             var builder = new RtcTokenBuilder();
-            var token = builder.buildTokenWithUid(agoraAppId, agoraAppCertificate, "vc-test", (int)AbpSession.UserId.Value, role, previledgeTimestamp);
+            var token = builder.buildTokenWithUid(agoraAppId, agoraAppCertificate, channelName, (int)AbpSession.UserId.Value, role, previledgeTimestamp);
+
+            var session = await _sessionsRepository.GetAll()
+                .Include(e => e.TutorOffer)
+                    .ThenInclude(e => e.Tutor)
+                        .ThenInclude(e => e.User)
+                .Include(e => e.TutorOffer)
+                    .ThenInclude(e => e.Tutorial)
+                        .ThenInclude(e => e.Student)
+                            .ThenInclude(e => e.User)
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            var sessionDto = ObjectMapper.Map<SessionDto>(session);
 
             var output = new JoinSessionDto()
             {
+                ChannelName = channelName,
                 ChannelToken = token,
-                Session = new SessionDto(),
+                Session = sessionDto,
             };
 
             return output;

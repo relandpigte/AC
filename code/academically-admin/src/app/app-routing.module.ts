@@ -230,7 +230,7 @@ import { SessionComponent } from './session/session.component';
             ],
           },
           {
-            path: 'session',
+            path: 'session/:id',
             component: WrapperComponent,
             canActivate: [AppRouteGuard],
             children: [

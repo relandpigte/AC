@@ -162,12 +162,17 @@ namespace Academically.Services.Offers
                 .Select(e => ObjectMapper.Map<GetTutorOfferDto>(e))
                 .FirstOrDefaultAsync();
 
-            foreach(var session in offer.Sessions)
+            if (offer != null)
             {
-                session.SessionDate = _timezoneDomainService.ConvertToLocal(session.SessionDate, session.TimeZone);
+                foreach (var session in offer.Sessions)
+                {
+                    session.SessionDate = _timezoneDomainService.ConvertToLocal(session.SessionDate, session.TimeZone);
+                }
+
+                return offer;
             }
 
-            return offer;
+            return new GetTutorOfferDto();
         }
     }
 }

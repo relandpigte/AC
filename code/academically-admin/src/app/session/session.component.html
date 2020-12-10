@@ -1,3 +1,42 @@
-<div [id]="localCallId" class="local"></div>
+<div class="call-controls">
+  <div class="left-call-controls">
+    <button (click)="onToggleVideo()" class="btn btn-secondary"
+      [tooltip]="(isVideoEnabled ? 'Disable' : 'Enable') + ' Video'">
+      <span *ngIf="isVideoEnabled" class="fas fa-video"></span>
+      <span *ngIf="!isVideoEnabled" class="fas fa-video-slash"></span>
+    </button>
+    <button (click)="onToggleMic()" class="btn btn-secondary"
+      [tooltip]="(isMicEnabled ? 'Mute' : 'Unmute') + ' Microphone'">
+      <span *ngIf="isMicEnabled" class="fas fa-microphone"></span>
+      <span *ngIf="!isMicEnabled" class="fas fa-microphone-slash"></span>
+    </button>
+  </div>
+  <div class="right-call-controls">
+    <button (click)="onLeaveClick()" class="btn btn-secondary">
+      <i class="fas fa-phone-slash"></i>
+      Leave
+    </button>
+  </div>
+</div>
 
 <div *ngFor="let callId of remoteCalls" [id]="callId" class="remote"></div>
+<div *ngIf="!isRemoteVideEnabled || !remoteParticipant" class="remote-overlay">
+  <div *ngIf="remoteParticipant" class="remote-overlay-text">
+    <img *ngIf="remoteParticipant.profilePictureFileName"
+      [src]="getProfilePicture(remoteParticipant.profilePictureFileName, remoteParticipant.userId)" />
+    <h1 *ngIf="!remoteParticipant.profilePictureFileName">
+      {{ remoteParticipant.user.name[0] }}{{ remoteParticipant.user.surname[0] }}
+    </h1>
+  </div>
+</div>
+
+<div [id]="localCallId" class="local"></div>
+<div *ngIf="!isVideoEnabled || !localParticipant" class="local-overlay">
+  <div *ngIf="localParticipant" class="local-overlay-text">
+    <img *ngIf="localParticipant.profilePictureFileName"
+      [src]="getProfilePicture(localParticipant.profilePictureFileName, localParticipant.userId)" />
+    <h1 *ngIf="!localParticipant.profilePictureFileName">
+      {{ localParticipant.user.name[0] }}{{ localParticipant.user.surname[0] }}
+    </h1>
+  </div>
+</div>

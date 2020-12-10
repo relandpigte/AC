@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Entities;
+using Academically.Services.UserProfiles.Dto;
 using Microsoft.AspNetCore.Http;
 
 namespace Academically.Services.UserTutorials.Dto
@@ -19,6 +20,6 @@ namespace Academically.Services.UserTutorials.Dto
         public string PictureFileName { get; set; }
         public IEnumerable<Guid> DisciplineTaxonomyIds { get; set; }
 
-        public UserProfile Student { get; set; }
+        public UserProfileDto Student { get; set; }
     }
 }

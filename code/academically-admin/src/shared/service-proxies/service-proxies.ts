@@ -10030,7 +10030,7 @@ export class UserTutorialDto implements IUserTutorialDto {
     picture: string | undefined;
     pictureFileName: string | undefined;
     disciplineTaxonomyIds: string[] | undefined;
-    student: UserProfile;
+    student: UserProfileDto;
     id: string;
 
     constructor(data?: IUserTutorialDto) {
@@ -10056,7 +10056,7 @@ export class UserTutorialDto implements IUserTutorialDto {
                 for (let item of _data["disciplineTaxonomyIds"])
                     this.disciplineTaxonomyIds.push(item);
             }
-            this.student = _data["student"] ? UserProfile.fromJS(_data["student"]) : <any>undefined;
+            this.student = _data["student"] ? UserProfileDto.fromJS(_data["student"]) : <any>undefined;
             this.id = _data["id"];
         }
     }
@@ -10104,7 +10104,7 @@ export interface IUserTutorialDto {
     picture: string | undefined;
     pictureFileName: string | undefined;
     disciplineTaxonomyIds: string[] | undefined;
-    student: UserProfile;
+    student: UserProfileDto;
     id: string;
 }
 
@@ -11001,8 +11001,10 @@ export interface IUserPublicationDtoPagedResultDto {
 }
 
 export class JoinSessionDto implements IJoinSessionDto {
+    channelName: string | undefined;
     channelToken: string | undefined;
     session: SessionDto;
+    participants: UserProfileDto[] | undefined;
 
     constructor(data?: IJoinSessionDto) {
         if (data) {
@@ -11015,8 +11017,14 @@ export class JoinSessionDto implements IJoinSessionDto {
 
     init(_data?: any) {
         if (_data) {
+            this.channelName = _data["channelName"];
             this.channelToken = _data["channelToken"];
             this.session = _data["session"] ? SessionDto.fromJS(_data["session"]) : <any>undefined;
+            if (Array.isArray(_data["participants"])) {
+                this.participants = [] as any;
+                for (let item of _data["participants"])
+                    this.participants.push(UserProfileDto.fromJS(item));
+            }
         }
     }
 
@@ -11029,8 +11037,14 @@ export class JoinSessionDto implements IJoinSessionDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["channelName"] = this.channelName;
         data["channelToken"] = this.channelToken;
         data["session"] = this.session ? this.session.toJSON() : <any>undefined;
+        if (Array.isArray(this.participants)) {
+            data["participants"] = [];
+            for (let item of this.participants)
+                data["participants"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -11043,8 +11057,10 @@ export class JoinSessionDto implements IJoinSessionDto {
 }
 
 export interface IJoinSessionDto {
+    channelName: string | undefined;
     channelToken: string | undefined;
     session: SessionDto;
+    participants: UserProfileDto[] | undefined;
 }
 
 export class ProfileSummaryWidgetDto implements IProfileSummaryWidgetDto {
