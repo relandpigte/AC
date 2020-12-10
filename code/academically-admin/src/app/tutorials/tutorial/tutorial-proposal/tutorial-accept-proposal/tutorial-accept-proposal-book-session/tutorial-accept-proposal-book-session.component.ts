@@ -56,12 +56,10 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
   }
 
   onFormSubmit(): void {
-    const date = moment(this.userSession.sessionDate).format('YYYY-MM-DD');
-    const sessionDateTime = this.hourInput + ':' + this.minuteInput + ':00  ';
-    const sessionDateStart = new Date(date + ' ' + sessionDateTime);
+    const sessionDate = `${moment(this.userSession.sessionDate).format('YYYY-MM-DD')} ${this.hourInput}:${this.minuteInput}:00`;
     const sessionDuration = Number(this.hourSessionDurationInput) * 60 + Number(this.minuteSessionDurationInput);
     this.userSession.duration = sessionDuration;
-    this.userSession.sessionDate = moment(sessionDateStart);
+    this.userSession.sessionDate = moment(sessionDate, 'YYYY-MM-DD HH:mm:ss').utc();
 
     this._userSessionService.save(this.userSession).subscribe(() => {
       this.notify.success(this.l('SavedSuccessfully'));

@@ -12,6 +12,7 @@ import * as moment from 'moment';
 export class UpcomingSessionsWidgetComponent extends AppComponentBase implements OnInit {
   isStudent = false;
   sessions: SessionDto[] = [];
+  dateFormat = 'DD-MM-YYYY H:mm:ss';
 
   constructor(
     injector: Injector,
@@ -27,12 +28,33 @@ export class UpcomingSessionsWidgetComponent extends AppComponentBase implements
   }
 
   onJoinSessionClick(session: SessionDto): void {
-    const startTime = session.sessionDate.subtract('minutes', 5);
-    const endTime = startTime.add('minutes', session.duration);
-    if (moment().isBetween(startTime, endTime, 'minutes')) {
+    const sStartTime = session.sessionDate.clone().utc(true).tz(session.timeZone).format(this.dateFormat);
+    const startTime = moment(sStartTime, this.dateFormat).subtract('minutes', 5);
+    const sEndTime = startTime.clone().add('minutes', session.duration).format(this.dateFormat);
+    const endTime = moment(sEndTime, this.dateFormat);
+    if (moment().isBetween(startTime, endTime, undefined, '[]')) {
       this._router.navigate(['/app/session', session.id]);
     } else {
       this.message.error('The session is not yet ready. Please check if you are within shedule before trying to join.', 'Session Not Ready');
+    }
+  }
+
+  private getSessionDateDisplay(session: SessionDto): { isToday: boolean, date: string } {
+    const sSessionDate = session.sessionDate.clone().utc(true).tz(session.timeZone).format(this.dateFormat);
+    const sessionDate = moment(sSessionDate, this.dateFormat);
+    const dateNow = new Date();
+    if (sessionDate.isSame(dateNow, 'day')) {
+      var duration = moment.duration(sessionDate.diff(moment(dateNow)));
+      const hours = duration.hours();
+      const minutes = duration.minutes();
+      const seconds = duration.seconds();
+      if (hours >= 0 && minutes >= 0 && seconds >= 0){
+        return { isToday: true, date: `${hours}:${minutes}:${seconds}` };
+      } else {
+        return { isToday: true, date: '--:--:--' }
+      }
+    } else {
+      return { isToday: false, date: sessionDate.format('DD/MM/YYYY HH:mm:ss') };
     }
   }
 
@@ -40,6 +62,11 @@ export class UpcomingSessionsWidgetComponent extends AppComponentBase implements
     this._sessionsService.getUpcoming(this.isStudent)
       .subscribe(sessions => {
         this.sessions = sessions;
+        this.sessions.forEach(session => {
+          const sessionDateDisplay = this.getSessionDateDisplay(session);
+          session['sessionDateDisplay'] = sessionDateDisplay.date;
+          session['isToday'] = sessionDateDisplay.isToday;
+        })
       });
   }
 }

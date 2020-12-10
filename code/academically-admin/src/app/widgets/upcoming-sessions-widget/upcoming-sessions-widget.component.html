@@ -27,7 +27,9 @@
         </h4>
 
         <!-- Time -->
-        <small class="text-muted"> <i class="fe fe-clock"></i> Updated 2hr ago </small>
+        <small [class.text-muted]="!session['isToday']" [class.text-red]="session['isToday']">
+          <i class="fe fe-clock"></i>&nbsp;{{ session['sessionDateDisplay'] }}
+        </small>
       </div>
       <div class="col-auto">
         <!-- Dropdown -->

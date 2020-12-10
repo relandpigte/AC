@@ -45,7 +45,7 @@ namespace Academically.Services.UserSessions
                     .Include(e => e.TutorOffer.Tutorial.Student.User);
             }
 
-            var sessions = await sessionsQuery.OrderByDescending(e => e.SessionDate)
+            var sessions = await sessionsQuery.OrderBy(e => e.SessionDate)
                 .Take(5)
                 .Select(e => ObjectMapper.Map<SessionDto>(e))
                 .ToListAsync();
