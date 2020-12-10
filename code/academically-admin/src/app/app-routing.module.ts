@@ -22,6 +22,7 @@ import { WrapperComponent } from './layout/wrapper/wrapper.component';
 import { ProfileHeaderComponent } from './profile/profile-header/profile-header.component';
 import { TutorOfferComponent } from './tutor-offer/tutor-offer.component';
 import { TutorialComponent } from './tutorials/tutorial/tutorial.component';
+import { SessionComponent } from './session/session.component';
 
 @NgModule({
   imports: [
@@ -228,6 +229,18 @@ import { TutorialComponent } from './tutorials/tutorial/tutorial.component';
               },
             ],
           },
+          {
+            path: 'session',
+            component: WrapperComponent,
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: SessionComponent,
+                outlet: 'content',
+              },
+            ],
+          },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent },
           { path: 'not-found', component: ErrorPageComponent },
@@ -238,4 +251,4 @@ import { TutorialComponent } from './tutorials/tutorial/tutorial.component';
   ],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

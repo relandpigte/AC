@@ -1,14 +1,13 @@
-﻿using Abp.Application.Services.Dto;
+﻿using System;
+using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Entities;
 using Academically.Entities.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Academically.Services.Offers.Dto;
 
 namespace Academically.Services.UserSessions.Dto
 {
-    [AutoMapFrom(typeof(Session))]
+    [AutoMap(typeof(Session))]
     public class SessionDto : EntityDto<Guid>
     {
         public string TimeZone { get; set; }
@@ -17,5 +16,6 @@ namespace Academically.Services.UserSessions.Dto
         public Guid TutorOfferId { get; set; }
         public SessionStatus Status { get; set; }
 
+        public GetTutorOfferDto TutorOffer { get; set; }
     }
 }

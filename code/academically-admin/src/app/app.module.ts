@@ -16,6 +16,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NgxQRCodeModule } from '@techiediaries/ngx-qrcode';
 import { TreeModule } from 'primeng/tree';
+import { NgxAgoraModule } from 'ngx-agora';
 // directives
 import { Select2Directive } from '@shared/directives/select2.directive';
 import { SunburstChartDirective } from '@shared/directives/sunburst-chart.directive';
@@ -103,6 +104,11 @@ import { FinancialDashboardComponent } from './home/financial-dashboard/financia
 import { TutorialAcceptProposalComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-accept-proposal/tutorial-accept-proposal.component';
 import { TutorialAcceptProposalOverviewComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-accept-proposal/tutorial-accept-proposal-overview/tutorial-accept-proposal-overview.component';
 import { TutorialAcceptProposalBookSessionComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-accept-proposal/tutorial-accept-proposal-book-session/tutorial-accept-proposal-book-session.component';
+
+import { environment } from 'environments/environment';
+import { SessionComponent } from './session/session.component';
+import { UpcomingSessionsWidgetComponent } from './widgets/upcoming-sessions-widget/upcoming-sessions-widget.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -189,7 +195,9 @@ import { TutorialAcceptProposalBookSessionComponent } from './tutorials/tutorial
     FinancialDashboardComponent,
     TutorialAcceptProposalComponent,
     TutorialAcceptProposalOverviewComponent,
-    TutorialAcceptProposalBookSessionComponent
+    TutorialAcceptProposalBookSessionComponent,
+    SessionComponent,
+    UpcomingSessionsWidgetComponent,
   ],
   imports: [
     CommonModule,
@@ -208,7 +216,8 @@ import { TutorialAcceptProposalBookSessionComponent } from './tutorials/tutorial
     TypeaheadModule.forRoot(),
     BsDatepickerModule.forRoot(),
     NgxQRCodeModule,
-    TreeModule
+    TreeModule,
+    NgxAgoraModule.forRoot({ AppID: environment.agora.appId }),
   ],
   providers: [GoogleMapsService, ProfileService],
   entryComponents: [
@@ -230,7 +239,7 @@ import { TutorialAcceptProposalBookSessionComponent } from './tutorials/tutorial
     SupportServicesSearchComponent,
     RequestNewResearchMethodComponent,
     RequestNewSupportServiceComponent,
-    TutorialExpandProposalComponent
-  ]
+    TutorialExpandProposalComponent,
+  ],
 })
-export class AppModule {}
+export class AppModule { }

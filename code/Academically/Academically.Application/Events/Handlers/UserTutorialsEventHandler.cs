@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Abp.Configuration;
@@ -12,7 +11,6 @@ using Academically.Application.Shared.Services;
 using Academically.Configuration;
 using Academically.DomainServices.Tutorials;
 using Academically.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Academically.Events.Handlers
 {

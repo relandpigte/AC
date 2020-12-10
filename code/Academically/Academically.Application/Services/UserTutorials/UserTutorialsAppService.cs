@@ -46,12 +46,12 @@ namespace Academically.Services.UserTutorials
         {
             var userId = AbpSession.UserId.Value;
             var userTutorial = new UserTutorial();
-            var userprofile =  _userProfileRepository.GetAll()
+            var userProfile =  _userProfileRepository.GetAll()
                 .Where(e => e.UserId == userId)
                 .FirstOrDefault();
             ObjectMapper.Map(inputs, userTutorial);
 
-            userTutorial.UserId = userId;
+            userTutorial.StudentId = userProfile.Id;
             userTutorial.CreatedDate = DateTime.UtcNow;
             userTutorial.ServiceTypeId = Guid.Parse(await _settingManager.GetSettingValueAsync(AppSettingNames.Services_Tutorial));
             var folder = await _settingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_UserTutorialPictures);
@@ -95,7 +95,7 @@ namespace Academically.Services.UserTutorials
         public async Task<IEnumerable<UserTutorialDto>> GetRecent()
         {
             var userTutorials = await _userTutorialsRepository.GetAll()
-                .Where(e => e.UserId == AbpSession.UserId.Value)
+                .Where(e => e.Student.UserId == AbpSession.UserId.Value)
                 .OrderByDescending(e => e.CreatedDate)
                 .Take(5)
                 .Select(e => ObjectMapper.Map<UserTutorialDto>(e))

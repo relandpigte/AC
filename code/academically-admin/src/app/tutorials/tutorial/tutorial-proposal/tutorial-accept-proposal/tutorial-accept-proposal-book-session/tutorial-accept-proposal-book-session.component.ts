@@ -63,7 +63,7 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
     this.userSession.sessionDate = moment.utc(moment(this.userSession.sessionDate).format('YYYY-MM-DD') + ' ' + sessionDateTime);
     this.userSession.duration = sessionDuration;
 
-    this._userSessionService.saveSessionDetail(this.userSession).subscribe(() => {
+    this._userSessionService.create(this.userSession).subscribe(() => {
       this.notify.success(this.l('SavedSuccessfully'));
       this.close();
     });

@@ -404,6 +404,8 @@
           <profile-summary-widget *ngIf="permission.isGranted('Pages.Dashboard.Widgets.ProfileSummary')" [routerLink]="['/app/profile']">
           </profile-summary-widget>
 
+          <upcoming-sessions-widget></upcoming-sessions-widget>
+
           <div class="card" *ngIf="permission.isGranted('Pages.Dashboard.Widgets.Polls')">
             <div class="card-header">
               <h4 class="card-header-title">Polls</h4>

@@ -112,15 +112,16 @@ namespace Academically.Services.Proposals
             var tutorial = await _userTutorialRepository.GetAll()
                 .Include(e => e.UserTutorialDisciplineTaxonomies)
                     .ThenInclude(e => e.DisciplineTaxonomy)
-                .Include(e => e.User.Roles)
-                .Include(e => e.User)
+                .Include(e => e.Student)
+                    .ThenInclude(e => e.User)
+                        .ThenInclude(e => e.Roles)
                 .Where(e => e.Id == tutorialId)
                 .Select(e => ObjectMapper.Map<GetStudentProposalDto>(e))
                 .FirstOrDefaultAsync();
 
             if (tutorial != null)
             {
-                var userProfile = await _userProfilesAppService.FirstOrDefaultAsync(e => e.UserId == tutorial.User.Id);
+                var userProfile = await _userProfilesAppService.FirstOrDefaultAsync(e => e.UserId == tutorial.Student.UserId);
                 tutorial.ProfilePictureFileName = userProfile.ProfilePictureFileName != null ?
                     _fileManagerService.GetFileUrl(userProfile.ProfilePictureFileName, userProfile.UserId, AppSettingNames.Aws_S3_Folders_ProfilePictures)
                     : "assets/img/anonymous.png";
@@ -133,7 +134,7 @@ namespace Academically.Services.Proposals
             var tutorialDisciplineTaxonomies = await _userTutorialDisciplineTaxonomy.GetAll()
                 .Include(e => e.DisciplineTaxonomy)
                 .Include(e => e.UserTutorial)
-                .Where(e => e.TutorialId == tutorialId && e.UserTutorial.UserId == studentId)
+                .Where(e => e.TutorialId == tutorialId && e.UserTutorial.Student.UserId == studentId)
                 .Select(e => e.DisciplineTaxonomy.ParentIdMap.Remove(36))
                 .ToListAsync();
 

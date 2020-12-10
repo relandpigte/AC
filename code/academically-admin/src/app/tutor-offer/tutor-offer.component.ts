@@ -47,7 +47,7 @@ export class TutorOfferComponent extends AppComponentBase implements OnInit {
 
   private getStudentProposal(tutorialId: string): void {
     this._proposalsService.getStudentProposal(tutorialId).subscribe(studentProposal => {
-      this.studentFullName = studentProposal.user.fullName;
+      this.studentFullName = studentProposal.student.user.fullName;
     });
   }
 }

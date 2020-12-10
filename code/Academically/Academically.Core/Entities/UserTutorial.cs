@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
-using Academically.Authorization.Users;
 
 namespace Academically.Entities
 {
     [Table("AcademicallyUserTutorials")]
     public class UserTutorial : Entity<Guid>
     {
-        public long UserId { get; set; }
         public string Information { get; set; }
         public int SupportLevel { get; set; }
         public string Concerns { get; set; }
@@ -18,9 +16,10 @@ namespace Academically.Entities
         public string PictureFileName { get; set; }
         public DateTime? CreatedDate { get; set; }
         public Guid ServiceTypeId { get; set; }
+        public Guid StudentId { get; set; }
 
-        [ForeignKey("UserId")]
-        public User User { get; set; }
+        [ForeignKey("StudentId")]
+        public UserProfile Student { get; set; }
 
         public virtual ICollection<UserTutorialDisciplineTaxonomy> UserTutorialDisciplineTaxonomies { get; set; }
     }

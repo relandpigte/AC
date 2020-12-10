@@ -35,6 +35,8 @@ namespace Academically.Configuration
                 new SettingDefinition(AppSettingNames.RankingWeightings_AreaOfStudyLevelScore, GetFromSettings("RankingWeightings:AreaOfStudyLevelScore")),
                 new SettingDefinition(AppSettingNames.RankingWeightings_AreaOfStudyLevelAndAboveScore, GetFromSettings("RankingWeightings:AreaOfStudyLevelAndAboveScore")),
                 new SettingDefinition(AppSettingNames.RankingWeightings_MethodologyScore, GetFromSettings("RankingWeightings:MethodologyScore")),
+                new SettingDefinition(AppSettingNames.Agora_AppId, GetFromSettings("Agora:AppId")),
+                new SettingDefinition(AppSettingNames.Agora_AppCertificate, GetFromSettings("Agora:AppCertificate")),
             };
         }
 

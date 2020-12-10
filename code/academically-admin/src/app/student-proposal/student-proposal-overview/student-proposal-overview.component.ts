@@ -97,7 +97,7 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
     this._proposalsService.getStudentProposal(this.id).subscribe((proposal) => {
       this.isLoading = false;
       this.studentProposal = proposal;
-      this.studentFullName = proposal.user.fullName;
+      this.studentFullName = proposal.student.user.fullName;
       this.getStudentTutorialHighestLevlAreasOfStudy();
       this.getTutorOffer();
       this.getTutorAreasOfStudy();
@@ -134,7 +134,7 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
 
   private getStudentTutorialHighestLevlAreasOfStudy(): void {
     this._proposalsService
-      .getTutorialHighestLevelAreaOfStudies(this.studentProposal.user.id, this.id)
+      .getTutorialHighestLevelAreaOfStudies(this.studentProposal.student.userId, this.id)
       .subscribe((studentTutorialAreasOfStudies) => {
         this.highLevelTutorialAreasOfStudies = studentTutorialAreasOfStudies;
       });
@@ -144,7 +144,7 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
     this._tutorOfferService.getOffer(this.id).subscribe((offer) => {
       if (Object.keys(offer).length === 0) {
         this.offer.tutorialId = this.id;
-        this.offer.studentId = this.studentProposal.user.id;
+        this.offer.studentId = this.studentProposal.student.userId;
       } else {
         this.offer = offer;
       }

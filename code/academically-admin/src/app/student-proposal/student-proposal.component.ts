@@ -37,8 +37,8 @@ export class StudentProposalComponent extends AppComponentBase implements OnInit
 
   private getStudentProposal() {
     this.proposalsService.getStudentProposal(this.id).subscribe(proposal => {
-      if (proposal.user) {
-        this.studentFullName = proposal.user.fullName;
+      if (proposal.student && proposal.student.user) {
+        this.studentFullName = proposal.student.user.fullName;
       } else {
         this._router.navigate(['/app/not-found']);
       }

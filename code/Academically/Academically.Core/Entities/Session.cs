@@ -1,9 +1,7 @@
-﻿using Abp.Domain.Entities;
-using Academically.Entities.Enums;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+using Abp.Domain.Entities;
+using Academically.Entities.Enums;
 
 namespace Academically.Entities
 {
@@ -15,5 +13,8 @@ namespace Academically.Entities
         public int Duration { get; set; }
         public Guid TutorOfferId { get; set; }
         public SessionStatus Status { get; set; }
+
+        [ForeignKey("TutorOfferId")]
+        public virtual TutorOffer TutorOffer { get; set; }
     }
 }

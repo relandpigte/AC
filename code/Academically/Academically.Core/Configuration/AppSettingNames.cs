@@ -20,5 +20,7 @@
         public const string RankingWeightings_AreaOfStudyLevelScore = "RankingWeightings.AreaOfStudyLevelScore";
         public const string RankingWeightings_AreaOfStudyLevelAndAboveScore = "RankingWeightings.AreaOfStudyLevelAndAboveScore";
         public const string RankingWeightings_MethodologyScore = "RankingWeightings.MethodologyScore";
+        public const string Agora_AppId = "Agora.AppId";
+        public const string Agora_AppCertificate = "Agora.AppCertificate";
     }
 }

@@ -1,10 +1,9 @@
-﻿using Abp.Application.Services.Dto;
+﻿using System;
+using System.Collections.Generic;
+using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Entities;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Academically.Services.UserTutorials.Dto
 {
@@ -19,5 +18,7 @@ namespace Academically.Services.UserTutorials.Dto
         public IFormFile Picture { get; set; }
         public string PictureFileName { get; set; }
         public IEnumerable<Guid> DisciplineTaxonomyIds { get; set; }
+
+        public UserProfile Student { get; set; }
     }
 }

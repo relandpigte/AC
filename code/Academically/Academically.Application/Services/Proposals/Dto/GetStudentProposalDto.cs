@@ -1,10 +1,8 @@
-﻿using Abp.AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using Abp.AutoMapper;
 using Academically.Entities;
 using Academically.Services.UserTutorials.Dto;
-using Academically.Users.Dto;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Academically.Services.Proposals.Dto
 {
@@ -19,6 +17,7 @@ namespace Academically.Services.Proposals.Dto
         public string SubjectArea { get; set; }
         public IEnumerable<UserTutorialDisciplineTaxonomyDto> UserTutorialDisciplineTaxonomies { get; set; }
         public string ProfilePictureFileName { get; set; }
-        public UserDto User { get; set; }
+
+        public UserProfile Student { get; set; }
     }
 }

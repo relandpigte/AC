@@ -20,5 +20,7 @@ namespace Academically.Entities
 
         [ForeignKey("TutorId")]
         public virtual UserProfile Tutor { get; set; }
+        [ForeignKey("TutorialId")]
+        public virtual UserTutorial Tutorial { get; set; }
     }
 }
