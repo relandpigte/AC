@@ -52,12 +52,16 @@ namespace Academically.Services.UserSessions
             return sessions;
         }
 
-        public async Task CreateAsync(SessionDto input)
+        public async Task SaveAsync(SessionDto input)
         {
-            var sessionDetail = new Session();
-            ObjectMapper.Map(input, sessionDetail);
+            var sessionDetail = await _sessionsRepository.FirstOrDefaultAsync(e => e.Id == input.Id);
+            if(sessionDetail == null)
+            {
+                sessionDetail = new Session();
+            }
 
-            await _sessionsRepository.InsertAsync(sessionDetail);
+            ObjectMapper.Map(input, sessionDetail);
+            await _sessionsRepository.InsertOrUpdateAsync(sessionDetail);
         }
 
         public async Task<JoinSessionDto> JoinAsync(Guid id)

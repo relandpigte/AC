@@ -52,6 +52,8 @@ import { SidebarSmallComponent } from './layout/navigations/sidebar-small/sideba
 // services
 import { GoogleMapsService } from '@shared/services/google-maps.service';
 import { ProfileService } from '@shared/services/profile.service';
+// environment
+import { environment } from 'environments/environment';
 // components
 import { AppComponent } from './app.component';
 import { HomeComponent } from '@app/home/home.component';
@@ -104,8 +106,7 @@ import { FinancialDashboardComponent } from './home/financial-dashboard/financia
 import { TutorialAcceptProposalComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-accept-proposal/tutorial-accept-proposal.component';
 import { TutorialAcceptProposalOverviewComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-accept-proposal/tutorial-accept-proposal-overview/tutorial-accept-proposal-overview.component';
 import { TutorialAcceptProposalBookSessionComponent } from './tutorials/tutorial/tutorial-proposal/tutorial-accept-proposal/tutorial-accept-proposal-book-session/tutorial-accept-proposal-book-session.component';
-
-import { environment } from 'environments/environment';
+import { StudentProposalLiveSessionsComponent } from './student-proposal/student-proposal-live-sessions/student-proposal-live-sessions.component';
 import { SessionComponent } from './session/session.component';
 import { UpcomingSessionsWidgetComponent } from './widgets/upcoming-sessions-widget/upcoming-sessions-widget.component';
 
@@ -196,6 +197,7 @@ import { UpcomingSessionsWidgetComponent } from './widgets/upcoming-sessions-wid
     TutorialAcceptProposalComponent,
     TutorialAcceptProposalOverviewComponent,
     TutorialAcceptProposalBookSessionComponent,
+    StudentProposalLiveSessionsComponent,
     SessionComponent,
     UpcomingSessionsWidgetComponent,
   ],

@@ -2954,8 +2954,8 @@ export class TutorOffersServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    create(body: CreateTutorOfferDto | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/TutorOffers/Create";
+    save(body: CreateTutorOfferDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/TutorOffers/Save";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -2970,11 +2970,11 @@ export class TutorOffersServiceProxy {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreate(response_);
+            return this.processSave(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCreate(<any>response_);
+                    return this.processSave(<any>response_);
                 } catch (e) {
                     return <Observable<void>><any>_observableThrow(e);
                 }
@@ -2983,7 +2983,7 @@ export class TutorOffersServiceProxy {
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<void> {
+    protected processSave(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3250,6 +3250,62 @@ export class TutorOffersServiceProxy {
             }));
         }
         return _observableOf<number>(<any>null);
+    }
+
+    /**
+     * @param tutorialId (optional) 
+     * @return Success
+     */
+    getTutorOfferSessions(tutorialId: string | undefined): Observable<GetTutorOfferDto> {
+        let url_ = this.baseUrl + "/api/services/app/TutorOffers/GetTutorOfferSessions?";
+        if (tutorialId === null)
+            throw new Error("The parameter 'tutorialId' cannot be null.");
+        else if (tutorialId !== undefined)
+            url_ += "tutorialId=" + encodeURIComponent("" + tutorialId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTutorOfferSessions(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTutorOfferSessions(<any>response_);
+                } catch (e) {
+                    return <Observable<GetTutorOfferDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetTutorOfferDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTutorOfferSessions(response: HttpResponseBase): Observable<GetTutorOfferDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetTutorOfferDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetTutorOfferDto>(<any>null);
     }
 }
 
@@ -5336,8 +5392,8 @@ export class UserSessionsServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    create(body: SessionDto | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/UserSessions/Create";
+    save(body: SessionDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserSessions/Save";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -5352,11 +5408,11 @@ export class UserSessionsServiceProxy {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreate(response_);
+            return this.processSave(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCreate(<any>response_);
+                    return this.processSave(<any>response_);
                 } catch (e) {
                     return <Observable<void>><any>_observableThrow(e);
                 }
@@ -5365,7 +5421,7 @@ export class UserSessionsServiceProxy {
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<void> {
+    protected processSave(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -10052,6 +10108,79 @@ export interface IUserTutorialDto {
     id: string;
 }
 
+export enum SessionStatus {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+}
+
+export class SessionDto implements ISessionDto {
+    timeZone: string | undefined;
+    sessionDate: moment.Moment;
+    duration: number;
+    tutorOfferId: string;
+    status: SessionStatus;
+    tutorOffer: GetTutorOfferDto;
+    id: string;
+
+    constructor(data?: ISessionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.timeZone = _data["timeZone"];
+            this.sessionDate = _data["sessionDate"] ? moment(_data["sessionDate"].toString()) : <any>undefined;
+            this.duration = _data["duration"];
+            this.tutorOfferId = _data["tutorOfferId"];
+            this.status = _data["status"];
+            this.tutorOffer = _data["tutorOffer"] ? GetTutorOfferDto.fromJS(_data["tutorOffer"]) : <any>undefined;
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): SessionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SessionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["timeZone"] = this.timeZone;
+        data["sessionDate"] = this.sessionDate ? this.sessionDate.toISOString() : <any>undefined;
+        data["duration"] = this.duration;
+        data["tutorOfferId"] = this.tutorOfferId;
+        data["status"] = this.status;
+        data["tutorOffer"] = this.tutorOffer ? this.tutorOffer.toJSON() : <any>undefined;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): SessionDto {
+        const json = this.toJSON();
+        let result = new SessionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISessionDto {
+    timeZone: string | undefined;
+    sessionDate: moment.Moment;
+    duration: number;
+    tutorOfferId: string;
+    status: SessionStatus;
+    tutorOffer: GetTutorOfferDto;
+    id: string;
+}
+
 export class GetTutorOfferDto implements IGetTutorOfferDto {
     tutorialId: string;
     studentId: number;
@@ -10064,6 +10193,7 @@ export class GetTutorOfferDto implements IGetTutorOfferDto {
     tutorId: string;
     tutor: UserProfileDto;
     tutorial: UserTutorialDto;
+    sessions: SessionDto[] | undefined;
     id: string;
 
     constructor(data?: IGetTutorOfferDto) {
@@ -10088,6 +10218,11 @@ export class GetTutorOfferDto implements IGetTutorOfferDto {
             this.tutorId = _data["tutorId"];
             this.tutor = _data["tutor"] ? UserProfileDto.fromJS(_data["tutor"]) : <any>undefined;
             this.tutorial = _data["tutorial"] ? UserTutorialDto.fromJS(_data["tutorial"]) : <any>undefined;
+            if (Array.isArray(_data["sessions"])) {
+                this.sessions = [] as any;
+                for (let item of _data["sessions"])
+                    this.sessions.push(SessionDto.fromJS(item));
+            }
             this.id = _data["id"];
         }
     }
@@ -10112,6 +10247,11 @@ export class GetTutorOfferDto implements IGetTutorOfferDto {
         data["tutorId"] = this.tutorId;
         data["tutor"] = this.tutor ? this.tutor.toJSON() : <any>undefined;
         data["tutorial"] = this.tutorial ? this.tutorial.toJSON() : <any>undefined;
+        if (Array.isArray(this.sessions)) {
+            data["sessions"] = [];
+            for (let item of this.sessions)
+                data["sessions"].push(item.toJSON());
+        }
         data["id"] = this.id;
         return data; 
     }
@@ -10136,6 +10276,7 @@ export interface IGetTutorOfferDto {
     tutorId: string;
     tutor: UserProfileDto;
     tutorial: UserTutorialDto;
+    sessions: SessionDto[] | undefined;
     id: string;
 }
 
@@ -10857,79 +10998,6 @@ export class UserPublicationDtoPagedResultDto implements IUserPublicationDtoPage
 export interface IUserPublicationDtoPagedResultDto {
     totalCount: number;
     items: UserPublicationDto[] | undefined;
-}
-
-export enum SessionStatus {
-    _0 = 0,
-    _1 = 1,
-    _2 = 2,
-}
-
-export class SessionDto implements ISessionDto {
-    timeZone: string | undefined;
-    sessionDate: moment.Moment;
-    duration: number;
-    tutorOfferId: string;
-    status: SessionStatus;
-    tutorOffer: GetTutorOfferDto;
-    id: string;
-
-    constructor(data?: ISessionDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.timeZone = _data["timeZone"];
-            this.sessionDate = _data["sessionDate"] ? moment(_data["sessionDate"].toString()) : <any>undefined;
-            this.duration = _data["duration"];
-            this.tutorOfferId = _data["tutorOfferId"];
-            this.status = _data["status"];
-            this.tutorOffer = _data["tutorOffer"] ? GetTutorOfferDto.fromJS(_data["tutorOffer"]) : <any>undefined;
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): SessionDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new SessionDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["timeZone"] = this.timeZone;
-        data["sessionDate"] = this.sessionDate ? this.sessionDate.toISOString() : <any>undefined;
-        data["duration"] = this.duration;
-        data["tutorOfferId"] = this.tutorOfferId;
-        data["status"] = this.status;
-        data["tutorOffer"] = this.tutorOffer ? this.tutorOffer.toJSON() : <any>undefined;
-        data["id"] = this.id;
-        return data; 
-    }
-
-    clone(): SessionDto {
-        const json = this.toJSON();
-        let result = new SessionDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface ISessionDto {
-    timeZone: string | undefined;
-    sessionDate: moment.Moment;
-    duration: number;
-    tutorOfferId: string;
-    status: SessionStatus;
-    tutorOffer: GetTutorOfferDto;
-    id: string;
 }
 
 export class JoinSessionDto implements IJoinSessionDto {

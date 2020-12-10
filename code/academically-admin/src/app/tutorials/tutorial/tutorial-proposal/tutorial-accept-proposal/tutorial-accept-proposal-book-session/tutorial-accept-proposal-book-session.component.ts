@@ -1,9 +1,8 @@
-import { Component, Injector, Input, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { GetTutorOfferDto, SessionDto, UserSessionsServiceProxy } from '@shared/service-proxies/service-proxies';
-import { Session } from 'inspector';
 import * as moment from 'moment';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, DateFormatter } from 'ngx-bootstrap/datepicker';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -35,7 +34,6 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
   }
 
   ngOnInit(): void {
-    console.log(moment.tz.guess());
     this.getHours();
     this.getMintues();
     this.getMinutesSessionDuration();
@@ -58,12 +56,14 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
   }
 
   onFormSubmit(): void {
-    const sessionDateTime = this.hourInput + ':' + this.minuteInput;
+    const date = moment(this.userSession.sessionDate).format('YYYY-MM-DD');
+    const sessionDateTime = this.hourInput + ':' + this.minuteInput + ':00  ';
+    const sessionDateStart = new Date(date + ' ' + sessionDateTime);
     const sessionDuration = Number(this.hourSessionDurationInput) * 60 + Number(this.minuteSessionDurationInput);
-    this.userSession.sessionDate = moment.utc(moment(this.userSession.sessionDate).format('YYYY-MM-DD') + ' ' + sessionDateTime);
     this.userSession.duration = sessionDuration;
+    this.userSession.sessionDate = moment(sessionDateStart);
 
-    this._userSessionService.create(this.userSession).subscribe(() => {
+    this._userSessionService.save(this.userSession).subscribe(() => {
       this.notify.success(this.l('SavedSuccessfully'));
       this.close();
     });
@@ -90,7 +90,7 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
   }
 
   private getMinutesSessionDuration(): void {
-    for (let x = 0; x < 60; x += 5) {
+    for (let x = 0; x <= 60; x += 5) {
       if (x >= 10) {
         this.minutesSessionDuration.push(x);
       } else {

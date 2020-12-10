@@ -12,6 +12,7 @@ using GeoCoordinatePortable;
 using Microsoft.EntityFrameworkCore;
 using Academically.Application.Shared.Services;
 using Academically.Configuration;
+using Academically.Entities.Enums;
 
 namespace Academically.Services.Offers
 {
@@ -50,7 +51,7 @@ namespace Academically.Services.Offers
             return offer;
         }
 
-        public async Task CreateAsync(CreateTutorOfferDto input)
+        public async Task SaveAsync(CreateTutorOfferDto input)
         {
             var tutor = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
             var offer = await _tutorOffersRepository.FirstOrDefaultAsync(e => e.TutorialId == input.TutorialId && e.TutorId == tutor.Id);
@@ -101,7 +102,9 @@ namespace Academically.Services.Offers
                     .ThenInclude(e => e.User)
                         .ThenInclude(e => e.UserDisciplineTaxonomies)
                             .ThenInclude(e => e.DisciplineTaxonomy)
+                .Include(e => e.Sessions)
                 .Where(e => e.TutorialId == input.TutorialIdFilter)
+                .Where(e => !e.Sessions.Any(s => s.Status == SessionStatus.Pending || s.Status == SessionStatus.Confirmed))
                 .WhereIf(input.EducationLevelFilter.HasValue, e => e.Tutor.User.UserEducations.Any(t => t.Level >= input.EducationLevelFilter.Value));
 
             var allOffers = await offersQuery.Select(e => ObjectMapper.Map<GetTutorOfferDto>(e)).ToListAsync();
@@ -144,6 +147,18 @@ namespace Academically.Services.Offers
 
 
             return educationLevel;
+        }
+
+        public async Task<GetTutorOfferDto> GetTutorOfferSessionsAsync(Guid tutorialId)
+        {
+            var tutor = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
+            var offer = await _tutorOffersRepository.GetAll()
+                .Include(e => e.Sessions)
+                .Where(e => e.TutorId == tutor.Id && e.TutorialId == tutorialId)
+                .Select(e => ObjectMapper.Map<GetTutorOfferDto>(e))
+                .FirstOrDefaultAsync();
+
+            return offer;
         }
     }
 }

@@ -1,6 +1,64 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="ConfirmSessionAdminEmailSubject">Academically - Booked Session Confirmed</text>
+    <text name="ConfirmSessionAdminEmailMessage">
+      <![CDATA[
+        <p>A request to book a session was confirmed.</p>
+        <p>The details of the request are:</p>
+        <br />
+        <p>Session: {0}<p>
+        <p>Start Date/Time: {1}<p>
+        <p>Duration: {2}<p>
+        <p>Timezone: {3}<p>
+        <p>Regards,<p/>
+        <p>Academically<p/>
+      ]]>
+    </text>
+    <text name="ConfirmSessionEmailSubject">Academically - Booked Session Confirmed</text>
+    <text name="ConfirmSessionEmailMessage">
+      <![CDATA[
+        <p>Your request to book a session has been confirmed by (Tutor) Name: {0}</p>
+        <p>The details of your request are:</p>
+        <br />
+        <p>Start Date/Time: {1}<p>
+        <p>Duration: {2}<p>
+        <p>Timezone: {3}<p>
+        <p>Regards,<p/>
+        <p>Academically<p/>
+      ]]>
+    </text>
+    <text name="BookSessionAminEmailSubject">Academically - Book Session Request Received.</text>
+    <text name="BookSessionAminEmailMessage">
+      <![CDATA[
+        <p>A request to book a session was created.</p>
+        <p>The details of the request are:</p>
+        <br />
+        <p>Session: {0}<p>
+        <p>Start Date/Time: {1}<p>
+        <p>Duration: {2}<p>
+        <p>Timezone: {3}<p>
+        <p>Link: {4}<p>
+        <p>Regards,<p/>
+        <p>Academically<p/>
+      ]]>
+    </text>
+    <text name="BookSessionEmailSubject">Academically - Book Session Request Sent.</text>
+    <text name="BookSessionEmailMessage">
+      <![CDATA[
+        <p>Your request to book a session was sent and is being reviewed by (Tutor) Name: {0}</p>
+        <p>The details of your request are:</p>
+        <br />
+        <p></p>
+        <p>Start Date/Time: {1}<p>
+        <p>Duration: {2}<p>
+        <p>Timezone: {3}<p>
+        <p>Regards,<p/>
+        <p>Academically<p/>
+      ]]>
+    </text>
+    <text name="StartDate">Start Date</text>
+    <text name="StartTime">Start Time</text>
     <text name="SessionDuration">Session Duration</text>
     <text name="YourTimeZone">Your time zone</text>
     <text name="SessionDate">Session Date</text>

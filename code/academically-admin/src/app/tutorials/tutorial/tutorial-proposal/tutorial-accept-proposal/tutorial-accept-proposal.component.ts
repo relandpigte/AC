@@ -1,4 +1,4 @@
-import { Component, inject, Injector, Input, OnInit } from '@angular/core';
+import { Component, inject, Injector, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { GetTutorOfferDto, UserDto, UserProfileDto } from '@shared/service-proxies/service-proxies';
@@ -12,6 +12,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class TutorialAcceptProposalComponent extends AppComponentBase implements OnInit {
   @Input() tutorOffer: GetTutorOfferDto;
+
   tutor: UserProfileDto = new UserProfileDto();
   constructor(injector: Injector, private modal: BsModalRef) {
     super(injector);

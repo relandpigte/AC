@@ -13,7 +13,7 @@ namespace Academically.Entities.Enums
         [Description("Pending")]
         Pending,
 
-        [Description("Completed")]
-        Completed
+        [Description("Confirmed")]
+        Confirmed
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 
@@ -22,5 +23,7 @@ namespace Academically.Entities
         public virtual UserProfile Tutor { get; set; }
         [ForeignKey("TutorialId")]
         public virtual UserTutorial Tutorial { get; set; }
+
+        public virtual IEnumerable<Session> Sessions { get; set; }
     }
 }
