@@ -49,7 +49,7 @@ namespace Academically.Events.Handlers
             var user = await _usersRepository.GetAsync(student.UserId);
 
             var clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
-            var offerLink = $"{clientRootAddress}app/tutor-offer/{eventData.Entity.Id}";
+            var offerLink = $"{clientRootAddress}app/tutorial/{eventData.Entity.TutorialId}";
             var subject = L("TutorOfferEmailSubject");
             var body = L("TutorOfferEmailMessage", user.FullName, offerLink);
 
