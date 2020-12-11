@@ -14,6 +14,10 @@ using Academically.Application.Shared.Services;
 using Academically.Configuration;
 using Academically.Entities.Enums;
 using Academically.DomainServices.Timezone;
+using System.Collections.Generic;
+using Academically.Services.UserSessions.Dto;
+using Academically.Services.UserProfiles.Dto;
+using Academically.Users.Dto;
 
 namespace Academically.Services.Offers
 {
@@ -173,6 +177,33 @@ namespace Academically.Services.Offers
             }
 
             return new GetTutorOfferDto();
+        }
+
+        public async Task<IEnumerable<GetTutorOfferDto>> GetAllTutorOfferSessionsAsync(Guid tutorialId)
+        {
+            var offer = await _tutorOffersRepository.GetAll()
+                .Include(e => e.Sessions)
+                    .ThenInclude(e => e.TutorOffer)
+                        .ThenInclude(e => e.Tutor)
+                            .ThenInclude(e => e.User)
+                .Where(e => e.TutorialId == tutorialId)
+                .Select(e => new GetTutorOfferDto { 
+                    Tutor = new UserProfileDto
+                    {
+                        ProfilePictureFileName = e.Tutor.ProfilePictureFileName,
+                        UserId = e.Tutor.UserId,
+                        User = ObjectMapper.Map<UserDto>(e.Tutor.User)
+                    },
+                    Sessions = e.Sessions.Select(s => new SessionDto { 
+                        SessionDate = _timezoneDomainService.ConvertToLocal(s.SessionDate, s.TimeZone),
+                        Duration = s.Duration,
+                        TimeZone = s.TimeZone,
+                        Status = s.Status
+                    })
+                })
+                .ToListAsync();
+
+            return offer;
         }
     }
 }

@@ -4,6 +4,7 @@ using Abp.AutoMapper;
 using Academically.Entities;
 using Academically.Entities.Enums;
 using Academically.Services.Offers.Dto;
+using Academically.Services.UserProfiles.Dto;
 
 namespace Academically.Services.UserSessions.Dto
 {
@@ -17,5 +18,6 @@ namespace Academically.Services.UserSessions.Dto
         public SessionStatus Status { get; set; }
 
         public GetTutorOfferDto TutorOffer { get; set; }
+        public UserProfileDto TutorProfile { get; set; }
     }
 }
