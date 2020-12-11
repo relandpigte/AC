@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
@@ -15,5 +16,6 @@ namespace Academically.Services.Offers
         Task<PagedResultDto<GetTutorOfferDto>> GetAllAsync(PagedAndSortedTutorOfferResultRequestDto input);
         Task<int> GetTutorHighestEducationLevel(long userId);
         Task<GetTutorOfferDto> GetTutorOfferSessionsAsync(Guid tutorialId);
+        Task<IEnumerable<GetTutorOfferDto>> GetAllTutorOfferSessionsAsync(Guid tutorialId);
     }
 }

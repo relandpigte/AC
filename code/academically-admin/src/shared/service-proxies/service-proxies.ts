@@ -3307,6 +3307,66 @@ export class TutorOffersServiceProxy {
         }
         return _observableOf<GetTutorOfferDto>(<any>null);
     }
+
+    /**
+     * @param tutorialId (optional) 
+     * @return Success
+     */
+    getAllTutorOfferSessions(tutorialId: string | undefined): Observable<GetTutorOfferDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/TutorOffers/GetAllTutorOfferSessions?";
+        if (tutorialId === null)
+            throw new Error("The parameter 'tutorialId' cannot be null.");
+        else if (tutorialId !== undefined)
+            url_ += "tutorialId=" + encodeURIComponent("" + tutorialId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllTutorOfferSessions(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllTutorOfferSessions(<any>response_);
+                } catch (e) {
+                    return <Observable<GetTutorOfferDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetTutorOfferDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllTutorOfferSessions(response: HttpResponseBase): Observable<GetTutorOfferDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(GetTutorOfferDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetTutorOfferDto[]>(<any>null);
+    }
 }
 
 @Injectable()
@@ -10121,6 +10181,7 @@ export class SessionDto implements ISessionDto {
     tutorOfferId: string;
     status: SessionStatus;
     tutorOffer: GetTutorOfferDto;
+    tutorProfile: UserProfileDto;
     id: string;
 
     constructor(data?: ISessionDto) {
@@ -10140,6 +10201,7 @@ export class SessionDto implements ISessionDto {
             this.tutorOfferId = _data["tutorOfferId"];
             this.status = _data["status"];
             this.tutorOffer = _data["tutorOffer"] ? GetTutorOfferDto.fromJS(_data["tutorOffer"]) : <any>undefined;
+            this.tutorProfile = _data["tutorProfile"] ? UserProfileDto.fromJS(_data["tutorProfile"]) : <any>undefined;
             this.id = _data["id"];
         }
     }
@@ -10159,6 +10221,7 @@ export class SessionDto implements ISessionDto {
         data["tutorOfferId"] = this.tutorOfferId;
         data["status"] = this.status;
         data["tutorOffer"] = this.tutorOffer ? this.tutorOffer.toJSON() : <any>undefined;
+        data["tutorProfile"] = this.tutorProfile ? this.tutorProfile.toJSON() : <any>undefined;
         data["id"] = this.id;
         return data; 
     }
@@ -10178,6 +10241,7 @@ export interface ISessionDto {
     tutorOfferId: string;
     status: SessionStatus;
     tutorOffer: GetTutorOfferDto;
+    tutorProfile: UserProfileDto;
     id: string;
 }
 
@@ -11004,7 +11068,6 @@ export class JoinSessionDto implements IJoinSessionDto {
     channelName: string | undefined;
     channelToken: string | undefined;
     session: SessionDto;
-    participants: UserProfileDto[] | undefined;
 
     constructor(data?: IJoinSessionDto) {
         if (data) {
@@ -11020,11 +11083,6 @@ export class JoinSessionDto implements IJoinSessionDto {
             this.channelName = _data["channelName"];
             this.channelToken = _data["channelToken"];
             this.session = _data["session"] ? SessionDto.fromJS(_data["session"]) : <any>undefined;
-            if (Array.isArray(_data["participants"])) {
-                this.participants = [] as any;
-                for (let item of _data["participants"])
-                    this.participants.push(UserProfileDto.fromJS(item));
-            }
         }
     }
 
@@ -11040,11 +11098,6 @@ export class JoinSessionDto implements IJoinSessionDto {
         data["channelName"] = this.channelName;
         data["channelToken"] = this.channelToken;
         data["session"] = this.session ? this.session.toJSON() : <any>undefined;
-        if (Array.isArray(this.participants)) {
-            data["participants"] = [];
-            for (let item of this.participants)
-                data["participants"].push(item.toJSON());
-        }
         return data; 
     }
 
@@ -11060,7 +11113,6 @@ export interface IJoinSessionDto {
     channelName: string | undefined;
     channelToken: string | undefined;
     session: SessionDto;
-    participants: UserProfileDto[] | undefined;
 }
 
 export class ProfileSummaryWidgetDto implements IProfileSummaryWidgetDto {

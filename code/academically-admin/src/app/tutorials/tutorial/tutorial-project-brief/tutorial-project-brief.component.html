@@ -1,0 +1,75 @@
+<div class="card">
+  <div class="card-header">
+    <!-- Title -->
+    <h4 class="card-header-title">
+      {{ 'Sessions' | localize }}
+    </h4>
+  </div>
+  <div class="table-responsive mb-0">
+    <table class="table table-sm table-nowrap card-table">
+      <thead>
+        <tr>
+          <th>
+            {{ 'Tutor' | localize }}
+          </th>
+          <th>
+            {{ 'Status' | localize }}
+          </th>
+          <th>
+            {{ 'StartDate' | localize }}
+          </th>
+          <th>
+            {{ 'StartTime' | localize }}
+          </th>
+          <th>
+            {{ 'Timezone' | localize }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let session of sessions">
+          <td>
+            <!-- Avatar -->
+            <a href="profile-posts.htmL" class="avatar avatar-xs d-inline-block mr-2">
+              <img
+                [src]="getProfilePicture(session.tutorProfile.profilePictureFileName, session.tutorProfile.userId)"
+                alt="..."
+                class="avatar-img rounded-circle"
+              />
+            </a>
+
+            <!-- Title -->
+            <span>{{ session.tutorProfile.user.fullName }}</span>
+          </td>
+          <td>
+            <span *ngIf="session.status === 2"> <span class="text-success">●</span> Confirmed </span>
+            <span *ngIf="session.status === 1"> <span class="text-danger">●</span> Pending </span>
+          </td>
+          <td>
+            <span
+              class="small text-danger mb-0"
+              *ngIf="moment.duration(session.sessionDate.diff(today)).asHours() < 24 && session.status === 2"
+            >
+              {{ session.sessionDate | date: 'dd/MM/yyyy' }}
+            </span>
+            <span
+              class="small text-muted mb-0"
+              *ngIf="session.status == 2 && moment.duration(session.sessionDate.diff(today)).asHours() >= 24"
+            >
+              {{ session.sessionDate | date: 'dd/MM/yyyy' }}
+            </span>
+            <span class="small text-muted mb-0" *ngIf="session.status == 1">
+              {{ session.sessionDate | date: 'dd/MM/yyyy' }}
+            </span>
+          </td>
+          <td>
+            {{ session.sessionDate | date: 'hh:mm a' }}
+          </td>
+          <td>
+            {{ session.timeZone }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

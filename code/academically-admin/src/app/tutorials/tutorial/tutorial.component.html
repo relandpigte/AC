@@ -19,7 +19,7 @@
                 <a
                   href="#project-brief"
                   id="project-brief-tab"
-                  class="nav-link"
+                  class="nav-link active"
                   data-toggle="tab"
                   role="tab"
                   aria-controls="project-brief"
@@ -32,7 +32,7 @@
                 <a
                   href="#proposals"
                   id="proposals-tab"
-                  class="nav-link active"
+                  class="nav-link "
                   data-toggle="tab"
                   role="tab"
                   aria-controls="proposals"
@@ -54,8 +54,10 @@
   </div>
   <div class="container-fluid">
     <div class="tab-content">
-      <div id="project-brief" class="tab-pane fade" role="tabpanel" aria-labelledby="project-brief-tab">Coming Soon!</div>
-      <div id="proposals" class="tab-pane fade show active" role="tabpanel" aria-labelledby="proposals-tab">
+      <div id="project-brief" class="tab-pane fade show active" role="tabpanel" aria-labelledby="project-brief-tab">
+        <tutorial-project-brief></tutorial-project-brief>
+      </div>
+      <div id="proposals" class="tab-pane fade" role="tabpanel" aria-labelledby="proposals-tab">
         <tutorial-proposal [id]="id"></tutorial-proposal>
       </div>
       <div id="hired" class="tab-pane fade" role="tabpanel" aria-labelledby="hired-tab">Coming Soon!</div>

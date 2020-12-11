@@ -111,6 +111,7 @@ import { TutorialAcceptProposalBookSessionComponent } from './tutorials/tutorial
 import { StudentProposalLiveSessionsComponent } from './student-proposal/student-proposal-live-sessions/student-proposal-live-sessions.component';
 import { SessionComponent } from './session/session.component';
 import { UpcomingSessionsWidgetComponent } from './widgets/upcoming-sessions-widget/upcoming-sessions-widget.component';
+import { TutorialProjectBriefComponent } from './tutorials/tutorial/tutorial-project-brief/tutorial-project-brief.component';
 
 @NgModule({
   declarations: [
@@ -202,6 +203,7 @@ import { UpcomingSessionsWidgetComponent } from './widgets/upcoming-sessions-wid
     StudentProposalLiveSessionsComponent,
     SessionComponent,
     UpcomingSessionsWidgetComponent,
+    TutorialProjectBriefComponent,
   ],
   imports: [
     CommonModule,
