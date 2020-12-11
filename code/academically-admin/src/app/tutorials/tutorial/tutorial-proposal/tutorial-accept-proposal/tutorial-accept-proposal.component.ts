@@ -12,7 +12,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class TutorialAcceptProposalComponent extends AppComponentBase implements OnInit {
   @Input() tutorOffer: GetTutorOfferDto;
-
+  @Output() sessionBooked = new EventEmitter<boolean>(false);
   tutor: UserProfileDto = new UserProfileDto();
   constructor(injector: Injector, private modal: BsModalRef) {
     super(injector);
@@ -25,6 +25,12 @@ export class TutorialAcceptProposalComponent extends AppComponentBase implements
 
   onCloseClick(): void {
     this.close();
+  }
+
+  onSessionBooked(isBooked: boolean): void {
+    if (isBooked) {
+      this.sessionBooked.emit(true);
+    }
   }
 
   private close(): void {

@@ -12,6 +12,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase implements OnInit {
   @Input() tutorOffer: GetTutorOfferDto;
+  @Output() sessionBooked = new EventEmitter<boolean>(false);
   userSession: SessionDto = new SessionDto();
   startTime: string;
   datePickerConfig: BsDatepickerConfig;
@@ -63,6 +64,7 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
 
     this._userSessionService.save(this.userSession).subscribe(() => {
       this.notify.success(this.l('SavedSuccessfully'));
+      this.sessionBooked.emit(true);
       this.close();
     });
   }
