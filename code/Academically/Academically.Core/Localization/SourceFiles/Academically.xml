@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="UnableToSuggestAreaOfStudy">Unable to suggest a new item under this Area of Study.</text>
     <text name="ConfirmSessionAdminEmailSubject">Academically - Booked Session Confirmed</text>
     <text name="ConfirmSessionAdminEmailMessage">
       <![CDATA[

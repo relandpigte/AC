@@ -36,9 +36,7 @@ export class TaxonomySearchComponent extends AppComponentBase implements OnInit 
   }
 
   onTaxonomySelectParent(taxonomy: GetAllDisciplineTaxonomyDto): void {
-    if (taxonomy.isEditable) {
-      this.selectedParentTaxonomy = taxonomy;
-    }
+    this.selectedParentTaxonomy = taxonomy;
   }
 
   onAddClick(): void {
@@ -93,5 +91,11 @@ export class TaxonomySearchComponent extends AppComponentBase implements OnInit 
     };
     const _modalRef = this._modalService.show(RequestNewTaxonomyComponent, modalSettings);
     const modal: RequestNewTaxonomyComponent = _modalRef.content;
+    modal.isSuccess.subscribe((status: boolean) => {
+      debugger;
+      if (status) {
+        this.selectedParentTaxonomy = new GetAllDisciplineTaxonomyDto();
+      }
+    });
   }
 }
