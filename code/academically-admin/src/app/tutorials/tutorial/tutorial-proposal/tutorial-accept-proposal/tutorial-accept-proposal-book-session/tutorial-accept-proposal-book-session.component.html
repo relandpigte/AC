@@ -14,12 +14,12 @@
           <div class="form-row">
             <div class="col-md-4">
               <div class="form-group required">
-                <label class="col-form-label" for="DateOfBirth">{{ 'DateOfBirth' | localize }}</label>
+                <label class="col-form-label" for="sessionDate">{{ 'StartDate' | localize }}</label>
                 <div class="input-group input-group-merge" (click)="dp.show()">
                   <input
                     [(ngModel)]="sessionDate"
-                    id="DateOfBirth"
-                    name="DateOfBirth"
+                    id="SessionDate"
+                    name="SessionDate"
                     type="text"
                     class="form-control form-control-appended"
                     #sessionDateModel="ngModel"
