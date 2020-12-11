@@ -25,6 +25,8 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
   hours = [];
   minutes = [];
   minutesSessionDuration = [];
+  isLoading = false;
+  sessionDate: moment.Moment;
 
   constructor(injector: Injector, private _userSessionService: UserSessionsServiceProxy, private modal: BsModalRef) {
     super(injector);
@@ -57,12 +59,14 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
   }
 
   onFormSubmit(): void {
-    const sessionDate = `${moment(this.userSession.sessionDate).format('YYYY-MM-DD')} ${this.hourInput}:${this.minuteInput}:00`;
+    this.isLoading = true;
+    const sessionDate = `${moment(this.sessionDate).format('YYYY-MM-DD')} ${this.hourInput}:${this.minuteInput}:00`;
     const sessionDuration = Number(this.hourSessionDurationInput) * 60 + Number(this.minuteSessionDurationInput);
     this.userSession.duration = sessionDuration;
     this.userSession.sessionDate = moment(sessionDate, 'YYYY-MM-DD HH:mm:ss').utc();
 
     this._userSessionService.save(this.userSession).subscribe(() => {
+      this.isLoading = false;
       this.notify.success(this.l('SavedSuccessfully'));
       this.sessionBooked.emit(true);
       this.close();

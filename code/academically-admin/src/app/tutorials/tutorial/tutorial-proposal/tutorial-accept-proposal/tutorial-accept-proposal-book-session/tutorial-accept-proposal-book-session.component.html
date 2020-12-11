@@ -1,5 +1,5 @@
 <form class="form-horizontal" autocomplete="off" #tutorialBookSessionForm="ngForm" (ngSubmit)="onFormSubmit()">
-  <div class="row">
+  <div class="row" [busy]="isLoading">
     <div class="col-md-8">
       <div class="card">
         <div class="card-header">
@@ -17,7 +17,7 @@
                 <label class="col-form-label" for="DateOfBirth">{{ 'DateOfBirth' | localize }}</label>
                 <div class="input-group input-group-merge" (click)="dp.show()">
                   <input
-                    [(ngModel)]="userSession.sessionDate"
+                    [(ngModel)]="sessionDate"
                     id="DateOfBirth"
                     name="DateOfBirth"
                     type="text"
@@ -335,7 +335,9 @@
 
           <div class="d-flex flex-column">
             <button class="btn btn-light btn-block">Free call</button>
-            <button type="submit" [disabled]="!tutorialBookSessionForm.valid" class="btn btn-primary btn-block">Book session</button>
+            <button type="submit" [disabled]="!tutorialBookSessionForm.valid || isLoading" class="btn btn-primary btn-block">
+              Book session
+            </button>
           </div>
         </div>
       </div>
