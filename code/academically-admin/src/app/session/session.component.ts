@@ -1,6 +1,6 @@
 import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { GetTutorOfferDto, SessionDto, UserProfileDto, UserSessionsServiceProxy, UserTutorialDto } from '@shared/service-proxies/service-proxies';
+import { GetTutorOfferDto, JoinSessionDto, SessionDto, UserProfileDto, UserSessionsServiceProxy, UserTutorialDto } from '@shared/service-proxies/service-proxies';
 import { VideoConferenceService } from '@shared/services/video-conference.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
@@ -35,6 +35,15 @@ export class SessionComponent extends AppComponentBase implements OnInit, OnDest
     this._videoConferenceService.initialize(this.appSession.userId, this.localCallId);
     this._videoConferenceService.remoteCallsUpdate.subscribe(remoteCalls => {
       this.remoteCalls = remoteCalls;
+      if (this.remoteCalls.length > 0) {
+        if (this.session.tutorOffer.tutor.userId === this.appSession.userId) {
+          this.remoteParticipant = this.session.tutorOffer.tutorial.student;
+        } else {
+          this.remoteParticipant = this.session.tutorOffer.tutor;
+        }
+      } else {
+        delete this.remoteParticipant;
+      }
     });
     this._videoConferenceService.remoteVideoToggle.subscribe(isEnabled => {
       this.isRemoteVideEnabled = isEnabled;
@@ -72,10 +81,8 @@ export class SessionComponent extends AppComponentBase implements OnInit, OnDest
       this.session = joinSessionResult.session;
       if (joinSessionResult.session.tutorOffer.tutor.userId === this.appSession.userId) {
         this.localParticipant = joinSessionResult.session.tutorOffer.tutor;
-        this.remoteParticipant = joinSessionResult.session.tutorOffer.tutorial.student;
       } else {
         this.localParticipant = joinSessionResult.session.tutorOffer.tutorial.student;
-        this.remoteParticipant = joinSessionResult.session.tutorOffer.tutor;
       }
       this._videoConferenceService.join(joinSessionResult.channelName, joinSessionResult.channelToken);
     });

@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
 import {
   EducationLevel,
@@ -23,6 +23,7 @@ class PagedAndSortedOffersRequestDto extends PagedAndSortedRequestDto {
   styleUrls: ['./tutorial-proposal.component.less']
 })
 export class TutorialProposalComponent extends PagedListingComponentBase<GetTutorOfferDto> {
+  @Output() sessionBooked = new EventEmitter<boolean>(false);
   @Input() id: string;
   educationLevelFilter?: EducationLevel;
   distanceFilter?: number;
@@ -101,6 +102,7 @@ export class TutorialProposalComponent extends PagedListingComponentBase<GetTuto
     modal.sessionBooked.subscribe((isBooked: boolean) => {
       if (isBooked) {
         this.refresh();
+        this.sessionBooked.emit(true);
       }
     });
   }

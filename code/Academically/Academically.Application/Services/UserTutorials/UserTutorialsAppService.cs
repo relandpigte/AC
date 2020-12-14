@@ -92,6 +92,13 @@ namespace Academically.Services.UserTutorials
             return id;
         }
 
+        public async Task<UserTutorialDto> GetAsync(Guid id)
+        {
+            var tutorial = await _userTutorialsRepository.GetAsync(id);
+            var output = ObjectMapper.Map<UserTutorialDto>(tutorial);
+            return output;
+        }
+
         public async Task<IEnumerable<UserTutorialDto>> GetRecent()
         {
             var userTutorials = await _userTutorialsRepository.GetAll()

@@ -28,7 +28,7 @@ export class TutorialProjectBriefComponent extends AppComponentBase implements O
     });
   }
 
-  private getTutorOffers(): void {
+  public getTutorOffers(): void {
     this.tutorOffersService.getAllTutorOfferSessions(this.id).subscribe(tutorOffers => {
       this.tutorOffers = tutorOffers;
       _.forEach(this.tutorOffers, tutorOffer => {

@@ -9,6 +9,7 @@ namespace Academically.Services.UserTutorials
     public interface IUserTutorialsAppService : IApplicationService
     {
         Task<Guid> CreateAsync(SaveUserTutorialDto inputs);
+        Task<UserTutorialDto> GetAsync(Guid id);
         Task<IEnumerable<UserTutorialDto>> GetRecent();
     }
 }

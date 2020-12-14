@@ -69,6 +69,11 @@
             {{ session.timeZone }}
           </td>
         </tr>
+        <tr *ngIf="sessions.length === 0">
+          <td colspan="10">
+            <p class="text-center p-0 m-0 text-muted">No Pending Sessions</p>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>

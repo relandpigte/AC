@@ -32,6 +32,9 @@ export class UpcomingSessionsWidgetComponent extends AppComponentBase implements
     const startTime = moment(sStartTime, this.dateFormat).subtract('minutes', 5);
     const sEndTime = startTime.clone().add('minutes', session.duration).format(this.dateFormat);
     const endTime = moment(sEndTime, this.dateFormat);
+    console.log(startTime);
+    console.log(endTime);
+    console.log(moment());
     if (moment().isBetween(startTime, endTime, undefined, '[]')) {
       this._router.navigate(['/app/session', session.id]);
     } else {
@@ -39,7 +42,7 @@ export class UpcomingSessionsWidgetComponent extends AppComponentBase implements
     }
   }
 
-  private getSessionDateDisplay(session: SessionDto): { isToday: boolean, date: string } {
+  private getSessionDateDisplay(session: SessionDto): { colorClass: string, date: string } {
     const sSessionDate = session.sessionDate.clone().utc(true).tz(session.timeZone).format(this.dateFormat);
     const sessionDate = moment(sSessionDate, this.dateFormat);
     const dateNow = new Date();
@@ -48,13 +51,16 @@ export class UpcomingSessionsWidgetComponent extends AppComponentBase implements
       const hours = duration.hours();
       const minutes = duration.minutes();
       const seconds = duration.seconds();
-      if (hours >= 0 && minutes >= 0 && seconds >= 0){
-        return { isToday: true, date: `${hours}:${minutes}:${seconds}` };
+      if (hours >= 0 && minutes >= 0 && seconds >= 0) {
+        return {
+          colorClass: 'text-red',
+          date: `${this.formatDoubleDigitNumber(hours)}:${this.formatDoubleDigitNumber(minutes)}:${this.formatDoubleDigitNumber(seconds)}`
+        };
       } else {
-        return { isToday: true, date: '--:--:--' }
+        return { colorClass: 'text-green', date: 'Ongoging' }
       }
     } else {
-      return { isToday: false, date: sessionDate.format('DD/MM/YYYY HH:mm:ss') };
+      return { colorClass: 'text-muted', date: sessionDate.format('DD/MM/YYYY HH:mm:ss') };
     }
   }
 
@@ -65,8 +71,12 @@ export class UpcomingSessionsWidgetComponent extends AppComponentBase implements
         this.sessions.forEach(session => {
           const sessionDateDisplay = this.getSessionDateDisplay(session);
           session['sessionDateDisplay'] = sessionDateDisplay.date;
-          session['isToday'] = sessionDateDisplay.isToday;
+          session['colorClass'] = sessionDateDisplay.colorClass;
         })
       });
+  }
+
+  private formatDoubleDigitNumber(num: number): string {
+    return ("0" + num).slice(-2);
   }
 }

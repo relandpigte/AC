@@ -27,7 +27,7 @@
         </h4>
 
         <!-- Time -->
-        <small [class.text-muted]="!session['isToday']" [class.text-red]="session['isToday']">
+        <small class="{{session['colorClass']}}">
           <i class="fe fe-clock"></i>&nbsp;{{ session['sessionDateDisplay'] }}
         </small>
       </div>

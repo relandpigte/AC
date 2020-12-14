@@ -59,6 +59,8 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
   }
 
   onFormSubmit(): void {
+    console.log(this.sessionDate);
+    console.log(this.userSession.sessionDate);
     this.isLoading = true;
     const sessionDate = `${moment(this.sessionDate).format('YYYY-MM-DD')} ${this.hourInput}:${this.minuteInput}:00`;
     const sessionDuration = Number(this.hourSessionDurationInput) * 60 + Number(this.minuteSessionDurationInput);
