@@ -31,6 +31,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<PasswordReset> PasswordResets { get; set; }
         public virtual DbSet<DisciplineTaxonomyRequest> DisciplineTaxonomyRequests { get; set; }
         public virtual DbSet<Session> Sessions { get; set; }
+        public virtual DbSet<GuardianConsentProfile> GuardianUserActivities { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

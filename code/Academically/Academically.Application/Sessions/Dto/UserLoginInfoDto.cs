@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Authorization.Users;
@@ -21,5 +22,7 @@ namespace Academically.Sessions.Dto
         public string DirectoryBaseUrl { get; set; }
 
         public IEnumerable<string> Roles { get; set; }
+        public DateTime? BirthDate { get; set; }
+        public bool IsConsented { get; set; }
     }
 }

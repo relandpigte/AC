@@ -112,6 +112,7 @@ import { StudentProposalLiveSessionsComponent } from './student-proposal/student
 import { SessionComponent } from './session/session.component';
 import { UpcomingSessionsWidgetComponent } from './widgets/upcoming-sessions-widget/upcoming-sessions-widget.component';
 import { TutorialProjectBriefComponent } from './tutorials/tutorial/tutorial-project-brief/tutorial-project-brief.component';
+import { GuardianConsentComponent } from './shared/guardian-consent/guardian-consent.component';
 
 @NgModule({
   declarations: [
@@ -204,6 +205,7 @@ import { TutorialProjectBriefComponent } from './tutorials/tutorial/tutorial-pro
     SessionComponent,
     UpcomingSessionsWidgetComponent,
     TutorialProjectBriefComponent,
+    GuardianConsentComponent
   ],
   imports: [
     CommonModule,
@@ -224,7 +226,7 @@ import { TutorialProjectBriefComponent } from './tutorials/tutorial/tutorial-pro
     NgxQRCodeModule,
     TreeModule,
     NgxAgoraModule.forRoot({ AppID: environment.agora.appId }),
-    TooltipModule.forRoot(),
+    TooltipModule.forRoot()
   ],
   providers: [GoogleMapsService, ProfileService, VideoConferenceService],
   entryComponents: [
@@ -246,7 +248,7 @@ import { TutorialProjectBriefComponent } from './tutorials/tutorial/tutorial-pro
     SupportServicesSearchComponent,
     RequestNewResearchMethodComponent,
     RequestNewSupportServiceComponent,
-    TutorialExpandProposalComponent,
-  ],
+    TutorialExpandProposalComponent
+  ]
 })
-export class AppModule { }
+export class AppModule {}

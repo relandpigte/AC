@@ -1,6 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    
+    <text name="GuardianConsentEmailSubject">Academically - Guardian Consent</text>
+    <text name="GuardianConsentEmailMessage">
+      <![CDATA[
+          <p>Hello {0},</p>
+          <p>Student {1} will be needing your consent to access tutorial requests.</p>
+          <p><a href="{2}">Guardian Consent link<a/></p>
+          <p>If for some reason the link is not clickable, please copy and paste the url below to your browser:<p>
+          <p>Regards,<p/>
+          <p>Academically<p/>
+      ]]>
+    </text>
+    <text name="SendConsentSuccesfully">We will send an email to your parents/guardian once this is confirmed you will have full access to the site</text>
+    <text name="GuardianConsent">Guardian Details</text>
+    <text name="MustBeAuthorized">You must get authorisation from your parent or guardian before using this service</text>
     <text name="UnableToSuggestAreaOfStudy">Unable to suggest a new item under this Area of Study.</text>
     <text name="ConfirmSessionAdminEmailSubject">Academically - Booked Session Confirmed</text>
     <text name="ConfirmSessionAdminEmailMessage">

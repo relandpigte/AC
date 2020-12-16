@@ -13,7 +13,7 @@ import {
   UserTutorialDto,
   UserTutorialsServiceProxy,
   FileParameter,
-  EducationLevel,
+  EducationLevel
 } from '@shared/service-proxies/service-proxies';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -21,11 +21,12 @@ import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { Observable, Observer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { GuardianConsentComponent } from '@app/shared/guardian-consent/guardian-consent.component';
 @Component({
   selector: 'peer-support-tutorial',
   templateUrl: './peer-support-tutorial.component.html',
   styleUrls: ['./peer-support-tutorial.component.less'],
-  animations: [appModuleAnimation()],
+  animations: [appModuleAnimation()]
 })
 export class PeerSupportTutorialComponent extends AppComponentBase implements OnInit {
   @ViewChild('peerSupportTutorialForm') public form: NgForm;
@@ -67,7 +68,7 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
 
   onTaxonomySelect(e: TypeaheadMatch): void {
     const disciplineTaxonomy: DisciplineTaxonomyDto = e.item;
-    const index = this.selectedDisciplineTaxonomies.findIndex((t) => t.id === disciplineTaxonomy.id);
+    const index = this.selectedDisciplineTaxonomies.findIndex(t => t.id === disciplineTaxonomy.id);
     if (index < 0) {
       this.selectedDisciplineTaxonomies.push(disciplineTaxonomy);
     }
@@ -75,7 +76,7 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
   }
 
   onRemoveDisciplineTaxonomyClick(id: string): void {
-    const index = this.selectedDisciplineTaxonomies.findIndex((e) => e.id === id);
+    const index = this.selectedDisciplineTaxonomies.findIndex(e => e.id === id);
     if (index > -1) {
       this.selectedDisciplineTaxonomies.splice(index, 1);
     }
@@ -91,13 +92,13 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
       if (this.validateFile(file)) {
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = (event) => {
+        reader.onload = event => {
           this.userTutorials.picture = reader.result.toString();
         };
         this.tutorialPicturePlaceholderText = file.name;
         this.picture = {
           fileName: file.name,
-          data: file,
+          data: file
         };
       } else {
         this.clearUploader();
@@ -115,7 +116,7 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
       this.userTutorials.deadline = moment.utc(moment(this.deadline).format('YYYY-MM-DD'));
     }
     if (this.selectedDisciplineTaxonomies.length > 0) {
-      _.forEach(this.selectedDisciplineTaxonomies, (disciplineTaxonomies) => {
+      _.forEach(this.selectedDisciplineTaxonomies, disciplineTaxonomies => {
         this.userTutorialDisciplineTaxonomiesIds.push(disciplineTaxonomies.id);
       });
     }
@@ -129,14 +130,18 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
         this.picture,
         this.userTutorialDisciplineTaxonomiesIds
       )
-      .subscribe((tutorialId) => {
-        this.clearUploader();
-        this.notify.success(this.l('SavedSuccessfully'));
-        this.form.reset();
-        this.userTutorialDisciplineTaxonomiesIds = [];
-        this.selectedDisciplineTaxonomies = [];
+      .subscribe(tutorialId => {
         this.isLoading = false;
-        this.router.navigate(['/app/tutorial', tutorialId]);
+        if (this.getAge() > 18) {
+          this.clearUploader();
+          this.notify.success(this.l('SavedSuccessfully'));
+          this.form.reset();
+          this.userTutorialDisciplineTaxonomiesIds = [];
+          this.selectedDisciplineTaxonomies = [];
+          this.router.navigate(['/app/tutorial', tutorialId]);
+        } else {
+          this.showConsentModal(tutorialId);
+        }
       });
   }
 
@@ -156,8 +161,8 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
     const modalRef = this._modalService.show(TaxonomySearchComponent, modalSettings);
     const modal: TaxonomySearchComponent = modalRef.content;
     modal.modalSave.subscribe((selectedTaxonomies: GetAllDisciplineTaxonomyDto[]) => {
-      selectedTaxonomies.forEach((e) => {
-        const index = this.selectedDisciplineTaxonomies.findIndex((t) => t.id === e.id);
+      selectedTaxonomies.forEach(e => {
+        const index = this.selectedDisciplineTaxonomies.findIndex(t => t.id === e.id);
         if (index < 0) {
           const taxonomy = new DisciplineTaxonomyDto();
           taxonomy.id = e.id;
@@ -204,5 +209,19 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
   private clearUploader(): void {
     this.tutorialPictureInput.nativeElement.value = '';
     this.tutorialPicturePlaceholderText = this.imageUploadPlaceholderText;
+  }
+
+  private getAge() {
+    var years = moment().diff(this.appSession.user.birthDate, 'years');
+    return years;
+  }
+
+  private showConsentModal(tutorialId: string) {
+    const modalSettings = this.defaultModalSettings;
+    modalSettings.initialState = {
+      tutorialId: tutorialId
+    };
+    const _modalRef = this._modalService.show(GuardianConsentComponent, modalSettings);
+    const modal: GuardianConsentComponent = _modalRef.content;
   }
 }

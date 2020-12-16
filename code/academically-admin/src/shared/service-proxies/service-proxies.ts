@@ -988,6 +988,70 @@ export class DisciplineTaxonomyStudyLevelsServiceProxy {
 }
 
 @Injectable()
+export class GuardianProfilesServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    save(body: GuardianConsentProfileDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/GuardianProfiles/Save";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSave(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSave(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSave(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class PasswordResetsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -7684,6 +7748,81 @@ export interface IDisciplineTaxonomyStudyLevelDto {
     id: number;
 }
 
+export enum SourceType {
+    _0 = 0,
+}
+
+export class GuardianConsentProfileDto implements IGuardianConsentProfileDto {
+    firstName: string | undefined;
+    lastName: string | undefined;
+    email: string | undefined;
+    ipAddress: string | undefined;
+    referenceId: string | undefined;
+    sourceType: SourceType;
+    consentedDate: moment.Moment;
+    id: string;
+
+    constructor(data?: IGuardianConsentProfileDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.email = _data["email"];
+            this.ipAddress = _data["ipAddress"];
+            this.referenceId = _data["referenceId"];
+            this.sourceType = _data["sourceType"];
+            this.consentedDate = _data["consentedDate"] ? moment(_data["consentedDate"].toString()) : <any>undefined;
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): GuardianConsentProfileDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GuardianConsentProfileDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["email"] = this.email;
+        data["ipAddress"] = this.ipAddress;
+        data["referenceId"] = this.referenceId;
+        data["sourceType"] = this.sourceType;
+        data["consentedDate"] = this.consentedDate ? this.consentedDate.toISOString() : <any>undefined;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): GuardianConsentProfileDto {
+        const json = this.toJSON();
+        let result = new GuardianConsentProfileDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGuardianConsentProfileDto {
+    firstName: string | undefined;
+    lastName: string | undefined;
+    email: string | undefined;
+    ipAddress: string | undefined;
+    referenceId: string | undefined;
+    sourceType: SourceType;
+    consentedDate: moment.Moment;
+    id: string;
+}
+
 export class PasswordResetInputDto implements IPasswordResetInputDto {
     id: string;
     newPassword: string;
@@ -8363,6 +8502,7 @@ export class UserProfile implements IUserProfile {
     profilePictureFileName: string | undefined;
     about: string | undefined;
     userId: number;
+    isConsented: boolean;
     user: User;
     id: string;
 
@@ -8389,6 +8529,7 @@ export class UserProfile implements IUserProfile {
             this.profilePictureFileName = _data["profilePictureFileName"];
             this.about = _data["about"];
             this.userId = _data["userId"];
+            this.isConsented = _data["isConsented"];
             this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
             this.id = _data["id"];
         }
@@ -8415,6 +8556,7 @@ export class UserProfile implements IUserProfile {
         data["profilePictureFileName"] = this.profilePictureFileName;
         data["about"] = this.about;
         data["userId"] = this.userId;
+        data["isConsented"] = this.isConsented;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         data["id"] = this.id;
         return data; 
@@ -8441,6 +8583,7 @@ export interface IUserProfile {
     profilePictureFileName: string | undefined;
     about: string | undefined;
     userId: number;
+    isConsented: boolean;
     user: User;
     id: string;
 }
@@ -9386,6 +9529,8 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
     profilePictureUrl: string | undefined;
     directoryBaseUrl: string | undefined;
     roles: string[] | undefined;
+    birthDate: moment.Moment | undefined;
+    isConsented: boolean;
     id: number;
 
     constructor(data?: IUserLoginInfoDto) {
@@ -9410,6 +9555,8 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
                 for (let item of _data["roles"])
                     this.roles.push(item);
             }
+            this.birthDate = _data["birthDate"] ? moment(_data["birthDate"].toString()) : <any>undefined;
+            this.isConsented = _data["isConsented"];
             this.id = _data["id"];
         }
     }
@@ -9434,6 +9581,8 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
             for (let item of this.roles)
                 data["roles"].push(item);
         }
+        data["birthDate"] = this.birthDate ? this.birthDate.toISOString() : <any>undefined;
+        data["isConsented"] = this.isConsented;
         data["id"] = this.id;
         return data; 
     }
@@ -9454,6 +9603,8 @@ export interface IUserLoginInfoDto {
     profilePictureUrl: string | undefined;
     directoryBaseUrl: string | undefined;
     roles: string[] | undefined;
+    birthDate: moment.Moment | undefined;
+    isConsented: boolean;
     id: number;
 }
 
