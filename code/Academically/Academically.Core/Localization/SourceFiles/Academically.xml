@@ -6,9 +6,9 @@
     <text name="GuardianConsentEmailMessage">
       <![CDATA[
           <p>Hello {0},</p>
-          <p>Student {1} will be needing your consent to access tutorial requests.</p>
-          <p><a href="{2}">Guardian Consent link<a/></p>
-          <p>If for some reason the link is not clickable, please copy and paste the url below to your browser:<p>
+          <p>We have received a request from <student name> to authorize them {1}</p>
+          <p>Please click on the link below to view full details and confirm permission.</p>
+          <p><a href="{2}">LINK HERE<a/><p>
           <p>Regards,<p/>
           <p>Academically<p/>
       ]]>
