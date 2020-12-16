@@ -32,7 +32,7 @@ export class GuardianConsentComponent extends AppComponentBase implements OnInit
     this.guardianConsent.consentedDate = null;
     this._guardianConsentProfileService.save(this.guardianConsent).subscribe(() => {
       this.isLoading = false;
-      this.notify.success(this.l('SendConsentSuccesfully'));
+      this.message.info(this.l('SendConsentSuccesfully'));
       this.router.navigate(['/app/tutorial', this.tutorialId]);
       this._modalRef.hide();
     });
