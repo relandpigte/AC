@@ -51,4 +51,6 @@
 	<include file="ddml/ddml.2020-12-07-01.added-sessions-table.xml"/>
 	<include file="ddml/ddml.2020-12-07-02.alter-sessions-table.xml"/>
 	<include file="ddml/ddml.2020-12-08-01.alter-usertutorials-table.xml"/>
+	<include file="ddml/ddml.2020-12-16-01.add-guardianconsentprofiles-table.xml"/>
+	<include file="ddml/ddml.2020-12-16-02.add-userprofiles-table.xml"/>
 </databaseChangeLog>

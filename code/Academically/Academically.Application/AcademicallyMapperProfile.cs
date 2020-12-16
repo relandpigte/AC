@@ -1,5 +1,6 @@
 ﻿using Academically.Entities;
 using Academically.Services.DisciplineTaxonomies.Dto;
+using Academically.Services.GuardianProfiles.Dto;
 using Academically.Services.Offers.Dto;
 using Academically.Services.UserProfiles.Dto;
 using Academically.Services.UserSessions.Dto;
@@ -20,6 +21,7 @@ namespace Academically
             CreateMap<UserSupportServiceSessionRateDto, UserSupportServiceSessionRate>();
             CreateMap<CreateTutorOfferDto, TutorOffer>();
             CreateMap<SessionDto, Session>();
+            CreateMap<GuardianConsentProfileDto, GuardianConsentProfile>();
         }
     }
 }

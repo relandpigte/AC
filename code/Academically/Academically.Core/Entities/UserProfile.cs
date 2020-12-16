@@ -21,6 +21,7 @@ namespace Academically.Entities
         public string ProfilePictureFileName { get; set; }
         public string About { get; set; }
         public long UserId { get; set; }
+        public bool IsConsented { get; set; }
 
         [ForeignKey("UserId")]
         public virtual User User { get; set; }

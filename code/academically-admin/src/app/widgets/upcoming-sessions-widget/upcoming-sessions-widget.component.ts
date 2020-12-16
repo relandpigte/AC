@@ -57,7 +57,7 @@ export class UpcomingSessionsWidgetComponent extends AppComponentBase implements
           date: `${this.formatDoubleDigitNumber(hours)}:${this.formatDoubleDigitNumber(minutes)}:${this.formatDoubleDigitNumber(seconds)}`
         };
       } else {
-        return { colorClass: 'text-green', date: 'Ongoging' }
+        return { colorClass: 'text-green', date: 'Ongoing' }
       }
     } else {
       return { colorClass: 'text-muted', date: sessionDate.format('DD/MM/YYYY HH:mm:ss') };

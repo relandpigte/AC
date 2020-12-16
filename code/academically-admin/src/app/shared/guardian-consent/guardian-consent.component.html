@@ -1,0 +1,61 @@
+<form class="form-horizontal" autocomplete="off" #guardianConsentForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="card" [busy]="isLoading">
+    <div class="card-header">
+      <h4 class="card-header-title">
+        {{ 'GuardianConsent' | localize }}
+      </h4>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <h4 class="text-muted">
+          {{ 'MustBeAuthorized' | localize }}
+        </h4>
+      </div>
+      <div class="form-group required">
+        <label class="col-form-label" for="FirstName">{{ 'FirstName' | localize }}</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="guardianConsent.firstName"
+          placeholder="First Name"
+          name="firstName"
+          #firstNameModel="ngModel"
+          #firstNameEl
+          required
+        />
+        <abp-validation-summary [control]="firstNameModel" [controlEl]="firstNameEl"></abp-validation-summary>
+      </div>
+      <div class="form-group required">
+        <label class="col-form-label" for="LastName">{{ 'LastName' | localize }}</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="guardianConsent.lastName"
+          placeholder="Last Name"
+          name="lastName"
+          #lastNameModel="ngModel"
+          #lastNameEl
+          required
+        />
+        <abp-validation-summary [control]="lastNameModel" [controlEl]="lastNameEl"></abp-validation-summary>
+      </div>
+      <div class="form-group required">
+        <label class="col-form-label" for="Email">{{ 'Email' | localize }}</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="guardianConsent.email"
+          placeholder="Email Address"
+          name="email"
+          #emailModel="ngModel"
+          #emailEl
+          required
+        />
+        <abp-validation-summary [control]="emailModel" [controlEl]="emailEl"></abp-validation-summary>
+      </div>
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-primary" type="submit" [disabled]="isLoading || !guardianConsentForm.valid">Save</button>
+    </div>
+  </div>
+</form>
