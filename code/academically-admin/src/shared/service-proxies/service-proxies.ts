@@ -7868,6 +7868,7 @@ export class GuardianConsentProfileDto implements IGuardianConsentProfileDto {
     referenceId: string;
     sourceType: SourceType;
     consentedDate: moment.Moment | undefined;
+    hasExpired: boolean | undefined;
     id: string;
 
     constructor(data?: IGuardianConsentProfileDto) {
@@ -7888,6 +7889,7 @@ export class GuardianConsentProfileDto implements IGuardianConsentProfileDto {
             this.referenceId = _data["referenceId"];
             this.sourceType = _data["sourceType"];
             this.consentedDate = _data["consentedDate"] ? moment(_data["consentedDate"].toString()) : <any>undefined;
+            this.hasExpired = _data["hasExpired"];
             this.id = _data["id"];
         }
     }
@@ -7908,6 +7910,7 @@ export class GuardianConsentProfileDto implements IGuardianConsentProfileDto {
         data["referenceId"] = this.referenceId;
         data["sourceType"] = this.sourceType;
         data["consentedDate"] = this.consentedDate ? this.consentedDate.toISOString() : <any>undefined;
+        data["hasExpired"] = this.hasExpired;
         data["id"] = this.id;
         return data; 
     }
@@ -7928,6 +7931,7 @@ export interface IGuardianConsentProfileDto {
     referenceId: string;
     sourceType: SourceType;
     consentedDate: moment.Moment | undefined;
+    hasExpired: boolean | undefined;
     id: string;
 }
 

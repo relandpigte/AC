@@ -270,7 +270,7 @@
               </label>
             </button>
             <button
-              [disabled]="getCoverLetterWordCount() < 50 && !isStudentAuthorized"
+              [disabled]="getCoverLetterWordCount() < 50 || !isStudentAuthorized"
               (click)="onAcceptProposalClick()"
               class="btn btn-sm btn-primary proposal-button-submit"
             >

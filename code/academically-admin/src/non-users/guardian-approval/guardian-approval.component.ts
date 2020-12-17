@@ -41,6 +41,7 @@ export class GuardianApprovalComponent extends AppComponentBase implements OnIni
   onFormSubmit(): void {
     this.isLoading = true;
     this.guardianConsentProfile.ipAddress = this.ipAddress;
+    this.guardianConsentProfile.hasExpired = true;
     this.guardianConsentProfile.consentedDate = moment.utc();
     this.guardianConsentProfileService.grantAccessToTutorial(this.guardianConsentProfile).subscribe(() => {
       this.isLoading = false;
@@ -51,6 +52,10 @@ export class GuardianApprovalComponent extends AppComponentBase implements OnIni
 
   private getGuardianConsentProfile(): void {
     this.guardianConsentProfileService.get(this.id).subscribe(guardianConsentProfile => {
+      if (!guardianConsentProfile.id && guardianConsentProfile.hasExpired) {
+        this.notify.error(this.l('EmailIsInvalid'));
+        this._router.navigate(['']);
+      }
       this.guardianConsentProfile = guardianConsentProfile;
     });
   }

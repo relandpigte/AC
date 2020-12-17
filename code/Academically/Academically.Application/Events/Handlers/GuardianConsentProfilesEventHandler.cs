@@ -18,7 +18,7 @@ namespace Academically.Events.Handlers
 {
     public class GuardianConsentProfilesEventHandler :
         EventHandlerBase,
-        IAsyncEventHandler<EntityCreatedEventData<GuardianConsentProfile>>
+        IAsyncEventHandler<EntityChangedEventData<GuardianConsentProfile>>
     {
         private readonly ISettingManager _settingManager;
         private readonly IEmailService _emailService;
@@ -42,7 +42,7 @@ namespace Academically.Events.Handlers
         }
 
         [UnitOfWork]
-        public async Task HandleEventAsync(EntityCreatedEventData<GuardianConsentProfile> eventData) 
+        public async Task HandleEventAsync(EntityChangedEventData<GuardianConsentProfile> eventData) 
         {
             var tutorial = new UserTutorial();
 
@@ -55,9 +55,22 @@ namespace Academically.Events.Handlers
             var link = $"{clientRootAddress}guardian-approval/{eventData.Entity.Id}";
             var guardianFullName = $"{eventData.Entity.FirstName} {eventData.Entity.LastName}";
 
-            var subject = L("GuardianConsentEmailSubject");
-            var body = L("GuardianConsentEmailMessage", guardianFullName, student.FullName, link);
-            await _emailService.SendAsync(eventData.Entity.Email, eventData.Entity.Email, subject, body);
+            if(!eventData.Entity.HasExpired.Value)
+            {
+                var subject = L("GuardianConsentEmailSubject");
+                var body = L("GuardianConsentEmailMessage", guardianFullName, student.FullName, link);
+                await _emailService.SendAsync(eventData.Entity.Email, eventData.Entity.Email, subject, body);
+            } 
+            else 
+            {
+                var guardianEmailSubject = L("ConfirmsGuardianTutorialAccesSubject");
+                var guardianEmailBody = L("ConfirmGuardianTutorialAccessMessage", guardianFullName, student.FullName);
+                await _emailService.SendAsync(eventData.Entity.Email, eventData.Entity.Email, guardianEmailSubject, guardianEmailBody);
+
+                var studentEmailSubject = L("ConfirmTutorialAccessSubject");
+                var studentEmailBody = L("ConfirmTutorialAccessMessage", student.FullName, guardianFullName);
+                await _emailService.SendAsync(student.EmailAddress, student.EmailAddress, studentEmailSubject, studentEmailBody);
+            }
         }
     }
 }

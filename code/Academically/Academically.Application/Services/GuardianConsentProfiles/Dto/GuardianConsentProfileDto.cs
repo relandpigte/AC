@@ -18,5 +18,6 @@ namespace Academically.Services.GuardianProfiles.Dto
         public Guid ReferenceId { get; set; }
         public SourceType SourceType { get; set; }
         public DateTime? ConsentedDate { get; set; }
+        public bool? HasExpired { get; set; }
     }
 }
