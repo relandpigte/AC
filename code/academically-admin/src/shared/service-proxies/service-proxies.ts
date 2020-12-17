@@ -1049,6 +1049,114 @@ export class GuardianProfilesServiceProxy {
         }
         return _observableOf<void>(<any>null);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    grantAccessToTutorial(body: GuardianConsentProfileDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/GuardianProfiles/GrantAccessToTutorial";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGrantAccessToTutorial(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGrantAccessToTutorial(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGrantAccessToTutorial(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<GuardianConsentProfileDto> {
+        let url_ = this.baseUrl + "/api/services/app/GuardianProfiles/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<GuardianConsentProfileDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GuardianConsentProfileDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<GuardianConsentProfileDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GuardianConsentProfileDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GuardianConsentProfileDto>(<any>null);
+    }
 }
 
 @Injectable()
@@ -7757,9 +7865,10 @@ export class GuardianConsentProfileDto implements IGuardianConsentProfileDto {
     lastName: string | undefined;
     email: string | undefined;
     ipAddress: string | undefined;
-    referenceId: string | undefined;
+    referenceId: string;
     sourceType: SourceType;
-    consentedDate: moment.Moment;
+    consentedDate: moment.Moment | undefined;
+    hasExpired: boolean | undefined;
     id: string;
 
     constructor(data?: IGuardianConsentProfileDto) {
@@ -7780,6 +7889,7 @@ export class GuardianConsentProfileDto implements IGuardianConsentProfileDto {
             this.referenceId = _data["referenceId"];
             this.sourceType = _data["sourceType"];
             this.consentedDate = _data["consentedDate"] ? moment(_data["consentedDate"].toString()) : <any>undefined;
+            this.hasExpired = _data["hasExpired"];
             this.id = _data["id"];
         }
     }
@@ -7800,6 +7910,7 @@ export class GuardianConsentProfileDto implements IGuardianConsentProfileDto {
         data["referenceId"] = this.referenceId;
         data["sourceType"] = this.sourceType;
         data["consentedDate"] = this.consentedDate ? this.consentedDate.toISOString() : <any>undefined;
+        data["hasExpired"] = this.hasExpired;
         data["id"] = this.id;
         return data; 
     }
@@ -7817,9 +7928,10 @@ export interface IGuardianConsentProfileDto {
     lastName: string | undefined;
     email: string | undefined;
     ipAddress: string | undefined;
-    referenceId: string | undefined;
+    referenceId: string;
     sourceType: SourceType;
-    consentedDate: moment.Moment;
+    consentedDate: moment.Moment | undefined;
+    hasExpired: boolean | undefined;
     id: string;
 }
 

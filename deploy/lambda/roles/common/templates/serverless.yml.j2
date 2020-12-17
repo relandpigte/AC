@@ -28,6 +28,7 @@ provider:
   profile: academically
   region: {{aws_region}}
   stage: {{env_name}}
+  logRetentionInDays: {{log_retention}}
   vpc:
     securityGroupIds:
       - {{my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.SGWebId}}
@@ -92,6 +93,7 @@ functions:
 
 plugins:
   - serverless-domain-manager
+  - serverless-plugin-log-retention
 
 custom:
   customDomain:
