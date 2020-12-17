@@ -52,7 +52,7 @@ namespace Academically.Events.Handlers
             var studentProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.Id == tutorial.StudentId);
             var student = await _usersRepository.FirstOrDefaultAsync(e => e.Id == studentProfile.UserId);
             var clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
-            var link = $"{clientRootAddress}/guardian-approval/{eventData.Entity.Id}";
+            var link = $"{clientRootAddress}guardian-approval/{eventData.Entity.Id}";
             var guardianFullName = $"{eventData.Entity.FirstName} {eventData.Entity.LastName}";
 
             var subject = L("GuardianConsentEmailSubject");

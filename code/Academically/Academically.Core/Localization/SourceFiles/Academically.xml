@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="StudentMustBeAuthorized">Student must be authorized by their parent/guardian befor submitting offer</text>
     <text name="TutorialAccessGranted">Tutorial request has been granted</text>
     <text name="GuardianConsentEmailSubject">Academically - Guardian Consent</text>
     <text name="GuardianConsentEmailMessage">
