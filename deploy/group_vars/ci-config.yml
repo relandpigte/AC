@@ -36,4 +36,7 @@ default_ttl: 30
 max_ttl: 30
 min_ttl: 10
 
+#Cloudwatch log retention for Lambda functions
+log_retention: 7
+
 acm_arn: arn:aws:acm:us-east-1:761676740162:certificate/b5733d6c-6981-48f1-a97a-e082d2099bea # ARN of SSL *.sourcecloud-dev.co.uk NOTE must be in North Virginia for Cloudfront
