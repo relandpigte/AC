@@ -19,6 +19,9 @@ import { API_BASE_URL } from '@shared/service-proxies/service-proxies';
 
 import { RootComponent } from './root.component';
 import { AppInitializer } from './app-initializer';
+import { GuardianApprovalComponent } from './non-users/guardian-approval/guardian-approval.component';
+import { ThankYouComponent } from './non-users/thank-you/thank-you.component';
+import { FormsModule } from '@angular/forms';
 
 export function getCurrentLanguage(): string {
   if (abp.localization.currentLanguage.name) {
@@ -41,22 +44,23 @@ export function getCurrentLanguage(): string {
     TabsModule.forRoot(),
     ServiceProxyModule,
     RootRoutingModule,
+    FormsModule
   ],
-  declarations: [RootComponent],
+  declarations: [RootComponent, GuardianApprovalComponent, ThankYouComponent],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true },
     {
       provide: APP_INITIALIZER,
       useFactory: (appInitializer: AppInitializer) => appInitializer.init(),
       deps: [AppInitializer],
-      multi: true,
+      multi: true
     },
     { provide: API_BASE_URL, useFactory: () => AppConsts.remoteServiceBaseUrl },
     {
       provide: LOCALE_ID,
-      useFactory: getCurrentLanguage,
-    },
+      useFactory: getCurrentLanguage
+    }
   ],
-  bootstrap: [RootComponent],
+  bootstrap: [RootComponent]
 })
 export class RootModule {}

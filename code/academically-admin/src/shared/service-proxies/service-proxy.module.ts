@@ -29,6 +29,7 @@ import * as ApiServiceProxies from './service-proxies';
     ApiServiceProxies.PasswordResetsServiceProxy,
     ApiServiceProxies.UserSessionsServiceProxy,
     ApiServiceProxies.GuardianProfilesServiceProxy,
+    ApiServiceProxies.TimezonesServiceProxy
     { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
   ]
 })
