@@ -1,0 +1,80 @@
+<form class="form-horizontal" autocomplete="off" #guardianApprovalForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-5 col-xl 4 my-5">
+        <div class="card" [busy]="isLoading">
+          <div class="card-header">
+            <h4 class="card-header-title">
+              Guardian Approval
+            </h4>
+          </div>
+          <div class="card-body" [busy]="isLoading">
+            <div class="form-group">
+              <h4 class="text-muted">
+                As a parent/guardian I am agreeing as follows:
+              </h4>
+            </div>
+            <div class="form-group required">
+              <div class="custom-control custom-checkbox required">
+                <input
+                  class="custom-control-input"
+                  [(ngModel)]="termsAndConditionsCheck"
+                  name="termsAndConditionsCheck"
+                  id="termsAndConditionsCheck"
+                  type="checkbox"
+                  #termsAndConditionsCheckModel="ngModel"
+                  #termsAndConditionsCheckEl
+                  required
+                />
+                <label class="custom-control-label" for="termsAndConditionsCheck"> I've agreed to the terms and conditions </label>
+                <abp-validation-summary
+                  [control]="termsAndConditionsCheckModel"
+                  [controlEl]="termsAndConditionsCheckEl"
+                ></abp-validation-summary>
+              </div>
+            </div>
+            <div class="form-group required">
+              <div class="custom-control custom-checkbox required">
+                <input
+                  class="custom-control-input"
+                  [(ngModel)]="privacyPolicyCheck"
+                  name="privacyPolicyCheck"
+                  id="privacyPolicyCheck"
+                  type="checkbox"
+                  #privacyPolicyCheckModel="ngModel"
+                  #privacyPolicyCheckEl
+                  required
+                />
+                <label class="custom-control-label" for="privacyPolicyCheck"> I’ve agreed to the privacy policy </label>
+                <abp-validation-summary [control]="privacyPolicyCheckModel" [controlEl]="privacyPolicyCheckEl"></abp-validation-summary>
+              </div>
+            </div>
+            <div class="form-group required">
+              <div class="custom-control custom-checkbox required">
+                <input
+                  class="custom-control-input"
+                  [(ngModel)]="authorityCheck"
+                  name="authorityCheck"
+                  id="authorityCheck"
+                  type="checkbox"
+                  #authorityCheckModel="ngModel"
+                  #authorityCheckEl
+                  required
+                />
+                <label class="custom-control-label" for="authorityCheck">
+                  I understand that I am giving authority for consent to be given on my behalf</label
+                >
+                <abp-validation-summary [control]="authorityCheckModel" [controlEl]="authorityCheckEl"></abp-validation-summary>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary" type="submit" [disabled]="!termsAndConditionsCheck || !privacyPolicyCheck || !authorityCheck">
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

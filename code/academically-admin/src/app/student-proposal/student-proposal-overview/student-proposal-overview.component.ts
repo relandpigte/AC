@@ -29,6 +29,7 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
   tutorAreasOfStudies = '';
   moment: any = moment;
   coverLetterMaxWordCount = 500;
+  isStudentAuthorized = true;
 
   constructor(
     injector: Injector,
@@ -98,6 +99,7 @@ export class StudentProposalOverviewComponent extends AppComponentBase implement
       this.isLoading = false;
       this.studentProposal = proposal;
       this.studentFullName = proposal.student.user.fullName;
+      this.isStudentAuthorized = proposal.student.isConsented;
       this.getStudentTutorialHighestLevlAreasOfStudy();
       this.getTutorOffer();
       this.getTutorAreasOfStudy();
