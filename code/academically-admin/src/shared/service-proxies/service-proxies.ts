@@ -10825,7 +10825,6 @@ export enum SessionStatus {
 export class SessionDto implements ISessionDto {
     timeZone: string | undefined;
     sessionDate: moment.Moment;
-    sessionDateUtc: string | undefined;
     duration: number;
     tutorOfferId: string;
     status: SessionStatus;
@@ -10846,7 +10845,6 @@ export class SessionDto implements ISessionDto {
         if (_data) {
             this.timeZone = _data["timeZone"];
             this.sessionDate = _data["sessionDate"] ? moment(_data["sessionDate"].toString()) : <any>undefined;
-            this.sessionDateUtc = _data["sessionDateUtc"];
             this.duration = _data["duration"];
             this.tutorOfferId = _data["tutorOfferId"];
             this.status = _data["status"];
@@ -10867,7 +10865,6 @@ export class SessionDto implements ISessionDto {
         data = typeof data === 'object' ? data : {};
         data["timeZone"] = this.timeZone;
         data["sessionDate"] = this.sessionDate ? this.sessionDate.toISOString() : <any>undefined;
-        data["sessionDateUtc"] = this.sessionDateUtc;
         data["duration"] = this.duration;
         data["tutorOfferId"] = this.tutorOfferId;
         data["status"] = this.status;
@@ -10888,7 +10885,6 @@ export class SessionDto implements ISessionDto {
 export interface ISessionDto {
     timeZone: string | undefined;
     sessionDate: moment.Moment;
-    sessionDateUtc: string | undefined;
     duration: number;
     tutorOfferId: string;
     status: SessionStatus;
@@ -11517,6 +11513,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
     timezoneId: string | undefined;
     dateJoined: moment.Moment;
     role: string | undefined;
+    timeZoneInfo: TimezoneInfoDto;
 
     constructor(data?: IGetProfileDetailDto) {
         if (data) {
@@ -11546,6 +11543,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
             this.timezoneId = _data["timezoneId"];
             this.dateJoined = _data["dateJoined"] ? moment(_data["dateJoined"].toString()) : <any>undefined;
             this.role = _data["role"];
+            this.timeZoneInfo = _data["timeZoneInfo"] ? TimezoneInfoDto.fromJS(_data["timeZoneInfo"]) : <any>undefined;
         }
     }
 
@@ -11575,6 +11573,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
         data["timezoneId"] = this.timezoneId;
         data["dateJoined"] = this.dateJoined ? this.dateJoined.toISOString() : <any>undefined;
         data["role"] = this.role;
+        data["timeZoneInfo"] = this.timeZoneInfo ? this.timeZoneInfo.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -11604,6 +11603,7 @@ export interface IGetProfileDetailDto {
     timezoneId: string | undefined;
     dateJoined: moment.Moment;
     role: string | undefined;
+    timeZoneInfo: TimezoneInfoDto;
 }
 
 export class UserPublicationDto implements IUserPublicationDto {

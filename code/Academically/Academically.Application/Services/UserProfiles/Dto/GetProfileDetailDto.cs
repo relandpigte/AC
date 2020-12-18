@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Academically.Services.Timezones.Dto;
+using System;
 
 namespace Academically.Services.UserProfiles.Dto
 {
@@ -22,5 +23,7 @@ namespace Academically.Services.UserProfiles.Dto
 
         public DateTime DateJoined { get; set; }
         public string Role { get; set; }
+
+        public TimezoneInfoDto TimeZoneInfo { get; set; }
     }
 }

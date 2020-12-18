@@ -18,6 +18,7 @@ using Academically.Entities;
 using Academically.Services.DisciplineTaxonomyStudyLevels.Dto;
 using Academically.Services.ResearchMethods.Dto;
 using Academically.Services.SupportServices.Dto;
+using Academically.Services.Timezones.Dto;
 using Academically.Services.UserProfiles.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -82,7 +83,7 @@ namespace Academically.Services.UserProfiles
 
             var userProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == userId);
             var role = await _roleManager.GetRoleByIdAsync(user.Roles.FirstOrDefault().RoleId);
-
+            var timezoneInfo = new TimezoneInfoDto();
             var output = ObjectMapper.Map<GetProfileDetailDto>(userProfile);
             if (output == null)
             {
@@ -93,6 +94,7 @@ namespace Academically.Services.UserProfiles
             output.LastName = user.Surname;
             output.DateJoined = user.CreationTime;
             output.Role = role.DisplayName;
+            output.TimeZoneInfo = ObjectMapper.Map(TimeZoneInfo.FindSystemTimeZoneById(userProfile.TimezoneId), timezoneInfo);
 
             return output;
         }
