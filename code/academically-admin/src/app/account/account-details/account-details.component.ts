@@ -5,7 +5,9 @@ import {
   UserProfilesServiceProxy,
   FileParameter,
   AddressLookupServiceProxy,
-  SuggestionDataDto
+  SuggestionDataDto,
+  TimezoneInfoDto,
+  TimezonesServiceProxy
 } from '@shared/service-proxies/service-proxies';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { countries } from '@shared/constants/countries';
@@ -42,9 +44,11 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
   isStudent = false;
   addressDataSource: Observable<SuggestionDataDto[]>;
   profilePictureUrl: string;
+  timezones: TimezoneInfoDto[] = [];
 
   constructor(
     injector: Injector,
+    private _timezonesService: TimezonesServiceProxy,
     private _userProfilesService: UserProfilesServiceProxy,
     private _addressLookupService: AddressLookupServiceProxy,
     private _sessionService: AppSessionService,
@@ -63,6 +67,7 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
   ngOnInit(): void {
     this.getDetails();
     this.getAddressLookup();
+    this.getTimezonesList();
   }
 
   onAddressSelected(e: TypeaheadMatch): void {
@@ -213,6 +218,7 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
         this.model.longitude,
         this.model.latitude,
         this.model.about,
+        this.model.timezoneId,
         this.profilePicture
       )
       .subscribe(() => {
@@ -278,5 +284,11 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
     if (address) {
       addresses.push(address);
     }
+  }
+
+  private getTimezonesList(): void {
+    this._timezonesService.getTimezonesList().subscribe(timezones => {
+      this.timezones = timezones;
+    });
   }
 }

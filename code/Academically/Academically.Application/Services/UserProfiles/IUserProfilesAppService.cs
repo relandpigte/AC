@@ -30,5 +30,6 @@ namespace Academically.Services.UserProfiles
         Task DeleteSupportService(long userId, Guid supportServiceId);
         Task<UserSupportServiceSessionRateDto> GetUserSupportServiceSessionRate(Guid supportServiceId);
         Task SaveUserSupportServiceSessionRate(UserSupportServiceSessionRateDto input);
+        Task SaveUserTimezoneDetail(long userId, string timezoneId);
     }
 }

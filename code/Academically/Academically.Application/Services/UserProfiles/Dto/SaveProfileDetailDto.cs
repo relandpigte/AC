@@ -17,6 +17,7 @@ namespace Academically.Services.UserProfiles.Dto
         public double? Longitude { get; set; }
         public double? Latitude { get; set; }
         public string About { get; set; }
+        public string TimezoneId { get; set; }
 
         public IFormFile ProfilePicture { get; set; }
     }

@@ -20,6 +20,7 @@ namespace Academically.Services.UserProfiles.Dto
         public string ProfilePictureFileName { get; set; }
         public string About { get; set; }
         public long UserId { get; set; }
+        public string TimezoneId { get; set; }
 
         public UserDto User { get; set; }
     }

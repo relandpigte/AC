@@ -6,6 +6,7 @@ using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Academically.Configuration;
+using Academically.DomainServices.Timezone;
 using Academically.Entities;
 using Academically.Services.UserProfiles.Dto;
 using Academically.Services.UserSessions.Dto;
@@ -17,15 +18,21 @@ namespace Academically.Services.UserSessions
     public class UserSessionsAppService : AcademicallyAppServiceBase, IUserSessionsAppService
     {
         private readonly IRepository<Session, Guid> _sessionsRepository;
+        private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
+        private readonly ITimezoneDomainService _timezoneDomainService;
         private readonly ISettingManager _settingManager;
 
         public UserSessionsAppService(
             IRepository<Session, Guid> sessionRepository,
+            IRepository<UserProfile, Guid> userProfilesRepository,
+            ITimezoneDomainService timezoneDomainService,
             ISettingManager settingManager
             )
         {
             _sessionsRepository = sessionRepository;
             _settingManager = settingManager;
+            _timezoneDomainService = timezoneDomainService;
+            _userProfilesRepository = userProfilesRepository;
         }
 
         public async Task<IEnumerable<SessionDto>> GetUpcomingAsync(bool isStudent = false)
@@ -59,6 +66,8 @@ namespace Academically.Services.UserSessions
             if(sessionDetail == null)
             {
                 sessionDetail = new Session();
+                var studentProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
+                input.SessionDate = _timezoneDomainService.ConvertToUtc(input.SessionDate, studentProfile.TimezoneId);
             }
 
             ObjectMapper.Map(input, sessionDetail);

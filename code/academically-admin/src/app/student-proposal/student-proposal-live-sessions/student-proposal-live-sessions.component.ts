@@ -46,6 +46,7 @@ export class StudentProposalLiveSessionsComponent extends AppComponentBase imple
     this.isLoading = true;
     session.status = 2;
     session.tutorOffer = null;
+    session.timeZone = '';
     this.userSerssionServic.save(session).subscribe(() => {
       this.isLoading = false;
       this.notify.success(this.l('SavedSuccessfully'));

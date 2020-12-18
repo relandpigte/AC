@@ -10,5 +10,6 @@ namespace Academically.Services.Timezones
     public interface ITimezonesAppService : IApplicationService
     {
         IEnumerable<TimezoneInfoDto> GetTimezonesList();
+        TimezoneInfoDto GetTimezoneInfo(string timezoneId);
     }
 }

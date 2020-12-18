@@ -25,11 +25,7 @@
                   [accept]="fileUploadSettings.allowedExtensions"
                 />
               </div>
-              <div
-                *ngIf="profilePictureUrl"
-                class="dz-preview"
-                [style.background-image]="'url(' + profilePictureUrl + ')'"
-              ></div>
+              <div *ngIf="profilePictureUrl" class="dz-preview" [style.background-image]="'url(' + profilePictureUrl + ')'"></div>
             </div>
           </div>
         </div>
@@ -113,6 +109,23 @@
           <option *ngFor="let country of countries" [value]="country.name">{{ country.name }}</option>
         </select>
         <abp-validation-summary *ngIf="!isStudent" [control]="countryModel" [controlEl]="countryEl"> </abp-validation-summary>
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label" for="Timezone">{{ 'Timezone' | localize }}</label>
+        <select
+          [(ngModel)]="model.timezoneId"
+          id="Country"
+          name="Country"
+          type="text"
+          class="form-control"
+          #timezoneModel="ngModel"
+          #timezoneEl
+        >
+          <option [ngValue]="null">{{ 'SelectTimezone' | localize }}</option>
+          <option *ngFor="let timezone of timezones" [value]="timezone.id">{{ timezone.displayName }}</option>
+        </select>
+        <abp-validation-summary [control]="timezoneModel" [controlEl]="timezoneEl"> </abp-validation-summary>
       </div>
 
       <ng-container *ngIf="model.country">

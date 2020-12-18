@@ -1,6 +1,14 @@
 import { Component, Injector, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { GetTutorOfferDto, SessionDto, UserSessionsServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  GetProfileDetailDto,
+  GetTutorOfferDto,
+  SessionDto,
+  TimezoneInfoDto,
+  TimezonesServiceProxy,
+  UserProfilesServiceProxy,
+  UserSessionsServiceProxy
+} from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { BsDatepickerConfig, DateFormatter } from 'ngx-bootstrap/datepicker';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -15,6 +23,8 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
   @Output() sessionBooked = new EventEmitter<boolean>(false);
   userSession: SessionDto = new SessionDto();
   startTime: string;
+  timezones: TimezoneInfoDto[] = [];
+  userProfile: GetProfileDetailDto = new GetProfileDetailDto();
   datePickerConfig: BsDatepickerConfig;
   hourInput = '00';
   minuteInput = '00';
@@ -28,20 +38,34 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
   isLoading = false;
   sessionDate: moment.Moment;
 
-  constructor(injector: Injector, private _userSessionService: UserSessionsServiceProxy, private modal: BsModalRef) {
+  constructor(
+    injector: Injector,
+    private _userProfilesService: UserProfilesServiceProxy,
+    private _userSessionService: UserSessionsServiceProxy,
+    private _timezonesService: TimezonesServiceProxy,
+    private modal: BsModalRef
+  ) {
     super(injector);
     this.datePickerConfig = new BsDatepickerConfig();
     this.datePickerConfig.showWeekNumbers = false;
     this.datePickerConfig.dateInputFormat = 'DD/MM/YYYY';
-    this.userSession.timeZone = moment.tz.guess();
+    this.userSession.timeZone = '';
   }
 
   ngOnInit(): void {
     this.getHours();
     this.getMintues();
     this.getMinutesSessionDuration();
+    this.getUserProfile();
+    this.getTimezonesList();
     this.userSession.tutorOfferId = this.tutorOffer.id;
     this.userSession.status = 1; // pending
+  }
+
+  onTimezoneChange(): void {
+    this._userProfilesService.saveUserTimezoneDetail(this.userProfile.userId, this.userProfile.timezoneId).subscribe(() => {
+      this.notify.success(this.l('SavedSuccessfully'));
+    });
   }
 
   getTotal(): any {
@@ -59,8 +83,6 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
   }
 
   onFormSubmit(): void {
-    console.log(this.sessionDate);
-    console.log(this.userSession.sessionDate);
     this.isLoading = true;
     const sessionDate = `${moment(this.sessionDate).format('YYYY-MM-DD')} ${this.hourInput}:${this.minuteInput}:00`;
     const sessionDuration = Number(this.hourSessionDurationInput) * 60 + Number(this.minuteSessionDurationInput);
@@ -107,5 +129,17 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
 
   private close(): void {
     this.modal.hide();
+  }
+
+  private getUserProfile(): void {
+    this._userProfilesService.getDetail(this.appSession.user.id).subscribe(userProfile => {
+      this.userProfile = userProfile;
+    });
+  }
+
+  private getTimezonesList(): void {
+    this._timezonesService.getTimezonesList().subscribe(timezones => {
+      this.timezones = timezones;
+    });
   }
 }

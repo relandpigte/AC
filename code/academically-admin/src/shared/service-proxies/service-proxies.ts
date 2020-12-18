@@ -2877,6 +2877,127 @@ export class TenantServiceProxy {
 }
 
 @Injectable()
+export class TimezonesServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    getTimezonesList(): Observable<TimezoneInfoDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Timezones/GetTimezonesList";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTimezonesList(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTimezonesList(<any>response_);
+                } catch (e) {
+                    return <Observable<TimezoneInfoDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TimezoneInfoDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTimezonesList(response: HttpResponseBase): Observable<TimezoneInfoDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(TimezoneInfoDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TimezoneInfoDto[]>(<any>null);
+    }
+
+    /**
+     * @param timezoneId (optional) 
+     * @return Success
+     */
+    getTimezoneInfo(timezoneId: string | null | undefined): Observable<TimezoneInfoDto> {
+        let url_ = this.baseUrl + "/api/services/app/Timezones/GetTimezoneInfo?";
+        if (timezoneId !== undefined && timezoneId !== null)
+            url_ += "timezoneId=" + encodeURIComponent("" + timezoneId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTimezoneInfo(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTimezoneInfo(<any>response_);
+                } catch (e) {
+                    return <Observable<TimezoneInfoDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TimezoneInfoDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTimezoneInfo(response: HttpResponseBase): Observable<TimezoneInfoDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TimezoneInfoDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TimezoneInfoDto>(<any>null);
+    }
+}
+
+@Injectable()
 export class TokenAuthServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -4439,10 +4560,11 @@ export class UserProfilesServiceProxy {
      * @param longitude (optional) 
      * @param latitude (optional) 
      * @param about (optional) 
+     * @param timezoneId (optional) 
      * @param profilePicture (optional) 
      * @return Success
      */
-    saveDetail(firstName: string | null | undefined, lastName: string | null | undefined, dateOfBirth: moment.Moment | null | undefined, addressLine1: string | null | undefined, addressLine2: string | null | undefined, city: string | null | undefined, zipOrPostCode: string | null | undefined, stateOrProvince: string | null | undefined, country: string | null | undefined, longitude: number | null | undefined, latitude: number | null | undefined, about: string | null | undefined, profilePicture: FileParameter | null | undefined): Observable<void> {
+    saveDetail(firstName: string | null | undefined, lastName: string | null | undefined, dateOfBirth: moment.Moment | null | undefined, addressLine1: string | null | undefined, addressLine2: string | null | undefined, city: string | null | undefined, zipOrPostCode: string | null | undefined, stateOrProvince: string | null | undefined, country: string | null | undefined, longitude: number | null | undefined, latitude: number | null | undefined, about: string | null | undefined, timezoneId: string | null | undefined, profilePicture: FileParameter | null | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/UserProfiles/SaveDetail";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -4471,6 +4593,8 @@ export class UserProfilesServiceProxy {
             content_.append("Latitude", latitude.toString());
         if (about !== null && about !== undefined)
             content_.append("About", about.toString());
+        if (timezoneId !== null && timezoneId !== undefined)
+            content_.append("TimezoneId", timezoneId.toString());
         if (profilePicture !== null && profilePicture !== undefined)
             content_.append("ProfilePicture", profilePicture.data, profilePicture.fileName ? profilePicture.fileName : "ProfilePicture");
 
@@ -5229,6 +5353,61 @@ export class UserProfilesServiceProxy {
     }
 
     protected processSaveUserSupportServiceSessionRate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @param timezoneId (optional) 
+     * @return Success
+     */
+    saveUserTimezoneDetail(userId: number | undefined, timezoneId: string | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserProfiles/SaveUserTimezoneDetail?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (timezoneId !== undefined && timezoneId !== null)
+            url_ += "timezoneId=" + encodeURIComponent("" + timezoneId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveUserTimezoneDetail(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveUserTimezoneDetail(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSaveUserTimezoneDetail(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -8615,6 +8794,7 @@ export class UserProfile implements IUserProfile {
     about: string | undefined;
     userId: number;
     isConsented: boolean;
+    timezoneId: string | undefined;
     user: User;
     id: string;
 
@@ -8642,6 +8822,7 @@ export class UserProfile implements IUserProfile {
             this.about = _data["about"];
             this.userId = _data["userId"];
             this.isConsented = _data["isConsented"];
+            this.timezoneId = _data["timezoneId"];
             this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
             this.id = _data["id"];
         }
@@ -8669,6 +8850,7 @@ export class UserProfile implements IUserProfile {
         data["about"] = this.about;
         data["userId"] = this.userId;
         data["isConsented"] = this.isConsented;
+        data["timezoneId"] = this.timezoneId;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         data["id"] = this.id;
         return data; 
@@ -8696,6 +8878,7 @@ export interface IUserProfile {
     about: string | undefined;
     userId: number;
     isConsented: boolean;
+    timezoneId: string | undefined;
     user: User;
     id: string;
 }
@@ -10046,6 +10229,148 @@ export interface ITenantDtoPagedResultDto {
     items: TenantDto[] | undefined;
 }
 
+export class TimeSpan implements ITimeSpan {
+    readonly ticks: number;
+    readonly days: number;
+    readonly hours: number;
+    readonly milliseconds: number;
+    readonly minutes: number;
+    readonly seconds: number;
+    readonly totalDays: number;
+    readonly totalHours: number;
+    readonly totalMilliseconds: number;
+    readonly totalMinutes: number;
+    readonly totalSeconds: number;
+
+    constructor(data?: ITimeSpan) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            (<any>this).ticks = _data["ticks"];
+            (<any>this).days = _data["days"];
+            (<any>this).hours = _data["hours"];
+            (<any>this).milliseconds = _data["milliseconds"];
+            (<any>this).minutes = _data["minutes"];
+            (<any>this).seconds = _data["seconds"];
+            (<any>this).totalDays = _data["totalDays"];
+            (<any>this).totalHours = _data["totalHours"];
+            (<any>this).totalMilliseconds = _data["totalMilliseconds"];
+            (<any>this).totalMinutes = _data["totalMinutes"];
+            (<any>this).totalSeconds = _data["totalSeconds"];
+        }
+    }
+
+    static fromJS(data: any): TimeSpan {
+        data = typeof data === 'object' ? data : {};
+        let result = new TimeSpan();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["ticks"] = this.ticks;
+        data["days"] = this.days;
+        data["hours"] = this.hours;
+        data["milliseconds"] = this.milliseconds;
+        data["minutes"] = this.minutes;
+        data["seconds"] = this.seconds;
+        data["totalDays"] = this.totalDays;
+        data["totalHours"] = this.totalHours;
+        data["totalMilliseconds"] = this.totalMilliseconds;
+        data["totalMinutes"] = this.totalMinutes;
+        data["totalSeconds"] = this.totalSeconds;
+        return data; 
+    }
+
+    clone(): TimeSpan {
+        const json = this.toJSON();
+        let result = new TimeSpan();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITimeSpan {
+    ticks: number;
+    days: number;
+    hours: number;
+    milliseconds: number;
+    minutes: number;
+    seconds: number;
+    totalDays: number;
+    totalHours: number;
+    totalMilliseconds: number;
+    totalMinutes: number;
+    totalSeconds: number;
+}
+
+export class TimezoneInfoDto implements ITimezoneInfoDto {
+    id: string | undefined;
+    displayName: string | undefined;
+    baseUtcOffset: TimeSpan;
+    standardName: string | undefined;
+    daylightName: string | undefined;
+
+    constructor(data?: ITimezoneInfoDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.displayName = _data["displayName"];
+            this.baseUtcOffset = _data["baseUtcOffset"] ? TimeSpan.fromJS(_data["baseUtcOffset"]) : <any>undefined;
+            this.standardName = _data["standardName"];
+            this.daylightName = _data["daylightName"];
+        }
+    }
+
+    static fromJS(data: any): TimezoneInfoDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TimezoneInfoDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["displayName"] = this.displayName;
+        data["baseUtcOffset"] = this.baseUtcOffset ? this.baseUtcOffset.toJSON() : <any>undefined;
+        data["standardName"] = this.standardName;
+        data["daylightName"] = this.daylightName;
+        return data; 
+    }
+
+    clone(): TimezoneInfoDto {
+        const json = this.toJSON();
+        let result = new TimezoneInfoDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITimezoneInfoDto {
+    id: string | undefined;
+    displayName: string | undefined;
+    baseUtcOffset: TimeSpan;
+    standardName: string | undefined;
+    daylightName: string | undefined;
+}
+
 export class AuthenticateModel implements IAuthenticateModel {
     userNameOrEmailAddress: string;
     password: string;
@@ -10322,6 +10647,7 @@ export class UserProfileDto implements IUserProfileDto {
     profilePictureFileName: string | undefined;
     about: string | undefined;
     userId: number;
+    timezoneId: string | undefined;
     user: UserDto;
 
     constructor(data?: IUserProfileDto) {
@@ -10347,6 +10673,7 @@ export class UserProfileDto implements IUserProfileDto {
             this.profilePictureFileName = _data["profilePictureFileName"];
             this.about = _data["about"];
             this.userId = _data["userId"];
+            this.timezoneId = _data["timezoneId"];
             this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
         }
     }
@@ -10372,6 +10699,7 @@ export class UserProfileDto implements IUserProfileDto {
         data["profilePictureFileName"] = this.profilePictureFileName;
         data["about"] = this.about;
         data["userId"] = this.userId;
+        data["timezoneId"] = this.timezoneId;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         return data; 
     }
@@ -10397,6 +10725,7 @@ export interface IUserProfileDto {
     profilePictureFileName: string | undefined;
     about: string | undefined;
     userId: number;
+    timezoneId: string | undefined;
     user: UserDto;
 }
 
@@ -10496,6 +10825,7 @@ export enum SessionStatus {
 export class SessionDto implements ISessionDto {
     timeZone: string | undefined;
     sessionDate: moment.Moment;
+    sessionDateUtc: string | undefined;
     duration: number;
     tutorOfferId: string;
     status: SessionStatus;
@@ -10516,6 +10846,7 @@ export class SessionDto implements ISessionDto {
         if (_data) {
             this.timeZone = _data["timeZone"];
             this.sessionDate = _data["sessionDate"] ? moment(_data["sessionDate"].toString()) : <any>undefined;
+            this.sessionDateUtc = _data["sessionDateUtc"];
             this.duration = _data["duration"];
             this.tutorOfferId = _data["tutorOfferId"];
             this.status = _data["status"];
@@ -10536,6 +10867,7 @@ export class SessionDto implements ISessionDto {
         data = typeof data === 'object' ? data : {};
         data["timeZone"] = this.timeZone;
         data["sessionDate"] = this.sessionDate ? this.sessionDate.toISOString() : <any>undefined;
+        data["sessionDateUtc"] = this.sessionDateUtc;
         data["duration"] = this.duration;
         data["tutorOfferId"] = this.tutorOfferId;
         data["status"] = this.status;
@@ -10556,6 +10888,7 @@ export class SessionDto implements ISessionDto {
 export interface ISessionDto {
     timeZone: string | undefined;
     sessionDate: moment.Moment;
+    sessionDateUtc: string | undefined;
     duration: number;
     tutorOfferId: string;
     status: SessionStatus;
@@ -11181,6 +11514,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
     latitude: number | undefined;
     about: string | undefined;
     profilePictureFileName: string | undefined;
+    timezoneId: string | undefined;
     dateJoined: moment.Moment;
     role: string | undefined;
 
@@ -11209,6 +11543,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
             this.latitude = _data["latitude"];
             this.about = _data["about"];
             this.profilePictureFileName = _data["profilePictureFileName"];
+            this.timezoneId = _data["timezoneId"];
             this.dateJoined = _data["dateJoined"] ? moment(_data["dateJoined"].toString()) : <any>undefined;
             this.role = _data["role"];
         }
@@ -11237,6 +11572,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
         data["latitude"] = this.latitude;
         data["about"] = this.about;
         data["profilePictureFileName"] = this.profilePictureFileName;
+        data["timezoneId"] = this.timezoneId;
         data["dateJoined"] = this.dateJoined ? this.dateJoined.toISOString() : <any>undefined;
         data["role"] = this.role;
         return data; 
@@ -11265,6 +11601,7 @@ export interface IGetProfileDetailDto {
     latitude: number | undefined;
     about: string | undefined;
     profilePictureFileName: string | undefined;
+    timezoneId: string | undefined;
     dateJoined: moment.Moment;
     role: string | undefined;
 }

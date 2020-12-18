@@ -21,5 +21,14 @@ namespace Academically.Services.Timezones
             var result = timezones.Select(t => ObjectMapper.Map<TimezoneInfoDto>(t));
             return result;
         }
+
+        public TimezoneInfoDto GetTimezoneInfo(string timezoneId)
+        {
+            var timezoneInfo = new TimezoneInfoDto();
+            var timezone = TimeZoneInfo.FindSystemTimeZoneById(timezoneId);
+            ObjectMapper.Map(timezone, timezoneInfo);
+
+            return timezoneInfo;
+        }
     }
 }

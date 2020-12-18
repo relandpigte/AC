@@ -319,6 +319,14 @@ namespace Academically.Services.UserProfiles
             }
         }
 
+        public async Task SaveUserTimezoneDetail(long userId, string timezoneId)
+        {
+            var userProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == userId);
+            userProfile.TimezoneId = timezoneId;
+
+            await _userProfilesRepository.UpdateAsync(userProfile);
+        }
+
         private byte[] MakeThumbnail(byte[] imageBytes, int thumbWidth, int thumbHeight)
         {
             using (MemoryStream ms = new MemoryStream())
