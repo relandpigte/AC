@@ -1,9 +1,9 @@
 import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { GetTutorOfferDto, JoinSessionDto, SessionDto, UserProfileDto, UserSessionsServiceProxy, UserTutorialDto } from '@shared/service-proxies/service-proxies';
-import { VideoConferenceService } from '@shared/services/video-conference.service';
+import { GetTutorOfferDto, SessionDto, UserProfileDto, UserSessionsServiceProxy, UserTutorialDto } from '@shared/service-proxies/service-proxies';
 import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
+import { VideoConferenceService } from '@shared/services/video-conference.service';
 
 @Component({
   selector: 'app-session',
@@ -13,14 +13,15 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 })
 export class SessionComponent extends AppComponentBase implements OnInit, OnDestroy {
   id: string;
-  localCallId = 'agora_local';
-  remoteCalls: string[];
+  localCallId = 'local-caller';
+  remoteCallId = 'remote-caller';
   isVideoEnabled = false;
   isMicEnabled = true;
   isRemoteVideEnabled = false;
   session: SessionDto = new SessionDto();
   localParticipant: UserProfileDto;
   remoteParticipant: UserProfileDto;
+  remoteParticipantName: string;
 
   constructor(
     injector: Injector,
@@ -32,10 +33,9 @@ export class SessionComponent extends AppComponentBase implements OnInit, OnDest
     super(injector);
     this.session.tutorOffer = new GetTutorOfferDto();
     this.session.tutorOffer.tutorial = new UserTutorialDto();
-    this._videoConferenceService.initialize(this.appSession.userId, this.localCallId);
-    this._videoConferenceService.remoteCallsUpdate.subscribe(remoteCalls => {
-      this.remoteCalls = remoteCalls;
-      if (this.remoteCalls.length > 0) {
+    this._videoConferenceService.initialize(this.appSession.userId, this.localCallId, this.remoteCallId);
+    this._videoConferenceService.remoteCallUpdate.subscribe(isJoining => {
+      if (isJoining) {
         if (this.session.tutorOffer.tutor.userId === this.appSession.userId) {
           this.remoteParticipant = this.session.tutorOffer.tutorial.student;
         } else {
@@ -79,12 +79,16 @@ export class SessionComponent extends AppComponentBase implements OnInit, OnDest
   private getSession(): void {
     this._sessionsService.join(this.id).subscribe(joinSessionResult => {
       this.session = joinSessionResult.session;
-      if (joinSessionResult.session.tutorOffer.tutor.userId === this.appSession.userId) {
-        this.localParticipant = joinSessionResult.session.tutorOffer.tutor;
-      } else {
-        this.localParticipant = joinSessionResult.session.tutorOffer.tutorial.student;
-      }
-      this._videoConferenceService.join(joinSessionResult.channelName, joinSessionResult.channelToken);
+      this._videoConferenceService.join(joinSessionResult.channelName, joinSessionResult.channelToken, this.isVideoEnabled, this.isMicEnabled)
+        .then(() => {
+          if (joinSessionResult.session.tutorOffer.tutor.userId === this.appSession.userId) {
+            this.localParticipant = joinSessionResult.session.tutorOffer.tutor;
+            this.remoteParticipantName = joinSessionResult.session.tutorOffer.tutorial.student.user.fullName;
+          } else {
+            this.localParticipant = joinSessionResult.session.tutorOffer.tutorial.student;
+            this.remoteParticipantName = joinSessionResult.session.tutorOffer.tutor.user.fullName;
+          }
+        });
     });
   }
 }
