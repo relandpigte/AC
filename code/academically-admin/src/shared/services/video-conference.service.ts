@@ -1,168 +1,102 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { AgoraClient, ClientEvent, NgxAgoraService, Stream, StreamEvent } from 'ngx-agora';
+import AgoraRTC, { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack } from "agora-rtc-sdk-ng";
+import { environment } from 'environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VideoConferenceService {
-  remoteCallsUpdate = new EventEmitter<string[]>();
+  remoteCallUpdate = new EventEmitter<boolean>(false);
   remoteVideoToggle = new EventEmitter<boolean>(false);
-  remoteAudioToggle = new EventEmitter<boolean>(false);
-  localCallId: string;
-  uid: number;
-  remoteCalls: string[] = [];
-  channelName: string;
-  channelToken: string;
-
-  private agoraClient: AgoraClient;
-  private localStream: Stream;
+  private localCallId: string;
+  private remoteCallId: string;
+  private uid: number;
+  private agoraClient: IAgoraRTCClient;
+  private localAudioTrack: IMicrophoneAudioTrack;
+  private localVideoTrack: ICameraVideoTrack;
 
   constructor(
-    private _agoraService: NgxAgoraService
   ) { }
 
-  public initialize(uid, localCallId): void {
+  public initialize(uid: number, localCallId: string, remoteCallId: string): void {
     this.uid = uid;
     this.localCallId = localCallId;
-
-    this.agoraClient = this._agoraService.createClient({ mode: 'rtc', codec: 'h264' });
-    this.assignClientHandlers();
-
-    this.localStream = this._agoraService.createStream({ streamID: this.uid, audio: true, video: true, screen: false });
-    this.assignLocalStreamHandlers();
+    this.remoteCallId = remoteCallId;
+    this.agoraClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
   }
 
-  public join(channelName: string, channelToken: string): void {
-    this.initLocalStream(() => this.connect(channelName, channelToken, uid => this.publish(), error => console.error(error)));
+  public async join(channelName: string, channelToken: string, isVideoEnabled: boolean, isAudioEnabled: boolean): Promise<void> {
+    await this.agoraClient.join(environment.agora.appId, channelName, channelToken, this.uid);
+    await this.initEvents();
+    await this.publishLocalTracks().then(() => {
+      this.initUserMedia(isVideoEnabled, isAudioEnabled);
+    });
   }
 
-  public leave(): void {
-    this.agoraClient.leave();
-    this.localStream.close();
+  public async leave(): Promise<void> {
+    if (this.localVideoTrack.isPlaying) {
+      this.localVideoTrack.close();
+    }
+    if (this.localAudioTrack.isPlaying) {
+      this.localAudioTrack.close();
+    }
+    await this.agoraClient.leave();
   }
 
-  public toggleVideo(isEnabled: boolean) {
-    isEnabled ? this.localStream.unmuteVideo() : this.localStream.muteVideo();
+  public async toggleVideo(isEnabled: boolean): Promise<void> {
+    this.localVideoTrack.setEnabled(isEnabled);
   }
 
-  public toggleAudio(isEnabled: boolean) {
-    isEnabled ? this.localStream.unmuteAudio() : this.localStream.muteAudio();
+  public async toggleAudio(isEnabled: boolean): Promise<void> {
+    this.localAudioTrack.setEnabled(isEnabled);
   }
 
-  /**
-   * Attempts to connect to an online chat room where users can host and receive A/V streams.
-   */
-  private connect(channelName: string, channelToken: string, onSuccess?: (uid: number | string) => void, onFailure?: (error: Error) => void): void {
-    this.agoraClient.join(channelToken, channelName, this.uid, onSuccess, onFailure);
-  }
+  private async publishLocalTracks(): Promise<void> {
+    this.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+    this.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+    await this.agoraClient.publish([this.localAudioTrack, this.localVideoTrack]);
+  };
 
-  /**
-   * Attempts to upload the created local A/V stream to a joined chat room.
-   */
-  private publish(): void {
-    this.agoraClient.publish(this.localStream, err => console.log('Publish local stream error: ' + err));
-  }
-
-  private assignClientHandlers(): void {
-    this.agoraClient.on(ClientEvent.LocalStreamPublished, (evt) => {
-      console.log('Publish local stream successfully');
+  private async initEvents(): Promise<void> {
+    this.agoraClient.on('user-joined', async (user) => {
+      this.remoteCallUpdate.next(true);
+    });
+    this.agoraClient.on('user-left', async (user) => {
+      this.remoteCallUpdate.next(false);
     });
 
-    this.agoraClient.on(ClientEvent.Error, (error) => {
-      console.log('Got error msg:', error.reason);
-      if (error.reason === 'DYNAMIC_KEY_TIMEOUT') {
-        this.agoraClient.renewChannelKey(
-          '',
-          () => console.log('Renewed the channel key successfully.'),
-          (renewError) => console.error('Renew channel key failed: ', renewError)
-        );
+    this.agoraClient.on('user-published', async (user, mediaType) => {
+      await this.agoraClient.subscribe(user, mediaType);
+
+      if (mediaType === 'video') {
+        const remoteVideoTrack = user.videoTrack;
+        remoteVideoTrack.play(this.remoteCallId);
+        this.remoteVideoToggle.next(true);
+      }
+
+      if (mediaType === 'audio') {
+        const remoteAudioTrack = user.audioTrack;
+        remoteAudioTrack.play();
       }
     });
 
-    this.agoraClient.on(ClientEvent.RemoteStreamAdded, (evt) => {
-      const stream = evt.stream as Stream;
-      this.agoraClient.subscribe(stream, { audio: true, video: true }, (err) => {
-        console.log('Subscribe stream failed', err);
-      });
-    });
+    this.agoraClient.on('user-unpublished', async (user, mediaType) => {
+      await this.agoraClient.unsubscribe(user, mediaType);
 
-    this.agoraClient.on(ClientEvent.RemoteStreamSubscribed, (evt) => {
-      const stream = evt.stream as Stream;
-      const id = this.getRemoteId(stream);
-      if (!this.remoteCalls.length) {
-        this.remoteCalls.push(id);
-        this.remoteCallsUpdate.next(this.remoteCalls);
-        setTimeout(() => stream.play(id), 1000);
+      if (mediaType === 'video') {
+        this.remoteVideoToggle.next(false);
       }
-    });
-
-    this.agoraClient.on(ClientEvent.RemoteStreamRemoved, (evt) => {
-      const stream = evt.stream as Stream;
-      if (stream) {
-        stream.stop();
-        this.remoteCalls = [];
-        this.remoteCallsUpdate.next(this.remoteCalls);
-        console.log(`Remote stream is removed ${stream.getId()}`);
-      }
-    });
-
-    this.agoraClient.on(ClientEvent.PeerLeave, (evt) => {
-      const stream = evt.stream as Stream;
-      if (stream) {
-        stream.stop();
-        this.remoteCalls = this.remoteCalls.filter((call) => call !== `${this.getRemoteId(stream)}`);
-        this.remoteCallsUpdate.next(this.remoteCalls);
-        console.log(`${evt.uid} left from this channel`);
-      }
-    });
-
-    this.agoraClient.on(ClientEvent.RemoveVideoMuted, (evt) => {
-      console.log('Video Muted: ' + evt.uid);
-      this.remoteVideoToggle.next(false);
-    });
-
-    this.agoraClient.on(ClientEvent.RemoteVideoUnmuted, (evt) => {
-      console.log('Video Unmuted: ' + evt.uid);
-      this.remoteVideoToggle.next(true);
-    });
-
-    this.agoraClient.on(ClientEvent.RemoteAudioMuted, (evt) => {
-      console.log('Audio Muted: ' + evt.uid);
-      this.remoteAudioToggle.next(false);
-    });
-
-    this.agoraClient.on(ClientEvent.RemoteAudioUnmuted, (evt) => {
-      console.log('Audio Unmuted: ' + evt.uid);
-      this.remoteAudioToggle.next(true);
     });
   }
 
-  private assignLocalStreamHandlers(): void {
-    this.localStream.on(StreamEvent.MediaAccessAllowed, () => {
-      console.log('accessAllowed');
-    });
-
-    // The user has denied access to the camera and mic.
-    this.localStream.on(StreamEvent.MediaAccessDenied, () => {
-      console.log('accessDenied');
-    });
-  }
-
-  private initLocalStream(onSuccess?: () => any): void {
-    this.localStream.init(
-      () => {
-        // The user has granted access to the camera and mic.
-        this.localStream.muteVideo();
-        this.localStream.play(this.localCallId);
-        if (onSuccess) {
-          onSuccess();
-        }
-      },
-      err => console.error('getUserMedia failed', err)
-    );
-  }
-
-  private getRemoteId(stream: Stream): string {
-    return `agora_remote-${stream.getId()}`;
+  private initUserMedia(isVideoEnabled: boolean, isAudioEnabled: boolean): void {
+    if (!isVideoEnabled) {
+      this.localVideoTrack.setEnabled(false);
+    }
+    if (!isAudioEnabled) {
+      this.localAudioTrack.setEnabled(false);
+    }
+    this.localVideoTrack.play(this.localCallId);
+    this.localAudioTrack.play();
   }
 }

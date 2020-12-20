@@ -19,8 +19,11 @@
   </div>
 </div>
 
-<div *ngFor="let callId of remoteCalls" [id]="callId" class="remote"></div>
+<div [id]="remoteCallId" class="remote"></div>
 <div *ngIf="!isRemoteVideEnabled || !remoteParticipant" class="remote-overlay">
+  <div *ngIf="!remoteParticipant && localParticipant" class="remote-waiting">
+    Waiting for {{ remoteParticipantName }}...
+  </div>
   <div *ngIf="remoteParticipant" class="remote-overlay-text">
     <img *ngIf="remoteParticipant.profilePictureFileName"
       [src]="getProfilePicture(remoteParticipant.profilePictureFileName, remoteParticipant.userId)" />
