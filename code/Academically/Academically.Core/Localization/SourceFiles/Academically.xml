@@ -28,7 +28,7 @@
     <text name="GuardianConsentEmailMessage">
       <![CDATA[
           <p>Hello {0},</p>
-          <p>We have received a request from {1} to authorize them </p>
+          <p>We have received a request from {1} to authorize them. </p>
           <p>Please click on the link below to view full details and confirm permission.</p>
           <p><a href="{2}">LINK HERE<a/><p>
           <p>Regards,<p/>
