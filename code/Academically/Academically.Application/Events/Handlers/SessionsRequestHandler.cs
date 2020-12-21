@@ -66,28 +66,30 @@ namespace Academically.Events.Handlers
             var tutor = await _usersRepository.FirstOrDefaultAsync(e => e.Id == tutorProfile.UserId);
             var clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
             var studentProposalLink = $"{clientRootAddress}app/student-proposal/{userTutorial.Id}";
-            var sessionDate = _timezoneDomainService.ConvertToLocal(eventData.Entity.SessionDate, eventData.Entity.TimeZone);
+
+            var timezoneInfo = TimeZoneInfo.FindSystemTimeZoneById(studentProfile.TimezoneId);
+            var sessionDate = TimeZoneInfo.ConvertTimeFromUtc(eventData.Entity.SessionDate.Value, timezoneInfo);
             var sessionDuration = GetDuration(eventData.Entity.Duration);
             var sessionName = "Tutorial Session with " + student.FullName;
 
             if (eventData.Entity.Status == SessionStatus.Confirmed)
             {
                 var subject = L("ConfirmSessionEmailSubject");
-                var body = L("ConfirmSessionEmailMessage", tutor.FullName, sessionDate, sessionDuration, eventData.Entity.TimeZone);
+                var body = L("ConfirmSessionEmailMessage", tutor.FullName, sessionDate, sessionDuration, timezoneInfo.DisplayName);
                 await _emailService.SendAsync(student.EmailAddress, student.EmailAddress, subject, body);
 
                 var adminSubject = L("ConfirmSessionAdminEmailSubject");
-                var adminBody = L("ConfirmSessionAdminEmailMessage", sessionName, sessionDate, sessionDuration, eventData.Entity.TimeZone);
+                var adminBody = L("ConfirmSessionAdminEmailMessage", sessionName, sessionDate, sessionDuration, timezoneInfo.DisplayName);
                 await _emailService.SendAsync(tutor.EmailAddress, tutor.EmailAddress, adminSubject, adminBody);
             } 
             else if(eventData.Entity.Status == SessionStatus.Pending)
             {
                 var subject = L("BookSessionEmailSubject");
-                var body = L("BookSessionEmailMessage", tutor.FullName, sessionDate, sessionDuration, eventData.Entity.TimeZone);
+                var body = L("BookSessionEmailMessage", tutor.FullName, sessionDate, sessionDuration, timezoneInfo.DisplayName);
                 await _emailService.SendAsync(student.EmailAddress, student.EmailAddress, subject, body);
 
                 var adminSubject = L("BookSessionAminEmailSubject");
-                var adminBody = L("BookSessionAminEmailMessage", sessionName, sessionDate, sessionDuration, eventData.Entity.TimeZone, studentProposalLink);
+                var adminBody = L("BookSessionAminEmailMessage", sessionName, sessionDate, sessionDuration, timezoneInfo.DisplayName, studentProposalLink);
                 await _emailService.SendAsync(tutor.EmailAddress, tutor.EmailAddress, adminSubject, adminBody);
             }
         }

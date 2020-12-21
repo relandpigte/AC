@@ -22,6 +22,7 @@ namespace Academically.Entities
         public string About { get; set; }
         public long UserId { get; set; }
         public bool IsConsented { get; set; }
+        public string TimezoneId { get; set; }
 
         [ForeignKey("UserId")]
         public virtual User User { get; set; }

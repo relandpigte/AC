@@ -19,6 +19,7 @@ using Abp.Json;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using Abp.Timing;
 
 namespace Academically.Web.Host.Startup
 {
@@ -33,6 +34,7 @@ namespace Academically.Web.Host.Startup
         public Startup(IWebHostEnvironment env)
         {
             _appConfiguration = env.GetAppConfiguration();
+            Clock.Provider = ClockProviders.Utc;
         }
 
         public void ConfigureServices(IServiceCollection services)

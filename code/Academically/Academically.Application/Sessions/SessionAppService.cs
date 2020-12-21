@@ -52,8 +52,6 @@ namespace Academically.Sessions
                 {
                     output.User.ProfilePictureUrl = _fileManagerService.GetFileUrl(userProfile.ProfilePictureFileName, user.Id, AppSettingNames.Aws_S3_Folders_ProfilePictures);
                     output.User.DirectoryBaseUrl = _fileManagerService.GetDirectoryUrl();
-                    output.User.BirthDate = userProfile.DateOfBirth;
-                    output.User.IsConsented = userProfile.IsConsented;
                 }
             }
 

@@ -8,8 +8,26 @@
           </h4>
         </div>
         <div class="card-body">
-          <div class="form-group">
-            <h5 class="col-form-label" for="SessionDate">{{ 'YourTimeZone' | localize }}: {{ userSession.timeZone }}</h5>
+          <div class="form-row">
+            <div class="col-md-6">
+              <div class="form-group required">
+                <label class="col-form-label" for="Timezone">{{ 'Timezone' | localize }}</label>
+                <select
+                  [(ngModel)]="userProfile.timezoneId"
+                  id="Timezone"
+                  name="Timezone"
+                  type="text"
+                  class="form-control"
+                  #timezoneModel="ngModel"
+                  #timezoneEl
+                  (change)="onTimezoneChange()"
+                >
+                  <option [ngValue]="null">{{ 'SelectTimezone' | localize }}</option>
+                  <option *ngFor="let timezone of timezones" [value]="timezone.id">{{ timezone.displayName }}</option>
+                </select>
+                <abp-validation-summary [control]="timezoneModel" [controlEl]="timezoneEl"> </abp-validation-summary>
+              </div>
+            </div>
           </div>
           <div class="form-row">
             <div class="col-md-4">

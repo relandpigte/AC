@@ -15,7 +15,6 @@ namespace Academically.Services.GuardianProfiles.Dto
         public string LastName { get; set; }
         public string Email { get; set; }
         public string IPAddress { get; set; }
-        public Guid ReferenceId { get; set; }
         public SourceType SourceType { get; set; }
         public DateTime? ConsentedDate { get; set; }
         public bool? HasExpired { get; set; }

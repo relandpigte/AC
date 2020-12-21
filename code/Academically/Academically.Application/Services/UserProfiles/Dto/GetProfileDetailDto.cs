@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Academically.Services.Timezones.Dto;
+using System;
 
 namespace Academically.Services.UserProfiles.Dto
 {
@@ -18,8 +19,11 @@ namespace Academically.Services.UserProfiles.Dto
         public double? Latitude { get; set; }
         public string About { get; set; }
         public string ProfilePictureFileName { get; set; }
+        public string TimezoneId { get; set; }
 
         public DateTime DateJoined { get; set; }
         public string Role { get; set; }
+
+        public TimezoneInfoDto TimeZoneInfo { get; set; }
     }
 }

@@ -18,6 +18,7 @@ using Academically.Entities;
 using Academically.Services.DisciplineTaxonomyStudyLevels.Dto;
 using Academically.Services.ResearchMethods.Dto;
 using Academically.Services.SupportServices.Dto;
+using Academically.Services.Timezones.Dto;
 using Academically.Services.UserProfiles.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -82,7 +83,7 @@ namespace Academically.Services.UserProfiles
 
             var userProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == userId);
             var role = await _roleManager.GetRoleByIdAsync(user.Roles.FirstOrDefault().RoleId);
-
+            var timezoneInfo = new TimezoneInfoDto();
             var output = ObjectMapper.Map<GetProfileDetailDto>(userProfile);
             if (output == null)
             {
@@ -317,6 +318,14 @@ namespace Academically.Services.UserProfiles
                 ObjectMapper.Map(input, userSupportServiceSessionRate);
                 await _userSupportServiceSessionRateRepository.UpdateAsync(userSupportServiceSessionRate);
             }
+        }
+
+        public async Task SaveUserTimezoneDetail(long userId, string timezoneId)
+        {
+            var userProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == userId);
+            userProfile.TimezoneId = timezoneId;
+
+            await _userProfilesRepository.UpdateAsync(userProfile);
         }
 
         private byte[] MakeThumbnail(byte[] imageBytes, int thumbWidth, int thumbHeight)

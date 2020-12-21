@@ -13,22 +13,13 @@ namespace Academically.DomainServices.Timezone
 
         }
 
-        public DateTime ConvertToLocal(DateTime? startDate, string timezone)
+        public DateTime ConvertToUtc(DateTime date, string timezoneId = "")
         {
-            var timeZone = TZConvert.GetTimeZoneInfo(timezone);
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone.Id);
-            var dateStartUtc = TimeZoneInfo.ConvertTimeFromUtc(startDate.Value, timeZoneInfo);
+            var timezoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneId);
+            date = DateTime.SpecifyKind(date, DateTimeKind.Unspecified);
+            var result = TimeZoneInfo.ConvertTimeToUtc(date, timezoneInfo);
 
-            return dateStartUtc;
-        }
-
-        public DateTime ConvertToUtc(DateTime? startDate, string timezone)
-        {
-            var timeZone = TZConvert.GetTimeZoneInfo(timezone);
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone.Id);
-            var dateStartUtc = TimeZoneInfo.ConvertTimeToUtc(startDate.Value, timeZoneInfo);
-
-            return dateStartUtc;
+            return result;
         }
     }
 }

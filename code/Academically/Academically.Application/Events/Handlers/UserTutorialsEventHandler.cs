@@ -7,7 +7,10 @@ using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Localization;
+using Abp.Timing;
+using Abp.UI;
 using Academically.Application.Shared.Services;
+using Academically.Authorization.Users;
 using Academically.Configuration;
 using Academically.DomainServices.Tutorials;
 using Academically.Entities;
@@ -16,10 +19,13 @@ namespace Academically.Events.Handlers
 {
     public class UserTutorialsEventHandler :
         EventHandlerBase,
-        IAsyncEventHandler<EntityCreatedEventData<UserTutorial>>
+        IAsyncEventHandler<EntityCreatedEventData<UserTutorial>>,
+        IAsyncEventHandler<EntityCreatingEventData<UserTutorial>>
     {
         private readonly IRepository<SupportService, Guid> _supportServicesRepository;
         private readonly IRepository<DisciplineTaxonomy, Guid> _disciplineTaxonomiesRepository;
+        private readonly IRepository<User, long> _usersRepository;
+        private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
         private readonly ITutorialsDomainService _tutorialsDomainService;
         private readonly ISettingManager _settingManager;
         private readonly IEmailService _emailService;
@@ -27,6 +33,8 @@ namespace Academically.Events.Handlers
         public UserTutorialsEventHandler(
             IRepository<SupportService, Guid> supportServicesRepository,
             IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomiesRepository,
+            IRepository<User, long> usersRepository,
+            IRepository<UserProfile, Guid> userProfilesRepository,
             ITutorialsDomainService tutorialsDomainService,
             ISettingManager settingManager,
             IEmailService emailService,
@@ -38,6 +46,8 @@ namespace Academically.Events.Handlers
             _tutorialsDomainService = tutorialsDomainService;
             _settingManager = settingManager;
             _emailService = emailService;
+            _usersRepository = usersRepository;
+            _userProfilesRepository = userProfilesRepository;
         }
 
         [UnitOfWork]
@@ -63,6 +73,16 @@ namespace Academically.Events.Handlers
                 string body = L("StudentProposalEmailMessage", tutor.User.Name, areasOfStudySb.ToString(), studentProposalLink);
                 await _emailService.SendAsync(tutor.User.FullName, tutor.User.EmailAddress, subject, body);
             }
+        }
+
+        public async Task HandleEventAsync(EntityCreatingEventData<UserTutorial> eventData)
+        {
+            var student = await _userProfilesRepository.FirstOrDefaultAsync(e => e.Id == eventData.Entity.StudentId);
+            var today = Clock.Now;
+            var age = today.Year - student.DateOfBirth.Value.Year;
+
+            if(!student.IsConsented && age <= 18)
+                throw new UserFriendlyException(L("MustBeAuthorized"));
         }
     }
 }

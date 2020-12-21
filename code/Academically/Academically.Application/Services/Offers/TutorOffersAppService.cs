@@ -162,6 +162,9 @@ namespace Academically.Services.Offers
             var tutor = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
             var offer = await _tutorOffersRepository.GetAll()
                 .Include(e => e.Sessions)
+                    .ThenInclude(e => e.TutorOffer)
+                        .ThenInclude(e => e.Tutorial)
+                            .ThenInclude(e => e.Student) 
                 .Where(e => e.TutorId == tutor.Id && e.TutorialId == tutorialId)
                 .Select(e => ObjectMapper.Map<GetTutorOfferDto>(e))
                 .FirstOrDefaultAsync();
@@ -170,7 +173,7 @@ namespace Academically.Services.Offers
             {
                 foreach (var session in offer.Sessions)
                 {
-                    session.SessionDate = _timezoneDomainService.ConvertToLocal(session.SessionDate, session.TimeZone);
+                    session.TimeZone = TimeZoneInfo.FindSystemTimeZoneById(session.TutorOffer.Tutorial.Student.TimezoneId).DisplayName;
                 }
 
                 return offer;
@@ -187,20 +190,7 @@ namespace Academically.Services.Offers
                         .ThenInclude(e => e.Tutor)
                             .ThenInclude(e => e.User)
                 .Where(e => e.TutorialId == tutorialId)
-                .Select(e => new GetTutorOfferDto { 
-                    Tutor = new UserProfileDto
-                    {
-                        ProfilePictureFileName = e.Tutor.ProfilePictureFileName,
-                        UserId = e.Tutor.UserId,
-                        User = ObjectMapper.Map<UserDto>(e.Tutor.User)
-                    },
-                    Sessions = e.Sessions.Select(s => new SessionDto { 
-                        SessionDate = _timezoneDomainService.ConvertToLocal(s.SessionDate, s.TimeZone),
-                        Duration = s.Duration,
-                        TimeZone = s.TimeZone,
-                        Status = s.Status
-                    })
-                })
+                .Select(e => ObjectMapper.Map<GetTutorOfferDto>(e))
                 .ToListAsync();
 
             return offer;

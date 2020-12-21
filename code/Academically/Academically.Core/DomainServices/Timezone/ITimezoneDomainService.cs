@@ -8,7 +8,6 @@ namespace Academically.DomainServices.Timezone
 {
     public interface ITimezoneDomainService : IDomainService
     {
-        DateTime ConvertToLocal(DateTime? startDate, string timezone);
-        DateTime ConvertToUtc(DateTime? startDate, string timezone);
+        DateTime ConvertToUtc(DateTime date, string timezoneId = "");
     }
 }
