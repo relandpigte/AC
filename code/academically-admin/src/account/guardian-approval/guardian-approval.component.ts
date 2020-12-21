@@ -46,7 +46,7 @@ export class GuardianApprovalComponent extends AppComponentBase implements OnIni
     this.guardianConsentProfileService.grantAccessToTutorial(this.guardianConsentProfile).subscribe(() => {
       this.isLoading = false;
       this.notify.success(this.l('TutorialAccessGranted'));
-      this._router.navigate(['thank-you']);
+      this._router.navigate(['/account/thank-you']);
     });
   }
 

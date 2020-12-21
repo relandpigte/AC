@@ -24,6 +24,8 @@ import { TwoFactorAuthenticationComponent } from './two-factor-authentication/tw
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { CompleteResetPasswordComponent } from './reset-password/complete-reset-password/complete-reset-password.component';
+import { GuardianApprovalComponent } from './guardian-approval/guardian-approval.component';
+import { ThankYouComponent } from './thank-you/thank-you.component';
 
 @NgModule({
     imports: [
@@ -53,6 +55,8 @@ import { CompleteResetPasswordComponent } from './reset-password/complete-reset-
         NotFoundComponent,
         ResetPasswordComponent,
         CompleteResetPasswordComponent,
+        GuardianApprovalComponent,
+        ThankYouComponent,
     ],
     entryComponents: [
         // tenant

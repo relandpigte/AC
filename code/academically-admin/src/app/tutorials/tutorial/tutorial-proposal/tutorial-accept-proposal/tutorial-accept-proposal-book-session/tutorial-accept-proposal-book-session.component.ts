@@ -62,12 +62,6 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
     this.userSession.status = 1; // pending
   }
 
-  onTimezoneChange(): void {
-    this._userProfilesService.saveUserTimezoneDetail(this.userProfile.userId, this.userProfile.timezoneId).subscribe(() => {
-      this.notify.success(this.l('SavedSuccessfully'));
-    });
-  }
-
   getTotal(): any {
     let total = 0;
     if (this.acceptTutorialBookSessionCheck) {
@@ -88,7 +82,9 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
     const sessionDuration = Number(this.hourSessionDurationInput) * 60 + Number(this.minuteSessionDurationInput);
     this.userSession.duration = sessionDuration;
     this.userSession.sessionDate = moment(sessionDate, 'YYYY-MM-DD HH:mm:ss').utc();
-
+    if (this.userSession.sessionDate) {
+      this.saveTimezoneDetail();
+    }
     this._userSessionService.save(this.userSession).subscribe(() => {
       this.isLoading = false;
       this.notify.success(this.l('SavedSuccessfully'));
@@ -141,5 +137,9 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
     this._timezonesService.getTimezonesList().subscribe(timezones => {
       this.timezones = timezones;
     });
+  }
+
+  private saveTimezoneDetail(): void {
+    this._userProfilesService.saveUserTimezoneDetail(this.userProfile.userId, this.userProfile.timezoneId).subscribe(() => {});
   }
 }

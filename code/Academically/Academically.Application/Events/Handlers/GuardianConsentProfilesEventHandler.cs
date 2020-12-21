@@ -47,7 +47,7 @@ namespace Academically.Events.Handlers
             var student = await _usersRepository.FirstOrDefaultAsync(e => e.Id == Convert.ToInt64(eventData.Entity.ReferenceId));
             var studentProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == student.Id);
             var clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
-            var link = $"{clientRootAddress}guardian-approval/{eventData.Entity.Id}";
+            var link = $"{clientRootAddress}account/guardian-approval/{eventData.Entity.Id}";
             var guardianFullName = $"{eventData.Entity.FirstName} {eventData.Entity.LastName}";
 
             if(!eventData.Entity.HasExpired.Value)

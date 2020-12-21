@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="NoTimezone">No timezone configured</text>
     <text name="SelectTimezone">Select Timezone</text>
     <text name="ConfirmsGuardianTutorialAccesSubject">Academically - Tutorial Access Granted</text>
     <text name="ConfirmGuardianTutorialAccessMessage">

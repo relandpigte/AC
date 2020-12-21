@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { GuardianApprovalComponent } from 'non-users/guardian-approval/guardian-approval.component';
-import { ThankYouComponent } from 'non-users/thank-you/thank-you.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/app/home', pathMatch: 'full' },
@@ -14,9 +12,7 @@ const routes: Routes = [
     path: 'app',
     loadChildren: () => import('app/app.module').then(m => m.AppModule), // Lazy load account module
     data: { preload: true }
-  },
-  { path: 'guardian-approval/:id', component: GuardianApprovalComponent, pathMatch: 'full' },
-  { path: 'thank-you', component: ThankYouComponent, pathMatch: 'full' }
+  }
 ];
 
 @NgModule({

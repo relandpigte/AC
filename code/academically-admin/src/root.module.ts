@@ -19,8 +19,6 @@ import { API_BASE_URL } from '@shared/service-proxies/service-proxies';
 
 import { RootComponent } from './root.component';
 import { AppInitializer } from './app-initializer';
-import { GuardianApprovalComponent } from './non-users/guardian-approval/guardian-approval.component';
-import { ThankYouComponent } from './non-users/thank-you/thank-you.component';
 import { FormsModule } from '@angular/forms';
 
 export function getCurrentLanguage(): string {
@@ -46,7 +44,7 @@ export function getCurrentLanguage(): string {
     RootRoutingModule,
     FormsModule
   ],
-  declarations: [RootComponent, GuardianApprovalComponent, ThankYouComponent],
+  declarations: [RootComponent],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true },
     {

@@ -20,7 +20,6 @@
                   class="form-control"
                   #timezoneModel="ngModel"
                   #timezoneEl
-                  (change)="onTimezoneChange()"
                 >
                   <option [ngValue]="null">{{ 'SelectTimezone' | localize }}</option>
                   <option *ngFor="let timezone of timezones" [value]="timezone.id">{{ timezone.displayName }}</option>
