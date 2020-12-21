@@ -29,7 +29,7 @@ namespace Academically.Services.Timezones
         {
             var timezoneInfo = new TimezoneInfoDto();
             var profile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == userId);
-            if (profile.TimezoneId != null) 
+            if (profile != null && profile.TimezoneId != null) 
             {
                 var timezone = TimeZoneInfo.FindSystemTimeZoneById(profile.TimezoneId);
                 ObjectMapper.Map(timezone, timezoneInfo);
