@@ -11,7 +11,7 @@
               {{ activeTab }}
             </h1>
           </div>
-          <div class="col-12 col-md-auto mt-2 mt-md-0 mb-md-3">
+          <div class="col-12 col-md-auto mt-2 mt-md-0 mb-md-3" *ngIf="timezoneName">
             <span class="text-muted"> {{ 'YourTimeZone' | localize }}: {{ timezoneName }} </span>
           </div>
         </div>

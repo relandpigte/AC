@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Repositories;
+using Academically.Authorization.Users;
 using Academically.DomainServices.Timezone;
 using Academically.Entities;
 using Academically.Services.GuardianProfiles.Dto;
@@ -14,15 +15,18 @@ namespace Academically.Services.GuardianConsentProfiles
         private readonly IRepository<GuardianConsentProfile, Guid> _guardianProfilesRepository;
         private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
         private readonly IRepository<UserTutorial, Guid> _userTutorialsRepository;
+        private readonly IRepository<User, long> _usersRepository;
 
         public GuardianProfilesAppService(
             IRepository<GuardianConsentProfile, Guid> guardianProfileRepository, 
             IRepository<UserProfile, Guid> userProfilesRepository, 
+            IRepository<User, long> usersRepository,
             IRepository<UserTutorial, Guid> userTutorialsRepository)
         {
             _guardianProfilesRepository = guardianProfileRepository;
             _userProfilesRepository = userProfilesRepository;
             _userTutorialsRepository = userTutorialsRepository;
+            _usersRepository = usersRepository;
         }
 
         public async Task SaveAsync(GuardianConsentProfileDto input)
@@ -32,6 +36,7 @@ namespace Academically.Services.GuardianConsentProfiles
             if(guardianProfile == null)
             {
                 guardianProfile = new GuardianConsentProfile();
+                guardianProfile.ReferenceId = AbpSession.UserId.Value.ToString() ;
             }
             
             ObjectMapper.Map(input, guardianProfile);
@@ -41,15 +46,15 @@ namespace Academically.Services.GuardianConsentProfiles
 
         public async Task GrantAccessToTutorialAsync(GuardianConsentProfileDto input)
         {
-            var userTutorial = await _userTutorialsRepository.FirstOrDefaultAsync(e => e.Id == input.ReferenceId);
-            var userProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.Id == userTutorial.StudentId);
-            var guardianProfile = await _guardianProfilesRepository.FirstOrDefaultAsync(e => e.Id == input.Id);
-
+            var guardianConsent = await _guardianProfilesRepository.FirstOrDefaultAsync(e => e.Id == input.Id);
+            var student = await _usersRepository.FirstOrDefaultAsync(e => e.Id == Convert.ToInt64(guardianConsent.ReferenceId));
+            var userProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == student.Id);
+            
             userProfile.IsConsented = true;
             await _userProfilesRepository.UpdateAsync(userProfile);
 
-            ObjectMapper.Map(input, guardianProfile);
-            await _guardianProfilesRepository.UpdateAsync(guardianProfile);
+            ObjectMapper.Map(input, guardianConsent);
+            await _guardianProfilesRepository.UpdateAsync(guardianConsent);
         }
 
         public async Task<GuardianConsentProfileDto> GetAsync(Guid id)

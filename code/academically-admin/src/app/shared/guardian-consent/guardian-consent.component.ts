@@ -10,7 +10,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   styleUrls: ['./guardian-consent.component.less']
 })
 export class GuardianConsentComponent extends AppComponentBase implements OnInit {
-  @Input() tutorialId: string;
   isLoading = false;
   guardianConsent: GuardianConsentProfileDto = new GuardianConsentProfileDto();
   constructor(
@@ -22,9 +21,7 @@ export class GuardianConsentComponent extends AppComponentBase implements OnInit
     super(injector);
   }
 
-  ngOnInit(): void {
-    this.guardianConsent.referenceId = this.tutorialId;
-  }
+  ngOnInit(): void {}
 
   onFormSubmit(): void {
     this.isLoading = true;
@@ -34,7 +31,7 @@ export class GuardianConsentComponent extends AppComponentBase implements OnInit
     this._guardianConsentProfileService.save(this.guardianConsent).subscribe(() => {
       this.isLoading = false;
       this.message.info(this.l('SendConsentSuccesfully'));
-      this.router.navigate(['/app/tutorial', this.tutorialId]);
+      this.router.navigate(['/app/home']);
       this._modalRef.hide();
     });
   }

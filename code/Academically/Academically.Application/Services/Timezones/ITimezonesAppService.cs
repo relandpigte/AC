@@ -4,12 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Academically.Services.Timezones
 {
     public interface ITimezonesAppService : IApplicationService
     {
         IEnumerable<TimezoneInfoDto> GetTimezonesList();
-        TimezoneInfoDto GetTimezoneInfo(string timezoneId);
+        Task<TimezoneInfoDto> GetTimezoneInfo(long userId);
     }
 }

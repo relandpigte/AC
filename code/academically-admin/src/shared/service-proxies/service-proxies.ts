@@ -2943,13 +2943,15 @@ export class TimezonesServiceProxy {
     }
 
     /**
-     * @param timezoneId (optional) 
+     * @param userId (optional) 
      * @return Success
      */
-    getTimezoneInfo(timezoneId: string | null | undefined): Observable<TimezoneInfoDto> {
+    getTimezoneInfo(userId: number | undefined): Observable<TimezoneInfoDto> {
         let url_ = this.baseUrl + "/api/services/app/Timezones/GetTimezoneInfo?";
-        if (timezoneId !== undefined && timezoneId !== null)
-            url_ += "timezoneId=" + encodeURIComponent("" + timezoneId) + "&";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -8044,7 +8046,6 @@ export class GuardianConsentProfileDto implements IGuardianConsentProfileDto {
     lastName: string | undefined;
     email: string | undefined;
     ipAddress: string | undefined;
-    referenceId: string;
     sourceType: SourceType;
     consentedDate: moment.Moment | undefined;
     hasExpired: boolean | undefined;
@@ -8065,7 +8066,6 @@ export class GuardianConsentProfileDto implements IGuardianConsentProfileDto {
             this.lastName = _data["lastName"];
             this.email = _data["email"];
             this.ipAddress = _data["ipAddress"];
-            this.referenceId = _data["referenceId"];
             this.sourceType = _data["sourceType"];
             this.consentedDate = _data["consentedDate"] ? moment(_data["consentedDate"].toString()) : <any>undefined;
             this.hasExpired = _data["hasExpired"];
@@ -8086,7 +8086,6 @@ export class GuardianConsentProfileDto implements IGuardianConsentProfileDto {
         data["lastName"] = this.lastName;
         data["email"] = this.email;
         data["ipAddress"] = this.ipAddress;
-        data["referenceId"] = this.referenceId;
         data["sourceType"] = this.sourceType;
         data["consentedDate"] = this.consentedDate ? this.consentedDate.toISOString() : <any>undefined;
         data["hasExpired"] = this.hasExpired;
@@ -8107,7 +8106,6 @@ export interface IGuardianConsentProfileDto {
     lastName: string | undefined;
     email: string | undefined;
     ipAddress: string | undefined;
-    referenceId: string;
     sourceType: SourceType;
     consentedDate: moment.Moment | undefined;
     hasExpired: boolean | undefined;
@@ -9824,8 +9822,6 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
     profilePictureUrl: string | undefined;
     directoryBaseUrl: string | undefined;
     roles: string[] | undefined;
-    birthDate: moment.Moment | undefined;
-    isConsented: boolean;
     id: number;
 
     constructor(data?: IUserLoginInfoDto) {
@@ -9850,8 +9846,6 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
                 for (let item of _data["roles"])
                     this.roles.push(item);
             }
-            this.birthDate = _data["birthDate"] ? moment(_data["birthDate"].toString()) : <any>undefined;
-            this.isConsented = _data["isConsented"];
             this.id = _data["id"];
         }
     }
@@ -9876,8 +9870,6 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
             for (let item of this.roles)
                 data["roles"].push(item);
         }
-        data["birthDate"] = this.birthDate ? this.birthDate.toISOString() : <any>undefined;
-        data["isConsented"] = this.isConsented;
         data["id"] = this.id;
         return data; 
     }
@@ -9898,8 +9890,6 @@ export interface IUserLoginInfoDto {
     profilePictureUrl: string | undefined;
     directoryBaseUrl: string | undefined;
     roles: string[] | undefined;
-    birthDate: moment.Moment | undefined;
-    isConsented: boolean;
     id: number;
 }
 

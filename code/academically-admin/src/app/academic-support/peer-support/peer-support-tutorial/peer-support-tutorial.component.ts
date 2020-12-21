@@ -130,19 +130,21 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
         this.picture,
         this.userTutorialDisciplineTaxonomiesIds
       )
-      .subscribe(tutorialId => {
-        this.isLoading = false;
-        if (this.getAge() > 18) {
+      .subscribe(
+        tutorialId => {
+          this.isLoading = false;
           this.clearUploader();
           this.notify.success(this.l('SavedSuccessfully'));
           this.form.reset();
           this.userTutorialDisciplineTaxonomiesIds = [];
           this.selectedDisciplineTaxonomies = [];
           this.router.navigate(['/app/tutorial', tutorialId]);
-        } else {
-          this.showConsentModal(tutorialId);
+        },
+        error => {
+          this.isLoading = false;
+          this.showConsentModal();
         }
-      });
+      );
   }
 
   private getDisciplineTaxonomies(): void {
@@ -210,17 +212,8 @@ export class PeerSupportTutorialComponent extends AppComponentBase implements On
     this.tutorialPictureInput.nativeElement.value = '';
     this.tutorialPicturePlaceholderText = this.imageUploadPlaceholderText;
   }
-
-  private getAge() {
-    var years = moment().diff(this.appSession.user.birthDate, 'years');
-    return years;
-  }
-
-  private showConsentModal(tutorialId: string) {
+  private showConsentModal() {
     const modalSettings = this.defaultModalSettings;
-    modalSettings.initialState = {
-      tutorialId: tutorialId
-    };
     const _modalRef = this._modalService.show(GuardianConsentComponent, modalSettings);
     const modal: GuardianConsentComponent = _modalRef.content;
   }

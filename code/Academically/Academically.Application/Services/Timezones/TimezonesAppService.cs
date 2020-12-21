@@ -1,4 +1,6 @@
-﻿using Academically.Services.Timezones.Dto;
+﻿using Abp.Domain.Repositories;
+using Academically.Entities;
+using Academically.Services.Timezones.Dto;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,9 +12,10 @@ namespace Academically.Services.Timezones
 {
     public class TimezonesAppService : AcademicallyAppServiceBase, ITimezonesAppService
     {
-        public TimezonesAppService()
+        private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
+        public TimezonesAppService(IRepository<UserProfile, Guid> userProfilesRepository)
         {
-
+            _userProfilesRepository = userProfilesRepository;
         }
 
         public IEnumerable<TimezoneInfoDto> GetTimezonesList()
@@ -22,13 +25,19 @@ namespace Academically.Services.Timezones
             return result;
         }
 
-        public TimezoneInfoDto GetTimezoneInfo(string timezoneId)
+        public async Task<TimezoneInfoDto> GetTimezoneInfo(long userId)
         {
             var timezoneInfo = new TimezoneInfoDto();
-            var timezone = TimeZoneInfo.FindSystemTimeZoneById(timezoneId);
-            ObjectMapper.Map(timezone, timezoneInfo);
+            var profile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == userId);
+            if (profile.TimezoneId != null) 
+            {
+                var timezone = TimeZoneInfo.FindSystemTimeZoneById(profile.TimezoneId);
+                ObjectMapper.Map(timezone, timezoneInfo);
 
-            return timezoneInfo;
+                return timezoneInfo;
+            } 
+            
+            return null;
         }
     }
 }

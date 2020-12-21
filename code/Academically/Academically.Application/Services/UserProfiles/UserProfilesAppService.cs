@@ -94,7 +94,6 @@ namespace Academically.Services.UserProfiles
             output.LastName = user.Surname;
             output.DateJoined = user.CreationTime;
             output.Role = role.DisplayName;
-            output.TimeZoneInfo = ObjectMapper.Map(TimeZoneInfo.FindSystemTimeZoneById(userProfile.TimezoneId), timezoneInfo);
 
             return output;
         }
