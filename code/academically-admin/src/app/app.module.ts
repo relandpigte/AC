@@ -16,7 +16,6 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NgxQRCodeModule } from '@techiediaries/ngx-qrcode';
 import { TreeModule } from 'primeng/tree';
-import { NgxAgoraModule } from 'ngx-agora';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 // directives
 import { Select2Directive } from '@shared/directives/select2.directive';
@@ -54,8 +53,6 @@ import { SidebarSmallComponent } from './layout/navigations/sidebar-small/sideba
 import { GoogleMapsService } from '@shared/services/google-maps.service';
 import { ProfileService } from '@shared/services/profile.service';
 import { VideoConferenceService } from '@shared/services/video-conference.service';
-// environment
-import { environment } from 'environments/environment';
 // components
 import { AppComponent } from './app.component';
 import { HomeComponent } from '@app/home/home.component';
@@ -225,10 +222,13 @@ import { GuardianConsentComponent } from './shared/guardian-consent/guardian-con
     BsDatepickerModule.forRoot(),
     NgxQRCodeModule,
     TreeModule,
-    NgxAgoraModule.forRoot({ AppID: environment.agora.appId }),
     TooltipModule.forRoot()
   ],
-  providers: [GoogleMapsService, ProfileService, VideoConferenceService],
+  providers: [
+    GoogleMapsService,
+    ProfileService,
+    VideoConferenceService,
+  ],
   entryComponents: [
     // tenants
     CreateTenantDialogComponent,
@@ -251,4 +251,4 @@ import { GuardianConsentComponent } from './shared/guardian-consent/guardian-con
     TutorialExpandProposalComponent
   ]
 })
-export class AppModule {}
+export class AppModule { }
