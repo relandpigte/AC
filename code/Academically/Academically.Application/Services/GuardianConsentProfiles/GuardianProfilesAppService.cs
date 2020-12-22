@@ -1,6 +1,5 @@
 ﻿using Abp.Domain.Repositories;
 using Academically.Authorization.Users;
-using Academically.DomainServices.Timezone;
 using Academically.Entities;
 using Academically.Services.GuardianProfiles.Dto;
 using Microsoft.EntityFrameworkCore;

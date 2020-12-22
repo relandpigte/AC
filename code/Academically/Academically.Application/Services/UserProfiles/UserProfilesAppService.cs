@@ -83,7 +83,7 @@ namespace Academically.Services.UserProfiles
 
             var userProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == userId);
             var role = await _roleManager.GetRoleByIdAsync(user.Roles.FirstOrDefault().RoleId);
-            var timezoneInfo = new TimezoneInfoDto();
+            var timezoneInfo = new TimeZoneDto();
             var output = ObjectMapper.Map<GetProfileDetailDto>(userProfile);
             if (output == null)
             {
@@ -94,6 +94,7 @@ namespace Academically.Services.UserProfiles
             output.LastName = user.Surname;
             output.DateJoined = user.CreationTime;
             output.Role = role.DisplayName;
+            output.TimezoneId = await _settingManager.GetSettingValueAsync(TimingSettingNames.TimeZone);
 
             return output;
         }
@@ -142,6 +143,11 @@ namespace Academically.Services.UserProfiles
             {
                 await _fileManagerService.DeleteAsync(folder, oldFileName);
                 await _fileManagerService.DeleteAsync(thumbnailsFolder, oldFileName);
+            }
+
+            if (!input.TimezoneId.IsNullOrWhiteSpace())
+            {
+                await SaveUserTimezoneDetail(userId, input.TimezoneId);
             }
         }
 
@@ -322,10 +328,8 @@ namespace Academically.Services.UserProfiles
 
         public async Task SaveUserTimezoneDetail(long userId, string timezoneId)
         {
-            var userProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == userId);
-            userProfile.TimezoneId = timezoneId;
-
-            await _userProfilesRepository.UpdateAsync(userProfile);
+            var user = await _usersRepository.GetAsync(userId);
+            await _settingManager.ChangeSettingForUserAsync(user.ToUserIdentifier(), TimingSettingNames.TimeZone, timezoneId);
         }
 
         private byte[] MakeThumbnail(byte[] imageBytes, int thumbWidth, int thumbHeight)

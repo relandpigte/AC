@@ -1,0 +1,160 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1608543938824-1">
+        <createTable tableName="AcademicallyTimeZones">
+            <column name="Id" type="VARCHAR(100)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DisplayOrder" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1608543938824-2">
+        <dropColumn columnName="TimezoneId" tableName="AcademicallyUserProfiles"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1608543938824-3">
+        <sql>
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Dateline Standard Time', '(UTC-12:00) International Date Line West', 0);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('UTC-11', '(UTC-11:00) Coordinated Universal Time-11', 1);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Aleutian Standard Time', '(UTC-10:00) Aleutian Islands', 2);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Hawaiian Standard Time', '(UTC-10:00) Hawaii', 3);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Marquesas Standard Time', '(UTC-09:30) Marquesas Islands', 4);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Alaskan Standard Time', '(UTC-09:00) Alaska', 5);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('UTC-09', '(UTC-09:00) Coordinated Universal Time-09', 6);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Pacific Standard Time (Mexico)', '(UTC-08:00) Baja California', 7);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('UTC-08', '(UTC-08:00) Coordinated Universal Time-08', 8);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Pacific Standard Time', '(UTC-08:00) Pacific Time (US &amp; Canada)', 9);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('US Mountain Standard Time', '(UTC-07:00) Arizona', 10);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Mountain Standard Time (Mexico)', '(UTC-07:00) Chihuahua, La Paz, Mazatlan', 11);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Mountain Standard Time', '(UTC-07:00) Mountain Time (US &amp; Canada)', 12);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Central America Standard Time', '(UTC-06:00) Central America', 13);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Central Standard Time', '(UTC-06:00) Central Time (US &amp; Canada)', 14);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Easter Island Standard Time', '(UTC-06:00) Easter Island', 15);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Central Standard Time (Mexico)', '(UTC-06:00) Guadalajara, Mexico City, Monterrey', 16);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Canada Central Standard Time', '(UTC-06:00) Saskatchewan', 17);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('SA Pacific Standard Time', '(UTC-05:00) Bogota, Lima, Quito, Rio Branco', 18);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Eastern Standard Time (Mexico)', '(UTC-05:00) Chetumal', 19);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Eastern Standard Time', '(UTC-05:00) Eastern Time (US &amp; Canada)', 20);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Haiti Standard Time', '(UTC-05:00) Haiti', 21);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Cuba Standard Time', '(UTC-05:00) Havana', 22);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('US Eastern Standard Time', '(UTC-05:00) Indiana (East)', 23);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Turks And Caicos Standard Time', '(UTC-05:00) Turks and Caicos', 24);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Paraguay Standard Time', '(UTC-04:00) Asuncion', 25);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Atlantic Standard Time', '(UTC-04:00) Atlantic Time (Canada)', 26);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Venezuela Standard Time', '(UTC-04:00) Caracas', 27);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Central Brazilian Standard Time', '(UTC-04:00) Cuiaba', 28);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('SA Western Standard Time', '(UTC-04:00) Georgetown, La Paz, Manaus, San Juan', 29);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Pacific SA Standard Time', '(UTC-04:00) Santiago', 30);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Newfoundland Standard Time', '(UTC-03:30) Newfoundland', 31);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Tocantins Standard Time', '(UTC-03:00) Araguaina', 32);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('E. South America Standard Time', '(UTC-03:00) Brasilia', 33);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('SA Eastern Standard Time', '(UTC-03:00) Cayenne, Fortaleza', 34);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Argentina Standard Time', '(UTC-03:00) City of Buenos Aires', 35);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Greenland Standard Time', '(UTC-03:00) Greenland', 36);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Montevideo Standard Time', '(UTC-03:00) Montevideo', 37);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Magallanes Standard Time', '(UTC-03:00) Punta Arenas', 38);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Saint Pierre Standard Time', '(UTC-03:00) Saint Pierre and Miquelon', 39);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Bahia Standard Time', '(UTC-03:00) Salvador', 40);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('UTC-02', '(UTC-02:00) Coordinated Universal Time-02', 41);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Azores Standard Time', '(UTC-01:00) Azores', 42);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Cape Verde Standard Time', '(UTC-01:00) Cabo Verde Is.', 43);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('UTC', '(UTC) Coordinated Universal Time', 44);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('GMT Standard Time', '(UTC+00:00) Dublin, Edinburgh, Lisbon, London', 45);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Greenwich Standard Time', '(UTC+00:00) Monrovia, Reykjavik', 46);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Sao Tome Standard Time', '(UTC+00:00) Sao Tome', 47);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Morocco Standard Time', '(UTC+01:00) Casablanca', 48);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('W. Europe Standard Time', '(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna', 49);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Central Europe Standard Time', '(UTC+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague', 50);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Romance Standard Time', '(UTC+01:00) Brussels, Copenhagen, Madrid, Paris', 51);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Central European Standard Time', '(UTC+01:00) Sarajevo, Skopje, Warsaw, Zagreb', 52);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('W. Central Africa Standard Time', '(UTC+01:00) West Central Africa', 53);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Jordan Standard Time', '(UTC+02:00) Amman', 54);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('GTB Standard Time', '(UTC+02:00) Athens, Bucharest', 55);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Middle East Standard Time', '(UTC+02:00) Beirut', 56);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Egypt Standard Time', '(UTC+02:00) Cairo', 57);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('E. Europe Standard Time', '(UTC+02:00) Chisinau', 58);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Syria Standard Time', '(UTC+02:00) Damascus', 59);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('West Bank Standard Time', '(UTC+02:00) Gaza, Hebron', 60);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('South Africa Standard Time', '(UTC+02:00) Harare, Pretoria', 61);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('FLE Standard Time', '(UTC+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius', 62);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Israel Standard Time', '(UTC+02:00) Jerusalem', 63);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Kaliningrad Standard Time', '(UTC+02:00) Kaliningrad', 64);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Sudan Standard Time', '(UTC+02:00) Khartoum', 65);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Libya Standard Time', '(UTC+02:00) Tripoli', 66);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Namibia Standard Time', '(UTC+02:00) Windhoek', 67);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Arabic Standard Time', '(UTC+03:00) Baghdad', 68);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Turkey Standard Time', '(UTC+03:00) Istanbul', 69);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Arab Standard Time', '(UTC+03:00) Kuwait, Riyadh', 70);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Belarus Standard Time', '(UTC+03:00) Minsk', 71);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Russian Standard Time', '(UTC+03:00) Moscow, St. Petersburg', 72);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('E. Africa Standard Time', '(UTC+03:00) Nairobi', 73);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Iran Standard Time', '(UTC+03:30) Tehran', 74);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Arabian Standard Time', '(UTC+04:00) Abu Dhabi, Muscat', 75);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Astrakhan Standard Time', '(UTC+04:00) Astrakhan, Ulyanovsk', 76);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Azerbaijan Standard Time', '(UTC+04:00) Baku', 77);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Russia Time Zone 3', '(UTC+04:00) Izhevsk, Samara', 78);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Mauritius Standard Time', '(UTC+04:00) Port Louis', 79);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Saratov Standard Time', '(UTC+04:00) Saratov', 80);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Georgian Standard Time', '(UTC+04:00) Tbilisi', 81);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Volgograd Standard Time', '(UTC+04:00) Volgograd', 82);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Caucasus Standard Time', '(UTC+04:00) Yerevan', 83);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Afghanistan Standard Time', '(UTC+04:30) Kabul', 84);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('West Asia Standard Time', '(UTC+05:00) Ashgabat, Tashkent', 85);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Ekaterinburg Standard Time', '(UTC+05:00) Ekaterinburg', 86);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Pakistan Standard Time', '(UTC+05:00) Islamabad, Karachi', 87);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Qyzylorda Standard Time', '(UTC+05:00) Qyzylorda', 88);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('India Standard Time', '(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi', 89);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Sri Lanka Standard Time', '(UTC+05:30) Sri Jayawardenepura', 90);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Nepal Standard Time', '(UTC+05:45) Kathmandu', 91);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Central Asia Standard Time', '(UTC+06:00) Astana', 92);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Bangladesh Standard Time', '(UTC+06:00) Dhaka', 93);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Omsk Standard Time', '(UTC+06:00) Omsk', 94);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Myanmar Standard Time', '(UTC+06:30) Yangon (Rangoon)', 95);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('SE Asia Standard Time', '(UTC+07:00) Bangkok, Hanoi, Jakarta', 96);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Altai Standard Time', '(UTC+07:00) Barnaul, Gorno-Altaysk', 97);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('W. Mongolia Standard Time', '(UTC+07:00) Hovd', 98);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('North Asia Standard Time', '(UTC+07:00) Krasnoyarsk', 99);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('N. Central Asia Standard Time', '(UTC+07:00) Novosibirsk', 100);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Tomsk Standard Time', '(UTC+07:00) Tomsk', 101);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('China Standard Time', '(UTC+08:00) Beijing, Chongqing, Hong Kong, Urumqi', 102);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('North Asia East Standard Time', '(UTC+08:00) Irkutsk', 103);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Singapore Standard Time', '(UTC+08:00) Kuala Lumpur, Singapore', 104);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('W. Australia Standard Time', '(UTC+08:00) Perth', 105);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Taipei Standard Time', '(UTC+08:00) Taipei', 106);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Ulaanbaatar Standard Time', '(UTC+08:00) Ulaanbaatar', 107);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Aus Central W. Standard Time', '(UTC+08:45) Eucla', 108);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Transbaikal Standard Time', '(UTC+09:00) Chita', 109);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Tokyo Standard Time', '(UTC+09:00) Osaka, Sapporo, Tokyo', 110);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('North Korea Standard Time', '(UTC+09:00) Pyongyang', 111);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Korea Standard Time', '(UTC+09:00) Seoul', 112);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Yakutsk Standard Time', '(UTC+09:00) Yakutsk', 113);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Cen. Australia Standard Time', '(UTC+09:30) Adelaide', 114);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('AUS Central Standard Time', '(UTC+09:30) Darwin', 115);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('E. Australia Standard Time', '(UTC+10:00) Brisbane', 116);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('AUS Eastern Standard Time', '(UTC+10:00) Canberra, Melbourne, Sydney', 117);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('West Pacific Standard Time', '(UTC+10:00) Guam, Port Moresby', 118);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Tasmania Standard Time', '(UTC+10:00) Hobart', 119);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Vladivostok Standard Time', '(UTC+10:00) Vladivostok', 120);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Lord Howe Standard Time', '(UTC+10:30) Lord Howe Island', 121);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Bougainville Standard Time', '(UTC+11:00) Bougainville Island', 122);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Russia Time Zone 10', '(UTC+11:00) Chokurdakh', 123);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Magadan Standard Time', '(UTC+11:00) Magadan', 124);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Norfolk Standard Time', '(UTC+11:00) Norfolk Island', 125);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Sakhalin Standard Time', '(UTC+11:00) Sakhalin', 126);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Central Pacific Standard Time', '(UTC+11:00) Solomon Is., New Caledonia', 127);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Russia Time Zone 11', '(UTC+12:00) Anadyr, Petropavlovsk-Kamchatsky', 128);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('New Zealand Standard Time', '(UTC+12:00) Auckland, Wellington', 129);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('UTC+12', '(UTC+12:00) Coordinated Universal Time+12', 130);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Fiji Standard Time', '(UTC+12:00) Fiji', 131);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Chatham Islands Standard Time', '(UTC+12:45) Chatham Islands', 132);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('UTC+13', '(UTC+13:00) Coordinated Universal Time+13', 133);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Tonga Standard Time', '(UTC+13:00) Nuku’alofa', 134);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Samoa Standard Time', '(UTC+13:00) Samoa', 135);
+            INSERT INTO AcademicallyTimeZones (Id, Name, DisplayOrder) VALUES ('Line Islands Standard Time', '(UTC+14:00) Kiritimati Island', 136);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

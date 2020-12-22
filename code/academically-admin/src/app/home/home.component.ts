@@ -26,9 +26,9 @@ export class HomeComponent extends AppComponentBase implements OnInit {
   }
 
   private getTimezoneDetails(): void {
-    this._timezoneService.getTimezoneInfo(this.appSession.user.id).subscribe(timezone => {
+    this._timezoneService.get().subscribe(timezone => {
       if (timezone) {
-        this.timezoneName = timezone.displayName;
+        this.timezoneName = timezone.name;
       }
     });
   }

@@ -28,13 +28,9 @@ export class UpcomingSessionsWidgetComponent extends AppComponentBase implements
   }
 
   onJoinSessionClick(session: SessionDto): void {
-    const sStartTime = session.sessionDate.clone().utc(true).tz(session.timeZone).format(this.dateFormat);
-    const startTime = moment(sStartTime, this.dateFormat).subtract('minutes', 5);
-    const sEndTime = startTime.clone().add('minutes', session.duration).format(this.dateFormat);
-    const endTime = moment(sEndTime, this.dateFormat);
-    console.log(startTime);
-    console.log(endTime);
-    console.log(moment());
+    console.log(session);
+    const startTime = session.sessionDate.subtract('minutes', 5);
+    const endTime = startTime.clone().add('minutes', session.duration);
     if (moment().isBetween(startTime, endTime, undefined, '[]')) {
       this._router.navigate(['/app/session', session.id]);
     } else {
@@ -43,24 +39,22 @@ export class UpcomingSessionsWidgetComponent extends AppComponentBase implements
   }
 
   private getSessionDateDisplay(session: SessionDto): { colorClass: string, date: string } {
-    const sSessionDate = session.sessionDate.clone().utc(true).tz(session.timeZone).format(this.dateFormat);
-    const sessionDate = moment(sSessionDate, this.dateFormat);
     const dateNow = new Date();
-    if (sessionDate.isSame(dateNow, 'day')) {
-      var duration = moment.duration(sessionDate.diff(moment(dateNow)));
+    if (session.sessionDate.isSame(dateNow, 'day')) {
+      var duration = moment.duration(session.sessionDate.diff(moment(dateNow)));
       const hours = duration.hours();
       const minutes = duration.minutes();
       const seconds = duration.seconds();
       if (hours >= 0 && minutes >= 0 && seconds >= 0) {
         return {
           colorClass: 'text-red',
-          date: `${this.formatDoubleDigitNumber(hours)}:${this.formatDoubleDigitNumber(minutes)}:${this.formatDoubleDigitNumber(seconds)}`
+          date: `${this.formatDoubleDigitNumber(hours)}:${this.formatDoubleDigitNumber(minutes)}`
         };
       } else {
         return { colorClass: 'text-green', date: 'Ongoing' }
       }
     } else {
-      return { colorClass: 'text-muted', date: sessionDate.format('DD/MM/YYYY HH:mm:ss') };
+      return { colorClass: 'text-muted', date: session.sessionDate.format('DD/MM/YYYY hh:mm A') };
     }
   }
 

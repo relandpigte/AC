@@ -24,6 +24,6 @@ namespace Academically.Services.UserProfiles.Dto
         public DateTime DateJoined { get; set; }
         public string Role { get; set; }
 
-        public TimezoneInfoDto TimeZoneInfo { get; set; }
+        public TimeZoneDto TimeZoneInfo { get; set; }
     }
 }

@@ -6,8 +6,8 @@ import {
   FileParameter,
   AddressLookupServiceProxy,
   SuggestionDataDto,
-  TimezoneInfoDto,
-  TimezonesServiceProxy
+  TimezonesServiceProxy,
+  TimeZoneDto
 } from '@shared/service-proxies/service-proxies';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { countries } from '@shared/constants/countries';
@@ -44,7 +44,8 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
   isStudent = false;
   addressDataSource: Observable<SuggestionDataDto[]>;
   profilePictureUrl: string;
-  timezones: TimezoneInfoDto[] = [];
+  timezones: TimeZoneDto[] = [];
+  oldTimeZoneId = '';
 
   constructor(
     injector: Injector,
@@ -192,6 +193,9 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
       if (this.model.profilePictureFileName) {
         this.profilePictureUrl = this.getProfilePicture(this.model.profilePictureFileName, this.model.userId);
       }
+      if (this.model.timezoneId) {
+        this.oldTimeZoneId = this.model.timezoneId;
+      }
       this.setRequiredFields();
       this.isLoading = false;
       this._cdRef.detectChanges();
@@ -222,11 +226,15 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
         this.profilePicture
       )
       .subscribe(() => {
-        this.clearUploader();
         this.notify.info(this.l('SavedSuccessfully'));
-        abp.event.trigger(uiEvents.profileDetailsUpdated, this.model, this.profilePictureUrl);
         this.form.form.markAsPristine();
-        this.getDetails();
+        if (this.oldTimeZoneId != this.model.timezoneId) {
+          location.reload();
+        } else {
+          this.clearUploader();
+          abp.event.trigger(uiEvents.profileDetailsUpdated, this.model, this.profilePictureUrl);
+          this.getDetails();
+        }
       });
   }
 
@@ -287,7 +295,7 @@ export class AccountDetailsComponent extends AppComponentBase implements OnInit 
   }
 
   private getTimezonesList(): void {
-    this._timezonesService.getTimezonesList().subscribe(timezones => {
+    this._timezonesService.getAll().subscribe(timezones => {
       this.timezones = timezones;
     });
   }

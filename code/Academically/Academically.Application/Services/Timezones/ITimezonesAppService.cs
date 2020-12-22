@@ -1,16 +1,13 @@
-﻿using Abp.Application.Services;
-using Academically.Services.Timezones.Dto;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Abp.Application.Services;
+using Academically.Services.Timezones.Dto;
 
 namespace Academically.Services.Timezones
 {
     public interface ITimezonesAppService : IApplicationService
     {
-        IEnumerable<TimezoneInfoDto> GetTimezonesList();
-        Task<TimezoneInfoDto> GetTimezoneInfo(long userId);
+        Task<IEnumerable<TimeZoneDto>> GetAllAsync();
+        Task<TimeZoneDto> GetAsync();
     }
 }

@@ -56,4 +56,5 @@
 	<include file="ddml/ddml.2020-12-17-01.alter-guardianconsentprofiles-table.xml"/>
 	<include file="ddml/ddml.2020-12-18-01.alter-userprofiles-table.xml"/>
 	<include file="ddml/ddml.2020-12-21-01.alter-guardianconsentprofiles-table.xml"/>
+	<include file="ddml/ddml.2020-12-21-02.add-timezones-table.xml"/>
 </databaseChangeLog>

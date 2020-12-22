@@ -32,6 +32,8 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<DisciplineTaxonomyRequest> DisciplineTaxonomyRequests { get; set; }
         public virtual DbSet<Session> Sessions { get; set; }
         public virtual DbSet<GuardianConsentProfile> GuardianUserActivities { get; set; }
+        public virtual DbSet<TimeZone> TimeZones { get; set; }
+
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

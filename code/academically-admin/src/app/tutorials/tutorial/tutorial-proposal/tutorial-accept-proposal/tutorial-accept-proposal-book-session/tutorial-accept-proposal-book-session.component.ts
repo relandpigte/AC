@@ -4,7 +4,7 @@ import {
   GetProfileDetailDto,
   GetTutorOfferDto,
   SessionDto,
-  TimezoneInfoDto,
+  TimeZoneDto,
   TimezonesServiceProxy,
   UserProfilesServiceProxy,
   UserSessionsServiceProxy
@@ -23,7 +23,7 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
   @Output() sessionBooked = new EventEmitter<boolean>(false);
   userSession: SessionDto = new SessionDto();
   startTime: string;
-  timezones: TimezoneInfoDto[] = [];
+  timezones: TimeZoneDto[] = [];
   userProfile: GetProfileDetailDto = new GetProfileDetailDto();
   datePickerConfig: BsDatepickerConfig;
   hourInput = '00';
@@ -134,7 +134,7 @@ export class TutorialAcceptProposalBookSessionComponent extends AppComponentBase
   }
 
   private getTimezonesList(): void {
-    this._timezonesService.getTimezonesList().subscribe(timezones => {
+    this._timezonesService.getAll().subscribe(timezones => {
       this.timezones = timezones;
     });
   }

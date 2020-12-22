@@ -123,7 +123,7 @@
           #timezoneEl
         >
           <option [ngValue]="null">{{ 'SelectTimezone' | localize }}</option>
-          <option *ngFor="let timezone of timezones" [value]="timezone.id">{{ timezone.displayName }}</option>
+          <option *ngFor="let timezone of timezones" [value]="timezone.id">{{ timezone.name }}</option>
         </select>
         <abp-validation-summary [control]="timezoneModel" [controlEl]="timezoneEl"> </abp-validation-summary>
       </div>

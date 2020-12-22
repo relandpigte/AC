@@ -1,21 +1,20 @@
-﻿using Abp.Configuration;
+﻿using System;
+using System.Threading.Tasks;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Localization;
+using Abp.Timing;
+using Abp.Timing.Timezone;
 using Academically.Application.Shared.Services;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 using Academically.Configuration;
-using Academically.DomainServices.Timezone;
 using Academically.Entities;
 using Academically.Entities.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using TimeZoneConverter;
+using TimeZone = Academically.Entities.TimeZone;
 
 namespace Academically.Events.Handlers
 {
@@ -27,32 +26,32 @@ namespace Academically.Events.Handlers
         private readonly IRepository<TutorOffer, Guid> _tutorOffersRepository;
         private readonly IRepository<UserTutorial, Guid> _userTutorialsRepository;
         private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
-        private readonly ITimezoneDomainService _timezoneDomainService;
+        private readonly IRepository<TimeZone, string> _timeZonesRepository;
         private readonly ISettingManager _settingManager;
         private readonly IEmailService _emailService;
-        private readonly RoleManager _roleManager;
+        private readonly ITimeZoneConverter _timeZoneConverter;
 
 
         public SessionsRequestHandler(
             IRepository<User, long> usersRepository,
             IEmailService emailService,
-            RoleManager roleManager,
             ISettingManager settingManager,
             IRepository<TutorOffer, Guid> tutorOffersRepository,
             IRepository<UserTutorial, Guid> userTutorialsRepository,
             IRepository<UserProfile, Guid> userProfilesRepository,
-            ITimezoneDomainService timezoneDomainService,
-            ILocalizationManager localizationManager
+            IRepository<TimeZone, string> timeZonesRepository,
+            ILocalizationManager localizationManager,
+            ITimeZoneConverter timeZoneConverter
             ) : base(localizationManager)
         {
             _usersRepository = usersRepository;
             _emailService = emailService;
-            _roleManager = roleManager;
             _tutorOffersRepository = tutorOffersRepository;
             _userTutorialsRepository = userTutorialsRepository;
             _userProfilesRepository = userProfilesRepository;
+            _timeZonesRepository = timeZonesRepository;
             _settingManager = settingManager;
-            _timezoneDomainService = timezoneDomainService;
+            _timeZoneConverter = timeZoneConverter;
         }
         
         [UnitOfWork]
@@ -67,29 +66,30 @@ namespace Academically.Events.Handlers
             var clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
             var studentProposalLink = $"{clientRootAddress}app/student-proposal/{userTutorial.Id}";
 
-            var timezoneInfo = TimeZoneInfo.FindSystemTimeZoneById(studentProfile.TimezoneId);
-            var sessionDate = TimeZoneInfo.ConvertTimeFromUtc(eventData.Entity.SessionDate.Value, timezoneInfo);
+            var timeZoneId = await _settingManager.GetSettingValueAsync(TimingSettingNames.TimeZone);
+            var timeZone = await _timeZonesRepository.GetAsync(timeZoneId);
+            var sessionDate = _timeZoneConverter.Convert(eventData.Entity.SessionDate.Value).Value;
             var sessionDuration = GetDuration(eventData.Entity.Duration);
             var sessionName = "Tutorial Session with " + student.FullName;
 
             if (eventData.Entity.Status == SessionStatus.Confirmed)
             {
                 var subject = L("ConfirmSessionEmailSubject");
-                var body = L("ConfirmSessionEmailMessage", tutor.FullName, sessionDate, sessionDuration, timezoneInfo.DisplayName);
+                var body = L("ConfirmSessionEmailMessage", tutor.FullName, sessionDate, sessionDuration, timeZone.Name);
                 await _emailService.SendAsync(student.EmailAddress, student.EmailAddress, subject, body);
 
                 var adminSubject = L("ConfirmSessionAdminEmailSubject");
-                var adminBody = L("ConfirmSessionAdminEmailMessage", sessionName, sessionDate, sessionDuration, timezoneInfo.DisplayName);
+                var adminBody = L("ConfirmSessionAdminEmailMessage", sessionName, sessionDate, sessionDuration, timeZone.Name);
                 await _emailService.SendAsync(tutor.EmailAddress, tutor.EmailAddress, adminSubject, adminBody);
             } 
             else if(eventData.Entity.Status == SessionStatus.Pending)
             {
                 var subject = L("BookSessionEmailSubject");
-                var body = L("BookSessionEmailMessage", tutor.FullName, sessionDate, sessionDuration, timezoneInfo.DisplayName);
+                var body = L("BookSessionEmailMessage", tutor.FullName, sessionDate, sessionDuration, timeZone.Name);
                 await _emailService.SendAsync(student.EmailAddress, student.EmailAddress, subject, body);
 
                 var adminSubject = L("BookSessionAminEmailSubject");
-                var adminBody = L("BookSessionAminEmailMessage", sessionName, sessionDate, sessionDuration, timezoneInfo.DisplayName, studentProposalLink);
+                var adminBody = L("BookSessionAminEmailMessage", sessionName, sessionDate, sessionDuration, timeZone.Name, studentProposalLink);
                 await _emailService.SendAsync(tutor.EmailAddress, tutor.EmailAddress, adminSubject, adminBody);
             }
         }
