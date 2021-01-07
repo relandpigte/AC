@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Tabs">Tabs</text>
+    <text name="Projects">Projects</text>
     <text name="NoTimezone">No timezone configured</text>
     <text name="SelectTimezone">Select Timezone</text>
     <text name="ConfirmsGuardianTutorialAccesSubject">Academically - Tutorial Access Granted</text>

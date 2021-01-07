@@ -21,5 +21,6 @@ namespace Academically.Services.UserTutorials.Dto
         public IEnumerable<Guid> DisciplineTaxonomyIds { get; set; }
 
         public UserProfileDto Student { get; set; }
+        public IEnumerable<UserTutorialDisciplineTaxonomyDto> UserTutorialDisciplineTaxonomies { get; set; }
     }
 }

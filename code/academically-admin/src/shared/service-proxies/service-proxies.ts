@@ -3657,6 +3657,61 @@ export class TutorOffersServiceProxy {
         }
         return _observableOf<GetTutorOfferDto[]>(<any>null);
     }
+
+    /**
+     * @return Success
+     */
+    getTutorProjects(): Observable<GetTutorOfferDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/TutorOffers/GetTutorProjects";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTutorProjects(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTutorProjects(<any>response_);
+                } catch (e) {
+                    return <Observable<GetTutorOfferDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetTutorOfferDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTutorProjects(response: HttpResponseBase): Observable<GetTutorOfferDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(GetTutorOfferDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetTutorOfferDto[]>(<any>null);
+    }
 }
 
 @Injectable()
@@ -10625,6 +10680,7 @@ export class UserTutorialDto implements IUserTutorialDto {
     pictureFileName: string | undefined;
     disciplineTaxonomyIds: string[] | undefined;
     student: UserProfileDto;
+    userTutorialDisciplineTaxonomies: UserTutorialDisciplineTaxonomyDto[] | undefined;
     id: string;
 
     constructor(data?: IUserTutorialDto) {
@@ -10651,6 +10707,11 @@ export class UserTutorialDto implements IUserTutorialDto {
                     this.disciplineTaxonomyIds.push(item);
             }
             this.student = _data["student"] ? UserProfileDto.fromJS(_data["student"]) : <any>undefined;
+            if (Array.isArray(_data["userTutorialDisciplineTaxonomies"])) {
+                this.userTutorialDisciplineTaxonomies = [] as any;
+                for (let item of _data["userTutorialDisciplineTaxonomies"])
+                    this.userTutorialDisciplineTaxonomies.push(UserTutorialDisciplineTaxonomyDto.fromJS(item));
+            }
             this.id = _data["id"];
         }
     }
@@ -10677,6 +10738,11 @@ export class UserTutorialDto implements IUserTutorialDto {
                 data["disciplineTaxonomyIds"].push(item);
         }
         data["student"] = this.student ? this.student.toJSON() : <any>undefined;
+        if (Array.isArray(this.userTutorialDisciplineTaxonomies)) {
+            data["userTutorialDisciplineTaxonomies"] = [];
+            for (let item of this.userTutorialDisciplineTaxonomies)
+                data["userTutorialDisciplineTaxonomies"].push(item.toJSON());
+        }
         data["id"] = this.id;
         return data; 
     }
@@ -10699,6 +10765,7 @@ export interface IUserTutorialDto {
     pictureFileName: string | undefined;
     disciplineTaxonomyIds: string[] | undefined;
     student: UserProfileDto;
+    userTutorialDisciplineTaxonomies: UserTutorialDisciplineTaxonomyDto[] | undefined;
     id: string;
 }
 

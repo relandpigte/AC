@@ -110,6 +110,7 @@ import { SessionComponent } from './session/session.component';
 import { UpcomingSessionsWidgetComponent } from './widgets/upcoming-sessions-widget/upcoming-sessions-widget.component';
 import { TutorialProjectBriefComponent } from './tutorials/tutorial/tutorial-project-brief/tutorial-project-brief.component';
 import { GuardianConsentComponent } from './shared/guardian-consent/guardian-consent.component';
+import { ProjectsComponent } from './home/projects/projects.component';
 
 @NgModule({
   declarations: [
@@ -202,7 +203,8 @@ import { GuardianConsentComponent } from './shared/guardian-consent/guardian-con
     SessionComponent,
     UpcomingSessionsWidgetComponent,
     TutorialProjectBriefComponent,
-    GuardianConsentComponent
+    GuardianConsentComponent,
+    ProjectsComponent
   ],
   imports: [
     CommonModule,

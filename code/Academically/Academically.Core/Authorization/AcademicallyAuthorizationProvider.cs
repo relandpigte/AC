@@ -16,6 +16,10 @@ namespace Academically.Authorization
             dashboardNavigationPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Navigations_Settings, L("Settings"));
             dashboardNavigationPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Navigation_AcademicSupport, L("AcademicSupport"));
 
+
+            var dashboardTabsPermission = dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Tabs, L("Tabs"));
+            dashboardNavigationPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Tabs_Projects, L("Projects"));
+
             var dashboardWidgetPermission = dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets, L("Widgets"));
             dashboardWidgetPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets_ProfileSummary, L("ProfileSummary"));
             dashboardWidgetPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Widgets_Polls, L("Polls"));
