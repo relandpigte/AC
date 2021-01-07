@@ -11,6 +11,7 @@ import * as moment from 'moment';
 })
 export class UpcomingSessionsWidgetComponent extends AppComponentBase implements OnInit {
   isStudent = false;
+  isLoading = false;
   sessions: SessionDto[] = [];
   dateFormat = 'DD-MM-YYYY H:mm:ss';
 
@@ -18,6 +19,7 @@ export class UpcomingSessionsWidgetComponent extends AppComponentBase implements
     injector: Injector,
     private _sessionsService: UserSessionsServiceProxy,
     private _router: Router,
+    private _usersSessionService: UserSessionsServiceProxy
   ) {
     super(injector);
     this.isStudent = this.appSession.user.roles.includes('Student');
@@ -34,11 +36,26 @@ export class UpcomingSessionsWidgetComponent extends AppComponentBase implements
     if (moment().isBetween(startTime, endTime, undefined, '[]')) {
       this._router.navigate(['/app/session', session.id]);
     } else {
-      this.message.error('The session is not yet ready. Please check if you are within shedule before trying to join.', 'Session Not Ready');
+      this.message.error(
+        'The session is not yet ready. Please check if you are within shedule before trying to join.',
+        'Session Not Ready'
+      );
     }
   }
 
-  private getSessionDateDisplay(session: SessionDto): { colorClass: string, date: string } {
+  onConfirmClick(session: SessionDto): void {
+    this.isLoading = true;
+    session.status = 2;
+    session.tutorOffer = null;
+    session.timeZone = '';
+    this._usersSessionService.save(session).subscribe(() => {
+      this.isLoading = false;
+      this.notify.success(this.l('SavedSuccessfully'));
+      this.getSessions();
+    });
+  }
+
+  private getSessionDateDisplay(session: SessionDto): { colorClass: string; date: string } {
     const dateNow = new Date();
     if (session.sessionDate.isSame(dateNow, 'day')) {
       var duration = moment.duration(session.sessionDate.diff(moment(dateNow)));
@@ -51,26 +68,43 @@ export class UpcomingSessionsWidgetComponent extends AppComponentBase implements
           date: `${this.formatDoubleDigitNumber(hours)}:${this.formatDoubleDigitNumber(minutes)}`
         };
       } else {
-        return { colorClass: 'text-green', date: 'Ongoing' }
+        return { colorClass: 'text-green', date: 'Ongoing' };
       }
     } else {
       return { colorClass: 'text-muted', date: session.sessionDate.format('DD/MM/YYYY hh:mm A') };
     }
   }
 
+  private getStatusDisplay(session: SessionDto): { statusColorClass: string; statusDisplay: string } {
+    if (session.status == 1) {
+      return {
+        statusDisplay: 'Pending',
+        statusColorClass: 'text-red'
+      };
+    } else if (session.status == 2) {
+      return {
+        statusDisplay: 'Confirmed',
+        statusColorClass: 'text-green'
+      };
+    }
+  }
+
   private getSessions(): void {
-    this._sessionsService.getUpcoming(this.isStudent)
-      .subscribe(sessions => {
-        this.sessions = sessions;
-        this.sessions.forEach(session => {
-          const sessionDateDisplay = this.getSessionDateDisplay(session);
-          session['sessionDateDisplay'] = sessionDateDisplay.date;
-          session['colorClass'] = sessionDateDisplay.colorClass;
-        })
+    this._sessionsService.getUpcoming(this.isStudent).subscribe(sessions => {
+      this.sessions = sessions;
+      this.sessions.forEach(session => {
+        const sessionDateDisplay = this.getSessionDateDisplay(session);
+        session['sessionDateDisplay'] = sessionDateDisplay.date;
+        session['colorClass'] = sessionDateDisplay.colorClass;
+
+        const sessionStatusDisplay = this.getStatusDisplay(session);
+        session['statusDisplay'] = sessionStatusDisplay.statusDisplay;
+        session['statusColorClass'] = sessionStatusDisplay.statusColorClass;
       });
+    });
   }
 
   private formatDoubleDigitNumber(num: number): string {
-    return ("0" + num).slice(-2);
+    return ('0' + num).slice(-2);
   }
 }
