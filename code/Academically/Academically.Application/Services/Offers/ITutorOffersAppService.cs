@@ -17,5 +17,6 @@ namespace Academically.Services.Offers
         Task<int> GetTutorHighestEducationLevel(long userId);
         Task<GetTutorOfferDto> GetTutorOfferSessionsAsync(Guid tutorialId);
         Task<IEnumerable<GetTutorOfferDto>> GetAllTutorOfferSessionsAsync(Guid tutorialId);
+        Task<IEnumerable<GetTutorOfferDto>> GetTutorProjectsAsync();
     }
 }

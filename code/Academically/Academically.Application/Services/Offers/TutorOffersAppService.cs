@@ -191,5 +191,22 @@ namespace Academically.Services.Offers
 
             return offer;
         }
+
+        public async Task<IEnumerable<GetTutorOfferDto>> GetTutorProjectsAsync()
+        {
+            var tutorProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
+            var offers = await _tutorOffersRepository.GetAll()
+                .Include(e => e.Tutorial)
+                    .ThenInclude(e => e.Student)
+                        .ThenInclude(e => e.User)
+                .Include(e => e.Tutorial)
+                    .ThenInclude(e => e.UserTutorialDisciplineTaxonomies)
+                        .ThenInclude(e => e.DisciplineTaxonomy)
+                .Where(e => e.TutorId == tutorProfile.Id)
+                .Select(e => ObjectMapper.Map<GetTutorOfferDto>(e))
+                .ToListAsync();
+
+            return offers;
+        }
     }
 }
