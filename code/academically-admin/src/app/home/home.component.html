@@ -94,9 +94,13 @@
 
       <div class="row" *ngIf="permission.isGranted('Pages.Dashboard.Widgets')">
         <div class="col-12 col-xl-8">
-          <!-- <recent-projects-widget
+          <tutor-recent-projects-widgets
+            *ngIf="permission.isGranted('Pages.Dashboard.Widgets.RecentProjectsProvidingHelp')"
+          ></tutor-recent-projects-widgets>
+
+          <recent-projects-widget
             *ngIf="permission.isGranted('Pages.Dashboard.Widgets.RecentProjectsReceveivingHelp')"
-          ></recent-projects-widget> -->
+          ></recent-projects-widget>
 
           <div class="card chat-box" *ngIf="permission.isGranted('Pages.Dashboard.Widgets.MessageHub')">
             <div class="card-header">
@@ -342,8 +346,8 @@
     <ng-container *ngIf="activeTab === 'Financial Dashboard'">
       <financial-dashboard></financial-dashboard>
     </ng-container>
-    <ng-container *ngIf="activeTab === 'Projects' && permission.isGranted('Pages.Dashboard.Tabs.Projects')">
-      <app-projects></app-projects>
+    <ng-container *ngIf="activeTab === 'Projects' && permission.isGranted('Pages.Dashboard.Widgets.RecentProjectsProvidingHelp')">
+      <tutor-recent-projects-widgets></tutor-recent-projects-widgets>
     </ng-container>
   </div>
 </div>

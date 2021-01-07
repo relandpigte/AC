@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="SupportLevel">Support Level</text>
     <text name="Tabs">Tabs</text>
     <text name="Projects">Projects</text>
     <text name="NoTimezone">No timezone configured</text>
