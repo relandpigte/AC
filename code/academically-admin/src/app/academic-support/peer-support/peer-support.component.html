@@ -18,11 +18,6 @@
               Launchday
             </h1>
           </div>
-          <div class="col-12 col-md-auto">
-            <span class="fe fe-instagram social-media"></span>
-            <span class="fe fe-facebook social-media"></span>
-            <span class="fe fe-twitter social-media"></span>
-          </div>
         </div>
       </div>
       <div class="row align-items-center tabs">
@@ -142,20 +137,13 @@
                           </p>
                         </div>
                         <div class="card-footer">
-                          <button class="btn btn-primary">Go somewhere</button>
+                          <button [routerLink]="['/app/tutorial']" class="btn btn-primary">Go somewhere</button>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </tab>
-            <tab *ngIf="true" heading="{{ 'Feedback' | localize }}"> </tab>
-            <tab *ngIf="true" heading="{{ 'Proofreading' | localize }}">
-              <peer-support-proposals></peer-support-proposals>
-            </tab>
-            <tab *ngIf="true" heading="{{ 'Tutorial' | localize }}">
-              <peer-support-tutorial></peer-support-tutorial>
             </tab>
           </tabset>
         </div>
