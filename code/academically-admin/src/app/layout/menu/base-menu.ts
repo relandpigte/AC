@@ -27,17 +27,17 @@ export abstract class BaseMenu extends AppComponentBase {
     return [
       new MenuItem(this.l('Dashboard'), '/app/home', 'fe fe-home', 'Pages.Dashboard'),
       new MenuItem(this.l('AcademicSupport'), '', 'fe fe-book', 'Pages.Dashboard.Navigations.AcademicSupport', [
-        new MenuItem(this.l('PeerSupport'), '', 'fe fe-users', 'Pages.PeerSupport', [
+        new MenuItem(this.l('PeerSupport'), '/app/peer-support', 'fe fe-users', 'Pages.PeerSupport', [
           new MenuItem(this.l('Tutorial'), '/app/tutorial', 'fe fe-book-open', 'Pages.PeerSupport.Tutorial'),
-          new MenuItem(this.l('Proposals'), '/app/proposals', 'fe fe-bell', 'Pages.PeerSupport.Proposals'),
+          new MenuItem(this.l('Proposals'), '/app/proposals', 'fe fe-bell', 'Pages.PeerSupport.Proposals')
         ]),
-        new MenuItem(this.l('StudySkills'), '/app/study-skils', 'fe fe-grid', 'Pages.Account'),
+        new MenuItem(this.l('StudySkills'), '/app/study-skils', 'fe fe-grid', 'Pages.Account')
       ]),
       new MenuItem(this.l('Tenants'), '/app/tenants', 'fas fa-building', 'Pages.Tenants'),
       new MenuItem(this.l('Settings'), '', 'fe fe-settings', '', [
         new MenuItem(this.l('Users'), '/app/users', 'fe fe-users', 'Pages.Users'),
-        new MenuItem(this.l('Roles'), '/app/roles', 'fe fe-lock', 'Pages.Roles'),
-      ]),
+        new MenuItem(this.l('Roles'), '/app/roles', 'fe fe-lock', 'Pages.Roles')
+      ])
     ];
   }
 
@@ -60,7 +60,7 @@ export abstract class BaseMenu extends AppComponentBase {
     this.deactivateMenuItems(this.menuItems);
     this.activatedMenuItems = [];
     const foundedItems = this.findMenuItemsByUrl(url, this.menuItems);
-    foundedItems.forEach((item) => {
+    foundedItems.forEach(item => {
       this.activateMenuItem(item);
     });
   }
@@ -100,7 +100,7 @@ export abstract class BaseMenu extends AppComponentBase {
   protected isMenuItemVisible(item: MenuItem): boolean {
     if (item.children && item.children.length > 0) {
       let isGranted = true;
-      item.children.forEach((child) => {
+      item.children.forEach(child => {
         isGranted = this.isMenuItemVisible(child);
         if (!isGranted) {
           return false;
