@@ -23,6 +23,7 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
 import { TutorOfferComponent } from './tutor-offer/tutor-offer.component';
 import { TutorialComponent } from './tutorials/tutorial/tutorial.component';
 import { SessionComponent } from './session/session.component';
+import { StudySkillsComponent } from './academic-support/study-skills/study-skills.component';
 
 @NgModule({
   imports: [
@@ -105,6 +106,19 @@ import { SessionComponent } from './session/session.component';
               {
                 path: '',
                 component: PeerSupportComponent,
+                outlet: 'content'
+              }
+            ]
+          },
+          {
+            path: 'study-skills',
+            component: WrapperComponent,
+            data: { permission: 'Pages.PeerSupport' },
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: StudySkillsComponent,
                 outlet: 'content'
               }
             ]

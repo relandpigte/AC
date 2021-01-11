@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="AssignmentStructure">Assignment Structure</text>
+    <text name="AcademicWriting">Academic Writing</text>
+    <text name="ResearchSkills">Research Skills</text>
+    <text name="PresentationSkills">Presentation Skills</text>
     <text name="SupportLevel">Support Level</text>
     <text name="Tabs">Tabs</text>
     <text name="Projects">Projects</text>
