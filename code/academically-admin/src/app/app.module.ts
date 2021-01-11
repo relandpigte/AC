@@ -111,6 +111,7 @@ import { UpcomingSessionsWidgetComponent } from './widgets/upcoming-sessions-wid
 import { TutorialProjectBriefComponent } from './tutorials/tutorial/tutorial-project-brief/tutorial-project-brief.component';
 import { GuardianConsentComponent } from './shared/guardian-consent/guardian-consent.component';
 import { TutorRecentProjectsWidgetsComponent } from './widgets/tutor-recent-projects-widgets/tutor-recent-projects-widgets.component';
+import { StudySkillsComponent } from './academic-support/study-skills/study-skills.component';
 
 @NgModule({
   declarations: [
@@ -204,7 +205,8 @@ import { TutorRecentProjectsWidgetsComponent } from './widgets/tutor-recent-proj
     UpcomingSessionsWidgetComponent,
     TutorialProjectBriefComponent,
     GuardianConsentComponent,
-    TutorRecentProjectsWidgetsComponent
+    TutorRecentProjectsWidgetsComponent,
+    StudySkillsComponent
   ],
   imports: [
     CommonModule,
