@@ -23,6 +23,7 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
 import { TutorOfferComponent } from './tutor-offer/tutor-offer.component';
 import { TutorialComponent } from './tutorials/tutorial/tutorial.component';
 import { SessionComponent } from './session/session.component';
+import { StudySkillsComponent } from './academic-support/study-skills/study-skills.component';
 
 @NgModule({
   imports: [
@@ -40,9 +41,9 @@ import { SessionComponent } from './session/session.component';
               {
                 path: '',
                 component: HomeComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'users',
@@ -53,9 +54,9 @@ import { SessionComponent } from './session/session.component';
               {
                 path: '',
                 component: UsersComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'roles',
@@ -66,9 +67,9 @@ import { SessionComponent } from './session/session.component';
               {
                 path: '',
                 component: RolesComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'tenants',
@@ -79,9 +80,9 @@ import { SessionComponent } from './session/session.component';
               {
                 path: '',
                 component: TenantsComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'academic-support',
@@ -92,9 +93,9 @@ import { SessionComponent } from './session/session.component';
               {
                 path: '',
                 component: AcademicSupportComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'peer-support',
@@ -105,9 +106,22 @@ import { SessionComponent } from './session/session.component';
               {
                 path: '',
                 component: PeerSupportComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
+          },
+          {
+            path: 'study-skills',
+            component: WrapperComponent,
+            data: { permission: 'Pages.PeerSupport' },
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: StudySkillsComponent,
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'tutorial',
@@ -118,9 +132,9 @@ import { SessionComponent } from './session/session.component';
               {
                 path: '',
                 component: PeerSupportTutorialComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'proposals',
@@ -131,9 +145,9 @@ import { SessionComponent } from './session/session.component';
               {
                 path: '',
                 component: PeerSupportProposalsComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'account',
@@ -145,9 +159,9 @@ import { SessionComponent } from './session/session.component';
                 path: '',
                 component: AccountComponent,
                 canDeactivate: [CanDeactivateComponentGuard],
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'profile',
@@ -158,14 +172,14 @@ import { SessionComponent } from './session/session.component';
               {
                 path: '',
                 component: ProfileComponent,
-                outlet: 'content',
+                outlet: 'content'
               },
               {
                 path: '',
                 component: ProfileHeaderComponent,
-                outlet: 'header',
-              },
-            ],
+                outlet: 'header'
+              }
+            ]
           },
           {
             path: 'profile/:userId',
@@ -176,9 +190,9 @@ import { SessionComponent } from './session/session.component';
               {
                 path: '',
                 component: ProfileComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'settings',
@@ -189,9 +203,9 @@ import { SessionComponent } from './session/session.component';
               {
                 path: '',
                 component: SettingsComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'student-proposal/:tutorialId',
@@ -201,9 +215,9 @@ import { SessionComponent } from './session/session.component';
               {
                 path: '',
                 component: StudentProposalComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'tutorial/:id',
@@ -213,9 +227,9 @@ import { SessionComponent } from './session/session.component';
               {
                 path: '',
                 component: TutorialComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'tutor-offer/:offerId',
@@ -225,9 +239,9 @@ import { SessionComponent } from './session/session.component';
               {
                 path: '',
                 component: TutorOfferComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           {
             path: 'session/:id',
@@ -237,18 +251,18 @@ import { SessionComponent } from './session/session.component';
               {
                 path: '',
                 component: SessionComponent,
-                outlet: 'content',
-              },
-            ],
+                outlet: 'content'
+              }
+            ]
           },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent },
           { path: 'not-found', component: ErrorPageComponent },
-          { path: '**', redirectTo: 'not-found' },
-        ],
-      },
-    ]),
+          { path: '**', redirectTo: 'not-found' }
+        ]
+      }
+    ])
   ],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

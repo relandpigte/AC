@@ -1,0 +1,61 @@
+<div class="card">
+  <div class="card-header">
+    <!-- Title -->
+    <h4 class="card-header-title">
+      {{ 'RecentProjects' | localize }}
+    </h4>
+    <p class="small text-muted mb-0">Providing Help</p>
+  </div>
+  <div class="table-responsive mb-0">
+    <table class="table table-sm table-nowrap card-table">
+      <thead>
+        <tr>
+          <th>
+            {{ 'Name' | localize }}
+          </th>
+          <th>
+            {{ 'Information' | localize }}
+          </th>
+          <th>
+            {{ 'UrgencyLevel' | localize }}
+          </th>
+          <th>
+            {{ 'SupportLevel' | localize }}
+          </th>
+          <th>
+            {{ 'AreasOfStudy' | localize }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let project of projects">
+          <td>
+            <!-- Avatar -->
+            <a href="profile-posts.htmL" class="avatar avatar-xs d-inline-block mr-2">
+              <img
+                [src]="getProfilePicture(project.tutorial.student.profilePictureFileName, project.tutorial.student.user.id)"
+                alt="..."
+                class="avatar-img rounded-circle"
+              />
+            </a>
+
+            <!-- Title -->
+            <span>{{ project.tutorial.student.user.fullName }}</span>
+          </td>
+          <td>{{ project.tutorial.information }}</td>
+          <td>
+            {{ 'UrgencyLevel' + project.tutorial.urgencyLevel | localize }}
+          </td>
+          <td>
+            {{ 'EducationLevel' + project.tutorial.supportLevel | localize }}
+          </td>
+          <td>
+            <span class="badge badge-soft-secondary" *ngFor="let taxonomy of project.tutorial.userTutorialDisciplineTaxonomies">
+              {{ taxonomy.disciplineTaxonomy.name }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

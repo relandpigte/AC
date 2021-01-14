@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
+using Abp.Timing.Timezone;
 using Academically.Configuration;
-using Academically.DomainServices.Timezone;
 using Academically.Entities;
-using Academically.Services.UserProfiles.Dto;
 using Academically.Services.UserSessions.Dto;
 using AgoraIO.Media;
 using Microsoft.EntityFrameworkCore;
@@ -19,19 +18,19 @@ namespace Academically.Services.UserSessions
     {
         private readonly IRepository<Session, Guid> _sessionsRepository;
         private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
-        private readonly ITimezoneDomainService _timezoneDomainService;
+        private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly ISettingManager _settingManager;
 
         public UserSessionsAppService(
             IRepository<Session, Guid> sessionRepository,
             IRepository<UserProfile, Guid> userProfilesRepository,
-            ITimezoneDomainService timezoneDomainService,
+            ITimeZoneConverter timeZoneConverter,
             ISettingManager settingManager
             )
         {
             _sessionsRepository = sessionRepository;
             _settingManager = settingManager;
-            _timezoneDomainService = timezoneDomainService;
+            _timeZoneConverter = timeZoneConverter;
             _userProfilesRepository = userProfilesRepository;
         }
 
@@ -57,6 +56,11 @@ namespace Academically.Services.UserSessions
                 .Select(e => ObjectMapper.Map<SessionDto>(e))
                 .ToListAsync();
 
+            foreach (var session in sessions)
+            {
+                //session.SessionDate = _timeZoneConverter.Convert(session.SessionDate).Value;
+            }
+
             return sessions;
         }
 
@@ -67,7 +71,6 @@ namespace Academically.Services.UserSessions
             {
                 sessionDetail = new Session();
                 var studentProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
-                input.SessionDate = _timezoneDomainService.ConvertToUtc(input.SessionDate, studentProfile.TimezoneId);
             }
 
             ObjectMapper.Map(input, sessionDetail);

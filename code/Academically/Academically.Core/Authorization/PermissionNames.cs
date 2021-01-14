@@ -9,6 +9,9 @@
         public const string Pages_Dashboard_Navigations_Financials = "Pages.Dashboard.Navigations.Financials";
         public const string Pages_Dashboard_Navigations_Settings = "Pages.Dashboard.Navigations.Settings";
         public const string Pages_Dashboard_Navigation_AcademicSupport = "Pages.Dashboard.Navigations.AcademicSupport";
+        
+        public const string Pages_Dashboard_Tabs = "Pages.Dashboard.Tabs";
+        public const string Pages_Dashboard_Tabs_Projects = "Pages.Dashboard.Tabs.Projects";
 
         public const string Pages_Dashboard_Widgets = "Pages.Dashboard.Widgets";
         public const string Pages_Dashboard_Widgets_ProfileSummary = "Pages.Dashboard.Widgets.ProfileSummary";
@@ -17,7 +20,6 @@
         public const string Pages_Dashboard_Widgets_RecentProjectsReceivingHelp = "Pages.Dashboard.Widgets.RecentProjectsReceveivingHelp";
         public const string Pages_Dashboard_Widgets_RecentProjectsProvidingHelp = "Pages.Dashboard.Widgets.RecentProjectsProvidingHelp";
         public const string Pages_Dashboard_Widgets_MessageHub = "Pages.Dashboard.Widgets.MessageHub";
-
 
         public const string Pages_Users = "Pages.Users";
         public const string Pages_Users_Create = "Pages.Users.Create";

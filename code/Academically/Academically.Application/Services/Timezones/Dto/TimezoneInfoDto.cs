@@ -1,17 +1,12 @@
 ﻿using Abp.AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Academically.Entities;
 
 namespace Academically.Services.Timezones.Dto
 {
-    [AutoMap(typeof(TimeZoneInfo))]
-    public class TimezoneInfoDto
+    [AutoMap(typeof(TimeZone))]
+    public class TimeZoneDto
     {
         public string Id { get; set; }
-        public string DisplayName { get; set; }
-        public TimeSpan BaseUtcOffset { get; set; }
-        public string StandardName { get; set; }
-        public string DaylightName { get; set; }
+        public string Name { get; set; }
     }
 }

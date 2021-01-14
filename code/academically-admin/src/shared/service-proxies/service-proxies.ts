@@ -2890,8 +2890,8 @@ export class TimezonesServiceProxy {
     /**
      * @return Success
      */
-    getTimezonesList(): Observable<TimezoneInfoDto[]> {
-        let url_ = this.baseUrl + "/api/services/app/Timezones/GetTimezonesList";
+    getAll(): Observable<TimeZoneDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Timezones/GetAll";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -2903,20 +2903,20 @@ export class TimezonesServiceProxy {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetTimezonesList(response_);
+            return this.processGetAll(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetTimezonesList(<any>response_);
+                    return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<TimezoneInfoDto[]>><any>_observableThrow(e);
+                    return <Observable<TimeZoneDto[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<TimezoneInfoDto[]>><any>_observableThrow(response_);
+                return <Observable<TimeZoneDto[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetTimezonesList(response: HttpResponseBase): Observable<TimezoneInfoDto[]> {
+    protected processGetAll(response: HttpResponseBase): Observable<TimeZoneDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2930,7 +2930,7 @@ export class TimezonesServiceProxy {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(TimezoneInfoDto.fromJS(item));
+                    result200.push(TimeZoneDto.fromJS(item));
             }
             return _observableOf(result200);
             }));
@@ -2939,19 +2939,14 @@ export class TimezonesServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<TimezoneInfoDto[]>(<any>null);
+        return _observableOf<TimeZoneDto[]>(<any>null);
     }
 
     /**
-     * @param userId (optional) 
      * @return Success
      */
-    getTimezoneInfo(userId: number | undefined): Observable<TimezoneInfoDto> {
-        let url_ = this.baseUrl + "/api/services/app/Timezones/GetTimezoneInfo?";
-        if (userId === null)
-            throw new Error("The parameter 'userId' cannot be null.");
-        else if (userId !== undefined)
-            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+    get(): Observable<TimeZoneDto> {
+        let url_ = this.baseUrl + "/api/services/app/Timezones/Get";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -2963,20 +2958,20 @@ export class TimezonesServiceProxy {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetTimezoneInfo(response_);
+            return this.processGet(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetTimezoneInfo(<any>response_);
+                    return this.processGet(<any>response_);
                 } catch (e) {
-                    return <Observable<TimezoneInfoDto>><any>_observableThrow(e);
+                    return <Observable<TimeZoneDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<TimezoneInfoDto>><any>_observableThrow(response_);
+                return <Observable<TimeZoneDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetTimezoneInfo(response: HttpResponseBase): Observable<TimezoneInfoDto> {
+    protected processGet(response: HttpResponseBase): Observable<TimeZoneDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2987,7 +2982,7 @@ export class TimezonesServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TimezoneInfoDto.fromJS(resultData200);
+            result200 = TimeZoneDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2995,7 +2990,7 @@ export class TimezonesServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<TimezoneInfoDto>(<any>null);
+        return _observableOf<TimeZoneDto>(<any>null);
     }
 }
 
@@ -3638,6 +3633,61 @@ export class TutorOffersServiceProxy {
     }
 
     protected processGetAllTutorOfferSessions(response: HttpResponseBase): Observable<GetTutorOfferDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(GetTutorOfferDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetTutorOfferDto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getTutorProjects(): Observable<GetTutorOfferDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/TutorOffers/GetTutorProjects";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTutorProjects(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTutorProjects(<any>response_);
+                } catch (e) {
+                    return <Observable<GetTutorOfferDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetTutorOfferDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTutorProjects(response: HttpResponseBase): Observable<GetTutorOfferDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -8792,7 +8842,6 @@ export class UserProfile implements IUserProfile {
     about: string | undefined;
     userId: number;
     isConsented: boolean;
-    timezoneId: string | undefined;
     user: User;
     id: string;
 
@@ -8820,7 +8869,6 @@ export class UserProfile implements IUserProfile {
             this.about = _data["about"];
             this.userId = _data["userId"];
             this.isConsented = _data["isConsented"];
-            this.timezoneId = _data["timezoneId"];
             this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
             this.id = _data["id"];
         }
@@ -8848,7 +8896,6 @@ export class UserProfile implements IUserProfile {
         data["about"] = this.about;
         data["userId"] = this.userId;
         data["isConsented"] = this.isConsented;
-        data["timezoneId"] = this.timezoneId;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         data["id"] = this.id;
         return data; 
@@ -8876,7 +8923,6 @@ export interface IUserProfile {
     about: string | undefined;
     userId: number;
     isConsented: boolean;
-    timezoneId: string | undefined;
     user: User;
     id: string;
 }
@@ -10219,97 +10265,11 @@ export interface ITenantDtoPagedResultDto {
     items: TenantDto[] | undefined;
 }
 
-export class TimeSpan implements ITimeSpan {
-    readonly ticks: number;
-    readonly days: number;
-    readonly hours: number;
-    readonly milliseconds: number;
-    readonly minutes: number;
-    readonly seconds: number;
-    readonly totalDays: number;
-    readonly totalHours: number;
-    readonly totalMilliseconds: number;
-    readonly totalMinutes: number;
-    readonly totalSeconds: number;
-
-    constructor(data?: ITimeSpan) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            (<any>this).ticks = _data["ticks"];
-            (<any>this).days = _data["days"];
-            (<any>this).hours = _data["hours"];
-            (<any>this).milliseconds = _data["milliseconds"];
-            (<any>this).minutes = _data["minutes"];
-            (<any>this).seconds = _data["seconds"];
-            (<any>this).totalDays = _data["totalDays"];
-            (<any>this).totalHours = _data["totalHours"];
-            (<any>this).totalMilliseconds = _data["totalMilliseconds"];
-            (<any>this).totalMinutes = _data["totalMinutes"];
-            (<any>this).totalSeconds = _data["totalSeconds"];
-        }
-    }
-
-    static fromJS(data: any): TimeSpan {
-        data = typeof data === 'object' ? data : {};
-        let result = new TimeSpan();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["ticks"] = this.ticks;
-        data["days"] = this.days;
-        data["hours"] = this.hours;
-        data["milliseconds"] = this.milliseconds;
-        data["minutes"] = this.minutes;
-        data["seconds"] = this.seconds;
-        data["totalDays"] = this.totalDays;
-        data["totalHours"] = this.totalHours;
-        data["totalMilliseconds"] = this.totalMilliseconds;
-        data["totalMinutes"] = this.totalMinutes;
-        data["totalSeconds"] = this.totalSeconds;
-        return data; 
-    }
-
-    clone(): TimeSpan {
-        const json = this.toJSON();
-        let result = new TimeSpan();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface ITimeSpan {
-    ticks: number;
-    days: number;
-    hours: number;
-    milliseconds: number;
-    minutes: number;
-    seconds: number;
-    totalDays: number;
-    totalHours: number;
-    totalMilliseconds: number;
-    totalMinutes: number;
-    totalSeconds: number;
-}
-
-export class TimezoneInfoDto implements ITimezoneInfoDto {
+export class TimeZoneDto implements ITimeZoneDto {
     id: string | undefined;
-    displayName: string | undefined;
-    baseUtcOffset: TimeSpan;
-    standardName: string | undefined;
-    daylightName: string | undefined;
+    name: string | undefined;
 
-    constructor(data?: ITimezoneInfoDto) {
+    constructor(data?: ITimeZoneDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -10321,16 +10281,13 @@ export class TimezoneInfoDto implements ITimezoneInfoDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.displayName = _data["displayName"];
-            this.baseUtcOffset = _data["baseUtcOffset"] ? TimeSpan.fromJS(_data["baseUtcOffset"]) : <any>undefined;
-            this.standardName = _data["standardName"];
-            this.daylightName = _data["daylightName"];
+            this.name = _data["name"];
         }
     }
 
-    static fromJS(data: any): TimezoneInfoDto {
+    static fromJS(data: any): TimeZoneDto {
         data = typeof data === 'object' ? data : {};
-        let result = new TimezoneInfoDto();
+        let result = new TimeZoneDto();
         result.init(data);
         return result;
     }
@@ -10338,27 +10295,21 @@ export class TimezoneInfoDto implements ITimezoneInfoDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["displayName"] = this.displayName;
-        data["baseUtcOffset"] = this.baseUtcOffset ? this.baseUtcOffset.toJSON() : <any>undefined;
-        data["standardName"] = this.standardName;
-        data["daylightName"] = this.daylightName;
+        data["name"] = this.name;
         return data; 
     }
 
-    clone(): TimezoneInfoDto {
+    clone(): TimeZoneDto {
         const json = this.toJSON();
-        let result = new TimezoneInfoDto();
+        let result = new TimeZoneDto();
         result.init(json);
         return result;
     }
 }
 
-export interface ITimezoneInfoDto {
+export interface ITimeZoneDto {
     id: string | undefined;
-    displayName: string | undefined;
-    baseUtcOffset: TimeSpan;
-    standardName: string | undefined;
-    daylightName: string | undefined;
+    name: string | undefined;
 }
 
 export class AuthenticateModel implements IAuthenticateModel {
@@ -10729,6 +10680,7 @@ export class UserTutorialDto implements IUserTutorialDto {
     pictureFileName: string | undefined;
     disciplineTaxonomyIds: string[] | undefined;
     student: UserProfileDto;
+    userTutorialDisciplineTaxonomies: UserTutorialDisciplineTaxonomyDto[] | undefined;
     id: string;
 
     constructor(data?: IUserTutorialDto) {
@@ -10755,6 +10707,11 @@ export class UserTutorialDto implements IUserTutorialDto {
                     this.disciplineTaxonomyIds.push(item);
             }
             this.student = _data["student"] ? UserProfileDto.fromJS(_data["student"]) : <any>undefined;
+            if (Array.isArray(_data["userTutorialDisciplineTaxonomies"])) {
+                this.userTutorialDisciplineTaxonomies = [] as any;
+                for (let item of _data["userTutorialDisciplineTaxonomies"])
+                    this.userTutorialDisciplineTaxonomies.push(UserTutorialDisciplineTaxonomyDto.fromJS(item));
+            }
             this.id = _data["id"];
         }
     }
@@ -10781,6 +10738,11 @@ export class UserTutorialDto implements IUserTutorialDto {
                 data["disciplineTaxonomyIds"].push(item);
         }
         data["student"] = this.student ? this.student.toJSON() : <any>undefined;
+        if (Array.isArray(this.userTutorialDisciplineTaxonomies)) {
+            data["userTutorialDisciplineTaxonomies"] = [];
+            for (let item of this.userTutorialDisciplineTaxonomies)
+                data["userTutorialDisciplineTaxonomies"].push(item.toJSON());
+        }
         data["id"] = this.id;
         return data; 
     }
@@ -10803,6 +10765,7 @@ export interface IUserTutorialDto {
     pictureFileName: string | undefined;
     disciplineTaxonomyIds: string[] | undefined;
     student: UserProfileDto;
+    userTutorialDisciplineTaxonomies: UserTutorialDisciplineTaxonomyDto[] | undefined;
     id: string;
 }
 
@@ -11503,7 +11466,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
     timezoneId: string | undefined;
     dateJoined: moment.Moment;
     role: string | undefined;
-    timeZoneInfo: TimezoneInfoDto;
+    timeZoneInfo: TimeZoneDto;
 
     constructor(data?: IGetProfileDetailDto) {
         if (data) {
@@ -11533,7 +11496,7 @@ export class GetProfileDetailDto implements IGetProfileDetailDto {
             this.timezoneId = _data["timezoneId"];
             this.dateJoined = _data["dateJoined"] ? moment(_data["dateJoined"].toString()) : <any>undefined;
             this.role = _data["role"];
-            this.timeZoneInfo = _data["timeZoneInfo"] ? TimezoneInfoDto.fromJS(_data["timeZoneInfo"]) : <any>undefined;
+            this.timeZoneInfo = _data["timeZoneInfo"] ? TimeZoneDto.fromJS(_data["timeZoneInfo"]) : <any>undefined;
         }
     }
 
@@ -11593,7 +11556,7 @@ export interface IGetProfileDetailDto {
     timezoneId: string | undefined;
     dateJoined: moment.Moment;
     role: string | undefined;
-    timeZoneInfo: TimezoneInfoDto;
+    timeZoneInfo: TimeZoneDto;
 }
 
 export class UserPublicationDto implements IUserPublicationDto {

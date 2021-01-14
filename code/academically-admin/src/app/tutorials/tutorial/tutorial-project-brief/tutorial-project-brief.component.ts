@@ -28,6 +28,12 @@ export class TutorialProjectBriefComponent extends AppComponentBase implements O
     });
   }
 
+  getDuration(totalMinutes: number): any {
+    const hours = Math.floor(totalMinutes / 60) > 10 ? Math.floor(totalMinutes / 60) : '0' + Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60 > 10 ? totalMinutes % 60 : '0' + (totalMinutes % 60);
+    return hours + ':' + minutes;
+  }
+
   public getTutorOffers(): void {
     this.tutorOffersService.getAllTutorOfferSessions(this.id).subscribe(tutorOffers => {
       this.tutorOffers = tutorOffers;

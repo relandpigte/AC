@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Academically.Application.Shared.Services;
 using Academically.Configuration;
 using Academically.Entities.Enums;
-using Academically.DomainServices.Timezone;
 using System.Collections.Generic;
 using Academically.Services.UserSessions.Dto;
 using Academically.Services.UserProfiles.Dto;
@@ -28,19 +27,16 @@ namespace Academically.Services.Offers
         private readonly IRepository<TutorOffer, Guid> _tutorOffersRepository;
         private readonly IRepository<UserEducation, Guid> _userEducationsRepository;
         private readonly IRepository<UserProfile, Guid> _userProfilesRepository;
-        private readonly ITimezoneDomainService _timezoneDomainService;
 
         public TutorOffersAppService(
             IRepository<TutorOffer, Guid> tutorOffersRepository,
             IRepository<UserEducation, Guid> userEducationsRepository,
-            IRepository<UserProfile, Guid> userProfilesRepository,
-            ITimezoneDomainService timezoneDomainService
+            IRepository<UserProfile, Guid> userProfilesRepository
             )
         {
             _tutorOffersRepository = tutorOffersRepository;
             _userProfilesRepository = userProfilesRepository;
             _userEducationsRepository = userEducationsRepository;
-            _timezoneDomainService = timezoneDomainService;
         }
 
         public async Task<GetTutorOfferDto> GetAsync(Guid offerId)
@@ -194,6 +190,23 @@ namespace Academically.Services.Offers
                 .ToListAsync();
 
             return offer;
+        }
+
+        public async Task<IEnumerable<GetTutorOfferDto>> GetTutorProjectsAsync()
+        {
+            var tutorProfile = await _userProfilesRepository.FirstOrDefaultAsync(e => e.UserId == AbpSession.UserId.Value);
+            var offers = await _tutorOffersRepository.GetAll()
+                .Include(e => e.Tutorial)
+                    .ThenInclude(e => e.Student)
+                        .ThenInclude(e => e.User)
+                .Include(e => e.Tutorial)
+                    .ThenInclude(e => e.UserTutorialDisciplineTaxonomies)
+                        .ThenInclude(e => e.DisciplineTaxonomy)
+                .Where(e => e.TutorId == tutorProfile.Id)
+                .Select(e => ObjectMapper.Map<GetTutorOfferDto>(e))
+                .ToListAsync();
+
+            return offers;
         }
     }
 }
