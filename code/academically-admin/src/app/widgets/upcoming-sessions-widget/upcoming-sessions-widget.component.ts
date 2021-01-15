@@ -19,7 +19,6 @@ export class UpcomingSessionsWidgetComponent extends AppComponentBase implements
     injector: Injector,
     private _sessionsService: UserSessionsServiceProxy,
     private _router: Router,
-    private _usersSessionService: UserSessionsServiceProxy
   ) {
     super(injector);
     this.isStudent = this.appSession.user.roles.includes('Student');
@@ -30,7 +29,6 @@ export class UpcomingSessionsWidgetComponent extends AppComponentBase implements
   }
 
   onJoinSessionClick(session: SessionDto): void {
-    console.log(session);
     const startTime = session.sessionDate.subtract('minutes', 5);
     const endTime = startTime.clone().add('minutes', session.duration);
     if (moment().isBetween(startTime, endTime, undefined, '[]')) {
@@ -48,7 +46,7 @@ export class UpcomingSessionsWidgetComponent extends AppComponentBase implements
     session.status = 2;
     session.tutorOffer = null;
     session.timeZone = '';
-    this._usersSessionService.save(session).subscribe(() => {
+    this._sessionsService.save(session).subscribe(() => {
       this.isLoading = false;
       this.notify.success(this.l('SavedSuccessfully'));
       this.getSessions();

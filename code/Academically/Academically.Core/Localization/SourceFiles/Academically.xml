@@ -76,8 +76,8 @@
         <p>Academically<p/>
       ]]>
     </text>
-    <text name="BookSessionAminEmailSubject">Academically - Book Session Request Received.</text>
-    <text name="BookSessionAminEmailMessage">
+    <text name="BookSessionAdminEmailSubject">Academically - Book Session Request Received.</text>
+    <text name="BookSessionAdminEmailMessage">
       <![CDATA[
         <p>A request to book a session was created.</p>
         <p>The details of the request are:</p>

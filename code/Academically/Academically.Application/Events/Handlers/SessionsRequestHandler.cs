@@ -9,7 +9,6 @@ using Abp.Localization;
 using Abp.Timing;
 using Abp.Timing.Timezone;
 using Academically.Application.Shared.Services;
-using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 using Academically.Configuration;
 using Academically.Entities;
@@ -29,7 +28,6 @@ namespace Academically.Events.Handlers
         private readonly IRepository<TimeZone, string> _timeZonesRepository;
         private readonly ISettingManager _settingManager;
         private readonly IEmailService _emailService;
-        private readonly ITimeZoneConverter _timeZoneConverter;
 
 
         public SessionsRequestHandler(
@@ -40,8 +38,7 @@ namespace Academically.Events.Handlers
             IRepository<UserTutorial, Guid> userTutorialsRepository,
             IRepository<UserProfile, Guid> userProfilesRepository,
             IRepository<TimeZone, string> timeZonesRepository,
-            ILocalizationManager localizationManager,
-            ITimeZoneConverter timeZoneConverter
+            ILocalizationManager localizationManager
             ) : base(localizationManager)
         {
             _usersRepository = usersRepository;
@@ -51,7 +48,6 @@ namespace Academically.Events.Handlers
             _userProfilesRepository = userProfilesRepository;
             _timeZonesRepository = timeZonesRepository;
             _settingManager = settingManager;
-            _timeZoneConverter = timeZoneConverter;
         }
         
         [UnitOfWork]
@@ -68,7 +64,7 @@ namespace Academically.Events.Handlers
 
             var timeZoneId = await _settingManager.GetSettingValueAsync(TimingSettingNames.TimeZone);
             var timeZone = await _timeZonesRepository.GetAsync(timeZoneId);
-            var sessionDate = _timeZoneConverter.Convert(eventData.Entity.SessionDate.Value).Value;
+            var sessionDate = TimezoneHelper.ConvertFromUtc(eventData.Entity.SessionDate.Value, timeZoneId);
             var sessionDuration = GetDuration(eventData.Entity.Duration);
             var sessionName = "Tutorial Session with " + student.FullName;
 
@@ -88,8 +84,8 @@ namespace Academically.Events.Handlers
                 var body = L("BookSessionEmailMessage", tutor.FullName, sessionDate, sessionDuration, timeZone.Name);
                 await _emailService.SendAsync(student.EmailAddress, student.EmailAddress, subject, body);
 
-                var adminSubject = L("BookSessionAminEmailSubject");
-                var adminBody = L("BookSessionAminEmailMessage", sessionName, sessionDate, sessionDuration, timeZone.Name, studentProposalLink);
+                var adminSubject = L("BookSessionAdminEmailSubject");
+                var adminBody = L("BookSessionAdminEmailMessage", sessionName, sessionDate, sessionDuration, timeZone.Name, studentProposalLink);
                 await _emailService.SendAsync(tutor.EmailAddress, tutor.EmailAddress, adminSubject, adminBody);
             }
         }

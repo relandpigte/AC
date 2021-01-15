@@ -4,13 +4,10 @@
   </div>
   <div class="card-body" [busy]="isLoading">
     <div *ngFor="let session of sessions" class="list-group list-group-flush my-n3">
-      <ng-container
-        [ngTemplateOutlet]="sessionUserTemplate"
-        [ngTemplateOutletContext]="{
+      <ng-container [ngTemplateOutlet]="sessionUserTemplate" [ngTemplateOutletContext]="{
           session: session,
           userProfile: isStudent ? session.tutorOffer.tutor : session.tutorOffer.tutorial.student
-        }"
-      >
+        }">
       </ng-container>
     </div>
     <p *ngIf="sessions.length === 0" class="text-center text-muted p-0 m-0 text-small">No Upcoming Session</p>
@@ -21,19 +18,21 @@
   <div class="list-group-item">
     <div class="row align-items-center">
       <div class="col-auto">
-        <a href="javsacript:;" class="avatar">
-          <img [src]="getProfilePicture(userProfile.profilePictureFileName, user.id)" alt="..." class="avatar-img rounded" />
+        <a href="javascript:;" class="avatar">
+          <img [src]="getProfilePicture(userProfile.profilePictureFileName, user.id)" alt="..."
+            class="avatar-img rounded" />
         </a>
       </div>
       <div class="col ml-n2">
         <h4 class="mb-1">
-          <a href="team-overview.html">{{ user.fullName }}</a>
+          <a href="javascript:;">{{ user.fullName }}</a>
         </h4>
 
         <!-- Time -->
-        <small class="{{ session['colorClass'] }}"> <i class="fe fe-clock"></i>&nbsp;{{ session['sessionDateDisplay'] }} </small>
+        <small class="{{ session['colorClass'] }}"> <i class="fe fe-clock"></i>&nbsp;{{ session['sessionDateDisplay'] }}
+        </small>
 
-        <p>
+        <p class="mb-0">
           <small class="{{ session['statusColorClass'] }}">
             {{ session['statusDisplay'] }}
           </small>
@@ -41,23 +40,13 @@
       </div>
       <div class="col-auto">
         <div class="dropdown">
-          <a
-            href="#"
-            class="dropdown-ellipses dropdown-toggle"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
+          <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
             <i class="fe fe-more-vertical"></i>
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a
-              href="javascript:;"
-              (click)="onConfirmClick(session)"
-              class="dropdown-item"
-              *ngIf="permission.isGranted('Pages.Dashboard.Widgets.UpcomingSessions.Confirm') && session.status === 1"
-            >
+            <a href="javascript:;" (click)="onConfirmClick(session)" class="dropdown-item"
+              *ngIf="permission.isGranted('Pages.Dashboard.Widgets.UpcomingSessions.Confirm') && session.status === 1">
               Confirm
             </a>
             <a href="javascript:;" (click)="onJoinSessionClick(session)" class="dropdown-item">
