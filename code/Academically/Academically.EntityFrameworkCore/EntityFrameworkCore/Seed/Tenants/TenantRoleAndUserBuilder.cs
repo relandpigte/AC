@@ -137,7 +137,9 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Study_Level_Create,
                 PermissionNames.Pages_Profile_AreasOfStudy_KnowledgeBase_Study_Level_Delete,
                 PermissionNames.Pages_Settings,
-                PermissionNames.Pages_Dashboard_Tabs_Projects
+                PermissionNames.Pages_Dashboard_Tabs_Projects,
+                PermissionNames.Pages_Dashboard_Widgets_UpcomingSessions,
+                PermissionNames.Pages_Dashboard_Widgets_UpcomingSessions_Confirm
             );
 
             #endregion

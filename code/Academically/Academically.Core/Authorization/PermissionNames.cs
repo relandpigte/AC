@@ -20,6 +20,8 @@
         public const string Pages_Dashboard_Widgets_RecentProjectsReceivingHelp = "Pages.Dashboard.Widgets.RecentProjectsReceveivingHelp";
         public const string Pages_Dashboard_Widgets_RecentProjectsProvidingHelp = "Pages.Dashboard.Widgets.RecentProjectsProvidingHelp";
         public const string Pages_Dashboard_Widgets_MessageHub = "Pages.Dashboard.Widgets.MessageHub";
+        public const string Pages_Dashboard_Widgets_UpcomingSessions = "Pages.Dashboard.Widgets.UpcomingSessions";
+        public const string Pages_Dashboard_Widgets_UpcomingSessions_Confirm = "Pages.Dashboard.Widgets.UpcomingSessions.Confirm";
 
         public const string Pages_Users = "Pages.Users";
         public const string Pages_Users_Create = "Pages.Users.Create";
