@@ -90,8 +90,8 @@ plugins:
 custom:
   customDomain:
     domainName: api-academically-$ENV_NAME.${env:PUBLIC_DOMAIN}
-    stage: $ENV_NAME
-    basePath: $ENV_NAME
+    stage: ${env:ENV_NAME}
+    basePath: ${env:ENV_NAME}
     # certificate name is first SAN listed
     certificateName: '*.${env:PUBLIC_DOMAIN}'
     createRoute53Record: true
