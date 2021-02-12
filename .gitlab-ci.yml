@@ -42,7 +42,8 @@ build_backend:
   artifacts:
     paths:
       - artifacts
-    expire_in: $ARTIFACT_RETENTION days
+    expire_in:
+      - $ARTIFACT_RETENTION days
 
 # End Build #
 #############
