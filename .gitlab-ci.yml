@@ -7,7 +7,7 @@ variables:
   BUILD_IMAGE: "mcr.microsoft.com/dotnet/core/sdk:3.1" 
   FRONTEND_PATH: "code/academically-admin"
   BACKEND_PATH: "code/Academically/Academically.Web.Host"
-  ENV_NAME: "poc"
+  ENV_NAME: "ci"
   LOG_RETENTION: 7
   SG_WEB: "sg-0e99d2ed26808a35d"
   PRIVATE_SUBNET_A: "subnet-03f6e008bbf99fd12"
@@ -17,8 +17,6 @@ variables:
 #########
 # Build #
 #########
-
-
 
 build_backend:
   stage: build
