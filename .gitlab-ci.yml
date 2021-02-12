@@ -5,7 +5,8 @@ stages:
 variables:
 #  PROJECT_NAME: "Admin.API"
   BUILD_IMAGE: "mcr.microsoft.com/dotnet/core/sdk:3.1" 
-  ANGULAR_PATH: "code/Academically/Academically.Web.Host"
+  FRONTEND_PATH: "code/impact-admin"
+  BACKEND_PATH: "code/Academically/Academically.Web.Host"
   ENV_NAME: "poc"
   LOG_RETENTION: 7
   SG_WEB: "sg-0e99d2ed26808a35d"
@@ -29,12 +30,12 @@ build_backend:
     - apt-get install -y zip
     - pwd
     - mkdir artifacts
-    - "cd $CI_PROJECT_DIR/$ANGULAR_PATH" 
+    - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
     - "dotnet restore"
 
   script:
     # Build and Package projects
-    - "cd $CI_PROJECT_DIR/$ANGULAR_PATH" 
+    - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
     - dotnet publish --configuration release --framework netcoreapp3.1 --output bin/release/netcoreapp3.1/output
     - zip -r $CI_PROJECT_DIR/artifacts/$CI_PROJECT_NAME.zip bin/release/netcoreapp3.1/output
     - ls -la
@@ -43,6 +44,33 @@ build_backend:
       - artifacts
     expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
 
+
+build_frontend:
+  stage: build
+  image: node:10.16.0
+  before_script:
+    - echo "pre script (build_frontend)"
+    - echo "Install Pre-requistes"
+    - apt-get update
+    - node -v
+    - npm -v
+  cache:
+    paths:
+      - $CI_PROJECT_DIR/$FRONTEND_PATH/node_modules/
+      
+  script:
+    - "cd $CI_PROJECT_DIR/code/impact-admin"
+    - ls -la
+    # specify v9.1.4 to match our code
+    - npm install -g @angular/cli@9.1.4
+    - yarn install
+    - ng build --configuration $ENV_NAME
+    - ls -la
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/$FRONTEND_PATH/dist/
+    expire_in: 21 day
+    
 # End Build #
 #############
 
