@@ -20,29 +20,29 @@ variables:
 
 
 
-build_backend:
-  stage: build
-  image: $BUILD_IMAGE
-  before_script:
-    - echo "pre script (build_backend)"
-    - apt-get update
-    - echo "Install Pre-requistes"
-    - apt-get install -y zip
-    - pwd
-    - mkdir artifacts
-    - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
-    - "dotnet restore"
+# build_backend:
+#   stage: build
+#   image: $BUILD_IMAGE
+#   before_script:
+#     - echo "pre script (build_backend)"
+#     - apt-get update
+#     - echo "Install Pre-requistes"
+#     - apt-get install -y zip
+#     - pwd
+#     - mkdir artifacts
+#     - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
+#     - "dotnet restore"
 
-  script:
-    # Build and Package projects
-    - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
-    - dotnet publish --configuration release --framework netcoreapp3.1 --output bin/release/netcoreapp3.1/output
-    - zip -r $CI_PROJECT_DIR/artifacts/$CI_PROJECT_NAME.zip bin/release/netcoreapp3.1/output
-    - ls -la
-  artifacts:
-    paths:
-      - artifacts
-    expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
+#   script:
+#     # Build and Package projects
+#     - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
+#     - dotnet publish --configuration release --framework netcoreapp3.1 --output bin/release/netcoreapp3.1/output
+#     - zip -r $CI_PROJECT_DIR/artifacts/$CI_PROJECT_NAME.zip bin/release/netcoreapp3.1/output
+#     - ls -la
+#   artifacts:
+#     paths:
+#       - artifacts
+#     expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
 
 
 build_frontend:
