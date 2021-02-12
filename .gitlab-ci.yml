@@ -5,7 +5,7 @@ stages:
 variables:
 #  PROJECT_NAME: "Admin.API"
   BUILD_IMAGE: "mcr.microsoft.com/dotnet/core/sdk:3.1" 
-  FRONTEND_PATH: "code/impact-admin"
+  FRONTEND_PATH: "code/academically-admin"
   BACKEND_PATH: "code/Academically/Academically.Web.Host"
   ENV_NAME: "poc"
   LOG_RETENTION: 7
