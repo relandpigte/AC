@@ -97,3 +97,4 @@ custom:
     createRoute53Record: true
     endpointType: 'EDGE'
     securityPolicy: tls_1_2
+
