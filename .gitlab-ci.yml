@@ -3,7 +3,6 @@ stages:
   - deploy
 
 variables:
-#  PROJECT_NAME: "Admin.API"
   BUILD_IMAGE: "mcr.microsoft.com/dotnet/core/sdk:3.1" 
   FRONTEND_PATH: "code/academically-admin"
   BACKEND_PATH: "code/Academically/Academically.Web.Host"
@@ -59,7 +58,7 @@ build_backend:
     # Build and Package projects
     - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
     - dotnet publish --configuration release --framework netcoreapp3.1 --output bin/release/netcoreapp3.1/output
-    - zip -r $CI_PROJECT_DIR/artifacts/$CI_PROJECT_NAME.zip bin/release/netcoreapp3.1/output
+    - zip -r $CI_PROJECT_DIR/artifacts/backend.zip bin/release/netcoreapp3.1/output
     - ls -la
   artifacts:
     paths:

@@ -77,7 +77,7 @@ functions:
 
     # you can add packaging information here
     package:
-      artifact: artifacts/${CI_PROJECT_NAME}.zip
+      artifact: artifacts/backend.zip
     #  exclude:
     #    - exclude-me.js
     #    - exclude-me-dir/**
