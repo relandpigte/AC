@@ -66,31 +66,31 @@ build_backend:
     expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
 
 
-# build_frontend:
-#   stage: build
-#   image: node:10.16.0
-#   before_script:
-#     - echo "pre script (build_frontend)"
-#     - echo "Install Pre-requistes"
-#     - apt-get update
-#     - node -v
-#     - npm -v
-#   cache:
-#     paths:
-#       - $CI_PROJECT_DIR/$FRONTEND_PATH/node_modules/
+build_frontend:
+  stage: build
+  image: node:10.16.0
+  before_script:
+    - echo "pre script (build_frontend)"
+    - echo "Install Pre-requistes"
+    - apt-get update
+    - node -v
+    - npm -v
+  cache:
+    paths:
+      - $CI_PROJECT_DIR/$FRONTEND_PATH/node_modules/
       
-#   script:
-#     - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
-#     - ls -la
-#     # specify v9.1.4 to match our code
-#     - npm install -g @angular/cli@9.1.4
-#     - yarn install
-#     - ng build --configuration $ENV_NAME
-#     - ls -la
-#   artifacts:
-#     paths:
-#       - $CI_PROJECT_DIR/$FRONTEND_PATH/dist/
-#     expire_in: 21 day
+  script:
+    - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
+    - ls -la
+    # specify v9.1.4 to match our code
+    - npm install -g @angular/cli@9.1.4
+    - yarn install
+    - ng build --configuration $ENV_NAME
+    - ls -la
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/$FRONTEND_PATH/dist/
+    expire_in: 21 day
     
 # End Build #
 #############
@@ -135,6 +135,32 @@ deploy_backend:
     - echo "run serverless deploy"
     - "SLS_DEBUG=* serverless deploy"  
 
+
+deploy_frontend:
+  stage: deploy
+  image: python:latest
+  before_script:
+    - echo "pre script (deploy_frontend)"
+    - echo "Install Pre-requistes"
+    - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
+    - apt-get update
+    - pip3 install awscli boto boto3
+    - aws --version
+    - pwd
+  dependencies:
+    - build_frontend
+  environment:
+    name: ci_frontend
+
+  script:
+    # Copy Dist to S3 Bucket
+    - echo "Copy dist to S3"
+    - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
+    - pwd
+    - ls -la
+    - aws s3 rm s3://academically-$ENV_NAME.sourcecloud-dev.uk --recursive
+    - aws s3 cp dist s3://academically-$ENV_NAME.sourcecloud-dev.uk --recursive
+    - aws s3 ls s3://academically-$ENV_NAME.sourcecloud-dev.uk
 
 # End Deploy #
 ##############
