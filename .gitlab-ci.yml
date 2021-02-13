@@ -134,6 +134,10 @@ deploy_schema:
     - cat <<< "key /etc/openvpn/client.key" >> /etc/openvpn/client.conf # Tell vpn config to use client.key file.
     - cat <<< "log /etc/openvpn/client.log" >> /etc/openvpn/client.conf # Tell vpn config to use log file.
     - which openvpn
+    # Lookup Database Id from Cloudformation
+    - export DATABASE_ID=$(aws cloudformation list-exports | jq -r '.[] | .[] | select(.Name=="academicallyci-RDSEndId") | .Value')
+    - echo "Database Id $DATABASE_ID"
+    # Connect to VPN
     - openvpn --config /etc/openvpn/client.conf --verb 5 --daemon # Start openvpn with config as a deamon.
     - sleep 30s # Wait for some time so the vpn can connect before doing anything else.
     - cat /etc/openvpn/client.log # Print the vpn log.
