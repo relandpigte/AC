@@ -161,8 +161,8 @@ deploy_schema:
     - ls -la
     - "cd $CI_PROJECT_DIR/liquibase_scripts"
     # run liquibase
-    - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME`_`$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver clearchecksums
-    - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME`_`$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver update
+    - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver clearchecksums
+    - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver update
 
 # deploy_backend:
 #   stage: deploy
