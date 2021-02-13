@@ -72,15 +72,12 @@ functions:
       - http:
           path: /{proxy+}
           method: ANY
-    #      integration: lambda
 
 
     # you can add packaging information here
     package:
       artifact: artifacts/backend.zip
-    #  exclude:
-    #    - exclude-me.js
-    #    - exclude-me-dir/**
+
 
 plugins:
   - serverless-domain-manager
