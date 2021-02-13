@@ -77,7 +77,7 @@ functions:
 
     # you can add packaging information here
     package:
-      artifact: artifacts/academically-pub-api.zip
+      artifact: artifacts/${CI_PROJECT_NAME}.zip
     #  exclude:
     #    - exclude-me.js
     #    - exclude-me-dir/**
