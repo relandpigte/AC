@@ -109,6 +109,7 @@ deploy_schema:
     - echo "pre script (deploy_schema)"
     - echo "Install Pre-requistes"
     - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
+    - jq --version
     - apt-get update
     - apt-get install -y software-properties-common 
     - apt-get install -y iputils-ping
