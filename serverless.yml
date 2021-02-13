@@ -88,7 +88,7 @@ plugins:
 
 custom:
   customDomain:
-    domainName: api-academically-$ENV_NAME.${env:PUBLIC_DOMAIN}
+    domainName: api-academically-${env:ENV_NAME}.${env:PUBLIC_DOMAIN}
     stage: ${env:ENV_NAME}
     basePath: ${env:ENV_NAME}
     # certificate name is first SAN listed
