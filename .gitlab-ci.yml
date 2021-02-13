@@ -152,8 +152,8 @@ deploy_schema:
     - ls -la
     - "cd $CI_PROJECT_DIR/liquibase_scripts"
     # run liquibase
-    - /opt/liquibase/liquibase --url="jdbc:mysql://academically-ci-cluster.cluster-cezk0pjfusmr.eu-west-2.rds.amazonaws.com:3306/impact_poc" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver clearchecksums
-    - /opt/liquibase/liquibase --url="jdbc:mysql://academically-ci-cluster.cluster-cezk0pjfusmr.eu-west-2.rds.amazonaws.com:3306/impact_poc" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver update
+    - /opt/liquibase/liquibase --url="jdbc:mysql://academically-ci-cluster.cluster-cezk0pjfusmr.eu-west-2.rds.amazonaws.com:3306/academically_$ENV_NAME" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver clearchecksums
+    - /opt/liquibase/liquibase --url="jdbc:mysql://academically-ci-cluster.cluster-cezk0pjfusmr.eu-west-2.rds.amazonaws.com:3306/academically_$ENV_NAME" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver update
 
 deploy_backend:
   stage: deploy
