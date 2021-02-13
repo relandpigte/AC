@@ -18,28 +18,28 @@ variables:
 # Build #
 #########
 
-build_schema:
-  stage: build
-  image: $BUILD_IMAGE
-  before_script:
-    - echo "pre script (build_schema)"
-    - apt-get update
-    - echo "Install Pre-requistes"
-    - apt-get install -y zip
-    - pwd
-    - mkdir artifacts
+# build_schema:
+#   stage: build
+#   image: $BUILD_IMAGE
+#   before_script:
+#     - echo "pre script (build_schema)"
+#     - apt-get update
+#     - echo "Install Pre-requistes"
+#     - apt-get install -y zip
+#     - pwd
+#     - mkdir artifacts
 
-  script:
-    # Package Schema
-    - "cd $CI_PROJECT_DIR/database" 
-    - zip -r $CI_PROJECT_DIR/artifacts/database.zip .
-    - echo "Zipped Packages Ready....."
-    - "cd $CI_PROJECT_DIR/artifacts" 
-    - ls -la
-  artifacts:
-    paths:
-      - artifacts
-    expire_in: 21 day
+#   script:
+#     # Package Schema
+#     - "cd $CI_PROJECT_DIR/database" 
+#     - zip -r $CI_PROJECT_DIR/artifacts/database.zip .
+#     - echo "Zipped Packages Ready....."
+#     - "cd $CI_PROJECT_DIR/artifacts" 
+#     - ls -la
+#   artifacts:
+#     paths:
+#       - artifacts
+#     expire_in: 21 day
 
 build_backend:
   stage: build
@@ -109,6 +109,7 @@ deploy_backend:
     - echo "pre script (deploy_backend)"
     - echo "Install Pre-requistes"
     - echo "AWS Region  $AWS_DEFAULT_REGION"
+    - echo "Project Dir  $CI_PROJECT_DIR"
     - apt-get update
     - apt-get install -y zip
     - npm install
