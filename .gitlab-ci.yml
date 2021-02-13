@@ -24,7 +24,7 @@ build_schema:
   image: $BUILD_IMAGE
   before_script:
     - echo "pre script (build_schema)"
-    - echo "DEBUG - $APP_NAME`__`$ENV_NAME"  # need a single underscore between variables
+    - echo "DEBUG - $APP_NAME`"_"`$ENV_NAME"  # need a single underscore between variables
     - apt-get update
     - echo "Install Pre-requistes"
     - apt-get install -y zip
