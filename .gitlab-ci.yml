@@ -108,6 +108,7 @@ deploy_backend:
   before_script:
     - echo "pre script (deploy_backend)"
     - echo "Install Pre-requistes"
+    - echo "AWS Region  $AWS_DEFAULT_REGION"
     - apt-get update
     - apt-get install -y zip
     - npm install
