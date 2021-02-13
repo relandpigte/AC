@@ -23,7 +23,7 @@ provider:
   name: aws
   endpointType: EDGE
   runtime: dotnetcore3.1
-  region: ${env:AWS_DEFAULT_REGION}
+  region: $AWS_DEFAULT_REGION
   stage: ${env:ENV_NAME}
   logRetentionInDays: ${env:LOG_RETENTION}
   vpc:
