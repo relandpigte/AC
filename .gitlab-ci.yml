@@ -109,15 +109,16 @@ deploy_schema:
     - echo "pre script (deploy_schema)"
     - echo "Install Pre-requistes"
     - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
-    - jq --version
     - apt-get update
     - apt-get install -y software-properties-common 
     - apt-get install -y iputils-ping
     - apt-get install -y zip
-    # install python and awscli
+    # install python, awscli & jq
     - apt-get install -y python3-pip
     - pip3 install awscli boto boto3
+    - apt-get install -y jq
     - aws --version
+    - jq --version
     # install java 1.8
     - apt-get install -y openjdk-8-jre
     - java -version
