@@ -24,7 +24,7 @@ provider:
   endpointType: EDGE
   runtime: dotnetcore3.1
   profile: academically
-  region: ${env:AWS_DEFAULT_REGION}
+  region: eu-west-2
   stage: ${env:ENV_NAME}
   logRetentionInDays: ${env:LOG_RETENTION}
   vpc:
