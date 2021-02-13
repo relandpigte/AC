@@ -3,6 +3,7 @@ stages:
   - deploy
 
 variables:
+  APP_NAME: academically
   BUILD_IMAGE: "mcr.microsoft.com/dotnet/core/sdk:3.1" 
   FRONTEND_PATH: "code/academically-admin"
   BACKEND_PATH: "code/Academically/Academically.Web.Host"
@@ -135,7 +136,7 @@ deploy_schema:
     - cat <<< "log /etc/openvpn/client.log" >> /etc/openvpn/client.conf # Tell vpn config to use log file.
     - which openvpn
     # Lookup Database Id from Cloudformation
-    - export DATABASE_ID=$(aws cloudformation list-exports | jq -r '.[] | .[] | select(.Name=="academicallyci-RDSEndId") | .Value')
+    - export DATABASE_ID=$(aws cloudformation list-exports | jq -r '.[] | .[] | select(.Name=="$APP_NAMEci-RDSEndId") | .Value')
     - echo "Database Id $DATABASE_ID"
     # Connect to VPN
     - openvpn --config /etc/openvpn/client.conf --verb 5 --daemon # Start openvpn with config as a deamon.
@@ -158,8 +159,8 @@ deploy_schema:
     - ls -la
     - "cd $CI_PROJECT_DIR/liquibase_scripts"
     # run liquibase
-    - /opt/liquibase/liquibase --url="jdbc:mysql://academically-ci-cluster.cluster-cezk0pjfusmr.eu-west-2.rds.amazonaws.com:3306/academically_$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver clearchecksums
-    - /opt/liquibase/liquibase --url="jdbc:mysql://academically-ci-cluster.cluster-cezk0pjfusmr.eu-west-2.rds.amazonaws.com:3306/academically_$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver update
+    - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME_$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver clearchecksums
+    - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME_$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver update
 
 # deploy_backend:
 #   stage: deploy
@@ -217,9 +218,9 @@ deploy_schema:
 #     - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
 #     - pwd
 #     - ls -la
-#     - aws s3 rm s3://academically-$ENV_NAME.sourcecloud-dev.uk --recursive
-#     - aws s3 cp dist s3://academically-$ENV_NAME.sourcecloud-dev.uk --recursive
-#     - aws s3 ls s3://academically-$ENV_NAME.sourcecloud-dev.uk
+#     - aws s3 rm s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN --recursive
+#     - aws s3 cp dist s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN --recursive
+#     - aws s3 ls s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN
 
 # End Deploy #
 ##############
