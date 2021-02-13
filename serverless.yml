@@ -23,7 +23,6 @@ provider:
   name: aws
   endpointType: EDGE
   runtime: dotnetcore3.1
-  profile: academically
   region: eu-west-2
   stage: ${env:ENV_NAME}
   logRetentionInDays: ${env:LOG_RETENTION}
