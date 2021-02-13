@@ -41,56 +41,56 @@ build_schema:
       - artifacts
     expire_in: 21 day
 
-build_backend:
-  stage: build
-  image: $BUILD_IMAGE
-  before_script:
-    - echo "pre script (build_backend)"
-    - apt-get update
-    - echo "Install Pre-requistes"
-    - apt-get install -y zip
-    - pwd
-    - mkdir artifacts
-    - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
-    - "dotnet restore"
+# build_backend:
+#   stage: build
+#   image: $BUILD_IMAGE
+#   before_script:
+#     - echo "pre script (build_backend)"
+#     - apt-get update
+#     - echo "Install Pre-requistes"
+#     - apt-get install -y zip
+#     - pwd
+#     - mkdir artifacts
+#     - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
+#     - "dotnet restore"
 
-  script:
-    # Build and Package projects
-    - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
-    - dotnet publish --configuration release --framework netcoreapp3.1 --output bin/release/netcoreapp3.1/output
-    - zip -r $CI_PROJECT_DIR/artifacts/backend.zip bin/release/netcoreapp3.1/output
-    - ls -la
-  artifacts:
-    paths:
-      - artifacts
-    expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
+#   script:
+#     # Build and Package projects
+#     - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
+#     - dotnet publish --configuration release --framework netcoreapp3.1 --output bin/release/netcoreapp3.1/output
+#     - zip -r $CI_PROJECT_DIR/artifacts/backend.zip bin/release/netcoreapp3.1/output
+#     - ls -la
+#   artifacts:
+#     paths:
+#       - artifacts
+#     expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
 
 
-build_frontend:
-  stage: build
-  image: node:10.16.0
-  before_script:
-    - echo "pre script (build_frontend)"
-    - echo "Install Pre-requistes"
-    - apt-get update
-    - node -v
-    - npm -v
-  cache:
-    paths:
-      - $CI_PROJECT_DIR/$FRONTEND_PATH/node_modules/
+# build_frontend:
+#   stage: build
+#   image: node:10.16.0
+#   before_script:
+#     - echo "pre script (build_frontend)"
+#     - echo "Install Pre-requistes"
+#     - apt-get update
+#     - node -v
+#     - npm -v
+#   cache:
+#     paths:
+#       - $CI_PROJECT_DIR/$FRONTEND_PATH/node_modules/
       
-  script:
-    - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
-    - ls -la
-    # specify v9.1.4 to match our code
-    - npm install -g @angular/cli@9.1.4
-    - yarn install
-    - ng build --configuration $ENV_NAME
-    - ls -la
-  artifacts:
-    paths:
-      - $CI_PROJECT_DIR/$FRONTEND_PATH/dist/
-    expire_in: 21 day
+#   script:
+#     - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
+#     - ls -la
+#     # specify v9.1.4 to match our code
+#     - npm install -g @angular/cli@9.1.4
+#     - yarn install
+#     - ng build --configuration $ENV_NAME
+#     - ls -la
+#   artifacts:
+#     paths:
+#       - $CI_PROJECT_DIR/$FRONTEND_PATH/dist/
+#     expire_in: 21 day
     
 # End Build #
 #############
@@ -156,65 +156,65 @@ deploy_schema:
     - /opt/liquibase/liquibase --url="jdbc:mysql://academically-ci-cluster.cluster-cezk0pjfusmr.eu-west-2.rds.amazonaws.com:3306/academically_$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver clearchecksums
     - /opt/liquibase/liquibase --url="jdbc:mysql://academically-ci-cluster.cluster-cezk0pjfusmr.eu-west-2.rds.amazonaws.com:3306/academically_$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver update
 
-deploy_backend:
-  stage: deploy
-  image: node:latest
-  before_script:
-    - echo "pre script (deploy_backend)"
-    - echo "Install Pre-requistes"
-    - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
-    - apt-get update
-    - apt-get install -y zip
-    - npm install
-    - npm install -g serverless
-    - pwd
-  dependencies:
-    - build_backend
-  environment:
-    name: ci_backend
+# deploy_backend:
+#   stage: deploy
+#   image: node:latest
+#   before_script:
+#     - echo "pre script (deploy_backend)"
+#     - echo "Install Pre-requistes"
+#     - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
+#     - apt-get update
+#     - apt-get install -y zip
+#     - npm install
+#     - npm install -g serverless
+#     - pwd
+#   dependencies:
+#     - build_backend
+#   environment:
+#     name: ci_backend
 
-  script:
-    # Deploy using serverless
-    - "cd $CI_PROJECT_DIR" 
-    - "pwd"
-    - "ls -la"
-    - echo "Create package.json"
-    - yarn install
-    - yarn init --yes 2>/dev/null
-    - echo "install plugins"
-    - "yarn add serverless-plugin-log-retention --dev"
-    - "yarn add serverless-domain-manager --dev"
-    - echo "run serverless-domain-manager"
-    - "SLS_DEBUG=* serverless create_domain"
-    - echo "run serverless deploy"
-    - "SLS_DEBUG=* serverless deploy"  
+#   script:
+#     # Deploy using serverless
+#     - "cd $CI_PROJECT_DIR" 
+#     - "pwd"
+#     - "ls -la"
+#     - echo "Create package.json"
+#     - yarn install
+#     - yarn init --yes 2>/dev/null
+#     - echo "install plugins"
+#     - "yarn add serverless-plugin-log-retention --dev"
+#     - "yarn add serverless-domain-manager --dev"
+#     - echo "run serverless-domain-manager"
+#     - "SLS_DEBUG=* serverless create_domain"
+#     - echo "run serverless deploy"
+#     - "SLS_DEBUG=* serverless deploy"  
 
 
-deploy_frontend:
-  stage: deploy
-  image: python:latest
-  before_script:
-    - echo "pre script (deploy_frontend)"
-    - echo "Install Pre-requistes"
-    - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
-    - apt-get update
-    - pip3 install awscli boto boto3
-    - aws --version
-    - pwd
-  dependencies:
-    - build_frontend
-  environment:
-    name: ci_frontend
+# deploy_frontend:
+#   stage: deploy
+#   image: python:latest
+#   before_script:
+#     - echo "pre script (deploy_frontend)"
+#     - echo "Install Pre-requistes"
+#     - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
+#     - apt-get update
+#     - pip3 install awscli boto boto3
+#     - aws --version
+#     - pwd
+#   dependencies:
+#     - build_frontend
+#   environment:
+#     name: ci_frontend
 
-  script:
-    # Copy Dist to S3 Bucket
-    - echo "Copy dist to S3"
-    - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
-    - pwd
-    - ls -la
-    - aws s3 rm s3://academically-$ENV_NAME.sourcecloud-dev.uk --recursive
-    - aws s3 cp dist s3://academically-$ENV_NAME.sourcecloud-dev.uk --recursive
-    - aws s3 ls s3://academically-$ENV_NAME.sourcecloud-dev.uk
+#   script:
+#     # Copy Dist to S3 Bucket
+#     - echo "Copy dist to S3"
+#     - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
+#     - pwd
+#     - ls -la
+#     - aws s3 rm s3://academically-$ENV_NAME.sourcecloud-dev.uk --recursive
+#     - aws s3 cp dist s3://academically-$ENV_NAME.sourcecloud-dev.uk --recursive
+#     - aws s3 ls s3://academically-$ENV_NAME.sourcecloud-dev.uk
 
 # End Deploy #
 ##############
