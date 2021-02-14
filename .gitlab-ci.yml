@@ -212,7 +212,7 @@ deploy_backend:
     - echo $API_URL
     - cp appsettings.json appsettings.bak
     - jq ".App.ServerRootAddress=\"$API_URL``/$ENV_NAME\" |\
-     .App.ClientRootAddress=\"$API_URL\" \
+     .App.ClientRootAddress=\"$API_URL\" |\
      .App.CorsOrigins=\"$API_URL``,$API_URL_PROD\" \
      " appsettings.bak > appsettings.json
     - cat appsettings.json
