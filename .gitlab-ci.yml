@@ -203,9 +203,11 @@ deploy_backend:
     - echo "install plugins"
     - "yarn add serverless-plugin-log-retention --dev"
     - "yarn add serverless-domain-manager --dev"
-    # perform subsitutions on appsettings
-    - cat $CI_PROJECT_DIR/$BACKEND_PATH/appsettings.json | jq .App.ServerRootAddress = 'testvalue' | > $CI_PROJECT_DIR/$BACKEND_PATH/appsettings.json
-    - cat $CI_PROJECT_DIR/$BACKEND_PATH/appsettings.json
+    # perform subsitutions on appsettings (need to unzip and rezip)
+    - mkdir $CI_PROJECT_DIR/temp
+    - unzip $CI_PROJECT_DIR/artifacts/backend.zip -d $CI_PROJECT_DIR/temp
+    - cat $CI_PROJECT_DIR/temp/appsettings.json | jq .App.ServerRootAddress = 'testvalue' | > $CI_PROJECT_DIR/temp/appsettings.json
+    - cat $CI_PROJECT_DIR/temp/appsettings.json
     # - echo "run serverless-domain-manager"
     # - "SLS_DEBUG=* serverless create_domain"
     # - echo "run serverless deploy"
