@@ -210,14 +210,20 @@ deploy_backend:
     - export API_URL_PROD="https://api-$APP_NAME.$PUBLIC_DOMAIN"
     - echo $API_URL
     - cp appsettings.json appsettings.bak
-    - jq ".App.ServerRootAddress=\"$API_URL``/$ENV_NAME\" | .App.ClientRootAddress=\"$API_URL\" | .App.CorsOrigins=\"$API_URL``,$API_URL_PROD\" | .App.ServerBasePath=\"$ENV_NAME\" | .Kestrel.Endpoints.Http.Url=\"$API_URL\" | .Aws.Id=\"$AWS_ACC_NUM\" | .Aws.Profile=\"\" | .Aws.Region=\"$AWS_DEFAULT_REGION\" | .Aws.S3.AssetsBucket=\"$APP_NAME``-$ENV_NAME``-assets\"" appsettings.bak > appsettings.json
+    # Lookup Database Id from Cloudformation
+    - export DATABASE_ID=$(aws cloudformation list-exports | jq -r '.[] | .[] | select(.Name=="academicallyci-RDSEndId") | .Value')
+    - echo "Database Id $DATABASE_ID"
+    # Subsitute the Connection String
+    - jq ".ConnectionStrings=\"server=$DATABASE_ID``;database=$APP_NAME``_$ENV_NAME;uid=deployAdmin;password=$db_master_password;port=3306\"" appsettings.bak > appsettings.v1
+    # Subsitute the Other Variables
+    - jq ".App.ServerRootAddress=\"$API_URL``/$ENV_NAME\" | .App.ClientRootAddress=\"$API_URL\" | .App.CorsOrigins=\"$API_URL``,$API_URL_PROD\" | .App.ServerBasePath=\"$ENV_NAME\" | .Kestrel.Endpoints.Http.Url=\"$API_URL\" | .Aws.Id=\"$AWS_ACC_NUM\" | .Aws.Profile=\"\" | .Aws.Region=\"$AWS_DEFAULT_REGION\" | .Aws.S3.AssetsBucket=\"$APP_NAME``-$ENV_NAME``-assets\"" appsettings.v1 > appsettings.json
     - cat appsettings.json
     - rm appsettings.bak
     - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
     - "cd $CI_PROJECT_DIR" 
     - echo "run serverless-domain-manager"
     - "SLS_DEBUG=* serverless create_domain"
-    - echo "run serverless deploy"
+    - echo "run serverless deploy"v1
     - "SLS_DEBUG=* serverless deploy"  
 
 
