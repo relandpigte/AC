@@ -3,7 +3,6 @@ stages:
   - deploy
 
 variables:
-  APP_NAME: "academically"
   BUILD_IMAGE: "mcr.microsoft.com/dotnet/core/sdk:3.1" 
   FRONTEND_PATH: "code/academically-admin"
   BACKEND_PATH: "code/Academically/Academically.Web.Host"
@@ -211,7 +210,7 @@ deploy_backend:
     - export API_URL_PROD="https://api-$APP_NAME.$PUBLIC_DOMAIN"
     - echo $API_URL
     - cp appsettings.json appsettings.bak
-    - jq ".App.ServerRootAddress=\"$API_URL``/$ENV_NAME\" | .App.ClientRootAddress=\"$API_URL\" | .App.CorsOrigins=\"$API_URL``,$API_URL_PROD\"" appsettings.bak > appsettings.json
+    - jq ".App.ServerRootAddress=\"$API_URL``/$ENV_NAME\" | .App.ClientRootAddress=\"$API_URL\" | .App.CorsOrigins=\"$API_URL``,$API_URL_PROD\" | .App.ServerBasePath=\"$ENV_NAME\" | .Kestral.Endpoints.Http.Url=\"$API_URL\" | .Aws.Id=\"$AWS_ACC_NUM\"" appsettings.bak > appsettings.json
     - cat appsettings.json
     - rm appsettings.bak
     # - echo "run serverless-domain-manager"
