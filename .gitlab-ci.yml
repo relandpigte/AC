@@ -208,9 +208,13 @@ deploy_backend:
     - unzip $CI_PROJECT_DIR/artifacts/backend.zip -d $CI_PROJECT_DIR/temp
     - cd temp
     - export API_URL="https://api-$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN"
+    - export API_URL_PROD="https://api-$APP_NAME.$PUBLIC_DOMAIN"
     - echo $API_URL
     - cp appsettings.json appsettings.bak
-    - jq ".App.ServerRootAddress=\"$API_URL\" | .App.ServerRootAddress=\"$API_URL``/$ENV_NAME\"" appsettings.bak > appsettings.json
+    - jq ".App.ServerRootAddress=\"$API_URL``/$ENV_NAME\" |\
+     .App.ClientRootAddress=\"$API_URL\" \
+     .App.CorsOrigins=\"$API_URL``,$API_URL_PROD\" \
+     " appsettings.bak > appsettings.json
     - cat appsettings.json
     - rm appsettings.bak
     # - echo "run serverless-domain-manager"
