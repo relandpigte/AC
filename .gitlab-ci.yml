@@ -208,7 +208,7 @@ deploy_backend:
     - echo $API_URL
     - mkdir $CI_PROJECT_DIR/temp
     - unzip $CI_PROJECT_DIR/artifacts/backend.zip -d $CI_PROJECT_DIR/temp
-    - "cd CI_PROJECT_DIR/temp"
+    - cd temp
     - cp appsettings.json appsettings.bak
     - cat appsettings.json
     - jq 'if .App.ServerRootAddress? then .App.ServerRootAddress="$API_URL" else . end' appsettings.json > appsettings.json
