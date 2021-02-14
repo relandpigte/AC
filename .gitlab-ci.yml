@@ -172,7 +172,14 @@ deploy_backend:
     - echo "Install Pre-requistes"
     - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
     - apt-get update
+    # install python, awscli & jq
+    - apt-get install -y python3-pip
+    - pip3 install awscli boto boto3
+    - apt-get install -y jq
+    - aws --version
+    - jq --version
     - apt-get install -y zip
+    # install node and serverless
     - npm install
     - npm install -g serverless
     # Lookup Required Outputs from Cloudformation
