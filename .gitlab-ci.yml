@@ -184,7 +184,6 @@ deploy_backend:
     # Lookup Required Outputs from Cloudformation
     - export SG_WEB=$(aws cloudformation list-exports | jq -r '.[] | .[] | select(.Name=="academicallyci-SGWebId") | .Value')
     - echo "Web Security Group $SG_WEB"
-
     - pwd
   dependencies:
     - build_backend
@@ -205,6 +204,7 @@ deploy_backend:
     # perform subsitutions on appsettings (need to unzip and rezip)
     - mkdir $CI_PROJECT_DIR/temp
     - unzip $CI_PROJECT_DIR/artifacts/backend.zip -d $CI_PROJECT_DIR/temp
+    - rm $CI_PROJECT_DIR/artifacts/backend.zip # remove zip so we can create a new one
     - cd temp
     - export API_URL="https://api-$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN"
     - export API_URL_PROD="https://api-$APP_NAME.$PUBLIC_DOMAIN"
@@ -213,6 +213,8 @@ deploy_backend:
     - jq ".App.ServerRootAddress=\"$API_URL``/$ENV_NAME\" | .App.ClientRootAddress=\"$API_URL\" | .App.CorsOrigins=\"$API_URL``,$API_URL_PROD\" | .App.ServerBasePath=\"$ENV_NAME\" | .Kestrel.Endpoints.Http.Url=\"$API_URL\" | .Aws.Id=\"$AWS_ACC_NUM\" | .Aws.Profile=\"\" | .Aws.Region=\"$AWS_DEFAULT_REGION\" | .Aws.S3.AssetsBucket=\"$APP_NAME``-$ENV_NAME``-assets\"" appsettings.bak > appsettings.json
     - cat appsettings.json
     - rm appsettings.bak
+    - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
+    - "cd $CI_PROJECT_DIR" 
     - echo "run serverless-domain-manager"
     - "SLS_DEBUG=* serverless create_domain"
     - echo "run serverless deploy"
