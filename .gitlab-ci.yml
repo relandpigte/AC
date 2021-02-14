@@ -210,7 +210,7 @@ deploy_backend:
     - export API_URL_PROD="https://api-$APP_NAME.$PUBLIC_DOMAIN"
     - echo $API_URL
     - cp appsettings.json appsettings.bak
-    - jq ".App.ServerRootAddress=\"$API_URL``/$ENV_NAME\" | .App.ClientRootAddress=\"$API_URL\" | .App.CorsOrigins=\"$API_URL``,$API_URL_PROD\" | .App.ServerBasePath=\"$ENV_NAME\" | .Kestral.Endpoints.Http.Url=\"$API_URL\" | .Aws.Id=\"$AWS_ACC_NUM\"" appsettings.bak > appsettings.json
+    - jq ".App.ServerRootAddress=\"$API_URL``/$ENV_NAME\" | .App.ClientRootAddress=\"$API_URL\" | .App.CorsOrigins=\"$API_URL``,$API_URL_PROD\" | .App.ServerBasePath=\"$ENV_NAME\" | .Kestrel.Endpoints.Http.Url=\"$API_URL\" | .Aws.Id=\"$AWS_ACC_NUM\" | .Aws.Profile=\"\" | .Aws.Region=\"$AWS_DEFAULT_REGION\" | .Aws.S3.AssetsBucket=\"$APP_NAME``-$ENV_NAME``-assets\"" appsettings.bak > appsettings.json
     - cat appsettings.json
     - rm appsettings.bak
     # - echo "run serverless-domain-manager"
