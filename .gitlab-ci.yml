@@ -204,11 +204,15 @@ deploy_backend:
     - "yarn add serverless-plugin-log-retention --dev"
     - "yarn add serverless-domain-manager --dev"
     # perform subsitutions on appsettings (need to unzip and rezip)
+    - export API_URL="https://api-$APP_NAME-$ENV_NAME.$PUBLIC_NAME/$ENV_NAME"
+    - echo $API_URL
     - mkdir $CI_PROJECT_DIR/temp
     - unzip $CI_PROJECT_DIR/artifacts/backend.zip -d $CI_PROJECT_DIR/temp
+    - cp appsettings.json appsettings.bak
     - cat $CI_PROJECT_DIR/temp/appsettings.json
-    - cat $CI_PROJECT_DIR/temp/appsettings.json | jq .App.ServerRootAddress = 'testvalue' | > $CI_PROJECT_DIR/temp/appsettings.json
+    - jq 'if .App.ServerRootAddress? then .App.ServerRootAddress="$API_URL" else . end' appsettings.json > appsettings.json
     - cat $CI_PROJECT_DIR/temp/appsettings.json
+    - rm appsettings.bak
     # - echo "run serverless-domain-manager"
     # - "SLS_DEBUG=* serverless create_domain"
     # - echo "run serverless deploy"
