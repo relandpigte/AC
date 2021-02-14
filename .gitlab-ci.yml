@@ -9,7 +9,7 @@ variables:
   BACKEND_PATH: "code/Academically/Academically.Web.Host"
   ENV_NAME: "ci"
   LOG_RETENTION: 7
-  SG_WEB: "sg-0e99d2ed26808a35d"
+#  SG_WEB: "sg-0e99d2ed26808a35d"
   PRIVATE_SUBNET_A: "subnet-03f6e008bbf99fd12"
   PRIVATE_SUBNET_B: "subnet-06ff7fbbb445833a3"
   PUBLIC_DOMAIN: "sourcecloud-dev.uk"
@@ -43,29 +43,29 @@ build_schema:
       - artifacts
     expire_in: 21 day
 
-# build_backend:
-#   stage: build
-#   image: $BUILD_IMAGE
-#   before_script:
-#     - echo "pre script (build_backend)"
-#     - apt-get update
-#     - echo "Install Pre-requistes"
-#     - apt-get install -y zip
-#     - pwd
-#     - mkdir artifacts
-#     - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
-#     - "dotnet restore"
+build_backend:
+  stage: build
+  image: $BUILD_IMAGE
+  before_script:
+    - echo "pre script (build_backend)"
+    - apt-get update
+    - echo "Install Pre-requistes"
+    - apt-get install -y zip
+    - pwd
+    - mkdir artifacts
+    - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
+    - "dotnet restore"
 
-#   script:
-#     # Build and Package projects
-#     - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
-#     - dotnet publish --configuration release --framework netcoreapp3.1 --output bin/release/netcoreapp3.1/output
-#     - zip -r $CI_PROJECT_DIR/artifacts/backend.zip bin/release/netcoreapp3.1/output
-#     - ls -la
-#   artifacts:
-#     paths:
-#       - artifacts
-#     expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
+  script:
+    # Build and Package projects
+    - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
+    - dotnet publish --configuration release --framework netcoreapp3.1 --output bin/release/netcoreapp3.1/output
+    - zip -r $CI_PROJECT_DIR/artifacts/backend.zip bin/release/netcoreapp3.1/output
+    - ls -la
+  artifacts:
+    paths:
+      - artifacts
+    expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
 
 
 # build_frontend:
@@ -164,38 +164,42 @@ deploy_schema:
     - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver clearchecksums
     - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver update
 
-# deploy_backend:
-#   stage: deploy
-#   image: node:latest
-#   before_script:
-#     - echo "pre script (deploy_backend)"
-#     - echo "Install Pre-requistes"
-#     - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
-#     - apt-get update
-#     - apt-get install -y zip
-#     - npm install
-#     - npm install -g serverless
-#     - pwd
-#   dependencies:
-#     - build_backend
-#   environment:
-#     name: ci_backend
+deploy_backend:
+  stage: deploy
+  image: node:latest
+  before_script:
+    - echo "pre script (deploy_backend)"
+    - echo "Install Pre-requistes"
+    - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
+    - apt-get update
+    - apt-get install -y zip
+    - npm install
+    - npm install -g serverless
+    # Lookup Required Outputs from Cloudformation
+    - export SG_WEB=$(aws cloudformation list-exports | jq -r '.[] | .[] | select(.Name=="academicallyci-SGWebId") | .Value')
+    - echo "Web Security Group $SG_WEB"
 
-#   script:
-#     # Deploy using serverless
-#     - "cd $CI_PROJECT_DIR" 
-#     - "pwd"
-#     - "ls -la"
-#     - echo "Create package.json"
-#     - yarn install
-#     - yarn init --yes 2>/dev/null
-#     - echo "install plugins"
-#     - "yarn add serverless-plugin-log-retention --dev"
-#     - "yarn add serverless-domain-manager --dev"
-#     - echo "run serverless-domain-manager"
-#     - "SLS_DEBUG=* serverless create_domain"
-#     - echo "run serverless deploy"
-#     - "SLS_DEBUG=* serverless deploy"  
+    - pwd
+  dependencies:
+    - build_backend
+  environment:
+    name: ci_backend
+
+  script:
+    # Deploy using serverless
+    - "cd $CI_PROJECT_DIR" 
+    - "pwd"
+    - "ls -la"
+    - echo "Create package.json"
+    - yarn install
+    - yarn init --yes 2>/dev/null
+    - echo "install plugins"
+    - "yarn add serverless-plugin-log-retention --dev"
+    - "yarn add serverless-domain-manager --dev"
+    - echo "run serverless-domain-manager"
+    - "SLS_DEBUG=* serverless create_domain"
+    - echo "run serverless deploy"
+    - "SLS_DEBUG=* serverless deploy"  
 
 
 # deploy_frontend:
