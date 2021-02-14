@@ -210,8 +210,7 @@ deploy_backend:
     - export API_URL="https://api-$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN"
     - echo $API_URL
     - cp appsettings.json appsettings.bak
-    - cat appsettings.json
-    - jq '.App.ServerRootAddress="$API_URL" | .App.ServerRootAddress="$API_URL/$ENV_NAME"' appsettings.bak > appsettings.json
+    - jq '.App.ServerRootAddress=/"$API_URL/" | .App.ServerRootAddress=/"$API_URL``/$ENV_NAME/"' appsettings.bak > appsettings.json
     - cat appsettings.json
     - rm appsettings.bak
     # - echo "run serverless-domain-manager"
