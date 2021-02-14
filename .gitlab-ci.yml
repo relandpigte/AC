@@ -206,6 +206,7 @@ deploy_backend:
     # perform subsitutions on appsettings (need to unzip and rezip)
     - mkdir $CI_PROJECT_DIR/temp
     - unzip $CI_PROJECT_DIR/artifacts/backend.zip -d $CI_PROJECT_DIR/temp
+    - cat $CI_PROJECT_DIR/temp/appsettings.json
     - cat $CI_PROJECT_DIR/temp/appsettings.json | jq .App.ServerRootAddress = 'testvalue' | > $CI_PROJECT_DIR/temp/appsettings.json
     - cat $CI_PROJECT_DIR/temp/appsettings.json
     # - echo "run serverless-domain-manager"
