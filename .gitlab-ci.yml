@@ -9,7 +9,6 @@ variables:
   BACKEND_PATH: "code/Academically/Academically.Web.Host"
   ENV_NAME: "ci"
   LOG_RETENTION: 7
-#  SG_WEB: "sg-0e99d2ed26808a35d"
   PRIVATE_SUBNET_A: "subnet-03f6e008bbf99fd12"
   PRIVATE_SUBNET_B: "subnet-06ff7fbbb445833a3"
   PUBLIC_DOMAIN: "sourcecloud-dev.uk"
