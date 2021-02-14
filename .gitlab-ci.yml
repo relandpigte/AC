@@ -204,7 +204,7 @@ deploy_backend:
     - "yarn add serverless-plugin-log-retention --dev"
     - "yarn add serverless-domain-manager --dev"
     # perform subsitutions on appsettings (need to unzip and rezip)
-    - export API_URL="https://api-$APP_NAME-$ENV_NAME.$PUBLIC_NAME/$ENV_NAME"
+    - export API_URL="https://api-$APP_NAME-$ENV_NAME``.$PUBLIC_NAME/$ENV_NAME"
     - echo $API_URL
     - mkdir $CI_PROJECT_DIR/temp
     - unzip $CI_PROJECT_DIR/artifacts/backend.zip -d $CI_PROJECT_DIR/temp
