@@ -60,7 +60,8 @@ build_backend:
     # Build and Package projects
     - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
     - dotnet publish --configuration release --framework netcoreapp3.1 --output bin/release/netcoreapp3.1/output
-    - zip -r -j $CI_PROJECT_DIR/artifacts/backend.zip bin/release/netcoreapp3.1/output
+    - "cd $CI_PROJECT_DIR/$BACKEND_PATH/bin/release/netcoreapp3.1/output" 
+    - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
     - ls -la
   artifacts:
     paths:
