@@ -231,7 +231,6 @@ build_backend:
 
 deploy_backend_to_ci:
   <<: *backend
-  only: develop
 
 deploy_backend_to_uat:
   <<: *backend
