@@ -47,7 +47,7 @@ variables:
     - cat <<< "log /etc/openvpn/client.log" >> /etc/openvpn/client.conf # Tell vpn config to use log file.
     - which openvpn
     # Lookup Database Id from Cloudformation
-    - export DATABASE_ID=$(aws cloudformation list-exports | jq -r '.[] | .[] | select(.Name=="academicallyci-RDSEndId") | .Value')
+    - export DATABASE_ID=$(aws cloudformation list-exports | jq -r ".[] | .[] | select(.Name==\"$APP_NAME$ENV_NAME-RDSEndId\") | .Value")
     - echo "Database Id $DATABASE_ID"
     # Connect to VPN
     - openvpn --config /etc/openvpn/client.conf --verb 5 --daemon # Start openvpn with config as a deamon.
@@ -91,7 +91,7 @@ variables:
     - npm install
     - npm install -g serverless
     # Lookup Required Outputs from Cloudformation
-    - export SG_WEB=$(aws cloudformation list-exports | jq -r '.[] | .[] | select(.Name=="academicallyci-SGWebId") | .Value')
+    - export SG_WEB=$(aws cloudformation list-exports | jq -r ".[] | .[] | select(.Name==\"$APP_NAME$ENV_NAME-SGWebId\") | .Value")
     - echo "Web Security Group $SG_WEB"
     - pwd
 
@@ -117,7 +117,7 @@ variables:
     - echo $API_URL
     - cp appsettings.json appsettings.bak
     # Lookup Database Id from Cloudformation
-    - export DATABASE_ID=$(aws cloudformation list-exports | jq -r '.[] | .[] | select(.Name=="academicallyci-RDSEndId") | .Value')
+    - export DATABASE_ID=$(aws cloudformation list-exports | jq -r ".[] | .[] | select(.Name==\"$APP_NAME$ENV_NAME-RDSEndId") | .Value\")
     - echo "Database Id $DATABASE_ID"
     # Subsitute the Connection String
     - jq ".ConnectionStrings.Default=\"server=$DATABASE_ID``;database=$APP_NAME``_$ENV_NAME;uid=deployAdmin;password=$db_master_password;port=3306\"" appsettings.bak > appsettings.v1
