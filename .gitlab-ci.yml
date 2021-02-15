@@ -35,10 +35,7 @@ variables:
     - export SG_WEB=$(aws cloudformation list-exports | jq -r '.[] | .[] | select(.Name=="academicallyci-SGWebId") | .Value')
     - echo "Web Security Group $SG_WEB"
     - pwd
-  dependencies:
-    - build_backend
-  environment:
-    name: $ENV_NAME_backend
+
 
   script:
     # Deploy using serverless
@@ -231,11 +228,19 @@ build_backend:
 
 deploy_backend_to_ci:
   <<: *backend
+  dependencies:
+    - build_backend
+  environment:
+    name: ci_backend
 
 deploy_backend_to_uat:
   <<: *backend
   variables:
     ENV_NAME: "uat"
+  dependencies:
+    - build_backend
+  environment:
+    name: uat_backend
   when: manual
 
 
