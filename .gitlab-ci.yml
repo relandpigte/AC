@@ -13,157 +13,7 @@ variables:
   PUBLIC_DOMAIN: "sourcecloud-dev.uk"
 
 
-#########
-# Build #
-#########
-
-build_schema:
-  stage: build
-  image: $BUILD_IMAGE
-  before_script:
-    - echo "pre script (build_schema)"
-    - echo "DEBUG - $APP_NAME``_$ENV_NAME"  # need a single underscore between variables
-    - apt-get update
-    - echo "Install Pre-requistes"
-    - apt-get install -y zip
-    - pwd
-    - mkdir artifacts
-
-  script:
-    # Package Schema
-    - "cd $CI_PROJECT_DIR/database" 
-    - zip -r $CI_PROJECT_DIR/artifacts/database.zip .
-    - echo "Zipped Packages Ready....."
-    - "cd $CI_PROJECT_DIR/artifacts" 
-    - ls -la
-  artifacts:
-    paths:
-      - artifacts
-    expire_in: 21 day
-
-build_backend:
-  stage: build
-  image: $BUILD_IMAGE
-  before_script:
-    - echo "pre script (build_backend)"
-    - apt-get update
-    - echo "Install Pre-requistes"
-    - apt-get install -y zip
-    - pwd
-    - mkdir artifacts
-    - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
-    - "dotnet restore"
-
-  script:
-    # Build and Package projects
-    - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
-    - dotnet publish --configuration release --framework netcoreapp3.1 --output bin/release/netcoreapp3.1/output
-    - "cd $CI_PROJECT_DIR/$BACKEND_PATH/bin/release/netcoreapp3.1/output" 
-    - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
-    - ls -la
-  artifacts:
-    paths:
-      - artifacts
-    expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
-
-
-build_frontend:
-  stage: build
-  image: node:10.16.0
-  before_script:
-    - echo "pre script (build_frontend)"
-    - echo "Install Pre-requistes"
-    - apt-get update
-    - node -v
-    - npm -v
-  cache:
-    paths:
-      - $CI_PROJECT_DIR/$FRONTEND_PATH/node_modules/
-      
-  script:
-    - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
-    - ls -la
-    # specify v9.1.4 to match our code
-    - npm install -g @angular/cli@9.1.4
-    - yarn install
-    - ng build --configuration $ENV_NAME
-    - ls -la
-  artifacts:
-    paths:
-      - $CI_PROJECT_DIR/$FRONTEND_PATH/dist/
-    expire_in: 21 day
-    
-# End Build #
-#############
-
-
-###############
-# Deployments #
-###############
-
-# Environment CI #
-
-deploy_schema:
-  stage: deploy
-  image: ubuntu:18.04
-  before_script:
-    - echo "pre script (deploy_schema)"
-    - echo "Install Pre-requistes"
-    - echo "Application - $APP_NAME"
-    - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
-    - apt-get update
-    - apt-get install -y software-properties-common 
-    - apt-get install -y iputils-ping
-    - apt-get install -y zip
-    # install python, awscli & jq
-    - apt-get install -y python3-pip
-    - pip3 install awscli boto boto3
-    - apt-get install -y jq
-    - aws --version
-    - jq --version
-    # install java 1.8
-    - apt-get install -y openjdk-8-jre
-    - java -version
-    # install and config OpenVPN
-    - which openvpn || (apt-get update -y -qq && apt-get install -y -qq openvpn) # Install openvpn if not available.
-    - cat <<< $CLIENT_OVPN > /etc/openvpn/client.conf # Move vpn config from gitlab variable to config file.
-    - cat <<< $CLIENT_OVPN_KEY > /etc/openvpn/client.key # Move vpn client.key from gitlab variable to file.
-    - cat <<< $CLIENT_OVPN_CRT > /etc/openvpn/client.crt # Move vpn client.crt from gitlab variable to file.
-    - cat <<< $VPN_U > /etc/openvpn/pass.txt # Move vpn user from gitlab variable to pass file.
-    - cat <<< $VPN_P >> /etc/openvpn/pass.txt # Move vpn password from gitlab variable to pass file.
-    - cat <<< "auth-user-pass /etc/openvpn/pass.txt" >> /etc/openvpn/client.conf # Tell vpn config to use password file.
-    - cat <<< "cert /etc/openvpn/client.crt" >> /etc/openvpn/client.conf # Tell vpn config to use client.crt file.
-    - cat <<< "key /etc/openvpn/client.key" >> /etc/openvpn/client.conf # Tell vpn config to use client.key file.
-    - cat <<< "log /etc/openvpn/client.log" >> /etc/openvpn/client.conf # Tell vpn config to use log file.
-    - which openvpn
-    # Lookup Database Id from Cloudformation
-    - export DATABASE_ID=$(aws cloudformation list-exports | jq -r '.[] | .[] | select(.Name=="academicallyci-RDSEndId") | .Value')
-    - echo "Database Id $DATABASE_ID"
-    # Connect to VPN
-    - openvpn --config /etc/openvpn/client.conf --verb 5 --daemon # Start openvpn with config as a deamon.
-    - sleep 30s # Wait for some time so the vpn can connect before doing anything else.
-    - cat /etc/openvpn/client.log # Print the vpn log.
-    - ping -c 1 10.100.0.79 # Ping the Zabbix to prove VPN connection. If not available this stops the deployment process.
-    - mkdir /opt/liquibase # ready to extract liquibase
-    - mkdir $CI_PROJECT_DIR/liquibase_scripts # ready to extract package into
-  environment:
-    name: ci_schema
-
-  script:
-    # Run Liquibase Scripts
-    - echo "Update Database Schema"
-    - aws s3 cp s3://wile-local-source/local/utils/liquibase-4.2.0.zip $CI_PROJECT_DIR/
-    # need 5.1.48 of mysql driver
-    - aws s3 cp s3://wile-local-source/local/utils/mysql-connector-java-5.1.38.jar /usr/share/java/mysql-connector-java.jar
-    - unzip $CI_PROJECT_DIR/liquibase-4.2.0.zip -d /opt/liquibase
-    - unzip $CI_PROJECT_DIR/artifacts/database.zip -d $CI_PROJECT_DIR/liquibase_scripts
-    - ls -la
-    - "cd $CI_PROJECT_DIR/liquibase_scripts"
-    # run liquibase
-    - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver clearchecksums
-    - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver update
-
-deploy_backend:
+.backend: &backend
   stage: deploy
   image: node:latest
   before_script:
@@ -188,7 +38,7 @@ deploy_backend:
   dependencies:
     - build_backend
   environment:
-    name: ci_backend
+    name: $ENV_NAME_backend
 
   script:
     # Deploy using serverless
@@ -228,31 +78,197 @@ deploy_backend:
     - "SLS_DEBUG=* serverless deploy"  
 
 
-deploy_frontend:
-  stage: deploy
-  image: python:latest
+
+#########
+# Build #
+#########
+
+# build_schema:
+#   stage: build
+#   image: $BUILD_IMAGE
+#   before_script:
+#     - echo "pre script (build_schema)"
+#     - echo "DEBUG - $APP_NAME``_$ENV_NAME"  # need a single underscore between variables
+#     - apt-get update
+#     - echo "Install Pre-requistes"
+#     - apt-get install -y zip
+#     - pwd
+#     - mkdir artifacts
+
+#   script:
+#     # Package Schema
+#     - "cd $CI_PROJECT_DIR/database" 
+#     - zip -r $CI_PROJECT_DIR/artifacts/database.zip .
+#     - echo "Zipped Packages Ready....."
+#     - "cd $CI_PROJECT_DIR/artifacts" 
+#     - ls -la
+#   artifacts:
+#     paths:
+#       - artifacts
+#     expire_in: 21 day
+
+build_backend:
+  stage: build
+  image: $BUILD_IMAGE
   before_script:
-    - echo "pre script (deploy_frontend)"
-    - echo "Install Pre-requistes"
-    - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
+    - echo "pre script (build_backend)"
     - apt-get update
-    - pip3 install awscli boto boto3
-    - aws --version
+    - echo "Install Pre-requistes"
+    - apt-get install -y zip
     - pwd
-  dependencies:
-    - build_frontend
-  environment:
-    name: ci_frontend
+    - mkdir artifacts
+    - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
+    - "dotnet restore"
 
   script:
-    # Copy Dist to S3 Bucket
-    - echo "Copy dist to S3"
-    - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
-    - pwd
+    # Build and Package projects
+    - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
+    - dotnet publish --configuration release --framework netcoreapp3.1 --output bin/release/netcoreapp3.1/output
+    - "cd $CI_PROJECT_DIR/$BACKEND_PATH/bin/release/netcoreapp3.1/output" 
+    - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
     - ls -la
-    - aws s3 rm s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN --recursive
-    - aws s3 cp dist s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN --recursive
-    - aws s3 ls s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN
+  artifacts:
+    paths:
+      - artifacts
+    expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
+
+
+# build_frontend:
+#   stage: build
+#   image: node:10.16.0
+#   before_script:
+#     - echo "pre script (build_frontend)"
+#     - echo "Install Pre-requistes"
+#     - apt-get update
+#     - node -v
+#     - npm -v
+#   cache:
+#     paths:
+#       - $CI_PROJECT_DIR/$FRONTEND_PATH/node_modules/
+      
+#   script:
+#     - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
+#     - ls -la
+#     # specify v9.1.4 to match our code
+#     - npm install -g @angular/cli@9.1.4
+#     - yarn install
+#     - ng build --configuration $ENV_NAME
+#     - ls -la
+#   artifacts:
+#     paths:
+#       - $CI_PROJECT_DIR/$FRONTEND_PATH/dist/
+#     expire_in: 21 day
+    
+# End Build #
+#############
+
+
+###############
+# Deployments #
+###############
+
+# Environment CI #
+
+# deploy_schema:
+#   stage: deploy
+#   image: ubuntu:18.04
+#   before_script:
+#     - echo "pre script (deploy_schema)"
+#     - echo "Install Pre-requistes"
+#     - echo "Application - $APP_NAME"
+#     - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
+#     - apt-get update
+#     - apt-get install -y software-properties-common 
+#     - apt-get install -y iputils-ping
+#     - apt-get install -y zip
+#     # install python, awscli & jq
+#     - apt-get install -y python3-pip
+#     - pip3 install awscli boto boto3
+#     - apt-get install -y jq
+#     - aws --version
+#     - jq --version
+#     # install java 1.8
+#     - apt-get install -y openjdk-8-jre
+#     - java -version
+#     # install and config OpenVPN
+#     - which openvpn || (apt-get update -y -qq && apt-get install -y -qq openvpn) # Install openvpn if not available.
+#     - cat <<< $CLIENT_OVPN > /etc/openvpn/client.conf # Move vpn config from gitlab variable to config file.
+#     - cat <<< $CLIENT_OVPN_KEY > /etc/openvpn/client.key # Move vpn client.key from gitlab variable to file.
+#     - cat <<< $CLIENT_OVPN_CRT > /etc/openvpn/client.crt # Move vpn client.crt from gitlab variable to file.
+#     - cat <<< $VPN_U > /etc/openvpn/pass.txt # Move vpn user from gitlab variable to pass file.
+#     - cat <<< $VPN_P >> /etc/openvpn/pass.txt # Move vpn password from gitlab variable to pass file.
+#     - cat <<< "auth-user-pass /etc/openvpn/pass.txt" >> /etc/openvpn/client.conf # Tell vpn config to use password file.
+#     - cat <<< "cert /etc/openvpn/client.crt" >> /etc/openvpn/client.conf # Tell vpn config to use client.crt file.
+#     - cat <<< "key /etc/openvpn/client.key" >> /etc/openvpn/client.conf # Tell vpn config to use client.key file.
+#     - cat <<< "log /etc/openvpn/client.log" >> /etc/openvpn/client.conf # Tell vpn config to use log file.
+#     - which openvpn
+#     # Lookup Database Id from Cloudformation
+#     - export DATABASE_ID=$(aws cloudformation list-exports | jq -r '.[] | .[] | select(.Name=="academicallyci-RDSEndId") | .Value')
+#     - echo "Database Id $DATABASE_ID"
+#     # Connect to VPN
+#     - openvpn --config /etc/openvpn/client.conf --verb 5 --daemon # Start openvpn with config as a deamon.
+#     - sleep 30s # Wait for some time so the vpn can connect before doing anything else.
+#     - cat /etc/openvpn/client.log # Print the vpn log.
+#     - ping -c 1 10.100.0.79 # Ping the Zabbix to prove VPN connection. If not available this stops the deployment process.
+#     - mkdir /opt/liquibase # ready to extract liquibase
+#     - mkdir $CI_PROJECT_DIR/liquibase_scripts # ready to extract package into
+#   environment:
+#     name: ci_schema
+
+#   script:
+#     # Run Liquibase Scripts
+#     - echo "Update Database Schema"
+#     - aws s3 cp s3://wile-local-source/local/utils/liquibase-4.2.0.zip $CI_PROJECT_DIR/
+#     # need 5.1.48 of mysql driver
+#     - aws s3 cp s3://wile-local-source/local/utils/mysql-connector-java-5.1.38.jar /usr/share/java/mysql-connector-java.jar
+#     - unzip $CI_PROJECT_DIR/liquibase-4.2.0.zip -d /opt/liquibase
+#     - unzip $CI_PROJECT_DIR/artifacts/database.zip -d $CI_PROJECT_DIR/liquibase_scripts
+#     - ls -la
+#     - "cd $CI_PROJECT_DIR/liquibase_scripts"
+#     # run liquibase
+#     - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver clearchecksums
+#     - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver update
+
+deploy_backend_to_ci:
+  <<: *backend
+  only: develop
+
+deploy_backend_to_uat:
+  <<: *backend
+  variables:
+    ENV_NAME: "uat"
+  when: manual
+
+
+# deploy_frontend:
+#   stage: deploy
+#   image: python:latest
+#   before_script:
+#     - echo "pre script (deploy_frontend)"
+#     - echo "Install Pre-requistes"
+#     - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
+#     - apt-get update
+#     - pip3 install awscli boto boto3
+#     - aws --version
+#     - pwd
+#   dependencies:
+#     - build_frontend
+#   environment:
+#     name: ci_frontend
+
+#   script:
+#     # Copy Dist to S3 Bucket
+#     - echo "Copy dist to S3"
+#     - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
+#     - pwd
+#     - ls -la
+#     - aws s3 rm s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN --recursive
+#     - aws s3 cp dist s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN --recursive
+#     - aws s3 ls s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN
+
+
+
+# Environment UAT #
 
 # End Deploy #
 ##############
