@@ -217,7 +217,7 @@ deploy_backend:
     # Subsitute the Connection String
     - jq ".ConnectionStrings.Default=\"server=$DATABASE_ID``;database=$APP_NAME``_$ENV_NAME;uid=deployAdmin;password=$db_master_password;port=3306\"" appsettings.bak > appsettings.v1
     # Subsitute the Other Variables
-    - jq ".App.ServerRootAddress=\"$API_URL``/$ENV_NAME\" | .App.ClientRootAddress=\"$API_URL\" | .App.CorsOrigins=\"$URL_HTTPS``,$URL_HTTP\" | .App.ServerBasePath=\"$ENV_NAME\" | .Kestrel.Endpoints.Http.Url=\"$API_URL\" | .Aws.Id=\"$AWS_ACC_NUM\" | .Aws.Profile=\"\" | .Aws.Region=\"$AWS_DEFAULT_REGION\" | .Aws.S3.AssetsBucket=\"$APP_NAME``-$ENV_NAME``-assets\"" appsettings.v1 > appsettings.json
+    - jq ".App.ServerRootAddress=\"$API_URL``/$ENV_NAME\" | .App.ClientRootAddress=\"$URL_HTTPS\" | .App.CorsOrigins=\"$URL_HTTPS``,$URL_HTTP\" | .App.ServerBasePath=\"$ENV_NAME\" | .Kestrel.Endpoints.Http.Url=\"$API_URL\" | .Aws.Id=\"$AWS_ACC_NUM\" | .Aws.Profile=\"\" | .Aws.Region=\"$AWS_DEFAULT_REGION\" | .Aws.S3.AssetsBucket=\"$APP_NAME``-$ENV_NAME``-assets\"" appsettings.v1 > appsettings.json
     - cat appsettings.json
     - rm appsettings.bak
     - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
