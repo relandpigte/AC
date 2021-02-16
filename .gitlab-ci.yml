@@ -91,7 +91,7 @@ variables:
     - npm install
     - npm install -g serverless
     # Lookup Required Outputs from Cloudformation
-    - export SG_WEB=$(aws cloudformation list-exports | jq -r ".[] | .[] | select(.Name==\"$APP_NAME``$ENV_NAME-SGWebId\") | .Value")
+    - export SG_WEB=$(aws cloudformation list-exports | jq -r ".[] | .[] | select(.Name==\"$APP_NAME``$ENV_NAME-SGWebId\") | .Value"
     - echo "Web Security Group $SG_WEB"
     - pwd
 
