@@ -117,7 +117,7 @@ variables:
     - echo $API_URL
     - cp appsettings.json appsettings.bak
     # Lookup Database Id from Cloudformation
-    - export DATABASE_ID=$(aws cloudformation list-exports | jq -r ".[] | .[] | select(.Name==\"$APP_NAME$ENV_NAME-RDSEndId") | .Value\")
+    - export DATABASE_ID=$(aws cloudformation list-exports | jq -r ".[] | .[] | select(.Name==\"$APP_NAME$ENV_NAME-RDSEndId") | .Value")
     - echo "Database Id $DATABASE_ID"
     # Subsitute the Connection String
     - jq ".ConnectionStrings.Default=\"server=$DATABASE_ID``;database=$APP_NAME``_$ENV_NAME;uid=deployAdmin;password=$db_master_password;port=3306\"" appsettings.bak > appsettings.v1
