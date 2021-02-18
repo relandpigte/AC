@@ -1,0 +1,1251 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1613626355534-1">
+        <createTable tableName="AbpAuditLogs">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="TenantId" type="INT"/>
+            <column name="UserId" type="BIGINT"/>
+            <column name="ServiceName" type="VARCHAR(256)"/>
+            <column name="MethodName" type="VARCHAR(256)"/>
+            <column name="Parameters" type="VARCHAR(1024)"/>
+            <column name="ReturnValue" type="LONGTEXT"/>
+            <column name="ExecutionTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExecutionDuration" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ClientIpAddress" type="VARCHAR(64)"/>
+            <column name="ClientName" type="VARCHAR(128)"/>
+            <column name="BrowserInfo" type="VARCHAR(512)"/>
+            <column name="Exception" type="VARCHAR(2000)"/>
+            <column name="ImpersonatorUserId" type="BIGINT"/>
+            <column name="ImpersonatorTenantId" type="INT"/>
+            <column name="CustomData" type="VARCHAR(2000)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-2">
+        <createTable tableName="AbpBackgroundJobs">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="JobType" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="JobArgs" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TryCount" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NextTryTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LastTryTime" type="datetime"/>
+            <column name="IsAbandoned" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Priority" type="TINYINT(3) UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-3">
+        <createTable tableName="AbpDynamicEntityProperties">
+            <column autoIncrement="true" name="Id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="EntityFullName" type="VARCHAR(255)"/>
+            <column name="DynamicPropertyId" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TenantId" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-4">
+        <createTable tableName="AbpDynamicEntityPropertyValues">
+            <column autoIncrement="true" name="Id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Value" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EntityId" type="LONGTEXT"/>
+            <column name="DynamicEntityPropertyId" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TenantId" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-5">
+        <createTable tableName="AbpDynamicProperties">
+            <column autoIncrement="true" name="Id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="PropertyName" type="VARCHAR(255)"/>
+            <column name="InputType" type="LONGTEXT"/>
+            <column name="Permission" type="LONGTEXT"/>
+            <column name="TenantId" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-6">
+        <createTable tableName="AbpDynamicPropertyValues">
+            <column autoIncrement="true" name="Id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Value" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TenantId" type="INT"/>
+            <column name="DynamicPropertyId" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-7">
+        <createTable tableName="AbpEditions">
+            <column autoIncrement="true" name="Id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="LastModificationTime" type="datetime"/>
+            <column name="LastModifierUserId" type="BIGINT"/>
+            <column name="IsDeleted" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DeleterUserId" type="BIGINT"/>
+            <column name="DeletionTime" type="datetime"/>
+            <column name="Name" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DisplayName" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-8">
+        <createTable tableName="AbpEntityChangeSets">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="BrowserInfo" type="VARCHAR(512)"/>
+            <column name="ClientIpAddress" type="VARCHAR(64)"/>
+            <column name="ClientName" type="VARCHAR(128)"/>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExtensionData" type="LONGTEXT"/>
+            <column name="ImpersonatorTenantId" type="INT"/>
+            <column name="ImpersonatorUserId" type="BIGINT"/>
+            <column name="Reason" type="VARCHAR(256)"/>
+            <column name="TenantId" type="INT"/>
+            <column name="UserId" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-9">
+        <createTable tableName="AbpEntityChanges">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="ChangeTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ChangeType" type="TINYINT(3) UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EntityChangeSetId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EntityId" type="VARCHAR(48)"/>
+            <column name="EntityTypeFullName" type="VARCHAR(192)"/>
+            <column name="TenantId" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-10">
+        <createTable tableName="AbpEntityPropertyChanges">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="EntityChangeId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NewValue" type="VARCHAR(512)"/>
+            <column name="OriginalValue" type="VARCHAR(512)"/>
+            <column name="PropertyName" type="VARCHAR(96)"/>
+            <column name="PropertyTypeFullName" type="VARCHAR(192)"/>
+            <column name="TenantId" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-11">
+        <createTable tableName="AbpFeatures">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="TenantId" type="INT"/>
+            <column name="Name" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Value" type="VARCHAR(2000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Discriminator" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EditionId" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-12">
+        <createTable tableName="AbpLanguageTexts">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="LastModificationTime" type="datetime"/>
+            <column name="LastModifierUserId" type="BIGINT"/>
+            <column name="TenantId" type="INT"/>
+            <column name="LanguageName" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Source" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Key" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Value" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-13">
+        <createTable tableName="AbpLanguages">
+            <column autoIncrement="true" name="Id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="LastModificationTime" type="datetime"/>
+            <column name="LastModifierUserId" type="BIGINT"/>
+            <column name="IsDeleted" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DeleterUserId" type="BIGINT"/>
+            <column name="DeletionTime" type="datetime"/>
+            <column name="TenantId" type="INT"/>
+            <column name="Name" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DisplayName" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Icon" type="VARCHAR(128)"/>
+            <column name="IsDisabled" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-14">
+        <createTable tableName="AbpNotificationSubscriptions">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="TenantId" type="INT"/>
+            <column name="UserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NotificationName" type="VARCHAR(96)"/>
+            <column name="EntityTypeName" type="VARCHAR(250)"/>
+            <column name="EntityTypeAssemblyQualifiedName" type="VARCHAR(512)"/>
+            <column name="EntityId" type="VARCHAR(96)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-15">
+        <createTable tableName="AbpNotifications">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="NotificationName" type="VARCHAR(96)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Data" type="LONGTEXT"/>
+            <column name="DataTypeName" type="VARCHAR(512)"/>
+            <column name="EntityTypeName" type="VARCHAR(250)"/>
+            <column name="EntityTypeAssemblyQualifiedName" type="VARCHAR(512)"/>
+            <column name="EntityId" type="VARCHAR(96)"/>
+            <column name="Severity" type="TINYINT(3) UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UserIds" type="LONGTEXT"/>
+            <column name="ExcludedUserIds" type="LONGTEXT"/>
+            <column name="TenantIds" type="LONGTEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-16">
+        <createTable tableName="AbpOrganizationUnitRoles">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="TenantId" type="INT"/>
+            <column name="RoleId" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OrganizationUnitId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsDeleted" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-17">
+        <createTable tableName="AbpOrganizationUnits">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="LastModificationTime" type="datetime"/>
+            <column name="LastModifierUserId" type="BIGINT"/>
+            <column name="IsDeleted" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DeleterUserId" type="BIGINT"/>
+            <column name="DeletionTime" type="datetime"/>
+            <column name="TenantId" type="INT"/>
+            <column name="ParentId" type="BIGINT"/>
+            <column name="Code" type="VARCHAR(95)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DisplayName" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-18">
+        <createTable tableName="AbpPermissions">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="TenantId" type="INT"/>
+            <column name="Name" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsGranted" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Discriminator" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RoleId" type="INT"/>
+            <column name="UserId" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-19">
+        <createTable tableName="AbpRoleClaims">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="TenantId" type="INT"/>
+            <column name="RoleId" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ClaimType" type="VARCHAR(256)"/>
+            <column name="ClaimValue" type="LONGTEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-20">
+        <createTable tableName="AbpRoles">
+            <column autoIncrement="true" name="Id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="LastModificationTime" type="datetime"/>
+            <column name="LastModifierUserId" type="BIGINT"/>
+            <column name="IsDeleted" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DeleterUserId" type="BIGINT"/>
+            <column name="DeletionTime" type="datetime"/>
+            <column name="TenantId" type="INT"/>
+            <column name="Name" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DisplayName" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsStatic" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsDefault" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NormalizedName" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ConcurrencyStamp" type="VARCHAR(128)"/>
+            <column name="Description" type="LONGTEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-21">
+        <createTable tableName="AbpSettings">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="LastModificationTime" type="datetime"/>
+            <column name="LastModifierUserId" type="BIGINT"/>
+            <column name="TenantId" type="INT"/>
+            <column name="UserId" type="BIGINT"/>
+            <column name="Name" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Value" type="LONGTEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-22">
+        <createTable tableName="AbpTenantNotifications">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="TenantId" type="INT"/>
+            <column name="NotificationName" type="VARCHAR(96)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Data" type="LONGTEXT"/>
+            <column name="DataTypeName" type="VARCHAR(512)"/>
+            <column name="EntityTypeName" type="VARCHAR(250)"/>
+            <column name="EntityTypeAssemblyQualifiedName" type="VARCHAR(512)"/>
+            <column name="EntityId" type="VARCHAR(96)"/>
+            <column name="Severity" type="TINYINT(3) UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-23">
+        <createTable tableName="AbpTenants">
+            <column autoIncrement="true" name="Id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="LastModificationTime" type="datetime"/>
+            <column name="LastModifierUserId" type="BIGINT"/>
+            <column name="IsDeleted" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DeleterUserId" type="BIGINT"/>
+            <column name="DeletionTime" type="datetime"/>
+            <column name="TenancyName" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Name" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ConnectionString" type="VARCHAR(1024)"/>
+            <column name="IsActive" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EditionId" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-24">
+        <createTable tableName="AbpUserAccounts">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="LastModificationTime" type="datetime"/>
+            <column name="LastModifierUserId" type="BIGINT"/>
+            <column name="IsDeleted" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DeleterUserId" type="BIGINT"/>
+            <column name="DeletionTime" type="datetime"/>
+            <column name="TenantId" type="INT"/>
+            <column name="UserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UserLinkId" type="BIGINT"/>
+            <column name="UserName" type="VARCHAR(256)"/>
+            <column name="EmailAddress" type="VARCHAR(256)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-25">
+        <createTable tableName="AbpUserClaims">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="TenantId" type="INT"/>
+            <column name="UserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ClaimType" type="VARCHAR(256)"/>
+            <column name="ClaimValue" type="LONGTEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-26">
+        <createTable tableName="AbpUserLoginAttempts">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="TenantId" type="INT"/>
+            <column name="TenancyName" type="VARCHAR(64)"/>
+            <column name="UserId" type="BIGINT"/>
+            <column name="UserNameOrEmailAddress" type="VARCHAR(256)"/>
+            <column name="ClientIpAddress" type="VARCHAR(64)"/>
+            <column name="ClientName" type="VARCHAR(128)"/>
+            <column name="BrowserInfo" type="VARCHAR(512)"/>
+            <column name="Result" type="TINYINT(3) UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-27">
+        <createTable tableName="AbpUserLogins">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="TenantId" type="INT"/>
+            <column name="UserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LoginProvider" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ProviderKey" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-28">
+        <createTable tableName="AbpUserNotifications">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="TenantId" type="INT"/>
+            <column name="UserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TenantNotificationId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="State" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-29">
+        <createTable tableName="AbpUserOrganizationUnits">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="TenantId" type="INT"/>
+            <column name="UserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OrganizationUnitId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsDeleted" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-30">
+        <createTable tableName="AbpUserRoles">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="TenantId" type="INT"/>
+            <column name="UserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RoleId" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-31">
+        <createTable tableName="AbpUserTokens">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="TenantId" type="INT"/>
+            <column name="UserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LoginProvider" type="VARCHAR(128)"/>
+            <column name="Name" type="VARCHAR(128)"/>
+            <column name="Value" type="VARCHAR(512)"/>
+            <column name="ExpireDate" type="datetime"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-32">
+        <createTable tableName="AbpUsers">
+            <column autoIncrement="true" name="Id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="LastModificationTime" type="datetime"/>
+            <column name="LastModifierUserId" type="BIGINT"/>
+            <column name="IsDeleted" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DeleterUserId" type="BIGINT"/>
+            <column name="DeletionTime" type="datetime"/>
+            <column name="AuthenticationSource" type="VARCHAR(64)"/>
+            <column name="UserName" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TenantId" type="INT"/>
+            <column name="EmailAddress" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Name" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Surname" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Password" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EmailConfirmationCode" type="VARCHAR(328)"/>
+            <column name="PasswordResetCode" type="VARCHAR(328)"/>
+            <column name="LockoutEndDateUtc" type="datetime"/>
+            <column name="AccessFailedCount" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsLockoutEnabled" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PhoneNumber" type="VARCHAR(32)"/>
+            <column name="IsPhoneNumberConfirmed" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SecurityStamp" type="VARCHAR(128)"/>
+            <column name="IsTwoFactorEnabled" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsEmailConfirmed" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsActive" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NormalizedUserName" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NormalizedEmailAddress" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ConcurrencyStamp" type="VARCHAR(128)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-33">
+        <createTable tableName="AbpWebhookEvents">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="WebhookName" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Data" type="LONGTEXT"/>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TenantId" type="INT"/>
+            <column name="IsDeleted" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DeletionTime" type="datetime"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-34">
+        <createTable tableName="AbpWebhookSendAttempts">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="WebhookEventId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="WebhookSubscriptionId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Response" type="LONGTEXT"/>
+            <column name="ResponseStatusCode" type="INT"/>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LastModificationTime" type="datetime"/>
+            <column name="TenantId" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-35">
+        <createTable tableName="AbpWebhookSubscriptions">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="TenantId" type="INT"/>
+            <column name="WebhookUri" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Secret" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsActive" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Webhooks" type="LONGTEXT"/>
+            <column name="Headers" type="LONGTEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-36">
+        <createTable tableName="__EFMigrationsHistory">
+            <column name="MigrationId" type="VARCHAR(95)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="ProductVersion" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-37">
+        <addUniqueConstraint columnNames="EntityFullName, DynamicPropertyId, TenantId" constraintName="IX_AbpDynamicEntityProperties_EntityFullName_DynamicPropertyId_~" tableName="AbpDynamicEntityProperties"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-38">
+        <addUniqueConstraint columnNames="PropertyName, TenantId" constraintName="IX_AbpDynamicProperties_PropertyName_TenantId" tableName="AbpDynamicProperties"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-39">
+        <addUniqueConstraint columnNames="TenantId, Name, UserId" constraintName="IX_AbpSettings_TenantId_Name_UserId" tableName="AbpSettings"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-40">
+        <createIndex indexName="IX_AbpAuditLogs_TenantId_ExecutionDuration" tableName="AbpAuditLogs">
+            <column name="TenantId"/>
+            <column name="ExecutionDuration"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-41">
+        <createIndex indexName="IX_AbpAuditLogs_TenantId_ExecutionTime" tableName="AbpAuditLogs">
+            <column name="TenantId"/>
+            <column name="ExecutionTime"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-42">
+        <createIndex indexName="IX_AbpAuditLogs_TenantId_UserId" tableName="AbpAuditLogs">
+            <column name="TenantId"/>
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-43">
+        <createIndex indexName="IX_AbpBackgroundJobs_IsAbandoned_NextTryTime" tableName="AbpBackgroundJobs">
+            <column name="IsAbandoned"/>
+            <column name="NextTryTime"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-44">
+        <createIndex indexName="IX_AbpDynamicEntityProperties_DynamicPropertyId" tableName="AbpDynamicEntityProperties">
+            <column name="DynamicPropertyId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-45">
+        <createIndex indexName="IX_AbpDynamicEntityPropertyValues_DynamicEntityPropertyId" tableName="AbpDynamicEntityPropertyValues">
+            <column name="DynamicEntityPropertyId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-46">
+        <createIndex indexName="IX_AbpDynamicPropertyValues_DynamicPropertyId" tableName="AbpDynamicPropertyValues">
+            <column name="DynamicPropertyId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-47">
+        <createIndex indexName="IX_AbpEntityChangeSets_TenantId_CreationTime" tableName="AbpEntityChangeSets">
+            <column name="TenantId"/>
+            <column name="CreationTime"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-48">
+        <createIndex indexName="IX_AbpEntityChangeSets_TenantId_Reason" tableName="AbpEntityChangeSets">
+            <column name="TenantId"/>
+            <column name="Reason"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-49">
+        <createIndex indexName="IX_AbpEntityChangeSets_TenantId_UserId" tableName="AbpEntityChangeSets">
+            <column name="TenantId"/>
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-50">
+        <createIndex indexName="IX_AbpEntityChanges_EntityChangeSetId" tableName="AbpEntityChanges">
+            <column name="EntityChangeSetId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-51">
+        <createIndex indexName="IX_AbpEntityChanges_EntityTypeFullName_EntityId" tableName="AbpEntityChanges">
+            <column name="EntityTypeFullName"/>
+            <column name="EntityId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-52">
+        <createIndex indexName="IX_AbpEntityPropertyChanges_EntityChangeId" tableName="AbpEntityPropertyChanges">
+            <column name="EntityChangeId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-53">
+        <createIndex indexName="IX_AbpFeatures_EditionId_Name" tableName="AbpFeatures">
+            <column name="EditionId"/>
+            <column name="Name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-54">
+        <createIndex indexName="IX_AbpFeatures_TenantId_Name" tableName="AbpFeatures">
+            <column name="TenantId"/>
+            <column name="Name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-55">
+        <createIndex indexName="IX_AbpLanguageTexts_TenantId_Source_LanguageName_Key" tableName="AbpLanguageTexts">
+            <column name="TenantId"/>
+            <column name="Source"/>
+            <column name="LanguageName"/>
+            <column name="Key"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-56">
+        <createIndex indexName="IX_AbpLanguages_TenantId_Name" tableName="AbpLanguages">
+            <column name="TenantId"/>
+            <column name="Name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-57">
+        <createIndex indexName="IX_AbpNotificationSubscriptions_NotificationName_EntityTypeName~" tableName="AbpNotificationSubscriptions">
+            <column name="NotificationName"/>
+            <column name="EntityTypeName"/>
+            <column name="EntityId"/>
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-58">
+        <createIndex indexName="IX_AbpNotificationSubscriptions_TenantId_NotificationName_Entit~" tableName="AbpNotificationSubscriptions">
+            <column name="TenantId"/>
+            <column name="NotificationName"/>
+            <column name="EntityTypeName"/>
+            <column name="EntityId"/>
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-59">
+        <createIndex indexName="IX_AbpOrganizationUnitRoles_TenantId_OrganizationUnitId" tableName="AbpOrganizationUnitRoles">
+            <column name="TenantId"/>
+            <column name="OrganizationUnitId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-60">
+        <createIndex indexName="IX_AbpOrganizationUnitRoles_TenantId_RoleId" tableName="AbpOrganizationUnitRoles">
+            <column name="TenantId"/>
+            <column name="RoleId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-61">
+        <createIndex indexName="IX_AbpOrganizationUnits_ParentId" tableName="AbpOrganizationUnits">
+            <column name="ParentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-62">
+        <createIndex indexName="IX_AbpOrganizationUnits_TenantId_Code" tableName="AbpOrganizationUnits">
+            <column name="TenantId"/>
+            <column name="Code"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-63">
+        <createIndex indexName="IX_AbpPermissions_RoleId" tableName="AbpPermissions">
+            <column name="RoleId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-64">
+        <createIndex indexName="IX_AbpPermissions_TenantId_Name" tableName="AbpPermissions">
+            <column name="TenantId"/>
+            <column name="Name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-65">
+        <createIndex indexName="IX_AbpPermissions_UserId" tableName="AbpPermissions">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-66">
+        <createIndex indexName="IX_AbpRoleClaims_RoleId" tableName="AbpRoleClaims">
+            <column name="RoleId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-67">
+        <createIndex indexName="IX_AbpRoleClaims_TenantId_ClaimType" tableName="AbpRoleClaims">
+            <column name="TenantId"/>
+            <column name="ClaimType"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-68">
+        <createIndex indexName="IX_AbpRoles_CreatorUserId" tableName="AbpRoles">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-69">
+        <createIndex indexName="IX_AbpRoles_DeleterUserId" tableName="AbpRoles">
+            <column name="DeleterUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-70">
+        <createIndex indexName="IX_AbpRoles_LastModifierUserId" tableName="AbpRoles">
+            <column name="LastModifierUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-71">
+        <createIndex indexName="IX_AbpRoles_TenantId_NormalizedName" tableName="AbpRoles">
+            <column name="TenantId"/>
+            <column name="NormalizedName"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-72">
+        <createIndex indexName="IX_AbpSettings_UserId" tableName="AbpSettings">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-73">
+        <createIndex indexName="IX_AbpTenantNotifications_TenantId" tableName="AbpTenantNotifications">
+            <column name="TenantId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-74">
+        <createIndex indexName="IX_AbpTenants_CreatorUserId" tableName="AbpTenants">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-75">
+        <createIndex indexName="IX_AbpTenants_DeleterUserId" tableName="AbpTenants">
+            <column name="DeleterUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-76">
+        <createIndex indexName="IX_AbpTenants_EditionId" tableName="AbpTenants">
+            <column name="EditionId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-77">
+        <createIndex indexName="IX_AbpTenants_LastModifierUserId" tableName="AbpTenants">
+            <column name="LastModifierUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-78">
+        <createIndex indexName="IX_AbpTenants_TenancyName" tableName="AbpTenants">
+            <column name="TenancyName"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-79">
+        <createIndex indexName="IX_AbpUserAccounts_EmailAddress" tableName="AbpUserAccounts">
+            <column name="EmailAddress"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-80">
+        <createIndex indexName="IX_AbpUserAccounts_TenantId_EmailAddress" tableName="AbpUserAccounts">
+            <column name="TenantId"/>
+            <column name="EmailAddress"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-81">
+        <createIndex indexName="IX_AbpUserAccounts_TenantId_UserId" tableName="AbpUserAccounts">
+            <column name="TenantId"/>
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-82">
+        <createIndex indexName="IX_AbpUserAccounts_TenantId_UserName" tableName="AbpUserAccounts">
+            <column name="TenantId"/>
+            <column name="UserName"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-83">
+        <createIndex indexName="IX_AbpUserAccounts_UserName" tableName="AbpUserAccounts">
+            <column name="UserName"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-84">
+        <createIndex indexName="IX_AbpUserClaims_TenantId_ClaimType" tableName="AbpUserClaims">
+            <column name="TenantId"/>
+            <column name="ClaimType"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-85">
+        <createIndex indexName="IX_AbpUserClaims_UserId" tableName="AbpUserClaims">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-86">
+        <createIndex indexName="IX_AbpUserLoginAttempts_TenancyName_UserNameOrEmailAddress_Resu~" tableName="AbpUserLoginAttempts">
+            <column name="TenancyName"/>
+            <column name="UserNameOrEmailAddress"/>
+            <column name="Result"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-87">
+        <createIndex indexName="IX_AbpUserLoginAttempts_UserId_TenantId" tableName="AbpUserLoginAttempts">
+            <column name="UserId"/>
+            <column name="TenantId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-88">
+        <createIndex indexName="IX_AbpUserLogins_TenantId_LoginProvider_ProviderKey" tableName="AbpUserLogins">
+            <column name="TenantId"/>
+            <column name="LoginProvider"/>
+            <column name="ProviderKey"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-89">
+        <createIndex indexName="IX_AbpUserLogins_TenantId_UserId" tableName="AbpUserLogins">
+            <column name="TenantId"/>
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-90">
+        <createIndex indexName="IX_AbpUserLogins_UserId" tableName="AbpUserLogins">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-91">
+        <createIndex indexName="IX_AbpUserNotifications_UserId_State_CreationTime" tableName="AbpUserNotifications">
+            <column name="UserId"/>
+            <column name="State"/>
+            <column name="CreationTime"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-92">
+        <createIndex indexName="IX_AbpUserOrganizationUnits_TenantId_OrganizationUnitId" tableName="AbpUserOrganizationUnits">
+            <column name="TenantId"/>
+            <column name="OrganizationUnitId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-93">
+        <createIndex indexName="IX_AbpUserOrganizationUnits_TenantId_UserId" tableName="AbpUserOrganizationUnits">
+            <column name="TenantId"/>
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-94">
+        <createIndex indexName="IX_AbpUserRoles_TenantId_RoleId" tableName="AbpUserRoles">
+            <column name="TenantId"/>
+            <column name="RoleId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-95">
+        <createIndex indexName="IX_AbpUserRoles_TenantId_UserId" tableName="AbpUserRoles">
+            <column name="TenantId"/>
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-96">
+        <createIndex indexName="IX_AbpUserRoles_UserId" tableName="AbpUserRoles">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-97">
+        <createIndex indexName="IX_AbpUserTokens_TenantId_UserId" tableName="AbpUserTokens">
+            <column name="TenantId"/>
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-98">
+        <createIndex indexName="IX_AbpUserTokens_UserId" tableName="AbpUserTokens">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-99">
+        <createIndex indexName="IX_AbpUsers_CreatorUserId" tableName="AbpUsers">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-100">
+        <createIndex indexName="IX_AbpUsers_DeleterUserId" tableName="AbpUsers">
+            <column name="DeleterUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-101">
+        <createIndex indexName="IX_AbpUsers_LastModifierUserId" tableName="AbpUsers">
+            <column name="LastModifierUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-102">
+        <createIndex indexName="IX_AbpUsers_TenantId_NormalizedEmailAddress" tableName="AbpUsers">
+            <column name="TenantId"/>
+            <column name="NormalizedEmailAddress"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-103">
+        <createIndex indexName="IX_AbpUsers_TenantId_NormalizedUserName" tableName="AbpUsers">
+            <column name="TenantId"/>
+            <column name="NormalizedUserName"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-104">
+        <createIndex indexName="IX_AbpWebhookSendAttempts_WebhookEventId" tableName="AbpWebhookSendAttempts">
+            <column name="WebhookEventId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-105">
+        <addForeignKeyConstraint baseColumnNames="DynamicPropertyId" baseTableName="AbpDynamicEntityProperties" constraintName="FK_AbpDynamicEntityProperties_AbpDynamicProperties_DynamicPrope~" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpDynamicProperties" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-106">
+        <addForeignKeyConstraint baseColumnNames="DynamicEntityPropertyId" baseTableName="AbpDynamicEntityPropertyValues" constraintName="FK_AbpDynamicEntityPropertyValues_AbpDynamicEntityProperties_Dy~" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpDynamicEntityProperties" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-107">
+        <addForeignKeyConstraint baseColumnNames="DynamicPropertyId" baseTableName="AbpDynamicPropertyValues" constraintName="FK_AbpDynamicPropertyValues_AbpDynamicProperties_DynamicPropert~" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpDynamicProperties" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-108">
+        <addForeignKeyConstraint baseColumnNames="EntityChangeSetId" baseTableName="AbpEntityChanges" constraintName="FK_AbpEntityChanges_AbpEntityChangeSets_EntityChangeSetId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpEntityChangeSets" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-109">
+        <addForeignKeyConstraint baseColumnNames="EntityChangeId" baseTableName="AbpEntityPropertyChanges" constraintName="FK_AbpEntityPropertyChanges_AbpEntityChanges_EntityChangeId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpEntityChanges" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-110">
+        <addForeignKeyConstraint baseColumnNames="EditionId" baseTableName="AbpFeatures" constraintName="FK_AbpFeatures_AbpEditions_EditionId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpEditions" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-111">
+        <addForeignKeyConstraint baseColumnNames="ParentId" baseTableName="AbpOrganizationUnits" constraintName="FK_AbpOrganizationUnits_AbpOrganizationUnits_ParentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpOrganizationUnits" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-112">
+        <addForeignKeyConstraint baseColumnNames="RoleId" baseTableName="AbpPermissions" constraintName="FK_AbpPermissions_AbpRoles_RoleId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpRoles" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-113">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="AbpPermissions" constraintName="FK_AbpPermissions_AbpUsers_UserId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-114">
+        <addForeignKeyConstraint baseColumnNames="RoleId" baseTableName="AbpRoleClaims" constraintName="FK_AbpRoleClaims_AbpRoles_RoleId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpRoles" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-115">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="AbpRoles" constraintName="FK_AbpRoles_AbpUsers_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-116">
+        <addForeignKeyConstraint baseColumnNames="DeleterUserId" baseTableName="AbpRoles" constraintName="FK_AbpRoles_AbpUsers_DeleterUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-117">
+        <addForeignKeyConstraint baseColumnNames="LastModifierUserId" baseTableName="AbpRoles" constraintName="FK_AbpRoles_AbpUsers_LastModifierUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-118">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="AbpSettings" constraintName="FK_AbpSettings_AbpUsers_UserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-119">
+        <addForeignKeyConstraint baseColumnNames="EditionId" baseTableName="AbpTenants" constraintName="FK_AbpTenants_AbpEditions_EditionId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpEditions" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-120">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="AbpTenants" constraintName="FK_AbpTenants_AbpUsers_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-121">
+        <addForeignKeyConstraint baseColumnNames="DeleterUserId" baseTableName="AbpTenants" constraintName="FK_AbpTenants_AbpUsers_DeleterUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-122">
+        <addForeignKeyConstraint baseColumnNames="LastModifierUserId" baseTableName="AbpTenants" constraintName="FK_AbpTenants_AbpUsers_LastModifierUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-123">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="AbpUserClaims" constraintName="FK_AbpUserClaims_AbpUsers_UserId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-124">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="AbpUserLogins" constraintName="FK_AbpUserLogins_AbpUsers_UserId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-125">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="AbpUserRoles" constraintName="FK_AbpUserRoles_AbpUsers_UserId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-126">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="AbpUserTokens" constraintName="FK_AbpUserTokens_AbpUsers_UserId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-127">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="AbpUsers" constraintName="FK_AbpUsers_AbpUsers_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-128">
+        <addForeignKeyConstraint baseColumnNames="DeleterUserId" baseTableName="AbpUsers" constraintName="FK_AbpUsers_AbpUsers_DeleterUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-129">
+        <addForeignKeyConstraint baseColumnNames="LastModifierUserId" baseTableName="AbpUsers" constraintName="FK_AbpUsers_AbpUsers_LastModifierUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1613626355534-130">
+        <addForeignKeyConstraint baseColumnNames="WebhookEventId" baseTableName="AbpWebhookSendAttempts" constraintName="FK_AbpWebhookSendAttempts_AbpWebhookEvents_WebhookEventId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpWebhookEvents" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

@@ -28,6 +28,7 @@ namespace Academically
 
             // Enable this line to create a multi-tenant application.
             Configuration.MultiTenancy.IsEnabled = AcademicallyConsts.MultiTenancyEnabled;
+            Configuration.MultiTenancy.IgnoreFeatureCheckForHostUsers = !AcademicallyConsts.MultiTenancyEnabled;
 
             // Configure roles
             AppRoleConfig.Configure(Configuration.Modules.Zero().RoleManagement);

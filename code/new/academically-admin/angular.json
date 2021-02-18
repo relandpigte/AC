@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Academically": {
+    "academically": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -94,21 +94,22 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "Academically:build"
+            "browserTarget": "academically:build",
+            "port": 6365
           },
           "configurations": {
             "production": {
-              "browserTarget": "Academically:build:production"
+              "browserTarget": "academically:build:production"
             },
             "hmr": {
-              "browserTarget": "Academically:build:hmr"
+              "browserTarget": "academically:build:hmr"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Academically:build"
+            "browserTarget": "academically:build"
           }
         },
         "test": {
@@ -163,7 +164,7 @@
         }
       }
     },
-    "Academically-e2e": {
+    "academically-e2e": {
       "root": "",
       "sourceRoot": "",
       "projectType": "application",
@@ -172,7 +173,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "Academically:serve"
+            "devServerTarget": "academically:serve"
           }
         },
         "lint": {
@@ -187,7 +188,7 @@
       }
     }
   },
-  "defaultProject": "Academically",
+  "defaultProject": "academically",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
