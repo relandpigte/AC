@@ -276,7 +276,6 @@ deploy_schema_to_uat:
     ENV_NAME: "uat"
   dependencies:
     - build_schema
-    - deploy_schema_to_ci
   environment:
     name: uat_schema
   when: manual
@@ -287,7 +286,6 @@ deploy_backend_to_uat:
     ENV_NAME: "uat"
   dependencies:
     - build_backend
-    - deploy_backend_to_ci
   environment:
     name: uat_backend
   when: manual
@@ -298,7 +296,6 @@ deploy_frontend_to_uat:
     ENV_NAME: "uat"
   dependencies:
     - build_frontend
-    - deploy_frontend_to_ci
   environment:
     name: uat_frontend
   when: manual
