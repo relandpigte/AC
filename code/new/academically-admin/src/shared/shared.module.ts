@@ -15,45 +15,48 @@ import { AbpModalHeaderComponent } from './components/modal/abp-modal-header.com
 import { AbpModalFooterComponent } from './components/modal/abp-modal-footer.component';
 import { LayoutStoreService } from './layout/layout-store.service';
 
-import { BusyDirective } from './directives/busy.directive';
 import { EqualValidator } from './directives/equal-validator.directive';
+import { BusyDirective } from './directives/busy.directive';
+import { BodyClassDirective } from './directives/body-class.directive';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule,
-        NgxPaginationModule
-    ],
-    declarations: [
-        AbpPaginationControlsComponent,
-        AbpValidationSummaryComponent,
-        AbpModalHeaderComponent,
-        AbpModalFooterComponent,
-        LocalizePipe,
-        BusyDirective,
-        EqualValidator
-    ],
-    exports: [
-        AbpPaginationControlsComponent,
-        AbpValidationSummaryComponent,
-        AbpModalHeaderComponent,
-        AbpModalFooterComponent,
-        LocalizePipe,
-        BusyDirective,
-        EqualValidator
-    ]
+  imports: [
+    CommonModule,
+    RouterModule,
+    NgxPaginationModule
+  ],
+  declarations: [
+    AbpPaginationControlsComponent,
+    AbpValidationSummaryComponent,
+    AbpModalHeaderComponent,
+    AbpModalFooterComponent,
+    LocalizePipe,
+    BusyDirective,
+    EqualValidator,
+    BodyClassDirective,
+  ],
+  exports: [
+    AbpPaginationControlsComponent,
+    AbpValidationSummaryComponent,
+    AbpModalHeaderComponent,
+    AbpModalFooterComponent,
+    LocalizePipe,
+    BusyDirective,
+    EqualValidator,
+    BodyClassDirective,
+  ]
 })
 export class SharedModule {
-    static forRoot(): ModuleWithProviders<SharedModule> {
-        return {
-            ngModule: SharedModule,
-            providers: [
-                AppSessionService,
-                AppUrlService,
-                AppAuthService,
-                AppRouteGuard,
-                LayoutStoreService
-            ]
-        };
-    }
+  static forRoot(): ModuleWithProviders<SharedModule> {
+    return {
+      ngModule: SharedModule,
+      providers: [
+        AppSessionService,
+        AppUrlService,
+        AppAuthService,
+        AppRouteGuard,
+        LayoutStoreService,
+      ]
+    };
+  }
 }
