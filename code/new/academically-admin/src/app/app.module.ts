@@ -34,10 +34,18 @@ import { HeaderLeftNavbarComponent } from './layout/header-left-navbar.component
 import { HeaderLanguageMenuComponent } from './layout/header-language-menu.component';
 import { HeaderUserMenuComponent } from './layout/header-user-menu.component';
 import { FooterComponent } from './layout/footer.component';
-import { SidebarComponent } from './layout/sidebar.component';
 import { SidebarLogoComponent } from './layout/sidebar-logo.component';
 import { SidebarUserPanelComponent } from './layout/sidebar-user-panel.component';
-import { SidebarMenuComponent } from './layout/sidebar-menu.component';
+import { WrapperComponent } from './layout/wrapper/wrapper.component';
+import { ThemeSettingComponent } from './layout/theme-setting/theme-setting.component';
+import { SidebarComponent } from './layout/navigations/sidebar/sidebar.component';
+import { UserNavigationComponent } from './layout/navigations/user-navigation/user-navigation.component';
+import { SidebarMenuComponent } from './layout/menu/sidebar-menu/sidebar-menu.component';
+import { TopnavComponent } from './layout/navigations/topnav/topnav.component';
+import { TopbarMenuComponent } from './layout/menu/topbar-menu/topbar-menu.component';
+import { SidebarSmallComponent } from './layout/navigations/sidebar-small/sidebar-small.component';
+import { SidebarSmallMenuComponent } from './layout/menu/sidebar-small-menu/sidebar-small-menu.component';
+import { TopbarComponent } from './layout/navigations/topbar/topbar.component';
 
 @NgModule({
   declarations: [
@@ -64,10 +72,18 @@ import { SidebarMenuComponent } from './layout/sidebar-menu.component';
     HeaderLanguageMenuComponent,
     HeaderUserMenuComponent,
     FooterComponent,
-    SidebarComponent,
     SidebarLogoComponent,
     SidebarUserPanelComponent,
-    SidebarMenuComponent
+    WrapperComponent,
+    ThemeSettingComponent,
+    SidebarComponent,
+    UserNavigationComponent,
+    SidebarMenuComponent,
+    TopnavComponent,
+    TopbarMenuComponent,
+    SidebarSmallComponent,
+    SidebarSmallMenuComponent,
+    TopbarComponent,
   ],
   imports: [
     CommonModule,

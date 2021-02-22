@@ -1,0 +1,30 @@
+<nav
+  *ngIf="themeSettings.navigationPosition === NavigationPosition.Combo"
+  class="navbar navbar-expand-md navbar-light d-none d-md-flex"
+  id="topbar"
+>
+  <div class="container-fluid justify-content-end">
+    <!-- User -->
+    <div class="navbar-user mr-3">
+      <!-- Dropdown -->
+      <div class="dropdown">
+        <!-- Toggle -->
+        <a
+          href="javascript:;"
+          class="avatar avatar-sm avatar-online dropdown-toggle"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <img [src]="getProfilePicture(user.profilePictureUrl, user.id)" class="avatar-img rounded-circle" alt="profile" />
+        </a>
+
+        <!-- Menu -->
+        <div class="dropdown-menu dropdown-menu-right">
+          <user-navigation></user-navigation>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

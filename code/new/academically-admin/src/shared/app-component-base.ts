@@ -56,4 +56,15 @@ export abstract class AppComponentBase {
     isGranted(permissionName: string): boolean {
         return this.permission.isGranted(permissionName);
     }
+
+    getProfilePicture(fileNameOrUrl: string, userId?: number): string {
+    //   if (fileNameOrUrl) {
+    //     if (this.isValidUrl(fileNameOrUrl)) {
+    //       return fileNameOrUrl;
+    //     } else {
+    //       return `${this.appSession.user.directoryBaseUrl}/${userId}/profile-pictures/${fileNameOrUrl}`;
+    //     }
+    //   }
+      return 'assets/img/anonymous.png';
+    }
 }
