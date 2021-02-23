@@ -1,15 +1,8 @@
-<nav class="navbar navbar-expand-lg navbar-light" id="topnav">
+<nav class="navbar navbar-expand-lg {{ navigationColor }}" id="topnav">
   <div class="container">
     <!-- Toggler -->
-    <button
-      class="navbar-toggler mr-auto"
-      type="button"
-      data-toggle="collapse"
-      data-target="#navbar"
-      aria-controls="navbar"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
+    <button class="navbar-toggler mr-auto" type="button" data-toggle="collapse" data-target="#navbar"
+      aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -18,31 +11,8 @@
       <img src="/assets/img/{{ appLogo }}.png" alt="..." class="navbar-brand-img mr-3" />
     </a>
 
-    <!-- User -->
-    <div class="navbar-user">
-      <!-- Dropdown -->
-      <div class="dropdown">
-        <!-- Toggle -->
-        <a
-          href="javascript:;"
-          class="avatar avatar-sm avatar-online dropdown-toggle"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          <img [src]="getProfilePicture(user.profilePictureUrl, user.id)" class="avatar-img rounded-circle" alt="profile" />
-        </a>
-
-        <!-- Menu -->
-        <div class="dropdown-menu dropdown-menu-right">
-          <user-navigation></user-navigation>
-        </div>
-      </div>
-    </div>
-
     <!-- Collapse -->
-    <div class="collapse navbar-collapse mr-lg-auto order-lg-first" id="navbar">
+    <div class="collapse navbar-collapse" id="navbar">
       <!-- Form -->
       <form class="mt-4 mb-3 d-md-none">
         <input type="search" class="form-control form-control-rounded" placeholder="Search" aria-label="Search" />
@@ -50,8 +20,64 @@
 
       <topbar-menu [routerEvent]="routerEvent"></topbar-menu>
 
+      <!-- User -->
+      <div class="navbar-user ml-4 mr-3">
+
+        <!-- Messages -->
+        <div class="dropdown mr-4 d-none d-md-flex">
+          <a href="#" class="navbar-user-link" role="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <span class="icon">
+              <i class="fe fe-message-square"></i>
+            </span>
+          </a>
+
+          <div class="dropdown-menu dropdown-menu-right dropdown-menu-card">
+            <div class="card-header">
+              <h5 class="card-header-title">
+                Messages - Coming Soon
+              </h5>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="dropdown mr-4 d-none d-md-flex">
+          <a href="#" class="navbar-user-link" role="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <span class="icon active">
+              <i class="fe fe-bell"></i>
+            </span>
+          </a>
+
+          <div class="dropdown-menu dropdown-menu-right dropdown-menu-card">
+            <div class="card-header">
+              <h5 class="card-header-title">
+                Alerts - Coming Soon
+              </h5>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dropdown -->
+        <div class="dropdown">
+          <!-- Toggle -->
+          <a href="javascript:;" class="avatar avatar-sm avatar-online dropdown-toggle" role="button"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img [src]="getProfilePicture(user.profilePictureUrl, user.id)" class="avatar-img rounded-circle"
+              alt="profile" />
+          </a>
+
+          <!-- Menu -->
+          <div class="dropdown-menu dropdown-menu-right">
+            <user-navigation></user-navigation>
+          </div>
+        </div>
+      </div>
+
       <!-- Customize -->
-      <button class="btn btn-sm btn-block btn-primary ml-3" (click)="onCustomizeClick()"><i class="fe fe-sliders"></i></button>
+      <button class="btn btn-sm btn-block btn-primary ml-3" (click)="onCustomizeClick()"><i
+          class="fe fe-sliders"></i></button>
     </div>
   </div>
   <!-- / .container -->
