@@ -201,6 +201,18 @@ body.theme-dark {
   color: green !important;
 }
 
+topbar-menu {
+  .navbar-nav .nav-link.active:before {
+    border-bottom: none !important;
+  }
+
+  .nav-item {
+    .nav-link {
+      white-space: nowrap;
+    }
+  }
+}
+
 @media (min-width: 768px) {
   sidebar:not([style*='display: none'])~.main-content {
     margin-left: 250px;

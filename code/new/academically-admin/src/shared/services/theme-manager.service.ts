@@ -37,9 +37,10 @@ export class ThemeManagerService {
 
   public saveConfiguration(themeSettings: IThemeSetting): void {
     const oldThemeSettings = this.getConfiguration();
+    const sideNavSizing = themeSettings.navigationPosition === NavigationPosition.Topnav ? SidebarSize.Base : themeSettings.sidenavSizing;
     localStorage.setItem(this.configLsKeys.colorScheme, themeSettings.colorScheme);
     localStorage.setItem(this.configLsKeys.navigationPosition, themeSettings.navigationPosition);
-    localStorage.setItem(this.configLsKeys.sidenavSizing, themeSettings.sidenavSizing);
+    localStorage.setItem(this.configLsKeys.sidenavSizing, sideNavSizing);
     localStorage.setItem(this.configLsKeys.navigationColor, themeSettings.navigationColor);
     if (oldThemeSettings.colorScheme !== themeSettings.colorScheme) {
       this.initColorScheme();
