@@ -1,9 +1,7 @@
-// "Hot Module Replacement" enabled environment
-
 export const environment = {
   production: false,
-  hmr: true,
-  appConfig: 'appconfig.json',
+  hmr: false,
+  appConfig: 'appconfig.ci.json',
   googleApiKey: 'AIzaSyBtYaldOOmA-wNFOI7f32MvYSYGkaLAz6k',
   agora: {
     appId: '61dfaf37a1ca4dfdb89d305d29914a09',

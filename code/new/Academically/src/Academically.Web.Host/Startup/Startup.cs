@@ -35,7 +35,7 @@ namespace Academically.Web.Host.Startup
             _appConfiguration = env.GetAppConfiguration();
         }
 
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             //MVC
             services.AddControllersWithViews(
@@ -112,7 +112,7 @@ namespace Academically.Web.Host.Startup
             });
 
             // Configure Abp and Dependency Injection
-            return services.AddAbp<AcademicallyWebHostModule>(
+            services.AddAbpWithoutCreatingServiceProvider<AcademicallyWebHostModule>(
                 // Configure Log4Net logging
                 options => options.IocManager.IocContainer.AddFacility<LoggingFacility>(
                     f => f.UseAbpLog4Net().WithConfig("log4net.config")
