@@ -1,8 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
-	<text name="Blog">Blog</text>
-	<text name="OverseasStudy">Overseas Study</text>
+    <text name="Usage">Usage</text>
+    <text name="MyProjects">My Projects</text>
+    <text name="Blog">Blog</text>
+    <text name="OverseasStudy">Overseas Study</text>
     <text name="UpcomingSessionsConfirm">Upcoming Sessions Confirm</text>
     <text name="UpcomingSessions">Upcoming Sessions</text>
     <text name="AssignmentStructure">Assignment Structure</text>

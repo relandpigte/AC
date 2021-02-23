@@ -5,10 +5,10 @@
         <div class="row align-items-end">
           <div class="col">
             <h6 class="header-pretitle">
-              {{ 'Overview' | localize }}
+              {{ 'Dashboard' | localize }}
             </h6>
             <h1 class="header-title">
-              {{ 'Dashboard' | localize}}
+              Good morning,
             </h1>
           </div>
           <div class="col-auto">
@@ -16,11 +16,28 @@
               Create New
             </a>
           </div>
+          <div class="row align-items-center">
+            <div class="col">
+            <ul class="nav nav-tabs nav-overflow header-tabs">
+              <li class="nav-item">
+                <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="true">{{ 'Overview' | localize }}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="projects-tab" data-toggle="tab" href="#projects" role="tab" aria-controls="projects" aria-selected="false">{{ 'MyProjects' | localize }}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="usage-tab" data-toggle="tab" href="#usage" role="tab" aria-controls="usage" aria-selected="false">{{ 'Usage' | localize }}</a>
+              </li>
+            </ul>
+
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="container-fluid">
-    <h3>Coming Soon!</h3>
+  <div class="container-fluid tab-content">
+    <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">Overview</div>
+    <div class="tab-pane fade" id="projects" role="tabpanel" aria-labelledby="projects-tab">My Projects</div>
+    <div class="tab-pane fade" id="usage" role="tabpanel" aria-labelledby="usage-tab">Usage</div>
   </div>
 </div>
