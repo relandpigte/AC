@@ -4,8 +4,8 @@ stages:
 
 variables:
   BUILD_IMAGE: "mcr.microsoft.com/dotnet/core/sdk:3.1" 
-  FRONTEND_PATH: "code/academically-admin"
-  BACKEND_PATH: "code/Academically/Academically.Web.Host"
+  FRONTEND_PATH: "code/new/academically-admin"
+  BACKEND_PATH: "code/new/Academically/src/Academically.Web.Host"
   ENV_NAME: "ci"
   LOG_RETENTION: 7
   PRIVATE_SUBNET_A: "subnet-03f6e008bbf99fd12"
