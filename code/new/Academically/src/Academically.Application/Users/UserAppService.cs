@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Abp.Application.Services;
+﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Configuration;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -14,13 +11,18 @@ using Abp.Localization;
 using Abp.Runtime.Session;
 using Abp.UI;
 using Academically.Authorization;
-using Academically.Authorization.Accounts;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 using Academically.Roles.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Academically.Users
 {
@@ -33,6 +35,8 @@ namespace Academically.Users
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IAbpSession _abpSession;
         private readonly LogInManager _logInManager;
+        private readonly UrlEncoder _urlEncoder;
+        private readonly ISettingManager _settingManager;
 
         public UserAppService(
             IRepository<User, long> repository,
@@ -41,7 +45,10 @@ namespace Academically.Users
             IRepository<Role> roleRepository,
             IPasswordHasher<User> passwordHasher,
             IAbpSession abpSession,
-            LogInManager logInManager)
+            LogInManager logInManager,
+            UrlEncoder urlEncoder,
+            ISettingManager settingManager
+            )
             : base(repository)
         {
             _userManager = userManager;
@@ -50,8 +57,12 @@ namespace Academically.Users
             _passwordHasher = passwordHasher;
             _abpSession = abpSession;
             _logInManager = logInManager;
+            _urlEncoder = urlEncoder;
+            _settingManager = settingManager;
+
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Users_Create)]
         public override async Task<UserDto> CreateAsync(CreateUserDto input)
         {
             CheckCreatePermission();
@@ -70,11 +81,14 @@ namespace Academically.Users
                 CheckErrors(await _userManager.SetRolesAsync(user, input.RoleNames));
             }
 
+            await UpdateLockOutEnabled(user);
+
             CurrentUnitOfWork.SaveChanges();
 
             return MapToEntityDto(user);
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Users_Update)]
         public override async Task<UserDto> UpdateAsync(UserDto input)
         {
             CheckUpdatePermission();
@@ -93,6 +107,7 @@ namespace Academically.Users
             return await GetAsync(input);
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Users_Delete)]
         public override async Task DeleteAsync(EntityDto<long> input)
         {
             var user = await _userManager.GetUserByIdAsync(input.Id);
@@ -131,10 +146,11 @@ namespace Academically.Users
         {
             var roleIds = user.Roles.Select(x => x.RoleId).ToArray();
 
-            var roles = _roleManager.Roles.Where(r => roleIds.Contains(r.Id)).Select(r => r.NormalizedName);
+            var roles = _roleManager.Roles.Where(r => roleIds.Contains(r.Id)).ToList();
 
             var userDto = base.MapToEntityDto(user);
-            userDto.RoleNames = roles.ToArray();
+            userDto.RoleNames = roles.Select(e => e.NormalizedName).ToArray();
+            userDto.RoleDisplayNames = roles.Select(e => e.DisplayName).ToArray();
 
             return userDto;
         }
@@ -142,7 +158,10 @@ namespace Academically.Users
         protected override IQueryable<User> CreateFilteredQuery(PagedUserResultRequestDto input)
         {
             return Repository.GetAllIncluding(x => x.Roles)
-                .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.UserName.Contains(input.Keyword) || x.Name.Contains(input.Keyword) || x.EmailAddress.Contains(input.Keyword))
+                .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(input.Keyword)
+                    || x.Surname.Contains(input.Keyword)
+                    || x.EmailAddress.Contains(input.Keyword)
+                    || x.Id.ToString().Contains(input.Keyword))
                 .WhereIf(input.IsActive.HasValue, x => x.IsActive == input.IsActive);
         }
 
@@ -160,7 +179,23 @@ namespace Academically.Users
 
         protected override IQueryable<User> ApplySorting(IQueryable<User> query, PagedUserResultRequestDto input)
         {
-            return query.OrderBy(r => r.UserName);
+            if (input.Sorting.Contains("role"))
+            {
+                var roles = _roleManager.Roles;
+                var sortParts = input.Sorting.Split(" ");
+                var userQuery = query.Select(u => new
+                {
+                    User = u,
+                    Role = roles.Where(r => u.Roles.Any(ur => ur.RoleId == r.Id)).Select(r => r.DisplayName).FirstOrDefault()
+                });
+
+                if (sortParts.Length > 1 && sortParts[1] == "desc")
+                    return userQuery.OrderByDescending(s => s.Role).Select(s => s.User);
+                else
+                    return userQuery.OrderBy(s => s.Role).Select(s => s.User);
+            }
+
+            return base.ApplySorting(query, input);
         }
 
         protected virtual void CheckErrors(IdentityResult identityResult)
@@ -181,7 +216,7 @@ namespace Academically.Users
             {
                 throw new UserFriendlyException("Your 'Existing Password' did not match the one on record.  Please try again or contact an administrator for assistance in resetting your password.");
             }
-            if (!new Regex(AccountAppService.PasswordRegex).IsMatch(input.NewPassword))
+            if (!new Regex(AcademicallyConsts.PasswordRegexValidator).IsMatch(input.NewPassword))
             {
                 throw new UserFriendlyException("Passwords must be at least 8 characters, contain a lowercase, uppercase, and number.");
             }
@@ -221,6 +256,12 @@ namespace Academically.Users
             }
 
             return true;
+        }
+
+        private async Task UpdateLockOutEnabled(User user)
+        {
+            user.IsLockoutEnabled = false;
+            await _userManager.UpdateAsync(user);
         }
     }
 }

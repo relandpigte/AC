@@ -30,44 +30,41 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
 
         private void CreateRolesAndUsers()
         {
-            // Admin role
+            #region SuperAdmin
 
-            var adminRole = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.Admin);
-            if (adminRole == null)
-            {
-                adminRole = _context.Roles.Add(new Role(_tenantId, StaticRoleNames.Tenants.Admin, StaticRoleNames.Tenants.Admin) { IsStatic = true }).Entity;
-                _context.SaveChanges();
-            }
+            var superAdminRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.SuperAdmin);
+            GrantPermissions(
+                superAdminRole,
+                PermissionNames.Pages_Dashboard,
+                PermissionNames.Pages_Users,
+                PermissionNames.Pages_Users_Create,
+                PermissionNames.Pages_Users_Update,
+                PermissionNames.Pages_Users_Delete,
+                PermissionNames.Pages_Users_ResetPassword,
+                PermissionNames.Pages_Roles,
+                PermissionNames.Pages_Roles_Create,
+                PermissionNames.Pages_Roles_Update,
+                PermissionNames.Pages_Roles_Delete
+            );
 
-            // Grant all permissions to admin role
+            #endregion
 
-            var grantedPermissions = _context.Permissions.IgnoreQueryFilters()
-                .OfType<RolePermissionSetting>()
-                .Where(p => p.TenantId == _tenantId && p.RoleId == adminRole.Id)
-                .Select(p => p.Name)
-                .ToList();
+            #region Admin
 
-            var permissions = PermissionFinder
-                .GetAllPermissions(new AcademicallyAuthorizationProvider())
-                .Where(p => p.MultiTenancySides.HasFlag(MultiTenancySides.Tenant) &&
-                            !grantedPermissions.Contains(p.Name))
-                .ToList();
-
-            if (permissions.Any())
-            {
-                _context.Permissions.AddRange(
-                    permissions.Select(permission => new RolePermissionSetting
-                    {
-                        TenantId = _tenantId,
-                        Name = permission.Name,
-                        IsGranted = true,
-                        RoleId = adminRole.Id
-                    })
-                );
-                _context.SaveChanges();
-            }
-
-            // Admin user
+            var adminRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.Admin);
+            GrantPermissions(
+                adminRole,
+                PermissionNames.Pages_Dashboard,
+                PermissionNames.Pages_Users,
+                PermissionNames.Pages_Users_Create,
+                PermissionNames.Pages_Users_Update,
+                PermissionNames.Pages_Users_Delete,
+                PermissionNames.Pages_Users_ResetPassword,
+                PermissionNames.Pages_Roles,
+                PermissionNames.Pages_Roles_Create,
+                PermissionNames.Pages_Roles_Update,
+                PermissionNames.Pages_Roles_Delete
+            );
 
             var adminUser = _context.Users.IgnoreQueryFilters().FirstOrDefault(u => u.TenantId == _tenantId && u.UserName == AbpUserBase.AdminUserName);
             if (adminUser == null)
@@ -80,8 +77,70 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 _context.Users.Add(adminUser);
                 _context.SaveChanges();
 
-                // Assign Admin role to admin user
                 _context.UserRoles.Add(new UserRole(_tenantId, adminUser.Id, adminRole.Id));
+                _context.SaveChanges();
+            }
+
+            #endregion
+
+            #region Tutor
+
+            var tutorRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.Tutor);
+            GrantPermissions(
+                tutorRole,
+                PermissionNames.Pages_Dashboard
+            );
+
+            #endregion
+
+            #region Student
+
+            var studentRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.Student);
+            GrantPermissions(
+                studentRole,
+                PermissionNames.Pages_Dashboard
+            );
+
+            #endregion
+        }
+
+        private Role CreateRoleIfNotExisting(string roleName)
+        {
+            var role = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == roleName);
+            if (role == null)
+            {
+                role = _context.Roles.Add(new Role(_tenantId, roleName, roleName) { IsStatic = true }).Entity;
+                _context.SaveChanges();
+            }
+            return role;
+        }
+
+        private void GrantPermissions(Role role, params string[] permissionNames)
+        {
+            var grantedAdminPermissions = _context.Permissions.IgnoreQueryFilters()
+                .OfType<RolePermissionSetting>()
+                .Where(p => p.TenantId == _tenantId && p.RoleId == role.Id)
+                .Select(p => p.Name)
+                .ToList();
+
+            var permissions = PermissionFinder
+                .GetAllPermissions(new AcademicallyAuthorizationProvider())
+                .Where(p => p.MultiTenancySides.HasFlag(MultiTenancySides.Tenant) &&
+                            !grantedAdminPermissions.Contains(p.Name) &&
+                            permissionNames.Contains(p.Name))
+                .ToList();
+
+            if (permissions.Any())
+            {
+                _context.Permissions.AddRange(
+                    permissions.Select(permission => new RolePermissionSetting
+                    {
+                        TenantId = _tenantId,
+                        Name = permission.Name,
+                        IsGranted = true,
+                        RoleId = role.Id
+                    })
+                );
                 _context.SaveChanges();
             }
         }

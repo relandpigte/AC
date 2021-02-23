@@ -8,8 +8,19 @@ namespace Academically.Authorization
     {
         public override void SetPermissions(IPermissionDefinitionContext context)
         {
-            context.CreatePermission(PermissionNames.Pages_Users, L("Users"));
-            context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
+            var dashboardPermission = context.CreatePermission(PermissionNames.Pages_Dashboard, L("Dashboard"));
+
+            var userPermission = context.CreatePermission(PermissionNames.Pages_Users, L("Users"));
+            userPermission.CreateChildPermission(PermissionNames.Pages_Users_Create, L("Create"));
+            userPermission.CreateChildPermission(PermissionNames.Pages_Users_Update, L("Update"));
+            userPermission.CreateChildPermission(PermissionNames.Pages_Users_Delete, L("Delete"));
+            userPermission.CreateChildPermission(PermissionNames.Pages_Users_ResetPassword, L("ResetPassword"));
+
+            var rolePermission = context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
+            rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Create, L("Create"));
+            rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Update, L("Update"));
+            rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Delete, L("Delete"));
+
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
         }
 

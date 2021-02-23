@@ -1,59 +1,32 @@
-<pagination-template
-  #p="paginationApi"
-  [id]="id"
-  [maxSize]="maxSize"
-  (pageChange)="pageChange.emit($event)"
->
-  <nav>
-    <ul *ngIf="!(autoHide && p.pages.length <= 1)" class="pagination m-0">
-      <li
-        *ngIf="directionLinks"
-        class="page-item"
-        [class.disabled]="p.isFirstPage()"
-      >
-        <a
-          *ngIf="!p.isFirstPage()"
-          class="page-link"
-          href="javascript:;"
-          (click)="p.previous()"
-        >
-          <i class="fas fa-chevron-left"></i>
+<pagination-template #p="paginationApi" [id]="id" [maxSize]="maxSize" (pageChange)="pageChange.emit($event)">
+  <div *ngIf="!(autoHide && p.pages.length <= 1)" class="card-footer d-flex justify-content-between">
+    <ul class="list-pagination-prev pagination pagination-tabs card-pagination">
+      <li *ngIf="directionLinks" class="page-item" [class.disabled]="p.isFirstPage()">
+        <a *ngIf="!p.isFirstPage()" class="page-link pl-0 pr-4 border-right" href="javascript:;" (click)="p.previous()">
+          <i class="fe fe-arrow-left mr-1"></i> Prev
         </a>
-        <a *ngIf="p.isFirstPage()" class="page-link" href="javascript:;">
-          <i class="fas fa-chevron-left"></i>
-        </a>
-      </li>
-      <li
-        *ngFor="let page of p.pages"
-        class="page-item"
-        [class.active]="p.getCurrent() === page.value"
-        [style.z-index]="p.getCurrent() === page.value ? '0' : ''"
-      >
-        <a
-          class="page-link"
-          href="javascript:;"
-          (click)="p.setCurrent(page.value)"
-        >
-          {{ page.label }}
-        </a>
-      </li>
-      <li
-        *ngIf="directionLinks"
-        class="page-item"
-        [class.disabled]="p.isLastPage()"
-      >
-        <a
-          *ngIf="!p.isLastPage()"
-          class="page-link"
-          href="javascript:;"
-          (click)="p.next()"
-        >
-          <i class="fas fa-chevron-right"></i>
-        </a>
-        <a *ngIf="p.isLastPage()" class="page-link" href="javascript:;">
-          <i class="fas fa-chevron-right"></i>
+        <a *ngIf="p.isFirstPage()" class="page-link pl-0 pr-4 border-right" href="javascript:;">
+          <i class="fe fe-arrow-left mr-1"></i> Prev
         </a>
       </li>
     </ul>
-  </nav>
+    <ul class="list-pagination pagination pagination-tabs card-pagination">
+      <li *ngFor="let page of p.pages" [class.active]="p.getCurrent() === page.value"
+        [style.z-index]="p.getCurrent() === page.value ? '0' : ''">
+        <a class="page" href="javascript:;" (click)="p.setCurrent(page.value)">
+          {{ page.label }}
+        </a>
+      </li>
+    </ul>
+    <ul class="list-pagination-next pagination pagination-tabs card-pagination">
+      <li *ngIf="directionLinks" class="page-item" [class.disabled]="p.isLastPage()">
+        <a *ngIf="!p.isLastPage()" class="page-link pl-4 pr-0 border-left" href="javascript:;" (click)="p.next()">
+          Next <i class="fe fe-arrow-right ml-1"></i>
+        </a>
+        <a *ngIf="p.isLastPage()" class="page-link pl-4 pr-0 border-left" href="javascript:;">
+          Next <i class="fe fe-arrow-right ml-1"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
 </pagination-template>

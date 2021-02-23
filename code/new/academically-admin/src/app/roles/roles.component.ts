@@ -4,7 +4,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
   PagedListingComponentBase,
-  PagedRequestDto
+  PagedAndSortedRequestDto
 } from '@shared/paged-listing-component-base';
 import {
   RoleServiceProxy,
@@ -13,8 +13,9 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { CreateRoleDialogComponent } from './create-role/create-role-dialog.component';
 import { EditRoleDialogComponent } from './edit-role/edit-role-dialog.component';
+import { TableHeaderSortData } from '@shared/components/table-header-sort/table-header-sort.component';
 
-class PagedRolesRequestDto extends PagedRequestDto {
+class PagedRolesRequestDto extends PagedAndSortedRequestDto {
   keyword: string;
 }
 
@@ -25,6 +26,10 @@ class PagedRolesRequestDto extends PagedRequestDto {
 export class RolesComponent extends PagedListingComponentBase<RoleDto> {
   roles: RoleDto[] = [];
   keyword = '';
+  headers: TableHeaderSortData[] = [
+    { title: 'Role Name', sortColumn: 'name' },
+    { title: 'Display Name', sortColumn: 'displayName', colspan: 2  },
+  ];
 
   constructor(
     injector: Injector,
@@ -32,6 +37,7 @@ export class RolesComponent extends PagedListingComponentBase<RoleDto> {
     private _modalService: BsModalService
   ) {
     super(injector);
+    this.sorting = this.headers[0].sortColumn;
   }
 
   list(
@@ -42,7 +48,7 @@ export class RolesComponent extends PagedListingComponentBase<RoleDto> {
     request.keyword = this.keyword;
 
     this._rolesService
-      .getAll(request.keyword, request.skipCount, request.maxResultCount)
+      .getAll(request.keyword, request.sort, request.skipCount, request.maxResultCount)
       .pipe(
         finalize(() => {
           finishedCallback();
@@ -54,7 +60,7 @@ export class RolesComponent extends PagedListingComponentBase<RoleDto> {
       });
   }
 
-  delete(role: RoleDto): void {
+  onDeleteClick(role: RoleDto): void {
     abp.message.confirm(
       this.l('RoleDeleteWarningMessage', role.displayName),
       undefined,
@@ -74,11 +80,11 @@ export class RolesComponent extends PagedListingComponentBase<RoleDto> {
     );
   }
 
-  createRole(): void {
+  onCreateClick(): void {
     this.showCreateOrEditRoleDialog();
   }
 
-  editRole(role: RoleDto): void {
+  onEditClick(role: RoleDto): void {
     this.showCreateOrEditRoleDialog(role.id);
   }
 

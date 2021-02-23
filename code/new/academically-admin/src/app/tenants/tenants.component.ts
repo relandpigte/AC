@@ -4,7 +4,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
   PagedListingComponentBase,
-  PagedRequestDto,
+  PagedAndSortedRequestDto,
 } from '@shared/paged-listing-component-base';
 import {
   TenantServiceProxy,
@@ -14,7 +14,7 @@ import {
 import { CreateTenantDialogComponent } from './create-tenant/create-tenant-dialog.component';
 import { EditTenantDialogComponent } from './edit-tenant/edit-tenant-dialog.component';
 
-class PagedTenantsRequestDto extends PagedRequestDto {
+class PagedTenantsRequestDto extends PagedAndSortedRequestDto {
   keyword: string;
   isActive: boolean | null;
 }

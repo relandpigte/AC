@@ -9,7 +9,10 @@ namespace Academically.Authorization.Roles
 
         public static class Tenants
         {
+            public const string SuperAdmin = "Super Admin";
             public const string Admin = "Admin";
+            public const string Tutor = "Tutor";
+            public const string Student = "Student";
         }
     }
 }

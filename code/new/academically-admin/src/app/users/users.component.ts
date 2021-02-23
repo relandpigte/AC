@@ -4,7 +4,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
   PagedListingComponentBase,
-  PagedRequestDto
+  PagedAndSortedRequestDto
 } from 'shared/paged-listing-component-base';
 import {
   UserServiceProxy,
@@ -14,10 +14,11 @@ import {
 import { CreateUserDialogComponent } from './create-user/create-user-dialog.component';
 import { EditUserDialogComponent } from './edit-user/edit-user-dialog.component';
 import { ResetPasswordDialogComponent } from './reset-password/reset-password.component';
+import { TableHeaderSortData } from '@shared/components/table-header-sort/table-header-sort.component';
 
-class PagedUsersRequestDto extends PagedRequestDto {
+class PagedUsersRequestDto extends PagedAndSortedRequestDto {
   keyword: string;
-  isActive: boolean | null;
+  isActive: boolean;
 }
 
 @Component({
@@ -27,8 +28,16 @@ class PagedUsersRequestDto extends PagedRequestDto {
 export class UsersComponent extends PagedListingComponentBase<UserDto> {
   users: UserDto[] = [];
   keyword = '';
-  isActive: boolean | null;
+  isActive: boolean;
   advancedFiltersVisible = false;
+  headers: TableHeaderSortData[] = [
+    { title: 'AccountNumber', sortColumn: 'id' },
+    { title: 'Name', sortColumn: 'name' },
+    { title: 'EmailAddress', sortColumn: 'emailAddress' },
+    { title: 'Roles', sortColumn: 'role' },
+    { title: 'LastLoginTime', sortColumn: 'lastLoginTime' },
+    { title: 'IsActive', colspan: 2 },
+  ];
 
   constructor(
     injector: Injector,
@@ -36,24 +45,44 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
     private _modalService: BsModalService
   ) {
     super(injector);
+    this.sorting = this.headers[0].sortColumn;
   }
 
-  createUser(): void {
+  getRoleNames(user: UserDto): string {
+    return user.roleDisplayNames.join(', ');
+  }
+
+  onCreateClick(): void {
     this.showCreateOrEditUserDialog();
   }
 
-  editUser(user: UserDto): void {
+  onEditClick(user: UserDto): void {
     this.showCreateOrEditUserDialog(user.id);
   }
 
-  public resetPassword(user: UserDto): void {
+  onResetPasswordClick(user: UserDto): void {
     this.showResetPasswordUserDialog(user.id);
   }
 
-  clearFilters(): void {
+  onClearFiltersClick(): void {
     this.keyword = '';
     this.isActive = undefined;
     this.getDataPage(1);
+  }
+
+  onDeleteClick(user: UserDto): void {
+    abp.message.confirm(
+      this.l('UserDeleteWarningMessage', user.fullName),
+      undefined,
+      (result: boolean) => {
+        if (result) {
+          this._userService.delete(user.id).subscribe(() => {
+            abp.notify.success(this.l('SuccessfullyDeleted'));
+            this.refresh();
+          });
+        }
+      }
+    );
   }
 
   protected list(
@@ -68,6 +97,7 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
       .getAll(
         request.keyword,
         request.isActive,
+        request.sort,
         request.skipCount,
         request.maxResultCount
       )
@@ -80,21 +110,6 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
         this.users = result.items;
         this.showPaging(result, pageNumber);
       });
-  }
-
-  protected delete(user: UserDto): void {
-    abp.message.confirm(
-      this.l('UserDeleteWarningMessage', user.fullName),
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._userService.delete(user.id).subscribe(() => {
-            abp.notify.success(this.l('SuccessfullyDeleted'));
-            this.refresh();
-          });
-        }
-      }
-    );
   }
 
   private showResetPasswordUserDialog(id?: number): void {

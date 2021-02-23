@@ -436,7 +436,7 @@ export class RoleServiceProxy {
     /**
      * @return Success
      */
-    getAllPermissions(): Observable<PermissionDtoListResultDto> {
+    getAllPermissions(): Observable<GroupedPermissionDtoListResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Role/GetAllPermissions";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -455,14 +455,14 @@ export class RoleServiceProxy {
                 try {
                     return this.processGetAllPermissions(<any>response_);
                 } catch (e) {
-                    return <Observable<PermissionDtoListResultDto>><any>_observableThrow(e);
+                    return <Observable<GroupedPermissionDtoListResultDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<PermissionDtoListResultDto>><any>_observableThrow(response_);
+                return <Observable<GroupedPermissionDtoListResultDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAllPermissions(response: HttpResponseBase): Observable<PermissionDtoListResultDto> {
+    protected processGetAllPermissions(response: HttpResponseBase): Observable<GroupedPermissionDtoListResultDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -473,7 +473,7 @@ export class RoleServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PermissionDtoListResultDto.fromJS(resultData200);
+            result200 = GroupedPermissionDtoListResultDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -481,7 +481,7 @@ export class RoleServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<PermissionDtoListResultDto>(<any>null);
+        return _observableOf<GroupedPermissionDtoListResultDto>(<any>null);
     }
 
     /**
@@ -598,14 +598,17 @@ export class RoleServiceProxy {
 
     /**
      * @param keyword (optional) 
+     * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(keyword: string | null | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<RoleDtoPagedResultDto> {
+    getAll(keyword: string | null | undefined, sorting: string | null | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<RoleDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Role/GetAll?";
         if (keyword !== undefined)
             url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -1651,16 +1654,19 @@ export class UserServiceProxy {
     /**
      * @param keyword (optional) 
      * @param isActive (optional) 
+     * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(keyword: string | null | undefined, isActive: boolean | null | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserDtoPagedResultDto> {
+    getAll(keyword: string | null | undefined, isActive: boolean | null | undefined, sorting: string | null | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/User/GetAll?";
         if (keyword !== undefined)
             url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
         if (isActive !== undefined)
             url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
+        if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -2213,13 +2219,15 @@ export interface IRoleListDtoListResultDto {
     items: RoleListDto[] | undefined;
 }
 
-export class PermissionDto implements IPermissionDto {
+export class GroupedPermissionDto implements IGroupedPermissionDto {
     name: string | undefined;
     displayName: string | undefined;
     description: string | undefined;
+    parent: GroupedPermissionDto;
+    children: GroupedPermissionDto[] | undefined;
     id: number;
 
-    constructor(data?: IPermissionDto) {
+    constructor(data?: IGroupedPermissionDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2233,13 +2241,19 @@ export class PermissionDto implements IPermissionDto {
             this.name = _data["name"];
             this.displayName = _data["displayName"];
             this.description = _data["description"];
+            this.parent = _data["parent"] ? GroupedPermissionDto.fromJS(_data["parent"]) : <any>undefined;
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(GroupedPermissionDto.fromJS(item));
+            }
             this.id = _data["id"];
         }
     }
 
-    static fromJS(data: any): PermissionDto {
+    static fromJS(data: any): GroupedPermissionDto {
         data = typeof data === 'object' ? data : {};
-        let result = new PermissionDto();
+        let result = new GroupedPermissionDto();
         result.init(data);
         return result;
     }
@@ -2249,29 +2263,37 @@ export class PermissionDto implements IPermissionDto {
         data["name"] = this.name;
         data["displayName"] = this.displayName;
         data["description"] = this.description;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
         data["id"] = this.id;
         return data; 
     }
 
-    clone(): PermissionDto {
+    clone(): GroupedPermissionDto {
         const json = this.toJSON();
-        let result = new PermissionDto();
+        let result = new GroupedPermissionDto();
         result.init(json);
         return result;
     }
 }
 
-export interface IPermissionDto {
+export interface IGroupedPermissionDto {
     name: string | undefined;
     displayName: string | undefined;
     description: string | undefined;
+    parent: GroupedPermissionDto;
+    children: GroupedPermissionDto[] | undefined;
     id: number;
 }
 
-export class PermissionDtoListResultDto implements IPermissionDtoListResultDto {
-    items: PermissionDto[] | undefined;
+export class GroupedPermissionDtoListResultDto implements IGroupedPermissionDtoListResultDto {
+    items: GroupedPermissionDto[] | undefined;
 
-    constructor(data?: IPermissionDtoListResultDto) {
+    constructor(data?: IGroupedPermissionDtoListResultDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2285,14 +2307,14 @@ export class PermissionDtoListResultDto implements IPermissionDtoListResultDto {
             if (Array.isArray(_data["items"])) {
                 this.items = [] as any;
                 for (let item of _data["items"])
-                    this.items.push(PermissionDto.fromJS(item));
+                    this.items.push(GroupedPermissionDto.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): PermissionDtoListResultDto {
+    static fromJS(data: any): GroupedPermissionDtoListResultDto {
         data = typeof data === 'object' ? data : {};
-        let result = new PermissionDtoListResultDto();
+        let result = new GroupedPermissionDtoListResultDto();
         result.init(data);
         return result;
     }
@@ -2307,16 +2329,16 @@ export class PermissionDtoListResultDto implements IPermissionDtoListResultDto {
         return data; 
     }
 
-    clone(): PermissionDtoListResultDto {
+    clone(): GroupedPermissionDtoListResultDto {
         const json = this.toJSON();
-        let result = new PermissionDtoListResultDto();
+        let result = new GroupedPermissionDtoListResultDto();
         result.init(json);
         return result;
     }
 }
 
-export interface IPermissionDtoListResultDto {
-    items: PermissionDto[] | undefined;
+export interface IGroupedPermissionDtoListResultDto {
+    items: GroupedPermissionDto[] | undefined;
 }
 
 export class RoleEditDto implements IRoleEditDto {
@@ -2378,60 +2400,9 @@ export interface IRoleEditDto {
     id: number;
 }
 
-export class FlatPermissionDto implements IFlatPermissionDto {
-    name: string | undefined;
-    displayName: string | undefined;
-    description: string | undefined;
-
-    constructor(data?: IFlatPermissionDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.displayName = _data["displayName"];
-            this.description = _data["description"];
-        }
-    }
-
-    static fromJS(data: any): FlatPermissionDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new FlatPermissionDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["displayName"] = this.displayName;
-        data["description"] = this.description;
-        return data; 
-    }
-
-    clone(): FlatPermissionDto {
-        const json = this.toJSON();
-        let result = new FlatPermissionDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IFlatPermissionDto {
-    name: string | undefined;
-    displayName: string | undefined;
-    description: string | undefined;
-}
-
 export class GetRoleForEditOutput implements IGetRoleForEditOutput {
     role: RoleEditDto;
-    permissions: FlatPermissionDto[] | undefined;
+    permissions: GroupedPermissionDto[] | undefined;
     grantedPermissionNames: string[] | undefined;
 
     constructor(data?: IGetRoleForEditOutput) {
@@ -2449,7 +2420,7 @@ export class GetRoleForEditOutput implements IGetRoleForEditOutput {
             if (Array.isArray(_data["permissions"])) {
                 this.permissions = [] as any;
                 for (let item of _data["permissions"])
-                    this.permissions.push(FlatPermissionDto.fromJS(item));
+                    this.permissions.push(GroupedPermissionDto.fromJS(item));
             }
             if (Array.isArray(_data["grantedPermissionNames"])) {
                 this.grantedPermissionNames = [] as any;
@@ -2492,7 +2463,7 @@ export class GetRoleForEditOutput implements IGetRoleForEditOutput {
 
 export interface IGetRoleForEditOutput {
     role: RoleEditDto;
-    permissions: FlatPermissionDto[] | undefined;
+    permissions: GroupedPermissionDto[] | undefined;
     grantedPermissionNames: string[] | undefined;
 }
 
@@ -3292,6 +3263,7 @@ export class UserDto implements IUserDto {
     lastLoginTime: moment.Moment | undefined;
     creationTime: moment.Moment;
     roleNames: string[] | undefined;
+    roleDisplayNames: string[] | undefined;
     id: number;
 
     constructor(data?: IUserDto) {
@@ -3317,6 +3289,11 @@ export class UserDto implements IUserDto {
                 this.roleNames = [] as any;
                 for (let item of _data["roleNames"])
                     this.roleNames.push(item);
+            }
+            if (Array.isArray(_data["roleDisplayNames"])) {
+                this.roleDisplayNames = [] as any;
+                for (let item of _data["roleDisplayNames"])
+                    this.roleDisplayNames.push(item);
             }
             this.id = _data["id"];
         }
@@ -3344,6 +3321,11 @@ export class UserDto implements IUserDto {
             for (let item of this.roleNames)
                 data["roleNames"].push(item);
         }
+        if (Array.isArray(this.roleDisplayNames)) {
+            data["roleDisplayNames"] = [];
+            for (let item of this.roleDisplayNames)
+                data["roleDisplayNames"].push(item);
+        }
         data["id"] = this.id;
         return data; 
     }
@@ -3366,6 +3348,7 @@ export interface IUserDto {
     lastLoginTime: moment.Moment | undefined;
     creationTime: moment.Moment;
     roleNames: string[] | undefined;
+    roleDisplayNames: string[] | undefined;
     id: number;
 }
 

@@ -7,15 +7,14 @@ import {
 } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { forEach as _forEach, includes as _includes, map as _map } from 'lodash-es';
+import * as _ from 'lodash';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   RoleServiceProxy,
   GetRoleForEditOutput,
   RoleDto,
-  PermissionDto,
   RoleEditDto,
-  FlatPermissionDto
+  GroupedPermissionDto
 } from '@shared/service-proxies/service-proxies';
 
 @Component({
@@ -26,7 +25,7 @@ export class EditRoleDialogComponent extends AppComponentBase
   saving = false;
   id: number;
   role = new RoleEditDto();
-  permissions: FlatPermissionDto[];
+  permissions: GroupedPermissionDto[];
   grantedPermissionNames: string[];
   checkedPermissionsMap: { [key: string]: boolean } = {};
 
@@ -47,29 +46,30 @@ export class EditRoleDialogComponent extends AppComponentBase
         this.role = result.role;
         this.permissions = result.permissions;
         this.grantedPermissionNames = result.grantedPermissionNames;
-        this.setInitialPermissionsStatus();
+        this.setInitialPermissionsStatus(this.permissions);
       });
   }
 
-  setInitialPermissionsStatus(): void {
-    _map(this.permissions, (item) => {
+  setInitialPermissionsStatus(permissions: GroupedPermissionDto[]): void {
+    _.map(permissions, (item) => {
       this.checkedPermissionsMap[item.name] = this.isPermissionChecked(
         item.name
       );
+      this.setInitialPermissionsStatus(item.children);
     });
   }
 
   isPermissionChecked(permissionName: string): boolean {
-    return _includes(this.grantedPermissionNames, permissionName);
+    return _.includes(this.grantedPermissionNames, permissionName);
   }
 
-  onPermissionChange(permission: PermissionDto, $event) {
+  onPermissionChange(permission: GroupedPermissionDto, $event) {
     this.checkedPermissionsMap[permission.name] = $event.target.checked;
   }
 
   getCheckedPermissions(): string[] {
     const permissions: string[] = [];
-    _forEach(this.checkedPermissionsMap, function (value, key) {
+    _.forEach(this.checkedPermissionsMap, function (value, key) {
       if (value) {
         permissions.push(key);
       }

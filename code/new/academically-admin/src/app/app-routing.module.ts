@@ -22,7 +22,7 @@ import { ChangePasswordComponent } from './users/change-password/change-password
           {
             path: 'home',
             component: WrapperComponent,
-            // data: { permission: 'Pages.Dashboard' },
+            data: { permission: 'Pages.Dashboard' },
             canActivate: [AppRouteGuard],
             children: [
               {
@@ -32,8 +32,32 @@ import { ChangePasswordComponent } from './users/change-password/change-password
               }
             ]
           },
-          { path: 'users', component: UsersComponent, data: { permission: 'Pages.Users' }, canActivate: [AppRouteGuard] },
-          { path: 'roles', component: RolesComponent, data: { permission: 'Pages.Roles' }, canActivate: [AppRouteGuard] },
+          {
+            path: 'roles',
+            component: WrapperComponent,
+            data: { permission: 'Pages.Roles' },
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: RolesComponent,
+                outlet: 'content'
+              }
+            ]
+          },
+          {
+            path: 'users',
+            component: WrapperComponent,
+            data: { permission: 'Pages.Users' },
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: UsersComponent,
+                outlet: 'content'
+              }
+            ]
+          },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent }
