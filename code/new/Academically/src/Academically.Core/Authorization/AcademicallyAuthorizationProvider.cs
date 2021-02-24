@@ -10,16 +10,25 @@ namespace Academically.Authorization
         {
             var dashboardPermission = context.CreatePermission(PermissionNames.Pages_Dashboard, L("Dashboard"));
 
+            var dashbardOverviewPermissions = dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Overview, L("Overview"));
+            dashbardOverviewPermissions.CreateChildPermission(PermissionNames.Pages_Dashboard_Overview_RecentProjects, L("RecentProjects"));
+
+            dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_MyProjects, L("MyProjects"));
+            dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Usage, L("Usage"));
+
+
             var userPermission = context.CreatePermission(PermissionNames.Pages_Users, L("Users"));
             userPermission.CreateChildPermission(PermissionNames.Pages_Users_Create, L("Create"));
             userPermission.CreateChildPermission(PermissionNames.Pages_Users_Update, L("Update"));
             userPermission.CreateChildPermission(PermissionNames.Pages_Users_Delete, L("Delete"));
             userPermission.CreateChildPermission(PermissionNames.Pages_Users_ResetPassword, L("ResetPassword"));
 
+
             var rolePermission = context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
             rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Create, L("Create"));
             rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Update, L("Update"));
             rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Delete, L("Delete"));
+
 
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
         }

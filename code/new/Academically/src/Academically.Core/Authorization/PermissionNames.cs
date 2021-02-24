@@ -5,6 +5,10 @@
         public const string Pages_Tenants = "Pages.Tenants";
 
         public const string Pages_Dashboard = "Pages.Dashboard";
+        public const string Pages_Dashboard_Overview = "Pages.Dashboard.Overview";
+        public const string Pages_Dashboard_Overview_RecentProjects = "Pages.Dashboard.Overview.RecentProjects";
+        public const string Pages_Dashboard_MyProjects = "Pages.Dashboard.MyProjects";
+        public const string Pages_Dashboard_Usage = "Pages.Dashboard.Usage";
 
         public const string Pages_Users = "Pages.Users";
         public const string Pages_Users_Create = "Pages.Users.Create";
