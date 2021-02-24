@@ -3,5 +3,7 @@
     <app-recent-projects *ngIf="permission.isGranted('Pages.Dashboard.Overview.RecentProjects')"></app-recent-projects>
     <app-recent-activity *ngIf="permission.isGranted('Pages.Dashboard.Overview.RecentActivity')"></app-recent-activity>
   </div>
-  <div class="col-4"></div>
+  <div class="col-4">
+    <app-profile-summary *ngIf="permission.isGranted('Pages.Dashboard.Overview.ProfileSummary')"></app-profile-summary>
+  </div>
 </div>
