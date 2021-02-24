@@ -46,6 +46,8 @@ import { TopbarMenuComponent } from './layout/menu/topbar-menu/topbar-menu.compo
 import { SidebarSmallComponent } from './layout/navigations/sidebar-small/sidebar-small.component';
 import { SidebarSmallMenuComponent } from './layout/menu/sidebar-small-menu/sidebar-small-menu.component';
 import { TopbarComponent } from './layout/navigations/topbar/topbar.component';
+import { DashboardOverviewComponent } from './home/dashboard-overview/dashboard-overview.component';
+import { RecentProjectsComponent } from './widgets/recent-projects/recent-projects.component';
 
 @NgModule({
   declarations: [
@@ -84,6 +86,8 @@ import { TopbarComponent } from './layout/navigations/topbar/topbar.component';
     SidebarSmallComponent,
     SidebarSmallMenuComponent,
     TopbarComponent,
+    DashboardOverviewComponent,
+    RecentProjectsComponent,
   ],
   imports: [
     CommonModule,
