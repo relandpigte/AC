@@ -48,6 +48,7 @@ import { SidebarSmallMenuComponent } from './layout/menu/sidebar-small-menu/side
 import { TopbarComponent } from './layout/navigations/topbar/topbar.component';
 import { DashboardOverviewComponent } from './home/dashboard-overview/dashboard-overview.component';
 import { RecentProjectsComponent } from './widgets/recent-projects/recent-projects.component';
+import { RecentActivityComponent } from './widgets/recent-activity/recent-activity.component';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import { RecentProjectsComponent } from './widgets/recent-projects/recent-projec
     TopbarComponent,
     DashboardOverviewComponent,
     RecentProjectsComponent,
+    RecentActivityComponent,
   ],
   imports: [
     CommonModule,

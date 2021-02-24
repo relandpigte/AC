@@ -1,6 +1,7 @@
 <div class="row">
   <div class="col-8">
-    <app-recent-projects *ngIf="permission.isGranted('Pages.Dashboard.Overview')"></app-recent-projects>
+    <app-recent-projects *ngIf="permission.isGranted('Pages.Dashboard.Overview.RecentProjects')"></app-recent-projects>
+    <app-recent-activity *ngIf="permission.isGranted('Pages.Dashboard.Overview.RecentActivity')"></app-recent-activity>
   </div>
   <div class="col-4"></div>
 </div>

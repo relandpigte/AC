@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="RecentActivity">Recent Activity</text>
     <text name="Usage">Usage</text>
     <text name="MyProjects">My Projects</text>
     <text name="Blog">Blog</text>
