@@ -183,6 +183,8 @@ build_schema:
     paths:
       - artifacts
     expire_in: 21 day
+  only:
+    - develop-new
 
 build_backend:
   stage: build
@@ -208,7 +210,8 @@ build_backend:
     paths:
       - artifacts
     expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
-
+  only:
+    - develop-new
 
 build_frontend:
   stage: build
@@ -235,6 +238,9 @@ build_frontend:
     paths:
       - $CI_PROJECT_DIR/$FRONTEND_PATH/dist/
     expire_in: 21 day
+  only:
+    - develop-new
+
     
 # End Build #
 #############
