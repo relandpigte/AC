@@ -13,4 +13,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Academically.Core\Academically.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
+    <Folder Include="Services\Registrations\" />
+    <Folder Include="Services\Registrations\Dto\" />
+  </ItemGroup>
 </Project>

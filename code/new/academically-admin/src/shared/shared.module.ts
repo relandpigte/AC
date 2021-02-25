@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { RouterModule } from '@angular/router';
+
 import { NgxPaginationModule } from 'ngx-pagination';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 import { LocalizePipe } from '@shared/pipes/localize.pipe';
 import { EqualValidator } from './directives/equal-validator.directive';
@@ -25,7 +27,8 @@ import { TableHeaderSortComponent } from './components/table-header-sort/table-h
   imports: [
     CommonModule,
     RouterModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    BsDatepickerModule.forRoot(),
   ],
   declarations: [
     LocalizePipe,
@@ -40,6 +43,7 @@ import { TableHeaderSortComponent } from './components/table-header-sort/table-h
     TableHeaderSortComponent,
   ],
   exports: [
+    BsDatepickerModule,
     LocalizePipe,
     EqualValidator,
     BusyDirective,

@@ -19,4 +19,11 @@
     <PackageReference Include="Abp.ZeroCore.EntityFrameworkCore" Version="5.13.0" />
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.3.1" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Domain\" />
+    <Folder Include="Domain\Services\" />
+    <Folder Include="Domain\Enums\" />
+    <Folder Include="Domain\Entities\" />
+    <Folder Include="Domain\Services\Registrations\" />
+  </ItemGroup>
 </Project>
