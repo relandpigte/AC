@@ -14,6 +14,7 @@ namespace Academically.Authorization
             dashbardOverviewPermissions.CreateChildPermission(PermissionNames.Pages_Dashboard_Overview_RecentProjects, L("RecentProjects"));
             dashbardOverviewPermissions.CreateChildPermission(PermissionNames.Pages_Dashboard_Overview_RecentActivity, L("RecentActivity"));
             dashbardOverviewPermissions.CreateChildPermission(PermissionNames.Pages_Dashboard_Overview_ProfileSummary, L("ProfileSummary"));
+            dashbardOverviewPermissions.CreateChildPermission(PermissionNames.Pages_Dashboard_Overview_Verifications, L("Verifications"));
 
             dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_MyProjects, L("MyProjects"));
             dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Usage, L("Usage"));
