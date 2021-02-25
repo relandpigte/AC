@@ -49,6 +49,7 @@ import { TopbarComponent } from './layout/navigations/topbar/topbar.component';
 import { DashboardOverviewComponent } from './home/dashboard-overview/dashboard-overview.component';
 import { RecentProjectsComponent } from './widgets/recent-projects/recent-projects.component';
 import { RecentActivityComponent } from './widgets/recent-activity/recent-activity.component';
+import { ProfileSummaryComponent } from './widgets/profile-summary/profile-summary.component';
 
 @NgModule({
   declarations: [
@@ -90,6 +91,7 @@ import { RecentActivityComponent } from './widgets/recent-activity/recent-activi
     DashboardOverviewComponent,
     RecentProjectsComponent,
     RecentActivityComponent,
+    ProfileSummaryComponent,
   ],
   imports: [
     CommonModule,

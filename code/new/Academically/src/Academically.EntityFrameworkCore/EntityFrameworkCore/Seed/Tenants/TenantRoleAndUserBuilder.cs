@@ -102,6 +102,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Overview,
                 PermissionNames.Pages_Dashboard_Overview_RecentProjects,
                 PermissionNames.Pages_Dashboard_Overview_RecentActivity,
+                PermissionNames.Pages_Dashboard_Overview_ProfileSummary,
                 PermissionNames.Pages_Dashboard_MyProjects,
                 PermissionNames.Pages_Dashboard_Usage
             );
