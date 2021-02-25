@@ -27,7 +27,6 @@ export class WrapperComponent extends AppComponentBase implements OnInit {
     router.events.subscribe(this.routerEvents);
     abp.event.on(uiEvents.themeSettingsSaved, () => {
       this.themeSetting = themeSettingsService.getConfiguration();
-      console.log(this.themeSetting);
     });
   }
 

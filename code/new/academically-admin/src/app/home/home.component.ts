@@ -1,6 +1,7 @@
 import { Component, Injector, ChangeDetectionStrategy } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
+import { UserLoginInfoDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   templateUrl: './home.component.html',
@@ -8,7 +9,12 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent extends AppComponentBase {
-  constructor(injector: Injector) {
+  user: UserLoginInfoDto = new UserLoginInfoDto();;
+
+  constructor(
+    injector: Injector,
+  ) {
     super(injector);
+    this.user = this.appSession.user;
   }
 }
