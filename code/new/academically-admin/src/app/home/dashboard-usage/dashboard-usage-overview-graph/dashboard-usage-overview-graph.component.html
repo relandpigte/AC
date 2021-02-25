@@ -1,0 +1,43 @@
+<div class="header">
+  <div class="header-body mt-0 pt-0">
+    <div class="row align-items-end">
+      <div class="col">
+        <h6 class="header-pretitle">
+          {{ 'Sessions' | localize }}
+        </h6>
+        <h1 class="header-title">
+          {{ 'Overview' | localize }}
+        </h1>
+      </div>
+      <div class="col-auto">
+        <ul class="nav nav-tabs header-tabs">
+          <li class="nav-item">
+            <a href="#" (click)="$event.preventDefault(); onLiveSessionsClick()" class="nav-link text-center"
+              [class.active]="currentSessionType === SessionTypes.live">
+              <h6 class="header-pretitle text-secondary">
+                {{ 'LiveSessions' | localize}}
+              </h6>
+              <h3 class="mb-0">
+                14 hrs
+              </h3>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" (click)="$event.preventDefault(); onOfflineSessionsClick()" class="nav-link text-center"
+              [class.active]="currentSessionType === SessionTypes.offline">
+              <h6 class="header-pretitle text-secondary">
+                {{ 'Offline' | localize}}
+              </h6>
+              <h3 class="mb-0">
+                3 Hrs
+              </h3>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="chart mt-4">
+    <canvas class="chart-canvas" chart [chartSettings]="sessionsBarChart" [chartDataset]="currentDataset"></canvas>
+  </div>
+</div>
