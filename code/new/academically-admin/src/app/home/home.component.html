@@ -17,9 +17,7 @@
             </a>
           </div>
         </div>
-        <div
-          *ngIf="permission.isGranted('Pages.Dashboard.Overview') && permission.isGranted('Pages.Dashboard.MyProjects') && permission.isGranted('Pages.Dashboard.Usage')"
-          class="row align-items-center">
+        <div class="row align-items-center">
           <div class="col">
             <ul class="nav nav-tabs nav-overflow header-tabs">
               <li *ngIf="permission.isGranted('Pages.Dashboard.Overview')" class="nav-item">
@@ -35,21 +33,18 @@
                   aria-selected="false">{{ 'Usage' | localize }}</a>
               </li>
             </ul>
-
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="container-fluid">
-    <div
-      *ngIf="permission.isGranted('Pages.Dashboard.Overview') && permission.isGranted('Pages.Dashboard.MyProjects') && permission.isGranted('Pages.Dashboard.Usage')"
-      class="tab-content">
+    <div class="tab-content">
       <div *ngIf="permission.isGranted('Pages.Dashboard.Overview')" class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
-        <app-dashboard-overview></app-dashboard-overview>
+        <app-dashboard-overview *ngIf="permission.isGranted('Pages.Dashboard.Overview')"></app-dashboard-overview>
       </div>
       <div *ngIf="permission.isGranted('Pages.Dashboard.MyProjects')" class="tab-pane fade" id="projects" role="tabpanel" aria-labelledby="projects-tab">
-        My Projects
+        <app-dashboard-projects *ngIf="permission.isGranted('Pages.Dashboard.MyProjects')"></app-dashboard-projects>
       </div>
       <div *ngIf="permission.isGranted('Pages.Dashboard.Usage')" class="tab-pane fade" id="usage" role="tabpanel" aria-labelledby="usage-tab">
         Usage
