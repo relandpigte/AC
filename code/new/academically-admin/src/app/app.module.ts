@@ -52,6 +52,7 @@ import { RecentActivityComponent } from './widgets/recent-activity/recent-activi
 import { ProfileSummaryComponent } from './widgets/profile-summary/profile-summary.component';
 import { VerificationsComponent } from './widgets/verifications/verifications.component';
 import { DashboardProjectsComponent } from './home/dashboard-projects/dashboard-projects.component';
+import { DashboardUsageComponent } from './home/dashboard-usage/dashboard-usage.component';
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { DashboardProjectsComponent } from './home/dashboard-projects/dashboard-
     ProfileSummaryComponent,
     VerificationsComponent,
     DashboardProjectsComponent,
+    DashboardUsageComponent,
   ],
   imports: [
     CommonModule,
