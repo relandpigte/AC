@@ -51,6 +51,7 @@ import { RecentProjectsComponent } from './widgets/recent-projects/recent-projec
 import { RecentActivityComponent } from './widgets/recent-activity/recent-activity.component';
 import { ProfileSummaryComponent } from './widgets/profile-summary/profile-summary.component';
 import { VerificationsComponent } from './widgets/verifications/verifications.component';
+import { DashboardProjectsComponent } from './home/dashboard-projects/dashboard-projects.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +95,7 @@ import { VerificationsComponent } from './widgets/verifications/verifications.co
     RecentActivityComponent,
     ProfileSummaryComponent,
     VerificationsComponent,
+    DashboardProjectsComponent,
   ],
   imports: [
     CommonModule,
