@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Offline">Offline</text>
     <text name="TotalProjects">Total Projects</text>
     <text name="TotalHours">Total Hours</text>
     <text name="RecentActivity">Recent Activity</text>

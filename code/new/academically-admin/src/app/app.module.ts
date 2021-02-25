@@ -14,6 +14,10 @@ import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module
 import { SharedModule } from '@shared/shared.module';
 import { HomeComponent } from '@app/home/home.component';
 import { AboutComponent } from '@app/about/about.component';
+
+// directives
+import { ChartDirective } from '@shared/directives/chart.directive';
+
 // tenants
 import { TenantsComponent } from '@app/tenants/tenants.component';
 import { CreateTenantDialogComponent } from './tenants/create-tenant/create-tenant-dialog.component';
@@ -53,9 +57,12 @@ import { ProfileSummaryComponent } from './widgets/profile-summary/profile-summa
 import { VerificationsComponent } from './widgets/verifications/verifications.component';
 import { DashboardProjectsComponent } from './home/dashboard-projects/dashboard-projects.component';
 import { DashboardUsageComponent } from './home/dashboard-usage/dashboard-usage.component';
+import { DashboardUsageOverviewComponent } from './home/dashboard-usage/dashboard-usage-overview/dashboard-usage-overview.component';
+import { DashboardUsageOverviewGraphComponent } from './home/dashboard-usage/dashboard-usage-overview-graph/dashboard-usage-overview-graph.component';
 
 @NgModule({
   declarations: [
+    ChartDirective,
     AppComponent,
     HomeComponent,
     AboutComponent,
@@ -98,6 +105,8 @@ import { DashboardUsageComponent } from './home/dashboard-usage/dashboard-usage.
     VerificationsComponent,
     DashboardProjectsComponent,
     DashboardUsageComponent,
+    DashboardUsageOverviewComponent,
+    DashboardUsageOverviewGraphComponent,
   ],
   imports: [
     CommonModule,
