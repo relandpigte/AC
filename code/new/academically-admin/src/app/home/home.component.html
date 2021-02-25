@@ -13,7 +13,7 @@
           </div>
           <div class="col-auto">
             <a href="javascript:;" class="btn btn-primary">
-              Create New
+              Create New Project
             </a>
           </div>
         </div>
@@ -47,7 +47,7 @@
         <app-dashboard-projects *ngIf="permission.isGranted('Pages.Dashboard.MyProjects')"></app-dashboard-projects>
       </div>
       <div *ngIf="permission.isGranted('Pages.Dashboard.Usage')" class="tab-pane fade" id="usage" role="tabpanel" aria-labelledby="usage-tab">
-        Usage
+        <app-dashboard-usage *ngIf="permission.isGranted('Pages.Dashboard.Usage')"></app-dashboard-usage>
       </div>
     </div>
   </div>
