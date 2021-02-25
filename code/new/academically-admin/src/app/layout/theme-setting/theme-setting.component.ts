@@ -29,7 +29,6 @@ export class ThemeSettingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('test');
     abp.event.on(uiEvents.themeSettingsShow, () => {
       this.themeSettings = this._themeManagerService.getConfiguration();
       this.themeSettingsModal.show();

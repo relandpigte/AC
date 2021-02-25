@@ -13,7 +13,7 @@ using Abp.Castle.Logging.Log4Net;
 using Abp.Extensions;
 using Academically.Configuration;
 using Academically.Identity;
-using Abp.AspNetCore.SignalR.Hubs;
+//using Abp.AspNetCore.SignalR.Hubs;
 using Abp.Dependency;
 using Abp.Json;
 using Microsoft.OpenApi.Models;
@@ -58,7 +58,7 @@ namespace Academically.Web.Host.Startup
             IdentityRegistrar.Register(services);
             AuthConfigurer.Configure(services, _appConfiguration);
 
-            services.AddSignalR();
+            //services.AddSignalR();
 
             // Configure CORS for angular2 UI
             services.AddCors(
@@ -137,7 +137,7 @@ namespace Academically.Web.Host.Startup
           
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<AbpCommonHub>("/signalr");
+                //endpoints.MapHub<AbpCommonHub>("/signalr");
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
             });
