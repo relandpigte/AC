@@ -7,12 +7,13 @@
       <div class="row align-items-end">
         <div class="col-auto">
           <div class="avatar avatar-xxl header-avatar-top">
-            <img
-              alt="..."
-              class="avatar-img rounded-circle border border-4 border-body no-picture-border"
-              [src]="getProfilePicture('')"
-            />
+            <img alt="..." class="avatar-img rounded-circle border border-4 border-body no-picture-border"
+              [src]="getProfilePicture('')" />
           </div>
+        </div>
+        <div class="col mb-3 ml-n3 ml-md-n2">
+          <h6 class="header-pretitle">{{ userTitle}}</h6>
+          <h1 class="header-title">{{ user.name }} {{ user.surname ? user.surname[0] : '' }}</h1>
         </div>
       </div>
     </div>
