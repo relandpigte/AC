@@ -1,12 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Auditing;
+using Academically.Authorization.Users;
 using Academically.Sessions.Dto;
 
 namespace Academically.Sessions
 {
     public class SessionAppService : AcademicallyAppServiceBase, ISessionAppService
     {
+        private readonly UserManager _userManager;
+
+        public SessionAppService(
+            UserManager userManager
+            )
+        {
+            _userManager = userManager;
+        }
+
         [DisableAuditing]
         public async Task<GetCurrentLoginInformationsOutput> GetCurrentLoginInformations()
         {
@@ -27,7 +37,9 @@ namespace Academically.Sessions
 
             if (AbpSession.UserId.HasValue)
             {
-                output.User = ObjectMapper.Map<UserLoginInfoDto>(await GetCurrentUserAsync());
+                var user = await GetCurrentUserAsync();
+                output.User = ObjectMapper.Map<UserLoginInfoDto>(user);
+                output.User.Roles = await _userManager.GetRolesAsync(user);
             }
 
             return output;

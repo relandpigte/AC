@@ -2710,6 +2710,7 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
     userName: string | undefined;
     emailAddress: string | undefined;
     profilePictureUrl: string | undefined;
+    roles: string[] | undefined;
     id: number;
 
     constructor(data?: IUserLoginInfoDto) {
@@ -2728,6 +2729,11 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
             this.userName = _data["userName"];
             this.emailAddress = _data["emailAddress"];
             this.profilePictureUrl = _data["profilePictureUrl"];
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles.push(item);
+            }
             this.id = _data["id"];
         }
     }
@@ -2746,6 +2752,11 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
         data["userName"] = this.userName;
         data["emailAddress"] = this.emailAddress;
         data["profilePictureUrl"] = this.profilePictureUrl;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item);
+        }
         data["id"] = this.id;
         return data; 
     }
@@ -2764,6 +2775,7 @@ export interface IUserLoginInfoDto {
     userName: string | undefined;
     emailAddress: string | undefined;
     profilePictureUrl: string | undefined;
+    roles: string[] | undefined;
     id: number;
 }
 
