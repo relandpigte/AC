@@ -61,6 +61,11 @@ import { DashboardUsageOverviewComponent } from './home/dashboard-usage/dashboar
 import { DashboardUsageOverviewGraphComponent } from './home/dashboard-usage/dashboard-usage-overview-graph/dashboard-usage-overview-graph.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileHeaderComponent } from './profile/profile-header/profile-header.component';
+import { ProfileIntroductionComponent } from './profile/profile-introduction/profile-introduction.component';
+import { ProfileEducationComponent } from './profile/profile-education/profile-education.component';
+import { ProfileResearchComponent } from './profile/profile-research/profile-research.component';
+import { ProfileIndustryExperienceComponent } from './profile/profile-industry-experience/profile-industry-experience.component';
+import { ProfileServicesComponent } from './profile/profile-services/profile-services.component';
 
 @NgModule({
   declarations: [
@@ -111,6 +116,11 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
     DashboardUsageOverviewGraphComponent,
     ProfileComponent,
     ProfileHeaderComponent,
+    ProfileIntroductionComponent,
+    ProfileEducationComponent,
+    ProfileResearchComponent,
+    ProfileIndustryExperienceComponent,
+    ProfileServicesComponent,
   ],
   imports: [
     CommonModule,

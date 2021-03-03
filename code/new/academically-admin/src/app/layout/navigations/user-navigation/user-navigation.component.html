@@ -6,6 +6,6 @@
 </ng-container>
 <ng-container *ngIf="permission.isGranted('Pages.Settings')">
   <a href="#" [routerLink]="['/app/settings']" class="dropdown-item">{{ 'Settings' | localize }}</a>
-  <hr class="dropdown-divider" />
 </ng-container>
+<hr *ngIf="permission.isGranted('Pages.Profile') || permission.isGranted('Pages.Account') || permission.isGranted('Pages.Account')" class="dropdown-divider" />
 <a href="javascript:;" class="dropdown-item" (click)="onLogoutClick()">{{ 'Logout' | localize }}</a>

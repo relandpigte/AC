@@ -89,7 +89,12 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
             GrantPermissions(
                 tutorRole,
                 PermissionNames.Pages_Dashboard,
-                PermissionNames.Pages_Profile
+                PermissionNames.Pages_Profile,
+                PermissionNames.Pages_Profile_Services,
+                PermissionNames.Pages_Profile_Introduction,
+                PermissionNames.Pages_Profile_Education,
+                PermissionNames.Pages_Profile_Research,
+                PermissionNames.Pages_Profile_IndustryExperience
             );
 
             #endregion
@@ -107,7 +112,11 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Overview_Verifications,
                 PermissionNames.Pages_Dashboard_MyProjects,
                 PermissionNames.Pages_Dashboard_Usage,
-                PermissionNames.Pages_Profile
+                PermissionNames.Pages_Profile,
+                PermissionNames.Pages_Profile_Introduction,
+                PermissionNames.Pages_Profile_Education,
+                PermissionNames.Pages_Profile_Research,
+                PermissionNames.Pages_Profile_IndustryExperience
             );
 
             #endregion
