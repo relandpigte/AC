@@ -14,6 +14,9 @@
         public const string Pages_Dashboard_Usage = "Pages.Dashboard.Usage";
 
 
+        public const string Pages_Profile = "Pages.Profile";
+
+
         public const string Pages_Users = "Pages.Users";
         public const string Pages_Users_Create = "Pages.Users.Create";
         public const string Pages_Users_Update = "Pages.Users.Update";

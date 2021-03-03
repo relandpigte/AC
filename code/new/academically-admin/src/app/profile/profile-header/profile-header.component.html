@@ -1,0 +1,20 @@
+<div class="header">
+  <img src="assets/themes/dashkit/img/covers/profile-cover-1.jpg" class="header-img-top" alt="..." />
+
+  <div [class.container]="themeSettings.navigationPosition === NavigationPosition.Topnav"
+    [class.container-fluid]="themeSettings.navigationPosition !== NavigationPosition.Topnav">
+    <div class="header-body mt-n5 mt-md-n6">
+      <div class="row align-items-end">
+        <div class="col-auto">
+          <div class="avatar avatar-xxl header-avatar-top">
+            <img
+              alt="..."
+              class="avatar-img rounded-circle border border-4 border-body no-picture-border"
+              [src]="getProfilePicture('')"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

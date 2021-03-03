@@ -20,6 +20,9 @@ namespace Academically.Authorization
             dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Usage, L("Usage"));
 
 
+            var profilePermission = context.CreatePermission(PermissionNames.Pages_Profile, L("Profile"));
+
+
             var userPermission = context.CreatePermission(PermissionNames.Pages_Users, L("Users"));
             userPermission.CreateChildPermission(PermissionNames.Pages_Users_Create, L("Create"));
             userPermission.CreateChildPermission(PermissionNames.Pages_Users_Update, L("Update"));

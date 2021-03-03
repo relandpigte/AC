@@ -88,7 +88,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
             var tutorRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.Tutor);
             GrantPermissions(
                 tutorRole,
-                PermissionNames.Pages_Dashboard
+                PermissionNames.Pages_Dashboard,
+                PermissionNames.Pages_Profile
             );
 
             #endregion
@@ -105,7 +106,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Overview_ProfileSummary,
                 PermissionNames.Pages_Dashboard_Overview_Verifications,
                 PermissionNames.Pages_Dashboard_MyProjects,
-                PermissionNames.Pages_Dashboard_Usage
+                PermissionNames.Pages_Dashboard_Usage,
+                PermissionNames.Pages_Profile
             );
 
             #endregion

@@ -11,6 +11,8 @@ import { UsersComponent } from './users/users.component';
 import { TenantsComponent } from './tenants/tenants.component';
 import { RolesComponent } from 'app/roles/roles.component';
 import { ChangePasswordComponent } from './users/change-password/change-password.component';
+import { ProfileComponent } from './profile/profile.component';
+import { ProfileHeaderComponent } from './profile/profile-header/profile-header.component';
 
 @NgModule({
   imports: [
@@ -28,9 +30,27 @@ import { ChangePasswordComponent } from './users/change-password/change-password
               {
                 path: '',
                 component: HomeComponent,
-                outlet: 'content'
-              }
-            ]
+                outlet: 'content',
+              },
+            ],
+          },
+          {
+            path: 'profile',
+            component: WrapperComponent,
+            data: { permission: 'Pages.Profile' },
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: ProfileHeaderComponent,
+                outlet: 'header',
+              },
+              {
+                path: '',
+                component: ProfileComponent,
+                outlet: 'content',
+              },
+            ],
           },
           {
             path: 'roles',
@@ -41,9 +61,9 @@ import { ChangePasswordComponent } from './users/change-password/change-password
               {
                 path: '',
                 component: RolesComponent,
-                outlet: 'content'
-              }
-            ]
+                outlet: 'content',
+              },
+            ],
           },
           {
             path: 'users',
@@ -54,9 +74,9 @@ import { ChangePasswordComponent } from './users/change-password/change-password
               {
                 path: '',
                 component: UsersComponent,
-                outlet: 'content'
-              }
-            ]
+                outlet: 'content',
+              },
+            ],
           },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
