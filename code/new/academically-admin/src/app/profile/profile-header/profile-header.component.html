@@ -16,6 +16,32 @@
           <h1 class="header-title">{{ user.name }} {{ user.surname ? user.surname[0] : '' }}</h1>
         </div>
       </div>
+      <div class="row align-items-center">
+        <div class="col">
+          <ul class="nav nav-tabs nav-overflow header-tabs">
+            <li *ngIf="permission.isGranted('Pages.Profile.Introduction')" class="nav-item">
+              <a class="nav-link active" id="introduction-tab" data-toggle="tab" href="#introduction" role="tab"
+                aria-controls="introduction" aria-selected="true">{{ 'Introduction' | localize }}</a>
+            </li>
+            <li *ngIf="permission.isGranted('Pages.Profile.Services')" class="nav-item">
+              <a class="nav-link" id="services-tab" data-toggle="tab" href="#services" role="tab"
+                aria-controls="services" aria-selected="false">{{ 'Services' | localize }}</a>
+            </li>
+            <li *ngIf="permission.isGranted('Pages.Profile.Education')" class="nav-item">
+              <a class="nav-link" id="education-tab" data-toggle="tab" href="#education" role="tab"
+                aria-controls="education" aria-selected="false">{{ 'Education' | localize }}</a>
+            </li>
+            <li *ngIf="permission.isGranted('Pages.Profile.Research')" class="nav-item">
+              <a class="nav-link" id="research-tab" data-toggle="tab" href="#research" role="tab"
+                aria-controls="research" aria-selected="false">{{ 'Research' | localize }}</a>
+            </li>
+            <li *ngIf="permission.isGranted('Pages.Profile.IndustryExperience')" class="nav-item">
+              <a class="nav-link" id="industry-experience-tab" data-toggle="tab" href="#industry-experience" role="tab"
+                aria-controls="industry-experience" aria-selected="false">{{ 'IndustryExperience' | localize }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </div>

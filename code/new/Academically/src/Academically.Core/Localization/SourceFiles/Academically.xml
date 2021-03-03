@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="IndustryExperience">Industry Experience</text>
+    <text name="Research">Research</text>
+    <text name="Introduction">Introduction</text>
     <text name="Offline">Offline</text>
     <text name="TotalProjects">Total Projects</text>
     <text name="TotalHours">Total Hours</text>
