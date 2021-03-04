@@ -101,7 +101,7 @@ namespace Academically.Users
 
             if (input.RoleNames != null)
             {
-                CheckErrors(await _userManager.SetRolesAsync(user, input.RoleNames));
+                CheckErrors(await _userManager.SetRolesAsync(user, input.RoleNames.ToArray()));
             }
 
             return await GetAsync(input);

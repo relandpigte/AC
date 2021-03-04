@@ -4,4 +4,5 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 	<include file="ddml-new/ddml.2021-02-18-01.initial-migrations.xml"/>
 	<include file="ddml-new/ddml.2021-02-25-01.create-registrations-table.xml"/>
+	<include file="ddml-new/ddml.2021-03-03-01.alter-users-add-ispublic-field.xml"/>
 </databaseChangeLog>
