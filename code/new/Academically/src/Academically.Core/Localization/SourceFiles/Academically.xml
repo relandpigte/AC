@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Phone">Phone</text>
+    <text name="Email">Email</text>
     <text name="IndustryExperience">Industry Experience</text>
     <text name="Research">Research</text>
     <text name="Introduction">Introduction</text>
