@@ -7,6 +7,8 @@ namespace Academically.Authorization.Users
 {
     public class User : AbpUser<User>
     {
+        public bool IsPublic { get; set; }
+
         public const string DefaultPassword = "123qwe";
 
         public static string CreateRandomPassword()

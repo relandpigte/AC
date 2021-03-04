@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { AppRouteGuard } from '@shared/auth/auth-route-guard';
+import { ProfileGuard } from '@shared/guards/profile.guard';
 
 import { WrapperComponent } from './layout/wrapper/wrapper.component';
 
@@ -25,7 +26,6 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
             path: 'home',
             component: WrapperComponent,
             data: { permission: 'Pages.Dashboard' },
-            canActivate: [AppRouteGuard],
             children: [
               {
                 path: '',
@@ -36,19 +36,42 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
           },
           {
             path: 'profile',
-            component: WrapperComponent,
-            data: { permission: 'Pages.Profile' },
-            canActivate: [AppRouteGuard],
             children: [
               {
                 path: '',
-                component: ProfileHeaderComponent,
-                outlet: 'header',
+                component: WrapperComponent,
+                data: { permission: 'Pages.Profile' },
+                canActivate: [AppRouteGuard, ProfileGuard],
+                children: [
+                  {
+                    path: '',
+                    component: ProfileHeaderComponent,
+                    outlet: 'header',
+                  },
+                  {
+                    path: '',
+                    component: ProfileComponent,
+                    outlet: 'content',
+                  },
+                ],
               },
               {
-                path: '',
-                component: ProfileComponent,
-                outlet: 'content',
+                path: ':user-id',
+                component: WrapperComponent,
+                data: { permission: 'Pages.Profile' },
+                canActivate: [AppRouteGuard, ProfileGuard],
+                children: [
+                  {
+                    path: '',
+                    component: ProfileHeaderComponent,
+                    outlet: 'header',
+                  },
+                  {
+                    path: '',
+                    component: ProfileComponent,
+                    outlet: 'content',
+                  },
+                ],
               },
             ],
           },

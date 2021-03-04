@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Abp.Application.Services.Dto;
 using Abp.Authorization.Users;
@@ -35,7 +36,9 @@ namespace Academically.Users.Dto
 
         public DateTime CreationTime { get; set; }
 
-        public string[] RoleNames { get; set; }
-        public string[] RoleDisplayNames { get; set; }
+        public bool IsPublic { get; set; }
+
+        public IEnumerable<string> RoleNames { get; set; }
+        public IEnumerable<string> RoleDisplayNames { get; set; }
     }
 }

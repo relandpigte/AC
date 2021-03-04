@@ -18,6 +18,12 @@ import { AboutComponent } from '@app/about/about.component';
 // directives
 import { ChartDirective } from '@shared/directives/chart.directive';
 
+// guards
+import { ProfileGuard } from '@shared/guards/profile.guard';
+
+// servuces
+import { ProfileService } from '@shared/services/profile.service'
+
 // tenants
 import { TenantsComponent } from '@app/tenants/tenants.component';
 import { CreateTenantDialogComponent } from './tenants/create-tenant/create-tenant-dialog.component';
@@ -137,7 +143,10 @@ import { ProfileServicesComponent } from './profile/profile-services/profile-ser
     SharedModule,
     NgxPaginationModule,
   ],
-  providers: [],
+  providers: [
+    ProfileGuard,
+    ProfileService,
+  ],
   entryComponents: [
     // tenants
     CreateTenantDialogComponent,
@@ -151,4 +160,4 @@ import { ProfileServicesComponent } from './profile/profile-services/profile-ser
     ResetPasswordDialogComponent,
   ],
 })
-export class AppModule {}
+export class AppModule { }
