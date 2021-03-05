@@ -26,6 +26,7 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
             path: 'home',
             component: WrapperComponent,
             data: { permission: 'Pages.Dashboard' },
+            canActivate: [AppRouteGuard],
             children: [
               {
                 path: '',

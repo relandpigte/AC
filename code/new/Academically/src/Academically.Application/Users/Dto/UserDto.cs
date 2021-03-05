@@ -29,14 +29,18 @@ namespace Academically.Users.Dto
         public string EmailAddress { get; set; }
 
         public bool IsActive { get; set; }
-
         public string FullName { get; set; }
+        public bool IsPublic { get; set; }
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public string City { get; set; }
+        public string ZipOrPostCode { get; set; }
+        public string StateOrProvince { get; set; }
+        public string Country { get; set; }
+        public string WebsiteUrl { get; set; }
 
         public DateTime? LastLoginTime { get; set; }
-
         public DateTime CreationTime { get; set; }
-
-        public bool IsPublic { get; set; }
 
         public IEnumerable<string> RoleNames { get; set; }
         public IEnumerable<string> RoleDisplayNames { get; set; }

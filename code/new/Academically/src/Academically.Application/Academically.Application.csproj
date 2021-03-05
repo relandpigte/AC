@@ -18,6 +18,5 @@
     <Folder Include="Services\Registrations\" />
     <Folder Include="Services\Registrations\Dto\" />
     <Folder Include="Services\Profiles\" />
-    <Folder Include="Services\Profiles\Dto\" />
   </ItemGroup>
 </Project>
