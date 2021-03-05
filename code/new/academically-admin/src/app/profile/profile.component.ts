@@ -7,7 +7,6 @@ import { AppComponentBase } from '@shared/app-component-base';
   styleUrls: ['./profile.component.less']
 })
 export class ProfileComponent extends AppComponentBase implements OnInit {
-
   constructor(
     injector: Injector,
   ) {

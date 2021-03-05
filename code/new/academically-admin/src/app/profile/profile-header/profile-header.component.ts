@@ -1,8 +1,8 @@
-import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Component, Injector, OnDestroy } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { NavigationPosition } from '@shared/enums/theme-settings/navigation-position.enum';
 import { IThemeSetting } from '@shared/interfaces/theme-setting.interface';
-import { UserLoginInfoDto } from '@shared/service-proxies/service-proxies';
+import { UserDto } from '@shared/service-proxies/service-proxies';
 import { ProfileService } from '@shared/services/profile.service';
 import { ThemeManagerService } from '@shared/services/theme-manager.service';
 import { Subscription } from 'rxjs';
@@ -12,10 +12,10 @@ import { Subscription } from 'rxjs';
   templateUrl: './profile-header.component.html',
   styleUrls: ['./profile-header.component.less']
 })
-export class ProfileHeaderComponent extends AppComponentBase implements OnInit, OnDestroy {
+export class ProfileHeaderComponent extends AppComponentBase implements OnDestroy {
   NavigationPosition = NavigationPosition;
   themeSettings: IThemeSetting;
-  user: UserLoginInfoDto = new UserLoginInfoDto();
+  user: UserDto;
   userTitle = '';
   userSubscription: Subscription;
 
@@ -26,12 +26,9 @@ export class ProfileHeaderComponent extends AppComponentBase implements OnInit, 
   ) {
     super(injector);
     this.themeSettings = themeSettingsService.getConfiguration();
-  }
-
-  ngOnInit(): void {
     this.userSubscription = this._profileService.$user.subscribe(user => {
       this.user = user;
-      this.userTitle = this.user.roles.filter(e => e.toLowerCase() === 'tutor').length > 0 ? 'Tutor' : 'Profile';
+      this.userTitle = this.user.roleNames.filter(e => e.toLowerCase() === 'tutor').length > 0 ? 'Tutor' : 'Profile';
     });
   }
 

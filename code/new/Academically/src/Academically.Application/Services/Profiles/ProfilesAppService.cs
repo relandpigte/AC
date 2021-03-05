@@ -6,7 +6,7 @@ using Academically.Authorization.Users;
 using Academically.Users.Dto;
 using Microsoft.EntityFrameworkCore;
 
-namespace Academically.Services.Profiles.Dto
+namespace Academically.Services.Profiles
 {
     [AbpAuthorize(PermissionNames.Pages_Profile)]
     public class ProfilesAppService : AcademicallyAppServiceBase, IProfilesAppService
@@ -30,6 +30,13 @@ namespace Academically.Services.Profiles.Dto
             var output = ObjectMapper.Map<UserDto>(user);
             output.RoleNames = await _userManager.GetRolesAsync(user);
             return output;
+        }
+
+        public async Task UpdateWebsiteUrl(string websiteUrl)
+        {
+            var user = await _usersRepository.GetAsync(AbpSession.UserId.Value);
+            user.WebsiteUrl = websiteUrl;
+            await _usersRepository.UpdateAsync(user);
         }
     }
 }

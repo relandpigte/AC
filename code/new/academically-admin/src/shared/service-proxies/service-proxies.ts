@@ -270,6 +270,56 @@ export class ProfilesServiceProxy {
         }
         return _observableOf<UserDto>(<any>null);
     }
+
+    /**
+     * @param websiteUrl (optional) 
+     * @return Success
+     */
+    updateWebsiteUrl(websiteUrl: string | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Profiles/UpdateWebsiteUrl?";
+        if (websiteUrl !== undefined)
+            url_ += "websiteUrl=" + encodeURIComponent("" + websiteUrl) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateWebsiteUrl(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateWebsiteUrl(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateWebsiteUrl(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
 }
 
 @Injectable()
@@ -2106,9 +2156,16 @@ export class UserDto implements IUserDto {
     emailAddress: string;
     isActive: boolean;
     fullName: string | undefined;
+    isPublic: boolean;
+    addressLine1: string | undefined;
+    addressLine2: string | undefined;
+    city: string | undefined;
+    zipOrPostCode: string | undefined;
+    stateOrProvince: string | undefined;
+    country: string | undefined;
+    websiteUrl: string | undefined;
     lastLoginTime: moment.Moment | undefined;
     creationTime: moment.Moment;
-    isPublic: boolean;
     roleNames: string[] | undefined;
     roleDisplayNames: string[] | undefined;
     id: number;
@@ -2130,9 +2187,16 @@ export class UserDto implements IUserDto {
             this.emailAddress = _data["emailAddress"];
             this.isActive = _data["isActive"];
             this.fullName = _data["fullName"];
+            this.isPublic = _data["isPublic"];
+            this.addressLine1 = _data["addressLine1"];
+            this.addressLine2 = _data["addressLine2"];
+            this.city = _data["city"];
+            this.zipOrPostCode = _data["zipOrPostCode"];
+            this.stateOrProvince = _data["stateOrProvince"];
+            this.country = _data["country"];
+            this.websiteUrl = _data["websiteUrl"];
             this.lastLoginTime = _data["lastLoginTime"] ? moment(_data["lastLoginTime"].toString()) : <any>undefined;
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
-            this.isPublic = _data["isPublic"];
             if (Array.isArray(_data["roleNames"])) {
                 this.roleNames = [] as any;
                 for (let item of _data["roleNames"])
@@ -2162,9 +2226,16 @@ export class UserDto implements IUserDto {
         data["emailAddress"] = this.emailAddress;
         data["isActive"] = this.isActive;
         data["fullName"] = this.fullName;
+        data["isPublic"] = this.isPublic;
+        data["addressLine1"] = this.addressLine1;
+        data["addressLine2"] = this.addressLine2;
+        data["city"] = this.city;
+        data["zipOrPostCode"] = this.zipOrPostCode;
+        data["stateOrProvince"] = this.stateOrProvince;
+        data["country"] = this.country;
+        data["websiteUrl"] = this.websiteUrl;
         data["lastLoginTime"] = this.lastLoginTime ? this.lastLoginTime.toISOString() : <any>undefined;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-        data["isPublic"] = this.isPublic;
         if (Array.isArray(this.roleNames)) {
             data["roleNames"] = [];
             for (let item of this.roleNames)
@@ -2194,9 +2265,16 @@ export interface IUserDto {
     emailAddress: string;
     isActive: boolean;
     fullName: string | undefined;
+    isPublic: boolean;
+    addressLine1: string | undefined;
+    addressLine2: string | undefined;
+    city: string | undefined;
+    zipOrPostCode: string | undefined;
+    stateOrProvince: string | undefined;
+    country: string | undefined;
+    websiteUrl: string | undefined;
     lastLoginTime: moment.Moment | undefined;
     creationTime: moment.Moment;
-    isPublic: boolean;
     roleNames: string[] | undefined;
     roleDisplayNames: string[] | undefined;
     id: number;
