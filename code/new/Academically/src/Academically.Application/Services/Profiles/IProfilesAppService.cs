@@ -8,5 +8,6 @@ namespace Academically.Services.Profiles
     {
         Task<UserDto> Get(long id);
         Task UpdateWebsiteUrl(string websiteUrl);
+        Task UpdateAbout(string about);
     }
 }

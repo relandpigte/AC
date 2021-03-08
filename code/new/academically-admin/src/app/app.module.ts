@@ -12,8 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module';
 import { SharedModule } from '@shared/shared.module';
-import { HomeComponent } from '@app/home/home.component';
-import { AboutComponent } from '@app/about/about.component';
+import { NgPipesModule } from 'ngx-pipes';
 
 // directives
 import { ChartDirective } from '@shared/directives/chart.directive';
@@ -39,6 +38,8 @@ import { EditUserDialogComponent } from '@app/users/edit-user/edit-user-dialog.c
 import { ChangePasswordComponent } from './users/change-password/change-password.component';
 import { ResetPasswordDialogComponent } from './users/reset-password/reset-password.component';
 // layout
+import { HomeComponent } from '@app/home/home.component';
+import { AboutComponent } from '@app/about/about.component';
 import { HeaderComponent } from './layout/header.component';
 import { HeaderLeftNavbarComponent } from './layout/header-left-navbar.component';
 import { HeaderLanguageMenuComponent } from './layout/header-language-menu.component';
@@ -72,6 +73,8 @@ import { ProfileEducationComponent } from './profile/profile-education/profile-e
 import { ProfileResearchComponent } from './profile/profile-research/profile-research.component';
 import { ProfileIndustryExperienceComponent } from './profile/profile-industry-experience/profile-industry-experience.component';
 import { ProfileServicesComponent } from './profile/profile-services/profile-services.component';
+import { ProfileIntroductionSummaryComponent } from './profile/profile-introduction/profile-introduction-summary/profile-introduction-summary.component';
+import { ProfileIntroductionAboutComponent } from './profile/profile-introduction/profile-introduction-about/profile-introduction-about.component';
 
 @NgModule({
   declarations: [
@@ -127,6 +130,8 @@ import { ProfileServicesComponent } from './profile/profile-services/profile-ser
     ProfileResearchComponent,
     ProfileIndustryExperienceComponent,
     ProfileServicesComponent,
+    ProfileIntroductionSummaryComponent,
+    ProfileIntroductionAboutComponent,
   ],
   imports: [
     CommonModule,
@@ -142,6 +147,7 @@ import { ProfileServicesComponent } from './profile/profile-services/profile-ser
     ServiceProxyModule,
     SharedModule,
     NgxPaginationModule,
+    NgPipesModule,
   ],
   providers: [
     ProfileGuard,

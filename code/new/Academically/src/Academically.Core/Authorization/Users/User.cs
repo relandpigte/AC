@@ -15,6 +15,7 @@ namespace Academically.Authorization.Users
         public string StateOrProvince { get; set; }
         public string Country { get; set; }
         public string WebsiteUrl { get; set; }
+        public string About { get; set; }
 
         public const string DefaultPassword = "123qwe";
 

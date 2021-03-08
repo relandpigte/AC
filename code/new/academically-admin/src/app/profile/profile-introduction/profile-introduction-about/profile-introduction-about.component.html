@@ -1,0 +1,40 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">{{ 'About' | localize }} {{ user.name }}</h4>
+  </div>
+  <div class="card-body">
+    <ng-container *ngIf="!isEditingAbout; else editAboutTemplate">
+      <p class="text-secondary p-0 m-0">
+        {{ user.about | shorten: aboutLength: ' ...' }}
+        <ng-container *ngIf="user.about && user.about.length > aboutCollapseLimit">
+          <a *ngIf="!isAboutExpanded" href="#" (click)="$event.preventDefault(); onReadMoreAboutClick(true);">
+            Read more
+          </a>
+          <a *ngIf="isAboutExpanded" href="#" (click)="$event.preventDefault(); onReadMoreAboutClick(false);">
+            Read less
+          </a>
+        </ng-container>
+      </p>
+    </ng-container>
+    <ng-template #editAboutTemplate>
+      <textarea [(ngModel)]="user.about" [disabled]="isSavingAbout" class="form-control" rows="10">
+      </textarea>
+    </ng-template>
+  </div>
+  <div *ngIf="!isViewOnly" class="card-footer justify-content-end">
+    <button *ngIf="!isEditingAbout" (click)="onEditAboutClick()" class="btn btn-sm btn-light">
+      <i class="fe fe-edit-2"></i>
+      {{ 'Edit' }}
+    </button>
+    <button *ngIf="isEditingAbout" [disabled]="isSavingAbout" (click)="onSaveAboutClick()" class="btn btn-sm btn-light">
+      <span *ngIf="!isSavingAbout">
+        <i class="fe fe-save"></i>
+        {{ 'Save' }}
+      </span>
+      <span *ngIf="isSavingAbout">
+        <span *ngIf="isSavingAbout" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        {{ 'Saving' }}
+      </span>
+    </button>
+  </div>
+</div>
