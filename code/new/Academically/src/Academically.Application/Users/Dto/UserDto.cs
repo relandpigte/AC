@@ -38,6 +38,7 @@ namespace Academically.Users.Dto
         public string StateOrProvince { get; set; }
         public string Country { get; set; }
         public string WebsiteUrl { get; set; }
+        public string About { get; set; }
 
         public DateTime? LastLoginTime { get; set; }
         public DateTime CreationTime { get; set; }

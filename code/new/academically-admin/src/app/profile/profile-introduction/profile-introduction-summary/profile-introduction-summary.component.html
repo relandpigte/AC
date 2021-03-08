@@ -1,0 +1,72 @@
+<div class="card">
+  <div class="card-body">
+    <div class="list-group list-group-flush my-n3">
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col">
+            <h5 class="mb-0">{{ 'University' | localize }}</h5>
+          </div>
+          <div class="col-auto">
+            <small class="text-muted">University of Oxford</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col">
+            <h5 class="mb-0">{{ 'Joined' | localize }}</h5>
+          </div>
+          <div class="col-auto">
+            <time class="small text-muted"> {{ user.creationTime | date: 'dd/MM/yyyy' }} </time>
+          </div>
+        </div>
+      </div>
+
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col">
+            <h5 class="mb-0">{{ 'Location' | localize }}</h5>
+          </div>
+          <div class="col-auto">
+            <small class="text-muted"> {{ userAddress }} </small>
+          </div>
+        </div>
+      </div>
+
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col-auto">
+            <h5 class="mb-0">{{ 'Website' | localize }}</h5>
+          </div>
+          <div class="col text-right">
+            <ng-container *ngIf="!isEditingWebsiteUrl; else editWebsiteUrlTemplate">
+              <small class="text-muted">
+                <a target="_blank" [href]="user.websiteUrl">
+                  {{ user.websiteUrl }}
+                </a>
+                <button *ngIf="!isViewOnly" (click)="onEditWebsiteUrlClick()" class="btn btn-sm btn-light ml-3">
+                  <i class="fe fe-edit-2"></i>
+                </button>
+              </small>
+            </ng-container>
+            <ng-template #editWebsiteUrlTemplate>
+              <div class="input-group input-group-sm input-group-merge">
+                <input [(ngModel)]="user.websiteUrl" [disabled]="isSavingWebsiteUrl" type="text"
+                  class="form-control form-control-appended">
+                <div class="input-group-append">
+                  <button [disabled]="isSavingWebsiteUrl" (click)="onSaveWebsiteUrlClick()"
+                    class="btn btn-sm btn-light">
+                    <i *ngIf="!isSavingWebsiteUrl" class="fe fe-save"></i>
+                    <span *ngIf="isSavingWebsiteUrl" class="spinner-border spinner-border-sm" role="status"
+                      aria-hidden="true"></span>
+                  </button>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -38,5 +38,12 @@ namespace Academically.Services.Profiles
             user.WebsiteUrl = websiteUrl;
             await _usersRepository.UpdateAsync(user);
         }
+
+        public async Task UpdateAbout(string about)
+        {
+            var user = await _usersRepository.GetAsync(AbpSession.UserId.Value);
+            user.About = about;
+            await _usersRepository.UpdateAsync(user);
+        }
     }
 }
