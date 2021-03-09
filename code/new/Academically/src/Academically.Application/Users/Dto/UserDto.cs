@@ -43,6 +43,7 @@ namespace Academically.Users.Dto
         public DateTime? LastLoginTime { get; set; }
         public DateTime CreationTime { get; set; }
 
+        public string CoverPhotoUrl { get; set; }
         public IEnumerable<string> RoleNames { get; set; }
         public IEnumerable<string> RoleDisplayNames { get; set; }
     }

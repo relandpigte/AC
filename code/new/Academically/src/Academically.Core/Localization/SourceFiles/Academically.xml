@@ -1,6 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="RemovePhoto">Remove Photo</text>
+    <text name="UploadPhoto">Upload Photo</text>
+    <text name="Removing">Removing</text>
+    <text name="EditCoverPhoto">Edit Cover Photo</text>
+    <text name="Cropping">Cropping</text>
+    <text name="CropImage">Crop Image</text>
     <text name="Saving">Saving</text>
     <text name="Phone">Phone</text>
     <text name="Email">Email</text>

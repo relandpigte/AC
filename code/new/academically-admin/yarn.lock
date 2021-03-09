@@ -5559,6 +5559,13 @@ ngx-bootstrap@^5.6.1:
   resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-5.6.1.tgz#c37643247441f9d421bca2cd7d7de1d0445e903f"
   integrity sha512-8fDs3VaaWgKpupakPKS0QaUc+1E/JMBGJDxUUODjyIkLtFr1A8vH4cjXiV3AfrPvhK27GH0oyTPyKWKcCjEtVg==
 
+ngx-image-cropper@^3.3.5:
+  version "3.3.5"
+  resolved "https://registry.yarnpkg.com/ngx-image-cropper/-/ngx-image-cropper-3.3.5.tgz#39f636e3989c5c84241f5130d0124ded6631fbeb"
+  integrity sha512-0yRVKG5XAbVo3rOaj/iFDlekGsxEqXKU9iXFbjyvHvRT2DFs+AjwtyvINsHCWw+4ed9yA4Y+wLIUNqzA0bfxLw==
+  dependencies:
+    tslib "^1.9.0"
+
 ngx-pagination@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/ngx-pagination/-/ngx-pagination-5.0.0.tgz#a4b4c150a70aef17ccd825e4543e174a974bbd14"
@@ -5751,10 +5758,10 @@ npm-run-path@^2.0.0:
   dependencies:
     path-key "^2.0.0"
 
-nswag@^13.4.2:
-  version "13.4.2"
-  resolved "https://registry.yarnpkg.com/nswag/-/nswag-13.4.2.tgz#1026e1c611ba74cfcabfe0130c1eff762cd8cc1f"
-  integrity sha512-foxTwohmOc3ip1OWMRFYVpb5s0eYiZ+dy+CSJ0iyUvCA0dAlbPUpfeuEFWUD4E9VhNDEjQAbayTayc1iKP+5Ug==
+nswag@^13.10.8:
+  version "13.10.8"
+  resolved "https://registry.yarnpkg.com/nswag/-/nswag-13.10.8.tgz#1f2917370e1a46937022480f3353600a2f5208d2"
+  integrity sha512-h6RydMuvRIDMUREgMh/cE/tngLhWZHf1nGGvF31g/y8ONPa3P/TasW7+uu5ATnU/CTbFqFsPDJQtzcVfPzLaMA==
 
 nth-check@^1.0.2:
   version "1.0.2"

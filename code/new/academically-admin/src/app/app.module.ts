@@ -13,6 +13,7 @@ import { AppComponent } from './app.component';
 import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module';
 import { SharedModule } from '@shared/shared.module';
 import { NgPipesModule } from 'ngx-pipes';
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 // directives
 import { ChartDirective } from '@shared/directives/chart.directive';
@@ -75,6 +76,8 @@ import { ProfileIndustryExperienceComponent } from './profile/profile-industry-e
 import { ProfileServicesComponent } from './profile/profile-services/profile-services.component';
 import { ProfileIntroductionSummaryComponent } from './profile/profile-introduction/profile-introduction-summary/profile-introduction-summary.component';
 import { ProfileIntroductionAboutComponent } from './profile/profile-introduction/profile-introduction-about/profile-introduction-about.component';
+import { CoverPhotoChangerComponent } from './shared/components/cover-photo-changer/cover-photo-changer.component';
+import { ImageCropperComponent } from './shared/components/image-cropper/image-cropper.component';
 
 @NgModule({
   declarations: [
@@ -132,6 +135,8 @@ import { ProfileIntroductionAboutComponent } from './profile/profile-introductio
     ProfileServicesComponent,
     ProfileIntroductionSummaryComponent,
     ProfileIntroductionAboutComponent,
+    CoverPhotoChangerComponent,
+    ImageCropperComponent,
   ],
   imports: [
     CommonModule,
@@ -148,6 +153,7 @@ import { ProfileIntroductionAboutComponent } from './profile/profile-introductio
     SharedModule,
     NgxPaginationModule,
     NgPipesModule,
+    ImageCropperModule,
   ],
   providers: [
     ProfileGuard,

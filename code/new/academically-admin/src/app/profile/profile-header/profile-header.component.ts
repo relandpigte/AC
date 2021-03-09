@@ -17,7 +17,9 @@ export class ProfileHeaderComponent extends AppComponentBase implements OnDestro
   themeSettings: IThemeSetting;
   user: UserDto;
   userTitle = '';
+  isViewOnly = false;
   userSubscription: Subscription;
+  viewOnlySubscription: Subscription;
 
   constructor(
     injector: Injector,
@@ -30,9 +32,13 @@ export class ProfileHeaderComponent extends AppComponentBase implements OnDestro
       this.user = user;
       this.userTitle = this.user.roleNames.filter(e => e.toLowerCase() === 'tutor').length > 0 ? 'Tutor' : 'Profile';
     });
+    this.viewOnlySubscription = this._profileService.$isViewOnly.subscribe(isViewOnly => {
+      this.isViewOnly = isViewOnly;
+    })
   }
 
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
+    this.viewOnlySubscription.unsubscribe();
   }
 }
