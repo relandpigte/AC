@@ -1,63 +1,72 @@
 import { Injector, ElementRef } from '@angular/core';
 import { AppConsts } from '@shared/AppConsts';
 import {
-    LocalizationService,
-    PermissionCheckerService,
-    FeatureCheckerService,
-    NotifyService,
-    SettingService,
-    MessageService,
-    AbpMultiTenancyService
+  LocalizationService,
+  PermissionCheckerService,
+  FeatureCheckerService,
+  NotifyService,
+  SettingService,
+  MessageService,
+  AbpMultiTenancyService
 } from 'abp-ng2-module';
 
 import { AppSessionService } from '@shared/session/app-session.service';
+import { ModalOptions } from 'ngx-bootstrap/modal';
 
 export abstract class AppComponentBase {
 
-    localizationSourceName = AppConsts.localization.defaultLocalizationSourceName;
+  localizationSourceName = AppConsts.localization.defaultLocalizationSourceName;
 
-    localization: LocalizationService;
-    permission: PermissionCheckerService;
-    feature: FeatureCheckerService;
-    notify: NotifyService;
-    setting: SettingService;
-    message: MessageService;
-    multiTenancy: AbpMultiTenancyService;
-    appSession: AppSessionService;
-    elementRef: ElementRef;
+  localization: LocalizationService;
+  permission: PermissionCheckerService;
+  feature: FeatureCheckerService;
+  notify: NotifyService;
+  setting: SettingService;
+  message: MessageService;
+  multiTenancy: AbpMultiTenancyService;
+  appSession: AppSessionService;
+  elementRef: ElementRef;
 
-    constructor(injector: Injector) {
-        this.localization = injector.get(LocalizationService);
-        this.permission = injector.get(PermissionCheckerService);
-        this.feature = injector.get(FeatureCheckerService);
-        this.notify = injector.get(NotifyService);
-        this.setting = injector.get(SettingService);
-        this.message = injector.get(MessageService);
-        this.multiTenancy = injector.get(AbpMultiTenancyService);
-        this.appSession = injector.get(AppSessionService);
-        this.elementRef = injector.get(ElementRef);
+  defaultModalSettings: ModalOptions;
+
+  constructor(injector: Injector) {
+    this.localization = injector.get(LocalizationService);
+    this.permission = injector.get(PermissionCheckerService);
+    this.feature = injector.get(FeatureCheckerService);
+    this.notify = injector.get(NotifyService);
+    this.setting = injector.get(SettingService);
+    this.message = injector.get(MessageService);
+    this.multiTenancy = injector.get(AbpMultiTenancyService);
+    this.appSession = injector.get(AppSessionService);
+    this.elementRef = injector.get(ElementRef);
+
+    this.defaultModalSettings = {
+      backdrop: 'static',
+      ignoreBackdropClick: true,
+      keyboard: false,
+    };
+  }
+
+  l(key: string, ...args: any[]): string {
+    let localizedText = this.localization.localize(key, this.localizationSourceName);
+
+    if (!localizedText) {
+      localizedText = key;
     }
 
-    l(key: string, ...args: any[]): string {
-        let localizedText = this.localization.localize(key, this.localizationSourceName);
-
-        if (!localizedText) {
-            localizedText = key;
-        }
-
-        if (!args || !args.length) {
-            return localizedText;
-        }
-
-        args.unshift(localizedText);
-        return abp.utils.formatString.apply(this, args);
+    if (!args || !args.length) {
+      return localizedText;
     }
 
-    isGranted(permissionName: string): boolean {
-        return this.permission.isGranted(permissionName);
-    }
+    args.unshift(localizedText);
+    return abp.utils.formatString.apply(this, args);
+  }
 
-    getProfilePicture(fileNameOrUrl: string, userId?: number): string {
+  isGranted(permissionName: string): boolean {
+    return this.permission.isGranted(permissionName);
+  }
+
+  getProfilePicture(fileNameOrUrl: string, userId?: number): string {
     //   if (fileNameOrUrl) {
     //     if (this.isValidUrl(fileNameOrUrl)) {
     //       return fileNameOrUrl;
@@ -65,6 +74,13 @@ export abstract class AppComponentBase {
     //       return `${this.appSession.user.directoryBaseUrl}/${userId}/profile-pictures/${fileNameOrUrl}`;
     //     }
     //   }
-      return 'assets/img/anonymous.png';
+    return 'assets/img/anonymous.png';
+  }
+
+  getCoverPhoto(coverPhotoUrl: string): string {
+    if (coverPhotoUrl) {
+      return coverPhotoUrl;
     }
+    return 'assets/themes/dashkit/img/covers/profile-cover-1.jpg';
+  }
 }

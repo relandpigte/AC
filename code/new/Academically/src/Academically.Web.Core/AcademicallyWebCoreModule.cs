@@ -13,6 +13,8 @@ using Academically.Authentication.JwtBearer;
 using Academically.Configuration;
 using Academically.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Academically.Application.Shared.Services;
+using Academically.Aws.Services;
 
 namespace Academically
 {
@@ -48,6 +50,8 @@ namespace Academically
                  );
 
             ConfigureTokenAuth();
+
+            IocManager.Register<IFileManagerService, S3Service>(Abp.Dependency.DependencyLifeStyle.Singleton);
         }
 
         private void ConfigureTokenAuth()

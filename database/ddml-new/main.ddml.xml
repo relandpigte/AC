@@ -8,4 +8,5 @@
 	<include file="ddml-new/ddml.2021-03-04-01.alter-users-add-address-fields.xml"/>
 	<include file="ddml-new/ddml.2021-03-04-02.alter-users-add-websiteurl-field.xml"/>
 	<include file="ddml-new/ddml.2021-03-05-01.alter-users-add-about-field.xml"/>
+	<include file="ddml-new/ddml.2021-03-05-02.alter-users-add-coverphotofilename-field.xml"/>
 </databaseChangeLog>

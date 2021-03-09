@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Abp.Application.Services;
+using Academically.Services.Profiles.Dto;
 using Academically.Users.Dto;
 
 namespace Academically.Services.Profiles
@@ -9,5 +10,7 @@ namespace Academically.Services.Profiles
         Task<UserDto> Get(long id);
         Task UpdateWebsiteUrl(string websiteUrl);
         Task UpdateAbout(string about);
+        Task<string> UpdateCoverPhoto(UpdateCoverPhotoInput input);
+        Task DeleteCoverPhoto();
     }
 }
