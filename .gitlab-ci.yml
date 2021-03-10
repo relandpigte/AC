@@ -233,6 +233,7 @@ build_frontend:
     - npm install -g @angular/cli@9.1.4
     - yarn install
     - ng build --configuration $ENV_NAME
+    - cat app.config
     - ls -la
   artifacts:
     paths:
