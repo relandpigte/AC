@@ -232,7 +232,7 @@ build_frontend:
     # specify v9.1.4 to match our code
     - npm install -g @angular/cli@9.1.4
     - yarn install
-    - "build_frontend: $ENV_NAME"
+    - echo "build_frontend: $ENV_NAME"
     - ng build --configuration $ENV_NAME
     - cat app.config
     - ls -la
