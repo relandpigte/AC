@@ -211,7 +211,6 @@ topbar-menu {
 
 .input-group.input-group-sm {
 
-
   .input-group-append,
   .input-group-prepend {
     .fe {
@@ -227,12 +226,13 @@ topbar-menu {
 }
 
 input[type='file'].inline-file-upload {
-  position: absolute;
-  width   : 100%;
-  height  : 100%;
-  opacity : 0;
-  cursor  : pointer;
-  top: 0;
+  display: none;
+}
+
+image-cropper {
+  .source-image {
+    width: 100%;
+  }
 }
 
 @media (min-width: 576px) {
