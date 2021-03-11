@@ -14,6 +14,7 @@ import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module
 import { SharedModule } from '@shared/shared.module';
 import { NgPipesModule } from 'ngx-pipes';
 import { ImageCropperModule } from 'ngx-image-cropper';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 // directives
 import { ChartDirective } from '@shared/directives/chart.directive';
@@ -78,6 +79,9 @@ import { ProfileIntroductionSummaryComponent } from './profile/profile-introduct
 import { ProfileIntroductionAboutComponent } from './profile/profile-introduction/profile-introduction-about/profile-introduction-about.component';
 import { CoverPhotoChangerComponent } from './shared/components/cover-photo-changer/cover-photo-changer.component';
 import { ImageCropperComponent } from './shared/components/image-cropper/image-cropper.component';
+import { CreateEditProfileEducationComponent } from './profile/profile-education/create-edit-profile-education/create-edit-profile-education.component';
+import { ProfileEducationLevelsComponent } from './profile/profile-education/profile-education-levels/profile-education-levels.component';
+import { CreateEditProfileEducationLevelComponent } from './profile/profile-education/profile-education-levels/create-edit-profile-education-level/create-edit-profile-education-level.component';
 
 @NgModule({
   declarations: [
@@ -137,6 +141,9 @@ import { ImageCropperComponent } from './shared/components/image-cropper/image-c
     ProfileIntroductionAboutComponent,
     CoverPhotoChangerComponent,
     ImageCropperComponent,
+    CreateEditProfileEducationComponent,
+    ProfileEducationLevelsComponent,
+    CreateEditProfileEducationLevelComponent,
   ],
   imports: [
     CommonModule,
@@ -154,6 +161,7 @@ import { ImageCropperComponent } from './shared/components/image-cropper/image-c
     NgxPaginationModule,
     NgPipesModule,
     ImageCropperModule,
+    TypeaheadModule.forRoot(),
   ],
   providers: [
     ProfileGuard,

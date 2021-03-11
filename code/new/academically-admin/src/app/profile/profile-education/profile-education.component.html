@@ -1,1 +1,64 @@
-<h1>Education - Coming Soon!</h1>
+<div class="card">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="card-header-title">Formal Education</h4>
+      </div>
+      <div class="col-auto">
+        <a (click)="$event.preventDefault(); onAddClick()" href="#" class="btn btn-primary">
+          Add Education
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-nowrap table-align-top card-table">
+      <tbody>
+        <tr *ngFor="let userEducation of userEducations">
+          <td>
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <div class="avatar avatar-sm">
+                  <div class="avatar-title font-size-lg bg-primary-soft rounded-circle text-primary">
+                    <i class="fe fe-book-open"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="col ml-n2">
+                <a href="#">
+                  <h4 (click)="$event.preventDefault(); onUserEducationClick(userEducation)" class="mb-1">{{ userEducation.universityName }}</h4>
+                </a>
+                <p class="card-text small text-muted">
+                  {{ userEducation.city }}, {{ userEducation.universityCountryCode }}
+                </p>
+              </div>
+            </div>
+          </td>
+          <td width="1%">
+            {{ userEducation.startYear }} - {{ userEducation.endYear }}
+          </td>
+          <td>
+            <p class="p-0 m-0" *ngFor="let userEducationLevel of userEducation.userEducationLevels">
+              {{ userEducationLevel.degree }}
+            </p>
+          </td>
+          <td width="1%">
+            <p class="p-0 m-0" *ngFor="let userEducationLevel of userEducation.userEducationLevels">
+              <span class="badge badge-soft-secondary">{{ userEducationLevel.educationLevelName }}</span>
+            </p>
+          </td>
+          <td width="1%">
+            <p class="p-0 m-0" *ngFor="let userEducationLevel of userEducation.userEducationLevels">
+              {{ userEducationLevel.grade }}
+            </p>
+          </td>
+        </tr>
+        <tr *ngIf="userEducations.length === 0">
+          <td colspan="10">
+            <p class="text-center m-0 p-0">{{ 'No Records Found' | localize }}</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

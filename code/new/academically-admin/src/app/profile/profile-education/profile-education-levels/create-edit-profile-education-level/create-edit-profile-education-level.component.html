@@ -1,0 +1,40 @@
+<form class="form-horizontal" autocomplete="off" #createEditUserEducationLevelForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <abp-modal-header [title]="'Add Level'" (onCloseClick)="onCloseClick()"></abp-modal-header>
+    <div class="card-body">
+
+      <div class="form-group required">
+        <label class="col-form-label" for="EducationLevel">{{ 'Level' | localize }}</label>
+        <select [(ngModel)]="model.educationLevelId" id="EducationLevel" name="EducationLevel" type="text"
+          class="form-control" #edicationLevelModel="ngModel" #educationLevelEl required>
+          <option [ngValue]="undefined">{{ 'SelectEducationLevel' | localize }}</option>
+          <option *ngFor="let educationLevel of educationLevels" [value]="educationLevel.id">{{ educationLevel.name }}
+          </option>
+        </select>
+        <abp-validation-summary [control]="edicationLevelModel" [controlEl]="educationLevelEl">
+        </abp-validation-summary>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="Degree">{{ 'Degree' | localize }}</label>
+          <input class="form-control" type="text" [(ngModel)]="model.degree" id="Degree" name="Degree"
+            #degreeModel="ngModel" #degreeEl required />
+          <abp-validation-summary [control]="degreeModel" [controlEl]="degreeEl">
+          </abp-validation-summary>
+        </div>
+
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="Grade">{{ 'Grade' | localize }}</label>
+          <input class="form-control" type="text" [(ngModel)]="model.grade" id="Grade" name="Grade"
+            #gradeModel="ngModel" #gradeEl required />
+          <abp-validation-summary [control]="gradeModel" [controlEl]="gradeEl">
+          </abp-validation-summary>
+        </div>
+      </div>
+    </div>
+    <abp-modal-footer [cancelDisabled]="isLoading"
+      [saveDisabled]="!createEditUserEducationLevelForm.form.valid || isLoading" (onCancelClick)="onCloseClick()">
+    </abp-modal-footer>
+  </div>
+</form>

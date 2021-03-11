@@ -205,6 +205,73 @@ export class ConfigurationServiceProxy {
 }
 
 @Injectable()
+export class EducationLevelsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    getAll(): Observable<EducationLevelDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/EducationLevels/GetAll";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<EducationLevelDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EducationLevelDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<EducationLevelDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(EducationLevelDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EducationLevelDto[]>(<any>null);
+    }
+}
+
+@Injectable()
 export class ProfilesServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -1542,6 +1609,79 @@ export class TokenAuthServiceProxy {
 }
 
 @Injectable()
+export class UniversitiesServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param countryCode (optional) 
+     * @param query (optional) 
+     * @return Success
+     */
+    search(countryCode: string | null | undefined, query: string | null | undefined): Observable<UniverisityDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Universities/Search?";
+        if (countryCode !== undefined && countryCode !== null)
+            url_ += "countryCode=" + encodeURIComponent("" + countryCode) + "&";
+        if (query !== undefined && query !== null)
+            url_ += "query=" + encodeURIComponent("" + query) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSearch(<any>response_);
+                } catch (e) {
+                    return <Observable<UniverisityDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UniverisityDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSearch(response: HttpResponseBase): Observable<UniverisityDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(UniverisityDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UniverisityDto[]>(<any>null);
+    }
+}
+
+@Injectable()
 export class UserServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -2058,6 +2198,130 @@ export class UserServiceProxy {
     }
 }
 
+@Injectable()
+export class UserEducationsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param userId (optional) 
+     * @return Success
+     */
+    getAll(userId: number | undefined): Observable<UserEducationDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/UserEducations/GetAll?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<UserEducationDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserEducationDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<UserEducationDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(UserEducationDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserEducationDto[]>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: UserEducationDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserEducations/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
 export class IsTenantAvailableInput implements IIsTenantAvailableInput {
     tenancyName: string;
 
@@ -2301,6 +2565,57 @@ export class ChangeUiThemeInput implements IChangeUiThemeInput {
 
 export interface IChangeUiThemeInput {
     theme: string;
+}
+
+export class EducationLevelDto implements IEducationLevelDto {
+    name: string | undefined;
+    shortName: string | undefined;
+    id: string;
+
+    constructor(data?: IEducationLevelDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.shortName = _data["shortName"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): EducationLevelDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EducationLevelDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["shortName"] = this.shortName;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): EducationLevelDto {
+        const json = this.toJSON();
+        let result = new EducationLevelDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEducationLevelDto {
+    name: string | undefined;
+    shortName: string | undefined;
+    id: string;
 }
 
 export class UserDto implements IUserDto {
@@ -3720,6 +4035,53 @@ export interface IExternalAuthenticateResultModel {
     waitingForActivation: boolean;
 }
 
+export class UniverisityDto implements IUniverisityDto {
+    heProvider: string | undefined;
+    id: string;
+
+    constructor(data?: IUniverisityDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.heProvider = _data["heProvider"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UniverisityDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UniverisityDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["heProvider"] = this.heProvider;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): UniverisityDto {
+        const json = this.toJSON();
+        let result = new UniverisityDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUniverisityDto {
+    heProvider: string | undefined;
+    id: string;
+}
+
 export class CreateUserDto implements ICreateUserDto {
     userName: string;
     name: string;
@@ -4040,6 +4402,148 @@ export class UserDtoPagedResultDto implements IUserDtoPagedResultDto {
 export interface IUserDtoPagedResultDto {
     totalCount: number;
     items: UserDto[] | undefined;
+}
+
+export class UserEducationLevelDto implements IUserEducationLevelDto {
+    userEducationId: string;
+    educationLevelId: string;
+    degree: string | undefined;
+    grade: string | undefined;
+    educationLevelName: string | undefined;
+    id: string;
+
+    constructor(data?: IUserEducationLevelDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userEducationId = _data["userEducationId"];
+            this.educationLevelId = _data["educationLevelId"];
+            this.degree = _data["degree"];
+            this.grade = _data["grade"];
+            this.educationLevelName = _data["educationLevelName"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserEducationLevelDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserEducationLevelDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userEducationId"] = this.userEducationId;
+        data["educationLevelId"] = this.educationLevelId;
+        data["degree"] = this.degree;
+        data["grade"] = this.grade;
+        data["educationLevelName"] = this.educationLevelName;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): UserEducationLevelDto {
+        const json = this.toJSON();
+        let result = new UserEducationLevelDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserEducationLevelDto {
+    userEducationId: string;
+    educationLevelId: string;
+    degree: string | undefined;
+    grade: string | undefined;
+    educationLevelName: string | undefined;
+    id: string;
+}
+
+export class UserEducationDto implements IUserEducationDto {
+    userId: number;
+    city: string | undefined;
+    startYear: string | undefined;
+    endYear: string | undefined;
+    universityName: string | undefined;
+    universityCountryCode: string | undefined;
+    userEducationLevels: UserEducationLevelDto[] | undefined;
+    id: string;
+
+    constructor(data?: IUserEducationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userId = _data["userId"];
+            this.city = _data["city"];
+            this.startYear = _data["startYear"];
+            this.endYear = _data["endYear"];
+            this.universityName = _data["universityName"];
+            this.universityCountryCode = _data["universityCountryCode"];
+            if (Array.isArray(_data["userEducationLevels"])) {
+                this.userEducationLevels = [] as any;
+                for (let item of _data["userEducationLevels"])
+                    this.userEducationLevels.push(UserEducationLevelDto.fromJS(item));
+            }
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserEducationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserEducationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["city"] = this.city;
+        data["startYear"] = this.startYear;
+        data["endYear"] = this.endYear;
+        data["universityName"] = this.universityName;
+        data["universityCountryCode"] = this.universityCountryCode;
+        if (Array.isArray(this.userEducationLevels)) {
+            data["userEducationLevels"] = [];
+            for (let item of this.userEducationLevels)
+                data["userEducationLevels"].push(item.toJSON());
+        }
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): UserEducationDto {
+        const json = this.toJSON();
+        let result = new UserEducationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserEducationDto {
+    userId: number;
+    city: string | undefined;
+    startYear: string | undefined;
+    endYear: string | undefined;
+    universityName: string | undefined;
+    universityCountryCode: string | undefined;
+    userEducationLevels: UserEducationLevelDto[] | undefined;
+    id: string;
 }
 
 export interface FileParameter {

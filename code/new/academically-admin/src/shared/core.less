@@ -1,3 +1,33 @@
+/* custom component styles */
+
+app-root {
+  width: 100%;
+}
+
+topbar-menu {
+  .navbar-nav .nav-link.active:before {
+    border-bottom: none !important;
+  }
+
+  .nav-item {
+    .nav-link {
+      white-space: nowrap;
+    }
+  }
+}
+
+image-cropper {
+  .source-image {
+    width: 100%;
+  }
+}
+
+typeahead-container {
+  z-index: 1060 !important;
+}
+
+/* custom component styles end */
+
 body {
   height: 100%;
 }
@@ -40,10 +70,6 @@ body.swal2-height-auto {
 
 .swal2-popup.swal2-toast .swal2-title {
   margin-bottom: 4px !important;
-}
-
-app-root {
-  width: 100%;
 }
 
 .freeze-ui:before {
@@ -197,18 +223,6 @@ body.theme-dark {
   color: green !important;
 }
 
-topbar-menu {
-  .navbar-nav .nav-link.active:before {
-    border-bottom: none !important;
-  }
-
-  .nav-item {
-    .nav-link {
-      white-space: nowrap;
-    }
-  }
-}
-
 .input-group.input-group-sm {
 
   .input-group-append,
@@ -229,9 +243,9 @@ input[type='file'].inline-file-upload {
   display: none;
 }
 
-image-cropper {
-  .source-image {
-    width: 100%;
+.table-align-top {
+  td {
+    vertical-align: top !important;
   }
 }
 

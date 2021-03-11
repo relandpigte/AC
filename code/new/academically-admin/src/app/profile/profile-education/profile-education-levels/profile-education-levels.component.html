@@ -1,0 +1,37 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="card-header-title">Levels</h4>
+      </div>
+      <div class="col-auto">
+        <a (click)="$event.preventDefault(); onAddLevelClick()" href="#" class="btn btn-sm btn-primary">
+          Add Level
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-sm table-nowrap card-table mb-0">
+      <thead>
+        <tr>
+          <th>Education Level</th>
+          <th>Degree</th>
+          <th>Grade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let userEducationLevel of userEducationLevels">
+          <td>{{ userEducationLevel.educationLevelName }}</td>
+          <td>{{ userEducationLevel.degree }}</td>
+          <td>{{ userEducationLevel.grade }}</td>
+        </tr>
+        <tr *ngIf="userEducationLevels.length === 0">
+          <td colspan="10">
+            <p class="text-center m-0 p-0">{{ 'No Records Found' | localize }}</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

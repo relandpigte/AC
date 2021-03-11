@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1615432873039-2">
+        <sql>
+            INSERT INTO AcademicallyEducationLevels (Id, Name, ShortName, DisplayOrder) VALUES ('194b0786-8e67-90a9-4695-7e33b11371e0','Entry Level (Skills for life)','Entry','0');
+            INSERT INTO AcademicallyEducationLevels (Id, Name, ShortName, DisplayOrder) VALUES ('80ce7712-05e7-04a3-4a5f-b925fc97784e','Level 1 (GCSE - grades 1,2,3 or G,F,E,D or equivalent)','GCSE','1');
+            INSERT INTO AcademicallyEducationLevels (Id, Name, ShortName, DisplayOrder) VALUES ('06d36eba-2e7e-4d53-5af4-fa1688685c44','Level 2 (GCSE - grades 6,7,8,9 or C,B,A,A* or equivalent)','GCSE','2');
+            INSERT INTO AcademicallyEducationLevels (Id, Name, ShortName, DisplayOrder) VALUES ('f57ec68d-62f9-34ca-25d2-60a2dca97878','Level 3 (A-level or equivalent)','A Level','3');
+            INSERT INTO AcademicallyEducationLevels (Id, Name, ShortName, DisplayOrder) VALUES ('ef42eacf-793f-5cb2-9d69-539356dd9b7a','Level 4 (Higher National Certificate or equivalent)','National Certificate','4');
+            INSERT INTO AcademicallyEducationLevels (Id, Name, ShortName, DisplayOrder) VALUES ('7a05fd29-52a7-1ab7-6bfe-63a555f07d8f','Level 5 (Higher National Diploma or equivalent)','National Diploma','5');
+            INSERT INTO AcademicallyEducationLevels (Id, Name, ShortName, DisplayOrder) VALUES ('26ec20ef-09db-075b-0005-3003ac6f7e6e','Level 6 (Bachelor\'s degree or equivalent)','Bachelors','6');
+            INSERT INTO AcademicallyEducationLevels (Id, Name, ShortName, DisplayOrder) VALUES ('5d9fa016-43cc-9885-7610-a3b5b2769b5c','Level 7 (Masters degree or equivalent)','Masters','7');
+            INSERT INTO AcademicallyEducationLevels (Id, Name, ShortName, DisplayOrder) VALUES ('b6547aeb-8bc4-64f5-30b9-98b64ebf944a','Level 8 (Doctoral degree or equivalent)','Doctorate','8');
+        </sql>
+    </changeSet>
+</databaseChangeLog>
