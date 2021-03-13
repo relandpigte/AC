@@ -150,8 +150,8 @@ variables:
     - aws --version
     - jq --version
     - apt-get install -y zip
-    # install node and serverless
-    - npm install
+    # Install Angular, specify v9.1.4 to match our code
+    - npm install -g @angular/cli@9.1.4
   
   script:
     # build dist previously saved as an artifact
