@@ -141,6 +141,8 @@ variables:
     - echo "Install Pre-requistes"
     - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
     - apt-get update
+    - node -v
+    - npm -v
     # install python, awscli & jq
     - apt-get install -y python3-pip
     - pip3 install awscli boto boto3
