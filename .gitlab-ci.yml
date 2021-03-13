@@ -135,17 +135,28 @@ variables:
 
 .frontend: &frontend
   stage: deploy
-  image: python:latest
+  image: node:latest
   before_script:
     - echo "pre script (deploy_frontend)"
     - echo "Install Pre-requistes"
     - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
     - apt-get update
+    # install python, awscli & jq
+    - apt-get install -y python3-pip
     - pip3 install awscli boto boto3
+    - apt-get install -y jq
     - aws --version
-    - pwd
-
+    - jq --version
+    - apt-get install -y zip
+    # install node and serverless
+    - npm install
+  
   script:
+    # build dist previously saved as an artifact
+    - echo "Build $ENV_NAME"
+    - ng build --configuration $ENV_NAME
+    - cat app.config
+    - ls -la
     # Copy Dist to S3 Bucket
     - echo "Copy dist to S3"
     - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
@@ -232,10 +243,6 @@ build_frontend:
     # specify v9.1.4 to match our code
     - npm install -g @angular/cli@9.1.4
     - yarn install    
-    - echo "Build $ENV_NAME"
-    - ng build --configuration $ENV_NAME
-    - cat app.config
-    - ls -la
   artifacts:
     paths:
       - $CI_PROJECT_DIR/$FRONTEND_PATH/dist/
