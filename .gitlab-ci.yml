@@ -152,7 +152,6 @@ variables:
     - apt-get install -y zip
     # Install Angular, specify v9.1.4 to match our code
     - npm install -g @angular/cli@9.1.4
-    - mkdir artifacts
     - pwd
   
   script:
@@ -249,11 +248,11 @@ build_frontend:
       
   script:
     - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
-    - ls -la
     # specify v9.1.4 to match our code
     - npm install -g @angular/cli@9.1.4
     - yarn install    
-    - cp $CI_PROJECT_DIR/$FRONTEND_PATH/dist/ $CI_PROJECT_DIR/artifacts/
+    - ls -la
+    - cp $CI_PROJECT_DIR/$FRONTEND_PATH/ $CI_PROJECT_DIR/artifacts/
   artifacts:
     paths:
       - artifacts
