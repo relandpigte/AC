@@ -156,6 +156,9 @@ variables:
   script:
     # build dist previously saved as an artifact
     - echo "Build $ENV_NAME"
+    - "cd $CI_PROJECT_DIR/$FRONTEND_PATH/dist" 
+    - "pwd"
+    - "ls -la"
     - ng build --configuration $ENV_NAME
     - cat app.config
     - ls -la
