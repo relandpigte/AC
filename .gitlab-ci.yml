@@ -152,13 +152,18 @@ variables:
     - apt-get install -y zip
     # Install Angular, specify v9.1.4 to match our code
     - npm install -g @angular/cli@9.1.4
+    - mkdir artifacts
+    - pwd
   
   script:
     # build dist previously saved as an artifact
     - echo "Build $ENV_NAME"
-    - "cd $CI_PROJECT_DIR/$FRONTEND_PATH/dist" 
-    - "pwd"
-    - "ls -la"
+    - ls -la
+    - "cd $CI_PROJECT_DIR"
+    - ls -la
+    - "cd $CI_PROJECT_DIR/artifacts" 
+    - pwd
+    - ls -la
     - ng build --configuration $ENV_NAME
     - cat app.config
     - ls -la
@@ -248,9 +253,10 @@ build_frontend:
     # specify v9.1.4 to match our code
     - npm install -g @angular/cli@9.1.4
     - yarn install    
+    - cp $CI_PROJECT_DIR/$FRONTEND_PATH/dist/ $CI_PROJECT_DIR/artifacts/
   artifacts:
     paths:
-      - $CI_PROJECT_DIR/$FRONTEND_PATH/dist/
+      - artifacts
     expire_in: 21 day
   only:
     - develop-new
