@@ -252,7 +252,7 @@ build_frontend:
     - npm install -g @angular/cli@9.1.4
     - yarn install    
     - ls -la
-    - cp $CI_PROJECT_DIR/$FRONTEND_PATH/ $CI_PROJECT_DIR/artifacts/
+    - cp -r $CI_PROJECT_DIR/$FRONTEND_PATH/ $CI_PROJECT_DIR/artifacts/
   artifacts:
     paths:
       - artifacts
