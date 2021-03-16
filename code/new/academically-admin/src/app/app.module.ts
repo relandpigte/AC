@@ -15,6 +15,7 @@ import { SharedModule } from '@shared/shared.module';
 import { NgPipesModule } from 'ngx-pipes';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 
 // directives
 import { ChartDirective } from '@shared/directives/chart.directive';
@@ -82,6 +83,7 @@ import { ImageCropperComponent } from './shared/components/image-cropper/image-c
 import { CreateEditProfileEducationComponent } from './profile/profile-education/create-edit-profile-education/create-edit-profile-education.component';
 import { ProfileEducationLevelsComponent } from './profile/profile-education/profile-education-levels/profile-education-levels.component';
 import { CreateEditProfileEducationLevelComponent } from './profile/profile-education/profile-education-levels/create-edit-profile-education-level/create-edit-profile-education-level.component';
+import { VerifyMobileComponent } from './widgets/verifications/verify-mobile/verify-mobile.component';
 
 @NgModule({
   declarations: [
@@ -144,6 +146,7 @@ import { CreateEditProfileEducationLevelComponent } from './profile/profile-educ
     CreateEditProfileEducationComponent,
     ProfileEducationLevelsComponent,
     CreateEditProfileEducationLevelComponent,
+    VerifyMobileComponent,
   ],
   imports: [
     CommonModule,
@@ -152,7 +155,9 @@ import { CreateEditProfileEducationLevelComponent } from './profile/profile-educ
     HttpClientModule,
     HttpClientJsonpModule,
     ModalModule.forChild(),
-    BsDropdownModule,
+    BsDropdownModule.forRoot({
+      container: 'body',
+    }),
     CollapseModule,
     TabsModule,
     AppRoutingModule,
@@ -162,6 +167,7 @@ import { CreateEditProfileEducationLevelComponent } from './profile/profile-educ
     NgPipesModule,
     ImageCropperModule,
     TypeaheadModule.forRoot(),
+    NgxIntlTelInputModule,
   ],
   providers: [
     ProfileGuard,

@@ -15,6 +15,9 @@ using Academically.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Academically.Application.Shared.Services;
 using Academically.Aws.Services;
+using SourceCloud.Core.Services;
+using SourceCloud.Providers.ITagg;
+using SourceCloud.Core.Configurations;
 
 namespace Academically
 {
@@ -26,12 +29,10 @@ namespace Academically
      )]
     public class AcademicallyWebCoreModule : AbpModule
     {
-        private readonly IWebHostEnvironment _env;
         private readonly IConfigurationRoot _appConfiguration;
 
         public AcademicallyWebCoreModule(IWebHostEnvironment env)
         {
-            _env = env;
             _appConfiguration = env.GetAppConfiguration();
         }
 
@@ -50,6 +51,7 @@ namespace Academically
                  );
 
             ConfigureTokenAuth();
+            RegistersSmsService();
 
             IocManager.Register<IFileManagerService, S3Service>(Abp.Dependency.DependencyLifeStyle.Singleton);
         }
@@ -58,12 +60,20 @@ namespace Academically
         {
             IocManager.Register<TokenAuthConfiguration>();
             var tokenAuthConfig = IocManager.Resolve<TokenAuthConfiguration>();
-
             tokenAuthConfig.SecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appConfiguration["Authentication:JwtBearer:SecurityKey"]));
             tokenAuthConfig.Issuer = _appConfiguration["Authentication:JwtBearer:Issuer"];
             tokenAuthConfig.Audience = _appConfiguration["Authentication:JwtBearer:Audience"];
             tokenAuthConfig.SigningCredentials = new SigningCredentials(tokenAuthConfig.SecurityKey, SecurityAlgorithms.HmacSha256);
             tokenAuthConfig.Expiration = TimeSpan.FromDays(1);
+        }
+
+        private void RegistersSmsService()
+        {
+            IocManager.Register<ISmsService, ITaggSmsService>(Abp.Dependency.DependencyLifeStyle.Singleton);
+            IocManager.Register<SmsConfiguration>();
+            var smsConfig = IocManager.Resolve<SmsConfiguration>();
+            smsConfig.Username = _appConfiguration[AppSettingNames.ITagg_Sms_Username.ToAppSettingKey()];
+            smsConfig.Password = _appConfiguration[AppSettingNames.ITagg_Sms_Password.ToAppSettingKey()];
         }
 
         public override void Initialize()

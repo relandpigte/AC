@@ -1,7 +1,6 @@
 <div class="card">
   <div class="card-header">
-    <h4 class="card-header-title">Verifications</h4>
-    <a class="small" href="javascript:;">View all</a>
+    <h4 class="card-header-title">{{ 'Verifications' | localize}}</h4>
   </div>
   <div class="card-body">
     <div class="list-group list-group-flush my-n3">
@@ -16,7 +15,8 @@
             <h5 class="mb-0 text-normal">{{ 'Email' | localize }}</h5>
           </div>
           <div class="col-auto">
-            <span class="text-muted"><i class="fe fe-check"></i></span>
+            <span *ngIf="verifcationStatus.isEmailConfirmed" class="text-muted"><i class="fe fe-check"></i></span>
+            <span *ngIf="!verifcationStatus.isEmailConfirmed" class="text-muted"><i class="fe fe-x"></i></span>
           </div>
         </div>
       </div>
@@ -31,7 +31,8 @@
             <h5 class="mb-0 text-normal">{{ 'Phone' | localize }}</h5>
           </div>
           <div class="col-auto">
-            <span class="text-muted"><i class="fe fe-x"></i></span>
+            <span *ngIf="verifcationStatus.isPhoneNumberConfirmed" class="text-muted"><i class="fe fe-check"></i></span>
+            <a *ngIf="!verifcationStatus.isPhoneNumberConfirmed" (click)="$event.preventDefault(); onVerifyMobileNumberClick();" href="#">Verify</a>
           </div>
         </div>
       </div>
