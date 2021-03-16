@@ -272,6 +272,169 @@ export class EducationLevelsServiceProxy {
 }
 
 @Injectable()
+export class PhoneVerificationsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    getLastUnverified(): Observable<PhoneVerificationDto> {
+        let url_ = this.baseUrl + "/api/services/app/PhoneVerifications/GetLastUnverified";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetLastUnverified(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetLastUnverified(<any>response_);
+                } catch (e) {
+                    return <Observable<PhoneVerificationDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PhoneVerificationDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetLastUnverified(response: HttpResponseBase): Observable<PhoneVerificationDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PhoneVerificationDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PhoneVerificationDto>(<any>null);
+    }
+
+    /**
+     * @param recipient (optional) 
+     * @return Success
+     */
+    create(recipient: string | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/PhoneVerifications/Create?";
+        if (recipient !== undefined && recipient !== null)
+            url_ += "recipient=" + encodeURIComponent("" + recipient) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param code (optional) 
+     * @return Success
+     */
+    verify(code: string | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/PhoneVerifications/Verify?";
+        if (code !== undefined && code !== null)
+            url_ += "code=" + encodeURIComponent("" + code) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processVerify(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processVerify(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processVerify(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class ProfilesServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -336,6 +499,62 @@ export class ProfilesServiceProxy {
             }));
         }
         return _observableOf<UserDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getVerificationStatus(id: number | undefined): Observable<VerificationStatusDto> {
+        let url_ = this.baseUrl + "/api/services/app/Profiles/GetVerificationStatus?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetVerificationStatus(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetVerificationStatus(<any>response_);
+                } catch (e) {
+                    return <Observable<VerificationStatusDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VerificationStatusDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetVerificationStatus(response: HttpResponseBase): Observable<VerificationStatusDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VerificationStatusDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VerificationStatusDto>(<any>null);
     }
 
     /**
@@ -2618,6 +2837,61 @@ export interface IEducationLevelDto {
     id: string;
 }
 
+export class PhoneVerificationDto implements IPhoneVerificationDto {
+    userId: number;
+    recipient: string | undefined;
+    dateSent: moment.Moment;
+    id: string;
+
+    constructor(data?: IPhoneVerificationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userId = _data["userId"];
+            this.recipient = _data["recipient"];
+            this.dateSent = _data["dateSent"] ? moment(_data["dateSent"].toString()) : <any>undefined;
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): PhoneVerificationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PhoneVerificationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["recipient"] = this.recipient;
+        data["dateSent"] = this.dateSent ? this.dateSent.toISOString() : <any>undefined;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): PhoneVerificationDto {
+        const json = this.toJSON();
+        let result = new PhoneVerificationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPhoneVerificationDto {
+    userId: number;
+    recipient: string | undefined;
+    dateSent: moment.Moment;
+    id: string;
+}
+
 export class UserDto implements IUserDto {
     userName: string;
     name: string;
@@ -2755,6 +3029,53 @@ export interface IUserDto {
     roleNames: string[] | undefined;
     roleDisplayNames: string[] | undefined;
     id: number;
+}
+
+export class VerificationStatusDto implements IVerificationStatusDto {
+    isEmailConfirmed: boolean;
+    isPhoneNumberConfirmed: boolean;
+
+    constructor(data?: IVerificationStatusDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isEmailConfirmed = _data["isEmailConfirmed"];
+            this.isPhoneNumberConfirmed = _data["isPhoneNumberConfirmed"];
+        }
+    }
+
+    static fromJS(data: any): VerificationStatusDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new VerificationStatusDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isEmailConfirmed"] = this.isEmailConfirmed;
+        data["isPhoneNumberConfirmed"] = this.isPhoneNumberConfirmed;
+        return data; 
+    }
+
+    clone(): VerificationStatusDto {
+        const json = this.toJSON();
+        let result = new VerificationStatusDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IVerificationStatusDto {
+    isEmailConfirmed: boolean;
+    isPhoneNumberConfirmed: boolean;
 }
 
 export class RegistrationDto implements IRegistrationDto {

@@ -53,6 +53,17 @@ namespace Academically.Services.Profiles
             return output;
         }
 
+        public async Task<VerificationStatusDto> GetVerificationStatus(long id)
+        {
+            var user = await _usersRepository.GetAsync(id);
+            var verificationStatus = new VerificationStatusDto()
+            {
+                IsEmailConfirmed = user.IsEmailConfirmed,
+                IsPhoneNumberConfirmed = user.IsPhoneNumberConfirmed,
+            };
+            return verificationStatus;
+        }
+
         public async Task UpdateWebsiteUrl(string websiteUrl)
         {
             var user = await _usersRepository.GetAsync(AbpSession.UserId.Value);

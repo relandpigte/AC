@@ -32,7 +32,7 @@ export class CreateEditProfileEducationComponent extends AppComponentBase implem
     private _userEducationsService: UserEducationsServiceProxy,
   ) {
     super(injector);
-    this.currentYear = abp.clock.now().getFullYear();
+    this.currentYear = this.convertToUserDate(new Date()).getFullYear();
     this.yearSelections.push('Present')
     for (let year = this.currentYear; year >= 1950; year--) {
       const sYear = year.toString();
