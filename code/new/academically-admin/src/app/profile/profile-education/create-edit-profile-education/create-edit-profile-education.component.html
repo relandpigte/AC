@@ -1,6 +1,7 @@
 <form class="form-horizontal" autocomplete="off" #createEditUserEducationForm="ngForm" (ngSubmit)="onFormSubmit()">
   <div class="modal-card card">
-    <abp-modal-header [title]="model.id ? 'Edit Education' : 'Add Education'" (onCloseClick)="onCloseClick()"></abp-modal-header>
+    <abp-modal-header [title]="(model.id ? 'EditEducation' : 'AddEducation') | localize"
+      (onCloseClick)="onCloseClick()"></abp-modal-header>
     <div class="card-body">
 
       <div class="form-group required">
@@ -19,8 +20,8 @@
           <label class="col-form-label" for="UniverisityName">{{ 'Univerisity' | localize }}</label>
           <input class="form-control" type="search" [(ngModel)]="model.universityName" id="UniversityName"
             name="AreaOfStudy" typeaheadOptionField="heProvider" [typeahead]="universitiesTypeaheadSource"
-            [typeaheadAsync]="true" [typeaheadMinLength]="3" [typeaheadOptionsLimit]="10" container="body" #universityNameModel="ngModel"
-            #universityNameEl required />
+            [typeaheadAsync]="true" [typeaheadMinLength]="3" [typeaheadOptionsLimit]="10" container="body"
+            #universityNameModel="ngModel" #universityNameEl required />
           <abp-validation-summary [control]="universityNameModel" [controlEl]="universityNameEl">
           </abp-validation-summary>
         </div>
@@ -59,8 +60,8 @@
       <app-profile-education-levels></app-profile-education-levels>
 
     </div>
-    <abp-modal-footer [cancelDisabled]="isLoading"
-      [saveDisabled]="!createEditUserEducationForm.form.valid || isLoading" (onCancelClick)="onCloseClick()">
+    <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading" [saveDisabled]="!createEditUserEducationForm.form.valid || isLoading"
+      (onCancelClick)="onCloseClick()">
     </abp-modal-footer>
   </div>
 </form>

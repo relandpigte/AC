@@ -11,7 +11,6 @@ export class CreateEditProfileEducationLevelComponent implements OnInit {
   @Output() userEducationLevelSaved = new EventEmitter<UserEducationLevelDto>();
   model: UserEducationLevelDto = new UserEducationLevelDto();
   educationLevels: EducationLevelDto[] = [];
-  isLoading = false;
 
   constructor(
     private _modal: BsModalRef,
@@ -20,6 +19,9 @@ export class CreateEditProfileEducationLevelComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEducationLevels();
+    if (!this.model) {
+      this.model = new UserEducationLevelDto();
+    }
   }
 
   onFormSubmit(): void {

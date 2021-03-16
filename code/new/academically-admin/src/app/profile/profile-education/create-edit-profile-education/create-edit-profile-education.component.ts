@@ -55,14 +55,18 @@ export class CreateEditProfileEducationComponent extends AppComponentBase implem
   }
 
   onFormSubmit(): void {
+    this.isLoading = true;
     this.model.universityCountryCode = this.countryCode;
     this.model.userEducationLevels = this.profileEducationLevelsComponent.userEducationLevels;
-    this._userEducationsService.create(this.model)
-      .subscribe(() => {
-        this.notify.success('Your education details has been saved.');
-        this.userEducationSaved.emit(true);
-        this._modal.hide();
-      });
+    const saveSubscription = this.model.id
+      ? this._userEducationsService.update(this.model)
+      : this._userEducationsService.create(this.model);
+    saveSubscription.subscribe(() => {
+      this.notify.success(this.l('SavedSuccessfully'));
+      this.userEducationSaved.emit(true);
+      this.isLoading = false;
+      this._modal.hide();
+    });
   }
 
   onCloseClick(): void {
