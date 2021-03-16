@@ -4,6 +4,7 @@ import { UserEducationDto, UserEducationsServiceProxy } from '@shared/service-pr
 import { ProfileService } from '@shared/services/profile.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CreateEditProfileEducationComponent } from './create-edit-profile-education/create-edit-profile-education.component';
+import * as _ from 'lodash-es';
 
 @Component({
   selector: 'app-profile-education',
@@ -34,8 +35,24 @@ export class ProfileEducationComponent extends AppComponentBase implements OnIni
     this.showCreateEditUserEducationModal();
   }
 
-  onUserEducationClick(userEducation: UserEducationDto): void {
-    this.showCreateEditUserEducationModal(userEducation);
+  onEditClick(userEducation: UserEducationDto): void {
+    this.showCreateEditUserEducationModal(_.cloneDeep(userEducation));
+  }
+
+  onDeleteClick(userEducation: UserEducationDto): void {
+    this.message.confirm(
+      undefined,
+      undefined,
+      (result: boolean) => {
+        if (result) {
+          this._userEducationsService.delete(userEducation.id)
+            .subscribe(() => {
+              this.notify.success('SuccessfullyDeleted');
+              this.getUserEducations();
+            })
+        }
+      }
+    );
   }
 
   private getUserEducations(): void {
@@ -57,6 +74,6 @@ export class ProfileEducationComponent extends AppComponentBase implements OnIni
       if (result) {
         this.getUserEducations();
       }
-    })
+    });
   }
 }

@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="SelectEducationLevel">Select Education Level</text>
+    <text name="Grade">Grade</text>
+    <text name="EducationLevel">Education Level</text>
+    <text name="EditLevel">Edit Level</text>
+    <text name="AddLevel">Add Level</text>
+    <text name="EditEducation">Edit Education</text>
+    <text name="AddEducation">Add Education</text>
+    <text name="NoRecordsFound">No Records Found</text>
+    <text name="FormalEducation">Formal Education</text>
     <text name="Resending">Resending</text>
     <text name="Resend">Resend</text>
     <text name="Sending">Sending</text>

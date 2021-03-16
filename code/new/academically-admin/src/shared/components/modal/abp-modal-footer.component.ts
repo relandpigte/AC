@@ -17,7 +17,9 @@ export class AbpModalFooterComponent extends AppComponentBase {
   @Input() cancelLabel = this.l('Cancel');
   @Input() cancelDisabled: boolean;
   @Input() saveLabel = this.l('Save');
+  @Input() savingLabel = `${this.l('Saving')}...`;
   @Input() saveDisabled: boolean;
+  @Input() isLoading: boolean;
 
   @Output() onCancelClick = new EventEmitter<number>();
 

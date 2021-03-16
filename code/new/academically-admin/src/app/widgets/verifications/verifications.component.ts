@@ -39,7 +39,6 @@ export class VerificationsComponent extends AppComponentBase implements OnInit {
     this._profilesService.getVerificationStatus(this.appSession.userId)
       .subscribe(verificationStatus => {
         this.verifcationStatus = verificationStatus;
-        console.log(this.verifcationStatus);
       })
   }
 }

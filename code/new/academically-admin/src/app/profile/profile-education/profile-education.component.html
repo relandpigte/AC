@@ -2,11 +2,11 @@
   <div class="card-header">
     <div class="row align-items-center">
       <div class="col">
-        <h4 class="card-header-title">Formal Education</h4>
+        <h4 class="card-header-title">{{ 'FormalEducation' | localize }}</h4>
       </div>
       <div class="col-auto">
-        <a (click)="$event.preventDefault(); onAddClick()" href="#" class="btn btn-primary">
-          Add Education
+        <a *ngIf="permission.isGranted('Pages.Profile.Education.Create')" (click)="$event.preventDefault(); onAddClick()" href="#" class="btn btn-primary">
+          {{ 'AddEducation' | localize }}
         </a>
       </div>
     </div>
@@ -25,9 +25,7 @@
                 </div>
               </div>
               <div class="col ml-n2">
-                <a href="#">
-                  <h4 (click)="$event.preventDefault(); onUserEducationClick(userEducation)" class="mb-1">{{ userEducation.universityName }}</h4>
-                </a>
+                <h4 class="mb-1">{{ userEducation.universityName }}</h4>
                 <p class="card-text small text-muted">
                   {{ userEducation.city }}, {{ userEducation.universityCountryCode }}
                 </p>
@@ -52,10 +50,20 @@
               {{ userEducationLevel.grade }}
             </p>
           </td>
+          <td width="1%">
+            <button *ngIf="permission.isGranted('Pages.Profile.Education.Update')" (click)="onEditClick(userEducation)" type="button"
+              class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+              <span class="fe fe-edit-2"></span>
+            </button>
+            <button *ngIf="permission.isGranted('Pages.Profile.Education.Delete')" (click)="onDeleteClick(userEducation)" type="button"
+              class="btn btn-outline-secondary btn-sm btn-rounded-circle">
+              <span class="fe fe-trash-2"></span>
+            </button>
+          </td>
         </tr>
         <tr *ngIf="userEducations.length === 0">
           <td colspan="10">
-            <p class="text-center m-0 p-0">{{ 'No Records Found' | localize }}</p>
+            <p class="text-center m-0 p-0">{{ 'NoRecordsFound' | localize }}</p>
           </td>
         </tr>
       </tbody>

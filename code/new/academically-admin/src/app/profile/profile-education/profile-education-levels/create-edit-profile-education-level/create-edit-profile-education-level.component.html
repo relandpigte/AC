@@ -1,6 +1,7 @@
 <form class="form-horizontal" autocomplete="off" #createEditUserEducationLevelForm="ngForm" (ngSubmit)="onFormSubmit()">
   <div class="modal-card card">
-    <abp-modal-header [title]="'Add Level'" (onCloseClick)="onCloseClick()"></abp-modal-header>
+    <abp-modal-header [title]="(!model.educationLevelId ? 'AddLevel' : 'EditLevel') | localize"
+      (onCloseClick)="onCloseClick()"></abp-modal-header>
     <div class="card-body">
 
       <div class="form-group required">
@@ -33,8 +34,8 @@
         </div>
       </div>
     </div>
-    <abp-modal-footer [cancelDisabled]="isLoading"
-      [saveDisabled]="!createEditUserEducationLevelForm.form.valid || isLoading" (onCancelClick)="onCloseClick()">
+    <abp-modal-footer [saveLabel]="(model.id ? 'Update' : 'Add') | localize"
+      [saveDisabled]="!createEditUserEducationLevelForm.form.valid" (onCancelClick)="onCloseClick()">
     </abp-modal-footer>
   </div>
 </form>

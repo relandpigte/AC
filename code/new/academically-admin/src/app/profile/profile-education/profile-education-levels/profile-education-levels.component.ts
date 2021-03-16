@@ -1,6 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { UserEducationLevelDto } from '@shared/service-proxies/service-proxies';
+import * as _ from 'lodash-es';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CreateEditProfileEducationLevelComponent } from './create-edit-profile-education-level/create-edit-profile-education-level.component';
 
@@ -23,13 +24,46 @@ export class ProfileEducationLevelsComponent extends AppComponentBase implements
   }
 
   onAddLevelClick(): void {
+    this.showCreateEditUserEducationLevelModal();
+  }
+
+  onEditLevelClick(userEducationLevel: UserEducationLevelDto): void {
+    this.showCreateEditUserEducationLevelModal(_.cloneDeep(userEducationLevel));
+  }
+
+  onRemoveLevelClick(userEducationLevel: UserEducationLevelDto): void {
+    this.message.confirm(
+      undefined,
+      undefined,
+      (result: boolean) => {
+        if (result) {
+          const index = this.userEducationLevels.findIndex(e => e.id === userEducationLevel.id);
+          if (index >= 0) {
+            this.userEducationLevels.splice(index, 1);
+          }
+        }
+      }
+    );
+  }
+
+  private showCreateEditUserEducationLevelModal(userEducationLevel?: UserEducationLevelDto) {
     const modalSettings = this.defaultModalSettings;
     modalSettings.class = 'modal-lg';
+    modalSettings.initialState = {
+      model: userEducationLevel,
+    };
     const modalRef = this._modalService.show(CreateEditProfileEducationLevelComponent, modalSettings);
     const modal: CreateEditProfileEducationLevelComponent = modalRef.content;
     modal.userEducationLevelSaved.subscribe((userEducationLevel: UserEducationLevelDto) => {
       if (userEducationLevel) {
-        this.userEducationLevels.push(userEducationLevel);
+        if (!userEducationLevel.id) {
+          this.userEducationLevels.push(userEducationLevel);
+        } else {
+          var index = this.userEducationLevels.findIndex(e => e.id === userEducationLevel.id);
+          if (index >= 0) {
+            this.userEducationLevels[index] = userEducationLevel;
+          }
+        }
       }
     });
   }

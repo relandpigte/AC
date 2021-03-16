@@ -15,15 +15,12 @@
     <ProjectReference Include="..\Academically.Aws\Academically.Aws.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Services\" />
     <Folder Include="Services\Registrations\" />
     <Folder Include="Services\Registrations\Dto\" />
     <Folder Include="Services\Profiles\" />
     <Folder Include="Services\Profiles\Dto\" />
     <Folder Include="Services\Universities\" />
     <Folder Include="Services\Universities\Dto\" />
-    <Folder Include="Services\UserEducations\" />
-    <Folder Include="Services\UserEducations\Dto\" />
     <Folder Include="Services\EducationLevels\" />
     <Folder Include="Services\EducationLevels\Dto\" />
     <Folder Include="Services\PhoneVerifications\" />

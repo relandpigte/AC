@@ -6,7 +6,7 @@ using Academically.Domain.Entities;
 namespace Academically.Services.UserEducations.Dto
 {
     [AutoMap(typeof(UserEducationLevel))]
-    public class UserEducationLevelDto : EntityDto<Guid>
+    public class UserEducationLevelDto : EntityDto<Guid?>
     {
         public Guid UserEducationId { get; set; }
         public Guid EducationLevelId { get; set; }
