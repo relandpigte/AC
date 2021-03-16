@@ -168,9 +168,6 @@ variables:
     - ls -la
     # Copy Dist to S3 Bucket
     - echo "Copy dist to S3"
-    - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
-    - pwd
-    - ls -la
     - aws s3 rm s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN --recursive
     - aws s3 cp dist s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN --recursive
     - aws s3 ls s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN
