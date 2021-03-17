@@ -18,11 +18,21 @@ namespace Academically.Configuration
             return new[]
             {
                 new SettingDefinition(AppSettingNames.UiTheme, "red", scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User, isVisibleToClients: true),
-                new SettingDefinition(AppSettingNames.Aws_Region, GetFromSettings(AppSettingNames.Aws_Region.ToAppSettingKey())),
-                new SettingDefinition(AppSettingNames.Aws_S3_AssetsBucket, GetFromSettings(AppSettingNames.Aws_S3_AssetsBucket.ToAppSettingKey())),
-                new SettingDefinition(AppSettingNames.Aws_S3_Folders_CoverPhotos, GetFromSettings(AppSettingNames.Aws_S3_Folders_CoverPhotos.ToAppSettingKey())),
-                new SettingDefinition(AppSettingNames.ITagg_Sms_Username, GetFromSettings(AppSettingNames.ITagg_Sms_Username.ToAppSettingKey())),
+                CreateSettingDefinitionFromAppSetting(AppSettingNames.App_ClientRootAddress),
+                CreateSettingDefinitionFromAppSetting(AppSettingNames.Aws_Region),
+                CreateSettingDefinitionFromAppSetting(AppSettingNames.Aws_S3_AssetsBucket),
+                CreateSettingDefinitionFromAppSetting(AppSettingNames.Aws_S3_Folders_CoverPhotos),
+                CreateSettingDefinitionFromAppSetting(AppSettingNames.ITagg_Sms_Username),
+                CreateSettingDefinitionFromAppSetting(AppSettingNames.ITagg_Sms_Password),
+                CreateSettingDefinitionFromAppSetting(AppSettingNames.Email_FromName),
+                CreateSettingDefinitionFromAppSetting(AppSettingNames.Email_FromEmail),
             };
+        }
+
+        private SettingDefinition CreateSettingDefinitionFromAppSetting(string appSettingName)
+        {
+            var appSettingKey = appSettingName.ToAppSettingKey();
+            return new SettingDefinition(appSettingName, GetFromSettings(appSettingKey));
         }
 
         private string GetFromSettings(string name, string defaultValue = null)

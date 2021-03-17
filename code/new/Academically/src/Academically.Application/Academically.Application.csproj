@@ -12,7 +12,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Academically.Core\Academically.Core.csproj" />
-    <ProjectReference Include="..\Academically.Aws\Academically.Aws.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\Registrations\" />

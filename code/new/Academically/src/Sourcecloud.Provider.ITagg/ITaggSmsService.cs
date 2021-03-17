@@ -1,10 +1,10 @@
-﻿using System.Net.Http;
+﻿using SourceCloud.Core.Configurations;
+using SourceCloud.Core.Services;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
-using SourceCloud.Core.Configurations;
-using SourceCloud.Core.Services;
 
-namespace SourceCloud.Providers.ITagg
+namespace SourceCloud.Provider.ITagg
 {
     public class ITaggSmsService : ISmsService
     {

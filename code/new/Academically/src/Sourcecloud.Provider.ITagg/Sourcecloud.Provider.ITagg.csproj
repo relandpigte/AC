@@ -7,4 +7,5 @@
   <ItemGroup>
     <ProjectReference Include="..\SourceCloud.Core\SourceCloud.Core.csproj" />
   </ItemGroup>
+
 </Project>

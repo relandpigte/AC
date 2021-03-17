@@ -140,8 +140,7 @@ namespace Academically.Controllers
                 externalUser.Surname,
                 externalUser.EmailAddress,
                 externalUser.EmailAddress,
-                Authorization.Users.User.CreateRandomPassword(),
-                true
+                Authorization.Users.User.CreateRandomPassword()
             );
 
             user.Logins = new List<UserLogin>

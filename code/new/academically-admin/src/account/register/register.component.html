@@ -8,49 +8,24 @@
       <form autocomplete="off" #registerForm="ngForm" (ngSubmit)="onFormSubmit()">
         <div class="form-group required">
           <label class="col-form-label" for="FirstName">{{ 'FirstName' | localize }}</label>
-          <input
-            type="text"
-            class="form-control"
-            id="FirstName"
-            name="FirstName"
-            [(ngModel)]="model.firstName"
-            #firstNameModel="ngModel"
-            #firstNameEl
-            required
-          />
+          <input type="text" class="form-control" id="FirstName" name="FirstName" [(ngModel)]="model.firstName"
+            #firstNameModel="ngModel" #firstNameEl required />
           <abp-validation-summary [control]="firstNameModel" [controlEl]="firstNameEl"></abp-validation-summary>
         </div>
 
         <div class="form-group required">
           <label class="col-form-label" for="LastName">{{ 'LastName' | localize }}</label>
-          <input
-            type="text"
-            class="form-control"
-            id="LastName"
-            name="LastName"
-            [(ngModel)]="model.lastName"
-            #lastNameModel="ngModel"
-            #lastNameEl
-            required
-          />
+          <input type="text" class="form-control" id="LastName" name="LastName" [(ngModel)]="model.lastName"
+            #lastNameModel="ngModel" #lastNameEl required />
           <abp-validation-summary [control]="lastNameModel" [controlEl]="lastNameEl"></abp-validation-summary>
         </div>
 
         <div class="form-group required">
           <label class="col-form-label" for="EmailAddress">{{ 'EmailAddress' | localize }}</label>
           <div class="input-group input-group-merge">
-            <input
-              type="email"
-              class="form-control form-control-appended"
-              id="EmailAddress"
-              name="EmailAddress"
-              required
-              maxlength="256"
-              pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$"
-              [(ngModel)]="model.emailAddress"
-              #emailAddressModel="ngModel"
-              #emailAddressEl
-            />
+            <input type="email" class="form-control form-control-appended" id="EmailAddress" name="EmailAddress"
+              required maxlength="256" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$"
+              [(ngModel)]="model.emailAddress" #emailAddressModel="ngModel" #emailAddressEl />
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>
@@ -63,18 +38,9 @@
         <div class="form-group required">
           <label class="col-form-label" for="DateOfBirth">{{ 'DateOfBirth' | localize }}</label>
           <div class="input-group input-group-merge" (click)="dp.show()">
-            <input
-              [(ngModel)]="dateOfBirth"
-              id="DateOfBirth"
-              name="DateOfBirth"
-              type="text"
-              class="form-control form-control-appended"
-              #dateOfBirthModel="ngModel"
-              #dateOfBirthEl
-              #dp="bsDatepicker"
-              bsDatepicker
-              [bsConfig]="datePickerConfig"
-            />
+            <input [(ngModel)]="dateOfBirth" id="DateOfBirth" name="DateOfBirth" type="text"
+              class="form-control form-control-appended" #dateOfBirthModel="ngModel" #dateOfBirthEl #dp="bsDatepicker"
+              bsDatepicker [bsConfig]="datePickerConfig" />
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-calendar"></span>
@@ -86,33 +52,25 @@
 
         <div class="form-group">
           <div class="form-check">
-            <input
-              [(ngModel)]="isTAndCAccepted"
-              class="form-check-input"
-              type="checkbox"
-              value=""
-              id="AcceptTAndC"
-              name="AcceptTAndC"
-              required=""
-            />
+            <input [(ngModel)]="isTAndCAccepted" class="form-check-input" type="checkbox" value="" id="AcceptTAndC"
+              name="AcceptTAndC" required="" />
             <label class="form-check-label" for="AcceptTAndC">
               <!-- {{ 'AcceptTermsAndConditions' | localize }} -->
-              Accept <a href="#" [routerLink]="['/account/terms-and-conditions']">{{ 'TermsAndConditions' | localize }}</a>
+              Accept <a href="#" [routerLink]="['/account/terms-and-conditions']" target="_blank">{{
+                'TermsAndConditions' | localize }}</a>
             </label>
           </div>
         </div>
 
-        <button
-          class="btn btn-lg btn-block btn-primary mb-3"
-          [disabled]="saving || !registerForm.valid || !isTAndCAccepted || !dateOfBirth"
-        >
+        <button class="btn btn-lg btn-block btn-primary mb-3"
+          [disabled]="saving || !registerForm.valid || !isTAndCAccepted || !dateOfBirth">
           {{ 'Register' | localize }}
         </button>
 
         <div class="text-center">
           <small class="text-muted text-center">
-            {{ 'AlreadyHaveAnAccount' | localize }} <a href="#" [routerLink]="['/account/login']">{{ 'LogIn' | localize }}</a
-            >.
+            {{ 'AlreadyHaveAnAccount' | localize }} <a href="#" [routerLink]="['/account/login']">{{ 'LogIn' | localize
+              }}</a>.
           </small>
         </div>
       </form>

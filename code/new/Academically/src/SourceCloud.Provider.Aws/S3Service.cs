@@ -1,29 +1,27 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using Abp.Configuration;
-using Abp.Extensions;
-using Academically.Application.Shared.Services;
-using Academically.Configuration;
-using Amazon.S3;
+﻿using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using Microsoft.Extensions.Configuration;
+using SourceCloud.Core.Configurations;
+using SourceCloud.Core.Services;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
-namespace Academically.Aws.Services
+namespace SourceCloud.Provider.Aws
 {
     public class S3Service : IFileManagerService, IDisposable
     {
         private readonly IAmazonS3 _client;
-        private readonly ISettingManager _settingManager;
+        private readonly FileManagerConfiguration _configuration;
 
         private string bucket;
 
-        public S3Service(IConfiguration configuration, ISettingManager settingManager)
+        public S3Service(FileManagerConfiguration configuration, IConfiguration awsConfiguration)
         {
-            _settingManager = settingManager;
-            bucket = settingManager.GetSettingValue(AppSettingNames.Aws_S3_AssetsBucket);
-            var options = configuration.GetAWSOptions();
+            _configuration = configuration;
+            bucket = configuration.Bucket;
+            var options = awsConfiguration.GetAWSOptions();
             _client = options.CreateServiceClient<IAmazonS3>();
         }
 
@@ -100,14 +98,13 @@ namespace Academically.Aws.Services
                 _client.Dispose();
         }
 
-        public string GetFileUrl(string fileName, long userId, string folderSetting = null)
+        public string GetFileUrl(string fileName, long userId, string folder = null)
         {
-            if (!fileName.IsNullOrWhiteSpace())
+            if (!string.IsNullOrWhiteSpace(fileName))
             {
                 var s3Bucket = GetDirectoryUrl();
-                if (!folderSetting.IsNullOrWhiteSpace())
+                if (!string.IsNullOrWhiteSpace(folder))
                 {
-                    string folder = _settingManager.GetSettingValue(folderSetting);
                     return $"{s3Bucket}/{userId}/{folder}/{fileName}";
                 }
                 return $"{s3Bucket}/{userId}/{fileName}";
@@ -118,9 +115,7 @@ namespace Academically.Aws.Services
 
         public string GetDirectoryUrl()
         {
-            string region = _settingManager.GetSettingValue(AppSettingNames.Aws_Region);
-            string bucket = _settingManager.GetSettingValue(AppSettingNames.Aws_S3_AssetsBucket);
-            return $"https://{bucket}.s3.{region}.amazonaws.com";
+            return $"https://{bucket}.s3.{_configuration.Region}.amazonaws.com";
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Academically.Authorization.Users
         public string WebsiteUrl { get; set; }
         public string About { get; set; }
         public string CoverPhotoFileName { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         public const string DefaultPassword = "123qwe";
 

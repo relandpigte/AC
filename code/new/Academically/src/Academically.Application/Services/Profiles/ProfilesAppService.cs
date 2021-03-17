@@ -1,12 +1,9 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-using Abp.Authorization;
+﻿using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.IO.Extensions;
 using Abp.Timing;
-using Academically.Application.Shared.Services;
 using Academically.Authorization;
 using Academically.Authorization.Users;
 using Academically.Configuration;
@@ -14,6 +11,9 @@ using Academically.Services.Profiles.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SourceCloud.Core.Services;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Academically.Services.Profiles
 {
@@ -47,7 +47,8 @@ namespace Academically.Services.Profiles
 
             if (!user.CoverPhotoFileName.IsNullOrWhiteSpace())
             {
-                output.CoverPhotoUrl = _fileManagerService.GetFileUrl(user.CoverPhotoFileName, user.Id, AppSettingNames.Aws_S3_Folders_CoverPhotos);
+                string coverPhotoFolder = await _settingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_CoverPhotos);
+                output.CoverPhotoUrl = _fileManagerService.GetFileUrl(user.CoverPhotoFileName, user.Id, coverPhotoFolder);
             }
 
             return output;
@@ -102,7 +103,8 @@ namespace Academically.Services.Profiles
                 await _fileManagerService.DeleteAsync(folder, oldFileName);
             }
 
-            return _fileManagerService.GetFileUrl(user.CoverPhotoFileName, user.Id, AppSettingNames.Aws_S3_Folders_CoverPhotos);
+            string coverPhotoFolder = await _settingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_CoverPhotos);
+            return _fileManagerService.GetFileUrl(user.CoverPhotoFileName, user.Id, coverPhotoFolder);
         }
 
         public async Task DeleteCoverPhoto()

@@ -20,16 +20,14 @@
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.3.1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Domain\" />
     <Folder Include="Domain\Services\" />
     <Folder Include="Domain\Enums\" />
     <Folder Include="Domain\Entities\" />
     <Folder Include="Domain\Services\Registrations\" />
     <Folder Include="Domain\Services\PhoneVerifications\" />
-    <Folder Include="Domain\Events\" />
-    <Folder Include="Domain\Events\Handlers\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sourcecloud.Provider.ITagg\Sourcecloud.Provider.ITagg.csproj" />
+    <ProjectReference Include="..\SourceCloud.Provider.Aws\SourceCloud.Provider.Aws.csproj" />
+    <ProjectReference Include="..\SourceCloud.Provider.ITagg\SourceCloud.Provider.ITagg.csproj" />
   </ItemGroup>
 </Project>
