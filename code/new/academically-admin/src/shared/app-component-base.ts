@@ -11,7 +11,7 @@ import {
 } from 'abp-ng2-module';
 
 import { AppSessionService } from '@shared/session/app-session.service';
-import { ModalOptions } from 'ngx-bootstrap/modal';
+import { Moment } from 'moment';
 
 export abstract class AppComponentBase {
 
@@ -27,7 +27,7 @@ export abstract class AppComponentBase {
   appSession: AppSessionService;
   elementRef: ElementRef;
 
-  defaultModalSettings: ModalOptions;
+  defaultModalSettings: any;
 
   constructor(injector: Injector) {
     this.localization = injector.get(LocalizationService);
@@ -82,5 +82,23 @@ export abstract class AppComponentBase {
       return coverPhotoUrl;
     }
     return 'assets/themes/dashkit/img/covers/profile-cover-1.jpg';
+  }
+
+  protected convertToUserDate(date: Date): Date {
+    return abp.timing.convertToUserTimezone(date);
+  }
+
+  protected convertMomentToUserDate(date: Moment): Date {
+    return this.convertToUserDate(date.toDate());
+  }
+
+  protected diffDatesSeconds(date1: Date, date2: Date): number {
+    var diffDatesSeconds = date1.getTime() - date2.getTime();
+    var diffSeconds = diffDatesSeconds / 1000;
+    return Math.round(diffSeconds);
+  }
+
+  protected diffMomentDatesSeconds(date1: Moment, date2: Moment): number {
+    return this.diffDatesSeconds(this.convertMomentToUserDate(date1), this.convertMomentToUserDate(date2));
   }
 }

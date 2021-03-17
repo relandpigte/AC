@@ -135,22 +135,39 @@ variables:
 
 .frontend: &frontend
   stage: deploy
-  image: python:latest
+  image: node:latest
   before_script:
     - echo "pre script (deploy_frontend)"
     - echo "Install Pre-requistes"
     - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
     - apt-get update
+    - node -v
+    - npm -v
+    # install python, awscli & jq
+    - apt-get install -y python3-pip
     - pip3 install awscli boto boto3
+    - apt-get install -y jq
     - aws --version
+    - jq --version
+    - apt-get install -y zip
+    # Install Angular, specify v9.1.4 to match our code
+    - npm install -g @angular/cli@9.1.4
     - pwd
-
+  
   script:
-    # Copy Dist to S3 Bucket
-    - echo "Copy dist to S3"
-    - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
+    # build dist previously saved as an artifact
+    - echo "Build $ENV_NAME"
+    - ls -la
+    - "cd $CI_PROJECT_DIR"
+    - ls -la
+    - "cd $CI_PROJECT_DIR/artifacts" 
     - pwd
     - ls -la
+    - ng build --configuration $ENV_NAME
+    - cat app.config
+    - ls -la
+    # Copy Dist to S3 Bucket
+    - echo "Copy dist to S3"
     - aws s3 rm s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN --recursive
     - aws s3 cp dist s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN --recursive
     - aws s3 ls s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN
@@ -228,17 +245,14 @@ build_frontend:
       
   script:
     - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
-    - ls -la
     # specify v9.1.4 to match our code
     - npm install -g @angular/cli@9.1.4
     - yarn install    
-    - echo "Build $ENV_NAME"
-    - ng build --configuration $ENV_NAME
-    - cat app.config
     - ls -la
+    - cp -r $CI_PROJECT_DIR/$FRONTEND_PATH/ $CI_PROJECT_DIR/artifacts/
   artifacts:
     paths:
-      - $CI_PROJECT_DIR/$FRONTEND_PATH/dist/
+      - artifacts
     expire_in: 21 day
   only:
     - develop-new

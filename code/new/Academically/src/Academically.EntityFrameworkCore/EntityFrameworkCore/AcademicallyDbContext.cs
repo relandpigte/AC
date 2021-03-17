@@ -10,6 +10,11 @@ namespace Academically.EntityFrameworkCore
     public class AcademicallyDbContext : AbpZeroDbContext<Tenant, Role, User, AcademicallyDbContext>
     {
         public virtual DbSet<Registration> Registrations { get; set; }
+        public virtual DbSet<EducationLevel> EducationLevels { get; set; }
+        public virtual DbSet<University> Universities { get; set; }
+        public virtual DbSet<UserEducation> UserEducations { get; set; }
+        public virtual DbSet<UserEducationLevel> UserEducationLevels { get; set; }
+        public virtual DbSet<PhoneVerification> PhoneVerifications { get; set; }
 
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)

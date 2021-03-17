@@ -3,6 +3,7 @@
     {{ cancelLabel }}
   </button>
   <button type="submit" class="btn btn-primary" [disabled]="saveDisabled">
-    {{ saveLabel }}
+    <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    {{ isLoading ? savingLabel : saveLabel }}
   </button>
 </div>

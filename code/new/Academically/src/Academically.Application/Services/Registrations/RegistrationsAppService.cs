@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
-using Academically.Domain.Entities;
+﻿using Academically.Domain.Entities;
 using Academically.Domain.Services.Registrations;
 using Academically.Services.Registrations.Dto;
+using System;
+using System.Threading.Tasks;
 
 namespace Academically.Services.Registrations
 {
@@ -12,6 +13,13 @@ namespace Academically.Services.Registrations
         public RegistrationsAppService(IRegistrationsDomainService registrationsDomainService)
         {
             _registrationsDomainService = registrationsDomainService;
+        }
+
+        public async Task<RegistrationDto> Get(Guid id)
+        {
+            var registration = await _registrationsDomainService.GetAsync(id);
+            var outout = ObjectMapper.Map<RegistrationDto>(registration);
+            return outout;
         }
 
         public async Task Create(RegistrationDto input)

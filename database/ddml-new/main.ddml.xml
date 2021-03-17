@@ -9,4 +9,12 @@
 	<include file="ddml-new/ddml.2021-03-04-02.alter-users-add-websiteurl-field.xml"/>
 	<include file="ddml-new/ddml.2021-03-05-01.alter-users-add-about-field.xml"/>
 	<include file="ddml-new/ddml.2021-03-05-02.alter-users-add-coverphotofilename-field.xml"/>
+	<include file="ddml-new/ddml.2021-03-08-01.create-universities-table.xml"/>
+	<include file="ddml-new/ddml.2021-03-08-02.generate-universities-data.xml"/>
+	<include file="ddml-new/ddml.2021-03-08-03.create-educationlevels-table.xml"/>
+	<include file="ddml-new/ddml.2021-03-08-04.generate-educationlevels-data.xml"/>
+	<include file="ddml-new/ddml.2021-03-08-05.create-usereducations-tables.xml"/>
+	<include file="ddml-new/ddml.2021-03-08-06.alter-universities-add-isreviewed-field.xml"/>
+	<include file="ddml-new/ddml.2021-03-09-01.create-phoneverifications-table.xml"/>
+	<include file="ddml-new/ddml.2021-03-15-01.alter-users-add-dateofbirth-field.xml"/>
 </databaseChangeLog>

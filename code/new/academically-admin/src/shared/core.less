@@ -1,3 +1,33 @@
+/* custom component styles */
+
+app-root {
+  width: 100%;
+}
+
+topbar-menu {
+  .navbar-nav .nav-link.active:before {
+    border-bottom: none !important;
+  }
+
+  .nav-item {
+    .nav-link {
+      white-space: nowrap;
+    }
+  }
+}
+
+image-cropper {
+  .source-image {
+    width: 100%;
+  }
+}
+
+typeahead-container {
+  z-index: 1060 !important;
+}
+
+/* custom component styles end */
+
 body {
   height: 100%;
 }
@@ -40,10 +70,6 @@ body.swal2-height-auto {
 
 .swal2-popup.swal2-toast .swal2-title {
   margin-bottom: 4px !important;
-}
-
-app-root {
-  width: 100%;
 }
 
 .freeze-ui:before {
@@ -197,20 +223,7 @@ body.theme-dark {
   color: green !important;
 }
 
-topbar-menu {
-  .navbar-nav .nav-link.active:before {
-    border-bottom: none !important;
-  }
-
-  .nav-item {
-    .nav-link {
-      white-space: nowrap;
-    }
-  }
-}
-
 .input-group.input-group-sm {
-
 
   .input-group-append,
   .input-group-prepend {
@@ -227,12 +240,27 @@ topbar-menu {
 }
 
 input[type='file'].inline-file-upload {
-  position: absolute;
-  width   : 100%;
-  height  : 100%;
-  opacity : 0;
-  cursor  : pointer;
-  top: 0;
+  display: none;
+}
+
+.table-align-top {
+  td {
+    vertical-align: top !important;
+  }
+}
+
+.iti {
+  width: 100%;
+
+  .iti__country-list {
+    box-shadow : none;
+    font-size  : 14px;
+    margin-left: 0;
+  }
+}
+
+.overflow-visible {
+  overflow: visible !important;
 }
 
 @media (min-width: 576px) {

@@ -15,6 +15,10 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.ConfigurationServiceProxy,
         ApiServiceProxies.RegistrationsServiceProxy,
         ApiServiceProxies.ProfilesServiceProxy,
+        ApiServiceProxies.UniversitiesServiceProxy,
+        ApiServiceProxies.UserEducationsServiceProxy,
+        ApiServiceProxies.EducationLevelsServiceProxy,
+        ApiServiceProxies.PhoneVerificationsServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

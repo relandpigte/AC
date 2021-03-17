@@ -17,7 +17,12 @@
         public const string Pages_Profile = "Pages.Profile";
         public const string Pages_Profile_Introduction = "Pages.Profile.Introduction";
         public const string Pages_Profile_Services = "Pages.Profile.Services";
+
         public const string Pages_Profile_Education = "Pages.Profile.Education";
+        public const string Pages_Profile_Education_Create = "Pages.Profile.Education.Create";
+        public const string Pages_Profile_Education_Update = "Pages.Profile.Education.Update";
+        public const string Pages_Profile_Education_Delete = "Pages.Profile.Education.Delete";
+
         public const string Pages_Profile_Research = "Pages.Profile.Research";
         public const string Pages_Profile_IndustryExperience = "Pages.Profile.IndustryExperience";
 

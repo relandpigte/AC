@@ -1,6 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="SelectEducationLevel">Select Education Level</text>
+    <text name="Grade">Grade</text>
+    <text name="EducationLevel">Education Level</text>
+    <text name="EditLevel">Edit Level</text>
+    <text name="AddLevel">Add Level</text>
+    <text name="EditEducation">Edit Education</text>
+    <text name="AddEducation">Add Education</text>
+    <text name="NoRecordsFound">No Records Found</text>
+    <text name="FormalEducation">Formal Education</text>
+    <text name="Resending">Resending</text>
+    <text name="Resend">Resend</text>
+    <text name="Sending">Sending</text>
+    <text name="Send">Send</text>
+    <text name="EnterVerificationCode">Enter Verification Code</text>
+    <text name="PhoneNumberVerificationSuccessMessage">Your phone number was successfully verified.</text>
+    <text name="PhoneNumberVerificationCodeInvalidErrorMessage">The verification code you entered is invalid. Please enter the code sent to your phone number or you can request to send a new one.</text>
+    <text name="PhoneNumberVerificationCodeInvalidErrorTitle">Verification Failed</text>
+    <text name="PhoneNumberVerificationSmsMessage">Your Academically Registration Code is: {0}</text>
+    <text name="PhoneNumberVerificationSentMessage">The verification code was sent to your phone number.</text>
+    <text name="PhoneNumberVerification">Phone Number Verification</text>
+    <text name="PhoneNumber">Phone Number</text>
     <text name="RemovePhoto">Remove Photo</text>
     <text name="UploadPhoto">Upload Photo</text>
     <text name="Removing">Removing</text>

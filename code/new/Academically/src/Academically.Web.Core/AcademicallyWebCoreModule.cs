@@ -1,9 +1,4 @@
-﻿using System;
-using System.Text;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Abp.AspNetCore;
+﻿using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.SignalR;
 using Abp.Modules;
@@ -12,9 +7,16 @@ using Abp.Zero.Configuration;
 using Academically.Authentication.JwtBearer;
 using Academically.Configuration;
 using Academically.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Academically.Application.Shared.Services;
-using Academically.Aws.Services;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using SourceCloud.Core.Configurations;
+using SourceCloud.Core.Services;
+using SourceCloud.Provider.Aws;
+using SourceCloud.Provider.ITagg;
+using System;
+using System.Text;
 
 namespace Academically
 {
@@ -26,12 +28,10 @@ namespace Academically
      )]
     public class AcademicallyWebCoreModule : AbpModule
     {
-        private readonly IWebHostEnvironment _env;
         private readonly IConfigurationRoot _appConfiguration;
 
         public AcademicallyWebCoreModule(IWebHostEnvironment env)
         {
-            _env = env;
             _appConfiguration = env.GetAppConfiguration();
         }
 
@@ -50,20 +50,9 @@ namespace Academically
                  );
 
             ConfigureTokenAuth();
-
-            IocManager.Register<IFileManagerService, S3Service>(Abp.Dependency.DependencyLifeStyle.Singleton);
-        }
-
-        private void ConfigureTokenAuth()
-        {
-            IocManager.Register<TokenAuthConfiguration>();
-            var tokenAuthConfig = IocManager.Resolve<TokenAuthConfiguration>();
-
-            tokenAuthConfig.SecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appConfiguration["Authentication:JwtBearer:SecurityKey"]));
-            tokenAuthConfig.Issuer = _appConfiguration["Authentication:JwtBearer:Issuer"];
-            tokenAuthConfig.Audience = _appConfiguration["Authentication:JwtBearer:Audience"];
-            tokenAuthConfig.SigningCredentials = new SigningCredentials(tokenAuthConfig.SecurityKey, SecurityAlgorithms.HmacSha256);
-            tokenAuthConfig.Expiration = TimeSpan.FromDays(1);
+            RegisterFileManagerService();
+            RegisterSmsService();
+            RegisterEmailService();
         }
 
         public override void Initialize()
@@ -75,6 +64,44 @@ namespace Academically
         {
             IocManager.Resolve<ApplicationPartManager>()
                 .AddApplicationPartsIfNotAddedBefore(typeof(AcademicallyWebCoreModule).Assembly);
+        }
+
+        private void ConfigureTokenAuth()
+        {
+            IocManager.Register<TokenAuthConfiguration>();
+            var tokenAuthConfig = IocManager.Resolve<TokenAuthConfiguration>();
+            tokenAuthConfig.SecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appConfiguration["Authentication:JwtBearer:SecurityKey"]));
+            tokenAuthConfig.Issuer = _appConfiguration["Authentication:JwtBearer:Issuer"];
+            tokenAuthConfig.Audience = _appConfiguration["Authentication:JwtBearer:Audience"];
+            tokenAuthConfig.SigningCredentials = new SigningCredentials(tokenAuthConfig.SecurityKey, SecurityAlgorithms.HmacSha256);
+            tokenAuthConfig.Expiration = TimeSpan.FromDays(1);
+        }
+
+        private void RegisterFileManagerService()
+        {
+            IocManager.Register<IFileManagerService, S3Service>(Abp.Dependency.DependencyLifeStyle.Singleton);
+            IocManager.Register<FileManagerConfiguration>();
+            var fileManagerConfig = IocManager.Resolve<FileManagerConfiguration>();
+            fileManagerConfig.Bucket = _appConfiguration[AppSettingNames.Aws_S3_AssetsBucket.ToAppSettingKey()];
+            fileManagerConfig.Region = _appConfiguration[AppSettingNames.Aws_Region.ToAppSettingKey()];
+        }
+
+        private void RegisterSmsService()
+        {
+            IocManager.Register<ISmsService, ITaggSmsService>(Abp.Dependency.DependencyLifeStyle.Singleton);
+            IocManager.Register<SmsConfiguration>();
+            var smsConfig = IocManager.Resolve<SmsConfiguration>();
+            smsConfig.Username = _appConfiguration[AppSettingNames.ITagg_Sms_Username.ToAppSettingKey()];
+            smsConfig.Password = _appConfiguration[AppSettingNames.ITagg_Sms_Password.ToAppSettingKey()];
+        }
+
+        private void RegisterEmailService()
+        {
+            IocManager.Register<IEmailService, SESService>(Abp.Dependency.DependencyLifeStyle.Singleton);
+            IocManager.Register<EmailConfiguration>();
+            var emailConfig = IocManager.Resolve<EmailConfiguration>();
+            emailConfig.FromName = _appConfiguration[AppSettingNames.Email_FromName.ToAppSettingKey()];
+            emailConfig.FromEmail = _appConfiguration[AppSettingNames.Email_FromEmail.ToAppSettingKey()];
         }
     }
 }
