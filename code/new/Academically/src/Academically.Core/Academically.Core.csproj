@@ -28,5 +28,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SourceCloud.Provider.Aws\SourceCloud.Provider.Aws.csproj" />
+    <ProjectReference Include="..\SourceCloud.Provider.ITagg\SourceCloud.Provider.ITagg.csproj" />
   </ItemGroup>
 </Project>
