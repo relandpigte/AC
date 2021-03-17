@@ -14,7 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using SourceCloud.Core.Configurations;
 using SourceCloud.Core.Services;
 using SourceCloud.Provider.Aws;
-using SourceCloud.Provider.ITagg;
+//using SourceCloud.Provider.ITagg;
 using System;
 using System.Text;
 
@@ -51,7 +51,7 @@ namespace Academically
 
             ConfigureTokenAuth();
             RegisterFileManagerService();
-            RegisterSmsService();
+            //RegisterSmsService();
             RegisterEmailService();
         }
 
@@ -86,14 +86,14 @@ namespace Academically
             fileManagerConfig.Region = _appConfiguration[AppSettingNames.Aws_Region.ToAppSettingKey()];
         }
 
-        private void RegisterSmsService()
-        {
-            IocManager.Register<ISmsService, ITaggSmsService>(Abp.Dependency.DependencyLifeStyle.Singleton);
-            IocManager.Register<SmsConfiguration>();
-            var smsConfig = IocManager.Resolve<SmsConfiguration>();
-            smsConfig.Username = _appConfiguration[AppSettingNames.ITagg_Sms_Username.ToAppSettingKey()];
-            smsConfig.Password = _appConfiguration[AppSettingNames.ITagg_Sms_Password.ToAppSettingKey()];
-        }
+        //private void RegisterSmsService()
+        //{
+        //    IocManager.Register<ISmsService, ITaggSmsService>(Abp.Dependency.DependencyLifeStyle.Singleton);
+        //    IocManager.Register<SmsConfiguration>();
+        //    var smsConfig = IocManager.Resolve<SmsConfiguration>();
+        //    smsConfig.Username = _appConfiguration[AppSettingNames.ITagg_Sms_Username.ToAppSettingKey()];
+        //    smsConfig.Password = _appConfiguration[AppSettingNames.ITagg_Sms_Password.ToAppSettingKey()];
+        //}
 
         private void RegisterEmailService()
         {
