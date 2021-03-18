@@ -20,7 +20,6 @@ export class PagedAndSortedRequestDto {
   template: '',
 })
 export abstract class PagedListingComponentBase<TEntityDto> extends AppComponentBase implements OnInit {
-
   public pageSize = 10;
   public pageNumber = 1;
   public totalPages = 1;
@@ -28,6 +27,8 @@ export abstract class PagedListingComponentBase<TEntityDto> extends AppComponent
   public isTableLoading = false;
   public pageSizeSelections = [5, 10, 20, 50];
   public sorting = '';
+
+  private _isFirstLoad = true;
 
   constructor(injector: Injector) {
     super(injector);
@@ -49,14 +50,15 @@ export abstract class PagedListingComponentBase<TEntityDto> extends AppComponent
   }
 
   public getDataPage(page: number): void {
+    this.isTableLoading = true;
     const req = new PagedAndSortedRequestDto();
     req.maxResultCount = this.pageSize;
     req.skipCount = (page - 1) * this.pageSize;
     req.sort = this.sorting;
 
-    this.isTableLoading = true;
     this.list(req, page, () => {
       this.isTableLoading = false;
+      this.scrollToTableTop();
     });
   }
 
@@ -71,4 +73,17 @@ export abstract class PagedListingComponentBase<TEntityDto> extends AppComponent
   }
 
   protected abstract list(request: PagedAndSortedRequestDto, pageNumber: number, finishedCallback: Function): void;
+
+  private scrollToTableTop(): void {
+    const scrollToElement = document.getElementsByClassName('p-scroll-tag');
+    if (this._isFirstLoad) {
+      this._isFirstLoad = false;
+    } else {
+      scrollToElement[0].scrollIntoView({
+        behavior: 'smooth',
+        block: "start",
+        inline: "start",
+      });
+    }
+  }
 }

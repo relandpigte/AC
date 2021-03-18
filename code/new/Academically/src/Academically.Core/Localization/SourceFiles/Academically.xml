@@ -1,6 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="PercentageOfPositiveReviewsFormulaDescription">
+      <![CDATA[
+        <i>
+          The <b>percentage of positive reviews</b> is calculated using the formula:<br />
+          Positives / (Positives + Negatives)
+        </i>
+      ]]>
+    </text>
+    <text name="Knowledge">Knowledge</text>
+    <text name="Professionalism">Professionalism</text>
+    <text name="Punctuality">Punctuality</text>
+    <text name="ValueForMoney">Value For Money</text>
+    <text name="Communication">Communication</text>
+    <text name="PositiveReviews">Positive Reviews</text>
+    <text name="NoReviewsFound">No Reviews Found</text>
+    <text name="Negative">Negative</text>
+    <text name="Neutral">Neutral</text>
+    <text name="Positive">Positive</text>
     <text name="SelectEducationLevel">Select Education Level</text>
     <text name="Grade">Grade</text>
     <text name="EducationLevel">Education Level</text>

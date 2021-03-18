@@ -1,0 +1,8 @@
+<div class="star-rating mr-1">
+  <span *ngFor="let rating of ratings" class="star-container">
+    <span class="fas fa-star"></span>
+  </span>
+  <span *ngIf="fractionRating" class="star-container">
+    <span [ngStyle]="{ 'width': fractionRating + '%' }" class="fas fa-star"></span>
+  </span>
+</div>

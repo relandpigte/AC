@@ -763,6 +763,262 @@ export class ProfilesServiceProxy {
 }
 
 @Injectable()
+export class RatingsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param studentId (optional) 
+     * @return Success
+     */
+    getStudentRatingSummary(studentId: number | undefined): Observable<StudentRatingSummaryDto> {
+        let url_ = this.baseUrl + "/api/services/app/Ratings/GetStudentRatingSummary?";
+        if (studentId === null)
+            throw new Error("The parameter 'studentId' cannot be null.");
+        else if (studentId !== undefined)
+            url_ += "studentId=" + encodeURIComponent("" + studentId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetStudentRatingSummary(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetStudentRatingSummary(<any>response_);
+                } catch (e) {
+                    return <Observable<StudentRatingSummaryDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<StudentRatingSummaryDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetStudentRatingSummary(response: HttpResponseBase): Observable<StudentRatingSummaryDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StudentRatingSummaryDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<StudentRatingSummaryDto>(<any>null);
+    }
+
+    /**
+     * @param tutorId (optional) 
+     * @return Success
+     */
+    getTutorRatingSummary(tutorId: number | undefined): Observable<TutorRatingSummaryDto> {
+        let url_ = this.baseUrl + "/api/services/app/Ratings/GetTutorRatingSummary?";
+        if (tutorId === null)
+            throw new Error("The parameter 'tutorId' cannot be null.");
+        else if (tutorId !== undefined)
+            url_ += "tutorId=" + encodeURIComponent("" + tutorId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTutorRatingSummary(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTutorRatingSummary(<any>response_);
+                } catch (e) {
+                    return <Observable<TutorRatingSummaryDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TutorRatingSummaryDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTutorRatingSummary(response: HttpResponseBase): Observable<TutorRatingSummaryDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TutorRatingSummaryDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TutorRatingSummaryDto>(<any>null);
+    }
+
+    /**
+     * @param studentId (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getStudentRatings(studentId: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<StudentRatingDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Ratings/GetStudentRatings?";
+        if (studentId === null)
+            throw new Error("The parameter 'studentId' cannot be null.");
+        else if (studentId !== undefined)
+            url_ += "StudentId=" + encodeURIComponent("" + studentId) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetStudentRatings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetStudentRatings(<any>response_);
+                } catch (e) {
+                    return <Observable<StudentRatingDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<StudentRatingDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetStudentRatings(response: HttpResponseBase): Observable<StudentRatingDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StudentRatingDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<StudentRatingDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param tutorId (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getTutorRatings(tutorId: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<TutorRatingDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Ratings/GetTutorRatings?";
+        if (tutorId === null)
+            throw new Error("The parameter 'tutorId' cannot be null.");
+        else if (tutorId !== undefined)
+            url_ += "TutorId=" + encodeURIComponent("" + tutorId) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTutorRatings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTutorRatings(<any>response_);
+                } catch (e) {
+                    return <Observable<TutorRatingDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TutorRatingDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTutorRatings(response: HttpResponseBase): Observable<TutorRatingDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TutorRatingDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TutorRatingDtoPagedResultDto>(<any>null);
+    }
+}
+
+@Injectable()
 export class RegistrationsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -1701,6 +1957,179 @@ export class TenantServiceProxy {
             }));
         }
         return _observableOf<TenantDto>(<any>null);
+    }
+}
+
+@Injectable()
+export class TestDataGeneratorServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param studentId (optional) 
+     * @param numberOfRatings (optional) 
+     * @return Success
+     */
+    generateTestRatingsForStudent(studentId: number | undefined, numberOfRatings: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/TestDataGenerator/GenerateTestRatingsForStudent?";
+        if (studentId === null)
+            throw new Error("The parameter 'studentId' cannot be null.");
+        else if (studentId !== undefined)
+            url_ += "studentId=" + encodeURIComponent("" + studentId) + "&";
+        if (numberOfRatings === null)
+            throw new Error("The parameter 'numberOfRatings' cannot be null.");
+        else if (numberOfRatings !== undefined)
+            url_ += "numberOfRatings=" + encodeURIComponent("" + numberOfRatings) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGenerateTestRatingsForStudent(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGenerateTestRatingsForStudent(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGenerateTestRatingsForStudent(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param tutorId (optional) 
+     * @param numberOfRatings (optional) 
+     * @return Success
+     */
+    generateTestRatingsForTutor(tutorId: number | undefined, numberOfRatings: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/TestDataGenerator/GenerateTestRatingsForTutor?";
+        if (tutorId === null)
+            throw new Error("The parameter 'tutorId' cannot be null.");
+        else if (tutorId !== undefined)
+            url_ += "tutorId=" + encodeURIComponent("" + tutorId) + "&";
+        if (numberOfRatings === null)
+            throw new Error("The parameter 'numberOfRatings' cannot be null.");
+        else if (numberOfRatings !== undefined)
+            url_ += "numberOfRatings=" + encodeURIComponent("" + numberOfRatings) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGenerateTestRatingsForTutor(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGenerateTestRatingsForTutor(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGenerateTestRatingsForTutor(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    generateTestUsers(): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/TestDataGenerator/GenerateTestUsers";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGenerateTestUsers(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGenerateTestUsers(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGenerateTestUsers(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -3244,6 +3673,394 @@ export class VerificationStatusDto implements IVerificationStatusDto {
 export interface IVerificationStatusDto {
     isEmailConfirmed: boolean;
     isPhoneNumberConfirmed: boolean;
+}
+
+export class StudentRatingSummaryDto implements IStudentRatingSummaryDto {
+    positivePercentage: number;
+    totalReviews: number;
+    totalPositiveReviews: number;
+    totalNeutralReviews: number;
+    totalNegativeReviews: number;
+
+    constructor(data?: IStudentRatingSummaryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.positivePercentage = _data["positivePercentage"];
+            this.totalReviews = _data["totalReviews"];
+            this.totalPositiveReviews = _data["totalPositiveReviews"];
+            this.totalNeutralReviews = _data["totalNeutralReviews"];
+            this.totalNegativeReviews = _data["totalNegativeReviews"];
+        }
+    }
+
+    static fromJS(data: any): StudentRatingSummaryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StudentRatingSummaryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["positivePercentage"] = this.positivePercentage;
+        data["totalReviews"] = this.totalReviews;
+        data["totalPositiveReviews"] = this.totalPositiveReviews;
+        data["totalNeutralReviews"] = this.totalNeutralReviews;
+        data["totalNegativeReviews"] = this.totalNegativeReviews;
+        return data; 
+    }
+
+    clone(): StudentRatingSummaryDto {
+        const json = this.toJSON();
+        let result = new StudentRatingSummaryDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IStudentRatingSummaryDto {
+    positivePercentage: number;
+    totalReviews: number;
+    totalPositiveReviews: number;
+    totalNeutralReviews: number;
+    totalNegativeReviews: number;
+}
+
+export class TutorRatingSummaryDto implements ITutorRatingSummaryDto {
+    totalRatingPercentage: number;
+    totalCommunicationRatings: number;
+    totalValueForMoneyRatings: number;
+    totalPunctualityRatings: number;
+    totalProfessionalismsRating: number;
+    totalKnowledgeRatings: number;
+    positivePercentage: number;
+    totalReviews: number;
+    totalPositiveReviews: number;
+    totalNeutralReviews: number;
+    totalNegativeReviews: number;
+
+    constructor(data?: ITutorRatingSummaryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalRatingPercentage = _data["totalRatingPercentage"];
+            this.totalCommunicationRatings = _data["totalCommunicationRatings"];
+            this.totalValueForMoneyRatings = _data["totalValueForMoneyRatings"];
+            this.totalPunctualityRatings = _data["totalPunctualityRatings"];
+            this.totalProfessionalismsRating = _data["totalProfessionalismsRating"];
+            this.totalKnowledgeRatings = _data["totalKnowledgeRatings"];
+            this.positivePercentage = _data["positivePercentage"];
+            this.totalReviews = _data["totalReviews"];
+            this.totalPositiveReviews = _data["totalPositiveReviews"];
+            this.totalNeutralReviews = _data["totalNeutralReviews"];
+            this.totalNegativeReviews = _data["totalNegativeReviews"];
+        }
+    }
+
+    static fromJS(data: any): TutorRatingSummaryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TutorRatingSummaryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalRatingPercentage"] = this.totalRatingPercentage;
+        data["totalCommunicationRatings"] = this.totalCommunicationRatings;
+        data["totalValueForMoneyRatings"] = this.totalValueForMoneyRatings;
+        data["totalPunctualityRatings"] = this.totalPunctualityRatings;
+        data["totalProfessionalismsRating"] = this.totalProfessionalismsRating;
+        data["totalKnowledgeRatings"] = this.totalKnowledgeRatings;
+        data["positivePercentage"] = this.positivePercentage;
+        data["totalReviews"] = this.totalReviews;
+        data["totalPositiveReviews"] = this.totalPositiveReviews;
+        data["totalNeutralReviews"] = this.totalNeutralReviews;
+        data["totalNegativeReviews"] = this.totalNegativeReviews;
+        return data; 
+    }
+
+    clone(): TutorRatingSummaryDto {
+        const json = this.toJSON();
+        let result = new TutorRatingSummaryDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITutorRatingSummaryDto {
+    totalRatingPercentage: number;
+    totalCommunicationRatings: number;
+    totalValueForMoneyRatings: number;
+    totalPunctualityRatings: number;
+    totalProfessionalismsRating: number;
+    totalKnowledgeRatings: number;
+    positivePercentage: number;
+    totalReviews: number;
+    totalPositiveReviews: number;
+    totalNeutralReviews: number;
+    totalNegativeReviews: number;
+}
+
+export enum RatingExperienceType {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+}
+
+export class StudentRatingDto implements IStudentRatingDto {
+    studentId: number;
+    experienceType: RatingExperienceType;
+    comments: string | undefined;
+    creationTime: moment.Moment;
+    reviewer: UserDto;
+    id: string;
+
+    constructor(data?: IStudentRatingDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.studentId = _data["studentId"];
+            this.experienceType = _data["experienceType"];
+            this.comments = _data["comments"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.reviewer = _data["reviewer"] ? UserDto.fromJS(_data["reviewer"]) : <any>undefined;
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): StudentRatingDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StudentRatingDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["studentId"] = this.studentId;
+        data["experienceType"] = this.experienceType;
+        data["comments"] = this.comments;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["reviewer"] = this.reviewer ? this.reviewer.toJSON() : <any>undefined;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): StudentRatingDto {
+        const json = this.toJSON();
+        let result = new StudentRatingDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IStudentRatingDto {
+    studentId: number;
+    experienceType: RatingExperienceType;
+    comments: string | undefined;
+    creationTime: moment.Moment;
+    reviewer: UserDto;
+    id: string;
+}
+
+export class StudentRatingDtoPagedResultDto implements IStudentRatingDtoPagedResultDto {
+    totalCount: number;
+    items: StudentRatingDto[] | undefined;
+
+    constructor(data?: IStudentRatingDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(StudentRatingDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): StudentRatingDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StudentRatingDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): StudentRatingDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new StudentRatingDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IStudentRatingDtoPagedResultDto {
+    totalCount: number;
+    items: StudentRatingDto[] | undefined;
+}
+
+export class TutorRatingDto implements ITutorRatingDto {
+    tutorId: number;
+    experienceType: RatingExperienceType;
+    comments: string | undefined;
+    creationTime: moment.Moment;
+    totalRatingPercentage: number;
+    reviewer: UserDto;
+    id: string;
+
+    constructor(data?: ITutorRatingDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.tutorId = _data["tutorId"];
+            this.experienceType = _data["experienceType"];
+            this.comments = _data["comments"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.totalRatingPercentage = _data["totalRatingPercentage"];
+            this.reviewer = _data["reviewer"] ? UserDto.fromJS(_data["reviewer"]) : <any>undefined;
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): TutorRatingDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TutorRatingDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["tutorId"] = this.tutorId;
+        data["experienceType"] = this.experienceType;
+        data["comments"] = this.comments;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["totalRatingPercentage"] = this.totalRatingPercentage;
+        data["reviewer"] = this.reviewer ? this.reviewer.toJSON() : <any>undefined;
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): TutorRatingDto {
+        const json = this.toJSON();
+        let result = new TutorRatingDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITutorRatingDto {
+    tutorId: number;
+    experienceType: RatingExperienceType;
+    comments: string | undefined;
+    creationTime: moment.Moment;
+    totalRatingPercentage: number;
+    reviewer: UserDto;
+    id: string;
+}
+
+export class TutorRatingDtoPagedResultDto implements ITutorRatingDtoPagedResultDto {
+    totalCount: number;
+    items: TutorRatingDto[] | undefined;
+
+    constructor(data?: ITutorRatingDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(TutorRatingDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): TutorRatingDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TutorRatingDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): TutorRatingDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new TutorRatingDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITutorRatingDtoPagedResultDto {
+    totalCount: number;
+    items: TutorRatingDto[] | undefined;
 }
 
 export class RegistrationDto implements IRegistrationDto {

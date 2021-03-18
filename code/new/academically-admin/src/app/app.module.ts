@@ -16,6 +16,7 @@ import { NgPipesModule } from 'ngx-pipes';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
+import { PopoverModule } from 'ngx-bootstrap/popover';
 
 // directives
 import { ChartDirective } from '@shared/directives/chart.directive';
@@ -84,6 +85,9 @@ import { CreateEditProfileEducationComponent } from './profile/profile-education
 import { ProfileEducationLevelsComponent } from './profile/profile-education/profile-education-levels/profile-education-levels.component';
 import { CreateEditProfileEducationLevelComponent } from './profile/profile-education/profile-education-levels/create-edit-profile-education-level/create-edit-profile-education-level.component';
 import { VerifyMobileComponent } from './widgets/verifications/verify-mobile/verify-mobile.component';
+import { ProfileStudentReviewsComponent } from './profile/profile-introduction/profile-student-reviews/profile-student-reviews.component';
+import { ProfileTutorReviewsComponent } from './profile/profile-introduction/profile-tutor-reviews/profile-tutor-reviews.component';
+import { StarRatingComponent } from './shared/components/star-rating/star-rating.component';
 
 @NgModule({
   declarations: [
@@ -147,6 +151,9 @@ import { VerifyMobileComponent } from './widgets/verifications/verify-mobile/ver
     ProfileEducationLevelsComponent,
     CreateEditProfileEducationLevelComponent,
     VerifyMobileComponent,
+    ProfileStudentReviewsComponent,
+    ProfileTutorReviewsComponent,
+    StarRatingComponent,
   ],
   imports: [
     CommonModule,
@@ -168,6 +175,7 @@ import { VerifyMobileComponent } from './widgets/verifications/verify-mobile/ver
     ImageCropperModule,
     TypeaheadModule.forRoot(),
     NgxIntlTelInputModule,
+    PopoverModule.forRoot(),
   ],
   providers: [
     ProfileGuard,

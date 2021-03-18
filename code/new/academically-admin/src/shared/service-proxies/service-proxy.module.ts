@@ -19,6 +19,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.UserEducationsServiceProxy,
         ApiServiceProxies.EducationLevelsServiceProxy,
         ApiServiceProxies.PhoneVerificationsServiceProxy,
+        ApiServiceProxies.RatingsServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

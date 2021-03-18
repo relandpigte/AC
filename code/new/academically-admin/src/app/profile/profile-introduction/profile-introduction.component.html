@@ -1,6 +1,8 @@
 <div class="row">
   <div class="col-md-8">
     <app-profile-introduction-about></app-profile-introduction-about>
+    <app-profile-tutor-reviews *ngIf="permission.isGranted('Pages.Profile.Introduction.Reviews') && isTutor"></app-profile-tutor-reviews>
+    <app-profile-student-reviews *ngIf="permission.isGranted('Pages.Profile.Introduction.Reviews') && !isTutor"></app-profile-student-reviews>
   </div>
   <div class="col-md-4">
     <app-profile-introduction-summary></app-profile-introduction-summary>

@@ -17,4 +17,5 @@
 	<include file="ddml-new/ddml.2021-03-08-06.alter-universities-add-isreviewed-field.xml"/>
 	<include file="ddml-new/ddml.2021-03-09-01.create-phoneverifications-table.xml"/>
 	<include file="ddml-new/ddml.2021-03-15-01.alter-users-add-dateofbirth-field.xml"/>
+	<include file="ddml-new/ddml.2021-03-16-01.create-ratings-tables.xml"/>
 </databaseChangeLog>

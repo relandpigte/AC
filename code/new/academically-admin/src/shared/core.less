@@ -26,6 +26,10 @@ typeahead-container {
   z-index: 1060 !important;
 }
 
+popover-container {
+  max-width: 100% !important;
+}
+
 /* custom component styles end */
 
 body {
@@ -261,6 +265,48 @@ input[type='file'].inline-file-upload {
 
 .overflow-visible {
   overflow: visible !important;
+}
+
+.card-table {
+  tr:first-child {
+    td {
+      border-top: none;
+    }
+  }
+}
+
+.rating-experience {
+  display: inline-block;
+  width  : 26px;
+  height : 26px;
+
+  &>* {
+    display        : flex;
+    align-items    : center;
+    justify-content: center;
+    width          : 100%;
+    height         : 100%;
+    border-radius  : 50%;
+
+    &.rating-experience-positive {
+      color           : #00d97e;
+      background-color: #ccf7e5;
+    }
+
+    &.rating-experience-neutral {
+      color           : #39afd1;
+      background-color: #d7eff6;
+    }
+
+    &.rating-experience-negative {
+      color           : #e63757;
+      background-color: #fad7dd;
+    }
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 @media (min-width: 576px) {
