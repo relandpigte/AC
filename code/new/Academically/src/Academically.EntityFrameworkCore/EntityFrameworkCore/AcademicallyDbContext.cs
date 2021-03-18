@@ -15,6 +15,9 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<UserEducation> UserEducations { get; set; }
         public virtual DbSet<UserEducationLevel> UserEducationLevels { get; set; }
         public virtual DbSet<PhoneVerification> PhoneVerifications { get; set; }
+        public virtual DbSet<StudentRating> StudentRatings { get; set; }
+        public virtual DbSet<TutorRating> TutorRatings { get; set; }
+        public virtual DbSet<TutorRatingArea> TutorRatingAreas { get; set; }
 
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)

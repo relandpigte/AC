@@ -21,7 +21,10 @@ namespace Academically.Authorization
 
 
             var profilePermission = context.CreatePermission(PermissionNames.Pages_Profile, L("Profile"));
-            profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Introduction, L("Introduction"));
+
+            var profileIntoductionPermission = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Introduction, L("Introduction"));
+            profileIntoductionPermission.CreateChildPermission(PermissionNames.Pages_Profile_Introduction_Reviews, L("Reviews"));
+
             profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Services, L("Services"));
 
             var profileEducationPermission = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Education, L("Education"));

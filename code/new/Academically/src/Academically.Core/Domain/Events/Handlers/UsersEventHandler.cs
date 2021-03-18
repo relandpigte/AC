@@ -25,9 +25,12 @@ namespace Academically.Domain.Events.Handlers
         [UnitOfWork]
         public async Task HandleEventAsync(EntityCreatedEventData<User> eventData)
         {
-            var user = await _usersRepository.GetAsync(eventData.Entity.Id);
-            user.IsLockoutEnabled = false;
-            await _usersRepository.UpdateAsync(user);
+            if (eventData.Entity.IsLockoutEnabled)
+            {
+                var user = await _usersRepository.GetAsync(eventData.Entity.Id);
+                user.IsLockoutEnabled = false;
+                await _usersRepository.UpdateAsync(user);
+            }
         }
     }
 }

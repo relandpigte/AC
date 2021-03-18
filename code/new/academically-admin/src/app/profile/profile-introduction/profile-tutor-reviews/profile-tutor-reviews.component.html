@@ -1,0 +1,162 @@
+<div class="card p-scroll-tag">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="card-header-title">{{ user.name }} {{ 'Reviews' | localize }}</h4>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-sm btn-white" type="button">
+          <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-header h-auto" [busy]="isSummaryLoading">
+    <div class="d-inline-block mt-3 mb-3">
+      <div class="row align-items-center">
+        <div class="col">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <a href="javascript:;" class="avatar avatar-md">
+                <img [src]="getProfilePicture('')" alt="..." class="avatar-img rounded-circle">
+              </a>
+            </div>
+            <div class="col ml-n2">
+              <h4 class="mb-0">
+                <a href="javascript:;">
+                  {{ tutorRatingSummary.positivePercentage }}% {{ 'PositiveReviews' | localize}}
+                </a>
+                <i class="fe fe-alert-circle text-info ml-1 align-bottom cursor-pointer"
+                  [popover]="formulaPopoverTemplate" container="body" placement="top" triggers="mouseenter:mouseleave">
+                </i>
+              </h4>
+              <app-star-rating [actualRating]="tutorRatingSummary.totalRatingPercentage"></app-star-rating>
+              <span class="text-muted small">{{ tutorRatingSummary.totalRatingPercentage }}/5</span>
+              <p class="small text-muted mb-0">{{ tutorRatingSummary.totalReviews }} {{ 'Reviews' | localize}}</p>
+            </div>
+            <div class="col-12 mt-4">
+              <div class="row">
+                <div class="col-auto text-center">
+                  <div class="rating-experience">
+                    <span class="rating-experience-positive font-size-sm">
+                      <i class="fas fa-plus"></i>
+                    </span>
+                  </div>
+                  <span class="h5 mb-0 ml-2">{{ tutorRatingSummary.totalPositiveReviews }}</span>
+                  <p class="h5 mb-0 mt-2 ml-2">{{ 'Positive' | localize}}</p>
+                </div>
+                <div class="col-auto text-center">
+                  <div class="rating-experience">
+                    <span class="rating-experience-neutral font-size-sm">
+                      <i class="fas fa-circle"></i>
+                    </span>
+                  </div>
+                  <span class="h5 mb-0 ml-2">{{ tutorRatingSummary.totalNeutralReviews }}</span>
+                  <p class="h5 mb-0 mt-2 ml-2">{{ 'Neutral' | localize}}</p>
+                </div>
+                <div class="col-auto text-center">
+                  <div class="rating-experience">
+                    <span class="rating-experience-negative font-size-sm">
+                      <i class="fas fa-minus"></i>
+                    </span>
+                  </div>
+                  <span class="h5 mb-0 ml-2">{{ tutorRatingSummary.totalNegativeReviews }}</span>
+                  <p class="h5 mb-0 mt-2 ml-2">{{ 'Negative' | localize}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-auto">
+          <table>
+            <tr>
+              <td class="pr-3">{{ tutorRatingSummary.totalCommunicationRatings }}/5</td>
+              <td>
+                <app-star-rating [actualRating]="tutorRatingSummary.totalCommunicationRatings"></app-star-rating>
+              </td>
+              <td class="text-muted pl-4">{{ 'Communication' | localize}}</td>
+            </tr>
+            <tr>
+              <td class="pr-3">{{ tutorRatingSummary.totalValueForMoneyRatings }}/5</td>
+              <td>
+                <app-star-rating [actualRating]="tutorRatingSummary.totalValueForMoneyRatings"></app-star-rating>
+              </td>
+              <td class="text-muted pl-4">{{ 'ValueForMoney' | localize}}</td>
+            </tr>
+            <tr>
+              <td class="pr-3">{{ tutorRatingSummary.totalPunctualityRatings }}/5</td>
+              <td>
+                <app-star-rating [actualRating]="tutorRatingSummary.totalPunctualityRatings"></app-star-rating>
+              </td>
+              <td class="text-muted pl-4">{{ 'Punctuality' | localize}}</td>
+            </tr>
+            <tr>
+              <td class="pr-3">{{ tutorRatingSummary.totalProfessionalismsRating }}/5</td>
+              <td>
+                <app-star-rating [actualRating]="tutorRatingSummary.totalProfessionalismsRating"></app-star-rating>
+              </td>
+              <td class="text-muted pl-4">{{ 'Professionalism' | localize}}</td>
+            </tr>
+            <tr>
+              <td class="pr-3">{{ tutorRatingSummary.totalKnowledgeRatings }}/5</td>
+              <td>
+                <app-star-rating [actualRating]="tutorRatingSummary.totalKnowledgeRatings"></app-star-rating>
+              </td>
+              <td class="text-muted pl-4">{{ 'Knowledge' | localize}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body pt-0 pb-0" [busy]="isTableLoading">
+    <table class="table card-table">
+      <tr *ngFor="let tutorRating of tutorRatings
+        | paginate: { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }">
+        <td class="pt-4 pb-4">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <a href="javascript:;" class="avatar avatar-md">
+                <img [src]="getProfilePicture('')" alt="..." class="avatar-img rounded-circle">
+              </a>
+            </div>
+            <div class="col ml-n2">
+              <h4 class="mb-0">
+                <a href="javascript:;">{{ tutorRating.reviewer.fullName }}</a>
+              </h4>
+              <p class="small text-muted mb-0">University of Oxford</p>
+            </div>
+            <div class="col-auto">
+              <h5 class="text-muted">{{ tutorRating.creationTime | date: 'd MMMM y' }}</h5>
+            </div>
+            <div class="col-12 mt-3">
+              <app-star-rating [actualRating]="tutorRating.totalRatingPercentage"></app-star-rating>
+              <span class="text-muted small mr-2">{{ tutorRating.totalRatingPercentage }}/5</span>
+              <span *ngIf="tutorRating.experienceType === RatingExperienceType._0" class="badge badge-soft-success">
+                <i class="fas fa-plus"></i>
+                {{ 'Positive' | localize}}
+              </span>
+              <span *ngIf="tutorRating.experienceType === RatingExperienceType._1" class="badge badge-soft-info">
+                <i class="fas fa-circle"></i>
+                {{ 'Neutral' | localize}}
+              </span>
+              <span *ngIf="tutorRating.experienceType === RatingExperienceType._2" class="badge badge-soft-danger">
+                <i class="fas fa-minus"></i>
+                {{ 'Negative' | localize}}
+              </span>
+              <div class="mt-2" [innerHtml]="tutorRating.comments"></div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="tutorRatings && !tutorRatings.length">
+        <p class="text-muted m-4 text-center">{{ 'NoReviewsFound' | localize }}</p>
+      </tr>
+    </table>
+  </div>
+  <abp-pagination-controls *ngIf="tutorRatings && tutorRatings.length" id="server" (pageChange)="getDataPage($event)">
+  </abp-pagination-controls>
+</div>
+<ng-template #formulaPopoverTemplate>
+  <p class="m-0" [innerHtml]="'PercentageOfPositiveReviewsFormulaDescription' | localize"></p>
+</ng-template>
