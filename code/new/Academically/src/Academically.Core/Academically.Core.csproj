@@ -20,7 +20,6 @@
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.3.1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Domain\Services\" />
     <Folder Include="Domain\Enums\" />
     <Folder Include="Domain\Entities\" />
     <Folder Include="Domain\Services\Registrations\" />

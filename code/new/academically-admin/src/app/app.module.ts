@@ -88,6 +88,7 @@ import { VerifyMobileComponent } from './widgets/verifications/verify-mobile/ver
 import { ProfileStudentReviewsComponent } from './profile/profile-introduction/profile-student-reviews/profile-student-reviews.component';
 import { ProfileTutorReviewsComponent } from './profile/profile-introduction/profile-tutor-reviews/profile-tutor-reviews.component';
 import { StarRatingComponent } from './shared/components/star-rating/star-rating.component';
+import { ProfileIntroductionMetricsComponent } from './profile/profile-introduction/profile-introduction-metrics/profile-introduction-metrics.component';
 
 @NgModule({
   declarations: [
@@ -154,6 +155,7 @@ import { StarRatingComponent } from './shared/components/star-rating/star-rating
     ProfileStudentReviewsComponent,
     ProfileTutorReviewsComponent,
     StarRatingComponent,
+    ProfileIntroductionMetricsComponent,
   ],
   imports: [
     CommonModule,
