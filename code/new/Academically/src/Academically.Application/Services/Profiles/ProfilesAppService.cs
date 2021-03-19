@@ -5,14 +5,20 @@ using Abp.Extensions;
 using Abp.IO.Extensions;
 using Abp.Timing;
 using Academically.Authorization;
+using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 using Academically.Configuration;
+using Academically.Domain.Entities;
+using Academically.Domain.Enums;
+using Academically.Extensions;
 using Academically.Services.Profiles.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SourceCloud.Core.Services;
+using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Academically.Services.Profiles
@@ -22,18 +28,27 @@ namespace Academically.Services.Profiles
     {
         private readonly UserManager _userManager;
         private readonly IRepository<User, long> _usersRepository;
+        private readonly IRepository<UserEducationLevel, Guid> _userEducationLevelsRepository;
+        private readonly IRepository<StudentRating, Guid> _studentRatingsRepository;
+        private readonly IRepository<TutorRating, Guid> _tutorRatingsRepository;
         private readonly ISettingManager _settingManager;
         private readonly IFileManagerService _fileManagerService;
 
         public ProfilesAppService(
             UserManager userManager,
             IRepository<User, long> usersRepository,
+            IRepository<UserEducationLevel, Guid> userEducationLevelsRepository,
+            IRepository<StudentRating, Guid> studentRatingsRepository,
+            IRepository<TutorRating, Guid> tutorRatingsRepository,
             ISettingManager settingManager,
             IFileManagerService fileManagerService
             )
         {
             _userManager = userManager;
             _usersRepository = usersRepository;
+            _userEducationLevelsRepository = userEducationLevelsRepository;
+            _studentRatingsRepository = studentRatingsRepository;
+            _tutorRatingsRepository = tutorRatingsRepository;
             _settingManager = settingManager;
             _fileManagerService = fileManagerService;
         }
@@ -63,6 +78,61 @@ namespace Academically.Services.Profiles
                 IsPhoneNumberConfirmed = user.IsPhoneNumberConfirmed,
             };
             return verificationStatus;
+        }
+
+        public async Task<ProfileMetricDto> GetMetrics(long id)
+        {
+            // TODO: Replace static values with proper datta
+            // once the schemas are defined for each metric
+            var profileMetric = new ProfileMetricDto() {
+                TotalHours = 521,
+                TotalHoursChange = "+3.5%",
+                UserType = "Researcher",
+            };
+
+            var user = await UserManager.GetUserByIdAsync(id);
+
+            var highestAcademicLevel = await _userEducationLevelsRepository.GetAll()
+                .Where(e => e.UserEducation.UserId == id)
+                .OrderByDescending(e => e.EducationLevel.DisplayOrder)
+                .Select(e => e.EducationLevel)
+                .FirstOrDefaultAsync();
+            if (highestAcademicLevel != null)
+            {
+                profileMetric.AcademicLevel = highestAcademicLevel.ShortName;
+            }
+
+            int totalPositiveReviews = 0;
+            int totalNegativeReviews = 0;
+            if (await UserManager.IsInRoleAsync(user, StaticRoleNames.Tenants.Tutor))
+            {
+                var tutorRatingsQuery = _tutorRatingsRepository.GetAll()
+                    .Where(e => e.TutorId == id);
+                profileMetric.TotalReviews = await tutorRatingsQuery.CountAsync();
+                if (profileMetric.TotalReviews > 0)
+                {
+                    totalPositiveReviews = await _tutorRatingsRepository.CountAsync(e => e.ExperienceType == RatingExperienceType.Positive);
+                    totalNegativeReviews = await _tutorRatingsRepository.CountAsync(e => e.ExperienceType == RatingExperienceType.Negative);
+                }
+            }
+            else
+            {
+                var studentRatingsQuery = _studentRatingsRepository.GetAll()
+                    .Where(e => e.StudentId == id);
+                profileMetric.TotalReviews = await studentRatingsQuery.CountAsync();
+                if (profileMetric.TotalReviews > 0)
+                {
+                    totalPositiveReviews = await _studentRatingsRepository.CountAsync(e => e.ExperienceType == RatingExperienceType.Positive);
+                    totalNegativeReviews = await _studentRatingsRepository.CountAsync(e => e.ExperienceType == RatingExperienceType.Negative);
+                }
+            }
+            if (totalPositiveReviews > 0 || totalNegativeReviews > 0)
+            {
+                profileMetric.PositiveReviewsPercentage = Math.Round(totalPositiveReviews.ToDecimal() 
+                    / (totalPositiveReviews.ToDecimal() + totalNegativeReviews.ToDecimal()) * 100, 1);
+            }
+
+            return profileMetric;
         }
 
         public async Task UpdateWebsiteUrl(string websiteUrl)

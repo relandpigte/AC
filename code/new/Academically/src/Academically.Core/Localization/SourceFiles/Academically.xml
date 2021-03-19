@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Metrics">Metrics</text>
+    <text name="UserType">User Type</text>
+    <text name="AcademicLevel">Academic Level</text>
     <text name="PercentageOfPositiveReviewsFormulaDescription">
       <![CDATA[
         <i>

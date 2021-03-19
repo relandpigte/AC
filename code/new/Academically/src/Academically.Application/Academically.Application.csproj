@@ -16,8 +16,6 @@
   <ItemGroup>
     <Folder Include="Services\Registrations\" />
     <Folder Include="Services\Registrations\Dto\" />
-    <Folder Include="Services\Profiles\" />
-    <Folder Include="Services\Profiles\Dto\" />
     <Folder Include="Services\Universities\" />
     <Folder Include="Services\Universities\Dto\" />
     <Folder Include="Services\EducationLevels\" />

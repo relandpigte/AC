@@ -9,6 +9,7 @@ namespace Academically.Services.Profiles
     {
         Task<UserDto> Get(long id);
         Task<VerificationStatusDto> GetVerificationStatus(long id);
+        Task<ProfileMetricDto> GetMetrics(long id);
         Task UpdateWebsiteUrl(string websiteUrl);
         Task UpdateAbout(string about);
         Task<string> UpdateCoverPhoto(UpdateCoverPhotoInput input);

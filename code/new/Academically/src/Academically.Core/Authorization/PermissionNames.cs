@@ -16,6 +16,7 @@
 
         public const string Pages_Profile = "Pages.Profile";
         public const string Pages_Profile_Introduction = "Pages.Profile.Introduction";
+        public const string Pages_Profile_Introduction_Metrics = "Pages.Profile.Introduction.Metrics";
         public const string Pages_Profile_Introduction_Reviews = "Pages.Profile.Introduction.Reviews";
 
         public const string Pages_Profile_Services = "Pages.Profile.Services";
