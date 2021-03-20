@@ -4,7 +4,10 @@
     "downlevelIteration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": [ "es6", "dom" ],
+    "lib": [
+      "es6",
+      "dom"
+    ],
     "mapRoot": "./",
     "module": "esnext",
     "skipLibCheck": true,
@@ -17,10 +20,18 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@abp/*": [ "../node_modules/abp-ng2-module/dist/src/*" ],
-      "@app/*": [ "./app/*" ],
-      "@shared/*": [ "./shared/*" ],
-      "@node_modules/*": [ "../node_modules/*" ]
+      "@abp/*": [
+        "../node_modules/abp-ng2-module/dist/src/*"
+      ],
+      "@app/*": [
+        "./app/*"
+      ],
+      "@shared/*": [
+        "./shared/*"
+      ],
+      "@node_modules/*": [
+        "../node_modules/*"
+      ]
     }
   },
   "files": [
@@ -30,5 +41,8 @@
   "include": [
     "src/**/*.d.ts",
     "typings.d.ts"
+  ],
+  "exclude": [
+    "**/*.stories.*"
   ]
 }
