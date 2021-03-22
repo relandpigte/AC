@@ -15,12 +15,12 @@ namespace SourceCloud.Provider.Aws
         private readonly IAmazonS3 _client;
         private readonly FileManagerConfiguration _configuration;
 
-        private string bucket;
+        private string _bucket;
 
         public S3Service(FileManagerConfiguration configuration, IConfiguration awsConfiguration)
         {
             _configuration = configuration;
-            bucket = configuration.Bucket;
+            _bucket = configuration.Bucket;
             var options = awsConfiguration.GetAWSOptions();
             _client = options.CreateServiceClient<IAmazonS3>();
         }
@@ -34,7 +34,7 @@ namespace SourceCloud.Provider.Aws
 
             GetObjectRequest request = new GetObjectRequest
             {
-                BucketName = bucket,
+                BucketName = _bucket,
                 Key = fileName,
             };
             using (GetObjectResponse response = await _client.GetObjectAsync(request))
@@ -53,12 +53,14 @@ namespace SourceCloud.Provider.Aws
             }
         }
 
-        public async Task UploadAsync(string fileName, byte[] fileBytes, string folder = null)
+        public async Task UploadAsync(string fileName, string type, byte[] fileBytes, string folder = null, bool isSecured = false)
         {
             if (!string.IsNullOrWhiteSpace(folder))
             {
                 fileName = $"{folder}/{fileName}";
             }
+
+            string bucket = isSecured ? _configuration.SecuredBucket : _bucket;
 
             var fileTransferUtility = new TransferUtility(_client);
             using (MemoryStream ms = new MemoryStream())
@@ -67,7 +69,6 @@ namespace SourceCloud.Provider.Aws
                 ms.Seek(0, SeekOrigin.Begin);
 
                 string extension = Path.GetExtension(fileName);
-                string contentType = extension == ".png" ? "image/png" : "images/jpeg";
                 var fileTransferUtilityRequest = new TransferUtilityUploadRequest
                 {
                     BucketName = bucket,
@@ -75,9 +76,13 @@ namespace SourceCloud.Provider.Aws
                     StorageClass = S3StorageClass.Standard,
                     PartSize = fileBytes.Length,
                     Key = fileName,
-                    CannedACL = S3CannedACL.PublicRead,
-                    ContentType = contentType,
+                    ContentType = type,
                 };
+
+                if (!isSecured)
+                {
+                    fileTransferUtilityRequest.CannedACL = S3CannedACL.PublicRead;
+                }
 
                 await fileTransferUtility.UploadAsync(fileTransferUtilityRequest);
             }
@@ -89,7 +94,7 @@ namespace SourceCloud.Provider.Aws
             {
                 fileName = $"{folder}/{fileName}";
             }
-            await _client.DeleteObjectAsync(bucket, fileName);
+            await _client.DeleteObjectAsync(_bucket, fileName);
         }
 
         public void Dispose()
@@ -115,7 +120,7 @@ namespace SourceCloud.Provider.Aws
 
         public string GetDirectoryUrl()
         {
-            return $"https://{bucket}.s3.{_configuration.Region}.amazonaws.com";
+            return $"https://{_bucket}.s3.{_configuration.Region}.amazonaws.com";
         }
     }
 }

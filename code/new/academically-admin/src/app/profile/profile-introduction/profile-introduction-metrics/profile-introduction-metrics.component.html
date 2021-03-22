@@ -6,7 +6,7 @@
           <div class="col">
             <h6 class="text-uppercase text-muted mb-2">{{ 'TotalHours' | localize }}</h6>
             <span class="h2 mb-0 align-middle">{{ profileMetric.totalHours }}</span>
-            <span class="badge badge-soft-success ml-2">{{ profileMetric.totalHoursChange }}&nbsp;</span>
+            <span class="badge badge-soft-success ml-2">{{ profileMetric.totalHoursChange }}</span>
           </div>
           <div class="col-auto">
             <span class="h2 fe fe-briefcase text-muted mb-0"></span>
@@ -22,7 +22,8 @@
         <div class="row align-items-center">
           <div class="col">
             <h6 class="text-uppercase text-muted mb-2">{{ 'AcademicLevel' | localize }}</h6>
-            <span class="h2 mb-0 align-middle">{{ profileMetric.academicLevel }}&nbsp;</span>
+            <span class="h2 mb-0 align-middle">{{ profileMetric.academicLevel ? profileMetric.academicLevel : '-'
+              }}</span>
           </div>
           <div class="col-auto">
             <span class="h2 fe fe-clock text-muted mb-0"></span>
@@ -38,7 +39,7 @@
         <div class="row align-items-center">
           <div class="col">
             <h6 class="text-uppercase text-muted mb-2">{{ 'UserType' | localize }}</h6>
-            <span class="h2 mb-0 align-middle">{{ profileMetric.userType }}&nbsp;</span>
+            <span class="h2 mb-0 align-middle">{{ profileMetric.userType }}</span>
           </div>
           <div class="col-auto">
             <span class="card-fas fas fa-pound-sign text-muted mb-0"></span>
@@ -55,7 +56,8 @@
           <div class="col">
             <h6 class="text-uppercase text-muted mb-2">{{ 'PositiveReviews' | localize }}</h6>
             <span class="h2 mb-0 align-middle">{{ profileMetric.positiveReviewsPercentage }}%</span>
-            <span class="badge badge-soft-success ml-2">{{ profileMetric.totalReviews }} {{ 'Reviews' | localize }}</span>
+            <span class="badge badge-soft-success ml-2">{{ profileMetric.totalReviews }} {{ 'Reviews' | localize
+              }}</span>
           </div>
           <div class="col-auto">
             <span class="h2 fe fe-star text-muted mb-0"></span>

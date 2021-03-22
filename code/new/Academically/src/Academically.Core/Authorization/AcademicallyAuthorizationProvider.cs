@@ -33,6 +33,9 @@ namespace Academically.Authorization
             profileEducationPermission.CreateChildPermission(PermissionNames.Pages_Profile_Education_Update, L("Update"));
             profileEducationPermission.CreateChildPermission(PermissionNames.Pages_Profile_Education_Delete, L("Delete"));
 
+            var profileEducationQualificationsPermission = profileEducationPermission.CreateChildPermission(PermissionNames.Pages_Profile_Education_Qualifications, L("Qualifications"));
+            profileEducationQualificationsPermission.CreateChildPermission(PermissionNames.Pages_Profile_Education_Qualifications_Create, L("Create"));
+
             profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Research, L("Research"));
             profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_IndustryExperience, L("IndustryExperience"));
 

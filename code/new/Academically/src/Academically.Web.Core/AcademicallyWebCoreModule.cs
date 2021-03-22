@@ -83,6 +83,7 @@ namespace Academically
             IocManager.Register<FileManagerConfiguration>();
             var fileManagerConfig = IocManager.Resolve<FileManagerConfiguration>();
             fileManagerConfig.Bucket = _appConfiguration[AppSettingNames.Aws_S3_AssetsBucket.ToAppSettingKey()];
+            fileManagerConfig.SecuredBucket = _appConfiguration[AppSettingNames.Aws_S3_SecureAssetsBucket.ToAppSettingKey()];
             fileManagerConfig.Region = _appConfiguration[AppSettingNames.Aws_Region.ToAppSettingKey()];
         }
 

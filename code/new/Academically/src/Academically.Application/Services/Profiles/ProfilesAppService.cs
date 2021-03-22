@@ -161,7 +161,7 @@ namespace Academically.Services.Profiles
             using (var stream = input.CoverPhoto.OpenReadStream())
             {
                 var fileBytes = stream.GetAllBytes();
-                await _fileManagerService.UploadAsync(fileName, fileBytes, folder);
+                await _fileManagerService.UploadAsync(fileName, input.CoverPhoto.ContentType, fileBytes, folder);
                 oldFileName = user.CoverPhotoFileName;
                 user.CoverPhotoFileName = fileName;
             }

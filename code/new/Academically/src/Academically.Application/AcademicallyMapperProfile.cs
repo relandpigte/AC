@@ -1,6 +1,8 @@
 ﻿using Academically.Domain.Entities;
 using Academically.Services.UserEducations.Dto;
+using Academically.Services.UserQualifications.Dto;
 using AutoMapper;
+using System.Linq;
 
 namespace Academically
 {
@@ -22,6 +24,11 @@ namespace Academically
                     opt.PreCondition(src => src.University != null);
                     opt.MapFrom(src => src.University.CountryCode);
                 });
+            //CreateMap<UserQualification, UserQualificationDto>()
+            //    .ForMember(dest => dest.Documents, opt => {
+            //        opt.PreCondition(src => src.UserQualificationDocuments != null);
+            //        opt.MapFrom(src => src.UserQualificationDocuments.Select(e => e.Document));
+            //    });
         }
     }
 }

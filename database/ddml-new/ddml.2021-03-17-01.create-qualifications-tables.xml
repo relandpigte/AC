@@ -1,0 +1,104 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="danie (generated)" id="1616132749521-1">
+        <createTable tableName="academicallydocuments">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OriginalFileName" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FileType" type="VARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DocumentType" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616132749521-2">
+        <createTable tableName="academicallyuserqualificationdocuments">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UserQualificationId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DocumentId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsReviewed" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616132749521-3">
+        <createTable tableName="academicallyuserqualifications">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="ProfessionalCertificateOrAward" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ConferringOrganization" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Summary" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="StartYear" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="GradeAttained" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616132749521-4">
+        <createIndex indexName="FK_Documents_Users_CreatorUserId_idx" tableName="academicallydocuments">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616132749521-5">
+        <createIndex indexName="FK_UQD_Documents_DocumentId_idx" tableName="academicallyuserqualificationdocuments">
+            <column name="DocumentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616132749521-6">
+        <createIndex indexName="FK_UQD_UserQualifications_UserQualificationId_idx" tableName="academicallyuserqualificationdocuments">
+            <column name="UserQualificationId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616132749521-7">
+        <createIndex indexName="FK_UserQualifications_Users_CreatorUserId_idx" tableName="academicallyuserqualifications">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616132749521-8">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallydocuments" constraintName="FK_Documents_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616132749521-9">
+        <addForeignKeyConstraint baseColumnNames="DocumentId" baseTableName="academicallyuserqualificationdocuments" constraintName="FK_UQD_Documents_DocumentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallydocuments" validate="true"/>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616132749521-10">
+        <addForeignKeyConstraint baseColumnNames="UserQualificationId" baseTableName="academicallyuserqualificationdocuments" constraintName="FK_UQD_UserQualifications_UserQualificationId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyuserqualifications" validate="true"/>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616132749521-11">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallyuserqualifications" constraintName="FK_UserQualifications_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
