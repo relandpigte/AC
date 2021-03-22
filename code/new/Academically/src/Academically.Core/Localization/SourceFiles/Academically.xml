@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Qualifications">Qualifications</text>
+    <text name="UploadEvidencePanelHeader">Upload Evidence of Qualification Attained</text>
+    <text name="GradeAttained">Grade Attained</text>
+    <text name="ConferringOrganization">Conferring Organization</text>
+    <text name="ProfessionalCertificateOrAward">Professional Certificate Or Award</text>
+    <text name="AddCourse">Add Course</text>
+    <text name="OtherCourses">Other Courses</text>
+    <text name="DropFileOrClickHereToUpload">Drop file or click here to upload</text>
     <text name="Metrics">Metrics</text>
     <text name="UserType">User Type</text>
     <text name="AcademicLevel">Academic Level</text>

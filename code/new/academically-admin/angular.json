@@ -42,6 +42,7 @@
               "src/assets/themes/dashkit/libs/flatpickr/dist/flatpickr.min.css",
               "src/assets/themes/dashkit/libs/quill/dist/quill.core.css",
               "src/assets/themes/dashkit/libs/highlightjs/styles/vs2015.css",
+              "src/assets/themes/dashkit/css/theme.min.css",
               "src/shared/core.less"
             ],
             "scripts": [
@@ -55,7 +56,6 @@
               "src/assets/themes/dashkit/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js",
               "src/assets/themes/dashkit/libs/autosize/dist/autosize.min.js",
               "src/assets/themes/dashkit/libs/chart.js/dist/Chart.min.js",
-              "src/assets/themes/dashkit/libs/dropzone/dist/min/dropzone.min.js",
               "src/assets/themes/dashkit/libs/flatpickr/dist/flatpickr.min.js",
               "src/assets/themes/dashkit/libs/highlightjs/highlight.pack.min.js",
               "src/assets/themes/dashkit/libs/jquery-mask-plugin/dist/jquery.mask.min.js",

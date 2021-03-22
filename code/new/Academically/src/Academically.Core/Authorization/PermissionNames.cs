@@ -26,6 +26,9 @@
         public const string Pages_Profile_Education_Update = "Pages.Profile.Education.Update";
         public const string Pages_Profile_Education_Delete = "Pages.Profile.Education.Delete";
 
+        public const string Pages_Profile_Education_Qualifications = "Pages.Profile.Education.Qualifications";
+        public const string Pages_Profile_Education_Qualifications_Create = "Pages.Profile.Education.Qualifications.Create";
+
         public const string Pages_Profile_Research = "Pages.Profile.Research";
         public const string Pages_Profile_IndustryExperience = "Pages.Profile.IndustryExperience";
 

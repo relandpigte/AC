@@ -18,8 +18,10 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 
+
 // directives
 import { ChartDirective } from '@shared/directives/chart.directive';
+import { DragClassUpdaterDirective } from '@shared/directives/drag-class-updater.directive';
 
 // guards
 import { ProfileGuard } from '@shared/guards/profile.guard';
@@ -89,10 +91,16 @@ import { ProfileStudentReviewsComponent } from './profile/profile-introduction/p
 import { ProfileTutorReviewsComponent } from './profile/profile-introduction/profile-tutor-reviews/profile-tutor-reviews.component';
 import { StarRatingComponent } from './shared/components/star-rating/star-rating.component';
 import { ProfileIntroductionMetricsComponent } from './profile/profile-introduction/profile-introduction-metrics/profile-introduction-metrics.component';
+import { ProfileQualificationsComponent } from './profile/profile-education/profile-qualifications/profile-qualifications.component';
+import { CreateEditProfileQualificationComponent } from './profile/profile-education/profile-qualifications/create-edit-profile-qualification/create-edit-profile-qualification.component';
+import { DocumentUploaderComponent } from './shared/components/document-uploader/document-uploader.component';
 
 @NgModule({
   declarations: [
+    //directives
     ChartDirective,
+    DragClassUpdaterDirective,
+    // components
     AppComponent,
     HomeComponent,
     AboutComponent,
@@ -128,6 +136,7 @@ import { ProfileIntroductionMetricsComponent } from './profile/profile-introduct
     SidebarSmallComponent,
     SidebarSmallMenuComponent,
     TopbarComponent,
+    // academically components
     DashboardOverviewComponent,
     RecentProjectsComponent,
     RecentActivityComponent,
@@ -156,6 +165,9 @@ import { ProfileIntroductionMetricsComponent } from './profile/profile-introduct
     ProfileTutorReviewsComponent,
     StarRatingComponent,
     ProfileIntroductionMetricsComponent,
+    ProfileQualificationsComponent,
+    CreateEditProfileQualificationComponent,
+    DocumentUploaderComponent,
   ],
   imports: [
     CommonModule,

@@ -6,7 +6,9 @@
         public const string App_ClientRootAddress = "App.ClientRootAddress";
         public const string Aws_Region = "Aws.Region";
         public const string Aws_S3_AssetsBucket = "Aws.S3.AssetsBucket";
+        public const string Aws_S3_SecureAssetsBucket = "Aws.S3.SecureAssetsBucket";
         public const string Aws_S3_Folders_CoverPhotos = "Aws.S3.Folders.CoverPhotos";
+        public const string Aws_S3_Folders_Qualifications = "Aws.S3.Folders.Qualifications";
         public const string ITagg_Sms_Username = "ITagg.Sms.Username";
         public const string ITagg_Sms_Password = "ITagg.Sms.Password";
         public const string Email_FromName = "Email.FromName";

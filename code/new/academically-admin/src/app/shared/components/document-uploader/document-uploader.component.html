@@ -1,0 +1,31 @@
+<div class="document-uploader" [dragClassUpdater]="'document-uploader-dragover'">
+  <label class="document-input-label m-0 p-0" for="DocumentUploader">{{ 'DropFileOrClickHereToUpload' | localize}}</label>
+  <input (change)="onFileChange($event)" [accept]="allowedExtensions" class="document-input" type="file"
+    name="DocumentUploader" id="DocumentUploader">
+</div>
+<ul *ngIf="files && files.length > 0" class="list-group mt-2">
+  <li *ngFor="let file of files" class="list-group-item">
+    <div class="row align-items-center">
+      <div class="col ml-n2">
+        <div class="col">
+          <h4 class="text-body text-focus mb-1">
+            {{ file.name }}
+          </h4>
+          <p class="small text-muted mb-0">
+            {{ formatBytes(file.size) }}
+          </p>
+        </div>
+      </div>
+      <div class="col-auto">
+        <button (click)="onOpenDocumentClick(file)" type="button"
+          class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
+          <span class="fe fe-eye"></span>
+        </button>
+        <button (click)="onRemoveFileClick(file)" type="button"
+          class="btn btn-outline-secondary btn-sm btn-rounded-circle">
+          <span class="fe fe-trash-2"></span>
+        </button>
+      </div>
+    </div>
+  </li>
+</ul>

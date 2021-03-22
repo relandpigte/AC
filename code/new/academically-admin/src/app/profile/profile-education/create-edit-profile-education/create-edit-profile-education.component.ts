@@ -34,7 +34,7 @@ export class CreateEditProfileEducationComponent extends AppComponentBase implem
     super(injector);
     this.currentYear = this.convertToUserDate(new Date()).getFullYear();
     this.yearSelections.push('Present')
-    for (let year = this.currentYear; year >= 1950; year--) {
+    for (let year = this.currentYear; year >= 1900; year--) {
       const sYear = year.toString();
       this.yearSelections.push(sYear);
     }
