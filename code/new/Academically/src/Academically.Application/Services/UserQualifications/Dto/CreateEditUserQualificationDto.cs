@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Academically.Services.UserQualifications.Dto
 {
     [AutoMapTo(typeof(UserQualification))]
-    public class CreateUserQualificationDto
+    public class CreateEditUserQualificationDto
     {
         public string ProfessionalCertificateOrAward { get; set; }
         public string ConferringOrganization { get; set; }

@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DocumentFile } from '@shared/models/document-file';
 import { NotifyService } from 'abp-ng2-module';
 
 @Component({
@@ -9,7 +8,7 @@ import { NotifyService } from 'abp-ng2-module';
 })
 export class DocumentUploaderComponent implements OnInit {
   @Input() allowedExtensions: string[] = [];
-  public files: DocumentFile[] = [];
+  public files: File[] = [];
 
   constructor(
     private notify: NotifyService,
@@ -19,7 +18,7 @@ export class DocumentUploaderComponent implements OnInit {
   }
 
   onFileChange(e: any) {
-    const file = e.target.files[0] as DocumentFile;
+    const file = e.target.files[0] as File;
     const fileExtension = this.getFileExtension(file.name).toLowerCase();
     if (this.allowedExtensions.includes(`.${fileExtension}`)) {
       this.files.push(file);
@@ -30,7 +29,7 @@ export class DocumentUploaderComponent implements OnInit {
   }
 
   onRemoveFileClick(file: File) {
-    this.files.splice(this.files.indexOf(file as DocumentFile), 1);
+    this.files.splice(this.files.indexOf(file), 1);
   }
 
   formatBytes(bytes: number, decimals = 2) {
@@ -45,11 +44,9 @@ export class DocumentUploaderComponent implements OnInit {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 
-  onOpenDocumentClick(file: DocumentFile): void {
-    if (!file.id) {
-      const fileUrl = URL.createObjectURL(file);
-      window.open(fileUrl, '_blank');
-    }
+  onOpenDocumentClick(file: File): void {
+    const fileUrl = URL.createObjectURL(file);
+    window.open(fileUrl, '_blank');
   }
 
   private getFileExtension(fileName: string): string {

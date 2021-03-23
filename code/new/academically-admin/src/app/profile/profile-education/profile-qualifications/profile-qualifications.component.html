@@ -11,7 +11,65 @@
       </div>
     </div>
   </div>
-  <div class="table-responsive">
-    <h5 class="p-5 text-center">Coming Soon!</h5>
+  <div class="table-responsive" [busy]="isLoading">
+    <table class="table table-nowrap table-align-top card-table">
+      <tbody>
+        <tr *ngFor="let qualification of userQualifications">
+          <td>
+            <div class="row align-items-start">
+              <div class="col-auto">
+                <div class="avatar avatar-sm">
+                  <div class="avatar-title font-size-lg bg-primary-soft rounded-circle text-primary">
+                    <i class="fe fe-book-open"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="row align-items-center">
+                  <div class="col-4">
+                    <h4 class="m-0">{{ qualification.professionalCertificateOrAward }}</h4>
+                  </div>
+                  <div class="col-2 text-center">
+                    <p class="text-body m-0">{{ qualification.startYear }}</p>
+                  </div>
+                  <div class="col-4">
+                    <p class="text-body m-0">{{ qualification.conferringOrganization }}</p>
+                  </div>
+                  <div class="col-2 text-center">
+                    <p class="text-body m-0">{{ qualification.gradeAttained }}</p>
+                  </div>
+                </div>
+                <div class="row mt-4">
+                  <div class="col-12">
+                    <p class="text-body m-0 break-spaces">{{ qualification.summary }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-auto">
+                <button [disabled]="deleteLoaders[qualification.id]" (click)="onViewDocumentsClick(qualification)" type="button"
+                  class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
+                  <span class="fe fe-folder"></span>
+                </button>
+                <button *ngIf="permission.isGranted('Pages.Profile.Education.Qualifications.Update')" [disabled]="deleteLoaders[qualification.id]" (click)="onEditClick(qualification)" type="button"
+                  class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+                  <span class="fe fe-edit-2"></span>
+                </button>
+                <button *ngIf="permission.isGranted('Pages.Profile.Education.Qualifications.Delete')" [disabled]="deleteLoaders[qualification.id]" (click)="onDeleteClick(qualification.id)"
+                  type="button" class="btn btn-outline-danger btn-sm btn-rounded-circle">
+                  <span *ngIf="deleteLoaders[qualification.id]" class="spinner-border spinner-border-sm" role="status"
+                    aria-hidden="true"></span>
+                  <span *ngIf="!deleteLoaders[qualification.id]" class="fe fe-trash-2"></span>
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="userQualifications.length === 0">
+          <td colspan="10">
+            <p class="text-center m-0 p-0">{{ 'NoRecordsFound' | localize }}</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

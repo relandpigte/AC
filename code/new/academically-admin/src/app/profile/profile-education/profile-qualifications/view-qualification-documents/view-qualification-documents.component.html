@@ -1,0 +1,52 @@
+<div class="modal-card card">
+  <abp-modal-header [title]="'QualificationDocuments' | localize" (onCloseClick)="onCloseClick()"></abp-modal-header>
+  <div class="card-body">
+
+    <ul *ngIf="userQualificationDocuments.length > 0" class="list-group list-group-flush my-n3">
+      <li *ngFor="let userQualificationDocument of userQualificationDocuments" class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col ml-n2">
+            <div class="col">
+              <h4 class="text-body text-focus mb-1">
+                {{ userQualificationDocument.document.originalFileName }}
+              </h4>
+              <p class="small text-muted mb-0">
+                {{ formatBytes(userQualificationDocument.document.size) }}
+              </p>
+            </div>
+          </div>
+          <div class="col-auto">
+            <span *ngIf="!userQualificationDocument.isReviewed" class="badge badge-soft-info mr-1">On Review</span>
+            <span *ngIf="userQualificationDocument.isReviewed" class="badge badge-soft-success mr-1">Reviewed</span>
+          </div>
+          <div class="col-auto">
+            <button (click)="onViewDocumentClick(userQualificationDocument.document)"
+              [disabled]="viewLoaders[userQualificationDocument.document.id] || deleteLoaders[userQualificationDocument.id]"
+              type="button" class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
+              <span *ngIf="viewLoaders[userQualificationDocument.document.id]" class="spinner-border spinner-border-sm"
+                role="status" aria-hidden="true"></span>
+              <span *ngIf="!viewLoaders[userQualificationDocument.document.id]" class="fe fe-eye"></span>
+            </button>
+            <button *ngIf="permission.isGranted('Pages.Profile.Education.Qualifications.Delete')"
+              (click)="onDeleteDocumentClick(userQualificationDocument.id)"
+              [disabled]="deleteLoaders[userQualificationDocument.id]" type="button" type="button"
+              class="btn btn-outline-danger btn-sm btn-rounded-circle">
+              <span *ngIf="deleteLoaders[userQualificationDocument.id]" class="spinner-border spinner-border-sm"
+                role="status" aria-hidden="true"></span>
+              <span *ngIf="!deleteLoaders[userQualificationDocument.id]" class="fe fe-trash-2"></span>
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <p *ngIf="userQualificationDocuments.length === 0" class="text-center m-0 p-0">
+      No Documents Uploaded
+    </p>
+
+  </div>
+  <div (click)="onCloseClick()" class="card-footer justify-content-between">
+    <button type="button" class="btn btn-white">
+      {{ 'Close' | localize }}
+    </button>
+  </div>
+</div>

@@ -16,6 +16,6 @@ namespace Academically.Services.UserQualifications.Dto
         public string StartYear { get; set; }
         public string GradeAttained { get; set; }
 
-        public List<IFormFile> DocumentsToUpload { get; set; }
+        public List<UserQualificationDocumentDto> UserQualificationDocuments { get; set; }
     }
 }

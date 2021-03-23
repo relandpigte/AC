@@ -1,6 +1,7 @@
 <form class="form-horizontal" autocomplete="off" #createEditUserQualificationForm="ngForm" (ngSubmit)="onFormSubmit()">
   <div class="modal-card card">
-    <abp-modal-header [title]="'Add Qualification'" (onCloseClick)="onCloseClick()"></abp-modal-header>
+    <abp-modal-header [title]="(userQualification.id ? 'EditQualification' : 'AddQualification') | localize"
+      (onCloseClick)="onCloseClick()"></abp-modal-header>
     <div class="card-body">
 
       <div class="form-row">

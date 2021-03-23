@@ -12,5 +12,6 @@ namespace Academically.Domain.Entities
         public string OriginalFileName { get; set; }
         public string FileType { get; set; }
         public DocumentType DocumentType { get; set; }
+        public long Size { get; set; }
     }
 }

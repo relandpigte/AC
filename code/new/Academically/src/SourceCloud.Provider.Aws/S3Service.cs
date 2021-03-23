@@ -12,6 +12,7 @@ namespace SourceCloud.Provider.Aws
 {
     public class S3Service : IFileManagerService, IDisposable
     {
+        private const int DEFAULT_SECURE_FILE_TIMEOUT_MINUTES = 5;
         private readonly IAmazonS3 _client;
         private readonly FileManagerConfiguration _configuration;
 
@@ -88,13 +89,14 @@ namespace SourceCloud.Provider.Aws
             }
         }
 
-        public async Task DeleteAsync(string folder, string fileName)
+        public async Task DeleteAsync(string folder, string fileName, bool isSecured = false)
         {
             if (!string.IsNullOrWhiteSpace(folder))
             {
                 fileName = $"{folder}/{fileName}";
             }
-            await _client.DeleteObjectAsync(_bucket, fileName);
+            var bucket = isSecured ? _configuration.SecuredBucket : _bucket;
+            await _client.DeleteObjectAsync(bucket, fileName);
         }
 
         public void Dispose()
@@ -103,16 +105,31 @@ namespace SourceCloud.Provider.Aws
                 _client.Dispose();
         }
 
-        public string GetFileUrl(string fileName, long userId, string folder = null)
+        public string GetFileUrl(string fileName, long userId, string folder = null, bool isSecured = false)
         {
             if (!string.IsNullOrWhiteSpace(fileName))
             {
-                var s3Bucket = GetDirectoryUrl();
-                if (!string.IsNullOrWhiteSpace(folder))
+                if (isSecured)
                 {
-                    return $"{s3Bucket}/{userId}/{folder}/{fileName}";
+                    var fileKey = string.IsNullOrWhiteSpace(folder) ? $"{userId}/{fileName}" : $"{userId}/{folder}/{fileName}";
+                    var request = new GetPreSignedUrlRequest()
+                    {
+                        BucketName = _configuration.SecuredBucket,
+                        Key = fileKey,
+                        Expires = DateTime.Now.AddMinutes(DEFAULT_SECURE_FILE_TIMEOUT_MINUTES),
+                    };
+
+                    return _client.GetPreSignedURL(request);
                 }
-                return $"{s3Bucket}/{userId}/{fileName}";
+                else
+                {
+                    var s3Bucket = GetDirectoryUrl();
+                    if (!string.IsNullOrWhiteSpace(folder))
+                    {
+                        return $"{s3Bucket}/{userId}/{folder}/{fileName}";
+                    }
+                    return $"{s3Bucket}/{userId}/{fileName}";
+                }
             }
 
             return string.Empty;
