@@ -6,8 +6,8 @@ namespace SourceCloud.Core.Services
     {
         Task<byte[]> DownloadAsync(string folder, string fileName);
         Task UploadAsync(string fileName, string type, byte[] fileBytes, string folder = null, bool isSecured = false);
-        Task DeleteAsync(string folder, string fileName);
+        Task DeleteAsync(string folder, string fileName, bool isSecured = false);
         string GetDirectoryUrl();
-        string GetFileUrl(string fileName, long userId, string folderSetting = null);
+        string GetFileUrl(string fileName, long userId, string folder = null, bool isSecured = false);
     }
 }

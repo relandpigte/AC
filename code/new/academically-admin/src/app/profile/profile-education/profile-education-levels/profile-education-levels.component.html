@@ -5,7 +5,8 @@
         <h4 class="card-header-title">Levels</h4>
       </div>
       <div class="col-auto">
-        <a *ngIf="permission.isGranted('Pages.Profile.Education.Create')" (click)="$event.preventDefault(); onAddLevelClick()" href="#" class="btn btn-sm btn-primary">
+        <a *ngIf="permission.isGranted('Pages.Profile.Education.Create')"
+          (click)="$event.preventDefault(); onAddLevelClick()" href="#" class="btn btn-sm btn-primary">
           {{ 'AddLevel' | localize }}
         </a>
       </div>
@@ -27,10 +28,14 @@
           <td>{{ userEducationLevel.degree }}</td>
           <td>{{ userEducationLevel.grade }}</td>
           <td>
-            <button *ngIf="permission.isGranted('Pages.Profile.Education.Update')" (click)="onEditLevelClick(userEducationLevel)" type="button" class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+            <button *ngIf="permission.isGranted('Pages.Profile.Education.Update')"
+              (click)="onEditLevelClick(userEducationLevel)" type="button"
+              class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
               <span class="fe fe-edit-2"></span>
             </button>
-            <button *ngIf="permission.isGranted('Pages.Profile.Education.Delete')" (click)="onRemoveLevelClick(userEducationLevel)" type="button" class="btn btn-outline-secondary btn-sm btn-rounded-circle">
+            <button *ngIf="permission.isGranted('Pages.Profile.Education.Delete')"
+              (click)="onRemoveLevelClick(userEducationLevel)" type="button"
+              class="btn btn-outline-danger btn-sm btn-rounded-circle">
               <span class="fe fe-trash-2"></span>
             </button>
           </td>

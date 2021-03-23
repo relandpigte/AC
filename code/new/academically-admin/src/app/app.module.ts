@@ -94,6 +94,7 @@ import { ProfileIntroductionMetricsComponent } from './profile/profile-introduct
 import { ProfileQualificationsComponent } from './profile/profile-education/profile-qualifications/profile-qualifications.component';
 import { CreateEditProfileQualificationComponent } from './profile/profile-education/profile-qualifications/create-edit-profile-qualification/create-edit-profile-qualification.component';
 import { DocumentUploaderComponent } from './shared/components/document-uploader/document-uploader.component';
+import { ViewQualificationDocumentsComponent } from './profile/profile-education/profile-qualifications/view-qualification-documents/view-qualification-documents.component';
 
 @NgModule({
   declarations: [
@@ -168,6 +169,7 @@ import { DocumentUploaderComponent } from './shared/components/document-uploader
     ProfileQualificationsComponent,
     CreateEditProfileQualificationComponent,
     DocumentUploaderComponent,
+    ViewQualificationDocumentsComponent,
   ],
   imports: [
     CommonModule,

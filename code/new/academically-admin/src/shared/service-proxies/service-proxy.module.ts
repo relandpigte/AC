@@ -21,6 +21,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.PhoneVerificationsServiceProxy,
         ApiServiceProxies.RatingsServiceProxy,
         ApiServiceProxies.UserQualificationsServiceProxy,
+        ApiServiceProxies.DocumentsServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

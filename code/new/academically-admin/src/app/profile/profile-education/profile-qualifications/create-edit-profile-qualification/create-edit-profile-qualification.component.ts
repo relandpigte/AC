@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { FileParameter, UserQualificationDto, UserQualificationsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -12,9 +12,10 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./create-edit-profile-qualification.component.less']
 })
 export class CreateEditProfileQualificationComponent extends AppComponentBase implements OnInit {
+  @Input() userQualification: UserQualificationDto = new UserQualificationDto();
+  @Output() qualificationSaved = new EventEmitter<boolean>();
   @ViewChild('documentUploader') documentUploaderComponent: DocumentUploaderComponent;
   qualificationTypes = qualificationTypes;
-  userQualification: UserQualificationDto = new UserQualificationDto();
   yearSelections: string[] = [];
   isLoading = false;
 
@@ -44,20 +45,33 @@ export class CreateEditProfileQualificationComponent extends AppComponentBase im
         data: file,
       };
       return fileParameter;
-    })
-    this._userQualificationsService.create(
-      this.userQualification.professionalCertificateOrAward,
-      this.userQualification.conferringOrganization,
-      this.userQualification.summary,
-      this.userQualification.startYear,
-      this.userQualification.gradeAttained,
-      documentsToUpload
-    )
+    });
+    const saveSubscription = this.userQualification.id
+      ? this._userQualificationsService.update(
+        this.userQualification.id,
+        this.userQualification.professionalCertificateOrAward,
+        this.userQualification.conferringOrganization,
+        this.userQualification.summary,
+        this.userQualification.startYear,
+        this.userQualification.gradeAttained,
+        documentsToUpload
+      )
+      : this._userQualificationsService.create(
+        this.userQualification.professionalCertificateOrAward,
+        this.userQualification.conferringOrganization,
+        this.userQualification.summary,
+        this.userQualification.startYear,
+        this.userQualification.gradeAttained,
+        documentsToUpload
+      );
+
+    saveSubscription
       .pipe(finalize(() => {
         this.isLoading = false;
       }))
       .subscribe(() => {
         this.notify.success(this.l('SavedSuccessfully'));
+        this.qualificationSaved.emit(true);
         this._modal.hide();
       });
   }

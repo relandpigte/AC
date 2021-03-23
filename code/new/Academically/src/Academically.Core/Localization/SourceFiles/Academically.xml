@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="AddQualification">Add Qualification</text>
+    <text name="EditQualification">Edit Qualification</text>
+    <text name="Close">Close</text>
+    <text name="QualificationDocuments">Qualification Documents</text>
     <text name="Qualifications">Qualifications</text>
     <text name="UploadEvidencePanelHeader">Upload Evidence of Qualification Attained</text>
     <text name="GradeAttained">Grade Attained</text>

@@ -14,7 +14,10 @@
             <column name="FileType" type="VARCHAR(150)">
                 <constraints nullable="false"/>
             </column>
-            <column name="DocumentType" type="INT">
+            <column name="DocumentType" type="INT(2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Size" type="BIGINT(20)">
                 <constraints nullable="false"/>
             </column>
             <column name="CreationTime" type="datetime">

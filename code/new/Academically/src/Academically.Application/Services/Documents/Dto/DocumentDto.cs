@@ -4,7 +4,7 @@ using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using System;
 
-namespace Academically.Dtos
+namespace Academically.Services.Documents.Dto
 {
     [AutoMap(typeof(Document))]
     public class DocumentDto : EntityDto<Guid?>
@@ -13,5 +13,6 @@ namespace Academically.Dtos
         public string OriginalFileName { get; set; }
         public string FileType { get; set; }
         public DocumentType DocumentType { get; set; }
+        public long Size { get; set; }
     }
 }

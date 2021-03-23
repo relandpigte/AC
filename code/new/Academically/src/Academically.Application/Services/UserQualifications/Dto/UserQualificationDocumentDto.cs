@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Domain.Entities;
+using Academically.Services.Documents.Dto;
 using System;
 
 namespace Academically.Services.UserQualifications.Dto
@@ -11,5 +12,7 @@ namespace Academically.Services.UserQualifications.Dto
         public Guid UserQualificationId { get; set; }
         public Guid DocumentId { get; set; }
         public bool IsReviewed { get; set; }
+
+        public DocumentDto Document { get; set; }
     }
 }
