@@ -9,7 +9,11 @@ import { ImageCropperComponent as ImageCopper } from 'ngx-image-cropper';
 })
 export class ImageCropperComponent {
   @Input() image: File;
+  @Input() aspectRatioWidth = 1;
+  @Input() aspectRationHeight = 1;
+  @Input() maintainAspectRatio = false;
   @Output() imageCropped = new EventEmitter<File>();
+  @Output() imageLoaded = new EventEmitter();
   @ViewChild('imageCropper') imageCropper: ImageCopper;
   isImageCropping = false;
 
@@ -19,14 +23,25 @@ export class ImageCropperComponent {
 
   }
 
-  onCloseClick(): void {
+  close(): void {
+    this.isImageCropping = false;
     this._modalRef.hide();
+  }
+
+  onCloseClick(): void {
+    this.close();
   }
 
   onCropClick(): void {
     this.isImageCropping = true;
-    const croppedImage = this.imageCropper.crop();
-    this.imageCropped.emit(this.base64ToFile(croppedImage.base64, this.image.name));
+    setTimeout(() => {
+      const croppedImage = this.imageCropper.crop();
+      this.imageCropped.emit(this.base64ToFile(croppedImage.base64, this.image.name));
+    }, 0);
+  }
+
+  onImageLoaded(): void {
+    this.imageLoaded.emit();
   }
 
   private base64ToFile(dataurl: string, filename: string): File {

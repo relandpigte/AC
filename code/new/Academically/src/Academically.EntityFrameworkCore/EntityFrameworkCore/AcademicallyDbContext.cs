@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Abp.Zero.EntityFrameworkCore;
+﻿using Abp.Zero.EntityFrameworkCore;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
-using Academically.MultiTenancy;
 using Academically.Domain.Entities;
+using Academically.MultiTenancy;
+using Microsoft.EntityFrameworkCore;
 
 namespace Academically.EntityFrameworkCore
 {
@@ -21,6 +21,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<UserQualification> UserQualifications { get; set; }
         public virtual DbSet<UserQualificationDocument> UserQualificationDocuments { get; set; }
+        public virtual DbSet<PassportVerification> PassportVerifications { get; set; }
 
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)

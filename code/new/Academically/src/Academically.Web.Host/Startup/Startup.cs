@@ -20,6 +20,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Abp.Timing;
+using Unchase.Swashbuckle.AspNetCore.Extensions.Extensions;
 
 namespace Academically.Web.Host.Startup
 {
@@ -110,6 +111,13 @@ namespace Academically.Web.Host.Startup
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey
+                });
+
+                options.AddEnumsWithValuesFixFilters(services, o =>
+                {
+                    o.ApplySchemaFilter = true;
+                    o.ApplyParameterFilter = true;
+                    o.ApplyDocumentFilter = true;
                 });
             });
 

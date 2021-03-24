@@ -31,6 +31,7 @@ namespace Academically.Services.Profiles
         private readonly IRepository<UserEducationLevel, Guid> _userEducationLevelsRepository;
         private readonly IRepository<StudentRating, Guid> _studentRatingsRepository;
         private readonly IRepository<TutorRating, Guid> _tutorRatingsRepository;
+        private readonly IRepository<PassportVerification, Guid> _passportVerifications;
         private readonly ISettingManager _settingManager;
         private readonly IFileManagerService _fileManagerService;
 
@@ -40,6 +41,7 @@ namespace Academically.Services.Profiles
             IRepository<UserEducationLevel, Guid> userEducationLevelsRepository,
             IRepository<StudentRating, Guid> studentRatingsRepository,
             IRepository<TutorRating, Guid> tutorRatingsRepository,
+            IRepository<PassportVerification, Guid> passportVerifications,
             ISettingManager settingManager,
             IFileManagerService fileManagerService
             )
@@ -49,6 +51,7 @@ namespace Academically.Services.Profiles
             _userEducationLevelsRepository = userEducationLevelsRepository;
             _studentRatingsRepository = studentRatingsRepository;
             _tutorRatingsRepository = tutorRatingsRepository;
+            _passportVerifications = passportVerifications;
             _settingManager = settingManager;
             _fileManagerService = fileManagerService;
         }
@@ -72,11 +75,20 @@ namespace Academically.Services.Profiles
         public async Task<VerificationStatusDto> GetVerificationStatus(long id)
         {
             var user = await _usersRepository.GetAsync(id);
+            var passportVerification = await _passportVerifications
+                .GetAll()
+                .OrderByDescending(e => e.CreationTime)
+                .FirstOrDefaultAsync(e => e.CreatorUserId == AbpSession.UserId.Value);
+
             var verificationStatus = new VerificationStatusDto()
             {
                 IsEmailConfirmed = user.IsEmailConfirmed,
                 IsPhoneNumberConfirmed = user.IsPhoneNumberConfirmed,
+                PassportVerificationStatus = passportVerification == null
+                    ? PassportVerificationStatus.None
+                    : passportVerification.Status,
             };
+
             return verificationStatus;
         }
 
@@ -84,7 +96,8 @@ namespace Academically.Services.Profiles
         {
             // TODO: Replace static values with proper datta
             // once the schemas are defined for each metric
-            var profileMetric = new ProfileMetricDto() {
+            var profileMetric = new ProfileMetricDto()
+            {
                 TotalHours = 521,
                 TotalHoursChange = "+3.5%",
                 UserType = "Researcher",
@@ -128,7 +141,7 @@ namespace Academically.Services.Profiles
             }
             if (totalPositiveReviews > 0 || totalNegativeReviews > 0)
             {
-                profileMetric.PositiveReviewsPercentage = Math.Round(totalPositiveReviews.ToDecimal() 
+                profileMetric.PositiveReviewsPercentage = Math.Round(totalPositiveReviews.ToDecimal()
                     / (totalPositiveReviews.ToDecimal() + totalNegativeReviews.ToDecimal()) * 100, 1);
             }
 

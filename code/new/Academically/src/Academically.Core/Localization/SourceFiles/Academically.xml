@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Uploading">Uploading</text>
+    <text name="Upload">Upload</text>
+    <text name="UploadPassportPhoto">Upload Passport Photo</text>
+    <text name="Passport">Passport</text>
+    <text name="PassportVerificationDeclinedMesssage">Your passport verification has been declined. Please upload a new passport photo.</text>
+    <text name="PendingVerification">Pending Verification</text>
+    <text name="PassportUploadedSuccessMessage">Your passport was successfully uploaded. It will be subjected to our verification process. We will let you know once it has been approved or declined.</text>
+    <text name="LoadingImageCropper">Loading image cropper</text>
     <text name="AddQualification">Add Qualification</text>
     <text name="EditQualification">Edit Qualification</text>
     <text name="Close">Close</text>

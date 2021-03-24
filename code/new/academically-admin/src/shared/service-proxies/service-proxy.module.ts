@@ -22,6 +22,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.RatingsServiceProxy,
         ApiServiceProxies.UserQualificationsServiceProxy,
         ApiServiceProxies.DocumentsServiceProxy,
+        ApiServiceProxies.PassportVerificationsServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })
