@@ -1,8 +1,9 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ProfilesServiceProxy, VerificationStatusDto } from '@shared/service-proxies/service-proxies';
+import { PassportVerificationStatus, ProfilesServiceProxy, VerificationStatusDto } from '@shared/service-proxies/service-proxies';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { VerifyMobileComponent } from './verify-mobile/verify-mobile.component';
+import { VerifyPassportComponent } from './verify-passport/verify-passport.component';
 
 @Component({
   selector: 'app-verifications',
@@ -10,7 +11,9 @@ import { VerifyMobileComponent } from './verify-mobile/verify-mobile.component';
   styleUrls: ['./verifications.component.less']
 })
 export class VerificationsComponent extends AppComponentBase implements OnInit {
+  PassportVerificationStatus = PassportVerificationStatus;
   verifcationStatus: VerificationStatusDto = new VerificationStatusDto();
+  isLoading = false;
 
   constructor(
     injector: Injector,
@@ -35,10 +38,21 @@ export class VerificationsComponent extends AppComponentBase implements OnInit {
     });
   }
 
+  onVerifiyPassportClick(): void {
+    const modalSettings = this.defaultModalSettings;
+    const modalRef = this._modalService.show(VerifyPassportComponent, modalSettings);
+    const modal: VerifyPassportComponent = modalRef.content;
+    modal.passportVerified.subscribe(() => {
+      this.getVerificationStatus();
+    });
+  }
+
   private getVerificationStatus(): void {
+    this.isLoading = true;
     this._profilesService.getVerificationStatus(this.appSession.userId)
       .subscribe(verificationStatus => {
         this.verifcationStatus = verificationStatus;
+        this.isLoading = false;
       })
   }
 }

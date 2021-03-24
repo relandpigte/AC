@@ -1,9 +1,12 @@
 ﻿using System.Threading.Tasks;
+using Abp.Authorization;
+using Academically.Authorization;
 using Academically.Domain.Services.PhoneVerifications;
 using Academically.Services.PhoneVerifications.Dto;
 
 namespace Academically.Services.PhoneVerifications
 {
+    [AbpAuthorize(PermissionNames.Pages_Dashboard_Overview_Verifications)]
     public class PhoneVerificationsAppService : AcademicallyAppServiceBase, IPhoneVerificationsAppService
     {
         private readonly IPhoneVerificationsDomainService _phoneVerificationsDomainService;

@@ -340,6 +340,73 @@ export class EducationLevelsServiceProxy {
 }
 
 @Injectable()
+export class PassportVerificationsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param passportPhoto (optional) 
+     * @return Success
+     */
+    create(passportPhoto: FileParameter | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/PassportVerifications/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (passportPhoto === null || passportPhoto === undefined)
+            throw new Error("The parameter 'passportPhoto' cannot be null.");
+        else
+            content_.append("PassportPhoto", passportPhoto.data, passportPhoto.fileName ? passportPhoto.fileName : "PassportPhoto");
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class PhoneVerificationsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -4186,11 +4253,12 @@ export interface IDocumentDto {
     size: number;
 }
 
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification */
 export enum DocumentType {
-    _0 = 0,
-    _1 = 1,
-    _2 = 2,
-    _3 = 3,
+    General = 0,
+    ProfilePicture = 1,
+    CoverPhoto = 2,
+    Qualification = 3,
 }
 
 export class EducationLevelDto implements IEducationLevelDto {
@@ -4727,6 +4795,14 @@ export interface IIsTenantAvailableOutput {
     tenantId: number | undefined;
 }
 
+/** 0 = None 1 = PendingVerification 2 = Accepted 3 = Declined */
+export enum PassportVerificationStatus {
+    None = 0,
+    PendingVerification = 1,
+    Accepted = 2,
+    Declined = 3,
+}
+
 export class PhoneVerificationDto implements IPhoneVerificationDto {
     id: string;
     userId: number;
@@ -4845,10 +4921,11 @@ export interface IProfileMetricDto {
     totalReviews: number;
 }
 
+/** 0 = Positive 1 = Neutral 2 = Negative */
 export enum RatingExperienceType {
-    _0 = 0,
-    _1 = 1,
-    _2 = 2,
+    Positive = 0,
+    Neutral = 1,
+    Negative = 2,
 }
 
 export class RegisterInput implements IRegisterInput {
@@ -5598,10 +5675,11 @@ export interface IStudentRatingSummaryDto {
     totalNegativeReviews: number;
 }
 
+/** 1 = Available 2 = InActive 3 = NotFound */
 export enum TenantAvailabilityState {
-    _1 = 1,
-    _2 = 2,
-    _3 = 3,
+    Available = 1,
+    InActive = 2,
+    NotFound = 3,
 }
 
 export class TenantDto implements ITenantDto {
@@ -6565,6 +6643,7 @@ export interface IUserQualificationDto {
 export class VerificationStatusDto implements IVerificationStatusDto {
     isEmailConfirmed: boolean;
     isPhoneNumberConfirmed: boolean;
+    passportVerificationStatus: PassportVerificationStatus;
 
     constructor(data?: IVerificationStatusDto) {
         if (data) {
@@ -6579,6 +6658,7 @@ export class VerificationStatusDto implements IVerificationStatusDto {
         if (_data) {
             this.isEmailConfirmed = _data["isEmailConfirmed"];
             this.isPhoneNumberConfirmed = _data["isPhoneNumberConfirmed"];
+            this.passportVerificationStatus = _data["passportVerificationStatus"];
         }
     }
 
@@ -6593,6 +6673,7 @@ export class VerificationStatusDto implements IVerificationStatusDto {
         data = typeof data === 'object' ? data : {};
         data["isEmailConfirmed"] = this.isEmailConfirmed;
         data["isPhoneNumberConfirmed"] = this.isPhoneNumberConfirmed;
+        data["passportVerificationStatus"] = this.passportVerificationStatus;
         return data; 
     }
 
@@ -6607,6 +6688,7 @@ export class VerificationStatusDto implements IVerificationStatusDto {
 export interface IVerificationStatusDto {
     isEmailConfirmed: boolean;
     isPhoneNumberConfirmed: boolean;
+    passportVerificationStatus: PassportVerificationStatus;
 }
 
 export interface FileParameter {

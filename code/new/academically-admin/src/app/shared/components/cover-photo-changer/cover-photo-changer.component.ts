@@ -38,6 +38,9 @@ export class CoverPhotoChangerComponent extends AppComponentBase {
       const modalSettings = this.defaultModalSettings;
       modalSettings.initialState = {
         image: files[0],
+        aspectRatioWidth: 1440,
+        aspectRationHeight: 300,
+        maintainAspectRatio: true,
       };
       const modal = this._modalService.show(ImageCropperComponent, modalSettings);
       const imageCropper: ImageCropperComponent = modal.content;

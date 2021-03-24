@@ -2,9 +2,9 @@ import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } f
 import { AppComponentBase } from '@shared/app-component-base';
 import { FileParameter, UserQualificationDto, UserQualificationsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { qualificationTypes } from '@shared/constants/qualification-types';
 import { DocumentUploaderComponent } from '@app/shared/components/document-uploader/document-uploader.component';
 import { finalize } from 'rxjs/operators';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 
 @Component({
   selector: 'app-create-edit-profile-qualification',
@@ -15,7 +15,7 @@ export class CreateEditProfileQualificationComponent extends AppComponentBase im
   @Input() userQualification: UserQualificationDto = new UserQualificationDto();
   @Output() qualificationSaved = new EventEmitter<boolean>();
   @ViewChild('documentUploader') documentUploaderComponent: DocumentUploaderComponent;
-  qualificationTypes = qualificationTypes;
+  qualificationExtensions = fileUploadConfiguration.allowedQualificationExtensions;
   yearSelections: string[] = [];
   isLoading = false;
 

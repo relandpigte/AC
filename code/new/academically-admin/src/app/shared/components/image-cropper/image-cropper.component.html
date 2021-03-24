@@ -1,12 +1,12 @@
 <div class="modal-card card">
   <abp-modal-header [title]="'CropImage' | localize" (onCloseClick)="onCloseClick()"></abp-modal-header>
   <div class="card-body">
-    <image-cropper #imageCropper [imageFile]="image" [maintainAspectRatio]="true" [autoCrop]="false"
-      [aspectRatio]="1440/300" format="png">
+    <image-cropper #imageCropper [imageFile]="image" [maintainAspectRatio]="maintainAspectRatio" [autoCrop]="false"
+      [aspectRatio]="aspectRatioWidth/aspectRationHeight" (imageLoaded)="onImageLoaded()" format="png">
     </image-cropper>
   </div>
   <div class="card-footer justify-content-between">
-    <button (click)="onCloseClick()" type="button" class="btn btn-white">
+    <button [disabled]="isImageCropping" (click)="onCloseClick()" type="button" class="btn btn-white">
       {{ 'Cancel' | localize }}
     </button>
     <button (click)="onCropClick()" [disabled]="isImageCropping" type="submit" class="btn btn-primary">

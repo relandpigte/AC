@@ -3,7 +3,7 @@
     <h4 class="card-header-title">{{ 'Verifications' | localize}}</h4>
   </div>
   <div class="card-body">
-    <div class="list-group list-group-flush my-n3">
+    <div [busy]="isLoading" class="list-group list-group-flush my-n3">
       <div class="list-group-item">
         <div class="row align-items-center">
           <div class="col">
@@ -15,7 +15,7 @@
             <h5 class="mb-0 text-normal">{{ 'Email' | localize }}</h5>
           </div>
           <div class="col-auto">
-            <span *ngIf="verifcationStatus.isEmailConfirmed" class="text-muted"><i class="fe fe-check"></i></span>
+            <span *ngIf="verifcationStatus.isEmailConfirmed" class="text-success"><i class="fe fe-check"></i></span>
             <span *ngIf="!verifcationStatus.isEmailConfirmed" class="text-muted"><i class="fe fe-x"></i></span>
           </div>
         </div>
@@ -31,8 +31,36 @@
             <h5 class="mb-0 text-normal">{{ 'Phone' | localize }}</h5>
           </div>
           <div class="col-auto">
-            <span *ngIf="verifcationStatus.isPhoneNumberConfirmed" class="text-muted"><i class="fe fe-check"></i></span>
-            <a *ngIf="!verifcationStatus.isPhoneNumberConfirmed" (click)="$event.preventDefault(); onVerifyMobileNumberClick();" href="#">Verify</a>
+            <span *ngIf="verifcationStatus.isPhoneNumberConfirmed" class="text-success"><i
+                class="fe fe-check"></i></span>
+            <a *ngIf="!verifcationStatus.isPhoneNumberConfirmed"
+              (click)="$event.preventDefault(); onVerifyMobileNumberClick();" href="#">Verify</a>
+          </div>
+        </div>
+      </div>
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col">
+            <div class="avatar avatar-sm">
+              <div class="avatar-title font-size-lg bg-primary-soft rounded-circle text-primary">
+                <i class="fe fe-image"></i>
+              </div>
+            </div>
+            <h5 class="mb-0 text-normal">{{ 'Passport' | localize }}</h5>
+          </div>
+          <div class="col-auto d-flex align-items-center">
+            <span
+              *ngIf="verifcationStatus.passportVerificationStatus === PassportVerificationStatus.PendingVerification"
+              popover="{{ 'PendingVerification' | localize}}" container="body" placement="top"
+              triggers="mouseenter:mouseleave" class="text-warning"><i class="fe fe-clock"></i></span>
+            <span *ngIf="verifcationStatus.passportVerificationStatus === PassportVerificationStatus.Accepted"
+              class="text-success"><i class="fe fe-check"></i></span>
+            <span *ngIf="verifcationStatus.passportVerificationStatus === PassportVerificationStatus.Declined"
+              popover="{{ 'PassportVerificationDeclinedMesssage' | localize}}" container="body" placement="top"
+              triggers="mouseenter:mouseleave" class="text-danger"><i class="fe fe-alert-triangle mr-2"></i></span>
+            <a *ngIf="verifcationStatus.passportVerificationStatus === PassportVerificationStatus.None
+              || verifcationStatus.passportVerificationStatus === PassportVerificationStatus.Declined"
+              (click)="$event.preventDefault(); onVerifiyPassportClick();" href="#">Verify</a>
           </div>
         </div>
       </div>
