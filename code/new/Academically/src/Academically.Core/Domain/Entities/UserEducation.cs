@@ -9,6 +9,12 @@ namespace Academically.Domain.Entities
     [Table("AcademicallyUserEducations")]
     public class UserEducation : Entity<Guid>
     {
+        public UserEducation()
+        {
+            UserEducationLevels = new HashSet<UserEducationLevel>();
+            UserEducationDocuments = new HashSet<UserEducationDocument>();
+        }
+
         public long UserId { get; set; }
         public Guid UniversityId { get; set; }
         public string City { get; set; }
@@ -22,5 +28,6 @@ namespace Academically.Domain.Entities
         public virtual University University { get; set; }
 
         public virtual ICollection<UserEducationLevel> UserEducationLevels { get; set; }
+        public virtual ICollection<UserEducationDocument> UserEducationDocuments { get; set; }
     }
 }

@@ -1,7 +1,23 @@
 <form class="form-horizontal" autocomplete="off" #createEditUserEducationForm="ngForm" (ngSubmit)="onFormSubmit()">
   <div class="modal-card card">
-    <abp-modal-header [title]="(model.id ? 'EditEducation' : 'AddEducation') | localize"
-      (onCloseClick)="onCloseClick()"></abp-modal-header>
+    <div class="card-header">
+      <h4 class="card-header-title">
+        {{ (model.id ? 'EditEducation' : 'AddEducation') | localize }}
+      </h4>
+      <ul class="mr-4 nav nav-tabs nav-tabs-sm card-header-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" id="levels-tab" data-toggle="tab" href="#levels" role="tab" aria-controls="levels"
+            aria-selected="true">{{ 'Levels' | localize}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="evidences-tab" data-toggle="tab" href="#evidences" role="tab" aria-controls="levels"
+            aria-selected="true">{{ 'Evidences' | localize}}</a>
+        </li>
+      </ul>
+      <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
     <div class="card-body">
 
       <div class="form-group required">
@@ -57,11 +73,27 @@
         </div>
       </div>
 
-      <app-profile-education-levels></app-profile-education-levels>
+      <div class="tab-content row">
+        <div class="col-12 tab-pane fade show active" id="levels" role="tabpanel" aria-labelledby="levels-tab">
+          <app-profile-education-levels></app-profile-education-levels>
+        </div>
+        <div class="col-12 tab-pane fade" id="evidences" role="tabpanel" aria-labelledby="evidences-tab">
+          <div class="card mb-0">
+            <div class="card-header">
+              <h4 class="card-header-title">{{ 'UploadEducationEvidencePanelHeader' | localize}}</h4>
+            </div>
+            <div class="card-body">
+              <app-document-uploader #documentUploader [allowedExtensions]="qualificationExtensions"
+                [hasCategory]="true">
+              </app-document-uploader>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div>
-    <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading" [saveDisabled]="!createEditUserEducationForm.form.valid || isLoading"
-      (onCancelClick)="onCloseClick()">
+    <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading"
+      [saveDisabled]="!createEditUserEducationForm.form.valid || isLoading" (onCancelClick)="onCloseClick()">
     </abp-modal-footer>
   </div>
 </form>

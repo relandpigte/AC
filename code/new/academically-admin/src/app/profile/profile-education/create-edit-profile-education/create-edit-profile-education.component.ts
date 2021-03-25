@@ -1,10 +1,12 @@
-import { AfterViewInit, Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
+import { DocumentUploaderComponent } from '@app/shared/components/document-uploader/document-uploader.component';
 import { AppComponentBase } from '@shared/app-component-base';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { countries } from '@shared/constants/countries';
-import { UniverisityDto, UniversitiesServiceProxy, UserEducationDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { FileParameter, UniverisityDto, UniversitiesServiceProxy, UserEducationDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Observable, Observer } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { finalize, switchMap } from 'rxjs/operators';
 import { ProfileEducationLevelsComponent } from '../profile-education-levels/profile-education-levels.component';
 
 @Component({
@@ -13,6 +15,7 @@ import { ProfileEducationLevelsComponent } from '../profile-education-levels/pro
   styleUrls: ['./create-edit-profile-education.component.less']
 })
 export class CreateEditProfileEducationComponent extends AppComponentBase implements OnInit, AfterViewInit {
+  @ViewChild('documentUploader') documentUploaderComponent: DocumentUploaderComponent;
   public model: UserEducationDto = new UserEducationDto();
 
   @Output() userEducationSaved = new EventEmitter<boolean>();
@@ -20,6 +23,7 @@ export class CreateEditProfileEducationComponent extends AppComponentBase implem
 
   countries = countries;
   isLoading = false;
+  qualificationExtensions = fileUploadConfiguration.allowedQualificationExtensions;
   countryCode: string;
   universitiesTypeaheadSource: Observable<UniverisityDto[]>;
   yearSelections: string[] = [];
@@ -61,11 +65,24 @@ export class CreateEditProfileEducationComponent extends AppComponentBase implem
     const saveSubscription = this.model.id
       ? this._userEducationsService.update(this.model)
       : this._userEducationsService.create(this.model);
-    saveSubscription.subscribe(() => {
-      this.notify.success(this.l('SavedSuccessfully'));
-      this.userEducationSaved.emit(true);
-      this.isLoading = false;
-      this._modal.hide();
+    saveSubscription.subscribe(userEducationId => {
+      const documentsToUpload = this.documentUploaderComponent.files.map(file => {
+        const fileParameter: FileParameter = {
+          fileName: file.name,
+          data: file,
+        };
+        return fileParameter;
+      });
+      const categories = JSON.stringify(this.documentUploaderComponent.categories);
+      this._userEducationsService.uploadDocuments(userEducationId, categories, documentsToUpload)
+        .pipe(finalize(() => {
+          this.isLoading = false;
+        }))
+        .subscribe(() => {
+          this.notify.success(this.l('SavedSuccessfully'));
+          this.userEducationSaved.emit(true);
+          this._modal.hide();
+        })
     });
   }
 

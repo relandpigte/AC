@@ -18,5 +18,6 @@ namespace Academically.Services.UserEducations.Dto
         public string UniversityCountryCode { get; set; }
 
         public IEnumerable<UserEducationLevelDto> UserEducationLevels { get; set; }
+        public IEnumerable<UserEducationDocumentDto> UserEducationDocuments { get; set; }
     }
 }

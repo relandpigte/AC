@@ -7,5 +7,6 @@
         CoverPhoto,
         Qualification,
         Passport,
+        Education,
     }
 }

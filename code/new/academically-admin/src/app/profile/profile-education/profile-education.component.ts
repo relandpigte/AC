@@ -5,6 +5,7 @@ import { ProfileService } from '@shared/services/profile.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CreateEditProfileEducationComponent } from './create-edit-profile-education/create-edit-profile-education.component';
 import * as _ from 'lodash-es';
+import { ViewEducationDocumentsComponent } from './view-education-documents/view-education-documents.component';
 
 @Component({
   selector: 'app-profile-education',
@@ -53,6 +54,14 @@ export class ProfileEducationComponent extends AppComponentBase implements OnIni
         }
       }
     );
+  }
+
+  onViewDocumentsClick(userEducation: UserEducationDto): void {
+    const modalSettings = this.defaultModalSettings;
+    modalSettings.initialState = {
+      userEducationDocuments: userEducation.userEducationDocuments,
+    };
+    this._modalService.show(ViewEducationDocumentsComponent, modalSettings);
   }
 
   private getUserEducations(): void {
