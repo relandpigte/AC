@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ContentChild, ElementRef, EventEmitter, Injector, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { FileParameter } from '@shared/service-proxies/service-proxies';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -10,14 +10,21 @@ import { ImageCropperComponent } from '../image-cropper/image-cropper.component'
   styleUrls: ['./document-uploader.component.less']
 })
 export class DocumentUploaderComponent extends AppComponentBase implements OnInit {
+  @ContentChild('test') layoutTemplate: TemplateRef<any>;
   @Input() allowedExtensions: string[] = [];
   @Input() maxFiles: number;
   @Input() cropImages = false;
+  @Input() hasCategory = false;
   @Output() filesChanged = new EventEmitter<FileParameter[]>();
   @ViewChild('documentUploader') documentUploaderInput: ElementRef;
   public files: File[] = [];
+  public categories: string[] = [];
 
   loadingImageCropper = false;
+  categorySource = [
+    'Certificate',
+    'Transcript',
+  ];
 
   private _imageExtensions = [
     'jpg',
@@ -57,11 +64,17 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
           this.loadingImageCropper = false;
         });
         imageCropper.imageCropped.subscribe((file: File) => {
+          if (this.hasCategory) {
+            this.categories.push('');
+          }
           this.files.push(file);
           this.filesChanged.emit(this.getFileParameterFromFiles());
           imageCropper.close();
         });
       } else {
+        if (this.hasCategory) {
+          this.categories.push('');
+        }
         this.files.push(file);
         this.filesChanged.emit(this.getFileParameterFromFiles());
       }

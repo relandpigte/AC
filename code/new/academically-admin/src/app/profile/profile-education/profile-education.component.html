@@ -54,6 +54,10 @@
                 </p>
               </td>
               <td width="1%">
+                <button (click)="onViewDocumentsClick(userEducation)" type="button"
+                  class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
+                  <span class="fe fe-folder"></span>
+                </button>
                 <button *ngIf="permission.isGranted('Pages.Profile.Education.Update')"
                   (click)="onEditClick(userEducation)" type="button"
                   class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">

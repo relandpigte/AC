@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="UploadEducationEvidencePanelHeader">Upload Evidence of Education Attained</text>
+    <text name="Evidences">Evidences</text>
+    <text name="Levels">Levels</text>
     <text name="ProfilePictureRemovedMessage">Your profile picture was removed.</text>
     <text name="ProfilePictureUploadedMessage">Your profile picture was uploaded.</text>
     <text name="CoverPhotoRemovedMessage">Your cover photo was removed.</text>

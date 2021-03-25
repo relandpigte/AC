@@ -16,8 +16,8 @@
             </div>
           </div>
           <div class="col-auto">
-            <span *ngIf="!userQualificationDocument.isReviewed" class="badge badge-soft-info mr-1">On Review</span>
-            <span *ngIf="userQualificationDocument.isReviewed" class="badge badge-soft-success mr-1">Reviewed</span>
+            <span *ngIf="!userEducationDocument.isReviewed" class="badge badge-soft-warning mr-1">Unverified</span>
+            <span *ngIf="userEducationDocument.isReviewed" class="badge badge-soft-info mr-1">Verified</span>
           </div>
           <div class="col-auto">
             <button (click)="onViewDocumentClick(userQualificationDocument.document)"

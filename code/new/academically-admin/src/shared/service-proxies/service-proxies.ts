@@ -3304,7 +3304,7 @@ export class UserEducationsServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    create(body: UserEducationDto | undefined): Observable<void> {
+    create(body: UserEducationDto | undefined): Observable<string> {
         let url_ = this.baseUrl + "/api/services/app/UserEducations/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3316,6 +3316,7 @@ export class UserEducationsServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
             })
         };
 
@@ -3326,14 +3327,14 @@ export class UserEducationsServiceProxy {
                 try {
                     return this.processCreate(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<string>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<string>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<void> {
+    protected processCreate(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3342,21 +3343,24 @@ export class UserEducationsServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<string>(<any>null);
     }
 
     /**
      * @param body (optional) 
      * @return Success
      */
-    update(body: UserEducationDto | undefined): Observable<void> {
+    update(body: UserEducationDto | undefined): Observable<string> {
         let url_ = this.baseUrl + "/api/services/app/UserEducations/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3368,6 +3372,7 @@ export class UserEducationsServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
             })
         };
 
@@ -3378,14 +3383,14 @@ export class UserEducationsServiceProxy {
                 try {
                     return this.processUpdate(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<string>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<string>><any>_observableThrow(response_);
         }));
     }
 
-    protected processUpdate(response: HttpResponseBase): Observable<void> {
+    protected processUpdate(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3394,14 +3399,17 @@ export class UserEducationsServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<string>(<any>null);
     }
 
     /**
@@ -3438,6 +3446,71 @@ export class UserEducationsServiceProxy {
     }
 
     protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param userEducationId (optional) 
+     * @param categories (optional) 
+     * @param documents (optional) 
+     * @return Success
+     */
+    uploadDocuments(userEducationId: string | undefined, categories: string | undefined, documents: FileParameter[] | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserEducations/UploadDocuments";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (userEducationId === null || userEducationId === undefined)
+            throw new Error("The parameter 'userEducationId' cannot be null.");
+        else
+            content_.append("UserEducationId", userEducationId.toString());
+        if (categories === null || categories === undefined)
+            throw new Error("The parameter 'categories' cannot be null.");
+        else
+            content_.append("Categories", categories.toString());
+        if (documents === null || documents === undefined)
+            throw new Error("The parameter 'documents' cannot be null.");
+        else
+            documents.forEach(item_ => content_.append("Documents", item_.data, item_.fileName ? item_.fileName : "Documents") );
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUploadDocuments(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUploadDocuments(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUploadDocuments(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4367,13 +4440,14 @@ export interface IDocumentDto {
     size: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
     CoverPhoto = 2,
     Qualification = 3,
     Passport = 4,
+    Education = 5,
 }
 
 export class EducationLevelDto implements IEducationLevelDto {
@@ -6412,6 +6486,69 @@ export interface IUserDtoPagedResultDto {
     totalCount: number;
 }
 
+export class UserEducationDocumentDto implements IUserEducationDocumentDto {
+    id: string | undefined;
+    userEductionId: string;
+    documentId: string;
+    category: string | undefined;
+    isReviewed: boolean;
+    document: DocumentDto;
+
+    constructor(data?: IUserEducationDocumentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userEductionId = _data["userEductionId"];
+            this.documentId = _data["documentId"];
+            this.category = _data["category"];
+            this.isReviewed = _data["isReviewed"];
+            this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserEducationDocumentDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserEducationDocumentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userEductionId"] = this.userEductionId;
+        data["documentId"] = this.documentId;
+        data["category"] = this.category;
+        data["isReviewed"] = this.isReviewed;
+        data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): UserEducationDocumentDto {
+        const json = this.toJSON();
+        let result = new UserEducationDocumentDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserEducationDocumentDto {
+    id: string | undefined;
+    userEductionId: string;
+    documentId: string;
+    category: string | undefined;
+    isReviewed: boolean;
+    document: DocumentDto;
+}
+
 export class UserEducationDto implements IUserEducationDto {
     id: string;
     userId: number;
@@ -6421,6 +6558,7 @@ export class UserEducationDto implements IUserEducationDto {
     universityName: string | undefined;
     universityCountryCode: string | undefined;
     userEducationLevels: UserEducationLevelDto[] | undefined;
+    userEducationDocuments: UserEducationDocumentDto[] | undefined;
 
     constructor(data?: IUserEducationDto) {
         if (data) {
@@ -6444,6 +6582,11 @@ export class UserEducationDto implements IUserEducationDto {
                 this.userEducationLevels = [] as any;
                 for (let item of _data["userEducationLevels"])
                     this.userEducationLevels.push(UserEducationLevelDto.fromJS(item));
+            }
+            if (Array.isArray(_data["userEducationDocuments"])) {
+                this.userEducationDocuments = [] as any;
+                for (let item of _data["userEducationDocuments"])
+                    this.userEducationDocuments.push(UserEducationDocumentDto.fromJS(item));
             }
         }
     }
@@ -6469,6 +6612,11 @@ export class UserEducationDto implements IUserEducationDto {
             for (let item of this.userEducationLevels)
                 data["userEducationLevels"].push(item.toJSON());
         }
+        if (Array.isArray(this.userEducationDocuments)) {
+            data["userEducationDocuments"] = [];
+            for (let item of this.userEducationDocuments)
+                data["userEducationDocuments"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -6489,6 +6637,7 @@ export interface IUserEducationDto {
     universityName: string | undefined;
     universityCountryCode: string | undefined;
     userEducationLevels: UserEducationLevelDto[] | undefined;
+    userEducationDocuments: UserEducationDocumentDto[] | undefined;
 }
 
 export class UserEducationLevelDto implements IUserEducationLevelDto {

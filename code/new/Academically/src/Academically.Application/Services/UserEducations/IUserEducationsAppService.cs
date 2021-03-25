@@ -9,8 +9,9 @@ namespace Academically.Services.UserEducations
     public interface IUserEducationsAppService : IApplicationService
     {
         Task<IEnumerable<UserEducationDto>> GetAll(long userId);
-        Task Create(UserEducationDto input);
-        Task Update(UserEducationDto input);
+        Task<Guid> Create(UserEducationDto input);
+        Task<Guid> Update(UserEducationDto input);
+        Task UploadDocuments(UploadUserEducationDocumentsDto input);
         Task Delete(Guid id);
     }
 }
