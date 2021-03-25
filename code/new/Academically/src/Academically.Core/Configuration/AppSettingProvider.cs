@@ -22,6 +22,7 @@ namespace Academically.Configuration
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.Aws_Region),
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.Aws_S3_AssetsBucket),
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.Aws_S3_SecureAssetsBucket),
+                CreateSettingDefinitionFromAppSetting(AppSettingNames.Aws_S3_Folders_ProfilePictures),
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.Aws_S3_Folders_CoverPhotos),
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.Aws_S3_Folders_Qualifications),
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.Aws_S3_Folders_Passports),

@@ -27,10 +27,10 @@ export abstract class BaseNavigation extends AppComponentBase {
     this.themeSettings = themeSettingsService.getConfiguration();
     this.initNavigationColor();
     this.user = this.appSession.user;
-    // abp.event.on(uiEvents.profileDetailsUpdated, (profile: GetProfileDetailDto, profilePictureUrl: string) => {
-    //   this.user.profilePictureUrl = profilePictureUrl;
-    //   cd.detectChanges();
-    // });
+    abp.event.on(uiEvents.profileDetailsUpdated, (profilePictureUrl: string) => {
+      this.user.profilePictureUrl = profilePictureUrl;
+      cd.detectChanges();
+    });
     abp.event.on(uiEvents.themeSettingsSaved, () => {
       this.themeSettings = themeSettingsService.getConfiguration();
       this.initNavigationColor();

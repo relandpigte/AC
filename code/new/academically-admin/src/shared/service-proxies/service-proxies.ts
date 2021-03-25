@@ -916,6 +916,65 @@ export class ProfilesServiceProxy {
     }
 
     /**
+     * @param profilePicture (optional) 
+     * @return Success
+     */
+    updateProfilePicture(profilePicture: FileParameter | undefined): Observable<string> {
+        let url_ = this.baseUrl + "/api/services/app/Profiles/UpdateProfilePicture";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (profilePicture === null || profilePicture === undefined)
+            throw new Error("The parameter 'profilePicture' cannot be null.");
+        else
+            content_.append("ProfilePicture", profilePicture.data, profilePicture.fileName ? profilePicture.fileName : "ProfilePicture");
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateProfilePicture(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateProfilePicture(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateProfilePicture(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
+    }
+
+    /**
      * @return Success
      */
     deleteCoverPhoto(): Observable<void> {
@@ -944,6 +1003,53 @@ export class ProfilesServiceProxy {
     }
 
     protected processDeleteCoverPhoto(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    deleteProfilePicture(): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Profiles/DeleteProfilePicture";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteProfilePicture(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteProfilePicture(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeleteProfilePicture(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3691,6 +3797,8 @@ export class ApplicationInfoDto implements IApplicationInfoDto {
     version: string | undefined;
     releaseDate: moment.Moment;
     features: { [key: string]: boolean; } | undefined;
+    baseDirectory: string | undefined;
+    profilePicturesFolderName: string | undefined;
 
     constructor(data?: IApplicationInfoDto) {
         if (data) {
@@ -3712,6 +3820,8 @@ export class ApplicationInfoDto implements IApplicationInfoDto {
                         this.features[key] = _data["features"][key];
                 }
             }
+            this.baseDirectory = _data["baseDirectory"];
+            this.profilePicturesFolderName = _data["profilePicturesFolderName"];
         }
     }
 
@@ -3733,6 +3843,8 @@ export class ApplicationInfoDto implements IApplicationInfoDto {
                     data["features"][key] = this.features[key];
             }
         }
+        data["baseDirectory"] = this.baseDirectory;
+        data["profilePicturesFolderName"] = this.profilePicturesFolderName;
         return data; 
     }
 
@@ -3748,6 +3860,8 @@ export interface IApplicationInfoDto {
     version: string | undefined;
     releaseDate: moment.Moment;
     features: { [key: string]: boolean; } | undefined;
+    baseDirectory: string | undefined;
+    profilePicturesFolderName: string | undefined;
 }
 
 export class AuthenticateModel implements IAuthenticateModel {
@@ -4253,12 +4367,13 @@ export interface IDocumentDto {
     size: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
     CoverPhoto = 2,
     Qualification = 3,
+    Passport = 4,
 }
 
 export class EducationLevelDto implements IEducationLevelDto {
@@ -6114,7 +6229,9 @@ export class UserDto implements IUserDto {
     about: string | undefined;
     lastLoginTime: moment.Moment | undefined;
     creationTime: moment.Moment;
+    profilePictureDocument: DocumentDto;
     coverPhotoUrl: string | undefined;
+    profilePictureUrl: string | undefined;
     roleNames: string[] | undefined;
     roleDisplayNames: string[] | undefined;
 
@@ -6147,7 +6264,9 @@ export class UserDto implements IUserDto {
             this.about = _data["about"];
             this.lastLoginTime = _data["lastLoginTime"] ? moment(_data["lastLoginTime"].toString()) : <any>undefined;
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.profilePictureDocument = _data["profilePictureDocument"] ? DocumentDto.fromJS(_data["profilePictureDocument"]) : <any>undefined;
             this.coverPhotoUrl = _data["coverPhotoUrl"];
+            this.profilePictureUrl = _data["profilePictureUrl"];
             if (Array.isArray(_data["roleNames"])) {
                 this.roleNames = [] as any;
                 for (let item of _data["roleNames"])
@@ -6188,7 +6307,9 @@ export class UserDto implements IUserDto {
         data["about"] = this.about;
         data["lastLoginTime"] = this.lastLoginTime ? this.lastLoginTime.toISOString() : <any>undefined;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["profilePictureDocument"] = this.profilePictureDocument ? this.profilePictureDocument.toJSON() : <any>undefined;
         data["coverPhotoUrl"] = this.coverPhotoUrl;
+        data["profilePictureUrl"] = this.profilePictureUrl;
         if (Array.isArray(this.roleNames)) {
             data["roleNames"] = [];
             for (let item of this.roleNames)
@@ -6229,7 +6350,9 @@ export interface IUserDto {
     about: string | undefined;
     lastLoginTime: moment.Moment | undefined;
     creationTime: moment.Moment;
+    profilePictureDocument: DocumentDto;
     coverPhotoUrl: string | undefined;
+    profilePictureUrl: string | undefined;
     roleNames: string[] | undefined;
     roleDisplayNames: string[] | undefined;
 }

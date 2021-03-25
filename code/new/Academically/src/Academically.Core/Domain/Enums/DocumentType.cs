@@ -6,5 +6,6 @@
         ProfilePicture,
         CoverPhoto,
         Qualification,
+        Passport,
     }
 }

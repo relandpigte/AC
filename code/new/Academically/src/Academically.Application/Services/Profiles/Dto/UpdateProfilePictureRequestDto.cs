@@ -2,7 +2,7 @@
 
 namespace Academically.Services.Profiles.Dto
 {
-    public class UpdateCoverPhotoInput
+    public class UpdateCoverPhotoRequestDto
     {
         public IFormFile CoverPhoto { get; set; }
     }

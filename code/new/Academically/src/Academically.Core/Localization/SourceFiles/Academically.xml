@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="ProfilePictureRemovedMessage">Your profile picture was removed.</text>
+    <text name="ProfilePictureUploadedMessage">Your profile picture was uploaded.</text>
+    <text name="CoverPhotoRemovedMessage">Your cover photo was removed.</text>
+    <text name="CoverPhotoUploadedMessage">Your cover photo was uploaded.</text>
     <text name="Uploading">Uploading</text>
     <text name="Upload">Upload</text>
     <text name="UploadPassportPhoto">Upload Passport Photo</text>

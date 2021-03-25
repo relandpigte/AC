@@ -96,6 +96,7 @@ import { CreateEditProfileQualificationComponent } from './profile/profile-educa
 import { DocumentUploaderComponent } from './shared/components/document-uploader/document-uploader.component';
 import { ViewQualificationDocumentsComponent } from './profile/profile-education/profile-qualifications/view-qualification-documents/view-qualification-documents.component';
 import { VerifyPassportComponent } from './widgets/verifications/verify-passport/verify-passport.component';
+import { ProfilePictureChangerComponent } from './shared/components/profile-picture-changer/profile-picture-changer.component';
 
 @NgModule({
   declarations: [
@@ -172,6 +173,7 @@ import { VerifyPassportComponent } from './widgets/verifications/verify-passport
     DocumentUploaderComponent,
     ViewQualificationDocumentsComponent,
     VerifyPassportComponent,
+    ProfilePictureChangerComponent,
   ],
   imports: [
     CommonModule,

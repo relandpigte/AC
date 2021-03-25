@@ -14,7 +14,7 @@ import { finalize } from 'rxjs/operators';
 export class VerifyPassportComponent extends AppComponentBase implements AfterViewInit {
   @Output() passportVerified = new EventEmitter();
   @ViewChild(DocumentUploaderComponent) documentUploader: DocumentUploaderComponent;
-  passportVerificationExtensions = fileUploadConfiguration.allowedPassportVerificationExtensions;
+  passportVerificationExtensions = fileUploadConfiguration.allowedImageExtensions;
   isLoading = false;
   passport: FileParameter;
 

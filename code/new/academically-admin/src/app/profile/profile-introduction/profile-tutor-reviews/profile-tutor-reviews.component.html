@@ -18,7 +18,7 @@
           <div class="row align-items-center">
             <div class="col-auto">
               <a href="javascript:;" class="avatar avatar-md">
-                <img [src]="getProfilePicture('')" alt="..." class="avatar-img rounded-circle">
+                <img [src]="getProfilePicture(user.profilePictureUrl)" alt="..." class="avatar-img rounded-circle">
               </a>
             </div>
             <div class="col ml-n2">
@@ -30,7 +30,7 @@
                   [popover]="formulaPopoverTemplate" container="body" placement="top" triggers="mouseenter:mouseleave">
                 </i>
               </h4>
-              <app-star-rating [actualRating]="tutorRatingSummary.totalRatingPercentage"></app-star-rating>
+              <app-star-rating *ngIf="tutorRatingSummary.totalRatingPercentage" [actualRating]="tutorRatingSummary.totalRatingPercentage"></app-star-rating>
               <span class="text-muted small">{{ tutorRatingSummary.totalRatingPercentage }}/5</span>
               <p class="small text-muted mb-0">{{ tutorRatingSummary.totalReviews }} {{ 'Reviews' | localize}}</p>
             </div>
@@ -117,7 +117,7 @@
           <div class="row align-items-center">
             <div class="col-auto">
               <a href="javascript:;" class="avatar avatar-md">
-                <img [src]="getProfilePicture('')" alt="..." class="avatar-img rounded-circle">
+                <img [src]="getProfilePictureFromDocument(tutorRating.reviewer.profilePictureDocument, tutorRating.reviewer.id)" alt="..." class="avatar-img rounded-circle">
               </a>
             </div>
             <div class="col ml-n2">

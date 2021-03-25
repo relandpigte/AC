@@ -97,6 +97,7 @@ namespace Academically.Services.Ratings
 
             studentRatingsQuery = studentRatingsQuery
                 .Include(e => e.Reviewer)
+                    .ThenInclude(e => e.ProfilePictureDocument)
                 .OrderByDescending(e => e.CreationTime);
 
             var studentRatings = await studentRatingsQuery
@@ -117,6 +118,7 @@ namespace Academically.Services.Ratings
 
             tutorRatingsQuery = tutorRatingsQuery
                 .Include(e => e.Reviewer)
+                    .ThenInclude(e => e.ProfilePictureDocument)
                 .OrderByDescending(e => e.CreationTime);
 
             var tutorRatings = await tutorRatingsQuery

@@ -10,6 +10,7 @@
         public const string Aws_S3_Folders_CoverPhotos = "Aws.S3.Folders.CoverPhotos";
         public const string Aws_S3_Folders_Qualifications = "Aws.S3.Folders.Qualifications";
         public const string Aws_S3_Folders_Passports = "Aws.S3.Folders.Passports";
+        public const string Aws_S3_Folders_ProfilePictures = "Aws.S3.Folders.ProfilePictures";
         public const string ITagg_Sms_Username = "ITagg.Sms.Username";
         public const string ITagg_Sms_Password = "ITagg.Sms.Password";
         public const string Email_FromName = "Email.FromName";
