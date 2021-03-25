@@ -5,6 +5,7 @@ using Abp.Application.Services.Dto;
 using Abp.Authorization.Users;
 using Abp.AutoMapper;
 using Academically.Authorization.Users;
+using Academically.Services.Documents.Dto;
 
 namespace Academically.Users.Dto
 {
@@ -43,7 +44,10 @@ namespace Academically.Users.Dto
         public DateTime? LastLoginTime { get; set; }
         public DateTime CreationTime { get; set; }
 
+        public DocumentDto ProfilePictureDocument { get; set; }
+
         public string CoverPhotoUrl { get; set; }
+        public string ProfilePictureUrl { get; set; }
         public IEnumerable<string> RoleNames { get; set; }
         public IEnumerable<string> RoleDisplayNames { get; set; }
     }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Authorization.Users;
 using Abp.Extensions;
+using Academically.Domain.Entities;
 
 namespace Academically.Authorization.Users
 {
@@ -16,8 +18,15 @@ namespace Academically.Authorization.Users
         public string Country { get; set; }
         public string WebsiteUrl { get; set; }
         public string About { get; set; }
-        public string CoverPhotoFileName { get; set; }
         public DateTime? DateOfBirth { get; set; }
+        public Guid? CoverPhotoDocumentId { get; set; }
+        public Guid? ProfilePictureDocumentId { get; set; }
+
+        [ForeignKey("CoverPhotoDocumentId")]
+        public virtual Document CoverPhotoDocument { get; set; }
+
+        [ForeignKey("ProfilePictureDocumentId")]
+        public virtual Document ProfilePictureDocument { get; set; }
 
         public const string DefaultPassword = "123qwe";
 

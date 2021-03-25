@@ -10,5 +10,9 @@ namespace Academically.Sessions.Dto
         public DateTime ReleaseDate { get; set; }
 
         public Dictionary<string, bool> Features { get; set; }
+
+        public string BaseDirectory { get; set; }
+
+        public string ProfilePicturesFolderName { get; set; }
     }
 }

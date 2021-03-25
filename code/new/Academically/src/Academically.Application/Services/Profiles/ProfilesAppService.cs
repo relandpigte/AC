@@ -1,23 +1,17 @@
 ﻿using Abp.Authorization;
-using Abp.Configuration;
 using Abp.Domain.Repositories;
-using Abp.Extensions;
-using Abp.IO.Extensions;
-using Abp.Timing;
 using Academically.Authorization;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
-using Academically.Configuration;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Domain.Services.Documents;
 using Academically.Extensions;
 using Academically.Services.Profiles.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SourceCloud.Core.Services;
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,8 +26,7 @@ namespace Academically.Services.Profiles
         private readonly IRepository<StudentRating, Guid> _studentRatingsRepository;
         private readonly IRepository<TutorRating, Guid> _tutorRatingsRepository;
         private readonly IRepository<PassportVerification, Guid> _passportVerifications;
-        private readonly ISettingManager _settingManager;
-        private readonly IFileManagerService _fileManagerService;
+        private readonly IDocumentsDomainService _documentsDomainService;
 
         public ProfilesAppService(
             UserManager userManager,
@@ -42,8 +35,7 @@ namespace Academically.Services.Profiles
             IRepository<StudentRating, Guid> studentRatingsRepository,
             IRepository<TutorRating, Guid> tutorRatingsRepository,
             IRepository<PassportVerification, Guid> passportVerifications,
-            ISettingManager settingManager,
-            IFileManagerService fileManagerService
+            IDocumentsDomainService documentsDomainService
             )
         {
             _userManager = userManager;
@@ -52,21 +44,26 @@ namespace Academically.Services.Profiles
             _studentRatingsRepository = studentRatingsRepository;
             _tutorRatingsRepository = tutorRatingsRepository;
             _passportVerifications = passportVerifications;
-            _settingManager = settingManager;
-            _fileManagerService = fileManagerService;
+            _documentsDomainService = documentsDomainService;
         }
 
         public async Task<UserDto> Get(long id)
         {
-            var user = await _usersRepository.GetAllIncluding(e => e.Roles)
+            var user = await _usersRepository.GetAll()
+                .Include(e => e.CoverPhotoDocument)
+                .Include(e => e.ProfilePictureDocument)
+                .Include(e => e.Roles)
                 .FirstOrDefaultAsync(e => e.Id == id);
             var output = ObjectMapper.Map<UserDto>(user);
             output.RoleNames = await _userManager.GetRolesAsync(user);
 
-            if (!user.CoverPhotoFileName.IsNullOrWhiteSpace())
+            if (user.CoverPhotoDocumentId.HasValue)
             {
-                string coverPhotoFolder = await _settingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_CoverPhotos);
-                output.CoverPhotoUrl = _fileManagerService.GetFileUrl(user.CoverPhotoFileName, user.Id, coverPhotoFolder);
+                output.CoverPhotoUrl = await _documentsDomainService.GetFileUrlAsync(user.CoverPhotoDocument);
+            }
+            if (user.ProfilePictureDocumentId.HasValue)
+            {
+                output.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(user.ProfilePictureDocument);
             }
 
             return output;
@@ -162,42 +159,62 @@ namespace Academically.Services.Profiles
             await _usersRepository.UpdateAsync(user);
         }
 
-        public async Task<string> UpdateCoverPhoto([FromForm] UpdateCoverPhotoInput input)
+        public async Task<string> UpdateCoverPhoto([FromForm] UpdateCoverPhotoRequestDto input)
         {
             long userId = AbpSession.UserId.Value;
             var user = await _usersRepository.GetAsync(userId);
-            string folder = await _settingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_CoverPhotos);
-            folder = $"{userId}/{folder}";
-            string fileName = $"{Clock.Now.Ticks}{Path.GetExtension(input.CoverPhoto.FileName)}";
-            string oldFileName = "";
+            var previousCoverPhotoDocumentId = user.CoverPhotoDocumentId;
+            var coverPhotoDocument = await _documentsDomainService.CreateAsync(user.Id, input.CoverPhoto, DocumentType.CoverPhoto);
+            user.CoverPhotoDocumentId = coverPhotoDocument.Id;
 
-            using (var stream = input.CoverPhoto.OpenReadStream())
+            if (previousCoverPhotoDocumentId.HasValue)
             {
-                var fileBytes = stream.GetAllBytes();
-                await _fileManagerService.UploadAsync(fileName, input.CoverPhoto.ContentType, fileBytes, folder);
-                oldFileName = user.CoverPhotoFileName;
-                user.CoverPhotoFileName = fileName;
+                await _documentsDomainService.DeleteAsync(previousCoverPhotoDocumentId.Value);
             }
 
             await _usersRepository.UpdateAsync(user);
+            return await _documentsDomainService.GetFileUrlAsync(coverPhotoDocument);
+        }
 
-            if (!oldFileName.IsNullOrWhiteSpace())
+        public async Task<string> UpdateProfilePicture([FromForm] UpdateProfilePictureRequestDto input)
+        {
+            long userId = AbpSession.UserId.Value;
+            var user = await _usersRepository.GetAsync(userId);
+            var previousProfilePictureDocumentId = user.ProfilePictureDocumentId;
+            var profilePictureDocument = await _documentsDomainService.CreateAsync(user.Id, input.ProfilePicture, DocumentType.ProfilePicture);
+            user.ProfilePictureDocumentId = profilePictureDocument.Id;
+
+            if (previousProfilePictureDocumentId.HasValue)
             {
-                await _fileManagerService.DeleteAsync(folder, oldFileName);
+                await _documentsDomainService.DeleteAsync(previousProfilePictureDocumentId.Value);
             }
 
-            string coverPhotoFolder = await _settingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_CoverPhotos);
-            return _fileManagerService.GetFileUrl(user.CoverPhotoFileName, user.Id, coverPhotoFolder);
+            await _usersRepository.UpdateAsync(user);
+            return await _documentsDomainService.GetFileUrlAsync(profilePictureDocument);
         }
 
         public async Task DeleteCoverPhoto()
         {
-            var user = await _usersRepository.GetAsync(AbpSession.UserId.Value);
-            string folder = await _settingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_CoverPhotos);
-            folder = $"{user.Id}/{folder}";
-            await _fileManagerService.DeleteAsync(folder, user.CoverPhotoFileName);
-            user.CoverPhotoFileName = "";
-            await _usersRepository.UpdateAsync(user);
+            var user = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
+            if (user.CoverPhotoDocumentId.HasValue)
+            {
+                var previousCoverPhotoDocumentId = user.CoverPhotoDocumentId.Value;
+                user.CoverPhotoDocumentId = null;
+                await _usersRepository.UpdateAsync(user);
+                await _documentsDomainService.DeleteAsync(previousCoverPhotoDocumentId);
+            }
+        }
+
+        public async Task DeleteProfilePicture()
+        {
+            var user = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
+            if (user.ProfilePictureDocumentId.HasValue)
+            {
+                var previousProfilePictureDocumentId = user.ProfilePictureDocumentId.Value;
+                user.ProfilePictureDocumentId = null;
+                await _usersRepository.UpdateAsync(user);
+                await _documentsDomainService.DeleteAsync(previousProfilePictureDocumentId);
+            }
         }
     }
 }

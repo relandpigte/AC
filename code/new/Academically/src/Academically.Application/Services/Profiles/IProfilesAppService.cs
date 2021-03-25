@@ -12,7 +12,9 @@ namespace Academically.Services.Profiles
         Task<ProfileMetricDto> GetMetrics(long id);
         Task UpdateWebsiteUrl(string websiteUrl);
         Task UpdateAbout(string about);
-        Task<string> UpdateCoverPhoto(UpdateCoverPhotoInput input);
+        Task<string> UpdateCoverPhoto(UpdateCoverPhotoRequestDto input);
+        Task<string> UpdateProfilePicture(UpdateProfilePictureRequestDto input);
         Task DeleteCoverPhoto();
+        Task DeleteProfilePicture();
     }
 }

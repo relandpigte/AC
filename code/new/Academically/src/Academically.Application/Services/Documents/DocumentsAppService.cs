@@ -1,44 +1,23 @@
-﻿using Abp.Configuration;
-using Abp.Domain.Repositories;
-using Academically.Configuration;
-using Academically.Domain.Entities;
-using SourceCloud.Core.Services;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Academically.Domain.Services.Documents;
 
 namespace Academically.Services.Documents
 {
     public class DocumentsAppService : AcademicallyAppServiceBase, IDocumentsAppService
     {
-        private readonly IRepository<Document, Guid> _documentsRepository;
-        private readonly IFileManagerService _fileManagerService;
-        private readonly ISettingManager _settingManager;
+        private readonly IDocumentsDomainService _documentsDomainService;
 
         public DocumentsAppService(
-            IRepository<Document, Guid> documentsRepository,
-            IFileManagerService fileManagerService,
-            ISettingManager settingManager
+            IDocumentsDomainService documentsDomainService
             )
         {
-            _documentsRepository = documentsRepository;
-            _fileManagerService = fileManagerService;
-            _settingManager = settingManager;
+            _documentsDomainService = documentsDomainService;
         }
 
         public async Task<string> GetSecuredUrl(Guid id)
         {
-            var document = await _documentsRepository.GetAsync(id);
-            string folder;
-            bool isSecured;
-            switch (document.DocumentType)
-            {
-                default:
-                    folder = await _settingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_Qualifications);
-                    isSecured = true;
-                    break;
-            }
-            string fileUrl = _fileManagerService.GetFileUrl(document.Name, AbpSession.UserId.Value, folder, isSecured);
-            return fileUrl;
+            return await _documentsDomainService.GetFileUrlAsync(id);
         }
     }
 }

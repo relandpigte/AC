@@ -12,6 +12,7 @@ import {
 
 import { AppSessionService } from '@shared/session/app-session.service';
 import { Moment } from 'moment';
+import { DocumentDto } from './service-proxies/service-proxies';
 
 export abstract class AppComponentBase {
 
@@ -67,14 +68,21 @@ export abstract class AppComponentBase {
   }
 
   getProfilePicture(fileNameOrUrl: string, userId?: number): string {
-    //   if (fileNameOrUrl) {
-    //     if (this.isValidUrl(fileNameOrUrl)) {
-    //       return fileNameOrUrl;
-    //     } else {
-    //       return `${this.appSession.user.directoryBaseUrl}/${userId}/profile-pictures/${fileNameOrUrl}`;
-    //     }
-    //   }
+    if (fileNameOrUrl) {
+      if (this.isValidUrl(fileNameOrUrl)) {
+        return fileNameOrUrl;
+      } else {
+        return `${this.appSession.application.baseDirectory}/${userId}/${this.appSession.application.profilePicturesFolderName}/${fileNameOrUrl}`;
+      }
+    }
     return 'assets/img/anonymous.png';
+  }
+
+  getProfilePictureFromDocument(document: DocumentDto, userId: number): string {
+    if (document) {
+      return this.getProfilePicture(document.name, userId);
+    }
+    return this.getProfilePicture('');
   }
 
   getCoverPhoto(coverPhotoUrl: string): string {
@@ -100,5 +108,15 @@ export abstract class AppComponentBase {
 
   protected diffMomentDatesSeconds(date1: Moment, date2: Moment): number {
     return this.diffDatesSeconds(this.convertMomentToUserDate(date1), this.convertMomentToUserDate(date2));
+  }
+
+  private isValidUrl(string): boolean {
+    try {
+      new URL(string);
+    } catch (_) {
+      return false;
+    }
+
+    return true;
   }
 }

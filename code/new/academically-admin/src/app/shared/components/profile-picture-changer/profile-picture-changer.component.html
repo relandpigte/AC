@@ -1,0 +1,29 @@
+<div class="btn-group profile-picture-changer" dropdown>
+  <button [disabled]="isRemoving" dropdownToggle type="button" class="btn btn-primary btn-sm btn-rounded-circle" aria-controls="dropdown-basic">
+    <span *ngIf="!isRemoving">
+      <i class="fe fe-camera"></i>
+    </span>
+    <span *ngIf="isRemoving">
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    </span>
+  </button>
+  <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu">
+    <li class="position-relative" role="menuitem">
+      <a class="dropdown-item" href="#" (click)="$event.preventDefault(); onUploadProfilePictureClick()">
+        <i class="fe fe-image"></i>
+        {{ 'UploadPhoto' | localize}}
+      </a>
+    </li>
+    <ng-container *ngIf="user.profilePictureUrl">
+      <li class="divider dropdown-divider"></li>
+      <li role="menuitem">
+        <a class="dropdown-item" href="#" (click)="$event.preventDefault(); onRemoveClick()">
+          <i class="fe fe-trash"></i>
+          {{ 'RemovePhoto' | localize}}
+        </a>
+      </li>
+    </ng-container>
+  </ul>
+</div>
+<input #profilePictureInput class="inline-file-upload" type="file"
+  (change)="onProfilePictureChange($event.target.files)" [accept]="fileUploadSettings.allowedImageExtensions" />

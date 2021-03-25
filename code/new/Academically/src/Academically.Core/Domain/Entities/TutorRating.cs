@@ -15,6 +15,9 @@ namespace Academically.Domain.Entities
         public string Comments { get; set; }
 
         [ForeignKey("TutorId")]
+        public virtual User Tutor { get; set; }
+
+        [ForeignKey("CreatorUserId")]
         public virtual User Reviewer { get; set; }
 
         public virtual ICollection<TutorRatingArea> TutorRatingAreas { get; set; }

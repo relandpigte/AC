@@ -105,13 +105,13 @@ namespace SourceCloud.Provider.Aws
                 _client.Dispose();
         }
 
-        public string GetFileUrl(string fileName, long userId, string folder = null, bool isSecured = false)
+        public string GetFileUrl(string fileName, string folder = null, bool isSecured = false)
         {
             if (!string.IsNullOrWhiteSpace(fileName))
             {
                 if (isSecured)
                 {
-                    var fileKey = string.IsNullOrWhiteSpace(folder) ? $"{userId}/{fileName}" : $"{userId}/{folder}/{fileName}";
+                    var fileKey = string.IsNullOrWhiteSpace(folder) ? fileName : $"{folder}/{fileName}";
                     var request = new GetPreSignedUrlRequest()
                     {
                         BucketName = _configuration.SecuredBucket,
@@ -126,9 +126,9 @@ namespace SourceCloud.Provider.Aws
                     var s3Bucket = GetDirectoryUrl();
                     if (!string.IsNullOrWhiteSpace(folder))
                     {
-                        return $"{s3Bucket}/{userId}/{folder}/{fileName}";
+                        return $"{s3Bucket}/{folder}/{fileName}";
                     }
-                    return $"{s3Bucket}/{userId}/{fileName}";
+                    return $"{s3Bucket}/{fileName}";
                 }
             }
 

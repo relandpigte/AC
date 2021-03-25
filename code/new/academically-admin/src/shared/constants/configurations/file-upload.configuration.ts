@@ -1,5 +1,5 @@
 export const fileUploadConfiguration = {
-  allowedExtensions: [
+  allowedImageExtensions: [
     '.jpg',
     '.jpeg',
     '.png',
@@ -11,11 +11,6 @@ export const fileUploadConfiguration = {
     '.pdf',
     '.doc',
     '.docx',
-  ],
-  allowedPassportVerificationExtensions: [
-    '.jpg',
-    '.jpeg',
-    '.png',
   ],
   profilePictureMaxFileSize: 2000000,
 };

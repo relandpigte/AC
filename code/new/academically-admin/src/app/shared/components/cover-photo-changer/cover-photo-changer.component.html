@@ -18,7 +18,7 @@
         {{ 'UploadPhoto' | localize}}
       </a>
     </li>
-    <ng-container *ngIf="user.coverPhotoUrl">
+    <ng-container *ngIf="user && user.coverPhotoUrl">
       <li class="divider dropdown-divider"></li>
       <li role="menuitem">
         <a class="dropdown-item" href="#" (click)="$event.preventDefault(); onRemoveCoverPhoto()">
@@ -30,4 +30,4 @@
   </ul>
 </div>
 <input #coverPhotoInput class="inline-file-upload" type="file" (change)="onCoverPhotoChange($event.target.files)"
-  [accept]="fileUploadSettings.allowedExtensions" />
+  [accept]="fileUploadSettings.allowedImageExtensions" />

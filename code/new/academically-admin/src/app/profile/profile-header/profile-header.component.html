@@ -9,7 +9,8 @@
         <div class="col-auto">
           <div class="avatar avatar-xxl header-avatar-top">
             <img alt="..." class="avatar-img rounded-circle border border-4 border-body no-picture-border"
-              [src]="getProfilePicture('')" />
+              [src]="getProfilePicture(user.profilePictureUrl)" />
+            <app-profile-picture-changer *ngIf="!isViewOnly"></app-profile-picture-changer>
           </div>
         </div>
         <div class="col mb-3 ml-n3 ml-md-n2">

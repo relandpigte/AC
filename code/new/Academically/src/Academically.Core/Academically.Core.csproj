@@ -22,6 +22,7 @@
   <ItemGroup>
     <Folder Include="Domain\Services\Registrations\" />
     <Folder Include="Domain\Services\PhoneVerifications\" />
+    <Folder Include="Domain\Services\Documents\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SourceCloud.Provider.Aws\SourceCloud.Provider.Aws.csproj" />
