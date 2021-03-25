@@ -31,7 +31,7 @@ namespace Academically.Domain.Events.Handlers
         public async Task HandleEventAsync(EntityCreatedEventData<Registration> eventData)
         {
             string clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
-            string registrationLink = $"{clientRootAddress}account/complete-registration/{eventData.Entity.Id}";
+            string registrationLink = $"{clientRootAddress}/account/complete-registration/{eventData.Entity.Id}";
             string subject = L("RegistrationEmailSubject");
             string body = L("RegistrationEmailMessage", registrationLink);
 
