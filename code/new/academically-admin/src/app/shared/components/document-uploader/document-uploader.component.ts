@@ -85,8 +85,11 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
     this.documentUploaderInput.nativeElement.value = '';
   }
 
-  onRemoveFileClick(file: File) {
-    this.files.splice(this.files.indexOf(file), 1);
+  onRemoveFileClick(fileIndex: number) {
+    if (this.hasCategory) {
+      this.categories.splice(fileIndex, 1);
+    }
+    this.files.splice(fileIndex, 1);
     this.filesChanged.emit(this.getFileParameterFromFiles());
   }
 

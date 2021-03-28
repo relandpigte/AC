@@ -3413,6 +3413,71 @@ export class UserEducationsServiceProxy {
     }
 
     /**
+     * @param userEducationId (optional) 
+     * @param categories (optional) 
+     * @param documents (optional) 
+     * @return Success
+     */
+    uploadDocuments(userEducationId: string | undefined, categories: string | undefined, documents: FileParameter[] | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserEducations/UploadDocuments";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (userEducationId === null || userEducationId === undefined)
+            throw new Error("The parameter 'userEducationId' cannot be null.");
+        else
+            content_.append("UserEducationId", userEducationId.toString());
+        if (categories === null || categories === undefined)
+            throw new Error("The parameter 'categories' cannot be null.");
+        else
+            content_.append("Categories", categories.toString());
+        if (documents === null || documents === undefined)
+            throw new Error("The parameter 'documents' cannot be null.");
+        else
+            documents.forEach(item_ => content_.append("Documents", item_.data, item_.fileName ? item_.fileName : "Documents") );
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUploadDocuments(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUploadDocuments(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUploadDocuments(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
      * @param id (optional) 
      * @return Success
      */
@@ -3465,43 +3530,30 @@ export class UserEducationsServiceProxy {
     }
 
     /**
-     * @param userEducationId (optional) 
-     * @param categories (optional) 
-     * @param documents (optional) 
+     * @param userEducationDocumentId (optional) 
      * @return Success
      */
-    uploadDocuments(userEducationId: string | undefined, categories: string | undefined, documents: FileParameter[] | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/UserEducations/UploadDocuments";
+    deleteDocument(userEducationDocumentId: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserEducations/DeleteDocument?";
+        if (userEducationDocumentId === null)
+            throw new Error("The parameter 'userEducationDocumentId' cannot be null.");
+        else if (userEducationDocumentId !== undefined)
+            url_ += "userEducationDocumentId=" + encodeURIComponent("" + userEducationDocumentId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = new FormData();
-        if (userEducationId === null || userEducationId === undefined)
-            throw new Error("The parameter 'userEducationId' cannot be null.");
-        else
-            content_.append("UserEducationId", userEducationId.toString());
-        if (categories === null || categories === undefined)
-            throw new Error("The parameter 'categories' cannot be null.");
-        else
-            content_.append("Categories", categories.toString());
-        if (documents === null || documents === undefined)
-            throw new Error("The parameter 'documents' cannot be null.");
-        else
-            documents.forEach(item_ => content_.append("Documents", item_.data, item_.fileName ? item_.fileName : "Documents") );
-
         let options_ : any = {
-            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
             })
         };
 
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUploadDocuments(response_);
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteDocument(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processUploadDocuments(<any>response_);
+                    return this.processDeleteDocument(<any>response_);
                 } catch (e) {
                     return <Observable<void>><any>_observableThrow(e);
                 }
@@ -3510,7 +3562,7 @@ export class UserEducationsServiceProxy {
         }));
     }
 
-    protected processUploadDocuments(response: HttpResponseBase): Observable<void> {
+    protected processDeleteDocument(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :

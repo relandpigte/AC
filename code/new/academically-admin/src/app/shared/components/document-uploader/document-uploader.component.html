@@ -24,16 +24,16 @@
         </div>
       </div>
       <div *ngIf="hasCategory" class="col-auto">
-        <input class="form-control form-control-sm" type="search" placeholder="Enter Category" [(ngModel)]="categories[i]" id="Categiry_{{i}}"
-          name="Categiry_{{i}}" [typeahead]="categorySource" [typeaheadMinLength]="0" container="body" required />
+        <input class="form-control form-control-sm" type="search" placeholder="Enter Category"
+          [(ngModel)]="categories[i]" id="Categiry_{{i}}" name="Categiry_{{i}}" [typeahead]="categorySource"
+          [typeaheadMinLength]="0" container="body" required />
       </div>
       <div class="col-auto">
         <button (click)="onOpenDocumentClick(file)" type="button"
           class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
           <span class="fe fe-eye"></span>
         </button>
-        <button (click)="onRemoveFileClick(file)" type="button"
-          class="btn btn-outline-danger btn-sm btn-rounded-circle">
+        <button (click)="onRemoveFileClick(i)" type="button" class="btn btn-outline-danger btn-sm btn-rounded-circle">
           <span class="fe fe-trash-2"></span>
         </button>
       </div>

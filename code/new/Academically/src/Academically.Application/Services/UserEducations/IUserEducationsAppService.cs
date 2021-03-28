@@ -13,5 +13,6 @@ namespace Academically.Services.UserEducations
         Task<Guid> Update(UserEducationDto input);
         Task UploadDocuments(UploadUserEducationDocumentsDto input);
         Task Delete(Guid id);
+        Task DeleteDocument(Guid userEducationDocumentId);
     }
 }

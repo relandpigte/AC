@@ -28,7 +28,8 @@
                 role="status" aria-hidden="true"></span>
               <span *ngIf="!viewLoaders[userEducationDocument.document.id]" class="fe fe-eye"></span>
             </button>
-            <button (click)="onDeleteDocumentClick(userEducationDocument.id)"
+            <button *ngIf="permission.isGranted('Pages.Profile.Education.Delete')"
+              (click)="onDeleteDocumentClick(userEducationDocument.id)"
               [disabled]="deleteLoaders[userEducationDocument.id]" type="button" type="button"
               class="btn btn-outline-danger btn-sm btn-rounded-circle">
               <span *ngIf="deleteLoaders[userEducationDocument.id]" class="spinner-border spinner-border-sm"

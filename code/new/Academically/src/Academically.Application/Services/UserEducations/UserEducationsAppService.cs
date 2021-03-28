@@ -21,18 +21,21 @@ namespace Academically.Services.UserEducations
         private readonly IRepository<UserEducation, Guid> _userEducationsRepository;
         private readonly IRepository<University, Guid> _universitesRepository;
         private readonly IRepository<UserEducationLevel, Guid> _userEducationLevelsRepository;
+        private readonly IRepository<UserEducationDocument, Guid> _userEducationDocumentsRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
 
         public UserEducationsAppService(
             IRepository<UserEducation, Guid> userEducationsRepository,
             IRepository<University, Guid> universitesRepository,
             IRepository<UserEducationLevel, Guid> userEducationLevelsRepository,
+            IRepository<UserEducationDocument, Guid> userEducationDocumentsRepository,
             IDocumentsDomainService documentsDomainService
             )
         {
             _userEducationsRepository = userEducationsRepository;
             _universitesRepository = universitesRepository;
             _userEducationLevelsRepository = userEducationLevelsRepository;
+            _userEducationDocumentsRepository = userEducationDocumentsRepository;
             _documentsDomainService = documentsDomainService;
         }
 
@@ -96,13 +99,6 @@ namespace Academically.Services.UserEducations
             return userEducation.Id;
         }
 
-        [AbpAuthorize(PermissionNames.Pages_Profile_Education_Delete)]
-        public async Task Delete(Guid id)
-        {
-            await _userEducationLevelsRepository.DeleteAsync(e => e.UserEducationId == id);
-            await _userEducationsRepository.DeleteAsync(id);
-        }
-
         [AbpAuthorize(PermissionNames.Pages_Profile_Education_Create, PermissionNames.Pages_Profile_Education_Qualifications_Update)]
         public async Task UploadDocuments([FromForm] UploadUserEducationDocumentsDto input)
         {
@@ -124,6 +120,29 @@ namespace Academically.Services.UserEducations
                 }
                 await _userEducationsRepository.UpdateAsync(userEducation);
             }
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_Profile_Education_Delete)]
+        public async Task Delete(Guid id)
+        {
+            var userEducationDocuments = await _userEducationDocumentsRepository.GetAll()
+                .Where(e => e.UserEducationId == id)
+                .ToListAsync();
+            userEducationDocuments.ForEach(async e =>
+            {
+                await _documentsDomainService.DeleteAsync(e.DocumentId);
+                await _userEducationDocumentsRepository.DeleteAsync(e.Id);
+            });
+            await _userEducationLevelsRepository.DeleteAsync(e => e.UserEducationId == id);
+            await _userEducationsRepository.DeleteAsync(id);
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_Profile_Education_Delete)]
+        public async Task DeleteDocument(Guid userEducationDocumentId)
+        {
+            var userEducationDocument = await _userEducationDocumentsRepository.GetAsync(userEducationDocumentId);
+            await _documentsDomainService.DeleteAsync(userEducationDocument.DocumentId);
+            await _userEducationDocumentsRepository.DeleteAsync(userEducationDocument);
         }
 
         private async Task<University> CreateAndGetUniverisityIfNotExists(string universityName, string universityCountryCode)
