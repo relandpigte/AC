@@ -81,15 +81,15 @@
               <h5 class="text-muted">{{ studentRating.creationTime | date: 'd MMMM y' }}</h5>
             </div>
             <div class="col-12 mt-3">
-              <span *ngIf="studentRating.experienceType === RatingExperienceType._0" class="badge badge-soft-success">
+              <span *ngIf="studentRating.experienceType === RatingExperienceType.Positive" class="badge badge-soft-success">
                 <i class="fas fa-plus"></i>
                 {{ 'Positive' | localize}}
               </span>
-              <span *ngIf="studentRating.experienceType === RatingExperienceType._1" class="badge badge-soft-info">
+              <span *ngIf="studentRating.experienceType === RatingExperienceType.Neutral" class="badge badge-soft-info">
                 <i class="fas fa-circle"></i>
                 {{ 'Neutral' | localize}}
               </span>
-              <span *ngIf="studentRating.experienceType === RatingExperienceType._2" class="badge badge-soft-danger">
+              <span *ngIf="studentRating.experienceType === RatingExperienceType.Negative" class="badge badge-soft-danger">
                 <i class="fas fa-minus"></i>
                 {{ 'Negative' | localize}}
               </span>
