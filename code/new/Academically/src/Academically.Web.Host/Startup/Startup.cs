@@ -159,7 +159,12 @@ namespace Academically.Web.Host.Startup
             app.UseSwaggerUI(options =>
             {
                 // specifying the Swagger JSON endpoint.
-                options.SwaggerEndpoint($"/swagger/{_apiVersion}/swagger.json", $"Academically API {_apiVersion}");
+                string serverBasePath = _appConfiguration["App:ServerBasePath"];
+                if (!string.IsNullOrWhiteSpace(serverBasePath))
+                {
+                    serverBasePath = $"/{serverBasePath}";
+                }
+                options.SwaggerEndpoint(serverBasePath + $"/swagger/{_apiVersion}/swagger.json", $"Academically API {_apiVersion}");
                 options.IndexStream = () => Assembly.GetExecutingAssembly()
                     .GetManifestResourceStream("Academically.Web.Host.wwwroot.swagger.ui.index.html");
                 options.DisplayRequestDuration(); // Controls the display of the request duration (in milliseconds) for "Try it out" requests.  
