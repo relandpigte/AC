@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, UserResearchInterestDto, UserResearchInterestsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, UserResearchInterestDisciplineTaxonomyDto, UserResearchInterestDto, UserResearchInterestsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Observable, Observer } from 'rxjs';
 import { finalize, switchMap } from 'rxjs/operators';
@@ -24,16 +24,21 @@ export class CreateEditResearchInterestComponent extends AppComponentBase implem
     private _disciplineTaxonomiesService: DisciplineTaxonomiesServiceProxy
   ) {
     super(injector);
-    this.userResearchInterest.disciplineTaxonomies = [];
   }
 
   ngOnInit(): void {
     this.getDisciplineTaxonomies();
+    if (!this.userResearchInterest) {
+      this.userResearchInterest = new UserResearchInterestDto();
+      this.userResearchInterest.userResearchInterestDisciplineTaxonomies = [];
+    }
   }
 
   onFormSubmit(): void {
     this.isLoading = true;
-    this._userResearchInterestsService.create(this.userResearchInterest)
+    (this.userResearchInterest.id
+      ? this._userResearchInterestsService.edit(this.userResearchInterest)
+      : this._userResearchInterestsService.create(this.userResearchInterest))
       .pipe(finalize(() => {
         this.isLoading = false;
       }))
@@ -51,13 +56,15 @@ export class CreateEditResearchInterestComponent extends AppComponentBase implem
 
   onDisciplineTaxonomySelect(disciplineTaxonomy: DisciplineTaxonomyDto): void {
     this.disciplineTaxonomy = '';
-    this.userResearchInterest.disciplineTaxonomies.push(disciplineTaxonomy);
+    var userResearchInterestDisciplineTaxonomy = new UserResearchInterestDisciplineTaxonomyDto();
+    userResearchInterestDisciplineTaxonomy.disciplineTaxonomy = disciplineTaxonomy;
+    this.userResearchInterest.userResearchInterestDisciplineTaxonomies.push(userResearchInterestDisciplineTaxonomy);
   }
 
   onRemoveDisciplineTaxonomyClick(id: string): void {
-    const index = this.userResearchInterest.disciplineTaxonomies.findIndex(e => e.id === id);
+    const index = this.userResearchInterest.userResearchInterestDisciplineTaxonomies.findIndex(e => e.disciplineTaxonomy.id === id);
     if (index > -1) {
-      this.userResearchInterest.disciplineTaxonomies.splice(index, 1);
+      this.userResearchInterest.userResearchInterestDisciplineTaxonomies.splice(index, 1);
     }
   }
 

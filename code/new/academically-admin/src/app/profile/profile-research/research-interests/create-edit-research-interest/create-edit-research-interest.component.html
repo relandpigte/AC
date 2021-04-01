@@ -1,6 +1,6 @@
 <form class="form-horizontal" autocomplete="off" #createEditResearchInterestForm="ngForm" (ngSubmit)="onFormSubmit()">
   <div class="modal-card card">
-    <abp-modal-header [title]="(false ? 'EditResearchInterest' : 'AddResearchInterest') | localize"
+    <abp-modal-header [title]="(userResearchInterest.id ? 'EditResearchInterest' : 'AddResearchInterest') | localize"
       (onCloseClick)="onCloseClick()"></abp-modal-header>
     <div class="card-body">
 
@@ -27,11 +27,11 @@
           [typeaheadAsync]="true" [typeaheadOptionsLimit]="10"
           (typeaheadOnSelect)="onDisciplineTaxonomySelect($event.item)" container="body" />
         <div class="ac-alerts">
-          <div *ngFor="let selectedTaxonomy of userResearchInterest.disciplineTaxonomies"
+          <div *ngFor="let selectedTaxonomy of userResearchInterest.userResearchInterestDisciplineTaxonomies"
             class="alert alert-info alert-dismissible ac-alert" role="alert">
-            {{ selectedTaxonomy.name }}
-            <button (click)="onRemoveDisciplineTaxonomyClick(selectedTaxonomy.id)" type="button" class="close"
-              data-dismiss="alert" aria-label="Close">
+            {{ selectedTaxonomy.disciplineTaxonomy.name }}
+            <button (click)="onRemoveDisciplineTaxonomyClick(selectedTaxonomy.disciplineTaxonomy.id)" type="button"
+              class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>

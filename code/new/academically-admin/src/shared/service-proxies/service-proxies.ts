@@ -4002,6 +4002,72 @@ export class UserResearchInterestsServiceProxy {
     }
 
     /**
+     * @param userIdFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getPaged(userIdFilter: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserResearchInterestDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/UserResearchInterests/GetPaged?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPaged(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPaged(<any>response_);
+                } catch (e) {
+                    return <Observable<UserResearchInterestDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserResearchInterestDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPaged(response: HttpResponseBase): Observable<UserResearchInterestDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserResearchInterestDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserResearchInterestDtoPagedResultDto>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -4035,6 +4101,110 @@ export class UserResearchInterestsServiceProxy {
     }
 
     protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    edit(body: UserResearchInterestDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserResearchInterests/Edit";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processEdit(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processEdit(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processEdit(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserResearchInterests/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -7155,11 +7325,66 @@ export interface IUserQualificationDto {
     userQualificationDocuments: UserQualificationDocumentDto[] | undefined;
 }
 
+export class UserResearchInterestDisciplineTaxonomyDto implements IUserResearchInterestDisciplineTaxonomyDto {
+    id: string | undefined;
+    userResearchInterestId: string;
+    disciplineTaxonomyId: string;
+    disciplineTaxonomy: DisciplineTaxonomyDto;
+
+    constructor(data?: IUserResearchInterestDisciplineTaxonomyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userResearchInterestId = _data["userResearchInterestId"];
+            this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomyDto.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserResearchInterestDisciplineTaxonomyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserResearchInterestDisciplineTaxonomyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userResearchInterestId"] = this.userResearchInterestId;
+        data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): UserResearchInterestDisciplineTaxonomyDto {
+        const json = this.toJSON();
+        let result = new UserResearchInterestDisciplineTaxonomyDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserResearchInterestDisciplineTaxonomyDto {
+    id: string | undefined;
+    userResearchInterestId: string;
+    disciplineTaxonomyId: string;
+    disciplineTaxonomy: DisciplineTaxonomyDto;
+}
+
 export class UserResearchInterestDto implements IUserResearchInterestDto {
     id: string | undefined;
     title: string | undefined;
     description: string | undefined;
-    disciplineTaxonomies: DisciplineTaxonomyDto[] | undefined;
+    userResearchInterestDisciplineTaxonomies: UserResearchInterestDisciplineTaxonomyDto[] | undefined;
 
     constructor(data?: IUserResearchInterestDto) {
         if (data) {
@@ -7175,10 +7400,10 @@ export class UserResearchInterestDto implements IUserResearchInterestDto {
             this.id = _data["id"];
             this.title = _data["title"];
             this.description = _data["description"];
-            if (Array.isArray(_data["disciplineTaxonomies"])) {
-                this.disciplineTaxonomies = [] as any;
-                for (let item of _data["disciplineTaxonomies"])
-                    this.disciplineTaxonomies.push(DisciplineTaxonomyDto.fromJS(item));
+            if (Array.isArray(_data["userResearchInterestDisciplineTaxonomies"])) {
+                this.userResearchInterestDisciplineTaxonomies = [] as any;
+                for (let item of _data["userResearchInterestDisciplineTaxonomies"])
+                    this.userResearchInterestDisciplineTaxonomies.push(UserResearchInterestDisciplineTaxonomyDto.fromJS(item));
             }
         }
     }
@@ -7195,10 +7420,10 @@ export class UserResearchInterestDto implements IUserResearchInterestDto {
         data["id"] = this.id;
         data["title"] = this.title;
         data["description"] = this.description;
-        if (Array.isArray(this.disciplineTaxonomies)) {
-            data["disciplineTaxonomies"] = [];
-            for (let item of this.disciplineTaxonomies)
-                data["disciplineTaxonomies"].push(item.toJSON());
+        if (Array.isArray(this.userResearchInterestDisciplineTaxonomies)) {
+            data["userResearchInterestDisciplineTaxonomies"] = [];
+            for (let item of this.userResearchInterestDisciplineTaxonomies)
+                data["userResearchInterestDisciplineTaxonomies"].push(item.toJSON());
         }
         return data; 
     }
@@ -7215,7 +7440,62 @@ export interface IUserResearchInterestDto {
     id: string | undefined;
     title: string | undefined;
     description: string | undefined;
-    disciplineTaxonomies: DisciplineTaxonomyDto[] | undefined;
+    userResearchInterestDisciplineTaxonomies: UserResearchInterestDisciplineTaxonomyDto[] | undefined;
+}
+
+export class UserResearchInterestDtoPagedResultDto implements IUserResearchInterestDtoPagedResultDto {
+    items: UserResearchInterestDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IUserResearchInterestDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(UserResearchInterestDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): UserResearchInterestDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserResearchInterestDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): UserResearchInterestDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new UserResearchInterestDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserResearchInterestDtoPagedResultDto {
+    items: UserResearchInterestDto[] | undefined;
+    totalCount: number;
 }
 
 export class VerificationStatusDto implements IVerificationStatusDto {
