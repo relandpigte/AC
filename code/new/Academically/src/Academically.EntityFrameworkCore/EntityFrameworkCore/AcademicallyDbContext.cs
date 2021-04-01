@@ -23,6 +23,9 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<UserQualificationDocument> UserQualificationDocuments { get; set; }
         public virtual DbSet<PassportVerification> PassportVerifications { get; set; }
         public virtual DbSet<UserEducationDocument> UserEducationDocuments { get; set; }
+        public virtual DbSet<DisciplineTaxonomy> DisciplineTaxonomies { get; set; }
+        public virtual DbSet<UserResearchInterest> UserResearchInterests { get; set; }
+        public virtual DbSet<UserResearchInterestDisciplineTaxonomy> UserResearchInterestDisciplineTaxonomies { get; set; }
 
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
