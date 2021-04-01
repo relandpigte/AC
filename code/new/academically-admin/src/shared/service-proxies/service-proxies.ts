@@ -205,6 +205,78 @@ export class ConfigurationServiceProxy {
 }
 
 @Injectable()
+export class DisciplineTaxonomiesServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param keyword (optional) 
+     * @return Success
+     */
+    search(keyword: string | undefined): Observable<DisciplineTaxonomyDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/Search?";
+        if (keyword === null)
+            throw new Error("The parameter 'keyword' cannot be null.");
+        else if (keyword !== undefined)
+            url_ += "keyword=" + encodeURIComponent("" + keyword) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSearch(<any>response_);
+                } catch (e) {
+                    return <Observable<DisciplineTaxonomyDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DisciplineTaxonomyDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSearch(response: HttpResponseBase): Observable<DisciplineTaxonomyDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(DisciplineTaxonomyDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DisciplineTaxonomyDto[]>(<any>null);
+    }
+}
+
+@Injectable()
 export class DocumentsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -3918,6 +3990,70 @@ export class UserQualificationsServiceProxy {
     }
 }
 
+@Injectable()
+export class UserResearchInterestsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: UserResearchInterestDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserResearchInterests/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
 export class ApplicationInfoDto implements IApplicationInfoDto {
     version: string | undefined;
     releaseDate: moment.Moment;
@@ -4427,6 +4563,61 @@ export interface ICreateUserDto {
     isActive: boolean;
     roleNames: string[] | undefined;
     password: string;
+}
+
+export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
+    id: string;
+    name: string | undefined;
+    parentId: string | undefined;
+    parentIdMap: string | undefined;
+
+    constructor(data?: IDisciplineTaxonomyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.parentId = _data["parentId"];
+            this.parentIdMap = _data["parentIdMap"];
+        }
+    }
+
+    static fromJS(data: any): DisciplineTaxonomyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DisciplineTaxonomyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["parentId"] = this.parentId;
+        data["parentIdMap"] = this.parentIdMap;
+        return data; 
+    }
+
+    clone(): DisciplineTaxonomyDto {
+        const json = this.toJSON();
+        let result = new DisciplineTaxonomyDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDisciplineTaxonomyDto {
+    id: string;
+    name: string | undefined;
+    parentId: string | undefined;
+    parentIdMap: string | undefined;
 }
 
 export class DocumentDto implements IDocumentDto {
@@ -6962,6 +7153,69 @@ export interface IUserQualificationDto {
     startYear: string | undefined;
     gradeAttained: string | undefined;
     userQualificationDocuments: UserQualificationDocumentDto[] | undefined;
+}
+
+export class UserResearchInterestDto implements IUserResearchInterestDto {
+    id: string | undefined;
+    title: string | undefined;
+    description: string | undefined;
+    disciplineTaxonomies: DisciplineTaxonomyDto[] | undefined;
+
+    constructor(data?: IUserResearchInterestDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.description = _data["description"];
+            if (Array.isArray(_data["disciplineTaxonomies"])) {
+                this.disciplineTaxonomies = [] as any;
+                for (let item of _data["disciplineTaxonomies"])
+                    this.disciplineTaxonomies.push(DisciplineTaxonomyDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): UserResearchInterestDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserResearchInterestDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["description"] = this.description;
+        if (Array.isArray(this.disciplineTaxonomies)) {
+            data["disciplineTaxonomies"] = [];
+            for (let item of this.disciplineTaxonomies)
+                data["disciplineTaxonomies"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): UserResearchInterestDto {
+        const json = this.toJSON();
+        let result = new UserResearchInterestDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserResearchInterestDto {
+    id: string | undefined;
+    title: string | undefined;
+    description: string | undefined;
+    disciplineTaxonomies: DisciplineTaxonomyDto[] | undefined;
 }
 
 export class VerificationStatusDto implements IVerificationStatusDto {

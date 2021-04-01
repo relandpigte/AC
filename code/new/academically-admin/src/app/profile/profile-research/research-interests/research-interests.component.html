@@ -1,0 +1,107 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="card-header-title">{{ 'ResearchInterests' | localize}}</h4>
+      </div>
+      <div class="col-auto">
+        <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchInterests.Create')" (click)="onAddClick()"
+          type="button" class="btn btn-sm btn-primary">
+          {{ 'AddResearchInterest' | localize}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-nowrap card-table">
+      <tr>
+        <td>
+          <div class="row p-3">
+            <div class="col-12">
+              <h4 class="text-body">Media</h4>
+            </div>
+            <div class="col-12">
+              <p class="m-0 p-0 text-body break-spaces">Aliquam ac nunc non nibh pulvinar finibus. Nulla nec fringilla
+                magna, in porta
+                tellus. Aenean vitae hendrerit elit. In hac habitasse platea dictumst. Cras hendrerit est sit amet
+                lacinia
+                maximus. Nulla at commodo orci. Morbi urna sem, efficitur in nunc at, mattis tristique nunc. Nunc ut
+                metus
+                lacus. Donec dapibus lorem vel justo fermentum consequat nec consequat velit. Maecenas quis massa nec
+                nisi
+                vestibulum imperdiet quis non nisi. Praesent at lacinia elit. Donec mi sapien, egestas at consectetur
+                vitae, faucibus ut diam. Nullam metus dui, ornare a est a, vestibulum ultrices metus. Cras sagittis
+                libero
+                quis lectus imperdiet fringilla eget hendrerit neque. Nam in mi nibh. Phasellus ultricies ligula sed
+                odio
+                volutpat, at blandit risus sodales.</p>
+            </div>
+            <div class="col-12 pt-2">
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+            </div>
+          </div>
+        </td>
+        <td class="table-action align-middle">
+          <div dropdown class="dropdown" container="body">
+            <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;" role="button">
+              <i class="fe fe-more-vertical"></i>
+            </a>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="row p-3">
+            <div class="col-12">
+              <h4 class="text-body">Therapy</h4>
+            </div>
+            <div class="col-12">
+              <p class="m-0 p-0 text-body break-spaces">Aliquam ac nunc non nibh pulvinar finibus. Nulla nec fringilla
+                magna, in porta
+                tellus. Aenean vitae hendrerit elit. In hac habitasse platea dictumst. Cras hendrerit est sit amet
+                lacinia
+                maximus. Nulla at commodo orci. Morbi urna sem, efficitur in nunc at, mattis tristique nunc. Nunc ut
+                metus
+                lacus. Donec dapibus lorem vel justo fermentum consequat nec consequat velit. Maecenas quis massa nec
+                nisi
+                vestibulum imperdiet quis non nisi. Praesent at lacinia elit. Donec mi sapien, egestas at consectetur
+                vitae, faucibus ut diam. Nullam metus dui, ornare a est a, vestibulum ultrices metus. Cras sagittis
+                libero
+                quis lectus imperdiet fringilla eget hendrerit neque. Nam in mi nibh. Phasellus ultricies ligula sed
+                odio
+                volutpat, at blandit risus sodales.</p>
+            </div>
+            <div class="col-12 pt-2">
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+              <div class="badge badge-soft-info mr-1">Tag</div>
+            </div>
+          </div>
+        </td>
+        <td class="table-action align-middle">
+          <div dropdown class="dropdown" container="body">
+            <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;" role="button">
+              <i class="fe fe-more-vertical"></i>
+            </a>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

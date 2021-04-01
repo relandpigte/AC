@@ -98,6 +98,8 @@ import { ViewQualificationDocumentsComponent } from './profile/profile-education
 import { VerifyPassportComponent } from './widgets/verifications/verify-passport/verify-passport.component';
 import { ProfilePictureChangerComponent } from './shared/components/profile-picture-changer/profile-picture-changer.component';
 import { ViewEducationDocumentsComponent } from './profile/profile-education/view-education-documents/view-education-documents.component';
+import { ResearchInterestsComponent } from './profile/profile-research/research-interests/research-interests.component';
+import { CreateEditResearchInterestComponent } from './profile/profile-research/research-interests/create-edit-research-interest/create-edit-research-interest.component';
 
 @NgModule({
   declarations: [
@@ -176,6 +178,8 @@ import { ViewEducationDocumentsComponent } from './profile/profile-education/vie
     VerifyPassportComponent,
     ProfilePictureChangerComponent,
     ViewEducationDocumentsComponent,
+    ResearchInterestsComponent,
+    CreateEditResearchInterestComponent,
   ],
   imports: [
     CommonModule,

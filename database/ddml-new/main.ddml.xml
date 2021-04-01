@@ -22,4 +22,6 @@
 	<include file="ddml-new/ddml.2021-03-19-01.create-phoneverifications-table.xml"/>
 	<include file="ddml-new/ddml.2021-03-22-01.alter-users-add-photos-fields.xml"/>
 	<include file="ddml-new/ddml.2021-03-23-01.create-usereducationdocuments-table.xml"/>
+	<include file="ddml-new/ddml.2021-03-26-01.create-userresearchinterests-tables.xml"/>
+	<include file="ddml-new/ddml.2021-03-26-02.generate-disciplinetaxonomies-data.xml"/>
 </databaseChangeLog>

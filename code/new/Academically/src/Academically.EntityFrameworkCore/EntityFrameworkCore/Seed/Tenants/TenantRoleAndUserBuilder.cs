@@ -103,6 +103,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_Education_Qualifications_Update,
                 PermissionNames.Pages_Profile_Education_Qualifications_Delete,
                 PermissionNames.Pages_Profile_Research,
+                PermissionNames.Pages_Profile_Research_ResearchInterests,
+                PermissionNames.Pages_Profile_Research_ResearchInterests_Create,
                 PermissionNames.Pages_Profile_IndustryExperience
             );
 
@@ -134,6 +136,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_Education_Qualifications_Update,
                 PermissionNames.Pages_Profile_Education_Qualifications_Delete,
                 PermissionNames.Pages_Profile_Research,
+                PermissionNames.Pages_Profile_Research_ResearchInterests,
+                PermissionNames.Pages_Profile_Research_ResearchInterests_Create,
                 PermissionNames.Pages_Profile_IndustryExperience
             );
 
