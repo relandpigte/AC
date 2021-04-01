@@ -35,6 +35,8 @@
 
         public const string Pages_Profile_Research_ResearchInterests = "Pages.Profile.Research.ResearchInterests";
         public const string Pages_Profile_Research_ResearchInterests_Create = "Pages.Profile.Research.ResearchInterests.Create";
+        public const string Pages_Profile_Research_ResearchInterests_Update = "Pages.Profile.Research.ResearchInterests.Update";
+        public const string Pages_Profile_Research_ResearchInterests_Delete = "Pages.Profile.Research.ResearchInterests.Delete";
 
         public const string Pages_Profile_IndustryExperience = "Pages.Profile.IndustryExperience";
 

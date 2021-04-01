@@ -9,5 +9,8 @@ namespace Academically.Domain.Entities
     {
         public Guid UserResearchInterestId { get; set; }
         public Guid DisciplineTaxonomyId { get; set; }
+
+        [ForeignKey("DisciplineTaxonomyId")]
+        public virtual DisciplineTaxonomy DisciplineTaxonomy { get; set; }
     }
 }

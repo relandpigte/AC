@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Domain.Entities;
-using Academically.Services.DisciplineTaxonomies.Dto;
 
 namespace Academically.Services.UserResearchInterests.Dto
 {
@@ -13,6 +12,6 @@ namespace Academically.Services.UserResearchInterests.Dto
         public string Title { get; set; }
         public string Description { get; set; }
 
-        public IEnumerable<DisciplineTaxonomyDto> DisciplineTaxonomies { get; set; }
+        public IEnumerable<UserResearchInterestDisciplineTaxonomyDto> UserResearchInterestDisciplineTaxonomies { get; set; }
     }
 }
