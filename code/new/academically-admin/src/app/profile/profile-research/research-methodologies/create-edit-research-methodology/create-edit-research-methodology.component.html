@@ -30,7 +30,7 @@
           <div *ngFor="let selectedMethod of userResearchMethodology.userResearchMethodologyResearchMethods"
             class="alert alert-info alert-dismissible ac-alert" role="alert">
             {{ selectedMethod.researchMethod.name }}
-            <button (click)="onRemoveDisciplineTaxonomyClick(selectedMethod.researchMethod.id)" type="button"
+            <button (click)="onRemoveResearchMethodClick(selectedMethod.researchMethod.id)" type="button"
               class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>

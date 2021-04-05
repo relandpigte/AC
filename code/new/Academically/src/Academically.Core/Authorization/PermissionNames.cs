@@ -40,6 +40,8 @@
 
         public const string Pages_Profile_Research_ResearchMethodologies = "Pages.Profile.Research.ResearchMethodologies";
         public const string Pages_Profile_Research_ResearchMethodologies_Create = "Pages.Profile.Research.ResearchMethodologies.Create";
+        public const string Pages_Profile_Research_ResearchMethodologies_Update = "Pages.Profile.Research.ResearchMethodologies.Update";
+        public const string Pages_Profile_Research_ResearchMethodologies_Delete = "Pages.Profile.Research.ResearchMethodologies.Delete";
 
         public const string Pages_Profile_IndustryExperience = "Pages.Profile.IndustryExperience";
 
