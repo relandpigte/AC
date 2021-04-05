@@ -29,6 +29,8 @@ namespace Academically.Users.Dto
 
         public bool IsActive { get; set; }
 
+        public bool IsPublic { get; set; }
+
         public string[] RoleNames { get; set; }
 
         [Required]

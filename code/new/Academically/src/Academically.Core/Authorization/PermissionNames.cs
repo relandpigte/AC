@@ -8,7 +8,6 @@
         public const string Pages_Dashboard_Overview_RecentProjects = "Pages.Dashboard.Overview.RecentProjects";
         public const string Pages_Dashboard_Overview_RecentActivity = "Pages.Dashboard.Overview.RecentActivity";
         public const string Pages_Dashboard_Overview_ProfileSummary = "Pages.Dashboard.Overview.ProfileSummary";
-        public const string Pages_Dashboard_Overview_Verifications = "Pages.Dashboard.Overview.Verifications";
 
         public const string Pages_Dashboard_MyProjects = "Pages.Dashboard.MyProjects";
         public const string Pages_Dashboard_Usage = "Pages.Dashboard.Usage";
@@ -57,6 +56,9 @@
         public const string Pages_Roles_Create = "Pages.Roles.Create";
         public const string Pages_Roles_Update = "Pages.Roles.Update";
         public const string Pages_Roles_Delete = "Pages.Roles.Delete";
+
+
+        public const string Pages_Widgets_Verifications = "Pages.Widgets.Verifications";
 
 
         public const string Pages_Tenants = "Pages.Tenants";

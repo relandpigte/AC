@@ -144,6 +144,17 @@
               </div>
             </div>
           </div>
+          <div class="form-group row mb-0">
+            <label class="col-md-3 col-form-label">
+              {{ 'IsPublic' | localize }}
+            </label>
+            <div class="col-md-9">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" name="isPublic" id="isPublic" [(ngModel)]="user.isPublic" />
+                <label class="custom-control-label mt-2" for="isPublic"></label>
+              </div>
+            </div>
+          </div>
         </tab>
         <tab [heading]="'UserRoles' | localize" class="pt-3 px-2">
           <div class="form-group row mb-0">

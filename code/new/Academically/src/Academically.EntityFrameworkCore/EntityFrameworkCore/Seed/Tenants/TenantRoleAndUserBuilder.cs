@@ -111,7 +111,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_Research_ResearchMethodologies_Create,
                 PermissionNames.Pages_Profile_Research_ResearchMethodologies_Update,
                 PermissionNames.Pages_Profile_Research_ResearchMethodologies_Delete,
-                PermissionNames.Pages_Profile_IndustryExperience
+                PermissionNames.Pages_Profile_IndustryExperience,
+                PermissionNames.Pages_Widgets_Verifications
             );
 
             #endregion
@@ -126,7 +127,6 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Overview_RecentProjects,
                 PermissionNames.Pages_Dashboard_Overview_RecentActivity,
                 PermissionNames.Pages_Dashboard_Overview_ProfileSummary,
-                PermissionNames.Pages_Dashboard_Overview_Verifications,
                 PermissionNames.Pages_Dashboard_MyProjects,
                 PermissionNames.Pages_Dashboard_Usage,
                 PermissionNames.Pages_Profile,
@@ -150,7 +150,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_Research_ResearchMethodologies_Create,
                 PermissionNames.Pages_Profile_Research_ResearchMethodologies_Update,
                 PermissionNames.Pages_Profile_Research_ResearchMethodologies_Delete,
-                PermissionNames.Pages_Profile_IndustryExperience
+                PermissionNames.Pages_Profile_IndustryExperience,
+                PermissionNames.Pages_Widgets_Verifications
             );
 
             #endregion

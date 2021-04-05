@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Academically.Services.PassportVerifications
 {
-    [AbpAuthorize(PermissionNames.Pages_Dashboard_Overview_Verifications)]
+    [AbpAuthorize(PermissionNames.Pages_Widgets_Verifications)]
     public class PassportVerificationsAppService : AcademicallyAppServiceBase, IPassportVerificationsAppService
     {
         private readonly IRepository<PassportVerification, Guid> _passportVerificationsRepository;

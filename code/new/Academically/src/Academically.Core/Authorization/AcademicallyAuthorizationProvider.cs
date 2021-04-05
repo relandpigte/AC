@@ -14,7 +14,6 @@ namespace Academically.Authorization
             dashbardOverviewPermissions.CreateChildPermission(PermissionNames.Pages_Dashboard_Overview_RecentProjects, L("RecentProjects"));
             dashbardOverviewPermissions.CreateChildPermission(PermissionNames.Pages_Dashboard_Overview_RecentActivity, L("RecentActivity"));
             dashbardOverviewPermissions.CreateChildPermission(PermissionNames.Pages_Dashboard_Overview_ProfileSummary, L("ProfileSummary"));
-            dashbardOverviewPermissions.CreateChildPermission(PermissionNames.Pages_Dashboard_Overview_Verifications, L("Verifications"));
 
             dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_MyProjects, L("MyProjects"));
             dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Usage, L("Usage"));
@@ -64,6 +63,9 @@ namespace Academically.Authorization
             rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Create, L("Create"));
             rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Update, L("Update"));
             rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Delete, L("Delete"));
+
+
+            context.CreatePermission(PermissionNames.Pages_Widgets_Verifications, L("Verifications"));
 
 
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);

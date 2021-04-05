@@ -1,4 +1,5 @@
-<app-profile-introduction-metrics *ngIf="permission.isGranted('Pages.Profile.Introduction.Reviews')"></app-profile-introduction-metrics>
+<app-profile-introduction-metrics *ngIf="permission.isGranted('Pages.Profile.Introduction.Reviews')">
+</app-profile-introduction-metrics>
 <div class="row">
   <div class="col-md-8">
     <app-profile-introduction-about></app-profile-introduction-about>
@@ -9,6 +10,6 @@
   </div>
   <div class="col-md-4">
     <app-profile-introduction-summary></app-profile-introduction-summary>
-    <app-verifications></app-verifications>
+    <app-verifications *ngIf="permission.isGranted('Pages.Widgets.Verifications')" [isTutor]="isTutor"></app-verifications>
   </div>
 </div>

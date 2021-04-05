@@ -5027,6 +5027,7 @@ export class CreateUserDto implements ICreateUserDto {
     surname: string;
     emailAddress: string;
     isActive: boolean;
+    isPublic: boolean;
     roleNames: string[] | undefined;
     password: string;
 
@@ -5046,6 +5047,7 @@ export class CreateUserDto implements ICreateUserDto {
             this.surname = _data["surname"];
             this.emailAddress = _data["emailAddress"];
             this.isActive = _data["isActive"];
+            this.isPublic = _data["isPublic"];
             if (Array.isArray(_data["roleNames"])) {
                 this.roleNames = [] as any;
                 for (let item of _data["roleNames"])
@@ -5069,6 +5071,7 @@ export class CreateUserDto implements ICreateUserDto {
         data["surname"] = this.surname;
         data["emailAddress"] = this.emailAddress;
         data["isActive"] = this.isActive;
+        data["isPublic"] = this.isPublic;
         if (Array.isArray(this.roleNames)) {
             data["roleNames"] = [];
             for (let item of this.roleNames)
@@ -5092,6 +5095,7 @@ export interface ICreateUserDto {
     surname: string;
     emailAddress: string;
     isActive: boolean;
+    isPublic: boolean;
     roleNames: string[] | undefined;
     password: string;
 }
@@ -6063,7 +6067,7 @@ export interface IRegistrationDto {
 export class ResearchMethodDto implements IResearchMethodDto {
     id: string;
     name: string | undefined;
-    parentId: string;
+    parentId: string | undefined;
     parentIdMap: string | undefined;
     isEditable: boolean;
     parent: ResearchMethodDto;
@@ -6128,7 +6132,7 @@ export class ResearchMethodDto implements IResearchMethodDto {
 export interface IResearchMethodDto {
     id: string;
     name: string | undefined;
-    parentId: string;
+    parentId: string | undefined;
     parentIdMap: string | undefined;
     isEditable: boolean;
     parent: ResearchMethodDto;

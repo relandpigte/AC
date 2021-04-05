@@ -5,6 +5,7 @@
   </div>
   <div class="col-4">
     <app-profile-summary *ngIf="permission.isGranted('Pages.Dashboard.Overview.ProfileSummary')"></app-profile-summary>
-    <app-verifications *ngIf="permission.isGranted('Pages.Dashboard.Overview.Verifications')"></app-verifications>
+    <app-verifications *ngIf="permission.isGranted('Pages.Widgets.Verifications')" [isTutor]="isTutor">
+    </app-verifications>
   </div>
 </div>

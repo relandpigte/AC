@@ -6,7 +6,7 @@ using Academically.Services.PhoneVerifications.Dto;
 
 namespace Academically.Services.PhoneVerifications
 {
-    [AbpAuthorize(PermissionNames.Pages_Dashboard_Overview_Verifications)]
+    [AbpAuthorize(PermissionNames.Pages_Widgets_Verifications)]
     public class PhoneVerificationsAppService : AcademicallyAppServiceBase, IPhoneVerificationsAppService
     {
         private readonly IPhoneVerificationsDomainService _phoneVerificationsDomainService;
