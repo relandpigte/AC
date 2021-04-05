@@ -26,6 +26,9 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<DisciplineTaxonomy> DisciplineTaxonomies { get; set; }
         public virtual DbSet<UserResearchInterest> UserResearchInterests { get; set; }
         public virtual DbSet<UserResearchInterestDisciplineTaxonomy> UserResearchInterestDisciplineTaxonomies { get; set; }
+        public virtual DbSet<ResearchMethod> ResearchMethods { get; set; }
+        public virtual DbSet<UserResearchMethodology> UserResearchMethodologies { get; set; }
+        public virtual DbSet<UserResearchMethodologyResearchMethod> UserResearchMethodologyResearchMethods { get; set; }
 
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)

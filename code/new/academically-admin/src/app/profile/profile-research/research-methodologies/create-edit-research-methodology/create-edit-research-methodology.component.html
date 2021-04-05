@@ -1,0 +1,50 @@
+<form class="form-horizontal" autocomplete="off" #createEditResearchInterestForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <abp-modal-header
+      [title]="(userResearchMethodology.id ? 'EditResearchMethodology' : 'AddResearchMethodology') | localize"
+      (onCloseClick)="onCloseClick()"></abp-modal-header>
+    <div class="card-body">
+
+      <div class="form-group required">
+        <label class="col-form-label" for="Title">{{ 'Title' | localize}}</label>
+        <select [(ngModel)]="userResearchMethodology.title" #titleModel="ngModel" #titleEl class="form-control"
+          type="text" id="Title" name="Title" required>
+          <option value="Quantitative">Quantitative</option>
+          <option value="Qualitative">Qualitative</option>
+        </select>
+        <abp-validation-summary [control]="titleModel" [controlEl]="titleEl">
+        </abp-validation-summary>
+      </div>
+
+      <div class="form-group required">
+        <label class="col-form-label" for="Description">{{ 'Description' | localize}}</label>
+        <textarea [(ngModel)]="userResearchMethodology.description" #descriptionModel="ngModel" #descriptionEl
+          class="form-control" rows="4" id="Description" name="Description" required></textarea>
+        <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl">
+        </abp-validation-summary>
+      </div>
+
+      <div class="form-group mb-0">
+        <label class="col-form-label pb-0" for="ResearchMethods">{{ 'ResearchMethods' | localize }}</label>
+        <div class="ac-alerts">
+          <div *ngFor="let selectedMethod of userResearchMethodology.userResearchMethodologyResearchMethods"
+            class="alert alert-info alert-dismissible ac-alert" role="alert">
+            {{ selectedMethod.researchMethod.name }}
+            <button (click)="onRemoveDisciplineTaxonomyClick(selectedMethod.researchMethod.id)" type="button"
+              class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <a (click)="$event.preventDefault(); onAddResearchMethodsClick()" class="alert alert-success ac-alert"
+            role="alert" href="#">
+            <i class="fe fe-plus"></i> {{ 'AddMethod' | localize}}
+          </a>
+        </div>
+      </div>
+
+    </div>
+    <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading"
+      [saveDisabled]="!createEditResearchInterestForm.form.valid || isLoading" (onCancelClick)="onCloseClick()">
+    </abp-modal-footer>
+  </div>
+</form>

@@ -26,5 +26,7 @@
     <Folder Include="Services\DisciplineTaxonomies\Dto\" />
     <Folder Include="Services\UserResearchInterests\" />
     <Folder Include="Services\UserResearchInterests\Dto\" />
+    <Folder Include="Services\ResearchMethods\" />
+    <Folder Include="Services\ResearchMethods\Dto\" />
   </ItemGroup>
 </Project>
