@@ -10,7 +10,7 @@ namespace Academically.Services.ResearchMethods.Dto
     public class ResearchMethodDto : EntityDto<Guid>
     {
         public string Name { get; set; }
-        public Guid ParentId { get; set; }
+        public Guid? ParentId { get; set; }
         public string ParentIdMap { get; set; }
         public bool IsEditable { get; set; }
 

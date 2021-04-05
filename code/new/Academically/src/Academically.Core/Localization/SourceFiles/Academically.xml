@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="NoResearchMethodologiesFound">No Research Methodologies Found</text>
     <text name="AddMethod">Add Method</text>
     <text name="AddResearchMethodology">Add Research Methodology</text>
     <text name="EditResearchMethodology">Edit Research Methodology</text>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { ResearchMethodTreeComponent } from '@app/shared/components/research-method-tree/research-method-tree.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ResearchMethodDto, UserResearchMethodologiesServiceProxy, UserResearchMethodologyDto, UserResearchMethodologyResearchMethodDto } from '@shared/service-proxies/service-proxies';
@@ -12,8 +12,8 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./create-edit-research-methodology.component.less']
 })
 export class CreateEditResearchMethodologyComponent extends AppComponentBase implements OnInit {
+  @Input() userResearchMethodology: UserResearchMethodologyDto;
   @Output() userResearchMethodologySaved = new EventEmitter();
-  userResearchMethodology: UserResearchMethodologyDto;
   researchMethodsTypeaheadSource: Observable<ResearchMethodDto[]>;
   researchMethod = '';
   isLoading = false;
@@ -37,7 +37,9 @@ export class CreateEditResearchMethodologyComponent extends AppComponentBase imp
 
   onFormSubmit(): void {
     this.isLoading = true;
-    this._userResearchMethodsService.create(this.userResearchMethodology)
+    (this.userResearchMethodology.id
+      ? this._userResearchMethodsService.edit(this.userResearchMethodology)
+      : this._userResearchMethodsService.create(this.userResearchMethodology))
       .pipe(finalize(() => {
         this.isLoading = false;
       }))
@@ -49,6 +51,13 @@ export class CreateEditResearchMethodologyComponent extends AppComponentBase imp
       });
   }
 
+  onRemoveResearchMethodClick(id: string): void {
+    const index = this.userResearchMethodology.userResearchMethodologyResearchMethods.findIndex(e => e.researchMethod.id === id);
+    if (index > -1) {
+      this.userResearchMethodology.userResearchMethodologyResearchMethods.splice(index, 1);
+    }
+  }
+
   onCloseClick(): void {
     this._modal.hide();
   }
@@ -58,7 +67,6 @@ export class CreateEditResearchMethodologyComponent extends AppComponentBase imp
     modalSettings.class = 'modal-lg';
     const modal = this._modalService.show(ResearchMethodTreeComponent, modalSettings).content;
     modal.modalSave.subscribe((selectedMethods: ResearchMethodDto[]) => {
-      console.log(selectedMethods);
       selectedMethods.forEach(selectedMethod => {
         var userResearchMethodologyResearchMethod = new UserResearchMethodologyResearchMethodDto();
         userResearchMethodologyResearchMethod.researchMethod = selectedMethod;
