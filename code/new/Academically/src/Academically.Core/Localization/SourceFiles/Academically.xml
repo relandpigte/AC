@@ -606,7 +606,7 @@
     <text name="WelcomeMessage">Welcome to Academically!</text>
     <text name="FormIsNotValidMessage">Form is not valid. Please check and fix errors.</text>
     <text name="TenantNameCanNotBeEmpty">Tenant name can not be empty</text>
-    <text name="InvalidUserNameOrPassword">Invalid user name or password</text>
+    <text name="InvalidUserNameOrPassword">Invalid username or password</text>
     <text name="ThereIsNoTenantDefinedWithName{0}">There is no tenant defined with name {0}</text>
     <text name="TenantIsNotActive">Tenant {0} is not active.</text>
     <text name="UserIsNotActiveAndCanNotLogin">User {0} is not active and can not log in. Please contact our support {1}.</text>
@@ -614,7 +614,7 @@
     <text name="UserLockedOutMessage">The user account has been locked out. Please try again later.</text>
     <text name="PleaseEnterLoginInformation">Please enter login information</text>
     <text name="TenancyName">Tenancy name</text>
-    <text name="UserNameOrEmail">User name or email</text>
+    <text name="UserNameOrEmail">Username or email</text>
     <text name="Password">Password</text>
     <text name="ResetPassword">Reset Password</text>
     <text name="UpdatePassword">Update Password</text>
@@ -622,7 +622,7 @@
     <text name="LogIn">Log in</text>
     <text name="LoginFailed">Login failed!</text>
     <text name="NameSurname">Name surname</text>
-    <text name="UserName">User name</text>
+    <text name="UserName">Username</text>
     <text name="Name">Name</text>
     <text name="Surname">Surname</text>
     <text name="EmailAddress">Email address</text>
