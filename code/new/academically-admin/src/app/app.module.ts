@@ -17,6 +17,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { PopoverModule } from 'ngx-bootstrap/popover';
+import { TreeModule } from 'primeng/tree';
 
 
 // directives
@@ -100,6 +101,9 @@ import { ProfilePictureChangerComponent } from './shared/components/profile-pict
 import { ViewEducationDocumentsComponent } from './profile/profile-education/view-education-documents/view-education-documents.component';
 import { ResearchInterestsComponent } from './profile/profile-research/research-interests/research-interests.component';
 import { CreateEditResearchInterestComponent } from './profile/profile-research/research-interests/create-edit-research-interest/create-edit-research-interest.component';
+import { ResearchMethodologiesComponent } from './profile/profile-research/research-methodologies/research-methodologies.component';
+import { CreateEditResearchMethodologyComponent } from './profile/profile-research/research-methodologies/create-edit-research-methodology/create-edit-research-methodology.component';
+import { ResearchMethodTreeComponent } from './shared/components/research-method-tree/research-method-tree.component';
 
 @NgModule({
   declarations: [
@@ -180,6 +184,9 @@ import { CreateEditResearchInterestComponent } from './profile/profile-research/
     ViewEducationDocumentsComponent,
     ResearchInterestsComponent,
     CreateEditResearchInterestComponent,
+    ResearchMethodologiesComponent,
+    CreateEditResearchMethodologyComponent,
+    ResearchMethodTreeComponent,
   ],
   imports: [
     CommonModule,
@@ -202,6 +209,7 @@ import { CreateEditResearchInterestComponent } from './profile/profile-research/
     TypeaheadModule.forRoot(),
     NgxIntlTelInputModule,
     PopoverModule.forRoot(),
+    TreeModule,
   ],
   providers: [
     ProfileGuard,

@@ -1518,6 +1518,133 @@ export class RegistrationsServiceProxy {
 }
 
 @Injectable()
+export class ResearchMethodsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    getAll(): Observable<ResearchMethodDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/ResearchMethods/GetAll";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<ResearchMethodDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ResearchMethodDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<ResearchMethodDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ResearchMethodDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ResearchMethodDto[]>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    search(body: SearchResearchMethodResultRequestDto | undefined): Observable<ResearchMethodDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/ResearchMethods/Search";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSearch(<any>response_);
+                } catch (e) {
+                    return <Observable<ResearchMethodDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ResearchMethodDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSearch(response: HttpResponseBase): Observable<ResearchMethodDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ResearchMethodDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ResearchMethodDto[]>(<any>null);
+    }
+}
+
+@Injectable()
 export class RoleServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -4224,6 +4351,70 @@ export class UserResearchInterestsServiceProxy {
     }
 }
 
+@Injectable()
+export class UserResearchMethodologiesServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: UserResearchMethodologyDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserResearchMethodologies/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
 export class ApplicationInfoDto implements IApplicationInfoDto {
     version: string | undefined;
     releaseDate: moment.Moment;
@@ -5699,6 +5890,81 @@ export interface IRegistrationDto {
     dateOfBirth: moment.Moment;
 }
 
+export class ResearchMethodDto implements IResearchMethodDto {
+    id: string;
+    name: string | undefined;
+    parentId: string;
+    parentIdMap: string | undefined;
+    isEditable: boolean;
+    parent: ResearchMethodDto;
+    children: ResearchMethodDto[] | undefined;
+
+    constructor(data?: IResearchMethodDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.parentId = _data["parentId"];
+            this.parentIdMap = _data["parentIdMap"];
+            this.isEditable = _data["isEditable"];
+            this.parent = _data["parent"] ? ResearchMethodDto.fromJS(_data["parent"]) : <any>undefined;
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(ResearchMethodDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ResearchMethodDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResearchMethodDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["parentId"] = this.parentId;
+        data["parentIdMap"] = this.parentIdMap;
+        data["isEditable"] = this.isEditable;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): ResearchMethodDto {
+        const json = this.toJSON();
+        let result = new ResearchMethodDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IResearchMethodDto {
+    id: string;
+    name: string | undefined;
+    parentId: string;
+    parentIdMap: string | undefined;
+    isEditable: boolean;
+    parent: ResearchMethodDto;
+    children: ResearchMethodDto[] | undefined;
+}
+
 export class ResetPasswordDto implements IResetPasswordDto {
     adminPassword: string;
     userId: number;
@@ -6098,6 +6364,53 @@ export class RoleListDtoListResultDto implements IRoleListDtoListResultDto {
 
 export interface IRoleListDtoListResultDto {
     items: RoleListDto[] | undefined;
+}
+
+export class SearchResearchMethodResultRequestDto implements ISearchResearchMethodResultRequestDto {
+    maxResultCount: number;
+    searchFilter: string | undefined;
+
+    constructor(data?: ISearchResearchMethodResultRequestDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.maxResultCount = _data["maxResultCount"];
+            this.searchFilter = _data["searchFilter"];
+        }
+    }
+
+    static fromJS(data: any): SearchResearchMethodResultRequestDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SearchResearchMethodResultRequestDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["maxResultCount"] = this.maxResultCount;
+        data["searchFilter"] = this.searchFilter;
+        return data; 
+    }
+
+    clone(): SearchResearchMethodResultRequestDto {
+        const json = this.toJSON();
+        let result = new SearchResearchMethodResultRequestDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISearchResearchMethodResultRequestDto {
+    maxResultCount: number;
+    searchFilter: string | undefined;
 }
 
 export class StudentRatingDto implements IStudentRatingDto {
@@ -7496,6 +7809,124 @@ export class UserResearchInterestDtoPagedResultDto implements IUserResearchInter
 export interface IUserResearchInterestDtoPagedResultDto {
     items: UserResearchInterestDto[] | undefined;
     totalCount: number;
+}
+
+export class UserResearchMethodologyDto implements IUserResearchMethodologyDto {
+    id: string | undefined;
+    title: string | undefined;
+    description: string | undefined;
+    userResearchMethodologyResearchMethods: UserResearchMethodologyResearchMethodDto[] | undefined;
+
+    constructor(data?: IUserResearchMethodologyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.description = _data["description"];
+            if (Array.isArray(_data["userResearchMethodologyResearchMethods"])) {
+                this.userResearchMethodologyResearchMethods = [] as any;
+                for (let item of _data["userResearchMethodologyResearchMethods"])
+                    this.userResearchMethodologyResearchMethods.push(UserResearchMethodologyResearchMethodDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): UserResearchMethodologyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserResearchMethodologyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["description"] = this.description;
+        if (Array.isArray(this.userResearchMethodologyResearchMethods)) {
+            data["userResearchMethodologyResearchMethods"] = [];
+            for (let item of this.userResearchMethodologyResearchMethods)
+                data["userResearchMethodologyResearchMethods"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): UserResearchMethodologyDto {
+        const json = this.toJSON();
+        let result = new UserResearchMethodologyDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserResearchMethodologyDto {
+    id: string | undefined;
+    title: string | undefined;
+    description: string | undefined;
+    userResearchMethodologyResearchMethods: UserResearchMethodologyResearchMethodDto[] | undefined;
+}
+
+export class UserResearchMethodologyResearchMethodDto implements IUserResearchMethodologyResearchMethodDto {
+    id: string | undefined;
+    userResearchMethodologyId: string;
+    researchMethodId: string;
+    researchMethod: ResearchMethodDto;
+
+    constructor(data?: IUserResearchMethodologyResearchMethodDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userResearchMethodologyId = _data["userResearchMethodologyId"];
+            this.researchMethodId = _data["researchMethodId"];
+            this.researchMethod = _data["researchMethod"] ? ResearchMethodDto.fromJS(_data["researchMethod"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserResearchMethodologyResearchMethodDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserResearchMethodologyResearchMethodDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userResearchMethodologyId"] = this.userResearchMethodologyId;
+        data["researchMethodId"] = this.researchMethodId;
+        data["researchMethod"] = this.researchMethod ? this.researchMethod.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): UserResearchMethodologyResearchMethodDto {
+        const json = this.toJSON();
+        let result = new UserResearchMethodologyResearchMethodDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserResearchMethodologyResearchMethodDto {
+    id: string | undefined;
+    userResearchMethodologyId: string;
+    researchMethodId: string;
+    researchMethod: ResearchMethodDto;
 }
 
 export class VerificationStatusDto implements IVerificationStatusDto {

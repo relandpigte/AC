@@ -25,6 +25,8 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.PassportVerificationsServiceProxy,
         ApiServiceProxies.DisciplineTaxonomiesServiceProxy,
         ApiServiceProxies.UserResearchInterestsServiceProxy,
+        ApiServiceProxies.ResearchMethodsServiceProxy,
+        ApiServiceProxies.UserResearchMethodologiesServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

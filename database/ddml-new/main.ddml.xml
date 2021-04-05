@@ -24,4 +24,6 @@
 	<include file="ddml-new/ddml.2021-03-23-01.create-usereducationdocuments-table.xml"/>
 	<include file="ddml-new/ddml.2021-03-26-01.create-userresearchinterests-tables.xml"/>
 	<include file="ddml-new/ddml.2021-03-26-02.generate-disciplinetaxonomies-data.xml"/>
+	<include file="ddml-new/ddml.2021-03-27-01.create-userresearchmethodologies-tables.xml"/>
+	<include file="ddml-new/ddml.2021-03-27-02.generate-researchmethods-data.xml"/>
 </databaseChangeLog>

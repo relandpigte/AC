@@ -47,7 +47,7 @@ export class CreateEditResearchInterestComponent extends AppComponentBase implem
         this.notify.success(this.l('SavedSuccessfully'));
         this.userResearchInterestSaved.emit();
         this._modal.hide();
-      })
+      });
   }
 
   onCloseClick(): void {
