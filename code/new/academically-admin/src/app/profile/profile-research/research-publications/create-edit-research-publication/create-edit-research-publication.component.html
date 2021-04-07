@@ -1,0 +1,80 @@
+<form class="form-horizontal" autocomplete="off" #createEditResearchInterestForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <abp-modal-header [title]="(userPublication.id ? 'EditPublication' : 'AddPublication') | localize"
+      (onCloseClick)="onCloseClick()"></abp-modal-header>
+    <div class="card-body">
+
+      <div class="form-row">
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="Title">{{ 'Title' | localize}}</label>
+          <input [(ngModel)]="userPublication.title" #titleModel="ngModel" #titleEl class="form-control" type="text"
+            id="Title" name="Title" required />
+          <abp-validation-summary [control]="titleModel" [controlEl]="titleEl">
+          </abp-validation-summary>
+        </div>
+
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="PublicationType">{{ 'PublicationType' | localize}}</label>
+          <select [(ngModel)]="userPublication.publicationType" #publicationTypeModel="ngModel" #publicationTypeEl
+            class="form-control" type="text" id="PublicationType" name="PublicationType" required>
+            <option [ngValue]="undefined">{{ 'SelectPublicationType' | localize }}</option>
+            <option [value]="1">{{ 'Article' | localize }}</option>
+            <option [value]="2">{{ 'Book' | localize }}</option>
+            <option [value]="3">{{ 'Chapter' | localize }}</option>
+            <option [value]="4">{{ 'ConferencePaper' | localize }}</option>
+            <option [value]="5">{{ 'Thesis' | localize }}</option>
+            <option [value]="6">{{ 'Data' | localize }}</option>
+          </select>
+          <abp-validation-summary [control]="publicationTypeModel" [controlEl]="publicationTypeEl">
+          </abp-validation-summary>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="Publisher">{{ 'Publisher' | localize}}</label>
+          <input [(ngModel)]="userPublication.publisher" #publisherModel="ngModel" #publisherEl class="form-control"
+            type="text" id="Publisher" name="Publisher" required />
+          <abp-validation-summary [control]="publisherModel" [controlEl]="publisherEl">
+          </abp-validation-summary>
+        </div>
+
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="PublicationDate">{{ 'PublicationDate' | localize }}</label>
+          <div class="input-group input-group-merge" (click)="dp.show()">
+            <input [(ngModel)]="publicationDate" id="PublicationDate" name="PublicationDate" type="text"
+              class="form-control form-control-appended" #publicationDateModel="ngModel" #publicationDateEl
+              #dp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" required />
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-calendar"></span>
+              </div>
+            </div>
+          </div>
+          <abp-validation-summary [control]="publicationDateModel" [controlEl]="publicationDateEl">
+          </abp-validation-summary>
+        </div>
+      </div>
+
+      <div class="form-group required">
+        <label class="col-form-label" for="Abstract">{{ 'Abstract' | localize}}</label>
+        <quill-editor [(ngModel)]="userPublication.abstract" #abstractModel="ngModel" #abstractEl id="Abstract"
+          name="Abstract" required></quill-editor>
+        <abp-validation-summary [control]="abstractModel" [controlEl]="abstractEl.elementRef.nativeElement">
+        </abp-validation-summary>
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label" for="PublicationTags">{{ 'Tags' | localize}}</label>
+        <input [(ngModel)]="tags" #publicationTagsModel="ngModel" #publicationTagsEl class="form-control" type="text"
+          id="PublicationTags" name="PublicationTags" />
+        <abp-validation-summary [control]="publicationTagsModel" [controlEl]="publicationTagsEl">
+        </abp-validation-summary>
+      </div>
+
+    </div>
+    <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading"
+      [saveDisabled]="!createEditResearchInterestForm.form.valid || isLoading" (onCancelClick)="onCloseClick()">
+    </abp-modal-footer>
+  </div>
+</form>

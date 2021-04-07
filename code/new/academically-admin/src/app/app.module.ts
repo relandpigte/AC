@@ -104,6 +104,8 @@ import { CreateEditResearchInterestComponent } from './profile/profile-research/
 import { ResearchMethodologiesComponent } from './profile/profile-research/research-methodologies/research-methodologies.component';
 import { CreateEditResearchMethodologyComponent } from './profile/profile-research/research-methodologies/create-edit-research-methodology/create-edit-research-methodology.component';
 import { ResearchMethodTreeComponent } from './shared/components/research-method-tree/research-method-tree.component';
+import { ResearchPublicationsComponent } from './profile/profile-research/research-publications/research-publications.component';
+import { CreateEditResearchPublicationComponent } from './profile/profile-research/research-publications/create-edit-research-publication/create-edit-research-publication.component';
 
 @NgModule({
   declarations: [
@@ -187,6 +189,8 @@ import { ResearchMethodTreeComponent } from './shared/components/research-method
     ResearchMethodologiesComponent,
     CreateEditResearchMethodologyComponent,
     ResearchMethodTreeComponent,
+    ResearchPublicationsComponent,
+    CreateEditResearchPublicationComponent,
   ],
   imports: [
     CommonModule,

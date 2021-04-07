@@ -9,8 +9,8 @@
         <label class="col-form-label" for="Title">{{ 'Title' | localize}}</label>
         <select [(ngModel)]="userResearchMethodology.title" #titleModel="ngModel" #titleEl class="form-control"
           type="text" id="Title" name="Title" required>
-          <option value="Quantitative">Quantitative</option>
-          <option value="Qualitative">Qualitative</option>
+          <option value="{{ 'Quantitative' | localize }}">{{ 'Quantitative' | localize }}</option>
+          <option value="{{ 'Qualitative' | localize }}">{{ 'Qualitative' | localize }}</option>
         </select>
         <abp-validation-summary [control]="titleModel" [controlEl]="titleEl">
         </abp-validation-summary>

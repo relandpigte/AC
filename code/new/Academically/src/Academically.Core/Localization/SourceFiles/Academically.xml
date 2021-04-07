@@ -1,6 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Tags">Tags</text>
+    <text name="Abstract">Abstract</text>
+    <text name="PublicationDate">Publication Date</text>
+    <text name="SelectPublicationType">Select Publication Type</text>
+    <text name="Data">Data</text>
+    <text name="Thesis">Thesis</text>
+    <text name="ConferencePaper">Conference Paper</text>
+    <text name="Chapter">Chapter</text>
+    <text name="Book">Book</text>
+    <text name="Article">Article</text>
+    <text name="PublicationType">Publication Type</text>
+    <text name="AddPublication">Add Publication</text>
+    <text name="Qualitative">Qualitative</text>
+    <text name="Quantitative">Quantitative</text>
     <text name="NoResearchMethodologiesFound">No Research Methodologies Found</text>
     <text name="AddMethod">Add Method</text>
     <text name="AddResearchMethodology">Add Research Methodology</text>

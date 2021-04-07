@@ -2,11 +2,11 @@
 {
     public enum PublicationType
     {
-        Article,
-        Book,
-        Chapter,
-        ConferencePaper,
-        Thesis,
-        Data,
+        Article = 1,
+        Book = 2,
+        Chapter = 3,
+        ConferencePaper = 4,
+        Thesis = 5,
+        Data = 6,
     }
 }
