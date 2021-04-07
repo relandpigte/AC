@@ -274,6 +274,8 @@ deploy_schema_to_ci:
     - build_schema
   environment:
     name: ci_schema
+  only:
+    - develop-new
 
 deploy_backend_to_ci:
   <<: *backend
@@ -288,6 +290,8 @@ deploy_frontend_to_ci:
     - build_frontend
   environment:
     name: ci_frontend
+  only:
+    - develop-new
 
 
 
@@ -300,6 +304,8 @@ deploy_schema_to_uat:
   environment:
     name: uat_schema
   when: manual
+  only:
+    - develop-new
 
 deploy_backend_to_uat:
   <<: *backend
@@ -310,6 +316,8 @@ deploy_backend_to_uat:
   environment:
     name: uat_backend
   when: manual
+  only:
+    - develop-new
 
 deploy_frontend_to_uat:
   <<: *frontend
@@ -320,6 +328,8 @@ deploy_frontend_to_uat:
   environment:
     name: uat_frontend
   when: manual
+  only:
+    - develop-new
 
 
 # Environment UAT #
