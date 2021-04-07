@@ -3782,6 +3782,201 @@ export class UserEducationsServiceProxy {
 }
 
 @Injectable()
+export class UserPublicationsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param nameFilter (optional) 
+     * @return Success
+     */
+    getTags(nameFilter: string | undefined): Observable<PublicationTagDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/UserPublications/GetTags?";
+        if (nameFilter === null)
+            throw new Error("The parameter 'nameFilter' cannot be null.");
+        else if (nameFilter !== undefined)
+            url_ += "nameFilter=" + encodeURIComponent("" + nameFilter) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTags(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTags(<any>response_);
+                } catch (e) {
+                    return <Observable<PublicationTagDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PublicationTagDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTags(response: HttpResponseBase): Observable<PublicationTagDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(PublicationTagDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PublicationTagDto[]>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: UserPublicationDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserPublications/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param userIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getPaged(userIdFilter: number | undefined, searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserPublicationDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/UserPublications/GetPaged?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPaged(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPaged(<any>response_);
+                } catch (e) {
+                    return <Observable<UserPublicationDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserPublicationDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPaged(response: HttpResponseBase): Observable<UserPublicationDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserPublicationDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserPublicationDtoPagedResultDto>(<any>null);
+    }
+}
+
+@Injectable()
 export class UserQualificationsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -5888,6 +6083,63 @@ export interface IProfileMetricDto {
     totalReviews: number;
 }
 
+export class PublicationTagDto implements IPublicationTagDto {
+    id: string;
+    name: string | undefined;
+
+    constructor(data?: IPublicationTagDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): PublicationTagDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PublicationTagDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+
+    clone(): PublicationTagDto {
+        const json = this.toJSON();
+        let result = new PublicationTagDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPublicationTagDto {
+    id: string;
+    name: string | undefined;
+}
+
+/** 1 = Article 2 = Book 3 = Chapter 4 = ConferencePaper 5 = Thesis 6 = Data */
+export enum PublicationType {
+    Article = 1,
+    Book = 2,
+    Chapter = 3,
+    ConferencePaper = 4,
+    Thesis = 5,
+    Data = 6,
+}
+
 /** 0 = Positive 1 = Neutral 2 = Negative */
 export enum RatingExperienceType {
     Positive = 0,
@@ -7676,6 +7928,207 @@ export interface IUserLoginInfoDto {
     emailAddress: string | undefined;
     profilePictureUrl: string | undefined;
     roles: string[] | undefined;
+}
+
+export class UserPublicationDto implements IUserPublicationDto {
+    id: string | undefined;
+    title: string | undefined;
+    publicationType: PublicationType;
+    publisher: string | undefined;
+    publicationDate: moment.Moment;
+    abstract: string | undefined;
+    creationTime: moment.Moment;
+    tags: string[] | undefined;
+    userPublicationTags: UserPublicationTagDto[] | undefined;
+
+    constructor(data?: IUserPublicationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.publicationType = _data["publicationType"];
+            this.publisher = _data["publisher"];
+            this.publicationDate = _data["publicationDate"] ? moment(_data["publicationDate"].toString()) : <any>undefined;
+            this.abstract = _data["abstract"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            if (Array.isArray(_data["tags"])) {
+                this.tags = [] as any;
+                for (let item of _data["tags"])
+                    this.tags.push(item);
+            }
+            if (Array.isArray(_data["userPublicationTags"])) {
+                this.userPublicationTags = [] as any;
+                for (let item of _data["userPublicationTags"])
+                    this.userPublicationTags.push(UserPublicationTagDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): UserPublicationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserPublicationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["publicationType"] = this.publicationType;
+        data["publisher"] = this.publisher;
+        data["publicationDate"] = this.publicationDate ? this.publicationDate.toISOString() : <any>undefined;
+        data["abstract"] = this.abstract;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        if (Array.isArray(this.tags)) {
+            data["tags"] = [];
+            for (let item of this.tags)
+                data["tags"].push(item);
+        }
+        if (Array.isArray(this.userPublicationTags)) {
+            data["userPublicationTags"] = [];
+            for (let item of this.userPublicationTags)
+                data["userPublicationTags"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): UserPublicationDto {
+        const json = this.toJSON();
+        let result = new UserPublicationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserPublicationDto {
+    id: string | undefined;
+    title: string | undefined;
+    publicationType: PublicationType;
+    publisher: string | undefined;
+    publicationDate: moment.Moment;
+    abstract: string | undefined;
+    creationTime: moment.Moment;
+    tags: string[] | undefined;
+    userPublicationTags: UserPublicationTagDto[] | undefined;
+}
+
+export class UserPublicationDtoPagedResultDto implements IUserPublicationDtoPagedResultDto {
+    items: UserPublicationDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IUserPublicationDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(UserPublicationDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): UserPublicationDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserPublicationDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): UserPublicationDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new UserPublicationDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserPublicationDtoPagedResultDto {
+    items: UserPublicationDto[] | undefined;
+    totalCount: number;
+}
+
+export class UserPublicationTagDto implements IUserPublicationTagDto {
+    id: string;
+    userPublicationId: string;
+    publicationTagId: string;
+    publicationTag: PublicationTagDto;
+
+    constructor(data?: IUserPublicationTagDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userPublicationId = _data["userPublicationId"];
+            this.publicationTagId = _data["publicationTagId"];
+            this.publicationTag = _data["publicationTag"] ? PublicationTagDto.fromJS(_data["publicationTag"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserPublicationTagDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserPublicationTagDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userPublicationId"] = this.userPublicationId;
+        data["publicationTagId"] = this.publicationTagId;
+        data["publicationTag"] = this.publicationTag ? this.publicationTag.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): UserPublicationTagDto {
+        const json = this.toJSON();
+        let result = new UserPublicationTagDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserPublicationTagDto {
+    id: string;
+    userPublicationId: string;
+    publicationTagId: string;
+    publicationTag: PublicationTagDto;
 }
 
 export class UserQualificationDocumentDto implements IUserQualificationDocumentDto {

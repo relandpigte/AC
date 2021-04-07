@@ -1,7 +1,10 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { PublicationTagDto, PublicationType, UserPublicationDto, UserPublicationsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { Observable, Observer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-edit-research-publication',
@@ -9,37 +12,74 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   styleUrls: ['./create-edit-research-publication.component.less']
 })
 export class CreateEditResearchPublicationComponent extends AppComponentBase implements OnInit {
-  userPublication = {
-    id: undefined,
-    title: undefined,
-    publicationType: undefined,
-    publisher: undefined,
-    publicationDate: undefined,
-    abstract: undefined,
-  };
+  @Output() userPublicationSaved = new EventEmitter();
+  userPublication: UserPublicationDto = new UserPublicationDto();
   isLoading = false;
-  tags = '';
+  publicationTagsTypeaheadSource: Observable<PublicationTagDto[]>;
+  publicationTag = '';
   publicationDate: Date;
   datePickerConfig: BsDatepickerConfig;
+  PublicationType = PublicationType;
 
   constructor(
     injector: Injector,
-    private _modal: BsModalRef
+    private _modal: BsModalRef,
+    private _userPublicationsService: UserPublicationsServiceProxy,
   ) {
     super(injector);
     this.datePickerConfig = new BsDatepickerConfig();
     this.datePickerConfig.showWeekNumbers = false;
     this.datePickerConfig.dateInputFormat = 'DD/MM/YYYY';
+    this.userPublication.tags = [];
   }
 
   ngOnInit(): void {
+    this.getPublicationTags();
   }
 
   onFormSubmit(): void {
-
+    this.isLoading = true;
+    this._userPublicationsService.create(this.userPublication)
+      .subscribe(() => {
+        this.notify.success(this.l('SuccessfullySaved'));
+        this.isLoading = false;
+        this.userPublicationSaved.emit();
+        this._modal.hide();
+      });
   }
 
   onCloseClick(): void {
     this._modal.hide();
+  }
+
+  onPublicationTagSelect(publicationTag: PublicationTagDto): void {
+    this.userPublication.tags.push(publicationTag.name.toLowerCase());
+  }
+
+  onRemovePublicationTagClick(tag: string): void {
+    const index = this.userPublication.tags.findIndex(e => e == tag);
+    if (index > -1) {
+      this.userPublication.tags.splice(index, 1);
+    }
+  }
+
+  onPublicationTagKeyDown(e: KeyboardEvent): void {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (this.publicationTag) {
+        this.userPublication.tags.push(this.publicationTag);
+        this.publicationTag = '';
+      }
+    }
+  }
+
+  private getPublicationTags(): void {
+    this.publicationTagsTypeaheadSource = new Observable((observer: Observer<string>) => {
+      observer.next(this.publicationTag);
+    }).pipe(
+      switchMap((query: string) => {
+        return this._userPublicationsService.getTags(query);
+      })
+    );
   }
 }

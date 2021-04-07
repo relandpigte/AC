@@ -66,10 +66,20 @@
 
       <div class="form-group">
         <label class="col-form-label" for="PublicationTags">{{ 'Tags' | localize}}</label>
-        <input [(ngModel)]="tags" #publicationTagsModel="ngModel" #publicationTagsEl class="form-control" type="text"
-          id="PublicationTags" name="PublicationTags" />
-        <abp-validation-summary [control]="publicationTagsModel" [controlEl]="publicationTagsEl">
-        </abp-validation-summary>
+        <input [(ngModel)]="publicationTag" #publicationTagsModel="ngModel" #publicationTagsEl class="form-control"
+          type="text" id="PublicationTags" name="PublicationTags" typeaheadOptionField="name"
+          [typeahead]="publicationTagsTypeaheadSource" [typeaheadAsync]="true" [typeaheadOptionsLimit]="10"
+          (typeaheadOnSelect)="onPublicationTagSelect($event.item)" container="body" (keydown)="onPublicationTagKeyDown($event)" />
+        <div class="ac-alerts">
+          <div *ngFor="let tag of userPublication.tags"
+            class="alert alert-info alert-dismissible ac-alert" role="alert">
+            {{ tag }}
+            <button (click)="onRemovePublicationTagClick(tag)" type="button"
+              class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+        </div>
       </div>
 
     </div>
