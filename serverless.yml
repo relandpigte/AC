@@ -52,6 +52,8 @@ provider:
       Resource: 
         - "arn:aws:s3:::academically-${env:ENV_NAME}-assets"
         - "arn:aws:s3:::academically-${env:ENV_NAME}-assets/*"
+        - "arn:aws:s3:::academically-${env:ENV_NAME}-assets-secured"
+        - "arn:aws:s3:::academically-${env:ENV_NAME}-assets-secured/*"
   apiGateway:
     binaryMediaTypes:
       - 'multipart/form-data'
