@@ -6,10 +6,12 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 import { LocalizePipe } from '@shared/pipes/localize.pipe';
+import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { EqualValidator } from './directives/equal-validator.directive';
 import { BusyDirective } from './directives/busy.directive';
 import { BodyClassDirective } from './directives/body-class.directive';
 import { Select2Directive } from './directives/select2.directive';
+import { ToggableContentDirective } from './directives/toggable-content.directive';
 
 import { AppSessionService } from './session/app-session.service';
 import { AppUrlService } from './nav/app-url.service';
@@ -32,10 +34,12 @@ import { TableHeaderSortComponent } from './components/table-header-sort/table-h
   ],
   declarations: [
     LocalizePipe,
+    SafeHtmlPipe,
     EqualValidator,
     BusyDirective,
     BodyClassDirective,
     Select2Directive,
+    ToggableContentDirective,
     AbpPaginationControlsComponent,
     AbpValidationSummaryComponent,
     AbpModalHeaderComponent,
@@ -45,10 +49,12 @@ import { TableHeaderSortComponent } from './components/table-header-sort/table-h
   exports: [
     BsDatepickerModule,
     LocalizePipe,
+    SafeHtmlPipe,
     EqualValidator,
     BusyDirective,
     BodyClassDirective,
     Select2Directive,
+    ToggableContentDirective,
     AbpPaginationControlsComponent,
     AbpValidationSummaryComponent,
     AbpModalHeaderComponent,

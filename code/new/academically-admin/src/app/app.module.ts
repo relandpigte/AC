@@ -18,7 +18,7 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { TreeModule } from 'primeng/tree';
-
+import { QuillModule } from 'ngx-quill';
 
 // directives
 import { ChartDirective } from '@shared/directives/chart.directive';
@@ -27,7 +27,7 @@ import { DragClassUpdaterDirective } from '@shared/directives/drag-class-updater
 // guards
 import { ProfileGuard } from '@shared/guards/profile.guard';
 
-// servuces
+// services
 import { ProfileService } from '@shared/services/profile.service'
 
 // tenants
@@ -210,6 +210,7 @@ import { ResearchMethodTreeComponent } from './shared/components/research-method
     NgxIntlTelInputModule,
     PopoverModule.forRoot(),
     TreeModule,
+    QuillModule.forRoot(),
   ],
   providers: [
     ProfileGuard,

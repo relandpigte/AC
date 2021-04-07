@@ -1,24 +1,25 @@
-import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { FileParameter, UserQualificationDto, UserQualificationsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { DocumentUploaderComponent } from '@app/shared/components/document-uploader/document-uploader.component';
 import { finalize } from 'rxjs/operators';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { Editor } from 'ngx-editor';
 
 @Component({
   selector: 'app-create-edit-profile-qualification',
   templateUrl: './create-edit-profile-qualification.component.html',
   styleUrls: ['./create-edit-profile-qualification.component.less']
 })
-export class CreateEditProfileQualificationComponent extends AppComponentBase implements OnInit {
+export class CreateEditProfileQualificationComponent extends AppComponentBase implements OnInit, OnDestroy {
   @Input() userQualification: UserQualificationDto = new UserQualificationDto();
   @Output() qualificationSaved = new EventEmitter<boolean>();
   @ViewChild('documentUploader') documentUploaderComponent: DocumentUploaderComponent;
   qualificationExtensions = fileUploadConfiguration.allowedQualificationExtensions;
   yearSelections: string[] = [];
   isLoading = false;
-
+  editor: Editor;
 
   constructor(
     injector: Injector,
@@ -35,6 +36,11 @@ export class CreateEditProfileQualificationComponent extends AppComponentBase im
   }
 
   ngOnInit(): void {
+    this.editor = new Editor();
+  }
+
+  ngOnDestroy(): void {
+    this.editor.destroy();
   }
 
   onFormSubmit(): void {

@@ -18,9 +18,9 @@
 
       <div class="form-group required">
         <label class="col-form-label" for="Description">{{ 'Description' | localize}}</label>
-        <textarea [(ngModel)]="userResearchMethodology.description" #descriptionModel="ngModel" #descriptionEl
-          class="form-control" rows="4" id="Description" name="Description" required></textarea>
-        <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl">
+        <quill-editor [(ngModel)]="userResearchMethodology.description" #descriptionModel="ngModel" #descriptionEl
+          id="Description" name="Description" required></quill-editor>
+        <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl.elementRef.nativeElement">
         </abp-validation-summary>
       </div>
 
@@ -30,8 +30,8 @@
           <div *ngFor="let selectedMethod of userResearchMethodology.userResearchMethodologyResearchMethods"
             class="alert alert-info alert-dismissible ac-alert" role="alert">
             {{ selectedMethod.researchMethod.name }}
-            <button (click)="onRemoveResearchMethodClick(selectedMethod.researchMethod.id)" type="button"
-              class="close" data-dismiss="alert" aria-label="Close">
+            <button (click)="onRemoveResearchMethodClick(selectedMethod.researchMethod.id)" type="button" class="close"
+              data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>

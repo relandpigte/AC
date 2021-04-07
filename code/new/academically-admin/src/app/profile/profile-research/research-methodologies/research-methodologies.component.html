@@ -22,7 +22,9 @@
               <h4 class="text-body">{{ userResearchMethodology.title }}</h4>
             </div>
             <div class="col-12">
-              <p class="m-0 p-0 text-body break-spaces">{{ userResearchMethodology.description }}</p>
+              <div toggableContent [identifier]="userResearchMethodology.id" contentClass="ql-container">
+                <quill-view-html [content]="userResearchMethodology.description" theme="snow"></quill-view-html>
+              </div>
             </div>
             <div class="col-12 pt-2">
               <div *ngFor="let userResearchMethod of userResearchMethodology.userResearchMethodologyResearchMethods"

@@ -4,21 +4,12 @@
   </div>
   <div class="card-body">
     <ng-container *ngIf="!isEditingAbout; else editAboutTemplate">
-      <p class="text-secondary p-0 m-0">
-        {{ user.about | shorten: aboutLength: ' ...' }}
-        <ng-container *ngIf="user.about && user.about.length > aboutCollapseLimit">
-          <a *ngIf="!isAboutExpanded" href="#" (click)="$event.preventDefault(); onReadMoreAboutClick(true);">
-            Read more
-          </a>
-          <a *ngIf="isAboutExpanded" href="#" (click)="$event.preventDefault(); onReadMoreAboutClick(false);">
-            Read less
-          </a>
-        </ng-container>
-      </p>
+      <div toggableContent identifier="about" contentClass="ql-container">
+        <quill-view-html [content]="user.about" theme="snow"></quill-view-html>
+      </div>
     </ng-container>
     <ng-template #editAboutTemplate>
-      <textarea [(ngModel)]="user.about" [disabled]="isSavingAbout" class="form-control" rows="10">
-      </textarea>
+      <quill-editor [(ngModel)]="user.about"></quill-editor>
     </ng-template>
   </div>
   <div *ngIf="!isViewOnly" class="card-footer justify-content-end">

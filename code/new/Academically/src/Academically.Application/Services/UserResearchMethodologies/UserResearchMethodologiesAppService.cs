@@ -62,6 +62,11 @@ namespace Academically.Services.UserResearchMethodologies
         [AbpAuthorize(PermissionNames.Pages_Profile_Research_ResearchMethodologies_Update)]
         public async Task Edit(UserResearchMethodologyDto input)
         {
+            input.UserResearchMethodologyResearchMethods.ToList().ForEach(e =>
+            {
+                e.ResearchMethod.Parent = null;
+                e.ResearchMethod.Children = null;
+            });
             var userResearchMethodology = await _userResearchMethodologiesRepository.GetAsync(input.Id.Value);
             await _userResearchMethodologyResearchMethodsRepository.DeleteAsync(e => e.UserResearchMethodologyId == userResearchMethodology.Id);
             ObjectMapper.Map(input, userResearchMethodology);

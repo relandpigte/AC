@@ -74,6 +74,7 @@ export class ResearchMethodologiesComponent extends PagedListingComponentBase<Us
 
   private showCreateEditUserResearchMethodologyModal(userResearchMethodology?: UserResearchMethodologyDto): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditResearchMethodologyComponent>;
+    modalSettings.class = 'modal-lg';
     modalSettings.initialState = {
       userResearchMethodology,
     };
