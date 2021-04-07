@@ -5798,6 +5798,13 @@ ngx-pipes@^2.7.5:
   dependencies:
     tslib "^2.0.0"
 
+ngx-quill@11.1.0:
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/ngx-quill/-/ngx-quill-11.1.0.tgz#1f92b9e3f3f43b4877ea46b5b1b9983ed1383680"
+  integrity sha512-A1qV6JfyNwSioRHgu7ZzjhV2yNRI9Yrv89Ip4WPhniD8mGZylXVnqcdTZqacRnal21hGoRQDX4QHULeO4XTqug==
+  dependencies:
+    tslib "^1.10.0"
+
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"

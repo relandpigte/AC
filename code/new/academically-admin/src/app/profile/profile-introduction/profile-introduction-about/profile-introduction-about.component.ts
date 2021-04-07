@@ -1,20 +1,18 @@
-import { Component, Injector, OnDestroy } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ProfilesServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import { ProfileService } from '@shared/services/profile.service';
-import { Editor } from 'ngx-editor';
 
 @Component({
   selector: 'app-profile-introduction-about',
   templateUrl: './profile-introduction-about.component.html',
   styleUrls: ['./profile-introduction-about.component.less']
 })
-export class ProfileIntroductionAboutComponent extends AppComponentBase implements OnDestroy {
+export class ProfileIntroductionAboutComponent extends AppComponentBase {
   user: UserDto;
   isViewOnly = true;
   isEditingAbout = false;
   isSavingAbout = false;
-  editor: Editor;
 
   constructor(
     injector: Injector,
@@ -31,11 +29,6 @@ export class ProfileIntroductionAboutComponent extends AppComponentBase implemen
   }
 
   ngOnInit(): void {
-    this.editor = new Editor();
-  }
-
-  ngOnDestroy(): void {
-    this.editor.destroy();
   }
 
   onEditAboutClick(): void {
