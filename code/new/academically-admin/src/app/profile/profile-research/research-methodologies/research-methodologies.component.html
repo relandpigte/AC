@@ -15,7 +15,7 @@
   <div class="table-responsive">
     <table class="table table-nowrap card-table" [busy]="isTableLoading">
       <tr *ngFor="let userResearchMethodology of userResearchMethodologies
-      | paginate: { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }">
+      | paginate: { id: 'method', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }">
         <td>
           <div class="row p-3">
             <div class="col-12">
@@ -50,7 +50,7 @@
       </tr>
     </table>
   </div>
-  <abp-pagination-controls *ngIf="userResearchMethodologies && userResearchMethodologies.length" id="server"
+  <abp-pagination-controls *ngIf="userResearchMethodologies && userResearchMethodologies.length" id="method"
     (pageChange)="getDataPage($event)">
   </abp-pagination-controls>
 </div>
