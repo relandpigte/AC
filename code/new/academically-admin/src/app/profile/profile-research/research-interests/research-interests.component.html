@@ -22,7 +22,9 @@
               <h4 class="text-body">{{ userResearchInterest.title }}</h4>
             </div>
             <div class="col-12">
-              <p class="m-0 p-0 text-body break-spaces">{{ userResearchInterest.description }}</p>
+              <div toggableContent [identifier]="userResearchInterest.id" contentClass="ql-container">
+                <quill-view-html [content]="userResearchInterest.description" theme="snow"></quill-view-html>
+              </div>
             </div>
             <div class="col-12 pt-2">
               <div

@@ -30,6 +30,24 @@ popover-container {
   max-width: 100% !important;
 }
 
+quill-editor {
+  .ql-container {
+    border-top: 1px solid #ccc !important;
+
+    .ql-editor {
+      border: none;
+    }
+  }
+}
+
+quill-view-html {
+  .ql-editor {
+    border    : none;
+    padding   : 0;
+    min-height: initial;
+  }
+}
+
 /* custom component styles end */
 
 body {
@@ -325,6 +343,27 @@ input[type='file'].inline-file-upload {
 
 .break-spaces {
   white-space: break-spaces;
+}
+
+.toggable-content {
+  max-height: 150px;
+  overflow  : hidden;
+
+  &.show-all {
+    overflow  : visible;
+    max-height: initial;
+    height    : auto;
+  }
+}
+
+.NgxEditor__Wrapper {
+  min-height: 150px;
+}
+
+.ql-toolbar.ql-snow {
+  &>* {
+    margin: 0 !important;
+  }
 }
 
 @media (min-width: 576px) {

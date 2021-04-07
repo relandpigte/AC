@@ -74,6 +74,7 @@ export class ResearchInterestsComponent extends PagedListingComponentBase<UserRe
 
   private showCreateEditUserResearchInterestMdoal(userResearchInterest?: UserResearchInterestDto): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditResearchInterestComponent>;
+    modalSettings.class = 'modal-lg';
     modalSettings.initialState = {
       userResearchInterest: userResearchInterest,
     };

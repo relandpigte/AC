@@ -1,21 +1,20 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnDestroy } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ProfilesServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import { ProfileService } from '@shared/services/profile.service';
+import { Editor } from 'ngx-editor';
 
 @Component({
   selector: 'app-profile-introduction-about',
   templateUrl: './profile-introduction-about.component.html',
   styleUrls: ['./profile-introduction-about.component.less']
 })
-export class ProfileIntroductionAboutComponent extends AppComponentBase {
+export class ProfileIntroductionAboutComponent extends AppComponentBase implements OnDestroy {
   user: UserDto;
   isViewOnly = true;
   isEditingAbout = false;
   isSavingAbout = false;
-  aboutCollapseLimit = 400;
-  aboutLength: number;
-  isAboutExpanded = false;
+  editor: Editor;
 
   constructor(
     injector: Injector,
@@ -23,7 +22,6 @@ export class ProfileIntroductionAboutComponent extends AppComponentBase {
     private _profilesService: ProfilesServiceProxy,
   ) {
     super(injector);
-    this.aboutLength = this.aboutCollapseLimit;
     profileService.$user.subscribe(user => {
       this.user = user;
     });
@@ -33,6 +31,11 @@ export class ProfileIntroductionAboutComponent extends AppComponentBase {
   }
 
   ngOnInit(): void {
+    this.editor = new Editor();
+  }
+
+  ngOnDestroy(): void {
+    this.editor.destroy();
   }
 
   onEditAboutClick(): void {
@@ -45,14 +48,6 @@ export class ProfileIntroductionAboutComponent extends AppComponentBase {
       .subscribe(() => {
         this.isEditingAbout = false;
         this.isSavingAbout = false;
-        if (this.isAboutExpanded) {
-          this.aboutLength = this.user.about.length;
-        }
       });
-  }
-
-  onReadMoreAboutClick(isAboutExpanded: boolean): void {
-    this.isAboutExpanded = isAboutExpanded;
-    this.aboutLength = this.isAboutExpanded ? this.user.about.length : this.aboutCollapseLimit;
   }
 }

@@ -10,7 +10,7 @@ namespace Academically.Domain.Entities
         public Guid UserResearchMethodologyId { get; set; }
         public Guid ResearchMethodId { get; set; }
 
-        public virtual UserResearchMethodology UserResearchMethodology { get; set; }
+        [ForeignKey("ResearchMethodId")]
         public virtual ResearchMethod ResearchMethod { get; set; }
     }
 }

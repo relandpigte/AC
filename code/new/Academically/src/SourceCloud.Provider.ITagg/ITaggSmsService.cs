@@ -24,7 +24,7 @@ namespace SourceCloud.Provider.ITagg
             message = HttpUtility.UrlEncode(message);
             using (var httpClient = new HttpClient())
             {
-                string url = $"{BASE_URL}?usr={_configuration.Username}&pwd={_configuration.Password}&from=Academ&to={recipient}&type=text&route={ROUTE}&txt={message}";
+                string url = $"{BASE_URL}?usr={_configuration.Username}&pwd={_configuration.Password}&from={sender}&to={recipient}&type=text&route={ROUTE}&txt={message}";
                 using (var request = new HttpRequestMessage(new HttpMethod("POST"), url))
                 {
                     var response = await httpClient.SendAsync(request);
