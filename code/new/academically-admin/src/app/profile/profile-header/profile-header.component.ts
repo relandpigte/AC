@@ -30,7 +30,7 @@ export class ProfileHeaderComponent extends AppComponentBase implements OnDestro
     this.themeSettings = themeSettingsService.getConfiguration();
     this.userSubscription = this._profileService.$user.subscribe(user => {
       this.user = user;
-      this.userTitle = this.user.roleNames.filter(e => e.toLowerCase() === 'tutor').length > 0 ? 'Tutor' : 'Profile';
+      this.userTitle = this.user.roleNames.filter(e => e.toLowerCase() === 'tutor').length > 0 ? 'Tutor' : 'Student';
     });
     this.viewOnlySubscription = this._profileService.$isViewOnly.subscribe(isViewOnly => {
       this.isViewOnly = isViewOnly;
