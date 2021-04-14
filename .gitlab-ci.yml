@@ -4,8 +4,8 @@ stages:
 
 variables:
   BUILD_IMAGE: "mcr.microsoft.com/dotnet/core/sdk:3.1" 
-  FRONTEND_PATH: "code/academically-admin"
-  BACKEND_PATH: "code/Academically/Academically.Web.Host"
+  FRONTEND_PATH: "code/new/academically-admin"
+  BACKEND_PATH: "code/new/Academically/src/Academically.Web.Host"
   ENV_NAME: "ci"
   LOG_RETENTION: 7
   PRIVATE_SUBNET_A: "subnet-03f6e008bbf99fd12"
@@ -122,7 +122,7 @@ variables:
     # Subsitute the Connection String
     - jq ".ConnectionStrings.Default=\"server=$DATABASE_ID``;database=$APP_NAME``_$ENV_NAME;uid=deployAdmin;password=$db_master_password;port=3306\"" appsettings.bak > appsettings.v1
     # Subsitute the Other Variables
-    - jq ".App.ServerRootAddress=\"$API_URL``/$ENV_NAME\" | .App.ClientRootAddress=\"$URL_HTTPS\" | .App.CorsOrigins=\"$URL_HTTPS``,$URL_HTTP\" | .App.ServerBasePath=\"$ENV_NAME\" | .Kestrel.Endpoints.Http.Url=\"$API_URL\" | .Aws.Id=\"$AWS_ACC_NUM\" | .Aws.Profile=\"\" | .Aws.Region=\"$AWS_DEFAULT_REGION\" | .Aws.S3.AssetsBucket=\"$APP_NAME``-$ENV_NAME``-assets\"" appsettings.v1 > appsettings.json
+    - jq ".App.ServerRootAddress=\"$API_URL``/$ENV_NAME\" | .App.ClientRootAddress=\"$URL_HTTPS\" | .App.CorsOrigins=\"$URL_HTTPS``,$URL_HTTP\" | .App.ServerBasePath=\"$ENV_NAME\" | .Kestrel.Endpoints.Http.Url=\"$API_URL\" | .Aws.Id=\"$AWS_ACC_NUM\" | .Aws.Profile=\"\" | .Aws.Region=\"$AWS_DEFAULT_REGION\" | .Aws.S3.AssetsBucket=\"$APP_NAME``-$ENV_NAME``-assets\" | .Aws.S3.SecureAssetsBucket=\"$APP_NAME``-$ENV_NAME``-assets-secured\" | .ITagg.Sms.Username=\"d9d7ec2c\" | .ITagg.Sms.Password=\"p5sswm6g\"" appsettings.v1 > appsettings.json
     - cat appsettings.json
     - rm appsettings.bak
     - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
@@ -135,22 +135,39 @@ variables:
 
 .frontend: &frontend
   stage: deploy
-  image: python:latest
+  image: node:latest
   before_script:
     - echo "pre script (deploy_frontend)"
     - echo "Install Pre-requistes"
     - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
     - apt-get update
+    - node -v
+    - npm -v
+    # install python, awscli & jq
+    - apt-get install -y python3-pip
     - pip3 install awscli boto boto3
+    - apt-get install -y jq
     - aws --version
+    - jq --version
+    - apt-get install -y zip
+    # Install Angular, specify v9.1.4 to match our code
+    - npm install -g @angular/cli@9.1.4
     - pwd
-
+  
   script:
-    # Copy Dist to S3 Bucket
-    - echo "Copy dist to S3"
-    - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
+    # build dist previously saved as an artifact
+    - echo "Build $ENV_NAME"
+    - ls -la
+    - "cd $CI_PROJECT_DIR"
+    - ls -la
+    - "cd $CI_PROJECT_DIR/artifacts" 
     - pwd
     - ls -la
+    - ng build --configuration $ENV_NAME
+    - cat app.config
+    - ls -la
+    # Copy Dist to S3 Bucket
+    - echo "Copy dist to S3"
     - aws s3 rm s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN --recursive
     - aws s3 cp dist s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN --recursive
     - aws s3 ls s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN
@@ -183,6 +200,8 @@ build_schema:
     paths:
       - artifacts
     expire_in: 21 day
+  only:
+    - develop-new
 
 build_backend:
   stage: build
@@ -208,8 +227,8 @@ build_backend:
     paths:
       - artifacts
     expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
-
-# debug - delete me
+  only:
+    - develop-new
 
 build_frontend:
   stage: build
@@ -226,16 +245,18 @@ build_frontend:
       
   script:
     - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
-    - ls -la
     # specify v9.1.4 to match our code
     - npm install -g @angular/cli@9.1.4
-    - yarn install
-    - ng build --configuration $ENV_NAME
+    - yarn install    
     - ls -la
+    - cp -r $CI_PROJECT_DIR/$FRONTEND_PATH/ $CI_PROJECT_DIR/artifacts/
   artifacts:
     paths:
-      - $CI_PROJECT_DIR/$FRONTEND_PATH/dist/
+      - artifacts
     expire_in: 21 day
+  only:
+    - develop-new
+
     
 # End Build #
 #############
@@ -253,6 +274,8 @@ deploy_schema_to_ci:
     - build_schema
   environment:
     name: ci_schema
+  only:
+    - develop-new
 
 deploy_backend_to_ci:
   <<: *backend
@@ -267,6 +290,8 @@ deploy_frontend_to_ci:
     - build_frontend
   environment:
     name: ci_frontend
+  only:
+    - develop-new
 
 
 
@@ -279,6 +304,8 @@ deploy_schema_to_uat:
   environment:
     name: uat_schema
   when: manual
+  only:
+    - develop-new
 
 deploy_backend_to_uat:
   <<: *backend
@@ -289,6 +316,8 @@ deploy_backend_to_uat:
   environment:
     name: uat_backend
   when: manual
+  only:
+    - develop-new
 
 deploy_frontend_to_uat:
   <<: *frontend
@@ -299,6 +328,8 @@ deploy_frontend_to_uat:
   environment:
     name: uat_frontend
   when: manual
+  only:
+    - develop-new
 
 
 # Environment UAT #

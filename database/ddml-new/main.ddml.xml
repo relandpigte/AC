@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<include file="ddml-new/ddml.2021-02-18-01.initial-migrations.xml"/>
+	<include file="ddml-new/ddml.2021-02-25-01.create-registrations-table.xml"/>
+	<include file="ddml-new/ddml.2021-03-03-01.alter-users-add-ispublic-field.xml"/>
+	<include file="ddml-new/ddml.2021-03-04-01.alter-users-add-address-fields.xml"/>
+	<include file="ddml-new/ddml.2021-03-04-02.alter-users-add-websiteurl-field.xml"/>
+	<include file="ddml-new/ddml.2021-03-05-01.alter-users-add-about-field.xml"/>
+	<include file="ddml-new/ddml.2021-03-05-02.alter-users-add-coverphotofilename-field.xml"/>
+	<include file="ddml-new/ddml.2021-03-08-01.create-universities-table.xml"/>
+	<include file="ddml-new/ddml.2021-03-08-02.generate-universities-data.xml"/>
+	<include file="ddml-new/ddml.2021-03-08-03.create-educationlevels-table.xml"/>
+	<include file="ddml-new/ddml.2021-03-08-04.generate-educationlevels-data.xml"/>
+	<include file="ddml-new/ddml.2021-03-08-05.create-usereducations-tables.xml"/>
+	<include file="ddml-new/ddml.2021-03-08-06.alter-universities-add-isreviewed-field.xml"/>
+	<include file="ddml-new/ddml.2021-03-09-01.create-phoneverifications-table.xml"/>
+	<include file="ddml-new/ddml.2021-03-15-01.alter-users-add-dateofbirth-field.xml"/>
+	<include file="ddml-new/ddml.2021-03-16-01.create-ratings-tables.xml"/>
+	<include file="ddml-new/ddml.2021-03-17-01.create-qualifications-tables.xml"/>
+	<include file="ddml-new/ddml.2021-03-19-01.create-phoneverifications-table.xml"/>
+	<include file="ddml-new/ddml.2021-03-22-01.alter-users-add-photos-fields.xml"/>
+	<include file="ddml-new/ddml.2021-03-23-01.create-usereducationdocuments-table.xml"/>
+	<include file="ddml-new/ddml.2021-03-26-01.create-userresearchinterests-tables.xml"/>
+	<include file="ddml-new/ddml.2021-03-26-02.generate-disciplinetaxonomies-data.xml"/>
+	<include file="ddml-new/ddml.2021-03-27-01.create-userresearchmethodologies-tables.xml"/>
+	<include file="ddml-new/ddml.2021-03-27-02.generate-researchmethods-data.xml"/>
+	<include file="ddml-new/ddml.2021-04-01-01.create-userpublications-tables.xml"/>
+</databaseChangeLog>

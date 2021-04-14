@@ -1,0 +1,12 @@
+<form class="form-horizontal" autocomplete="off" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <abp-modal-header [title]="'UploadPassportPhoto' | localize" (onCloseClick)="onCloseClick()"></abp-modal-header>
+    <div class="card-body">
+      <app-document-uploader [maxFiles]="1" [cropImages]="true" [allowedExtensions]="passportVerificationExtensions">
+      </app-document-uploader>
+    </div>
+    <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading" [saveLabel]="'Upload' | localize"
+      [savingLabel]="'Uploading' | localize" [saveDisabled]="!passport || isLoading" (onCancelClick)="onCloseClick()">
+    </abp-modal-footer>
+  </div>
+</form>

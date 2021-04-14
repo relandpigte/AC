@@ -1,0 +1,54 @@
+﻿<div [@routerTransition]>
+  <div class="header">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-end">
+          <div class="col">
+            <h6 class="header-pretitle">
+              {{ 'Dashboard' | localize }}
+            </h6>
+            <h1 class="header-title">
+              Good morning, {{ user.name }}
+            </h1>
+          </div>
+          <div class="col-auto">
+            <a href="javascript:;" class="btn btn-primary">
+              {{ 'CreateNewProject' | localize}}
+            </a>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col">
+            <ul class="nav nav-tabs nav-overflow header-tabs">
+              <li *ngIf="permission.isGranted('Pages.Dashboard.Overview')" class="nav-item">
+                <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab"
+                  aria-controls="overview" aria-selected="true">{{ 'Overview' | localize }}</a>
+              </li>
+              <li *ngIf="permission.isGranted('Pages.Dashboard.MyProjects')" class="nav-item">
+                <a class="nav-link" id="projects-tab" data-toggle="tab" href="#projects" role="tab"
+                  aria-controls="projects" aria-selected="false">{{ 'MyProjects' | localize }}</a>
+              </li>
+              <li *ngIf="permission.isGranted('Pages.Dashboard.Usage')" class="nav-item">
+                <a class="nav-link" id="usage-tab" data-toggle="tab" href="#usage" role="tab" aria-controls="usage"
+                  aria-selected="false">{{ 'Usage' | localize }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="tab-content">
+      <div *ngIf="permission.isGranted('Pages.Dashboard.Overview')" class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+        <app-dashboard-overview *ngIf="permission.isGranted('Pages.Dashboard.Overview')"></app-dashboard-overview>
+      </div>
+      <div *ngIf="permission.isGranted('Pages.Dashboard.MyProjects')" class="tab-pane fade" id="projects" role="tabpanel" aria-labelledby="projects-tab">
+        <app-dashboard-projects *ngIf="permission.isGranted('Pages.Dashboard.MyProjects')"></app-dashboard-projects>
+      </div>
+      <div *ngIf="permission.isGranted('Pages.Dashboard.Usage')" class="tab-pane fade" id="usage" role="tabpanel" aria-labelledby="usage-tab">
+        <app-dashboard-usage *ngIf="permission.isGranted('Pages.Dashboard.Usage')"></app-dashboard-usage>
+      </div>
+    </div>
+  </div>
+</div>

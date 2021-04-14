@@ -1,0 +1,53 @@
+<div class="modal-card card">
+  <abp-modal-header [title]="'Evidences' | localize" (onCloseClick)="onCloseClick()"></abp-modal-header>
+  <div class="card-body">
+
+    <ul *ngIf="userEducationDocuments.length > 0" class="list-group list-group-flush my-n3">
+      <li *ngFor="let userEducationDocument of userEducationDocuments" class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col ml-n2">
+            <div class="col">
+              <h4 class="text-body text-focus mb-1">
+                {{ userEducationDocument.document.originalFileName }}
+              </h4>
+              <p class="small text-muted mb-0">
+                {{ formatBytes(userEducationDocument.document.size) }}
+              </p>
+            </div>
+          </div>
+          <div class="col-auto">
+            <span class="badge badge-soft-success mr-1">{{ userEducationDocument.category }}</span><br />
+            <span *ngIf="!userEducationDocument.isReviewed" class="badge badge-soft-warning mr-1">Unverified</span>
+            <span *ngIf="userEducationDocument.isReviewed" class="badge badge-soft-info mr-1">Verified</span>
+          </div>
+          <div class="col-auto">
+            <button (click)="onViewDocumentClick(userEducationDocument.document)"
+              [disabled]="viewLoaders[userEducationDocument.document.id] || deleteLoaders[userEducationDocument.id]"
+              type="button" class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
+              <span *ngIf="viewLoaders[userEducationDocument.document.id]" class="spinner-border spinner-border-sm"
+                role="status" aria-hidden="true"></span>
+              <span *ngIf="!viewLoaders[userEducationDocument.document.id]" class="fe fe-eye"></span>
+            </button>
+            <button *ngIf="permission.isGranted('Pages.Profile.Education.Delete')"
+              (click)="onDeleteDocumentClick(userEducationDocument.id)"
+              [disabled]="deleteLoaders[userEducationDocument.id]" type="button" type="button"
+              class="btn btn-outline-danger btn-sm btn-rounded-circle">
+              <span *ngIf="deleteLoaders[userEducationDocument.id]" class="spinner-border spinner-border-sm"
+                role="status" aria-hidden="true"></span>
+              <span *ngIf="!deleteLoaders[userEducationDocument.id]" class="fe fe-trash-2"></span>
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <p *ngIf="userEducationDocuments.length === 0" class="text-center m-0 p-0">
+      No Documents Uploaded
+    </p>
+
+  </div>
+  <div (click)="onCloseClick()" class="card-footer justify-content-between">
+    <button type="button" class="btn btn-white">
+      {{ 'Close' | localize }}
+    </button>
+  </div>
+</div>

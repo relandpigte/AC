@@ -1,0 +1,46 @@
+<form class="form-horizontal" autocomplete="off" #createEditResearchInterestForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <abp-modal-header [title]="(userResearchInterest.id ? 'EditResearchInterest' : 'AddResearchInterest') | localize"
+      (onCloseClick)="onCloseClick()"></abp-modal-header>
+    <div class="card-body">
+
+      <div class="form-group required">
+        <label class="col-form-label" for="Title">{{ 'Title' | localize}}</label>
+        <input [(ngModel)]="userResearchInterest.title" #titleModel="ngModel" #titleEl class="form-control" type="text"
+          id="Title" name="Title" required />
+        <abp-validation-summary [control]="titleModel" [controlEl]="titleEl">
+        </abp-validation-summary>
+      </div>
+
+      <div class="form-group required">
+        <label class="col-form-label" for="Description">{{ 'Description' | localize}}</label>
+        <quill-editor [(ngModel)]="userResearchInterest.description" #descriptionModel="ngModel" #descriptionEl
+          id="Description" name="Description" required></quill-editor>
+        <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl.elementRef.nativeElement">
+        </abp-validation-summary>
+      </div>
+
+      <div class="form-group mb-0">
+        <label class="col-form-label" for="DisciplineTaxonomies">{{ 'KnowledgeBase' | localize }}</label>
+        <input class="form-control" type="search" id="DisciplineTaxonomies" [(ngModel)]="disciplineTaxonomy"
+          name="DisciplineTaxonomies" typeaheadOptionField="name" [typeahead]="disciplineTaxonomiesTypeaheadSource"
+          [typeaheadAsync]="true" [typeaheadOptionsLimit]="10"
+          (typeaheadOnSelect)="onDisciplineTaxonomySelect($event.item)" container="body" />
+        <div class="ac-alerts">
+          <div *ngFor="let selectedTaxonomy of userResearchInterest.userResearchInterestDisciplineTaxonomies"
+            class="alert alert-info alert-dismissible ac-alert" role="alert">
+            {{ selectedTaxonomy.disciplineTaxonomy.name }}
+            <button (click)="onRemoveDisciplineTaxonomyClick(selectedTaxonomy.disciplineTaxonomy.id)" type="button"
+              class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading"
+      [saveDisabled]="!createEditResearchInterestForm.form.valid || isLoading" (onCancelClick)="onCloseClick()">
+    </abp-modal-footer>
+  </div>
+</form>

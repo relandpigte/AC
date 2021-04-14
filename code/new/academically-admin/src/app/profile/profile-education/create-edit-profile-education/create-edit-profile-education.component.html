@@ -1,0 +1,99 @@
+<form class="form-horizontal" autocomplete="off" #createEditUserEducationForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <div class="card-header">
+      <h4 class="card-header-title">
+        {{ (model.id ? 'EditEducation' : 'AddEducation') | localize }}
+      </h4>
+      <ul class="mr-4 nav nav-tabs nav-tabs-sm card-header-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" id="levels-tab" data-toggle="tab" href="#levels" role="tab" aria-controls="levels"
+            aria-selected="true">{{ 'Levels' | localize}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="evidences-tab" data-toggle="tab" href="#evidences" role="tab" aria-controls="levels"
+            aria-selected="true">{{ 'Evidences' | localize}}</a>
+        </li>
+      </ul>
+      <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="card-body">
+
+      <div class="form-group required">
+        <label class="col-form-label" for="CountryCode">{{ 'Country' | localize }}</label>
+        <select [(ngModel)]="countryCode" id="CountryCode" name="CountryCode" type="text" class="form-control"
+          #countryCodeModel="ngModel" #countryCodeEl required>
+          <option [ngValue]="undefined">{{ 'SelectCountry' | localize }}</option>
+          <option *ngFor="let country of countries" [value]="country.code">{{ country.name }}</option>
+        </select>
+        <abp-validation-summary [control]="countryCodeModel" [controlEl]="countryCodeEl">
+        </abp-validation-summary>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="UniverisityName">{{ 'Univerisity' | localize }}</label>
+          <input class="form-control" type="search" [(ngModel)]="model.universityName" id="UniversityName"
+            name="AreaOfStudy" typeaheadOptionField="heProvider" [typeahead]="universitiesTypeaheadSource"
+            [typeaheadAsync]="true" [typeaheadMinLength]="3" [typeaheadOptionsLimit]="10" container="body"
+            #universityNameModel="ngModel" #universityNameEl required />
+          <abp-validation-summary [control]="universityNameModel" [controlEl]="universityNameEl">
+          </abp-validation-summary>
+        </div>
+
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="City">{{ 'City' | localize }}</label>
+          <input class="form-control" type="text" [(ngModel)]="model.city" id="City" name="City" #cityModel="ngModel"
+            #cityEl required />
+          <abp-validation-summary [control]="cityModel" [controlEl]="cityEl">
+          </abp-validation-summary>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="StartYear">{{ 'StartYear' | localize }}</label>
+          <select [(ngModel)]="model.startYear" id="StartYear" name="StartYear" type="number" class="form-control"
+            #startYearModel="ngModel" #startYearEl (change)="onStartYearChange()" required>
+            <option [ngValue]="undefined">{{ 'SelectYear' | localize }}</option>
+            <option *ngFor="let year of yearSelections" [value]="year">{{ year }}</option>
+          </select>
+          <abp-validation-summary [control]="startYearModel" [controlEl]="startYearEl"></abp-validation-summary>
+        </div>
+
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="EndYear">{{ 'EndYear' | localize }}</label>
+          <select [(ngModel)]="model.endYear" id="EndYear" name="EndYear" type="number" class="form-control"
+            #endYearModel="ngModel" #endYearEl (change)="onEndYearChange()" required>
+            <option [ngValue]="undefined">{{ 'SelectYear' | localize }}</option>
+            <option *ngFor="let year of yearSelections" [value]="year">{{ year }}</option>
+          </select>
+          <abp-validation-summary [control]="endYearModel" [controlEl]="endYearEl"></abp-validation-summary>
+        </div>
+      </div>
+
+      <div class="tab-content row">
+        <div class="col-12 tab-pane fade show active" id="levels" role="tabpanel" aria-labelledby="levels-tab">
+          <app-profile-education-levels></app-profile-education-levels>
+        </div>
+        <div class="col-12 tab-pane fade" id="evidences" role="tabpanel" aria-labelledby="evidences-tab">
+          <div class="card mb-0">
+            <div class="card-header">
+              <h4 class="card-header-title">{{ 'UploadEducationEvidencePanelHeader' | localize}}</h4>
+            </div>
+            <div class="card-body">
+              <app-document-uploader #documentUploader [allowedExtensions]="qualificationExtensions"
+                [hasCategory]="true">
+              </app-document-uploader>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading"
+      [saveDisabled]="!createEditUserEducationForm.form.valid || isLoading" (onCancelClick)="onCloseClick()">
+    </abp-modal-footer>
+  </div>
+</form>

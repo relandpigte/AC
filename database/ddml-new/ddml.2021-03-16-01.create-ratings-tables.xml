@@ -1,0 +1,103 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="danie (generated)" id="1616035917151-1">
+        <createTable tableName="academicallystudentratings">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="StudentId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExperienceType" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Comments" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616035917151-2">
+        <createTable tableName="academicallytutorratingareas">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="TutorRatingId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AreaType" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Rating" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616035917151-3">
+        <createTable tableName="academicallytutorratings">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="TutorId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExperienceType" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Comments" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616035917151-4">
+        <createIndex indexName="FK_StudentRatings_Users_CreatorUserId_idx" tableName="academicallystudentratings">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616035917151-5">
+        <createIndex indexName="FK_StudentRatings_Users_StudentId_idx" tableName="academicallystudentratings">
+            <column name="StudentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616035917151-6">
+        <createIndex indexName="FK_TRA_TutorRatings_TutorRatingId_idx" tableName="academicallytutorratingareas">
+            <column name="TutorRatingId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616035917151-7">
+        <createIndex indexName="FK_TutorRatings_Users_CreatorUserId_idx" tableName="academicallytutorratings">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616035917151-8">
+        <createIndex indexName="FK_TutorRatings_Users_TutorId_idx" tableName="academicallytutorratings">
+            <column name="TutorId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616035917151-9">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallystudentratings" constraintName="FK_StudentRatings_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616035917151-10">
+        <addForeignKeyConstraint baseColumnNames="StudentId" baseTableName="academicallystudentratings" constraintName="FK_StudentRatings_Users_StudentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616035917151-11">
+        <addForeignKeyConstraint baseColumnNames="TutorRatingId" baseTableName="academicallytutorratingareas" constraintName="FK_TRA_TutorRatings_TutorRatingId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallytutorratings" validate="true"/>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616035917151-12">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallytutorratings" constraintName="FK_TutorRatings_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1616035917151-13">
+        <addForeignKeyConstraint baseColumnNames="TutorId" baseTableName="academicallytutorratings" constraintName="FK_TutorRatings_Users_TutorId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

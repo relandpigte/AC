@@ -1,0 +1,35 @@
+<!-- Navigation -->
+<ul class="navbar-nav">
+  <ng-container *ngFor="let item of menuItems; let i = index">
+    <ng-container *ngTemplateOutlet="sidebarInner; context: { item: item, index: i }"></ng-container>
+  </ng-container>
+</ul>
+
+<ng-template #sidebarInner let-item="item" let-i="index">
+  <li *ngIf="isMenuItemVisible(item)" class="nav-item" [class.menu-open]="!item.isCollapsed" [class.has-treeview]="item.children">
+    <a *ngIf="item.route && item.route.indexOf('http') != 0" class="nav-link" [routerLink]="item.route" [class.active]="item.isActive">
+      <i class="{{ item.icon }}"></i> {{ item.label }}
+    </a>
+    <a *ngIf="item.route && item.route.indexOf('http') == 0 && !item.children" class="nav-link" target="_blank" [href]="item.route">
+      <i class="{{ item.icon }}"></i> {{ item.label }}
+    </a>
+    <a
+      *ngIf="!item.route && item.children"
+      class="nav-link"
+      [class.active]="item.isActive"
+      data-toggle="collapse"
+      role="button"
+      (click)="item.isCollapsed = !item.isCollapsed"
+      [attr.aria-expanded]="item.isCollapsed ? 'false' : 'true'"
+    >
+      <i class="{{ item.icon }}"></i> {{ item.label }}
+    </a>
+    <div class="collapse" [collapse]="item.isCollapsed" [isAnimated]="true" *ngIf="item.children">
+      <ul class="nav nav-sm flex-column">
+        <ng-container *ngFor="let item of item.children">
+          <ng-container *ngTemplateOutlet="sidebarInner; context: { item: item }"></ng-container>
+        </ng-container>
+      </ul>
+    </div>
+  </li>
+</ng-template>

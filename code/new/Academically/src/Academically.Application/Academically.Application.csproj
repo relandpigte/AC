@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <VersionPrefix>1.0.0.0</VersionPrefix>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
+    <AssemblyName>Academically.Application</AssemblyName>
+    <PackageId>Academically.Application</PackageId>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <RootNamespace>Academically</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Academically.Core\Academically.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\Registrations\" />
+    <Folder Include="Services\Registrations\Dto\" />
+    <Folder Include="Services\Universities\" />
+    <Folder Include="Services\Universities\Dto\" />
+    <Folder Include="Services\EducationLevels\" />
+    <Folder Include="Services\EducationLevels\Dto\" />
+    <Folder Include="Services\PhoneVerifications\" />
+    <Folder Include="Services\PhoneVerifications\Dto\" />
+    <Folder Include="Services\DisciplineTaxonomies\" />
+    <Folder Include="Services\DisciplineTaxonomies\Dto\" />
+    <Folder Include="Services\UserResearchInterests\" />
+    <Folder Include="Services\UserResearchInterests\Dto\" />
+    <Folder Include="Services\ResearchMethods\" />
+    <Folder Include="Services\ResearchMethods\Dto\" />
+  </ItemGroup>
+</Project>

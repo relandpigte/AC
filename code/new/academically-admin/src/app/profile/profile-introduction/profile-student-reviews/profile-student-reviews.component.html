@@ -1,0 +1,111 @@
+<div class="card p-scroll-tag">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="card-header-title">{{ user.name }} {{ 'Reviews' | localize }}</h4>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-sm btn-white" type="button">
+          <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-header h-auto">
+    <div class="d-inline-block mt-3 mb-3">
+      <div class="row align-items-center">
+        <div class="col-auto">
+          <a href="javascript:;" class="avatar avatar-md">
+            <img [src]="getProfilePicture(user.profilePictureUrl)" alt="..." class="avatar-img rounded-circle">
+          </a>
+        </div>
+        <div class="col ml-n2">
+          <h4 class="mb-0">
+            <a href="javascript:;">
+              {{ studentRatingSummary.positivePercentage }}% {{ 'PositiveReviews' | localize}}
+            </a>
+            <i class="fe fe-alert-circle text-info ml-1 align-bottom cursor-pointer" [popover]="formulaPopoverTemplate"
+              container="body" placement="top" triggers="mouseenter:mouseleave">
+            </i>
+          </h4>
+          <p class="small text-muted mb-0">{{ studentRatingSummary.totalReviews }} {{ 'Reviews' | localize}}</p>
+        </div>
+        <div class="col-auto text-center">
+          <div class="rating-experience">
+            <span class="rating-experience-positive font-size-sm">
+              <i class="fas fa-plus"></i>
+            </span>
+          </div>
+          <span class="h5 mb-0 ml-2">{{ studentRatingSummary.totalPositiveReviews }}</span>
+          <p class="h5 mb-0 mt-2 ml-2">{{ 'Positive' | localize}}</p>
+        </div>
+        <div class="col-auto text-center">
+          <div class="rating-experience">
+            <span class="rating-experience-neutral font-size-sm">
+              <i class="fas fa-circle"></i>
+            </span>
+          </div>
+          <span class="h5 mb-0 ml-2">{{ studentRatingSummary.totalNeutralReviews }}</span>
+          <p class="h5 mb-0 mt-2 ml-2">{{ 'Neutral' | localize}}</p>
+        </div>
+        <div class="col-auto text-center">
+          <div class="rating-experience">
+            <span class="rating-experience-negative font-size-sm">
+              <i class="fas fa-minus"></i>
+            </span>
+          </div>
+          <span class="h5 mb-0 ml-2">{{ studentRatingSummary.totalNegativeReviews }}</span>
+          <p class="h5 mb-0 mt-2 ml-2">{{ 'Negative' | localize}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body pt-0 pb-0" [busy]="isTableLoading">
+    <table class="table card-table">
+      <tr *ngFor="let studentRating of studentRatings
+        | paginate: { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }">
+        <td class="pt-4 pb-4">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <a href="javascript:;" class="avatar avatar-md">
+                <img [src]="getProfilePictureFromDocument(studentRating.reviewer.profilePictureDocument, studentRating.reviewer.id)" alt="..." class="avatar-img rounded-circle">
+              </a>
+            </div>
+            <div class="col ml-n2">
+              <h4 class="mb-0">
+                <a href="javascript:;">{{ studentRating.reviewer.fullName }}</a>
+              </h4>
+              <p class="small text-muted mb-0">University of Oxford</p>
+            </div>
+            <div class="col-auto">
+              <h5 class="text-muted">{{ studentRating.creationTime | date: 'd MMMM y' }}</h5>
+            </div>
+            <div class="col-12 mt-3">
+              <span *ngIf="studentRating.experienceType === RatingExperienceType.Positive" class="badge badge-soft-success">
+                <i class="fas fa-plus"></i>
+                {{ 'Positive' | localize}}
+              </span>
+              <span *ngIf="studentRating.experienceType === RatingExperienceType.Neutral" class="badge badge-soft-info">
+                <i class="fas fa-circle"></i>
+                {{ 'Neutral' | localize}}
+              </span>
+              <span *ngIf="studentRating.experienceType === RatingExperienceType.Negative" class="badge badge-soft-danger">
+                <i class="fas fa-minus"></i>
+                {{ 'Negative' | localize}}
+              </span>
+              <div class="mt-2" [innerHtml]="studentRating.comments"></div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="studentRatings && !studentRatings.length">
+        <p class="text-muted m-4 text-center">{{ 'NoReviewsFound' | localize }}</p>
+      </tr>
+    </table>
+  </div>
+  <abp-pagination-controls *ngIf="studentRatings && studentRatings.length" id="server"
+    (pageChange)="getDataPage($event)"></abp-pagination-controls>
+</div>
+<ng-template #formulaPopoverTemplate>
+  <p class="m-0" [innerHtml]="'PercentageOfPositiveReviewsFormulaDescription' | localize"></p>
+</ng-template>

@@ -1,0 +1,56 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="card-header-title">{{ 'Methodology' | localize}}</h4>
+      </div>
+      <div class="col-auto">
+        <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchMethodologies.Create')"
+          (click)="onAddClick()" type="button" class="btn btn-sm btn-primary">
+          {{ 'AddMethodology' | localize}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-nowrap card-table" [busy]="isTableLoading">
+      <tr *ngFor="let userResearchMethodology of userResearchMethodologies
+      | paginate: { id: 'method', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }">
+        <td>
+          <div class="row p-3">
+            <div class="col-12">
+              <h4 class="text-body">{{ userResearchMethodology.title }}</h4>
+            </div>
+            <div class="col-12">
+              <div toggableContent [identifier]="userResearchMethodology.id" contentClass="ql-container">
+                <quill-view-html [content]="userResearchMethodology.description" theme="snow"></quill-view-html>
+              </div>
+            </div>
+            <div class="col-12 pt-2">
+              <div *ngFor="let userResearchMethod of userResearchMethodology.userResearchMethodologyResearchMethods"
+                class="badge badge-soft-info mr-1">
+                {{ userResearchMethod.researchMethod.name }}
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="table-action align-middle">
+          <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchMethodologies.Update')" (click)="onEditClick(userResearchMethodology)" type="button"
+            class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+            <span class="fe fe-edit-2"></span>
+          </button>
+          <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchMethodologies.Update')" (click)="onDeleteClick(userResearchMethodology)" type="button"
+            class="btn btn-outline-danger btn-sm btn-rounded-circle">
+            <span class="fe fe-trash-2"></span>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="userResearchMethodologies && !userResearchMethodologies.length">
+        <p class="text-muted m-4 text-center">{{ 'NoResearchMethodologiesFound' | localize }}</p>
+      </tr>
+    </table>
+  </div>
+  <abp-pagination-controls *ngIf="userResearchMethodologies && userResearchMethodologies.length" id="method"
+    (pageChange)="getDataPage($event)">
+  </abp-pagination-controls>
+</div>

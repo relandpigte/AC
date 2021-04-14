@@ -1,0 +1,18 @@
+{
+  "remoteServiceBaseUrl": "https://api-academically-uat.sourcecloud-dev.uk/uat",
+  "appBaseUrl": "https://academically-uat.sourcecloud-dev.uk",
+  "localeMappings": [
+    {
+      "from": "pt-BR",
+      "to": "pt"
+    },
+    {
+      "from": "zh-CN",
+      "to": "zh"
+    },
+    {
+      "from": "he-IL",
+      "to": "he"
+    }
+  ]
+}

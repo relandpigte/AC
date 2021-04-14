@@ -1,0 +1,51 @@
+<div class="card mb-0">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="card-header-title">Levels</h4>
+      </div>
+      <div class="col-auto">
+        <a *ngIf="permission.isGranted('Pages.Profile.Education.Create')"
+          (click)="$event.preventDefault(); onAddLevelClick()" href="#" class="btn btn-sm btn-primary">
+          {{ 'AddLevel' | localize }}
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-sm table-nowrap card-table mb-0">
+      <thead>
+        <tr>
+          <th>{{ 'EducationLevel' | localize }}</th>
+          <th>{{ 'Degree' | localize }}</th>
+          <th>{{ 'Grade' | localize }}</th>
+          <th width="1%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let userEducationLevel of userEducationLevels">
+          <td>{{ userEducationLevel.educationLevelName }}</td>
+          <td>{{ userEducationLevel.degree }}</td>
+          <td>{{ userEducationLevel.grade }}</td>
+          <td>
+            <button *ngIf="permission.isGranted('Pages.Profile.Education.Update')"
+              (click)="onEditLevelClick(userEducationLevel)" type="button"
+              class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+              <span class="fe fe-edit-2"></span>
+            </button>
+            <button *ngIf="permission.isGranted('Pages.Profile.Education.Delete')"
+              (click)="onRemoveLevelClick(userEducationLevel)" type="button"
+              class="btn btn-outline-danger btn-sm btn-rounded-circle">
+              <span class="fe fe-trash-2"></span>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="userEducationLevels.length === 0">
+          <td colspan="10">
+            <p class="text-center m-0 p-0">{{ 'NoRecordsFound' | localize }}</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

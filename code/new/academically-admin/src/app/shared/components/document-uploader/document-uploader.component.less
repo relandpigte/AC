@@ -1,0 +1,32 @@
+.document-uploader {
+  position        : relative;
+  padding         : 30px;
+  background-color: #fff;
+  border          : 1px dashed #d2ddec;
+  border-radius   : .375rem;
+  text-align      : center;
+  color           : #95aac9;
+  transition      : all .2s ease-in-out;
+  order           : -1;
+  z-index         : 999;
+
+  &.document-uploader-dragover {
+    border-color: #2c7be5 !important;
+    color       : #2c7be5 !important;
+  }
+
+  &:hover {
+    border-color: #95aac9;
+    color       : #12263f;
+  }
+
+  .document-input {
+    opacity : 0;
+    position: absolute;
+    top     : 0;
+    left    : 0;
+    width   : 100%;
+    height  : 100%;
+    cursor  : pointer;
+  }
+}

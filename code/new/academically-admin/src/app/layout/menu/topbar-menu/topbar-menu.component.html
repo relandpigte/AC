@@ -1,0 +1,48 @@
+<!-- Navigation -->
+<ul class="navbar-nav mr-lg-auto">
+  <ng-container *ngFor="let item of menuItems; let i = index">
+    <ng-container *ngTemplateOutlet="sidebarInner; context: { item: item, root: true }"></ng-container>
+  </ng-container>
+</ul>
+
+<ng-template #sidebarInner let-item="item" let-root="root">
+  <li *ngIf="isMenuItemVisible(item)" class="nav-item" [class.dropdown]="item.children && root" [class.dropright]="item.children && !root">
+    <a
+      *ngIf="item.route && item.route.indexOf('http') != 0"
+      [class.nav-link]="root"
+      [class.dropdown-item]="!root"
+      [routerLink]="item.route"
+      [class.active]="item.isActive"
+    >
+      {{ item.label }}
+    </a>
+    <a
+      *ngIf="item.route && item.route.indexOf('http') == 0 && !item.children"
+      [class.nav-link]="root"
+      [class.dropdown-item]="!root"
+      target="_blank"
+      [href]="item.route"
+      [class.active]="item.isActive"
+    >
+      {{ item.label }}
+    </a>
+    <a
+      *ngIf="!item.route && item.children"
+      [class.nav-link]="root"
+      [class.dropdown-item]="!root"
+      class="dropdown-toggle"
+      [class.active]="item.isActive"
+      role="button"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      {{ item.label }}
+    </a>
+    <ul class="dropdown-menu" *ngIf="!item.route && item.children">
+      <ng-container *ngFor="let item of item.children">
+        <ng-container *ngTemplateOutlet="sidebarInner; context: { item: item, root: false }"></ng-container>
+      </ng-container>
+    </ul>
+  </li>
+</ng-template>

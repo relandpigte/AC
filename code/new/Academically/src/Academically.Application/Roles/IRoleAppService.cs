@@ -1,0 +1,16 @@
+﻿using System.Threading.Tasks;
+using Abp.Application.Services;
+using Abp.Application.Services.Dto;
+using Academically.Roles.Dto;
+
+namespace Academically.Roles
+{
+    public interface IRoleAppService : IAsyncCrudAppService<RoleDto, int, PagedRoleResultRequestDto, CreateRoleDto, RoleDto>
+    {
+        Task<ListResultDto<GroupedPermissionDto>> GetAllPermissions();
+
+        Task<GetRoleForEditOutput> GetRoleForEdit(EntityDto input);
+
+        Task<ListResultDto<RoleListDto>> GetRolesAsync(GetRolesInput input);
+    }
+}

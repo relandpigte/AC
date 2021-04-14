@@ -1,0 +1,31 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">{{ 'About' | localize }} {{ user.name }}</h4>
+  </div>
+  <div class="card-body">
+    <ng-container *ngIf="!isEditingAbout; else editAboutTemplate">
+      <div toggableContent identifier="about" contentClass="ql-container">
+        <quill-view-html [content]="user.about" theme="snow"></quill-view-html>
+      </div>
+    </ng-container>
+    <ng-template #editAboutTemplate>
+      <quill-editor [(ngModel)]="user.about"></quill-editor>
+    </ng-template>
+  </div>
+  <div *ngIf="!isViewOnly" class="card-footer justify-content-end">
+    <button *ngIf="!isEditingAbout" (click)="onEditAboutClick()" class="btn btn-sm btn-light">
+      <i class="fe fe-edit-2"></i>
+      {{ 'Edit' }}
+    </button>
+    <button *ngIf="isEditingAbout" [disabled]="isSavingAbout" (click)="onSaveAboutClick()" class="btn btn-sm btn-light">
+      <span *ngIf="!isSavingAbout">
+        <i class="fe fe-save"></i>
+        {{ 'Save' }}
+      </span>
+      <span *ngIf="isSavingAbout">
+        <span *ngIf="isSavingAbout" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        {{ 'Saving' }}
+      </span>
+    </button>
+  </div>
+</div>

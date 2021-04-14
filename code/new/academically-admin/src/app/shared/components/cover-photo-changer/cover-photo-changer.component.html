@@ -1,0 +1,33 @@
+<div class="btn-group cover-photo-changer" dropdown>
+  <button [disabled]="isRemovingCoverPhoto" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+    aria-controls="dropdown-basic">
+    <span *ngIf="!isRemovingCoverPhoto">
+      <i class="fe fe-camera"></i>
+      {{ 'EditCoverPhoto' | localize}}
+    </span>
+    <span *ngIf="isRemovingCoverPhoto">
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      {{ 'Removing' | localize}}
+    </span>
+    <span class="caret"></span>
+  </button>
+  <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu">
+    <li class="position-relative" role="menuitem">
+      <a class="dropdown-item" href="#" (click)="$event.preventDefault(); onUploadCoverPhotoClick()">
+        <i class="fe fe-image"></i>
+        {{ 'UploadPhoto' | localize}}
+      </a>
+    </li>
+    <ng-container *ngIf="user && user.coverPhotoUrl">
+      <li class="divider dropdown-divider"></li>
+      <li role="menuitem">
+        <a class="dropdown-item" href="#" (click)="$event.preventDefault(); onRemoveCoverPhoto()">
+          <i class="fe fe-trash"></i>
+          {{ 'RemovePhoto' | localize}}
+        </a>
+      </li>
+    </ng-container>
+  </ul>
+</div>
+<input #coverPhotoInput class="inline-file-upload" type="file" (change)="onCoverPhotoChange($event.target.files)"
+  [accept]="fileUploadSettings.allowedImageExtensions" />
