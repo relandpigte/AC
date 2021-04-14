@@ -68,20 +68,26 @@
           <div class="row align-items-center">
             <div class="col-auto">
               <a href="javascript:;" class="avatar avatar-md">
-                <img [src]="getProfilePictureFromDocument(studentRating.reviewer.profilePictureDocument, studentRating.reviewer.id)" alt="..." class="avatar-img rounded-circle">
+                <img
+                  [src]="getProfilePictureFromDocument(studentRating.reviewer.profilePictureDocument, studentRating.reviewer.id)"
+                  alt="..." class="avatar-img rounded-circle">
               </a>
             </div>
             <div class="col ml-n2">
               <h4 class="mb-0">
                 <a href="javascript:;">{{ studentRating.reviewer.fullName }}</a>
               </h4>
-              <p class="small text-muted mb-0">University of Oxford</p>
+              <p class="small text-muted mb-0">
+                {{ studentRating.reviewer.currentUniversity ? studentRating.reviewer.currentUniversity :
+                ('NoFormalEducation' | localize) }}
+              </p>
             </div>
             <div class="col-auto">
               <h5 class="text-muted">{{ studentRating.creationTime | date: 'd MMMM y' }}</h5>
             </div>
             <div class="col-12 mt-3">
-              <span *ngIf="studentRating.experienceType === RatingExperienceType.Positive" class="badge badge-soft-success">
+              <span *ngIf="studentRating.experienceType === RatingExperienceType.Positive"
+                class="badge badge-soft-success">
                 <i class="fas fa-plus"></i>
                 {{ 'Positive' | localize}}
               </span>
@@ -89,7 +95,8 @@
                 <i class="fas fa-circle"></i>
                 {{ 'Neutral' | localize}}
               </span>
-              <span *ngIf="studentRating.experienceType === RatingExperienceType.Negative" class="badge badge-soft-danger">
+              <span *ngIf="studentRating.experienceType === RatingExperienceType.Negative"
+                class="badge badge-soft-danger">
                 <i class="fas fa-minus"></i>
                 {{ 'Negative' | localize}}
               </span>

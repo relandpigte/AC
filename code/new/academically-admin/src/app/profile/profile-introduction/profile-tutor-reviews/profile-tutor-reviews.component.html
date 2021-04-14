@@ -30,7 +30,8 @@
                   [popover]="formulaPopoverTemplate" container="body" placement="top" triggers="mouseenter:mouseleave">
                 </i>
               </h4>
-              <app-star-rating *ngIf="tutorRatingSummary.totalRatingPercentage" [actualRating]="tutorRatingSummary.totalRatingPercentage"></app-star-rating>
+              <app-star-rating *ngIf="tutorRatingSummary.totalRatingPercentage"
+                [actualRating]="tutorRatingSummary.totalRatingPercentage"></app-star-rating>
               <span class="text-muted small">{{ tutorRatingSummary.totalRatingPercentage }}/5</span>
               <p class="small text-muted mb-0">{{ tutorRatingSummary.totalReviews }} {{ 'Reviews' | localize}}</p>
             </div>
@@ -117,14 +118,18 @@
           <div class="row align-items-center">
             <div class="col-auto">
               <a href="javascript:;" class="avatar avatar-md">
-                <img [src]="getProfilePictureFromDocument(tutorRating.reviewer.profilePictureDocument, tutorRating.reviewer.id)" alt="..." class="avatar-img rounded-circle">
+                <img
+                  [src]="getProfilePictureFromDocument(tutorRating.reviewer.profilePictureDocument, tutorRating.reviewer.id)"
+                  alt="..." class="avatar-img rounded-circle">
               </a>
             </div>
             <div class="col ml-n2">
               <h4 class="mb-0">
                 <a href="javascript:;">{{ tutorRating.reviewer.fullName }}</a>
               </h4>
-              <p class="small text-muted mb-0">University of Oxford</p>
+              <p class="small text-muted mb-0">
+                {{ tutorRating.reviewer.currentUniversity ? tutorRating.reviewer.currentUniversity : ('NoFormalEducation' | localize) }}
+              </p>
             </div>
             <div class="col-auto">
               <h5 class="text-muted">{{ tutorRating.creationTime | date: 'd MMMM y' }}</h5>
@@ -132,7 +137,8 @@
             <div class="col-12 mt-3">
               <app-star-rating [actualRating]="tutorRating.totalRatingPercentage"></app-star-rating>
               <span class="text-muted small mr-2">{{ tutorRating.totalRatingPercentage }}/5</span>
-              <span *ngIf="tutorRating.experienceType === RatingExperienceType.Positive" class="badge badge-soft-success">
+              <span *ngIf="tutorRating.experienceType === RatingExperienceType.Positive"
+                class="badge badge-soft-success">
                 <i class="fas fa-plus"></i>
                 {{ 'Positive' | localize}}
               </span>
@@ -140,7 +146,8 @@
                 <i class="fas fa-circle"></i>
                 {{ 'Neutral' | localize}}
               </span>
-              <span *ngIf="tutorRating.experienceType === RatingExperienceType.Negatuve" class="badge badge-soft-danger">
+              <span *ngIf="tutorRating.experienceType === RatingExperienceType.Negatuve"
+                class="badge badge-soft-danger">
                 <i class="fas fa-minus"></i>
                 {{ 'Negative' | localize}}
               </span>

@@ -3,7 +3,7 @@ import { DocumentUploaderComponent } from '@app/shared/components/document-uploa
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { countries } from '@shared/constants/countries';
-import { FileParameter, UniverisityDto, UniversitiesServiceProxy, UserEducationDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { FileParameter, UniversityDto, UniversitiesServiceProxy, UserEducationDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Observable, Observer } from 'rxjs';
 import { finalize, switchMap } from 'rxjs/operators';
@@ -25,7 +25,7 @@ export class CreateEditProfileEducationComponent extends AppComponentBase implem
   isLoading = false;
   qualificationExtensions = fileUploadConfiguration.allowedQualificationExtensions;
   countryCode: string;
-  universitiesTypeaheadSource: Observable<UniverisityDto[]>;
+  universitiesTypeaheadSource: Observable<UniversityDto[]>;
   yearSelections: string[] = [];
   currentYear: number;
 

@@ -7,7 +7,9 @@
             <h5 class="mb-0">{{ 'University' | localize }}</h5>
           </div>
           <div class="col-auto">
-            <small class="text-muted">University of Oxford</small>
+            <small class="text-muted">
+              {{ user.currentUniversity ? user.currentUniversity : ('NoFormalEducation' | localize) }}
+            </small>
           </div>
         </div>
       </div>

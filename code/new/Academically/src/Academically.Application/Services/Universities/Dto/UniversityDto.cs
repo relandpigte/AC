@@ -6,7 +6,7 @@ using Academically.Domain.Entities;
 namespace Academically.Services.Universities.Dto
 {
     [AutoMap(typeof(University))]
-    public class UniverisityDto : EntityDto<Guid>
+    public class UniversityDto : EntityDto<Guid>
     {
         public string HeProvider { get; set; }
     }
