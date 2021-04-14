@@ -9,7 +9,8 @@ import {
 import {
   UserServiceProxy,
   UserDto,
-  UserDtoPagedResultDto
+  UserDtoPagedResultDto,
+  TestDataGeneratorServiceProxy
 } from '@shared/service-proxies/service-proxies';
 import { CreateUserDialogComponent } from './create-user/create-user-dialog.component';
 import { EditUserDialogComponent } from './edit-user/edit-user-dialog.component';
@@ -38,11 +39,13 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
     { title: 'LastLoginTime', sortColumn: 'lastLoginTime' },
     { title: 'IsActive', colspan: 2 },
   ];
+  testRatingsGeneratorLoader: boolean[] = [];
 
   constructor(
     injector: Injector,
     private _userService: UserServiceProxy,
-    private _modalService: BsModalService
+    private _modalService: BsModalService,
+    private _testDataGeneratorSevice: TestDataGeneratorServiceProxy,
   ) {
     super(injector);
     this.sorting = this.headers[0].sortColumn;
@@ -83,6 +86,22 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
         }
       }
     );
+  }
+
+  onGenerateRatingsClick(user: UserDto): void {
+    this.testRatingsGeneratorLoader[user.id] = true;
+    const isTutor = user.roleNames.findIndex(e => e.toLowerCase() === 'tutor') >= 0;
+    (isTutor
+      ? this._testDataGeneratorSevice.generateTestRatingsForTutor(user.id, 300)
+      : this._testDataGeneratorSevice.generateTestRatingsForStudent(user.id, 300))
+      .pipe(
+        finalize(() => {
+          this.testRatingsGeneratorLoader[user.id] = false;
+        })
+      )
+      .subscribe(() => {
+        this.notify.success('The ratings were added.');
+      });
   }
 
   protected list(

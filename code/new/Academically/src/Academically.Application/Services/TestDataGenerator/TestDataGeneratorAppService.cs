@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Academically.Services.TestDataGeneratorAppService
+namespace Academically.Services.TestDataGenerator
 {
     public class TestDataGeneratorAppService : AcademicallyAppServiceBase, ITestDataGeneratorAppService
     {

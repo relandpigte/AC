@@ -9,12 +9,8 @@
               <h1 class="header-title">{{ 'Users' | localize }}</h1>
             </div>
             <div class="col-auto">
-              <a
-                href="javascript:;"
-                class="btn btn-primary ml-2"
-                (click)="onCreateClick()"
-                *ngIf="permission.isGranted('Pages.Users.Create')"
-              >
+              <a href="javascript:;" class="btn btn-primary ml-2" (click)="onCreateClick()"
+                *ngIf="permission.isGranted('Pages.Users.Create')">
                 {{ 'Create' | localize }}
               </a>
             </div>
@@ -33,28 +29,16 @@
                       <i class="fe fe-search"></i>
                     </span>
                   </div>
-                  <input
-                    class="list-search form-control"
-                    type="search"
-                    name="Search"
-                    placeholder="Search"
-                    [(ngModel)]="keyword"
-                    (keyup.enter)="getDataPage(1)"
-                  />
+                  <input class="list-search form-control" type="search" name="Search" placeholder="Search"
+                    [(ngModel)]="keyword" (keyup.enter)="getDataPage(1)" />
                 </div>
               </form>
             </div>
             <div class="col-auto mr-n3">
               <form>
-                <select
-                  [(ngModel)]="pageNumber"
-                  select2
-                  [select2defaultValue]="pageSize"
-                  (select2ValueChange)="pageSizeChange($event)"
-                  name="PageNumber"
-                  class="custom-select custom-select-sm form-control-flush"
-                  data-toggle="select"
-                >
+                <select [(ngModel)]="pageNumber" select2 [select2defaultValue]="pageSize"
+                  (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
+                  class="custom-select custom-select-sm form-control-flush" data-toggle="select">
                   <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
                     {{ pageSizeSelection }} {{ 'PerPage' | localize }}
                   </option>
@@ -64,16 +48,15 @@
             <div class="col-auto">
               <div class="dropdown" dropdown #filterDropdown="bs-dropdown" [isAnimated]="true" [autoClose]="false">
                 <button class="btn btn-sm btn-white" type="button" dropdownToggle>
-                  <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }} <span class="badge badge-primary ml-1 d-none">0</span>
+                  <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }} <span
+                    class="badge badge-primary ml-1 d-none">0</span>
                 </button>
-                <form *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-card" (ngSubmit)="getDataPage(1)">
+                <form *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-card"
+                  (ngSubmit)="getDataPage(1)">
                   <div class="card-header">
                     <h4 class="card-header-title">{{ 'Filters' | localize }}</h4>
-                    <button
-                      class="btn btn-sm btn-link text-reset btn-white"
-                      type="submit"
-                      (click)="filterDropdown.hide(); onClearFiltersClick()"
-                    >
+                    <button class="btn btn-sm btn-link text-reset btn-white" type="submit"
+                      (click)="filterDropdown.hide(); onClearFiltersClick()">
                       <small>{{ 'ClearFilters' | localize }}</small>
                     </button>
                   </div>
@@ -86,41 +69,22 @@
                           </div>
                           <div class="col-auto">
                             <div class="custom-control custom-radio d-inline">
-                              <input
-                                type="radio"
-                                class="custom-control-input"
-                                id="isActiveAll"
-                                name="isActiveFilter"
-                                [(ngModel)]="isActive"
-                                [value]="undefined"
-                                checked
-                              />
+                              <input type="radio" class="custom-control-input" id="isActiveAll" name="isActiveFilter"
+                                [(ngModel)]="isActive" [value]="undefined" checked />
                               <label class="custom-control-label" for="isActiveAll">
                                 {{ 'All' | localize }}
                               </label>
                             </div>
                             <div class="custom-control custom-radio d-inline mx-3">
-                              <input
-                                type="radio"
-                                class="custom-control-input"
-                                id="isActiveActive"
-                                name="isActiveFilter"
-                                [(ngModel)]="isActive"
-                                [value]="true"
-                              />
+                              <input type="radio" class="custom-control-input" id="isActiveActive" name="isActiveFilter"
+                                [(ngModel)]="isActive" [value]="true" />
                               <label class="custom-control-label" for="isActiveActive">
                                 {{ 'Yes' | localize }}
                               </label>
                             </div>
                             <div class="custom-control custom-radio d-inline">
-                              <input
-                                type="radio"
-                                class="custom-control-input"
-                                id="isActivePassive"
-                                name="isActiveFilter"
-                                [(ngModel)]="isActive"
-                                [value]="false"
-                              />
+                              <input type="radio" class="custom-control-input" id="isActivePassive"
+                                name="isActiveFilter" [(ngModel)]="isActive" [value]="false" />
                               <label class="custom-control-label" for="isActivePassive">
                                 {{ 'No' | localize }}
                               </label>
@@ -143,11 +107,9 @@
           <table class="table table-sm table-hover table-nowrap card-table" [busy]="isTableLoading">
             <thead table-header-sort [headers]="headers" (sortChange)="sortChange($event)"></thead>
             <tbody class="list font-size-base">
-              <tr
-                *ngFor="
+              <tr *ngFor="
                   let user of (users | paginate: { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
-                "
-              >
+                ">
                 <td>{{ user.id }}</td>
                 <td>{{ user.fullName }}</td>
                 <td>{{ user.emailAddress }}</td>
@@ -160,29 +122,27 @@
                   </div>
                 </td>
                 <td class="table-action">
-                  <div dropdown class="dropdown" container="body">
+                  <div *ngIf="!this.testRatingsGeneratorLoader[user.id]" dropdown class="dropdown" container="body">
                     <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;" role="button">
                       <i class="fe fe-more-vertical"></i>
                     </a>
                     <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
-                      <a
-                        href="javascript:;"
-                        class="dropdown-item"
-                        (click)="onEditClick(user)"
-                        *ngIf="permission.isGranted('Pages.Users.Update')"
-                      >
+                      <a href="javascript:;" class="dropdown-item" (click)="onEditClick(user)"
+                        *ngIf="permission.isGranted('Pages.Users.Update')">
                         <i class="fe fe-edit"></i> {{ 'Edit' | localize }}
                       </a>
-                      <a
-                        href="javascript:;"
-                        class="dropdown-item"
-                        (click)="onDeleteClick(user)"
-                        *ngIf="permission.isGranted('Pages.Users.Delete')"
-                      >
+                      <a href="javascript:;" class="dropdown-item" (click)="onDeleteClick(user)"
+                        *ngIf="permission.isGranted('Pages.Users.Delete')">
                         <i class="fe fe-trash"></i> {{ 'Delete' | localize }}
+                      </a>
+                      <a href="#" class="dropdown-item" (click)="$event.preventDefault(); onGenerateRatingsClick(user)">
+                        <i class="fe fe-sunrise"></i>
+                        Generate Ratings
                       </a>
                     </div>
                   </div>
+                  <span *ngIf="this.testRatingsGeneratorLoader[user.id]"
+                    class="spinner-border spinner-border-sm text-muted" role="status" aria-hidden="true"></span>
                 </td>
               </tr>
             </tbody>
