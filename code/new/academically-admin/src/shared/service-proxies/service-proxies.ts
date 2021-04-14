@@ -2844,7 +2844,7 @@ export class UniversitiesServiceProxy {
      * @param query (optional) 
      * @return Success
      */
-    search(countryCode: string | undefined, query: string | undefined): Observable<UniverisityDto[]> {
+    search(countryCode: string | undefined, query: string | undefined): Observable<UniversityDto[]> {
         let url_ = this.baseUrl + "/api/services/app/Universities/Search?";
         if (countryCode === null)
             throw new Error("The parameter 'countryCode' cannot be null.");
@@ -2871,14 +2871,14 @@ export class UniversitiesServiceProxy {
                 try {
                     return this.processSearch(<any>response_);
                 } catch (e) {
-                    return <Observable<UniverisityDto[]>><any>_observableThrow(e);
+                    return <Observable<UniversityDto[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<UniverisityDto[]>><any>_observableThrow(response_);
+                return <Observable<UniversityDto[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processSearch(response: HttpResponseBase): Observable<UniverisityDto[]> {
+    protected processSearch(response: HttpResponseBase): Observable<UniversityDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2892,7 +2892,7 @@ export class UniversitiesServiceProxy {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(UniverisityDto.fromJS(item));
+                    result200.push(UniversityDto.fromJS(item));
             }
             return _observableOf(result200);
             }));
@@ -2901,7 +2901,7 @@ export class UniversitiesServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<UniverisityDto[]>(<any>null);
+        return _observableOf<UniversityDto[]>(<any>null);
     }
 }
 
@@ -7493,11 +7493,11 @@ export interface ITutorRatingSummaryDto {
     totalKnowledgeRatings: number;
 }
 
-export class UniverisityDto implements IUniverisityDto {
+export class UniversityDto implements IUniversityDto {
     id: string;
     heProvider: string | undefined;
 
-    constructor(data?: IUniverisityDto) {
+    constructor(data?: IUniversityDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -7513,9 +7513,9 @@ export class UniverisityDto implements IUniverisityDto {
         }
     }
 
-    static fromJS(data: any): UniverisityDto {
+    static fromJS(data: any): UniversityDto {
         data = typeof data === 'object' ? data : {};
-        let result = new UniverisityDto();
+        let result = new UniversityDto();
         result.init(data);
         return result;
     }
@@ -7527,15 +7527,15 @@ export class UniverisityDto implements IUniverisityDto {
         return data; 
     }
 
-    clone(): UniverisityDto {
+    clone(): UniversityDto {
         const json = this.toJSON();
-        let result = new UniverisityDto();
+        let result = new UniversityDto();
         result.init(json);
         return result;
     }
 }
 
-export interface IUniverisityDto {
+export interface IUniversityDto {
     id: string;
     heProvider: string | undefined;
 }
@@ -7562,6 +7562,7 @@ export class UserDto implements IUserDto {
     profilePictureDocument: DocumentDto;
     coverPhotoUrl: string | undefined;
     profilePictureUrl: string | undefined;
+    currentUniversity: string | undefined;
     roleNames: string[] | undefined;
     roleDisplayNames: string[] | undefined;
 
@@ -7597,6 +7598,7 @@ export class UserDto implements IUserDto {
             this.profilePictureDocument = _data["profilePictureDocument"] ? DocumentDto.fromJS(_data["profilePictureDocument"]) : <any>undefined;
             this.coverPhotoUrl = _data["coverPhotoUrl"];
             this.profilePictureUrl = _data["profilePictureUrl"];
+            this.currentUniversity = _data["currentUniversity"];
             if (Array.isArray(_data["roleNames"])) {
                 this.roleNames = [] as any;
                 for (let item of _data["roleNames"])
@@ -7640,6 +7642,7 @@ export class UserDto implements IUserDto {
         data["profilePictureDocument"] = this.profilePictureDocument ? this.profilePictureDocument.toJSON() : <any>undefined;
         data["coverPhotoUrl"] = this.coverPhotoUrl;
         data["profilePictureUrl"] = this.profilePictureUrl;
+        data["currentUniversity"] = this.currentUniversity;
         if (Array.isArray(this.roleNames)) {
             data["roleNames"] = [];
             for (let item of this.roleNames)
@@ -7683,6 +7686,7 @@ export interface IUserDto {
     profilePictureDocument: DocumentDto;
     coverPhotoUrl: string | undefined;
     profilePictureUrl: string | undefined;
+    currentUniversity: string | undefined;
     roleNames: string[] | undefined;
     roleDisplayNames: string[] | undefined;
 }

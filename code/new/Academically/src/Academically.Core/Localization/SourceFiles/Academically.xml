@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="NoEducation">No Education</text>
+    <text name="NoFormalEducation">No Formal Education</text>
     <text name="NoPublicationsFound">No Publications Found</text>
     <text name="Tags">Tags</text>
     <text name="Abstract">Abstract</text>

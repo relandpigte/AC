@@ -53,6 +53,8 @@ namespace Academically.Services.Profiles
                 .Include(e => e.CoverPhotoDocument)
                 .Include(e => e.ProfilePictureDocument)
                 .Include(e => e.Roles)
+                .Include(e => e.UserEducations)
+                    .ThenInclude(e => e.University)
                 .FirstOrDefaultAsync(e => e.Id == id);
             var output = ObjectMapper.Map<UserDto>(user);
             output.RoleNames = await _userManager.GetRolesAsync(user);
@@ -64,6 +66,14 @@ namespace Academically.Services.Profiles
             if (user.ProfilePictureDocumentId.HasValue)
             {
                 output.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(user.ProfilePictureDocument);
+            }
+            if (user.UserEducations != null && user.UserEducations.Count > 0)
+            {
+                output.CurrentUniversity = user.UserEducations
+                    .OrderByDescending(e => e.EndYear)
+                        .ThenByDescending(e => e.StartYear)
+                   .FirstOrDefault()
+                   .University.HeProvider;
             }
 
             return output;

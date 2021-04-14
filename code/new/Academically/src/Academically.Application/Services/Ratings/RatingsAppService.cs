@@ -7,6 +7,7 @@ using Academically.Extensions;
 using Academically.Services.Ratings.Dto;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -98,15 +99,32 @@ namespace Academically.Services.Ratings
             studentRatingsQuery = studentRatingsQuery
                 .Include(e => e.Reviewer)
                     .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.Reviewer)
+                    .ThenInclude(e => e.UserEducations)
+                        .ThenInclude(e => e.University)
                 .OrderByDescending(e => e.CreationTime);
 
             var studentRatings = await studentRatingsQuery
                 .PageBy(input)
                 .Take(input.MaxResultCount)
-                .Select(e => ObjectMapper.Map<StudentRatingDto>(e))
                 .ToListAsync();
 
-            return new PagedResultDto<StudentRatingDto>(totalCount, studentRatings);
+            var outputs = new List<StudentRatingDto>();
+            foreach (var studentRating in studentRatings)
+            {
+                var output = ObjectMapper.Map<StudentRatingDto>(studentRating);
+                if (studentRating.Reviewer.UserEducations != null && studentRating.Reviewer.UserEducations.Count > 0)
+                {
+                    output.Reviewer.CurrentUniversity = studentRating.Reviewer.UserEducations
+                        .OrderByDescending(e => e.EndYear)
+                            .ThenByDescending(e => e.StartYear)
+                       .FirstOrDefault()
+                       .University.HeProvider;
+                }
+                outputs.Add(output);
+            }
+
+            return new PagedResultDto<StudentRatingDto>(totalCount, outputs);
         }
 
         public async Task<PagedResultDto<TutorRatingDto>> GetTutorRatings(PagedTutorRatingRequestDto input)
@@ -119,22 +137,35 @@ namespace Academically.Services.Ratings
             tutorRatingsQuery = tutorRatingsQuery
                 .Include(e => e.Reviewer)
                     .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.Reviewer)
+                    .ThenInclude(e => e.UserEducations)
+                        .ThenInclude(e => e.University)
                 .OrderByDescending(e => e.CreationTime);
 
             var tutorRatings = await tutorRatingsQuery
                 .PageBy(input)
                 .Take(input.MaxResultCount)
-                .Select(e => ObjectMapper.Map<TutorRatingDto>(e))
                 .ToListAsync();
 
+            var outputs = new List<TutorRatingDto>();
             foreach (var tutorRating in tutorRatings)
             {
-                tutorRating.TotalRatingPercentage = (await _tutorRatingAreasRepository.GetAll()
+                var output = ObjectMapper.Map<TutorRatingDto>(tutorRating);
+                output.TotalRatingPercentage = (await _tutorRatingAreasRepository.GetAll()
                     .Where(e => e.TutorRatingId == tutorRating.Id)
                     .SumAsync(e => e.Rating)).ToDecimal() / 5;
+                if (tutorRating.Reviewer.UserEducations != null && tutorRating.Reviewer.UserEducations.Count > 0)
+                {
+                    output.Reviewer.CurrentUniversity = tutorRating.Reviewer.UserEducations
+                        .OrderByDescending(e => e.EndYear)
+                            .ThenByDescending(e => e.StartYear)
+                       .FirstOrDefault()
+                       .University.HeProvider;
+                }
+                outputs.Add(output);
             }
 
-            return new PagedResultDto<TutorRatingDto>(totalCount, tutorRatings);
+            return new PagedResultDto<TutorRatingDto>(totalCount, outputs);
         }
 
         private async Task<decimal> GetTotalTutorRatingsOnArea(IQueryable<TutorRatingArea> query, RatingAreaType areaType)

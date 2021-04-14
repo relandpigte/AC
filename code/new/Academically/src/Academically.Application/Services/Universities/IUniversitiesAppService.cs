@@ -7,6 +7,6 @@ namespace Academically.Services.Universities
 {
     public interface IUniversitiesAppService : IApplicationService
     {
-        Task<IEnumerable<UniverisityDto>> Search(string countryCode, string query);
+        Task<IEnumerable<UniversityDto>> Search(string countryCode, string query);
     }
 }

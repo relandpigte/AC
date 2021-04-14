@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { UserEducationDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ProfilesServiceProxy, UserEducationDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ProfileService } from '@shared/services/profile.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CreateEditProfileEducationComponent } from './create-edit-profile-education/create-edit-profile-education.component';
@@ -18,12 +18,13 @@ export class ProfileEducationComponent extends AppComponentBase implements OnIni
 
   constructor(
     injector: Injector,
-    profileService: ProfileService,
+    private _profileService: ProfileService,
+    private _profilesService: ProfilesServiceProxy,
     private _modalService: BsModalService,
     private _userEducationsService: UserEducationsServiceProxy,
   ) {
     super(injector);
-    profileService.$user.subscribe(user => {
+    this._profileService.$user.subscribe(user => {
       this.userId = user.id;
       this.getUserEducations();
     });
@@ -50,6 +51,7 @@ export class ProfileEducationComponent extends AppComponentBase implements OnIni
             .subscribe(() => {
               this.notify.success('SuccessfullyDeleted');
               this.getUserEducations();
+              this.getProfile();
             })
         }
       }
@@ -82,7 +84,15 @@ export class ProfileEducationComponent extends AppComponentBase implements OnIni
     modal.userEducationSaved.subscribe((result: boolean) => {
       if (result) {
         this.getUserEducations();
+        this.getProfile();
       }
     });
+  }
+
+  private getProfile(): void {
+    this._profilesService.get(this.userId)
+      .subscribe(user => {
+        this._profileService.user = user;
+      });
   }
 }

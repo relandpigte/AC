@@ -28,6 +28,9 @@ namespace Academically.Authorization.Users
         [ForeignKey("ProfilePictureDocumentId")]
         public virtual Document ProfilePictureDocument { get; set; }
 
+        public virtual ICollection<UserEducation> UserEducations { get; set; }
+
+
         public const string DefaultPassword = "123qwe";
 
         public static string CreateRandomPassword()

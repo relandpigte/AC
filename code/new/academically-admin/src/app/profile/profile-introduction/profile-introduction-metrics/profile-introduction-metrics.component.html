@@ -22,8 +22,9 @@
         <div class="row align-items-center">
           <div class="col">
             <h6 class="text-uppercase text-muted mb-2">{{ 'AcademicLevel' | localize }}</h6>
-            <span class="h2 mb-0 align-middle">{{ profileMetric.academicLevel ? profileMetric.academicLevel : '-'
-              }}</span>
+            <span class="h2 mb-0 align-middle">
+              {{ profileMetric.academicLevel ? profileMetric.academicLevel : ('NoEducation' | localize) }}
+            </span>
           </div>
           <div class="col-auto">
             <span class="h2 fe fe-clock text-muted mb-0"></span>
