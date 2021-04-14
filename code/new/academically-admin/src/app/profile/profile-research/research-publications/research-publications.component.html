@@ -5,7 +5,8 @@
         <h4 class="card-header-title">Publications</h4>
       </div>
       <div class="col-auto">
-        <button (click)="onAddClick()" type="button" class="btn btn-sm btn-primary">
+        <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchPublications.Create')"
+          (click)="onAddClick()" type="button" class="btn btn-sm btn-primary">
           {{ 'AddPublication' | localize}}
         </button>
       </div>
@@ -14,14 +15,15 @@
   <div class="card-header">
     <div class="row align-items-center">
       <div class="col">
-        <form>
+        <form (ngSubmit)="onSearchSubmit()">
           <div class="input-group input-group-flush">
             <div class="input-group-prepend">
               <span class="input-group-text">
                 <i class="fe fe-search"></i>
               </span>
             </div>
-            <input class="list-search form-control" type="search" placeholder="Search" />
+            <input [(ngModel)]="searchFilter" id="SearchFilter" name="SearchFilter" class="list-search form-control"
+              type="search" placeholder="Search" />
           </div>
         </form>
       </div>
@@ -48,7 +50,7 @@
                   {{ 'PublicationType_' + userPublication.publicationType | localize}}
                 </div>
                 <span class="text-muted ml-2">{{ userPublication.publisher }}, {{ userPublication.publicationDate |
-                  date: 'MMMM, y' }}</span>
+                  date: 'MMMM yyyy' }}</span>
               </div>
             </div>
             <div class="col-12">
@@ -57,17 +59,26 @@
               </div>
             </div>
             <div class="col-12 pt-2">
-              <div *ngFor="let tag of userPublication.userPublicationTags" class="badge badge-soft-info mr-1">{{ tag.publicationTag.name }}</div>
+              <div *ngFor="let tag of userPublication.userPublicationTags" class="badge badge-soft-info mr-1">{{
+                tag.publicationTag.name }}</div>
             </div>
           </div>
         </td>
         <td class="table-action align-middle">
-          <div dropdown class="dropdown" container="body">
-            <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;" role="button">
-              <i class="fe fe-more-vertical"></i>
-            </a>
-          </div>
+          <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchPublications.Update')"
+            (click)="onEditClick(userPublication)" type="button"
+            class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+            <span class="fe fe-edit-2"></span>
+          </button>
+          <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchPublications.Delete')"
+            (click)="onDeleteClick(userPublication)" type="button"
+            class="btn btn-outline-danger btn-sm btn-rounded-circle">
+            <span class="fe fe-trash-2"></span>
+          </button>
         </td>
+      </tr>
+      <tr *ngIf="userPublications && !userPublications.length">
+        <p class="text-muted m-4 text-center">{{ 'NoPublicationsFound' | localize }}</p>
       </tr>
     </table>
   </div>

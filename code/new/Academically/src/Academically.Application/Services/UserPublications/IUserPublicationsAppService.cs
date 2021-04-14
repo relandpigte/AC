@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Academically.Services.UserPublications.Dto;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,5 +12,7 @@ namespace Academically.Services.UserPublications
         Task<PagedResultDto<UserPublicationDto>> GetPaged(PagedUserPublicationRequestDto input);
         Task<IEnumerable<PublicationTagDto>> GetTags(string nameFilter);
         Task Create(UserPublicationDto input);
+        Task Update(UserPublicationDto input);
+        Task Delete(Guid id);
     }
 }

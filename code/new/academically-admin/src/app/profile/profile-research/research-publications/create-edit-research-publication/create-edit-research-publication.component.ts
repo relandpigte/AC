@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PublicationTagDto, PublicationType, UserPublicationDto, UserPublicationsServiceProxy } from '@shared/service-proxies/service-proxies';
+import * as moment from 'moment';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Observable, Observer } from 'rxjs';
@@ -13,7 +14,7 @@ import { switchMap } from 'rxjs/operators';
 })
 export class CreateEditResearchPublicationComponent extends AppComponentBase implements OnInit {
   @Output() userPublicationSaved = new EventEmitter();
-  userPublication: UserPublicationDto = new UserPublicationDto();
+  userPublication: UserPublicationDto;
   isLoading = false;
   publicationTagsTypeaheadSource: Observable<PublicationTagDto[]>;
   publicationTag = '';
@@ -30,16 +31,28 @@ export class CreateEditResearchPublicationComponent extends AppComponentBase imp
     this.datePickerConfig = new BsDatepickerConfig();
     this.datePickerConfig.showWeekNumbers = false;
     this.datePickerConfig.dateInputFormat = 'DD/MM/YYYY';
-    this.userPublication.tags = [];
   }
 
   ngOnInit(): void {
     this.getPublicationTags();
+    if (!this.userPublication) {
+      this.userPublication = new UserPublicationDto();
+      this.userPublication.tags = [];
+    } else {
+      if (this.userPublication.userPublicationTags && this.userPublication.userPublicationTags.length > 0) {
+        this.userPublication.tags = this.userPublication.userPublicationTags
+          .map(userPublicationTag => userPublicationTag.publicationTag.name);
+      }
+      this.publicationDate = this.userPublication.publicationDate.toDate();
+    }
   }
 
   onFormSubmit(): void {
     this.isLoading = true;
-    this._userPublicationsService.create(this.userPublication)
+    this.userPublication.publicationDate = moment(this.publicationDate);
+    (this.userPublication.id
+      ? this._userPublicationsService.update(this.userPublication)
+      : this._userPublicationsService.create(this.userPublication))
       .subscribe(() => {
         this.notify.success(this.l('SuccessfullySaved'));
         this.isLoading = false;
@@ -53,7 +66,7 @@ export class CreateEditResearchPublicationComponent extends AppComponentBase imp
   }
 
   onPublicationTagSelect(publicationTag: PublicationTagDto): void {
-    this.userPublication.tags.push(publicationTag.name.toLowerCase());
+    this.addTagToUserPublication(publicationTag.name);
   }
 
   onRemovePublicationTagClick(tag: string): void {
@@ -67,8 +80,7 @@ export class CreateEditResearchPublicationComponent extends AppComponentBase imp
     if (e.key === 'Enter') {
       e.preventDefault();
       if (this.publicationTag) {
-        this.userPublication.tags.push(this.publicationTag);
-        this.publicationTag = '';
+        this.addTagToUserPublication(this.publicationTag);
       }
     }
   }
@@ -81,5 +93,12 @@ export class CreateEditResearchPublicationComponent extends AppComponentBase imp
         return this._userPublicationsService.getTags(query);
       })
     );
+  }
+
+  private addTagToUserPublication(tag: string): void {
+    if (!this.userPublication.tags.includes(tag.toLowerCase())) {
+      this.userPublication.tags.push(tag.toLowerCase());
+    }
+    this.publicationTag = '';
   }
 }

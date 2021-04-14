@@ -4,4 +4,5 @@
 <app-research-methodologies *ngIf="permission.isGranted('Pages.Profile.Research.ResearchMethodologies')">
 </app-research-methodologies>
 
-<app-research-publications></app-research-publications>
+<app-research-publications *ngIf="permission.isGranted('Pages.Profile.Research.ResearchPublications')">
+</app-research-publications>

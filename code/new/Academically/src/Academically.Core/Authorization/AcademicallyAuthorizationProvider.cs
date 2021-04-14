@@ -49,6 +49,11 @@ namespace Academically.Authorization
             profileResearchMethodologiesPermission.CreateChildPermission(PermissionNames.Pages_Profile_Research_ResearchMethodologies_Update, L("Update"));
             profileResearchMethodologiesPermission.CreateChildPermission(PermissionNames.Pages_Profile_Research_ResearchMethodologies_Delete, L("Delete"));
 
+            var profileResearchPublicationsPermission = profileResearchPermission.CreateChildPermission(PermissionNames.Pages_Profile_Research_ResearchPublications, L("Publications"));
+            profileResearchPublicationsPermission.CreateChildPermission(PermissionNames.Pages_Profile_Research_ResearchPublications_Create, L("Create"));
+            profileResearchPublicationsPermission.CreateChildPermission(PermissionNames.Pages_Profile_Research_ResearchPublications_Update, L("Update"));
+            profileResearchPublicationsPermission.CreateChildPermission(PermissionNames.Pages_Profile_Research_ResearchPublications_Delete, L("Delete"));
+
             profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_IndustryExperience, L("IndustryExperience"));
 
 

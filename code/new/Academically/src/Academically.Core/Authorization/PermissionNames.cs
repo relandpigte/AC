@@ -42,6 +42,11 @@
         public const string Pages_Profile_Research_ResearchMethodologies_Update = "Pages.Profile.Research.ResearchMethodologies.Update";
         public const string Pages_Profile_Research_ResearchMethodologies_Delete = "Pages.Profile.Research.ResearchMethodologies.Delete";
 
+        public const string Pages_Profile_Research_ResearchPublications = "Pages.Profile.Research.ResearchPublications";
+        public const string Pages_Profile_Research_ResearchPublications_Create = "Pages.Profile.Research.ResearchPublications.Create";
+        public const string Pages_Profile_Research_ResearchPublications_Update = "Pages.Profile.Research.ResearchPublications.Update";
+        public const string Pages_Profile_Research_ResearchPublications_Delete = "Pages.Profile.Research.ResearchPublications.Delete";
+
         public const string Pages_Profile_IndustryExperience = "Pages.Profile.IndustryExperience";
 
 
