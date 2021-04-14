@@ -2,56 +2,70 @@
   <div class="modal-card card">
     <abp-modal-header [title]="'PhoneNumberVerification' | localize" (onCloseClick)="onCloseClick()"></abp-modal-header>
     <div class="card-body overflow-visible">
-      <div class="form-row">
 
-        <div class="form-group col-md-6" [class.required]="!isVerificationCodeSent">
-          <label class="col-form-label" for="PhoneNumber">{{ 'PhoneNumber' | localize }}</label>
-          <ng-container *ngIf="!isVerificationCodeSent; else verificationCodeSentPhoneTemplate">
-            <ngx-intl-tel-input [(ngModel)]="phoneNumber" [disabled]="isVerificationCodeSent"
-              [enableAutoCountrySelect]="false" [searchCountryFlag]="true" [phoneValidation]="true"
-              [enablePlaceholder]="true" [selectFirstCountry]="false"
-              [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
-              [selectedCountryISO]="CountryISO.UnitedKingdom" [maxLength]="15" [separateDialCode]="true"
-              [numberFormat]="PhoneNumberFormat.International" id="PhoneNumber" name="PhoneNumber">
-            </ngx-intl-tel-input>
-          </ng-container>
-          <ng-template #verificationCodeSentPhoneTemplate>
-            <input class="form-control" type="text" [value]="phoneNumber.internationalNumber" readonly disabled />
-          </ng-template>
-        </div>
-
-        <div class="form-group col-md-6 required" *ngIf="isVerificationCodeSent">
-          <label class="col-form-label" for="VerificationCode">{{ 'VerificationCode' | localize }}</label>
-          <input class="form-control" type="text" [(ngModel)]="verificationCode" id="VerificationCode"
-            name="VerificationCode" #verificationCodeModel="ngModel" #verificationCodeEl required />
-          <abp-validation-summary [control]="verificationCodeModel" [controlEl]="verificationCodeEl">
-          </abp-validation-summary>
-        </div>
-
+      <div class="form-group" [class.required]="currentState === PhoneVerificationState.NotSent">
+        <label class="col-form-label" for="PhoneNumber">{{ 'PhoneNumber' | localize }}</label>
+        <ng-container
+          *ngIf="currentState === PhoneVerificationState.NotSent || currentState === PhoneVerificationState.EditSent; else verificationCodeSentPhoneTemplate">
+          <ngx-intl-tel-input [(ngModel)]="phoneNumber" [disabled]="isVerificationCodeSent"
+            [enableAutoCountrySelect]="false" [searchCountryFlag]="true" [phoneValidation]="true"
+            [enablePlaceholder]="true" [selectFirstCountry]="false"
+            [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+            [selectedCountryISO]="CountryISO.UnitedKingdom" [maxLength]="15" [separateDialCode]="true"
+            [numberFormat]="PhoneNumberFormat.International" id="PhoneNumber" name="PhoneNumber">
+          </ngx-intl-tel-input>
+        </ng-container>
+        <ng-template #verificationCodeSentPhoneTemplate>
+          <div class="input-group input-group-merge">
+            <input class="form-control form-control-appended" type="text" [value]="phoneNumber.internationalNumber"
+              readonly disabled />
+            <div class="input-group-append">
+              <button (click)="onEditPhoneNumberClick()" class="btn btn-sm btn-light">
+                <i class="fe fe-edit mr-1"></i>Edit
+              </button>
+            </div>
+          </div>
+        </ng-template>
       </div>
+
+      <div class="form-group required" *ngIf="currentState === PhoneVerificationState.Sent">
+        <label class="col-form-label" for="VerificationCode">{{ 'VerificationCode' | localize }}</label>
+        <input class="form-control" type="text" [(ngModel)]="verificationCode" id="VerificationCode"
+          name="VerificationCode" #verificationCodeModel="ngModel" #verificationCodeEl required />
+        <abp-validation-summary [control]="verificationCodeModel" [controlEl]="verificationCodeEl">
+        </abp-validation-summary>
+      </div>
+
     </div>
 
     <div class="card-footer justify-content-between">
-      <button type="button" class="btn btn-white" [disabled]="isLoading || isResending" (click)="onCloseClick()">
+      <button type="button" class="btn btn-white" [disabled]="isLoading" (click)="onCloseClick()">
         {{ 'Cancel' | localize}}
       </button>
-      <ng-container *ngIf="!isVerificationCodeSent; else verificationCodeSentTemplate">
+      <ng-container
+        *ngIf="currentState === PhoneVerificationState.NotSent || currentState === PhoneVerificationState.EditSent; else verificationCodeSentTemplate">
         <button (click)="onSendClick()" type="submit" class="btn btn-primary"
-          [disabled]="!verifyMobileNumberForm.form.valid || !phoneNumber || isLoading || isVerificationCodeResent">
+          [disabled]="!verifyMobileNumberForm.form.valid || !phoneNumber || isLoading || resendTimer">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <span class="badge badge-soft-danger" *ngIf="resendTimer">
+            {{ resendTimer }}
+          </span>
           {{ (!isLoading ? 'Send' : 'Sending') | localize }}
         </button>
       </ng-container>
       <ng-template #verificationCodeSentTemplate>
         <div>
           <button (click)="onResendClick()" type="submit" class="btn btn-primary mr-3"
-            [disabled]="isResending || isLoading || isVerificationCodeResent">
-            <span *ngIf="isResending" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            <span class="badge badge-soft-danger" *ngIf="isVerificationCodeResent">{{ resendTimer }}</span>
-            {{ (!isResending ? 'Resend' : 'Resending') | localize }}
+            [disabled]="currentState === PhoneVerificationState.Sending || isLoading || resendTimer">
+            <span *ngIf="currentState === PhoneVerificationState.Sending" class="spinner-border spinner-border-sm"
+              role="status" aria-hidden="true"></span>
+            <span class="badge badge-soft-danger" *ngIf="resendTimer">
+              {{ resendTimer }}
+            </span>
+            {{ (!isLoading ? 'Resend' : 'Resending') | localize }}
           </button>
           <button (click)="onVerifyClick()" type="submit" class="btn btn-primary"
-            [disabled]="!verificationCode || isLoading || isResending">
+            [disabled]="!verificationCode || isLoading">
             <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             {{ (!isLoading ? 'Verify' : 'Verifying') | localize }}
           </button>
