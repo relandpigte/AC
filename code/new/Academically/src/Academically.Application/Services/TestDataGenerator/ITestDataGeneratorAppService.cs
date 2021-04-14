@@ -1,7 +1,7 @@
 ﻿using Abp.Application.Services;
 using System.Threading.Tasks;
 
-namespace Academically.Services.TestDataGeneratorAppService
+namespace Academically.Services.TestDataGenerator
 {
     public interface ITestDataGeneratorAppService : IApplicationService
     {
