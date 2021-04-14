@@ -100,7 +100,9 @@
                 <i class="fas fa-minus"></i>
                 {{ 'Negative' | localize}}
               </span>
-              <div class="mt-2" [innerHtml]="studentRating.comments"></div>
+              <div toggableContent [identifier]="studentRating.id" contentClass="ql-container" class="mt-2">
+                <quill-view-html [content]="studentRating.comments" theme="snow"></quill-view-html>
+              </div>
             </div>
           </div>
         </td>
