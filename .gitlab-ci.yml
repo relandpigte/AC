@@ -201,7 +201,7 @@ build_schema:
       - artifacts
     expire_in: 21 day
   only:
-    - develop-new
+    - develop
 
 build_backend:
   stage: build
@@ -228,7 +228,7 @@ build_backend:
       - artifacts
     expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
   only:
-    - develop-new
+    - develop
 
 build_frontend:
   stage: build
@@ -255,7 +255,7 @@ build_frontend:
       - artifacts
     expire_in: 21 day
   only:
-    - develop-new
+    - develop
 
     
 # End Build #
@@ -275,7 +275,7 @@ deploy_schema_to_ci:
   environment:
     name: ci_schema
   only:
-    - develop-new
+    - develop
 
 deploy_backend_to_ci:
   <<: *backend
@@ -291,7 +291,7 @@ deploy_frontend_to_ci:
   environment:
     name: ci_frontend
   only:
-    - develop-new
+    - develop
 
 
 
@@ -305,7 +305,7 @@ deploy_schema_to_uat:
     name: uat_schema
   when: manual
   only:
-    - develop-new
+    - develop
 
 deploy_backend_to_uat:
   <<: *backend
@@ -317,7 +317,7 @@ deploy_backend_to_uat:
     name: uat_backend
   when: manual
   only:
-    - develop-new
+    - develop
 
 deploy_frontend_to_uat:
   <<: *frontend
@@ -329,7 +329,7 @@ deploy_frontend_to_uat:
     name: uat_frontend
   when: manual
   only:
-    - develop-new
+    - develop
 
 
 # Environment UAT #
