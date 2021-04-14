@@ -7,6 +7,12 @@ import { ChangeData, CountryISO, PhoneNumberFormat, SearchCountryField } from 'n
 import { interval, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
+enum PhoneVerificationState {
+  NotSent,
+  Sent,
+  EditSent,
+}
+
 @Component({
   selector: 'app-verify-mobile',
   templateUrl: './verify-mobile.component.html',
@@ -17,15 +23,14 @@ export class VerifyMobileComponent extends AppComponentBase implements OnInit, O
   CountryISO = CountryISO;
   SearchCountryField = SearchCountryField;
   PhoneNumberFormat = PhoneNumberFormat;
+  PhoneVerificationState = PhoneVerificationState;
   phoneNumber: ChangeData;
   verificationCode: string;
-  isVerificationCodeSent = false;
   isLoading = false;
-  isResending = false;
-  isVerificationCodeResent = false;
   defaultResendTimerValue = 60;
   resendTimer: number;
   resendTimerSubscription: Subscription;
+  currentState = PhoneVerificationState.NotSent;
 
   constructor(
     injector: Injector,
@@ -52,7 +57,11 @@ export class VerifyMobileComponent extends AppComponentBase implements OnInit, O
         this.isLoading = false;
       }))
       .subscribe(() => {
-        this.isVerificationCodeSent = true;
+        if (this.currentState === PhoneVerificationState.EditSent) {
+          this.resendTimer = this.defaultResendTimerValue;
+          this.initiateResendTimer();
+        }
+        this.currentState = PhoneVerificationState.Sent;
         this.notify.success(this.l('PhoneNumberVerificationSentMessage'));
       });
   }
@@ -71,17 +80,21 @@ export class VerifyMobileComponent extends AppComponentBase implements OnInit, O
   }
 
   onResendClick(): void {
-    this.isResending = true;
+    this.isLoading = true;
     this._phoneVerificationsService.create(this.phoneNumber.internationalNumber)
       .pipe(finalize(() => {
-        this.isResending = false;
+        this.currentState = PhoneVerificationState.Sent;
+        this.isLoading = false;
       }))
       .subscribe(() => {
-        this.isVerificationCodeResent = true;
         this.resendTimer = this.defaultResendTimerValue;
         this.initiateResendTimer();
         this.notify.success(this.l('PhoneNumberVerificationSentMessage'));
       });
+  }
+
+  onEditPhoneNumberClick(): void {
+    this.currentState = PhoneVerificationState.EditSent;
   }
 
   onCloseClick(): void {
@@ -90,12 +103,13 @@ export class VerifyMobileComponent extends AppComponentBase implements OnInit, O
 
   private initiateResendTimer(): void {
     this.resendTimerSubscription = interval(1000).subscribe(() => {
-      if (this.resendTimer > 0) {
+      if (this.resendTimer > 1) {
         this.resendTimer--;
       } else {
+        this.resendTimer = 0;
         this.resendTimerSubscription.unsubscribe();
-        this.isVerificationCodeResent = false;
-        this.resendTimer = this.defaultResendTimerValue;
+        this.currentState = PhoneVerificationState.Sent;
+        console.log('stop!');
       }
     });
   }
@@ -107,14 +121,14 @@ export class VerifyMobileComponent extends AppComponentBase implements OnInit, O
           this.phoneNumber = {
             internationalNumber: phoneVerification.recipient,
           };
-          this.isVerificationCodeSent = true;
+          this.currentState = PhoneVerificationState.Sent;
+          console.log(this.currentState);
           const resendTimer = this.diffMomentDatesSeconds(
             phoneVerification.dateSent.add(this.defaultResendTimerValue, 'seconds'),
             moment()
           );
           if (resendTimer > 0) {
             this.resendTimer = resendTimer;
-            this.isVerificationCodeResent = true;
             this.initiateResendTimer();
           }
         }

@@ -1,7 +1,7 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PassportVerificationStatus, ProfilesServiceProxy, VerificationStatusDto } from '@shared/service-proxies/service-proxies';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { VerifyMobileComponent } from './verify-mobile/verify-mobile.component';
 import { VerifyPassportComponent } from './verify-passport/verify-passport.component';
 
@@ -29,9 +29,9 @@ export class VerificationsComponent extends AppComponentBase implements OnInit {
   }
 
   onVerifyMobileNumberClick(): void {
-    const modalSettings = this.defaultModalSettings;
-    const modalRef = this._modalService.show(VerifyMobileComponent, modalSettings);
-    const modal: VerifyMobileComponent = modalRef.content;
+    const modalSettings = this.defaultModalSettings as ModalOptions<VerifyMobileComponent>;
+    modalSettings.class = 'modal-md';
+    const modal = this._modalService.show(VerifyMobileComponent, modalSettings).content;
     modal.phoneNumberVerified.subscribe((result: boolean) => {
       if (result) {
         this.getVerificationStatus();
