@@ -128,7 +128,8 @@
                 <a href="javascript:;">{{ tutorRating.reviewer.fullName }}</a>
               </h4>
               <p class="small text-muted mb-0">
-                {{ tutorRating.reviewer.currentUniversity ? tutorRating.reviewer.currentUniversity : ('NoFormalEducation' | localize) }}
+                {{ tutorRating.reviewer.currentUniversity ? tutorRating.reviewer.currentUniversity :
+                ('NoFormalEducation' | localize) }}
               </p>
             </div>
             <div class="col-auto">
@@ -151,7 +152,9 @@
                 <i class="fas fa-minus"></i>
                 {{ 'Negative' | localize}}
               </span>
-              <div class="mt-2" [innerHtml]="tutorRating.comments"></div>
+              <div toggableContent [identifier]="tutorRating.id" contentClass="ql-container" class="mt-2">
+                <quill-view-html [content]="tutorRating.comments" theme="snow"></quill-view-html>
+              </div>
             </div>
           </div>
         </td>
