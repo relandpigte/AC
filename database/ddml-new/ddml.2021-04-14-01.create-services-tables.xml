@@ -1,0 +1,44 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="Gilbert (generated)" id="1618545332640-46">
+        <createTable tableName="academicallyservices">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+     <changeSet author="Gilbert (generated)" id="1618545332640-45">
+        <createTable tableName="academicallyservicemapping">
+            <column name="Node1Id" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Node2Id" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Node3Id" type="CHAR(36)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Gilbert (generated)" id="1618545332640-78">
+        <addPrimaryKey columnNames="Node1Id, Node2Id, Node3Id" constraintName="PRIMARY" tableName="academicallyservicemapping"/>
+    </changeSet>
+    <changeSet author="Gilbert (generated)" id="1618545332640-79">
+        <addPrimaryKey columnNames="Id" constraintName="PRIMARY" tableName="academicallyservices"/>
+    </changeSet>
+    <changeSet author="Gilbert (generated)" id="1618545727615-234">
+        <addForeignKeyConstraint baseColumnNames="Node1Id" baseTableName="academicallyservicemapping" constraintName="FK_Services_ServiceMapping_Node1Id" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="Id" referencedTableName="academicallyservices"/>
+    </changeSet>
+    <changeSet author="Gilbert (generated)" id="1618545727615-235">
+        <addForeignKeyConstraint baseColumnNames="Node2Id" baseTableName="academicallyservicemapping" constraintName="FK_Services_ServiceMapping_Node2Id" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="Id" referencedTableName="academicallyservices"/>
+    </changeSet>
+    <changeSet author="Gilbert (generated)" id="1618545727615-236">
+        <addForeignKeyConstraint baseColumnNames="Node3Id" baseTableName="academicallyservicemapping" constraintName="FK_Services_ServiceMapping_Node3Id" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="Id" referencedTableName="academicallyservices"/>
+    </changeSet>
+</databaseChangeLog>
