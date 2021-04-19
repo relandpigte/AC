@@ -27,4 +27,6 @@
 	<include file="ddml-new/ddml.2021-03-27-01.create-userresearchmethodologies-tables.xml"/>
 	<include file="ddml-new/ddml.2021-03-27-02.generate-researchmethods-data.xml"/>
 	<include file="ddml-new/ddml.2021-04-01-01.create-userpublications-tables.xml"/>
+	<include file="ddml-new/ddml.2021-04-14-01.create-services-tables.xml"/>
+	<include file="ddml-new/ddml.2021-04-14-02.load-services-data.xml"/>
 </databaseChangeLog>
