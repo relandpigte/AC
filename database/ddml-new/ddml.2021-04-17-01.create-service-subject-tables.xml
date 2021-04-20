@@ -1,0 +1,39 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="Gilbert (generated)" id="1618810101805-49">
+        <createTable tableName="academicallysubjects">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Name" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Gilbert (generated)" id="1618810101805-84">
+        <addPrimaryKey columnNames="Id" constraintName="PRIMARY" tableName="academicallysubjects"/>
+    </changeSet>
+
+    <changeSet author="Gilbert (generated)" id="1618810101805-47">
+        <createTable tableName="academicallyservicesubjects">
+            <column name="ServiceId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SubjectId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Gilbert (generated)" id="1618810101805-82">
+        <addPrimaryKey columnNames="ServiceId, SubjectId" constraintName="PRIMARY" tableName="academicallyservicesubjects"/>
+    </changeSet>
+    <changeSet author="Gilbert (generated)" id="1618810101805-83">
+        <addForeignKeyConstraint baseColumnNames="SubjectId" baseTableName="academicallyservicesubjects" constraintName="FK_academicallyservicesubjects_Subjects_Id" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="Id" referencedTableName="academicallysubjects" validate="true"/>
+    </changeSet>
+    <changeSet author="Gilbert (generated)" id="1618810101805-85">
+        <addForeignKeyConstraint baseColumnNames="ServiceId" baseTableName="academicallyservicesubjects" constraintName="FK_academicallyservicesubjects_Services_Id" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="Id" referencedTableName="academicallyservices" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
