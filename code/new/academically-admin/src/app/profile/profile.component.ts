@@ -1,17 +1,13 @@
-import { Component, Injector, OnInit } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.less']
 })
-export class ProfileComponent extends AppComponentBase implements OnInit {
-  constructor(
-    injector: Injector,
-  ) {
-    super(injector);
-  }
+export class ProfileComponent implements OnInit {
+
+  constructor() { }
 
   ngOnInit(): void {
   }

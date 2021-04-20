@@ -1,0 +1,49 @@
+<div class="header">
+  <img [src]="getCoverPhoto(user.coverPhotoUrl)" class="header-img-top" alt="..." />
+
+  <div [class.container]="themeSettings.navigationPosition === NavigationPosition.Topnav"
+    [class.container-fluid]="themeSettings.navigationPosition !== NavigationPosition.Topnav">
+    <div class="header-body mt-n5 mt-md-n6 position-relative">
+      <app-cover-photo-changer *ngIf="!isViewOnly"></app-cover-photo-changer>
+      <div class="row align-items-end">
+        <div class="col-auto">
+          <div class="avatar avatar-xxl header-avatar-top">
+            <img alt="..." class="avatar-img rounded-circle border border-4 border-body no-picture-border"
+              [src]="getProfilePicture(user.profilePictureUrl)" />
+            <app-profile-picture-changer *ngIf="!isViewOnly"></app-profile-picture-changer>
+          </div>
+        </div>
+        <div class="col mb-3 ml-n3 ml-md-n2">
+          <h6 class="header-pretitle">{{ userTitle}}</h6>
+          <h1 class="header-title">{{ user.name }} {{ user.surname ? user.surname[0] : '' }}</h1>
+        </div>
+      </div>
+      <div class="row align-items-center">
+        <div class="col">
+          <ul class="nav nav-tabs nav-overflow header-tabs profile-menu">
+            <li *ngIf="permission.isGranted('Pages.Profile.Introduction')" class="nav-item">
+              <a [routerLink]="['introduction']" routerLinkActive="active" class="nav-link">{{
+                'Introduction' | localize }}</a>
+            </li>
+            <li *ngIf="permission.isGranted('Pages.Profile.Services')" class="nav-item">
+              <a [routerLink]="['services']" routerLinkActive="active" class="nav-link">
+                {{ 'Services' | localize }}</a>
+            </li>
+            <li *ngIf="permission.isGranted('Pages.Profile.Education')" class="nav-item">
+              <a [routerLink]="['education']" routerLinkActive="active" class="nav-link">
+                {{ 'Education' | localize }}</a>
+            </li>
+            <li *ngIf="permission.isGranted('Pages.Profile.Research')" class="nav-item">
+              <a [routerLink]="['research']" routerLinkActive="active" class="nav-link">
+                {{ 'Research' | localize }}</a>
+            </li>
+            <li *ngIf="permission.isGranted('Pages.Profile.IndustryExperience')" class="nav-item">
+              <a [routerLink]="['industry-experience']" routerLinkActive="active" class="nav-link">
+                {{ 'IndustryExperience' | localize }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

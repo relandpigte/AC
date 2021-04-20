@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { AppRouteGuard } from '@shared/auth/auth-route-guard';
-import { ProfileGuard } from '@shared/guards/profile.guard';
 
 import { WrapperComponent } from './layout/wrapper/wrapper.component';
 
@@ -12,8 +11,6 @@ import { UsersComponent } from './users/users.component';
 import { TenantsComponent } from './tenants/tenants.component';
 import { RolesComponent } from 'app/roles/roles.component';
 import { ChangePasswordComponent } from './users/change-password/change-password.component';
-import { ProfileComponent } from './profile/profile.component';
-import { ProfileHeaderComponent } from './profile/profile-header/profile-header.component';
 
 @NgModule({
   imports: [
@@ -31,48 +28,6 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
               {
                 path: '',
                 component: HomeComponent,
-                outlet: 'content',
-              },
-            ],
-          },
-          {
-            path: 'profile',
-            children: [
-              {
-                path: '',
-                component: WrapperComponent,
-                data: { permission: 'Pages.Profile' },
-                canActivate: [AppRouteGuard, ProfileGuard],
-                children: [
-                  {
-                    path: '',
-                    component: ProfileHeaderComponent,
-                    outlet: 'header',
-                  },
-                  {
-                    path: '',
-                    component: ProfileComponent,
-                    outlet: 'content',
-                  },
-                ],
-              },
-              {
-                path: ':user-id',
-                component: WrapperComponent,
-                data: { permission: 'Pages.Profile' },
-                canActivate: [AppRouteGuard, ProfileGuard],
-                children: [
-                  {
-                    path: '',
-                    component: ProfileHeaderComponent,
-                    outlet: 'header',
-                  },
-                  {
-                    path: '',
-                    component: ProfileComponent,
-                    outlet: 'content',
-                  },
-                ],
               },
             ],
           },
@@ -85,7 +40,6 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
               {
                 path: '',
                 component: RolesComponent,
-                outlet: 'content',
               },
             ],
           },
@@ -98,9 +52,15 @@ import { ProfileHeaderComponent } from './profile/profile-header/profile-header.
               {
                 path: '',
                 component: UsersComponent,
-                outlet: 'content',
               },
             ],
+          },
+          {
+            path: 'profile',
+            loadChildren: () =>
+              import('@app/profile/profile.module').then(
+                (m) => m.ProfileModule
+              ),
           },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },

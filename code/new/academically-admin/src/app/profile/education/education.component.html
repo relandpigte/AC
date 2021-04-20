@@ -1,0 +1,8 @@
+<div class="row">
+  <div *ngIf="permission.isGranted('Pages.Profile.Education')" class="col-12">
+    <app-educations></app-educations>
+  </div>
+  <div *ngIf="permission.isGranted('Pages.Profile.Education.Qualifications')" class="col-12">
+    <app-qualifications></app-qualifications>
+  </div>
+</div>

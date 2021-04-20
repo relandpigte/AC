@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Academically.Authorization;
 using Academically.Domain.Entities;
 using Academically.Services.UserResearchMethodologies.Dto;
@@ -35,6 +36,7 @@ namespace Academically.Services.UserResearchMethodologies
             var userResearchMethodologies = await query
                 .Include(e => e.UserResearchMethodologyResearchMethods)
                     .ThenInclude(e => e.ResearchMethod)
+                .PageBy(input)
                 .Select(e => ObjectMapper.Map<UserResearchMethodologyDto>(e))
                 .ToListAsync();
 

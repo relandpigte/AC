@@ -1,0 +1,88 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="card-header-title">Publications</h4>
+      </div>
+      <div class="col-auto">
+        <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchPublications.Create')"
+          (click)="onAddClick()" type="button" class="btn btn-sm btn-primary">
+          {{ 'AddPublication' | localize}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <form (ngSubmit)="onSearchSubmit()">
+          <div class="input-group input-group-flush">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fe fe-search"></i>
+              </span>
+            </div>
+            <input [(ngModel)]="searchFilter" id="SearchFilter" name="SearchFilter" class="list-search form-control"
+              type="search" placeholder="Search" />
+          </div>
+        </form>
+      </div>
+      <div class="col-auto">
+        <form>
+          <select select2 [select2defaultValue]="'Sort Order'" class="custom-select custom-select-sm form-control-flush"
+            data-toggle="select">
+            <option>Sort Order</option>
+          </select>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-nowrap card-table">
+      <tr *ngFor="let userPublication of userPublications
+      | paginate: { id: 'publication', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }">
+        <td>
+          <div class="row p-3">
+            <div class="col-12 mb-2">
+              <h4 class="text-body">{{ userPublication.title }}</h4>
+              <div class="d-flex align-items-center">
+                <div class="badge badge-soft-success">
+                  {{ 'PublicationType_' + userPublication.publicationType | localize}}
+                </div>
+                <span class="text-muted ml-2">{{ userPublication.publisher }}, {{ userPublication.publicationDate |
+                  date: 'MMMM yyyy' }}</span>
+              </div>
+            </div>
+            <div class="col-12">
+              <div toggableContent [identifier]="userPublication.id" contentClass="ql-container">
+                <quill-view-html [content]="userPublication.abstract" theme="snow"></quill-view-html>
+              </div>
+            </div>
+            <div class="col-12 pt-2">
+              <div *ngFor="let tag of userPublication.userPublicationTags" class="badge badge-soft-info mr-1">{{
+                tag.publicationTag.name }}</div>
+            </div>
+          </div>
+        </td>
+        <td class="table-action align-middle">
+          <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchPublications.Update')"
+            (click)="onEditClick(userPublication)" type="button"
+            class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+            <span class="fe fe-edit-2"></span>
+          </button>
+          <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchPublications.Delete')"
+            (click)="onDeleteClick(userPublication)" type="button"
+            class="btn btn-outline-danger btn-sm btn-rounded-circle">
+            <span class="fe fe-trash-2"></span>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="userPublications && !userPublications.length">
+        <p class="text-muted m-4 text-center">{{ 'NoPublicationsFound' | localize }}</p>
+      </tr>
+    </table>
+  </div>
+  <abp-pagination-controls *ngIf="userPublications && userPublications.length && totalItems > userPublications.length"
+    id="publication" (pageChange)="getDataPage($event)">
+  </abp-pagination-controls>
+</div>

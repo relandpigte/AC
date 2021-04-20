@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Academically.Authorization;
 using Academically.Domain.Entities;
 using Academically.Services.UserResearchInterests.Dto;
@@ -35,6 +36,7 @@ namespace Academically.Services.UserResearchInterests
             var userResearchInterests = await query
                 .Include(e => e.UserResearchInterestDisciplineTaxonomies)
                     .ThenInclude(e => e.DisciplineTaxonomy)
+                .PageBy(input)
                 .Select(e => ObjectMapper.Map<UserResearchInterestDto>(e))
                 .ToListAsync();
 

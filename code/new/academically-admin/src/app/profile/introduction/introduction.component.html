@@ -1,0 +1,15 @@
+<app-metrics *ngIf="permission.isGranted('Pages.Profile.Introduction.Metrics')">
+</app-metrics>
+<div class="row">
+  <div class="col-md-8">
+    <app-about></app-about>
+    <app-student-reviews *ngIf="permission.isGranted('Pages.Profile.Introduction.Reviews') && !isTutor">
+    </app-student-reviews>
+    <app-tutor-reviews *ngIf="permission.isGranted('Pages.Profile.Introduction.Reviews') && isTutor">
+    </app-tutor-reviews>
+  </div>
+  <div class="col-md-4">
+    <app-summary></app-summary>
+    <app-verifications [isTutor]="isTutor"></app-verifications>
+  </div>
+</div>

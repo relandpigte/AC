@@ -12,6 +12,7 @@ import { BusyDirective } from './directives/busy.directive';
 import { BodyClassDirective } from './directives/body-class.directive';
 import { Select2Directive } from './directives/select2.directive';
 import { ToggableContentDirective } from './directives/toggable-content.directive';
+import { CollapseDirective } from './directives/collapse.directive';
 
 import { AppSessionService } from './session/app-session.service';
 import { AppUrlService } from './nav/app-url.service';
@@ -40,6 +41,7 @@ import { TableHeaderSortComponent } from './components/table-header-sort/table-h
     BodyClassDirective,
     Select2Directive,
     ToggableContentDirective,
+    CollapseDirective,
     AbpPaginationControlsComponent,
     AbpValidationSummaryComponent,
     AbpModalHeaderComponent,
@@ -55,6 +57,7 @@ import { TableHeaderSortComponent } from './components/table-header-sort/table-h
     BodyClassDirective,
     Select2Directive,
     ToggableContentDirective,
+    CollapseDirective,
     AbpPaginationControlsComponent,
     AbpValidationSummaryComponent,
     AbpModalHeaderComponent,

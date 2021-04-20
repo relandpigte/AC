@@ -1,24 +1,7 @@
 <div class="container-fluid">
-  <div class="tab-content row">
-    <div *ngIf="permission.isGranted('Pages.Profile.Introduction')" class="col-12 tab-pane fade show active"
-      id="introduction" role="tabpanel" aria-labelledby="introduction-tab">
-      <app-profile-introduction></app-profile-introduction>
-    </div>
-    <div *ngIf="permission.isGranted('Pages.Profile.Services')" class="col-12 tab-pane fade" id="services"
-      role="tabpanel" aria-labelledby="services-tab">
-      <app-profile-services></app-profile-services>
-    </div>
-    <div *ngIf="permission.isGranted('Pages.Profile.Education')" class="col-12 tab-pane fade" id="education"
-      role="tabpanel" aria-labelledby="education-tab">
-      <app-profile-education></app-profile-education>
-    </div>
-    <div *ngIf="permission.isGranted('Pages.Profile.Research')" class="col-12 tab-pane fade" id="research"
-      role="tabpanel" aria-labelledby="research-tab">
-      <app-profile-research></app-profile-research>
-    </div>
-    <div *ngIf="permission.isGranted('Pages.Profile.IndustryExperience')" class="col-12 tab-pane fade"
-      id="industry-experience" role="tabpanel" aria-labelledby="industry-experience-tab">
-      <app-profile-industry-experience></app-profile-industry-experience>
+  <div class="row">
+    <div class="col-12">
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>

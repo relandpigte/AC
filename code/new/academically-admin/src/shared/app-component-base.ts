@@ -1,4 +1,4 @@
-import { Injector, ElementRef } from '@angular/core';
+import { Injector, ElementRef, OnDestroy, Injectable } from '@angular/core';
 import { AppConsts } from '@shared/AppConsts';
 import {
   LocalizationService,
@@ -13,8 +13,11 @@ import {
 import { AppSessionService } from '@shared/session/app-session.service';
 import { Moment } from 'moment';
 import { DocumentDto } from './service-proxies/service-proxies';
+import { ReplaySubject } from 'rxjs';
 
-export abstract class AppComponentBase {
+@Injectable()
+export abstract class AppComponentBase implements OnDestroy {
+  protected destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   localizationSourceName = AppConsts.localization.defaultLocalizationSourceName;
 
@@ -46,6 +49,11 @@ export abstract class AppComponentBase {
       ignoreBackdropClick: true,
       keyboard: false,
     };
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 
   l(key: string, ...args: any[]): string {
