@@ -58,6 +58,7 @@ namespace Academically.Services.UserPublications
             var userPublications = await query
                 .Include(e => e.UserPublicationTags)
                     .ThenInclude(e => e.PublicationTag)
+                .PageBy(input)
                 .Select(e => ObjectMapper.Map<UserPublicationDto>(e))
                 .ToListAsync();
 

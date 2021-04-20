@@ -3,7 +3,7 @@ import { AfterViewInit, Directive, ElementRef, Input, OnInit } from '@angular/co
 @Directive({
   selector: '[toggableContent]'
 })
-export class ToggableContentDirective implements OnInit, AfterViewInit {
+export class ToggableContentDirective implements AfterViewInit {
   @Input() identifier: string;
   @Input() contentClass = 'toggable-content';
   private content: JQuery<any>;
@@ -15,18 +15,8 @@ export class ToggableContentDirective implements OnInit, AfterViewInit {
 
   constructor(private _el: ElementRef) { }
 
-  ngOnInit(): void {
-    this.initActions();
-
-    $(document).on('click', '.profile-menu .nav-item', () => {
-      setTimeout(() => {
-        this.initContent();
-        this.initActions();
-      }, 200);
-    });
-  }
-
   ngAfterViewInit(): void {
+    this.initActions();
     this.initContent()
   }
 

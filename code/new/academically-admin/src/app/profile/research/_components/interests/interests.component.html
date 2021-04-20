@@ -1,0 +1,60 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="card-header-title">{{ 'ResearchInterests' | localize}}</h4>
+      </div>
+      <div class="col-auto">
+        <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchInterests.Create')" (click)="onAddClick()"
+          type="button" class="btn btn-sm btn-primary">
+          {{ 'AddResearchInterest' | localize}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-nowrap card-table" [busy]="isTableLoading">
+      <tr *ngFor="let userResearchInterest of userResearchInterests
+      | paginate: { id: 'interest', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }">
+        <td>
+          <div class="row p-3">
+            <div class="col-12">
+              <h4 class="text-body">{{ userResearchInterest.title }}</h4>
+            </div>
+            <div class="col-12">
+              <div toggableContent [identifier]="userResearchInterest.id" contentClass="ql-container">
+                <quill-view-html [content]="userResearchInterest.description" theme="snow"></quill-view-html>
+              </div>
+            </div>
+            <div class="col-12 pt-2">
+              <div
+                *ngFor="let userResearchInterestTaxonomy of userResearchInterest.userResearchInterestDisciplineTaxonomies"
+                class="badge badge-soft-info mr-1">
+                {{ userResearchInterestTaxonomy.disciplineTaxonomy.name }}
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="table-action align-middle">
+          <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchInterests.Update')"
+            (click)="onEditClick(userResearchInterest)" type="button"
+            class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+            <span class="fe fe-edit-2"></span>
+          </button>
+          <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchInterests.Delete')"
+            (click)="onDeleteClick(userResearchInterest)" type="button"
+            class="btn btn-outline-danger btn-sm btn-rounded-circle">
+            <span class="fe fe-trash-2"></span>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="userResearchInterests && !userResearchInterests.length">
+        <p class="text-muted m-4 text-center">{{ 'NoResearchInterestsFound' | localize }}</p>
+      </tr>
+    </table>
+  </div>
+  <abp-pagination-controls
+    *ngIf="userResearchInterests && userResearchInterests.length && totalItems > userResearchInterests.length"
+    id="interest" (pageChange)="getDataPage($event)">
+  </abp-pagination-controls>
+</div>

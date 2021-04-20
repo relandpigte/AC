@@ -79,11 +79,13 @@ export abstract class PagedListingComponentBase<TEntityDto> extends AppComponent
     if (this._isFirstLoad) {
       this._isFirstLoad = false;
     } else {
-      scrollToElement[0].scrollIntoView({
-        behavior: 'smooth',
-        block: "start",
-        inline: "start",
-      });
+      if (scrollToElement[0]) {
+        scrollToElement[0].scrollIntoView({
+          behavior: 'smooth',
+          block: "start",
+          inline: "start",
+        });
+      }
     }
   }
 }

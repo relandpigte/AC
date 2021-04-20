@@ -66,6 +66,7 @@ namespace Academically.Services.UserEducations
         [AbpAuthorize(PermissionNames.Pages_Profile_Education_Update)]
         public async Task<Guid> Update(UserEducationDto input)
         {
+            input.UserEducationDocuments = null;
             var userEducationLevelInputs = input.UserEducationLevels;
             input.UserEducationLevels = null;
 

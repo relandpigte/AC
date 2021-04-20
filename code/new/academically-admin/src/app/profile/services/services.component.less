@@ -1,0 +1,33 @@
+.services {
+  .service {
+    .service-title {
+      display        : flex;
+      justify-content: space-between;
+      align-items    : center;
+
+      h4 {
+        margin: 0
+      }
+
+      .collapse-toggles {
+        .btn {
+          padding: 0px 5px;
+        }
+      }
+    }
+
+    ul.service-items {
+      list-style-type: none;
+      padding-left   : 0;
+      margin-bottom  : 0;
+      padding-top    : 10px;
+
+      li {
+        &:not(:last-child) {
+          margin-bottom: 3px;
+        }
+      }
+    }
+  }
+
+}
