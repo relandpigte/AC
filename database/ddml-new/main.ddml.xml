@@ -32,4 +32,7 @@
 	<include file="ddml-new/ddml.2021-04-17-01.create-service-subject-tables.xml"/>
 	<include file="ddml-new/ddml.2021-04-17-02.load-update-subjects.xml"/>
 	<include file="ddml-new/ddml.2021-04-17-03.load-update-servicesubjects.xml"/>
+	<include file="ddml-new/ddml.2021-04-17-01.create-service-subject-tables.xml"/>
+	<include file="ddml-new/ddml.2021-04-17-02.load-update-subjects.xml"/>
+	<include file="ddml-new/ddml.2021-04-17-03.load-update-servicesubjects.xml"/>
 </databaseChangeLog>

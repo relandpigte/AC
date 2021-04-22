@@ -15,11 +15,14 @@
     </changeSet>
      <changeSet author="Gilbert (generated)" id="1618545332640-45">
         <createTable tableName="academicallyservicemapping">
-            <column name="Node1Id" type="CHAR(36)">
+            <column name="Id" type="CHAR(36)">
                 <constraints nullable="false"/>
             </column>
+            <column name="Node1Id" type="CHAR(36)">
+                <constraints nullable="true"/>
+            </column>
             <column name="Node2Id" type="CHAR(36)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="Node3Id" type="CHAR(36)">
                 <constraints nullable="true"/>
@@ -27,7 +30,7 @@
         </createTable>
     </changeSet>
     <changeSet author="Gilbert (generated)" id="1618545332640-78">
-        <addPrimaryKey columnNames="Node1Id, Node2Id, Node3Id" constraintName="PRIMARY" tableName="academicallyservicemapping"/>
+        <addPrimaryKey columnNames="Id" constraintName="PRIMARY" tableName="academicallyservicemapping"/>
     </changeSet>
     <changeSet author="Gilbert (generated)" id="1618545332640-79">
         <addPrimaryKey columnNames="Id" constraintName="PRIMARY" tableName="academicallyservices"/>
