@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div [collapse]="i !== 0" *ngFor="let category of categories; let i = index" class="card service">
+    <div [accordion]="i !== 0" *ngFor="let category of categories; let i = index" class="card service">
       <div class="card-body">
         <div class="service-title">
           <h4 class="service-name">{{ category.name }}</h4>
@@ -25,7 +25,7 @@
         <div class="collapse-content">
           <ul [id]="'category_' + category.id" class="service-items">
             <li *ngFor="let service of category.children; let j = index">
-              <div [collapse]="j !== 0 || i !== 0">
+              <div [accordion]="j !== 0 || i !== 0">
                 <div class="collapse-header d-flex justify-content-between align-items-center">
                   <p class="m-0 service-name">{{ service.name }}</p>
                   <a class="collapse-button"></a>

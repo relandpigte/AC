@@ -89,6 +89,12 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
             GrantPermissions(
                 tutorRole,
                 PermissionNames.Pages_Dashboard,
+                PermissionNames.Pages_Dashboard_Overview,
+                PermissionNames.Pages_Dashboard_Overview_RecentProjects,
+                PermissionNames.Pages_Dashboard_Overview_RecentActivity,
+                PermissionNames.Pages_Dashboard_Overview_ProfileSummary,
+                PermissionNames.Pages_Dashboard_MyProjects,
+                PermissionNames.Pages_Dashboard_Usage,
                 PermissionNames.Pages_Profile,
                 PermissionNames.Pages_Profile_Services,
                 PermissionNames.Pages_Profile_Introduction,
