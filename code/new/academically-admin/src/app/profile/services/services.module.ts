@@ -5,10 +5,12 @@ import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
 import { ServicesComponent } from './services.component';
+import { CreateEditServiceComponent } from './_components/create-edit-service/create-edit-service.component';
 
 @NgModule({
   declarations: [
     ServicesComponent,
+    CreateEditServiceComponent,
   ],
   imports: [
     CommonModule,

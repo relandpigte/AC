@@ -1,8 +1,8 @@
-import { CollapseDirective } from './collapse.directive';
+import { AccordionDirective } from './accordion.directive';
 
 describe('CollapseDirective', () => {
   it('should create an instance', () => {
-    const directive = new CollapseDirective();
+    const directive = new AccordionDirective();
     expect(directive).toBeTruthy();
   });
 });

@@ -9,12 +9,14 @@ import { UserLoginInfoDto } from '@shared/service-proxies/service-proxies';
 })
 export class ProfileSummaryComponent extends AppComponentBase {
   user: UserLoginInfoDto;
+  userTitle: string;
 
   constructor(
     injector: Injector,
   ) {
     super(injector);
     this.user = this.appSession.user;
+    this.userTitle = this.user.roles.filter(e => e.toLowerCase() === 'tutor').length > 0 ? 'Tutor' : 'Student';
   }
 
 }

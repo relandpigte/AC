@@ -11,8 +11,9 @@
         </loadUpdateData>
     </changeSet>
     <changeSet author="gilbert" id="2963CA71-DFBF-46C0-B26C-9B590725ACB9" runAlways="true">
-        <comment>Load "academicallyservicemapping" data</comment>
-        <loadUpdateData tableName="academicallyservicemapping" file="ddml-new/ServiceMapping.csv" primaryKey="Node1Id, Node2Id, Node3Id">
+        <comment>Load "academicallyservicemappings" data</comment>
+        <loadUpdateData tableName="academicallyservicemappings" file="ddml-new/ServiceMapping.csv" primaryKey="Node1Id, Node2Id, Node3Id">
+            <column name="Id" type="string"/>
             <column name="Node1Id" type="string"/>
             <column name="Node2Id" type="string"/>
             <column name="Node3Id" type="string"/>

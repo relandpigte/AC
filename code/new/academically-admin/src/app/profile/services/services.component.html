@@ -1,17 +1,50 @@
-<div class="row">
+<div class="row" [busy]="isLoading">
+  <div class="col-12 service-header">
+    <div class="row">
+      <div class="col-md-4 d-flex justify-content-between align-items-center">
+        <h2 class="m-0">{{ 'Categories' | localize }}</h2>
+      </div>
+      <div class="col-md-8 text-right">
+        <button (click)="onAddClick()" class="btn btn-sm btn-primary">Add Service</button>
+      </div>
+    </div>
+  </div>
   <div class="col-md-4 services">
-    <h2>Categories</h2>
-    <div [collapse]="i !== 0" *ngFor="let service of services; let i = index" class="card service">
+    <div *ngIf="categories.length === 0" class="card">
+      <div class="card-body">
+        <p class="text-muted text-center m-0">{{ 'NoServicesFound' | localize}}</p>
+      </div>
+    </div>
+
+    <div [accordion]="i !== 0" *ngFor="let category of categories; let i = index" class="card service">
       <div class="card-body">
         <div class="service-title">
-          <h4>{{ service.name }}</h4>
-          <div class="collapse-toggles">
-            <button class="btn btn-sm btn-white collapse-button"></button>
-          </div>
+          <h4 class="service-name">{{ category.name }}</h4>
+          <a class="collapse-button"></a>
         </div>
         <div class="collapse-content">
-          <ul [id]="'service_' + service.id" class="service-items">
-            <li *ngFor="let childService of service.children"><a href="#">{{ childService.name }}</a></li>
+          <ul [id]="'category_' + category.id" class="service-items">
+            <li *ngFor="let service of category.children; let j = index">
+              <div [accordion]="j !== 0 || i !== 0">
+                <div class="collapse-header d-flex justify-content-between align-items-center">
+                  <p class="m-0 service-name">{{ service.name }}</p>
+                  <a class="collapse-button"></a>
+                </div>
+                <div class="collapse-content">
+                  <ul [id]="'service_' + service.id" class="service-items">
+                    <li *ngFor="let level of service.children">
+                      <a *ngIf="!selectedService || level.id !== selectedService.id" href="#"
+                        (click)="$event.preventDefault(); onServiceClick(level)" class="service-name">
+                        {{ level.name }}
+                      </a>
+                      <span class="text-success" *ngIf="selectedService && level.id === selectedService.id">
+                        {{ level.name }}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </li>
           </ul>
         </div>
       </div>
@@ -19,53 +52,45 @@
   </div>
   <div class="col-md-8">
     <div class="card">
-      <div class="card-header">
-        <div class="row align-items-center">
-          <div class="col">
-            <h4 class="card-header-title">Assessment Coaching</h4>
+      <ng-container *ngIf="selectedService; else noServiceTemplate">
+
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <h4 class="card-header-title">{{ selectedService.name }}</h4>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="table-responsive">
-        <table class="table card-table">
-          <tr>
-            <td>
-              <h5>Numeracy</h5>
-              <p class="mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tempus elementum turpis,
-                quis iaculis magna rutrum quis. Vestibulum urna eros, maximus in lacus nec, facilisis accumsan orci.
-                Morbi nunc risus, dignissim id purus eget, pellentesque accumsan lacus. Vivamus pellentesque dapibus
-                sapien, id mollis velit eleifend vitae. Nulla malesuada velit leo. Aliquam tempus purus sollicitudin sem
-                dictum, quis luctus tortor mollis. Vestibulum at orci erat. Proin sagittis efficitur lectus, sit amet
-                viverra metus consectetur id. Praesent arcu enim, euismod sed massa in, pharetra ultricies enim. Fusce
-                sollicitudin leo lectus, a commodo lorem interdum id. Proin auctor mi in nunc mattis, sit amet malesuada
-                quam iaculis. Mauris nec nisl sed risus accumsan vulputate.</p>
-              <span class="badge badge-soft-primary mr-1">Numeracy</span>
-              <span class="badge badge-soft-info mr-1">Level</span>
-              <span class="badge badge-soft-info mr-1">Level</span>
-              <span class="badge badge-soft-info mr-1">Level</span>
-              <span class="badge badge-soft-info mr-1">Level</span>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <h5>Literacy</h5>
-              <p class="mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tempus elementum turpis,
-                quis iaculis magna rutrum quis. Vestibulum urna eros, maximus in lacus nec, facilisis accumsan orci.
-                Morbi nunc risus, dignissim id purus eget, pellentesque accumsan lacus. Vivamus pellentesque dapibus
-                sapien, id mollis velit eleifend vitae. Nulla malesuada velit leo. Aliquam tempus purus sollicitudin sem
-                dictum, quis luctus tortor mollis. Vestibulum at orci erat. Proin sagittis efficitur lectus, sit amet
-                viverra metus consectetur id. Praesent arcu enim, euismod sed massa in, pharetra ultricies enim. Fusce
-                sollicitudin leo lectus, a commodo lorem interdum id. Proin auctor mi in nunc mattis, sit amet malesuada
-                quam iaculis. Mauris nec nisl sed risus accumsan vulputate.</p>
-              <span class="badge badge-soft-primary mr-1">Literacy</span>
-              <span class="badge badge-soft-info mr-1">Level</span>
-              <span class="badge badge-soft-info mr-1">Level</span>
-              <span class="badge badge-soft-info mr-1">Level</span>
-              <span class="badge badge-soft-info mr-1">Level</span>
-            </td>
-          </tr>
-        </table>
-      </div>
+        <div class="table-responsive">
+          <table class="table card-table">
+            <tr *ngFor="let userService of userServices">
+              <td>
+                <h5>{{ userService.title }}</h5>
+                <div toggableContent [identifier]="userService.id" contentClass="ql-container">
+                  <quill-view-html [content]="userService.description" theme="snow"></quill-view-html>
+                </div>
+                <div *ngIf="userService.subjects && userService.subjects.length > 0">
+                  <span *ngFor="let subject of userService.subjects" class="badge badge-soft-info mr-1">
+                    {{ subject.name }}
+                  </span>
+                </div>
+                <div *ngIf="userService.disciplineTaxonomies && userService.disciplineTaxonomies.length > 0">
+                  <span *ngFor="let disciplineTaxonomy of userService.disciplineTaxonomies"
+                    class="badge badge-soft-info mr-1">
+                    {{ disciplineTaxonomy.name }}
+                  </span>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+      </ng-container>
+      <ng-template #noServiceTemplate>
+        <div class="card-body">
+          <p class="text-muted text-center m-0">{{ 'NoServiceSelected' | localize}}</p>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>
