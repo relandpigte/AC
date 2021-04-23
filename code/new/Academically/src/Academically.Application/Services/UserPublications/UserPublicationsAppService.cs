@@ -52,7 +52,8 @@ namespace Academically.Services.UserPublications
                 .WhereIf(!input.SearchFilter.IsNullOrWhiteSpace(), e => e.Title.ToLower().Contains(input.SearchFilter)
                     || e.Publisher.Contains(input.SearchFilter)
                     || e.Abstract.Contains(input.SearchFilter)
-                    || e.UserPublicationTags.Any(e => e.PublicationTag.Name.ToLower().Contains(input.SearchFilter)));
+                    || e.UserPublicationTags.Any(e => e.PublicationTag.Name.ToLower().Contains(input.SearchFilter)))
+                .OrderByDescending(e => e.PublicationDate);
 
             var totalCount = await query.CountAsync();
             var userPublications = await query

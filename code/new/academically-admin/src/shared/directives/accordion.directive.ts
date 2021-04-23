@@ -1,9 +1,9 @@
 import { AfterViewInit, Directive, ElementRef, Input } from '@angular/core';
 
 @Directive({
-  selector: '[collapse]'
+  selector: '[accordion]'
 })
-export class CollapseDirective implements AfterViewInit {
+export class AccordionDirective implements AfterViewInit {
   @Input() collapse = false;
   private _expandIconTemplate = '<i class="fe fe-chevron-down"></i>';
   private _collapseIconTemplate = '<i class="fe fe-chevron-up"></i>';
