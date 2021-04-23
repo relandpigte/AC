@@ -32,10 +32,23 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<PublicationTag> PublicationTags { get; set; }
         public virtual DbSet<UserPublication> UserPublications { get; set; }
         public virtual DbSet<UserPublicationTag> UserPublicationTags { get; set; }
+        public virtual DbSet<Service> Services { get; set; }
+        public virtual DbSet<ServiceMapping> ServiceMappings { get; set; }
+        public virtual DbSet<Subject> Subjects { get; set; }
+        public virtual DbSet<ServiceSubject> ServiceSubjects { get; set; }
+        public virtual DbSet<UserService> UserServices { get; set; }
+        public virtual DbSet<UserServiceSubject> UserServiceSubjects { get; set; }
+        public virtual DbSet<UserServiceDisciplineTaxonomy> UserServiceDisciplineTaxonomies { get; set; }
 
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ServiceSubject>().HasKey(t => new { t.ServiceId, t.SubjectId });
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

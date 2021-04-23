@@ -1,3 +1,7 @@
+.service-header {
+  margin-bottom: 15px;
+}
+
 .services {
   .service {
     .service-title {
@@ -8,19 +12,13 @@
       h4 {
         margin: 0
       }
-
-      .collapse-toggles {
-        .btn {
-          padding: 0px 5px;
-        }
-      }
     }
 
     ul.service-items {
+      margin-left    : 10px;
       list-style-type: none;
       padding-left   : 0;
       margin-bottom  : 0;
-      padding-top    : 10px;
 
       li {
         &:not(:last-child) {
@@ -30,4 +28,20 @@
     }
   }
 
+  .collapse-button {
+    cursor               : pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select  : none;
+    -khtml-user-select   : none;
+    -moz-user-select     : none;
+    -ms-user-select      : none;
+    user-select          : none;
+  }
+
+  .service-name {
+    width        : 90%;
+    white-space  : nowrap;
+    overflow     : hidden;
+    text-overflow: ellipsis;
+  }
 }

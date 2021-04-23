@@ -1,0 +1,99 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="danie (generated)" id="1619157413296-1">
+        <createTable tableName="academicallyuserservicedisciplinetaxonomies">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UserServiceId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DisciplineTaxonomyId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1619157413296-2">
+        <createTable tableName="academicallyuserservices">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Title" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Description" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ServiceMappingId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1619157413296-3">
+        <createTable tableName="academicallyuserservicesubjects">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UserServiceId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SubjectId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1619157413296-4">
+        <createIndex indexName="FK_USDTs_DisciplineTaxonomies_DisciplineTaxonomy_Id_idx" tableName="academicallyuserservicedisciplinetaxonomies">
+            <column name="DisciplineTaxonomyId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1619157413296-5">
+        <createIndex indexName="FK_USSs_Subjects_SubjectId_idx" tableName="academicallyuserservicesubjects">
+            <column name="SubjectId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1619157413296-6">
+        <createIndex indexName="FK_UserServices_ServiceMappings_ServiceMappingId_idx" tableName="academicallyuserservices">
+            <column name="ServiceMappingId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1619157413296-7">
+        <createIndex indexName="FK_UserServices_USDTs_UserServiceId_idx" tableName="academicallyuserservicedisciplinetaxonomies">
+            <column name="UserServiceId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1619157413296-8">
+        <createIndex indexName="FK_UserServices_USSs_UserServiceId_idx" tableName="academicallyuserservicesubjects">
+            <column name="UserServiceId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1619157413296-9">
+        <createIndex indexName="FK_UserServices_Users_CreatorUserId_idx" tableName="academicallyuserservices">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1619157413296-10">
+        <addForeignKeyConstraint baseColumnNames="DisciplineTaxonomyId" baseTableName="academicallyuserservicedisciplinetaxonomies" constraintName="FK_USDTs_DisciplineTaxonomies_DisciplineTaxonomy_Id" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallydisciplinetaxonomies" validate="true"/>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1619157413296-11">
+        <addForeignKeyConstraint baseColumnNames="UserServiceId" baseTableName="academicallyuserservicedisciplinetaxonomies" constraintName="FK_USDTs_UserServices_UserServiceId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyuserservices" validate="true"/>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1619157413296-12">
+        <addForeignKeyConstraint baseColumnNames="SubjectId" baseTableName="academicallyuserservicesubjects" constraintName="FK_USSs_Subjects_SubjectId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallysubjects" validate="true"/>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1619157413296-13">
+        <addForeignKeyConstraint baseColumnNames="UserServiceId" baseTableName="academicallyuserservicesubjects" constraintName="FK_USSs_UserServices_UserServiceId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyuserservices" validate="true"/>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1619157413296-14">
+        <addForeignKeyConstraint baseColumnNames="ServiceMappingId" baseTableName="academicallyuserservices" constraintName="FK_UserServices_ServiceMappings_ServiceMappingId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyservicemappings" validate="true"/>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1619157413296-15">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallyuserservices" constraintName="FK_UserServices_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
