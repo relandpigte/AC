@@ -283,6 +283,8 @@ deploy_backend_to_ci:
     - build_backend
   environment:
     name: ci_backend
+  only:
+    - develop
 
 deploy_frontend_to_ci:
   <<: *frontend
