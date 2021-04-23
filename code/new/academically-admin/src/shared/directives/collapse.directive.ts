@@ -12,23 +12,28 @@ export class CollapseDirective implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    const container = this._el.nativeElement as HTMLDivElement;
-    const collapseButton = container.getElementsByClassName('collapse-button')[0] as HTMLButtonElement;
-    const collapseContent = container.getElementsByClassName('collapse-content')[0] as HTMLDivElement;
-    collapseContent.style.overflow = 'hidden';
-    collapseContent.style.transition = 'all 200ms ease-in';
-    const height = collapseContent.getBoundingClientRect().height;
-    collapseButton.innerHTML = this.collapse ? this._expandIconTemplate : this._collapseIconTemplate;
-    collapseContent.style.height = `${this.collapse ? 0 : collapseContent.getBoundingClientRect().height}px`;
-    collapseButton.addEventListener('click', () => {
-      if (this.collapse) {
-        collapseButton.innerHTML = this._collapseIconTemplate;
-        collapseContent.style.height = `${height}px`;
-      } else {
-        collapseButton.innerHTML = this._expandIconTemplate;
-        collapseContent.style.height = '0px';
-      }
-      this.collapse = !this.collapse;
+    const self = this;
+    const container = $(self._el.nativeElement);
+    const collapseButton = container.find('.collapse-button').first();
+    const collapseContent = container.find('.collapse-content').first();
+    this.toggleCollapse(collapseButton);
+    if (self.collapse) {
+      collapseContent.hide()
+    }
+    collapseButton.on('click', () => {
+      collapseContent.slideToggle(100, () => {
+        this.collapse = !this.collapse;
+        this.toggleCollapse(collapseButton);
+      });
     });
+  }
+
+  private toggleCollapse(collapseButton: JQuery): void {
+    const self = this;
+    if (self.collapse) {
+      collapseButton.html(self._expandIconTemplate);
+    } else {
+      collapseButton.html(self._collapseIconTemplate);
+    }
   }
 }

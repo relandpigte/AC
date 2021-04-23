@@ -1,0 +1,107 @@
+<form class="form-horizontal" autocomplete="off" #createEditForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <abp-modal-header [title]="(model.id ? 'EditService' : 'AddService') | localize" (onCloseClick)="onCloseClick()">
+    </abp-modal-header>
+    <div class="card-body" [busy]="isSelectionLoading">
+
+      <div class="form-group required">
+        <label class="col-form-label" for="category">{{ 'Category' | localize}}</label>
+        <select [(ngModel)]="model.categoryId" (change)="onCategoryChange()" class="form-control" id="categoryId"
+          name="categoryId" required #categoryIdModel="ngModel" #categoryIdEl>
+          <option [ngValue]="undefined">{{ 'SelectCategory' | localize }}</option>
+          <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+        </select>
+        <abp-validation-summary [control]="categoryIdModel" [controlEl]="categoryIdEl">
+        </abp-validation-summary>
+      </div>
+
+      <div class="form-row">
+        <div *ngIf="services.length > 0" class="form-group col-md-6 required">
+          <label class="col-form-label" for="service">{{ 'Service' | localize}}</label>
+          <select [(ngModel)]="model.serviceId" (change)="onServiceChange()" class="form-control" id="serviceId"
+            name="serviceId" required #serviceIdModel="ngModel" #serviceIdEl>
+            <option [ngValue]="undefined">{{ 'SelectService' | localize }}</option>
+            <option *ngFor="let service of services" [value]="service.id">{{ service.name }}</option>
+          </select>
+          <abp-validation-summary [control]="serviceIdModel" [controlEl]="serviceIdEl">
+          </abp-validation-summary>
+        </div>
+
+        <div *ngIf="levels.length > 0" class="form-group col-md-6 required">
+          <label class="col-form-label" for="level">{{ 'Level' | localize}}</label>
+          <select [(ngModel)]="model.levelId" (change)="onLevelChange()" class="form-control" id="levelId"
+            name="levelId" required #levelIdModel="ngModel" #levelIdEl>
+            <option [ngValue]="undefined">{{ 'SelectLevel' | localize }}</option>
+            <option *ngFor="let level of levels" [value]="level.id">{{ level.service.name }}</option>
+          </select>
+          <abp-validation-summary [control]="levelIdModel" [controlEl]="levelIdEl">
+          </abp-validation-summary>
+        </div>
+      </div>
+
+      <ng-container *ngIf="model.levelId">
+        <ng-container *ngIf="levelsWithSubjects.includes(selectedLevel.service.name); else notSubjectTemplate">
+
+          <div class="form-group required mb-0">
+            <label class="col-form-label" for="subject">{{ 'Subject' | localize }}</label>
+            <input class="form-control" type="search" id="subject" [(ngModel)]="subject" name="subject"
+              typeaheadOptionField="name" [typeahead]="subjects" (typeaheadOnSelect)="onSubjectSelect($event.item)"
+              container="body" />
+            <div class="ac-alerts">
+              <div *ngFor="let subject of model.subjects" class="alert alert-info alert-dismissible ac-alert"
+                role="alert">
+                {{ subject.name }}
+                <button (click)="onRemoveSubjectClick(subject.id)" type="button" class="close" data-dismiss="alert"
+                  aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </ng-container>
+        <ng-template #notSubjectTemplate>
+
+          <div class="form-group required">
+            <label class="col-form-label" for="title">{{ 'Title' | localize}}</label>
+            <input [(ngModel)]="model.title" class="form-control" id="title" name="title" type="text" required
+              #titleModel="ngModel" #titleEl />
+            <abp-validation-summary [control]="titleModel" [controlEl]="titleEl">
+            </abp-validation-summary>
+          </div>
+
+          <div class="form-group required mb-0">
+            <label class="col-form-label" for="DisciplineTaxonomies">{{ 'KnowledgeBase' | localize }}</label>
+            <input class="form-control" type="search" id="DisciplineTaxonomies" [(ngModel)]="disciplineTaxonomy"
+              name="DisciplineTaxonomies" typeaheadOptionField="name" [typeahead]="disciplineTaxonomiesTypeaheadSource"
+              [typeaheadAsync]="true" [typeaheadOptionsLimit]="10"
+              (typeaheadOnSelect)="onDisciplineTaxonomySelect($event.item)" container="body" />
+            <div class="ac-alerts">
+              <div *ngFor="let disciplineTaxonomy of model.disciplineTaxonomies"
+                class="alert alert-info alert-dismissible ac-alert" role="alert">
+                {{ disciplineTaxonomy.name }}
+                <button (click)="onRemoveDisciplineTaxonomyClick(disciplineTaxonomy.id)" type="button" class="close"
+                  data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </ng-template>
+      </ng-container>
+
+      <div *ngIf="model.disciplineTaxonomies.length > 0 || model.subjects.length > 0" class="form-group required mb-0">
+        <label class="col-form-label" for="Description">{{ 'Description' | localize}}</label>
+        <quill-editor [(ngModel)]="model.description" #descriptionModel="ngModel" #descriptionEl id="Description"
+          name="Description" required></quill-editor>
+        <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl.elementRef.nativeElement">
+        </abp-validation-summary>
+      </div>
+
+    </div>
+    <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading"
+      [saveDisabled]="!createEditForm.form.valid || isLoading" (onCancelClick)="onCloseClick()">
+    </abp-modal-footer>
+  </div>
+</form>

@@ -14,7 +14,7 @@
         </createTable>
     </changeSet>
      <changeSet author="Gilbert (generated)" id="1618545332640-45">
-        <createTable tableName="academicallyservicemapping">
+        <createTable tableName="academicallyservicemappings">
             <column name="Id" type="CHAR(36)">
                 <constraints nullable="false"/>
             </column>
@@ -30,18 +30,18 @@
         </createTable>
     </changeSet>
     <changeSet author="Gilbert (generated)" id="1618545332640-78">
-        <addPrimaryKey columnNames="Id" constraintName="PRIMARY" tableName="academicallyservicemapping"/>
+        <addPrimaryKey columnNames="Id" constraintName="PRIMARY" tableName="academicallyservicemappings"/>
     </changeSet>
     <changeSet author="Gilbert (generated)" id="1618545332640-79">
         <addPrimaryKey columnNames="Id" constraintName="PRIMARY" tableName="academicallyservices"/>
     </changeSet>
     <changeSet author="Gilbert (generated)" id="1618545727615-234">
-        <addForeignKeyConstraint baseColumnNames="Node1Id" baseTableName="academicallyservicemapping" constraintName="FK_Services_ServiceMapping_Node1Id" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="Id" referencedTableName="academicallyservices"/>
+        <addForeignKeyConstraint baseColumnNames="Node1Id" baseTableName="academicallyservicemappings" constraintName="FK_Services_ServiceMappings_Node1Id" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="Id" referencedTableName="academicallyservices"/>
     </changeSet>
     <changeSet author="Gilbert (generated)" id="1618545727615-235">
-        <addForeignKeyConstraint baseColumnNames="Node2Id" baseTableName="academicallyservicemapping" constraintName="FK_Services_ServiceMapping_Node2Id" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="Id" referencedTableName="academicallyservices"/>
+        <addForeignKeyConstraint baseColumnNames="Node2Id" baseTableName="academicallyservicemappings" constraintName="FK_Services_ServiceMappings_Node2Id" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="Id" referencedTableName="academicallyservices"/>
     </changeSet>
     <changeSet author="Gilbert (generated)" id="1618545727615-236">
-        <addForeignKeyConstraint baseColumnNames="Node3Id" baseTableName="academicallyservicemapping" constraintName="FK_Services_ServiceMapping_Node3Id" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="Id" referencedTableName="academicallyservices"/>
+        <addForeignKeyConstraint baseColumnNames="Node3Id" baseTableName="academicallyservicemappings" constraintName="FK_Services_ServiceMappings_Node3Id" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="Id" referencedTableName="academicallyservices"/>
     </changeSet>
 </databaseChangeLog>

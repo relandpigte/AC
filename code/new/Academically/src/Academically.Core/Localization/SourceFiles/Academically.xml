@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="NoServiceSelected">No Service Selected</text>
+    <text name="NoServicesFound">No Services Found</text>
+    <text name="Subject">Subject</text>
+    <text name="SelectService">Select Service</text>
+    <text name="SelectCategory">Select Category</text>
+    <text name="Category">Category</text>
+    <text name="EditService">Edit Service</text>
+    <text name="AddService">Add Service</text>
+    <text name="Categories">Categories</text>
     <text name="NoEducation">No Education</text>
     <text name="NoFormalEducation">No Formal Education</text>
     <text name="NoPublicationsFound">No Publications Found</text>
