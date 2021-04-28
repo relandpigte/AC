@@ -60,7 +60,7 @@
       </div>
     </div>
   </div>
-  <div class="card-body pt-0 pb-0" [busy]="isTableLoading">
+  <div class="card-body pt-0 pb-0" [loader]="isTableLoading">
     <table class="table card-table">
       <tr *ngFor="let studentRating of studentRatings
         | paginate: { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }">

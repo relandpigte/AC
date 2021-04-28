@@ -1,4 +1,4 @@
-<div class="card p-scroll-tag">
+<div class="card p-scroll-tag" [loader]="isSummaryLoading">
   <div class="card-header">
     <div class="row align-items-center">
       <div class="col">
@@ -11,7 +11,7 @@
       </div>
     </div>
   </div>
-  <div class="card-header h-auto" [busy]="isSummaryLoading">
+  <div class="card-header h-auto">
     <div class="d-inline-block mt-3 mb-3">
       <div class="row align-items-center">
         <div class="col">
@@ -110,7 +110,7 @@
       </div>
     </div>
   </div>
-  <div class="card-body pt-0 pb-0" [busy]="isTableLoading">
+  <div class="card-body pt-0 pb-0" [loader]="isTableLoading">
     <table class="table card-table">
       <tr *ngFor="let tutorRating of tutorRatings
         | paginate: { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }">

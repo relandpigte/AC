@@ -2,8 +2,8 @@
   <div class="card-header">
     <h4 class="card-header-title">{{ 'Verifications' | localize}}</h4>
   </div>
-  <div class="card-body">
-    <div [busy]="isLoading" class="list-group list-group-flush my-n3">
+  <div class="card-body" [loader]="isLoading">
+    <div class="list-group list-group-flush my-n3">
       <div class="list-group-item">
         <div class="row align-items-center">
           <div class="col">

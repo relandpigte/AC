@@ -1,7 +1,7 @@
-<div class="row" [busy]="isLoading">
+<div class="row">
   <div class="col-12 col-lg-6 col-xl">
     <div class="card">
-      <div class="card-body">
+      <div class="card-body" [loader]="isLoading">
         <div class="row align-items-center">
           <div class="col">
             <h6 class="text-uppercase text-muted mb-2">{{ 'TotalHours' | localize }}</h6>
@@ -18,7 +18,7 @@
 
   <div class="col-12 col-lg-6 col-xl">
     <div class="card">
-      <div class="card-body">
+      <div class="card-body" [loader]="isLoading">
         <div class="row align-items-center">
           <div class="col">
             <h6 class="text-uppercase text-muted mb-2">{{ 'AcademicLevel' | localize }}</h6>
@@ -36,7 +36,7 @@
 
   <div class="col-12 col-lg-6 col-xl">
     <div class="card">
-      <div class="card-body">
+      <div class="card-body" [loader]="isLoading">
         <div class="row align-items-center">
           <div class="col">
             <h6 class="text-uppercase text-muted mb-2">{{ 'UserType' | localize }}</h6>
@@ -52,7 +52,7 @@
 
   <div class="col-12 col-lg-6 col-xl">
     <div class="card">
-      <div class="card-body">
+      <div class="card-body" [loader]="isLoading">
         <div class="row align-items-center">
           <div class="col">
             <h6 class="text-uppercase text-muted mb-2">{{ 'PositiveReviews' | localize }}</h6>

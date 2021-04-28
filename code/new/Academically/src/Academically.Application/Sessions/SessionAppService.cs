@@ -1,24 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Auditing;
+using Abp.Domain.Repositories;
 using Academically.Authorization.Users;
 using Academically.Configuration;
+using Academically.Domain.Entities;
 using Academically.Domain.Services.Documents;
 using Academically.Sessions.Dto;
+using Microsoft.EntityFrameworkCore;
 
 namespace Academically.Sessions
 {
     public class SessionAppService : AcademicallyAppServiceBase, ISessionAppService
     {
         private readonly UserManager _userManager;
+        private readonly IRepository<UserEducation, Guid> _userEducationsRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
 
         public SessionAppService(
             UserManager userManager,
+            IRepository<UserEducation, Guid> userEducationsRepository,
             IDocumentsDomainService documentsDomainService
             )
         {
             _userManager = userManager;
+            _userEducationsRepository = userEducationsRepository;
             _documentsDomainService = documentsDomainService;
         }
 
@@ -47,6 +55,11 @@ namespace Academically.Sessions
                 var user = await GetCurrentUserAsync();
                 output.User = ObjectMapper.Map<UserLoginInfoDto>(user);
                 output.User.Roles = await _userManager.GetRolesAsync(user);
+                output.User.CurrentUniversity = await _userEducationsRepository.GetAll()
+                    .OrderByDescending(e => e.EndYear)
+                        .ThenByDescending(e => e.StartYear)
+                    .Select(e => e.University.HeProvider)
+                    .FirstOrDefaultAsync();
 
                 if (user.ProfilePictureDocumentId.HasValue)
                 {

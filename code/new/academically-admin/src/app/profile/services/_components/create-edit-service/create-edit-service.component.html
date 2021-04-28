@@ -2,7 +2,7 @@
   <div class="modal-card card">
     <abp-modal-header [title]="(model.id ? 'EditService' : 'AddService') | localize" (onCloseClick)="onCloseClick()">
     </abp-modal-header>
-    <div class="card-body" [busy]="isSelectionLoading">
+    <div class="card-body" [loader]="isSelectionLoading">
 
       <div class="form-group required">
         <label class="col-form-label" for="category">{{ 'Category' | localize}}</label>

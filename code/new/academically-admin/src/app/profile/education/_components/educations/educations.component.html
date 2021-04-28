@@ -12,7 +12,7 @@
       </div>
     </div>
   </div>
-  <div class="table-responsive">
+  <div class="table-responsive" [loader]="isLoading">
     <table class="table table-nowrap table-align-top card-table">
       <tbody>
         <tr *ngFor="let userEducation of userEducations">

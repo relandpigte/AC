@@ -13,6 +13,7 @@ import { BodyClassDirective } from './directives/body-class.directive';
 import { Select2Directive } from './directives/select2.directive';
 import { ToggableContentDirective } from './directives/toggable-content.directive';
 import { AccordionDirective } from './directives/accordion.directive';
+import { LoaderDirective } from './directives/loader.directive';
 
 import { AppSessionService } from './session/app-session.service';
 import { AppUrlService } from './nav/app-url.service';
@@ -42,6 +43,7 @@ import { TableHeaderSortComponent } from './components/table-header-sort/table-h
     Select2Directive,
     ToggableContentDirective,
     AccordionDirective,
+    LoaderDirective,
     AbpPaginationControlsComponent,
     AbpValidationSummaryComponent,
     AbpModalHeaderComponent,
@@ -58,6 +60,7 @@ import { TableHeaderSortComponent } from './components/table-header-sort/table-h
     Select2Directive,
     ToggableContentDirective,
     AccordionDirective,
+    LoaderDirective,
     AbpPaginationControlsComponent,
     AbpValidationSummaryComponent,
     AbpModalHeaderComponent,
