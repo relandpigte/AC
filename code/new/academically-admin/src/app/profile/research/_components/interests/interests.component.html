@@ -13,7 +13,7 @@
     </div>
   </div>
   <div class="table-responsive">
-    <table class="table table-nowrap card-table" [busy]="isTableLoading">
+    <table class="table table-nowrap card-table" [loader]="isTableLoading">
       <tr *ngFor="let userResearchInterest of userResearchInterests
       | paginate: { id: 'interest', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }">
         <td>

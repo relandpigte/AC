@@ -4,6 +4,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { UserEducationDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash-es';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { CreateEditEducationComponent } from './create-edit-education/create-edit-education.component';
 import { ViewEducationDocumentsComponent } from './view-education-documents/view-education-documents.component';
 
@@ -15,6 +16,7 @@ import { ViewEducationDocumentsComponent } from './view-education-documents/view
 export class EducationsComponent extends AppComponentBase implements OnInit {
   userId: number;
   userEducations: UserEducationDto[] = [];
+  isLoading = false;
 
   constructor(
     injector: Injector,
@@ -65,10 +67,17 @@ export class EducationsComponent extends AppComponentBase implements OnInit {
   }
 
   private getUserEducations(): void {
+    this.isLoading = true;
     this._userEducationsService.getAll(this.userId)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+      )
       .subscribe(userEducations => {
         this.userEducations = userEducations;
-      })
+      });
   }
 
   private showCreateEditUserEducationModal(userEducation?: UserEducationDto) {

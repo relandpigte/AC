@@ -14,6 +14,7 @@ export class ServicesComponent extends AppComponentBase implements OnInit {
   collapsedItems: boolean[] = [];
   categories: ServiceDto[] = [];
   isLoading = false;
+  isServicesLoading = false;
   userServices: UserServiceDto[] = [];
   selectedService: ServiceDto;
 
@@ -70,12 +71,12 @@ export class ServicesComponent extends AppComponentBase implements OnInit {
   }
 
   private getUserServices(service: ServiceDto): void {
-    this.isLoading = true;
+    this.isServicesLoading = true;
     this._userServicesService.get(this.appSession.userId, service.id)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
-          this.isLoading = false;
+          this.isServicesLoading = false;
         }),
       )
       .subscribe(userServices => {
