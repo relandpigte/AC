@@ -1,9 +1,9 @@
-import { Directive, ElementRef, Input, OnInit } from '@angular/core';
+import { Directive, ElementRef, Input } from '@angular/core';
 
 @Directive({
   selector: '[loader]'
 })
-export class LoaderDirective implements OnInit {
+export class LoaderDirective {
   private _loaderTemplate = `
     <div class="loader">
       <div class="spinner-bg"></div>
@@ -20,8 +20,6 @@ export class LoaderDirective implements OnInit {
         + self.getPixelNumberValue(block.css('padding-top'));
       const blockLeftMargin = self.getPixelNumberValue(block.css('margin-left'))
         + self.getPixelNumberValue(block.css('padding-left'));
-      console.log(blockTopMargin);
-      console.log(blockLeftMargin);
       block.addClass('loader-parent');
       self._loader = $(self._loaderTemplate);
       self._loader.css('margin-top', `-${blockTopMargin}px`);
@@ -35,12 +33,7 @@ export class LoaderDirective implements OnInit {
     }
   }
 
-  constructor(private _el: ElementRef) {
-
-  }
-
-  ngOnInit(): void {
-  }
+  constructor(private _el: ElementRef) { }
 
   private getPixelNumberValue(pixelValue: string): number {
     return +pixelValue.replace('px', '');

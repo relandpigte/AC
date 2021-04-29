@@ -122,6 +122,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_Research_ResearchPublications_Update,
                 PermissionNames.Pages_Profile_Research_ResearchPublications_Delete,
                 PermissionNames.Pages_Profile_IndustryExperience,
+                PermissionNames.Pages_AccountSettings,
                 PermissionNames.Pages_Widgets_Verifications
             );
 
@@ -165,6 +166,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_Research_ResearchPublications_Update,
                 PermissionNames.Pages_Profile_Research_ResearchPublications_Delete,
                 PermissionNames.Pages_Profile_IndustryExperience,
+                PermissionNames.Pages_AccountSettings,
                 PermissionNames.Pages_Widgets_Verifications
             );
 
