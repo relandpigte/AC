@@ -57,6 +57,9 @@ namespace Academically.Authorization
             profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_IndustryExperience, L("IndustryExperience"));
 
 
+            var accountSettingsPermission = context.CreatePermission(PermissionNames.Pages_AccountSettings, L("AccountSettings"));
+
+
             var userPermission = context.CreatePermission(PermissionNames.Pages_Users, L("Users"));
             userPermission.CreateChildPermission(PermissionNames.Pages_Users_Create, L("Create"));
             userPermission.CreateChildPermission(PermissionNames.Pages_Users_Update, L("Update"));
