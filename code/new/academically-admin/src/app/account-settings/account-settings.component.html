@@ -1,0 +1,49 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10 col-xl-8">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">
+                {{ 'Overview' | localize }}
+              </h6>
+              <h1 class="header-title">
+                {{ 'Account' | localize }}
+              </h1>
+            </div>
+          </div>
+          <div class="row align-items-center">
+            <div class="col">
+
+              <ul class="nav nav-tabs nav-overflow header-tabs">
+                <li *ngIf="permission.isGranted('Pages.AccountSettings.General')" class="nav-item">
+                  <a [routerLink]="['general']" routerLinkActive="active" class="nav-link">
+                    {{ 'General' | localize }}
+                  </a>
+                </li>
+                <li *ngIf="permission.isGranted('Pages.AccountSettings.Billing')" class="nav-item">
+                  <a [routerLink]="['billing']" routerLinkActive="active" class="nav-link">
+                    {{ 'Billing' | localize }}
+                  </a>
+                </li>
+                <li *ngIf="permission.isGranted('Pages.AccountSettings.Security')" class="nav-item">
+                  <a [routerLink]="['security']" routerLinkActive="active" class="nav-link">
+                    {{ 'Security' | localize }}
+                  </a>
+                </li>
+                <li *ngIf="permission.isGranted('Pages.AccountSettings.Notifications')" class="nav-item">
+                  <a [routerLink]="['notifications']" routerLinkActive="active" class="nav-link">
+                    {{ 'Notifications' | localize }}
+                  </a>
+                </li>
+              </ul>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

@@ -40,6 +40,8 @@ namespace Academically.Users.Dto
         public string Country { get; set; }
         public string WebsiteUrl { get; set; }
         public string About { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+        public string PhoneNumber { get; set; }
         public DateTime? LastLoginTime { get; set; }
         public DateTime CreationTime { get; set; }
 
@@ -48,6 +50,7 @@ namespace Academically.Users.Dto
         public string CoverPhotoUrl { get; set; }
         public string ProfilePictureUrl { get; set; }
         public string CurrentUniversity { get; set; }
+        public string TimeZoneId { get; set; }
         public IEnumerable<string> RoleNames { get; set; }
         public IEnumerable<string> RoleDisplayNames { get; set; }
     }

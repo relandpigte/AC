@@ -58,6 +58,10 @@ namespace Academically.Authorization
 
 
             var accountSettingsPermission = context.CreatePermission(PermissionNames.Pages_AccountSettings, L("AccountSettings"));
+            accountSettingsPermission.CreateChildPermission(PermissionNames.Pages_AccountSettings_General, L("General"));
+            accountSettingsPermission.CreateChildPermission(PermissionNames.Pages_AccountSettings_Billing, L("Billing"));
+            accountSettingsPermission.CreateChildPermission(PermissionNames.Pages_AccountSettings_Security, L("Security"));
+            accountSettingsPermission.CreateChildPermission(PermissionNames.Pages_AccountSettings_Notifications, L("Notifications"));
 
 
             var userPermission = context.CreatePermission(PermissionNames.Pages_Users, L("Users"));

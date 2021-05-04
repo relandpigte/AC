@@ -17,6 +17,7 @@ import { ReplaySubject } from 'rxjs';
 
 @Injectable()
 export abstract class AppComponentBase implements OnDestroy {
+  public isTutor: boolean;
   protected destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   localizationSourceName = AppConsts.localization.defaultLocalizationSourceName;
@@ -49,6 +50,9 @@ export abstract class AppComponentBase implements OnDestroy {
       ignoreBackdropClick: true,
       keyboard: false,
     };
+    if (this.appSession.user) {
+      this.isTutor = this.appSession.user.roles.findIndex(e => e.toLowerCase() === 'tutor') >= 0;
+    }
   }
 
   ngOnDestroy(): void {

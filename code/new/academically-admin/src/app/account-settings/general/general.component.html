@@ -1,0 +1,233 @@
+<form [loader]="isLoading" autocomplete="off" #createEditForm="ngForm" (ngSubmit)="onFormSubmit()">
+
+  <div class="row justify-content-between align-items-center">
+    <div class="col">
+      <div class="row align-items-center">
+        <div class="col-auto">
+          <div class="avatar">
+            <img class="avatar-img rounded-circle" [src]="getProfilePicture(user.profilePictureUrl)" alt="...">
+          </div>
+        </div>
+        <div class="col ml-n2">
+          <h4 class="mb-1">
+            {{ user.name }} {{ user.surname }}
+          </h4>
+          <small class="text-muted">
+            {{ isTutor ? 'Tutor' : 'Student' }}
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-5">
+
+  <div class="form-row">
+
+    <div class="form-group col-md-6 required">
+      <label class="col-form-label" for="name">{{ 'FirstName' | localize}}</label>
+      <input [(ngModel)]="model.name" #nameModel="ngModel" #nameEl class="form-control" type="text" id="name"
+        name="name" required />
+      <abp-validation-summary [control]="nameModel" [controlEl]="nameEl">
+      </abp-validation-summary>
+    </div>
+
+    <div class="form-group col-md-6 required">
+      <label class="col-form-label" for="surname">{{ 'LastName' | localize}}</label>
+      <input [(ngModel)]="model.surname" #surnameModel="ngModel" #surnameEl class="form-control" type="text"
+        id="surname" name="surname" required />
+      <abp-validation-summary [control]="surnameModel" [controlEl]="surnameEl">
+      </abp-validation-summary>
+    </div>
+
+  </div>
+
+  <div class="form-row">
+
+    <div class="form-group col-md-6 required">
+      <label class="col-form-label" for="dateOfBirth">{{ 'DateOfBirth' | localize}}</label>
+      <div class="input-group input-group-merge" (click)="dp.show()">
+        <input [(ngModel)]="dateOfBirth" #dateOfBirthModel="ngModel" #dateOfBirthEl
+          class="form-control form-control-appended" type="text" id="dateOfBirth" name="dateOfBirth" required
+          #dp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" />
+        <div class="input-group-append">
+          <div class="input-group-text">
+            <span class="fas fa-calendar"></span>
+          </div>
+        </div>
+      </div>
+      <abp-validation-summary [control]="dateOfBirthModel" [controlEl]="dateOfBirthEl">
+      </abp-validation-summary>
+    </div>
+
+    <div class="form-group col-md-6 required">
+      <label class="col-form-label" for="phoneNumber">{{ 'PhoneNumber' | localize}}</label>
+      <div>
+        <ngx-intl-tel-input [(ngModel)]="phoneNumber" [enableAutoCountrySelect]="false" [searchCountryFlag]="true"
+          [phoneValidation]="true" [enablePlaceholder]="true" [selectFirstCountry]="false"
+          [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+          [selectedCountryISO]="CountryISO.UnitedKingdom" [maxLength]="15" [separateDialCode]="true"
+          [numberFormat]="PhoneNumberFormat.International" id="PhoneNumber" name="PhoneNumber"
+          #phoneNumberModel="ngModel"
+          [class.is-invalid]="phoneNumberModel.invalid && phoneNumberModel.touched && phoneNumberModel.errors.required"
+          required>
+        </ngx-intl-tel-input>
+      </div>
+      <ng-container *ngIf="phoneNumberModel.invalid && phoneNumberModel.touched">
+        <span *ngIf="!!phoneNumberModel.errors.required" class="error invalid-feedback"
+          [class.d-block]="phoneNumberModel.errors.required">
+          {{ 'ThisFieldIsRequired' | localize }}
+        </span>
+      </ng-container>
+    </div>
+
+  </div>
+
+  <div class="form-group required">
+    <label class="col-form-label" for="emailAddress">{{ 'EmailAddress' | localize}}</label>
+    <input [(ngModel)]="model.emailAddress" #emailAddressModel="ngModel" #emailAddressEl class="form-control"
+      type="email" id="emailAddress" name="emailAddress" required />
+    <abp-validation-summary [control]="emailAddressModel" [controlEl]="emailAddressEl">
+    </abp-validation-summary>
+  </div>
+
+  <div class="form-group required">
+    <label class="col-form-label" for="about">{{ 'About' | localize}}</label>
+    <quill-editor [(ngModel)]="model.about" #aboutModel="ngModel" #aboutEl id="about" name="about" required>
+    </quill-editor>
+    <abp-validation-summary [control]="aboutModel" [controlEl]="aboutEl.elementRef.nativeElement">
+    </abp-validation-summary>
+  </div>
+
+  <div class="form-group required">
+    <label class="col-form-label" for="TimeZone">{{ 'TimeZone' | localize }}</label>
+    <select [(ngModel)]="model.timeZoneId" id="TimeZone" name="TimeZone" type="text" class="form-control"
+      #timeZoneModel="ngModel" #timeZoneEl required>
+      <option [ngValue]="null">{{ 'SelectTimeZone' | localize }}</option>
+      <option *ngFor="let timezone of timezones" [value]="timezone.id">{{ timezone.name }}</option>
+    </select>
+    <abp-validation-summary [control]="timeZoneModel" [controlEl]="timeZoneEl"> </abp-validation-summary>
+  </div>
+
+  <div class="form-group required">
+    <label class="col-form-label" for="country">{{ 'Country' | localize}}</label>
+    <select [(ngModel)]="model.country" #countryModel="ngModel" #countryEl class="form-control" id="country"
+      name="country" required>
+      <option [ngValue]="null">{{ 'SelectCountry' | localize }}</option>
+      <option *ngFor="let country of countries" [value]="country.name">{{ country.name }}</option>
+    </select>
+    <abp-validation-summary [control]="countryModel" [controlEl]="countryEl">
+    </abp-validation-summary>
+  </div>
+
+
+  <div class="form-group">
+    <label class="col-form-label" for="AddressLine1">{{ 'AddressLine1' | localize }}</label>
+    <input [(ngModel)]="model.addressLine1" id="AddressLine1" name="AddressLine1" type="text" class="form-control"
+      #addressLine1Model="ngModel" #addressLine1El />
+    <abp-validation-summary [control]="addressLine1Model" [controlEl]="addressLine1El">
+    </abp-validation-summary>
+  </div>
+  <div class="form-group">
+    <label class="col-form-label" for="AddressLine2">{{ 'AddressLine2' | localize }}</label>
+    <input [(ngModel)]="model.addressLine2" id="AddressLine2" name="AddressLine2" type="text" class="form-control" />
+  </div>
+
+  <div class="form-group">
+    <label class="col-form-label" for="City">{{ 'City' | localize }}</label>
+    <input [(ngModel)]="model.city" id="City" name="City" type="text" class="form-control" #cityModel="ngModel"
+      #cityEl />
+    <abp-validation-summary [control]="cityModel" [controlEl]="cityEl"> </abp-validation-summary>
+  </div>
+
+  <div class="form-row">
+
+    <div class="form-group col-md-6">
+      <label class="col-form-label" for="ZipOrPostCode">{{ 'ZipOrPostCode' | localize }}</label>
+      <input [(ngModel)]="model.zipOrPostCode" id="ZipOrPostCode" name="ZipOrPostCode" type="text" class="form-control"
+        #zipOrPostCodeModel="ngModel" #zipOrPostCodeEl />
+      <abp-validation-summary [control]="zipOrPostCodeModel" [controlEl]="zipOrPostCodeEl"></abp-validation-summary>
+    </div>
+
+    <div class="form-group col-md-6">
+      <label class="col-form-label" for="StateOrProvince">{{ 'StateOrProvince' | localize }}</label>
+      <input [(ngModel)]="model.stateOrProvince" id="StateOrProvince" name="StateOrProvince" type="text"
+        class="form-control" #stateOrProvinceModel="ngModel" #stateOrProvinceEl />
+      <abp-validation-summary [control]="stateOrProvinceModel" [controlEl]="stateOrProvinceEl"></abp-validation-summary>
+    </div>
+
+  </div>
+
+  <button class="btn btn-primary" [disabled]="!createEditForm.form.valid || isLoading">
+    {{ 'SaveChanges' | localize }}
+  </button>
+
+  <hr class="my-5">
+
+  <div class="row">
+    <div class="col-12 col-md-6">
+      <div class="form-group">
+        <label class="mb-1">
+          Public profile
+        </label>
+        <small class="form-text text-muted">
+          Making your profile public means that anyone on the Dashkit network will be able to find you.
+        </small>
+        <div class="row">
+          <div class="col-auto">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="switchOne">
+              <label class="custom-control-label" for="switchOne"></label>
+            </div>
+          </div>
+          <div class="col ml-n2">
+            <small class="text-muted">
+              You're currently invisible
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="form-group">
+        <label class="mb-1">
+          Allow for additional Bookings
+        </label>
+        <small class="form-text text-muted">
+          If you are available for hire outside of the current situation, you can encourage others to hire you.
+        </small>
+        <div class="row">
+          <div class="col-auto">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="switchTwo" checked>
+              <label class="custom-control-label" for="switchTwo"></label>
+            </div>
+          </div>
+          <div class="col ml-n2">
+            <small class="text-muted">
+              You're currently available
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="mt-4 mb-5">
+
+  <div class="row justify-content-between">
+    <div class="col-12 col-md-6">
+      <h4>
+        Delete your account
+      </h4>
+      <p class="small text-muted mb-md-0">
+        Please note, deleting your account is a permanent action and will no be recoverable once completed.
+      </p>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-danger">
+        Delete
+      </button>
+    </div>
+  </div>
+</form>

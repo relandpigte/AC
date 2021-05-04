@@ -51,6 +51,10 @@
 
 
         public const string Pages_AccountSettings = "Pages.AccountSettings";
+        public const string Pages_AccountSettings_General = "Pages.AccountSettings.General";
+        public const string Pages_AccountSettings_Billing = "Pages.AccountSettings.Billing";
+        public const string Pages_AccountSettings_Security = "Pages.AccountSettings.Security";
+        public const string Pages_AccountSettings_Notifications = "Pages.AccountSettings.Notifications";
 
 
         public const string Pages_Users = "Pages.Users";

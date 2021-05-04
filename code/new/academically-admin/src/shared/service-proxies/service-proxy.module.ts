@@ -31,6 +31,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.TestDataGeneratorServiceProxy,
         ApiServiceProxies.ServicesServiceProxy,
         ApiServiceProxies.UserServicesServiceProxy,
+        ApiServiceProxies.TimeZonesServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })
