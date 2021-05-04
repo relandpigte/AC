@@ -21,6 +21,8 @@ namespace Academically.Authorization.Users
         public DateTime? DateOfBirth { get; set; }
         public Guid? CoverPhotoDocumentId { get; set; }
         public Guid? ProfilePictureDocumentId { get; set; }
+        public double? Longitude { get; set; }
+        public double? Latitude { get; set; }
 
         [ForeignKey("CoverPhotoDocumentId")]
         public virtual Document CoverPhotoDocument { get; set; }

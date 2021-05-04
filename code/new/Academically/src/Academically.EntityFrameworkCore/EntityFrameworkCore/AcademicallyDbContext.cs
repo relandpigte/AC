@@ -39,6 +39,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<UserService> UserServices { get; set; }
         public virtual DbSet<UserServiceSubject> UserServiceSubjects { get; set; }
         public virtual DbSet<UserServiceDisciplineTaxonomy> UserServiceDisciplineTaxonomies { get; set; }
+        public virtual DbSet<TimeZone> TimeZones { get; set; }
 
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)

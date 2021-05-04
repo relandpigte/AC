@@ -22,24 +22,29 @@
         <div class="col">
           <ul class="nav nav-tabs nav-overflow header-tabs profile-menu">
             <li *ngIf="permission.isGranted('Pages.Profile.Introduction')" class="nav-item">
-              <a [routerLink]="['introduction']" routerLinkActive="active" class="nav-link">{{
-                'Introduction' | localize }}</a>
+              <a [routerLink]="['introduction']" routerLinkActive="active" class="nav-link">
+                {{ 'Introduction' | localize }}
+              </a>
             </li>
             <li *ngIf="permission.isGranted('Pages.Profile.Services')" class="nav-item">
               <a [routerLink]="['services']" routerLinkActive="active" class="nav-link">
-                {{ 'Services' | localize }}</a>
+                {{ 'Services' | localize }}
+              </a>
             </li>
             <li *ngIf="permission.isGranted('Pages.Profile.Education')" class="nav-item">
               <a [routerLink]="['education']" routerLinkActive="active" class="nav-link">
-                {{ 'Education' | localize }}</a>
+                {{ 'Education' | localize }}
+              </a>
             </li>
             <li *ngIf="permission.isGranted('Pages.Profile.Research')" class="nav-item">
               <a [routerLink]="['research']" routerLinkActive="active" class="nav-link">
-                {{ 'Research' | localize }}</a>
+                {{ 'Research' | localize }}
+              </a>
             </li>
             <li *ngIf="permission.isGranted('Pages.Profile.IndustryExperience')" class="nav-item">
               <a [routerLink]="['industry-experience']" routerLinkActive="active" class="nav-link">
-                {{ 'IndustryExperience' | localize }}</a>
+                {{ 'IndustryExperience' | localize }}
+              </a>
             </li>
           </ul>
         </div>

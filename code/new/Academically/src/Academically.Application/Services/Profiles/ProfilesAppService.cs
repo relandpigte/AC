@@ -1,5 +1,8 @@
 ﻿using Abp.Authorization;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
+using Abp.Timing;
 using Academically.Authorization;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
@@ -27,6 +30,7 @@ namespace Academically.Services.Profiles
         private readonly IRepository<TutorRating, Guid> _tutorRatingsRepository;
         private readonly IRepository<PassportVerification, Guid> _passportVerifications;
         private readonly IDocumentsDomainService _documentsDomainService;
+        private readonly ISettingManager _settingManager;
 
         public ProfilesAppService(
             UserManager userManager,
@@ -35,7 +39,8 @@ namespace Academically.Services.Profiles
             IRepository<StudentRating, Guid> studentRatingsRepository,
             IRepository<TutorRating, Guid> tutorRatingsRepository,
             IRepository<PassportVerification, Guid> passportVerifications,
-            IDocumentsDomainService documentsDomainService
+            IDocumentsDomainService documentsDomainService,
+            ISettingManager settingManager
             )
         {
             _userManager = userManager;
@@ -45,6 +50,7 @@ namespace Academically.Services.Profiles
             _tutorRatingsRepository = tutorRatingsRepository;
             _passportVerifications = passportVerifications;
             _documentsDomainService = documentsDomainService;
+            _settingManager = settingManager;
         }
 
         public async Task<UserDto> Get(long id)
@@ -153,6 +159,20 @@ namespace Academically.Services.Profiles
             }
 
             return profileMetric;
+        }
+
+        public async Task Update(UserDto input)
+        {
+            var userId = AbpSession.UserId.Value;
+            var user = await _usersRepository.GetAsync(userId);
+            ObjectMapper.Map(input, user);
+
+            await _usersRepository.InsertOrUpdateAsync(user);
+
+            if (!input.TimeZoneId.IsNullOrWhiteSpace())
+            {
+                await _settingManager.ChangeSettingForUserAsync(user.ToUserIdentifier(), TimingSettingNames.TimeZone, input.TimeZoneId);
+            }
         }
 
         public async Task UpdateWebsiteUrl(string websiteUrl)

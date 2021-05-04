@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="SaveChanges">Save Changes</text>
+    <text name="TimeZone">Time Zone</text>
+    <text name="Notifications">Notifications</text>
+    <text name="Billing">Billing</text>
+    <text name="General">General</text>
     <text name="AccountSettings">Account Settings</text>
     <text name="University">University</text>
     <text name="NoServiceSelected">No Service Selected</text>
@@ -140,8 +145,8 @@
     <text name="SupportLevel">Support Level</text>
     <text name="Tabs">Tabs</text>
     <text name="Projects">Projects</text>
-    <text name="NoTimezone">No timezone configured</text>
-    <text name="SelectTimezone">Select Timezone</text>
+    <text name="NoTime Zone">No time zone configured</text>
+    <text name="SelectTimeZone">Select Time Zone</text>
     <text name="ConfirmsGuardianTutorialAccesSubject">Academically - Tutorial Access Granted</text>
     <text name="ConfirmGuardianTutorialAccessMessage">
       <![CDATA[

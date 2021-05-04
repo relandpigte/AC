@@ -62,6 +62,13 @@ import { ChangePasswordComponent } from './users/change-password/change-password
                 (m) => m.ProfileModule
               ),
           },
+          {
+            path: 'account-settings',
+            loadChildren: () =>
+              import('@app/account-settings/account-settings.module').then(
+                (m) => m.AccountSettingsModule
+              ),
+          },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent }

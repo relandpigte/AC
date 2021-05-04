@@ -825,6 +825,58 @@ export class ProfilesServiceProxy {
     }
 
     /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: UserDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Profiles/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
      * @param websiteUrl (optional) 
      * @return Success
      */
@@ -2898,6 +2950,124 @@ export class TestDataGeneratorServiceProxy {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
+export class TimeZonesServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    getAll(): Observable<TimeZoneDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/TimeZones/GetAll";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<TimeZoneDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TimeZoneDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<TimeZoneDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(TimeZoneDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TimeZoneDto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    get(): Observable<TimeZoneDto> {
+        let url_ = this.baseUrl + "/api/services/app/TimeZones/Get";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<TimeZoneDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TimeZoneDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<TimeZoneDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TimeZoneDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TimeZoneDto>(<any>null);
     }
 }
 
@@ -7886,6 +8056,53 @@ export interface ITenantLoginInfoDto {
     name: string | undefined;
 }
 
+export class TimeZoneDto implements ITimeZoneDto {
+    id: string | undefined;
+    name: string | undefined;
+
+    constructor(data?: ITimeZoneDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): TimeZoneDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TimeZoneDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+
+    clone(): TimeZoneDto {
+        const json = this.toJSON();
+        let result = new TimeZoneDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITimeZoneDto {
+    id: string | undefined;
+    name: string | undefined;
+}
+
 export class TutorRatingDto implements ITutorRatingDto {
     id: string;
     tutorId: number;
@@ -8155,12 +8372,15 @@ export class UserDto implements IUserDto {
     country: string | undefined;
     websiteUrl: string | undefined;
     about: string | undefined;
+    dateOfBirth: moment.Moment | undefined;
+    phoneNumber: string | undefined;
     lastLoginTime: moment.Moment | undefined;
     creationTime: moment.Moment;
     profilePictureDocument: DocumentDto;
     coverPhotoUrl: string | undefined;
     profilePictureUrl: string | undefined;
     currentUniversity: string | undefined;
+    timeZoneId: string | undefined;
     roleNames: string[] | undefined;
     roleDisplayNames: string[] | undefined;
 
@@ -8191,12 +8411,15 @@ export class UserDto implements IUserDto {
             this.country = _data["country"];
             this.websiteUrl = _data["websiteUrl"];
             this.about = _data["about"];
+            this.dateOfBirth = _data["dateOfBirth"] ? moment(_data["dateOfBirth"].toString()) : <any>undefined;
+            this.phoneNumber = _data["phoneNumber"];
             this.lastLoginTime = _data["lastLoginTime"] ? moment(_data["lastLoginTime"].toString()) : <any>undefined;
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.profilePictureDocument = _data["profilePictureDocument"] ? DocumentDto.fromJS(_data["profilePictureDocument"]) : <any>undefined;
             this.coverPhotoUrl = _data["coverPhotoUrl"];
             this.profilePictureUrl = _data["profilePictureUrl"];
             this.currentUniversity = _data["currentUniversity"];
+            this.timeZoneId = _data["timeZoneId"];
             if (Array.isArray(_data["roleNames"])) {
                 this.roleNames = [] as any;
                 for (let item of _data["roleNames"])
@@ -8235,12 +8458,15 @@ export class UserDto implements IUserDto {
         data["country"] = this.country;
         data["websiteUrl"] = this.websiteUrl;
         data["about"] = this.about;
+        data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
+        data["phoneNumber"] = this.phoneNumber;
         data["lastLoginTime"] = this.lastLoginTime ? this.lastLoginTime.toISOString() : <any>undefined;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["profilePictureDocument"] = this.profilePictureDocument ? this.profilePictureDocument.toJSON() : <any>undefined;
         data["coverPhotoUrl"] = this.coverPhotoUrl;
         data["profilePictureUrl"] = this.profilePictureUrl;
         data["currentUniversity"] = this.currentUniversity;
+        data["timeZoneId"] = this.timeZoneId;
         if (Array.isArray(this.roleNames)) {
             data["roleNames"] = [];
             for (let item of this.roleNames)
@@ -8279,12 +8505,15 @@ export interface IUserDto {
     country: string | undefined;
     websiteUrl: string | undefined;
     about: string | undefined;
+    dateOfBirth: moment.Moment | undefined;
+    phoneNumber: string | undefined;
     lastLoginTime: moment.Moment | undefined;
     creationTime: moment.Moment;
     profilePictureDocument: DocumentDto;
     coverPhotoUrl: string | undefined;
     profilePictureUrl: string | undefined;
     currentUniversity: string | undefined;
+    timeZoneId: string | undefined;
     roleNames: string[] | undefined;
     roleDisplayNames: string[] | undefined;
 }

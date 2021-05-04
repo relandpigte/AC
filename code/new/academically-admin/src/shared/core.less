@@ -48,6 +48,14 @@ quill-view-html {
   }
 }
 
+ngx-intl-tel-input {
+  &.is-invalid {
+    .form-control {
+      border-color: #e63757;
+    }
+  }
+}
+
 /* custom component styles end */
 
 body {
@@ -371,7 +379,7 @@ input[type='file'].inline-file-upload {
 }
 
 .loader-parent {
-  position: relative;
+  position  : relative;
   min-height: 50px;
 
   .loader {

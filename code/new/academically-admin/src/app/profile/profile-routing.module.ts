@@ -8,7 +8,6 @@ import { WrapperComponent } from '@app/layout/wrapper/wrapper.component';
 import { HeaderComponent } from './_components/header/header.component';
 import { ProfileComponent } from './profile.component';
 
-
 @NgModule({
   imports: [
     RouterModule.forChild([

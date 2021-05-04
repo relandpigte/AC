@@ -10,7 +10,6 @@ import { ProfileService } from '../_services/profile.service';
   styleUrls: ['./introduction.component.less']
 })
 export class IntroductionComponent extends AppComponentBase {
-  isTutor: boolean = false;
   profileSubscription: Subscription;
 
   constructor(
