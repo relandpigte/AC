@@ -399,6 +399,13 @@ input[type='file'].inline-file-upload {
       width     : 100%;
     }
   }
+
+}
+
+.custom-control-input:disabled~.custom-control-label::before,
+.custom-control-input[disabled]~.custom-control-label::before {
+  background-color: #EEEEEE !important;
+  opacity         : .5;
 }
 
 @media (min-width: 576px) {

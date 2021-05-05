@@ -16,7 +16,6 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
   model: UserDto = new UserDto();
   dateOfBirth: Date;
   datePickerConfig: BsDatepickerConfig;
-  phoneNumber: ChangeData;
   CountryISO = CountryISO;
   SearchCountryField = SearchCountryField;
   PhoneNumberFormat = PhoneNumberFormat;
@@ -43,7 +42,7 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
 
   onFormSubmit(): void {
     this.isLoading = true;
-    this.model.phoneNumber = this.phoneNumber.internationalNumber;
+    this.model.phoneNumber = (this.model.phoneNumber as ChangeData).internationalNumber;
     this._profilesService.update(this.model)
       .pipe(
         takeUntil(this.destroyed$),
@@ -67,10 +66,8 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
       )
       .subscribe(user => {
         this.model = user;
-        if (user.phoneNumber) {
-          this.phoneNumber = {
-            internationalNumber: user.phoneNumber,
-          };
+        if (this.model.phoneNumber) {
+          this.model.phoneNumber = this.model.phoneNumber.substr(this.model.phoneNumber.indexOf(' ') + 1);
         }
         if (this.model.dateOfBirth) {
           this.dateOfBirth = this.model.dateOfBirth.toDate();
