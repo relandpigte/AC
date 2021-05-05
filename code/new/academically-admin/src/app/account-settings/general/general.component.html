@@ -1,4 +1,4 @@
-<form [loader]="isLoading" autocomplete="off" #createEditForm="ngForm" (ngSubmit)="onFormSubmit()">
+<form [loader]="isLoading" autocomplete="off" #createEditForm="ngForm" (ngSubmit)="onFormSubmit()" class="pb-5">
 
   <div class="row justify-content-between align-items-center">
     <div class="col">
@@ -63,7 +63,7 @@
     <div class="form-group col-md-6 required">
       <label class="col-form-label" for="phoneNumber">{{ 'PhoneNumber' | localize}}</label>
       <div>
-        <ngx-intl-tel-input [(ngModel)]="phoneNumber" [enableAutoCountrySelect]="false" [searchCountryFlag]="true"
+        <ngx-intl-tel-input [(ngModel)]="model.phoneNumber" [enableAutoCountrySelect]="false" [searchCountryFlag]="true"
           [phoneValidation]="true" [enablePlaceholder]="true" [selectFirstCountry]="false"
           [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
           [selectedCountryISO]="CountryISO.UnitedKingdom" [maxLength]="15" [separateDialCode]="true"
@@ -88,14 +88,6 @@
     <input [(ngModel)]="model.emailAddress" #emailAddressModel="ngModel" #emailAddressEl class="form-control"
       type="email" id="emailAddress" name="emailAddress" required />
     <abp-validation-summary [control]="emailAddressModel" [controlEl]="emailAddressEl">
-    </abp-validation-summary>
-  </div>
-
-  <div class="form-group required">
-    <label class="col-form-label" for="about">{{ 'About' | localize}}</label>
-    <quill-editor [(ngModel)]="model.about" #aboutModel="ngModel" #aboutEl id="about" name="about" required>
-    </quill-editor>
-    <abp-validation-summary [control]="aboutModel" [controlEl]="aboutEl.elementRef.nativeElement">
     </abp-validation-summary>
   </div>
 
@@ -158,31 +150,28 @@
 
   </div>
 
-  <button class="btn btn-primary" [disabled]="!createEditForm.form.valid || isLoading">
-    {{ 'SaveChanges' | localize }}
-  </button>
-
   <hr class="my-5">
 
   <div class="row">
     <div class="col-12 col-md-6">
       <div class="form-group">
         <label class="mb-1">
-          Public profile
+          {{ 'PublicProfile' | localize }}
         </label>
         <small class="form-text text-muted">
-          Making your profile public means that anyone on the Dashkit network will be able to find you.
+          {{ 'PublicProfileMessage' | localize }}
         </small>
         <div class="row">
           <div class="col-auto">
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="switchOne">
-              <label class="custom-control-label" for="switchOne"></label>
+              <input [(ngModel)]="model.isPublic" id="isPublic" name="isPublic" type="checkbox"
+                class="custom-control-input">
+              <label class="custom-control-label" for="isPublic"></label>
             </div>
           </div>
           <div class="col ml-n2">
             <small class="text-muted">
-              You're currently invisible
+              {{ 'YouAreCurrentlyVisible' | localize }}
             </small>
           </div>
         </div>
@@ -191,21 +180,21 @@
     <div class="col-12 col-md-6">
       <div class="form-group">
         <label class="mb-1">
-          Allow for additional Bookings
+          {{ 'TutorProfile' | localize }}
         </label>
         <small class="form-text text-muted">
-          If you are available for hire outside of the current situation, you can encourage others to hire you.
+          {{ 'TutorProfileMessage' | localize }}
         </small>
         <div class="row">
           <div class="col-auto">
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="switchTwo" checked>
+              <input type="checkbox" class="custom-control-input" id="switchTwo" [checked]="isTutor" disabled>
               <label class="custom-control-label" for="switchTwo"></label>
             </div>
           </div>
           <div class="col ml-n2">
             <small class="text-muted">
-              You're currently available
+              This options is currently not available
             </small>
           </div>
         </div>
@@ -213,21 +202,10 @@
     </div>
   </div>
 
-  <hr class="mt-4 mb-5">
+  <hr class="my-5">
 
-  <div class="row justify-content-between">
-    <div class="col-12 col-md-6">
-      <h4>
-        Delete your account
-      </h4>
-      <p class="small text-muted mb-md-0">
-        Please note, deleting your account is a permanent action and will no be recoverable once completed.
-      </p>
-    </div>
-    <div class="col-auto">
-      <button class="btn btn-danger">
-        Delete
-      </button>
-    </div>
-  </div>
+  <button class="btn btn-primary" [disabled]="!createEditForm.form.valid || isLoading">
+    {{ 'SaveChanges' | localize }}
+  </button>
+
 </form>

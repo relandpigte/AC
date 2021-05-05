@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="TutorProfileMessage">If you are available for hire outside of the current situation, you can encourage others to hire you.</text>
+    <text name="TutorProfile">Tutor Profile</text>
+    <text name="YouAreCurrentlyVisible">You are currently invisible</text>
+    <text name="PublicProfileMessage">Making your profile public means that anyone on the Academically network will be able to find you.</text>
+    <text name="PublicProfile">Public Profile</text>
     <text name="SaveChanges">Save Changes</text>
     <text name="TimeZone">Time Zone</text>
     <text name="Notifications">Notifications</text>

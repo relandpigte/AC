@@ -81,6 +81,7 @@ namespace Academically.Services.Profiles
                    .FirstOrDefault()
                    .University.HeProvider;
             }
+            output.TimeZoneId = await _settingManager.GetSettingValueAsync(TimingSettingNames.TimeZone);
 
             return output;
         }

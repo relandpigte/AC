@@ -17,5 +17,6 @@ namespace Academically.Services.Profiles.Dto
         public double? Latitude { get; set; }
         public string About { get; set; }
         public string TimezoneId { get; set; }
+        public bool IsPublic { get; set; }
     }
 }
