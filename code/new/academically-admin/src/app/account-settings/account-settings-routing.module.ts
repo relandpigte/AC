@@ -28,6 +28,13 @@ import { AccountSettingsComponent } from './account-settings.component';
                     (m) => m.GeneralModule,
                   ),
               },
+              {
+                path: 'security',
+                loadChildren: () =>
+                  import('@app/account-settings/security/security.module').then(
+                    (m) => m.SecurityModule,
+                  ),
+              },
               { path: '', redirectTo: 'general' },
             ]
           },

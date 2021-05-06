@@ -1,6 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="PasswordRequirementsDetails">
+      <![CDATA[
+        <ul class="small text-muted pl-4 mb-0">
+          <li>Minimum of 8 character</li>
+          <li>Maximum of 32 character</li>
+          <li>At least one uppercase letter</li>
+          <li>At least one lowercase letter</li>
+          <li>At least one number</li>
+          <li>At least one special character</li>
+        </ul>
+      ]]>
+    </text>
+    <text name="PasswordRequirementsMessage">To create a new password, you have to meet all of the following requirements:</text>
+    <text name="PasswordRequirements">Password requirements</text>
+    <text name="EnterYourPreviousPassword">Enter your previous and new password</text>
+    <text name="ChangeYourPassword">Change your password</text>
+    <text name="PasswordChangedSuccessfully">Password changed successfully</text>
+    <text name="AuthenticatorAppMessage">Two Factor Security using Authenticator App is enabled. If you have a new device or need to reset please disable then re-enable Two Factor Security.</text>
+    <text name="AuthenticatorAppStepsMessage">Follow the following steps to set up your authenticator:</text>
+    <text name="AuthenticatorApp">Authenticator app</text>
+    <text name="TwoFactorSecurityMessage">Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in.</text>
+    <text name="TwoFactorSecurity">Two factor security</text>
+    <text name="TwoFactorAuthenticationDisableConfirmationMessage">This will disable the Two Factor Security on your account. Are you sure you want to proceed?</text>
+    <text name="TwoFactorAuthenticationDisabledMessage">Two factor authentication is now disabled.</text>
+    <text name="TwoFactorAuthenticationEnabledMessage">Two factor authentication is now enabled.</text>
+    <text name="Verify">Verify</text>
+    <text name="TwoFactorAuthenticationVerificationCodeErrorMessage">Verification Code is not recognised. Please try again.</text>
     <text name="TutorProfileMessage">If you are available for hire outside of the current situation, you can encourage others to hire you.</text>
     <text name="TutorProfile">Tutor Profile</text>
     <text name="YouAreCurrentlyVisible">You are currently invisible</text>
