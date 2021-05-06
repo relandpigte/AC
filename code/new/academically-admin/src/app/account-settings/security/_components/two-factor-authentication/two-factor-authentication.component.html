@@ -1,0 +1,108 @@
+<div [loader]="is2FaLoading" class="row justify-content-between align-items-center mb-5">
+  <div class="col-12 col-md-9 col-xl-7">
+
+    <h2 class="mb-2">
+      {{ 'TwoFactorSecurity' | localize }}
+    </h2>
+
+    <p class="text-muted mb-md-0">
+      {{ 'TwoFactorSecurityMessage' | localize }}
+    </p>
+  </div>
+  <div class="col-12 col-md-auto">
+
+    <div class="custom-control custom-switch">
+      <input [(ngModel)]="is2FaEnabled" id="is2FaEnabled" name="is2FaEnabled" type="checkbox"
+        class="custom-control-input" (change)="on2FaStatusChange()">
+      <label class="custom-control-label" for="is2FaEnabled"></label>
+    </div>
+  </div>
+</div>
+
+<div [loader]="is2FaLoading" class="card" *ngIf="is2FaEnabled">
+  <div class="card-body">
+
+    <div class="list-group list-group-flush my-n3">
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col-12">
+            <h4 class="mb-1">
+              {{ 'AuthenticatorApp' | localize | titlecase }}
+            </h4>
+            <small *ngIf="!model.isEnabled" class="text-muted">
+              {{ 'AuthenticatorAppStepsMessage' | localize }}
+            </small>
+            <small *ngIf="model.isEnabled" class="text-muted">
+              {{ 'AuthenticatorAppMessage' | localize }}
+            </small>
+          </div>
+          <div *ngIf="!model.isEnabled" class="col-12">
+            <ul class="list-group mt-2">
+              <li class="list-group-item">
+                <div class="row">
+                  <div class="col-auto">
+                    <span class="badge badge-primary mt-3">1</span>
+                  </div>
+                  <div class="col">
+                    Download a two-factor authenticator app like Microsoft Authenticator for <span
+                      class="text-primary">Android</span> and <span class="text-primary">iOS</span> or Google
+                    Authenticator for <span class="text-primary">Android</span> and <span
+                      class="text-primary">iOS</span>
+                  </div>
+                </div>
+              </li>
+              <li class="list-group-item">
+                <div class="row">
+                  <div class="col-auto">
+                    <span class="badge badge-primary mt-3">2</span>
+                  </div>
+                  <div class="col">
+                    Scan the QR Code or enter this key <kbd>{{ model.sharedKey }}</kbd> into your two
+                    factor authenticator app. Spaces and casing do not matter.
+                    <div class="text-center mt-3">
+                      <ngx-qrcode [elementType]="NgxQrcodeElementTypes.URL"
+                        [errorCorrectionLevel]="NgxQrcodeErrorCorrectionLevels.HIGH" [value]="model.qrCodeUrl"
+                        cssClass="bshadow"></ngx-qrcode>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="list-group-item">
+                <div class="row">
+                  <div class="col-auto">
+                    <span class="badge badge-primary mt-3">3</span>
+                  </div>
+                  <div class="col">
+                    Once you have scanned the QR code or input the key above, your two factor authenticator app will
+                    provide you with a unique code. Enter the code int he confirmation box below.
+                    <form class="form-horizontal mt-2" autocomplete="off" #verifyCodeForm="ngForm"
+                      (ngSubmit)="onVerificationFormSubmit()">
+                      <div class="form-group required">
+                        <label class="col-form-label" for="verificationCode">
+                          {{ 'VerificationCode' | localize}}</label>
+                        <div class="input-group input-group-merge">
+                          <input [(ngModel)]="verificationCode" #verificationCodeModel="ngModel" #verificationCodeEl
+                            class="form-control form-control-appended" type="text" id="verificationCode"
+                            name="verificationCode" required />
+                          <div class="input-group-append">
+                            <button [disabled]="is2FaLoading" class="btn btn-primary">
+                              <span *ngIf="is2FaLoading" class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>
+                              {{ 'Verify' | localize }}
+                            </button>
+                          </div>
+                        </div>
+                        <abp-validation-summary [control]="verificationCodeModel" [controlEl]="verificationCodeEl">
+                        </abp-validation-summary>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
