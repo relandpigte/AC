@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" *ngIf="!isTutor">
   <div class="col-12 col-lg-6 col-xl">
     <div class="card">
       <div class="card-body" [loader]="isLoading">
@@ -59,6 +59,73 @@
             <span class="h2 mb-0 align-middle">{{ profileMetric.positiveReviewsPercentage }}%</span>
             <span class="badge badge-soft-success ml-2">{{ profileMetric.totalReviews }} {{ 'Reviews' | localize
               }}</span>
+          </div>
+          <div class="col-auto">
+            <span class="h2 fe fe-star text-muted mb-0"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" *ngIf="isTutor">
+  <div class="col-12 col-lg-6 col-xl">
+    <div class="card">
+      <div class="card-body" [loader]="isLoading">
+        <div class="row align-items-center">
+          <div class="col">
+            <h6 class="text-uppercase text-muted mb-2">{{ 'ThisWeeksIncome' | localize }}</h6>
+            <span class="h2 mb-0 align-middle">	&#163;24.50</span>
+            <span class="badge badge-soft-success ml-2">+3.5%</span>
+          </div>
+          <div class="col-auto">
+            <span class="card-fas fas fa-pound-sign text-muted mb-0"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-6 col-xl">
+    <div class="card">
+      <div class="card-body" [loader]="isLoading">
+        <div class="row align-items-center">
+          <div class="col">
+            <h6 class="text-uppercase text-muted mb-2">{{ 'TotalProjects' | localize }}</h6>
+            <span class="h2 mb-0 align-middle">	64 hrs</span>
+          </div>
+          <div class="col-auto">
+            <span class="h2 fe fe-clock text-muted mb-0"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-6 col-xl">
+    <div class="card">
+      <div class="card-body" [loader]="isLoading">
+        <div class="row align-items-center">
+          <div class="col">
+            <h6 class="text-uppercase text-muted mb-2">{{ 'TotalHours' | localize }}</h6>
+            <span class="h2 mb-0 align-middle">	&#163;24.50</span>
+            <span class="badge badge-soft-success ml-2">+3.5%</span>
+          </div>
+          <div class="col-auto">
+            <span class="card-fas fas fa-pound-sign text-muted mb-0"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-6 col-xl">
+    <div class="card">
+      <div class="card-body" [loader]="isLoading">
+        <div class="row align-items-center">
+          <div class="col">
+            <h6 class="text-uppercase text-muted mb-2">{{ 'AverageRating' | localize }}</h6>
+            <app-star-rating *ngIf="tutorRatingSummary.totalRatingPercentage"
+                [actualRating]="tutorRatingSummary.totalRatingPercentage"></app-star-rating>
+                <span class="text-muted small">{{ tutorRatingSummary.totalRatingPercentage }}/5</span>
           </div>
           <div class="col-auto">
             <span class="h2 fe fe-star text-muted mb-0"></span>

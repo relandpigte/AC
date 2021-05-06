@@ -18,6 +18,8 @@ import { ReplaySubject } from 'rxjs';
 @Injectable()
 export abstract class AppComponentBase implements OnDestroy {
   public isTutor: boolean;
+  public isStudent: boolean;
+
   protected destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   localizationSourceName = AppConsts.localization.defaultLocalizationSourceName;
@@ -52,6 +54,7 @@ export abstract class AppComponentBase implements OnDestroy {
     };
     if (this.appSession.user) {
       this.isTutor = this.appSession.user.roles.findIndex(e => e.toLowerCase() === 'tutor') >= 0;
+      this.isStudent = this.appSession.user.roles.findIndex(e => e.toLowerCase() === 'student') >= 0;
     }
   }
 
