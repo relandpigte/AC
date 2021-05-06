@@ -61,7 +61,7 @@ namespace Academically.Authorization.Accounts.Dto
                 }
                 if (!(Regex.Match(Password, AcademicallyConsts.PasswordRegexValidator)).Success)
                 {
-                    yield return new ValidationResult("Password must be at least 8 charachters and must contain 1 uppercase letter, 1 lowercase letter and 1 number.");
+                    yield return new ValidationResult("Password must be at least 8 characters and must contain 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character.");
                 }
             }
         }
