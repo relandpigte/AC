@@ -35,6 +35,13 @@ import { AccountSettingsComponent } from './account-settings.component';
                     (m) => m.SecurityModule,
                   ),
               },
+              {
+                path: 'notifications',
+                loadChildren: () =>
+                  import('@app/account-settings/notifications/notifications.module').then(
+                    (m) => m.NotificationsModule,
+                  ),
+              },
               { path: '', redirectTo: 'general' },
             ]
           },
