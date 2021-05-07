@@ -7,7 +7,7 @@
     <text name="NoSubjectSuggested">No Subject Suggested</text>
     <text name="ServiceSubjectSuggestionRejectedEmailMessage">
       <![CDATA[
-        <p>You have submitted a subject suggestion with the following details.</p>
+        <p>You have submitted a subject suggestion with the following details:</p>
         <br />
         <p>Subject Name: {0}<p>
         <p>Service: {1}<p>
@@ -17,7 +17,7 @@
     </text>
     <text name="ServiceSubjectSuggestionApprovedEmailMessage">
       <![CDATA[
-        <p>You have submitted a subject suggestion with the following details.</p>
+        <p>You have submitted a subject suggestion with the following details:</p>
         <br />
         <p>Subject Name: {0}<p>
         <p>Service: {1}<p>

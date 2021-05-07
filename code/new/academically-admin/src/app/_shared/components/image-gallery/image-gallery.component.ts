@@ -14,16 +14,16 @@ export class ImageGalleryComponent extends AppComponentBase implements OnInit {
   @ViewChild('imageCropper') imageCropper: ImageCopper;
   imageRoot = AppConsts.appBaseUrl + '/assets/img/cover-photos/';
   images: string[] = [
-    'pexels-aleksandar-pasaric-2341830.jpg',
-    'pexels-alex-andrews-1983038.jpg',
-    'pexels-carlos-oliva-3586966.jpg',
-    'pexels-francesco-ungaro-2325446.jpg',
-    'pexels-mack-kamp-1449455.jpg',
-    'pexels-magda-ehlers-1279813.jpg',
-    'pexels-philippe-donn-1114690.jpg',
-    'pexels-pixabay-262713.jpg',
-    'pexels-riccardo-bertolo-4245826.jpg',
-    'pexels-toni-cuenca-585752.jpg',
+    'cp-1.jpeg',
+    'cp-2.jpeg',
+    'cp-3.jpeg',
+    'cp-4.jpeg',
+    'cp-5.jpeg',
+    'cp-6.jpeg',
+    'cp-7.jpeg',
+    'cp-8.jpeg',
+    'cp-9.jpeg',
+    'cp-10.jpeg',
   ];
   selectedImage: string;
   selectedImageFile: File;
