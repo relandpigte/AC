@@ -12,10 +12,16 @@
     <span class="caret"></span>
   </button>
   <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu">
-    <li class="position-relative" role="menuitem">
+    <!-- <li class="position-relative" role="menuitem">
       <a class="dropdown-item" href="#" (click)="$event.preventDefault(); onUploadCoverPhotoClick()">
         <i class="fe fe-image"></i>
         {{ 'UploadPhoto' | localize}}
+      </a>
+    </li> -->
+    <li class="position-relative" role="menuitem">
+      <a class="dropdown-item" href="#" (click)="$event.preventDefault(); onBrowseGalleryClick()">
+        <i class="fe fe-image"></i>
+        {{ 'BrowseGallery' | localize}}
       </a>
     </li>
     <ng-container *ngIf="user && user.coverPhotoUrl">

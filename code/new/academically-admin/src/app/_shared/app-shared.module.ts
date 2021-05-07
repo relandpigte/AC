@@ -6,15 +6,17 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { QuillModule } from 'ngx-quill';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { DocumentUploaderComponent } from './components/document-uploader/document-uploader.component';
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
 
 @NgModule({
   declarations: [
     DocumentUploaderComponent,
     ImageCropperComponent,
+    ImageGalleryComponent,
   ],
   imports: [
     CommonModule,
@@ -32,12 +34,13 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     FormsModule,
     ReactiveFormsModule,
     ImageCropperModule,
-    DocumentUploaderComponent,
-    ImageCropperComponent,
     TypeaheadModule,
     QuillModule,
     NgxPaginationModule,
     TooltipModule,
+    DocumentUploaderComponent,
+    ImageCropperComponent,
+    ImageGalleryComponent,
   ],
 })
 export class AppSharedModule { }

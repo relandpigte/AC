@@ -1,10 +1,11 @@
 import { Component, ElementRef, Injector, ViewChild } from '@angular/core';
 import { ProfileService } from '@app/profile/_services/profile.service';
 import { ImageCropperComponent } from '@app/_shared/components/image-cropper/image-cropper.component';
+import { ImageGalleryComponent } from '@app/_shared/components/image-gallery/image-gallery.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { FileParameter, ProfilesServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-cover-photo-changer',
@@ -31,6 +32,26 @@ export class CoverPhotoChangerComponent extends AppComponentBase {
 
   onUploadCoverPhotoClick(): void {
     this.coverPhotoInput.nativeElement.click();
+  }
+
+  onBrowseGalleryClick(): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<ImageGalleryComponent>;
+    modalSettings.class = 'modal-lg';
+    const modal = this._modalService.show(ImageGalleryComponent, modalSettings);
+    const imageCropper = modal.content
+    imageCropper.imageCropped.subscribe((file: File) => {
+      const coverPhoto: FileParameter = {
+        fileName: file.name,
+        data: file,
+      }
+      this._profilesService.updateCoverPhoto(coverPhoto)
+        .subscribe(coverPhotoUrl => {
+          this.user.coverPhotoUrl = coverPhotoUrl;
+          this._profileService.user = this.user;
+          this.notify.success(this.l('CoverPhotoUploadedMessage'));
+          modal.hide();
+        });
+    });
   }
 
   onCoverPhotoChange(files: FileList): void {

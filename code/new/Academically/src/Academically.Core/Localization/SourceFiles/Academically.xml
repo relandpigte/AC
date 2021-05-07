@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="BrowseGallery">Browse Gallery</text>
+    <text name="CoverPhotoGallery">Cover Photo Gallery</text>
     <text name="SubjectExistsErrorMessage">The subject you are trying to suggest already exists.</text>
     <text name="NoSubjectSuggested">No Subject Suggested</text>
     <text name="ServiceSubjectSuggestionRejectedEmailMessage">
