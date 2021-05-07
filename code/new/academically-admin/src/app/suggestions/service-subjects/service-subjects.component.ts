@@ -26,7 +26,6 @@ export class ServiceSubjectsComponent extends AppComponentBase implements OnInit
   ) {
     super(injector);
     activatedRoute.paramMap.subscribe(paramMap => {
-      console.log(paramMap);
       if (paramMap.has('service-name')) {
         this.selectedService = paramMap.get('service-name');
       }
