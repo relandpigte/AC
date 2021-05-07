@@ -1,6 +1,62 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="SubjectExistsErrorMessage">The subject you are trying to suggest already exists.</text>
+    <text name="NoSubjectSuggested">No Subject Suggested</text>
+    <text name="ServiceSubjectSuggestionRejectedEmailMessage">
+      <![CDATA[
+        <p>You have submitted a subject suggestion with the following details.</p>
+        <br />
+        <p>Subject Name: {0}<p>
+        <p>Service: {1}<p>
+        <br />
+        <p>We regret to inform you that your suggestion was rejected by our Administrators. Please review the details of your submission then try suggesting the subject again.</p>
+      ]]>
+    </text>
+    <text name="ServiceSubjectSuggestionApprovedEmailMessage">
+      <![CDATA[
+        <p>You have submitted a subject suggestion with the following details.</p>
+        <br />
+        <p>Subject Name: {0}<p>
+        <p>Service: {1}<p>
+        <br />
+        <p>We are happy to inform you that your suggestion was accepted by our Administrators. The subject will now be available on all users across Academically.</p>
+      ]]>
+    </text>
+    <text name="ServiceSubjectSuggestionEmailSubject">Academically - Service Subject Suggestion Reviewed</text>
+    <text name="SuggestSubjectInfoMessage">If your desired subject is not available, you can suggest a new subject by clicking the Suggest button.</text>
+    <text name="Suggest">Suggest</text>
+    <text name="SuggestASubject">Subject a Subject</text>
+    <text name="SubjectSuggestionSubmittedMessage">The subject suggestion was submitted. It will now undergo our verification process. We will notify you by email once your suggestion was accepted or rejected.</text>
+    <text name="SubjectSuggestionRejectedMessage">The suggested subject was rejected.</text>
+    <text name="SubjectSuggestionApprovedMessage">The suggested subject was approved and will be visible to all users.</text>
+    <text name="DateRequested">Date Requested</text>
+    <text name="RequestedBy">Requested By</text>
+    <text name="SubjectName">Subject Name</text>
+    <text name="Subjects">Subjects</text>
+    <text name="ServiceSubjectSuggestions">Approve or Reject Suggestions</text>
+    <text name="ApproveOrRejectSuggestions">Approve or Reject Suggestions</text>
+    <text name="Reject">Reject</text>
+    <text name="Approve">Approve</text>
+    <text name="Suggestions">Suggestions</text>
+    <text name="ServiceSubjects">Service Subjects</text>
+    <text name="ServiceSubjectSuggestionAdminEmailMessage">
+      <![CDATA[
+        <p>A request to add a new Service Subject was created.</p>
+        <p>The details of the request are:</p>
+        <br />
+        <p>Subject Name: {0}<p>
+        <p>Level: {1}<p>
+        <p>Requested By: {2}<p>
+        <br />
+        <p>To review this suggestion, make sure you are currently logged in on Acamidemically as an Admin or Super Admin and click this link: <a href="{3}">Review Suggested Subject</a></p>
+        <br />
+        <p>If for some reason the link is not clickable, please copy and paste the url below to your browser:<p>
+        <p>{3}<p/>
+      ]]>
+    </text>
+    <text name="ServiceSubjectSuggestionAdminEmailSubject">Academically - Service Subject Suggestion</text>
+    <text name="SuggestSubject">Suggest Subject</text>
     <text name="PasswordRequirementsDetails">
       <![CDATA[
         <ul class="small text-muted pl-4 mb-0">

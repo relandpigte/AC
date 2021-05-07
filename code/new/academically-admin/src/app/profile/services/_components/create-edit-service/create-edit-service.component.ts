@@ -2,9 +2,10 @@ import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core
 import { AppComponentBase } from '@shared/app-component-base';
 import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, ServiceDto, ServiceMappingDto, ServicesServiceProxy, SubjectDto, UserServiceDto, UserServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash-es';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable, Observer } from 'rxjs';
 import { finalize, switchMap, takeUntil } from 'rxjs/operators';
+import { SuggestServiceSubjectComponent } from '../suggest-service-subject/suggest-service-subject.component';
 
 class CreateEditServiceModel {
   id?: string;
@@ -28,6 +29,8 @@ export class CreateEditServiceComponent extends AppComponentBase implements OnIn
   categories: ServiceDto[] = [];
   services: ServiceDto[] = [];
   levels: ServiceMappingDto[] = [];
+  selectedCategory: ServiceDto;
+  selectedService: ServiceDto;
   selectedLevel: ServiceMappingDto;
   disciplineTaxonomiesTypeaheadSource: Observable<DisciplineTaxonomyDto[]>;
   disciplineTaxonomy: string;
@@ -40,6 +43,7 @@ export class CreateEditServiceComponent extends AppComponentBase implements OnIn
   constructor(
     injector: Injector,
     private _modal: BsModalRef,
+    private _modalService: BsModalService,
     private _servicesService: ServicesServiceProxy,
     private _userServicesService: UserServicesServiceProxy,
     private _disciplineTaxonomiesService: DisciplineTaxonomiesServiceProxy,
@@ -79,10 +83,12 @@ export class CreateEditServiceComponent extends AppComponentBase implements OnIn
   }
 
   onCategoryChange(): void {
+    this.selectedCategory = this.categories.find(e => e.id === this.model.categoryId);
     this.getServices();
   }
 
   onServiceChange(): void {
+    this.selectedService = this.services.find(e => e.id === this.model.serviceId);
     this.getLevels();
   }
 
@@ -123,6 +129,23 @@ export class CreateEditServiceComponent extends AppComponentBase implements OnIn
     if (index > -1) {
       this.model.subjects.splice(index, 1);
     }
+  }
+
+  onSuggestSubjectClick(): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<SuggestServiceSubjectComponent>;
+    modalSettings.initialState = {
+      categoryName: this.selectedCategory.name,
+      serviceName: this.selectedService.name,
+      levelName: this.selectedLevel.service.name,
+      levelId: this.selectedLevel.service.id,
+    }
+    const modal = this._modalService.show(SuggestServiceSubjectComponent, modalSettings).content;
+    modal.modelSaved
+      .pipe(
+        takeUntil(this.destroyed$),
+      ).subscribe(() => {
+        this.getSubjects();
+      })
   }
 
   onCloseClick(): void {

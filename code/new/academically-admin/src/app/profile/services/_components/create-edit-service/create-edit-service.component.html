@@ -44,9 +44,18 @@
 
           <div class="form-group required mb-0">
             <label class="col-form-label" for="subject">{{ 'Subject' | localize }}</label>
-            <input class="form-control" type="search" id="subject" [(ngModel)]="subject" name="subject"
-              typeaheadOptionField="name" [typeahead]="subjects" (typeaheadOnSelect)="onSubjectSelect($event.item)"
-              container="body" />
+
+            <div class="input-group input-group-merge">
+              <input class="form-control form-control-appended" type="search" id="subject" [(ngModel)]="subject"
+                name="subject" typeaheadOptionField="name" [typeahead]="subjects"
+                (typeaheadOnSelect)="onSubjectSelect($event.item)" container="body" />
+              <div class="input-group-append">
+                <button class="btn btn-primary" (click)="onSuggestSubjectClick()" type="button">
+                  {{ 'Suggest' | localize }} <i class="fe fe-plus"></i>
+                </button>
+              </div>
+            </div>
+            <i><small><i class="fe fe-alert-circle"></i>{{ 'SuggestSubjectInfoMessage' | localize }}</small></i>
             <div class="ac-alerts">
               <div *ngFor="let subject of model.subjects" class="alert alert-info alert-dismissible ac-alert"
                 role="alert">

@@ -19,6 +19,7 @@
         public const string Pages_Profile_Introduction_Reviews = "Pages.Profile.Introduction.Reviews";
 
         public const string Pages_Profile_Services = "Pages.Profile.Services";
+        public const string Pages_Profile_Services_SuggestSubject = "Pages.Profile.Services.SuggestSubject";
 
         public const string Pages_Profile_Education = "Pages.Profile.Education";
         public const string Pages_Profile_Education_Create = "Pages.Profile.Education.Create";
@@ -68,6 +69,13 @@
         public const string Pages_Roles_Create = "Pages.Roles.Create";
         public const string Pages_Roles_Update = "Pages.Roles.Update";
         public const string Pages_Roles_Delete = "Pages.Roles.Delete";
+
+
+        public const string Pages_Suggestions = "Pages.Suggestions";
+
+        public const string Pages_Suggestions_ServiceSubjects = "Pages.Suggestions.ServiceSubjects";
+        public const string Pages_Suggestions_ServiceSubjects_Approve = "Pages.Suggestions.ServiceSubjects.Approve";
+        public const string Pages_Suggestions_ServiceSubjects_Reject = "Pages.Suggestions.ServiceSubjects.Reject";
 
 
         public const string Pages_Widgets_Verifications = "Pages.Widgets.Verifications";

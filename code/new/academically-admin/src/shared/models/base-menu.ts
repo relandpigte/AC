@@ -40,10 +40,13 @@ export abstract class BaseMenu extends AppComponentBase {
         new MenuItem(this.l('StudySkills'), '/app/study-skills', 'fe fe-grid', 'Pages.Account')
       ]),
       new MenuItem(this.l('Tenants'), '/app/tenants', 'fas fa-building', 'Pages.Tenants'),
+      new MenuItem(this.l('Suggestions'), '', 'fe fe-alert-circle', 'Pages.Suggestions', [
+        new MenuItem(this.l('ServiceSubjects'), '/app/suggestions/service-subjects', 'fe fe-bookmark', 'Pages.Suggestions.ServiceSubjects'),
+      ]),
       new MenuItem(this.l('Settings'), '', 'fe fe-settings', '', [
         new MenuItem(this.l('Users'), '/app/users', 'fe fe-users', 'Pages.Users'),
         new MenuItem(this.l('Roles'), '/app/roles', 'fe fe-lock', 'Pages.Roles')
-      ])
+      ]),
     ];
   }
 

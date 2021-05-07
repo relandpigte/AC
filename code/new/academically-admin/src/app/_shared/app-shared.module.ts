@@ -9,6 +9,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 
 import { DocumentUploaderComponent } from './components/document-uploader/document-uploader.component';
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { ImageCropperComponent } from './components/image-cropper/image-cropper.
     TypeaheadModule.forRoot(),
     QuillModule.forRoot(),
     NgxPaginationModule,
+    TooltipModule.forRoot(),
   ],
   exports: [
     SharedModule,
@@ -35,6 +37,7 @@ import { ImageCropperComponent } from './components/image-cropper/image-cropper.
     TypeaheadModule,
     QuillModule,
     NgxPaginationModule,
+    TooltipModule,
   ],
 })
 export class AppSharedModule { }

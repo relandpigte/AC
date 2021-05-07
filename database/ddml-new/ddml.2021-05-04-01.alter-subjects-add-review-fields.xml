@@ -1,0 +1,32 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1620361072562-1">
+        <addColumn tableName="academicallysubjects">
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="CreationTime" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1620361072562-2">
+        <addColumn tableName="academicallysubjects">
+            <column name="CreatorUserId" type="BIGINT(19)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1620361072562-3">
+        <addColumn tableName="academicallysubjects">
+            <column name="ReviewTime" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1620361072562-4">
+        <addColumn tableName="academicallysubjects">
+            <column name="ReviewerUserId" type="BIGINT(19)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1620361072562-5">
+        <addColumn tableName="academicallysubjects">
+            <column defaultValueNumeric="1" name="ReviewStatus" type="INT(10)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>
