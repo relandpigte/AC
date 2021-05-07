@@ -69,6 +69,13 @@ import { ChangePasswordComponent } from './users/change-password/change-password
                 (m) => m.AccountSettingsModule
               ),
           },
+          {
+            path: 'suggestions',
+            loadChildren: () =>
+              import('@app/suggestions/suggestions.module').then(
+                (m) => m.SuggestionsModule
+              ),
+          },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent }

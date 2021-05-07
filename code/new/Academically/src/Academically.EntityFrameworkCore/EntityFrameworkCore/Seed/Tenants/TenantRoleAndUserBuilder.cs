@@ -44,7 +44,11 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Roles,
                 PermissionNames.Pages_Roles_Create,
                 PermissionNames.Pages_Roles_Update,
-                PermissionNames.Pages_Roles_Delete
+                PermissionNames.Pages_Roles_Delete,
+                PermissionNames.Pages_Suggestions,
+                PermissionNames.Pages_Suggestions_ServiceSubjects,
+                PermissionNames.Pages_Suggestions_ServiceSubjects_Approve,
+                PermissionNames.Pages_Suggestions_ServiceSubjects_Reject
             );
 
             #endregion
@@ -63,7 +67,11 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Roles,
                 PermissionNames.Pages_Roles_Create,
                 PermissionNames.Pages_Roles_Update,
-                PermissionNames.Pages_Roles_Delete
+                PermissionNames.Pages_Roles_Delete,
+                PermissionNames.Pages_Suggestions,
+                PermissionNames.Pages_Suggestions_ServiceSubjects,
+                PermissionNames.Pages_Suggestions_ServiceSubjects_Approve,
+                PermissionNames.Pages_Suggestions_ServiceSubjects_Reject
             );
 
             var adminUser = _context.Users.IgnoreQueryFilters().FirstOrDefault(u => u.TenantId == _tenantId && u.UserName == AbpUserBase.AdminUserName);
@@ -97,6 +105,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Usage,
                 PermissionNames.Pages_Profile,
                 PermissionNames.Pages_Profile_Services,
+                PermissionNames.Pages_Profile_Services_SuggestSubject,
                 PermissionNames.Pages_Profile_Introduction,
                 PermissionNames.Pages_Profile_Introduction_Metrics,
                 PermissionNames.Pages_Profile_Introduction_Reviews,

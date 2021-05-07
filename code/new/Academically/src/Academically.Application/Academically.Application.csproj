@@ -26,5 +26,7 @@
     <Folder Include="Services\UserResearchInterests\Dto\" />
     <Folder Include="Services\ResearchMethods\" />
     <Folder Include="Services\ResearchMethods\Dto\" />
+    <Folder Include="Services\Subjects\" />
+    <Folder Include="Services\Subjects\Dto\" />
   </ItemGroup>
 </Project>

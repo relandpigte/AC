@@ -1,0 +1,26 @@
+<form class="form-horizontal" autocomplete="off" #createEditForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <abp-modal-header [title]="('SuggestASubject') | localize" (onCloseClick)="onCloseClick()">
+    </abp-modal-header>
+    <div class="card-body" [loader]="isLoading">
+
+      <p class="col-form-label"><b>{{ 'Category' | localize }}:</b> {{ categoryName }}</p>
+      <p class="col-form-label"><b>{{ 'Service' | localize }}:</b> {{ serviceName }}</p>
+      <p class="col-form-label"><b>{{ 'Level' | localize }}:</b> {{ levelName }}</p>
+
+      <hr />
+
+      <div class="form-group required">
+        <label class="col-form-label" for="name">{{ 'Name' | localize}}</label>
+        <input [(ngModel)]="model.name" #nameModel="ngModel" #nameEl class="form-control" type="text" id="name"
+          name="name" required />
+        <abp-validation-summary [control]="nameModel" [controlEl]="nameEl">
+        </abp-validation-summary>
+      </div>
+
+    </div>
+    <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading"
+      [saveDisabled]="!createEditForm.form.valid || isLoading" (onCancelClick)="onCloseClick()">
+    </abp-modal-footer>
+  </div>
+</form>
