@@ -78,6 +78,9 @@
         public const string Pages_Suggestions_ServiceSubjects_Reject = "Pages.Suggestions.ServiceSubjects.Reject";
 
 
+        public const string Pages_TutorWizard = "Pages.TutorWizard";
+
+
         public const string Pages_Widgets_Verifications = "Pages.Widgets.Verifications";
 
 

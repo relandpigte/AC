@@ -40,8 +40,8 @@
         </small>
       </div>
       <div class="col-auto">
-        <button *ngIf="userTitle === 'Student'" class="btn btn-sm btn-primary">
-          Become a Tutor
+        <button *ngIf="permission.isGranted('Pages.TutorWizard')" [routerLink]="['/app/tutor-wizard']" class="btn btn-sm btn-primary">
+          {{ 'BecomeATutor' | localize}}
         </button>
       </div>
     </div>

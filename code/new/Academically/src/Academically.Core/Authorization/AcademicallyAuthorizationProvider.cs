@@ -85,6 +85,9 @@ namespace Academically.Authorization
             rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Delete, L("Delete"));
 
 
+            context.CreatePermission(PermissionNames.Pages_TutorWizard, L("TutorWizard"));
+
+
             context.CreatePermission(PermissionNames.Pages_Widgets_Verifications, L("Verifications"));
 
 

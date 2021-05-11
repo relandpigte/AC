@@ -1,0 +1,146 @@
+<div class="container-fluid" [@routerTransition]>
+  <div class="row justify-content-center tutor-wizard">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ 'BecomeATutor' | localize }}</h6>
+              <h1 class="header-title">{{ 'TutorWizard' | localize }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-header">
+          {{ 'Profile' | localize }}
+        </div>
+        <div class="card-body">
+          <div class="checklist">
+            <div class="custom-control custom-checkbox checklist-control">
+              <input class="custom-control-input" id="checklist1" type="checkbox" readonly checked />
+              <label class="custom-control-label" for="checklist1"></label>
+              <span class="custom-control-caption">
+                {{ 'AboutYou' | localize }}
+              </span>
+            </div>
+            <div class="custom-control custom-checkbox checklist-control">
+              <input class="custom-control-input" id="checklist2" type="checkbox" readonly />
+              <label class="custom-control-label" for="checklist2"></label>
+              <span class="custom-control-caption">
+                {{ 'Education' | localize }}
+              </span>
+            </div>
+            <div class="custom-control custom-checkbox checklist-control">
+              <input class="custom-control-input" id="checklist3" type="checkbox" readonly />
+              <label class="custom-control-label" for="checklist3"></label>
+              <span class="custom-control-caption">
+                {{ 'Research' | localize }}
+              </span>
+            </div>
+            <div class="custom-control custom-checkbox checklist-control">
+              <input class="custom-control-input" id="checklist4" type="checkbox" readonly />
+              <label class="custom-control-label" for="checklist4"></label>
+              <span class="custom-control-caption">
+                {{ 'Languages' | localize }}
+              </span>
+            </div>
+            <div class="custom-control custom-checkbox checklist-control">
+              <input class="custom-control-input" id="checklist5" type="checkbox" readonly />
+              <label class="custom-control-label" for="checklist5"></label>
+              <span class="custom-control-caption">
+                {{ 'ServicesOffered' | localize }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          {{ 'Verifications' | localize }}
+        </div>
+        <div class="card-body">
+          <div class="checklist">
+            <div class="custom-control custom-checkbox checklist-control">
+              <input class="custom-control-input" id="checklist1" type="checkbox" readonly />
+              <label class="custom-control-label" for="checklist1"></label>
+              <span class="custom-control-caption">
+                {{ 'ProfilePicture' | localize }}
+              </span>
+            </div>
+            <div class="custom-control custom-checkbox checklist-control">
+              <input class="custom-control-input" id="checklist2" type="checkbox" readonly />
+              <label class="custom-control-label" for="checklist2"></label>
+              <span class="custom-control-caption">
+                {{ 'PhotoId' | localize }}
+              </span>
+            </div>
+            <div class="custom-control custom-checkbox checklist-control">
+              <input class="custom-control-input" id="checklist3" type="checkbox" readonly />
+              <label class="custom-control-label" for="checklist3"></label>
+              <span class="custom-control-caption">
+                {{ 'Address' | localize }}
+              </span>
+            </div>
+            <div class="custom-control custom-checkbox checklist-control">
+              <input class="custom-control-input" id="checklist4" type="checkbox" readonly />
+              <label class="custom-control-label" for="checklist4"></label>
+              <span class="custom-control-caption">
+                {{ 'ContactNumber' | localize }}
+              </span>
+            </div>
+            <div class="custom-control custom-checkbox checklist-control">
+              <input class="custom-control-input" id="checklist5" type="checkbox" readonly />
+              <label class="custom-control-label" for="checklist5"></label>
+              <span class="custom-control-caption">
+                {{ 'References' | localize }}
+              </span>
+            </div>
+            <div class="custom-control custom-checkbox checklist-control">
+              <input class="custom-control-input" id="checklist6" type="checkbox" readonly />
+              <label class="custom-control-label" for="checklist6"></label>
+              <span class="custom-control-caption">
+                {{ 'DbsCheck' | localize }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          {{ 'TermsAndConditions' | localize }}
+        </div>
+        <div class="card-body">
+          <div class="checklist">
+            <div class="custom-control custom-checkbox checklist-control">
+              <input class="custom-control-input" id="checklist1" type="checkbox" readonly />
+              <label class="custom-control-label" for="checklist1"></label>
+              <span class="custom-control-caption">
+                {{ 'TermsOfUse' | localize }}
+              </span>
+            </div>
+            <div class="custom-control custom-checkbox checklist-control">
+              <input class="custom-control-input" id="checklist2" type="checkbox" readonly />
+              <label class="custom-control-label" for="checklist2"></label>
+              <span class="custom-control-caption">
+                {{ 'PrivacyPolicy' | localize }}
+              </span>
+            </div>
+            <div class="custom-control custom-checkbox checklist-control">
+              <input class="custom-control-input" id="checklist3" type="checkbox" readonly />
+              <label class="custom-control-label" for="checklist3"></label>
+              <span class="custom-control-caption">
+                {{ 'Declaration' | localize }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <app-about-you></app-about-you>
+    </div>
+  </div>
+</div>
