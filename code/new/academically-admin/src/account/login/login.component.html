@@ -6,50 +6,70 @@
         {{ 'FreeAccessToOurDashboard' | localize }}
       </p>
       <form novalidate autocomplete="off" #loginForm="ngForm" (ngSubmit)="login()">
-        <div class="form-group">
-          <label for="userNameOrEmailAddress">{{ 'EmailAddress' | localize }}</label>
-          <input type="text" placeholder="name@address.com" class="form-control" id="userNameOrEmailAddress"
-            name="userNameOrEmailAddress" [(ngModel)]="authService.authenticateModel.userNameOrEmailAddress" required
-            maxlength="256" #userNameOrEmailAddressModel="ngModel" #userNameOrEmailAddressEl />
-          <abp-validation-summary [control]="userNameOrEmailAddressModel" [controlEl]="userNameOrEmailAddressEl">
-          </abp-validation-summary>
-        </div>
+        <ng-container
+          *ngIf="authService.authenticateResult && authService.authenticateResult.isTwoFactorEnabled; else noTwoFactorTemplate">
 
-        <div class="form-group">
-          <div class="row">
-            <div class="col">
-              <label for="password">{{ 'Password' | localize }}</label>
-            </div>
-            <div class="col-auto">
-              <a [routerLink]="['/account/reset-password']" class="form-text small text-muted">
-                {{ 'ForgotPassword' | localize }}
-              </a>
-            </div>
+          <div class="form-group">
+            <label for="verificationCode">{{ 'VerificationCode' | localize }}</label>
+            <input type="text" class="form-control" id="verificationCode" name="verificationCode"
+              [(ngModel)]="authService.verificationCode" required #verificationCodeModel="ngModel"
+              #verificationCodeEl />
+            <abp-validation-summary [control]="verificationCodeModel" [controlEl]="verificationCodeEl">
+            </abp-validation-summary>
           </div>
 
-          <div class="input-group input-group-merge">
-            <input type="password" class="form-control form-control-appended" id="password" name="password"
-              [(ngModel)]="authService.authenticateModel.password" [placeholder]="'EnterYourPassword' | localize"
-              required maxlength="32" #passwordModel="ngModel" #passwordEl />
-            <div class="input-group-append">
-              <span class="input-group-text">
-                <i class="fe fe-eye"></i>
-              </span>
-            </div>
-          </div>
-          <abp-validation-summary [control]="passwordModel" [controlEl]="passwordEl"></abp-validation-summary>
-        </div>
+          <button type="submit" class="btn btn-lg btn-block btn-primary mb-3"
+            [disabled]="!loginForm.form.valid || submitting">
+            {{ 'Submit' | localize }}
+          </button>
+        </ng-container>
+        <ng-template #noTwoFactorTemplate>
 
-        <button type="submit" class="btn btn-lg btn-block btn-primary mb-3"
-          [disabled]="!loginForm.form.valid || submitting">
-          {{ 'SignIn' | localize }}
-        </button>
-        <div class="text-center" *ngIf="isSelfRegistrationAllowed">
-          <small class="text-muted text-center">
-            {{ 'DontHaveAnAccountYet' | localize }} <a href="#" [routerLink]="['/account/register']">{{ 'Register' |
-              localize }}</a>.
-          </small>
-        </div>
+          <div class="form-group">
+            <label for="userNameOrEmailAddress">{{ 'EmailAddress' | localize }}</label>
+            <input type="text" placeholder="name@address.com" class="form-control" id="userNameOrEmailAddress"
+              name="userNameOrEmailAddress" [(ngModel)]="authService.authenticateModel.userNameOrEmailAddress" required
+              maxlength="256" #userNameOrEmailAddressModel="ngModel" #userNameOrEmailAddressEl />
+            <abp-validation-summary [control]="userNameOrEmailAddressModel" [controlEl]="userNameOrEmailAddressEl">
+            </abp-validation-summary>
+          </div>
+
+          <div class="form-group">
+            <div class="row">
+              <div class="col">
+                <label for="password">{{ 'Password' | localize }}</label>
+              </div>
+              <div class="col-auto">
+                <a [routerLink]="['/account/reset-password']" class="form-text small text-muted">
+                  {{ 'ForgotPassword' | localize }}
+                </a>
+              </div>
+            </div>
+
+            <div class="input-group input-group-merge">
+              <input type="password" class="form-control form-control-appended" id="password" name="password"
+                [(ngModel)]="authService.authenticateModel.password" [placeholder]="'EnterYourPassword' | localize"
+                required maxlength="32" #passwordModel="ngModel" #passwordEl />
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <i class="fe fe-eye"></i>
+                </span>
+              </div>
+            </div>
+            <abp-validation-summary [control]="passwordModel" [controlEl]="passwordEl"></abp-validation-summary>
+          </div>
+
+          <button type="submit" class="btn btn-lg btn-block btn-primary mb-3"
+            [disabled]="!loginForm.form.valid || submitting">
+            {{ 'SignIn' | localize }}
+          </button>
+          <div class="text-center" *ngIf="isSelfRegistrationAllowed">
+            <small class="text-muted text-center">
+              {{ 'DontHaveAnAccountYet' | localize }} <a href="#" [routerLink]="['/account/register']">{{ 'Register' |
+                localize }}</a>.
+            </small>
+          </div>
+        </ng-template>
       </form>
     </div>
   </div>

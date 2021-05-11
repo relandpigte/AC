@@ -33,6 +33,10 @@ export class LoginComponent extends AppComponentBase {
 
   login(): void {
     this.submitting = true;
-    this.authService.authenticate(() => (this.submitting = false));
+    if (this.authService.authenticateResult && this.authService.authenticateResult.isTwoFactorEnabled) {
+      this.authService.verifiyTwoFactorCode(() => (this.submitting = false));
+    } else {
+      this.authService.authenticate(() => (this.submitting = false));
+    }
   }
 }
