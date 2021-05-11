@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Declaration">Declaration</text>
+    <text name="PrivacyPolicy">Privacy policy</text>
+    <text name="TermsOfUse">Terms of Use</text>
+    <text name="DbsCheck">DBS Check</text>
+    <text name="References">References</text>
+    <text name="ContactNumber">Contact Number</text>
+    <text name="Address">Address</text>
+    <text name="PhotoId">Photo ID</text>
+    <text name="ProfilePicture">Profile Picture</text>
+    <text name="ServicesOffered">Services Offered</text>
+    <text name="AboutYou">About You</text>
+    <text name="TutorWizard">Tutor Wizard</text>
     <text name="BrowseGallery">Browse Gallery</text>
     <text name="CoverPhotoGallery">Cover Photo Gallery</text>
     <text name="SubjectExistsErrorMessage">The subject you are trying to suggest already exists.</text>
@@ -597,7 +609,7 @@
     <text name="StudyLevelValue108">8</text>
     <text name="StudyLevels">Study Levels</text>
     <text name="AreaOfStudyLevelsWasUpdated">Area of study levels was updated successfully.</text>
-    <text name="TermsAndConditions">terms and conditions</text>
+    <text name="TermsAndConditions">Terms and Conditions</text>
     <text name="Add">Add</text>
     <text name="Inactive">Inactive</text> 
     <text name="Active">Active</text>

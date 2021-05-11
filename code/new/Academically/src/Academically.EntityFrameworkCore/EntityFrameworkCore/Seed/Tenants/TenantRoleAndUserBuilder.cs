@@ -184,6 +184,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_AccountSettings_Billing,
                 PermissionNames.Pages_AccountSettings_Security,
                 PermissionNames.Pages_AccountSettings_Notifications,
+                PermissionNames.Pages_TutorWizard,
                 PermissionNames.Pages_Widgets_Verifications
             );
 
