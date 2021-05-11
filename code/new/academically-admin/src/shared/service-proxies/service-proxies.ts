@@ -6052,6 +6052,7 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
     encryptedAccessToken: string | undefined;
     expireInSeconds: number;
     userId: number;
+    isTwoFactorEnabled: boolean;
 
     constructor(data?: IAuthenticateResultModel) {
         if (data) {
@@ -6068,6 +6069,7 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
             this.encryptedAccessToken = _data["encryptedAccessToken"];
             this.expireInSeconds = _data["expireInSeconds"];
             this.userId = _data["userId"];
+            this.isTwoFactorEnabled = _data["isTwoFactorEnabled"];
         }
     }
 
@@ -6084,6 +6086,7 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
         data["encryptedAccessToken"] = this.encryptedAccessToken;
         data["expireInSeconds"] = this.expireInSeconds;
         data["userId"] = this.userId;
+        data["isTwoFactorEnabled"] = this.isTwoFactorEnabled;
         return data; 
     }
 
@@ -6100,6 +6103,7 @@ export interface IAuthenticateResultModel {
     encryptedAccessToken: string | undefined;
     expireInSeconds: number;
     userId: number;
+    isTwoFactorEnabled: boolean;
 }
 
 export class AuthenticatorDto implements IAuthenticatorDto {
