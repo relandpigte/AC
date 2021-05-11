@@ -63,6 +63,7 @@ import { DashboardProjectsComponent } from './home/dashboard-projects/dashboard-
 import { DashboardUsageComponent } from './home/dashboard-usage/dashboard-usage.component';
 import { DashboardUsageOverviewComponent } from './home/dashboard-usage/dashboard-usage-overview/dashboard-usage-overview.component';
 import { DashboardUsageOverviewGraphComponent } from './home/dashboard-usage/dashboard-usage-overview-graph/dashboard-usage-overview-graph.component';
+import { MetricsComponent } from './home/dashboard-overview/metrics/metrics.component';
 
 @NgModule({
   declarations: [
@@ -114,6 +115,7 @@ import { DashboardUsageOverviewGraphComponent } from './home/dashboard-usage/das
     DashboardUsageComponent,
     DashboardUsageOverviewComponent,
     DashboardUsageOverviewGraphComponent,
+    MetricsComponent,
   ],
   imports: [
     CommonModule,

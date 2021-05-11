@@ -1,3 +1,4 @@
+<app-metrics *ngIf="isTutor"></app-metrics>
 <div class="row">
   <div class="col-8">
     <app-recent-projects *ngIf="permission.isGranted('Pages.Dashboard.Overview.RecentProjects')"></app-recent-projects>
