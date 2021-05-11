@@ -4,12 +4,12 @@
       <div class="card-body" [loader]="isLoading">
         <div class="row align-items-center">
           <div class="col">
-            <h6 class="text-uppercase text-muted mb-2">{{ 'TotalHours' | localize }}</h6>
-            <span class="h2 mb-0 align-middle">{{ profileMetric.totalHours }}</span>
-            <span class="badge badge-soft-success ml-2">{{ profileMetric.totalHoursChange }}</span>
+            <h6 class="text-uppercase text-muted mb-2">{{ 'ThisWeeksIncome' | localize }}</h6>
+            <span class="h2 mb-0 align-middle"> &#163;24.50</span>
+            <span class="badge badge-soft-success ml-2">+3.5%</span>
           </div>
           <div class="col-auto">
-            <span class="h2 fe fe-briefcase text-muted mb-0"></span>
+            <span class="card-fas fas fa-pound-sign text-muted mb-0"></span>
           </div>
         </div>
       </div>
@@ -21,10 +21,8 @@
       <div class="card-body" [loader]="isLoading">
         <div class="row align-items-center">
           <div class="col">
-            <h6 class="text-uppercase text-muted mb-2">{{ 'AcademicLevel' | localize }}</h6>
-            <span class="h2 mb-0 align-middle">
-              {{ profileMetric.academicLevel ? profileMetric.academicLevel : ('NoEducation' | localize) }}
-            </span>
+            <h6 class="text-uppercase text-muted mb-2">{{ 'TotalProjects' | localize }}</h6>
+            <span class="h2 mb-0 align-middle"> 64 hrs</span>
           </div>
           <div class="col-auto">
             <span class="h2 fe fe-clock text-muted mb-0"></span>
@@ -39,8 +37,9 @@
       <div class="card-body" [loader]="isLoading">
         <div class="row align-items-center">
           <div class="col">
-            <h6 class="text-uppercase text-muted mb-2">{{ 'UserType' | localize }}</h6>
-            <span class="h2 mb-0 align-middle">{{ profileMetric.userType }}</span>
+            <h6 class="text-uppercase text-muted mb-2">{{ 'TotalHours' | localize }}</h6>
+            <span class="h2 mb-0 align-middle"> &#163;24.50</span>
+            <span class="badge badge-soft-success ml-2">+3.5%</span>
           </div>
           <div class="col-auto">
             <span class="card-fas fas fa-pound-sign text-muted mb-0"></span>

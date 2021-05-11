@@ -31,13 +31,12 @@ export class MetricsComponent extends AppComponentBase implements OnInit {
     super(injector);
     profileService.user$.subscribe((user) => {
       this.user = user;
-      this.isTutor = user.roleNames.findIndex(e => e.toLowerCase() === 'tutor') >= 0;
       this.getMetrics(user.id);
       this.getRatingSummary();
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   private getMetrics(id: number): void {
     this.isLoading = true;
