@@ -1,1 +1,10 @@
-<p>education works!</p>
+<app-educations #educations [userId]="appSession.userId"></app-educations>
+<div class="d-flex justify-content-between">
+  <button [routerLink]="['/app/tutor-wizard/about-you']" type="button" class="btn btn-white">
+    {{ 'Back' | localize }}
+  </button>
+  <button (click)="onNextClick()" [disabled]="!educations.userEducations || !educations.userEducations.length || isLoading" type="submit"
+    class="btn btn-primary">
+    {{ 'Next' | localize }}
+  </button>
+</div>

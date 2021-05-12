@@ -8,7 +8,10 @@ namespace Academically.Services.TutorWizard
     public interface ITutorWizardAppService : IApplicationService
     {
         Task<BecomeATutorStep> GetCurrentStep();
+
         Task<AboutYouDto> GetAboutYou();
         Task UpdateAboutYou(AboutYouDto input);
+
+        Task UpdateStep(BecomeATutorStep step);
     }
 }

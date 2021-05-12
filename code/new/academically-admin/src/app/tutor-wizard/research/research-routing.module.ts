@@ -3,15 +3,15 @@ import { RouterModule } from '@angular/router';
 
 import { AppRouteGuard } from '@shared/auth/auth-route-guard';
 
-import { EducationComponent } from './education.component';
+import { ResearchComponent } from './research.component';
 
 @NgModule({
   imports: [
     RouterModule.forChild([
       {
         path: '',
-        component: EducationComponent,
-        data: { permission: 'Pages.TutorWizard.Education' },
+        component: ResearchComponent,
+        data: { permission: 'Pages.TutorWizard.Research' },
         canActivate: [AppRouteGuard],
         canActivateChild: [AppRouteGuard],
       },
@@ -21,4 +21,4 @@ import { EducationComponent } from './education.component';
     RouterModule
   ],
 })
-export class EducationRoutingModule { }
+export class ResearchRoutingModule { }

@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { ProfileService } from '@app/profile/_services/profile.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { UserEducationDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -14,8 +14,8 @@ import { ViewEducationDocumentsComponent } from './view-education-documents/view
   styleUrls: ['./educations.component.less']
 })
 export class EducationsComponent extends AppComponentBase implements OnInit {
-  userId: number;
-  userEducations: UserEducationDto[] = [];
+  @Input() userId: number;
+  public userEducations: UserEducationDto[] = [];
   isLoading = false;
 
   constructor(
@@ -25,13 +25,15 @@ export class EducationsComponent extends AppComponentBase implements OnInit {
     private _userEducationsService: UserEducationsServiceProxy,
   ) {
     super(injector);
-    this._profileService.user$.subscribe(user => {
-      this.userId = user.id;
-      this.getUserEducations();
-    });
   }
 
   ngOnInit(): void {
+    this._profileService.user$.subscribe(user => {
+      if (user && user.id) {
+        this.userId = user.id;
+      }
+      this.getUserEducations();
+    });
   }
 
   onAddClick(): void {

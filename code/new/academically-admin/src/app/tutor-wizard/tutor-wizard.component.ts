@@ -15,6 +15,7 @@ import { BecomeATutorService } from './_services/become-a-tutor.service';
 export class TutorWizardComponent extends AppComponentBase implements OnInit {
   BecomeATutorStep = BecomeATutorStep;
   currentStep: BecomeATutorStep;
+  isComingSoon = false;
 
   constructor(
     injector: Injector,
@@ -35,7 +36,7 @@ export class TutorWizardComponent extends AppComponentBase implements OnInit {
         takeUntil(this.destroyed$),
       )
       .subscribe(currentStep => {
-        if (currentStep) {
+        if (currentStep !== null && currentStep !== undefined) {
           this.currentStep = currentStep;
           this.navigateToStep();
         }
@@ -53,7 +54,11 @@ export class TutorWizardComponent extends AppComponentBase implements OnInit {
       case BecomeATutorStep.Education:
         this._router.navigate(['/app/tutor-wizard/education']);
         break;
+        case BecomeATutorStep.Research:
+          this._router.navigate(['/app/tutor-wizard/research']);
+          break;
       default:
+        this.isComingSoon = true;
         break;
     }
   }

@@ -54,9 +54,12 @@ namespace Academically.Services.TutorWizard
             var user = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
             ObjectMapper.Map(input, user);
             await UserManager.UpdateAsync(user);
+        }
 
+        public async Task UpdateStep(BecomeATutorStep step)
+        {
             var tutorVerification = await GetCurrent();
-            tutorVerification.CurrentStep = BecomeATutorStep.Education;
+            tutorVerification.CurrentStep = step;
             await _tutorVerificationsRepository.UpdateAsync(tutorVerification);
         }
 
