@@ -4,12 +4,12 @@ import { TutorWizardRoutingModule } from './tutor-wizard-routing.module';
 import { SharedModule } from '@shared/shared.module';
 
 import { TutorWizardComponent } from './tutor-wizard.component';
-import { AboutYouComponent } from './_components/about-you/about-you.component';
+import { TutorWizardStepComponent } from './_components/tutor-wizard-step/tutor-wizard-step.component';
 
 @NgModule({
   declarations: [
     TutorWizardComponent,
-    AboutYouComponent,
+    TutorWizardStepComponent,
   ],
   imports: [
     CommonModule,

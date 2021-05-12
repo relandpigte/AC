@@ -1,0 +1,5 @@
+<a [routerLink]="navigationLink">
+  <i *ngIf="isLockedStep" class="ico fa fa-lock"></i>
+  <i *ngIf="isCompletedStep" class="ico fa fa-check"></i>
+  {{ title | localize }}
+</a>

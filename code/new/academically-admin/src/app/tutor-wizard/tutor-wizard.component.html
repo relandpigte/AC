@@ -18,42 +18,23 @@
           {{ 'Profile' | localize }}
         </div>
         <div class="card-body">
-          <div class="checklist">
-            <div class="custom-control custom-checkbox checklist-control">
-              <input class="custom-control-input" id="checklist1" type="checkbox" readonly checked />
-              <label class="custom-control-label" for="checklist1"></label>
-              <span class="custom-control-caption">
-                {{ 'AboutYou' | localize }}
-              </span>
-            </div>
-            <div class="custom-control custom-checkbox checklist-control">
-              <input class="custom-control-input" id="checklist2" type="checkbox" readonly />
-              <label class="custom-control-label" for="checklist2"></label>
-              <span class="custom-control-caption">
-                {{ 'Education' | localize }}
-              </span>
-            </div>
-            <div class="custom-control custom-checkbox checklist-control">
-              <input class="custom-control-input" id="checklist3" type="checkbox" readonly />
-              <label class="custom-control-label" for="checklist3"></label>
-              <span class="custom-control-caption">
-                {{ 'Research' | localize }}
-              </span>
-            </div>
-            <div class="custom-control custom-checkbox checklist-control">
-              <input class="custom-control-input" id="checklist4" type="checkbox" readonly />
-              <label class="custom-control-label" for="checklist4"></label>
-              <span class="custom-control-caption">
-                {{ 'Languages' | localize }}
-              </span>
-            </div>
-            <div class="custom-control custom-checkbox checklist-control">
-              <input class="custom-control-input" id="checklist5" type="checkbox" readonly />
-              <label class="custom-control-label" for="checklist5"></label>
-              <span class="custom-control-caption">
-                {{ 'ServicesOffered' | localize }}
-              </span>
-            </div>
+          <div class="bs-vertical-wizard">
+            <ul>
+              <li app-tutor-wizard-step title="AboutYou" link="/app/tutor-wizard/about-you"
+                [step]="BecomeATutorStep.AboutYou" [currentStep]="currentStep">
+              </li>
+              <li app-tutor-wizard-step title="Education" link="/app/tutor-wizard/education"
+                [step]="BecomeATutorStep.Education" [currentStep]="currentStep">
+              </li>
+              <li app-tutor-wizard-step title="Research" [step]="BecomeATutorStep.Research" [currentStep]="currentStep">
+              </li>
+              <li app-tutor-wizard-step title="Languages" [step]="BecomeATutorStep.Languages"
+                [currentStep]="currentStep">
+              </li>
+              <li app-tutor-wizard-step title="ServicesOffered" [step]="BecomeATutorStep.ServicesOffered"
+                [currentStep]="currentStep">
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -62,49 +43,24 @@
           {{ 'Verifications' | localize }}
         </div>
         <div class="card-body">
-          <div class="checklist">
-            <div class="custom-control custom-checkbox checklist-control">
-              <input class="custom-control-input" id="checklist1" type="checkbox" readonly />
-              <label class="custom-control-label" for="checklist1"></label>
-              <span class="custom-control-caption">
-                {{ 'ProfilePicture' | localize }}
-              </span>
-            </div>
-            <div class="custom-control custom-checkbox checklist-control">
-              <input class="custom-control-input" id="checklist2" type="checkbox" readonly />
-              <label class="custom-control-label" for="checklist2"></label>
-              <span class="custom-control-caption">
-                {{ 'PhotoId' | localize }}
-              </span>
-            </div>
-            <div class="custom-control custom-checkbox checklist-control">
-              <input class="custom-control-input" id="checklist3" type="checkbox" readonly />
-              <label class="custom-control-label" for="checklist3"></label>
-              <span class="custom-control-caption">
-                {{ 'Address' | localize }}
-              </span>
-            </div>
-            <div class="custom-control custom-checkbox checklist-control">
-              <input class="custom-control-input" id="checklist4" type="checkbox" readonly />
-              <label class="custom-control-label" for="checklist4"></label>
-              <span class="custom-control-caption">
-                {{ 'ContactNumber' | localize }}
-              </span>
-            </div>
-            <div class="custom-control custom-checkbox checklist-control">
-              <input class="custom-control-input" id="checklist5" type="checkbox" readonly />
-              <label class="custom-control-label" for="checklist5"></label>
-              <span class="custom-control-caption">
-                {{ 'References' | localize }}
-              </span>
-            </div>
-            <div class="custom-control custom-checkbox checklist-control">
-              <input class="custom-control-input" id="checklist6" type="checkbox" readonly />
-              <label class="custom-control-label" for="checklist6"></label>
-              <span class="custom-control-caption">
-                {{ 'DbsCheck' | localize }}
-              </span>
-            </div>
+          <div class="bs-vertical-wizard">
+            <ul>
+              <li app-tutor-wizard-step title="ProfilePicture" [step]="BecomeATutorStep.ProfilePicture"
+                [currentStep]="currentStep">
+              </li>
+              <li app-tutor-wizard-step title="PhotoId" [step]="BecomeATutorStep.PhotoId" [currentStep]="currentStep">
+              </li>
+              <li app-tutor-wizard-step title="Address" [step]="BecomeATutorStep.Address" [currentStep]="currentStep">
+              </li>
+              <li app-tutor-wizard-step title="ContactNumber" [step]="BecomeATutorStep.ContactNumber"
+                [currentStep]="currentStep">
+              </li>
+              <li app-tutor-wizard-step title="References" [step]="BecomeATutorStep.References"
+                [currentStep]="currentStep">
+              </li>
+              <li app-tutor-wizard-step title="DbsCheck" [step]="BecomeATutorStep.DbsCheck" [currentStep]="currentStep">
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -113,34 +69,24 @@
           {{ 'TermsAndConditions' | localize }}
         </div>
         <div class="card-body">
-          <div class="checklist">
-            <div class="custom-control custom-checkbox checklist-control">
-              <input class="custom-control-input" id="checklist1" type="checkbox" readonly />
-              <label class="custom-control-label" for="checklist1"></label>
-              <span class="custom-control-caption">
-                {{ 'TermsOfUse' | localize }}
-              </span>
-            </div>
-            <div class="custom-control custom-checkbox checklist-control">
-              <input class="custom-control-input" id="checklist2" type="checkbox" readonly />
-              <label class="custom-control-label" for="checklist2"></label>
-              <span class="custom-control-caption">
-                {{ 'PrivacyPolicy' | localize }}
-              </span>
-            </div>
-            <div class="custom-control custom-checkbox checklist-control">
-              <input class="custom-control-input" id="checklist3" type="checkbox" readonly />
-              <label class="custom-control-label" for="checklist3"></label>
-              <span class="custom-control-caption">
-                {{ 'Declaration' | localize }}
-              </span>
-            </div>
+          <div class="bs-vertical-wizard">
+            <ul>
+              <li app-tutor-wizard-step title="TermsOfUse" [step]="BecomeATutorStep.TermsOfUse"
+                [currentStep]="currentStep">
+              </li>
+              <li app-tutor-wizard-step title="PrivacyPolicy" [step]="BecomeATutorStep.PrivacyPolicy"
+                [currentStep]="currentStep">
+              </li>
+              <li app-tutor-wizard-step title="Declaration" [step]="BecomeATutorStep.Declaration"
+                [currentStep]="currentStep">
+              </li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
     <div class="col-md-9">
-      <app-about-you></app-about-you>
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>

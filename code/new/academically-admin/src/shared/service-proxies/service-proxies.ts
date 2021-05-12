@@ -3681,6 +3681,172 @@ export class TokenAuthServiceProxy {
 }
 
 @Injectable()
+export class TutorWizardServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    getCurrentStep(): Observable<BecomeATutorStep> {
+        let url_ = this.baseUrl + "/api/services/app/TutorWizard/GetCurrentStep";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCurrentStep(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCurrentStep(<any>response_);
+                } catch (e) {
+                    return <Observable<BecomeATutorStep>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<BecomeATutorStep>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetCurrentStep(response: HttpResponseBase): Observable<BecomeATutorStep> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<BecomeATutorStep>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAboutYou(): Observable<AboutYouDto> {
+        let url_ = this.baseUrl + "/api/services/app/TutorWizard/GetAboutYou";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAboutYou(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAboutYou(<any>response_);
+                } catch (e) {
+                    return <Observable<AboutYouDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AboutYouDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAboutYou(response: HttpResponseBase): Observable<AboutYouDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AboutYouDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AboutYouDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateAboutYou(body: AboutYouDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/TutorWizard/UpdateAboutYou";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateAboutYou(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateAboutYou(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateAboutYou(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class UniversitiesServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -5925,6 +6091,57 @@ export class UserServicesServiceProxy {
     }
 }
 
+export class AboutYouDto implements IAboutYouDto {
+    name: string | undefined;
+    surname: string | undefined;
+    about: string | undefined;
+
+    constructor(data?: IAboutYouDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.surname = _data["surname"];
+            this.about = _data["about"];
+        }
+    }
+
+    static fromJS(data: any): AboutYouDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AboutYouDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["surname"] = this.surname;
+        data["about"] = this.about;
+        return data; 
+    }
+
+    clone(): AboutYouDto {
+        const json = this.toJSON();
+        let result = new AboutYouDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAboutYouDto {
+    name: string | undefined;
+    surname: string | undefined;
+    about: string | undefined;
+}
+
 export class ApplicationInfoDto implements IApplicationInfoDto {
     version: string | undefined;
     releaseDate: moment.Moment;
@@ -6155,6 +6372,24 @@ export interface IAuthenticatorDto {
     isEnabled: boolean;
     sharedKey: string | undefined;
     qrCodeUrl: string | undefined;
+}
+
+/** 0 = AboutYou 1 = Education 2 = Research 3 = Languages 4 = ServicesOffered 5 = ProfilePicture 6 = PhotoId 7 = Address 8 = ContactNumber 9 = References 10 = DbsCheck 11 = TermsOfUse 12 = PrivacyPolicy 13 = Declaration */
+export enum BecomeATutorStep {
+    AboutYou = 0,
+    Education = 1,
+    Research = 2,
+    Languages = 3,
+    ServicesOffered = 4,
+    ProfilePicture = 5,
+    PhotoId = 6,
+    Address = 7,
+    ContactNumber = 8,
+    References = 9,
+    DbsCheck = 10,
+    TermsOfUse = 11,
+    PrivacyPolicy = 12,
+    Declaration = 13,
 }
 
 export class ChangePasswordDto implements IChangePasswordDto {
