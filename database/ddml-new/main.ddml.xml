@@ -36,4 +36,5 @@
 	<include file="ddml-new/ddml.2021-05-18-01.alter-users-add-location-fields.xml"/>
 	<include file="ddml-new/ddml.2021-05-18-02.create-timezones-table.xml"/>
 	<include file="ddml-new/ddml.2021-05-04-01.alter-subjects-add-review-fields.xml"/>
+	<include file="ddml-new/ddml.2021-05-12-01.create-tutorverifications-table.xml"/>
 </databaseChangeLog>

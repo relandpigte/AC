@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="ProfessionalOverview">Professional overview</text>
+    <text name="CancelTutorWizardMessage">Are you sure you want to leave the tutor wizard? You can still continue your becoming a tutor process later. Please save your changes before leaving this page.</text>
     <text name="Declaration">Declaration</text>
     <text name="PrivacyPolicy">Privacy policy</text>
     <text name="TermsOfUse">Terms of Use</text>

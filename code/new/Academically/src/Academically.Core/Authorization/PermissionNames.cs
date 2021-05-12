@@ -79,6 +79,7 @@
 
 
         public const string Pages_TutorWizard = "Pages.TutorWizard";
+        public const string Pages_TutorWizard_AboutYou = "Pages.TutorWizard.AboutYou";
 
 
         public const string Pages_Widgets_Verifications = "Pages.Widgets.Verifications";
