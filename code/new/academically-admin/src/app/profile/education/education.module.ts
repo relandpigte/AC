@@ -32,5 +32,8 @@ import { ViewQualificationDocumentsComponent } from './_components/qualification
     SharedModule,
     AppSharedModule,
   ],
+  exports: [
+    EducationsComponent,
+  ]
 })
 export class EducationModule { }

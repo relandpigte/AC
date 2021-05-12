@@ -87,6 +87,8 @@ namespace Academically.Authorization
 
             var tutorWizardPermission = context.CreatePermission(PermissionNames.Pages_TutorWizard, L("TutorWizard"));
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_AboutYou, L("AboutYou"));
+            tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_Education, L("Education"));
+            tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_Research, L("Research"));
 
 
             context.CreatePermission(PermissionNames.Pages_Widgets_Verifications, L("Verifications"));

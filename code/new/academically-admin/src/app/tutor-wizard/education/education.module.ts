@@ -5,6 +5,7 @@ import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
 import { EducationComponent } from './education.component';
+import * as ProfileEducationModule from '@app/profile/education/education.module';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { EducationComponent } from './education.component';
     EducationRoutingModule,
     SharedModule,
     AppSharedModule,
+    ProfileEducationModule.EducationModule,
   ]
 })
 export class EducationModule { }

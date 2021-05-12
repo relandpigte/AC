@@ -36,6 +36,13 @@ import { TutorWizardComponent } from './tutor-wizard.component';
                     (m) => m.EducationModule,
                   ),
               },
+              {
+                path: 'research',
+                loadChildren: () =>
+                  import('@app/tutor-wizard/research/research.module').then(
+                    (m) => m.ResearchModule,
+                  ),
+              },
             ]
           },
         ],
