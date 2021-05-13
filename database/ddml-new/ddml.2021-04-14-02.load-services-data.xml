@@ -3,14 +3,14 @@
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xmlns:pro="http://www.liquibase.org/xml/ns/pro"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
-    <changeSet author="gilbert" id="F0E2FD1B-FC9D-454E-A2E5-BF772309BB3D" runAlways="true">
+    <changeSet author="gilbert" id="F0E2FD1B-FC9D-454E-A2E5-BF772309BB3D" runAlways="false">
         <comment>Load "academicallyservices" data</comment>
         <loadUpdateData tableName="academicallyservices" file="ddml-new/Services.csv" primaryKey="Id">
             <column name="Id" type="string"/>
             <column name="Name" type="string"/>
         </loadUpdateData>
     </changeSet>
-    <changeSet author="gilbert" id="2963CA71-DFBF-46C0-B26C-9B590725ACB9" runAlways="true">
+    <changeSet author="gilbert" id="2963CA71-DFBF-46C0-B26C-9B590725ACB9" runAlways="false">
         <comment>Load "academicallyservicemappings" data</comment>
         <loadUpdateData tableName="academicallyservicemappings" file="ddml-new/ServiceMapping.csv" primaryKey="Node1Id, Node2Id, Node3Id">
             <column name="Id" type="string"/>
