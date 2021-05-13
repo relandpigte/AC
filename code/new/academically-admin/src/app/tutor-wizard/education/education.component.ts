@@ -16,7 +16,7 @@ export class EducationComponent extends AppComponentBase {
 
   constructor(
     injector: Injector,
-    private _bomeATutorService: BecomeATutorService,
+    private _becomeATutorService: BecomeATutorService,
     private _tutorWizardService: TutorWizardServiceProxy,
   ) {
     super(injector);
@@ -34,7 +34,7 @@ export class EducationComponent extends AppComponentBase {
       )
       .subscribe(() => {
         this.notify.success(this.l('SavedSuccessfully'));
-        this._bomeATutorService.currentStep = nextStep;
+        this._becomeATutorService.currentStep = nextStep;
       });
   }
 }

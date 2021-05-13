@@ -15,7 +15,6 @@ import { BecomeATutorService } from './_services/become-a-tutor.service';
 export class TutorWizardComponent extends AppComponentBase implements OnInit {
   BecomeATutorStep = BecomeATutorStep;
   currentStep: BecomeATutorStep;
-  isComingSoon = false;
 
   constructor(
     injector: Injector,
@@ -47,19 +46,21 @@ export class TutorWizardComponent extends AppComponentBase implements OnInit {
   }
 
   private navigateToStep(): void {
+    let routeName = '';
     switch (this.currentStep) {
       case BecomeATutorStep.AboutYou:
-        this._router.navigate(['/app/tutor-wizard/about-you']);
+        routeName = 'about-you';
         break;
       case BecomeATutorStep.Education:
-        this._router.navigate(['/app/tutor-wizard/education']);
+        routeName = 'education';
         break;
-        case BecomeATutorStep.Research:
-          this._router.navigate(['/app/tutor-wizard/research']);
-          break;
-      default:
-        this.isComingSoon = true;
+      case BecomeATutorStep.Research:
+        routeName = 'research';
+        break;
+      case BecomeATutorStep.ServicesOffered:
+        routeName = 'services-offered';
         break;
     }
+    this._router.navigate([`/app/tutor-wizard/${routeName}`]);
   }
 }

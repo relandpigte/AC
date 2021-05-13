@@ -31,6 +31,9 @@ import { CreateEditPublicationComponent } from './_components/publications/creat
     SharedModule,
     AppSharedModule,
     TreeModule,
-  ]
+  ],
+  exports: [
+    ResearchComponent,
+  ],
 })
 export class ResearchModule { }

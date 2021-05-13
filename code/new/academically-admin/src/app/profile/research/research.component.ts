@@ -2,7 +2,7 @@ import { Component, Injector } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 
 @Component({
-  selector: 'app-research',
+  selector: 'app-profile-research',
   templateUrl: './research.component.html',
   styleUrls: ['./research.component.less']
 })
