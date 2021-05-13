@@ -1,0 +1,42 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="Gilbert" id="75C14FC0-CFE0-45E7-8E6B-FEE9243528C8">
+        <comment>Delete "academicallyservices" duplicate data</comment>
+        <sql>
+        DELETE
+        FROM academicallyservices
+        WHERE ID IN (
+                '402410a6-d45f-423f-ab69-e62d55348dac'
+                ,'d76d644d-11b8-4f6a-8079-e7719e6a9c75'
+                ,'0c7b23af-c5a5-4e9d-8784-7994466a3a50'
+                ,'8c0821ff-9027-4177-b30c-17a6437b91cc'
+                ,'1b16ca5e-b334-4dff-aa6b-adb6e4ce89f1'
+                ,'4b4feede-0c51-4db2-b46a-4dc8abc4b7a8'
+                ,'b13d4c53-8b71-4f67-9912-0ab0d0714247'
+                ,'23a1dc9b-2e19-4edc-a2fa-5f2f741c3b79'
+                ,'a212df96-548c-4702-bba4-532e04494cbb'
+                ,'d07e3046-f681-4841-83eb-b7794c4e41d5'
+                ,'93cd7c91-e40f-459f-bd39-436d89221ca4'
+                ,'095dd7c5-ad35-430f-99ca-881b81468592'
+                ,'edc70fc2-c551-4f94-bfdf-93863da160ec'
+                ,'5ac68481-3c46-46f5-acd6-09be48dbafa8'
+                ,'41893412-8f67-4d58-baf2-abb4f96da0ba'
+                ,'d789a168-652b-49df-8367-0945e183486e'
+                ,'555381ae-f4fe-4b33-87ce-12e38f12ba6a'
+                ,'ef700f76-fbfc-475f-921b-bca9931f9719'
+                ,'1db2580e-8fe4-4c65-bf05-2af023676c02'
+                ,'57468258-b18a-47b8-b620-1a1af1d0d4a1'
+                ,'f47ee9ef-8c00-4008-b87f-69c778de0bd5'
+                ,'3fbed4b8-aa5e-4272-a264-4af14efd8edd'
+                ,'88b77771-9590-4f58-b04d-0d6ca75b6f05'
+                ,'24db2d03-c079-4619-bafb-26ad7d8ff261'
+                ,'b060591f-e4a8-4552-9903-0fbf41c6ed66'
+                ,'f4c0dbdb-1144-431e-ae0f-f52fa4867703'
+                ,'79955c4b-f0a4-41f5-bedb-30a449b785a0'
+                );
+        </sql>
+    </changeSet>
+</databaseChangeLog>

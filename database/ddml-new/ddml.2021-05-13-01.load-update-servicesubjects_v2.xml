@@ -3,11 +3,11 @@
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xmlns:pro="http://www.liquibase.org/xml/ns/pro"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
-    <changeSet author="Gilbert" id="1618810101805-50" runAlways="false">
-        <comment>Load "academicallysubjects" data</comment>
-        <loadUpdateData tableName="academicallysubjects" file="ddml-new/Subjects.csv" primaryKey="Id">
-            <column name="Id" type="string"/>
-            <column name="Name" type="string"/>
+    <changeSet author="Gilbert" id="B894C2E7-8FE8-4FD1-85D4-80C2F964F49F" runAlways="true">
+        <comment>Load "academicallyservicesubjects" data</comment>
+        <loadUpdateData tableName="academicallyservicesubjects" file="ddml-new/ServiceSubjects_v2.csv" primaryKey="ServiceId, SubjectId">
+            <column name="ServiceId" type="string"/>
+            <column name="SubjectId" type="string"/>
         </loadUpdateData>
     </changeSet>
 </databaseChangeLog>
