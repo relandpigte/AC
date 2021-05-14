@@ -1,0 +1,37 @@
+<form class="form-horizontal" autocomplete="off" #createEditForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <abp-modal-header [title]="(model && !model.id ? 'AddLanguage' : 'EditLanguage') | localize"
+      (onCloseClick)="onCloseClick()"></abp-modal-header>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group col-12 required">
+          <label class="col-form-label">{{ "Language" | localize }}</label>
+          <select class="form-control" id="newOtherSpokenLanguage" name="newOtherSpokenLanguage"
+            [(ngModel)]="model.spokenLanguageId" #spokenLanguageIdModel="ngModel" #spokenLanguageIdEl required>
+            <option [value]="undefined">{{ 'SelectLanguage' | localize }}</option>
+            <option *ngFor="let s of unSelectedSpokenLanguages" [value]="s.id">
+              {{ s.name | localize }}
+            </option>
+          </select>
+          <abp-validation-summary [control]="spokenLanguageIdModel" [controlEl]="spokenLanguageIdEl">
+          </abp-validation-summary>
+        </div>
+        <div class="form-group col-12 mb-0 required">
+          <label class="col-form-label">{{ "Proficiency" | localize }}</label>
+          <select class="form-control" required id="newProficiency" name="newProficiency"
+            [(ngModel)]="model.proficiency" #proficiencyModel="ngModel" #proficiencyEl required>
+            <option *ngFor="let proficiency of SpokenLanguageProficiency | enumToArray | keyvalue"
+              [value]="proficiency.key">
+              {{ proficiency.value | localize }}
+            </option>
+          </select>
+          <abp-validation-summary [control]="proficiencyModel" [controlEl]="proficiencyEl">
+          </abp-validation-summary>
+        </div>
+      </div>
+    </div>
+    <abp-modal-footer [saveLabel]="(model.id ? 'Update' : 'Add') | localize" [saveDisabled]="!createEditForm.form.valid"
+      (onCancelClick)="onCloseClick()">
+    </abp-modal-footer>
+  </div>
+</form>

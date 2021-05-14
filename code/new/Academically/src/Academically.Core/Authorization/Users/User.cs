@@ -31,6 +31,7 @@ namespace Academically.Authorization.Users
         public virtual Document ProfilePictureDocument { get; set; }
 
         public virtual ICollection<UserEducation> UserEducations { get; set; }
+        public virtual ICollection<UserSpokenLanguage> UserSpokenLanguages { get; set; }
 
 
         public const string DefaultPassword = "123qwe";

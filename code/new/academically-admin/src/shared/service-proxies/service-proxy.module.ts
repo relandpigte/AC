@@ -34,6 +34,8 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.TimeZonesServiceProxy,
         ApiServiceProxies.SubjectsServiceProxy,
         ApiServiceProxies.TutorWizardServiceProxy,
+        ApiServiceProxies.SpokenLanguagesServiceProxy,
+        ApiServiceProxies.UserSpokenlanguageServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

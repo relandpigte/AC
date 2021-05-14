@@ -2685,6 +2685,73 @@ export class SessionServiceProxy {
 }
 
 @Injectable()
+export class SpokenLanguagesServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    get(): Observable<SpokenLanguageDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/SpokenLanguages/Get";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<SpokenLanguageDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<SpokenLanguageDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<SpokenLanguageDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(SpokenLanguageDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<SpokenLanguageDto[]>(<any>null);
+    }
+}
+
+@Injectable()
 export class SubjectsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -6143,6 +6210,130 @@ export class UserServicesServiceProxy {
     }
 }
 
+@Injectable()
+export class UserSpokenlanguageServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param userId (optional) 
+     * @return Success
+     */
+    getUserSpokenLanguages(userId: number | undefined): Observable<UserSpokenLanguageDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/UserSpokenlanguage/GetUserSpokenLanguages?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUserSpokenLanguages(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUserSpokenLanguages(<any>response_);
+                } catch (e) {
+                    return <Observable<UserSpokenLanguageDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserSpokenLanguageDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetUserSpokenLanguages(response: HttpResponseBase): Observable<UserSpokenLanguageDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(UserSpokenLanguageDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserSpokenLanguageDto[]>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    editUserSpokenLanguages(body: EditUserSpokenLanguagesDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserSpokenlanguage/EditUserSpokenLanguages";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processEditUserSpokenLanguages(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processEditUserSpokenLanguages(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processEditUserSpokenLanguages(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
 export class AboutYouDto implements IAboutYouDto {
     name: string | undefined;
     surname: string | undefined;
@@ -6908,6 +7099,112 @@ export enum DocumentType {
     Qualification = 3,
     Passport = 4,
     Education = 5,
+}
+
+export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {
+    spokenLanguageId: string;
+    proficiency: SpokenLanguageProficiency;
+
+    constructor(data?: IEditOtherUserSpokenLanguageDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.spokenLanguageId = _data["spokenLanguageId"];
+            this.proficiency = _data["proficiency"];
+        }
+    }
+
+    static fromJS(data: any): EditOtherUserSpokenLanguageDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EditOtherUserSpokenLanguageDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["spokenLanguageId"] = this.spokenLanguageId;
+        data["proficiency"] = this.proficiency;
+        return data; 
+    }
+
+    clone(): EditOtherUserSpokenLanguageDto {
+        const json = this.toJSON();
+        let result = new EditOtherUserSpokenLanguageDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEditOtherUserSpokenLanguageDto {
+    spokenLanguageId: string;
+    proficiency: SpokenLanguageProficiency;
+}
+
+export class EditUserSpokenLanguagesDto implements IEditUserSpokenLanguagesDto {
+    userId: number;
+    englishProficiency: SpokenLanguageProficiency;
+    otherUserSpokenLanguages: EditOtherUserSpokenLanguageDto[] | undefined;
+
+    constructor(data?: IEditUserSpokenLanguagesDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userId = _data["userId"];
+            this.englishProficiency = _data["englishProficiency"];
+            if (Array.isArray(_data["otherUserSpokenLanguages"])) {
+                this.otherUserSpokenLanguages = [] as any;
+                for (let item of _data["otherUserSpokenLanguages"])
+                    this.otherUserSpokenLanguages.push(EditOtherUserSpokenLanguageDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): EditUserSpokenLanguagesDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EditUserSpokenLanguagesDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["englishProficiency"] = this.englishProficiency;
+        if (Array.isArray(this.otherUserSpokenLanguages)) {
+            data["otherUserSpokenLanguages"] = [];
+            for (let item of this.otherUserSpokenLanguages)
+                data["otherUserSpokenLanguages"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): EditUserSpokenLanguagesDto {
+        const json = this.toJSON();
+        let result = new EditUserSpokenLanguagesDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEditUserSpokenLanguagesDto {
+    userId: number;
+    englishProficiency: SpokenLanguageProficiency;
+    otherUserSpokenLanguages: EditOtherUserSpokenLanguageDto[] | undefined;
 }
 
 export class EducationLevelDto implements IEducationLevelDto {
@@ -8434,6 +8731,61 @@ export class ServiceMappingDto implements IServiceMappingDto {
 export interface IServiceMappingDto {
     id: string;
     service: ServiceDto;
+}
+
+export class SpokenLanguageDto implements ISpokenLanguageDto {
+    id: string;
+    name: string | undefined;
+
+    constructor(data?: ISpokenLanguageDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): SpokenLanguageDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SpokenLanguageDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+
+    clone(): SpokenLanguageDto {
+        const json = this.toJSON();
+        let result = new SpokenLanguageDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISpokenLanguageDto {
+    id: string;
+    name: string | undefined;
+}
+
+/** 0 = Basic 1 = Conversational 2 = Fluent 3 = NativeOrBilingual */
+export enum SpokenLanguageProficiency {
+    Basic = 0,
+    Conversational = 1,
+    Fluent = 2,
+    NativeOrBilingual = 3,
 }
 
 export class StudentRatingDto implements IStudentRatingDto {
@@ -10505,6 +10857,65 @@ export interface IUserServiceDto {
     serviceMappingId: string;
     subjects: SubjectDto[] | undefined;
     disciplineTaxonomies: DisciplineTaxonomyDto[] | undefined;
+}
+
+export class UserSpokenLanguageDto implements IUserSpokenLanguageDto {
+    id: string;
+    userId: number;
+    spokenLanguageId: string;
+    spokenLanguageName: string | undefined;
+    proficiency: SpokenLanguageProficiency;
+
+    constructor(data?: IUserSpokenLanguageDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userId = _data["userId"];
+            this.spokenLanguageId = _data["spokenLanguageId"];
+            this.spokenLanguageName = _data["spokenLanguageName"];
+            this.proficiency = _data["proficiency"];
+        }
+    }
+
+    static fromJS(data: any): UserSpokenLanguageDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserSpokenLanguageDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userId"] = this.userId;
+        data["spokenLanguageId"] = this.spokenLanguageId;
+        data["spokenLanguageName"] = this.spokenLanguageName;
+        data["proficiency"] = this.proficiency;
+        return data; 
+    }
+
+    clone(): UserSpokenLanguageDto {
+        const json = this.toJSON();
+        let result = new UserSpokenLanguageDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserSpokenLanguageDto {
+    id: string;
+    userId: number;
+    spokenLanguageId: string;
+    spokenLanguageName: string | undefined;
+    proficiency: SpokenLanguageProficiency;
 }
 
 export class VerificationStatusDto implements IVerificationStatusDto {

@@ -33,6 +33,8 @@
 	<include file="ddml-new/ddml.2021-04-17-02.load-update-subjects.xml"/>
 	<include file="ddml-new/ddml.2021-04-17-03.load-update-servicesubjects.xml"/>
 	<include file="ddml-new/ddml.2021-04-26-01.create-userservices-tables.xml"/>
+	<include file="ddml-new/ddml.2021-05-06-01.create-user-languages-tables.xml"/>
+	<include file="ddml-new/ddml.2021-05-06-02.load-languages.xml"/>
 	<include file="ddml-new/ddml.2021-05-12-01.delete-duplicate-services.xml"/>
 	<include file="ddml-new/ddml.2021-05-18-01.alter-users-add-location-fields.xml"/>
 	<include file="ddml-new/ddml.2021-05-18-02.create-timezones-table.xml"/>
