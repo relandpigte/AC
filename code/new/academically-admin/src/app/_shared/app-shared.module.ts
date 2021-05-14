@@ -8,12 +8,15 @@ import { QuillModule } from 'ngx-quill';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
+import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
+
 import { DocumentUploaderComponent } from './components/document-uploader/document-uploader.component';
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
 import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
 
 @NgModule({
   declarations: [
+    EnumToArrayPipe,
     DocumentUploaderComponent,
     ImageCropperComponent,
     ImageGalleryComponent,
@@ -38,6 +41,7 @@ import { ImageGalleryComponent } from './components/image-gallery/image-gallery.
     QuillModule,
     NgxPaginationModule,
     TooltipModule,
+    EnumToArrayPipe,
     DocumentUploaderComponent,
     ImageCropperComponent,
     ImageGalleryComponent,

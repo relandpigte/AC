@@ -1,0 +1,36 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">{{ "LanguageSpoken" | localize }}</h4>
+    <div class="col-auto row">
+      <button class="btn btn-sm btn-light" type="button" (click)="$event.preventDefault(); onEdit()">
+        <i class="fe fe-edit-2"></i>
+      </button>
+    </div>
+  </div>
+  <div class="card-body" [loader]="isLoading">
+    <div *ngIf="userSpokenLanguages" class="list-group list-group-flush my-n3">
+      <div *ngIf="userSpokenLanguages.length === 0" class="list-group-item">
+        <p class="text-muted text-center m-0">{{ "NoLanguageSet" | localize }}</p>
+      </div>
+      <div class="list-group-item" *ngFor="let userSpokenLanguage of userSpokenLanguages">
+        <div class="row align-items-center">
+          <div class="col-auto">
+            <div class="avatar avatar-sm">
+              <div class="avatar-title font-size-lg bg-primary-soft rounded-circle text-primary">
+                <i class="fe fe-mail"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col d-flex flex-column ml-n2">
+            <h5 class="m-0 text-normal">
+              {{ userSpokenLanguage.spokenLanguageName }}
+            </h5>
+            <h6 class="m-0 text-muted">
+              {{ SpokenLanguageProficiency[userSpokenLanguage.proficiency] | localize }}
+            </h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

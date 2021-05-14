@@ -1,6 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="SelectLanguage">Select Language</text>
+    <text name="AverageRating">Average Rating</text>
+    <text name="LanguageSpoken">Language Spoken</text>
+    <text name="Basic">Basic</text>
+    <text name="Conversational">Conversational</text>
+    <text name="Fluent">Fluent</text>
+    <text name="NativeOrBilingual">Native Or Bilingual</text>
+    <text name="Languages">Languages</text>
+    <text name="WhatIsYourEnglishProficiency">What is your English proficiency?</text>
+    <text name="WhatOtherLanguageDoYouSpeak">What other language do you speak?</text>
+    <text name="AddLanguage">Add Language</text>
+    <text name="EditLanguage">Edit Language</text>
+    <text name="NoLanguageSet">No Language Set</text>
     <text name="ProfessionalOverview">Professional overview</text>
     <text name="CancelTutorWizardMessage">Are you sure you want to leave the tutor wizard? You can still continue your becoming a tutor process later. Please save your changes before leaving this page.</text>
     <text name="Declaration">Declaration</text>
@@ -858,6 +871,5 @@
     <text name="ResetPasswordStepOneInfo">1. Enter your administrator password</text>
     <text name="ResetPasswordStepTwoInfo">2. Copy this random password so you can send it to the user</text>
     <text name="ThisWeeksIncome">This Weeks Income</text>
-    <text name="AverageRating">Average Rating</text>
   </texts>
 </localizationDictionary>
