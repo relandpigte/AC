@@ -16,6 +16,9 @@
         public const string ITagg_Sms_Password = "ITagg.Sms.Password";
         public const string Email_FromName = "Email.FromName";
         public const string Email_FromEmail = "Email.FromEmail";
+        public const string Providers_Stripe_ClientId = "Providers.Stripe.ClientId";
+        public const string Providers_Stripe_PublicKey = "Providers.Stripe.PublicKey";
+        public const string Providers_Stripe_SecretKey = "Providers.Stripe.SecretKey";
 
         public static string ToAppSettingKey(this string settingName)
         {

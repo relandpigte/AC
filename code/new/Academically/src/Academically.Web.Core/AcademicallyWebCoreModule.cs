@@ -15,6 +15,7 @@ using SourceCloud.Core.Configurations;
 using SourceCloud.Core.Services;
 using SourceCloud.Provider.Aws;
 using SourceCloud.Provider.ITagg;
+using SourceCloud.Provider.Stripe.Payments;
 using System;
 using System.Text;
 
@@ -53,6 +54,7 @@ namespace Academically
             RegisterFileManagerService();
             RegisterSmsService();
             RegisterEmailService();
+            RegisterPaymentProvider();
         }
 
         public override void Initialize()
@@ -103,6 +105,16 @@ namespace Academically
             var emailConfig = IocManager.Resolve<EmailConfiguration>();
             emailConfig.FromName = _appConfiguration[AppSettingNames.Email_FromName.ToAppSettingKey()];
             emailConfig.FromEmail = _appConfiguration[AppSettingNames.Email_FromEmail.ToAppSettingKey()];
+        }
+
+        private void RegisterPaymentProvider()
+        {
+            IocManager.Register<IPaymentService, StripePaymentService>(Abp.Dependency.DependencyLifeStyle.Singleton);
+            IocManager.Register<StripePaymentOptions>();
+            var paymentOptions = IocManager.Resolve<StripePaymentOptions>();
+            paymentOptions.ClientId = _appConfiguration[AppSettingNames.Providers_Stripe_ClientId.ToAppSettingKey()];
+            paymentOptions.PublicKey = _appConfiguration[AppSettingNames.Providers_Stripe_PublicKey.ToAppSettingKey()];
+            paymentOptions.SecretKey = _appConfiguration[AppSettingNames.Providers_Stripe_SecretKey.ToAppSettingKey()];
         }
     }
 }
