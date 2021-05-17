@@ -44,6 +44,7 @@ namespace Academically.Users.Dto
         public string PhoneNumber { get; set; }
         public DateTime? LastLoginTime { get; set; }
         public DateTime CreationTime { get; set; }
+        public string StripeUserId { get; set; }
 
         public DocumentDto ProfilePictureDocument { get; set; }
 

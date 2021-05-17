@@ -686,6 +686,70 @@ export class PassportVerificationsServiceProxy {
 }
 
 @Injectable()
+export class PaymentsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param code (optional) 
+     * @return Success
+     */
+    onboardUser(code: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Payments/OnboardUser?";
+        if (code === null)
+            throw new Error("The parameter 'code' cannot be null.");
+        else if (code !== undefined)
+            url_ += "code=" + encodeURIComponent("" + code) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOnboardUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOnboardUser(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processOnboardUser(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class PhoneVerificationsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -9606,6 +9670,7 @@ export class UserDto implements IUserDto {
     phoneNumber: string | undefined;
     lastLoginTime: moment.Moment | undefined;
     creationTime: moment.Moment;
+    stripeUserId: string | undefined;
     profilePictureDocument: DocumentDto;
     coverPhotoUrl: string | undefined;
     profilePictureUrl: string | undefined;
@@ -9645,6 +9710,7 @@ export class UserDto implements IUserDto {
             this.phoneNumber = _data["phoneNumber"];
             this.lastLoginTime = _data["lastLoginTime"] ? moment(_data["lastLoginTime"].toString()) : <any>undefined;
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.stripeUserId = _data["stripeUserId"];
             this.profilePictureDocument = _data["profilePictureDocument"] ? DocumentDto.fromJS(_data["profilePictureDocument"]) : <any>undefined;
             this.coverPhotoUrl = _data["coverPhotoUrl"];
             this.profilePictureUrl = _data["profilePictureUrl"];
@@ -9692,6 +9758,7 @@ export class UserDto implements IUserDto {
         data["phoneNumber"] = this.phoneNumber;
         data["lastLoginTime"] = this.lastLoginTime ? this.lastLoginTime.toISOString() : <any>undefined;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["stripeUserId"] = this.stripeUserId;
         data["profilePictureDocument"] = this.profilePictureDocument ? this.profilePictureDocument.toJSON() : <any>undefined;
         data["coverPhotoUrl"] = this.coverPhotoUrl;
         data["profilePictureUrl"] = this.profilePictureUrl;
@@ -9739,6 +9806,7 @@ export interface IUserDto {
     phoneNumber: string | undefined;
     lastLoginTime: moment.Moment | undefined;
     creationTime: moment.Moment;
+    stripeUserId: string | undefined;
     profilePictureDocument: DocumentDto;
     coverPhotoUrl: string | undefined;
     profilePictureUrl: string | undefined;

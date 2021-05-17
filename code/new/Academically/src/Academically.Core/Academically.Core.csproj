@@ -27,5 +27,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SourceCloud.Provider.Aws\SourceCloud.Provider.Aws.csproj" />
     <ProjectReference Include="..\SourceCloud.Provider.ITagg\SourceCloud.Provider.ITagg.csproj" />
+    <ProjectReference Include="..\SourceCloud.Provider.Stripe\SourceCloud.Provider.Stripe.csproj" />
   </ItemGroup>
 </Project>

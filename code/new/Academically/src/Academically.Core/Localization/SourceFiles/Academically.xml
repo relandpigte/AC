@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="ConnectStripe">Connect Stripe</text>
+    <text name="StripeConnectionMessage">Even when you set your profile to public, you need to connect your account to stripe in order for others to be able to search you on the Academically network.</text>
+    <text name="StripeConnectionRequired">Stripe connection required</text>
+    <text name="StripeOnboardingSuccessMessage">You were successfully onboarded to stripe!</text>
+    <text name="StripeOnboardingConfirmationMessage">You will be onboarded to stripe. Are you sure you want to continue?</text>
     <text name="SelectLanguage">Select Language</text>
     <text name="AverageRating">Average Rating</text>
     <text name="LanguageSpoken">Language Spoken</text>
