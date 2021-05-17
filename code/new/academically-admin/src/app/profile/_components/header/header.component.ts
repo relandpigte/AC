@@ -2,6 +2,7 @@ import { Component, Injector } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProfileService } from '@app/profile/_services/profile.service';
 import { AppComponentBase } from '@shared/app-component-base';
+import { uiEvents } from '@shared/constants/ui-events.constant';
 import { NavigationPosition } from '@shared/enums/theme-settings/navigation-position.enum';
 import { IThemeSetting } from '@shared/interfaces/theme-setting.interface';
 import { UserDto } from '@shared/service-proxies/service-proxies';
@@ -37,5 +38,11 @@ export class HeaderComponent extends AppComponentBase {
     route.data.subscribe(data => {
       this.isViewOnly = data.isViewOnly;
     });
+  }
+
+  onProfilePictureUpdated(profilePictureUrl: string): void {
+    this.user.profilePictureUrl = profilePictureUrl;
+    this._profileService.user = this.user;
+    abp.event.trigger(uiEvents.profileDetailsUpdated, profilePictureUrl);
   }
 }

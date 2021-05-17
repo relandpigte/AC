@@ -50,6 +50,20 @@ import { TutorWizardComponent } from './tutor-wizard.component';
                     (m) => m.ServicesOfferedModule,
                   ),
               },
+              {
+                path: 'profile-picture',
+                loadChildren: () =>
+                  import('@app/tutor-wizard/profile-picture/profile-picture.module').then(
+                    (m) => m.ProfilePictureModule,
+                  ),
+              },
+              {
+                path: 'photo-id',
+                loadChildren: () =>
+                  import('@app/tutor-wizard/photo-id/photo-id.module').then(
+                    (m) => m.PhotoIdModule,
+                  ),
+              },
             ]
           },
         ],

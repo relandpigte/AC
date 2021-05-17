@@ -83,6 +83,8 @@
         public const string Pages_TutorWizard_Education = "Pages.TutorWizard.Education";
         public const string Pages_TutorWizard_Research = "Pages.TutorWizard.Research";
         public const string Pages_TutorWizard_ServicesOffered = "Pages.TutorWizard.ServicesOffered";
+        public const string Pages_TutorWizard_ProfilePicture = "Pages.TutorWizard.ProfilePicture";
+        public const string Pages_TutorWizard_PhotoId = "Pages.TutorWizard.PhotoId";
 
 
         public const string Pages_Widgets_Verifications = "Pages.Widgets.Verifications";

@@ -60,6 +60,12 @@ export class TutorWizardComponent extends AppComponentBase implements OnInit {
       case BecomeATutorStep.ServicesOffered:
         routeName = 'services-offered';
         break;
+      case BecomeATutorStep.ProfilePicture:
+        routeName = 'profile-picture';
+        break;
+      case BecomeATutorStep.PhotoId:
+        routeName = 'photo-id';
+        break;
     }
     this._router.navigate([`/app/tutor-wizard/${routeName}`]);
   }

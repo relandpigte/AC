@@ -23,7 +23,6 @@ export class ResearchComponent extends AppComponentBase {
   ngOnInit(): void {
   }
 
-
   onNextClick(): void {
     this.isLoading = true;
     const nextStep = BecomeATutorStep.ServicesOffered;
