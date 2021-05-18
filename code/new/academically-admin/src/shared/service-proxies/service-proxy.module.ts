@@ -37,6 +37,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.SpokenLanguagesServiceProxy,
         ApiServiceProxies.UserSpokenlanguageServiceProxy,
         ApiServiceProxies.PaymentsServiceProxy,
+        ApiServiceProxies.PhotoIdVerificationsServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

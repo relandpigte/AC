@@ -10,9 +10,13 @@
   <input #documentUploader [disabled]="loadingImageCropper" (change)="onFileChange($event)" [accept]="allowedExtensions"
     class="document-input" type="file" name="DocumentUploader" id="DocumentUploader">
 </div>
-<ul *ngIf="files && files.length > 0" class="list-group mt-2">
+<ul *ngIf="files && files.length > 0" class="list-group mt-2 document-uploader-preview">
   <li *ngFor="let file of files; let i = index" class="list-group-item">
     <div class="row align-items-center">
+      <div *ngIf="previewImages" [class.col-12]="largeImagePreview" [class.col-auto]="!largeImagePreview"
+        class="mr-n2 text-center">
+        <img class="image-preview" alt="preview" [src]="getSanitizedFileUrl(file)" />
+      </div>
       <div class="col ml-n2">
         <div class="col">
           <h4 class="text-body text-focus mb-1">
