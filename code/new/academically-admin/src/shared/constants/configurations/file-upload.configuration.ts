@@ -12,5 +12,5 @@ export const fileUploadConfiguration = {
     '.doc',
     '.docx',
   ],
-  profilePictureMaxFileSize: 2000000,
+  maxFileSize: 1000000,
 };

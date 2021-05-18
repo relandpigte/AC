@@ -12,10 +12,14 @@
         public const string Aws_S3_Folders_Passports = "Aws.S3.Folders.Passports";
         public const string Aws_S3_Folders_ProfilePictures = "Aws.S3.Folders.ProfilePictures";
         public const string Aws_S3_Folders_Educations = "Aws.S3.Folders.Educations";
+        public const string Aws_S3_Folders_PhotoIds = "Aws.S3.Folders.PhotoIds";
         public const string ITagg_Sms_Username = "ITagg.Sms.Username";
         public const string ITagg_Sms_Password = "ITagg.Sms.Password";
         public const string Email_FromName = "Email.FromName";
         public const string Email_FromEmail = "Email.FromEmail";
+        public const string Providers_Stripe_ClientId = "Providers.Stripe.ClientId";
+        public const string Providers_Stripe_PublicKey = "Providers.Stripe.PublicKey";
+        public const string Providers_Stripe_SecretKey = "Providers.Stripe.SecretKey";
 
         public static string ToAppSettingKey(this string settingName)
         {

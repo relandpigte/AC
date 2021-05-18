@@ -42,6 +42,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<TimeZone> TimeZones { get; set; }
         public virtual DbSet<SpokenLanguage> SpokenLanguages { get; set; }
         public virtual DbSet<UserSpokenLanguage> UserSpokenLanguages { get; set; }
+        public virtual DbSet<PhotoIdVerification> PhotoIdVerifications { get; set; }
 
         public virtual DbSet<TutorVerification> TutorVerifications { get; set; }
 

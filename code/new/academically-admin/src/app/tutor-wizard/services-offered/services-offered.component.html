@@ -3,4 +3,7 @@
   <button [routerLink]="['/app/tutor-wizard/research']" type="button" class="btn btn-white">
     {{ 'Back' | localize }}
   </button>
+  <button (click)="onNextClick()" type="submit" class="btn btn-primary">
+    {{ 'Next' | localize }}
+  </button>
 </div>

@@ -23,6 +23,7 @@ namespace Academically.Authorization.Users
         public Guid? ProfilePictureDocumentId { get; set; }
         public double? Longitude { get; set; }
         public double? Latitude { get; set; }
+        public string StripeUserId { get; set; }
 
         [ForeignKey("CoverPhotoDocumentId")]
         public virtual Document CoverPhotoDocument { get; set; }

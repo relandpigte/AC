@@ -1,9 +1,7 @@
-import { Component, ElementRef, Injector, ViewChild } from '@angular/core';
-import { ProfileService } from '@app/profile/_services/profile.service';
+import { Component, ElementRef, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
 import { ImageCropperComponent } from '@app/_shared/components/image-cropper/image-cropper.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { uiEvents } from '@shared/constants/ui-events.constant';
 import { FileParameter, ProfilesServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import { BsModalService } from 'ngx-bootstrap/modal';
 
@@ -13,21 +11,18 @@ import { BsModalService } from 'ngx-bootstrap/modal';
   styleUrls: ['./profile-picture-changer.component.less']
 })
 export class ProfilePictureChangerComponent extends AppComponentBase {
-  fileUploadSettings = fileUploadConfiguration;
+  @Input() user: UserDto = new UserDto();
+  @Output() profilePictureUpdated = new EventEmitter<string>(null);
   @ViewChild('profilePictureInput', { static: true }) profilePictureInput: ElementRef;
-  user: UserDto;
+  fileUploadSettings = fileUploadConfiguration;
   isRemoving = false;
 
   constructor(
     injector: Injector,
     private _modalService: BsModalService,
-    private _profileService: ProfileService,
     private _profilesService: ProfilesServiceProxy,
   ) {
     super(injector);
-    this._profileService.user$.subscribe(user => {
-      this.user = user;
-    });
   }
 
   onUploadProfilePictureClick(): void {
@@ -52,9 +47,7 @@ export class ProfilePictureChangerComponent extends AppComponentBase {
         }
         this._profilesService.updateProfilePicture(profilePicture)
           .subscribe(profilePictureUrl => {
-            this.user.profilePictureUrl = profilePictureUrl;
-            this._profileService.user = this.user;
-            abp.event.trigger(uiEvents.profileDetailsUpdated, profilePictureUrl);
+            this.profilePictureUpdated.emit(profilePictureUrl);
             this.notify.success(this.l('ProfilePictureUploadedMessage'));
             modal.hide();
           });
@@ -71,9 +64,7 @@ export class ProfilePictureChangerComponent extends AppComponentBase {
           this.isRemoving = true;
           this._profilesService.deleteProfilePicture()
             .subscribe(() => {
-              delete this.user.profilePictureUrl;
-              this._profileService.user = this.user;
-              abp.event.trigger(uiEvents.profileDetailsUpdated, undefined);
+              this.profilePictureUpdated.emit(undefined);
               this.notify.success(this.l('ProfilePictureRemovedMessage'));
               this.isRemoving = false;
             });

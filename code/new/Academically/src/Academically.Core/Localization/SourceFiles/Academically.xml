@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="ConnectStripe">Connect Stripe</text>
+    <text name="StripeConnectionMessage">Even when you set your profile to public, you need to connect your account to stripe in order for others to be able to search you on the Academically network.</text>
+    <text name="StripeConnectionRequired">Stripe connection required</text>
+    <text name="StripeOnboardingSuccessMessage">You were successfully onboarded to stripe!</text>
+    <text name="StripeOnboardingConfirmationMessage">You will be onboarded to stripe. Are you sure you want to continue?</text>
     <text name="SelectLanguage">Select Language</text>
     <text name="AverageRating">Average Rating</text>
     <text name="LanguageSpoken">Language Spoken</text>
@@ -571,16 +576,17 @@
     <text name="ProfileDetailsNotSavedWarning">Your changes on Prfoile Details tab were not yet saved. If you leave, your changes will be lost.</text>
     <text name="LostChangesWarning">You have unsaved changes! If you leave, your changes will be lost.</text>
     <text name="NoPublicationAvailable">No Publication available</text>
-    <text name="ProfilePictureFileSizeUploadError">
-      <![CDATA[
-          <p>Invalid advert image. The image file size must be less than <b>2MB</b>.</p>
-      ]]>
+    <text name="InvalidFileSizeUploadError">
+        <![CDATA[
+            The file size should not exceed the limit of <b>{0}</b>.
+        ]]>
     </text>
     <text name="InvalidFileExtensionUploadError">
-      <![CDATA[
-          <p>Invalid file extension. The file must be an image with the a <b>.png</b> or <b>.jpg</b> file extension.</p>
-      ]]>
+        <![CDATA[
+            The file with extension <b>{0}</b> is not not allowed.
+        ]]>
     </text>
+    <text name="InvalidFileUploadError">Invalid File</text>
     <text name="EditSessionRates">Edit Session Rates</text>
     <text name="EnableFreeSession">Enable a free 15 min session</text>
     <text name="SingleSession">Single Session</text>

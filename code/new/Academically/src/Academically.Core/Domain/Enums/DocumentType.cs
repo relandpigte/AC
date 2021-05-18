@@ -8,5 +8,6 @@
         Qualification,
         Passport,
         Education,
+        PhotoId,
     }
 }
