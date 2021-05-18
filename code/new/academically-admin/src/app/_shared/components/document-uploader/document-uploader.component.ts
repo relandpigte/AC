@@ -1,6 +1,7 @@
 import { Component, ContentChild, ElementRef, EventEmitter, Injector, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { AppComponentBase } from '@shared/app-component-base';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { FileParameter } from '@shared/service-proxies/service-proxies';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ImageCropperComponent } from '../image-cropper/image-cropper.component';
@@ -71,19 +72,23 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
           if (this.hasCategory) {
             this.categories.push('');
           }
-          this.files.push(file);
-          this.filesChanged.emit(this.getFileParameterFromFiles());
+          if (this.validateFileSize(file.size)) {
+            this.files.push(file);
+            this.filesChanged.emit(this.getFileParameterFromFiles());
+          }
           imageCropper.close();
         });
       } else {
         if (this.hasCategory) {
           this.categories.push('');
         }
-        this.files.push(file);
-        this.filesChanged.emit(this.getFileParameterFromFiles());
+        if (this.validateFileSize(file.size)) {
+          this.files.push(file);
+          this.filesChanged.emit(this.getFileParameterFromFiles());
+        }
       }
     } else {
-      this.notify.error(`The file with extension <b>${fileExtension}</b> is not not allowed.`);
+      this.notify.error(this.l('InvalidFileExtensionUploadError', fileExtension), this.l('InvalidFileUploadError'));
     }
 
     this.documentUploaderInput.nativeElement.value = '';
@@ -134,5 +139,13 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
 
   private getFileUrl(file: File): string {
     return URL.createObjectURL(file)
+  }
+
+  private validateFileSize(size: number) {
+    const isValid = size <= fileUploadConfiguration.maxFileSize;
+    if (!isValid) {
+      this.notify.error(this.l('InvalidFileSizeUploadError', '1MB'), this.l('InvalidFileUploadError'));
+    }
+    return isValid;
   }
 }

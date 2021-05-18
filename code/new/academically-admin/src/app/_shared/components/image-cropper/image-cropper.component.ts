@@ -1,4 +1,6 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
+import { AppComponentBase } from '@shared/app-component-base';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ImageCropperComponent as ImageCopper } from 'ngx-image-cropper';
 
@@ -7,7 +9,7 @@ import { ImageCropperComponent as ImageCopper } from 'ngx-image-cropper';
   templateUrl: './image-cropper.component.html',
   styleUrls: ['./image-cropper.component.less']
 })
-export class ImageCropperComponent {
+export class ImageCropperComponent extends AppComponentBase {
   @Input() image: File;
   @Input() aspectRatioWidth = 1;
   @Input() aspectRationHeight = 1;
@@ -18,9 +20,10 @@ export class ImageCropperComponent {
   isImageCropping = false;
 
   constructor(
+    injector: Injector,
     private _modalRef: BsModalRef,
   ) {
-
+    super(injector);
   }
 
   close(): void {
@@ -36,7 +39,13 @@ export class ImageCropperComponent {
     this.isImageCropping = true;
     setTimeout(() => {
       const croppedImage = this.imageCropper.crop();
-      this.imageCropped.emit(this.base64ToFile(croppedImage.base64, this.image.name));
+      const imageFile = this.base64ToFile(croppedImage.base64, this.image.name);
+      if (this.validateFileSize(imageFile.size)) {
+        this.imageCropped.emit(imageFile);
+      }
+      else {
+        this.isImageCropping = false;
+      }
     }, 0);
   }
 
@@ -56,5 +65,13 @@ export class ImageCropperComponent {
     }
 
     return new File([u8arr], filename, { type: mime });
+  }
+
+  private validateFileSize(size: number) {
+    const isValid = size <= fileUploadConfiguration.maxFileSize;
+    if (!isValid) {
+      this.notify.error(this.l('InvalidFileSizeUploadError', '1MB'), this.l('InvalidFileUploadError'));
+    }
+    return isValid;
   }
 }
