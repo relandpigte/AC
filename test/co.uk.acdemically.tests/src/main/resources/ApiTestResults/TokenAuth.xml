@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample ts="1614815569260" s="true" lb="Authenticate with valid credentials" rc="200" rm="OK" tn="Authenticate 1-1" dt="text" ng="1" na="1">
+  <assertionResult>
+    <name>Response Code Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <assertionResult>
+    <name>Response Data Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Content-Length: 1893
+Connection: keep-alive
+Date: Wed, 03 Mar 2021 23:52:53 GMT
+x-amzn-RequestId: 17fc7dfe-596c-4424-a942-ce69d7bc8848
+X-XSS-Protection: 1; mode=block
+x-amzn-Remapped-Content-Length: 1893
+X-Frame-Options: DENY
+x-amz-apigw-id: boolZGqPLPEFuLA=
+X-Content-Type-Options: nosniff
+X-Amzn-Trace-Id: Root=1-60402155-156858cc070caebc26b63d92;Sampled=0
+X-Cache: Miss from cloudfront
+Via: 1.1 d15276da4da99356a934604ab9d63062.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: MNL50-C1
+X-Amz-Cf-Id: vloxQbMrNpX0pbhE2F_KPXsZMuRfJnJ1PUaElg_IBqtToif7vec_gg==
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: keep-alive
+accept: text/plain
+Content-Type: application/json-patch+json
+Content-Length: 98
+Host: api-uat.casemix-dev.co.uk
+User-Agent: Apache-HttpClient/4.5.2 (Java/11.0.1)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;result&quot;:{&quot;accessToken&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJBc3BOZXQuSWRlbnRpdHkuU2VjdXJpdHlTdGFtcCI6ImVmZWRmNDc0LTQzNzUtNzVlMS05NGVlLTM5ZjU5NjQzZjg1ZCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiaHR0cDovL3d3dy5hc3BuZXRib2lsZXJwbGF0ZS5jb20vaWRlbnRpdHkvY2xhaW1zL3RlbmFudElkIjoiMSIsInN1YiI6IjIiLCJqdGkiOiI1ZGQ2OTcyMC1iYzI3LTQ1NzQtOGVhMy1mODFlM2I3Y2NhMGEiLCJpYXQiOjE2MTQ4MTU1NzMsIm5iZiI6MTYxNDgxNTU3MywiZXhwIjoxNjE0OTAxOTczLCJpc3MiOiJDYXNlTWl4IiwiYXVkIjoiQ2FzZU1peCJ9.0LQaF1TeTsdNMXUvLef7hrxsPsU0QjwgEnt61SpB9oA&quot;,&quot;encryptedAccessToken&quot;:&quot;wNYmO41/48SHNstaLVXxHCCre29BZQl1NhC6NM3R3rzpXtPQxVzH6jEzA/QhXFN5tu6Fk7pO53uppm1mVXMZgxbyRVz26dnepi/FyB6axBY+6gq1GL+uRQgoiFUCjRN2p8w6LevViwKlHyWZZJZO1DGVSjAi1m2U+og9pkHw9/Rkp3UZ8A1gKoReYXpvXHc0KFXzGY3aUxaXUOjpNPSTn4LyfFvWqGRq42yefBXGrkBTbBN3h9UXPP+25Rfae1rBCQrd8mQ0G3JHpGlVZBMKMD5RSIjWMCe3sPKe05J4ZS4x7ipM9FJHtoJ0Ev/fvM08rDbeioKKXNqOF9YqzdChxSnpsH4gsiia6e+SRx0RP0tGrGeJl/Gpo4BIu8efFk8nskWhOUwGjMMmgFcHkbD1l4w39oUxDpOT8XLODNBBC7HYZ6MdkB09oc5AM2hh3fbuXXxE5ubTdsbldhy1Jp2KEf1ltKYKPxFwxUrRybf3/g09kmp3/baB1sKkSng/DFMK/CluwAdvuqRPecudxfAzxeS40Ta+SInR+vo/z8eu0pjDLpVuWplwdxSn36KM1GjjjP34In1+J6inS+t9vUhuuRHEr+TXkYJR0BpYMCpUInLlCkbdaERjWi0aTJUzTRHXK7M4HoFeEASrjpUryVcmZgV82HpYwm1yk3PLXw2otGAjmvxooOorucdlydbil7VchPD+uuf3f03A1+c0IBJo1SwiFZS7A0+QCdyOErXqj9/E6o92RPzQHImWpYMK4wWQKRmMMabJdp0How0f/XUAMlHCLpZLbHL39dfs4OHbAK3DaFsXSKOxJ0VRUGUX7PSmekIswoaEghe2VJVZW3c3ZRq0R8PgK1FAS2vr5K+2lpExwzDF5KjwmvoE/Ct/Y78O4XOF7Eij86jdilxfHM1ZvETIsI+gUMZY0ZmpGV8ssVLyaVZdagyomkwJtF1D9wxi/2I935MH8sJWSjyM+auA6Q==&quot;,&quot;expireInSeconds&quot;:86400,&quot;userId&quot;:2},&quot;targetUrl&quot;:null,&quot;success&quot;:true,&quot;error&quot;:null,&quot;unAuthorizedRequest&quot;:false,&quot;__abp&quot;:true}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&#xd;
+  &quot;userNameOrEmailAddress&quot;: &quot;admin&quot;,&#xd;
+  &quot;password&quot;: &quot;Summer1969*&quot;,&#xd;
+  &quot;rememberClient&quot;: true&#xd;
+}</queryString>
+  <java.net.URL>https://api-uat.casemix-dev.co.uk/uat/api/TokenAuth/Authenticate</java.net.URL>
+</httpSample>
+<httpSample ts="1614815573832" s="false" lb="Authenticate with invalid credentials" rc="500" rm="Internal Server Error" tn="Authenticate 1-1" dt="text" ng="1" na="1">
+  <assertionResult>
+    <name>Response Code Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <assertionResult>
+    <name>Response Data Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 500 Internal Server Error
+Content-Type: application/json; charset=utf-8
+Content-Length: 200
+Connection: keep-alive
+Date: Wed, 03 Mar 2021 23:52:55 GMT
+x-amzn-RequestId: a1c28bfe-3006-4c87-8f1f-ead64d4df0f1
+X-XSS-Protection: 1; mode=block
+x-amzn-Remapped-Content-Length: 200
+X-Frame-Options: DENY
+x-amz-apigw-id: boolvF47rPEFs0Q=
+X-Content-Type-Options: nosniff
+X-Amzn-Trace-Id: Root=1-60402157-5cd005254bf1e47d1309183f;Sampled=0
+X-Cache: Error from cloudfront
+Via: 1.1 7c2235d494e9a3b4e39b70d44b3f8810.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: MNL50-C1
+X-Amz-Cf-Id: QlZi1hT8XU1z8fofpj_2gctrgSqBZfODfz00afmgGFjHJt4YWr17ng==
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: keep-alive
+accept: text/plain
+Content-Type: application/json-patch+json
+Content-Length: 104
+Host: api-uat.casemix-dev.co.uk
+User-Agent: Apache-HttpClient/4.5.2 (Java/11.0.1)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;result&quot;:null,&quot;targetUrl&quot;:null,&quot;success&quot;:false,&quot;error&quot;:{&quot;code&quot;:0,&quot;message&quot;:&quot;Login failed!&quot;,&quot;details&quot;:&quot;Invalid user name or password&quot;,&quot;validationErrors&quot;:null},&quot;unAuthorizedRequest&quot;:false,&quot;__abp&quot;:true}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&#xd;
+  &quot;userNameOrEmailAddress&quot;: &quot;admin&quot;,&#xd;
+  &quot;password&quot;: &quot;IncorrectPassword&quot;,&#xd;
+  &quot;rememberClient&quot;: true&#xd;
+}</queryString>
+  <java.net.URL>https://api-uat.casemix-dev.co.uk/uat/api/TokenAuth/Authenticate</java.net.URL>
+</httpSample>
+<httpSample ts="1614815575874" s="false" lb="Authenticate with empty username and password" rc="400" rm="Bad Request" tn="Authenticate 1-1" dt="text" ng="1" na="1">
+  <assertionResult>
+    <name>Response Code Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <assertionResult>
+    <name>Response Data Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 400 Bad Request
+Content-Type: application/json; charset=utf-8
+Content-Length: 488
+Connection: keep-alive
+Date: Wed, 03 Mar 2021 23:52:57 GMT
+x-amzn-RequestId: f446d86b-6d53-465c-8a7c-94a962378947
+X-XSS-Protection: 1; mode=block
+x-amzn-Remapped-Content-Length: 488
+X-Frame-Options: DENY
+x-amz-apigw-id: bool-Ft9rPEFu3A=
+X-Content-Type-Options: nosniff
+X-Amzn-Trace-Id: Root=1-60402159-69ce75721b207bf62f51de7f;Sampled=0
+X-Cache: Error from cloudfront
+Via: 1.1 dec38a131db97012c641f185be312ae5.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: MNL50-C1
+X-Amz-Cf-Id: pW8CoRs2VvBN61oQwawPZ8x0FlJ1aIh8mHHn2Bjf1nevMe8vIrqW9w==
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: keep-alive
+accept: text/plain
+Content-Type: application/json-patch+json
+Content-Length: 82
+Host: api-uat.casemix-dev.co.uk
+User-Agent: Apache-HttpClient/4.5.2 (Java/11.0.1)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;result&quot;:null,&quot;targetUrl&quot;:null,&quot;success&quot;:false,&quot;error&quot;:{&quot;code&quot;:0,&quot;message&quot;:&quot;Your request is not valid!&quot;,&quot;details&quot;:&quot;The following errors were detected during validation.\n - The Password field is required.\n - The UserNameOrEmailAddress field is required.\n&quot;,&quot;validationErrors&quot;:[{&quot;message&quot;:&quot;The Password field is required.&quot;,&quot;members&quot;:[&quot;password&quot;]},{&quot;message&quot;:&quot;The UserNameOrEmailAddress field is required.&quot;,&quot;members&quot;:[&quot;userNameOrEmailAddress&quot;]}]},&quot;unAuthorizedRequest&quot;:false,&quot;__abp&quot;:true}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&#xd;
+  &quot;userNameOrEmailAddress&quot;: &quot;&quot;,&#xd;
+  &quot;password&quot;: &quot;&quot;,&#xd;
+  &quot;rememberClient&quot;: true&#xd;
+}</queryString>
+  <java.net.URL>https://api-uat.casemix-dev.co.uk/uat/api/TokenAuth/Authenticate</java.net.URL>
+</httpSample>
+<httpSample ts="1614815577280" s="false" lb="Authenticate with empty username" rc="400" rm="Bad Request" tn="Authenticate 1-1" dt="text" ng="1" na="1">
+  <assertionResult>
+    <name>Response Code Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <assertionResult>
+    <name>Response Data Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 400 Bad Request
+Content-Type: application/json; charset=utf-8
+Content-Length: 383
+Connection: keep-alive
+Date: Wed, 03 Mar 2021 23:52:59 GMT
+x-amzn-RequestId: ebb03f92-3f8e-4ef1-8ac6-b65a911e7845
+X-XSS-Protection: 1; mode=block
+x-amzn-Remapped-Content-Length: 383
+X-Frame-Options: DENY
+x-amz-apigw-id: boomSGxgrPEFqiQ=
+X-Content-Type-Options: nosniff
+X-Amzn-Trace-Id: Root=1-6040215b-7682831a60d237c11b491018;Sampled=0
+X-Cache: Error from cloudfront
+Via: 1.1 dec38a131db97012c641f185be312ae5.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: MNL50-C1
+X-Amz-Cf-Id: FJgrDFzyODiTrV_hMIJbRuJdJYmhQ8unaGO3IB9UqsMxHZaijyiNEA==
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: keep-alive
+accept: text/plain
+Content-Type: application/json-patch+json
+Content-Length: 93
+Host: api-uat.casemix-dev.co.uk
+User-Agent: Apache-HttpClient/4.5.2 (Java/11.0.1)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;result&quot;:null,&quot;targetUrl&quot;:null,&quot;success&quot;:false,&quot;error&quot;:{&quot;code&quot;:0,&quot;message&quot;:&quot;Your request is not valid!&quot;,&quot;details&quot;:&quot;The following errors were detected during validation.\n - The UserNameOrEmailAddress field is required.\n&quot;,&quot;validationErrors&quot;:[{&quot;message&quot;:&quot;The UserNameOrEmailAddress field is required.&quot;,&quot;members&quot;:[&quot;userNameOrEmailAddress&quot;]}]},&quot;unAuthorizedRequest&quot;:false,&quot;__abp&quot;:true}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&#xd;
+  &quot;userNameOrEmailAddress&quot;: &quot;&quot;,&#xd;
+  &quot;password&quot;: &quot;Summer1969*&quot;,&#xd;
+  &quot;rememberClient&quot;: true&#xd;
+}</queryString>
+  <java.net.URL>https://api-uat.casemix-dev.co.uk/uat/api/TokenAuth/Authenticate</java.net.URL>
+</httpSample>
+<httpSample ts="1614815579306" s="false" lb="Authenticate with empty password" rc="400" rm="Bad Request" tn="Authenticate 1-1" dt="text" ng="1" na="1">
+  <assertionResult>
+    <name>Response Code Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <assertionResult>
+    <name>Response Data Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 400 Bad Request
+Content-Type: application/json; charset=utf-8
+Content-Length: 341
+Connection: keep-alive
+Date: Wed, 03 Mar 2021 23:53:01 GMT
+x-amzn-RequestId: 7a0ee463-aae3-4240-af72-f0fd7da1e4c0
+X-XSS-Protection: 1; mode=block
+x-amzn-Remapped-Content-Length: 341
+X-Frame-Options: DENY
+x-amz-apigw-id: boomlHdqrPEFjMA=
+X-Content-Type-Options: nosniff
+X-Amzn-Trace-Id: Root=1-6040215d-2ee17ecd764e59f7580a5987;Sampled=0
+X-Cache: Error from cloudfront
+Via: 1.1 3aa8e90e2b200eda85bd40b1e40b26d9.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: MNL50-C1
+X-Amz-Cf-Id: zS4ZQ33reFA3EAU5DkGeGCTpx6emq7kLcpxpFg1rzRyp2IrdGwp2Xg==
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: keep-alive
+accept: text/plain
+Content-Type: application/json-patch+json
+Content-Length: 87
+Host: api-uat.casemix-dev.co.uk
+User-Agent: Apache-HttpClient/4.5.2 (Java/11.0.1)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;result&quot;:null,&quot;targetUrl&quot;:null,&quot;success&quot;:false,&quot;error&quot;:{&quot;code&quot;:0,&quot;message&quot;:&quot;Your request is not valid!&quot;,&quot;details&quot;:&quot;The following errors were detected during validation.\n - The Password field is required.\n&quot;,&quot;validationErrors&quot;:[{&quot;message&quot;:&quot;The Password field is required.&quot;,&quot;members&quot;:[&quot;password&quot;]}]},&quot;unAuthorizedRequest&quot;:false,&quot;__abp&quot;:true}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&#xd;
+  &quot;userNameOrEmailAddress&quot;: &quot;admin&quot;,&#xd;
+  &quot;password&quot;: &quot;&quot;,&#xd;
+  &quot;rememberClient&quot;: true&#xd;
+}</queryString>
+  <java.net.URL>https://api-uat.casemix-dev.co.uk/uat/api/TokenAuth/Authenticate</java.net.URL>
+</httpSample>
+<httpSample ts="1614815581352" s="true" lb="GetExternalAuthenticationProviders" rc="200" rm="OK" tn="GetExternalAuthenticationProviders 2-1" dt="text" ng="1" na="1">
+  <assertionResult>
+    <name>Response Code Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <assertionResult>
+    <name>Response Data Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Content-Length: 99
+Connection: keep-alive
+Date: Wed, 03 Mar 2021 23:53:03 GMT
+x-amzn-RequestId: d93c4138-ba3c-4eda-a3d3-6b81a51a890d
+X-XSS-Protection: 1; mode=block
+x-amzn-Remapped-Content-Length: 99
+X-Frame-Options: DENY
+x-amz-apigw-id: boom5EcnLPEFhaQ=
+X-Content-Type-Options: nosniff
+X-Amzn-Trace-Id: Root=1-6040215f-38a0d7e959e85dd636b46f75;Sampled=0
+X-Cache: Miss from cloudfront
+Via: 1.1 bd2a712c8280f0f57859c608168ce9f2.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: MNL50-C1
+X-Amz-Cf-Id: 7F57hM_B_G48k4dFKhEsKN3jwBxVacFEGlMpdjeLlD4mru4BWjlzwg==
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: keep-alive
+accept: text/plain
+Content-Type: application/json-patch+json
+Host: api-uat.casemix-dev.co.uk
+User-Agent: Apache-HttpClient/4.5.2 (Java/11.0.1)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;result&quot;:[],&quot;targetUrl&quot;:null,&quot;success&quot;:true,&quot;error&quot;:null,&quot;unAuthorizedRequest&quot;:false,&quot;__abp&quot;:true}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>https://api-uat.casemix-dev.co.uk/uat/api/TokenAuth/GetExternalAuthenticationProviders</java.net.URL>
+</httpSample>
+
+</testResults>

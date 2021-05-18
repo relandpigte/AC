@@ -1,0 +1,27 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1614815583479,1048,Create Non-Existing User,200,OK,Create 1-1,text,true,,985,472,1,1,https://api-uat.casemix-dev.co.uk/uat/api/services/app/User/Create,1048,0,87
+1614815585585,838,Login,200,OK,Create 1-1,text,true,,2557,344,1,1,https://api-uat.casemix-dev.co.uk/uat/api/TokenAuth/Authenticate,838,0,46
+1614815587517,312,Create Existing User,500,Internal Server Error,Create 1-1,text,false,,850,472,1,1,https://api-uat.casemix-dev.co.uk/uat/api/services/app/User/Create,312,0,0
+1614815588861,833,Update Non-Existing User,500,Internal Server Error,Create 1-1,text,false,"Test failed: code expected to equal /
+
+****** received  : [[[5]]]00
+
+****** comparison: [[[4]]]00
+
+/",857,584,1,1,https://api-uat.casemix-dev.co.uk/uat/api/services/app/User/Update,832,0,67
+1614815590732,451,Update Existing User,200,OK,Create 1-1,text,true,,976,578,1,1,https://api-uat.casemix-dev.co.uk/uat/api/services/app/User/Update,451,0,0
+1614815592231,829,Delete Non-Existing User,500,Internal Server Error,Create 1-1,text,false,"Test failed: code expected to equal /
+
+****** received  : [[[5]]]00
+
+****** comparison: [[[4]]]00
+
+/",857,257,1,1,https://api-uat.casemix-dev.co.uk/uat/api/services/app/User/Delete?Id=7219734921,829,0,60
+1614815594118,808,Delete Existing User,200,OK,Create 1-1,text,true,,731,250,1,1,https://api-uat.casemix-dev.co.uk/uat/api/services/app/User/Delete?Id=106,808,0,0
+1614815596003,891,Login Deleted User,500,Internal Server Error,Create 1-1,text,false,"Test failed: code expected to equal /
+
+****** received  : [[[500]]]
+
+****** comparison: [[[401]]]
+
+/",850,344,1,1,https://api-uat.casemix-dev.co.uk/uat/api/TokenAuth/Authenticate,891,0,90

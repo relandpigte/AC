@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="UI Regression Tests" parallel="classes">
+
+	<test name="UI Tests">
+		<classes>
+			<class name="co.uk.testrunner.AdhocTestRunner" />
+		</classes>
+	</test>
+
+</suite> 

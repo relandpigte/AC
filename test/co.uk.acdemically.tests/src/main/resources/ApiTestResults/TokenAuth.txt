@@ -1,0 +1,7 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1614815569260,3444,Authenticate with valid credentials,200,OK,Authenticate 1-1,text,true,,2525,338,1,1,https://api-uat.casemix-dev.co.uk/uat/api/TokenAuth/Authenticate,3432,0,2503
+1614815573832,961,Authenticate with invalid credentials,500,Internal Server Error,Authenticate 1-1,text,false,,850,345,1,1,https://api-uat.casemix-dev.co.uk/uat/api/TokenAuth/Authenticate,961,0,98
+1614815575874,366,Authenticate with empty username and password,400,Bad Request,Authenticate 1-1,text,false,,1128,322,1,1,https://api-uat.casemix-dev.co.uk/uat/api/TokenAuth/Authenticate,366,0,87
+1614815577280,980,Authenticate with empty username,400,Bad Request,Authenticate 1-1,text,false,,1023,333,1,1,https://api-uat.casemix-dev.co.uk/uat/api/TokenAuth/Authenticate,980,0,0
+1614815579306,909,Authenticate with empty password,400,Bad Request,Authenticate 1-1,text,false,,981,327,1,1,https://api-uat.casemix-dev.co.uk/uat/api/TokenAuth/Authenticate,909,0,65
+1614815581352,881,GetExternalAuthenticationProviders,200,OK,GetExternalAuthenticationProviders 2-1,text,true,,727,241,1,1,https://api-uat.casemix-dev.co.uk/uat/api/TokenAuth/GetExternalAuthenticationProviders,881,0,74

@@ -1,0 +1,2 @@
+protocol,baseUrl,environment,adminUsername,adminPassword
+https,api-uat.casemix-dev.co.uk,uat,admin,Summer1969*

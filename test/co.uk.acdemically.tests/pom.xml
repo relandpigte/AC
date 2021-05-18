@@ -1,0 +1,89 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>co.uk.acdemically.tests</groupId>
+	<artifactId>co.uk.acdemically.tests</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0</version>
+	<name>AcdemicallyTestFramework</name>
+	<url>http://maven.apache.org</url>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>co.uk.base</groupId>
+			<artifactId>co.uk.base</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<!-- <encoding>windows-1252</encoding> -->
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+					<debug>false</debug>
+					<fork>true</fork>
+					<meminitial>128m</meminitial>
+					<maxmem>512m</maxmem>
+					<optimize>true</optimize>
+					<!--<release>true</release> -->
+					<useIncrementalCompilation>true</useIncrementalCompilation>
+					<verbose>false</verbose>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M3</version>
+				<configuration>
+					<parallelOptimized>true</parallelOptimized>
+					<perCoreThreadCount>true</perCoreThreadCount>
+					<reuseForks>false</reuseForks>
+					<forkCount>2.5C</forkCount>
+					<argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+					<useUnlimitedThreads>true</useUnlimitedThreads>
+
+					<systemProperties>
+						<property>
+							<name>browser</name>
+							<!-- <value>${browser}</value> -->
+							<value>local_chrome</value>
+							<!-- <value>browserstack_windows10_chrome88.0</value> -->
+						</property>
+						<property>
+							<name>environment</name>
+							<!-- <value>${environment}</value> -->
+							<value>UAT</value>
+						</property>
+					</systemProperties>
+					<executions>
+						<execution>
+							<phase>integration-test</phase>
+							<goals>
+								<goal>test</goal>
+							</goals>
+							<configuration>
+								<skip>false</skip>
+							</configuration>
+						</execution>
+					</executions>
+					<suiteXmlFiles>
+						<!-- <suiteXmlFile>${testNG.Suite}</suiteXmlFile> -->
+						<suiteXmlFile>src\main\resources\TestSuite\AdhocTestSuite.xml</suiteXmlFile>
+					</suiteXmlFiles>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>

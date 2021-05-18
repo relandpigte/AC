@@ -1,0 +1,19 @@
+{
+	"credentials": {
+		"username": "roblangley3",
+		"key": "9JQKJMM5g5zLqGfUYHmT",
+		"url": "@hub-cloud.browserstack.com/wd/hub"
+	},
+	"browserstack_windows10_chrome88.0": {
+		"os": "Windows",
+		"os_version": "10",
+		"browser": "Chrome",
+		"browser_version": "88.0"
+	},
+	"browserstack_windows10_firefox85.0": {
+		"os": "Windows",
+		"os_version": "10",
+		"browser": "Firefox",
+		"browser_version": "85.0"
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"urls": {
+		"UI": "https://academically-uat.sourcecloud-dev.uk/account/login",
+		"API": ""
+	},
+	"credentials": {
+		"student": {
+			"password": "AaA@12345",
+			"email": "TestEmail.x9001@gmail.com"
+		}
+		,"admin":{
+			"password": "123qwe",
+			"email": "Admin"
+		}
+		
+	}
+}

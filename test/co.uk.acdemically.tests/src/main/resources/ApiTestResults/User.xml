@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample ts="1614815583479" s="true" lb="Create Non-Existing User" rc="200" rm="OK" tn="Create 1-1" dt="text" ng="1" na="1">
+  <assertionResult>
+    <name>Response Code Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <assertionResult>
+    <name>Response Data Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Content-Length: 355
+Connection: keep-alive
+Date: Wed, 03 Mar 2021 23:53:05 GMT
+x-amzn-RequestId: 2bfea549-685a-4a50-aa5d-078d38354426
+X-XSS-Protection: 1; mode=block
+x-amzn-Remapped-Content-Length: 355
+X-Frame-Options: DENY
+x-amz-apigw-id: boonPGe7rPEFp6w=
+X-Content-Type-Options: nosniff
+X-Amzn-Trace-Id: Root=1-60402161-62905c99382ea0510001b801;Sampled=0
+X-Cache: Miss from cloudfront
+Via: 1.1 d581fd7d027ae1d21c173306d67bf109.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: MNL50-C1
+X-Amz-Cf-Id: q2EmGL2SE6Sembo-XrxGOrp01OKhXesJaymz8tfwaynUAiSjuWQxuQ==
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: keep-alive
+accept: text/plain
+Content-Type: application/json-patch+json
+Content-Length: 229
+Host: api-uat.casemix-dev.co.uk
+User-Agent: Apache-HttpClient/4.5.2 (Java/11.0.1)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;result&quot;:{&quot;userName&quot;:&quot;gilmatugas&quot;,&quot;name&quot;:&quot;Gil&quot;,&quot;surname&quot;:&quot;Matugas&quot;,&quot;emailAddress&quot;:&quot;gilmatugas@gmail.com&quot;,&quot;isActive&quot;:true,&quot;fullName&quot;:&quot;Gil Matugas&quot;,&quot;lastLoginTime&quot;:null,&quot;creationTime&quot;:&quot;2021-03-03T23:53:05.4918712+00:00&quot;,&quot;roleNames&quot;:[&quot;SURGEON&quot;],&quot;experience&quot;:10,&quot;id&quot;:106},&quot;targetUrl&quot;:null,&quot;success&quot;:true,&quot;error&quot;:null,&quot;unAuthorizedRequest&quot;:false,&quot;__abp&quot;:true}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&#xd;
+  &quot;userName&quot;: &quot;gilmatugas&quot;,&#xd;
+  &quot;name&quot;: &quot;Gil&quot;,&#xd;
+  &quot;surname&quot;: &quot;Matugas&quot;,&#xd;
+  &quot;emailAddress&quot;: &quot;gilmatugas@gmail.com&quot;,&#xd;
+  &quot;isActive&quot;: true,&#xd;
+  &quot;roleNames&quot;: [&#xd;
+    &quot;Surgeon&quot;&#xd;
+  ],&#xd;
+  &quot;password&quot;: &quot;Summer1969*&quot;,&#xd;
+  &quot;experience&quot;: 10&#xd;
+}</queryString>
+  <java.net.URL>https://api-uat.casemix-dev.co.uk/uat/api/services/app/User/Create</java.net.URL>
+</httpSample>
+<httpSample ts="1614815585585" s="true" lb="Login" rc="200" rm="OK" tn="Create 1-1" dt="text" ng="1" na="1">
+  <assertionResult>
+    <name>Response Code Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <assertionResult>
+    <name>Response Data Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Content-Length: 1925
+Connection: keep-alive
+Date: Wed, 03 Mar 2021 23:53:07 GMT
+x-amzn-RequestId: eabb049e-78da-4e69-b1ff-98937d92cacd
+X-XSS-Protection: 1; mode=block
+x-amzn-Remapped-Content-Length: 1925
+X-Frame-Options: DENY
+x-amz-apigw-id: boonjHp5LPEFjrA=
+X-Content-Type-Options: nosniff
+X-Amzn-Trace-Id: Root=1-60402163-019c22ec23eeba67563e283b;Sampled=0
+X-Cache: Miss from cloudfront
+Via: 1.1 4489b706eea989055790f1129d2e507f.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: MNL50-C1
+X-Amz-Cf-Id: eOlzZd85ch9O8oVP20upwUOuwA7Q7EexSmjqmKT-RrFv_uUpkeo6CA==
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: keep-alive
+accept: text/plain
+Content-Type: application/json-patch+json
+Content-Length: 103
+Host: api-uat.casemix-dev.co.uk
+User-Agent: Apache-HttpClient/4.5.2 (Java/11.0.1)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;result&quot;:{&quot;accessToken&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEwNiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJnaWxtYXR1Z2FzIiwiQXNwTmV0LklkZW50aXR5LlNlY3VyaXR5U3RhbXAiOiJDSjI1NVI1TkhYT0dRSVZOTTdFSFZRMjZBRVVDNlpHSCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlN1cmdlb24iLCJodHRwOi8vd3d3LmFzcG5ldGJvaWxlcnBsYXRlLmNvbS9pZGVudGl0eS9jbGFpbXMvdGVuYW50SWQiOiIxIiwic3ViIjoiMTA2IiwianRpIjoiYTdhYzBhNmUtODQwZi00YzgyLTkzZmEtZTAzNTM0MTFmNTU3IiwiaWF0IjoxNjE0ODE1NTg3LCJuYmYiOjE2MTQ4MTU1ODcsImV4cCI6MTYxNDkwMTk4NywiaXNzIjoiQ2FzZU1peCIsImF1ZCI6IkNhc2VNaXgifQ.ROcR2KgXPVPtcc8GcfZGf-4H6LwcQsR5THwlidOJpvg&quot;,&quot;encryptedAccessToken&quot;:&quot;wNYmO41/48SHNstaLVXxHCCre29BZQl1NhC6NM3R3rzpXtPQxVzH6jEzA/QhXFN5tu6Fk7pO53uppm1mVXMZgxbyRVz26dnepi/FyB6axBY+6gq1GL+uRQgoiFUCjRN2p8w6LevViwKlHyWZZJZO1DGVSjAi1m2U+og9pkHw9/SuKMIGaZmbIQnPjy4zDIyhrYNIyHoz6EbttYt10VfGkjmtSde4EPOzNicUKQdPq/S9SFI85tPAcmadhb0J1J7bRDXBjTjM3buSfE63+uypmc7WCRIhneA2nn8oVr/2sKCLh6zUMoXuAW/MGVybPtUAboxqMMza1GVhay9FUwpBjsBA6NenWdHeFtyw+Vm5eR5flBNUFsVS12RaikcvTgQbVJV8WPxxBagkAuP1tXfo4nl8iTzUKIYJTPJb8iRihsnTK9NVVX4gFxPd/DWvpI3PbNFUHUrkg4nhFBDaRODiTC92zktQF4deUXrrfZtQ9qDM9VFSxlYnQJGQwzLF7e0X1sVTLzujYSyxG4Bzea3LrPdSK4BJjXK7PlQmvkuQ8RrpZwB/c8Z4YjZM/r8BUQNLEwwGbzjj/ARZpY+7lvAP4b1JIEPIAdnSXYs8GVux1T2EIANDcD6A+8z+c95rnyLm6m8bj0tRMw4r00pC2f1Z/uWwf0oOs8fleMfA5lAoX730UKbt9tRvffbnLR0U3Ns9diMsZGM/cmjHzQl5y5TXDHh3NGn8kPIL5NQrd3SNSu7P/z+zH5LLQJqWzsepS8mDoEF53i989FOguFbzxDy+gFjsMI7Yu05Dn5fOdUlfLPaqvsYkGqBVkdztTae+bZTWEd/Pujwj69CjojD90zrppTxxPOf+aNwHbapLPKP+XF9yQgJVzjXUism4zXEmsyTQN2RmE2q+o1XXVbx+iB93ws9/BY66yLkscH4jjpsaKWLz/GciqBoUBJKHytqVezeC4gEA/2HBS7EQsVZUC/lJZu8ljeKEyN/gf9K20KfVaDE=&quot;,&quot;expireInSeconds&quot;:86400,&quot;userId&quot;:106},&quot;targetUrl&quot;:null,&quot;success&quot;:true,&quot;error&quot;:null,&quot;unAuthorizedRequest&quot;:false,&quot;__abp&quot;:true}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&#xd;
+  &quot;userNameOrEmailAddress&quot;: &quot;gilmatugas&quot;,&#xd;
+  &quot;password&quot;: &quot;Summer1969*&quot;,&#xd;
+  &quot;rememberClient&quot;: true&#xd;
+}</queryString>
+  <java.net.URL>https://api-uat.casemix-dev.co.uk/uat/api/TokenAuth/Authenticate</java.net.URL>
+</httpSample>
+<httpSample ts="1614815587517" s="false" lb="Create Existing User" rc="500" rm="Internal Server Error" tn="Create 1-1" dt="text" ng="1" na="1">
+  <assertionResult>
+    <name>Response Code Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <assertionResult>
+    <name>Response Data Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 500 Internal Server Error
+Content-Type: application/json; charset=utf-8
+Content-Length: 200
+Connection: keep-alive
+Date: Wed, 03 Mar 2021 23:53:08 GMT
+x-amzn-RequestId: 186ee64b-bc6f-442e-a30d-8cf0e27010ec
+X-XSS-Protection: 1; mode=block
+x-amzn-Remapped-Content-Length: 200
+X-Frame-Options: DENY
+x-amz-apigw-id: boonyHjYrPEFkGg=
+X-Content-Type-Options: nosniff
+X-Amzn-Trace-Id: Root=1-60402164-2ea7e2d83c5e1313314703e3;Sampled=0
+X-Cache: Error from cloudfront
+Via: 1.1 4489b706eea989055790f1129d2e507f.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: MNL50-C1
+X-Amz-Cf-Id: GE5lD1-BaTtmAtEFCe7JrXUXHLmtt3NW1SeuqZOZMqEhxdLBOKq-Iw==
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: keep-alive
+accept: text/plain
+Content-Type: application/json-patch+json
+Content-Length: 229
+Host: api-uat.casemix-dev.co.uk
+User-Agent: Apache-HttpClient/4.5.2 (Java/11.0.1)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;result&quot;:null,&quot;targetUrl&quot;:null,&quot;success&quot;:false,&quot;error&quot;:{&quot;code&quot;:0,&quot;message&quot;:&quot;User name &apos;gilmatugas&apos; is already taken.&quot;,&quot;details&quot;:null,&quot;validationErrors&quot;:null},&quot;unAuthorizedRequest&quot;:false,&quot;__abp&quot;:true}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&#xd;
+  &quot;userName&quot;: &quot;gilmatugas&quot;,&#xd;
+  &quot;name&quot;: &quot;Gil&quot;,&#xd;
+  &quot;surname&quot;: &quot;Matugas&quot;,&#xd;
+  &quot;emailAddress&quot;: &quot;gilmatugas@gmail.com&quot;,&#xd;
+  &quot;isActive&quot;: true,&#xd;
+  &quot;roleNames&quot;: [&#xd;
+    &quot;Surgeon&quot;&#xd;
+  ],&#xd;
+  &quot;password&quot;: &quot;Summer1969*&quot;,&#xd;
+  &quot;experience&quot;: 10&#xd;
+}</queryString>
+  <java.net.URL>https://api-uat.casemix-dev.co.uk/uat/api/services/app/User/Create</java.net.URL>
+</httpSample>
+<httpSample ts="1614815588861" s="false" lb="Update Non-Existing User" rc="500" rm="Internal Server Error" tn="Create 1-1" dt="text" ng="1" na="1">
+  <assertionResult>
+    <name>Response Code Assertion</name>
+    <failure>true</failure>
+    <error>false</error>
+    <failureMessage>Test failed: code expected to equal /
+
+****** received  : [[[5]]]00
+
+****** comparison: [[[4]]]00
+
+/</failureMessage>
+  </assertionResult>
+  <assertionResult>
+    <name>Response Data Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 500 Internal Server Error
+Content-Type: application/json; charset=utf-8
+Content-Length: 207
+Connection: keep-alive
+Date: Wed, 03 Mar 2021 23:53:10 GMT
+x-amzn-RequestId: 7ee0bb6b-91b0-43a4-9716-4acc4a2cc392
+X-XSS-Protection: 1; mode=block
+x-amzn-Remapped-Content-Length: 207
+X-Frame-Options: DENY
+x-amz-apigw-id: boooEFUFLPEFlGg=
+X-Content-Type-Options: nosniff
+X-Amzn-Trace-Id: Root=1-60402166-08bd34380158b1ba7d81869e;Sampled=0
+X-Cache: Error from cloudfront
+Via: 1.1 ea827cc38a1fdbc5065cccdf5462ba3a.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: MNL50-C1
+X-Amz-Cf-Id: kK0nMdPT-6VMXJ-UgNC0q_KSv563k5OunSKt5YxvdR7xyUXmB93zJw==
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: keep-alive
+accept: text/plain
+Content-Type: application/json-patch+json
+Content-Length: 342
+Host: api-uat.casemix-dev.co.uk
+User-Agent: Apache-HttpClient/4.5.2 (Java/11.0.1)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;result&quot;:null,&quot;targetUrl&quot;:null,&quot;success&quot;:false,&quot;error&quot;:{&quot;code&quot;:0,&quot;message&quot;:&quot;An internal error occurred during your request!&quot;,&quot;details&quot;:null,&quot;validationErrors&quot;:null},&quot;unAuthorizedRequest&quot;:false,&quot;__abp&quot;:true}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">PUT</method>
+  <queryString class="java.lang.String">{&#xd;
+  &quot;userName&quot;: &quot;gilmatugas&quot;,&#xd;
+  &quot;name&quot;: &quot;Gil&quot;,&#xd;
+  &quot;surname&quot;: &quot;Matugas&quot;,&#xd;
+  &quot;emailAddress&quot;: &quot;gilmatugas@gmail.com&quot;,&#xd;
+  &quot;isActive&quot;: true,&#xd;
+  &quot;fullName&quot;: &quot;Gil Matugas&quot;,&#xd;
+  &quot;lastLoginTime&quot;: &quot;2021-02-27T08:22:41.170Z&quot;,&#xd;
+  &quot;creationTime&quot;: &quot;2021-02-27T08:22:41.170Z&quot;,&#xd;
+  &quot;roleNames&quot;: [&#xd;
+    &quot;admin&quot;&#xd;
+  ],&#xd;
+  &quot;experience&quot;: 9,&#xd;
+  &quot;id&quot;: 3687937183&#xd;
+}</queryString>
+  <java.net.URL>https://api-uat.casemix-dev.co.uk/uat/api/services/app/User/Update</java.net.URL>
+</httpSample>
+<httpSample ts="1614815590732" s="true" lb="Update Existing User" rc="200" rm="OK" tn="Create 1-1" dt="text" ng="1" na="1">
+  <assertionResult>
+    <name>Response Code Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <assertionResult>
+    <name>Response Data Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Content-Length: 346
+Connection: keep-alive
+Date: Wed, 03 Mar 2021 23:53:12 GMT
+x-amzn-RequestId: 9ae90bd6-0e3a-44eb-82ec-fb425998c532
+X-XSS-Protection: 1; mode=block
+x-amzn-Remapped-Content-Length: 346
+X-Frame-Options: DENY
+x-amz-apigw-id: boooSHwQrPEFrhQ=
+X-Content-Type-Options: nosniff
+X-Amzn-Trace-Id: Root=1-60402168-18d3e9271d9bc0815a0635ef;Sampled=0
+X-Cache: Miss from cloudfront
+Via: 1.1 ea827cc38a1fdbc5065cccdf5462ba3a.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: MNL50-C1
+X-Amz-Cf-Id: _MjlvMC0SXmwn51BEPKn-SDRrPGXLdquRMtDZdhRFHfohrUBeRZKEg==
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: keep-alive
+accept: text/plain
+Content-Type: application/json-patch+json
+Content-Length: 336
+Host: api-uat.casemix-dev.co.uk
+User-Agent: Apache-HttpClient/4.5.2 (Java/11.0.1)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;result&quot;:{&quot;userName&quot;:&quot;gilmatugas&quot;,&quot;name&quot;:&quot;Gil&quot;,&quot;surname&quot;:&quot;Matugas&quot;,&quot;emailAddress&quot;:&quot;gilmatugas@gmail.com&quot;,&quot;isActive&quot;:false,&quot;fullName&quot;:&quot;Gil Matugas&quot;,&quot;lastLoginTime&quot;:null,&quot;creationTime&quot;:&quot;2021-03-03T23:53:05.491871&quot;,&quot;roleNames&quot;:[&quot;ADMIN&quot;],&quot;experience&quot;:9,&quot;id&quot;:106},&quot;targetUrl&quot;:null,&quot;success&quot;:true,&quot;error&quot;:null,&quot;unAuthorizedRequest&quot;:false,&quot;__abp&quot;:true}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">PUT</method>
+  <queryString class="java.lang.String">{&#xd;
+  &quot;userName&quot;: &quot;gilmatugas&quot;,&#xd;
+  &quot;name&quot;: &quot;Gil&quot;,&#xd;
+  &quot;surname&quot;: &quot;Matugas&quot;,&#xd;
+  &quot;emailAddress&quot;: &quot;gilmatugas@gmail.com&quot;,&#xd;
+  &quot;isActive&quot;: false,&#xd;
+  &quot;fullName&quot;: &quot;Gil Matugas&quot;,&#xd;
+  &quot;lastLoginTime&quot;: &quot;2021-02-27T08:22:41.170Z&quot;,&#xd;
+  &quot;creationTime&quot;: &quot;2021-02-27T08:22:41.170Z&quot;,&#xd;
+  &quot;roleNames&quot;: [&#xd;
+    &quot;admin&quot;&#xd;
+  ],&#xd;
+  &quot;experience&quot;: 9,&#xd;
+  &quot;id&quot;: 106&#xd;
+}</queryString>
+  <java.net.URL>https://api-uat.casemix-dev.co.uk/uat/api/services/app/User/Update</java.net.URL>
+</httpSample>
+<httpSample ts="1614815592231" s="false" lb="Delete Non-Existing User" rc="500" rm="Internal Server Error" tn="Create 1-1" dt="text" ng="1" na="1">
+  <assertionResult>
+    <name>Response Code Assertion</name>
+    <failure>true</failure>
+    <error>false</error>
+    <failureMessage>Test failed: code expected to equal /
+
+****** received  : [[[5]]]00
+
+****** comparison: [[[4]]]00
+
+/</failureMessage>
+  </assertionResult>
+  <assertionResult>
+    <name>Response Data Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 500 Internal Server Error
+Content-Type: application/json; charset=utf-8
+Content-Length: 207
+Connection: keep-alive
+Date: Wed, 03 Mar 2021 23:53:14 GMT
+x-amzn-RequestId: 9d028a04-227e-45a8-af76-2dd7c2d7ec2a
+X-XSS-Protection: 1; mode=block
+x-amzn-Remapped-Content-Length: 207
+X-Frame-Options: DENY
+x-amz-apigw-id: booomHxFLPEFgiA=
+X-Content-Type-Options: nosniff
+X-Amzn-Trace-Id: Root=1-6040216a-05bfe46d51b94c05016658bc;Sampled=0
+X-Cache: Error from cloudfront
+Via: 1.1 3aa8e90e2b200eda85bd40b1e40b26d9.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: MNL50-C1
+X-Amz-Cf-Id: j3Ma8lSkKnAX_UL8IRYAwjdUXgnbdAtMzsJbrA9ovoF_sVgjXHY91w==
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: keep-alive
+accept: text/plain
+Content-Type: application/json-patch+json
+Content-Length: 0
+Host: api-uat.casemix-dev.co.uk
+User-Agent: Apache-HttpClient/4.5.2 (Java/11.0.1)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;result&quot;:null,&quot;targetUrl&quot;:null,&quot;success&quot;:false,&quot;error&quot;:{&quot;code&quot;:0,&quot;message&quot;:&quot;An internal error occurred during your request!&quot;,&quot;details&quot;:null,&quot;validationErrors&quot;:null},&quot;unAuthorizedRequest&quot;:false,&quot;__abp&quot;:true}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">DELETE</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>https://api-uat.casemix-dev.co.uk/uat/api/services/app/User/Delete?Id=7219734921</java.net.URL>
+</httpSample>
+<httpSample ts="1614815594118" s="true" lb="Delete Existing User" rc="200" rm="OK" tn="Create 1-1" dt="text" ng="1" na="1">
+  <assertionResult>
+    <name>Response Code Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <assertionResult>
+    <name>Response Data Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Content-Length: 101
+Connection: keep-alive
+Date: Wed, 03 Mar 2021 23:53:16 GMT
+x-amzn-RequestId: 45eeb4cb-185b-4642-9156-6e4342998978
+X-XSS-Protection: 1; mode=block
+x-amzn-Remapped-Content-Length: 101
+X-Frame-Options: DENY
+x-amz-apigw-id: booo4E1ILPEFtrQ=
+X-Content-Type-Options: nosniff
+X-Amzn-Trace-Id: Root=1-6040216b-0a52be3a491f6603732a2e8c;Sampled=0
+X-Cache: Miss from cloudfront
+Via: 1.1 3aa8e90e2b200eda85bd40b1e40b26d9.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: MNL50-C1
+X-Amz-Cf-Id: lKYoF3o4YtdpNwRn-5TxmEuh44IgTGbhoGffMx7SUEolfs_mf46lOQ==
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: keep-alive
+accept: text/plain
+Content-Type: application/json-patch+json
+Content-Length: 0
+Host: api-uat.casemix-dev.co.uk
+User-Agent: Apache-HttpClient/4.5.2 (Java/11.0.1)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;result&quot;:null,&quot;targetUrl&quot;:null,&quot;success&quot;:true,&quot;error&quot;:null,&quot;unAuthorizedRequest&quot;:false,&quot;__abp&quot;:true}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">DELETE</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>https://api-uat.casemix-dev.co.uk/uat/api/services/app/User/Delete?Id=106</java.net.URL>
+</httpSample>
+<httpSample ts="1614815596003" s="false" lb="Login Deleted User" rc="500" rm="Internal Server Error" tn="Create 1-1" dt="text" ng="1" na="1">
+  <assertionResult>
+    <name>Response Code Assertion</name>
+    <failure>true</failure>
+    <error>false</error>
+    <failureMessage>Test failed: code expected to equal /
+
+****** received  : [[[500]]]
+
+****** comparison: [[[401]]]
+
+/</failureMessage>
+  </assertionResult>
+  <assertionResult>
+    <name>Response Data Assertion</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 500 Internal Server Error
+Content-Type: application/json; charset=utf-8
+Content-Length: 200
+Connection: keep-alive
+Date: Wed, 03 Mar 2021 23:53:18 GMT
+x-amzn-RequestId: a2bf84f1-3665-403f-91fc-fedb9569f244
+X-XSS-Protection: 1; mode=block
+x-amzn-Remapped-Content-Length: 200
+X-Frame-Options: DENY
+x-amz-apigw-id: boopMHl2rPEFr1Q=
+X-Content-Type-Options: nosniff
+X-Amzn-Trace-Id: Root=1-6040216d-3d02636808e871d23d3e947e;Sampled=0
+X-Cache: Error from cloudfront
+Via: 1.1 35ca6aa74c5646f0333fa6da149920ce.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: MNL50-C1
+X-Amz-Cf-Id: 4WRQEiyE_h0v80ywgn-MzH8Ds656XU9pwhIXtNSkjeMDVAqHsrzBSg==
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: keep-alive
+accept: text/plain
+Content-Type: application/json-patch+json
+Content-Length: 103
+Host: api-uat.casemix-dev.co.uk
+User-Agent: Apache-HttpClient/4.5.2 (Java/11.0.1)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;result&quot;:null,&quot;targetUrl&quot;:null,&quot;success&quot;:false,&quot;error&quot;:{&quot;code&quot;:0,&quot;message&quot;:&quot;Login failed!&quot;,&quot;details&quot;:&quot;Invalid user name or password&quot;,&quot;validationErrors&quot;:null},&quot;unAuthorizedRequest&quot;:false,&quot;__abp&quot;:true}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&#xd;
+  &quot;userNameOrEmailAddress&quot;: &quot;gilmatugas&quot;,&#xd;
+  &quot;password&quot;: &quot;Summer1969*&quot;,&#xd;
+  &quot;rememberClient&quot;: true&#xd;
+}</queryString>
+  <java.net.URL>https://api-uat.casemix-dev.co.uk/uat/api/TokenAuth/Authenticate</java.net.URL>
+</httpSample>
+
+</testResults>
