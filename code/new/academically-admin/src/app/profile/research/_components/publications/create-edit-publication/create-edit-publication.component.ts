@@ -42,6 +42,8 @@ export class CreateEditPublicationComponent extends AppComponentBase implements 
       if (this.userPublication.userPublicationTags && this.userPublication.userPublicationTags.length > 0) {
         this.userPublication.tags = this.userPublication.userPublicationTags
           .map(userPublicationTag => userPublicationTag.publicationTag.name);
+      } else {
+        this.userPublication.tags = [];
       }
       this.publicationDate = this.userPublication.publicationDate.toDate();
     }
