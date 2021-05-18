@@ -1,4 +1,5 @@
 import { Component, ContentChild, ElementRef, EventEmitter, Injector, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { AppComponentBase } from '@shared/app-component-base';
 import { FileParameter } from '@shared/service-proxies/service-proxies';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -15,6 +16,8 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
   @Input() maxFiles: number;
   @Input() cropImages = false;
   @Input() hasCategory = false;
+  @Input() previewImages = false;
+  @Input() largeImagePreview = false;
   @Output() filesChanged = new EventEmitter<FileParameter[]>();
   @ViewChild('documentUploader') documentUploaderInput: ElementRef;
   public files: File[] = [];
@@ -35,6 +38,7 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
   constructor(
     injector: Injector,
     private _modalService: BsModalService,
+    private _sanitizer: DomSanitizer,
   ) {
     super(injector);
   }
@@ -105,6 +109,10 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 
+  getSanitizedFileUrl(file: File): SafeUrl {
+    return this._sanitizer.bypassSecurityTrustUrl(this.getFileUrl(file));
+  }
+
   onOpenDocumentClick(file: File): void {
     const fileUrl = URL.createObjectURL(file);
     window.open(fileUrl, '_blank');
@@ -122,5 +130,9 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
 
   private getFileExtension(fileName: string): string {
     return fileName.split('.').pop();
+  }
+
+  private getFileUrl(file: File): string {
+    return URL.createObjectURL(file)
   }
 }

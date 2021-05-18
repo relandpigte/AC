@@ -917,6 +917,124 @@ export class PhoneVerificationsServiceProxy {
 }
 
 @Injectable()
+export class PhotoIdVerificationsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    getLatest(): Observable<PhotoIdVerificationDto> {
+        let url_ = this.baseUrl + "/api/services/app/PhotoIdVerifications/GetLatest";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetLatest(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetLatest(<any>response_);
+                } catch (e) {
+                    return <Observable<PhotoIdVerificationDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PhotoIdVerificationDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetLatest(response: HttpResponseBase): Observable<PhotoIdVerificationDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PhotoIdVerificationDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PhotoIdVerificationDto>(<any>null);
+    }
+
+    /**
+     * @param photoId (optional) 
+     * @return Success
+     */
+    create(photoId: FileParameter | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/PhotoIdVerifications/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (photoId === null || photoId === undefined)
+            throw new Error("The parameter 'photoId' cannot be null.");
+        else
+            content_.append("PhotoId", photoId.data, photoId.fileName ? photoId.fileName : "PhotoId");
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class ProfilesServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -7155,7 +7273,7 @@ export interface IDocumentDto {
     size: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -7163,6 +7281,7 @@ export enum DocumentType {
     Qualification = 3,
     Passport = 4,
     Education = 5,
+    PhotoId = 6,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {
@@ -7866,6 +7985,68 @@ export interface IPhoneVerificationDto {
     userId: number;
     recipient: string | undefined;
     dateSent: moment.Moment;
+}
+
+export class PhotoIdVerificationDto implements IPhotoIdVerificationDto {
+    id: string;
+    status: PhotoIdVerificationStatus;
+    photoIdUrl: string | undefined;
+    document: DocumentDto;
+
+    constructor(data?: IPhotoIdVerificationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.status = _data["status"];
+            this.photoIdUrl = _data["photoIdUrl"];
+            this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PhotoIdVerificationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PhotoIdVerificationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["status"] = this.status;
+        data["photoIdUrl"] = this.photoIdUrl;
+        data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): PhotoIdVerificationDto {
+        const json = this.toJSON();
+        let result = new PhotoIdVerificationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPhotoIdVerificationDto {
+    id: string;
+    status: PhotoIdVerificationStatus;
+    photoIdUrl: string | undefined;
+    document: DocumentDto;
+}
+
+/** 0 = Pending 1 = Accepted 2 = Declined */
+export enum PhotoIdVerificationStatus {
+    Pending = 0,
+    Accepted = 1,
+    Declined = 2,
 }
 
 export class ProfileMetricDto implements IProfileMetricDto {

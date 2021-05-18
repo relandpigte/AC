@@ -3,15 +3,15 @@ import { RouterModule } from '@angular/router';
 
 import { AppRouteGuard } from '@shared/auth/auth-route-guard';
 
-import { ProfilePictureComponent } from './profile-picture.component';
+import { AddressComponent } from './address.component';
 
 @NgModule({
   imports: [
     RouterModule.forChild([
       {
         path: '',
-        component: ProfilePictureComponent,
-        data: { permission: 'Pages.TutorWizard.ProfilePicture' },
+        component: AddressComponent,
+        data: { permission: 'Pages.TutorWizard.Address' },
         canActivate: [AppRouteGuard],
         canActivateChild: [AppRouteGuard],
       },
@@ -21,4 +21,4 @@ import { ProfilePictureComponent } from './profile-picture.component';
     RouterModule
   ],
 })
-export class ProfilePictureRoutingModule { }
+export class AddressRoutingModule { }

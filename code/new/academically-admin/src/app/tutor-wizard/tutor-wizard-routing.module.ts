@@ -64,6 +64,13 @@ import { TutorWizardComponent } from './tutor-wizard.component';
                     (m) => m.PhotoIdModule,
                   ),
               },
+              {
+                path: 'address',
+                loadChildren: () =>
+                  import('@app/tutor-wizard/address/address.module').then(
+                    (m) => m.AddressModule,
+                  ),
+              },
             ]
           },
         ],
