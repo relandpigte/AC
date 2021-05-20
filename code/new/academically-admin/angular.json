@@ -49,7 +49,8 @@
               "src/assets/themes/dashkit/libs/quill/dist/quill.core.css",
               "src/assets/themes/dashkit/libs/highlightjs/styles/vs2015.css",
               "src/assets/themes/dashkit/css/theme.min.css",
-              "src/shared/core.less"
+              "src/shared/core.less",
+              "node_modules/cookieconsent/build/cookieconsent.min.css"
             ],
             "scripts": [
               "node_modules/moment/min/moment.min.js",
@@ -73,7 +74,8 @@
               "node_modules/abp-web-resources/Abp/Framework/scripts/abp.js",
               "src/assets/abp-web-resources/abp.sweet-alert.js",
               "src/assets/abp-web-resources/abp.freeze-ui.js",
-              "node_modules/abp-web-resources/Abp/Framework/scripts/libs/abp.moment.js"
+              "node_modules/abp-web-resources/Abp/Framework/scripts/libs/abp.moment.js",
+              "node_modules/cookieconsent/build/cookieconsent.min.js"
             ]
           },
           "configurations": {
