@@ -1,4 +1,4 @@
-<div *ngIf="!maxFiles || (files.length < maxFiles)" class="document-uploader"
+<div *ngIf="(!maxFiles || (files.length < maxFiles)) && !defaultFile" class="document-uploader"
   [dragClassUpdater]="'document-uploader-dragover'">
   <label class="document-input-label m-0 p-0" for="DocumentUploader">
     <span *ngIf="!loadingImageCropper">{{ 'DropFileOrClickHereToUpload' | localize }}</span>
@@ -10,7 +10,33 @@
   <input #documentUploader [disabled]="loadingImageCropper" (change)="onFileChange($event)" [accept]="allowedExtensions"
     class="document-input" type="file" name="DocumentUploader" id="DocumentUploader">
 </div>
-<ul *ngIf="files && files.length > 0" class="list-group mt-2 document-uploader-preview">
+<ul *ngIf="(files && files.length > 0) || defaultFile" class="list-group mt-2 document-uploader-preview">
+  <li *ngIf="defaultFile" class="list-group-item">
+    <div class="row align-items-center">
+      <div [class.col-12]="largeImagePreview" [class.col-auto]="!largeImagePreview" class="mr-n2 text-center">
+        <img class="image-preview" alt="preview" [src]="defaultFile.url" />
+      </div>
+      <div class="col ml-n2">
+        <div class="col">
+          <h4 class="text-body text-focus mb-1">
+            {{ defaultFile.name }}
+          </h4>
+          <p class="small text-muted mb-0">
+            {{ formatBytes(defaultFile.size) }}
+          </p>
+        </div>
+      </div>
+      <div class="col-auto">
+        <a [href]="defaultFile.url" target="_blank" type="button"
+          class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
+          <span class="fe fe-eye"></span>
+        </a>
+        <button (click)="onRemoveDefaultFileClick()" type="button" class="btn btn-outline-danger btn-sm btn-rounded-circle">
+          <span class="fe fe-trash-2"></span>
+        </button>
+      </div>
+    </div>
+  </li>
   <li *ngFor="let file of files; let i = index" class="list-group-item">
     <div class="row align-items-center">
       <div *ngIf="previewImages" [class.col-12]="largeImagePreview" [class.col-auto]="!largeImagePreview"

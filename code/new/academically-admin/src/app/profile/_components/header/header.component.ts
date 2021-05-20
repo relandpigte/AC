@@ -1,5 +1,5 @@
 import { Component, Injector } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileService } from '@app/profile/_services/profile.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { uiEvents } from '@shared/constants/ui-events.constant';
@@ -26,6 +26,7 @@ export class HeaderComponent extends AppComponentBase {
     route: ActivatedRoute,
     themeSettingsService: ThemeManagerService,
     private _profileService: ProfileService,
+    private _router: Router,
   ) {
     super(injector);
     this.themeSettings = themeSettingsService.getConfiguration();
@@ -44,5 +45,17 @@ export class HeaderComponent extends AppComponentBase {
     this.user.profilePictureUrl = profilePictureUrl;
     this._profileService.user = this.user;
     abp.event.trigger(uiEvents.profileDetailsUpdated, profilePictureUrl);
+  }
+
+  onTutorWizardClick(): void {
+    this.message.confirm(
+      this.l('TutorWizardConfirmationMessage'),
+      undefined,
+      (result: boolean) => {
+        if (result) {
+          this._router.navigate(['/app/tutor-wizard']);
+        }
+      }
+    );
   }
 }

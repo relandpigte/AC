@@ -29,6 +29,7 @@ namespace Academically.Services.PhotoIdVerifications
         {
             var photoIdVerification = await _photoIdVerificationsRepository.GetAll()
                 .Where(e => e.Status != PhotoIdVerificationStatus.Declined && e.CreatorUserId == AbpSession.UserId.Value)
+                .OrderByDescending(e => e.CreationTime)
                 .Include(e => e.Document)
                 .FirstOrDefaultAsync();
 

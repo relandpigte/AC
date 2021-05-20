@@ -219,7 +219,7 @@ namespace Academically.Users
             }
             if (!new Regex(AcademicallyConsts.PasswordRegexValidator).IsMatch(input.NewPassword))
             {
-                throw new UserFriendlyException("Passwords must be at least 8 characters, contain a lowercase, uppercase, and number.");
+                throw new UserFriendlyException("Passwords must be at least 8 characters, contain a lowercase, uppercase, number and special character.");
             }
             user.Password = _passwordHasher.HashPassword(user, input.NewPassword);
             CurrentUnitOfWork.SaveChanges();

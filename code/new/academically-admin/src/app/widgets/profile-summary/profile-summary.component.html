@@ -40,7 +40,8 @@
         </small>
       </div>
       <div class="col-auto">
-        <button *ngIf="permission.isGranted('Pages.TutorWizard')" [routerLink]="['/app/tutor-wizard']" class="btn btn-sm btn-primary">
+        <button *ngIf="permission.isGranted('Pages.TutorWizard')" (click)="onTutorWizardClick()"
+          class="btn btn-sm btn-primary">
           {{ 'BecomeATutor' | localize}}
         </button>
       </div>
