@@ -17,6 +17,9 @@ import { NgPipesModule } from 'ngx-pipes';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 
+// Cookie Consent
+import { NgcCookieConsentModule, NgcCookieConsentConfig } from 'ngx-cookieconsent';
+
 // directives
 import { ChartDirective } from '@shared/directives/chart.directive';
 import { DragClassUpdaterDirective } from '@shared/directives/drag-class-updater.directive';
@@ -64,6 +67,37 @@ import { DashboardUsageComponent } from './home/dashboard-usage/dashboard-usage.
 import { DashboardUsageOverviewComponent } from './home/dashboard-usage/dashboard-usage-overview/dashboard-usage-overview.component';
 import { DashboardUsageOverviewGraphComponent } from './home/dashboard-usage/dashboard-usage-overview-graph/dashboard-usage-overview-graph.component';
 import { MetricsComponent } from './home/dashboard-overview/metrics/metrics.component';
+
+// Settings is subject to change
+//
+const cookieConfig: NgcCookieConsentConfig = {
+  'cookie': {
+    'domain': window.location.hostname,
+  },
+  'position': 'bottom',
+  'theme': 'edgeless',
+  'palette': {
+    'popup': {
+      'background': '#2C7BE5',
+      'text': '#ffffff',
+      'link': '#ffffff'
+    },
+    'button': {
+      'background': '#00D97E',
+      'text': '#000000',
+      'border': 'transparent'
+    }
+  },
+  'type': 'info',
+  'content': {
+    'message': 'We use cookies to give you the best experience on our website. If you continue to browse, then you agree to our',
+    'dismiss': 'Got it!',
+    'deny': 'Refuse cookies',
+    'link': 'privacy policy and cookie policy.',
+    'href': window.location.hostname,
+    'policy': 'Cookie Policy'
+  }
+}
 
 @NgModule({
   declarations: [
@@ -137,6 +171,7 @@ import { MetricsComponent } from './home/dashboard-overview/metrics/metrics.comp
     NgPipesModule,
     TypeaheadModule.forRoot(),
     PopoverModule.forRoot(),
+    NgcCookieConsentModule.forRoot(cookieConfig)
   ],
   entryComponents: [
     // tenants
