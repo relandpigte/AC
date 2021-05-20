@@ -15,18 +15,13 @@ import { StudentReviewsComponent } from './_components/student-reviews/student-r
 import { TutorReviewsComponent } from './_components/tutor-reviews/tutor-reviews.component';
 import { StarRatingComponent } from './_components/star-rating/star-rating.component';
 import { SummaryComponent } from './_components/summary/summary.component';
-import { LanguageSpokenComponent } from './_components/language-spoken/language-spoken.component';
-import { EditLanguageSpokenComponent } from './_components/language-spoken/edit-language-spoken/edit-language-spoken.component';
-import { EditOtherLanguageSpokenComponent } from './_components/language-spoken/edit-language-spoken/edit-other-language-spoken/edit-other-language-spoken.component';
+import { SpokenLanguagesModule } from '../spoken-languages/spoken-languages.module';
 
 
 @NgModule({
   declarations: [
     IntroductionComponent,
     MetricsComponent,
-    LanguageSpokenComponent,
-    EditLanguageSpokenComponent,
-    EditOtherLanguageSpokenComponent,
     AboutComponent,
     StudentReviewsComponent,
     TutorReviewsComponent,
@@ -34,6 +29,7 @@ import { EditOtherLanguageSpokenComponent } from './_components/language-spoken/
     SummaryComponent,
   ],
   imports: [
+    SpokenLanguagesModule,
     CommonModule,
     IntroductionRoutingModule,
     SharedModule,

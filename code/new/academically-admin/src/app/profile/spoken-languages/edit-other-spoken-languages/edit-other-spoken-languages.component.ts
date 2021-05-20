@@ -15,16 +15,15 @@ import {
 import { BsModalRef } from "ngx-bootstrap/modal";
 
 @Component({
-  selector: "app-edit-other-language-spoken",
-  templateUrl: "./edit-other-language-spoken.component.html",
-  styleUrls: ["./edit-other-language-spoken.component.less"],
+  selector: "app-edit-other-spoken-language",
+  templateUrl: "./edit-other-spoken-languages.component.html",
+  styleUrls: ["./edit-other-spoken-languages.component.less"],
 })
-export class EditOtherLanguageSpokenComponent
+export class EditOtherSpokenLanguagesComponent
   extends AppComponentBase
   implements OnInit {
   @Input() unSelectedSpokenLanguages: SpokenLanguageDto[];
-  @Input() editUserSpokenLanguage: UserSpokenLanguageDto =
-    new UserSpokenLanguageDto();
+  @Input() editUserSpokenLanguage: UserSpokenLanguageDto = new UserSpokenLanguageDto();
   @Output() save = new EventEmitter<UserSpokenLanguageDto>();
   model: UserSpokenLanguageDto = new UserSpokenLanguageDto();
   SpokenLanguageProficiency = SpokenLanguageProficiency;

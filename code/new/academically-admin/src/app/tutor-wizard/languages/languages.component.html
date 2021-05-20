@@ -1,0 +1,11 @@
+<app-spoken-languages>
+</app-spoken-languages>
+
+<div class="d-flex justify-content-between">
+  <button [routerLink]="['/app/tutor-wizard/research']" type="button" class="btn btn-white">
+    {{ "Back" | localize }}
+  </button>
+  <button (click)="onNextClick()" [disabled]="isLoading || (spokenLanguages && !spokenLanguages.userSpokenLanguages.length)" type="submit" class="btn btn-primary">
+    {{ "Next" | localize }}
+  </button>
+</div>

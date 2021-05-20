@@ -4,7 +4,9 @@ import {
   Injector,
   OnInit,
   Output,
+  ViewChild,
 } from "@angular/core";
+import { NgForm } from "@angular/forms";
 import { ProfileService } from "@app/profile/_services/profile.service";
 import { AppComponentBase } from "@shared/app-component-base";
 import {
@@ -16,26 +18,29 @@ import {
   UserSpokenLanguageDto,
   UserSpokenlanguageServiceProxy,
 } from "@shared/service-proxies/service-proxies";
+import { AppSessionService } from "@shared/session/app-session.service";
 import * as _ from "lodash-es";
-import { BsModalRef, BsModalService, ModalOptions } from "ngx-bootstrap/modal";
+import { BsModalService, ModalOptions } from "ngx-bootstrap/modal";
 import { finalize } from "rxjs/operators";
-import { EditOtherLanguageSpokenComponent } from "./edit-other-language-spoken/edit-other-language-spoken.component";
+import { EditOtherSpokenLanguagesComponent } from "../edit-other-spoken-languages/edit-other-spoken-languages.component";
 
 @Component({
-  selector: "app-edit-language-spoken",
-  templateUrl: "./edit-language-spoken.component.html",
-  styleUrls: ["./edit-language-spoken.component.less"],
+  selector: "app-spoken-languages-form",
+  templateUrl: "./spoken-languages-form.component.html",
+  styleUrls: ["./spoken-languages-form.component.less"],
 })
-export class EditLanguageSpokenComponent
+export class SpokenLanguagesFormComponent
   extends AppComponentBase
   implements OnInit {
+  @ViewChild('form', { read: NgForm }) form: any;
   @Output() save = new EventEmitter<boolean>();
+  @Output() isLoadingChange = new EventEmitter<boolean>();
+
   userSpokenLanguages: UserSpokenLanguageDto[];
   otherUserSpokenLanguages: UserSpokenLanguageDto[];
-  user: UserDto;
   spokenLanguages: SpokenLanguageDto[];
   otherSpokenLanguages: SpokenLanguageDto[];
-  isLoading = false;
+  isLoading = true;
   englishProficiency = 0;
   unSelectedSpokenLanguages: SpokenLanguageDto[];
   proficiency = [
@@ -58,29 +63,22 @@ export class EditLanguageSpokenComponent
   ];
   constructor(
     injector: Injector,
-    profileService: ProfileService,
-    private _modal: BsModalRef,
+    private _appSession: AppSessionService,
     private _modalService: BsModalService,
     private _spokenlanguageServiceProxy: SpokenLanguagesServiceProxy,
     private _userSpokenlanguageServiceProxy: UserSpokenlanguageServiceProxy
   ) {
     super(injector);
-    profileService.user$.subscribe((user) => {
-      this.user = user;
-      this.getUserSpokenLanguage();
-      this.getSpokenLanugages();
-    });
+    this.getUserSpokenLanguage();
+    this.getSpokenLanugages();
   }
 
   ngOnInit(): void { }
 
-  onCloseClick(): void {
-    this._modal.hide();
-  }
-
   onFormSubmit(): void {
+    this.setIsLoading(true);
     const formModel = new EditUserSpokenLanguagesDto();
-    formModel.userId = this.user.id;
+    formModel.userId = this._appSession.user.id;
     formModel.englishProficiency = this.englishProficiency;
     formModel.otherUserSpokenLanguages = [];
 
@@ -95,13 +93,12 @@ export class EditLanguageSpokenComponent
       .editUserSpokenLanguages(formModel)
       .pipe(
         finalize(() => {
-          this.isLoading = false;
+          this.setIsLoading(false);
         })
       )
       .subscribe(() => {
         this.notify.success(this.l("SavedSuccessfully"));
         this.save.emit(true);
-        this._modal.hide();
       });
   }
 
@@ -125,7 +122,9 @@ export class EditLanguageSpokenComponent
       }
     );
 
-    this.showAddEditOtherUserSpokenLanguages(_.cloneDeep(toEditOtherUserSpokenLanguage));
+    this.showAddEditOtherUserSpokenLanguages(
+      _.cloneDeep(toEditOtherUserSpokenLanguage)
+    );
   }
 
   getUnselectedOtherLanguages(): SpokenLanguageDto[] {
@@ -168,17 +167,17 @@ export class EditLanguageSpokenComponent
       );
     }
 
-    const modalSettings = this.defaultModalSettings as ModalOptions<EditOtherLanguageSpokenComponent>;
+    const modalSettings = this.defaultModalSettings as ModalOptions<EditOtherSpokenLanguagesComponent>;
     modalSettings.initialState = {
       unSelectedSpokenLanguages: this.unSelectedSpokenLanguages,
       editUserSpokenLanguage: userSpokenLanguage,
     };
-    modalSettings.class = 'modal-sm';
+    modalSettings.class = "modal-sm";
     const modalRef = this._modalService.show(
-      EditOtherLanguageSpokenComponent,
+      EditOtherSpokenLanguagesComponent,
       modalSettings
     );
-    const modal: EditOtherLanguageSpokenComponent = modalRef.content;
+    const modal: EditOtherSpokenLanguagesComponent = modalRef.content;
     modal.save.subscribe((result: UserSpokenLanguageDto) => {
       if (result) {
         this.pushNewUpdatedOtherUserSpokenLanguage(result);
@@ -189,7 +188,9 @@ export class EditLanguageSpokenComponent
   private pushNewUpdatedOtherUserSpokenLanguage(
     userSpokenLanguage: UserSpokenLanguageDto
   ) {
-    const index = this.otherUserSpokenLanguages.findIndex(e => e.id === userSpokenLanguage.id);
+    const index = this.otherUserSpokenLanguages.findIndex(
+      (e) => e.id === userSpokenLanguage.id
+    );
 
     userSpokenLanguage.spokenLanguageName = this.spokenLanguages.find((s) => {
       return s.id == userSpokenLanguage.spokenLanguageId;
@@ -221,25 +222,30 @@ export class EditLanguageSpokenComponent
   }
 
   private getSpokenLanugages(): void {
-    this.isLoading = true;
+    this.setIsLoading(true);
     this._spokenlanguageServiceProxy.get().subscribe((result) => {
       this.spokenLanguages = result;
       this.otherSpokenLanguages = this.getOtherSpokenLanguages();
       this.unSelectedSpokenLanguages = this.getUnselectedOtherLanguages();
-      this.isLoading = false;
+      this.setIsLoading(false);
     });
   }
 
+  private setIsLoading(value: boolean) {
+    this.isLoading = value;
+    this.isLoadingChange.emit(value);
+  }
+
   private getUserSpokenLanguage(): void {
-    this.isLoading = true;
+    this.setIsLoading(true);
     this._userSpokenlanguageServiceProxy
-      .getUserSpokenLanguages(this.user.id)
+      .getUserSpokenLanguages(this._appSession.user.id)
       .subscribe((result) => {
         this.userSpokenLanguages = result;
         this.otherUserSpokenLanguages = this.getOtherUserSpokenLanguages();
         this.setEnglishProficiency();
         this.unSelectedSpokenLanguages = this.getUnselectedOtherLanguages();
-        this.isLoading = false;
+        this.setIsLoading(false);
       });
   }
 

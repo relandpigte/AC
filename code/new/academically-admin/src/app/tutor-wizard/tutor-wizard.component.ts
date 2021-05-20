@@ -57,6 +57,9 @@ export class TutorWizardComponent extends AppComponentBase implements OnInit {
       case BecomeATutorStep.Research:
         routeName = 'research';
         break;
+      case BecomeATutorStep.Languages:
+        routeName = 'languages';
+        break;
       case BecomeATutorStep.ServicesOffered:
         routeName = 'services-offered';
         break;
