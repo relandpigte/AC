@@ -1,4 +1,5 @@
 import { Component, Injector } from '@angular/core';
+import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { UserLoginInfoDto } from '@shared/service-proxies/service-proxies';
 
@@ -13,10 +14,22 @@ export class ProfileSummaryComponent extends AppComponentBase {
 
   constructor(
     injector: Injector,
+    private _router: Router,
   ) {
     super(injector);
     this.user = this.appSession.user;
     this.userTitle = this.user.roles.filter(e => e.toLowerCase() === 'tutor').length > 0 ? 'Tutor' : 'Student';
   }
 
+  onTutorWizardClick(): void {
+    this.message.confirm(
+      this.l('TutorWizardConfirmationMessage'),
+      undefined,
+      (result: boolean) => {
+        if (result) {
+          this._router.navigate(['/app/tutor-wizard']);
+        }
+      }
+    );
+  }
 }

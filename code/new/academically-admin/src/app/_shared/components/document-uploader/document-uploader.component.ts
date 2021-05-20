@@ -1,4 +1,4 @@
-import { Component, ContentChild, ElementRef, EventEmitter, Injector, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
@@ -6,20 +6,27 @@ import { FileParameter } from '@shared/service-proxies/service-proxies';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ImageCropperComponent } from '../image-cropper/image-cropper.component';
 
+export class DefaultFile {
+  name: string;
+  url: string;
+  size: number;
+}
+
 @Component({
   selector: 'app-document-uploader',
   templateUrl: './document-uploader.component.html',
   styleUrls: ['./document-uploader.component.less']
 })
 export class DocumentUploaderComponent extends AppComponentBase implements OnInit {
-  @ContentChild('test') layoutTemplate: TemplateRef<any>;
   @Input() allowedExtensions: string[] = [];
   @Input() maxFiles: number;
   @Input() cropImages = false;
   @Input() hasCategory = false;
   @Input() previewImages = false;
   @Input() largeImagePreview = false;
+  @Input() defaultFile: DefaultFile;
   @Output() filesChanged = new EventEmitter<FileParameter[]>();
+  @Output() defaultFileRemoved = new EventEmitter();
   @ViewChild('documentUploader') documentUploaderInput: ElementRef;
   public files: File[] = [];
   public categories: string[] = [];
@@ -100,6 +107,11 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
     }
     this.files.splice(fileIndex, 1);
     this.filesChanged.emit(this.getFileParameterFromFiles());
+  }
+
+  onRemoveDefaultFileClick(): void {
+    this.defaultFile = undefined;
+    this.defaultFileRemoved.emit();
   }
 
   formatBytes(bytes: number, decimals = 2) {

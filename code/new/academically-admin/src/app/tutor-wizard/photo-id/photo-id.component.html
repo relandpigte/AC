@@ -1,5 +1,5 @@
 <div class="card">
-  <div class="card-body">
+  <div class="card-body" [loader]="isLoading">
     <app-document-uploader [maxFiles]="1" [previewImages]="true" [largeImagePreview]="true" [cropImages]="true"
       [allowedExtensions]="photIdVerificationExtensions">
     </app-document-uploader>
@@ -9,7 +9,7 @@
   <button [routerLink]="['/app/tutor-wizard/profile-picture']" type="button" class="btn btn-white">
     {{ 'Back' | localize }}
   </button>
-  <button (click)="onNextClick()" [disabled]="!photoId || isLoading" type="submit" class="btn btn-primary">
+  <button (click)="onNextClick()" [disabled]="(!photoId && !defaultFile) || isLoading" type="submit" class="btn btn-primary">
     {{ 'Next' | localize }}
   </button>
 </div>
