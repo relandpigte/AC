@@ -44,6 +44,13 @@ import { TutorWizardComponent } from './tutor-wizard.component';
                   ),
               },
               {
+                path: 'languages',
+                loadChildren: () =>
+                  import('@app/tutor-wizard/languages/languages.module').then(
+                    (m) => m.LanguagesModule,
+                  ),
+              },
+              {
                 path: 'services-offered',
                 loadChildren: () =>
                   import('@app/tutor-wizard/services-offered/services-offered.module').then(

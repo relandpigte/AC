@@ -51,6 +51,13 @@ import { ProfileComponent } from './profile.component';
                     ),
                 },
                 {
+                  path: 'languages',
+                  loadChildren: () =>
+                    import('@app/profile/spoken-languages/spoken-languages.module').then(
+                      (m) => m.SpokenLanguagesModule,
+                    ),
+                },
+                {
                   path: 'industry-experience',
                   loadChildren: () =>
                     import('@app/profile/industry-experience/industry-experience.module').then(

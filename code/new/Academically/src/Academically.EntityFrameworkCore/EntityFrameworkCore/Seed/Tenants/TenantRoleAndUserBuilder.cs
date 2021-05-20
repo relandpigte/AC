@@ -188,6 +188,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_TutorWizard_AboutYou,
                 PermissionNames.Pages_TutorWizard_Education,
                 PermissionNames.Pages_TutorWizard_Research,
+                PermissionNames.Pages_TutorWizard_Languages,
                 PermissionNames.Pages_TutorWizard_ServicesOffered,
                 PermissionNames.Pages_TutorWizard_ProfilePicture,
                 PermissionNames.Pages_TutorWizard_PhotoId,

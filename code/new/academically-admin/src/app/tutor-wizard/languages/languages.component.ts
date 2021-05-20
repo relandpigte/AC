@@ -1,21 +1,24 @@
-import { Component, Injector } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, ViewChild } from '@angular/core';
+import { SpokenLanguagesComponent } from '@app/profile/spoken-languages/spoken-languages.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { BecomeATutorStep, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { BecomeATutorService } from '../_services/become-a-tutor.service';
 
 @Component({
-  selector: 'app-research',
-  templateUrl: './research.component.html',
-  styleUrls: ['./research.component.less']
+  selector: 'app-tutor-wizard-languages',
+  templateUrl: './languages.component.html',
+  styleUrls: ['./languages.component.less']
 })
-export class ResearchComponent extends AppComponentBase {
+export class LanguagesComponent extends AppComponentBase {
+  @ViewChild(SpokenLanguagesComponent) spokenLanguages: SpokenLanguagesComponent;
   isLoading = false;
 
   constructor(
     injector: Injector,
     private _becomeATutorService: BecomeATutorService,
     private _tutorWizardService: TutorWizardServiceProxy,
+    private cdr: ChangeDetectorRef
   ) {
     super(injector);
   }
@@ -23,9 +26,13 @@ export class ResearchComponent extends AppComponentBase {
   ngOnInit(): void {
   }
 
+  ngAfterViewInit() {
+    this.cdr.detectChanges();
+  }
+
   onNextClick(): void {
     this.isLoading = true;
-    const nextStep = BecomeATutorStep.Languages;
+    const nextStep = BecomeATutorStep.ServicesOffered;
     this._tutorWizardService.updateStep(nextStep)
       .pipe(
         takeUntil(this.destroyed$),

@@ -1,0 +1,28 @@
+<div class="modal-card card">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ "Languages" | localize }}
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="onCloseClick()"
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="card-body" [loader]="isLoading">
+    <app-spoken-languages-form (save)='onSaveResult($event)' (isLoadingChange)='onIsLoadingChange($event)'></app-spoken-languages-form>
+  </div>
+
+  <div class="card-footer justify-content-between">
+    <button type="button" class="btn btn-white" [disabled]="isLoading" (click)="onCloseClick()">
+      {{ cancelLabel }}
+    </button>
+    <button class="btn btn-primary" [disabled]="isLoading" (click)="onSave()">
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      {{ isLoading ? savingLabel : saveLabel }}
+    </button>
+  </div>
+</div>

@@ -1,39 +1,34 @@
 import { Component, Injector, OnInit } from "@angular/core";
-import { ProfileService } from "@app/profile/_services/profile.service";
 import { AppComponentBase } from "@shared/app-component-base";
 import {
   SpokenLanguageProficiency,
-  UserDto,
   UserSpokenLanguageDto,
   UserSpokenlanguageServiceProxy,
 } from "@shared/service-proxies/service-proxies";
+import { AppSessionService } from "@shared/session/app-session.service";
 import { BsModalService } from "ngx-bootstrap/modal";
-import { EditLanguageSpokenComponent } from "./edit-language-spoken/edit-language-spoken.component";
+import { EditSpokenLanguageModalComponent } from "./edit-spoken-languages-modal/edit-spoken-languages-modal.component";
 
 @Component({
-  selector: "app-language-spoken",
-  templateUrl: "./language-spoken.component.html",
-  styleUrls: ["./language-spoken.component.less"],
+  selector: "app-spoken-languages",
+  templateUrl: "./spoken-languages.component.html",
+  styleUrls: ["./spoken-languages.component.less"],
 })
-export class LanguageSpokenComponent
+export class SpokenLanguagesComponent
   extends AppComponentBase
   implements OnInit {
-  user: UserDto;
-  userSpokenLanguages: UserSpokenLanguageDto[];
+  userSpokenLanguages: UserSpokenLanguageDto[] = [];
   isLoading: boolean = false;
   SpokenLanguageProficiency = SpokenLanguageProficiency;
 
   constructor(
     injector: Injector,
-    profileService: ProfileService,
+    private _appSession: AppSessionService,
     private _modalService: BsModalService,
     private _userSpokenlanguageServiceProxy: UserSpokenlanguageServiceProxy
   ) {
     super(injector);
-    profileService.user$.subscribe((user) => {
-      this.user = user;
       this.getUserSpokenLanguage();
-    });
   }
 
   ngOnInit(): void { }
@@ -45,7 +40,7 @@ export class LanguageSpokenComponent
   private getUserSpokenLanguage(): void {
     this.isLoading = true;
     this._userSpokenlanguageServiceProxy
-      .getUserSpokenLanguages(this.user.id)
+      .getUserSpokenLanguages(this._appSession.user.id)
       .subscribe((result) => {
         this.userSpokenLanguages = result;
         this.isLoading = false;
@@ -55,10 +50,10 @@ export class LanguageSpokenComponent
   private showEditUserSpokenLanguages() {
     const modalSettings = this.defaultModalSettings;
     const modalRef = this._modalService.show(
-      EditLanguageSpokenComponent,
+      EditSpokenLanguageModalComponent,
       modalSettings
     );
-    const modal: EditLanguageSpokenComponent = modalRef.content;
+    const modal: EditSpokenLanguageModalComponent = modalRef.content;
     modal.save.subscribe((result: boolean) => {
       if (result) {
         this.getUserSpokenLanguage();

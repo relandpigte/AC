@@ -89,6 +89,7 @@ namespace Academically.Authorization
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_AboutYou, L("AboutYou"));
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_Education, L("Education"));
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_Research, L("Research"));
+            tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_Languages, L("Languages"));
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_ServicesOffered, L("ServicesOffered"));
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_ProfilePicture, L("ProfilePicture"));
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_PhotoId, L("PhotoId"));
