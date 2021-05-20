@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ServiceDto, UserServiceDto, UserServicesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ServiceDto, ServiceExpertiseLevel, UserServiceDto, UserServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { CreateEditServiceComponent } from './_components/create-edit-service/create-edit-service.component';
@@ -11,6 +11,7 @@ import { CreateEditServiceComponent } from './_components/create-edit-service/cr
   styleUrls: ['./services.component.less']
 })
 export class ServicesComponent extends AppComponentBase implements OnInit {
+  ServiceExptertiseLevel = ServiceExpertiseLevel;
   collapsedItems: boolean[] = [];
   categories: ServiceDto[] = [];
   isLoading = false;

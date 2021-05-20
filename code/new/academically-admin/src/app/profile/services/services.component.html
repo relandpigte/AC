@@ -67,7 +67,12 @@
           <table class="table card-table">
             <tr *ngFor="let userService of userServices">
               <td>
-                <h5>{{ userService.title }}</h5>
+                <h5 class="d-flex align-items-center">
+                  {{ userService.title }}
+                  <span class="ml-2 badge badge-success">
+                    {{ ServiceExptertiseLevel[userService.expertiseLevel] | localize }}
+                  </span>
+                </h5>
                 <div toggableContent [identifier]="userService.id" contentClass="ql-container">
                   <quill-view-html [content]="userService.description" theme="snow"></quill-view-html>
                 </div>

@@ -20,5 +20,6 @@ import { SuggestServiceSubjectComponent } from './_components/suggest-service-su
     SharedModule,
     AppSharedModule,
   ],
+  exports: [ServicesComponent],
 })
 export class ServicesModule { }

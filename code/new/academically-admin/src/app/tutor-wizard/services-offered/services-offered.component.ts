@@ -1,4 +1,5 @@
-import { Component, Injector } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, ViewChild } from '@angular/core';
+import { ServicesComponent } from '@app/profile/services/services.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { BecomeATutorStep, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -11,13 +12,18 @@ import { BecomeATutorService } from '../_services/become-a-tutor.service';
 })
 export class ServicesOfferedComponent extends AppComponentBase {
   isLoading = false;
-
+  @ViewChild(ServicesComponent) services: ServicesComponent
   constructor(
     injector: Injector,
     private _tutorWizardService: TutorWizardServiceProxy,
     private _becomeATutorService: BecomeATutorService,
+    private cdr: ChangeDetectorRef
   ) {
     super(injector);
+  }
+
+  ngAfterViewInit() {
+    this.cdr.detectChanges();
   }
 
   onNextClick(): void {

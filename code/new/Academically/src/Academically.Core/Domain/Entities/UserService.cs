@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities.Auditing;
 using Academically.Authorization.Users;
+using Academically.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,6 +18,7 @@ namespace Academically.Domain.Entities
 
         public string Title { get; set; }
         public string Description { get; set; }
+        public ServiceExpertiseLevel ExpertiseLevel { get; set; }
         public Guid ServiceMappingId { get; set; }
 
         [ForeignKey("ServiceMappingId")]

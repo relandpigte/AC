@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, ServiceDto, ServiceMappingDto, ServicesServiceProxy, SubjectDto, UserServiceDto, UserServicesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, ServiceDto, ServiceExpertiseLevel, ServiceMappingDto, ServicesServiceProxy, SubjectDto, UserServiceDto, UserServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash-es';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable, Observer } from 'rxjs';
@@ -14,6 +14,7 @@ class CreateEditServiceModel {
   levelId: string;
   title: string;
   description: string;
+  expertiseLevel: number;
   disciplineTaxonomies: DisciplineTaxonomyDto[] = [];
   subjects: SubjectDto[] = [];
 };
@@ -25,6 +26,7 @@ class CreateEditServiceModel {
 })
 export class CreateEditServiceComponent extends AppComponentBase implements OnInit {
   @Output() modelSaved = new EventEmitter();
+  ServiceExptertiseLevel = ServiceExpertiseLevel;
   model: CreateEditServiceModel = new CreateEditServiceModel();
   categories: ServiceDto[] = [];
   services: ServiceDto[] = [];
@@ -63,6 +65,7 @@ export class CreateEditServiceComponent extends AppComponentBase implements OnIn
     userService.id = this.model.id;
     userService.title = this.model.title;
     userService.description = this.model.description;
+    userService.expertiseLevel = this.model.expertiseLevel;
     userService.serviceMappingId = this.model.levelId;
     userService.subjects = this.model.subjects;
     userService.disciplineTaxonomies = this.model.disciplineTaxonomies;
