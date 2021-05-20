@@ -1,9 +1,9 @@
-<h1>Coming Soon!</h1>
+<app-services></app-services>
 <div class="d-flex justify-content-between">
   <button [routerLink]="['/app/tutor-wizard/languages']" type="button" class="btn btn-white">
     {{ 'Back' | localize }}
   </button>
-  <button (click)="onNextClick()" type="submit" class="btn btn-primary">
+  <button (click)="onNextClick()" type="submit" [disabled]='services && (services.isLoading || !services.categories.length)' class="btn btn-primary">
     {{ 'Next' | localize }}
   </button>
 </div>

@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts> 
+    <text name="SelectExpertiseLevel">Select Expertise Level</text>
+    <text name="Expert">Expert</text>
+    <text name="Intermediate">Intermediate</text>
+    <text name="EntryLevel">Entry Level</text>
+    <text name="ExpertiseLevel">Expertise Level</text>
     <text name="TutorWizardConfirmationMessage">You are applying to become a tutor. You will be asked both your personal and professional information. Are you sure you want to continue?</text>
     <text name="ConnectStripe">Connect Stripe</text>
     <text name="StripeConnectionMessage">Even when you set your profile to public, you need to connect your account to stripe in order for others to be able to search you on the Academically network.</text>

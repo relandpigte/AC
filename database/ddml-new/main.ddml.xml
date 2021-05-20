@@ -43,4 +43,5 @@
 	<include file="ddml-new/ddml.2021-05-13-01.load-update-servicesubjects_v2.xml"/>
 	<include file="ddml-new/ddml.2021-05-14-01.alter-users-add-stripeuserid-field.xml"/>
 	<include file="ddml-new/ddml.2021-05-17-01.create-photoidverifications-table.xml"/>
+	<include file="ddml-new/ddml.2021-05-20-01.alter-userservices-add-expertiselevel-field.xml"/>
 </databaseChangeLog>

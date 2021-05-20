@@ -5,6 +5,7 @@ import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
 import { ServicesOfferedComponent } from './services-offered.component';
+import { ServicesModule } from '@app/profile/services/services.module';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { ServicesOfferedComponent } from './services-offered.component';
     ServicesOfferedRoutingModule,
     SharedModule,
     AppSharedModule,
+    ServicesModule
   ],
 })
 export class ServicesOfferedModule { }

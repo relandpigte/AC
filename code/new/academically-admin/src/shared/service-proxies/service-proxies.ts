@@ -8931,6 +8931,13 @@ export interface IServiceDto {
     children: ServiceDto[] | undefined;
 }
 
+/** 1 = EntryLevel 2 = Intermediate 3 = Expert */
+export enum ServiceExpertiseLevel {
+    EntryLevel = 1,
+    Intermediate = 2,
+    Expert = 3,
+}
+
 export class ServiceMappingDto implements IServiceMappingDto {
     id: string;
     service: ServiceDto;
@@ -11033,6 +11040,7 @@ export class UserServiceDto implements IUserServiceDto {
     id: string;
     title: string | undefined;
     description: string | undefined;
+    expertiseLevel: ServiceExpertiseLevel;
     serviceMappingId: string;
     subjects: SubjectDto[] | undefined;
     disciplineTaxonomies: DisciplineTaxonomyDto[] | undefined;
@@ -11051,6 +11059,7 @@ export class UserServiceDto implements IUserServiceDto {
             this.id = _data["id"];
             this.title = _data["title"];
             this.description = _data["description"];
+            this.expertiseLevel = _data["expertiseLevel"];
             this.serviceMappingId = _data["serviceMappingId"];
             if (Array.isArray(_data["subjects"])) {
                 this.subjects = [] as any;
@@ -11077,6 +11086,7 @@ export class UserServiceDto implements IUserServiceDto {
         data["id"] = this.id;
         data["title"] = this.title;
         data["description"] = this.description;
+        data["expertiseLevel"] = this.expertiseLevel;
         data["serviceMappingId"] = this.serviceMappingId;
         if (Array.isArray(this.subjects)) {
             data["subjects"] = [];
@@ -11103,6 +11113,7 @@ export interface IUserServiceDto {
     id: string;
     title: string | undefined;
     description: string | undefined;
+    expertiseLevel: ServiceExpertiseLevel;
     serviceMappingId: string;
     subjects: SubjectDto[] | undefined;
     disciplineTaxonomies: DisciplineTaxonomyDto[] | undefined;
