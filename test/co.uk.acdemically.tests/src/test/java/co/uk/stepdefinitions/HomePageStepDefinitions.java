@@ -46,5 +46,48 @@ public class HomePageStepDefinitions {
 		Homepage.clickUsageTab();
 	}
 	
+	@Then("^user is in usage information$")
+	public void verifyUsageInformation() {
+		Homepage.Usage.verifyUsageTabIsActive();
+	}
+	
+	@Then("^user should see actual total hours$")
+	public void verifyActualTotalHours() {
+		Homepage.Usage.verifyTotalHoursIsDisplayed();
+	}
+	
+	@Then("^user should see all total projects$")
+	public void verifyTotalProject() {
+		Homepage.Usage.veriftTotalProjectIsDisplayed();
+	}
+	
+	@Then("^user should see overview graph$")
+	public void verifyOverviewGraph() {
+		Homepage.Usage.verifyChart();
+	}
+
+	@Then("^user profile widget is displayed on the dashboard$")
+	public void verifyProfileWidget() {
+		Homepage.verifyProfileWidgetIsDisplayed();
+	}
+	
+	@Then("^verification widget is displayed on the dashboard$")
+	public void verifyVerificationWidget() {
+		Homepage.verifyVerificationWidgetIsDisplayed();
+	}
+	
+	@Then("^see a list of verification$")
+	public void verifyListOfVerifcations() {
+		Homepage.verifyEmailIsDisplayed();
+		Homepage.verifyPhoneIsDisplayed();
+	}
+	
+	@Then("^four key metrics is displayed on the dashboard$")
+	public void verifyFourMetricsIsDisplayedOnTheDashboard() {
+		Homepage.Metric.verifyTotalHoursMetricIsDisplayed();
+		Homepage.Metric.verifyAcademicLevelMetricIsDisplayed();
+		Homepage.Metric.verifyUserTypeMetricIsDisplayed();
+		Homepage.Metric.verifyReviewsMetricIsDisplayed();
+	}
 	
 }

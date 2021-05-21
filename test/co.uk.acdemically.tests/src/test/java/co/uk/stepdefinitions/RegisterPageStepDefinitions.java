@@ -28,7 +28,7 @@ public class RegisterPageStepDefinitions {
 	        	RegisterPage.enterLastName(lastname);
 	        }
 	        if(!email.equals("null")) {	 
-	        	RegisterPage.enterEmail(email.replace("XXX", DriverHandler.timestamp)+"@gilmatugas.33mail.com");
+	        	RegisterPage.enterEmail(email.replace("XXX",DriverHandler.timestamp)+"@gilmatugas.33mail.com");
 	        				        }
 	        if(!dateOfBirth.equals("null")) {	 
 	        	RegisterPage.enterDateOfBirth(dateOfBirth);
@@ -39,10 +39,17 @@ public class RegisterPageStepDefinitions {
 	
 	@When("^user activate account$")
 	public void activateAccount() {
+		DriverHandler.delay(5);
 		String value = GmailReader.getEmailContent();
 		 value = TextUtility.getValueByRegex(value, "<p>https://academically(.+?)<p/>").replace("<p>", "").replace("<p/>", "");
 		 DriverHandler.navigateUrl(value);
 		 DriverHandler.delay(10);
+	}
+	
+	public static void main(String[] args) {
+		String value = GmailReader.getEmailContent();
+	//	value = TextUtility.getValueByRegex(value, "<p>https://academically(.+?)<p/>").replace("<p>", "").replace("<p/>", "");
+		System.out.println(value);
 	}
 	
 	@Then("^sent email modal is displayed$")

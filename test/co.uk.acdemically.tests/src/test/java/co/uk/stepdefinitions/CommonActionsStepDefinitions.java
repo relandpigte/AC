@@ -39,7 +39,7 @@ public class CommonActionsStepDefinitions {
     public void navigateAcademically() throws Exception {
         DriverHandler.openBrowser();
         DriverHandler.navigateUrl(TestDataObjects.getUrl("UI"));
-        DriverHandler.delay(15);
+        DriverHandler.delay(17);
     }
     
     @Given("^page is refreshed$")
