@@ -139,7 +139,7 @@ Scenario: C14340 - Verify user verification widget is displayed
 	And verification widget is displayed on the dashboard
 	And see a list of verification
 
-@UI @StudentUser @TestRails(14341) @Adhoc
+@UI @StudentUser @TestRails(14341)
 Scenario: C14341- Verify key four key metrics is displayed
 
 	Given User is in academically login page
@@ -158,8 +158,8 @@ Scenario: C14341- Verify key four key metrics is displayed
 	Then user successfully login
 	And four key metrics is displayed on the dashboard
 
-@UI
-Scenario: Verify account settings is displayed
+@UI @StudentUser @TestRails(14342)
+Scenario: C14342- Verify account settings is displayed
 	
 	Given User is in academically login page
 	When user register a student
@@ -195,10 +195,8 @@ Scenario: Verify uploading a profile photo
 	Then registered the account successfully
 	When user enter username "automatedXXX" and password "Test@12345"
 	Then user successfully login
-	When user navigate to profile settings
-#- Click user profile image widget
+	When user navigate to profile settings using profile widget
 	Then user is in profile settings
-#- Verify user profile settings is displayed
 	When user upload a profile photo
 #- Click camera icon
 #- Click Upload photo
@@ -214,14 +212,259 @@ Scenario: Verify uploading a profile photo
 	And successful message is displayed at the right corner
 #- Verify message is displayed
 
+@??
 Scenario: Verify removing a profile photo
-Scenario: Verify uploading a cover photo
-Scenario: Verify removing a cover photo
-Scenario: Verify adding about user information
+
+Scenario: C14345- Verify uploading a cover photo
+	
+	Given User is in academically login page
+	When user register a student
+	And user enter account details
+		|Firstname  |Lastname  |Email 			  |Date of Birth  |
+		|Joseph  		|Quinn     |automatedXXX  |04/02/1981     |
+	Then sent email modal is displayed 
+	And user activate account 
+	Then user is in complete registration form
+	And email address "automatedXXX" matched
+	When user enter password "Test@12345" and confirm passoword "Test@12345"
+	And user register an account
+	Then registered the account successfully
+	When user enter username "automatedXXX" and password "Test@12345"
+	Then user successfully login
+	When user navigate to profile settings using profile widget
+	Then user is in profile settings
+	When user add a cover photo
+	And user select a photo from the gallery
+	And user crop the cover photo
+	Then upload a cover photo is successful
+
+Scenario: C14346- Verify removing a cover photo
+
+	Given User is in academically login page
+	When user register a student
+	And user enter account details
+		|Firstname  |Lastname  |Email 			  |Date of Birth  |
+		|Joseph  		|Quinn     |automatedXXX  |04/02/1981     |
+	Then sent email modal is displayed 
+	And user activate account 
+	Then user is in complete registration form
+	And email address "automatedXXX" matched
+	When user enter password "Test@12345" and confirm passoword "Test@12345"
+	And user register an account
+	Then registered the account successfully
+	When user enter username "automatedXXX" and password "Test@12345"
+	Then user successfully login
+	When user navigate to profile settings using profile widget
+	Then user is in profile settings
+	When user add a cover photo
+	And user select a photo from the gallery
+	And user crop the cover photo
+	Then upload a cover photo is successful
+	When user remove a cover photo
+	Then confirmation is displayed
+	When the user confirms to remove a cover photo
+	Then removing a cover photo is successful
+
+	
+Scenario: C14347 - Verify adding about user information
+	
+	Given User is in academically login page
+	When user register a student
+	And user enter account details
+		|Firstname  |Lastname  |Email 			  |Date of Birth  |
+		|Joseph  		|Quinn     |automatedXXX  |04/02/1981     |
+	Then sent email modal is displayed 
+	And user activate account 
+	Then user is in complete registration form
+	And email address "automatedXXX" matched
+	When user enter password "Test@12345" and confirm passoword "Test@12345"
+	And user register an account
+	Then registered the account successfully
+	When user enter username "automatedXXX" and password "Test@12345"
+	Then user successfully login
+	When user navigate to profile settings using profile widget
+	Then user is in profile settings
+	When user add a cover photo
+	And user select a photo from the gallery
+	And user crop the cover photo
+	Then upload a cover photo is successful
+	When user add about information
+	Then adding about user information is successful
+@?? 
 Scenario: Verify adding website Url on user profile page
-Scenario: Verify adding user education information by levels
+
+Scenario: C14349- Verify adding user education information by levels
+	
+	Given User is in academically login page
+	When user register a student
+	And user enter account details
+		|Firstname  |Lastname  |Email 			  |Date of Birth  |
+		|Rosalind   |Barker    |automatedXXX  |04/02/1971     |
+	Then sent email modal is displayed 
+	And user activate account 
+	Then user is in complete registration form
+	And email address "automatedXXX" matched
+	When user enter password "Test@12345" and confirm passoword "Test@12345"
+	And user register an account
+	Then registered the account successfully
+	When user enter username "automatedXXX" and password "Test@12345"
+	Then user successfully login
+	When user navigate to profile settings using profile widget
+	Then user is in profile settings
+	When user proceed to education tab
+	And user add education
+	And user enter education information
+	#Select country
+	#Enter university
+	#Enter city
+	#Select start year
+	#Select end year
+	And user add education level
+#Click level tab at the right corner
+#Click add level
+
 Scenario: Verify adding user education information by evidence
+
+	Given User is in academically login page
+	When user register a student
+	And user enter account details
+		|Firstname  |Lastname  |Email 			  |Date of Birth  |
+		|Rosalind   |Barker    |automatedXXX  |04/02/1971     |
+	Then sent email modal is displayed 
+	And user activate account 
+	Then user is in complete registration form
+	And email address "automatedXXX" matched
+	When user enter password "Test@12345" and confirm passoword "Test@12345"
+	And user register an account
+	Then registered the account successfully
+	When user enter username "automatedXXX" and password "Test@12345"
+	Then user successfully login
+	When user navigate to profile settings using profile widget
+	Then user is in profile settings
+	When user proceed to education tab
+	And user add evidence file (image or document)
+#Click evidence tab at the right corner
+#Drop file or click to upload (Image or document)
+	Then evidence is added
+#Verify evidence is added and displayed
+	When user categorize the evidence
+#Enter category of the evidence
+	And user saving the education information
+#Click save
+	Then adding education information is successful
+#Verify education information is added
+#Verify successful message is displayed
+When user saving the education information
+Then adding education information is successful
+
 Scenario: Verify removing user education information
+
+	Given User is in academically login page
+	When user register a student
+	And user enter account details
+		|Firstname  |Lastname  |Email 			  |Date of Birth  |
+		|Rosalind   |Barker    |automatedXXX  |04/02/1971     |
+	Then sent email modal is displayed 
+	And user activate account 
+	Then user is in complete registration form
+	And email address "automatedXXX" matched
+	When user enter password "Test@12345" and confirm passoword "Test@12345"
+	And user register an account
+	Then registered the account successfully
+	When user enter username "automatedXXX" and password "Test@12345"
+	Then user successfully login
+	When user navigate to profile settings using profile widget
+	Then user is in profile settings
+	When user proceed to education tab
+	And user add evidence file (image or document)
+#Click evidence tab at the right corner
+#Drop file or click to upload (Image or document)
+	Then evidence is added
+#Verify evidence is added and displayed
+	When user categorize the evidence
+#Enter category of the evidence
+	And user saving the education information
+#Click save
+	Then adding education information is successful
+#Verify education information is added
+#Verify successful message is displayed
+	When user saving the education information
+	Then adding education information is successful
+	When user delete education information
+	Then confirmation is displayed
+	When the user confirms to remove a education information
+	Then removing education information is successful
+	
+	
 Scenario: Verify adding other courses information
+
+	Given User is in academically login page
+	When user register a student
+	And user enter account details
+		|Firstname  |Lastname  |Email 			  |Date of Birth  |
+		|Rosalind   |Barker    |automatedXXX  |04/02/1971     |
+	Then sent email modal is displayed 
+	And user activate account 
+	Then user is in complete registration form
+	And email address "automatedXXX" matched
+	When user enter password "Test@12345" and confirm passoword "Test@12345"
+	And user register an account
+	Then registered the account successfully
+	When user enter username "automatedXXX" and password "Test@12345"
+	Then user successfully login
+	When user navigate to profile settings using profile widget
+	Then user is in profile settings
+	When user proceed to education tab
+	And user add course
+	Then qualification modal is displayed
+	When user enter qualification information
+#Enter professional certificate or award
+#Enter conferring organization
+#Enter summary
+#Select start year
+#Enter grade attained
+And user upload evidence of qualification attained
+And user saving qualification information
+Then adding course information is successful
+
+
 Scenario: Verify removing other course information
+
+	Given User is in academically login page
+	When user register a student
+	And user enter account details
+		|Firstname  |Lastname  |Email 			  |Date of Birth  |
+		|Rosalind   |Barker    |automatedXXX  |04/02/1971     |
+	Then sent email modal is displayed 
+	And user activate account 
+	Then user is in complete registration form
+	And email address "automatedXXX" matched
+	When user enter password "Test@12345" and confirm passoword "Test@12345"
+	And user register an account
+	Then registered the account successfully
+	When user enter username "automatedXXX" and password "Test@12345"
+	Then user successfully login
+	When user navigate to profile settings using profile widget
+	Then user is in profile settings
+	When user proceed to education tab
+	And user add course
+	Then qualification modal is displayed
+	When user enter qualification information
+#Enter professional certificate or award
+#Enter conferring organization
+#Enter summary
+#Select start year
+#Enter grade attained
+	And user upload evidence of qualification attained
+	And user saving qualification information
+	Then adding course information is successful
+	When user delete course information
+#Click trash icon
+	Then confirmation is displayed
+#Verify confirmation is displayed
+	When the user confirms to remove a course
+#Click yes
+	Then removing course information is successful
+#Verify successful message is displayed at the bottom right corner
+
 Scenario: 

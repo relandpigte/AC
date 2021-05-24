@@ -26,7 +26,7 @@ public class CompleteRegistrationPageStepDefinitions {
 	@When("^user register an account$")
 	public void registerAnAccount() {
 		CompleteRegistrationPage.clickRegister();
-		DriverHandler.delay(5);
+		DriverHandler.delay(2);
 	}
 	
 	@Then("^registered the account successfully$")

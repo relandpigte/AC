@@ -90,4 +90,8 @@ public class HomePageStepDefinitions {
 		Homepage.Metric.verifyReviewsMetricIsDisplayed();
 	}
 	
+	@When("^user navigate to profile settings using profile widget$")
+	public void navigateProfileSettingsUsingWidget() {
+		Homepage.ProfileWidget.clickProfilePhoto();
+	}
 }
