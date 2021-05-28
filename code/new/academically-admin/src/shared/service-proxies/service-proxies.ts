@@ -1214,6 +1214,122 @@ export class ProfilesServiceProxy {
     }
 
     /**
+     * @param keyword (optional) 
+     * @return Success
+     */
+    getLocationSuggestions(keyword: string | undefined): Observable<LocationSuggestion[]> {
+        let url_ = this.baseUrl + "/api/services/app/Profiles/GetLocationSuggestions?";
+        if (keyword === null)
+            throw new Error("The parameter 'keyword' cannot be null.");
+        else if (keyword !== undefined)
+            url_ += "keyword=" + encodeURIComponent("" + keyword) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetLocationSuggestions(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetLocationSuggestions(<any>response_);
+                } catch (e) {
+                    return <Observable<LocationSuggestion[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<LocationSuggestion[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetLocationSuggestions(response: HttpResponseBase): Observable<LocationSuggestion[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(LocationSuggestion.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<LocationSuggestion[]>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getLocation(id: string | undefined): Observable<LocationDetail> {
+        let url_ = this.baseUrl + "/api/services/app/Profiles/GetLocation?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetLocation(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetLocation(<any>response_);
+                } catch (e) {
+                    return <Observable<LocationDetail>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<LocationDetail>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetLocation(response: HttpResponseBase): Observable<LocationDetail> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = LocationDetail.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<LocationDetail>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -4128,6 +4244,58 @@ export class TutorWizardServiceProxy {
     }
 
     protected processUpdateStep(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateAddress(body: UpdateAddressDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/TutorWizard/UpdateAddress";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateAddress(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateAddress(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateAddress(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -7924,6 +8092,128 @@ export interface IIsTenantAvailableOutput {
     tenantId: number | undefined;
 }
 
+export class LocationDetail implements ILocationDetail {
+    postcode: string | undefined;
+    latitude: string | undefined;
+    longitude: string | undefined;
+    line_1: string | undefined;
+    line_2: string | undefined;
+    town_Or_City: string | undefined;
+    county: string | undefined;
+    district: string | undefined;
+
+    constructor(data?: ILocationDetail) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.postcode = _data["postcode"];
+            this.latitude = _data["latitude"];
+            this.longitude = _data["longitude"];
+            this.line_1 = _data["line_1"];
+            this.line_2 = _data["line_2"];
+            this.town_Or_City = _data["town_Or_City"];
+            this.county = _data["county"];
+            this.district = _data["district"];
+        }
+    }
+
+    static fromJS(data: any): LocationDetail {
+        data = typeof data === 'object' ? data : {};
+        let result = new LocationDetail();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["postcode"] = this.postcode;
+        data["latitude"] = this.latitude;
+        data["longitude"] = this.longitude;
+        data["line_1"] = this.line_1;
+        data["line_2"] = this.line_2;
+        data["town_Or_City"] = this.town_Or_City;
+        data["county"] = this.county;
+        data["district"] = this.district;
+        return data; 
+    }
+
+    clone(): LocationDetail {
+        const json = this.toJSON();
+        let result = new LocationDetail();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ILocationDetail {
+    postcode: string | undefined;
+    latitude: string | undefined;
+    longitude: string | undefined;
+    line_1: string | undefined;
+    line_2: string | undefined;
+    town_Or_City: string | undefined;
+    county: string | undefined;
+    district: string | undefined;
+}
+
+export class LocationSuggestion implements ILocationSuggestion {
+    id: string | undefined;
+    address: string | undefined;
+    url: string | undefined;
+
+    constructor(data?: ILocationSuggestion) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.address = _data["address"];
+            this.url = _data["url"];
+        }
+    }
+
+    static fromJS(data: any): LocationSuggestion {
+        data = typeof data === 'object' ? data : {};
+        let result = new LocationSuggestion();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["address"] = this.address;
+        data["url"] = this.url;
+        return data; 
+    }
+
+    clone(): LocationSuggestion {
+        const json = this.toJSON();
+        let result = new LocationSuggestion();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ILocationSuggestion {
+    id: string | undefined;
+    address: string | undefined;
+    url: string | undefined;
+}
+
 /** 0 = None 1 = PendingVerification 2 = Accepted 3 = Declined */
 export enum PassportVerificationStatus {
     None = 0,
@@ -9835,6 +10125,69 @@ export class UniversityDto implements IUniversityDto {
 export interface IUniversityDto {
     id: string;
     heProvider: string | undefined;
+}
+
+export class UpdateAddressDto implements IUpdateAddressDto {
+    country: string | undefined;
+    addressLine1: string | undefined;
+    addressLine2: string | undefined;
+    city: string | undefined;
+    stateOrProvince: string | undefined;
+    zipOrPostCode: string | undefined;
+
+    constructor(data?: IUpdateAddressDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.country = _data["country"];
+            this.addressLine1 = _data["addressLine1"];
+            this.addressLine2 = _data["addressLine2"];
+            this.city = _data["city"];
+            this.stateOrProvince = _data["stateOrProvince"];
+            this.zipOrPostCode = _data["zipOrPostCode"];
+        }
+    }
+
+    static fromJS(data: any): UpdateAddressDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateAddressDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["country"] = this.country;
+        data["addressLine1"] = this.addressLine1;
+        data["addressLine2"] = this.addressLine2;
+        data["city"] = this.city;
+        data["stateOrProvince"] = this.stateOrProvince;
+        data["zipOrPostCode"] = this.zipOrPostCode;
+        return data; 
+    }
+
+    clone(): UpdateAddressDto {
+        const json = this.toJSON();
+        let result = new UpdateAddressDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateAddressDto {
+    country: string | undefined;
+    addressLine1: string | undefined;
+    addressLine2: string | undefined;
+    city: string | undefined;
+    stateOrProvince: string | undefined;
+    zipOrPostCode: string | undefined;
 }
 
 export class UserDto implements IUserDto {

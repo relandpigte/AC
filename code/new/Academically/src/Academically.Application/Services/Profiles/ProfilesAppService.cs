@@ -14,7 +14,9 @@ using Academically.Services.Profiles.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SourceCloud.Core.Services.Locations;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,6 +32,7 @@ namespace Academically.Services.Profiles
         private readonly IRepository<TutorRating, Guid> _tutorRatingsRepository;
         private readonly IRepository<PassportVerification, Guid> _passportVerifications;
         private readonly IDocumentsDomainService _documentsDomainService;
+        private readonly ILocationsService _locationsService;
         private readonly ISettingManager _settingManager;
 
         public ProfilesAppService(
@@ -40,6 +43,7 @@ namespace Academically.Services.Profiles
             IRepository<TutorRating, Guid> tutorRatingsRepository,
             IRepository<PassportVerification, Guid> passportVerifications,
             IDocumentsDomainService documentsDomainService,
+            ILocationsService locationsService,
             ISettingManager settingManager
             )
         {
@@ -50,6 +54,7 @@ namespace Academically.Services.Profiles
             _tutorRatingsRepository = tutorRatingsRepository;
             _passportVerifications = passportVerifications;
             _documentsDomainService = documentsDomainService;
+            _locationsService = locationsService;
             _settingManager = settingManager;
         }
 
@@ -160,6 +165,16 @@ namespace Academically.Services.Profiles
             }
 
             return profileMetric;
+        }
+
+        public async Task<IEnumerable<LocationSuggestion>> GetLocationSuggestions(string keyword)
+        {
+            return await _locationsService.GetSuggestions(keyword);
+        }
+
+        public async Task<LocationDetail> GetLocation(string id)
+        {
+            return await _locationsService.Get(id);
         }
 
         public async Task Update(UserDto input)

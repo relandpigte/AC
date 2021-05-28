@@ -1,13 +1,17 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, NgForm, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { AppConsts } from '@shared/AppConsts';
 import { countries } from '@shared/constants/countries';
-import { PaymentsServiceProxy, ProfilesServiceProxy, TimeZoneDto, TimeZonesServiceProxy, UserDto, UserLoginInfoDto } from '@shared/service-proxies/service-proxies';
+import { LocationSuggestion, PaymentsServiceProxy, ProfilesServiceProxy, TimeZoneDto, TimeZonesServiceProxy, UserDto, UserLoginInfoDto } from '@shared/service-proxies/service-proxies';
 import { environment } from 'environments/environment';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { ChangeData, CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { Observer } from 'rxjs';
+import { Observable } from 'rxjs';
+import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-general',
@@ -15,8 +19,10 @@ import { finalize, takeUntil } from 'rxjs/operators';
   styleUrls: ['./general.component.less']
 })
 export class GeneralComponent extends AppComponentBase implements OnInit {
+  @ViewChild('createEditForm') public form: NgForm;
   user: UserLoginInfoDto;
   model: UserDto = new UserDto();
+  locationsDataSource: Observable<LocationSuggestion[]>;
   dateOfBirth: Date;
   datePickerConfig: BsDatepickerConfig;
   CountryISO = CountryISO;
@@ -27,6 +33,7 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
   isLoading = false;
   isOnboarding = true;
   isTutorProfile = false;
+  isFullAddressRequired = false;
 
   constructor(
     injector: Injector,
@@ -46,6 +53,7 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
     this.getTimeZones();
     this.getUser();
+    this.getLocationSuggestions();
     this._route.queryParams.subscribe(paramMap => {
       if (paramMap.scope && paramMap.code) {
         this._paymentsService.onboardUser(paramMap.code)
@@ -68,12 +76,14 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
 
   onFormSubmit(): void {
     this.isLoading = true;
-    this.model.phoneNumber = (this.model.phoneNumber as ChangeData).internationalNumber;
+    const tempPhoneNumber = (this.model.phoneNumber as ChangeData).internationalNumber
+    this.model.phoneNumber = tempPhoneNumber;
     this._profilesService.update(this.model)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
           this.isLoading = false;
+          this.model.phoneNumber = tempPhoneNumber.substr(tempPhoneNumber.indexOf(' ') + 1);
         }),
       )
       .subscribe(() => {
@@ -95,12 +105,21 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
     );
   }
 
+  onCountryChange(): void {
+    this.setRequiredFields();
+  }
+
+  onAddressSelected(e: TypeaheadMatch): void {
+    this.getLocationDetail(e.item.id);
+  }
+
   private getUser(): void {
     this.isLoading = true;
     this._profilesService.get(this.appSession.userId)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
+          this.setRequiredFields();
           this.isLoading = false;
         }),
       )
@@ -126,6 +145,88 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
       )
       .subscribe(timezones => {
         this.timezones = timezones;
+      });
+  }
+
+  private setRequiredFields(): void {
+    const strictCountries = ['United States', 'United Kingdom'];
+    if (!this.isStudent) {
+      setTimeout(() => {
+        this.setControlValidators(this.form.controls.DateOfBirth, [Validators.required]);
+        this.setControlValidators(this.form.controls.Country, [Validators.required]);
+        this.setControlValidators(this.form.controls.AddressLine1, [Validators.required]);
+        this.setControlValidators(this.form.controls.City, [Validators.required]);
+      });
+    } else {
+      setTimeout(() => {
+        this.clearControlValidators(this.form.controls.DateOfBirth);
+        this.clearControlValidators(this.form.controls.Country);
+        this.clearControlValidators(this.form.controls.AddressLine1);
+        this.clearControlValidators(this.form.controls.City);
+      });
+    }
+
+    if (strictCountries.includes(this.model.country)) {
+      setTimeout(() => {
+        this.setControlValidators(this.form.controls.ZipOrPostCode, [Validators.required]);
+        if (!this.isStudent) {
+          this.setControlValidators(this.form.controls.StateOrProvince, [Validators.required]);
+        }
+        this.isFullAddressRequired = true;
+      });
+    } else {
+      setTimeout(() => {
+        this.clearControlValidators(this.form.controls.ZipOrPostCode);
+        if (!this.isStudent) {
+          this.clearControlValidators(this.form.controls.StateOrProvince);
+        }
+        this.isFullAddressRequired = false;
+      });
+    }
+  }
+
+  private setControlValidators(control: AbstractControl, validators: ValidatorFn[]): void {
+    if (control) {
+      control.setValidators(validators);
+      control.updateValueAndValidity();
+    }
+  }
+
+  private clearControlValidators(control: AbstractControl): void {
+    if (control) {
+      control.clearValidators();
+      control.updateValueAndValidity();
+    }
+  }
+
+  private getLocationSuggestions(): void {
+    this.locationsDataSource = new Observable((observer: Observer<string>) => {
+      observer.next(this.model.addressLine1);
+    }).pipe(
+      takeUntil(this.destroyed$),
+      switchMap((query: string) => {
+        return this._profilesService.getLocationSuggestions(query);
+      })
+    );
+  }
+
+  private getLocationDetail(id: string): void {
+    this.isLoading = true;
+    this._profilesService.getLocation(id)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+      )
+      .subscribe(result => {
+        if (result) {
+          this.model.addressLine1 = result.line_1;
+          this.model.addressLine2 = result.line_2;
+          this.model.city = result.town_Or_City;
+          this.model.zipOrPostCode = result.postcode;
+          this.model.stateOrProvince = result.county;
+        }
       });
   }
 }

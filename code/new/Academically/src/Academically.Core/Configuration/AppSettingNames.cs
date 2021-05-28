@@ -20,6 +20,7 @@
         public const string Providers_Stripe_ClientId = "Providers.Stripe.ClientId";
         public const string Providers_Stripe_PublicKey = "Providers.Stripe.PublicKey";
         public const string Providers_Stripe_SecretKey = "Providers.Stripe.SecretKey";
+        public const string Providers_GetAddress_ApiKey = "Providers.GetAddress.ApiKey";
 
         public static string ToAppSettingKey(this string settingName)
         {

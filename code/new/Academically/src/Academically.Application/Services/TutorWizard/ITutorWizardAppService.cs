@@ -11,6 +11,7 @@ namespace Academically.Services.TutorWizard
 
         Task<AboutYouDto> GetAboutYou();
         Task UpdateAboutYou(AboutYouDto input);
+        Task UpdateAddress(UpdateAddressDto input);
 
         Task UpdateStep(BecomeATutorStep step);
     }

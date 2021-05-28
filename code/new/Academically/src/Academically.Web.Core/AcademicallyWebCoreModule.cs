@@ -13,7 +13,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SourceCloud.Core.Configurations;
 using SourceCloud.Core.Services;
+using SourceCloud.Core.Services.Locations;
 using SourceCloud.Provider.Aws;
+using SourceCloud.Provider.GetAddress.Locations;
 using SourceCloud.Provider.ITagg;
 using SourceCloud.Provider.Stripe.Payments;
 using System;
@@ -55,6 +57,7 @@ namespace Academically
             RegisterSmsService();
             RegisterEmailService();
             RegisterPaymentProvider();
+            RegisterLocationsProvider();
         }
 
         public override void Initialize()
@@ -115,6 +118,14 @@ namespace Academically
             paymentOptions.ClientId = _appConfiguration[AppSettingNames.Providers_Stripe_ClientId.ToAppSettingKey()];
             paymentOptions.PublicKey = _appConfiguration[AppSettingNames.Providers_Stripe_PublicKey.ToAppSettingKey()];
             paymentOptions.SecretKey = _appConfiguration[AppSettingNames.Providers_Stripe_SecretKey.ToAppSettingKey()];
+        }
+
+        private void RegisterLocationsProvider()
+        {
+            IocManager.Register<ILocationsService, GetAddressLocationsService>(Abp.Dependency.DependencyLifeStyle.Singleton);
+            IocManager.Register<GetAddressLocationsOptions>();
+            var locationOptions = IocManager.Resolve<GetAddressLocationsOptions>();
+            locationOptions.ApiKey = _appConfiguration[AppSettingNames.Providers_GetAddress_ApiKey.ToAppSettingKey()];
         }
     }
 }
