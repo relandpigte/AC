@@ -95,6 +95,7 @@ namespace Academically.Authorization
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_PhotoId, L("PhotoId"));
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_Address, L("Address"));
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_ContactNumber, L("ContactNumber"));
+            tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_References, L("References"));
 
 
             context.CreatePermission(PermissionNames.Pages_Widgets_Verifications, L("Verifications"));

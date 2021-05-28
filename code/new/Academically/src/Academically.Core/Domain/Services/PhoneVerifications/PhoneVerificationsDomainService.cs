@@ -36,6 +36,12 @@ namespace Academically.Domain.Services.PhoneVerifications
 
         public async Task InsertAsync(long userId, string recipient)
         {
+
+            var user = await _usersRepository.GetAsync(userId);
+            user.IsPhoneNumberConfirmed = false;
+            user.PhoneNumber = null;
+            await _usersRepository.UpdateAsync(user);
+
             var phoneVerification = new PhoneVerification()
             {
                 UserId = userId,
