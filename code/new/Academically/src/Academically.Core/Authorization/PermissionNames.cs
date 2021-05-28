@@ -88,6 +88,7 @@
         public const string Pages_TutorWizard_PhotoId = "Pages.TutorWizard.PhotoId";
         public const string Pages_TutorWizard_Address = "Pages.TutorWizard.Address";
         public const string Pages_TutorWizard_ContactNumber = "Pages.TutorWizard.ContactNumber";
+        public const string Pages_TutorWizard_References = "Pages.TutorWizard.References";
 
 
         public const string Pages_Widgets_Verifications = "Pages.Widgets.Verifications";

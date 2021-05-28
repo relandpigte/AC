@@ -75,6 +75,9 @@ export class TutorWizardComponent extends AppComponentBase implements OnInit {
       case BecomeATutorStep.ContactNumber:
         routeName = 'contact-number';
         break;
+      case BecomeATutorStep.References:
+        routeName = 'references';
+        break;
     }
     this._router.navigate([`/app/tutor-wizard/${routeName}`]);
   }

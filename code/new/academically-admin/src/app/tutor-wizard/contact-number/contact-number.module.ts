@@ -5,6 +5,7 @@ import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
 import { ContactNumberComponent } from './contact-number.component';
+import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { ContactNumberComponent } from './contact-number.component';
     ContactNumberRoutingModule,
     SharedModule,
     AppSharedModule,
+    NgxIntlTelInputModule,
   ],
 })
 export class ContactNumberModule { }

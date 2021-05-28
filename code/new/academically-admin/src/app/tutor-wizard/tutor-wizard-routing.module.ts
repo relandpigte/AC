@@ -85,6 +85,13 @@ import { TutorWizardComponent } from './tutor-wizard.component';
                     (m) => m.ContactNumberModule,
                   ),
               },
+              {
+                path: 'references',
+                loadChildren: () =>
+                  import('@app/tutor-wizard/references/references.module').then(
+                    (m) => m.ReferencesModule,
+                  ),
+              },
             ]
           },
         ],

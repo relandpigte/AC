@@ -10212,6 +10212,7 @@ export class UserDto implements IUserDto {
     lastLoginTime: moment.Moment | undefined;
     creationTime: moment.Moment;
     stripeUserId: string | undefined;
+    isPhoneNumberConfirmed: boolean;
     profilePictureDocument: DocumentDto;
     coverPhotoUrl: string | undefined;
     profilePictureUrl: string | undefined;
@@ -10252,6 +10253,7 @@ export class UserDto implements IUserDto {
             this.lastLoginTime = _data["lastLoginTime"] ? moment(_data["lastLoginTime"].toString()) : <any>undefined;
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.stripeUserId = _data["stripeUserId"];
+            this.isPhoneNumberConfirmed = _data["isPhoneNumberConfirmed"];
             this.profilePictureDocument = _data["profilePictureDocument"] ? DocumentDto.fromJS(_data["profilePictureDocument"]) : <any>undefined;
             this.coverPhotoUrl = _data["coverPhotoUrl"];
             this.profilePictureUrl = _data["profilePictureUrl"];
@@ -10300,6 +10302,7 @@ export class UserDto implements IUserDto {
         data["lastLoginTime"] = this.lastLoginTime ? this.lastLoginTime.toISOString() : <any>undefined;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["stripeUserId"] = this.stripeUserId;
+        data["isPhoneNumberConfirmed"] = this.isPhoneNumberConfirmed;
         data["profilePictureDocument"] = this.profilePictureDocument ? this.profilePictureDocument.toJSON() : <any>undefined;
         data["coverPhotoUrl"] = this.coverPhotoUrl;
         data["profilePictureUrl"] = this.profilePictureUrl;
@@ -10348,6 +10351,7 @@ export interface IUserDto {
     lastLoginTime: moment.Moment | undefined;
     creationTime: moment.Moment;
     stripeUserId: string | undefined;
+    isPhoneNumberConfirmed: boolean;
     profilePictureDocument: DocumentDto;
     coverPhotoUrl: string | undefined;
     profilePictureUrl: string | undefined;
