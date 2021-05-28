@@ -1,6 +1,95 @@
-<h1>Coming Soon!</h1>
-<div class="d-flex justify-content-between">
-  <button [routerLink]="['/app/tutor-wizard/photo-id']" type="button" class="btn btn-white">
-    {{ 'Back' | localize }}
-  </button>
-</div>
+<form [loader]="isLoading" autocomplete="off" #createEditForm="ngForm" (ngSubmit)="onFormSubmit()" class="pb-5">
+
+  <div class="card">
+
+    <div class="card-header">
+      <h4 class="card-header-title">{{ 'Address' | localize}}</h4>
+    </div>
+
+    <div class="card-body">
+      <div class="form-group required">
+        <label class="col-form-label" for="country">{{ 'Country' | localize}}</label>
+        <select [(ngModel)]="model.country" #countryModel="ngModel" #countryEl class="form-control" id="country"
+          name="country" required (change)="onCountryChange()">
+          <option [ngValue]="null">{{ 'SelectCountry' | localize }}</option>
+          <option *ngFor="let country of countries" [value]="country.name">{{ country.name }}</option>
+        </select>
+        <abp-validation-summary [control]="countryModel" [controlEl]="countryEl">
+        </abp-validation-summary>
+      </div>
+
+      <ng-container *ngIf="model.country">
+
+        <div class="form-group required" *ngIf="model.country !== 'United Kingdom'">
+          <label class="col-form-label" for="AddressLine1">{{ 'AddressLine1' | localize }}</label>
+          <input [(ngModel)]="model.addressLine1" id="AddressLine1" name="AddressLine1" type="text" class="form-control"
+            #addressLine1Model="ngModel" #addressLine1El required />
+          <abp-validation-summary [control]="addressLine1Model" [controlEl]="addressLine1El">
+          </abp-validation-summary>
+        </div>
+
+        <div class="form-group required" *ngIf="model.country === 'United Kingdom'">
+          <label class="col-form-label" for="AddressLine1">{{ 'AddressLine1' | localize }}</label>
+          <div class="input-group input-group-merge">
+            <input [(ngModel)]="model.addressLine1" id="AddressLine1" name="AddressLine1" type="text"
+              class="form-control form-control-appended" #addressLine1Model="ngModel" #addressLine1El
+              typeaheadOptionField="address" [typeahead]="locationsDataSource" [typeaheadAsync]="true"
+              [typeaheadMinLength]="3" (typeaheadOnSelect)="onAddressSelected($event)" required />
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-search"></span>
+              </div>
+            </div>
+          </div>
+          <abp-validation-summary [control]="addressLine1Model" [controlEl]="addressLine1El">
+          </abp-validation-summary>
+        </div>
+
+        <div class="form-group">
+          <label class="col-form-label" for="AddressLine2">{{ 'AddressLine2' | localize }}</label>
+          <input [(ngModel)]="model.addressLine2" id="AddressLine2" name="AddressLine2" type="text"
+            class="form-control" />
+        </div>
+
+        <div class="form-group required">
+          <label class="col-form-label" for="City">{{ 'City' | localize }}</label>
+          <input [(ngModel)]="model.city" id="City" name="City" type="text" class="form-control" #cityModel="ngModel"
+            #cityEl required />
+          <abp-validation-summary [control]="cityModel" [controlEl]="cityEl"> </abp-validation-summary>
+        </div>
+
+        <div class="form-row">
+
+          <div class="form-group col-md-6" [class.required]="isFullAddressRequired">
+            <label class="col-form-label" for="ZipOrPostCode">{{ 'ZipOrPostCode' | localize }}</label>
+            <input [(ngModel)]="model.zipOrPostCode" id="ZipOrPostCode" name="ZipOrPostCode" type="text"
+              class="form-control" #zipOrPostCodeModel="ngModel" #zipOrPostCodeEl />
+            <abp-validation-summary *ngIf="isFullAddressRequired" [control]="zipOrPostCodeModel"
+              [controlEl]="zipOrPostCodeEl"></abp-validation-summary>
+          </div>
+
+          <div class="form-group col-md-6" [class.required]="isFullAddressRequired">
+            <label class="col-form-label" for="StateOrProvince">{{ 'StateOrProvince' | localize }}</label>
+            <input [(ngModel)]="model.stateOrProvince" id="StateOrProvince" name="StateOrProvince" type="text"
+              class="form-control" #stateOrProvinceModel="ngModel" #stateOrProvinceEl />
+            <abp-validation-summary *ngIf="isFullAddressRequired" [control]="stateOrProvinceModel"
+              [controlEl]="stateOrProvinceEl">
+            </abp-validation-summary>
+          </div>
+
+        </div>
+
+      </ng-container>
+
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between">
+    <button [routerLink]="['/app/tutor-wizard/photo-id']" type="button" class="btn btn-white">
+      {{ 'Back' | localize }}
+    </button>
+    <button type="submit" [disabled]="!createEditForm.form.valid || isLoading" type="submit" class="btn btn-primary">
+      {{ 'Next' | localize }}
+    </button>
+  </div>
+</form>

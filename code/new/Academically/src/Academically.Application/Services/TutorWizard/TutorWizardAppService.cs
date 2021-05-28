@@ -63,6 +63,13 @@ namespace Academically.Services.TutorWizard
             await _tutorVerificationsRepository.UpdateAsync(tutorVerification);
         }
 
+        public async Task UpdateAddress(UpdateAddressDto input)
+        {
+            var user = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
+            ObjectMapper.Map(input, user);
+            await UserManager.UpdateAsync(user);
+        }
+
         private async Task<TutorVerification> GetCurrent()
         {
             return await _tutorVerificationsRepository

@@ -75,7 +75,7 @@
           </div>
         </div>
       </div>
-      <abp-validation-summary [control]="dateOfBirthModel" [controlEl]="dateOfBirthEl">
+      <abp-validation-summary *ngIf="isTutor" [control]="dateOfBirthModel" [controlEl]="dateOfBirthEl">
       </abp-validation-summary>
     </div>
 
@@ -123,51 +123,75 @@
   <div class="form-group required">
     <label class="col-form-label" for="country">{{ 'Country' | localize}}</label>
     <select [(ngModel)]="model.country" #countryModel="ngModel" #countryEl class="form-control" id="country"
-      name="country" required>
+      name="country" required (change)="onCountryChange()">
       <option [ngValue]="null">{{ 'SelectCountry' | localize }}</option>
       <option *ngFor="let country of countries" [value]="country.name">{{ country.name }}</option>
     </select>
-    <abp-validation-summary [control]="countryModel" [controlEl]="countryEl">
+    <abp-validation-summary *ngIf="isTutor" [control]="countryModel" [controlEl]="countryEl">
     </abp-validation-summary>
   </div>
 
+  <ng-container *ngIf="model.country">
 
-  <div class="form-group">
-    <label class="col-form-label" for="AddressLine1">{{ 'AddressLine1' | localize }}</label>
-    <input [(ngModel)]="model.addressLine1" id="AddressLine1" name="AddressLine1" type="text" class="form-control"
-      #addressLine1Model="ngModel" #addressLine1El />
-    <abp-validation-summary [control]="addressLine1Model" [controlEl]="addressLine1El">
-    </abp-validation-summary>
-  </div>
-  <div class="form-group">
-    <label class="col-form-label" for="AddressLine2">{{ 'AddressLine2' | localize }}</label>
-    <input [(ngModel)]="model.addressLine2" id="AddressLine2" name="AddressLine2" type="text" class="form-control" />
-  </div>
-
-  <div class="form-group">
-    <label class="col-form-label" for="City">{{ 'City' | localize }}</label>
-    <input [(ngModel)]="model.city" id="City" name="City" type="text" class="form-control" #cityModel="ngModel"
-      #cityEl />
-    <abp-validation-summary [control]="cityModel" [controlEl]="cityEl"> </abp-validation-summary>
-  </div>
-
-  <div class="form-row">
-
-    <div class="form-group col-md-6">
-      <label class="col-form-label" for="ZipOrPostCode">{{ 'ZipOrPostCode' | localize }}</label>
-      <input [(ngModel)]="model.zipOrPostCode" id="ZipOrPostCode" name="ZipOrPostCode" type="text" class="form-control"
-        #zipOrPostCodeModel="ngModel" #zipOrPostCodeEl />
-      <abp-validation-summary [control]="zipOrPostCodeModel" [controlEl]="zipOrPostCodeEl"></abp-validation-summary>
+    <div class="form-group" [class.required]="isTutor" *ngIf="model.country !== 'United Kingdom'">
+      <label class="col-form-label" for="AddressLine1">{{ 'AddressLine1' | localize }}</label>
+      <input [(ngModel)]="model.addressLine1" id="AddressLine1" name="AddressLine1" type="text" class="form-control"
+        #addressLine1Model="ngModel" #addressLine1El />
+      <abp-validation-summary *ngIf="isTutor" [control]="addressLine1Model" [controlEl]="addressLine1El">
+      </abp-validation-summary>
     </div>
 
-    <div class="form-group col-md-6">
-      <label class="col-form-label" for="StateOrProvince">{{ 'StateOrProvince' | localize }}</label>
-      <input [(ngModel)]="model.stateOrProvince" id="StateOrProvince" name="StateOrProvince" type="text"
-        class="form-control" #stateOrProvinceModel="ngModel" #stateOrProvinceEl />
-      <abp-validation-summary [control]="stateOrProvinceModel" [controlEl]="stateOrProvinceEl"></abp-validation-summary>
+    <div class="form-group" [class.required]="isTutor" *ngIf="model.country === 'United Kingdom'">
+      <label class="col-form-label" for="AddressLine1">{{ 'AddressLine1' | localize }}</label>
+      <div class="input-group input-group-merge">
+        <input [(ngModel)]="model.addressLine1" id="AddressLine1" name="AddressLine1" type="text"
+          class="form-control form-control-appended" #addressLine1Model="ngModel" #addressLine1El
+          typeaheadOptionField="address" [typeahead]="locationsDataSource" [typeaheadAsync]="true"
+          [typeaheadMinLength]="3" (typeaheadOnSelect)="onAddressSelected($event)" />
+        <div class="input-group-append">
+          <div class="input-group-text">
+            <span class="fas fa-search"></span>
+          </div>
+        </div>
+      </div>
+      <abp-validation-summary *ngIf="isTutor" [control]="addressLine1Model" [controlEl]="addressLine1El">
+      </abp-validation-summary>
     </div>
 
-  </div>
+    <div class="form-group">
+      <label class="col-form-label" for="AddressLine2">{{ 'AddressLine2' | localize }}</label>
+      <input [(ngModel)]="model.addressLine2" id="AddressLine2" name="AddressLine2" type="text" class="form-control" />
+    </div>
+
+    <div class="form-group" [class.required]="isTutor">
+      <label class="col-form-label" for="City">{{ 'City' | localize }}</label>
+      <input [(ngModel)]="model.city" id="City" name="City" type="text" class="form-control" #cityModel="ngModel"
+        #cityEl />
+      <abp-validation-summary *ngIf="isTutor" [control]="cityModel" [controlEl]="cityEl"> </abp-validation-summary>
+    </div>
+
+    <div class="form-row">
+
+      <div class="form-group col-md-6" [class.required]="isFullAddressRequired">
+        <label class="col-form-label" for="ZipOrPostCode">{{ 'ZipOrPostCode' | localize }}</label>
+        <input [(ngModel)]="model.zipOrPostCode" id="ZipOrPostCode" name="ZipOrPostCode" type="text"
+          class="form-control" #zipOrPostCodeModel="ngModel" #zipOrPostCodeEl />
+        <abp-validation-summary *ngIf="isFullAddressRequired" [control]="zipOrPostCodeModel"
+          [controlEl]="zipOrPostCodeEl"></abp-validation-summary>
+      </div>
+
+      <div class="form-group col-md-6" [class.required]="isFullAddressRequired && isTutor">
+        <label class="col-form-label" for="StateOrProvince">{{ 'StateOrProvince' | localize }}</label>
+        <input [(ngModel)]="model.stateOrProvince" id="StateOrProvince" name="StateOrProvince" type="text"
+          class="form-control" #stateOrProvinceModel="ngModel" #stateOrProvinceEl />
+        <abp-validation-summary *ngIf="isFullAddressRequired && isTutor" [control]="stateOrProvinceModel"
+          [controlEl]="stateOrProvinceEl">
+        </abp-validation-summary>
+      </div>
+
+    </div>
+
+  </ng-container>
 
   <hr class="my-5">
 
