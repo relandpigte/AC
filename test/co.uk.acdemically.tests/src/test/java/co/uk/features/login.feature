@@ -1,7 +1,7 @@
 Feature: Login Functionality
 
 @UI
-Scenario: 1. Verify login using valid credentials
+Scenario: Verify login using valid credentials
 
 	Given User is in academically login page
 	When user login with valid credentials

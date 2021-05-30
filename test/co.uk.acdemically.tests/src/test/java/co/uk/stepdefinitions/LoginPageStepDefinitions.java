@@ -4,13 +4,11 @@ import java.io.IOException;
 
 import org.json.JSONException;
 
-import co.uk.core.DateUtilities;
 import co.uk.core.DriverHandler;
 import co.uk.dataobjects.TestDataObjects;
-import co.uk.pageobjects.student.CommonObjects;
 import co.uk.pageobjects.student.LoginPage;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 
 public class LoginPageStepDefinitions {
 

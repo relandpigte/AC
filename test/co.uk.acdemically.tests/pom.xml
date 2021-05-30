@@ -2,12 +2,19 @@
 	xmlns="http://maven.apache.org/POM/4.0.0"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>co.uk.acdemically.tests</groupId>
-	<artifactId>co.uk.acdemically.tests</artifactId>
+	<groupId>co.uk.academically.tests</groupId>
+	<artifactId>co.uk.academically.tests</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0</version>
-	<name>AcdemicallyTestFramework</name>
+	<name>AcademicallyTestFramework</name>
 	<url>http://maven.apache.org</url>
+
+	<repositories>
+		<repository>
+			<id>gitlab-maven</id>
+			<url>https://gitlab.com/api/v4/groups/10960269/-/packages/maven</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 
@@ -56,14 +63,24 @@
 					<systemProperties>
 						<property>
 							<name>browser</name>
-							<!-- <value>${browser}</value> -->
-							<value>local_chrome</value>
+							<value>${browser}</value>
+							<!-- <value>local_chrome</value> -->
 							<!-- <value>browserstack_windows10_chrome88.0</value> -->
 						</property>
 						<property>
 							<name>environment</name>
-							<!-- <value>${environment}</value> -->
-							<value>UAT</value>
+							<value>${environment}</value>
+							<!-- <value>UAT</value> -->
+						</property>
+						<property>
+							<name>updateTestRailStatus</name>
+							<value>${updateTestRailStatus}</value>
+							<!-- <value>false</value> -->
+						</property>
+						<property>
+							<name>buildNumber</name>
+							<value>${buildNumber}</value>
+							<!-- <value>1</value> -->
 						</property>
 					</systemProperties>
 					<executions>
@@ -78,8 +95,8 @@
 						</execution>
 					</executions>
 					<suiteXmlFiles>
-						<!-- <suiteXmlFile>${testNG.Suite}</suiteXmlFile> -->
-						<suiteXmlFile>src\main\resources\TestSuite\AdhocTestSuite.xml</suiteXmlFile>
+						<suiteXmlFile>${testNG.Suite}</suiteXmlFile>
+						<!-- <suiteXmlFile>src\main\resources\TestSuite\AdhocTestSuite.xml</suiteXmlFile> -->
 					</suiteXmlFiles>
 				</configuration>
 			</plugin>

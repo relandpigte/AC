@@ -8,6 +8,7 @@ import co.uk.core.DriverHandler;
 import co.uk.webelements.Button;
 import co.uk.webelements.Element;
 import co.uk.webelements.Tab;
+import co.uk.webelements.TextBox;
 
 public class UserProfilePageCommonObjects {
 	
@@ -21,7 +22,7 @@ public class UserProfilePageCommonObjects {
 	private static Element removeCoverPhoto = new Element("Remove Photo",By.xpath("//app-cover-photo-changer//a[contains(text(),'Remove Photo')]"));
 	private static Element removeCoverPhotoMessage = new Element("",By.xpath("the user confirms to remove a cover photo"));
 	private static Button editProfilePhoto = new Button("Edit profile photo",By.xpath("//div[contains(@class,'profile-picture-changer')]//button[@aria-controls='dropdown-basic']"));
-	private static Element uploadProfilePhoto = new Element("Upload profile photo",By.xpath("//app-profile-picture-changer//input[@class='inline-file-upload']"));
+	private static TextBox uploadProfilePhoto = new TextBox("Upload profile photo",By.xpath("//app-profile-picture-changer//input[@class='inline-file-upload']"));
 	
 	public static void clickIntroductionTab() {
 		introductionTab.click();
@@ -57,11 +58,8 @@ public class UserProfilePageCommonObjects {
 		userProfile.verifyDisplayed();
 	}
 	
-	private static Path profilePhotoFile = Path.of(System.getProperty("user.dir").replace("\\", "/")
-			+ "/src/main/resources/Data/" + DriverHandler.environment + "/ProfilePhoto_Benjamin_Franklin.jpg");
-	
-	public static void uploadProfilePhoto() {
-		uploadProfilePhoto.
+	public static void uploadProfilePhoto(String filePath) {
+	uploadProfilePhoto.setText(filePath);
 		
 	}
 	

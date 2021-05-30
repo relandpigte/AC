@@ -1,14 +1,9 @@
 package co.uk.stepdefinitions;
 
-import java.util.List;
-import java.util.Map;
-
 import co.uk.core.DriverHandler;
 import co.uk.pageobjects.student.CompleteRegistrationPage;
-import co.uk.pageobjects.student.RegisterPage;
-import cucumber.api.DataTable;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 
 public class CompleteRegistrationPageStepDefinitions {
 

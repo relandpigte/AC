@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="Regression Tests" parallel="classes">
-
-	<test name="Data Clean Up">
-		<classes>
-			<class name="co.uk.testrunner.DataCleanUpTestRunner" />
-		</classes>
-	</test>
+<suite name="Regression Tests" data-provider-thread-count="5">
 
 	<test name="UI and API Tests">
 		<classes>
-			<class name="co.uk.testrunner.UiTestRunner" />
-			<class name="co.uk.testrunner.ApiTestRunner" />
+			<class name="co.uk.testrunner.RegressionTestRunner" />
 		</classes>
 	</test>
 

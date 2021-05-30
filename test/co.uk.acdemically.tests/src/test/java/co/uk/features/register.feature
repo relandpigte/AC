@@ -1,7 +1,7 @@
 Feature: Register
 
-@UI
-Scenario: 1. Verify successful register a student
+@UI @Adhoc
+Scenario: Verify successful register a student
 
 	Given User is in academically login page
 	When user register a student

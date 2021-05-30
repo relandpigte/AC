@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="Smoke Tests" parallel="classes">
+<suite name="Smoke Tests" data-provider-thread-count="5">
 
-	<test name="Data Clean Up">
-		<classes>
-			<class name="co.uk.testrunner.DataCleanUpTestRunner" />
-		</classes>
-	</test>
-	
 	<test name="UI and API Tests">
 		<classes>
 			<class name="co.uk.testrunner.SmokeTestRunner" />
-			<class name="co.uk.testrunner.ApiTestRunner" />
 		</classes>
 	</test>
 

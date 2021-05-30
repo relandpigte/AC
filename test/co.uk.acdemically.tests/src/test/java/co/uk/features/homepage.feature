@@ -1,6 +1,6 @@
 Feature: Title of your feature
 
-@UI @StudentUser @TestRails(14334) 
+@UI @TestRails(14334) 
 Scenario: C14334 - Verify menu items on the dashboard as student
 	
 	Given User is in academically login page
@@ -19,8 +19,7 @@ Scenario: C14334 - Verify menu items on the dashboard as student
 	Then user successfully login
 	And overview, my project and usage tab are displayed
 
-
-@UI @StudentUser @TestRails(14335) 
+@UI @TestRails(14335) 
 Scenario: C14335 - Verify create new project on the dashboard is displayed
 		
 	Given User is in academically login page
@@ -39,7 +38,7 @@ Scenario: C14335 - Verify create new project on the dashboard is displayed
 	And create new project is displayed on the dashboard
 
 
-@UI @StudentUser @TestRails(14336) 
+@UI @TestRails(14336) 
 Scenario: C14336 - Verify recent project and activity are displayed as student
 
 	Given User is in academically login page
@@ -119,7 +118,7 @@ Scenario: C14339 - Verify user profile widget is displayed
 #- Verify university name is displayed
 #- Verify user type is displayed
 
-@UI @StudentUser @TestRails(14340)
+@UI @TestRails(14340)
 Scenario: C14340 - Verify user verification widget is displayed
 
 	Given User is in academically login page
@@ -139,7 +138,7 @@ Scenario: C14340 - Verify user verification widget is displayed
 	And verification widget is displayed on the dashboard
 	And see a list of verification
 
-@UI @StudentUser @TestRails(14341)
+@UI @TestRails(14341)
 Scenario: C14341- Verify key four key metrics is displayed
 
 	Given User is in academically login page
@@ -158,7 +157,7 @@ Scenario: C14341- Verify key four key metrics is displayed
 	Then user successfully login
 	And four key metrics is displayed on the dashboard
 
-@UI @StudentUser @TestRails(14342)
+@UI @TestRails(14342)
 Scenario: C14342- Verify account settings is displayed
 	
 	Given User is in academically login page
