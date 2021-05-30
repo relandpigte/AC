@@ -10640,6 +10640,7 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
     userName: string | undefined;
     emailAddress: string | undefined;
     profilePictureUrl: string | undefined;
+    coverPictureUrl: string | undefined;
     currentUniversity: string | undefined;
     roles: string[] | undefined;
 
@@ -10660,6 +10661,7 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
             this.userName = _data["userName"];
             this.emailAddress = _data["emailAddress"];
             this.profilePictureUrl = _data["profilePictureUrl"];
+            this.coverPictureUrl = _data["coverPictureUrl"];
             this.currentUniversity = _data["currentUniversity"];
             if (Array.isArray(_data["roles"])) {
                 this.roles = [] as any;
@@ -10684,6 +10686,7 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
         data["userName"] = this.userName;
         data["emailAddress"] = this.emailAddress;
         data["profilePictureUrl"] = this.profilePictureUrl;
+        data["coverPictureUrl"] = this.coverPictureUrl;
         data["currentUniversity"] = this.currentUniversity;
         if (Array.isArray(this.roles)) {
             data["roles"] = [];
@@ -10708,6 +10711,7 @@ export interface IUserLoginInfoDto {
     userName: string | undefined;
     emailAddress: string | undefined;
     profilePictureUrl: string | undefined;
+    coverPictureUrl: string | undefined;
     currentUniversity: string | undefined;
     roles: string[] | undefined;
 }

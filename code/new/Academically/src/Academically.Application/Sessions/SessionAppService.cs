@@ -56,6 +56,7 @@ namespace Academically.Sessions
                 output.User = ObjectMapper.Map<UserLoginInfoDto>(user);
                 output.User.Roles = await _userManager.GetRolesAsync(user);
                 output.User.CurrentUniversity = await _userEducationsRepository.GetAll()
+                    .Where(u => u.UserId == user.Id)
                     .OrderByDescending(e => e.EndYear)
                         .ThenByDescending(e => e.StartYear)
                     .Select(e => e.University.HeProvider)
@@ -64,6 +65,11 @@ namespace Academically.Sessions
                 if (user.ProfilePictureDocumentId.HasValue)
                 {
                     output.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(user.ProfilePictureDocumentId.Value);
+                }
+
+                if (user.CoverPhotoDocumentId.HasValue)
+                {
+                    output.User.CoverPictureUrl = await _documentsDomainService.GetFileUrlAsync(user.CoverPhotoDocumentId.Value);
                 }
             }
 

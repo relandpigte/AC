@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts> 
+    <text name="GoodEvening">Good Evening</text>
+    <text name="GoodAfternoon">Good Afternoon</text>
+    <text name="GoodMorning">Good Morning</text>
     <text name="ReverifiyPhoneNumberConfirmationMessage">Your phone number was already verified perviously. You will be asked to verify your new phone number again and your previously verified phone number will be removed from our network. Are you sure you want to continue?</text>
     <text name="SelectExpertiseLevel">Select Expertise Level</text>
     <text name="Expert">Expert</text>

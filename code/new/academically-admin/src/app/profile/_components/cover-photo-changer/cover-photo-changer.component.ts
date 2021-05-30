@@ -43,11 +43,12 @@ export class CoverPhotoChangerComponent extends AppComponentBase {
       const coverPhoto: FileParameter = {
         fileName: file.name,
         data: file,
-      }
+      };
       this._profilesService.updateCoverPhoto(coverPhoto)
         .subscribe(coverPhotoUrl => {
           this.user.coverPhotoUrl = coverPhotoUrl;
           this._profileService.user = this.user;
+          this.appSession.user.coverPictureUrl = coverPhotoUrl;
           this.notify.success(this.l('CoverPhotoUploadedMessage'));
           modal.hide();
         });
@@ -69,11 +70,12 @@ export class CoverPhotoChangerComponent extends AppComponentBase {
         const coverPhoto: FileParameter = {
           fileName: file.name,
           data: file,
-        }
+        };
         this._profilesService.updateCoverPhoto(coverPhoto)
           .subscribe(coverPhotoUrl => {
             this.user.coverPhotoUrl = coverPhotoUrl;
             this._profileService.user = this.user;
+            this.appSession.user.coverPictureUrl = coverPhotoUrl;
             this.notify.success(this.l('CoverPhotoUploadedMessage'));
             modal.hide();
           });
@@ -91,6 +93,7 @@ export class CoverPhotoChangerComponent extends AppComponentBase {
           this._profilesService.deleteCoverPhoto()
             .subscribe(() => {
               delete this.user.coverPhotoUrl;
+              delete this.appSession.user.coverPictureUrl;
               this._profileService.user = this.user;
               this.notify.success(this.l('CoverPhotoRemovedMessage'));
               this.isRemovingCoverPhoto = false;
