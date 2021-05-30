@@ -1,5 +1,6 @@
 <div class="card">
-  <img src="/assets/themes/dashkit/img/covers/profile-cover-2.jpg" alt="..." class="card-img-top">
+  <img *ngIf="!user.coverPictureUrl" src="/assets/themes/dashkit/img/covers/profile-cover-2.jpg" alt="..." class="card-img-top">
+  <img *ngIf="user.coverPictureUrl" [src]="user.coverPictureUrl" alt="..." class="card-img-top">
   <div class="card-body text-center">
     <a href="#" [routerLink]="['/app/profile']" class="avatar avatar-xl card-avatar card-avatar-top">
       <img [src]="getProfilePicture(user.profilePictureUrl)"
