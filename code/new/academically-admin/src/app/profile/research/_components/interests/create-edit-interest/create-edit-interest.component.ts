@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, UserResearchInterestDisciplineTaxonomyDto, UserResearchInterestDto, UserResearchInterestsServiceProxy } from '@shared/service-proxies/service-proxies';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable, Observer } from 'rxjs';
 import { finalize, switchMap } from 'rxjs/operators';
+import { ResearchFieldsTreeComponent } from '../research-fields-tree/research-fields-tree.component';
 
 @Component({
   selector: 'app-create-edit-interest',
@@ -20,6 +21,7 @@ export class CreateEditInterestComponent extends AppComponentBase implements OnI
   constructor(
     injector: Injector,
     private _modal: BsModalRef,
+    private _modalService: BsModalService,
     private _userResearchInterestsService: UserResearchInterestsServiceProxy,
     private _disciplineTaxonomiesService: DisciplineTaxonomiesServiceProxy
   ) {
@@ -66,6 +68,23 @@ export class CreateEditInterestComponent extends AppComponentBase implements OnI
     if (index > -1) {
       this.userResearchInterest.userResearchInterestDisciplineTaxonomies.splice(index, 1);
     }
+  }
+
+  onAddResearchFieldsClick(): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<ResearchFieldsTreeComponent>;
+    modalSettings.class = 'modal-lg';
+    const modal = this._modalService.show(ResearchFieldsTreeComponent, modalSettings).content;
+    modal.modalSave.subscribe((selectedResearchFields: DisciplineTaxonomyDto[]) => {
+      selectedResearchFields.forEach(selectedResearchField => {
+        var isExisting = this.userResearchInterest.userResearchInterestDisciplineTaxonomies.find(e => e.disciplineTaxonomy.id == selectedResearchField.id);
+        if (!isExisting) {
+          var userResearchInterestDisciplineTaxonomyDto = new UserResearchInterestDisciplineTaxonomyDto();
+          userResearchInterestDisciplineTaxonomyDto.disciplineTaxonomy = selectedResearchField;
+          this.userResearchInterest.userResearchInterestDisciplineTaxonomies.push(userResearchInterestDisciplineTaxonomyDto);
+        }
+
+      })
+    });
   }
 
   private getDisciplineTaxonomies(): void {

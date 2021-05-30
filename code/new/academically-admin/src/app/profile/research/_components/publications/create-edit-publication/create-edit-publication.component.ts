@@ -50,6 +50,10 @@ export class CreateEditPublicationComponent extends AppComponentBase implements 
   }
 
   onFormSubmit(): void {
+    if (this.publicationTag && this.publicationTag.trim().length > 0) {
+      this.addTagToUserPublication(this.publicationTag);
+    }
+
     this.isLoading = true;
     this.userPublication.publicationDate = moment(this.publicationDate);
     (this.userPublication.id
