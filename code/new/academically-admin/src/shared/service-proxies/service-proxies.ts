@@ -10217,6 +10217,7 @@ export class UserDto implements IUserDto {
     coverPhotoUrl: string | undefined;
     profilePictureUrl: string | undefined;
     currentUniversity: string | undefined;
+    isPresentUniversity: boolean;
     timeZoneId: string | undefined;
     roleNames: string[] | undefined;
     roleDisplayNames: string[] | undefined;
@@ -10258,6 +10259,7 @@ export class UserDto implements IUserDto {
             this.coverPhotoUrl = _data["coverPhotoUrl"];
             this.profilePictureUrl = _data["profilePictureUrl"];
             this.currentUniversity = _data["currentUniversity"];
+            this.isPresentUniversity = _data["isPresentUniversity"];
             this.timeZoneId = _data["timeZoneId"];
             if (Array.isArray(_data["roleNames"])) {
                 this.roleNames = [] as any;
@@ -10307,6 +10309,7 @@ export class UserDto implements IUserDto {
         data["coverPhotoUrl"] = this.coverPhotoUrl;
         data["profilePictureUrl"] = this.profilePictureUrl;
         data["currentUniversity"] = this.currentUniversity;
+        data["isPresentUniversity"] = this.isPresentUniversity;
         data["timeZoneId"] = this.timeZoneId;
         if (Array.isArray(this.roleNames)) {
             data["roleNames"] = [];
@@ -10356,6 +10359,7 @@ export interface IUserDto {
     coverPhotoUrl: string | undefined;
     profilePictureUrl: string | undefined;
     currentUniversity: string | undefined;
+    isPresentUniversity: boolean;
     timeZoneId: string | undefined;
     roleNames: string[] | undefined;
     roleDisplayNames: string[] | undefined;

@@ -140,6 +140,8 @@
     <text name="General">General</text>
     <text name="AccountSettings">Account Settings</text>
     <text name="University">University</text>
+    <text name="StudyingAt">Studying at</text>
+    <text name="StudiedAt">Studied at</text>
     <text name="NoServiceSelected">No Service Selected</text>
     <text name="NoServicesFound">No Services Found</text>
     <text name="Subject">Subject</text>
@@ -569,6 +571,7 @@
     <text name="ResearchMethods">Research Methods</text>
     <text name="Location">Location</text>
     <text name="Joined">Joined</text>
+    <text name="MemberSince">Member since</text>
     <text name="Birthday">Birthday</text>
     <text name="Account">Account</text>
     <text name="AreaOfStudy">Area of Study</text>
@@ -660,6 +663,7 @@
     <text name="Details">Details</text>
     <text name="ManageYourSettings">Manage your settings</text>
     <text name="Profile">Profile</text>
+    <text name="ProfileLink">Profile link</text>
     <text name="RecentProjectsProvidingHelp">Recent Project (Providing Help)</text>
     <text name="RecentProjectsReceivingHelp">Recent Project (Receiving Help)</text>
     <text name="MessageHub">Message Hub</text>
@@ -887,5 +891,7 @@
     <text name="ResetPasswordStepOneInfo">1. Enter your administrator password</text>
     <text name="ResetPasswordStepTwoInfo">2. Copy this random password so you can send it to the user</text>
     <text name="ThisWeeksIncome">This Weeks Income</text>
+    <text name="LinkCopiedToClipboard">Link copied to clipboard</text>
+
   </texts>
 </localizationDictionary>

@@ -48,6 +48,21 @@ export class SummaryComponent extends AppComponentBase {
       });
   }
 
+  onCopyToClipboardClick(): void {
+    let link = `${location.origin}/app/profile/${this.user.id}`;
+    if (this.user.websiteUrl) {
+      link = this.user.websiteUrl;
+    }
+
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        console.log('[copied] ', link);
+        this.notify.success(this.l('LinkCopiedToClipboard'));
+      })
+      .catch((e) => console.error(e));
+  }
+
   private pushToArray(arr: string[], item: string) {
     if (item) {
       arr.push(item);
