@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts> 
+    <text name="SelectRelationship">Select Relationship</text>
+    <text name="Professional">Professional</text>
+    <text name="Academic">Academic</text>
+    <text name="EditReference">Edit Reference</text>
+    <text name="AddReference">Add Reference</text>
+    <text name="Relationship">Relationship</text>
+    <text name="Forename">Forename</text>
     <text name="GoodEvening">Good Evening</text>
     <text name="GoodAfternoon">Good Afternoon</text>
     <text name="GoodMorning">Good Morning</text>

@@ -80,11 +80,6 @@ namespace Academically.Services.Profiles
             }
             if (user.UserEducations != null && user.UserEducations.Count > 0)
             {
-                //output.CurrentUniversity = user.UserEducations
-                //    .OrderByDescending(e => e.EndYear)
-                //        .ThenByDescending(e => e.StartYear)
-                //   .FirstOrDefault()
-                //   .University.HeProvider;
                 var education = user.UserEducations
                     .OrderByDescending(e => e.EndYear)
                         .ThenByDescending(e => e.StartYear)

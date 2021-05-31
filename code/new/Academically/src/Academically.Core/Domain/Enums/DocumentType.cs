@@ -9,5 +9,6 @@
         Passport,
         Education,
         PhotoId,
+        Reference,
     }
 }
