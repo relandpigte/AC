@@ -52,6 +52,7 @@ namespace Academically.Users.Dto
         public string CoverPhotoUrl { get; set; }
         public string ProfilePictureUrl { get; set; }
         public string CurrentUniversity { get; set; }
+        public bool IsPresentUniversity { get; set; }
         public string TimeZoneId { get; set; }
         public IEnumerable<string> RoleNames { get; set; }
         public IEnumerable<string> RoleDisplayNames { get; set; }

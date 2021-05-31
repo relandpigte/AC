@@ -80,11 +80,21 @@ namespace Academically.Services.Profiles
             }
             if (user.UserEducations != null && user.UserEducations.Count > 0)
             {
-                output.CurrentUniversity = user.UserEducations
+                //output.CurrentUniversity = user.UserEducations
+                //    .OrderByDescending(e => e.EndYear)
+                //        .ThenByDescending(e => e.StartYear)
+                //   .FirstOrDefault()
+                //   .University.HeProvider;
+                var education = user.UserEducations
                     .OrderByDescending(e => e.EndYear)
                         .ThenByDescending(e => e.StartYear)
-                   .FirstOrDefault()
-                   .University.HeProvider;
+                   .FirstOrDefault();
+
+                if (education != null)
+                {
+                    output.CurrentUniversity = education.University.HeProvider;
+                    output.IsPresentUniversity = education.EndYear.ToLower() == "present";
+                }
             }
             output.TimeZoneId = await _settingManager.GetSettingValueAsync(TimingSettingNames.TimeZone);
 
@@ -183,6 +193,7 @@ namespace Academically.Services.Profiles
             var user = await _usersRepository.GetAsync(userId);
             ObjectMapper.Map(input, user);
 
+            user.ProfilePictureDocument = null;
             await _usersRepository.InsertOrUpdateAsync(user);
 
             if (!input.TimeZoneId.IsNullOrWhiteSpace())

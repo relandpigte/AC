@@ -1,7 +1,7 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { ProfileService } from '@app/profile/_services/profile.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { UserEducationDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ProfilesServiceProxy, UserEducationDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash-es';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -22,6 +22,7 @@ export class EducationsComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     private _profileService: ProfileService,
     private _modalService: BsModalService,
+    private _profilesService: ProfilesServiceProxy,
     private _userEducationsService: UserEducationsServiceProxy,
   ) {
     super(injector);
@@ -54,7 +55,8 @@ export class EducationsComponent extends AppComponentBase implements OnInit {
             .subscribe(() => {
               this.notify.success('SuccessfullyDeleted');
               this.getUserEducations();
-            })
+              this.refreshUser();
+            });
         }
       }
     );
@@ -93,7 +95,18 @@ export class EducationsComponent extends AppComponentBase implements OnInit {
     modal.userEducationSaved.subscribe((result: boolean) => {
       if (result) {
         this.getUserEducations();
+        this.refreshUser();
       }
     });
+  }
+
+  private refreshUser(): void {
+    this._profilesService.get(this.userId)
+      .pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe(user => {
+        this._profileService.user = user;
+      });
   }
 }
