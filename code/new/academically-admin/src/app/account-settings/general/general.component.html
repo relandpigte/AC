@@ -1,6 +1,6 @@
 <form [loader]="isLoading" autocomplete="off" #createEditForm="ngForm" (ngSubmit)="onFormSubmit()" class="pb-5">
 
-  <div class="row justify-content-between align-items-center">
+  <!-- <div class="row justify-content-between align-items-center">
     <div class="col-12">
       <div class="row align-items-center">
         <div class="col-auto">
@@ -37,9 +37,9 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
-  <hr class="my-5">
+  <!-- <hr class="my-5"> -->
 
   <div class="form-row">
 
@@ -112,21 +112,26 @@
 
   <div class="form-group required">
     <label class="col-form-label" for="TimeZone">{{ 'TimeZone' | localize }}</label>
-    <select [(ngModel)]="model.timeZoneId" id="TimeZone" name="TimeZone" type="text" class="form-control"
+    <div class="form-select-wrapper" [class.is-invalid]="timeZoneModel.valid && timeZoneModel.touched">
+      <select [(ngModel)]="model.timeZoneId" id="TimeZone" name="TimeZone" type="text" class="form-control"
       #timeZoneModel="ngModel" #timeZoneEl required>
       <option [ngValue]="null">{{ 'SelectTimeZone' | localize }}</option>
       <option *ngFor="let timezone of timezones" [value]="timezone.id">{{ timezone.name }}</option>
     </select>
+    </div>
+
     <abp-validation-summary [control]="timeZoneModel" [controlEl]="timeZoneEl"> </abp-validation-summary>
   </div>
 
   <div class="form-group required">
     <label class="col-form-label" for="country">{{ 'Country' | localize}}</label>
-    <select [(ngModel)]="model.country" #countryModel="ngModel" #countryEl class="form-control" id="country"
+    <div class="form-select-wrapper" [class.is-invalid]="!countryModel.valid && countryModel.touched">
+      <select [(ngModel)]="model.country" #countryModel="ngModel" #countryEl class="form-control" id="country"
       name="country" required (change)="onCountryChange()">
-      <option [ngValue]="null">{{ 'SelectCountry' | localize }}</option>
-      <option *ngFor="let country of countries" [value]="country.name">{{ country.name }}</option>
-    </select>
+        <option [ngValue]="null">{{ 'SelectCountry' | localize }}</option>
+        <option *ngFor="let country of countries" [value]="country.name">{{ country.name }}</option>
+      </select>
+    </div>
     <abp-validation-summary *ngIf="isTutor" [control]="countryModel" [controlEl]="countryEl">
     </abp-validation-summary>
   </div>
@@ -199,7 +204,7 @@
     <div class="col-12 col-md-6">
       <div class="form-group">
         <label class="mb-1">
-          {{ 'PublicProfile' | localize }}
+          {{ 'StudentProfile' | localize }}
         </label>
         <small class="form-text text-muted">
           {{ 'PublicProfileMessage' | localize }}

@@ -128,13 +128,14 @@
     <text name="TwoFactorAuthenticationEnabledMessage">Two factor authentication is now enabled.</text>
     <text name="Verify">Verify</text>
     <text name="TwoFactorAuthenticationVerificationCodeErrorMessage">Verification Code is not recognised. Please try again.</text>
-    <text name="TutorProfileMessage">If you are available for hire outside of the current situation, you can encourage others to hire you.</text>
-    <text name="TutorProfile">Tutor Profile</text>
+    <text name="TutorProfileMessage">Making your tutor profile visible means that you are available to accept work will appear in search results.</text>
+    <text name="TutorProfile">Tutor profile</text>
     <text name="YouAreCurrentlyVisible">You are currently invisible</text>
-    <text name="PublicProfileMessage">Making your profile public means that anyone on the Academically network will be able to find you.</text>
-    <text name="PublicProfile">Public Profile</text>
+    <text name="PublicProfileMessage">Making your student profile visible means that Tutors will be able to view your profile.</text>
+    <text name="PublicProfile">Public profile</text>
+    <text name="StudentProfile">Student profile</text>
     <text name="SaveChanges">Save Changes</text>
-    <text name="TimeZone">Time Zone</text>
+    <text name="TimeZone">Time zone</text>
     <text name="Notifications">Notifications</text>
     <text name="Billing">Billing</text>
     <text name="General">General</text>
@@ -249,7 +250,7 @@
     <text name="PhoneNumberVerificationSmsMessage">Your Academically Registration Code is: {0}</text>
     <text name="PhoneNumberVerificationSentMessage">The verification code was sent to your phone number.</text>
     <text name="PhoneNumberVerification">Phone Number Verification</text>
-    <text name="PhoneNumber">Phone Number</text>
+    <text name="PhoneNumber">Phone number</text>
     <text name="RemovePhoto">Remove Photo</text>
     <text name="UploadPhoto">Upload Photo</text>
     <text name="Removing">Removing</text>
@@ -649,12 +650,12 @@
     <text name="Active">Active</text>
     <text name="DropOrClickToUpload">Drop or click to upload</text>
     <text name="StateOrProvince">State/Province</text>
-    <text name="ZipOrPostCode">Zip/Post Code</text>
+    <text name="ZipOrPostCode">Zip/Postcode</text>
     <text name="City">City</text>
-    <text name="AddressLine2">Address Line 2</text>
-    <text name="AddressLine1">Address Line 1</text>
+    <text name="AddressLine2">Address line 2</text>
+    <text name="AddressLine1">Address line 1</text>
     <text name="SelectCountry">Select Country</text>
-    <text name="DateOfBirth">Date of Birth</text>
+    <text name="DateOfBirth">Date of birth</text>
     <text name="BecomeATutor">Become a Tutor</text>
     <text name="PrivacyAndNotifications">Privacy &amp; Notifications</text>
     <text name="Service">Service</text>
@@ -868,9 +869,9 @@
     <text name="Skins">Skins</text>
     <text name="Settings">Settings</text>
     <text name="Filter">Filter</text>
-    <text name="CurrentPassword">Current Password</text>
-    <text name="NewPassword">New Password</text>
-    <text name="ConfirmNewPassword">Confirm New Password</text>
+    <text name="CurrentPassword">Current password</text>
+    <text name="NewPassword">New password</text>
+    <text name="ConfirmNewPassword">Confirm new password</text>
     <text name="EnterNewPassword">Enter your new password</text>
     <text name="EnterConfirmNewPassword">Enter confirm password</text>
     <text name="PasswordsDoNotMatch">Passwords do not match</text>
@@ -892,6 +893,7 @@
     <text name="ResetPasswordStepTwoInfo">2. Copy this random password so you can send it to the user</text>
     <text name="ThisWeeksIncome">This Weeks Income</text>
     <text name="LinkCopiedToClipboard">Link copied to clipboard</text>
-
+    <text name="DeleteYourAccount">Delete your account</text>
+    <text name="DeleteYourAccountMessage">Don't need ScholarPro anymore?</text>
   </texts>
 </localizationDictionary>
