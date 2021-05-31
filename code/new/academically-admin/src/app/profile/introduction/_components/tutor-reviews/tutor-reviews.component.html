@@ -26,9 +26,8 @@
                 <a href="javascript:;">
                   {{ tutorRatingSummary.positivePercentage }}% {{ 'PositiveReviews' | localize}}
                 </a>
-                <i class="fe fe-alert-circle text-secondary ml-1 align-bottom cursor-pointer"
-                  [popover]="formulaPopoverTemplate" container="body" placement="right"
-                  triggers="mouseenter:mouseleave">
+                <i class="fe fe-info text-secondary ml-1 align-bottom cursor-pointer" [popover]="formulaPopoverTemplate"
+                  container="body" placement="right" triggers="mouseenter:mouseleave">
                 </i>
               </h4>
               <app-star-rating *ngIf="tutorRatingSummary.totalRatingPercentage"
