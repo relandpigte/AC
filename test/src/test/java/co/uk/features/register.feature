@@ -1,7 +1,7 @@
 Feature: Register
 
-@UI @Adhoc
-Scenario: Verify successful register a student
+@UI @TestRails(14474) 
+Scenario: C14474 - Verify successful register a student
 
 	Given User is in academically login page
 	When user register a student
