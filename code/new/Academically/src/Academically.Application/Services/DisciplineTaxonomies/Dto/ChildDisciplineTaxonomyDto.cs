@@ -7,13 +7,11 @@ using Academically.Domain.Entities;
 namespace Academically.Services.DisciplineTaxonomies.Dto
 {
     [AutoMap(typeof(DisciplineTaxonomy))]
-    public class DisciplineTaxonomyDto : EntityDto<Guid>
+    public class ChildDisciplineTaxonomyDto : EntityDto<Guid>
     {
         public string Name { get; set; }
         public Guid? ParentId { get; set; }
         public string ParentIdMap { get; set; }
         public bool IsEditable { get; set; }
-        public DisciplineTaxonomy Parent { get; set; }
-        public IEnumerable<ChildDisciplineTaxonomyDto> Children { get; set; }
     }
 }

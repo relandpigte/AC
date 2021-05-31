@@ -5,9 +5,14 @@
         <h4 class="card-header-title">Publications</h4>
       </div>
       <div class="col-auto">
+        <button (click)="onAddClick()" type="button" class="btn btn-sm btn-light bg-white mr-2">
+          <i class="fe fe-sliders"></i>
+          {{ 'Filter' | localize}}
+        </button>
         <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchPublications.Create')"
-          (click)="onAddClick()" type="button" class="btn btn-sm btn-primary">
-          {{ 'AddPublication' | localize}}
+          (click)="onAddClick()" type="button" class="btn btn-sm btn-light">
+          <i class="fe fe-edit-2"></i>
+          {{ 'Add' | localize}}
         </button>
       </div>
     </div>
@@ -27,14 +32,17 @@
           </div>
         </form>
       </div>
-      <div class="col-auto">
+      <!-- <div class="col-auto">
         <form>
           <select select2 [select2defaultValue]="'Sort Order'" class="custom-select custom-select-sm form-control-flush"
             data-toggle="select">
-            <option>Sort Order</option>
+            <option>
+              <i class="fe fe-slider"></i>
+              Sort Order
+            </option>
           </select>
         </form>
-      </div>
+      </div> -->
     </div>
   </div>
   <div class="table-responsive" [loader]="isTableLoading">
