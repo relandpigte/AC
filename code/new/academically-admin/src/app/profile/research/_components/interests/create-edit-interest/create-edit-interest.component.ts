@@ -76,14 +76,14 @@ export class CreateEditInterestComponent extends AppComponentBase implements OnI
     const modal = this._modalService.show(ResearchFieldsTreeComponent, modalSettings).content;
     modal.modalSave.subscribe((selectedResearchFields: DisciplineTaxonomyDto[]) => {
       selectedResearchFields.forEach(selectedResearchField => {
-        var isExisting = this.userResearchInterest.userResearchInterestDisciplineTaxonomies.find(e => e.disciplineTaxonomy.id == selectedResearchField.id);
+        const isExisting = this.userResearchInterest.userResearchInterestDisciplineTaxonomies
+          .find(e => e.disciplineTaxonomy.id == selectedResearchField.id);
         if (!isExisting) {
-          var userResearchInterestDisciplineTaxonomyDto = new UserResearchInterestDisciplineTaxonomyDto();
+          const userResearchInterestDisciplineTaxonomyDto = new UserResearchInterestDisciplineTaxonomyDto();
           userResearchInterestDisciplineTaxonomyDto.disciplineTaxonomy = selectedResearchField;
           this.userResearchInterest.userResearchInterestDisciplineTaxonomies.push(userResearchInterestDisciplineTaxonomyDto);
         }
-
-      })
+      });
     });
   }
 

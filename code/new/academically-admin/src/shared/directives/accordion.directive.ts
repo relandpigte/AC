@@ -20,7 +20,7 @@ export class AccordionDirective implements AfterViewInit {
     if (self.collapse) {
       collapseContent.hide()
     }
-    collapseButton.on('click', () => {
+    collapseButton.parent().on('click', () => {
       collapseContent.slideToggle(100, () => {
         this.collapse = !this.collapse;
         this.toggleCollapse(collapseButton);

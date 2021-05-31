@@ -213,7 +213,7 @@
     <text name="DropFileOrClickHereToUpload">Drop file or click here to upload</text>
     <text name="Metrics">Metrics</text>
     <text name="UserType">User Type</text>
-    <text name="AcademicLevel">Academic Level</text>
+    <text name="AcademicLevel">Academic level</text>
     <text name="PercentageOfPositiveReviewsFormulaDescription">
       <![CDATA[
         <i>
@@ -902,5 +902,8 @@
     <text name="LinkCopiedToClipboard">Link copied to clipboard</text>
     <text name="DeleteYourAccount">Delete your account</text>
     <text name="DeleteYourAccountMessage">Don't need ScholarPro anymore?</text>
+    <text name="StudyArea">Study area</text>
+    <text name="StudyFields">Study fields</text>
+    <text name="MyServices">My Services</text>
   </texts>
 </localizationDictionary>

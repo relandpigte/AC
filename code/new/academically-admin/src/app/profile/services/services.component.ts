@@ -4,7 +4,17 @@ import { ServiceDto, ServiceExpertiseLevel, UserServiceDto, UserServicesServiceP
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { CreateEditServiceComponent } from './_components/create-edit-service/create-edit-service.component';
+import { Services } from '../../../assets/services-icon.json';
+class ServiceMenuItem extends ServiceDto {
+  icon: string;
+  isActive?: boolean;
+  isCollapsed?: boolean;
 
+  id: string;
+  name: string | undefined;
+  serviceMappingId: string;
+  children: ServiceMenuItem[] | undefined;
+}
 @Component({
   selector: 'app-services',
   templateUrl: './services.component.html',
@@ -14,10 +24,12 @@ export class ServicesComponent extends AppComponentBase implements OnInit {
   ServiceExptertiseLevel = ServiceExpertiseLevel;
   collapsedItems: boolean[] = [];
   categories: ServiceDto[] = [];
+  categoryTree: any;
   isLoading = false;
   isServicesLoading = false;
   userServices: UserServiceDto[] = [];
   selectedService: ServiceDto;
+  categoryMenuItem: ServiceMenuItem[] = [];
 
   constructor(
     injector: Injector,
@@ -44,11 +56,28 @@ export class ServicesComponent extends AppComponentBase implements OnInit {
         takeUntil(this.destroyed$),
       ).subscribe(() => {
         this.getServiceTree();
-      })
+      });
   }
 
   onServiceClick(service: ServiceDto): void {
     this.getUserServices(service);
+  }
+
+  getServiceIcon(name: string): string {
+    if (!name) {
+      return null;
+    }
+
+    const service = Services.find(s => s.name.toLocaleLowerCase() === name.toLocaleLowerCase().trim());
+    return service?.icon;
+  }
+
+  onEditClick(id: string): void {
+
+  }
+
+  onDeleteClick(id: string): void {
+
   }
 
   private getServiceTree(): void {
@@ -61,6 +90,11 @@ export class ServicesComponent extends AppComponentBase implements OnInit {
         }),
       )
       .subscribe(services => {
+        console.log(services);
+
+
+
+
         this.categories = services;
         if (this.categories && this.categories.length) {
           if (!this.selectedService) {
@@ -85,4 +119,5 @@ export class ServicesComponent extends AppComponentBase implements OnInit {
         this.userServices = userServices;
       });
   }
+
 }

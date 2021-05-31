@@ -5,6 +5,7 @@ import * as _ from 'lodash-es';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable, Observer } from 'rxjs';
 import { finalize, switchMap, takeUntil } from 'rxjs/operators';
+import { StudyFieldsTreeComponent } from '../study-fields-tree/study-fields-tree.component';
 import { SuggestServiceSubjectComponent } from '../suggest-service-subject/suggest-service-subject.component';
 
 class CreateEditServiceModel {
@@ -53,6 +54,13 @@ export class CreateEditServiceComponent extends AppComponentBase implements OnIn
     super(injector);
   }
 
+  get HasValidSubject(): boolean {
+    if (this.levelsWithSubjects.includes(this.selectedLevel?.service?.name) ) {
+      return this.model.subjects.length > 0;
+    }
+    return true;
+  }
+
   ngOnInit(): void {
     this.getCategories();
     this.getDisciplineTaxonomies();
@@ -61,7 +69,7 @@ export class CreateEditServiceComponent extends AppComponentBase implements OnIn
   onFormSubmit(): void {
     this.isLoading = true;
 
-    var userService = new UserServiceDto();
+    const userService = new UserServiceDto();
     userService.id = this.model.id;
     userService.title = this.model.title;
     userService.description = this.model.description;
@@ -153,6 +161,21 @@ export class CreateEditServiceComponent extends AppComponentBase implements OnIn
 
   onCloseClick(): void {
     this._modal.hide();
+  }
+
+  onAddResearchFieldsClick(): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<StudyFieldsTreeComponent>;
+    modalSettings.class = 'modal-lg';
+    const modal = this._modalService.show(StudyFieldsTreeComponent, modalSettings).content;
+    modal.modalSave.subscribe((selectedResearchFields: DisciplineTaxonomyDto[]) => {
+      selectedResearchFields.forEach(selectedResearchField => {
+        const isExisting = this.model.disciplineTaxonomies
+          .find(e => e.id === selectedResearchField.id);
+        if (!isExisting) {
+          this.model.disciplineTaxonomies.push(selectedResearchField);
+        }
+      });
+    });
   }
 
   private getCategories(): void {
