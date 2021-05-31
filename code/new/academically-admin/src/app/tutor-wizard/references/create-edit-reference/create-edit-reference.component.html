@@ -1,0 +1,74 @@
+<form class="form-horizontal" autocomplete="off" #createEditForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <abp-modal-header [title]="(model.id ? 'EditReference' : 'AddReference') | localize"
+      (onCloseClick)="onCloseClick()"></abp-modal-header>
+    <div class="card-body">
+
+      <div class="form-row">
+
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="forename">{{ 'Forename' | localize}}</label>
+          <input [(ngModel)]="model.forename" #forenameModel="ngModel" #forenameEl class="form-control" type="text"
+            id="forename" name="forename" required />
+          <abp-validation-summary [control]="forenameModel" [controlEl]="forenameEl">
+          </abp-validation-summary>
+        </div>
+
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="surname">{{ 'Surname' | localize}}</label>
+          <input [(ngModel)]="model.surname" #surnameModel="ngModel" #surnameEl class="form-control" type="text"
+            id="surname" name="surname" required />
+          <abp-validation-summary [control]="surnameModel" [controlEl]="surnameEl">
+          </abp-validation-summary>
+        </div>
+
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="email">{{ 'Email' | localize}}</label>
+          <input [(ngModel)]="model.email" #emailModel="ngModel" #emailEl class="form-control" type="email" id="email"
+            name="email" required />
+          <abp-validation-summary [control]="emailModel" [controlEl]="emailEl">
+          </abp-validation-summary>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label class="col-form-label" for="phone">{{ 'Phone' | localize}}</label>
+          <div>
+            <ngx-intl-tel-input [(ngModel)]="phoneNumber" [enableAutoCountrySelect]="false" [searchCountryFlag]="true"
+              [phoneValidation]="true" [enablePlaceholder]="true" [selectFirstCountry]="false"
+              [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+              [selectedCountryISO]="CountryISO.UnitedKingdom" [maxLength]="15" [separateDialCode]="true"
+              [numberFormat]="PhoneNumberFormat.International" id="phone" name="phone" #phoneModel="ngModel">
+            </ngx-intl-tel-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group required">
+        <label class="col-form-label" for="relationship">{{ "Relationship" | localize }}</label>
+        <select class="form-control" required id="relationship" name="relationship" [(ngModel)]="model.relationship"
+          #relationshipModel="ngModel" #relationshipEl required>
+          <option [ngValue]="undefined">{{ 'SelectRelationship' | localize }}</option>
+          <option *ngFor="let relationship of ReferenceRelationshipType | enumToArray | keyvalue"
+            [value]="relationship.key">
+            {{ relationship.value | localize }}
+          </option>
+        </select>
+        <abp-validation-summary [control]="relationshipModel" [controlEl]="relationshipEl">
+        </abp-validation-summary>
+      </div>
+
+
+      <app-document-uploader [maxFiles]="1" [cropImages]="true" [allowedExtensions]="referenceFileExtensions">
+      </app-document-uploader>
+
+    </div>
+    <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading"
+      [saveDisabled]="!createEditForm.form.valid || (!referenceFile && !defaultFile) || isLoading"
+      (onCancelClick)="onCloseClick()">
+    </abp-modal-footer>
+  </div>
+</form>

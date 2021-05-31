@@ -83,7 +83,7 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
         takeUntil(this.destroyed$),
         finalize(() => {
           this.isLoading = false;
-          this.model.phoneNumber = tempPhoneNumber.substr(tempPhoneNumber.indexOf(' ') + 1);
+          this.model.phoneNumber = this.formatPhoneNumber(tempPhoneNumber);
         }),
       )
       .subscribe(() => {
@@ -126,7 +126,7 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
       .subscribe(user => {
         this.model = user;
         if (this.model.phoneNumber) {
-          this.model.phoneNumber = this.model.phoneNumber.substr(this.model.phoneNumber.indexOf(' ') + 1);
+          this.model.phoneNumber = this.formatPhoneNumber(this.model.phoneNumber);
         }
         if (this.model.dateOfBirth) {
           this.dateOfBirth = this.model.dateOfBirth.toDate();

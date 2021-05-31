@@ -68,7 +68,7 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
           this.initiateResendTimer();
         }
         this.currentState = PhoneVerificationState.Sent;
-        this.phoneNumber = this.phoneNumber.internationalNumber.substr(this.phoneNumber.internationalNumber.indexOf(' ') + 1);
+        this.phoneNumber = this.formatPhoneNumber(this.phoneNumber.internationalNumber);
         this.notify.success(this.l('PhoneNumberVerificationSentMessage'));
       });
   }
@@ -141,7 +141,7 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
       )
       .subscribe(phoneVerification => {
         if (this.currentState !== PhoneVerificationState.Verified && phoneVerification && phoneVerification.id) {
-          this.phoneNumber = phoneVerification.recipient.substr(phoneVerification.recipient.indexOf(' ') + 1);
+          this.phoneNumber = this.formatPhoneNumber(phoneVerification.recipient);
           this.currentState = PhoneVerificationState.Sent;
           const resendTimer = this.diffMomentDatesSeconds(
             phoneVerification.dateSent.add(this.defaultResendTimerValue, 'seconds'),
@@ -169,7 +169,7 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
           this.currentState = PhoneVerificationState.Verified;
           if (user.phoneNumber) {
             console.log(user.phoneNumber);
-            this.phoneNumber = user.phoneNumber.substr(user.phoneNumber.indexOf(' ') + 1);
+            this.phoneNumber = this.formatPhoneNumber(user.phoneNumber);
           }
         }
         this.getLatestUnverifiedVerification();

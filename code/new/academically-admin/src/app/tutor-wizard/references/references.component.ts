@@ -1,15 +1,122 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector } from '@angular/core';
+import { TableHeaderSortData } from '@shared/components/table-header-sort/table-header-sort.component';
+import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
+import { BecomeATutorStep, ReferenceDto, ReferenceDtoPagedResultDto, ReferenceRelationshipType, ReferencesServiceProxy, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
+import * as _ from 'lodash';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { pipe } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
+import { BecomeATutorService } from '../_services/become-a-tutor.service';
+import { CreateEditReferenceComponent } from './create-edit-reference/create-edit-reference.component';
 
 @Component({
   selector: 'app-references',
   templateUrl: './references.component.html',
   styleUrls: ['./references.component.less']
 })
-export class ReferencesComponent implements OnInit {
+export class ReferencesComponent extends PagedListingComponentBase<ReferenceDto> {
+  references: ReferenceDto[] = [];
+  headers: TableHeaderSortData[] = [
+    { title: 'Forename', sortColumn: 'forename' },
+    { title: 'Surname', sortColumn: 'surname' },
+    { title: 'Email', sortColumn: 'email' },
+    { title: 'Phone', sortColumn: 'phone' },
+    { title: 'Relationship', sortColumn: 'relationship', colspan: 2, },
+  ];
 
-  constructor() { }
+  ReferenceRelationshipType = ReferenceRelationshipType;
 
-  ngOnInit(): void {
+  constructor(
+    injector: Injector,
+    private _modalService: BsModalService,
+    private _becomeATutorService: BecomeATutorService,
+    private _tutorWizardService: TutorWizardServiceProxy,
+    private _referencesService: ReferencesServiceProxy,
+  ) {
+    super(injector);
+    this.sorting = this.headers[0].sortColumn;
   }
 
+  list(request: PagedAndSortedRequestDto, pageNumber: number, finishedCallback: Function): void {
+    this._referencesService
+      .getAll(
+        request.skipCount,
+        request.maxResultCount,
+        request.sort,
+      )
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          finishedCallback();
+        }),
+      )
+      .subscribe((result: ReferenceDtoPagedResultDto) => {
+        this.references = result.items;
+        this.showPaging(result, pageNumber);
+      });
+  }
+
+  onNextClick(): void {
+    this.isTableLoading = true;
+    const nextStep = BecomeATutorStep.DbsCheck;
+    this._tutorWizardService.updateStep(nextStep)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isTableLoading = false;
+        }),
+      )
+      .subscribe(() => {
+        this.notify.success(this.l('SavedSuccessfully'));
+        this._becomeATutorService.currentStep = nextStep;
+      });
+  }
+
+  onAddClick(): void {
+    this.showCreateEditReferenceModal();
+  }
+
+  onEditClick(reference: ReferenceDto): void {
+    this.showCreateEditReferenceModal(_.cloneDeep(reference));
+  }
+
+  onDeleteClick(id: string): void {
+    this.message.confirm(
+      undefined,
+      undefined,
+      (result: boolean) => {
+        if (result) {
+          this.isTableLoading = true;
+          this._referencesService.delete(id)
+            .pipe(
+              takeUntil(this.destroyed$),
+              pipe(finalize(() => {
+                this.isTableLoading = false;
+              }))
+            )
+            .subscribe(() => {
+              this.notify.success('SuccessfullyDeleted');
+              this.pageNumber = 1;
+              this.refresh();
+            })
+        }
+      }
+    );
+  }
+
+  private showCreateEditReferenceModal(reference?: ReferenceDto): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditReferenceComponent>;
+    modalSettings.initialState = {
+      model: reference,
+    };
+    const modal = this._modalService.show(CreateEditReferenceComponent, modalSettings).content;
+    modal.referenceSaved
+      .pipe(
+        takeUntil(this.destroyed$),
+      )
+      .subscribe(() => {
+        this.pageNumber = 1;
+        this.refresh();
+      });
+  }
 }

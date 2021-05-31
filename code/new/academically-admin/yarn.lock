@@ -5878,9 +5878,9 @@ npm-run-path@^2.0.0:
     path-key "^2.0.0"
 
 nswag@^13.10.8:
-  version "13.10.8"
-  resolved "https://registry.yarnpkg.com/nswag/-/nswag-13.10.8.tgz#1f2917370e1a46937022480f3353600a2f5208d2"
-  integrity sha512-h6RydMuvRIDMUREgMh/cE/tngLhWZHf1nGGvF31g/y8ONPa3P/TasW7+uu5ATnU/CTbFqFsPDJQtzcVfPzLaMA==
+  version "13.11.1"
+  resolved "https://registry.yarnpkg.com/nswag/-/nswag-13.11.1.tgz#2a8865d45ab8187c6d2dd6b18da833e78a72ac77"
+  integrity sha512-HyXoDRJdCMJQGZdWMdVxgSAE9FINWxrbL/1ReHtuV0H0L+Fq0PRuldu7xrznNLDln+/ivhHW9dZtxqGl2kcyIg==
 
 nth-check@^1.0.2:
   version "1.0.2"

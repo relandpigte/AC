@@ -92,6 +92,13 @@ import { TutorWizardComponent } from './tutor-wizard.component';
                     (m) => m.ReferencesModule,
                   ),
               },
+              {
+                path: 'dbs-check',
+                loadChildren: () =>
+                  import('@app/tutor-wizard/dbs-check/dbs-check.module').then(
+                    (m) => m.DbsCheckModule,
+                  ),
+              },
             ]
           },
         ],
