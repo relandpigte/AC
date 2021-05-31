@@ -2,7 +2,7 @@
   <div class="card-header">
     <div class="row align-items-center">
       <div class="col">
-        <h4 class="card-header-title">{{ user.name }} {{ 'Reviews' | localize }}</h4>
+        <h4 class="card-header-title">{{ user.name }}'s {{ 'Reviews' | localize }}</h4>
       </div>
       <div class="col-auto">
         <button class="btn btn-sm btn-white" type="button">
@@ -26,8 +26,9 @@
                 <a href="javascript:;">
                   {{ tutorRatingSummary.positivePercentage }}% {{ 'PositiveReviews' | localize}}
                 </a>
-                <i class="fe fe-alert-circle text-info ml-1 align-bottom cursor-pointer"
-                  [popover]="formulaPopoverTemplate" container="body" placement="top" triggers="mouseenter:mouseleave">
+                <i class="fe fe-alert-circle text-secondary ml-1 align-bottom cursor-pointer"
+                  [popover]="formulaPopoverTemplate" container="body" placement="right"
+                  triggers="mouseenter:mouseleave">
                 </i>
               </h4>
               <app-star-rating *ngIf="tutorRatingSummary.totalRatingPercentage"
