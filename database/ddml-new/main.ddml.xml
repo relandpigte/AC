@@ -46,4 +46,5 @@
 	<include file="ddml-new/ddml.2021-05-20-01.alter-userservices-add-expertiselevel-field.xml"/>
 	<include file="ddml-new/ddml.2021-05-28-01.create-references-table.xml"/>
 	<include file="ddml-new/ddml.2021-05-31-01.create-dbscertificates-table.xml"/>
+	<include file="ddml-new/ddml.2021-06-01-01.update-spokenlanguages-data.xml"/>
 </databaseChangeLog>
