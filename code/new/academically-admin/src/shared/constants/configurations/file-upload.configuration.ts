@@ -20,5 +20,13 @@ export const fileUploadConfiguration = {
     '.doc',
     '.docx',
   ],
+  allowedDbsCertificateExtensions: [
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.pdf',
+    '.doc',
+    '.docx',
+  ],
   maxFileSize: 1000000,
 };

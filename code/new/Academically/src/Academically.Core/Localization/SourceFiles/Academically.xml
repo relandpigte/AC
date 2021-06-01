@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts> 
+    <text name="DbsCheckAgreementMessage">I have agreed to the DBS update service and I give Academically consent to perform a status check.</text>
+    <text name="DbsCheckMessage">In order to be able to serve under 18’s then you must provide a valid DBS or equivalent certificate.</text>
+    <text name="DateOfIssue">Date of Issue</text>
+    <text name="DbsNumber">DBS Number</text>
     <text name="SelectRelationship">Select Relationship</text>
     <text name="Professional">Professional</text>
     <text name="Academic">Academic</text>

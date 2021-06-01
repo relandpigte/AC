@@ -113,6 +113,10 @@ namespace Academically.Domain.Services.Documents
                     folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_References);
                     isSecured = true;
                     break;
+                case DocumentType.DbsCertificate:
+                    folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_DbsCertificates);
+                    isSecured = true;
+                    break;
                 default:
                     folder = string.Empty;
                     isSecured = false;

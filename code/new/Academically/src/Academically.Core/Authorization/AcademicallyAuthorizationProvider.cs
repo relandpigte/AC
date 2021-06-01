@@ -101,7 +101,10 @@ namespace Academically.Authorization
             tutorWizardReferencesPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_References_Update, L("Update"));
             tutorWizardReferencesPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_References_Delete, L("Delete"));
 
-            tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_DbsCheck, L("DbsCheck"));
+            var tutorWizardDbsCheckPermission = tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_DbsCheck, L("DbsCheck"));
+            tutorWizardDbsCheckPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_DbsCheck_Create, L("Create"));
+            tutorWizardDbsCheckPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_DbsCheck_Update, L("Update"));
+            tutorWizardDbsCheckPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_DbsCheck_Delete, L("Delete"));
 
 
             context.CreatePermission(PermissionNames.Pages_Widgets_Verifications, L("Verifications"));
