@@ -82,7 +82,6 @@ export class TutorWizardComponent extends AppComponentBase implements OnInit {
         routeName = 'dbs-check';
         break;
     }
-    console.log(`/app/tutor-wizard/${routeName}`);
     this._router.navigate([`/app/tutor-wizard/${routeName}`]);
   }
 }

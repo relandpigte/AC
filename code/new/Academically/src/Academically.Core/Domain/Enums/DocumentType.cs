@@ -10,5 +10,6 @@
         Education,
         PhotoId,
         Reference,
+        DbsCertificate,
     }
 }

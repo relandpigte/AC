@@ -412,6 +412,335 @@ export class ConfigurationServiceProxy {
 }
 
 @Injectable()
+export class DbsCertificatesServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @param sorting (optional) 
+     * @return Success
+     */
+    getAll(skipCount: number | undefined, maxResultCount: number | undefined, sorting: string | undefined): Observable<DbsCertificateDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/DbsCertificates/GetAll?";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<DbsCertificateDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DbsCertificateDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<DbsCertificateDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DbsCertificateDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DbsCertificateDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param dbsNumber (optional) 
+     * @param dateOfIssue (optional) 
+     * @param file (optional) 
+     * @return Success
+     */
+    create(dbsNumber: string | undefined, dateOfIssue: moment.Moment | undefined, file: FileParameter | undefined): Observable<DbsCertificateDto> {
+        let url_ = this.baseUrl + "/api/services/app/DbsCertificates/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (dbsNumber === null || dbsNumber === undefined) {
+            // do nothing
+        } else
+            content_.append("DbsNumber", dbsNumber.toString());
+        if (dateOfIssue === null || dateOfIssue === undefined) {
+            // do nothing
+        } else
+            content_.append("DateOfIssue", dateOfIssue.toJSON());
+        if (file === null || file === undefined) {
+            // do nothing
+        } else
+            content_.append("File", file.data, file.fileName ? file.fileName : "File");
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<DbsCertificateDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DbsCertificateDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<DbsCertificateDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DbsCertificateDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DbsCertificateDto>(<any>null);
+    }
+
+    /**
+     * @param dbsNumber (optional) 
+     * @param dateOfIssue (optional) 
+     * @param file (optional) 
+     * @param id (optional) 
+     * @return Success
+     */
+    update(dbsNumber: string | undefined, dateOfIssue: moment.Moment | undefined, file: FileParameter | undefined, id: string | undefined): Observable<DbsCertificateDto> {
+        let url_ = this.baseUrl + "/api/services/app/DbsCertificates/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (dbsNumber === null || dbsNumber === undefined) {
+            // do nothing
+        } else
+            content_.append("DbsNumber", dbsNumber.toString());
+        if (dateOfIssue === null || dateOfIssue === undefined) {
+            // do nothing
+        } else
+            content_.append("DateOfIssue", dateOfIssue.toJSON());
+        if (file === null || file === undefined) {
+            // do nothing
+        } else
+            content_.append("File", file.data, file.fileName ? file.fileName : "File");
+        if (id === null || id === undefined) {
+            // do nothing
+        } else
+            content_.append("Id", id.toString());
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<DbsCertificateDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DbsCertificateDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<DbsCertificateDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DbsCertificateDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DbsCertificateDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/DbsCertificates/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<DbsCertificateDto> {
+        let url_ = this.baseUrl + "/api/services/app/DbsCertificates/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<DbsCertificateDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DbsCertificateDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<DbsCertificateDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DbsCertificateDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DbsCertificateDto>(<any>null);
+    }
+}
+
+@Injectable()
 export class DisciplineTaxonomiesServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -2217,6 +2546,58 @@ export class ReferencesServiceProxy {
      * @param id (optional) 
      * @return Success
      */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/References/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
     get(id: string | undefined): Observable<ReferenceDto> {
         let url_ = this.baseUrl + "/api/services/app/References/Get?";
         if (id === null)
@@ -2267,58 +2648,6 @@ export class ReferencesServiceProxy {
             }));
         }
         return _observableOf<ReferenceDto>(<any>null);
-    }
-
-    /**
-     * @param id (optional) 
-     * @return Success
-     */
-    delete(id: string | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/References/Delete?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "Id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDelete(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDelete(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processDelete(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
     }
 }
 
@@ -7742,6 +8071,124 @@ export interface ICreateUserDto {
     password: string;
 }
 
+export class DbsCertificateDto implements IDbsCertificateDto {
+    id: string;
+    dbsNumber: string | undefined;
+    dateOfIssue: moment.Moment;
+    documentId: string;
+    document: DocumentDto;
+    dbsCertificateFileUrl: string | undefined;
+
+    constructor(data?: IDbsCertificateDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.dbsNumber = _data["dbsNumber"];
+            this.dateOfIssue = _data["dateOfIssue"] ? moment(_data["dateOfIssue"].toString()) : <any>undefined;
+            this.documentId = _data["documentId"];
+            this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
+            this.dbsCertificateFileUrl = _data["dbsCertificateFileUrl"];
+        }
+    }
+
+    static fromJS(data: any): DbsCertificateDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DbsCertificateDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["dbsNumber"] = this.dbsNumber;
+        data["dateOfIssue"] = this.dateOfIssue ? this.dateOfIssue.toISOString() : <any>undefined;
+        data["documentId"] = this.documentId;
+        data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        data["dbsCertificateFileUrl"] = this.dbsCertificateFileUrl;
+        return data; 
+    }
+
+    clone(): DbsCertificateDto {
+        const json = this.toJSON();
+        let result = new DbsCertificateDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDbsCertificateDto {
+    id: string;
+    dbsNumber: string | undefined;
+    dateOfIssue: moment.Moment;
+    documentId: string;
+    document: DocumentDto;
+    dbsCertificateFileUrl: string | undefined;
+}
+
+export class DbsCertificateDtoPagedResultDto implements IDbsCertificateDtoPagedResultDto {
+    items: DbsCertificateDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IDbsCertificateDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(DbsCertificateDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): DbsCertificateDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DbsCertificateDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): DbsCertificateDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new DbsCertificateDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDbsCertificateDtoPagedResultDto {
+    items: DbsCertificateDto[] | undefined;
+    totalCount: number;
+}
+
 export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
     id: string;
     name: string | undefined;
@@ -7860,7 +8307,7 @@ export interface IDocumentDto {
     size: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -7870,6 +8317,7 @@ export enum DocumentType {
     Education = 5,
     PhotoId = 6,
     Reference = 7,
+    DbsCertificate = 8,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {
@@ -8896,7 +9344,6 @@ export class ReferenceDto implements IReferenceDto {
     documentId: string;
     document: DocumentDto;
     referenceFileUrl: string | undefined;
-    file: string | undefined;
 
     constructor(data?: IReferenceDto) {
         if (data) {
@@ -8918,7 +9365,6 @@ export class ReferenceDto implements IReferenceDto {
             this.documentId = _data["documentId"];
             this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
             this.referenceFileUrl = _data["referenceFileUrl"];
-            this.file = _data["file"];
         }
     }
 
@@ -8940,7 +9386,6 @@ export class ReferenceDto implements IReferenceDto {
         data["documentId"] = this.documentId;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
         data["referenceFileUrl"] = this.referenceFileUrl;
-        data["file"] = this.file;
         return data; 
     }
 
@@ -8962,7 +9407,6 @@ export interface IReferenceDto {
     documentId: string;
     document: DocumentDto;
     referenceFileUrl: string | undefined;
-    file: string | undefined;
 }
 
 export class ReferenceDtoPagedResultDto implements IReferenceDtoPagedResultDto {

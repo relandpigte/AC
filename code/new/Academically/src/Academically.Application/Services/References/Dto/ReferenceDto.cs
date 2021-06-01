@@ -21,6 +21,5 @@ namespace Academically.Services.References.Dto
         public DocumentDto Document { get; set; }
 
         public string ReferenceFileUrl { get; set; }
-        public IFormFile File { get; set; }
     }
 }
