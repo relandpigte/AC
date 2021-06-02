@@ -7890,7 +7890,7 @@ export interface IAuthenticatorDto {
     qrCodeUrl: string | undefined;
 }
 
-/** 0 = AboutYou 1 = Education 2 = Research 3 = Languages 4 = ServicesOffered 5 = ProfilePicture 6 = PhotoId 7 = Address 8 = ContactNumber 9 = References 10 = DbsCheck 11 = TermsOfUse 12 = PrivacyPolicy 13 = Declaration */
+/** 0 = AboutYou 1 = Education 2 = Research 3 = Languages 4 = ServicesOffered 5 = ProfilePicture 6 = PhotoId 7 = Address 8 = ContactNumber 9 = References 10 = DbsCheck 11 = TermsOfUse 12 = PrivacyPolicy 13 = Declaration 14 = CompleteApplication */
 export enum BecomeATutorStep {
     AboutYou = 0,
     Education = 1,
@@ -7906,6 +7906,7 @@ export enum BecomeATutorStep {
     TermsOfUse = 11,
     PrivacyPolicy = 12,
     Declaration = 13,
+    CompleteApplication = 14,
 }
 
 export class ChangePasswordDto implements IChangePasswordDto {

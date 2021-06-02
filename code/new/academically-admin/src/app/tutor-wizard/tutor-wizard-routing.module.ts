@@ -113,6 +113,13 @@ import { TutorWizardComponent } from './tutor-wizard.component';
                     (m) => m.PrivacyPolicyModule,
                   ),
               },
+              {
+                path: 'declaration',
+                loadChildren: () =>
+                  import('@app/tutor-wizard/declaration/declaration.module').then(
+                    (m) => m.DeclarationModule,
+                  ),
+              },
             ]
           },
         ],
