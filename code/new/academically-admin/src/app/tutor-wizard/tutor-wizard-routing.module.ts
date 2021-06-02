@@ -106,6 +106,13 @@ import { TutorWizardComponent } from './tutor-wizard.component';
                     (m) => m.TermsOfUseModule,
                   ),
               },
+              {
+                path: 'privacy-policy',
+                loadChildren: () =>
+                  import('@app/tutor-wizard/privacy-policy/privacy-policy.module').then(
+                    (m) => m.PrivacyPolicyModule,
+                  ),
+              },
             ]
           },
         ],

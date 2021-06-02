@@ -100,6 +100,7 @@
         public const string Pages_TutorWizard_DbsCheck_Delete = "Pages.TutorWizard.DbsCheck.Delete";
         
         public const string Pages_TutorWizard_TermsOfUse = "Pages.TutorWizard.TermsOfUse";
+        public const string Pages_TutorWizard_PrivacyPolicy = "Pages.TutorWizard.PrivacyPolicy";
 
 
         public const string Pages_Widgets_Verifications = "Pages.Widgets.Verifications";

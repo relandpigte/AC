@@ -1,8 +1,9 @@
 <div class="card">
+
   <div class="card-header">
     <div class="row align-items-center">
       <div class="col">
-        <h4 class="card-header-title">{{ 'TermsOfUse' | localize }}</h4>
+        <h4 class="card-header-title">{{ 'PrivacyPolicy' | localize }}</h4>
       </div>
       <div class="col-auto">
         <button (click)="onPrint()" type="button" class="btn btn-sm btn-primary">
@@ -40,7 +41,7 @@
     </div>
     <div class="row mt-4">
       <div class="col-md-9">
-        <h4>Licensing Terms</h4>
+        <h4>{{'PrivacyPolicy' | localize}}</h4>
         <p class="text-justify">
           Aliquam purus nibh, efficitur eu condimentum at, pulvinar id leo. Ut diam nibh, sodales eget finibus
           ac,
@@ -57,6 +58,7 @@
           ultricies. Fusce ac fringilla lacus, vel hendrerit nisl. Pellentesque semper consectetur augue
           consequat
           pretium.
+
           Aliquam purus nibh, efficitur eu condimentum at, pulvinar id leo. Ut diam nibh, sodales eget finibus
           ac,
           placerat a turpis. Proin vitae eros ultricies, consectetur felis et, blandit odio. Vestibulum
@@ -78,9 +80,8 @@
         <div class="alert alert-info">
           <h4>Have a Question?</h4>
           <p>
-            <small>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non feugiat justo. Pellentesque
-            </small>
+            <small> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non feugiat justo.
+              Pellentesque</small>
           </p>
           <p>
             <small>Email us: <b>support@academically.com</b></small>
@@ -92,7 +93,7 @@
 
 </div>
 <div class="d-flex justify-content-between">
-  <button [routerLink]="['/app/tutor-wizard/dbs-check']" type="button" class="btn btn-white">
+  <button [routerLink]="['/app/tutor-wizard/terms-of-use']" type="button" class="btn btn-white">
     {{ 'Back' | localize }}
   </button>
   <button (click)="onNextClick()" type="submit" class="btn btn-primary">
