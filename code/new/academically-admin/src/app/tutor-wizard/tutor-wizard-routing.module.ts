@@ -99,6 +99,13 @@ import { TutorWizardComponent } from './tutor-wizard.component';
                     (m) => m.DbsCheckModule,
                   ),
               },
+              {
+                path: 'terms-of-use',
+                loadChildren: () =>
+                  import('@app/tutor-wizard/terms-of-use/terms-of-use.module').then(
+                    (m) => m.TermsOfUseModule,
+                  ),
+              },
             ]
           },
         ],
