@@ -1,11 +1,11 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileService } from '@app/profile/_services/profile.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { uiEvents } from '@shared/constants/ui-events.constant';
 import { NavigationPosition } from '@shared/enums/theme-settings/navigation-position.enum';
 import { IThemeSetting } from '@shared/interfaces/theme-setting.interface';
-import { UserDto } from '@shared/service-proxies/service-proxies';
+import { BecomeATutorStep, TutorWizardServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import { ThemeManagerService } from '@shared/services/theme-manager.service';
 import { takeUntil } from 'rxjs/operators';
 
@@ -14,18 +14,20 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.less']
 })
-export class HeaderComponent extends AppComponentBase {
+export class HeaderComponent extends AppComponentBase implements OnInit {
   NavigationPosition = NavigationPosition;
   themeSettings: IThemeSetting;
   user: UserDto;
   userTitle = '';
   isViewOnly = false;
+  canBecomeATutor = false;
 
   constructor(
     injector: Injector,
     route: ActivatedRoute,
     themeSettingsService: ThemeManagerService,
     private _profileService: ProfileService,
+    private _tutorWizardServiceProxy: TutorWizardServiceProxy,
     private _router: Router,
   ) {
     super(injector);
@@ -39,6 +41,10 @@ export class HeaderComponent extends AppComponentBase {
     route.data.subscribe(data => {
       this.isViewOnly = data.isViewOnly;
     });
+  }
+
+  ngOnInit(): void {
+    this.getCurrentWizardStep();
   }
 
   onProfilePictureUpdated(profilePictureUrl: string): void {
@@ -57,5 +63,15 @@ export class HeaderComponent extends AppComponentBase {
         }
       }
     );
+  }
+
+  private getCurrentWizardStep(): void {
+    this._tutorWizardServiceProxy.getCurrentStep()
+      .pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe(currentStep => {
+        this.canBecomeATutor = currentStep <= BecomeATutorStep.Declaration;
+      });
   }
 }

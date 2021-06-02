@@ -60,6 +60,12 @@ namespace Academically.Services.TutorWizard
         {
             var tutorVerification = await GetCurrent();
             tutorVerification.CurrentStep = step;
+
+            if (step == BecomeATutorStep.CompleteApplication)
+            {
+                tutorVerification.Status = TutorVerificationStatus.Completed;
+            }
+
             await _tutorVerificationsRepository.UpdateAsync(tutorVerification);
         }
 
@@ -74,7 +80,6 @@ namespace Academically.Services.TutorWizard
         {
             return await _tutorVerificationsRepository
                 .GetAll()
-                .Where(e => e.Status == TutorVerificationStatus.Pending)
                 .FirstOrDefaultAsync(e => e.CreatorUserId == AbpSession.UserId.Value);
         }
     }

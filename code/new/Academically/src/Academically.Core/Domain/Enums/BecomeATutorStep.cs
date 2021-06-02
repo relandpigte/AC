@@ -16,5 +16,6 @@
         TermsOfUse,
         PrivacyPolicy,
         Declaration,
+        CompleteApplication,
     }
 }
