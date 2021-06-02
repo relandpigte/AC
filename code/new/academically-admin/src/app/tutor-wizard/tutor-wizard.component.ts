@@ -84,6 +84,9 @@ export class TutorWizardComponent extends AppComponentBase implements OnInit {
       case BecomeATutorStep.TermsOfUse:
         routeName = 'terms-of-use';
         break;
+      case BecomeATutorStep.PrivacyPolicy:
+        routeName = 'privacy-policy';
+        break;
     }
     this._router.navigate([`/app/tutor-wizard/${routeName}`]);
   }

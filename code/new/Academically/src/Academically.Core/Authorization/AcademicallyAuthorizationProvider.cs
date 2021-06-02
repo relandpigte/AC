@@ -107,6 +107,7 @@ namespace Academically.Authorization
             tutorWizardDbsCheckPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_DbsCheck_Delete, L("Delete"));
             
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_TermsOfUse, L("TermsOfUse"));
+            tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_PrivacyPolicy, L("PrivacyPolicy"));
 
 
             context.CreatePermission(PermissionNames.Pages_Widgets_Verifications, L("Verifications"));

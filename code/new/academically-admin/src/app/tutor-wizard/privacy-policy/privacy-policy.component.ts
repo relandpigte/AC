@@ -5,11 +5,11 @@ import { finalize, takeUntil } from 'rxjs/operators';
 import { BecomeATutorService } from '../_services/become-a-tutor.service';
 
 @Component({
-  selector: 'app-terms-of-use',
-  templateUrl: './terms-of-use.component.html',
-  styleUrls: ['./terms-of-use.component.less']
+  selector: 'app-privacy-policy',
+  templateUrl: './privacy-policy.component.html',
+  styleUrls: ['./privacy-policy.component.less']
 })
-export class TermsOfUseComponent extends AppComponentBase implements OnInit {
+export class PrivacyPolicyComponent extends AppComponentBase implements OnInit {
   isLoading = false;
 
   constructor(
@@ -41,7 +41,7 @@ export class TermsOfUseComponent extends AppComponentBase implements OnInit {
 
   onNextClick(): void {
     this.isLoading = true;
-    this._acceptanceLogsService.accept(AcceptanceType.TermsOfUse)
+    this._acceptanceLogsService.accept(AcceptanceType.PrivacyPolicy)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
@@ -55,7 +55,7 @@ export class TermsOfUseComponent extends AppComponentBase implements OnInit {
 
   private nextStep(): void {
     this.isLoading = true;
-    const nextStep = BecomeATutorStep.PrivacyPolicy;
+    const nextStep = BecomeATutorStep.Declaration;
     this._tutorWizardService.updateStep(nextStep)
       .pipe(
         takeUntil(this.destroyed$),
