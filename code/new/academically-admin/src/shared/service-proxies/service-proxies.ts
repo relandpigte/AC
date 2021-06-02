@@ -9464,9 +9464,9 @@ export interface IReferenceDtoPagedResultDto {
     totalCount: number;
 }
 
-/** 1 = Acedemic 2 = Professional */
+/** 1 = Academic 2 = Professional */
 export enum ReferenceRelationshipType {
-    Acedemic = 1,
+    Academic = 1,
     Professional = 2,
 }
 
