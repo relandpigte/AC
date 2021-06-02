@@ -906,5 +906,6 @@
     <text name="LinkCopiedToClipboard">Link copied to clipboard</text>
     <text name="DeleteYourAccount">Delete your account</text>
     <text name="DeleteYourAccountMessage">Don't need ScholarPro anymore?</text>
+    <text name="Print">Print</text>
   </texts>
 </localizationDictionary>

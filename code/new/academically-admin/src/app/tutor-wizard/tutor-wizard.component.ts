@@ -81,6 +81,9 @@ export class TutorWizardComponent extends AppComponentBase implements OnInit {
       case BecomeATutorStep.DbsCheck:
         routeName = 'dbs-check';
         break;
+      case BecomeATutorStep.TermsOfUse:
+        routeName = 'terms-of-use';
+        break;
     }
     this._router.navigate([`/app/tutor-wizard/${routeName}`]);
   }
