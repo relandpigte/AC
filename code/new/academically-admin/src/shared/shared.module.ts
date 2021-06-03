@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
@@ -26,9 +27,12 @@ import { AbpValidationSummaryComponent } from './components/validation/abp-valid
 import { AbpModalHeaderComponent } from './components/modal/abp-modal-header.component';
 import { AbpModalFooterComponent } from './components/modal/abp-modal-footer.component';
 import { TableHeaderSortComponent } from './components/table-header-sort/table-header-sort.component';
+import { PasswordToggleComponent } from './components/password-toggle/password-toggle.component';
 
 @NgModule({
   imports: [
+    FormsModule,
+    ReactiveFormsModule,
     CommonModule,
     RouterModule,
     NgxPaginationModule,
@@ -49,6 +53,7 @@ import { TableHeaderSortComponent } from './components/table-header-sort/table-h
     AbpModalHeaderComponent,
     AbpModalFooterComponent,
     TableHeaderSortComponent,
+    PasswordToggleComponent,
   ],
   exports: [
     BsDatepickerModule,
@@ -66,6 +71,7 @@ import { TableHeaderSortComponent } from './components/table-header-sort/table-h
     AbpModalHeaderComponent,
     AbpModalFooterComponent,
     TableHeaderSortComponent,
+    PasswordToggleComponent,
   ]
 })
 export class SharedModule {
