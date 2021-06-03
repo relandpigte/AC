@@ -1,3 +1,5 @@
+@import url('dark-mode-custom.less');
+
 /* custom component styles */
 
 app-root {
@@ -52,6 +54,18 @@ ngx-intl-tel-input {
   &.is-invalid {
     .form-control {
       border-color: #e63757;
+    }
+  }
+}
+
+bs-datepicker-container {
+  .bs-datepicker-head {
+    background-color: #2c7be5 !important;
+  }
+
+  .bs-datepicker-body {
+    .selected {
+      background-color: #2c7be5 !important;
     }
   }
 }
@@ -672,9 +686,6 @@ app-tutor-reviews {
 
   .badge.badge-soft-info,
   .rating-experience>*.rating-experience-neutral {
-    color           : #96a4c2;
-    background-color: #e8ebf2;
-
     >.fas {
       font-size: 8px;
     }
