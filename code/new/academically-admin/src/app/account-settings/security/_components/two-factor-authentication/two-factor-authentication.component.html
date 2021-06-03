@@ -10,17 +10,12 @@
     </p>
   </div>
   <div class="col-12 col-md-auto">
-
-    <!-- <div class="custom-control custom-switch">
-      <input [(ngModel)]="is2FaEnabled" id="is2FaEnabled" name="is2FaEnabled" type="checkbox"
-        class="custom-control-input" (change)="on2FaStatusChange()">
-      <label class="custom-control-label" for="is2FaEnabled"></label>
-    </div> -->
-    <button *ngIf="is2FaEnabled" type="button" class="btn btn-primary" (click)="is2FaEnabled = false">
-      Disable
+    <button *ngIf="is2FaEnabled === model.isEnabled" type="button" class="btn btn-primary"
+      (click)="on2FaStatusChange()">
+      {{ (model.isEnabled ? 'Disable' : 'Enable') | localize }}
     </button>
-    <button *ngIf="!is2FaEnabled" type="button" class="btn btn-primary" (click)="is2FaEnabled = true">
-      Enable
+    <button *ngIf="is2FaEnabled !== model.isEnabled" type="button" class="btn btn-white" (click)="onCancelClick()">
+      {{ 'Cancel' | localize }}
     </button>
   </div>
 </div>

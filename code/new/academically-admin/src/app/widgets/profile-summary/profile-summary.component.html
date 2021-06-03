@@ -42,8 +42,7 @@
         </small>
       </div>
       <div class="col-auto">
-        <button *ngIf="permission.isGranted('Pages.TutorWizard') && canBecomeATutor" (click)="onTutorWizardClick()"
-          class="btn btn-sm btn-primary">
+        <button *ngIf="canBecomeATutor" (click)="onTutorWizardClick()" class="btn btn-sm btn-primary">
           {{ 'BecomeATutor' | localize}}
         </button>
       </div>

@@ -66,12 +66,14 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   }
 
   private getCurrentWizardStep(): void {
-    this._tutorWizardServiceProxy.getCurrentStep()
-      .pipe(
-        takeUntil(this.destroyed$)
-      )
-      .subscribe(currentStep => {
-        this.canBecomeATutor = currentStep <= BecomeATutorStep.Declaration;
-      });
+    if (this.permission.isGranted('Pages.TutorWizard')) {
+      this._tutorWizardServiceProxy.getCurrentStep()
+        .pipe(
+          takeUntil(this.destroyed$)
+        )
+        .subscribe(currentStep => {
+          this.canBecomeATutor = currentStep <= BecomeATutorStep.Declaration;
+        });
+    }
   }
 }
