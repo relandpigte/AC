@@ -1,14 +1,15 @@
 <form class="form-horizontal" autocomplete="off" #createEditUserEducationLevelForm="ngForm" (ngSubmit)="onFormSubmit()">
   <div class="modal-card card">
-    <abp-modal-header [title]="(!model.educationLevelId ? 'AddLevel' : 'EditLevel') | localize"
+    <abp-modal-header [title]="(!model.educationLevelId ? 'AddCourse' : 'EditCourse') | localize"
       (onCloseClick)="onCloseClick()"></abp-modal-header>
     <div class="card-body">
 
       <div class="form-group required">
-        <label class="col-form-label" for="EducationLevel">{{ 'Level' | localize }}</label>
-        <select [(ngModel)]="model.educationLevelId" id="EducationLevel" name="EducationLevel" type="text"
-          class="form-control" #edicationLevelModel="ngModel" #educationLevelEl required>
-          <option [ngValue]="undefined">{{ 'SelectEducationLevel' | localize }}</option>
+        <label class="col-form-label" for="EducationLevel">{{ 'CourseTitle' | localize }}</label>
+        <select select2 [defaultValue]="model.educationLevelId" [placeholder]="'SelectEducationLevel' | localize"
+          (select2ValueChange)="model.educationLevelId = $event" [(ngModel)]="model.educationLevelId"
+          id="EducationLevel" name="EducationLevel" type="text" class="custom-select" #edicationLevelModel="ngModel"
+          #educationLevelEl required>
           <option *ngFor="let educationLevel of educationLevels" [value]="educationLevel.id">{{ educationLevel.name }}
           </option>
         </select>
@@ -18,7 +19,7 @@
 
       <div class="form-row">
         <div class="form-group col-md-6 required">
-          <label class="col-form-label" for="Degree">{{ 'Degree' | localize }}</label>
+          <label class="col-form-label" for="Degree">{{ 'AcademicLevel' | localize }}</label>
           <input class="form-control" type="text" [(ngModel)]="model.degree" id="Degree" name="Degree"
             #degreeModel="ngModel" #degreeEl required />
           <abp-validation-summary [control]="degreeModel" [controlEl]="degreeEl">

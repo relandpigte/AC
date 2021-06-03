@@ -280,6 +280,10 @@ input[type='file'].inline-file-upload {
 .table-align-top {
   td {
     vertical-align: top !important;
+
+    &.align-middle {
+      vertical-align: middle !important;
+    }
   }
 }
 
@@ -302,9 +306,31 @@ input[type='file'].inline-file-upload {
 }
 
 .card-table {
-  tr:first-child {
-    td {
-      border-top: none;
+  tbody {
+    tr {
+
+      &:first-child {
+        td {
+          border-top: none;
+        }
+      }
+
+      &.no-border {
+        td {
+          border-top: none !important;
+          padding   : 1rem !important;
+        }
+      }
+
+      td {
+        &.multilevel {
+          vertical-align: middle !important;
+        }
+
+        &.not-firstchild {
+          padding: 1rem !important;
+        }
+      }
     }
   }
 }
@@ -612,21 +638,21 @@ app-student-reviews .ql-container.ngx-quill-view-html {
 
 .form-select-wrapper {
 
-  background-color: #fff;
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 9 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m1 1 3.25 3.25L7.5 1' stroke='%2395AAC9' stroke-width='1.083' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-color   : #fff;
+  background-image   : url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 9 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m1 1 3.25 3.25L7.5 1' stroke='%2395AAC9' stroke-width='1.083' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-position: right .75rem center;
-  background-repeat: no-repeat;
-  background-size: .75em .75em;
-  border: 1px solid #d2ddec;
-  border-radius: .375rem;
-  color: #12263f;
-  display: block;
-  font-size: .9375rem;
-  font-weight: 400;
-  line-height: 1.5;
+  background-repeat  : no-repeat;
+  background-size    : .75em .75em;
+  border             : 1px solid #d2ddec;
+  border-radius      : .375rem;
+  color              : #12263f;
+  display            : block;
+  font-size          : .9375rem;
+  font-weight        : 400;
+  line-height        : 1.5;
   // padding: .5rem 1.75rem .5rem .75rem;
-  padding-right: 1.75rem;
-  width: 100%;
+  padding-right      : 1.75rem;
+  width              : 100%;
 
   &.is-invalid {
     border-color: #e63757;
@@ -634,9 +660,9 @@ app-student-reviews .ql-container.ngx-quill-view-html {
 
   select.form-control {
     -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border: none;
+    -moz-appearance   : none;
+    appearance        : none;
+    border            : none;
   }
 }
 
@@ -645,17 +671,17 @@ app-student-reviews,
 app-tutor-reviews {
 
   .badge.badge-soft-info,
-  .rating-experience > *.rating-experience-neutral {
-    color: #96a4c2;
+  .rating-experience>*.rating-experience-neutral {
+    color           : #96a4c2;
     background-color: #e8ebf2;
 
-    > .fas {
-        font-size: 8px;
+    >.fas {
+      font-size: 8px;
     }
   }
 
   .badge.badge-soft-info {
-    padding-top: 4px;
+    padding-top   : 4px;
     padding-bottom: 4px;
   }
 
