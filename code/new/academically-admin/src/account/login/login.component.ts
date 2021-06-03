@@ -10,6 +10,7 @@ import { AppAuthService } from '@shared/auth/app-auth.service';
 })
 export class LoginComponent extends AppComponentBase {
   submitting = false;
+  hide: boolean = true;
 
   constructor(
     injector: Injector,
@@ -38,5 +39,9 @@ export class LoginComponent extends AppComponentBase {
     } else {
       this.authService.authenticate(() => (this.submitting = false));
     }
+  }
+
+  hideShowPassword(): void {
+    this.hide = !this.hide;
   }
 }
