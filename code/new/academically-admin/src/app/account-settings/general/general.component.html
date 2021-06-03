@@ -1,45 +1,32 @@
 <form [loader]="isLoading" autocomplete="off" #createEditForm="ngForm" (ngSubmit)="onFormSubmit()" class="pb-5">
 
-  <!-- <div class="row justify-content-between align-items-center">
-    <div class="col-12">
-      <div class="row align-items-center">
-        <div class="col-auto">
-          <div class="avatar">
-            <img class="avatar-img rounded-circle" [src]="getProfilePicture(user.profilePictureUrl)" alt="...">
-          </div>
-        </div>
-        <div class="col ml-n2">
-          <h4 class="mb-1">
-            {{ user.name }} {{ user.surname }}
-          </h4>
-          <small class="text-muted">
-            {{ isTutor ? 'Tutor' : 'Student' }}
-          </small>
-        </div>
-      </div>
-    </div>
-    <div class="col-12">
-      <div *ngIf="!isOnboarding && !isLoading && !model.stripeUserId && isTutor"
-        class="alert alert-warning alert-dismissible mb-0 mt-3" role="alert">
-        <div class="row align-items-center">
-          <div class="col-auto">
-            <i class="fe fe-alert-triangle display-5"></i>
-          </div>
-          <div class="col">
-            <h3 class="mb-2">{{ 'StripeConnectionRequired' | localize }}!</h3>
-            {{ 'StripeConnectionMessage' | localize }}
-          </div>
-          <div class="col-auto mr-n5">
-            <button (click)="onConnectStripeClick()" class="btn btn-primary btn-sm" type="button">
-              {{ 'ConnectStripe' | localize }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> -->
+  <ng-container *ngIf="!isOnboarding && !isLoading && !model.stripeUserId && isTutor">
 
-  <!-- <hr class="my-5"> -->
+    <div class="row justify-content-between align-items-center">
+      <div class="col-12">
+        <div class="alert alert-warning alert-dismissible mb-0 mt-3" role="alert">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <i class="fe fe-alert-triangle display-5"></i>
+            </div>
+            <div class="col">
+              <h3 class="mb-2">{{ 'StripeConnectionRequired' | localize }}!</h3>
+              {{ 'StripeConnectionMessage' | localize }}
+            </div>
+            <div class="col-auto mr-n5">
+              <button (click)="onConnectStripeClick()" class="btn btn-primary btn-sm" type="button">
+                {{ 'ConnectStripe' | localize }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-5">
+
+  </ng-container>
+
 
   <div class="form-row">
 
@@ -114,10 +101,10 @@
     <label class="col-form-label" for="TimeZone">{{ 'TimeZone' | localize }}</label>
     <div class="form-select-wrapper" [class.is-invalid]="timeZoneModel.valid && timeZoneModel.touched">
       <select [(ngModel)]="model.timeZoneId" id="TimeZone" name="TimeZone" type="text" class="form-control"
-      #timeZoneModel="ngModel" #timeZoneEl required>
-      <option [ngValue]="null">{{ 'SelectTimeZone' | localize }}</option>
-      <option *ngFor="let timezone of timezones" [value]="timezone.id">{{ timezone.name }}</option>
-    </select>
+        #timeZoneModel="ngModel" #timeZoneEl required>
+        <option [ngValue]="null">{{ 'SelectTimeZone' | localize }}</option>
+        <option *ngFor="let timezone of timezones" [value]="timezone.id">{{ timezone.name }}</option>
+      </select>
     </div>
 
     <abp-validation-summary [control]="timeZoneModel" [controlEl]="timeZoneEl"> </abp-validation-summary>
@@ -127,7 +114,7 @@
     <label class="col-form-label" for="country">{{ 'Country' | localize}}</label>
     <div class="form-select-wrapper" [class.is-invalid]="!countryModel.valid && countryModel.touched">
       <select [(ngModel)]="model.country" #countryModel="ngModel" #countryEl class="form-control" id="country"
-      name="country" required (change)="onCountryChange()">
+        name="country" required (change)="onCountryChange()">
         <option [ngValue]="null">{{ 'SelectCountry' | localize }}</option>
         <option *ngFor="let country of countries" [value]="country.name">{{ country.name }}</option>
       </select>
