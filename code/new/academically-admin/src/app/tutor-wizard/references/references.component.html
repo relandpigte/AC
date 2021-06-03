@@ -49,8 +49,7 @@
   <button [routerLink]="['/app/tutor-wizard/contact-number']" type="button" class="btn btn-white">
     {{ 'Back' | localize }}
   </button>
-  <button (click)="onNextClick()" [disabled]="!references || !references.length ||  isTableLoading" type="submit"
-    class="btn btn-primary">
+  <button (click)="onNextClick()" [disabled]="isTableLoading" type="submit" class="btn btn-primary">
     {{ 'Next' | localize }}
   </button>
 </div>

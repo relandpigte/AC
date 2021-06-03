@@ -98,6 +98,10 @@
         public const string Pages_TutorWizard_DbsCheck_Create = "Pages.TutorWizard.DbsCheck.Create";
         public const string Pages_TutorWizard_DbsCheck_Update = "Pages.TutorWizard.DbsCheck.Update";
         public const string Pages_TutorWizard_DbsCheck_Delete = "Pages.TutorWizard.DbsCheck.Delete";
+        
+        public const string Pages_TutorWizard_TermsOfUse = "Pages.TutorWizard.TermsOfUse";
+        public const string Pages_TutorWizard_PrivacyPolicy = "Pages.TutorWizard.PrivacyPolicy";
+        public const string Pages_TutorWizard_Declaration = "Pages.TutorWizard.Declaration";
 
 
         public const string Pages_Widgets_Verifications = "Pages.Widgets.Verifications";

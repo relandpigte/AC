@@ -202,6 +202,9 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_TutorWizard_DbsCheck_Create,
                 PermissionNames.Pages_TutorWizard_DbsCheck_Update,
                 PermissionNames.Pages_TutorWizard_DbsCheck_Delete,
+                PermissionNames.Pages_TutorWizard_TermsOfUse,
+                PermissionNames.Pages_TutorWizard_PrivacyPolicy,
+                PermissionNames.Pages_TutorWizard_Declaration,
                 PermissionNames.Pages_Widgets_Verifications
             );
 

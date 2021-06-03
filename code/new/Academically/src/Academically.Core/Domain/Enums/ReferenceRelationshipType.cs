@@ -2,7 +2,7 @@
 {
     public enum ReferenceRelationshipType
     {
-        Acedemic = 1,
+        Academic = 1,
         Professional = 2,
     }
 }

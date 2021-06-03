@@ -1,0 +1,101 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="card-header-title">{{ 'TermsOfUse' | localize }}</h4>
+      </div>
+      <div class="col-auto">
+        <button (click)="onPrint()" type="button" class="btn btn-sm btn-primary">
+          {{ 'Print' | localize }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id='print-section' class="card-body" [loader]="isLoading">
+    <div class="row ">
+      <div class="col-md-12">
+        <p class="text-justify">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non feugiat justo. Pellentesque
+          efficitur
+          risus quis magna mattis, in lobortis sapien gravida. Praesent et maximus augue. Quisque condimentum
+          nisi
+          non
+          eros pellentesque ullamcorper. Donec pharetra lobortis quam vel pellentesque. Aenean scelerisque
+          purus
+          at
+          volutpat laoreet. Aenean dapibus erat velit, id egestas velit blandit a.
+
+          Lorem ipsum dolor sit amet. Morbi non feugiat justo. Pellentesque
+          efficitur
+          risus quis magna mattis, in lobortis sapien gravida. Praesent et maximus augue. Quisque condimentum
+          nisi
+          non
+          eros pellentesque ullamcorper. Donec pharetra lobortis quam vel pellentesque. Aenean scelerisque
+          purus
+          at
+          volutpat laoreet. Aenean dapibus erat velit, id egestas velit blandit a.
+        </p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-9">
+        <h4>Licensing Terms</h4>
+        <p class="text-justify">
+          Aliquam purus nibh, efficitur eu condimentum at, pulvinar id leo. Ut diam nibh, sodales eget finibus
+          ac,
+          placerat a turpis. Proin vitae eros ultricies, consectetur felis et, blandit odio. Vestibulum
+          hendrerit,
+          purus eu posuere pellentesque, urna nunc scelerisque risus, at semper lorem erat eu erat. Mauris a
+          elementum enim, eu auctor lorem. Suspendisse id convallis sapien, ac lacinia mi. Vivamus finibus
+          interdum odio fermentum dapibus. Donec eros nisi, porta et vehicula molestie, vestibulum vel justo.
+          Maecenas varius nibh ipsum, eu tincidunt mi hendrerit at. Nunc eu risus mollis, iaculis sapien
+          vitae,
+          finibus orci. Donec malesuada nisi libero, et ornare nunc vestibulum quis. Vivamus ante neque,
+          euismod
+          sit amet volutpat ut, maximus in velit. Sed nec tempus mauris. Integer maximus sed lacus euismod
+          ultricies. Fusce ac fringilla lacus, vel hendrerit nisl. Pellentesque semper consectetur augue
+          consequat
+          pretium.
+          Aliquam purus nibh, efficitur eu condimentum at, pulvinar id leo. Ut diam nibh, sodales eget finibus
+          ac,
+          placerat a turpis. Proin vitae eros ultricies, consectetur felis et, blandit odio. Vestibulum
+          hendrerit,
+          purus eu posuere pellentesque, urna nunc scelerisque risus, at semper lorem erat eu erat. Mauris a
+          elementum enim, eu auctor lorem. Suspendisse id convallis sapien, ac lacinia mi. Vivamus finibus
+          interdum odio fermentum dapibus. Donec eros nisi, porta et vehicula molestie, vestibulum vel justo.
+          Maecenas varius nibh ipsum, eu tincidunt mi hendrerit at. Nunc eu risus mollis, iaculis sapien
+          vitae,
+          finibus orci. Donec malesuada nisi libero, et ornare nunc vestibulum quis. Vivamus ante neque,
+          euismod
+          sit amet volutpat ut, maximus in velit. Sed nec tempus mauris. Integer maximus sed lacus euismod
+          ultricies. Fusce ac fringilla lacus, vel hendrerit nisl. Pellentesque semper consectetur augue
+          consequat
+          pretium.
+        </p>
+      </div>
+      <div class="col-md-3">
+        <div class="alert alert-info">
+          <h4>Have a Question?</h4>
+          <p>
+            <small>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non feugiat justo. Pellentesque
+            </small>
+          </p>
+          <p>
+            <small>Email us: <b>support@academically.com</b></small>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="d-flex justify-content-between">
+  <button [routerLink]="['/app/tutor-wizard/dbs-check']" type="button" class="btn btn-white">
+    {{ 'Back' | localize }}
+  </button>
+  <button (click)="onNextClick()" type="submit" class="btn btn-primary">
+    {{ 'Next' | localize }}
+  </button>
+</div>

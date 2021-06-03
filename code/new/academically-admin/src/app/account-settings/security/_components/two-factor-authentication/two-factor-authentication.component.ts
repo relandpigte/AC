@@ -45,6 +45,7 @@ export class TwoFactorAuthenticationComponent extends AppComponentBase implement
   }
 
   on2FaStatusChange(): void {
+    this.is2FaEnabled = !this.is2FaEnabled;
     if (!this.is2FaEnabled && this.model.isEnabled) {
       this.message.confirm(
         this.l('TwoFactorAuthenticationDisableConfirmationMessage'),
@@ -69,6 +70,10 @@ export class TwoFactorAuthenticationComponent extends AppComponentBase implement
         }
       );
     }
+  }
+
+  onCancelClick(): void {
+    this.is2FaEnabled = false;
   }
 
   private getAuthenticatorStatus(): void {

@@ -1,0 +1,64 @@
+/*** custom application of dark-mode for some components ***/
+
+.theme-dark {
+  bs-datepicker-container {
+    .bs-datepicker {
+      background: #12263f !important;
+
+      .bs-datepicker-body table td span.is-other-month,
+      .bs-datepicker-body table td.is-other-month span {
+        color: rgba(0, 255, 150, 0.25);
+      }
+    }
+  }
+
+  p-tree {
+    .p-tree {
+      background: transparent !important;
+
+      .p-inputtext {
+        background: transparent !important;
+      }
+
+      .p-tree-container .p-treenode .p-treenode-content {
+        color: #FFFFFF !important;
+
+        &:hover,
+        &.p-highlight {
+          background: #39afd1 !important;
+          color     : #FFFFFF !important;
+        }
+      }
+    }
+  }
+
+  quill-view-html .ql-editor {
+    background: transparent !important;
+  }
+
+  .document-uploader {
+    background-color: transparent !important;
+
+    &:hover {
+      border-color: #95aac9 !important;
+      color       : #FFFFFF !important;
+    }
+  }
+
+  .rating-experience {
+    .rating-experience-positive {
+      color           : #00d97e !important;
+      background-color: #0e4a4c !important;
+    }
+
+    .rating-experience-negative {
+      color           : #e63757 !important;
+      background-color: #3c2944 !important;
+    }
+
+    .rating-experience-neutral {
+      color           : #39afd1 !important;
+      background-color: #1a415c !important;
+    }
+  }
+}

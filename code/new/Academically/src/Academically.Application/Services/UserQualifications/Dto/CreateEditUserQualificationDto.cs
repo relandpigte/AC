@@ -11,7 +11,10 @@ namespace Academically.Services.UserQualifications.Dto
         public string ProfessionalCertificateOrAward { get; set; }
         public string ConferringOrganization { get; set; }
         public string Summary { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }
         public string StartYear { get; set; }
+        public string EndYear { get; set; }
         public string GradeAttained { get; set; }
 
         public List<IFormFile> DocumentsToUpload { get; set; }

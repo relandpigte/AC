@@ -1,0 +1,62 @@
+<div class="card">
+
+  <div class="card-header">
+    <h4 class="card-header-title">{{ 'Declaration' | localize}}</h4>
+  </div>
+
+  <div class="card-body" [loader]="isLoading">
+
+    <p class="text-body mb-4">
+      {{ 'DeclarationInstruction' | localize }}
+    </p>
+
+    <ng-container *ngTemplateOutlet="declarationTemplate; context: { id: 'declaration1' }">
+    </ng-container>
+
+    <ng-container *ngTemplateOutlet="declarationTemplate; context: { id: 'declaration2' }">
+    </ng-container>
+
+    <ng-container *ngTemplateOutlet="declarationTemplate; context: { id: 'declaration3' }">
+    </ng-container>
+
+    <ng-container *ngTemplateOutlet="declarationTemplate; context: { id: 'declaration4' }">
+    </ng-container>
+
+    <ng-container *ngTemplateOutlet="declarationTemplate; context: { id: 'declaration5' }">
+    </ng-container>
+
+    <ng-container *ngTemplateOutlet="declarationTemplate; context: { id: 'declaration6' }">
+    </ng-container>
+
+    <ng-container *ngTemplateOutlet="declarationTemplate; context: { id: 'declaration7' }">
+    </ng-container>
+
+    <ng-container *ngTemplateOutlet="declarationTemplate; context: { id: 'declaration8' }">
+    </ng-container>
+
+    <ng-container *ngTemplateOutlet="declarationTemplate; context: { id: 'declaration9' }">
+    </ng-container>
+
+    <ng-container *ngTemplateOutlet="declarationTemplate; context: { id: 'declaration10' }">
+    </ng-container>
+
+  </div>
+</div>
+<div class="d-flex justify-content-between">
+  <button [routerLink]="['/app/tutor-wizard/privacy-policy']" type="button" class="btn btn-white">
+    {{ 'Back' | localize }}
+  </button>
+  <button (click)="onNextClick()" [disabled]="isLoading || !allDeclarationsChecked()" type="submit"
+    class="btn btn-success">
+    {{ 'CompleteApplication' | localize }}
+  </button>
+</div>
+
+<ng-template #declarationTemplate let-id="id">
+  <div class="form-group">
+    <div class="custom-control custom-checkbox">
+      <input [(ngModel)]="model[id]" class="custom-control-input" [id]="id" [name]="id" type="checkbox" />
+      <label class="custom-control-label" [for]="id">{{ id | titlecase | localize }}</label>
+    </div>
+  </div>
+</ng-template>

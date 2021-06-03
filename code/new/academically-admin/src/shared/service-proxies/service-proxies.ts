@@ -17,6 +17,128 @@ import * as moment from 'moment';
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 @Injectable()
+export class AcceptanceLogsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    accept(body: AcceptanceType | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/AcceptanceLogs/Accept";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAccept(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAccept(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAccept(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param type (optional) 1 = TermsOfUse
+    
+    2 = PrivacyPolicy
+     * @return Success
+     */
+    getLatest(type: AcceptanceType | undefined): Observable<AcceptanceLogDto> {
+        let url_ = this.baseUrl + "/api/services/app/AcceptanceLogs/GetLatest?";
+        if (type === null)
+            throw new Error("The parameter 'type' cannot be null.");
+        else if (type !== undefined)
+            url_ += "type=" + encodeURIComponent("" + type) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetLatest(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetLatest(<any>response_);
+                } catch (e) {
+                    return <Observable<AcceptanceLogDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AcceptanceLogDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetLatest(response: HttpResponseBase): Observable<AcceptanceLogDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AcceptanceLogDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AcceptanceLogDto>(<any>null);
+    }
+}
+
+@Injectable()
 export class AccountServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -5660,7 +5782,7 @@ export class UserEducationsServiceProxy {
      * @param userId (optional) 
      * @return Success
      */
-    getAll(userId: number | undefined): Observable<UserEducationDto[]> {
+    getAll(userId: number | undefined): Observable<UniversityDto[]> {
         let url_ = this.baseUrl + "/api/services/app/UserEducations/GetAll?";
         if (userId === null)
             throw new Error("The parameter 'userId' cannot be null.");
@@ -5683,14 +5805,14 @@ export class UserEducationsServiceProxy {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<UserEducationDto[]>><any>_observableThrow(e);
+                    return <Observable<UniversityDto[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<UserEducationDto[]>><any>_observableThrow(response_);
+                return <Observable<UniversityDto[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<UserEducationDto[]> {
+    protected processGetAll(response: HttpResponseBase): Observable<UniversityDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -5704,7 +5826,7 @@ export class UserEducationsServiceProxy {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(UserEducationDto.fromJS(item));
+                    result200.push(UniversityDto.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -5716,7 +5838,7 @@ export class UserEducationsServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<UserEducationDto[]>(<any>null);
+        return _observableOf<UniversityDto[]>(<any>null);
     }
 
     /**
@@ -6376,12 +6498,15 @@ export class UserQualificationsServiceProxy {
      * @param professionalCertificateOrAward (optional) 
      * @param conferringOrganization (optional) 
      * @param summary (optional) 
+     * @param city (optional) 
+     * @param country (optional) 
      * @param startYear (optional) 
+     * @param endYear (optional) 
      * @param gradeAttained (optional) 
      * @param documentsToUpload (optional) 
      * @return Success
      */
-    create(professionalCertificateOrAward: string | undefined, conferringOrganization: string | undefined, summary: string | undefined, startYear: string | undefined, gradeAttained: string | undefined, documentsToUpload: FileParameter[] | undefined): Observable<void> {
+    create(professionalCertificateOrAward: string | undefined, conferringOrganization: string | undefined, summary: string | undefined, city: string | undefined, country: string | undefined, startYear: string | undefined, endYear: string | undefined, gradeAttained: string | undefined, documentsToUpload: FileParameter[] | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/UserQualifications/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -6398,10 +6523,22 @@ export class UserQualificationsServiceProxy {
             // do nothing
         } else
             content_.append("Summary", summary.toString());
+        if (city === null || city === undefined) {
+            // do nothing
+        } else
+            content_.append("City", city.toString());
+        if (country === null || country === undefined) {
+            // do nothing
+        } else
+            content_.append("Country", country.toString());
         if (startYear === null || startYear === undefined) {
             // do nothing
         } else
             content_.append("StartYear", startYear.toString());
+        if (endYear === null || endYear === undefined) {
+            // do nothing
+        } else
+            content_.append("EndYear", endYear.toString());
         if (gradeAttained === null || gradeAttained === undefined) {
             // do nothing
         } else
@@ -6457,12 +6594,15 @@ export class UserQualificationsServiceProxy {
      * @param professionalCertificateOrAward (optional) 
      * @param conferringOrganization (optional) 
      * @param summary (optional) 
+     * @param city (optional) 
+     * @param country (optional) 
      * @param startYear (optional) 
+     * @param endYear (optional) 
      * @param gradeAttained (optional) 
      * @param documentsToUpload (optional) 
      * @return Success
      */
-    update(id: string | undefined, professionalCertificateOrAward: string | undefined, conferringOrganization: string | undefined, summary: string | undefined, startYear: string | undefined, gradeAttained: string | undefined, documentsToUpload: FileParameter[] | undefined): Observable<void> {
+    update(id: string | undefined, professionalCertificateOrAward: string | undefined, conferringOrganization: string | undefined, summary: string | undefined, city: string | undefined, country: string | undefined, startYear: string | undefined, endYear: string | undefined, gradeAttained: string | undefined, documentsToUpload: FileParameter[] | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/UserQualifications/Update?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -6483,10 +6623,22 @@ export class UserQualificationsServiceProxy {
             // do nothing
         } else
             content_.append("Summary", summary.toString());
+        if (city === null || city === undefined) {
+            // do nothing
+        } else
+            content_.append("City", city.toString());
+        if (country === null || country === undefined) {
+            // do nothing
+        } else
+            content_.append("Country", country.toString());
         if (startYear === null || startYear === undefined) {
             // do nothing
         } else
             content_.append("StartYear", startYear.toString());
+        if (endYear === null || endYear === undefined) {
+            // do nothing
+        } else
+            content_.append("EndYear", endYear.toString());
         if (gradeAttained === null || gradeAttained === undefined) {
             // do nothing
         } else
@@ -7483,6 +7635,59 @@ export interface IAboutYouDto {
     about: string | undefined;
 }
 
+export class AcceptanceLogDto implements IAcceptanceLogDto {
+    id: string;
+    type: AcceptanceType;
+
+    constructor(data?: IAcceptanceLogDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.type = _data["type"];
+        }
+    }
+
+    static fromJS(data: any): AcceptanceLogDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AcceptanceLogDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["type"] = this.type;
+        return data; 
+    }
+
+    clone(): AcceptanceLogDto {
+        const json = this.toJSON();
+        let result = new AcceptanceLogDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAcceptanceLogDto {
+    id: string;
+    type: AcceptanceType;
+}
+
+/** 1 = TermsOfUse 2 = PrivacyPolicy */
+export enum AcceptanceType {
+    TermsOfUse = 1,
+    PrivacyPolicy = 2,
+}
+
 export class ApplicationInfoDto implements IApplicationInfoDto {
     version: string | undefined;
     releaseDate: moment.Moment;
@@ -7715,7 +7920,7 @@ export interface IAuthenticatorDto {
     qrCodeUrl: string | undefined;
 }
 
-/** 0 = AboutYou 1 = Education 2 = Research 3 = Languages 4 = ServicesOffered 5 = ProfilePicture 6 = PhotoId 7 = Address 8 = ContactNumber 9 = References 10 = DbsCheck 11 = TermsOfUse 12 = PrivacyPolicy 13 = Declaration */
+/** 0 = AboutYou 1 = Education 2 = Research 3 = Languages 4 = ServicesOffered 5 = ProfilePicture 6 = PhotoId 7 = Address 8 = ContactNumber 9 = References 10 = DbsCheck 11 = TermsOfUse 12 = PrivacyPolicy 13 = Declaration 14 = CompleteApplication */
 export enum BecomeATutorStep {
     AboutYou = 0,
     Education = 1,
@@ -7731,6 +7936,7 @@ export enum BecomeATutorStep {
     TermsOfUse = 11,
     PrivacyPolicy = 12,
     Declaration = 13,
+    CompleteApplication = 14,
 }
 
 export class ChangePasswordDto implements IChangePasswordDto {
@@ -9464,9 +9670,9 @@ export interface IReferenceDtoPagedResultDto {
     totalCount: number;
 }
 
-/** 1 = Acedemic 2 = Professional */
+/** 1 = Academic 2 = Professional */
 export enum ReferenceRelationshipType {
-    Acedemic = 1,
+    Academic = 1,
     Professional = 2,
 }
 
@@ -11087,6 +11293,8 @@ export interface ITutorRatingSummaryDto {
 export class UniversityDto implements IUniversityDto {
     id: string;
     heProvider: string | undefined;
+    countryCode: string | undefined;
+    userEducations: UserEducationDto[] | undefined;
 
     constructor(data?: IUniversityDto) {
         if (data) {
@@ -11101,6 +11309,12 @@ export class UniversityDto implements IUniversityDto {
         if (_data) {
             this.id = _data["id"];
             this.heProvider = _data["heProvider"];
+            this.countryCode = _data["countryCode"];
+            if (Array.isArray(_data["userEducations"])) {
+                this.userEducations = [] as any;
+                for (let item of _data["userEducations"])
+                    this.userEducations.push(UserEducationDto.fromJS(item));
+            }
         }
     }
 
@@ -11115,6 +11329,12 @@ export class UniversityDto implements IUniversityDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["heProvider"] = this.heProvider;
+        data["countryCode"] = this.countryCode;
+        if (Array.isArray(this.userEducations)) {
+            data["userEducations"] = [];
+            for (let item of this.userEducations)
+                data["userEducations"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -11129,6 +11349,8 @@ export class UniversityDto implements IUniversityDto {
 export interface IUniversityDto {
     id: string;
     heProvider: string | undefined;
+    countryCode: string | undefined;
+    userEducations: UserEducationDto[] | undefined;
 }
 
 export class UpdateAddressDto implements IUpdateAddressDto {
@@ -11989,7 +12211,10 @@ export class UserQualificationDto implements IUserQualificationDto {
     professionalCertificateOrAward: string | undefined;
     conferringOrganization: string | undefined;
     summary: string | undefined;
+    city: string | undefined;
+    country: string | undefined;
     startYear: string | undefined;
+    endYear: string | undefined;
     gradeAttained: string | undefined;
     userQualificationDocuments: UserQualificationDocumentDto[] | undefined;
 
@@ -12008,7 +12233,10 @@ export class UserQualificationDto implements IUserQualificationDto {
             this.professionalCertificateOrAward = _data["professionalCertificateOrAward"];
             this.conferringOrganization = _data["conferringOrganization"];
             this.summary = _data["summary"];
+            this.city = _data["city"];
+            this.country = _data["country"];
             this.startYear = _data["startYear"];
+            this.endYear = _data["endYear"];
             this.gradeAttained = _data["gradeAttained"];
             if (Array.isArray(_data["userQualificationDocuments"])) {
                 this.userQualificationDocuments = [] as any;
@@ -12031,7 +12259,10 @@ export class UserQualificationDto implements IUserQualificationDto {
         data["professionalCertificateOrAward"] = this.professionalCertificateOrAward;
         data["conferringOrganization"] = this.conferringOrganization;
         data["summary"] = this.summary;
+        data["city"] = this.city;
+        data["country"] = this.country;
         data["startYear"] = this.startYear;
+        data["endYear"] = this.endYear;
         data["gradeAttained"] = this.gradeAttained;
         if (Array.isArray(this.userQualificationDocuments)) {
             data["userQualificationDocuments"] = [];
@@ -12054,7 +12285,10 @@ export interface IUserQualificationDto {
     professionalCertificateOrAward: string | undefined;
     conferringOrganization: string | undefined;
     summary: string | undefined;
+    city: string | undefined;
+    country: string | undefined;
     startYear: string | undefined;
+    endYear: string | undefined;
     gradeAttained: string | undefined;
     userQualificationDocuments: UserQualificationDocumentDto[] | undefined;
 }
