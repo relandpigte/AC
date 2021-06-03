@@ -1,7 +1,7 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { ProfileService } from '@app/profile/_services/profile.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ProfilesServiceProxy, UserEducationDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ProfilesServiceProxy, UniversityDto, UserEducationDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash-es';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -15,7 +15,7 @@ import { ViewEducationDocumentsComponent } from './view-education-documents/view
 })
 export class EducationsComponent extends AppComponentBase implements OnInit {
   @Input() userId: number;
-  public userEducations: UserEducationDto[] = [];
+  public universities: UniversityDto[] = [];
   isLoading = false;
 
   constructor(
@@ -79,8 +79,8 @@ export class EducationsComponent extends AppComponentBase implements OnInit {
           this.isLoading = false;
         }),
       )
-      .subscribe(userEducations => {
-        this.userEducations = userEducations;
+      .subscribe(universities => {
+        this.universities = universities;
       });
   }
 

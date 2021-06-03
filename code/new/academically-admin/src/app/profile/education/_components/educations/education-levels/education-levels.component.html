@@ -2,12 +2,13 @@
   <div class="card-header">
     <div class="row align-items-center">
       <div class="col">
-        <h4 class="card-header-title">Levels</h4>
+        <h4 class="card-header-title">{{ 'Courses' | localize }}</h4>
       </div>
       <div class="col-auto">
         <a *ngIf="permission.isGranted('Pages.Profile.Education.Create')"
-          (click)="$event.preventDefault(); onAddLevelClick()" href="#" class="btn btn-sm btn-primary">
-          {{ 'AddLevel' | localize }}
+          (click)="$event.preventDefault(); onAddLevelClick()" href="#" class="btn btn-sm btn-light">
+          <i class="fe fe-plus"></i>
+          {{ 'Add' | localize }}
         </a>
       </div>
     </div>
@@ -16,8 +17,8 @@
     <table class="table table-sm table-nowrap card-table mb-0">
       <thead>
         <tr>
-          <th>{{ 'EducationLevel' | localize }}</th>
-          <th>{{ 'Degree' | localize }}</th>
+          <th>{{ 'CourseTitle' | localize }}</th>
+          <th>{{ 'AcademicLevel' | localize }}</th>
           <th>{{ 'Grade' | localize }}</th>
           <th width="1%"></th>
         </tr>

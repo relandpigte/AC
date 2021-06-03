@@ -8,6 +8,7 @@ using Academically.Authorization;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
+using Academically.Services.Universities.Dto;
 using Academically.Services.UserEducations.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -39,7 +40,7 @@ namespace Academically.Services.UserEducations
             _documentsDomainService = documentsDomainService;
         }
 
-        public async Task<IEnumerable<UserEducationDto>> GetAll(long userId)
+        public async Task<IEnumerable<UniversityDto>> GetAll(long userId)
         {
             var userEducations = await _userEducationsRepository.GetAll()
                 .Include(e => e.University)
@@ -48,9 +49,22 @@ namespace Academically.Services.UserEducations
                 .Include(e => e.UserEducationDocuments)
                     .ThenInclude(e => e.Document)
                 .Where(e => e.UserId == userId)
-                .Select(e => ObjectMapper.Map<UserEducationDto>(e))
+                .OrderByDescending(e => e.EndYear)
+                    .ThenByDescending(e => e.StartYear)
                 .ToListAsync();
-            return userEducations;
+
+            var userUniversities = userEducations.Select(e => ObjectMapper.Map<UniversityDto>(e.University))
+                .GroupBy(e => e.Id)
+                .Select(e => e.First())
+                .ToList();
+
+            foreach (var university in userUniversities)
+            {
+                university.UserEducations = userEducations.Where(e => e.UniversityId == university.Id)
+                    .Select(e => ObjectMapper.Map<UserEducationDto>(e));
+            }
+
+            return userUniversities;
         }
 
         [AbpAuthorize(PermissionNames.Pages_Profile_Education_Create)]

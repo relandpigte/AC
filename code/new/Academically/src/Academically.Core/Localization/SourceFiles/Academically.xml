@@ -1,6 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts> 
+    <text name="Institution">Institution</text>
+    <text name="Evidence">Evidence</text>
+    <text name="EditCourse">Edit course</text>
+    <text name="Courses">Courses</text>
+    <text name="CourseTitle">Course title</text>
+    <text name="Course">Course</text>
     <text name="TutorApplicationCompletedAdminEmailMessage">
         <![CDATA[
         <p>A student named {0} has completed his application to become a tutor.</p>
@@ -244,12 +250,12 @@
     <text name="GradeAttained">Grade Attained</text>
     <text name="ConferringOrganization">Conferring Organization</text>
     <text name="ProfessionalCertificateOrAward">Professional Certificate Or Award</text>
-    <text name="AddCourse">Add Course</text>
+    <text name="AddCourse">Add course</text>
     <text name="OtherCourses">Other Courses</text>
     <text name="DropFileOrClickHereToUpload">Drop file or click here to upload</text>
     <text name="Metrics">Metrics</text>
     <text name="UserType">User Type</text>
-    <text name="AcademicLevel">Academic Level</text>
+    <text name="AcademicLevel">Academic level</text>
     <text name="PercentageOfPositiveReviewsFormulaDescription">
       <![CDATA[
         <i>
@@ -715,8 +721,8 @@
     <text name="CreatePublication">Create Publication</text>
     <text name="Country">Country</text>
     <text name="Degree">Degree</text>
-    <text name="StartYear">Start Year</text>
-    <text name="EndYear">End Year</text>
+    <text name="StartYear">Start year</text>
+    <text name="EndYear">End year</text>
     <text name="Level">Level</text>
     <text name="Publication">Publication</text>
     <text name="Publications">Publications</text>

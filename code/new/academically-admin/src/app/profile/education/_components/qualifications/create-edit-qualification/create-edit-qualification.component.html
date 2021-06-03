@@ -4,41 +4,21 @@
       (onCloseClick)="onCloseClick()"></abp-modal-header>
     <div class="card-body">
 
+      <div class="form-group required">
+        <label class="col-form-label" for="Certificate">{{ 'ProfessionalCertificateOrAward' | localize}}</label>
+        <input [(ngModel)]="userQualification.professionalCertificateOrAward" #cerificateModel="ngModel" #certificateEl
+          class="form-control" type="text" id="Certificate" name="Certificate" required />
+        <abp-validation-summary [control]="cerificateModel" [controlEl]="certificateEl">
+        </abp-validation-summary>
+      </div>
+
       <div class="form-row">
-        <div class="form-group col-md-6 required">
-          <label class="col-form-label" for="Certificate">{{ 'ProfessionalCertificateOrAward' | localize}}</label>
-          <input [(ngModel)]="userQualification.professionalCertificateOrAward" #cerificateModel="ngModel"
-            #certificateEl class="form-control" type="text" id="Certificate" name="Certificate" required />
-          <abp-validation-summary [control]="cerificateModel" [controlEl]="certificateEl">
-          </abp-validation-summary>
-        </div>
 
         <div class="form-group col-md-6 required">
           <label class="col-form-label" for="Organization">{{ 'ConferringOrganization' | localize}}</label>
           <input [(ngModel)]="userQualification.conferringOrganization" #organizationModel="ngModel" #organizationEl
             class="form-control" type="text" id="Organization" name="Organization" required />
           <abp-validation-summary [control]="organizationModel" [controlEl]="organizationEl">
-          </abp-validation-summary>
-        </div>
-      </div>
-
-      <div class="form-group required">
-        <label class="col-form-label" for="Summary">{{ 'Summary' | localize}}</label>
-        <quill-editor [(ngModel)]="userQualification.summary" #summaryModel="ngModel" #summaryEl id="Summary"
-          name="Summary" required></quill-editor>
-        <abp-validation-summary [control]="summaryModel" [controlEl]="summaryEl.elementRef.nativeElement">
-        </abp-validation-summary>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group col-md-6 required">
-          <label class="col-form-label" for="StartYear">{{ 'StartYear' | localize}}</label>
-          <select [(ngModel)]="userQualification.startYear" #startYearModel="ngModel" #startYearEl class="form-control"
-            id="StartYear" name="StartYear" required>
-            <option [ngValue]="undefined">Select Year</option>
-            <option *ngFor="let year of yearSelections" [value]="year">{{ year }}</option>
-          </select>
-          <abp-validation-summary [control]="startYearModel" [controlEl]="startYearEl">
           </abp-validation-summary>
         </div>
 
@@ -49,6 +29,62 @@
           <abp-validation-summary [control]="gradeAttainedModel" [controlEl]="gradeAttainedEl">
           </abp-validation-summary>
         </div>
+
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="StartYear">{{ 'StartYear' | localize }}</label>
+          <select select2 [defaultValue]="userQualification.startYear" [placeholder]="'SelectYear' | localize"
+            (select2ValueChange)="userQualification.startYear = $event" [(ngModel)]="userQualification.startYear"
+            id="StartYear" name="StartYear" type="number" class="custom-select" #startYearModel="ngModel" #startYearEl
+            (change)="onStartYearChange()" required>
+            <option *ngFor="let year of yearSelections" [value]="year">{{ year }}</option>
+          </select>
+          <abp-validation-summary [control]="startYearModel" [controlEl]="startYearEl"></abp-validation-summary>
+        </div>
+
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="EndYear">{{ 'EndYear' | localize }}</label>
+          <select select2 [defaultValue]="userQualification.endYear" [placeholder]="'SelectYear' | localize"
+            (select2ValueChange)="userQualification.endYear = $event" [(ngModel)]="userQualification.endYear"
+            id="EndYear" name="EndYear" type="number" class="custom-select" #endYearModel="ngModel" #endYearEl
+            (change)="onEndYearChange()" required>
+            <option *ngFor="let year of yearSelections" [value]="year">{{ year }}</option>
+          </select>
+          <abp-validation-summary [control]="endYearModel" [controlEl]="endYearEl"></abp-validation-summary>
+        </div>
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="country">{{ 'Country' | localize }}</label>
+          <select [(ngModel)]="userQualification.country" id="country" name="country" type="text" class="form-control"
+            #countryModel="ngModel" #countryEl required>
+            <option [ngValue]="undefined">{{ 'SelectCountry' | localize }}</option>
+            <option *ngFor="let country of countries" [value]="country.code">{{ country.name }}</option>
+          </select>
+          <abp-validation-summary [control]="countryModel" [controlEl]="countryEl">
+          </abp-validation-summary>
+        </div>
+
+        <div class="form-group col-md-6 required">
+          <label class="col-form-label" for="City">{{ 'City' | localize }}</label>
+          <input class="form-control" type="text" [(ngModel)]="userQualification.city" id="City" name="City"
+            #cityModel="ngModel" #cityEl required />
+          <abp-validation-summary [control]="cityModel" [controlEl]="cityEl">
+          </abp-validation-summary>
+        </div>
+
+      </div>
+
+      <div class="form-group required">
+        <label class="col-form-label" for="Summary">{{ 'Summary' | localize}}</label>
+        <quill-editor [(ngModel)]="userQualification.summary" #summaryModel="ngModel" #summaryEl id="Summary"
+          name="Summary" required></quill-editor>
+        <abp-validation-summary [control]="summaryModel" [controlEl]="summaryEl.elementRef.nativeElement">
+        </abp-validation-summary>
       </div>
 
       <div class="card">
