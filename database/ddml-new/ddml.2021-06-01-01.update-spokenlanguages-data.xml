@@ -2,11 +2,11 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
     <changeSet author="mlabio" id="c9f62514-c2b1-11eb-bf09-1831bf981123">
         <update tableName="academicallyspokenlanguages">
-            <column name="Name" value="Ta`izzi-Adeni Arabic"/>
+            <column name="Name" value="Ta'izzi-Adeni Arabic"/>
             <where>Id = '15ce4dfc-8b9d-460e-9a24-1c81e0fe4c2f'</where>
         </update>
         <update tableName="academicallyspokenlanguages">
-            <column name="Name" value="Sa`idi Arabic"/>
+            <column name="Name" value="Sa'idi Arabic"/>
             <where>Id = '52e9a6a8-8d69-48cf-98a4-35e6d52cc3cc'</where>
         </update>
     </changeSet>
