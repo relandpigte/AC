@@ -1,0 +1,76 @@
+<form class="form-horizontal" autocomplete="off" #createEditForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="card">
+    <div class="card-header">
+      <div class="row align-items-center">
+        <div class="col">
+          <h4 class="card-header-title">{{ 'DbsCheck' | localize}}</h4>
+        </div>
+      </div>
+    </div>
+    <div class="card-body" [loader]="isLoading">
+
+      <div class="form-group">
+        <div class="custom-control custom-checkbox">
+          <input [(ngModel)]="isDbsRequired" class="custom-control-input" id="isDbsRequired" name="isDbsRequired"
+            type="checkbox" (change)="onDbsRequiredChange()" />
+          <label class="custom-control-label" for="isDbsRequired">{{ 'DbsCheckMessage' | localize }}</label>
+        </div>
+      </div>
+
+      <ng-container *ngIf="isDbsRequired">
+
+        <div class="form-row">
+
+          <div class="form-group col-md-6 required">
+            <label class="col-form-label" for="dbsNumber">{{ 'DbsNumber' | localize}}</label>
+            <input [(ngModel)]="model.dbsNumber" #dbsNumberModel="ngModel" #dbsNumberEl class="form-control" type="text"
+              id="dbsNumber" name="dbsNumber" required />
+            <abp-validation-summary [control]="dbsNumberModel" [controlEl]="dbsNumberEl">
+            </abp-validation-summary>
+          </div>
+
+          <div class="form-group col-md-6 required">
+            <label class="col-form-label" for="dateOfIssue">{{ 'DateOfIssue' | localize}}</label>
+            <div class="input-group input-group-merge" (click)="dp.show()">
+              <input [(ngModel)]="dateOfIssue" #dateOfIssueModel="ngModel" #dateOfIssueEl
+                class="form-control form-control-appended" type="text" id="dateOfIssue" name="dateOfIssue" required
+                #dp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" />
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-calendar"></span>
+                </div>
+              </div>
+            </div>
+            <abp-validation-summary [control]="dateOfIssueModel" [controlEl]="dateOfIssueEl">
+            </abp-validation-summary>
+          </div>
+
+        </div>
+
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input [(ngModel)]="isDbsCheckAgreed" class="custom-control-input" id="isDbsCheckAgreed"
+              name="isDbsCheckAgreed" type="checkbox" required />
+            <label class="custom-control-label" for="isDbsCheckAgreed">{{ 'DbsCheckAgreementMessage' | localize
+              }}</label>
+          </div>
+        </div>
+
+
+        <app-document-uploader [maxFiles]="1" [cropImages]="true" [allowedExtensions]="dbsCertificatesFileExtensions">
+        </app-document-uploader>
+
+      </ng-container>
+
+    </div>
+  </div>
+  <div class="d-flex justify-content-between">
+    <button [routerLink]="['/app/tutor-wizard/references']" type="button" class="btn btn-white">
+      {{ 'Back' | localize }}
+    </button>
+    <button type="submit" [disabled]="!createEditForm.form.valid || (isDbsRequired && !dbsCertificateFile && !defaultFile) || isLoading"
+      type="submit" class="btn btn-primary">
+      {{ 'Next' | localize }}
+    </button>
+  </div>
+</form>

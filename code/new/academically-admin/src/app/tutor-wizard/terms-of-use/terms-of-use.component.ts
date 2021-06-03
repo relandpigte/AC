@@ -1,0 +1,71 @@
+import { Component, Injector, OnInit } from '@angular/core';
+import { AppComponentBase } from '@shared/app-component-base';
+import { AcceptanceLogsServiceProxy, AcceptanceType, BecomeATutorStep, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { finalize, takeUntil } from 'rxjs/operators';
+import { BecomeATutorService } from '../_services/become-a-tutor.service';
+
+@Component({
+  selector: 'app-terms-of-use',
+  templateUrl: './terms-of-use.component.html',
+  styleUrls: ['./terms-of-use.component.less']
+})
+export class TermsOfUseComponent extends AppComponentBase implements OnInit {
+  isLoading = false;
+
+  constructor(
+    injector: Injector,
+    private _becomeATutorService: BecomeATutorService,
+    private _tutorWizardService: TutorWizardServiceProxy,
+    private _acceptanceLogsService: AcceptanceLogsServiceProxy,
+  ) {
+    super(injector);
+  }
+
+  ngOnInit(): void {
+  }
+
+  onPrint(): void {
+    var printWindow = window.open('', 'PRINT', 'height=1000,width=1300');
+
+    printWindow.document.write('<html><head><title>' + document.title + '</title>');
+    printWindow.document.write('</head><body >');
+    printWindow.document.write('<h1>' + document.title + '</h1>');
+    printWindow.document.write(document.getElementById("print-section").innerHTML);
+    printWindow.document.write('</body></html>');
+
+    printWindow.document.close(); // necessary for IE >= 10
+    printWindow.focus(); // necessary for IE >= 10*/
+
+    printWindow.print();
+  }
+
+  onNextClick(): void {
+    this.isLoading = true;
+    this._acceptanceLogsService.accept(AcceptanceType.TermsOfUse)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+      )
+      .subscribe(() => {
+        this.nextStep()
+      });
+  }
+
+  private nextStep(): void {
+    this.isLoading = true;
+    const nextStep = BecomeATutorStep.PrivacyPolicy;
+    this._tutorWizardService.updateStep(nextStep)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+      )
+      .subscribe(() => {
+        this.notify.success(this.l('SavedSuccessfully'));
+        this._becomeATutorService.currentStep = nextStep;
+      });
+  }
+}

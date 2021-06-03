@@ -1,6 +1,52 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts> 
+    <text name="Disable">Disable</text>
+    <text name="Enable">Enable</text>
+    <text name="Institution">Institution</text>
+    <text name="Evidence">Evidence</text>
+    <text name="EditCourse">Edit course</text>
+    <text name="Courses">Courses</text>
+    <text name="CourseTitle">Course title</text>
+    <text name="Course">Course</text>
+    <text name="TutorApplicationCompletedAdminEmailMessage">
+        <![CDATA[
+        <p>A student named {0} has completed his application to become a tutor.</p>
+      ]]>
+    </text>
+    <text name="TutorApplicationCompletedAdminEmailSubject">Academically - Tutor Application by {0}</text>
+    <text name="TutorApplicationCompletedEmailMessage">
+        <![CDATA[
+        <p>You have completed your tutor application process.</p>
+        <p>Your application will now undergo our verification process.</p>
+        <p>We will send you an email once your application has been approved, rejected or if we have follow up questions regarding some of the information you provided.</p>
+        <p>Thank you for choosing our platform.</p>
+      ]]>
+    </text>
+    <text name="TutorApplicationCompletedEmailSubject">Academically - Tutor Application Completed</text>
+    <text name="Declaration10">I understand that payment is made to me [X] days after a session has ended and that payment may be withheld should a student raise a complaint against me.</text>
+    <text name="Declaration9">I understand that ScholarPro is not responsible for any claims brought against me by another party as a result of misconduct.</text>
+    <text name="Declaration8">I agree to allow ScholarPro to randomly audit sessions and messages to ensure compliance with their acceptable use policy.</text>
+    <text name="Declaration7">I understand that my ratings effect my ranking in the ScholarPro search results.</text>
+    <text name="Declaration6">I understand that a session must be confirmed by both parties before it can go ahead.</text>
+    <text name="Declaration5">I agree not to include any personal contact information, hyperlinks or branding on my profile as to direct students away from the ScholarPro platform.</text>
+    <text name="Declaration4">I understand that I am solely responsible for paying tax owed on money I earned through the ScholarPro platform.</text>
+    <text name="Declaration3">I agree never to take payment directly from a student and understand that all payments must go through ScholarPro payment gateway.</text>
+    <text name="Declaration2">I agree that if I need to cancel or rearrange a session, I must do so via the ScholarPro booking system.</text>
+    <text name="Declaration1">I agree that all sessions must be booked and delivered via the ScholarPro platform.</text>
+    <text name="DeclarationInstruction">Please click all of the checkboxes below to confirm that you agree to all of the declarations.</text>
+    <text name="CompleteApplication">Complete Application</text>
+    <text name="DbsCheckAgreementMessage">I have agreed to the DBS update service and I give Academically consent to perform a status check.</text>
+    <text name="DbsCheckMessage">In order to be able to serve under 18’s then you must provide a valid DBS or equivalent certificate.</text>
+    <text name="DateOfIssue">Date of Issue</text>
+    <text name="DbsNumber">DBS Number</text>
+    <text name="SelectRelationship">Select Relationship</text>
+    <text name="Professional">Professional</text>
+    <text name="Academic">Academic</text>
+    <text name="EditReference">Edit Reference</text>
+    <text name="AddReference">Add Reference</text>
+    <text name="Relationship">Relationship</text>
+    <text name="Forename">Forename</text>
     <text name="GoodEvening">Good Evening</text>
     <text name="GoodAfternoon">Good Afternoon</text>
     <text name="GoodMorning">Good Morning</text>
@@ -208,7 +254,7 @@
     <text name="GradeAttained">Grade Attained</text>
     <text name="ConferringOrganization">Conferring Organization</text>
     <text name="ProfessionalCertificateOrAward">Professional Certificate Or Award</text>
-    <text name="AddCourse">Add Course</text>
+    <text name="AddCourse">Add course</text>
     <text name="OtherCourses">Other Courses</text>
     <text name="DropFileOrClickHereToUpload">Drop file or click here to upload</text>
     <text name="Metrics">Metrics</text>
@@ -683,8 +729,8 @@
     <text name="CreatePublication">Create Publication</text>
     <text name="Country">Country</text>
     <text name="Degree">Degree</text>
-    <text name="StartYear">Start Year</text>
-    <text name="EndYear">End Year</text>
+    <text name="StartYear">Start year</text>
+    <text name="EndYear">End year</text>
     <text name="Level">Level</text>
     <text name="Publication">Publication</text>
     <text name="Keywords">Keywords</text>
@@ -902,6 +948,7 @@
     <text name="LinkCopiedToClipboard">Link copied to clipboard</text>
     <text name="DeleteYourAccount">Delete your account</text>
     <text name="DeleteYourAccountMessage">Don't need ScholarPro anymore?</text>
+    <text name="Print">Print</text>
     <text name="StudyArea">Study area</text>
     <text name="StudyFields">Study fields</text>
     <text name="MyServices">My Services</text>

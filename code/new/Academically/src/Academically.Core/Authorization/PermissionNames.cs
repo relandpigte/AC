@@ -88,7 +88,20 @@
         public const string Pages_TutorWizard_PhotoId = "Pages.TutorWizard.PhotoId";
         public const string Pages_TutorWizard_Address = "Pages.TutorWizard.Address";
         public const string Pages_TutorWizard_ContactNumber = "Pages.TutorWizard.ContactNumber";
+
         public const string Pages_TutorWizard_References = "Pages.TutorWizard.References";
+        public const string Pages_TutorWizard_References_Create = "Pages.TutorWizard.References.Create";
+        public const string Pages_TutorWizard_References_Update = "Pages.TutorWizard.References.Update";
+        public const string Pages_TutorWizard_References_Delete = "Pages.TutorWizard.References.Delete";
+
+        public const string Pages_TutorWizard_DbsCheck = "Pages.TutorWizard.DbsCheck";
+        public const string Pages_TutorWizard_DbsCheck_Create = "Pages.TutorWizard.DbsCheck.Create";
+        public const string Pages_TutorWizard_DbsCheck_Update = "Pages.TutorWizard.DbsCheck.Update";
+        public const string Pages_TutorWizard_DbsCheck_Delete = "Pages.TutorWizard.DbsCheck.Delete";
+        
+        public const string Pages_TutorWizard_TermsOfUse = "Pages.TutorWizard.TermsOfUse";
+        public const string Pages_TutorWizard_PrivacyPolicy = "Pages.TutorWizard.PrivacyPolicy";
+        public const string Pages_TutorWizard_Declaration = "Pages.TutorWizard.Declaration";
 
 
         public const string Pages_Widgets_Verifications = "Pages.Widgets.Verifications";

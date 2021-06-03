@@ -1,6 +1,55 @@
-<h1>Coming Soon!</h1>
+<div class="card">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="card-header-title">{{ 'References' | localize}}</h4>
+      </div>
+      <div *ngIf="permission.isGranted('Pages.TutorWizard.References.Create')" class="col-auto">
+        <button (click)="onAddClick()" type="button" class="btn btn-sm btn-primary">
+          {{ 'AddReference' | localize }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive" [loader]="isTableLoading">
+    <table class="table table-sm table-hover table-nowrap card-table">
+      <thead table-header-sort [headers]="headers" (sortChange)="sortChange($event)"></thead>
+      <tbody>
+        <tr *ngFor="
+            let reference of (references | paginate: { id: 'references', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
+          ">
+          <td>{{ reference.forename }}</td>
+          <td>{{ reference.surname }}</td>
+          <td>{{ reference.email }}</td>
+          <td>{{ reference.phone }}</td>
+          <td>{{ ReferenceRelationshipType[reference.relationship] | localize }}</td>
+          <td width="1%">
+            <button *ngIf="permission.isGranted('Pages.TutorWizard.References.Update')" (click)="onEditClick(reference)"
+              type="button" class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+              <span class="fe fe-edit-2"></span>
+            </button>
+            <button *ngIf="permission.isGranted('Pages.TutorWizard.References.Delete')"
+              (click)="onDeleteClick(reference.id)" type="button"
+              class="btn btn-outline-danger btn-sm btn-rounded-circle">
+              <span class="fe fe-trash-2"></span>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="references.length === 0">
+          <td colspan="10">
+            <p class="text-center m-0 p-0">{{ 'NoRecordsFound' | localize }}</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <div class="d-flex justify-content-between">
   <button [routerLink]="['/app/tutor-wizard/contact-number']" type="button" class="btn btn-white">
     {{ 'Back' | localize }}
+  </button>
+  <button (click)="onNextClick()" [disabled]="isTableLoading" type="submit" class="btn btn-primary">
+    {{ 'Next' | localize }}
   </button>
 </div>

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } f
 import { DocumentUploaderComponent } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { countries } from '@shared/constants/countries';
 import { FileParameter, UserQualificationDto, UserQualificationsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
@@ -17,7 +18,9 @@ export class CreateEditQualificationComponent extends AppComponentBase implement
   @ViewChild('documentUploader') documentUploaderComponent: DocumentUploaderComponent;
   qualificationExtensions = fileUploadConfiguration.allowedQualificationExtensions;
   yearSelections: string[] = [];
+  countries = countries;
   isLoading = false;
+  currentYear: number;
 
   constructor(
     injector: Injector,
@@ -25,9 +28,9 @@ export class CreateEditQualificationComponent extends AppComponentBase implement
     private _userQualificationsService: UserQualificationsServiceProxy,
   ) {
     super(injector);
-    const currentYear = this.convertToUserDate(new Date()).getFullYear();
+    this.currentYear = this.convertToUserDate(new Date()).getFullYear();
     this.yearSelections.push('Present')
-    for (let year = currentYear; year >= 1900; year--) {
+    for (let year = this.currentYear; year >= 1900; year--) {
       const sYear = year.toString();
       this.yearSelections.push(sYear);
     }
@@ -51,7 +54,10 @@ export class CreateEditQualificationComponent extends AppComponentBase implement
         this.userQualification.professionalCertificateOrAward,
         this.userQualification.conferringOrganization,
         this.userQualification.summary,
+        this.userQualification.city,
+        this.userQualification.country,
         this.userQualification.startYear,
+        this.userQualification.endYear,
         this.userQualification.gradeAttained,
         documentsToUpload
       )
@@ -59,7 +65,10 @@ export class CreateEditQualificationComponent extends AppComponentBase implement
         this.userQualification.professionalCertificateOrAward,
         this.userQualification.conferringOrganization,
         this.userQualification.summary,
+        this.userQualification.city,
+        this.userQualification.country,
         this.userQualification.startYear,
+        this.userQualification.endYear,
         this.userQualification.gradeAttained,
         documentsToUpload
       );
@@ -77,5 +86,27 @@ export class CreateEditQualificationComponent extends AppComponentBase implement
 
   onCloseClick(): void {
     this._modal.hide();
+  }
+
+  onStartYearChange(): void {
+    const startYear = this.getYear(this.userQualification.startYear);
+    const endYear = this.getYear(this.userQualification.endYear);
+    if (startYear > endYear) {
+      const sStartYear = startYear === this.currentYear + 1 ? 'Present' : startYear.toString();
+      this.userQualification.endYear = sStartYear;
+    }
+  }
+
+  onEndYearChange(): void {
+    const endYear = this.getYear(this.userQualification.endYear);
+    const startYear = this.getYear(this.userQualification.startYear);
+    if (endYear < startYear) {
+      const sEndYear = endYear === this.currentYear + 1 ? 'Present' : endYear.toString();
+      this.userQualification.startYear = sEndYear;
+    }
+  }
+
+  private getYear(year: string): number {
+    return year === 'Present' ? this.currentYear + 1 : +year;
   }
 }

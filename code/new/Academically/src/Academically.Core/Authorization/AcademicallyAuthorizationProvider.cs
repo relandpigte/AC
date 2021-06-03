@@ -95,7 +95,20 @@ namespace Academically.Authorization
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_PhotoId, L("PhotoId"));
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_Address, L("Address"));
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_ContactNumber, L("ContactNumber"));
-            tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_References, L("References"));
+
+            var tutorWizardReferencesPermission = tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_References, L("References"));
+            tutorWizardReferencesPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_References_Create, L("Create"));
+            tutorWizardReferencesPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_References_Update, L("Update"));
+            tutorWizardReferencesPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_References_Delete, L("Delete"));
+
+            var tutorWizardDbsCheckPermission = tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_DbsCheck, L("DbsCheck"));
+            tutorWizardDbsCheckPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_DbsCheck_Create, L("Create"));
+            tutorWizardDbsCheckPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_DbsCheck_Update, L("Update"));
+            tutorWizardDbsCheckPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_DbsCheck_Delete, L("Delete"));
+            
+            tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_TermsOfUse, L("TermsOfUse"));
+            tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_PrivacyPolicy, L("PrivacyPolicy"));
+            tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_Declaration, L("Declaration"));
 
 
             context.CreatePermission(PermissionNames.Pages_Widgets_Verifications, L("Verifications"));

@@ -19,7 +19,7 @@
           <h1 class="header-title">{{ user.name }} {{ user.surname ? user.surname[0] : '' }}</h1>
         </div>
         <div class="col-12 col-md-auto mt-2 mt-md-0 mb-md-3">
-          <button *ngIf="permission.isGranted('Pages.TutorWizard')" (click)="onTutorWizardClick()"
+          <button *ngIf="canBecomeATutor" (click)="onTutorWizardClick()"
             class="btn btn-primary d-block d-md-inline-block">
             {{ 'BecomeATutor' | localize}}
           </button>

@@ -195,6 +195,16 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_TutorWizard_Address,
                 PermissionNames.Pages_TutorWizard_ContactNumber,
                 PermissionNames.Pages_TutorWizard_References,
+                PermissionNames.Pages_TutorWizard_References_Create,
+                PermissionNames.Pages_TutorWizard_References_Update,
+                PermissionNames.Pages_TutorWizard_References_Delete,
+                PermissionNames.Pages_TutorWizard_DbsCheck,
+                PermissionNames.Pages_TutorWizard_DbsCheck_Create,
+                PermissionNames.Pages_TutorWizard_DbsCheck_Update,
+                PermissionNames.Pages_TutorWizard_DbsCheck_Delete,
+                PermissionNames.Pages_TutorWizard_TermsOfUse,
+                PermissionNames.Pages_TutorWizard_PrivacyPolicy,
+                PermissionNames.Pages_TutorWizard_Declaration,
                 PermissionNames.Pages_Widgets_Verifications
             );
 

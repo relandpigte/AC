@@ -1,7 +1,7 @@
 Feature: Title of your feature
 
-@UI @TestRails(14334) 
-Scenario: C14334 - Verify menu items on the dashboard as student
+@UI @TestRails(14484) 
+Scenario: C14484 - Verify menu items on the dashboard as student
 	
 	Given User is in academically login page
 	When user register a student
@@ -19,8 +19,8 @@ Scenario: C14334 - Verify menu items on the dashboard as student
 	Then user successfully login
 	And overview, my project and usage tab are displayed
 
-@UI @TestRails(14335) 
-Scenario: C14335 - Verify create new project on the dashboard is displayed
+@UI @TestRails(14485) 
+Scenario: C14485 - Verify create new project on the dashboard is displayed
 		
 	Given User is in academically login page
 	When user register a student
@@ -38,8 +38,8 @@ Scenario: C14335 - Verify create new project on the dashboard is displayed
 	And create new project is displayed on the dashboard
 
 
-@UI @TestRails(14336) 
-Scenario: C14336 - Verify recent project and activity are displayed as student
+@UI @TestRails(14486) 
+Scenario: C14486 - Verify recent project and activity are displayed as student
 
 	Given User is in academically login page
 	When user register a student
@@ -60,7 +60,7 @@ Scenario: C14336 - Verify recent project and activity are displayed as student
 	Then user should see recent project and recent activity
 
 @UI
-Scenario: Verify view all projects on the dashboard
+Scenario: C14487 - Verify view all projects on the dashboard
 
 	Given User is in academically login page
 	When user login with valid credentials
@@ -69,8 +69,8 @@ Scenario: Verify view all projects on the dashboard
 	When user navigate to my projects tab
 	Then user should see all projects
 
-@UI @OK
-Scenario: C14338 - Verify usage information is displayed
+@UI @TestRails(14488)
+Scenario: C14488 - Verify usage information is displayed
 
 	Given User is in academically login page
 	When user register a student
@@ -94,7 +94,7 @@ Scenario: C14338 - Verify usage information is displayed
 	And user should see overview graph
 
 @UI
-Scenario: C14339 - Verify user profile widget is displayed
+Scenario: C14489 - Verify user profile widget is displayed
 	
 	Given User is in academically login page
 	When user register a student
@@ -118,8 +118,8 @@ Scenario: C14339 - Verify user profile widget is displayed
 #- Verify university name is displayed
 #- Verify user type is displayed
 
-@UI @TestRails(14340)
-Scenario: C14340 - Verify user verification widget is displayed
+@UI @TestRails(14490)
+Scenario: C14490 - Verify user verification widget is displayed
 
 	Given User is in academically login page
 	When user register a student
@@ -138,8 +138,8 @@ Scenario: C14340 - Verify user verification widget is displayed
 	And verification widget is displayed on the dashboard
 	And see a list of verification
 
-@UI @TestRails(14341)
-Scenario: C14341- Verify key four key metrics is displayed
+@UI @TestRails(14492)
+Scenario: C14492 - Verify key four key metrics is displayed
 
 	Given User is in academically login page
 	When user register a student
@@ -157,8 +157,8 @@ Scenario: C14341- Verify key four key metrics is displayed
 	Then user successfully login
 	And four key metrics is displayed on the dashboard
 
-@UI @TestRails(14342)
-Scenario: C14342- Verify account settings is displayed
+@UI @TestRails(14491)
+Scenario: C14491- Verify account settings is displayed
 	
 	Given User is in academically login page
 	When user register a student
@@ -178,7 +178,7 @@ Scenario: C14342- Verify account settings is displayed
 	Then account settings is displayed
 
 @UI
-Scenario: Verify uploading a profile photo
+Scenario: C14499 - Verify uploading a profile photo
 	
 	Given User is in academically login page
 	When user register a student
@@ -211,10 +211,10 @@ Scenario: Verify uploading a profile photo
 	And successful message is displayed at the right corner
 #- Verify message is displayed
 
-@??
-Scenario: Verify removing a profile photo
 
-Scenario: C14345- Verify uploading a cover photo
+Scenario: C14500 - Verify removing a profile photo
+
+Scenario: C14501 - Verify uploading a cover photo
 	
 	Given User is in academically login page
 	When user register a student
@@ -237,7 +237,7 @@ Scenario: C14345- Verify uploading a cover photo
 	And user crop the cover photo
 	Then upload a cover photo is successful
 
-Scenario: C14346- Verify removing a cover photo
+Scenario: C14502- Verify removing a cover photo
 
 	Given User is in academically login page
 	When user register a student
@@ -264,8 +264,7 @@ Scenario: C14346- Verify removing a cover photo
 	When the user confirms to remove a cover photo
 	Then removing a cover photo is successful
 
-	
-Scenario: C14347 - Verify adding about user information
+Scenario: C14503 - Verify adding about user information
 	
 	Given User is in academically login page
 	When user register a student
@@ -289,10 +288,10 @@ Scenario: C14347 - Verify adding about user information
 	Then upload a cover photo is successful
 	When user add about information
 	Then adding about user information is successful
-@?? 
-Scenario: Verify adding website Url on user profile page
 
-Scenario: C14349- Verify adding user education information by levels
+Scenario: C14504 - Verify adding website Url on user profile page
+
+Scenario: C14505 - Verify adding user education information by levels
 	
 	Given User is in academically login page
 	When user register a student
@@ -322,7 +321,7 @@ Scenario: C14349- Verify adding user education information by levels
 #Click level tab at the right corner
 #Click add level
 
-Scenario: Verify adding user education information by evidence
+Scenario: C14506 - Verify adding user education information by evidence
 
 	Given User is in academically login page
 	When user register a student
@@ -356,7 +355,7 @@ Scenario: Verify adding user education information by evidence
 When user saving the education information
 Then adding education information is successful
 
-Scenario: Verify removing user education information
+Scenario: C14507 Verify removing user education information
 
 	Given User is in academically login page
 	When user register a student
@@ -395,7 +394,7 @@ Scenario: Verify removing user education information
 	Then removing education information is successful
 	
 	
-Scenario: Verify adding other courses information
+Scenario: C14508 - Verify adding other courses information
 
 	Given User is in academically login page
 	When user register a student
@@ -427,7 +426,7 @@ And user saving qualification information
 Then adding course information is successful
 
 
-Scenario: Verify removing other course information
+Scenario: C14509 - Verify removing other course information
 
 	Given User is in academically login page
 	When user register a student
@@ -466,4 +465,4 @@ Scenario: Verify removing other course information
 	Then removing course information is successful
 #Verify successful message is displayed at the bottom right corner
 
-Scenario: 
+Scenario: C14510	Verify adding research interest

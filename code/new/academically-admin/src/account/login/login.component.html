@@ -46,17 +46,12 @@
               </div>
             </div>
 
-            <div class="input-group input-group-merge">
-              <input type="password" class="form-control form-control-appended" id="password" name="password"
-                [(ngModel)]="authService.authenticateModel.password" [placeholder]="'EnterYourPassword' | localize"
-                required maxlength="32" #passwordModel="ngModel" #passwordEl />
-              <div class="input-group-append">
-                <span class="input-group-text">
-                  <i class="fe fe-eye"></i>
-                </span>
-              </div>
-            </div>
-            <abp-validation-summary [control]="passwordModel" [controlEl]="passwordEl"></abp-validation-summary>
+            <app-password-toggle [(ngModel)]="authService.authenticateModel.password"
+              [placeholder]="'EnterYourPassword' | localize" id="password" name="password" required maxlength="32"
+              #passwordModel="ngModel" #passwordEl>
+            </app-password-toggle>
+            <abp-validation-summary [control]="passwordModel" [controlEl]="passwordEl.elementRef.nativeElement">
+            </abp-validation-summary>
           </div>
 
           <button type="submit" class="btn btn-lg btn-block btn-primary mb-3"

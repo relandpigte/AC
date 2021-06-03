@@ -9,5 +9,7 @@
         Passport,
         Education,
         PhotoId,
+        Reference,
+        DbsCertificate,
     }
 }

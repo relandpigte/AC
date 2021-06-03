@@ -78,7 +78,25 @@ export class TutorWizardComponent extends AppComponentBase implements OnInit {
       case BecomeATutorStep.References:
         routeName = 'references';
         break;
+      case BecomeATutorStep.DbsCheck:
+        routeName = 'dbs-check';
+        break;
+      case BecomeATutorStep.TermsOfUse:
+        routeName = 'terms-of-use';
+        break;
+      case BecomeATutorStep.PrivacyPolicy:
+        routeName = 'privacy-policy';
+        break;
+      case BecomeATutorStep.Declaration:
+        routeName = 'declaration';
+        break;
+      default:
+        console.log('should navigate to home');
+        this._router.navigate(['/app/home']);
+        break;
     }
-    this._router.navigate([`/app/tutor-wizard/${routeName}`]);
+    if (routeName) {
+      this._router.navigate([`/app/tutor-wizard/${routeName}`]);
+    }
   }
 }

@@ -16,7 +16,10 @@ namespace Academically.Domain.Entities
         public string ProfessionalCertificateOrAward { get; set; }
         public string ConferringOrganization { get; set; }
         public string Summary { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }
         public string StartYear { get; set; }
+        public string EndYear { get; set; }
         public string GradeAttained { get; set; }
 
         public virtual ICollection<UserQualificationDocument> UserQualificationDocuments { get; set; }

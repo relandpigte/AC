@@ -14,6 +14,7 @@ import { AppSessionService } from '@shared/session/app-session.service';
 import { Moment } from 'moment';
 import { DocumentDto } from './service-proxies/service-proxies';
 import { ReplaySubject } from 'rxjs';
+import { ChangeData } from 'ngx-intl-tel-input';
 
 @Injectable()
 export abstract class AppComponentBase implements OnDestroy {
@@ -133,5 +134,9 @@ export abstract class AppComponentBase implements OnDestroy {
     }
 
     return true;
+  }
+
+  protected formatPhoneNumber(phoneNumber: string): string {
+    return phoneNumber.substr(phoneNumber.indexOf(' ') + 1);
   }
 }

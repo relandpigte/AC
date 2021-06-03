@@ -28,33 +28,21 @@
 
         <div class="form-group">
           <label class="col-form-label" for="Password">{{ 'Password' | localize }}</label>
-          <div class="input-group input-group-merge">
-            <input type="password" class="form-control form-control-appended" id="Password" name="Password"
-              placeholder="{{ 'Password' | localize }}" [(ngModel)]="model.password" required maxlength="32"
-              #passwordModel="ngModel" #passwordEl />
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <i class="fe fe-eye"></i>
-              </div>
-            </div>
-          </div>
-          <abp-validation-summary [control]="passwordModel" [controlEl]="passwordEl"></abp-validation-summary>
+          <app-password-toggle [(ngModel)]="model.password" [placeholder]="'Password' | localize" id="password"
+            name="password" required maxlength="32" #passwordModel="ngModel" #passwordEl>
+          </app-password-toggle>
+          <abp-validation-summary [control]="passwordModel" [controlEl]="passwordEl.elementRef.nativeElement">
+          </abp-validation-summary>
         </div>
 
         <div class="form-group">
           <label class="col-form-label" for="ConfirmPassword">{{ 'ConfirmPassword' | localize }}</label>
-          <div class="input-group input-group-merge">
-            <input type="password" class="form-control form-control-appended" id="ConfirmPassword"
-              name="ConfirmPassword" placeholder="{{ 'ConfirmPassword' | localize }}"
-              [(ngModel)]="model.passwordConfirmation" required maxlength="32" #passwordConfirmationModel="ngModel"
-              #passwordConfirmationEl />
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <i class="fe fe-eye"></i>
-              </div>
-            </div>
-          </div>
-          <abp-validation-summary [control]="passwordConfirmationModel" [controlEl]="passwordConfirmationEl">
+          <app-password-toggle [(ngModel)]="model.passwordConfirmation" [placeholder]="'ConfirmPassword' | localize"
+            id="confirmPassword" name="confirmPassword" required maxlength="32" #passwordConfirmationModel="ngModel"
+            #passwordConfirmationEl>
+          </app-password-toggle>
+          <abp-validation-summary [control]="passwordConfirmationModel"
+            [controlEl]="passwordConfirmationEl.elementRef.nativeElement">
           </abp-validation-summary>
         </div>
 

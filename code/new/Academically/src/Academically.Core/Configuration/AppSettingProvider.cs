@@ -28,6 +28,8 @@ namespace Academically.Configuration
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.Aws_S3_Folders_Passports),
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.Aws_S3_Folders_Educations),
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.Aws_S3_Folders_PhotoIds),
+                CreateSettingDefinitionFromAppSetting(AppSettingNames.Aws_S3_Folders_References),
+                CreateSettingDefinitionFromAppSetting(AppSettingNames.Aws_S3_Folders_DbsCertificates),
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.ITagg_Sms_Username),
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.ITagg_Sms_Password),
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.Email_FromName),
