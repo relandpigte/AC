@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto } from '@shared/service-proxies/service-proxies';
+import { ChildDisciplineTaxonomyDto, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { TreeNode } from 'primeng/api';
@@ -64,8 +64,24 @@ export class StudyFieldsTreeComponent extends AppComponentBase implements OnInit
         data: treeItem,
       };
       if (_.isArray(treeItem.children)) {
-        treeNode.children = this.buildTreeNodes(treeItem.children);
+        treeNode.children = this.buildChildTreeNodes(treeItem.children);
       }
+      if (treeItem.isEditable) {
+        treeNode.type = 'editable';
+      }
+      treeNodes.push(treeNode);
+    });
+    return treeNodes;
+  }
+
+  private buildChildTreeNodes(treeItems: ChildDisciplineTaxonomyDto[]): TreeNode[] {
+    const treeNodes: TreeNode[] = [];
+    _.forEach(treeItems, (treeItem) => {
+      const treeNode: TreeNode = {
+        key: treeItem.id,
+        label: treeItem.name,
+        data: treeItem,
+      };
       if (treeItem.isEditable) {
         treeNode.type = 'editable';
       }
