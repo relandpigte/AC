@@ -8130,65 +8130,6 @@ export interface IChangeUserLanguageDto {
     languageName: string;
 }
 
-export class ChildDisciplineTaxonomyDto implements IChildDisciplineTaxonomyDto {
-    id: string;
-    name: string | undefined;
-    parentId: string | undefined;
-    parentIdMap: string | undefined;
-    isEditable: boolean;
-
-    constructor(data?: IChildDisciplineTaxonomyDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.parentId = _data["parentId"];
-            this.parentIdMap = _data["parentIdMap"];
-            this.isEditable = _data["isEditable"];
-        }
-    }
-
-    static fromJS(data: any): ChildDisciplineTaxonomyDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ChildDisciplineTaxonomyDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["parentId"] = this.parentId;
-        data["parentIdMap"] = this.parentIdMap;
-        data["isEditable"] = this.isEditable;
-        return data; 
-    }
-
-    clone(): ChildDisciplineTaxonomyDto {
-        const json = this.toJSON();
-        let result = new ChildDisciplineTaxonomyDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IChildDisciplineTaxonomyDto {
-    id: string;
-    name: string | undefined;
-    parentId: string | undefined;
-    parentIdMap: string | undefined;
-    isEditable: boolean;
-}
-
 export class CreateRoleDto implements ICreateRoleDto {
     name: string;
     displayName: string;
@@ -8594,7 +8535,7 @@ export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
     parentIdMap: string | undefined;
     isEditable: boolean;
     parent: DisciplineTaxonomy;
-    children: ChildDisciplineTaxonomyDto[] | undefined;
+    children: DisciplineTaxonomyDto[] | undefined;
 
     constructor(data?: IDisciplineTaxonomyDto) {
         if (data) {
@@ -8616,7 +8557,7 @@ export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
             if (Array.isArray(_data["children"])) {
                 this.children = [] as any;
                 for (let item of _data["children"])
-                    this.children.push(ChildDisciplineTaxonomyDto.fromJS(item));
+                    this.children.push(DisciplineTaxonomyDto.fromJS(item));
             }
         }
     }
@@ -8659,7 +8600,7 @@ export interface IDisciplineTaxonomyDto {
     parentIdMap: string | undefined;
     isEditable: boolean;
     parent: DisciplineTaxonomy;
-    children: ChildDisciplineTaxonomyDto[] | undefined;
+    children: DisciplineTaxonomyDto[] | undefined;
 }
 
 export class DocumentDto implements IDocumentDto {

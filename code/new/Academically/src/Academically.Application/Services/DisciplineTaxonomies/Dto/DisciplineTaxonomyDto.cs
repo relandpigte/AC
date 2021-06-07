@@ -14,6 +14,6 @@ namespace Academically.Services.DisciplineTaxonomies.Dto
         public string ParentIdMap { get; set; }
         public bool IsEditable { get; set; }
         public DisciplineTaxonomy Parent { get; set; }
-        public IEnumerable<ChildDisciplineTaxonomyDto> Children { get; set; }
+        public IEnumerable<DisciplineTaxonomyDto> Children { get; set; }
     }
 }
