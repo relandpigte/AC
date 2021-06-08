@@ -88,6 +88,7 @@ variables:
     - jq --version
     - apt-get install -y zip
     # install node and serverless
+    - npm init -y
     - npm install
     - npm install -g serverless
     # Lookup Required Outputs from Cloudformation
