@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Repositories;
 using Academically.Domain.Entities;
+using Academically.Domain.Enums;
 using Academically.Services.Services.Dto;
 using Academically.Services.UserServices.Dto;
 using Microsoft.EntityFrameworkCore;
@@ -80,6 +81,8 @@ namespace Academically.Services.Services
             return await _servicesRepository.GetAll()
                 .Where(e => levelIds.Any(id => id == e.Id))
                 .SelectMany(e => e.ServiceSubjects)
+                .Where(e => e.Subject.ReviewStatus == SubjectReviewStatus.Approved
+                    || (e.Subject.ReviewStatus != SubjectReviewStatus.Rejected && e.Subject.CreatorUserId == AbpSession.UserId.Value))
                 .Select(e => ObjectMapper.Map<SubjectDto>(e.Subject))
                 .Distinct()
                 .ToListAsync();
