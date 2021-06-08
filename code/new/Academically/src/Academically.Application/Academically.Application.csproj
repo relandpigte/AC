@@ -28,5 +28,7 @@
     <Folder Include="Services\ResearchMethods\Dto\" />
     <Folder Include="Services\Subjects\" />
     <Folder Include="Services\Subjects\Dto\" />
+    <Folder Include="Services\PasswordResets\" />
+    <Folder Include="Services\PasswordResets\Dto\" />
   </ItemGroup>
 </Project>

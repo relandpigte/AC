@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, Input, OnInit } from '@angular/core';
 import { ProfileService } from '@app/profile/_services/profile.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ProfilesServiceProxy, UniversityDto, UserEducationDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -7,6 +7,15 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { CreateEditEducationComponent } from './create-edit-education/create-edit-education.component';
 import { ViewEducationDocumentsComponent } from './view-education-documents/view-education-documents.component';
+
+class UserEducation {
+  educations: UserEducationDto[] = [];
+  universityName: string | undefined;
+  universityCountryCode: string | undefined;
+  city: string | undefined;
+  isRendered: boolean;
+  id: string | undefined;
+}
 
 @Component({
   selector: 'app-educations',
@@ -18,8 +27,11 @@ export class EducationsComponent extends AppComponentBase implements OnInit {
   public universities: UniversityDto[] = [];
   isLoading = false;
 
+  userEducationGroup: UserEducation[] = [];
+
   constructor(
     injector: Injector,
+    private _changeDetector: ChangeDetectorRef,
     private _profileService: ProfileService,
     private _modalService: BsModalService,
     private _profilesService: ProfilesServiceProxy,
@@ -68,6 +80,22 @@ export class EducationsComponent extends AppComponentBase implements OnInit {
       userEducationDocuments: userEducation.userEducationDocuments,
     };
     this._modalService.show(ViewEducationDocumentsComponent, modalSettings);
+  }
+
+  isFirstItemInEducations(id: string): boolean {
+    const university = this.userEducationGroup.find(u => u.id === id);
+    console.log(university);
+    return university !== undefined;
+  }
+
+  countUserEducation(name: string): number {
+    const university = this.getUserEducationFromGroup(name);
+    return university.educations.length;
+  }
+
+  private getUserEducationFromGroup(name: string): UserEducation {
+    const university = this.userEducationGroup.find(u => u.universityName === name);
+    return university;
   }
 
   private getUserEducations(): void {
