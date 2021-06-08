@@ -5,8 +5,8 @@
 	},
 	"credentials": {
 		"student": {
-			"password": "AaA@12345",
-			"email": "TestEmail.x9001@gmail.com"
+			"password": "Test@12345",
+			"email": "test.student@gilmatugas.33mail.com"
 		}
 		,"admin":{
 			"password": "123qwe",

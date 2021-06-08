@@ -30,7 +30,7 @@ public class Homepage {
 	}
 	
 	public static void verifyPhoneIsDisplayed() {
-		phone.click();
+		phone.verifyDisplayed();
 	}
 	
 	public static void clickVerifyPhone() {
@@ -79,7 +79,17 @@ public class Homepage {
 	
 	public static void verifyDashBoardIsDisplayed() {
 		dashboardHeader.verifyDisplayed();
-	}	
+	}
+	
+	public static class MyProject{
+		
+		private static Element projects = new Element("Project table",By.xpath("//app-dashboard-projects//h4[text()='Projects']"));
+		
+		public static void verifyProjectTableIsDisplayed() {
+			projects.verifyDisplayed();
+		}
+		
+	}
 	
 	public static class Metric{
 		

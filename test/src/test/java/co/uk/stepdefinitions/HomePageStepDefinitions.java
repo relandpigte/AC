@@ -94,4 +94,9 @@ public class HomePageStepDefinitions {
 	public void navigateProfileSettingsUsingWidget() {
 		Homepage.ProfileWidget.clickProfilePhoto();
 	}
+	
+	@Then("^user should see all projects$")
+	public void verifyProjectTableIsDisplayed() {
+		Homepage.MyProject.verifyProjectTableIsDisplayed();
+	}
 }

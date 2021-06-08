@@ -10,8 +10,8 @@ public class CompleteRegistrationPage {
 
 	private static Element completeRegistration = new Element("Complete registration",By.xpath("//h1[text()='Complete Registration']"));
 	private static TextBox textboxEmail = new TextBox("Email",By.xpath("//input[@id='EmailAddress']"));
-	private static TextBox textboxPassword = new TextBox("Password",By.xpath("//input[@id='Password']"));
-	private static TextBox textboxConfirmPassword = new TextBox("Confirm Password",By.xpath("//input[@id='ConfirmPassword']"));
+	private static TextBox textboxPassword = new TextBox("Password",By.xpath("//app-password-toggle[@id='password']//input[@type='password']"));
+	private static TextBox textboxConfirmPassword = new TextBox("Confirm Password",By.xpath("//app-password-toggle[@id='confirmPassword']//input[@type='password']"));
 	private static Button register = new Button("Register",By.xpath("//button[text()='Register']"));
 	private static Element sucessfullyRegisteredMessage = new Element("Successful message",By.xpath("//span[@class='text-light' and text()='Successfully registered']"));
 

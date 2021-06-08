@@ -11,7 +11,7 @@ public class LoginPage {
 	private static TextBox textBoxUsername = new TextBox("Username",By.xpath("//input[@id='userNameOrEmailAddress']"));
 	private static Element forgetPasswordLink = new Element("Forget password",By.xpath("//a[contains(text(),' Forgot password')]"));
 	private static Element registerLink = new Element("Register",By.xpath("//a[contains(text(),'Register')]"));
-	private static TextBox textBoxPassWord = new TextBox("Password",By.xpath("//input[@id='password']"));
+	private static TextBox textBoxPassWord = new TextBox("Password",By.xpath("//app-password-toggle[@id='password']//input[@type='password']"));
 	private static Button buttonSignIn = new Button("Submit",By.xpath("//button[@type='submit']"));
 
 	public static void enterUsername(String username) {

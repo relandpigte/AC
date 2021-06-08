@@ -27,22 +27,19 @@ public class UserProfilePageCommonObjectStepDefinitions {
 
     @When("^user select a photo from the gallery$")
     public void selectCoverPhoto() {
+    	DriverHandler.delay(10);
         UserProfilePageCommonObjects.CoverPhotoGallery.clickToselectCoverPhoto("2");
     }
 
     @When("^user crop the cover photo$")
     public void cropCoverPhoto() {
         UserProfilePageCommonObjects.CoverPhotoGallery.clickCrop();
+        DriverHandler.delay(5);
     }
 
     @Then("^upload a cover photo is successful$")
     public void verifyCoverPhotoIsUploaded() {
         UserProfilePageCommonObjects.CoverPhotoGallery.verifySuccessfulMessageIsDisplayed();
-    }
-
-    @When("^user remove a cover photo$")
-    public void removeCoverPhoto() {
-        UserProfilePageCommonObjects.removeCoverPhoto();
     }
 
     @Then("^confirmation is displayed$")
@@ -55,9 +52,40 @@ public class UserProfilePageCommonObjectStepDefinitions {
         UserProfilePageCommonObjects.ConfirmationModal.clickYes();
         DriverHandler.delay(5);
     }
-
-    @Then("^removing a cover photo is successful$")
-    public void verifyRemovingCoverPhotoIsSuccessful() {
-        UserProfilePageCommonObjects.verifyRemoveCoverPhotoMessageIsDisplayed();
+    
+    @Then("^crop profile photo modal is displayed$")
+    public void verifyCropProfilePhotoModalIsDisplayed() {
+    	UserProfilePageCommonObjects.CropImageModal.verifyCropImageModalIsDisplayed();
+    }
+    
+    @When("^user crop the image$")
+    public void cropImage() {
+    	UserProfilePageCommonObjects.CropImageModal.clickCrop();
+    }
+    
+    @Then("^upload a profile photo is successful$")
+    public void verifyUploadAProfilePhotoIsSuccessful() {
+    	UserProfilePageCommonObjects.CropImageModal.verifySuccessfulMessageIsDisplayed();
+    }
+    
+    @When("^user remove a profile photo$")
+    public void removeProfilePhoto() {
+    	UserProfilePageCommonObjects.removeProfilePhoto();
+    	UserProfilePageCommonObjects.ConfirmationModal.clickYes();
+    }
+    
+    @Then("^successfully displayed profile picture message was removed$")
+    public void verifySuccessfulyMessageProfilePhotoWasRemoved() {
+    	UserProfilePageCommonObjects.verifyRemoveProfilePhotoMessageIsDisplayed();
+    }
+    
+    @Then("^profile photo is removed$")
+    public void verifyAnoumousPhotoIsDisplayed() {
+    	UserProfilePageCommonObjects.verifyAnonymousPhoto();
+    }
+    
+    @When("^user proceed to education tab$")
+    public void proceedToEducationTab() {
+    	UserProfilePageCommonObjects.clickEducationTab();
     }
 }

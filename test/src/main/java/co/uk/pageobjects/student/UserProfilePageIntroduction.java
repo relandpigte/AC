@@ -15,8 +15,8 @@ public class UserProfilePageIntroduction {
 		
 		private static Button edit = new Button("Edit",By.xpath("//app-about//button[contains(text(),'Edit')]"));
 		private static Button save = new Button("Save",By.xpath("//app-about//span[contains(text(),'Save')]"));
-		private static TextBox editor = new TextBox("Editor",By.xpath("//app-about//div[@class='ql-editor']"));
-		private static TextBox aboutMessage = new TextBox("About message",By.xpath("//app-about//div[@class='ql-editor']/p"));
+		private static TextBox editor = new TextBox("Editor",By.xpath("//div[@class='ql-editor ql-blank']/p"));
+		private static TextBox aboutMessage = new TextBox("About message",By.xpath("//div[@class='ql-editor']/p"));
 		
 		public static void clickEdit() {
 			edit.click();
