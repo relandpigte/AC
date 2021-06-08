@@ -19,6 +19,8 @@ import { TenantChangeComponent } from './tenant/tenant-change.component';
 import { TenantChangeDialogComponent } from './tenant/tenant-change-dialog.component';
 import { TermsAndConditionsComponent } from './terms-and-conditions/terms-and-conditions.component';
 import { CompleteRegistrationComponent } from './complete-registration/complete-registration.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { CompleteResetPasswordComponent } from './reset-password/complete-reset-password/complete-reset-password.component';
 
 @NgModule({
     imports: [
@@ -43,6 +45,8 @@ import { CompleteRegistrationComponent } from './complete-registration/complete-
         TenantChangeDialogComponent,
         TermsAndConditionsComponent,
         CompleteRegistrationComponent,
+        ResetPasswordComponent,
+        CompleteResetPasswordComponent,
     ],
     entryComponents: [
         // tenant
