@@ -3,7 +3,7 @@
   <button [routerLink]="['/app/tutor-wizard/education']" type="button" class="btn btn-white">
     {{ 'Back' | localize }}
   </button>
-  <button (click)="onNextClick()" [disabled]="isLoading" type="submit" class="btn btn-primary">
+  <button (click)="onNextClick()" [disabled]="isLoading || profileResearch.publications.userPublications.length > 0" type="submit" class="btn btn-primary">
     {{ 'Next' | localize }}
   </button>
 </div>

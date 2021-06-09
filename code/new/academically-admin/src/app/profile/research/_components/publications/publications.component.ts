@@ -31,7 +31,7 @@ export class PublicationsComponent extends PagedListingComponentBase<UserResearc
 
   list(request: PagedUserPublicationsRequestDto, pageNumber: number, finishedCallback: Function): void {
     request.userIdFilter = this.appSession.userId;
-    request.searchFilter = this.searchFilter
+    request.searchFilter = this.searchFilter;
 
     this._userPublicationsService
       .getPaged(
@@ -75,7 +75,7 @@ export class PublicationsComponent extends PagedListingComponentBase<UserResearc
               this.notify.success('SuccessfullyDeleted');
               this.pageNumber = 1;
               this.refresh();
-            })
+            });
         }
       }
     );

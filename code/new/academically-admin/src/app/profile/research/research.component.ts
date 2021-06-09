@@ -1,5 +1,6 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { PublicationsComponent } from './_components/publications/publications.component';
 
 @Component({
   selector: 'app-profile-research',
@@ -7,6 +8,7 @@ import { AppComponentBase } from '@shared/app-component-base';
   styleUrls: ['./research.component.less']
 })
 export class ResearchComponent extends AppComponentBase {
+  @ViewChild('publications') public publications: PublicationsComponent;
 
   constructor(
     injector: Injector,

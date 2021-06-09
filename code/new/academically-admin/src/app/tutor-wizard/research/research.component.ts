@@ -1,8 +1,9 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { BecomeATutorStep, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { BecomeATutorService } from '../_services/become-a-tutor.service';
+import { ResearchComponent as ProfileReseachComponent } from '../../profile/research/research.component';
 
 @Component({
   selector: 'app-research',
@@ -10,6 +11,8 @@ import { BecomeATutorService } from '../_services/become-a-tutor.service';
   styleUrls: ['./research.component.less']
 })
 export class ResearchComponent extends AppComponentBase {
+  @ViewChild(ProfileReseachComponent) profileResearch: ProfileReseachComponent;
+
   isLoading = false;
 
   constructor(
@@ -18,9 +21,6 @@ export class ResearchComponent extends AppComponentBase {
     private _tutorWizardService: TutorWizardServiceProxy,
   ) {
     super(injector);
-  }
-
-  ngOnInit(): void {
   }
 
   onNextClick(): void {
