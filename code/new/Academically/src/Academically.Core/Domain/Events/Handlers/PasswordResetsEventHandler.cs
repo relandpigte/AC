@@ -30,7 +30,7 @@ namespace Academically.Domain.Events.Handlers
         public async Task HandleEventAsync(EntityCreatedEventData<PasswordReset> eventData)
         {
             string clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
-            string registrationLink = $"{clientRootAddress}account/complete-reset-password/{eventData.Entity.Id}";
+            string registrationLink = $"{clientRootAddress}/account/complete-reset-password/{eventData.Entity.Id}";
             string subject = L("PasswordResetEmailSubject");
             string body = L("PasswordResetEmailMessage", registrationLink);
 

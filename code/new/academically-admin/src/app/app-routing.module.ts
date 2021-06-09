@@ -11,6 +11,7 @@ import { UsersComponent } from './users/users.component';
 import { TenantsComponent } from './tenants/tenants.component';
 import { RolesComponent } from 'app/roles/roles.component';
 import { ChangePasswordComponent } from './users/change-password/change-password.component';
+import { CreateProjectComponent } from './create-project/create-project.component';
 
 @NgModule({
   imports: [
@@ -56,6 +57,18 @@ import { ChangePasswordComponent } from './users/change-password/change-password
             ],
           },
           {
+            path: 'new-project',
+            component: WrapperComponent,
+            // data: { permission: 'Pages.Dashboard' },
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: CreateProjectComponent,
+              },
+            ],
+          },
+          {
             path: 'profile',
             loadChildren: () =>
               import('@app/profile/profile.module').then(
@@ -81,6 +94,13 @@ import { ChangePasswordComponent } from './users/change-password/change-password
             loadChildren: () =>
               import('@app/tutor-wizard/tutor-wizard.module').then(
                 (m) => m.TutorWizardModule
+              ),
+          },
+          {
+            path: 'service-wizard',
+            loadChildren: () =>
+              import('@app/service-wizard/service-wizard.module').then(
+                (m) => m.ServiceWizardModule
               ),
           },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
