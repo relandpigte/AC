@@ -93,6 +93,10 @@ export class DbsCheckComponent extends AppComponentBase implements OnInit {
     }
   }
 
+  onSkipClick(): void {
+    this.updateStep();
+  }
+
   private updateStep(): void {
     this.isLoading = true;
     const nextStep = BecomeATutorStep.TermsOfUse;
