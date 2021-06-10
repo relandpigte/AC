@@ -136,7 +136,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_AccountSettings_Billing,
                 PermissionNames.Pages_AccountSettings_Security,
                 PermissionNames.Pages_AccountSettings_Notifications,
-                PermissionNames.Pages_Widgets_Verifications
+                PermissionNames.Pages_Widgets_Verifications,
+                PermissionNames.Pages_Calendar
             );
 
             #endregion
@@ -205,7 +206,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_TutorWizard_TermsOfUse,
                 PermissionNames.Pages_TutorWizard_PrivacyPolicy,
                 PermissionNames.Pages_TutorWizard_Declaration,
-                PermissionNames.Pages_Widgets_Verifications
+                PermissionNames.Pages_Widgets_Verifications,
+                PermissionNames.Pages_Calendar
             );
 
             #endregion

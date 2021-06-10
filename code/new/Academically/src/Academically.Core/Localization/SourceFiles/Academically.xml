@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="ManageYourEvents">Manage your events</text>
+    <text name="Calendar">Calendar</text>
     <text name="LinkCopiedToClipboard">Link copied to clipboard</text>
     <text name="DeleteYourAccount">Delete your account</text>
     <text name="DeleteYourAccountMessage">Don't need ScholarPro anymore?</text>

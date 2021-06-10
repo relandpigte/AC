@@ -107,6 +107,9 @@
         public const string Pages_Widgets_Verifications = "Pages.Widgets.Verifications";
 
 
+        public const string Pages_Calendar = "Pages.Calendar";
+
+
         public const string Pages_Tenants = "Pages.Tenants";
     }
 }
