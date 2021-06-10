@@ -103,6 +103,13 @@ import { CreateProjectComponent } from './create-project/create-project.componen
                 (m) => m.ServiceWizardModule
               ),
           },
+          {
+            path: 'calendar',
+            loadChildren: () =>
+              import('@app/calendar/calendar.module').then(
+                (m) => m.CalendarModule
+              ),
+          },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent }

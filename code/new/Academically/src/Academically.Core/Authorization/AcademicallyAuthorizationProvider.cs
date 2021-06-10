@@ -114,6 +114,9 @@ namespace Academically.Authorization
             context.CreatePermission(PermissionNames.Pages_Widgets_Verifications, L("Verifications"));
 
 
+            context.CreatePermission(PermissionNames.Pages_Calendar, L("Calendar"));
+
+
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
         }
 

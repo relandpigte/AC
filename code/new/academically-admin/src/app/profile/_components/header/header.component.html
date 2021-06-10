@@ -15,13 +15,18 @@
           </div>
         </div>
         <div class="col mb-3 ml-n3 ml-md-n2">
-          <h6 class="header-pretitle">{{ userTitle}}</h6>
+          <h6 class="header-pretitle">{{ (isTutor ? 'Tutor' : 'Student') | localize }}</h6>
           <h1 class="header-title">{{ user.name }} {{ user.surname ? user.surname[0] : '' }}</h1>
         </div>
         <div class="col-12 col-md-auto mt-2 mt-md-0 mb-md-3">
           <button *ngIf="canBecomeATutor" (click)="onTutorWizardClick()"
             class="btn btn-primary d-block d-md-inline-block">
             {{ 'BecomeATutor' | localize}}
+          </button>
+          <button *ngIf="isTutor" [routerLink]="['/app/calendar']"
+            class="btn btn-primary d-block d-md-inline-block ml-2">
+            <i class="fe fe-calendar"></i>
+            {{ 'Calendar' | localize}}
           </button>
         </div>
       </div>
