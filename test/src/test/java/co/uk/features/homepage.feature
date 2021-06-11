@@ -303,8 +303,7 @@ Scenario: C14507 Verify removing user education information
 	Then confirmation is displayed
 	When the user confirms to remove a education information
 	Then removing education information is successful
-	
-	
+		
 Scenario: C14508 - Verify adding other courses information
 
 	Given User is in academically login page
