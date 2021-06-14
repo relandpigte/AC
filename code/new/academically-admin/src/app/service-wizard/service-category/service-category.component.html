@@ -1,0 +1,48 @@
+<div class="container-fluid" [@routerTransition]>
+    <div class="row mt-5 pt-5 text-center">
+        <div class="col-md-12">
+            <p class="text-muted">STEP 1 OF 4</p>
+        </div>
+        <div class="col-md-12 header mt-md-5">
+            <div class="header-body">
+              <h1 class="header-title mb-4">
+                Let's start with the Basics
+              </h1>
+              <p class="header-subtitle mb-5">
+                Understanding the type of services you're looking for help
+                <br>
+                us ask all the right questions.
+              </p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 header" [loader]="isLoading">
+            <div class="header-body">
+                <div class="row">
+                    <div class="col-md-6" *ngFor="let serviceCategory of serviceCategories">
+                        <div class="form-group m-0 p-3" [class.bg-light]="getSelected(serviceCategory.id)">
+                            <div class="custom-control custom-checkbox">
+                              <!-- Remove (click)="$event.preventDefault()" to select more than one services-->
+                              <input class="custom-control-input" id="service_{{ serviceCategory.id }}" name="service-category"
+                                type="checkbox" [checked]="getSelected(serviceCategory.id)"
+                                (click)="$event.preventDefault()"
+                                (change)="onCheckChange($event.target.checked, serviceCategory)"/>
+                              <label class="custom-control-label w-100" for="service_{{ serviceCategory.id }}">{{ serviceCategory.name }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between">
+        <button (click)="onCancelClick()" type="button" class="btn btn-white">
+          {{ 'Cancel' | localize }}
+        </button>
+        <p class="text-muted m-0 align-self-center">STEP 1 OF 4</p>
+        <button type="button" (click)="onNextClick()" class="btn btn-primary">
+          {{ 'Next' | localize }}
+        </button>
+      </div>
+</div>
