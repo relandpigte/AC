@@ -48,6 +48,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<Reference> References { get; set; }
         public virtual DbSet<DbsCertificate> DbsCertificates { get; set; }
         public virtual DbSet<AcceptanceLog> AcceptanceLogs { get; set; }
+        public virtual DbSet<Service2> Service2s { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

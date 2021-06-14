@@ -1,0 +1,42 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="root (generated)" id="1601222042888-1">
+        <createTable tableName="academicallyservices2">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ParentId" type="CHAR(36)"/>
+            <column name="ParentIdMap" type="VARCHAR(184 BYTE)"/>
+            <column name="IsEditable" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1601222042888-2">
+        <createIndex indexName="FK_Service2_Service2_ParentId_idx" tableName="academicallyservices2">
+            <column name="ParentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1601222042888-3">
+        <addForeignKeyConstraint baseColumnNames="ParentId" baseTableName="academicallyservices2" constraintName="FK_Services2_Services2_ParentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyservices2" validate="true"/>
+    </changeSet>
+
+    <changeSet author="danie (generated)" id="1601222042888-4">
+        <sql>
+        INSERT INTO `academicallyservices2` VALUES ('08d92b5f-1e65-4d63-8454-08fbe1304e09','School Admissions',NULL,'08d92b5f-1e65-4d63-8454-08fbe1304e09',_binary '\0');
+        INSERT INTO `academicallyservices2` VALUES ('08d92b5f-1e70-4b4d-82da-c2c77c729ea2','University Admissions',NULL,'08d92b5f-1e70-4b4d-82da-c2c77c729ea2',_binary '\0');
+        INSERT INTO `academicallyservices2` VALUES ('08d92b5f-1e77-4928-8eaa-4cbc3f7c8815','Academic Support',NULL,'08d92b5f-1e77-4928-8eaa-4cbc3f7c8815',_binary '\0');
+        INSERT INTO `academicallyservices2` VALUES ('08d92b5f-1e7b-4be5-84a9-a1349ec6353e','Study Skills',NULL,'08d92b5f-1e7b-4be5-84a9-a1349ec6353e',_binary '\0');
+        INSERT INTO `academicallyservices2` VALUES ('08d92b5f-1e80-4591-8482-498a10b9ca9b','Career Consultancy',NULL,'08d92b5f-1e80-4591-8482-498a10b9ca9b',_binary '\0');
+        INSERT INTO `academicallyservices2` VALUES ('08d92b5f-1e8c-4769-80d5-06fa11f74b3d','Language Tutoring',NULL,'08d92b5f-1e8c-4769-80d5-06fa11f74b3d',_binary '\0');
+        INSERT INTO `academicallyservices2` VALUES ('08d92b5f-1ea0-4c2d-8020-f653ef92b2c6','Interpretering',NULL,'08d92b5f-1ea0-4c2d-8020-f653ef92b2c6',_binary '\0');
+        INSERT INTO `academicallyservices2` VALUES ('08d92b5f-1ea9-487b-8cc7-c2b475142f44','Guardianship',NULL,'08d92b5f-1ea9-487b-8cc7-c2b475142f44',_binary '\0');
+        INSERT INTO `academicallyservices2` VALUES ('08d92b5f-1eae-4704-820a-60adc838e291','Visa Application Consultancy',NULL,'08d92b5f-1eae-4704-820a-60adc838e291',_binary '\0');
+        INSERT INTO `academicallyservices2` VALUES ('08d92b5f-1eb7-44c8-80ec-84c8df929dd9','Academic English Coaching',NULL,'08d92b5f-1eb7-44c8-80ec-84c8df929dd9',_binary '\0');
+        INSERT INTO `academicallyservices2` VALUES ('08d92b5f-1eb8-41a3-8ed9-515337dcc37b','English Language Test for Professionals Coaching',NULL,'08d92b5f-1eb8-41a3-8ed9-515337dcc37b',_binary '\0');
+        </sql>
+    </changeSet>
+</databaseChangeLog>
