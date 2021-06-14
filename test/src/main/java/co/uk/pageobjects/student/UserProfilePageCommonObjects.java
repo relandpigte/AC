@@ -33,7 +33,12 @@ public class UserProfilePageCommonObjects {
             By.xpath("//app-profile-picture-changer//a[contains(text(),'Remove Photo ')]"));
     private static Element anonymousPhoto = new Element("Anonymous photo",
             By.xpath("//div[contains(@class,'header-avatar-top')]//img[@src='assets/img/anonymous.png']"));
-
+	private static Element successfulyDeletedMesssage = new Element("Successfuly deleted message",By.xpath("//span[text()='Successfully Deleted']"));
+	
+	public static void verifySuccesfulyDeletedMessageIsDisplayed() {
+		successfulyDeletedMesssage.verifyDisplayed();
+	}
+	
     public static void verifyRemoveProfilePhotoMessageIsDisplayed() {
         removeProfilePhotoMessage.verifyDisplayed();
     }

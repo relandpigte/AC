@@ -93,6 +93,7 @@ public class HomePageStepDefinitions {
 	@When("^user navigate to profile settings using profile widget$")
 	public void navigateProfileSettingsUsingWidget() {
 		Homepage.ProfileWidget.clickProfilePhoto();
+		DriverHandler.delay(8);
 	}
 	
 	@Then("^user should see all projects$")

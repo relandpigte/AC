@@ -15,4 +15,9 @@ public class CommonObjectPageStepDefinitions {
 	public void verifyAccountSettingsIsDisplayed() {
 		CommonObjects.verifyAccountSettingsIsDisplayed();
 	}
+	
+	@Then("sucessful message is displayed$")
+	public void verifySuccessfulMessageIsDisplayed() {
+		CommonObjects.successfulMessageAtTheRightCornerIsDisplayed();
+	}
 }

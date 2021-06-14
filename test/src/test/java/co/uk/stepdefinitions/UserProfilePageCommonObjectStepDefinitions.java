@@ -44,7 +44,7 @@ public class UserProfilePageCommonObjectStepDefinitions {
 
     @Then("^confirmation is displayed$")
     public void verifyConfirmationModalIsDisplayed() {
-        UserProfilePageCommonObjects.ConfirmationModal.verifyConfirmationModalIsDisplayed();
+    	UserProfilePageCommonObjects.ConfirmationModal.verifyConfirmationModalIsDisplayed();
     }
 
     @When("^the user confirms to remove a cover photo$")
@@ -87,5 +87,14 @@ public class UserProfilePageCommonObjectStepDefinitions {
     @When("^user proceed to education tab$")
     public void proceedToEducationTab() {
     	UserProfilePageCommonObjects.clickEducationTab();
+    	DriverHandler.delay(4);
     }
+    
+    @When("^user proceed to research tab$")
+    public void proceedToResearchTab() {
+    	UserProfilePageCommonObjects.clickResearchTab();
+    	DriverHandler.delay(4);
+    }
+    
+   
 }
