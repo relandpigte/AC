@@ -18,26 +18,22 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <!-- Card -->
         <div class="card">
           <div class="card-body text-center">
-            <!-- Title -->
             <h1>
               {{ 'RequestSupportCardTitle' | localize }}
             </h1>
-            <!-- Subtitle -->
             <p class="text-muted">
               {{ 'RequestSupportCardMessage' | localize }}
             </p>
-            <!-- Button -->
-            <a href="javascript:;" class="btn btn-primary">
+            <a [routerLink]="['/app/service-wizard']" class="btn btn-primary">
               {{ 'RequestSupport' | localize }}
             </a>
 
           </div>
         </div>
       </div>
-    </div> <!-- / .row -->
+    </div>
 
     <div class="row mt-5">
       <div class="col-12 col-xl-8">

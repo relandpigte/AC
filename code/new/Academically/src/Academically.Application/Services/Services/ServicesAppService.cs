@@ -15,14 +15,17 @@ namespace Academically.Services.Services
     {
         private readonly IRepository<Service, Guid> _servicesRepository;
         private readonly IRepository<ServiceMapping, Guid> _serviceMappingsRepository;
+        private readonly IRepository<Service2, Guid> _service2sRepository;
 
         public ServicesAppService(
             IRepository<Service, Guid> servicesRepository,
-            IRepository<ServiceMapping, Guid> serviceMappingsRepository
+            IRepository<ServiceMapping, Guid> serviceMappingsRepository,
+            IRepository<Service2, Guid> service2sRepository
             )
         {
             _servicesRepository = servicesRepository;
             _serviceMappingsRepository = serviceMappingsRepository;
+            _service2sRepository = service2sRepository;
         }
 
         public async Task<IEnumerable<ServiceDto>> GetCategories()
@@ -85,6 +88,15 @@ namespace Academically.Services.Services
                     || (e.Subject.ReviewStatus != SubjectReviewStatus.Rejected && e.Subject.CreatorUserId == AbpSession.UserId.Value))
                 .Select(e => ObjectMapper.Map<SubjectDto>(e.Subject))
                 .Distinct()
+                .ToListAsync();
+        }
+
+        // Using Service2 Table
+        public async Task<IEnumerable<Service2Dto>> GetAllCategories()
+        {
+            return await _service2sRepository.GetAll()
+                .OrderBy(s => s.Name)
+                .Select(s => ObjectMapper.Map<Service2Dto>(s))
                 .ToListAsync();
         }
     }
