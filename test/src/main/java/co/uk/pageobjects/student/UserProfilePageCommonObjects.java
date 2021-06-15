@@ -46,6 +46,10 @@ public class UserProfilePageCommonObjects {
     public static void verifyAnonymousPhoto() {
         anonymousPhoto.verifyDisplayed();
     }
+    
+    public static void verifyAnonyomousPhotoIsNotDisplayed() {
+    	anonymousPhoto.verifyNotDisplayed();
+    }
 
     public static void clickIntroductionTab() {
         introductionTab.click();
@@ -79,7 +83,7 @@ public class UserProfilePageCommonObjects {
 
     public static void uploadProfilePhoto(String filePath) {
         uploadProfilePhoto.uploadFile(filePath);
-        DriverHandler.delay(10);
+        DriverHandler.delay(5);
     }
 
     public static class CropImageModal {

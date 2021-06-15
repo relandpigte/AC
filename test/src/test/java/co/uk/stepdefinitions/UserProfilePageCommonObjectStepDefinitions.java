@@ -5,11 +5,12 @@ import co.uk.pageobjects.student.UserProfilePageCommonObjects;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+
 public class UserProfilePageCommonObjectStepDefinitions {
 
     private static String profilePhotoFile = System.getProperty("user.dir").replace("\\", "/") + "/src/main/resources/Data/"
             + DriverHandler.environment + "/ProfilePhoto_Benjamin_Franklin.jpg";
-
+    
     @Then("^user is in profile settings$")
     public void verifyUserProfilePageIsDisplayed() {
         UserProfilePageCommonObjects.verifyUserProfilePageIsDisplayed();
@@ -61,6 +62,7 @@ public class UserProfilePageCommonObjectStepDefinitions {
     @When("^user crop the image$")
     public void cropImage() {
     	UserProfilePageCommonObjects.CropImageModal.clickCrop();
+    	DriverHandler.delay(5);
     }
     
     @Then("^upload a profile photo is successful$")
@@ -96,5 +98,9 @@ public class UserProfilePageCommonObjectStepDefinitions {
     	DriverHandler.delay(4);
     }
     
+    @Then("^new profile photo is displayed$")
+    public void verifyNewProfilePhotoIsDisplayed() {
+    	UserProfilePageCommonObjects.verifyAnonyomousPhotoIsNotDisplayed();
+    }
    
 }

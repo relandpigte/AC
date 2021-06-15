@@ -1,6 +1,6 @@
 Feature: User profile settings
  
-@NOT
+@UI @TestRails(14499) @??
 Scenario: C14499 - Verify uploading a profile photo
 	
 	Given User is in academically login page
@@ -23,8 +23,8 @@ Scenario: C14499 - Verify uploading a profile photo
 	Then crop profile photo modal is displayed
 	When user crop the image
 	Then upload a profile photo is successful
-
-@NOT
+	
+@UI @TestRails(14500)
 Scenario: C14500 - Verify removing a profile photo
 	
 	Given User is in academically login page
@@ -47,6 +47,7 @@ Scenario: C14500 - Verify removing a profile photo
 	Then crop profile photo modal is displayed
 	When user crop the image
 	Then upload a profile photo is successful
+	And new profile photo is displayed
 	When user remove a profile photo
 	Then successfully displayed profile picture message was removed
 	And profile photo is removed
@@ -150,20 +151,11 @@ Scenario: C14506 - Verify adding user education information by evidence
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
 	When user proceed to education tab
-	And user add evidence file (image or document)
-#Click evidence tab at the right corner
-#Drop file or click to upload (Image or document)
-	Then evidence is added
-#Verify evidence is added and displayed
-	When user categorize the evidence
-#Enter category of the evidence
+	And user add evidence file
+	Then "Sample1" evidence is added
+	When user enter "Certificate" category evidence
 	And user saving the education information
-#Click save
-	Then adding education information is successful
-#Verify education information is added
-#Verify successful message is displayed
-When user saving the education information
-Then adding education information is successful
+	Then sucessful message is displayed
 
 Scenario: C14507 Verify removing user education information
 
@@ -228,7 +220,7 @@ Scenario: C14508 - Verify adding other courses information
 	When user enter qualification information
 		|Certificate     |Organization     |Grade attained  |Start year  |End year  |Country         |City    |Summary  |
 		|Risk Management |ABC Organization |A               |2005        |2007      |United Kingdom  |London  |Testing  |          
-##And user upload evidence of qualification attained
+  And user upload evidence of qualification attained
   And user saving qualification information
   Then sucessful message is displayed
 

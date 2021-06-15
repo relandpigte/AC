@@ -25,7 +25,7 @@ public class UserProfilePageEducation {
 	private static Button folderOtherCourse(String course) {
 		return new Button(course+" folder",By.xpath("//td[contains(text(),'"+course+"')]/following-sibling::td//span[contains(@class,'trash')]/parent::button"));
 	}
-	
+
 	public static void clickEditCourse(String course) {
 		editOtherCourse(course).click();
 	}
@@ -191,6 +191,24 @@ public class UserProfilePageEducation {
 		private static Button addCourseBtn = new Button("Add Course",By.xpath("//app-education-levels//a[contains(text(),'Add')]"));
 		private static Tab evidenceTab = new Tab("Evidence tab",By.xpath("//a[@id='evidences-tab']"));
 		private static Button saveBtn = new Button("Save",By.xpath("//app-create-edit-education//button[@type='submit']"));
+		private static TextBox documentUploader = new TextBox("Upload evidence",By.xpath("//input[@id='DocumentUploader']"));
+		private static Element evidenceName(String name) {
+			return new Element(name,By.xpath("//app-document-uploader//h4[contains(text(),'Sample1.jpg')]"));
+		}
+		
+		private static TextBox evidenceCategory = new TextBox("Evidence category",By.xpath("//app-document-uploader//input[@id='Categiry_0']"));
+		
+		public static void enterEvidenceCategory(String categoryName) {
+			evidenceCategory.setText(categoryName);
+		}
+		
+		public static void verifyEvidenceNameIsDisplayed(String name) {
+			evidenceName(name).verifyDisplayed();
+		}
+		
+		public static void uploadEvidence(String file) {
+			documentUploader.uploadFile(file);
+		}
 		
 		public static void selectStartYear(String year) {
 			startYearContainer.click();
@@ -261,11 +279,6 @@ public class UserProfilePageEducation {
 			private static Button addBtn = new Button("Add",By.xpath("//app-create-edit-education-level//button[@type='submit']"));
 			private static Button editCourseBtn = new Button("Edit course",By.xpath("//app-education-levels//span[contains(@class,'edit')]//parent::button"));
 			private static Button removeCourseBtn = new Button("Remove course",By.xpath("//app-education-levels//span[contains(@class,'trash')]//parent::button"));
-			private static TextBox documentUploader = new TextBox("Upload evidence",By.xpath("//input[@id='DocumentUploader']"));
-			
-			public static void uploadEvidence(String file) {
-				documentUploader.setText(file);
-			}
 			
 			public static void verifyHeader(String headerTitle) {
 				header(headerTitle).verifyDisplayed();

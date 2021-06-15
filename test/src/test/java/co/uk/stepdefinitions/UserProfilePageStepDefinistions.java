@@ -149,6 +149,39 @@ public class UserProfilePageStepDefinistions {
 		UserProfilePageEducation.confirmationModal.clickYes();
 		DriverHandler.delay(3);
 	}
+	
+    private static String sampleFile = System.getProperty("user.dir").replace("\\", "/") + "/src/main/resources/Data/"
+            + DriverHandler.environment + "/Sample1.jpg";
+   
+	@When("^user upload evidence of qualification attained$")
+	public void uploadEvidenceQualification() {
+		UserProfilePageEducation.OtherCourse.uploadDocument(sampleFile);
+	}
+	
+	@When("^user add evidence file$")
+	public void addEvidenceFile() {
+		UserProfilePageEducation.AddEditEducationModal.clickEvidenceTab();
+		UserProfilePageEducation.AddEditEducationModal.uploadEvidence(sampleFile);
+	}
+	
+	@Then("^\"(.*)\" evidence is added$")
+	public void verifyEvidenceIsAdded(String name) {
+		DriverHandler.delay(1);
+		UserProfilePageEducation.AddEditEducationModal.verifyEvidenceNameIsDisplayed(name);
+	}
+	
+	@When("^user enter \"(.*)\" category evidence$")
+	public void enterCategoryEvidence(String category) {
+		UserProfilePageEducation.AddEditEducationModal.enterEvidenceCategory(category);
+	}
+	
+	@When("^user saving the education information$")
+	public void saveEducationInformation() {
+		UserProfilePageEducation.AddEditEducationModal.clickSave();
+		DriverHandler.delay(4);
+	}
+	
+	
 }
 
 
