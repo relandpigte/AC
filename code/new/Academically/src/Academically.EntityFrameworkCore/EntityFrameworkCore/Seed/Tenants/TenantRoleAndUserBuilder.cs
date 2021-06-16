@@ -137,7 +137,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_AccountSettings_Security,
                 PermissionNames.Pages_AccountSettings_Notifications,
                 PermissionNames.Pages_Widgets_Verifications,
-                PermissionNames.Pages_Calendar
+                PermissionNames.Pages_Calendar,
+                PermissionNames.Pages_Calendar_BlockOuts
             );
 
             #endregion

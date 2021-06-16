@@ -30,6 +30,7 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
   PhoneNumberFormat = PhoneNumberFormat;
   countries = countries;
   timezones: TimeZoneDto[] = [];
+  currentTimeZone: string;
   isLoading = false;
   isOnboarding = true;
   isTutorProfile = false;
@@ -84,6 +85,11 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
         finalize(() => {
           this.isLoading = false;
           this.model.phoneNumber = this.formatPhoneNumber(tempPhoneNumber);
+          if (this.currentTimeZone !== this.model.timeZoneId) {
+            setTimeout(() => {
+              location.reload();
+            }, 3000);
+          }
         }),
       )
       .subscribe(() => {
@@ -113,6 +119,12 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
     this.getLocationDetail(e.item.id);
   }
 
+  onTimeZoneChange(): void {
+    if (this.currentTimeZone !== this.model.timeZoneId) {
+      this.notify.info(this.l('TimeZoneUpdatedMessage'), undefined, { timer: 5000 });
+    }
+  }
+
   private getUser(): void {
     this.isLoading = true;
     this._profilesService.get(this.appSession.userId)
@@ -125,6 +137,7 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
       )
       .subscribe(user => {
         this.model = user;
+        this.currentTimeZone = this.model.timeZoneId;
         if (this.model.phoneNumber) {
           this.model.phoneNumber = this.formatPhoneNumber(this.model.phoneNumber);
         }

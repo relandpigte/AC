@@ -51,4 +51,5 @@
 	<include file="ddml-new/ddml.2021-06-01-01.update-spokenlanguages-data.xml"/>
 	<include file="ddml-new/ddml.2021-06-02-01.alter-qualifications-add-missing-fields.xml"/>
 	<include file="ddml-new/ddml.2021-06-03-01.add-services2-table.xml"/>
+	<include file="ddml-new/ddml.2021-06-10-01.create-calendarevents-table.xml"/>
 </databaseChangeLog>

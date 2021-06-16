@@ -42,6 +42,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.ReferencesServiceProxy,
         ApiServiceProxies.DbsCertificatesServiceProxy,
         ApiServiceProxies.AcceptanceLogsServiceProxy,
+        ApiServiceProxies.CalendarEventsServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

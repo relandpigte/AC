@@ -1,0 +1,21 @@
+﻿using Abp.Domain.Entities.Auditing;
+using Academically.Authorization.Users;
+using Academically.Domain.Enums;
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Academically.Domain.Entities
+{
+    [Table("AcademicallyCalendarEvents")]
+    public class CalendarEvent : CreationAuditedEntity<Guid>
+    {
+        public string Title { get; set; }
+        public CalendarEventType Type { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public CalendarEventRecurrence Recurrence { get; set; }
+
+        [ForeignKey("CreatorUserId")]
+        public virtual User CreatorUser { get; set; }
+    }
+}

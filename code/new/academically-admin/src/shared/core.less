@@ -70,6 +70,26 @@ bs-datepicker-container {
   }
 }
 
+full-calendar {
+
+  .fc-timegrid-slot,
+  .fc-day {
+    cursor: cell;
+  }
+
+  .fc-non-business {
+    cursor: default;
+
+    &.tutor {
+      cursor: pointer;
+    }
+  }
+
+  .fc-timegrid-event {
+    cursor: pointer;
+  }
+}
+
 /* custom component styles end */
 
 body {
@@ -702,5 +722,5 @@ app-tutor-reviews {
 }
 
 .virtical-center {
-  vertical-align:middle !important;
+  vertical-align: middle !important;
 }

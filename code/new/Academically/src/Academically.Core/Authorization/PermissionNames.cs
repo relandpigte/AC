@@ -108,6 +108,7 @@
 
 
         public const string Pages_Calendar = "Pages.Calendar";
+        public const string Pages_Calendar_BlockOuts = "Pages.Calendar.BlockOuts";
 
 
         public const string Pages_Tenants = "Pages.Tenants";

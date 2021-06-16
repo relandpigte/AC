@@ -1,6 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+      <text name="BlockOuts">Block Outs</text>
+      <text name="TimeZoneUpdatedMessage">Updating your time zone will refresh your browser thress seconds after saving your changes.</text>
+      <text name="Yearly">Yearly</text>
+    <text name="Monthly">Monthly</text>
+    <text name="Weekly">Weekly</text>
+    <text name="Daily">Daily</text>
+    <text name="OneTime">One Time</text>
+    <text name="Recurrence">Recurrence</text>
+    <text name="EditBlockOut">Edit block out</text>
+    <text name="AddBlockOut">Add block out</text>
     <text name="Schedule">Schedule</text>
     <text name="ManageYourEvents">Manage your events</text>
     <text name="Calendar">Calendar</text>

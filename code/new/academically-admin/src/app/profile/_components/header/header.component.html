@@ -23,8 +23,7 @@
             class="btn btn-primary d-block d-md-inline-block">
             {{ 'BecomeATutor' | localize}}
           </button>
-          <button *ngIf="isTutor" [routerLink]="['/app/calendar']"
-            class="btn btn-primary d-block d-md-inline-block ml-2">
+          <button *ngIf="isTutor" [routerLink]="[calendarRoute]" class="btn btn-primary d-block d-md-inline-block ml-2">
             <i class="fe fe-calendar"></i>
             {{ 'Calendar' | localize}}
           </button>
