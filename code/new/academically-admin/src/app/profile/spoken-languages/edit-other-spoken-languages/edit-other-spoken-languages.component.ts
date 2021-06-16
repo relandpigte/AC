@@ -34,7 +34,6 @@ export class EditOtherSpokenLanguagesComponent
 
   ngOnInit(): void {
     this.model = this.editUserSpokenLanguage;
-    console.log(this.model);
     if (!this.model.proficiency) {
       this.model.proficiency = SpokenLanguageProficiency.Basic;
     }

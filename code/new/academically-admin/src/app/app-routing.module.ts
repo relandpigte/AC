@@ -104,6 +104,13 @@ import { CreateProjectComponent } from './create-project/create-project.componen
               ),
           },
           {
+            path: 'projects',
+            loadChildren: () =>
+              import('@app/projects/projects.module').then(
+                (m) => m.ProjectsModule
+              ),
+          },
+          {
             path: 'calendar',
             loadChildren: () =>
               import('@app/calendar/calendar.module').then(

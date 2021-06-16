@@ -43,7 +43,6 @@ export class BlockDateComponent extends AppComponentBase implements OnInit {
     this.isLoading = true;
     this.model.startTime = moment(this.startTime);
     this.model.endTime = moment(this.endTime);
-    console.log(this.model.startTime.format('HH:mm'));
     this.model.type = CalendarEventType.Blocker;
     (!this.model.id
       ? this._calendarEventsService.create(this.model)

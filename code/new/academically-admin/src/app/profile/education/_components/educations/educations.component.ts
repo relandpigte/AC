@@ -84,7 +84,6 @@ export class EducationsComponent extends AppComponentBase implements OnInit {
 
   isFirstItemInEducations(id: string): boolean {
     const university = this.userEducationGroup.find(u => u.id === id);
-    console.log(university);
     return university !== undefined;
   }
 

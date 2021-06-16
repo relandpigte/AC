@@ -1,0 +1,56 @@
+<div class="container-fluid" [@routerTransition]>
+  <div class="row mt-5 pt-5 text-center">
+    <div class="col-md-12">
+      <p class="text-muted">
+        <ng-container *ngTemplateOutlet="stepInfo"></ng-container>
+      </p>
+    </div>
+    <div class="col-md-12 header mt-md-5">
+      <div class="header-body">
+        <h1 class="header-title mb-4">
+          {{ 'ServiceWizardStep2Title' | localize }}
+        </h1>
+        <p class="header-subtitle mb-5">
+          {{ 'ServiceWizardStep2Subtitle' | localize }}
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="row ">
+    <div class="col-md-12 header" [loader]="isLoading">
+      <div class="header-body">
+        <div class="row justify-content-center">
+          <div class="col-md-8 header">
+            <div class="row">
+              <div class="col-md-6" *ngFor="let serviceLevel of serviceLevels">
+                <div class="form-group m-1 p-3" [class.bg-light]="getSelected(serviceLevel.id)">
+                  <div class="custom-control custom-checkbox">
+                    <!-- Remove (click)="$event.preventDefault()" to select more than one services-->
+                    <input class="custom-control-input" id="service_{{ serviceLevel.id }}" name="service-level"
+                      type="checkbox" [checked]="getSelected(serviceLevel.id)"
+                      (change)="onCheckChange($event.target.checked, serviceLevel)" />
+                    <label class="custom-control-label w-100" for="service_{{ serviceLevel.id }}">{{ serviceLevel.name
+                      }}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="d-flex justify-content-between">
+    <button (click)="onBackClick()" type="button" class="btn btn-white">
+      {{ 'Back' | localize }}
+    </button>
+    <p class="text-muted m-0 align-self-center">
+      <ng-container *ngTemplateOutlet="stepInfo"></ng-container>
+    </p>
+    <button type="button" (click)="onNextClick()" class="btn btn-primary">
+      {{ 'Continue' | localize }}
+    </button>
+  </div>
+</div>
+<ng-template #stepInfo>{{ 'step' | localize | titlecase }} 2 {{ 'of' | localize | titlecase }} 4</ng-template>

@@ -16,5 +16,7 @@ namespace Academically.Services.Services
 
         // using services2 table
         Task<IEnumerable<Service2Dto>> GetAllCategories();
+        IEnumerable<Service2Dto> GetStaticServiceLevels();
+        IEnumerable<Service2Dto> GetStaticServices();
     }
 }

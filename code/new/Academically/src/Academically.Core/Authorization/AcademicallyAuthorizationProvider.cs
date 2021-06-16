@@ -117,6 +117,17 @@ namespace Academically.Authorization
             var calendarPermissions = context.CreatePermission(PermissionNames.Pages_Calendar, L("Calendar"));
             calendarPermissions.CreateChildPermission(PermissionNames.Pages_Calendar_BlockOuts, L("BlockOuts"));
 
+            var serviceWizardPermission = context.CreatePermission(PermissionNames.Pages_ServiceWizard, L("ServiceWizard"));
+            serviceWizardPermission.CreateChildPermission(PermissionNames.Pages_ServiceWizard_Category, L("Category"));
+            serviceWizardPermission.CreateChildPermission(PermissionNames.Pages_ServiceWizard_Level, L("Level"));
+            serviceWizardPermission.CreateChildPermission(PermissionNames.Pages_ServiceWizard_Services, L("Services"));
+            serviceWizardPermission.CreateChildPermission(PermissionNames.Pages_ServiceWizard_CreateProject, L("CreateProject"));
+
+            var projectsPermission = context.CreatePermission(PermissionNames.Pages_Projects, L("Projects"));
+            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Overview, L("Overwiew"));
+            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Browse, L("Browse"));
+            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_MyProjects, L("MyProjects"));
+            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_UsageAndFinancials, L("UsageAndFinancials"));
 
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
         }

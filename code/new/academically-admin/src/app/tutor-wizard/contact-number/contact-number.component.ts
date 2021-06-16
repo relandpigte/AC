@@ -168,7 +168,6 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
         if (user.isPhoneNumberConfirmed) {
           this.currentState = PhoneVerificationState.Verified;
           if (user.phoneNumber) {
-            console.log(user.phoneNumber);
             this.phoneNumber = this.formatPhoneNumber(user.phoneNumber);
           }
         }
