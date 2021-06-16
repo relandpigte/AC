@@ -53,5 +53,6 @@
 	<include file="ddml-new/ddml.2021-06-03-01.add-services2-table.xml"/>
 	<include file="ddml-new/ddml.2021-06-10-01.create-calendarevents-table.xml"/>
 	<include file="ddml-new/ddml.2021-06-011-01.add-projects-table.xml"/>
+	<include file="ddml-new/ddml.2021-06-16-01.create-projectoffers-table.xml"/>
 </databaseChangeLog>
 	
