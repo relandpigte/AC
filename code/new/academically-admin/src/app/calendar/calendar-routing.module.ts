@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Route, RouterModule } from '@angular/router';
 
 import { AppRouteGuard } from '@shared/auth/auth-route-guard';
 
@@ -9,19 +9,21 @@ import { CalendarComponent } from './calendar.component';
 @NgModule({
   imports: [
     RouterModule.forChild([
-      {
-        path: '',
-        component: WrapperComponent,
-        data: { permission: 'Pages.Calendar' },
-        canActivate: [AppRouteGuard],
-        canActivateChild: [AppRouteGuard],
-        children: [
-          {
-            path: '',
-            component: CalendarComponent,
-          },
-        ],
-      }
+      ...['', ':user-id'].map(path => (
+        {
+          path,
+          component: WrapperComponent,
+          data: { permission: 'Pages.Calendar' },
+          canActivate: [AppRouteGuard],
+          canActivateChild: [AppRouteGuard],
+          children: [
+            {
+              path: '',
+              component: CalendarComponent,
+            },
+          ],
+        } as Route
+      )),
     ]),
   ],
   exports: [

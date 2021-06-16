@@ -8,6 +8,7 @@ import { QuillModule } from 'ngx-quill';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 
 import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
 
@@ -37,6 +38,7 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
     BsDropdownModule.forRoot({
       container: 'body',
     }),
+    TimepickerModule.forRoot(),
   ],
   exports: [
     SharedModule,
@@ -48,6 +50,7 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
     NgxPaginationModule,
     TooltipModule,
     BsDropdownModule,
+    TimepickerModule,
     EnumToArrayPipe,
     DocumentUploaderComponent,
     ImageCropperComponent,

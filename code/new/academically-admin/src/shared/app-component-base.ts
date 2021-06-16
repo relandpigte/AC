@@ -14,7 +14,6 @@ import { AppSessionService } from '@shared/session/app-session.service';
 import { Moment } from 'moment';
 import { DocumentDto } from './service-proxies/service-proxies';
 import { ReplaySubject } from 'rxjs';
-import { ChangeData } from 'ngx-intl-tel-input';
 
 @Injectable()
 export abstract class AppComponentBase implements OnDestroy {
@@ -54,8 +53,7 @@ export abstract class AppComponentBase implements OnDestroy {
       keyboard: false,
     };
     if (this.appSession.user) {
-      this.isTutor = this.appSession.user.roles.findIndex(e => e.toLowerCase() === 'tutor') >= 0;
-      this.isStudent = this.appSession.user.roles.findIndex(e => e.toLowerCase() === 'student') >= 0;
+      this.checkUserRole();
     }
   }
 
@@ -126,9 +124,9 @@ export abstract class AppComponentBase implements OnDestroy {
     return this.diffDatesSeconds(this.convertMomentToUserDate(date1), this.convertMomentToUserDate(date2));
   }
 
-  private isValidUrl(string): boolean {
+  private isValidUrl(url: string): boolean {
     try {
-      new URL(string);
+      new URL(url);
     } catch (_) {
       return false;
     }
@@ -138,5 +136,10 @@ export abstract class AppComponentBase implements OnDestroy {
 
   protected formatPhoneNumber(phoneNumber: string): string {
     return phoneNumber.substr(phoneNumber.indexOf(' ') + 1);
+  }
+
+  protected checkUserRole(): void {
+    this.isTutor = this.appSession.user.roles.findIndex(e => e.toLowerCase() === 'tutor') >= 0;
+    this.isStudent = this.appSession.user.roles.findIndex(e => e.toLowerCase() === 'student') >= 0;
   }
 }
