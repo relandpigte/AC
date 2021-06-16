@@ -57,7 +57,6 @@ export class SummaryComponent extends AppComponentBase {
     navigator.clipboard
       .writeText(link)
       .then(() => {
-        console.log('[copied] ', link);
         this.notify.success(this.l('LinkCopiedToClipboard'));
       })
       .catch((e) => console.error(e));

@@ -50,6 +50,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<AcceptanceLog> AcceptanceLogs { get; set; }
         public virtual DbSet<CalendarEvent> CalendarEvents { get; set; }
         public virtual DbSet<Service2> Service2s { get; set; }
+        public virtual DbSet<Project> Projects { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

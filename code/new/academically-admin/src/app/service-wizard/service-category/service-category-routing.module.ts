@@ -11,7 +11,7 @@ import { ServiceCategoryComponent } from './service-category.component';
       {
         path: '',
         component: ServiceCategoryComponent,
-        data: { permission: 'Pages.TutorWizard.AboutYou' },
+        data: { permission: 'Pages.ServiceWizard.Category' },
         canActivate: [AppRouteGuard],
         canActivateChild: [AppRouteGuard],
       },

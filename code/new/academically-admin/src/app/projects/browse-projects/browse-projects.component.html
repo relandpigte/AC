@@ -1,0 +1,123 @@
+<div [@routerTransition]>
+  <div class="card">
+    <div class="card-header">
+      <div class="row align-items-center">
+        <div class="col">
+          <form>
+            <div class="input-group input-group-flush input-group-merge input-group-reverse flex-row-reverse">
+              <input class="form-control list-search" type="search" placeholder="Search">
+              <span class="input-group-text border-0 pr-0">
+                <i class="fe fe-search"></i>
+              </span>
+            </div>
+          </form>
+        </div>
+
+        <div class="col-auto me-n3">
+          <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+            <li class="nav-item">
+              <a href="javascript:;" class="nav-link active">{{ 'Shortlisted' | localize }}</a>
+            </li>
+            <li class="nav-item">
+              <a href="javascript:;" class="nav-link">{{ 'Shortlisted' | localize }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="card-body bg-light">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="col-form-label font-size-sm text-muted" for="nativeLanguage">{{ 'NativeLanguage' | localize | uppercase }}</label>
+            <div class="form-select-wrapper">
+              <select id="nativeLanguage" name="nativeLanguage" class="form-control form-select form-select-sm">
+                <option>English</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="col-form-label font-size-sm text-muted" for="minEducationLevel">{{ 'MinEduLevel' | localize | uppercase }}</label>
+            <div class="form-select-wrapper">
+              <select id="minEducationLevel" name="minEducationLevel" class="form-control form-select form-select-sm">
+                <option>Graduate</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="col-form-label font-size-sm text-muted" for="minRating">{{ 'MinRating' | localize | uppercase }}</label>
+            <div class="form-select-wrapper">
+              <select id="minEducationLevel" name="minRating" class="form-control form-select form-select-sm">
+                <option>4 Star</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="col-form-label font-size-sm text-muted" for="distance">{{ 'Distance' | localize | uppercase }}</label>
+            <div class="form-select-wrapper">
+              <select id="minEducationLevel" name="distance" class="form-control form-select form-select-sm">
+                <option>25 Miles</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="col-form-label font-size-sm text-muted" for="availability">{{ 'Availability' | localize | uppercase }}</label>
+            <div class="form-select-wrapper">
+              <select id="minEducationLevel" name="availability" class="form-control form-select form-select-sm">
+                <option>Any</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="col-form-label font-size-sm text-muted" for="sortBy">{{ 'SortBy' | localize | uppercase }}</label>
+            <div class="form-select-wrapper">
+              <select id="minEducationLevel" name="sortBy" class="form-control form-select form-select-sm">
+                <option>Best Match</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <ul class="list-group list-group-flush list my-n3">
+      <li class="list-group-item" *ngFor="let project of projects">
+        <div class="row align-items-top">
+          <div class="col ms-n2">
+            <!-- Title -->
+            <h4 class="mb-1 name text-primary">
+              <a href="javascript:;">{{ project.name }}</a>
+            </h4>
+            <p class="header-subtitle">
+              {{ project.creatorUser.currentUniversity }}
+            </p>
+          </div>
+          <div class="col-auto">
+            <button type="button" class="btn btn-link btn-sm mr-3 text-secondary">
+              <i class="fe fe-heart"></i>
+              {{ 'Shortlist' | localize }}
+            </button>
+            <button type="button" class="btn btn-sm btn-primary">
+              {{ 'ViewBrief' | localize }}
+            </button>
+          </div>
+        </div>
+      </li>
+      </ul>
+    </div>
+  </div>
+</div>

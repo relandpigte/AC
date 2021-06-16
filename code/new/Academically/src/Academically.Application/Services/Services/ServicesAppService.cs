@@ -17,6 +17,59 @@ namespace Academically.Services.Services
         private readonly IRepository<ServiceMapping, Guid> _serviceMappingsRepository;
         private readonly IRepository<Service2, Guid> _service2sRepository;
 
+        private readonly List<Service2Dto> StaticServiceLevels = new List<Service2Dto>
+            {
+                new Service2Dto {
+                    Id = Guid.Parse("cbe3067b-c6c6-4d01-9cbe-4ec7dc94cf18"),
+                    Name = "High School",
+                    ParentIdMap = "cbe3067b-c6c6-4d01-9cbe-4ec7dc94cf18",
+                },
+                new Service2Dto {
+                    Id = Guid.Parse("552cbaae-aeeb-4745-99b0-fd92da9c7288"),
+                    Name = "Pre Degree",
+                    ParentIdMap = "552cbaae-aeeb-4745-99b0-fd92da9c7288",
+                },
+                new Service2Dto
+                {
+                    Id = Guid.Parse("efd532fd-198b-4364-9be3-5dfdc299ed63"),
+                    Name = "Undergraduate",
+                    ParentIdMap = "efd532fd-198b-4364-9be3-5dfdc299ed63",
+                },
+                new Service2Dto
+                {
+                    Id = Guid.Parse("173b478d-cffe-4b57-9b5e-4cd54a006dc4"),
+                    Name = "Graduate",
+                    ParentIdMap = "173b478d-cffe-4b57-9b5e-4cd54a006dc4",
+                },
+                new Service2Dto
+                {
+                    Id = Guid.Parse("0aff0178-03c7-4b75-b74a-596378427dd7"),
+                    Name = "Post Graduate",
+                    ParentIdMap = "0aff0178-03c7-4b75-b74a-596378427dd7",
+                },
+                new Service2Dto
+                {
+                    Id = Guid.Parse("36680967-d2a9-4e9d-807e-4cce793a6aac"),
+                    Name = "Doctorate",
+                    ParentIdMap = "36680967-d2a9-4e9d-807e-4cce793a6aac",
+                },
+            };
+        private readonly List<Service2Dto> StaticServices = new List<Service2Dto>
+            {
+                new Service2Dto {
+                    Id = Guid.Parse("7483d3c9-84c4-4a38-9b37-8783e19af7e4"),
+                    Name = "Academic Tutoring",
+                    ParentIdMap = "7483d3c9-84c4-4a38-9b37-8783e19af7e4",
+                    Description = "Improve your subject knowledge from talented tutors"
+                },
+                new Service2Dto {
+                    Id = Guid.Parse("7585ab65-4087-4c73-a0ee-821bf670943f"),
+                    Name = "Assignment Feedback",
+                    ParentIdMap = "7585ab65-4087-4c73-a0ee-821bf670943f",
+                    Description = "Receive unbiased feedback before you submit your work"
+                },
+            };
+
         public ServicesAppService(
             IRepository<Service, Guid> servicesRepository,
             IRepository<ServiceMapping, Guid> serviceMappingsRepository,
@@ -98,6 +151,16 @@ namespace Academically.Services.Services
                 .OrderBy(s => s.Name)
                 .Select(s => ObjectMapper.Map<Service2Dto>(s))
                 .ToListAsync();
+        }
+
+        public IEnumerable<Service2Dto> GetStaticServiceLevels()
+        {
+            return StaticServiceLevels;
+        }
+
+        public IEnumerable<Service2Dto> GetStaticServices()
+        {
+            return StaticServices;
         }
     }
 }

@@ -2525,6 +2525,249 @@ export class ProfilesServiceProxy {
 }
 
 @Injectable()
+export class ProjectsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param userIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(userIdFilter: number | undefined, searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ProjectDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Projects/GetAll?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<ProjectDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ProjectDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<ProjectDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ProjectDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ProjectDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateProjectDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Projects/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: UpdateProjectDto | undefined): Observable<ProjectDto> {
+        let url_ = this.baseUrl + "/api/services/app/Projects/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<ProjectDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ProjectDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<ProjectDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ProjectDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ProjectDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Projects/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class RatingsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -4151,6 +4394,122 @@ export class ServicesServiceProxy {
     }
 
     protected processGetAllCategories(response: HttpResponseBase): Observable<Service2Dto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(Service2Dto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<Service2Dto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getStaticServiceLevels(): Observable<Service2Dto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetStaticServiceLevels";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetStaticServiceLevels(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetStaticServiceLevels(<any>response_);
+                } catch (e) {
+                    return <Observable<Service2Dto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<Service2Dto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetStaticServiceLevels(response: HttpResponseBase): Observable<Service2Dto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(Service2Dto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<Service2Dto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getStaticServices(): Observable<Service2Dto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetStaticServices";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetStaticServices(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetStaticServices(<any>response_);
+                } catch (e) {
+                    return <Observable<Service2Dto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<Service2Dto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetStaticServices(response: HttpResponseBase): Observable<Service2Dto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -8579,6 +8938,73 @@ export interface IChangeUserLanguageDto {
     languageName: string;
 }
 
+export class CreateProjectDto implements ICreateProjectDto {
+    name: string | undefined;
+    serviceLevel1: string | undefined;
+    serviceNameLevel1: string | undefined;
+    serviceLevel2: string | undefined;
+    serviceNameLevel2: string | undefined;
+    serviceLevel3: string | undefined;
+    serviceNameLevel3: string | undefined;
+
+    constructor(data?: ICreateProjectDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.serviceLevel1 = _data["serviceLevel1"];
+            this.serviceNameLevel1 = _data["serviceNameLevel1"];
+            this.serviceLevel2 = _data["serviceLevel2"];
+            this.serviceNameLevel2 = _data["serviceNameLevel2"];
+            this.serviceLevel3 = _data["serviceLevel3"];
+            this.serviceNameLevel3 = _data["serviceNameLevel3"];
+        }
+    }
+
+    static fromJS(data: any): CreateProjectDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateProjectDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["serviceLevel1"] = this.serviceLevel1;
+        data["serviceNameLevel1"] = this.serviceNameLevel1;
+        data["serviceLevel2"] = this.serviceLevel2;
+        data["serviceNameLevel2"] = this.serviceNameLevel2;
+        data["serviceLevel3"] = this.serviceLevel3;
+        data["serviceNameLevel3"] = this.serviceNameLevel3;
+        return data; 
+    }
+
+    clone(): CreateProjectDto {
+        const json = this.toJSON();
+        let result = new CreateProjectDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateProjectDto {
+    name: string | undefined;
+    serviceLevel1: string | undefined;
+    serviceNameLevel1: string | undefined;
+    serviceLevel2: string | undefined;
+    serviceNameLevel2: string | undefined;
+    serviceLevel3: string | undefined;
+    serviceNameLevel3: string | undefined;
+}
+
 export class CreateRoleDto implements ICreateRoleDto {
     name: string;
     displayName: string;
@@ -10034,6 +10460,144 @@ export interface IProfileMetricDto {
     totalReviews: number;
 }
 
+export class ProjectDto implements IProjectDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    name: string | undefined;
+    serviceLevel1: string | undefined;
+    serviceNameLevel1: string | undefined;
+    serviceLevel2: string | undefined;
+    serviceNameLevel2: string | undefined;
+    serviceLevel3: string | undefined;
+    serviceNameLevel3: string | undefined;
+    creatorUser: UserDto;
+
+    constructor(data?: IProjectDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.name = _data["name"];
+            this.serviceLevel1 = _data["serviceLevel1"];
+            this.serviceNameLevel1 = _data["serviceNameLevel1"];
+            this.serviceLevel2 = _data["serviceLevel2"];
+            this.serviceNameLevel2 = _data["serviceNameLevel2"];
+            this.serviceLevel3 = _data["serviceLevel3"];
+            this.serviceNameLevel3 = _data["serviceNameLevel3"];
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ProjectDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProjectDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["name"] = this.name;
+        data["serviceLevel1"] = this.serviceLevel1;
+        data["serviceNameLevel1"] = this.serviceNameLevel1;
+        data["serviceLevel2"] = this.serviceLevel2;
+        data["serviceNameLevel2"] = this.serviceNameLevel2;
+        data["serviceLevel3"] = this.serviceLevel3;
+        data["serviceNameLevel3"] = this.serviceNameLevel3;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): ProjectDto {
+        const json = this.toJSON();
+        let result = new ProjectDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IProjectDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    name: string | undefined;
+    serviceLevel1: string | undefined;
+    serviceNameLevel1: string | undefined;
+    serviceLevel2: string | undefined;
+    serviceNameLevel2: string | undefined;
+    serviceLevel3: string | undefined;
+    serviceNameLevel3: string | undefined;
+    creatorUser: UserDto;
+}
+
+export class ProjectDtoPagedResultDto implements IProjectDtoPagedResultDto {
+    items: ProjectDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IProjectDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(ProjectDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): ProjectDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProjectDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ProjectDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new ProjectDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IProjectDtoPagedResultDto {
+    items: ProjectDto[] | undefined;
+    totalCount: number;
+}
+
 export class PublicationTagDto implements IPublicationTagDto {
     id: string;
     name: string | undefined;
@@ -10931,6 +11495,7 @@ export class Service2Dto implements IService2Dto {
     name: string | undefined;
     parentId: string | undefined;
     parentIdMap: string | undefined;
+    description: string | undefined;
 
     constructor(data?: IService2Dto) {
         if (data) {
@@ -10947,6 +11512,7 @@ export class Service2Dto implements IService2Dto {
             this.name = _data["name"];
             this.parentId = _data["parentId"];
             this.parentIdMap = _data["parentIdMap"];
+            this.description = _data["description"];
         }
     }
 
@@ -10963,6 +11529,7 @@ export class Service2Dto implements IService2Dto {
         data["name"] = this.name;
         data["parentId"] = this.parentId;
         data["parentIdMap"] = this.parentIdMap;
+        data["description"] = this.description;
         return data; 
     }
 
@@ -10979,6 +11546,7 @@ export interface IService2Dto {
     name: string | undefined;
     parentId: string | undefined;
     parentIdMap: string | undefined;
+    description: string | undefined;
 }
 
 export class ServiceDto implements IServiceDto {
@@ -12027,6 +12595,77 @@ export interface IUpdateAddressDto {
     city: string | undefined;
     stateOrProvince: string | undefined;
     zipOrPostCode: string | undefined;
+}
+
+export class UpdateProjectDto implements IUpdateProjectDto {
+    id: string;
+    name: string | undefined;
+    serviceLevel1: string | undefined;
+    serviceNameLevel1: string | undefined;
+    serviceLevel2: string | undefined;
+    serviceNameLevel2: string | undefined;
+    serviceLevel3: string | undefined;
+    serviceNameLevel3: string | undefined;
+
+    constructor(data?: IUpdateProjectDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.serviceLevel1 = _data["serviceLevel1"];
+            this.serviceNameLevel1 = _data["serviceNameLevel1"];
+            this.serviceLevel2 = _data["serviceLevel2"];
+            this.serviceNameLevel2 = _data["serviceNameLevel2"];
+            this.serviceLevel3 = _data["serviceLevel3"];
+            this.serviceNameLevel3 = _data["serviceNameLevel3"];
+        }
+    }
+
+    static fromJS(data: any): UpdateProjectDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateProjectDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["serviceLevel1"] = this.serviceLevel1;
+        data["serviceNameLevel1"] = this.serviceNameLevel1;
+        data["serviceLevel2"] = this.serviceLevel2;
+        data["serviceNameLevel2"] = this.serviceNameLevel2;
+        data["serviceLevel3"] = this.serviceLevel3;
+        data["serviceNameLevel3"] = this.serviceNameLevel3;
+        return data; 
+    }
+
+    clone(): UpdateProjectDto {
+        const json = this.toJSON();
+        let result = new UpdateProjectDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateProjectDto {
+    id: string;
+    name: string | undefined;
+    serviceLevel1: string | undefined;
+    serviceNameLevel1: string | undefined;
+    serviceLevel2: string | undefined;
+    serviceNameLevel2: string | undefined;
+    serviceLevel3: string | undefined;
+    serviceNameLevel3: string | undefined;
 }
 
 export class UserDto implements IUserDto {

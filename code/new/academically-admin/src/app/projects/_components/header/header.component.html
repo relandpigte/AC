@@ -1,0 +1,42 @@
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+          <h6 class="header-pretitle">
+            {{ 'Projects' | localize }}
+          </h6>
+          <h1 class="header-title">
+            {{ 'Search' | localize }}
+          </h1>
+        </div>
+      </div>
+      <div class="row align-items-center">
+        <div class="col">
+          <ul class="nav nav-tabs nav-overflow header-tabs">
+            <li *ngIf="permission.isGranted('Pages.Projects.Overview')" class="nav-item">
+              <a [routerLink]="['introduction']" routerLinkActive="active" class="nav-link">
+                {{ 'Overview' | localize }}
+              </a>
+            </li>
+            <li *ngIf="permission.isGranted('Pages.Projects.Browse')" class="nav-item">
+              <a [routerLink]="['browse']" routerLinkActive="active" class="nav-link">
+                {{ 'FindWork' | localize }}
+              </a>
+            </li>
+            <li *ngIf="permission.isGranted('Pages.Projects.MyProjects')" class="nav-item">
+              <a [routerLink]="['education']" routerLinkActive="active" class="nav-link">
+                {{ 'MyProjects' | localize }}
+              </a>
+            </li>
+            <li *ngIf="permission.isGranted('Pages.Profile.UsageAndFinancials')" class="nav-item">
+              <a [routerLink]="['research']" routerLinkActive="active" class="nav-link">
+                {{ 'UsageAndFinancials' | localize }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

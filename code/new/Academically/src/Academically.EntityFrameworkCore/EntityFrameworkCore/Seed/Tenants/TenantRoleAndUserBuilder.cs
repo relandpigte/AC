@@ -208,7 +208,12 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_TutorWizard_PrivacyPolicy,
                 PermissionNames.Pages_TutorWizard_Declaration,
                 PermissionNames.Pages_Widgets_Verifications,
-                PermissionNames.Pages_Calendar
+                PermissionNames.Pages_Calendar,
+                PermissionNames.Pages_ServiceWizard,
+                PermissionNames.Pages_ServiceWizard_Category,
+                PermissionNames.Pages_ServiceWizard_Level,
+                PermissionNames.Pages_ServiceWizard_Services,
+                PermissionNames.Pages_ServiceWizard_CreateProject
             );
 
             #endregion

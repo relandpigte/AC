@@ -43,6 +43,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.DbsCertificatesServiceProxy,
         ApiServiceProxies.AcceptanceLogsServiceProxy,
         ApiServiceProxies.CalendarEventsServiceProxy,
+        ApiServiceProxies.ProjectsServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

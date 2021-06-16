@@ -1,9 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
-      <text name="BlockOuts">Block Outs</text>
-      <text name="TimeZoneUpdatedMessage">Updating your time zone will refresh your browser thress seconds after saving your changes.</text>
-      <text name="Yearly">Yearly</text>
+    <text name="ServiceWizardStep3Subtitle">Understanding the type of work you're looking for helps us ask all the right questions.</text>
+    <text name="ServiceWizardStep3Title">Next, tell us what level you're working at</text>
+    <text name="ServiceWizardStep2Subtitle">Understanding the type of work you're looking for helps us ask all the right questions.</text>
+    <text name="ServiceWizardStep2Title">Next, tell us what level you're working at</text>
+    <text name="ServiceWizardStep1Subtitle">Understanding the type of services you're looking for help us ask all the right questions.</text>
+    <text name="ServiceWizardStep1Title">Let's start with the Basics</text>
+    <text name="Of">Of</text>
+    <text name="Step">Step</text>
+    <text name="BlockOuts">Block Outs</text>
+    <text name="TimeZoneUpdatedMessage">Updating your time zone will refresh your browser thress seconds after saving your changes.</text>
+    <text name="Yearly">Yearly</text>
     <text name="Monthly">Monthly</text>
     <text name="Weekly">Weekly</text>
     <text name="Daily">Daily</text>
@@ -968,5 +976,19 @@
     <text name="ResetPasswordStepTwoInfo">2. Copy this random password so you can send it to the user</text>
     <text name="ThisWeeksIncome">This Weeks Income</text>
     <text name="CancelServiceWizardMessage">Are you sure you want to leave the service wizard?</text>
+    <text name="ServiceWizard">Service Wizard</text>
+    <text name="CreateProject">Create Project</text>
+    <text name="ProjectName">Project Name</text>
+    <text name="Continue">Continue</text>
+    <text name="Browse">Browse</text>
+    <text name="BrowseProjects">Browse Projects</text>
+    <text name="FindWork">Find Work</text>
+    <text name="UsageAndFinancials">Usage &amp; Financials</text>
+    <text name="Shortlisted">Shortlisted</text>
+    <text name="AllProjects">All Projects</text>
+    <text name="MinEduLevel">Min Edu. Level</text>
+    <text name="SeeAllProjects">See All Projects</text>
+    <text name="Shortlist">Shortlist</text>
+    <text name="ViewBrief">View Brief</text>
   </texts>
 </localizationDictionary>
