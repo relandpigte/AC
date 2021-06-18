@@ -14,19 +14,26 @@ using Academically.Services.UserPublications.Dto;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using Academically.Domain.Services.Documents;
+using Academically.Authorization.Users;
 
 namespace Academically.Services.Projects
 {
     public class ProjectsAppService: AcademicallyAppServiceBase, IProjectsAppService
     {
-
+        private readonly UserManager _userManager;
         private readonly IRepository<Project, Guid> _projectsRepository;
+        private readonly IDocumentsDomainService _documentsDomainService;
 
         public ProjectsAppService(
-            IRepository<Project, Guid> projectsRepository
+            UserManager userManager,
+            IRepository<Project, Guid> projectsRepository,
+            IDocumentsDomainService documentsDomainService
             )
         {
             _projectsRepository = projectsRepository;
+            _documentsDomainService = documentsDomainService;
+            _userManager = userManager;
         }
 
         public async Task<PagedResultDto<ProjectDto>> GetAllAsync(PagedProjectRequestDto input)
@@ -52,9 +59,32 @@ namespace Academically.Services.Projects
                 .Select(e => ObjectMapper.Map<ProjectDto>(e))
                 .ToListAsync();
 
-            var ps = await query.ToListAsync();
-
             return new PagedResultDto<ProjectDto>(totalCount, projects);
+        }
+
+        public async Task<ProjectDto> GetAsync(Guid id)
+        {
+            var project = await _projectsRepository.GetAll()
+                .Include(p => p.CreatorUser)
+                    .ThenInclude(u => u.UserEducations)
+                .Include(p => p.CreatorUser.ProfilePictureDocument)
+                .Include(p => p.CreatorUser.CoverPhotoDocument)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (project == null)
+                return null;
+
+            var projectDto = ObjectMapper.Map<ProjectDto>(project);
+
+            projectDto.CreatorUser.RoleNames = await _userManager.GetRolesAsync(project.CreatorUser);
+
+            if (project.CreatorUser.ProfilePictureDocumentId.HasValue)
+                projectDto.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(project.CreatorUser.ProfilePictureDocumentId.Value);
+
+            if (project.CreatorUser.CoverPhotoDocumentId.HasValue)
+                projectDto.CreatorUser.CoverPhotoUrl = await _documentsDomainService.GetFileUrlAsync(project.CreatorUser.CoverPhotoDocumentId.Value);
+
+            return projectDto;
         }
 
         public async Task CreateAsync(CreateProjectDto input)

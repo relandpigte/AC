@@ -5,10 +5,12 @@ import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
 import { BrowseProjectsComponent } from './browse-projects.component';
+import { ViewProjectComponent } from './_components/view-project/view-project.component';
 
 @NgModule({
   declarations: [
     BrowseProjectsComponent,
+    ViewProjectComponent,
   ],
   imports: [
     CommonModule,

@@ -122,6 +122,8 @@
         public const string Pages_Projects_Browse = "Pages.Projects.Browse";
         public const string Pages_Projects_MyProjects = "Pages.Projects.MyProjects";
         public const string Pages_Projects_UsageAndFinancials = "Pages.Projects.UsageAndFinancials";
+        public const string Pages_Projects_Offer = "Pages.Projects.Offer";
+        public const string Pages_Projects_OfferHistory = "Pages.Projects.OfferHistory";
 
         public const string Pages_Tenants = "Pages.Tenants";
     }

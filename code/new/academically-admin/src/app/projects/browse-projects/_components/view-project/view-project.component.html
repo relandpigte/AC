@@ -1,0 +1,85 @@
+<div class="modal-card card">
+	<abp-modal-header [title]="'ProjectDetails' | localize" (onCloseClick)="onCloseClick()"></abp-modal-header>
+	<div class="card-body">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="mb-1 name text-primary">
+                            {{ project.name }}
+                        </h2>
+                        <p class="header-subtitle text-dark font-size-sm mt-0">
+                            {{ project.creatorUser.currentUniversity }}
+                        </p>
+                        <p class="m-0 text-muted">
+                            <small><i class="fe fe-clock"></i> 4hr ago</small>
+                        </p>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                      <label class="m-0 font-size-sm">{{ 'ServiceType' | localize | titlecase }}</label>
+                      <p class="text-muted">{{ project.serviceNameLevel1 }}</p>
+                    </div>
+                    <div class="col-md-4 text-md-center">
+                      <label class="m-0 font-size-sm">{{ 'AcademicLevel' | localize }}</label>
+                      <p class="text-muted">{{ project.serviceNameLevel2 }}</p>
+                    </div>
+                    <div class="col-md-4 text-md-right">
+                      <label class="m-0 font-size-sm">{{ 'SubjectArea' | localize }}</label>
+                      <p class="text-muted">{{ project.serviceNameLevel3 }}</p>
+                    </div>
+                  </div>
+                  <div class="row mt-5">
+                    <div class="col-12">
+                      <p class="">At vero eos et accusamus et iusto idio dignissimos ducimus qui blanditiis upiditate non provident, et
+                        iusto idio similique sunt in culpa qui official deserunt molitia
+                      </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-0" [busy]="isLoading">
+                    <img *ngIf="!project.creatorUser.coverPhotoUrl"
+                      src="/assets/themes/dashkit/img/covers/profile-cover-2.jpg"
+                      alt="..." class="card-img-top">
+                    <img *ngIf="project.creatorUser.coverPhotoUrl" [src]="project.creatorUser.coverPhotoUrl" alt="..." class="card-img-top">
+                    <!-- Body -->
+                    <div class="card-body overflow-visible">
+                      <!-- Image -->
+                      <a href="profile-posts.html" class="avatar avatar-xl card-avatar card-avatar-top">
+                        <img [src]="getProfilePicture(project.creatorUser.profilePictureUrl)" class="avatar-img rounded-circle border border-4 border-card" alt="...">
+                      </a>
+
+                      <!-- Heading -->
+                      <h2 class="card-title text-center">
+                        <a href="profile-posts.html">{{ project.creatorUser.fullName }}</a>
+                      </h2>
+
+                      <!-- Text -->
+                      <p class="small text-center text-muted mb-3">
+                        {{ project.creatorUser.currentUniversity }}
+                      </p>
+
+                      <!-- Badges -->
+                      <p class="text-center">
+                        <span class="badge bg-secondary-soft">
+                          {{ userTitle }}
+                        </span>
+                      </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+	</div>
+	<div class="card-footer justify-content-between">
+	  <button type="button" class="btn btn-white" (click)="onCloseClick()">
+		{{ 'Close' | localize }}
+	  </button>
+      <button type="button" class="btn btn-primary ml-auto" (click)="onMakeAnOfferClick()">
+		{{ 'MakeAnOffer' | localize }}
+	  </button>
+	</div>
+</div>

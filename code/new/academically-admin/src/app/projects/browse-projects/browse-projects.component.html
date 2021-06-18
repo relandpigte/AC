@@ -101,7 +101,7 @@
             <div class="row">
               <div class="col-12">
                 <h2 class="mb-1 name text-primary">
-                  <a href="javascript:;">{{ project.name }}</a>
+                  <a href="javascript:;" (click)="onViewProjectDetails(project)">{{ project.name }}</a>
                 </h2>
                 <p class="header-subtitle text-dark font-size-sm mt-0">
                   {{ project.creatorUser.currentUniversity }}
@@ -119,8 +119,8 @@
               <i class="fe fe-heart"></i>
               {{ 'Shortlist' | localize }}
             </button>
-            <button type="button" class="btn btn-sm btn-primary">
-              {{ 'ViewBrief' | localize }}
+            <button type="button" class="btn btn-sm btn-primary" (click)="onViewProjectDetails(project)">
+              {{ 'FullDetails' | localize }}
             </button>
           </div>
         </div>
