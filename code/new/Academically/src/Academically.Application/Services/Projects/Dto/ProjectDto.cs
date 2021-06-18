@@ -1,8 +1,10 @@
-﻿using Abp.AutoMapper;
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Application.Services.Dto;
+using Abp.AutoMapper;
 using Abp.Domain.Entities.Auditing;
 using Academically.Domain.Entities;
 using Academically.Users.Dto;
-using System;
 
 namespace Academically.Services.Projects.Dto
 {

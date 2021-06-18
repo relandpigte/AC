@@ -617,7 +617,7 @@
     <text name="Revise">Revise</text>
     <text name="FreeConsulation">15 MIN CONSULTATION</text>
     <text name="Free">FREE</text>
-    <text name="SubjectArea">Subject Area</text>
+    <text name="SubjectArea">Subject area</text>
     <text name="UrgencyLevel">Urgency Level</text>
     <text name="Deadline">Deadline</text>
     <text name="DeclineProject">Decline Project</text>
@@ -990,5 +990,6 @@
     <text name="SeeAllProjects">See All Projects</text>
     <text name="Shortlist">Shortlist</text>
     <text name="ViewBrief">View Brief</text>
+    <text name="ServiceType">Service type</text>
   </texts>
 </localizationDictionary>

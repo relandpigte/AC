@@ -1,7 +1,9 @@
-﻿using Academically.Authorization.Users;
+using System;
+using System.Linq;
+using Academically.Authorization.Users;
+using Academically.Domain.Entities;
 using Academically.Users.Dto;
 using AutoMapper;
-using System.Linq;
 
 namespace Academically.Services.Projects.Dto
 {
