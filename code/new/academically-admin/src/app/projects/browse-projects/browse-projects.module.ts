@@ -6,11 +6,13 @@ import { AppSharedModule } from '@app/_shared/app-shared.module';
 
 import { BrowseProjectsComponent } from './browse-projects.component';
 import { ViewProjectComponent } from './_components/view-project/view-project.component';
+import { SubmitOfferComponent } from './_components/submit-offer/submit-offer.component';
 
 @NgModule({
   declarations: [
     BrowseProjectsComponent,
     ViewProjectComponent,
+    SubmitOfferComponent,
   ],
   imports: [
     CommonModule,

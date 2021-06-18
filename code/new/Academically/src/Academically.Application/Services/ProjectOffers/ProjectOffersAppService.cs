@@ -1,6 +1,8 @@
 ﻿using Abp.Domain.Repositories;
 using Academically.Domain.Entities;
+using Academically.Services.ProjectOffers.Dto;
 using System;
+using System.Threading.Tasks;
 
 namespace Academically.Services.ProjectOffers
 {
@@ -13,6 +15,12 @@ namespace Academically.Services.ProjectOffers
             )
         {
             _projectOffersRepository = projectOffersRepository;
+        }
+
+        public async Task CreateAsync(CreateProjectOfferDto input)
+        {
+            var projectOffer = ObjectMapper.Map<ProjectOffer>(input);
+            await _projectOffersRepository.InsertAsync(projectOffer);
         }
     }
 }

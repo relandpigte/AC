@@ -1,0 +1,104 @@
+<form class="modal-card card" autocomplete="off" #createProjectOfferForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <abp-modal-header [title]="'MyOffer' | localize" (onCloseClick)="onCloseClick()"></abp-modal-header>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+
+            <h4 class="card-header-title">
+              {{ project.name }}
+            </h4>
+          </div>
+          <div class="card-body">
+            <div class="align-items-center d-flex row">
+              <div class="col-4">
+                <div class="form-group">
+                  <label class="col-form-label" for="PricePerHour">{{ 'PricePerHour' | localize }}</label>
+                  <input [(ngModel)]="projectOffer.hourlyRate" id="PricePerHour" name="PricePerHour" type="number"
+                    class="form-control" [required]="projectOffer.isHourlySessionOffered" #pricePerHourModel="ngModel"
+                    #pricePerHourEl [disabled]="!projectOffer.isHourlySessionOffered" />
+                  <abp-validation-summary [control]="pricePerHourModel" [controlEl]="pricePerHourEl">
+                  </abp-validation-summary>
+                </div>
+              </div>
+              <div class="col"></div>
+              <div class="col-auto">
+                <div class="custom-control custom-switch">
+                  <input [(ngModel)]="projectOffer.isHourlySessionOffered" id="IsPricedPerHour" name="IsPricedPerHour"
+                    type="checkbox" class="custom-control-input">
+                  <label class="custom-control-label" for="IsPricedPerHour"></label>
+                </div>
+              </div>
+            </div>
+            <div class="align-items-center d-flex row">
+              <div class="col">
+                <div class="form-group">
+                  <label class="col-form-label" for="PricePerHour">{{ 'NumberOfHours' | localize }}</label>
+                  <input [(ngModel)]="projectOffer.discountedHours" id="NumberOfHours" name="NumberOfHours"
+                    type="number" class="form-control" #discountedNumberOfHoursModel="ngModel"
+                    #discountedNumberOfHoursEl (ngModelChange)="calculateTotal()"
+                    [required]="projectOffer.isDiscountedHourlySessionOffered"
+                    [disabled]="!projectOffer.isDiscountedHourlySessionOffered" (keypress)="onNumberPress($event)" />
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <label class="col-form-label" for="DiscountedPricePerHour">{{ 'PricePerHour' | localize }}</label>
+                  <input [(ngModel)]="projectOffer.discountedHourlyRate" id="DiscountedPricePerHour"
+                    name="DiscountedPricePerHour" type="number" class="form-control"
+                    #discountedPricePerHourModel="ngModel" [required]="projectOffer.isDiscountedHourlySessionOffered"
+                    #discountedPricePerHourEl [disabled]="!projectOffer.isDiscountedHourlySessionOffered"
+                    (ngModelChange)="calculateTotal()" />
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <label class="col-form-label" for="DiscountedTotalPrice">{{ 'TotalPrice' | localize }}</label>
+                  <input [(ngModel)]="discountedTotalPrice" id="DiscountedTotalPrice" name="DiscountedTotalPrice"
+                    type="number" class="form-control" readonly />
+                </div>
+              </div>
+              <div class="col-auto">
+                <div class="custom-control custom-switch">
+                  <input [(ngModel)]="projectOffer.isDiscountedHourlySessionOffered" id="HasDiscountedHours"
+                    name="HasDiscountedHours" type="checkbox" class="custom-control-input"
+                    (ngModelChange)="resetDiscountedHourlySessionOffered()">
+                  <label class="custom-control-label" for="HasDiscountedHours"></label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="card m-0 bg-light">
+          <div class="card-body">
+
+            <div class="row d-flex align-items-center">
+              <div class="col">
+                <h3 class="card-title">{{ 'Free15MinuteInterview' | localize }}</h3>
+                <p class="card-text text-muted font-size-sm">{{ 'Free15MinuteInterviewMessage' | localize}}</p>
+              </div>
+
+              <div class="col-auto">
+                <div class="custom-control custom-switch">
+                  <input [(ngModel)]="projectOffer.isFreeSessionOffered" id="IsFreeInterview" name="IsFreeInterview"
+                    type="checkbox" class="custom-control-input">
+                  <label class="custom-control-label" for="IsFreeInterview"></label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading" [saveLabel]="l('Confirm')"
+    [saveDisabled]="!createProjectOfferForm.form.valid || isLoading || !hasValidValues()"
+    (onCancelClick)="onCloseClick()">
+  </abp-modal-footer>
+
+</form>
