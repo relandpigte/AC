@@ -1,13 +1,19 @@
-﻿using Abp.Application.Services.Dto;
+using System;
+using System.Threading.Tasks;
+using Abp.Application.Services;
+using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
-using Abp.Extensions;
-using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Services.Projects.Dto;
+
+using Abp.Authorization;
+using Abp.Extensions;
+using Abp.Linq.Extensions;
+using Academically.Authorization;
+using Academically.Services.UserPublications.Dto;
 using Microsoft.EntityFrameworkCore;
-using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Academically.Services.Projects
 {

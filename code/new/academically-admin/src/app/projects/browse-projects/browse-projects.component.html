@@ -93,18 +93,26 @@
       </div>
     </div>
 
-    <div class="card-body">
+    <div class="card-body" [busy]="isLoading">
       <ul class="list-group list-group-flush list my-n3">
       <li class="list-group-item" *ngFor="let project of projects">
         <div class="row align-items-top">
           <div class="col ms-n2">
-            <!-- Title -->
-            <h4 class="mb-1 name text-primary">
-              <a href="javascript:;">{{ project.name }}</a>
-            </h4>
-            <p class="header-subtitle">
-              {{ project.creatorUser.currentUniversity }}
-            </p>
+            <div class="row">
+              <div class="col-12">
+                <h2 class="mb-1 name text-primary">
+                  <a href="javascript:;">{{ project.name }}</a>
+                </h2>
+                <p class="header-subtitle text-dark font-size-sm mt-0">
+                  {{ project.creatorUser.currentUniversity }}
+                </p>
+                <p class="m-0 text-muted">
+                  <small><i class="fe fe-clock"></i> 4hr ago</small>
+                </p>
+              </div>
+            </div>
+
+
           </div>
           <div class="col-auto">
             <button type="button" class="btn btn-link btn-sm mr-3 text-secondary">
@@ -115,6 +123,28 @@
               {{ 'ViewBrief' | localize }}
             </button>
           </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <label class="m-0 font-size-sm">{{ 'ServiceType' | localize | titlecase }}</label>
+            <p class="text-muted">{{ project.serviceNameLevel1 }}</p>
+          </div>
+          <div class="col-md-4 text-md-center">
+            <label class="m-0 font-size-sm">{{ 'AcademicLevel' | localize }}</label>
+            <p class="text-muted">{{ project.serviceNameLevel2 }}</p>
+          </div>
+          <div class="col-md-4 text-md-right">
+            <label class="m-0 font-size-sm">{{ 'SubjectArea' | localize }}</label>
+            <p class="text-muted">{{ project.serviceNameLevel3 }}</p>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
+            <p class="">At vero eos et accusamus et iusto idio dignissimos ducimus qui blanditiis upiditate non provident, et
+              iusto idio similique sunt in culpa qui official deserunt molitia
+            </p>
+          </div>
+
         </div>
       </li>
       </ul>
