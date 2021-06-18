@@ -1,0 +1,43 @@
+<div [@routerTransition]>
+    <div class="header">
+      <div class="container-fluid">
+        <div class="header-body">
+          <div class="row align-items-end">
+            <div class="col">
+              <h6 class="header-pretitle">
+                {{ 'Project' | localize }}
+              </h6>
+              <h1 class="header-title">
+                Project 1
+              </h1>
+            </div>
+          </div>
+          <div class="row align-items-center">
+            <div class="col">
+              <ul class="nav nav-tabs nav-overflow header-tabs">
+                <li *ngIf="permission.isGranted('Pages.Projects.Overview')" class="nav-item">
+                  <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab"
+                    aria-controls="overview" aria-selected="true">{{ 'Overview' | localize }}</a>
+                </li>
+                <li *ngIf="permission.isGranted('Pages.Projects.OfferHistory')" class="nav-item">
+                  <a class="nav-link" id="projects-tab" data-toggle="tab" href="#offerHistory" role="tab"
+                    aria-controls="projects" aria-selected="false">{{ 'OfferHistory' | localize }}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="tab-content">
+        <div *ngIf="permission.isGranted('Pages.Projects.Overview')" class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+            <app-overview *ngIf="permission.isGranted('Pages.Projects.Overview')"></app-overview>
+        </div>
+        <div *ngIf="permission.isGranted('Pages.Projects.OfferHistory')" class="tab-pane fade" id="offerHistory" role="tabpanel" aria-labelledby="projects-tab">
+           <!-- Offer History Component here -->
+        </div>
+
+      </div>
+    </div>
+  </div>

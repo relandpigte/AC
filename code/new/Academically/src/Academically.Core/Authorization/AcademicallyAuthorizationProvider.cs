@@ -124,10 +124,12 @@ namespace Academically.Authorization
             serviceWizardPermission.CreateChildPermission(PermissionNames.Pages_ServiceWizard_CreateProject, L("CreateProject"));
 
             var projectsPermission = context.CreatePermission(PermissionNames.Pages_Projects, L("Projects"));
-            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Overview, L("Overwiew"));
+            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Overview, L("Overview"));
             projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Browse, L("Browse"));
             projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_MyProjects, L("MyProjects"));
             projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_UsageAndFinancials, L("UsageAndFinancials"));
+            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Offer, L("Offer"));
+            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_OfferHistory, L("OfferHistory"));
 
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
         }

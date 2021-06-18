@@ -991,5 +991,10 @@
     <text name="Shortlist">Shortlist</text>
     <text name="ViewBrief">View Brief</text>
     <text name="ServiceType">Service type</text>
+    <text name="FullDetails">Full details</text>
+    <text name="ProjectDetails">Project Details</text>
+    <text name="MakeAnOffer">Make an offer</text>
+    <text name="Offer">Offer</text>
+    <text name="OfferHistory">Offer History</text>
   </texts>
 </localizationDictionary>
