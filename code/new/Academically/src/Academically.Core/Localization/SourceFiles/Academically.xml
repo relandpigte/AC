@@ -1004,5 +1004,19 @@
     <text name="Free15MinuteInterview">Free 15 minutes interview (recommended)</text>
     <text name="Free15MinuteInterviewMessage">Offer a free 15 minute interview to allow students to ask questions and help them decide if you meet their requirements.</text>
     <text name="OfferSentSuccessfully">Offer sent successfully</text>
+    <text name="ProjectOfferEmailSubject">Academically - Project Offer</text>
+    <text name="ProjectOfferEmailMessage">
+      <![CDATA[
+          <p>Hi {0},</p>
+          <br/>
+          <p>You have received an offer for <b>{1}</b></p>
+          
+          <p>Please click this link to view the offer details: <a href="{2}">Offer details link<a/></p>
+          <br />
+          <p>If for some reason the link is not clickable, please copy and paste the url below to your browser:<p>
+          <br />
+          <p>{2}<p/>
+      ]]>
+    </text>
   </texts>
 </localizationDictionary>
