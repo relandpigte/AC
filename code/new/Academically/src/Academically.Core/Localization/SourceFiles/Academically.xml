@@ -995,6 +995,14 @@
     <text name="ProjectDetails">Project Details</text>
     <text name="MakeAnOffer">Make an offer</text>
     <text name="Offer">Offer</text>
+    <text name="Confirm">Confirm</text>
     <text name="OfferHistory">Offer History</text>
+    <text name="MyOffer">My Offer</text>
+    <text name="PricePerHour">Price per hour</text>
+    <text name="NumberOfHours">Number of hours</text>
+    <text name="TotalPrice">Total price</text>
+    <text name="Free15MinuteInterview">Free 15 minutes interview (recommended)</text>
+    <text name="Free15MinuteInterviewMessage">Offer a free 15 minute interview to allow students to ask questions and help them decide if you meet their requirements.</text>
+    <text name="OfferSentSuccessfully">Offer sent successfully</text>
   </texts>
 </localizationDictionary>

@@ -2,8 +2,9 @@ import { Component, Injector, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ProjectDto, ProjectsServiceProxy } from '@shared/service-proxies/service-proxies';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
+import { SubmitOfferComponent } from '../submit-offer/submit-offer.component';
 
 @Component({
   selector: 'app-view-project',
@@ -18,7 +19,7 @@ export class ViewProjectComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _modal: BsModalRef,
-    private _router: Router,
+    private _modalService: BsModalService,
     private _projectsService: ProjectsServiceProxy
   ) {
     super(injector);
@@ -42,7 +43,10 @@ export class ViewProjectComponent extends AppComponentBase implements OnInit {
   }
 
   onMakeAnOfferClick(): void {
-    this._modal.hide();
-    this._router.navigate([ `/app/projects/${this.project.id}/offer`]);
+    const modalSettings = this.defaultModalSettings;
+    modalSettings.initialState = {
+      project: this.project
+    };
+    this._modalService.show(SubmitOfferComponent, modalSettings);
   }
 }

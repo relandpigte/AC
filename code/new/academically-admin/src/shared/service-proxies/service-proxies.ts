@@ -2525,6 +2525,70 @@ export class ProfilesServiceProxy {
 }
 
 @Injectable()
+export class ProjectOffersServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateProjectOfferDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/ProjectOffers/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class ProjectsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -9059,6 +9123,73 @@ export interface ICreateProjectDto {
     serviceNameLevel2: string | undefined;
     serviceLevel3: string | undefined;
     serviceNameLevel3: string | undefined;
+}
+
+export class CreateProjectOfferDto implements ICreateProjectOfferDto {
+    projectId: string;
+    isHourlySessionOffered: boolean;
+    hourlyRate: number;
+    isDiscountedHourlySessionOffered: boolean;
+    discountedHours: number;
+    discountedHourlyRate: number;
+    isFreeSessionOffered: boolean;
+
+    constructor(data?: ICreateProjectOfferDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.projectId = _data["projectId"];
+            this.isHourlySessionOffered = _data["isHourlySessionOffered"];
+            this.hourlyRate = _data["hourlyRate"];
+            this.isDiscountedHourlySessionOffered = _data["isDiscountedHourlySessionOffered"];
+            this.discountedHours = _data["discountedHours"];
+            this.discountedHourlyRate = _data["discountedHourlyRate"];
+            this.isFreeSessionOffered = _data["isFreeSessionOffered"];
+        }
+    }
+
+    static fromJS(data: any): CreateProjectOfferDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateProjectOfferDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["projectId"] = this.projectId;
+        data["isHourlySessionOffered"] = this.isHourlySessionOffered;
+        data["hourlyRate"] = this.hourlyRate;
+        data["isDiscountedHourlySessionOffered"] = this.isDiscountedHourlySessionOffered;
+        data["discountedHours"] = this.discountedHours;
+        data["discountedHourlyRate"] = this.discountedHourlyRate;
+        data["isFreeSessionOffered"] = this.isFreeSessionOffered;
+        return data; 
+    }
+
+    clone(): CreateProjectOfferDto {
+        const json = this.toJSON();
+        let result = new CreateProjectOfferDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateProjectOfferDto {
+    projectId: string;
+    isHourlySessionOffered: boolean;
+    hourlyRate: number;
+    isDiscountedHourlySessionOffered: boolean;
+    discountedHours: number;
+    discountedHourlyRate: number;
+    isFreeSessionOffered: boolean;
 }
 
 export class CreateRoleDto implements ICreateRoleDto {
