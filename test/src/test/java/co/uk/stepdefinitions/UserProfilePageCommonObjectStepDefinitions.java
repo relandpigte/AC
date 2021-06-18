@@ -2,6 +2,8 @@ package co.uk.stepdefinitions;
 
 import co.uk.core.DriverHandler;
 import co.uk.pageobjects.student.UserProfilePageCommonObjects;
+import co.uk.pageobjects.student.UserProfilePageEducation;
+import co.uk.pageobjects.student.UserProfilePageResearch;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -102,5 +104,11 @@ public class UserProfilePageCommonObjectStepDefinitions {
     public void verifyNewProfilePhotoIsDisplayed() {
     	UserProfilePageCommonObjects.verifyAnonyomousPhotoIsNotDisplayed();
     }
+    
+    @Then("message show successfully deleted")
+    public void verifyDeletedMessage() {
+    	UserProfilePageCommonObjects.verifySuccesfulyDeletedMessageIsDisplayed();
+    }
    
+    
 }

@@ -131,7 +131,8 @@ Scenario: C14505 - Verify adding user education information by levels
 		|Level 7 (Masters degree or equivalent) |Masters         |4      |
 	And user saving education information
 	Then sucessful message is displayed
-
+	
+@UI @TestRails(C14506)
 Scenario: C14506 - Verify adding user education information by evidence
 
 	Given User is in academically login page
@@ -156,7 +157,8 @@ Scenario: C14506 - Verify adding user education information by evidence
 	When user enter "Certificate" category evidence
 	And user saving the education information
 	Then sucessful message is displayed
-
+	
+@UI @TestRails(14507)
 Scenario: C14507 Verify removing user education information
 
 	Given User is in academically login page
@@ -176,24 +178,15 @@ Scenario: C14507 Verify removing user education information
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
 	When user proceed to education tab
-	And user add evidence file (image or document)
-#Click evidence tab at the right corner
-#Drop file or click to upload (Image or document)
-	Then evidence is added
-#Verify evidence is added and displayed
-	When user categorize the evidence
-#Enter category of the evidence
+	And user add evidence file
+	Then "Sample1" evidence is added
+	When user enter "Certificate" category evidence
 	And user saving the education information
-#Click save
-	Then adding education information is successful
-#Verify education information is added
-#Verify successful message is displayed
-	When user saving the education information
-	Then adding education information is successful
+	Then sucessful message is displayed
 	When user delete education information
 	Then confirmation is displayed
 	When the user confirms to remove a education information
-	Then removing education information is successful
+	Then message show successfully deleted
 
 @UI @TestRails(14508)
 Scenario: C14508 - Verify adding other courses information
@@ -256,6 +249,7 @@ Scenario: C14509 - Verify removing other course information
 	When the user confirms to remove a course
 	Then removing "Risk Management" course is successful
 
+@UI @TestRails(14510)
 Scenario: C14510	Verify adding research interest
  
  	Given User is in academically login page
@@ -276,37 +270,48 @@ Scenario: C14510	Verify adding research interest
 	Then user is in profile settings
 	When user proceed to research tab
 	And user add research interest
-##Click add research interest
-Then add research interest modal is displayed
-##Verify add research interest modal is displayed
-When user enter research interest information
-##Enter title
-##Enter description 
-##Enter and select the knowledge base in the suggestion 
-And user saving research interest information
-#Click save
-Then adding research interest information is successful
-#Verify successful message is displayed at the bottom right corner
-#Verify the selected knowledge base was displayed 
+	Then "Add Research" interest modal is displayed
+	When user enter research interest information
+	|Title                                        |Knowledge Base             |Description                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+	|Computer Science and Information Technology  |Computational Engineering  |"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."  |
+	And user saving research interest information
+	Then sucessful message is displayed
+	And adding research interest "Computer Science and Information Technology" is successful
 
-
+@UI @TestRails(14511)
 Scenario: C14511	Verify removing research interest 
 	
 	Given User is in academically login page
+	When user register a student
+	And user enter account details
+		|Firstname  |Lastname  |Email 			  |Date of Birth  |
+		|Rosalind   |Barker    |automatedXXX  |04/02/1971     |
+	Then sent email modal is displayed 
+	And user activate account 
+	Then user is in complete registration form
+	And email address "automatedXXX" matched
+	When user enter password "Test@12345" and confirm passoword "Test@12345"
+	And user register an account
+	Then registered the account successfully
+	When user enter username "automatedXXX" and password "Test@12345"
 	Then user successfully login
-	When user navigate to profile settings
+	When user navigate to profile settings using profile widget
 	Then user is in profile settings
 	When user proceed to research tab
-	And user delete research interest
-#Click trash icon
-Then confirmation is displayed
-#Verify confirmation is displayed
-When the user confirms to remove a research interest
-#Click yes
-Then removing research interest is successful
-#Verify successful message is displayed at the bottom right corner
+	And user add research interest
+	Then "Add Research" interest modal is displayed
+	When user enter research interest information
+	|Title                                        |Knowledge Base             |Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+	|Computer Science and Information Technology  |Computational Engineering  |"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
+	And user saving research interest information
+	Then sucessful message is displayed
+	And adding research interest "Computer Science and Information Technology" is successful
+	When user delete research interest "Computer Science and Information Technology"
+	Then confirmation is displayed
+	When the user confirms to remove a research interest
+	Then removing "Computer Science and Information Technology" research interest is successful
 
-
+@UI @TestRails(14512)
 Scenario: C14512	Verify adding research methodology	
 	
 	Given User is in academically login page
@@ -327,51 +332,77 @@ Scenario: C14512	Verify adding research methodology
 	Then user is in profile settings
 	When user proceed to research tab
 	And user add research methodology
-#Click add research methodology
-	Then add research methodology modal is displayed
-#Verify add research methodology modal is displayed
+	Then "Add Research" Methodology modal is displayed
 	When user enter research methodology information
-#Select title
-#Enter description
-#Select research method
+		|Title         |Research method           |Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+		|Quantitative	 |Methodological Pluralism  |"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
 	And user saving research methodology information
-#Click save
-	Then adding research methodology is successful
-#Verify successful message is displayed at the bottom right corner	
-	
+	Then sucessful message is displayed
+  And adding methodology "Quantitative" is successful
+
+@UI @TestRails(14513)
 Scenario: C14513	Verify removing research methodology
 
-
-	And user delete research methodology
-#Click trash icon
+	Given User is in academically login page
+	When user register a student
+	And user enter account details
+		|Firstname  |Lastname  |Email 			  |Date of Birth  |
+		|Rosalind   |Barker    |automatedXXX  |04/02/1971     |
+	Then sent email modal is displayed 
+	And user activate account 
+	Then user is in complete registration form
+	And email address "automatedXXX" matched
+	When user enter password "Test@12345" and confirm passoword "Test@12345"
+	And user register an account
+	Then registered the account successfully
+	When user enter username "automatedXXX" and password "Test@12345"
+	Then user successfully login
+	When user navigate to profile settings using profile widget
+	Then user is in profile settings
+	When user proceed to research tab
+	And user add research methodology
+	Then "Add Research" Methodology modal is displayed
+	When user enter research methodology information
+		|Title         |Research method           |Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+		|Quantitative	 |Methodological Pluralism  |"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
+	And user saving research methodology information
+	Then sucessful message is displayed
+  And adding methodology "Quantitative" is successful
+	When user delete "Quantitative" research methodology
 	Then confirmation is displayed
-#Verify confirmation is displayed
 	When the user confirms to remove a research methodology
-#Click yes
-	Then removing research methodology is successful
-#Verify successful message is displayed at the bottom right corner
-			
-Scenario: C14514	Verify adding publication
+	Then removing "Quantitative" research methodology is successful
 
+@UI @TestRails(14514)
+Scenario: C14514	Verify adding publication
+	
+	Given User is in academically login page
+	When user register a student
+	And user enter account details
+		|Firstname  |Lastname  |Email 			  |Date of Birth  |
+		|Rosalind   |Barker    |automatedXXX  |04/02/1971     |
+	Then sent email modal is displayed 
+	And user activate account 
+	Then user is in complete registration form
+	And email address "automatedXXX" matched
+	When user enter password "Test@12345" and confirm passoword "Test@12345"
+	And user register an account
+	Then registered the account successfully
+	When user enter username "automatedXXX" and password "Test@12345"
+	Then user successfully login
+	When user navigate to profile settings using profile widget
+	Then user is in profile settings
+	When user proceed to research tab
 	And user add publication
-#Click add publication
-	Then add publication modal is displayed
-#Verify add publication modal is displayed
+	Then "Add" publication modal is displayed
 	When user enter publication information
-#Enter title
-#Select publication type
-#Enter publisher
-#Enter publication date
-#Enter abstract
-#Enter and select the tag suggestion
+	|Title              |Publication Type  |Publisher        |Date       |Tag  |Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                               
+	|Silence the storm  |Book              |Rosalind Barker  |06/02/2013 |tag1 |"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."| 
 	And user saving publication information
-#Click save
-	Then adding publication was successful
-#Verify successful message is displayed at the bottom right corner
-#Verify selected tag was displayed  			
+  Then adding publication "Silence the storm" is successful	
 
 Scenario: C14515	Verify removing publication
-
+#	When user enter username "automated110736" and password "Test@12345" 
 			
 Scenario: C14516	Verify editing publication			
 Scenario: C14517	Verify editing research methodology			

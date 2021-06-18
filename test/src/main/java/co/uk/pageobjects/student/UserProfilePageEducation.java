@@ -13,6 +13,7 @@ public class UserProfilePageEducation {
 	private static Tab educationTabIsActive = new Tab("Education",By.xpath("//a[@class='nav-link active' and contains(text(),'Education')]"));
 	private static Button addEducationBtn = new Button("Add education",By.xpath("//app-educations//a[contains(text(),'Add')]"));
 	private static Button addOtherCourse = new Button("Add other course",By.xpath("//app-qualifications//button[contains(text(),'Add')]"));
+	private static Button removeEducation = new Button("Remove education",By.xpath("//app-education//span[contains(@class,'trash')]"));
 	private static Element courseName(String course) {
 		return new Element(course,By.xpath("//td[contains(text(),'"+course+"')]"));
 	}
@@ -24,6 +25,10 @@ public class UserProfilePageEducation {
 	}
 	private static Button folderOtherCourse(String course) {
 		return new Button(course+" folder",By.xpath("//td[contains(text(),'"+course+"')]/following-sibling::td//span[contains(@class,'trash')]/parent::button"));
+	}
+	
+	public static void clickRemoveEducation() {
+		removeEducation.click();
 	}
 
 	public static void clickEditCourse(String course) {

@@ -3,9 +3,11 @@ package co.uk.stepdefinitions;
 import java.util.List;
 import java.util.Map;
 import co.uk.core.DriverHandler;
+import co.uk.pageobjects.student.RegisterPage;
 import co.uk.pageobjects.student.UserProfilePageCommonObjects;
 import co.uk.pageobjects.student.UserProfilePageEducation;
 import co.uk.pageobjects.student.UserProfilePageIntroduction;
+import co.uk.pageobjects.student.UserProfilePageResearch;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -181,7 +183,176 @@ public class UserProfilePageStepDefinistions {
 		DriverHandler.delay(4);
 	}
 	
+	@When("^user delete education information$")
+	public void deleteEducationInformation() {
+		UserProfilePageEducation.clickRemoveEducation();
+	}
 	
+	@When("^the user confirms to remove a education information$")
+	public void confirmToRemoveEducation() {
+		UserProfilePageEducation.confirmationModal.clickYes();
+	}
+	
+	@When("^user add research interest$")
+    public void addResearchInterest() {
+    	UserProfilePageResearch.clickAddResearchInterest();
+    	DriverHandler.delay(3);
+    }
+	
+	@Then("^\"(.*)\" interest modal is displayed$")
+	public void verifyResearchModalTitleIsDisplayed(String title) {
+		UserProfilePageResearch.ResearchInterestModal.verifyModalTitle(title);
+	}
+	
+	@When("^user enter research interest information$")
+	public void enterResearchInterest(DataTable researchInterestInformation) {
+        List<Map<String, String>> data = researchInterestInformation.asMaps(String.class, String.class);
+        String title = data.get(0).get("Title");
+        String knowledge = data.get(0).get("Knowledge Base");
+        String description = data.get(0).get("Description");
+        if(!title.equals("null")) {
+        	UserProfilePageResearch.ResearchInterestModal.enterTitle(title);
+        }
+        if(!description.equals("null")) {	 
+        	UserProfilePageResearch.ResearchInterestModal.enterDescription(description);
+        }
+        if(!knowledge.equals("null")) {	 
+        	UserProfilePageResearch.ResearchInterestModal.enterAndSelectKnowledgeBase(knowledge);
+        }
+	}
+	
+	@When("^user saving research interest information$")
+	public static void saveResearchInterestInformation() {
+		UserProfilePageResearch.ResearchInterestModal.clickSave();
+	}
+	
+	@Then("^adding research interest \"(.*)\" is successful$")
+	public void verifyResearchInterstIsAdded(String title) {
+		UserProfilePageResearch.verifyResearchInterestIsDisplayed(title);
+	}
+	
+	@When("^user delete research interest \"(.*)\"$")
+	public void deleteResearchInterest(String title) {
+		UserProfilePageResearch.clickRemoveResearchInterest(title);
+	}
+	
+	@When("^the user confirms to remove a research interest$")
+	public void confirmsToRemoveResearchInterest() {
+		UserProfilePageResearch.confirmationModal.clickYes();
+		DriverHandler.delay(4);
+	}
+	
+	@Then("^removing \"(.*)\" research interest is successful$")
+	public void verifyRemovingResearchInterestIsSuccessful(String title) {
+		UserProfilePageResearch.verifyResearchInterestIsNotDisplayed(title);
+	}
+	
+	@When("^user add research methodology$")
+	public void addResearchMethodology() {
+		UserProfilePageResearch.clickAddMethodology();
+		DriverHandler.delay(8);
+	}
+	
+	@Then("^\"(.*)\" Methodology modal is displayed$")
+	public void verifyMethodologyModalIsDisplayed(String title) {
+		UserProfilePageResearch.MethodologyModal.verifyModalTitle(title+" Methodology");
+	}
+	
+	@When("^user enter research methodology information$")
+	public void enterResearchMethodologyInformation(DataTable methodologyInformation) {
+        List<Map<String, String>> data = methodologyInformation.asMaps(String.class, String.class);
+        String title = data.get(0).get("Title");
+        String ResearchMethod = data.get(0).get("Research method");
+        String description = data.get(0).get("Description");
+        if(!title.equals("null")) {
+        	UserProfilePageResearch.MethodologyModal.enterTitle(title);
+        }
+        if(!description.equals("null")) {	 
+        	UserProfilePageResearch.MethodologyModal.enterDescription(description);
+        }
+        if(!ResearchMethod.equals("null")) {	 
+        	UserProfilePageResearch.MethodologyModal.clickAddMethod();
+        	UserProfilePageResearch.MethodologyModal.ResearchMethodModal.enterTreeFilter(ResearchMethod);
+        	UserProfilePageResearch.MethodologyModal.ResearchMethodModal.clickTreeItem(ResearchMethod);
+        	UserProfilePageResearch.MethodologyModal.ResearchMethodModal.verifyItemIsAdded(ResearchMethod);
+        	UserProfilePageResearch.MethodologyModal.ResearchMethodModal.clickAdd();
+        }
+	}
+	
+	@When("^user saving research methodology information$")
+	public void savingResearchMethodologyInformation() {
+		UserProfilePageResearch.MethodologyModal.clickSave();
+	}
+	
+	@Then("^adding methodology \"(.*)\" is successful$")
+	public void verifyMethodologyIsAdded(String title) {
+		UserProfilePageResearch.verifyMethodologyIsDisplayed(title);
+	}
+	
+	@When("^user delete \"(.*)\" research methodology$")
+	public void removeResearchMethodology(String title) {
+		UserProfilePageResearch.clickRemoveMethodology(title);
+	}
+	
+	@When("^the user confirms to remove a research methodology$")
+	public void confirmToRemoveResearchMethodology() {
+		UserProfilePageResearch.confirmationModal.clickYes();
+	}
+	
+	@Then("^removing \"(.*)\" research methodology is successful$")
+	public void verifyRemovingResearhMethodologyIsSuccessful(String title) {
+		UserProfilePageResearch.verifyMethodologyIsNotDisplayed(title);
+	}
+	
+	@When("^user add publication$")
+	public void addPublication() {
+		UserProfilePageResearch.clickAddPublication();
+		DriverHandler.delay(2);
+	}
+	
+	@Then("^\"(.*)\" publication modal is displayed$")
+	public void verifyPublicationModalIsDisplayed(String title) {
+		UserProfilePageResearch.PublicationModal.verifyModalTitleIsDisplayed(title);
+	}
+	
+	@When("^user enter publication information$")
+	public void enterPublicationInformation(DataTable publicationInformation) {
+        List<Map<String, String>> data = publicationInformation.asMaps(String.class, String.class);
+        String title = data.get(0).get("Title");
+        String publicationType = data.get(0).get("Publication Type");
+        String publisher = data.get(0).get("Publisher");
+        String date = data.get(0).get("Date");
+        String tag = data.get(0).get("Tag");
+        String abstarct = data.get(0).get("Abstarct");
+        if(!title.equals("null")) {
+        	UserProfilePageResearch.PublicationModal.enterTitle(title);
+        }
+        if(!publicationType.equals("null")) {
+        	UserProfilePageResearch.PublicationModal.selectPublicationType(publicationType);
+        }
+        if(!publisher.equals("null")) {
+        	UserProfilePageResearch.PublicationModal.enterPublisher(publisher);
+        }
+        if(!date.equals("null")) {
+        	UserProfilePageResearch.PublicationModal.enterPublicationDate(date);
+        }
+        if(!abstarct.equals("null")) {
+        	UserProfilePageResearch.PublicationModal.enterAbstract(abstarct);
+        }
+        if(!tag.equals("null")) {
+        	UserProfilePageResearch.PublicationModal.enterAndSelectTag(tag);
+        }
+	}
+	
+	@When("^user saving publication information$")
+	public void savePublicationInformation() {
+		UserProfilePageResearch.PublicationModal.clickSave();
+		DriverHandler.delay(5);
+	}
+	
+	@Then("^adding publication \"(.*)\" is successful$")
+	public void verifyPublicationIsAdded(String title) {
+		UserProfilePageResearch.verifyPublicationIsDisplayed(title);
+	}
 }
-
 

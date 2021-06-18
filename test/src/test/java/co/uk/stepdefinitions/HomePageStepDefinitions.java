@@ -9,7 +9,7 @@ public class HomePageStepDefinitions {
 
 	@Then("^user successfully login")
 	public void loginIsSucessful() {
-		DriverHandler.delay(10);
+		DriverHandler.delay(15);
 		Homepage.verifyDashBoardIsDisplayed();
 	}
 	
