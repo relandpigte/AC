@@ -116,12 +116,15 @@ namespace Academically.Authorization
 
             var calendarPermissions = context.CreatePermission(PermissionNames.Pages_Calendar, L("Calendar"));
             calendarPermissions.CreateChildPermission(PermissionNames.Pages_Calendar_BlockOuts, L("BlockOuts"));
+            calendarPermissions.CreateChildPermission(PermissionNames.Pages_Calendar_Bookings, L("Bookings"));
+
 
             var serviceWizardPermission = context.CreatePermission(PermissionNames.Pages_ServiceWizard, L("ServiceWizard"));
             serviceWizardPermission.CreateChildPermission(PermissionNames.Pages_ServiceWizard_Category, L("Category"));
             serviceWizardPermission.CreateChildPermission(PermissionNames.Pages_ServiceWizard_Level, L("Level"));
             serviceWizardPermission.CreateChildPermission(PermissionNames.Pages_ServiceWizard_Services, L("Services"));
             serviceWizardPermission.CreateChildPermission(PermissionNames.Pages_ServiceWizard_CreateProject, L("CreateProject"));
+
 
             var projectsPermission = context.CreatePermission(PermissionNames.Pages_Projects, L("Projects"));
             projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Overview, L("Overview"));

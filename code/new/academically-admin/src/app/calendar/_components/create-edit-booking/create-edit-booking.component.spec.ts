@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BlockDateComponent } from './block-date.component';
+import { CreateEditBookingComponent } from './create-edit-booking.component';
 
-describe('BlockDateComponent', () => {
-  let component: BlockDateComponent;
-  let fixture: ComponentFixture<BlockDateComponent>;
+describe('CreateEditBookingComponent', () => {
+  let component: CreateEditBookingComponent;
+  let fixture: ComponentFixture<CreateEditBookingComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BlockDateComponent ]
+      declarations: [ CreateEditBookingComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BlockDateComponent);
+    fixture = TestBed.createComponent(CreateEditBookingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

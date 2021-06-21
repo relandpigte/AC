@@ -14,6 +14,7 @@ import { AppSessionService } from '@shared/session/app-session.service';
 import { Moment } from 'moment';
 import { DocumentDto } from './service-proxies/service-proxies';
 import { ReplaySubject } from 'rxjs';
+import * as moment from 'moment';
 
 @Injectable()
 export abstract class AppComponentBase implements OnDestroy {
@@ -53,7 +54,8 @@ export abstract class AppComponentBase implements OnDestroy {
       keyboard: false,
     };
     if (this.appSession.user) {
-      this.checkUserRole();
+      this.isTutor = this.checkUserRole('tutor');
+      this.isStudent = this.checkUserRole('student');
     }
   }
 
@@ -138,8 +140,18 @@ export abstract class AppComponentBase implements OnDestroy {
     return phoneNumber.substr(phoneNumber.indexOf(' ') + 1);
   }
 
-  protected checkUserRole(): void {
-    this.isTutor = this.appSession.user.roles.findIndex(e => e.toLowerCase() === 'tutor') >= 0;
-    this.isStudent = this.appSession.user.roles.findIndex(e => e.toLowerCase() === 'student') >= 0;
+  protected checkUserRole(role: string): boolean {
+    return this.appSession.user.roles.findIndex(e => e.toLowerCase() === role) >= 0;
+  }
+
+  protected calculateDuration(startTime: Moment, endTime: Moment): number {
+    return moment.duration(endTime.diff(startTime)).asMinutes();
+  }
+
+  protected formatDuration(durationInMinutes: number): string {
+    const durationHours = Math.floor(durationInMinutes / 60).toString().padStart(2, '0');
+    const durationMinutes = (durationInMinutes % 60).toString().padStart(2, '0');
+    const duration = `${durationHours}:${durationMinutes}`;
+    return duration;
   }
 }

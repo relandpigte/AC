@@ -1,6 +1,16 @@
 <div class="container-fluid" [@routerTransition]>
-  <div class="row justify-content-center tutor-wizard">
-    <div class="col-md-12 mt-4">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ 'ManageYourEvents' | localize }}</h6>
+              <h1 class="header-title"><span *ngIf="user.id">{{ user.fullName }}'s Calendar</span></h1>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="card">
         <div class="card-body" [loader]="isLoading">
           <full-calendar [options]="calendarOptions"></full-calendar>

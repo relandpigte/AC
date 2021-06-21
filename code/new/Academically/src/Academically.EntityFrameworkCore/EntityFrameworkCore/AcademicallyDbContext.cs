@@ -52,6 +52,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<Service2> Service2s { get; set; }
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<ProjectOffer> ProjectOffers { get; set; }
+        public virtual DbSet<RescheduleComment> RescheduleComments { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

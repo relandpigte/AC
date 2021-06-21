@@ -138,7 +138,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_AccountSettings_Notifications,
                 PermissionNames.Pages_Widgets_Verifications,
                 PermissionNames.Pages_Calendar,
-                PermissionNames.Pages_Calendar_BlockOuts
+                PermissionNames.Pages_Calendar_BlockOuts,
+                PermissionNames.Pages_Calendar_Bookings
             );
 
             #endregion
@@ -209,6 +210,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_TutorWizard_Declaration,
                 PermissionNames.Pages_Widgets_Verifications,
                 PermissionNames.Pages_Calendar,
+                PermissionNames.Pages_Calendar_Bookings,
                 PermissionNames.Pages_ServiceWizard,
                 PermissionNames.Pages_ServiceWizard_Category,
                 PermissionNames.Pages_ServiceWizard_Level,
