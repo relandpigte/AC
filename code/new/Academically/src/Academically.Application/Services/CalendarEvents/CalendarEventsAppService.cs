@@ -1,8 +1,9 @@
-﻿using Abp.Configuration;
-using Abp.Domain.Repositories;
+﻿using Abp.Domain.Repositories;
+using Academically.Authorization.Roles;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Services.CalendarEvents.Dto;
+using Academically.Services.Projects.Dto;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,36 +15,73 @@ namespace Academically.Services.CalendarEvents
     public class CalendarEventsAppService : AcademicallyAppServiceBase, ICalendarEventsAppService
     {
         private readonly IRepository<CalendarEvent, Guid> _calendarEventsRepository;
-        private readonly ISettingManager _settingManager;
+        private readonly IRepository<Project, Guid> _projectsRepository;
+        private readonly IRepository<ProjectOffer, Guid> _projectOffersRepository;
+        private readonly IRepository<RescheduleComment, Guid> _reschedleCommentsRepository;
 
         public CalendarEventsAppService(
             IRepository<CalendarEvent, Guid> calendarEventsRepository,
-            ISettingManager settingManager
+            IRepository<Project, Guid> projectsRepository,
+            IRepository<ProjectOffer, Guid> projectOffersRepository,
+            IRepository<RescheduleComment, Guid> reschedleCommentsRepository
             )
         {
             _calendarEventsRepository = calendarEventsRepository;
-            _settingManager = settingManager;
+            _projectsRepository = projectsRepository;
+            _projectOffersRepository = projectOffersRepository;
+            _reschedleCommentsRepository = reschedleCommentsRepository;
         }
 
         public async Task<IEnumerable<CalendarEventDto>> GetAll(GetAllCalendarEventsRequestDto input)
         {
-            var oneTimeEvents = await _calendarEventsRepository.GetAll()
-                .Where(e => e.CreatorUserId == input.UserId
-                    && e.Recurrence == CalendarEventRecurrence.OneTime
-                    && e.Type == input.Type
+            var user = await UserManager.GetUserByIdAsync(input.UserId);
+            var userRoles = await UserManager.GetRolesAsync(user);
+
+            List<long?> userIds;
+            if (userRoles.Contains(StaticRoleNames.Tenants.Tutor))
+            {
+                userIds = await _projectOffersRepository.GetAll()
+                    .Where(e => e.CreatorUserId == input.UserId)
+                    .Select(e => e.Project.CreatorUserId)
+                    .ToListAsync();
+            } else
+            {
+                userIds = new List<long?>();
+            }
+            userIds.Add(user.Id);
+
+            var eventsQuery = _calendarEventsRepository.GetAll()
+                .Where(e => userIds.Any(id => id == e.CreatorUserId))
+                .Include(e => e.Project)
+                .Include(e => e.RescheduleComments)
+                    .ThenInclude(e => e.CreatorUser)
+                        .ThenInclude(e => e.ProfilePictureDocument);
+
+            var oneTimeEvents = await eventsQuery
+                .Where(e => e.Recurrence == CalendarEventRecurrence.OneTime
                     && e.StartTime >= input.StartTime
                     && e.EndTime <= input.EndTime)
                 .Select(e => ObjectMapper.Map<CalendarEventDto>(e))
                 .ToListAsync();
-            var recurringEvents = await _calendarEventsRepository.GetAll()
-                .Where(e => e.CreatorUserId == input.UserId && e.Recurrence != CalendarEventRecurrence.OneTime && e.Type == input.Type)
+            var recurringEvents = await eventsQuery
+                .Where(e => e.Recurrence != CalendarEventRecurrence.OneTime)
                 .Select(e => ObjectMapper.Map<CalendarEventDto>(e))
                 .ToListAsync();
+
             var calendarEvents = new List<CalendarEventDto>();
             calendarEvents.AddRange(oneTimeEvents);
             calendarEvents.AddRange(recurringEvents);
 
             return calendarEvents.OrderBy(e => e.StartTime).ThenBy(e => e.EndTime);
+        }
+
+        public async Task<IEnumerable<ProjectDto>> GetUserProjects(long userId)
+        {
+            var projects = await _projectsRepository.GetAll()
+                .Where(e => e.CreatorUserId == userId)
+                .Select(e => ObjectMapper.Map<ProjectDto>(e))
+                .ToListAsync();
+            return projects;
         }
 
         public async Task Create(CalendarEventDto input)
@@ -57,6 +95,31 @@ namespace Academically.Services.CalendarEvents
         {
             var calendarEvent = await _calendarEventsRepository.GetAsync(input.Id.Value);
             ObjectMapper.Map(input, calendarEvent);
+            await _calendarEventsRepository.UpdateAsync(calendarEvent);
+        }
+
+        public async Task Reschedule(RescheduleCalendarEventDto input)
+        {
+            input.CalendarEvent.RescheduleComments = null;
+            input.CalendarEvent.Project = null;
+            var calendarEvent = await _calendarEventsRepository.GetAsync(input.CalendarEvent.Id.Value);
+            ObjectMapper.Map(input.CalendarEvent, calendarEvent);
+            await _calendarEventsRepository.UpdateAsync(calendarEvent);
+
+            var rescheduleComment = new RescheduleComment();
+            rescheduleComment.OldStartTime = input.OldStartTime;
+            rescheduleComment.OldEndTime = input.OldEndTime;
+            rescheduleComment.NewStartTime = input.CalendarEvent.StartTime;
+            rescheduleComment.NewEndTime = input.CalendarEvent.EndTime;
+            rescheduleComment.Comments = input.Comments;
+            rescheduleComment.CalendarEventId = input.CalendarEvent.Id.Value;
+            await _reschedleCommentsRepository.InsertAsync(rescheduleComment);
+        }
+
+        public async Task AcceptOffer(Guid id)
+        {
+            var calendarEvent = await _calendarEventsRepository.GetAsync(id);
+            calendarEvent.Type = CalendarEventType.ConfirmedBooking;
             await _calendarEventsRepository.UpdateAsync(calendarEvent);
         }
     }

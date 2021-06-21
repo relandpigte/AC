@@ -3,19 +3,21 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { CalendarEventDto, CalendarEventRecurrence, CalendarEventsServiceProxy, CalendarEventType } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { takeUntil, finalize } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-block-date',
-  templateUrl: './block-date.component.html',
-  styleUrls: ['./block-date.component.less']
+  selector: 'app-create-edit-block-out',
+  templateUrl: './create-edit-block-out.component.html',
+  styleUrls: ['./create-edit-block-out.component.less']
 })
-export class BlockDateComponent extends AppComponentBase implements OnInit {
+export class CreateEditBlockOutComponent extends AppComponentBase implements OnInit {
   @Input() model: CalendarEventDto = new CalendarEventDto();
   @Output() modelSaved = new EventEmitter();
   isLoading = false;
   startTime: Date;
   endTime: Date;
+  tempStartTime: Date;
+  tempEndTime: Date;
 
   CalendarEventRecurrence = CalendarEventRecurrence;
 
@@ -29,10 +31,20 @@ export class BlockDateComponent extends AppComponentBase implements OnInit {
     this.endTime = new Date();
   }
 
+  get duration(): number {
+    return this.calculateDuration(moment(this.startTime), moment(this.endTime));
+  }
+
+  get durationText(): string {
+    return this.formatDuration(this.duration);
+  }
+
   ngOnInit(): void {
     if (this.model) {
       this.startTime = this.model.startTime.toDate();
       this.endTime = this.model.endTime.toDate();
+      this.tempStartTime = this.startTime;
+      this.tempEndTime = this.endTime;
       if (!this.model.id) {
         this.model.recurrence = CalendarEventRecurrence.OneTime;
       }
@@ -62,5 +74,27 @@ export class BlockDateComponent extends AppComponentBase implements OnInit {
 
   onCloseClick(): void {
     this._modal.hide();
+  }
+
+  onStartTimeChange(): void {
+    if (this.durationText.length > 5) {
+      setTimeout(() => {
+        this.startTime = this.tempStartTime;
+      });
+    }
+    if (this.startTime > this.endTime) {
+      this.endTime = this.startTime;
+    }
+  }
+
+  onEndTimeChange(): void {
+    if (this.durationText.length > 5) {
+      setTimeout(() => {
+        this.endTime = this.tempEndTime;
+      });
+    }
+    if (this.endTime < this.startTime) {
+      this.startTime = this.endTime;
+    }
   }
 }

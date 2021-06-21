@@ -4,12 +4,13 @@ import { CalendarOptions, DateSelectArg, EventClickArg, EventInput } from '@full
 import { DateClickArg } from '@fullcalendar/interaction';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CalendarEventDto, CalendarEventRecurrence, CalendarEventsServiceProxy, CalendarEventType } from '@shared/service-proxies/service-proxies';
+import { CalendarEventDto, CalendarEventRecurrence, CalendarEventsServiceProxy, CalendarEventType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
-import { BlockDateComponent } from './_components/block-date/block-date.component';
+import { CreateEditBlockOutComponent } from './_components/create-edit-block-out/create-edit-block-out.component';
+import { CreateEditBookingComponent } from './_components/create-edit-booking/create-edit-booking.component';
 
 @Component({
   selector: 'app-calendar',
@@ -18,10 +19,12 @@ import { BlockDateComponent } from './_components/block-date/block-date.componen
   animations: [appModuleAnimation()],
 })
 export class CalendarComponent extends AppComponentBase implements OnInit {
-  isLoading = false;
+  user: UserDto = new UserDto();
+  userId: number;
   startTime: Date;
   endTime: Date;
-  userId: number;
+  isLoading = false;
+  isBlockOutClicked = false;
 
   calendarOptions: CalendarOptions = {
     initialView: 'timeGridWeek',
@@ -39,7 +42,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
     },
     datesSet: this.dateSet.bind(this),
     dateClick: this.dateClicked.bind(this),
-    eventClick: this.eventClicked.bind(this),
+    eventClick: this.eventClick.bind(this),
   };
 
   constructor(
@@ -47,6 +50,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
     private _modalService: BsModalService,
     private _route: ActivatedRoute,
     private _calendarEventsService: CalendarEventsServiceProxy,
+    private _usersService: UserServiceProxy,
   ) {
     super(injector);
   }
@@ -54,6 +58,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
     this._route.paramMap.subscribe(paramMap => {
       this.userId = paramMap.has('user-id') ? +paramMap.get('user-id') : this.appSession.userId;
+      this.getUser();
     });
   }
 
@@ -61,49 +66,90 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
     this.startTime = args.start;
     this.endTime = args.end;
     setTimeout(() => {
-      this.getBlockOuts();
+      this.getEvents();
     });
   }
 
   private dateClicked(args: DateClickArg): void {
-    const targetClassList = (args.jsEvent.target as any).classList;
-    if (!targetClassList.contains('fc-bg-event')
-      && !targetClassList.contains('fc-event-title')
-      && this.permission.isGranted('Pages.Calendar.BlockOuts')) {
-      const model = new CalendarEventDto();
-      model.startTime = moment(args.date);
-      model.endTime = moment(args.date);
-      this.showBlockDateModal(model);
+    const model = new CalendarEventDto();
+    model.startTime = moment(args.date);
+    model.endTime = moment(args.date);
+    if (!this.isBlockOutClicked && this.permission.isGranted('Pages.Calendar.BlockOuts')) {
+      this.showCreateEditBlockOutModal(model);
+    } else if (!this.isBlockOutClicked && !this.isTutor && this.permission.isGranted('Pages.Calendar.Bookings')) {
+      this.showCreateEditBookingModal(model);
+    }
+    this.isBlockOutClicked = false;
+  }
+
+  private eventClick(args: EventClickArg): void {
+    const calendarEvent = args.event.extendedProps.calendarEvent as CalendarEventDto;
+    switch (calendarEvent.type) {
+      case CalendarEventType.Blocker:
+        this.isBlockOutClicked = true;
+        if (this.permission.isGranted('Pages.Calendar.BlockOuts')) {
+          this.showCreateEditBlockOutModal(_.cloneDeep((args.event.extendedProps.calendarEvent as CalendarEventDto)));
+        }
+        break;
+      case CalendarEventType.BookingRequest:
+        if ((calendarEvent.creatorUserId === this.appSession.userId || this.userId === this.appSession.userId)
+          && this.permission.isGranted('Pages.Calendar.Bookings')) {
+          this.showCreateEditBookingModal(_.cloneDeep((args.event.extendedProps.calendarEvent as CalendarEventDto)));
+        } else {
+          this.isBlockOutClicked = true;
+        }
+        break;
     }
   }
 
-  private eventClicked(args: EventClickArg): void {
-    if ((args.event.extendedProps.type as CalendarEventType) == CalendarEventType.Blocker
-      && this.permission.isGranted('Pages.Calendar.BlockOuts')) {
-      this.showBlockDateModal(_.cloneDeep((args.event.extendedProps.calendarEvent as CalendarEventDto)));
-    }
-  }
-
-  private showBlockDateModal(model?: CalendarEventDto): void {
-    const modalSettings = this.defaultModalSettings as ModalOptions<BlockDateComponent>;
+  private showCreateEditBlockOutModal(model?: CalendarEventDto): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditBlockOutComponent>;
     modalSettings.initialState = {
       model: model,
     };
-    const modal = this._modalService.show(BlockDateComponent, modalSettings).content;
+    const modal = this._modalService.show(CreateEditBlockOutComponent, modalSettings).content;
     modal.modelSaved
       .pipe(
         takeUntil(this.destroyed$),
       )
       .subscribe(() => {
-        this.getBlockOuts();
+        this.getEvents();
       });
   }
 
-  private getBlockOuts(): void {
+  private showCreateEditBookingModal(model?: CalendarEventDto): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditBookingComponent>;
+    modalSettings.initialState = {
+      model: model,
+    };
+    const modal = this._modalService.show(CreateEditBookingComponent, modalSettings).content;
+    modal.modelSaved
+      .pipe(
+        takeUntil(this.destroyed$),
+      )
+      .subscribe(() => {
+        this.getEvents();
+      });
+  }
+
+  private getUser(): void {
+    this._usersService.get(this.userId)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe(user => {
+        this.user = user;
+      });
+  }
+
+  private getEvents(): void {
     this.isLoading = true;
     const startTime = moment(this.startTime);
     const endTime = moment(this.endTime);
-    this._calendarEventsService.getAll(CalendarEventType.Blocker, startTime, endTime, this.userId)
+    this._calendarEventsService.getAll(this.userId, startTime, endTime)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
@@ -111,39 +157,50 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
         }),
       )
       .subscribe(calendarEvents => {
-        const blockOutEvents: EventInput[] = _.map(calendarEvents, calendarEvent => {
-          const blockOutEvent: EventInput = {
+        const calendarEventInputs: EventInput[] = _.map(calendarEvents, calendarEvent => {
+          const calendarEventInput: EventInput = {
             id: calendarEvent.id,
             title: calendarEvent.creatorUserId === this.appSession.userId ? calendarEvent.title : '',
             start: calendarEvent.startTime.format('YYYY-MM-DD HH:mm'),
             end: calendarEvent.endTime.format('YYYY-MM-DD HH:mm'),
             allDay: false,
-            display: 'background',
-            className: `fc-non-business ${this.isTutor ? 'tutor' : ''}`,
-            type: CalendarEventType.Blocker,
             calendarEvent: calendarEvent,
           };
+          switch (calendarEvent.type) {
+            case CalendarEventType.Blocker:
+              calendarEventInput.display = 'background';
+              calendarEventInput.className = 'fc-non-business';
+              calendarEventInput.title = calendarEvent.creatorUserId === this.appSession.userId ? calendarEvent.title : '';
+              break;
+            case CalendarEventType.BookingRequest:
+              if (calendarEvent.creatorUserId !== this.appSession.userId && this.userId !== this.appSession.userId) {
+                calendarEventInput.display = 'background';
+                calendarEventInput.className = 'fc-non-business';
+                calendarEventInput.title = '';
+              } else {
+                calendarEventInput.title = calendarEvent.title;
+                calendarEventInput.backgroundColor = '#6E84A3';
+              }
+              break;
+            case CalendarEventType.ConfirmedBooking:
+              calendarEventInput.title = calendarEvent.title;
+              calendarEventInput.backgroundColor = '#2C7BE5';
+              break;
+          }
           if (calendarEvent.recurrence !== CalendarEventRecurrence.OneTime) {
             const duration = this.calculateDuration(calendarEvent.startTime, calendarEvent.endTime);
-            blockOutEvent.rrule = {
+            const durationText = this.formatDuration(duration);
+            calendarEventInput.rrule = {
               freq: CalendarEventRecurrence[calendarEvent.recurrence].toLowerCase(),
               interval: 1,
               dtstart: calendarEvent.startTime.format('YYYY-MM-DD HH:mm'),
               until: '2025-01-01',
             };
-            blockOutEvent.duration = duration;
+            calendarEventInput.duration = durationText;
           }
-          return blockOutEvent;
+          return calendarEventInput;
         });
-        this.calendarOptions.events = blockOutEvents;
+        this.calendarOptions.events = calendarEventInputs;
       });
-  }
-
-  private calculateDuration(startTime: moment.Moment, endTime: moment.Moment): string {
-    const durationInMinutes = moment.duration(endTime.diff(startTime)).asMinutes();
-    const durationHours = Math.floor(durationInMinutes / 60).toString().padStart(2, '0');
-    const durationMinutes = (durationInMinutes % 60).toString().padStart(2, '0');
-    const duration = `${durationHours}:${durationMinutes}`;
-    return duration;
   }
 }

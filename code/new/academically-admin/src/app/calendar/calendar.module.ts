@@ -11,7 +11,9 @@ import bootstrapPlugin from '@fullcalendar/bootstrap';
 import rrulePlugin from '@fullcalendar/rrule'
 
 import { CalendarComponent } from './calendar.component';
-import { BlockDateComponent } from './_components/block-date/block-date.component';
+import { CreateEditBlockOutComponent } from './_components/create-edit-block-out/create-edit-block-out.component';
+import { CreateEditBookingComponent } from './_components/create-edit-booking/create-edit-booking.component';
+import { RescheduleHistoryComponent } from './_components/reschedule-history/reschedule-history.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -25,7 +27,9 @@ FullCalendarModule.registerPlugins([
 @NgModule({
   declarations: [
     CalendarComponent,
-    BlockDateComponent,
+    CreateEditBlockOutComponent,
+    CreateEditBookingComponent,
+    RescheduleHistoryComponent,
   ],
   imports: [
     CommonModule,

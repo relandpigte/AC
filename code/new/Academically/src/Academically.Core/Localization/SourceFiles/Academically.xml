@@ -1,6 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="EndTime">End time</text>
+    <text name="StartTime">Start time</text>
+    <text name="NoRescheduleHistory">No Reschedule History</text>
+    <text name="BookingDetails">Booking Details</text>
+    <text name="RescheduleHistory">Reschedule History</text>
+    <text name="Submit">Submit</text>
+    <text name="SavingWithDots">Saving...</text>
+    <text name="ProposeNewTime">Propose new time</text>
+    <text name="Accept">Accept</text>
+    <text name="BookSession">Book Session</text>
+    <text name="SelectProject">Select Project</text>
+    <text name="Project">Project</text>
+    <text name="Duration">Duration</text>
+    <text name="EditBooking">Edit Booking</text>
+    <text name="AddBooking">Add Booking</text>
+    <text name="Bookings">Bookings</text>
+    <text name="Booking">Booking</text>
     <text name="ServiceWizardStep3Subtitle">Understanding the type of work you're looking for helps us ask all the right questions.</text>
     <text name="ServiceWizardStep3Title">Next, tell us what level you're working at</text>
     <text name="ServiceWizardStep2Subtitle">Understanding the type of work you're looking for helps us ask all the right questions.</text>
@@ -459,7 +476,6 @@
       ]]>
     </text>
     <text name="StartDate">Start Date</text>
-    <text name="StartTime">Start Time</text>
     <text name="SessionDuration">Session Duration</text>
     <text name="YourTimeZone">Your time zone</text>
     <text name="SessionDate">Session Date</text>
