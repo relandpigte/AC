@@ -354,5 +354,36 @@ public class UserProfilePageStepDefinistions {
 	public void verifyPublicationIsAdded(String title) {
 		UserProfilePageResearch.verifyPublicationIsDisplayed(title);
 	}
+	
+	@When("^user delete publication \"(.*)\"$")
+	public void deletePublication(String title) {
+		UserProfilePageResearch.clickRemovePublication(title);
+	}
+	
+	@When("^the user confirms to remove a publication$")
+	public void confirmToRemovePublication() {
+		UserProfilePageResearch.confirmationModal.clickYes();
+		DriverHandler.delay(6);
+	}
+	
+	@Then("^removing \"(.*)\" publication is successful$")
+	public void verifyPublicationIsNotDisplayed(String title) {
+		UserProfilePageResearch.verifyPublicationIsNotDisplayed(title);
+	}
+	
+	@When("^user edit publication \"(.*)\"$")
+	public void editPublication(String title) {
+			UserProfilePageResearch.clickEditPublication(title);
+	}
+	
+	@When("^user edit \"(.*)\" research methodology$")
+	public void editResearchMethodology(String title) {
+		UserProfilePageResearch.clickEditMethodology(title);
+	}
+	
+	@When("^user edit research interest \"(.*)\"$")
+	public void editResearchInterest(String title) {
+		UserProfilePageResearch.clickEditResearchInterest(title);
+	}
 }
 
