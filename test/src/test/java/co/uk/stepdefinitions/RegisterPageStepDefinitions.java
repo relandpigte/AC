@@ -6,7 +6,7 @@ import java.util.Map;
 import co.uk.core.DriverHandler;
 import co.uk.core.GmailReader;
 import co.uk.core.TextUtility;
-import co.uk.pageobjects.student.RegisterPage;
+import co.uk.pageobjects.RegisterPage;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

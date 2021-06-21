@@ -1,7 +1,7 @@
 package co.uk.stepdefinitions;
 
 import co.uk.core.DriverHandler;
-import co.uk.pageobjects.student.Homepage;
+import co.uk.pageobjects.Homepage;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 

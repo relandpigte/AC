@@ -1,9 +1,9 @@
 package co.uk.stepdefinitions;
 
 import co.uk.core.DriverHandler;
-import co.uk.pageobjects.student.UserProfilePageCommonObjects;
-import co.uk.pageobjects.student.UserProfilePageEducation;
-import co.uk.pageobjects.student.UserProfilePageResearch;
+import co.uk.pageobjects.UserProfilePageCommonObjects;
+import co.uk.pageobjects.UserProfilePageEducation;
+import co.uk.pageobjects.UserProfilePageResearch;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 

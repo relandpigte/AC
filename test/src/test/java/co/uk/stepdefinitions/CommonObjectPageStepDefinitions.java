@@ -1,6 +1,6 @@
 package co.uk.stepdefinitions;
 
-import co.uk.pageobjects.student.CommonObjects;
+import co.uk.pageobjects.CommonObjects;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
