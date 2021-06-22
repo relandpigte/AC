@@ -4,18 +4,33 @@ Feature: Tutor user profile settings 20
 Scenario: C14556 - Verify uploading a profile photo
 	
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname      |Lastname  |Email 			   |Date of Birth  |
-		|Automated2XXX	|Test      |automated2XXX  |04/02/1981     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated2XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated2XXX" and password "Test@12345"
+	When user login as "admin"
+#	When user register a student
+#	And user enter account details
+#		|Firstname      |Lastname  |Email 			   |Date of Birth  |
+#		|Automated2XXX	|Test      |automated2XXX  |04/02/1981     |
+#	Then sent email modal is displayed 
+#	And user activate account 
+#	Then user is in complete registration form
+#	And email address "automated2XXX" matched
+#	When user enter password "Test@12345" and confirm passoword "Test@12345"
+#	And user register an account
+#	Then registered the account successfully
+
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated20XXX  |Test    |automated20XXX |Test@12345 |automated20XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+
+  When user enter username "automated20XXX" and password "Test@12345"	
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings

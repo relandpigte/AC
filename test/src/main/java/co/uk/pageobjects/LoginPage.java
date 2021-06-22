@@ -14,6 +14,12 @@ public class LoginPage {
 	private static TextBox textBoxPassWord = new TextBox("Password",By.xpath("//app-password-toggle[@id='password']//input[@type='password']"));
 	private static Button buttonSignIn = new Button("Submit",By.xpath("//button[@type='submit']"));
 
+	public static void verifyLoginPage() {
+		textBoxUsername.verifyDisplayed();
+		textBoxPassWord.verifyDisplayed();
+		buttonSignIn.verifyDisplayed();
+	}
+	
 	public static void enterUsername(String username) {
 		textBoxUsername.setText(username);
 	}

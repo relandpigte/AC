@@ -20,4 +20,10 @@ public class CommonObjectPageStepDefinitions {
 	public void verifySuccessfulMessageIsDisplayed() {
 		CommonObjects.successfulMessageAtTheRightCornerIsDisplayed();
 	}
+	
+	@When("^user proceed to manage user$")
+	public void proceedToManageUserPage() {
+		CommonObjects.clicknavSettings();
+		CommonObjects.clicknavUsers();
+	}
 }
