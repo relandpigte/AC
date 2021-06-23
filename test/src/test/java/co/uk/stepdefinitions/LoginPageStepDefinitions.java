@@ -28,7 +28,7 @@ public class LoginPageStepDefinitions {
 	
 	@When("^user enter username \"(.*)\" and password \"(.*)\"$")
 	public void loginInvalidCredential(String username, String password) {
-		LoginPage.enterUsername(username.replace("XXX", DriverHandler.timestamp)+"@gilmatugas.33mail.com");
+		LoginPage.enterUsername(username.replace("XXX", DriverHandler.timestamp)+"@academically.33mail.com");
 		LoginPage.enterPassword(password);
 		LoginPage.clickLogin();
 	}
@@ -42,4 +42,10 @@ public class LoginPageStepDefinitions {
 	public void register() {
 		LoginPage.clickRegister();
 	}
+	
+	@Then("^user is in academically login page$")
+	public void verifyLoginPageIsDisplayed() {
+		LoginPage.verifyLoginPage();
+	}
+	
 }

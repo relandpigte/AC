@@ -1,22 +1,10 @@
-Feature: Tutor user profile settings 20
+Feature: Tutor user profile settings
  
-
+@UI @TestRails(14556)
 Scenario: C14556 - Verify uploading a profile photo
 	
 	Given User is in academically login page
 	When user login as "admin"
-#	When user register a student
-#	And user enter account details
-#		|Firstname      |Lastname  |Email 			   |Date of Birth  |
-#		|Automated2XXX	|Test      |automated2XXX  |04/02/1981     |
-#	Then sent email modal is displayed 
-#	And user activate account 
-#	Then user is in complete registration form
-#	And email address "automated2XXX" matched
-#	When user enter password "Test@12345" and confirm passoword "Test@12345"
-#	And user register an account
-#	Then registered the account successfully
-
 	Then user successfully login
 	When user proceed to manage user
 	Then user is in manage user page
@@ -29,7 +17,6 @@ Scenario: C14556 - Verify uploading a profile photo
 	Then sucessful message is displayed
 	When user logout in academically
 	Then user is in academically login page
-
   When user enter username "automated20XXX" and password "Test@12345"	
 	Then user successfully login
 	When user navigate to profile settings using profile widget
@@ -39,21 +26,24 @@ Scenario: C14556 - Verify uploading a profile photo
 	When user crop the image
 	Then upload a profile photo is successful
 	
+@UI @TestRails(14557)
 Scenario: C14557 - Verify removing a profile photo
 	
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname      |Lastname  |Email 			  |Date of Birth  |
-		|Automated3XXX  |Test      |automated3XXX  |04/02/1981     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated3XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated3XXX" and password "Test@12345"
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated21XXX  |Test    |automated21XXX |Test@12345 |automated21XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated21XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
@@ -66,22 +56,23 @@ Scenario: C14557 - Verify removing a profile photo
 	Then successfully displayed profile picture message was removed
 	And profile photo is removed
 	
-@UI @TestRails(14501)
-Scenario: C14501 - Verify select a cover photo
+Scenario: ??? - Verify select a cover photo
 	
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname      |Lastname  |Email 			  |Date of Birth  |
-		|automated4XXX  |Test      |automated4XXX  |04/02/1981     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated4XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated4XXX" and password "Test@12345"
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated22XXX  |Test    |automated21XXX |Test@12345 |automated22XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated22XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
@@ -89,22 +80,25 @@ Scenario: C14501 - Verify select a cover photo
 	And user select a photo from the gallery
 	And user crop the cover photo
 	Then upload a cover photo is successful
-
+	
+@UI @TestRails(14558)
 Scenario: C14558 - Verify adding about user information
 	
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname      |Lastname  |Email 			   |Date of Birth  |
-		|Automated5XXX  |Test      |automated5XXX  |04/02/1981     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated5XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated5XXX" and password "Test@12345"
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated23XXX  |Test    |automated23XXX |Test@12345 |automated23XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated23XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
@@ -114,22 +108,25 @@ Scenario: C14558 - Verify adding about user information
 	Then upload a cover photo is successful
 	When user add about information
 	Then adding about user information is successful
-
+	
+@UI @TestRails(14560)
 Scenario: C14560 - Verify adding user education information by levels
 	
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname       |Lastname  |Email 			    |Date of Birth  |
-		|Automated6XXX   |Test      |automated6XXX  |04/02/1971     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated6XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated6XXX" and password "Test@12345"
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated24XXX  |Test    |automated24XXX |Test@12345 |automated24XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated24XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
@@ -143,22 +140,25 @@ Scenario: C14560 - Verify adding user education information by levels
 		|Level 7 (Masters degree or equivalent) |Masters         |4      |
 	And user saving education information
 	Then sucessful message is displayed
-
+	
+@UI @TestRails(14561)
 Scenario: C14561 - Verify adding user education information by evidence
 
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname  |Lastname  |Email 			  |Date of Birth  |
-		|Automated7XXX   |Test      |automated7XXX  |04/02/1971     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated7XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated7XXX" and password "Test@12345"
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated25XXX  |Test    |automated25XXX |Test@12345 |automated25XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated25XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
@@ -169,21 +169,24 @@ Scenario: C14561 - Verify adding user education information by evidence
 	And user saving the education information
 	Then sucessful message is displayed
 	
+@UI @TestRails(14562)	
 Scenario: C14562 Verify removing user education information
 
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname       |Lastname  |Email 			  |Date of Birth  |
-		|Automated8XXX   |Test      |automated8XXX  |04/02/1971     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated8XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated8XXX" and password "Test@12345"
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated26XXX  |Test    |automated26XXX |Test@12345 |automated26XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated26XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
@@ -197,22 +200,25 @@ Scenario: C14562 Verify removing user education information
 	Then confirmation is displayed
 	When the user confirms to remove a education information
 	Then message show successfully deleted
-
+	
+@UI @TestRails(14563)	
 Scenario: C14563 - Verify adding other courses information
 
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname       |Lastname  |Email 		  	  |Date of Birth  |
-		|Automated9XXX   |Test      |automated9XXX  |04/02/1971     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated9XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated9XXX" and password "Test@12345"
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated27XXX  |Test    |automated27XXX |Test@12345 |automated27XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated27XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
@@ -225,22 +231,25 @@ Scenario: C14563 - Verify adding other courses information
   And user upload evidence of qualification attained
   And user saving qualification information
   Then sucessful message is displayed
-
+  
+@UI @TestRails(14564)	
 Scenario: C14564 - Verify removing other course information
 
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname       |Lastname  |Email 			  |Date of Birth  |
-		|Automated5XXX   |Test    |automated10XXX  |04/02/1971     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated10XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated10XXX" and password "Test@12345"
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated28XXX  |Test    |automated28XXX |Test@12345 |automated28XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated28XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
@@ -256,22 +265,25 @@ Scenario: C14564 - Verify removing other course information
 	Then confirmation is displayed
 	When the user confirms to remove a course
 	Then removing "Risk Management" course is successful
-
+	
+@UI @TestRails(14569)
 Scenario: C14569	Verify adding research interest
  
  	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname       |Lastname  |Email 		       |Date of Birth  |
-		|Automated11XXX  |Test      |automated11XXX  |04/02/1971     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated11XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated11XXX" and password "Test@12345"
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated29XXX  |Test    |automated29XXX |Test@12345 |automated29XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated29XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
@@ -285,21 +297,24 @@ Scenario: C14569	Verify adding research interest
 	Then sucessful message is displayed
 	And adding research interest "Computer Science and Information Technology" is successful
 
+@UI @TestRails(C14572)
 Scenario: C14572	Verify removing research interest 
 	
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname       |Lastname  |Email 			  |Date of Birth  |
-		|Automated12XXX  |Test      |automated12XXX  |04/02/1971     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated12XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated12XXX" and password "Test@12345"
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated30XXX  |Test    |automated30XXX |Test@12345 |automated30XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated30XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
@@ -317,21 +332,24 @@ Scenario: C14572	Verify removing research interest
 	When the user confirms to remove a research interest
 	Then removing "Computer Science and Information Technology" research interest is successful
 
+@UI @TestRails(14565)
 Scenario: C14565	Verify adding research methodology	
 	
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname        |Lastname  |Email 			  |Date of Birth  |
-		|Automated13XXX   |Test    |automated13XXX  |04/02/1971     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated13XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated13XXX" and password "Test@12345"
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated31XXX  |Test    |automated31XXX |Test@12345 |automated31XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated31XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
@@ -345,21 +363,24 @@ Scenario: C14565	Verify adding research methodology
 	Then sucessful message is displayed
   And adding methodology "Quantitative" is successful
 
+@UI @TestRails(14568)
 Scenario: C14568	Verify removing research methodology
 
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname        |Lastname  |Email 			    |Date of Birth  |
-		|Automated14XXX   |Test      |automated14XXX  |04/02/1971     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated14XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated14XXX" and password "Test@12345"
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated32XXX  |Test    |automated32XXX |Test@12345 |automated32XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated32XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
@@ -377,21 +398,24 @@ Scenario: C14568	Verify removing research methodology
 	When the user confirms to remove a research methodology
 	Then removing "Quantitative" research methodology is successful
 
+@UI @TestRails(14573)
 Scenario: C14573	Verify adding publication
 	
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname        |Lastname  |Email 			    |Date of Birth  |
-		|Automated15XXX   |Test      |automated15XXX  |04/02/1971     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated15XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated15XXX" and password "Test@12345"
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated33XXX  |Test    |automated33XXX |Test@12345 |automated33XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated33XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
@@ -399,26 +423,29 @@ Scenario: C14573	Verify adding publication
 	And user add publication
 	Then "Add" publication modal is displayed
 	When user enter publication information
-	|Title              |Publication Type  |Publisher        |Date       |Tag  |Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                               
-	|Silence the storm  |Book              |Rosalind Barker  |06/02/2013 |tag1 |"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."| 
+	|Title              |Publication Type  |Publisher            |Date       |Tag  |Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                               
+	|Silence the storm  |Book              |Automated33XXX Test  |06/02/2013 |tag1 |"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."| 
 	And user saving publication information
   Then adding publication "Silence the storm" is successful	
-
+  
+@UI @TestRails(14576) @Adhoc
 Scenario: C14576	Verify removing publication
 
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname        |Lastname  |Email 			    |Date of Birth  |
-		|Automated16XXX   |Test      |automated16XXX  |04/02/1971     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated16XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated16XXX" and password "Test@12345"
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated34XXX  |Test    |automated34XXX |Test@12345 |automated34XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated34XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
@@ -426,8 +453,8 @@ Scenario: C14576	Verify removing publication
 	And user add publication
 	Then "Add" publication modal is displayed
 	When user enter publication information
-	|Title              |Publication Type  |Publisher        |Date       |Tag  |Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                               
-	|Silence the storm  |Book              |Rosalind Barker  |06/02/2013 |tag1 |"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."| 
+	|Title              |Publication Type  |Publisher            |Date       |Tag  |Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                               
+	|Silence the storm  |Book              |Automated34XXX Test  |06/02/2013 |tag1 |"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."| 
 	And user saving publication information
   Then adding publication "Silence the storm" is successful	
 	When user delete publication "Silence the storm"
@@ -439,18 +466,20 @@ Scenario: C14576	Verify removing publication
 Scenario: C14575	Verify editing publication
 
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname        |Lastname  |Email 			    |Date of Birth  |
-		|Automated17XXX   |Test      |automated17XXX  |04/02/1971     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated17XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated17XXX" and password "Test@12345"
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated35XXX  |Test    |automated35XXX |Test@12345 |automated35XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated35XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
@@ -466,7 +495,7 @@ Scenario: C14575	Verify editing publication
 	Then "Edit" publication modal is displayed
 	When user enter publication information
 	|Title              |Publication Type  |Publisher           |Date       |Tag  |Abstarct|
-	|Strange tides      |Chapter           |Automated17XXX Test |03/01/2013 |tag2 |null    |  
+	|Strange tides      |Chapter           |Automated35XXX Test |03/01/2013 |tag2 |null    |  
 	And user saving publication information     
 	Then editing a publication is successful
 	
@@ -474,18 +503,20 @@ Scenario: C14575	Verify editing publication
 Scenario: C14567	Verify editing research methodology
 
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname        |Lastname  |Email 			    |Date of Birth  |
-		|Automated18XXX   |Test      |automated18XXX  |04/02/1971     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated18XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated18XXX" and password "Test@12345"
+		When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated36XXX  |Test    |automated36XXX |Test@12345 |automated36XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated36XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings
@@ -511,18 +542,20 @@ Scenario: C14567	Verify editing research methodology
 Scenario: C14571	Verify editing research interest
 
 	Given User is in academically login page
-	When user register a student
-	And user enter account details
-		|Firstname       |Lastname  |Email 			     |Date of Birth  |
-		|Automated19XXX  |Test      |automated19XXX  |04/02/1971     |
-	Then sent email modal is displayed 
-	And user activate account 
-	Then user is in complete registration form
-	And email address "automated19XXX" matched
-	When user enter password "Test@12345" and confirm passoword "Test@12345"
-	And user register an account
-	Then registered the account successfully
-	When user enter username "automated19XXX" and password "Test@12345"
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated37XXX  |Test    |automated37XXX |Test@12345 |automated37XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated37XXX" and password "Test@12345"
 	Then user successfully login
 	When user navigate to profile settings using profile widget
 	Then user is in profile settings

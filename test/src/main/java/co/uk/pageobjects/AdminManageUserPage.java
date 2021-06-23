@@ -2,6 +2,7 @@ package co.uk.pageobjects;
 
 import org.openqa.selenium.By;
 
+import co.uk.webelements.Button;
 import co.uk.webelements.CheckBox;
 import co.uk.webelements.Element;
 import co.uk.webelements.Tab;
@@ -54,11 +55,14 @@ public class AdminManageUserPage {
 		private static CheckBox userRole(String role) {
 			return  new CheckBox(role,By.xpath("//label[contains(text(),'"+role+"')]//../input"));
 		}
+		private static Button save = new Button("Save",By.xpath("//abp-modal-footer//button[@type='submit']"));
+		
+		public static void clickSave() {
+			save.click();
+		}
 		
 		public static void selectUserRole(String role) {
-			if(!userRole(role).isSelected()) {
-				userRole(role).click();
-			}
+			userRole(role).click();
 		}
 		
 		public static void unselectUserRole(String role) {
@@ -97,24 +101,28 @@ public class AdminManageUserPage {
 		
 		public static void enableActiveStatus() {
 			if(!activeStatus.isSelected()) {
-				activeStatus.click();
+				activeStatus.clickJS();
+			}else if(activeStatus.isSelected()){
+				
 			}
 		}
 		public static void enablePublicStatus() {
 			if(!publicStatus.isSelected()) {
-				publicStatus.click();
+				publicStatus.clickJS();
+			}else if(publicStatus.isSelected()){
+				
 			}
 		}
 		
 		public static void disablePublicStatus() {
 			if(publicStatus.isSelected()) {
-				publicStatus.click();
+				publicStatus.clickJS();
 			}
 		}
 		
 		public static void disableActiveStatus() {
 			if(activeStatus.isSelected()) {				
-				activeStatus.click();
+				activeStatus.clickJS();
 			}
 		}
 	}

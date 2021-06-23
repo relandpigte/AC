@@ -12,7 +12,7 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-public class UserProfilePageStepDefinistions {
+public class UserProfilePageStepDefinitions {
 
 	@When("^user add about information$")
 	public void enterAboutInformation() {
@@ -331,7 +331,7 @@ public class UserProfilePageStepDefinistions {
         	UserProfilePageResearch.PublicationModal.selectPublicationType(publicationType);
         }
         if(!publisher.equals("null")) {
-        	UserProfilePageResearch.PublicationModal.enterPublisher(publisher);
+        	UserProfilePageResearch.PublicationModal.enterPublisher(publisher.replace("XXX", DriverHandler.timestamp));
         }
         if(!date.equals("null")) {
         	UserProfilePageResearch.PublicationModal.enterPublicationDate(date);
