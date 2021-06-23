@@ -2744,6 +2744,138 @@ export class ProjectOffersServiceProxy {
         }
         return _observableOf<void>(<any>null);
     }
+
+    /**
+     * @param userIdFilter (optional) 
+     * @param projectIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(userIdFilter: number | undefined, projectIdFilter: string | undefined, searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ProjectOfferDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/ProjectOffers/GetAll?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (projectIdFilter === null)
+            throw new Error("The parameter 'projectIdFilter' cannot be null.");
+        else if (projectIdFilter !== undefined)
+            url_ += "ProjectIdFilter=" + encodeURIComponent("" + projectIdFilter) + "&";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<ProjectOfferDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ProjectOfferDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<ProjectOfferDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ProjectOfferDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ProjectOfferDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<ProjectOfferDto> {
+        let url_ = this.baseUrl + "/api/services/app/ProjectOffers/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<ProjectOfferDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ProjectOfferDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<ProjectOfferDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ProjectOfferDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ProjectOfferDto>(<any>null);
+    }
 }
 
 @Injectable()
@@ -10960,6 +11092,148 @@ export class ProjectDtoPagedResultDto implements IProjectDtoPagedResultDto {
 
 export interface IProjectDtoPagedResultDto {
     items: ProjectDto[] | undefined;
+    totalCount: number;
+}
+
+export class ProjectOfferDto implements IProjectOfferDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    projectId: string;
+    isHourlySessionOffered: boolean;
+    hourlyRate: number;
+    isDiscountedHourlySessionOffered: boolean;
+    discountedHours: number;
+    discountedHourlyRate: number;
+    isFreeSessionOffered: boolean;
+    project: ProjectDto;
+    creatorUser: UserDto;
+
+    constructor(data?: IProjectOfferDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.projectId = _data["projectId"];
+            this.isHourlySessionOffered = _data["isHourlySessionOffered"];
+            this.hourlyRate = _data["hourlyRate"];
+            this.isDiscountedHourlySessionOffered = _data["isDiscountedHourlySessionOffered"];
+            this.discountedHours = _data["discountedHours"];
+            this.discountedHourlyRate = _data["discountedHourlyRate"];
+            this.isFreeSessionOffered = _data["isFreeSessionOffered"];
+            this.project = _data["project"] ? ProjectDto.fromJS(_data["project"]) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ProjectOfferDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProjectOfferDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["projectId"] = this.projectId;
+        data["isHourlySessionOffered"] = this.isHourlySessionOffered;
+        data["hourlyRate"] = this.hourlyRate;
+        data["isDiscountedHourlySessionOffered"] = this.isDiscountedHourlySessionOffered;
+        data["discountedHours"] = this.discountedHours;
+        data["discountedHourlyRate"] = this.discountedHourlyRate;
+        data["isFreeSessionOffered"] = this.isFreeSessionOffered;
+        data["project"] = this.project ? this.project.toJSON() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): ProjectOfferDto {
+        const json = this.toJSON();
+        let result = new ProjectOfferDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IProjectOfferDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    projectId: string;
+    isHourlySessionOffered: boolean;
+    hourlyRate: number;
+    isDiscountedHourlySessionOffered: boolean;
+    discountedHours: number;
+    discountedHourlyRate: number;
+    isFreeSessionOffered: boolean;
+    project: ProjectDto;
+    creatorUser: UserDto;
+}
+
+export class ProjectOfferDtoPagedResultDto implements IProjectOfferDtoPagedResultDto {
+    items: ProjectOfferDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IProjectOfferDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(ProjectOfferDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): ProjectOfferDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProjectOfferDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ProjectOfferDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new ProjectOfferDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IProjectOfferDtoPagedResultDto {
+    items: ProjectOfferDto[] | undefined;
     totalCount: number;
 }
 

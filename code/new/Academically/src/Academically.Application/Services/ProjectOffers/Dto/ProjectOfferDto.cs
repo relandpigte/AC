@@ -1,13 +1,14 @@
-﻿using Abp.AutoMapper;
-using Abp.Domain.Entities;
+﻿using System;
+using Abp.AutoMapper;
+using Abp.Domain.Entities.Auditing;
 using Academically.Domain.Entities;
 using Academically.Services.Projects.Dto;
-using System;
+using Academically.Users.Dto;
 
 namespace Academically.Services.ProjectOffers.Dto
 {
     [AutoMap(typeof(ProjectOffer))]
-    public class ProjectOfferDto : Entity<Guid>
+    public class ProjectOfferDto : CreationAuditedEntity<Guid>
     {
         public Guid ProjectId { get; set; }
         public bool IsHourlySessionOffered { get; set; }
@@ -18,5 +19,6 @@ namespace Academically.Services.ProjectOffers.Dto
         public bool IsFreeSessionOffered { get; set; }
 
         public ProjectDto Project { get; set; }
+        public UserDto CreatorUser { get; set; }
     }
 }
