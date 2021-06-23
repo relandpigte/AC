@@ -1034,5 +1034,17 @@
           <p>{2}<p/>
       ]]>
     </text>
+    <text name="TutorsFound">Tutors found</text>
+    <text name="AllProposals">All proposals</text>
+    <text name="Sort">Sort</text>
+    <text name="WrittenFeedback">Written feedback</text>
+    <text name="LiveSession">Live session</text>
+    <text name="5Session">5 Session</text>
+    <text name="Message">Message</text>
+    <text name="ViewOffer">View offer</text>
+    <text name="ProjectBrief">Project brief</text>
+    <text name="BrowseTutors">Browse tutors</text>
+    <text name="Hired">Hired</text>
+    <text name="DateCreated">Date created</text>
   </texts>
 </localizationDictionary>

@@ -1,22 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OfferRoutingModule } from './offer-routing.module';
+import { ProjectProposalsRoutingModule } from './project-proposals-routing.module';
 import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
-import { OfferComponent } from './offer.component';
-import { OverviewComponent } from './overview/overview.component';
+import { ProjectProposalsComponent } from './project-proposals.component';
 
 @NgModule({
   declarations: [
-    OfferComponent,
-    OverviewComponent,
+    ProjectProposalsComponent,
   ],
   imports: [
     CommonModule,
-    OfferRoutingModule,
+    ProjectProposalsRoutingModule,
     SharedModule,
     AppSharedModule,
   ],
 })
-export class OfferModule { }
+export class ProjectProposalsModule { }

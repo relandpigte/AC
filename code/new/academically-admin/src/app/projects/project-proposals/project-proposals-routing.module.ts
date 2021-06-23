@@ -1,17 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
 import { AppRouteGuard } from '@shared/auth/auth-route-guard';
-
-import { OfferComponent } from './offer.component';
+import { ProjectProposalsComponent } from './project-proposals.component';
 
 @NgModule({
   imports: [
     RouterModule.forChild([
       {
         path: '',
-        component: OfferComponent,
-        data: { permission: 'Pages.Projects.Offer' },
+        component: ProjectProposalsComponent,
+        data: { permission: 'Pages.Projects.Proposals' },
         canActivate: [AppRouteGuard],
         canActivateChild: [AppRouteGuard],
       },
@@ -21,4 +19,4 @@ import { OfferComponent } from './offer.component';
     RouterModule
   ],
 })
-export class OfferRoutingModule { }
+export class ProjectProposalsRoutingModule { }

@@ -6,7 +6,8 @@ import { AppRouteGuard } from '@shared/auth/auth-route-guard';
 import { WrapperComponent } from '@app/layout/wrapper/wrapper.component';
 import { HeaderComponent } from './_components/header/header.component';
 import { ProjectsComponent } from './projects.component';
-import { OfferComponent } from './offer/offer.component';
+import { ProjectResolver } from './_resolvers/project.resolver';
+import { ProjectDetailsHeaderComponent } from './_components/project-details-header/project-details-header.component';
 @NgModule({
   imports: [
     RouterModule.forChild([
@@ -40,18 +41,23 @@ import { OfferComponent } from './offer/offer.component';
         ],
       },
       {
-        path: '',
+        path: ':project-id',
         component: WrapperComponent,
         data: { permission: 'Pages.Projects' },
         canActivate: [AppRouteGuard],
         canActivateChild: [AppRouteGuard],
-        // resolve: { user: ProjectsResolver },
+        resolve: { project: ProjectResolver },
         children: [
           {
-            path: ':project-id/offer',
+            path: '',
+            component: ProjectDetailsHeaderComponent,
+            outlet: 'header',
+          },
+          {
+            path: 'proposals',
             loadChildren: () =>
-              import('@app/projects/offer/offer.module').then(
-                (m) => m.OfferModule,
+              import('@app/projects/project-proposals/project-proposals.module').then(
+                (m) => m.ProjectProposalsModule,
               ),
           },
         ]

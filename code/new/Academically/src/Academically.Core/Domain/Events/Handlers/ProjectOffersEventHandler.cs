@@ -40,7 +40,7 @@ namespace Academically.Domain.Events.Handlers
         public async Task HandleEventAsync(EntityCreatedEventData<ProjectOffer> eventData)
         {
             string clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
-            string registrationLink = $"{clientRootAddress}/proposals/{eventData.Entity.ProjectId}";
+            string registrationLink = $"{clientRootAddress}/app/projects/{eventData.Entity.ProjectId}/proposals";
             string subject = L("ProjectOfferEmailSubject");
 
             var project = await _projectsRepository.GetAsync(eventData.Entity.ProjectId);

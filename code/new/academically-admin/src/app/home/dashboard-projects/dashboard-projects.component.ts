@@ -1,15 +1,55 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
+import { ProjectDto, ProjectDtoPagedResultDto, ProjectsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { finalize } from 'rxjs/operators';
+
+class PagedProjectsRequestDto extends PagedAndSortedRequestDto {
+  userIdFilter: number;
+  searchKeyword: string;
+}
 
 @Component({
   selector: 'app-dashboard-projects',
   templateUrl: './dashboard-projects.component.html',
   styleUrls: ['./dashboard-projects.component.less']
 })
-export class DashboardProjectsComponent implements OnInit {
+export class DashboardProjectsComponent extends PagedListingComponentBase<ProjectDto>  {
+  projects: ProjectDto[];
+  deleteLoaders: boolean[] = [];
 
-  constructor() { }
+  constructor(
+    injector: Injector,
+    private _router: Router,
+    private _projectsService: ProjectsServiceProxy,
+  ) {
+    super(injector);
+    this.pageSize = 5;
+  }
 
-  ngOnInit(): void {
+  list(request: PagedProjectsRequestDto, pageNumber: number, finishedCallback: Function): void {
+    request.userIdFilter = this.appSession.userId;
+
+    this._projectsService
+      .getAll(
+        request.userIdFilter,
+        request.searchKeyword,
+        request.skipCount,
+        request.maxResultCount
+      )
+      .pipe(
+        finalize(() => {
+          finishedCallback();
+        })
+      )
+      .subscribe((result: ProjectDtoPagedResultDto) => {
+        this.projects = result.items;
+        this.showPaging(result, pageNumber);
+      });
+  }
+
+  onViewClick(project: ProjectDto): void {
+    this._router.navigate(['/app/projects/' + project.id + '/proposals']);
   }
 
 }

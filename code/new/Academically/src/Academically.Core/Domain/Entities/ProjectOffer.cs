@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities.Auditing;
+using Academically.Authorization.Users;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,5 +18,8 @@ namespace Academically.Domain.Entities
 
         [ForeignKey("ProjectId")]
         public virtual Project Project { get; set; }
+
+        [ForeignKey("CreatorUserId")]
+        public virtual User CreatorUser { get; set; }
     }
 }

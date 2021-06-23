@@ -3,25 +3,42 @@
     <h4 class="card-header-title">Projects</h4>
   </div>
   <div class="table-responsive mb-0">
-    <table class="table table-sm table-nowrap card-table">
+    <table class="table table-sm table-nowrap card-table" [loader]="isTableLoading">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Support Level</th>
-          <th>Urgency Level</th>
-          <th>Date Created</th>
-          <th>Deadline</th>
+          <th>{{ 'Name' | localize }}</th>
+          <th>{{ 'DateCreated' | localize }}</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Animal Research</td>
-          <td>Level 3</td>
-          <td>Urgent</td>
-          <td>February 14, 2021</td>
-          <td>February 27, 2021</td>
+        <ng-container *ngFor="let project of projects">
+          <tr>
+            <td>
+              {{ project.name }}
+            </td>
+            <td width="10%">
+              {{ project.creationTime | date: 'dd/MM/yyyy' }}
+            </td>
+            <td width="1%" class="align-middle">
+              <button *ngIf="permission.isGranted('Pages.Profile.Education.Qualifications.Update')"
+                [disabled]="deleteLoaders[project.id]" (click)="onViewClick(project)" type="button"
+                class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+                <span class="fe fe-eye"></span>
+              </button>
+            </td>
+          </tr>
+        </ng-container>
+        <tr *ngIf="projects && !projects.length">
+          <td colspan="3">
+            <p class="text-muted m-4 text-center">{{ 'NoRecordsFound' | localize }}</p>
+          </td>
         </tr>
       </tbody>
     </table>
+    <abp-pagination-controls
+      *ngIf="projects && projects.length && totalItems > projects.length"
+      id="interest" (pageChange)="getDataPage($event)">
+    </abp-pagination-controls>
   </div>
 </div>

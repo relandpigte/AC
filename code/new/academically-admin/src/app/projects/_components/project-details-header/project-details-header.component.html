@@ -1,0 +1,42 @@
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+          <h6 class="header-pretitle">
+            {{ 'Project' | localize }}
+          </h6>
+          <h1 class="header-title">
+            {{ projectName }}
+          </h1>
+        </div>
+      </div>
+      <div class="row align-items-center">
+        <div class="col">
+          <ul class="nav nav-tabs nav-overflow header-tabs">
+            <li class="nav-item">
+              <a [routerLink]="['details']" routerLinkActive="active" class="nav-link" (click)="$event.preventDetaul()">
+                {{ 'ProjectBrief' | localize }}
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="['browse-tutors']" routerLinkActive="active" class="nav-link" (click)="$event.preventDetaul()">
+                {{ 'BrowseTutors' | localize }}
+              </a>
+            </li>
+            <li class="nav-item">
+              <a *ngIf="permission.isGranted('Pages.Projects.Proposals')" [routerLink]="['proposals']" routerLinkActive="active" class="nav-link">
+                {{ 'Proposals' | localize }}
+              </a>
+            </li>
+            <li class="nav-item" (click)="$event.preventDetaul()">
+              <a [routerLink]="['hired']" routerLinkActive="active" class="nav-link">
+                {{ 'Hired' | localize }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

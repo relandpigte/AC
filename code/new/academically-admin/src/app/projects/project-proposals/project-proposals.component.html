@@ -1,0 +1,145 @@
+<div class="container-fluid" [@routerTransition]>
+    <div class="row">
+      <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <div class="row align-items-center">
+                <div class="col">
+                  <form>
+                    <div class="input-group input-group-flush input-group-merge input-group-reverse flex-row-reverse">
+                      <input class="form-control list-search" type="search" placeholder="Search">
+                      <span class="input-group-text border-0 pr-0">
+                        <i class="fe fe-search"></i>
+                      </span>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="col-auto me-n3">
+                  <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+                    <li class="nav-item">
+                      <a href="javascript:;" class="nav-link active">{{ 'AllProposals' | localize }}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-body bg-light">
+              <div class="row align-items-center">
+                <div class="col">
+                  <label class="col-sm-5 col-form-label">
+                    <b>723</b> {{ 'TutorsFound' | localize }}
+                  </label>
+                </div>
+
+
+                <div class="col-auto">
+                  <div class="row align-items-center form-group mb-0">
+                      <div class="form-select-wrapper">
+                        <select id="minEducationLevel" name="distance" class="form-control form-select form-control-sm">
+                          <option>9 per page</option>
+                        </select>
+                      </div>
+                  </div>
+                </div>
+
+                <div class="col-auto">
+                  <div class="row align-items-center">
+                    <label for="inputEmail3" class="col-sm-5 col-form-label">UK</label>
+                    <div class="col-sm-7">
+                      <div class="custom-control custom-switch">
+                        <input id="isPublic" name="isPublic" type="checkbox"
+                          class="custom-control-input">
+                        <label class="custom-control-label" for="isPublic"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-auto">
+                  <div class="row align-items-center form-group mb-0">
+                    <label class="col-form-label font-size-sm text-muted col-sm-4" for="sortBy">{{ 'Sort' | localize | uppercase }}</label>
+                    <div class="col-sm-8">
+                      <div class="form-select-wrapper">
+                        <select id="minEducationLevel" name="sortBy" class="form-control form-select form-control-sm">
+                          <option>Best Match</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body" [busy]="isLoading">
+              <ul class="list-group list-group-flush list my-n3">
+                <li class="list-group-item" *ngFor="let projectOffer of projectOffers">
+                  <div class="row align-items-top">
+                    <div class="col-auto">
+                      <div class="avatar avatar-lg avatar-online">
+                        <img class="avatar-img rounded-circle" [src]="getProfilePic(projectOffer.creatorUser)" alt="...">
+                        <img *ngIf="projectOffer.creatorUser.profilePictureUrl" class="avatar-img rounded-circle"
+                          [src]="projectOffer.creatorUser.profilePictureUrl" alt="...">
+                      </div>
+
+                    </div>
+                    <div class="col ms-n2">
+                      <h4 class="mb-1">
+                        <a href="javascript:;">{{ projectOffer.creatorUser.fullName | titlecase }}</a>
+                      </h4>
+                      <p class="small text-muted mb-1">
+                        {{ projectOffer.creatorUser.currentUniversity }}
+                      </p>
+                      <p class="small mb-0">
+                        200+ Hours
+                      </p>
+
+                    </div>
+                    <div class="col-auto">
+                      <button type="button" class="btn btn-link btn-sm mr-3 text-secondary">
+                        <i class="fe fe-heart"></i>
+                      </button>
+                      <button type="button" class="bg-primary-soft btn btn-sm mr-3 text-secondary">
+                        {{ 'Message' | localize }}
+                      </button>
+                      <button type="button" class="btn btn-sm btn-primary" (click)="onViewOfferClick(projectOffer)">
+                        {{ 'ViewOffer' | localize }}
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row mt-4">
+                    <div class="col-md-4">
+                      <label class="m-0 font-size-sm text-muted">{{ 'WrittenFeedback' | localize | uppercase }}</label>
+                      <p class="">£15/1000 words</p>
+                    </div>
+                    <div class="col-md-4 text-md-center">
+                      <label class="m-0 font-size-sm text-muted">{{ 'LiveSession' | localize | uppercase }}</label>
+                      <p class="">£19/hour</p>
+                    </div>
+                    <div class="col-md-4 text-md-right">
+                      <label class="m-0 font-size-sm text-muted">{{ '5Session' | localize | uppercase }}</label>
+                      <p class="">£17/hour</p>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-12">
+                      <p class="">At vero eos et accusamus et iusto idio dignissimos ducimus qui blanditiis upiditate non provident, et
+                        iusto idio similique sunt in culpa qui official deserunt molitia
+                      </p>
+                    </div>
+
+                  </div>
+                </li>
+                <li *ngIf="projectOffers.length === 0" class="list-group-item">
+                  <p class="text-center m-0 p-0">{{ 'NoRecordsFound' | localize }}</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+      </div>
+    </div>
+  </div>
+
+
