@@ -17,19 +17,21 @@
           </div>
           <div class="col-auto">
             <time class="comment-time">
-              {{ rescheduleComment.creationTime | date: 'MMM d, y h:mm a' }}
+              {{ rescheduleComment.creationTime | dateFormat: 'MMM DD, YYYY hh:mm A' }}
             </time>
           </div>
         </div>
         <p class="comment-text">
           {{ rescheduleComment.comments }}
         </p>
-        <div class="comment-time m-0">
-          {{ 'From' | localize }}: {{ rescheduleComment.oldStartTime | date: 'MMM d, y h:mm a' }}
-          - {{ rescheduleComment.oldEndTime | date: 'MMM d, y h:mm a' }}
+        <div
+          *ngIf="rescheduleComment.oldStartTime !== rescheduleComment.newStartTime && rescheduleComment.oldEndTime !== rescheduleComment.newEndTime"
+          class="comment-time m-0">
+          {{ 'From' | localize }}: {{ rescheduleComment.oldStartTime | dateFormat: 'MMM DD, YYYY hh:mm A' }}
+          - {{ rescheduleComment.oldEndTime | dateFormat: 'MMM DD, YYYY hh:mm A' }}
           <br />
-          {{ 'To' | localize }}: {{ rescheduleComment.newStartTime | date: 'MMM d, y h:mm a' }}
-          - {{ rescheduleComment.newEndTime | date: 'MMM d, y h:mm a' }}
+          {{ 'To' | localize }}: {{ rescheduleComment.newStartTime | dateFormat: 'MMM DD, YYYY hh:mm A' }}
+          - {{ rescheduleComment.newEndTime | dateFormat: 'MMM DD, YYYY hh:mm A' }}
         </div>
       </div>
     </div>

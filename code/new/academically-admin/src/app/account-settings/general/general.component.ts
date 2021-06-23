@@ -6,6 +6,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { countries } from '@shared/constants/countries';
 import { LocationSuggestion, PaymentsServiceProxy, ProfilesServiceProxy, TimeZoneDto, TimeZonesServiceProxy, UserDto, UserLoginInfoDto } from '@shared/service-proxies/service-proxies';
 import { environment } from 'environments/environment';
+import * as moment from 'moment';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { ChangeData, CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
@@ -29,7 +30,7 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
   SearchCountryField = SearchCountryField;
   PhoneNumberFormat = PhoneNumberFormat;
   countries = countries;
-  timezones: TimeZoneDto[] = [];
+  timeZones: TimeZoneDto[] = [];
   currentTimeZone: string;
   isLoading = false;
   isOnboarding = true;
@@ -86,9 +87,10 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
           this.isLoading = false;
           this.model.phoneNumber = this.formatPhoneNumber(tempPhoneNumber);
           if (this.currentTimeZone !== this.model.timeZoneId) {
-            setTimeout(() => {
-              location.reload();
-            }, 3000);
+            this.currentTimeZone = this.model.timeZoneId;
+            const timeZone = this.timeZones.find(e => e.id === this.model.timeZoneId);
+            abp.timing.timeZoneInfo.iana.timeZoneId = timeZone.ianaName;
+            moment.tz.setDefault(abp.timing.timeZoneInfo.iana.timeZoneId);
           }
         }),
       )
@@ -117,12 +119,6 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
 
   onAddressSelected(e: TypeaheadMatch): void {
     this.getLocationDetail(e.item.id);
-  }
-
-  onTimeZoneChange(): void {
-    if (this.currentTimeZone !== this.model.timeZoneId) {
-      this.notify.info(this.l('TimeZoneUpdatedMessage'), undefined, { timer: 5000 });
-    }
   }
 
   private getUser(): void {
@@ -157,7 +153,7 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
         }),
       )
       .subscribe(timezones => {
-        this.timezones = timezones;
+        this.timeZones = timezones;
       });
   }
 

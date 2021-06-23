@@ -6,7 +6,7 @@
       </h4>
       <ul *ngIf="model.id" class="mr-4 nav nav-tabs nav-tabs-sm card-header-tabs">
         <li class="nav-item">
-          <a class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab"
+          <a #detailsTabButton class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab"
             aria-controls="details" aria-selected="true">
             {{ 'BookingDetails' | localize}}
           </a>
@@ -26,10 +26,6 @@
       <div class="tab-content row">
 
         <div class="col-12 tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
-          <div class="form-group mb-2 d-flex justify-content-between">
-            <label class="col-form-label">{{ 'Date' | localize}}: <b>{{ startTime | date: 'MMMM d, yyyy' }}</b></label>
-            <label class="col-form-label">{{ 'Duration' | localize}}: <b>{{ durationText }}</b></label>
-          </div>
           <div *ngIf="model.id" class="form-group mb-2 d-flex justify-content-between">
             <label class="col-form-label">{{ 'Project' | localize}}: <b>{{ model.project.name }}</b></label>
             <label class="col-form-label">{{ 'Title' | localize}}: <b>{{ model.title }}</b></label>
@@ -95,6 +91,11 @@
               </timepicker>
             </div>
 
+
+            <div class="form-group col-12 mb-2">
+              <label class="col-form-label">{{ 'Duration' | localize}}: <b>{{ durationText }}</b></label>
+            </div>
+
           </div>
 
           <div class="form-group required">
@@ -111,7 +112,7 @@
             </abp-validation-summary>
           </div>
 
-          <div *ngIf="model.id && !isFormViewOnly" class="form-group required">
+          <div *ngIf="model.id && (!isFormViewOnly || isDecliningABooking)" class="form-group required">
             <label class="col-form-label" for="comments">{{ 'Comments' | localize}}</label>
             <textarea [rows]="4" [(ngModel)]="comments" #commentsModel="ngModel" #commentsEl class="form-control"
               id="comments" name="comments" required>
@@ -134,23 +135,29 @@
     </abp-modal-footer>
     <ng-container *ngIf="model.id">
 
-      <div *ngIf="isFormViewOnly" class="card-footer justify-content-between">
+      <div *ngIf="isFormViewOnly && !isDecliningABooking" class="card-footer justify-content-between">
         <button type="button" class="btn btn-white" (click)="onCloseClick()">
           {{ 'Close' | localize }}
         </button>
-        <div>
-          <button type="button" class="btn btn-success mr-2" (click)="isFormViewOnly = false">
+        <div *ngIf="(!lastRescheduleComment && model.creatorUserId !== appSession.userId)
+          || (lastRescheduleComment && lastRescheduleComment.creatorUser.id !== appSession.userId)">
+          <button type="button" class="btn btn-success mr-2"
+            (click)="detailsTabButton.nativeElement.click(); isFormViewOnly = false">
             {{ 'ProposeNewTime' | localize }}
           </button>
-          <button type="button" class="btn btn-primary" (click)="onAcceptClick()">
+          <button *ngIf="lastRescheduleComment" type="button" class="btn btn-secondary mr-2"
+            (click)="detailsTabButton.nativeElement.click(); onDeclineClick()">
+            {{ 'Decline' | localize }}
+          </button>
+          <button type="button" class="btn btn-primary" (click)="onSubmitClick()">
             <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             {{ (isLoading ? 'SavingWithDots' : 'Accept') | localize }}
           </button>
         </div>
       </div>
 
-      <div *ngIf="!isFormViewOnly" class="card-footer justify-content-between">
-        <button type="button" class="btn btn-white" (click)="isFormViewOnly = true">
+      <div *ngIf="!isFormViewOnly || isDecliningABooking" class="card-footer justify-content-between">
+        <button type="button" class="btn btn-white" (click)="detailsTabButton.nativeElement.click(); onCancelClick()">
           {{ 'Cancel' | localize }}
         </button>
         <button type="submit" class="btn btn-primary" [disabled]="!form.form.valid || isLoading || duration <= 0">

@@ -9,5 +9,6 @@ namespace Academically.Services.TimeZones
     {
         Task<IEnumerable<TimeZoneDto>> GetAllAsync();
         Task<TimeZoneDto> GetAsync();
+        Task UpdateUserTimeZone(TimeZoneDto input);
     }
 }

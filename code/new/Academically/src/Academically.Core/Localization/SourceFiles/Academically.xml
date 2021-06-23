@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="NoProjectOfferBookingDomainErrorMessage">There was no offer made by {0} for {1}. Please select a tutur that has submitted an offer for this project.</text>
+    <text name="BookingFailed">Booking Failed</text>
+    <text name="Decline">Decline</text>
     <text name="EndTime">End time</text>
     <text name="StartTime">Start time</text>
     <text name="NoRescheduleHistory">No Reschedule History</text>
@@ -27,7 +30,7 @@
     <text name="Of">Of</text>
     <text name="Step">Step</text>
     <text name="BlockOuts">Block Outs</text>
-    <text name="TimeZoneUpdatedMessage">Updating your time zone will refresh your browser thress seconds after saving your changes.</text>
+    <text name="TimeZoneUpdatedMessage">Your time zone was successfully updated.</text>
     <text name="Yearly">Yearly</text>
     <text name="Monthly">Monthly</text>
     <text name="Weekly">Weekly</text>

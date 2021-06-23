@@ -51,7 +51,7 @@
 
     </div>
     <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading"
-      [saveDisabled]="!form.form.valid || duration <= 0" (onCancelClick)="onCloseClick()">
+      [saveDisabled]="!form.form.valid || duration <= 0 || isLoading" (onCancelClick)="onCloseClick()">
     </abp-modal-footer>
   </div>
 </form>

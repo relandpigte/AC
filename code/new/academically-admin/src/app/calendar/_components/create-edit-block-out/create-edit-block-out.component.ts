@@ -41,20 +41,23 @@ export class CreateEditBlockOutComponent extends AppComponentBase implements OnI
 
   ngOnInit(): void {
     if (this.model) {
-      this.startTime = this.model.startTime.toDate();
-      this.endTime = this.model.endTime.toDate();
       this.tempStartTime = this.startTime;
       this.tempEndTime = this.endTime;
       if (!this.model.id) {
+        this.startTime = this.model.startTime.toDate();
+        this.endTime = this.model.startTime.toDate();
         this.model.recurrence = CalendarEventRecurrence.OneTime;
+      } else {
+        this.startTime = this.convertMomentToDate(this.model.startTime);
+        this.endTime = this.convertMomentToDate(this.model.endTime);
       }
     }
   }
 
   onFormSubmit(): void {
     this.isLoading = true;
-    this.model.startTime = moment(this.startTime);
-    this.model.endTime = moment(this.endTime);
+    this.model.startTime = this.convertDateToMoment(this.startTime);
+    this.model.endTime = this.convertDateToMoment(this.endTime);
     this.model.type = CalendarEventType.Blocker;
     (!this.model.id
       ? this._calendarEventsService.create(this.model)
