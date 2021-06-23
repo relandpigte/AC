@@ -15,5 +15,6 @@ namespace Academically.Services.CalendarEvents
         Task Update(CalendarEventDto input);
         Task Reschedule(RescheduleCalendarEventDto input);
         Task AcceptOffer(Guid id);
+        Task DeclineOffer(RescheduleCalendarEventDto input);
     }
 }

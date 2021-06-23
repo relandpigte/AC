@@ -4,7 +4,7 @@ import { CalendarOptions, DateSelectArg, EventClickArg, EventInput } from '@full
 import { DateClickArg } from '@fullcalendar/interaction';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CalendarEventDto, CalendarEventRecurrence, CalendarEventsServiceProxy, CalendarEventType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CalendarEventDto, CalendarEventRecurrence, CalendarEventsServiceProxy, CalendarEventType, ProfilesServiceProxy, TimeZoneDto, TimeZonesServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -20,6 +20,7 @@ import { CreateEditBookingComponent } from './_components/create-edit-booking/cr
 })
 export class CalendarComponent extends AppComponentBase implements OnInit {
   user: UserDto = new UserDto();
+  timeZones: TimeZoneDto[] = [];
   userId: number;
   startTime: Date;
   endTime: Date;
@@ -30,7 +31,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
     initialView: 'timeGridWeek',
     themeSystem: 'bootstrap',
     headerToolbar: {
-      left: 'prev,next today',
+      left: 'prev,next refresh today',
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
@@ -39,6 +40,12 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
       hour: '2-digit',
       minute: '2-digit',
       meridiem: true,
+    },
+    customButtons: {
+      refresh: {
+        bootstrapFontAwesome: 'fa-sync-alt',
+        click: this.refreshClick.bind(this),
+      }
     },
     datesSet: this.dateSet.bind(this),
     dateClick: this.dateClicked.bind(this),
@@ -50,7 +57,8 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
     private _modalService: BsModalService,
     private _route: ActivatedRoute,
     private _calendarEventsService: CalendarEventsServiceProxy,
-    private _usersService: UserServiceProxy,
+    private _profilesService: ProfilesServiceProxy,
+    private _timeZonesService: TimeZonesServiceProxy,
   ) {
     super(injector);
   }
@@ -62,11 +70,29 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
     });
   }
 
+  onTimeZoneChange(timeZoneId: string): void {
+    this.isLoading = true;
+    const timeZone = this.timeZones.find(e => e.id === timeZoneId);
+    this._timeZonesService.updateUserTimeZone(timeZone)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+          abp.timing.timeZoneInfo.iana.timeZoneId = timeZone.ianaName;
+          moment.tz.setDefault(abp.timing.timeZoneInfo.iana.timeZoneId);
+          this.getCalendarEvents();
+        }),
+      )
+      .subscribe(() => {
+        this.notify.success(this.l('TimeZoneUpdatedMessage'));
+      })
+  }
+
   private dateSet(args: DateSelectArg): void {
     this.startTime = args.start;
     this.endTime = args.end;
     setTimeout(() => {
-      this.getEvents();
+      this.getCalendarEvents();
     });
   }
 
@@ -77,6 +103,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
     if (!this.isBlockOutClicked && this.permission.isGranted('Pages.Calendar.BlockOuts')) {
       this.showCreateEditBlockOutModal(model);
     } else if (!this.isBlockOutClicked && !this.isTutor && this.permission.isGranted('Pages.Calendar.Bookings')) {
+      model.tutorId = this.userId;
       this.showCreateEditBookingModal(model);
     }
     this.isBlockOutClicked = false;
@@ -92,6 +119,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
         }
         break;
       case CalendarEventType.BookingRequest:
+      case CalendarEventType.RescheduledBooking:
         if ((calendarEvent.creatorUserId === this.appSession.userId || this.userId === this.appSession.userId)
           && this.permission.isGranted('Pages.Calendar.Bookings')) {
           this.showCreateEditBookingModal(_.cloneDeep((args.event.extendedProps.calendarEvent as CalendarEventDto)));
@@ -100,6 +128,10 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
         }
         break;
     }
+  }
+
+  private refreshClick(): void {
+    this.getCalendarEvents();
   }
 
   private showCreateEditBlockOutModal(model?: CalendarEventDto): void {
@@ -113,7 +145,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
         takeUntil(this.destroyed$),
       )
       .subscribe(() => {
-        this.getEvents();
+        this.getCalendarEvents();
       });
   }
 
@@ -128,16 +160,16 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
         takeUntil(this.destroyed$),
       )
       .subscribe(() => {
-        this.getEvents();
+        this.getCalendarEvents();
       });
   }
 
   private getUser(): void {
-    this._usersService.get(this.userId)
+    this._profilesService.get(this.userId)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
-          this.isLoading = false;
+          this.getTimeZones();
         })
       )
       .subscribe(user => {
@@ -145,7 +177,17 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
       });
   }
 
-  private getEvents(): void {
+  private getTimeZones(): void {
+    this._timeZonesService.getAll()
+      .pipe(
+        takeUntil(this.destroyed$),
+      )
+      .subscribe(timeZones => {
+        this.timeZones = timeZones;
+      })
+  }
+
+  private getCalendarEvents(): void {
     this.isLoading = true;
     const startTime = moment(this.startTime);
     const endTime = moment(this.endTime);
@@ -169,8 +211,17 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
           switch (calendarEvent.type) {
             case CalendarEventType.Blocker:
               calendarEventInput.display = 'background';
-              calendarEventInput.className = 'fc-non-business';
-              calendarEventInput.title = calendarEvent.creatorUserId === this.appSession.userId ? calendarEvent.title : '';
+              if (calendarEvent.creatorUserId === this.appSession.userId) {
+                calendarEventInput.className = 'fc-non-business tutor';
+                calendarEventInput.title = calendarEvent.title;
+              } else {
+                calendarEventInput.className = 'fc-non-business';
+                calendarEventInput.title = '';
+              }
+              break;
+            case CalendarEventType.ConfirmedBooking:
+              calendarEventInput.title = calendarEvent.title;
+              calendarEventInput.backgroundColor = '#2C7BE5';
               break;
             case CalendarEventType.BookingRequest:
               if (calendarEvent.creatorUserId !== this.appSession.userId && this.userId !== this.appSession.userId) {
@@ -179,12 +230,19 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
                 calendarEventInput.title = '';
               } else {
                 calendarEventInput.title = calendarEvent.title;
-                calendarEventInput.backgroundColor = '#6E84A3';
+                calendarEventInput.backgroundColor = '#EDF2F9';
+                calendarEventInput.textColor = '#000000';
               }
               break;
-            case CalendarEventType.ConfirmedBooking:
-              calendarEventInput.title = calendarEvent.title;
-              calendarEventInput.backgroundColor = '#2C7BE5';
+            case CalendarEventType.RescheduledBooking:
+              if (calendarEvent.creatorUserId !== this.appSession.userId && this.userId !== this.appSession.userId) {
+                calendarEventInput.display = 'background';
+                calendarEventInput.className = 'fc-non-business';
+                calendarEventInput.title = '';
+              } else {
+                calendarEventInput.title = calendarEvent.title;
+                calendarEventInput.backgroundColor = '#6E84A3';
+              }
               break;
           }
           if (calendarEvent.recurrence !== CalendarEventRecurrence.OneTime) {

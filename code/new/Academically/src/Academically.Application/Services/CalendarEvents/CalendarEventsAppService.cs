@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Repositories;
+using Abp.UI;
 using Academically.Authorization.Roles;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
@@ -17,7 +18,7 @@ namespace Academically.Services.CalendarEvents
         private readonly IRepository<CalendarEvent, Guid> _calendarEventsRepository;
         private readonly IRepository<Project, Guid> _projectsRepository;
         private readonly IRepository<ProjectOffer, Guid> _projectOffersRepository;
-        private readonly IRepository<RescheduleComment, Guid> _reschedleCommentsRepository;
+        private readonly IRepository<RescheduleComment, Guid> _rescheduleCommentsRepository;
 
         public CalendarEventsAppService(
             IRepository<CalendarEvent, Guid> calendarEventsRepository,
@@ -29,7 +30,7 @@ namespace Academically.Services.CalendarEvents
             _calendarEventsRepository = calendarEventsRepository;
             _projectsRepository = projectsRepository;
             _projectOffersRepository = projectOffersRepository;
-            _reschedleCommentsRepository = reschedleCommentsRepository;
+            _rescheduleCommentsRepository = reschedleCommentsRepository;
         }
 
         public async Task<IEnumerable<CalendarEventDto>> GetAll(GetAllCalendarEventsRequestDto input)
@@ -44,7 +45,8 @@ namespace Academically.Services.CalendarEvents
                     .Where(e => e.CreatorUserId == input.UserId)
                     .Select(e => e.Project.CreatorUserId)
                     .ToListAsync();
-            } else
+            }
+            else
             {
                 userIds = new List<long?>();
             }
@@ -86,6 +88,20 @@ namespace Academically.Services.CalendarEvents
 
         public async Task Create(CalendarEventDto input)
         {
+            if (input.Type != CalendarEventType.Blocker)
+            {
+                var hasTutorOffer = await _projectOffersRepository.GetAll()
+                    .Where(e => e.ProjectId == input.ProjectId && e.CreatorUserId == input.TutorId)
+                    .AnyAsync();
+
+                if (!hasTutorOffer)
+                {
+                    var tutor = await UserManager.GetUserByIdAsync(input.TutorId);
+                    var project = await _projectsRepository.GetAsync(input.ProjectId.Value);
+                    throw new UserFriendlyException(L("BookingFailed"), L("NoProjectOfferBookingDomainErrorMessage", tutor.FullName, project.Name));
+                }
+            }
+
             input.CreatorUserId = AbpSession.UserId.Value;
             var calendarEvent = ObjectMapper.Map<CalendarEvent>(input);
             await _calendarEventsRepository.InsertAsync(calendarEvent);
@@ -104,6 +120,7 @@ namespace Academically.Services.CalendarEvents
             input.CalendarEvent.Project = null;
             var calendarEvent = await _calendarEventsRepository.GetAsync(input.CalendarEvent.Id.Value);
             ObjectMapper.Map(input.CalendarEvent, calendarEvent);
+            calendarEvent.Type = CalendarEventType.RescheduledBooking;
             await _calendarEventsRepository.UpdateAsync(calendarEvent);
 
             var rescheduleComment = new RescheduleComment();
@@ -113,13 +130,37 @@ namespace Academically.Services.CalendarEvents
             rescheduleComment.NewEndTime = input.CalendarEvent.EndTime;
             rescheduleComment.Comments = input.Comments;
             rescheduleComment.CalendarEventId = input.CalendarEvent.Id.Value;
-            await _reschedleCommentsRepository.InsertAsync(rescheduleComment);
+            await _rescheduleCommentsRepository.InsertAsync(rescheduleComment);
         }
 
         public async Task AcceptOffer(Guid id)
         {
             var calendarEvent = await _calendarEventsRepository.GetAsync(id);
             calendarEvent.Type = CalendarEventType.ConfirmedBooking;
+            await _calendarEventsRepository.UpdateAsync(calendarEvent);
+        }
+
+        public async Task DeclineOffer(RescheduleCalendarEventDto input)
+        {
+            var calendarEvent = await _calendarEventsRepository.GetAsync(input.CalendarEvent.Id.Value);
+            var previousRescheduleComment = await _rescheduleCommentsRepository.GetAll()
+                .OrderByDescending(e => e.CreationTime)
+                .FirstOrDefaultAsync();
+
+            var rescheduleComment = new RescheduleComment();
+            rescheduleComment.OldStartTime = calendarEvent.StartTime;
+            rescheduleComment.OldEndTime = calendarEvent.EndTime;
+
+            calendarEvent.Type = CalendarEventType.RescheduledBooking;
+            calendarEvent.StartTime = previousRescheduleComment.OldStartTime;
+            calendarEvent.EndTime = previousRescheduleComment.OldEndTime;
+
+            rescheduleComment.NewStartTime = calendarEvent.StartTime;
+            rescheduleComment.NewEndTime = calendarEvent.EndTime;
+            rescheduleComment.Comments = input.Comments;
+            rescheduleComment.CalendarEventId = input.CalendarEvent.Id.Value;
+
+            await _rescheduleCommentsRepository.InsertAsync(rescheduleComment);
             await _calendarEventsRepository.UpdateAsync(calendarEvent);
         }
     }

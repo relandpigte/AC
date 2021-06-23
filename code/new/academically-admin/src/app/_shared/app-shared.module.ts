@@ -11,6 +11,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 
 import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
+import { DateFormatPipe } from './pipes/date-format.pipe';
 
 import { DocumentUploaderComponent } from './components/document-uploader/document-uploader.component';
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
@@ -24,6 +25,7 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
     ImageCropperComponent,
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
+    DateFormatPipe,
   ],
   imports: [
     CommonModule,
@@ -52,6 +54,7 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
     BsDropdownModule,
     TimepickerModule,
     EnumToArrayPipe,
+    DateFormatPipe,
     DocumentUploaderComponent,
     ImageCropperComponent,
     ImageGalleryComponent,

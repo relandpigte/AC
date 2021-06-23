@@ -823,6 +823,58 @@ export class CalendarEventsServiceProxy {
         }
         return _observableOf<void>(<any>null);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    declineOffer(body: RescheduleCalendarEventDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/CalendarEvents/DeclineOffer";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeclineOffer(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeclineOffer(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeclineOffer(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
 }
 
 @Injectable()
@@ -5903,6 +5955,58 @@ export class TimeZonesServiceProxy {
         }
         return _observableOf<TimeZoneDto>(<any>null);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateUserTimeZone(body: TimeZoneDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/TimeZones/UpdateUserTimeZone";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateUserTimeZone(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateUserTimeZone(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateUserTimeZone(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
 }
 
 @Injectable()
@@ -9141,6 +9245,7 @@ export class CalendarEventDto implements ICalendarEventDto {
     recurrence: CalendarEventRecurrence;
     projectId: string | undefined;
     creatorUserId: number;
+    tutorId: number;
     project: ProjectDto;
     rescheduleComments: RescheduleCommentDto[] | undefined;
 
@@ -9163,6 +9268,7 @@ export class CalendarEventDto implements ICalendarEventDto {
             this.recurrence = _data["recurrence"];
             this.projectId = _data["projectId"];
             this.creatorUserId = _data["creatorUserId"];
+            this.tutorId = _data["tutorId"];
             this.project = _data["project"] ? ProjectDto.fromJS(_data["project"]) : <any>undefined;
             if (Array.isArray(_data["rescheduleComments"])) {
                 this.rescheduleComments = [] as any;
@@ -9189,6 +9295,7 @@ export class CalendarEventDto implements ICalendarEventDto {
         data["recurrence"] = this.recurrence;
         data["projectId"] = this.projectId;
         data["creatorUserId"] = this.creatorUserId;
+        data["tutorId"] = this.tutorId;
         data["project"] = this.project ? this.project.toJSON() : <any>undefined;
         if (Array.isArray(this.rescheduleComments)) {
             data["rescheduleComments"] = [];
@@ -9215,6 +9322,7 @@ export interface ICalendarEventDto {
     recurrence: CalendarEventRecurrence;
     projectId: string | undefined;
     creatorUserId: number;
+    tutorId: number;
     project: ProjectDto;
     rescheduleComments: RescheduleCommentDto[] | undefined;
 }
@@ -9228,11 +9336,12 @@ export enum CalendarEventRecurrence {
     Yearly = 4,
 }
 
-/** 0 = Blocker 1 = BookingRequest 2 = ConfirmedBooking */
+/** 0 = Blocker 1 = ConfirmedBooking 2 = BookingRequest 3 = RescheduledBooking */
 export enum CalendarEventType {
     Blocker = 0,
-    BookingRequest = 1,
-    ConfirmedBooking = 2,
+    ConfirmedBooking = 1,
+    BookingRequest = 2,
+    RescheduledBooking = 3,
 }
 
 export class ChangePasswordDto implements IChangePasswordDto {
@@ -12991,6 +13100,7 @@ export interface ITenantLoginInfoDto {
 export class TimeZoneDto implements ITimeZoneDto {
     id: string | undefined;
     name: string | undefined;
+    ianaName: string | undefined;
 
     constructor(data?: ITimeZoneDto) {
         if (data) {
@@ -13005,6 +13115,7 @@ export class TimeZoneDto implements ITimeZoneDto {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
+            this.ianaName = _data["ianaName"];
         }
     }
 
@@ -13019,6 +13130,7 @@ export class TimeZoneDto implements ITimeZoneDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
+        data["ianaName"] = this.ianaName;
         return data; 
     }
 
@@ -13033,6 +13145,7 @@ export class TimeZoneDto implements ITimeZoneDto {
 export interface ITimeZoneDto {
     id: string | undefined;
     name: string | undefined;
+    ianaName: string | undefined;
 }
 
 export class TutorRatingDto implements ITutorRatingDto {

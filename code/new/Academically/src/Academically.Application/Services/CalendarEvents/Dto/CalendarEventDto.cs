@@ -19,6 +19,8 @@ namespace Academically.Services.CalendarEvents.Dto
         public Guid? ProjectId { get; set; }
         public long CreatorUserId { get; set; }
 
+        public long TutorId { get; set; }
+
         public ProjectDto Project { get; set; }
         public IEnumerable<RescheduleCommentDto> RescheduleComments { get; set; }
     }

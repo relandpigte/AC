@@ -8,6 +8,17 @@
               <h6 class="header-pretitle">{{ 'ManageYourEvents' | localize }}</h6>
               <h1 class="header-title"><span *ngIf="user.id">{{ user.fullName }}'s Calendar</span></h1>
             </div>
+            <div class="col-auto">
+
+              <select class="custom-select" [disabled]="isLoading" select2 [defaultValue]="user.timeZoneId"
+                (select2ValueChange)="onTimeZoneChange($event)" [(ngModel)]="user.timeZoneId" id="timeZoneId"
+                name="timeZoneId" #timeZoneIdModel="ngModel" #timeZoneIdEl required>
+                <option *ngFor="let timeZone of timeZones" [value]="timeZone.id">
+                  {{ timeZone.name }}
+                </option>
+              </select>
+
+            </div>
           </div>
         </div>
       </div>

@@ -100,10 +100,10 @@
   <div class="form-group required">
     <label class="col-form-label" for="TimeZone">{{ 'TimeZone' | localize }}</label>
     <div class="form-select-wrapper" [class.is-invalid]="!timeZoneModel.valid && timeZoneModel.touched">
-      <select [(ngModel)]="model.timeZoneId" (change)="onTimeZoneChange()" id="TimeZone" name="TimeZone" type="text" class="form-control"
+      <select [(ngModel)]="model.timeZoneId" id="TimeZone" name="TimeZone" type="text" class="form-control"
         #timeZoneModel="ngModel" #timeZoneEl required>
         <option [ngValue]="null">{{ 'SelectTimeZone' | localize }}</option>
-        <option *ngFor="let timezone of timezones" [value]="timezone.id">{{ timezone.name }}</option>
+        <option *ngFor="let timeZone of timeZones" [value]="timeZone.id">{{ timeZone.name }}</option>
       </select>
     </div>
 

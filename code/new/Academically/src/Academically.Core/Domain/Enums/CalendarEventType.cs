@@ -3,7 +3,8 @@
     public enum CalendarEventType
     {
         Blocker = 0,
-        BookingRequest = 1,
-        ConfirmedBooking = 2,
+        ConfirmedBooking = 1,
+        BookingRequest = 2,
+        RescheduledBooking = 3,
     }
 }

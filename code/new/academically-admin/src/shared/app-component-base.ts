@@ -154,4 +154,28 @@ export abstract class AppComponentBase implements OnDestroy {
     const duration = `${durationHours}:${durationMinutes}`;
     return duration;
   }
+
+  protected convertDateToMoment(dateToConvert: Date): Moment {
+    return moment().set({
+      year: dateToConvert.getFullYear(),
+      month: dateToConvert.getMonth(),
+      date: dateToConvert.getDate(),
+      hour: dateToConvert.getHours(),
+      minute: dateToConvert.getMinutes(),
+      second: 0,
+      millisecond: 0,
+    });
+  }
+
+  protected convertMomentToDate(date: Moment): Date {
+    return new Date(
+      date.year(),
+      date.month(),
+      date.date(),
+      date.hour(),
+      date.minute(),
+      0,
+      0,
+    );
+  }
 }
