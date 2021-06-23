@@ -11,21 +11,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Linq.Extensions;
 using Academically.Domain.Services.Documents;
+using Academically.Authorization.Users;
 
 namespace Academically.Services.ProjectOffers
 {
     public class ProjectOffersAppService : AcademicallyAppServiceBase, IProjectOffersAppService
     {
+        private readonly UserManager _userManager;
         private readonly IRepository<ProjectOffer, Guid> _projectOffersRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IRepository<UserEducation, Guid> _userEducationsRepository;
 
         public ProjectOffersAppService(
+            UserManager userManager,
             IDocumentsDomainService documentsDomainService,
             IRepository<ProjectOffer, Guid> projectOffersRepository,
             IRepository<UserEducation, Guid> userEducationsRepository
             )
         {
+            _userManager = userManager;
             _projectOffersRepository = projectOffersRepository;
             _documentsDomainService = documentsDomainService;
             _userEducationsRepository = userEducationsRepository;
@@ -53,9 +57,9 @@ namespace Academically.Services.ProjectOffers
 
             var projectOffers = await query
                 .Include(e => e.CreatorUser)
-                    .ThenInclude(e => e.ProfilePictureDocument)
-                .Include(e => e.CreatorUser.UserEducations)
-                    .ThenInclude(e => e.University)
+                    .ThenInclude(e => e.UserEducations)
+                        .ThenInclude(e => e.University)
+                .Include(e => e.CreatorUser.ProfilePictureDocument)
                 .PageBy(input)
                 .Select(e => ObjectMapper.Map<ProjectOfferDto>(e))
                 .ToListAsync();
@@ -66,13 +70,27 @@ namespace Academically.Services.ProjectOffers
         public async Task<ProjectOfferDto> GetAsync(Guid id)
         {
             var projectOffer = await _projectOffersRepository.GetAll()
-                .Include(p => p.CreatorUser)
-                    .ThenInclude(u => u.UserEducations)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.UserEducations)
+                    .ThenInclude(e => e.University)
                 .Include(p => p.CreatorUser.ProfilePictureDocument)
                 .Include(p => p.CreatorUser.CoverPhotoDocument)
+                .Include(p => p.Project)
                 .FirstOrDefaultAsync(p => p.Id == id);
-            
-            return ObjectMapper.Map<ProjectOfferDto>(projectOffer);
+
+            if (projectOffer == null)
+                return null;
+
+            var projectOfferDto = ObjectMapper.Map<ProjectOfferDto>(projectOffer); ;
+            projectOfferDto.CreatorUser.RoleNames = await _userManager.GetRolesAsync(projectOffer.CreatorUser);
+
+            if (projectOffer.CreatorUser.ProfilePictureDocumentId.HasValue)
+                projectOfferDto.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(projectOffer.CreatorUser.ProfilePictureDocumentId.Value);
+
+            if (projectOffer.CreatorUser.CoverPhotoDocumentId.HasValue)
+                projectOfferDto.CreatorUser.CoverPhotoUrl = await _documentsDomainService.GetFileUrlAsync(projectOffer.CreatorUser.CoverPhotoDocumentId.Value);
+
+            return projectOfferDto;
         }
     }
 }

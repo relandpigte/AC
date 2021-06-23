@@ -10,7 +10,7 @@
     <text name="SavingWithDots">Saving...</text>
     <text name="ProposeNewTime">Propose new time</text>
     <text name="Accept">Accept</text>
-    <text name="BookSession">Book Session</text>
+    <text name="BookSession">Book session</text>
     <text name="SelectProject">Select Project</text>
     <text name="Project">Project</text>
     <text name="Duration">Duration</text>
@@ -475,10 +475,10 @@
         <p>Academically<p/>
       ]]>
     </text>
-    <text name="StartDate">Start Date</text>
-    <text name="SessionDuration">Session Duration</text>
+    <text name="StartDate">Start date</text>
+    <text name="SessionDuration">Session duration</text>
     <text name="YourTimeZone">Your time zone</text>
-    <text name="SessionDate">Session Date</text>
+    <text name="SessionDate">Session date</text>
     <text name="FinancialDashboard">Financial Dashboard</text>
     <text name="TotalIncome">Total Income</text>
     <text name="TotalExpenditure">Total Expenditure</text>
@@ -1046,5 +1046,11 @@
     <text name="BrowseTutors">Browse tutors</text>
     <text name="Hired">Hired</text>
     <text name="DateCreated">Date created</text>
+    <text name="TutorInterview15min">Tutor interview (15 mins)</text>
+    <text name="Total">Total</text>
+    <text name="Pay">Pay</text>
+    <text name="Hr">hr</text>
+    <text name="Hrs">hrs</text>
+    <text name="PaymentMethods">Payment methods</text>
   </texts>
 </localizationDictionary>

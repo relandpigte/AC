@@ -1,0 +1,383 @@
+<div class="modal-card card" id="offer-modal">
+	<abp-modal-header [title]="modalTitle | titlecase" (onCloseClick)="onCloseClick()"></abp-modal-header>
+	<div class="card-body">
+    <div class="row align-items-center">
+      <div class="col">
+        <ul class="nav nav-tabs nav-overflow">
+          <li class="nav-item">
+            <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab"
+              aria-controls="overview" aria-selected="true" (click)="onTabClick(0)">{{ 'Overview' | localize }}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="book-session-tab" data-toggle="tab" href="#bookSession" role="tab" #bookSessionTabBtn
+              aria-controls="projects" aria-selected="false" (click)="onTabClick(1)">{{ 'BookSession' | localize }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-8">
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+            <div class="row">
+              <div class="col">
+                <div class="card col">
+                  <div class="card-header">
+                    <h4 class="card-header-title">
+                      {{ 'CoverLetter' | localize }}
+                    </h4>
+                  </div>
+                  <div class="card-body" style="min-height: 160px;"></div>
+                </div>
+                <div class="card mt-3">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col">
+                        <h4 class="card-header-title">{{ 'Messages' | localize }}</h4>
+                      </div>
+                      <div class="col-auto me-n3">
+                        <div class="avatar-group d-none d-sm-flex">
+                          <a href="javascript:;" class="avatar avatar-xs" data-bs-toggle="tooltip" title="" data-bs-original-title="Ab Hadley">
+                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..." class="avatar-img rounded-circle">
+                          </a>
+                          <a href="javascript:;" class="avatar avatar-xs" data-bs-toggle="tooltip" title="" data-bs-original-title="Adolfo Hess">
+                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" alt="..." class="avatar-img rounded-circle">
+                          </a>
+                          <a href="javascript:;" class="avatar avatar-xs" data-bs-toggle="tooltip" title="" data-bs-original-title="Daniela Dewitt">
+                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-4.jpg" alt="..." class="avatar-img rounded-circle">
+                          </a>
+                          <a href="javascript:;" class="avatar avatar-xs" data-bs-toggle="tooltip" title="" data-bs-original-title="Miyah Myles">
+                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-5.jpg" alt="..." class="avatar-img rounded-circle">
+                          </a>
+                        </div>
+                      </div>
+                      <div class="col-auto">
+                        <a href="javascript:;" class="btn btn-sm btn-white">
+                          Share
+                        </a>
+                      </div>
+                    </div>
+                    <hr>
+
+                    <div class="comment mb-3">
+                      <div class="row">
+                        <div class="col-auto">
+                          <a class="avatar avatar-sm" href="javascript:;">
+                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..." class="avatar-img rounded-circle">
+                          </a>
+
+                        </div>
+                        <div class="col ms-n2">
+                          <div class="comment-body">
+
+                            <div class="row">
+                              <div class="col">
+                                <h5 class="comment-title">
+                                  Ab Hadley
+                                </h5>
+
+                              </div>
+                              <div class="col-auto">
+                                <time class="comment-time">
+                                  11:12
+                                </time>
+
+                              </div>
+                            </div>
+                            <p class="comment-text">
+                              Looking good Dianna! I like the image grid on the left, but it feels like a lot to process and doesn't really <em>show</em> me what the product does? I think using a short looping video or something similar demo'ing the product might be better?
+                            </p>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="comment mb-3">
+                      <div class="row">
+                        <div class="col-auto">
+                          <a class="avatar avatar-sm" href="javascript:;">
+                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" alt="..." class="avatar-img rounded-circle">
+                          </a>
+
+                        </div>
+                        <div class="col ms-n2">
+                          <div class="comment-body">
+
+                            <div class="row">
+                              <div class="col">
+                                <h5 class="comment-title">
+                                  Adolfo Hess
+                                </h5>
+
+                              </div>
+                              <div class="col-auto">
+                                <time class="comment-time">
+                                  11:12
+                                </time>
+
+                              </div>
+                            </div>
+                            <p class="comment-text">
+                              Any chance you're going to link the grid up to a public gallery of sites built with Launchday?
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                      <div class="col-auto">
+                        <div class="avatar avatar-sm">
+                          <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" alt="..." class="avatar-img rounded-circle">
+                        </div>
+
+                      </div>
+                      <div class="col ms-n2">
+                        <form class="mt-1">
+                          <label class="visually-hidden d-none">Leave a comment...</label>
+                          <textarea class="form-control form-control-flush" data-autosize="" rows="1" placeholder="Leave a comment" style="overflow: hidden; overflow-wrap: break-word; height: 41px;"></textarea>
+                        </form>
+
+                      </div>
+                      <div class="col-auto align-self-end">
+                        <div class="text-muted mb-2">
+                          <a class="text-reset mr-3" href="javascropt:;" data-bs-toggle="tooltip" title="" data-bs-original-title="Add photo">
+                            <i class="fe fe-camera"></i>
+                          </a>
+                          <a class="text-reset mr-3" href="javascropt:;" data-bs-toggle="tooltip" title="" data-bs-original-title="Attach file">
+                            <i class="fe fe-paperclip"></i>
+                          </a>
+                          <a class="text-reset" href="javascropt:;" data-bs-toggle="tooltip" title="" data-bs-original-title="Record audio">
+                            <i class="fe fe-mic"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="tab-pane fade" id="bookSession" role="tabpanel" aria-labelledby="book-session-tab">
+            <form class="row">
+              <div class="col">
+                  <div class="card">
+                    <div class="card-header">
+                      <h4 class="card-header-title">
+                        {{ 'Tutorial' | localize }}
+                      </h4>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <label for="sessionDate" class="form-label">{{ 'SessionDate' | localize }}</label>
+                          <input type="text" class="form-control" id="sessionDate">
+                        </div>
+                        <div class="col-md-4">
+                          <label for="startTime" class="form-label">{{ 'StartTime' | localize }}</label>
+                          <input type="text" class="form-control" id="startTime">
+                        </div>
+                        <div class="col-md-4">
+                          <label for="sessionDuration" class="form-label">{{ 'SessionDuration' | localize }}</label>
+                          <input type="text" class="form-control" id="sessionDuration">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card mt-3">
+                    <div class="card-header">
+                      <h4 class="card-header-title">
+                        {{ 'PaymentMethods' | localize }}
+                      </h4>
+                    </div>
+                    <div class="card-body">
+                      <div class="list-group list-group-flush my-n3">
+                        <div class="list-group-item">
+                          <div class="row align-items-center">
+                            <div class="col-auto">
+                              <img class="img-fluid" src="../../../../assets/themes/dashkit/img/payment-methods/visa.svg" alt="..." style="max-width: 38px;">
+                            </div>
+                            <div class="col ms-n2">
+                              <h4 class="mb-1">
+                                Visa ending in 1234
+                              </h4>
+                              <small class="text-muted">
+                                Expires 3/2024
+                              </small>
+                            </div>
+                            <div class="col-auto me-n3">
+                              <span class="badge bg-light">
+                                Default
+                              </span>
+
+                            </div>
+                            <div class="col-auto">
+                              <div dropdown class="dropdown" container="#offer-modal">
+                                <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;" role="button">
+                                  <i class="fe fe-more-vertical"></i>
+                                </a>
+                                <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
+                                  <a href="javascript:;" class="dropdown-item">
+                                    <i class="fe fe-edit"></i> {{ 'Edit' | localize }}
+                                  </a>
+                                  <a href="javascript:;" class="dropdown-item">
+                                    <i class="fe fe-trash"></i> {{ 'Remove' | localize }}
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="list-group-item">
+                          <div class="row align-items-center">
+                            <div class="col-auto">
+                              <img class="img-fluid" src="../../../../assets/themes/dashkit/img/payment-methods/mastercard.svg" alt="..." style="max-width: 38px;">
+                            </div>
+                            <div class="col ms-n2">
+                              <h4 class="mb-1">
+                                Mastercard ending in 1234
+                              </h4>
+                              <small class="text-muted">
+                                Expires 3/2024
+                              </small>
+
+                            </div>
+                            <div class="col-auto">
+                              <div dropdown class="dropdown" container="#offer-modal">
+                                <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;" role="button">
+                                  <i class="fe fe-more-vertical"></i>
+                                </a>
+                                <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
+                                  <a href="javascript:;" class="dropdown-item">
+                                    <i class="fe fe-edit"></i> {{ 'Edit' | localize }}
+                                  </a>
+                                  <a href="javascript:;" class="dropdown-item">
+                                    <i class="fe fe-trash"></i> {{ 'Remove' | localize }}
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card mb-0" [busy]="isLoading">
+          <img *ngIf="!projectOffer.creatorUser.coverPhotoUrl"
+            src="/assets/themes/dashkit/img/covers/profile-cover-2.jpg"
+            alt="..." class="card-img-top">
+          <img *ngIf="projectOffer.creatorUser.coverPhotoUrl" [src]="projectOffer.creatorUser.coverPhotoUrl" alt="..." class="card-img-top">
+
+          <div class="card-body overflow-visible">
+            <a href="javascript:;" class="avatar avatar-xl card-avatar card-avatar-top">
+              <img [src]="getProfilePicture(projectOffer.creatorUser.profilePictureUrl)" class="avatar-img rounded-circle border border-4 border-card" alt="...">
+            </a>
+
+            <h2 class="card-title text-center">
+              <a href="javascript:;">{{ projectOffer.creatorUser.fullName | titlecase }}</a>
+            </h2>
+            <p class="small text-center text-muted mb-3">
+              {{ projectOffer.creatorUser.currentUniversity }}
+            </p>
+            <p class="text-center">
+              <span class="badge bg-secondary-soft">
+                {{ userTitle }}
+              </span>
+            </p>
+
+            <div class="list-group list-group-flush mb-4">
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <p class="mb-0 font-size-sm">{{ 'TutorInterview15min' | localize }}</p>
+                    <p class="text-muted font-size-sm mb-0">{{ 'Free' | localize }}<p>
+                  </div>
+                  <div class="col-auto">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" name="isFreeSessionOffered" id="isFreeSessionOffered" [(ngModel)]="projectOffer.isFreeSessionOffered" />
+                      <label class="custom-control-label mt-2" for="isFreeSessionOffered"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item" *ngIf="isHourlyTutorialOffered">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <p class="mb-0 font-size-sm">
+                      {{ 'Tutorial' | localize }} ({{ projectOffer.discountedHours }}/{{ (projectOffer.discountedHours > 1 ? 'Hrs' : 'Hr') | localize }})
+                    </p>
+                    <p class="text-muted font-size-sm mb-0">
+                      <span>&#163;</span>
+                      {{ projectOffer.discountedHourlyRate }}/{{ 'Hr' | localize }}
+                    <p>
+                  </div>
+                  <div class="col-auto">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" name="isDiscountedHourlySessionOffered" id="isDiscountedHourlySessionOffered"
+                        [(ngModel)]="projectOffer.isDiscountedHourlySessionOffered" />
+                      <label class="custom-control-label mt-2" for="isDiscountedHourlySessionOffered"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <p class="mb-0 font-size-sm">{{ 'Tutorial' | localize }}</p>
+                    <p class="text-muted font-size-sm mb-0">
+                      <span>&#163;</span>
+                      {{ projectOffer.hourlyRate }}/{{ 'Hr' | localize }}
+                    <p>
+                  </div>
+                  <div class="col-auto">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" name="isActive" id="isActive"
+                        [(ngModel)]="projectOffer.isHourlySessionOffered" />
+                      <label class="custom-control-label mt-2" for="isActive"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <h2 class="m-0">{{ 'Total' | localize }}</h2>
+                  </div>
+                  <div class="col-auto">
+                    <h2 class="m-0">
+                      <span>&#163;</span>
+                      0.00
+                    </h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button *ngIf="!showPayButton" class="btn btn-block btn-primary" (click)="bookSessionTabBtn.click()">
+                {{ 'BookSession' | localize }}
+            </button>
+            <button *ngIf="showPayButton" type="button" class="btn btn-block btn-primary">
+              {{ 'Pay' | localize }}
+          </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+	</div>
+	<div class="card-footer justify-content-between">
+	  <button type="button" class="btn btn-white" (click)="onCloseClick()">
+		{{ 'Close' | localize }}
+	  </button>
+	</div>
+</div>
