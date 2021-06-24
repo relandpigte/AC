@@ -82,7 +82,7 @@ export class CreateEditEducationComponent extends AppComponentBase implements On
           this.notify.success(this.l('SavedSuccessfully'));
           this.userEducationSaved.emit(true);
           this._modal.hide();
-        })
+        });
     });
   }
 

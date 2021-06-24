@@ -6,7 +6,7 @@ import org.json.JSONException;
 
 import co.uk.core.DriverHandler;
 import co.uk.dataobjects.TestDataObjects;
-import co.uk.pageobjects.student.LoginPage;
+import co.uk.pageobjects.LoginPage;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -28,7 +28,7 @@ public class LoginPageStepDefinitions {
 	
 	@When("^user enter username \"(.*)\" and password \"(.*)\"$")
 	public void loginInvalidCredential(String username, String password) {
-		LoginPage.enterUsername(username.replace("XXX", DriverHandler.timestamp)+"@gilmatugas.33mail.com");
+		LoginPage.enterUsername(username.replace("XXX", DriverHandler.timestamp)+"@academically.33mail.com");
 		LoginPage.enterPassword(password);
 		LoginPage.clickLogin();
 	}
@@ -42,4 +42,10 @@ public class LoginPageStepDefinitions {
 	public void register() {
 		LoginPage.clickRegister();
 	}
+	
+	@Then("^user is in academically login page$")
+	public void verifyLoginPageIsDisplayed() {
+		LoginPage.verifyLoginPage();
+	}
+	
 }

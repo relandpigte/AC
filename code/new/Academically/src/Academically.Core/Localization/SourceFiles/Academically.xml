@@ -1,6 +1,69 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts> 
+  <texts>
+    <text name="BookingConfirmedEmailSubject">Academically - Booking Confirmed</text>
+    <text name="BookingRequestEmailSubject">Academically - New Booking Request</text>
+    <text name="TheBookingRequestWasDeclined">The booking request was declined.</text>
+    <text name="TheBookingRequestWasRescheduled">The booking request was rescheduled.</text>
+    <text name="TheBookingRequestWasAccepted">The booking request was accepted.</text>
+    <text name="TheBookingRequestWasCreated">The booking request was created.</text>
+    <text name="NoProjectOfferBookingDomainErrorMessage">There was no offer made by {0} for {1}. Please select a tutur that has submitted an offer for this project.</text>
+    <text name="BookingFailed">Booking Failed</text>
+    <text name="Decline">Decline</text>
+    <text name="EndTime">End time</text>
+    <text name="StartTime">Start time</text>
+    <text name="NoRescheduleHistory">No Reschedule History</text>
+    <text name="BookingDetails">Booking Details</text>
+    <text name="RescheduleHistory">Reschedule History</text>
+    <text name="Submit">Submit</text>
+    <text name="SavingWithDots">Saving...</text>
+    <text name="ProposeNewTime">Propose new time</text>
+    <text name="Accept">Accept</text>
+    <text name="BookSession">Book session</text>
+    <text name="SelectProject">Select Project</text>
+    <text name="Project">Project</text>
+    <text name="Duration">Duration</text>
+    <text name="EditBooking">Edit Booking</text>
+    <text name="AddBooking">Add Booking</text>
+    <text name="Bookings">Bookings</text>
+    <text name="Booking">Booking</text>
+    <text name="ServiceWizardStep3Subtitle">Understanding the type of work you're looking for helps us ask all the right questions.</text>
+    <text name="ServiceWizardStep3Title">Next, tell us what level you're working at</text>
+    <text name="ServiceWizardStep2Subtitle">Understanding the type of work you're looking for helps us ask all the right questions.</text>
+    <text name="ServiceWizardStep2Title">Next, tell us what level you're working at</text>
+    <text name="ServiceWizardStep1Subtitle">Understanding the type of services you're looking for help us ask all the right questions.</text>
+    <text name="ServiceWizardStep1Title">Let's start with the Basics</text>
+    <text name="Of">Of</text>
+    <text name="Step">Step</text>
+    <text name="BlockOuts">Block Outs</text>
+    <text name="TimeZoneUpdatedMessage">Your time zone was successfully updated.</text>
+    <text name="Yearly">Yearly</text>
+    <text name="Monthly">Monthly</text>
+    <text name="Weekly">Weekly</text>
+    <text name="Daily">Daily</text>
+    <text name="OneTime">One Time</text>
+    <text name="Recurrence">Recurrence</text>
+    <text name="EditBlockOut">Edit block out</text>
+    <text name="AddBlockOut">Add block out</text>
+    <text name="Schedule">Schedule</text>
+    <text name="ManageYourEvents">Manage your events</text>
+    <text name="Calendar">Calendar</text>
+    <text name="LinkCopiedToClipboard">Link copied to clipboard</text>
+    <text name="DeleteYourAccount">Delete your account</text>
+    <text name="DeleteYourAccountMessage">Don't need ScholarPro anymore?</text>
+    <text name="Print">Print</text>
+    <text name="AcceptTermsOfUseMessage">I agree to the terms &amp; conditions</text>
+    <text name="AcceptPrivacyPolicyMessage">I agree to the privacy policy</text>
+    <text name="CreateANewProject">Create a New Project</text>
+    <text name="RequestSupportCardTitle">Use the wizard to find academic support</text>
+    <text name="RequestSupportCardMessage">
+        You are a student who's aced their course, 
+        a sold professional tutor or academic. You are a student who's aced their course, a sold professional tutor.
+        You are a student who's aced their coursea sold professional tutor
+    </text>
+    <text name="RequestSupport">Request Support</text>
+    <text name="HowItworks">How it works</text>
+    <text name="PopularService">Popular Services</text>
     <text name="Disable">Disable</text>
     <text name="Enable">Enable</text>
     <text name="Institution">Institution</text>
@@ -423,11 +486,10 @@
         <p>Academically<p/>
       ]]>
     </text>
-    <text name="StartDate">Start Date</text>
-    <text name="StartTime">Start Time</text>
-    <text name="SessionDuration">Session Duration</text>
+    <text name="StartDate">Start date</text>
+    <text name="SessionDuration">Session duration</text>
     <text name="YourTimeZone">Your time zone</text>
-    <text name="SessionDate">Session Date</text>
+    <text name="SessionDate">Session date</text>
     <text name="FinancialDashboard">Financial Dashboard</text>
     <text name="TotalIncome">Total Income</text>
     <text name="TotalExpenditure">Total Expenditure</text>
@@ -582,7 +644,7 @@
     <text name="Revise">Revise</text>
     <text name="FreeConsulation">15 MIN CONSULTATION</text>
     <text name="Free">FREE</text>
-    <text name="SubjectArea">Subject Area</text>
+    <text name="SubjectArea">Subject area</text>
     <text name="UrgencyLevel">Urgency Level</text>
     <text name="Deadline">Deadline</text>
     <text name="DeclineProject">Decline Project</text>
@@ -952,5 +1014,66 @@
     <text name="StudyArea">Study area</text>
     <text name="StudyFields">Study fields</text>
     <text name="MyServices">My Services</text>
+    <text name="CancelServiceWizardMessage">Are you sure you want to leave the service wizard?</text>
+    <text name="ServiceWizard">Service Wizard</text>
+    <text name="CreateProject">Create Project</text>
+    <text name="ProjectName">Project Name</text>
+    <text name="Continue">Continue</text>
+    <text name="Browse">Browse</text>
+    <text name="BrowseProjects">Browse Projects</text>
+    <text name="FindWork">Find Work</text>
+    <text name="UsageAndFinancials">Usage &amp; Financials</text>
+    <text name="Shortlisted">Shortlisted</text>
+    <text name="AllProjects">All Projects</text>
+    <text name="MinEduLevel">Min Edu. Level</text>
+    <text name="SeeAllProjects">See All Projects</text>
+    <text name="Shortlist">Shortlist</text>
+    <text name="ViewBrief">View Brief</text>
+    <text name="ServiceType">Service type</text>
+    <text name="FullDetails">Full details</text>
+    <text name="ProjectDetails">Project Details</text>
+    <text name="MakeAnOffer">Make an offer</text>
+    <text name="Offer">Offer</text>
+    <text name="Confirm">Confirm</text>
+    <text name="OfferHistory">Offer History</text>
+    <text name="MyOffer">My Offer</text>
+    <text name="PricePerHour">Price per hour</text>
+    <text name="NumberOfHours">Number of hours</text>
+    <text name="TotalPrice">Total price</text>
+    <text name="Free15MinuteInterview">Free 15 minutes interview (recommended)</text>
+    <text name="Free15MinuteInterviewMessage">Offer a free 15 minute interview to allow students to ask questions and help them decide if you meet their requirements.</text>
+    <text name="OfferSentSuccessfully">Offer sent successfully</text>
+    <text name="ProjectOfferEmailSubject">Academically - Project Offer</text>
+    <text name="ProjectOfferEmailMessage">
+      <![CDATA[
+          <p>Hi {0},</p>
+          <br/>
+          <p>You have received an offer for <b>{1}</b></p>
+          
+          <p>Please click this link to view the offer details: <a href="{2}">Offer details link<a/></p>
+          <br />
+          <p>If for some reason the link is not clickable, please copy and paste the url below to your browser:<p>
+          <br />
+          <p>{2}<p/>
+      ]]>
+    </text>
+    <text name="TutorsFound">Tutors found</text>
+    <text name="AllProposals">All proposals</text>
+    <text name="Sort">Sort</text>
+    <text name="WrittenFeedback">Written feedback</text>
+    <text name="LiveSession">Live session</text>
+    <text name="5Session">5 Session</text>
+    <text name="Message">Message</text>
+    <text name="ViewOffer">View offer</text>
+    <text name="ProjectBrief">Project brief</text>
+    <text name="BrowseTutors">Browse tutors</text>
+    <text name="Hired">Hired</text>
+    <text name="DateCreated">Date created</text>
+    <text name="TutorInterview15min">Tutor interview (15 mins)</text>
+    <text name="Total">Total</text>
+    <text name="Pay">Pay</text>
+    <text name="Hr">hr</text>
+    <text name="Hrs">hrs</text>
+    <text name="PaymentMethods">Payment methods</text>
   </texts>
 </localizationDictionary>

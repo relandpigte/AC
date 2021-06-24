@@ -70,6 +70,36 @@ bs-datepicker-container {
   }
 }
 
+full-calendar {
+
+  .fc-timegrid-slot,
+  .fc-day {
+    cursor: cell;
+  }
+
+  .fc-non-business {
+    cursor: default;
+
+    &.tutor {
+      cursor: pointer;
+    }
+  }
+
+  .fc-timegrid-event {
+    cursor: pointer;
+  }
+}
+
+timepicker {
+  &.datetimepicker {
+    table {
+      display        : flex;
+      justify-content: center;
+      margin-top     : 10px;
+    }
+  }
+}
+
 /* custom component styles end */
 
 body {
@@ -738,4 +768,6 @@ sidebar-small~.main-content .container-fluid {
 app-methodologies .badge{
   border-radius: 15px;
   padding: 5px 10px;
+.virtical-center {
+  vertical-align: middle !important;
 }

@@ -1,0 +1,152 @@
+<div [@routerTransition]>
+  <div class="card">
+    <div class="card-header">
+      <div class="row align-items-center">
+        <div class="col">
+          <form>
+            <div class="input-group input-group-flush input-group-merge input-group-reverse flex-row-reverse">
+              <input class="form-control list-search" type="search" placeholder="Search">
+              <span class="input-group-text border-0 pr-0">
+                <i class="fe fe-search"></i>
+              </span>
+            </div>
+          </form>
+        </div>
+
+        <div class="col-auto me-n3">
+          <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+            <li class="nav-item">
+              <a href="javascript:;" class="nav-link active">{{ 'AllProjects' | localize }}</a>
+            </li>
+            <li class="nav-item">
+              <a href="javascript:;" class="nav-link">{{ 'Shortlisted' | localize }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="card-body bg-light">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="col-form-label font-size-sm text-muted" for="nativeLanguage">{{ 'NativeLanguage' | localize | uppercase }}</label>
+            <div class="form-select-wrapper">
+              <select id="nativeLanguage" name="nativeLanguage" class="form-control form-select form-select-sm">
+                <option>English</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="col-form-label font-size-sm text-muted" for="minEducationLevel">{{ 'MinEduLevel' | localize | uppercase }}</label>
+            <div class="form-select-wrapper">
+              <select id="minEducationLevel" name="minEducationLevel" class="form-control form-select form-select-sm">
+                <option>Graduate</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="col-form-label font-size-sm text-muted" for="minRating">{{ 'MinRating' | localize | uppercase }}</label>
+            <div class="form-select-wrapper">
+              <select id="minEducationLevel" name="minRating" class="form-control form-select form-select-sm">
+                <option>4 Star</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="col-form-label font-size-sm text-muted" for="distance">{{ 'Distance' | localize | uppercase }}</label>
+            <div class="form-select-wrapper">
+              <select id="minEducationLevel" name="distance" class="form-control form-select form-select-sm">
+                <option>25 Miles</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="col-form-label font-size-sm text-muted" for="availability">{{ 'Availability' | localize | uppercase }}</label>
+            <div class="form-select-wrapper">
+              <select id="minEducationLevel" name="availability" class="form-control form-select form-select-sm">
+                <option>Any</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="col-form-label font-size-sm text-muted" for="sortBy">{{ 'SortBy' | localize | uppercase }}</label>
+            <div class="form-select-wrapper">
+              <select id="minEducationLevel" name="sortBy" class="form-control form-select form-select-sm">
+                <option>Best Match</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body" [busy]="isLoading">
+      <ul class="list-group list-group-flush list my-n3">
+      <li class="list-group-item" *ngFor="let project of projects">
+        <div class="row align-items-top">
+          <div class="col ms-n2">
+            <div class="row">
+              <div class="col-12">
+                <h2 class="mb-1 name text-primary">
+                  <a href="javascript:;" (click)="onViewProjectDetails(project)">{{ project.name }}</a>
+                </h2>
+                <p class="header-subtitle text-dark font-size-sm mt-0">
+                  {{ project.creatorUser.currentUniversity }}
+                </p>
+                <p class="m-0 text-muted">
+                  <small><i class="fe fe-clock"></i> 4hr ago</small>
+                </p>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-auto">
+            <button type="button" class="btn btn-link btn-sm mr-3 text-secondary">
+              <i class="fe fe-heart"></i>
+              {{ 'Shortlist' | localize }}
+            </button>
+            <button type="button" class="btn btn-sm btn-primary" (click)="onViewProjectDetails(project)">
+              {{ 'FullDetails' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <label class="m-0 font-size-sm">{{ 'ServiceType' | localize | titlecase }}</label>
+            <p class="text-muted">{{ project.serviceNameLevel1 }}</p>
+          </div>
+          <div class="col-md-4 text-md-center">
+            <label class="m-0 font-size-sm">{{ 'AcademicLevel' | localize }}</label>
+            <p class="text-muted">{{ project.serviceNameLevel2 }}</p>
+          </div>
+          <div class="col-md-4 text-md-right">
+            <label class="m-0 font-size-sm">{{ 'SubjectArea' | localize }}</label>
+            <p class="text-muted">{{ project.serviceNameLevel3 }}</p>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
+            <p class="">At vero eos et accusamus et iusto idio dignissimos ducimus qui blanditiis upiditate non provident, et
+              iusto idio similique sunt in culpa qui official deserunt molitia
+            </p>
+          </div>
+
+        </div>
+      </li>
+      </ul>
+    </div>
+  </div>
+</div>

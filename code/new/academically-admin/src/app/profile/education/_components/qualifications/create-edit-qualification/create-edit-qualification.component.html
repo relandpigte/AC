@@ -60,11 +60,14 @@
 
         <div class="form-group col-md-6 required">
           <label class="col-form-label" for="country">{{ 'Country' | localize }}</label>
-          <select [(ngModel)]="userQualification.country" id="country" name="country" type="text" class="form-control"
-            #countryModel="ngModel" #countryEl required>
-            <option [ngValue]="undefined">{{ 'SelectCountry' | localize }}</option>
-            <option *ngFor="let country of countries" [value]="country.code">{{ country.name }}</option>
-          </select>
+          <div class="form-select-wrapper" [class.is-invalid]="!countryModel.valid && countryModel.touched">
+            <select [(ngModel)]="userQualification.country" id="country" name="country" type="text" class="form-control"
+              #countryModel="ngModel" #countryEl required>
+              <option [ngValue]="undefined">{{ 'SelectCountry' | localize }}</option>
+              <option *ngFor="let country of countries" [value]="country.code">{{ country.name }}</option>
+            </select>
+          </div>
+
           <abp-validation-summary [control]="countryModel" [controlEl]="countryEl">
           </abp-validation-summary>
         </div>

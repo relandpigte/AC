@@ -1,7 +1,7 @@
 package co.uk.stepdefinitions;
 
 import co.uk.core.DriverHandler;
-import co.uk.pageobjects.student.CompleteRegistrationPage;
+import co.uk.pageobjects.CompleteRegistrationPage;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -32,5 +32,6 @@ public class CompleteRegistrationPageStepDefinitions {
 	@Then("^email address \"(.*)\" matched$")
 	public void verifyEmailIsMatched(String email) {
 		CompleteRegistrationPage.verifyEmailisMatched(email.replace("XXX", DriverHandler.timestamp)+"@gilmatugas.33mail.com");
+		DriverHandler.delay(2);
 	}
 }

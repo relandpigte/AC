@@ -1,8 +1,8 @@
-<app-interests *ngIf="permission.isGranted('Pages.Profile.Research.ResearchInterests')">
+<app-interests #interests *ngIf="permission.isGranted('Pages.Profile.Research.ResearchInterests')">
 </app-interests>
 
-<app-methodologies *ngIf="permission.isGranted('Pages.Profile.Research.ResearchMethodologies')">
+<app-methodologies #methodologies *ngIf="permission.isGranted('Pages.Profile.Research.ResearchMethodologies')">
 </app-methodologies>
 
-<app-publications *ngIf="permission.isGranted('Pages.Profile.Research.ResearchPublications')">
+<app-publications #publications *ngIf="permission.isGranted('Pages.Profile.Research.ResearchPublications')">
 </app-publications>

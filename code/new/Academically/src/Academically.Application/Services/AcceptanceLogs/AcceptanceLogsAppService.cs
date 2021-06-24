@@ -43,5 +43,6 @@ namespace Academically.Services.AcceptanceLogs
                 .FirstOrDefaultAsync();
             return acceptanceLog;
         }
+
     }
 }

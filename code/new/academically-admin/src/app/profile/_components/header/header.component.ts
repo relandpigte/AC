@@ -18,9 +18,9 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   NavigationPosition = NavigationPosition;
   themeSettings: IThemeSetting;
   user: UserDto;
-  userTitle = '';
   isViewOnly = false;
   canBecomeATutor = false;
+  calendarRoute = '/app/calendar';
 
   constructor(
     injector: Injector,
@@ -36,7 +36,10 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(user => {
         this.user = user;
-        this.userTitle = this.user.roleNames.filter(e => e.toLowerCase() === 'tutor').length > 0 ? 'Tutor' : 'Student';
+        this.isTutor = this.user.roleNames.filter(e => e.toLowerCase() === 'tutor').length > 0;
+        if (this.user.id !== this.appSession.user.id) {
+          this.calendarRoute = `${this.calendarRoute}/${user.id}`;
+        }
       });
     route.data.subscribe(data => {
       this.isViewOnly = data.isViewOnly;

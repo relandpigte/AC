@@ -1,0 +1,42 @@
+<div *ngFor="let rescheduleComment of rescheduleComments" class="comment mb-3">
+  <div class="row" [class.my-comment]="rescheduleComment.creatorUser.id === appSession.userId">
+    <div class="col-auto">
+      <div class="avatar avatar-sm">
+        <img
+          [src]="getProfilePictureFromDocument(rescheduleComment.creatorUser.profilePictureDocument, rescheduleComment.creatorUser.id)"
+          class="avatar-img rounded-circle" alt="profile" />
+      </div>
+    </div>
+    <div class="col comment-body-container">
+      <div class="comment-body">
+        <div class="row">
+          <div class="col">
+            <h5 class="comment-title">
+              {{ rescheduleComment.creatorUser.fullName }}
+            </h5>
+          </div>
+          <div class="col-auto">
+            <time class="comment-time">
+              {{ rescheduleComment.creationTime | dateFormat: 'MMM DD, YYYY hh:mm A' }}
+            </time>
+          </div>
+        </div>
+        <p class="comment-text">
+          {{ rescheduleComment.comments }}
+        </p>
+        <div
+          *ngIf="rescheduleComment.oldStartTime !== rescheduleComment.newStartTime && rescheduleComment.oldEndTime !== rescheduleComment.newEndTime"
+          class="comment-time m-0">
+          {{ 'From' | localize }}: {{ rescheduleComment.oldStartTime | dateFormat: 'MMM DD, YYYY hh:mm A' }}
+          - {{ rescheduleComment.oldEndTime | dateFormat: 'MMM DD, YYYY hh:mm A' }}
+          <br />
+          {{ 'To' | localize }}: {{ rescheduleComment.newStartTime | dateFormat: 'MMM DD, YYYY hh:mm A' }}
+          - {{ rescheduleComment.newEndTime | dateFormat: 'MMM DD, YYYY hh:mm A' }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p *ngIf="!rescheduleComments || !rescheduleComments.length" class="text-muted text-center m-0">
+  {{ 'NoRescheduleHistory' | localize }}
+</p>

@@ -44,8 +44,17 @@
 	<include file="ddml-new/ddml.2021-05-14-01.alter-users-add-stripeuserid-field.xml"/>
 	<include file="ddml-new/ddml.2021-05-17-01.create-photoidverifications-table.xml"/>
 	<include file="ddml-new/ddml.2021-05-20-01.alter-userservices-add-expertiselevel-field.xml"/>
+	<include file="ddml-new/ddml.2021-06-03-01.add-passwordresets-table.xml"/>
 	<include file="ddml-new/ddml.2021-05-28-01.create-references-table.xml"/>
 	<include file="ddml-new/ddml.2021-05-31-01.create-dbscertificates-table.xml"/>
 	<include file="ddml-new/ddml.2021-06-01-01.create-acceptancelogs-table.xml"/>
+	<include file="ddml-new/ddml.2021-06-01-01.update-spokenlanguages-data.xml"/>
 	<include file="ddml-new/ddml.2021-06-02-01.alter-qualifications-add-missing-fields.xml"/>
+	<include file="ddml-new/ddml.2021-06-03-01.add-services2-table.xml"/>
+	<include file="ddml-new/ddml.2021-06-10-01.create-calendarevents-table.xml"/>
+	<include file="ddml-new/ddml.2021-06-011-01.add-projects-table.xml"/>
+	<include file="ddml-new/ddml.2021-06-16-01.create-projectoffers-table.xml"/>
+	<include file="ddml-new/ddml.2021-06-16-02.alter-calendarevents-add-projectid-field.xml"/>
+	<include file="ddml-new/ddml.2021-06-17-01.add-reschedulecomments-table.xml"/>
 </databaseChangeLog>
+	

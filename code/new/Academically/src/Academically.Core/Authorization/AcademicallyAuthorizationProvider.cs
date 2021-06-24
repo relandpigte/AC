@@ -114,6 +114,27 @@ namespace Academically.Authorization
             context.CreatePermission(PermissionNames.Pages_Widgets_Verifications, L("Verifications"));
 
 
+            var calendarPermissions = context.CreatePermission(PermissionNames.Pages_Calendar, L("Calendar"));
+            calendarPermissions.CreateChildPermission(PermissionNames.Pages_Calendar_BlockOuts, L("BlockOuts"));
+            calendarPermissions.CreateChildPermission(PermissionNames.Pages_Calendar_Bookings, L("Bookings"));
+
+
+            var serviceWizardPermission = context.CreatePermission(PermissionNames.Pages_ServiceWizard, L("ServiceWizard"));
+            serviceWizardPermission.CreateChildPermission(PermissionNames.Pages_ServiceWizard_Category, L("Category"));
+            serviceWizardPermission.CreateChildPermission(PermissionNames.Pages_ServiceWizard_Level, L("Level"));
+            serviceWizardPermission.CreateChildPermission(PermissionNames.Pages_ServiceWizard_Services, L("Services"));
+            serviceWizardPermission.CreateChildPermission(PermissionNames.Pages_ServiceWizard_CreateProject, L("CreateProject"));
+
+
+            var projectsPermission = context.CreatePermission(PermissionNames.Pages_Projects, L("Projects"));
+            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Overview, L("Overview"));
+            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Browse, L("Browse"));
+            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_MyProjects, L("MyProjects"));
+            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_UsageAndFinancials, L("UsageAndFinancials"));
+            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Offer, L("Offer"));
+            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_OfferHistory, L("OfferHistory"));
+            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Proposals, L("Proposals"));
+
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
         }
 

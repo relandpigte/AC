@@ -13,5 +13,10 @@ namespace Academically.Services.Services
         Task<IEnumerable<ServiceDto>> GetServices(Guid categoryId);
         Task<IEnumerable<ServiceMappingDto>> GetLevels(Guid categoryId, Guid serviceId);
         Task<IEnumerable<SubjectDto>> GetSubjects(string levelName);
+
+        // using services2 table
+        Task<IEnumerable<Service2Dto>> GetAllCategories();
+        IEnumerable<Service2Dto> GetStaticServiceLevels();
+        IEnumerable<Service2Dto> GetStaticServices();
     }
 }

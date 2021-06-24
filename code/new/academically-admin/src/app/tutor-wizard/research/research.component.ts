@@ -1,15 +1,17 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { BecomeATutorStep, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { BecomeATutorService } from '../_services/become-a-tutor.service';
-
+import { ResearchComponent as UserResearchComponent } from '../../profile/research/research.component';
 @Component({
   selector: 'app-research',
   templateUrl: './research.component.html',
   styleUrls: ['./research.component.less']
 })
 export class ResearchComponent extends AppComponentBase {
+  @ViewChild('userResearch') userResearch: UserResearchComponent;
+
   isLoading = false;
 
   constructor(
@@ -20,7 +22,10 @@ export class ResearchComponent extends AppComponentBase {
     super(injector);
   }
 
-  ngOnInit(): void {
+  get isNextEnabled(): boolean {
+    return this.userResearch?.interests?.userResearchInterests?.length > 0
+      || this.userResearch?.methodologies?.userResearchMethodologies?.length > 0
+      || this.userResearch?.publications?.userPublications?.length > 0;
   }
 
   onNextClick(): void {
@@ -38,4 +43,5 @@ export class ResearchComponent extends AppComponentBase {
         this._becomeATutorService.currentStep = nextStep;
       });
   }
+
 }

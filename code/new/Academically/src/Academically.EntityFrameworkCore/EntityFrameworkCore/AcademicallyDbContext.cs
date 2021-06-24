@@ -43,10 +43,16 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<SpokenLanguage> SpokenLanguages { get; set; }
         public virtual DbSet<UserSpokenLanguage> UserSpokenLanguages { get; set; }
         public virtual DbSet<PhotoIdVerification> PhotoIdVerifications { get; set; }
+        public virtual DbSet<PasswordReset> PasswordResets { get; set; }
         public virtual DbSet<TutorVerification> TutorVerifications { get; set; }
         public virtual DbSet<Reference> References { get; set; }
         public virtual DbSet<DbsCertificate> DbsCertificates { get; set; }
         public virtual DbSet<AcceptanceLog> AcceptanceLogs { get; set; }
+        public virtual DbSet<CalendarEvent> CalendarEvents { get; set; }
+        public virtual DbSet<Service2> Service2s { get; set; }
+        public virtual DbSet<Project> Projects { get; set; }
+        public virtual DbSet<ProjectOffer> ProjectOffers { get; set; }
+        public virtual DbSet<RescheduleComment> RescheduleComments { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

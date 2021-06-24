@@ -14,7 +14,7 @@ import { AppSessionService } from '@shared/session/app-session.service';
 import { Moment } from 'moment';
 import { DocumentDto } from './service-proxies/service-proxies';
 import { ReplaySubject } from 'rxjs';
-import { ChangeData } from 'ngx-intl-tel-input';
+import * as moment from 'moment';
 
 @Injectable()
 export abstract class AppComponentBase implements OnDestroy {
@@ -54,8 +54,8 @@ export abstract class AppComponentBase implements OnDestroy {
       keyboard: false,
     };
     if (this.appSession.user) {
-      this.isTutor = this.appSession.user.roles.findIndex(e => e.toLowerCase() === 'tutor') >= 0;
-      this.isStudent = this.appSession.user.roles.findIndex(e => e.toLowerCase() === 'student') >= 0;
+      this.isTutor = this.checkUserRole('tutor');
+      this.isStudent = this.checkUserRole('student');
     }
   }
 
@@ -126,9 +126,9 @@ export abstract class AppComponentBase implements OnDestroy {
     return this.diffDatesSeconds(this.convertMomentToUserDate(date1), this.convertMomentToUserDate(date2));
   }
 
-  private isValidUrl(string): boolean {
+  private isValidUrl(url: string): boolean {
     try {
-      new URL(string);
+      new URL(url);
     } catch (_) {
       return false;
     }
@@ -138,5 +138,44 @@ export abstract class AppComponentBase implements OnDestroy {
 
   protected formatPhoneNumber(phoneNumber: string): string {
     return phoneNumber.substr(phoneNumber.indexOf(' ') + 1);
+  }
+
+  protected checkUserRole(role: string): boolean {
+    return this.appSession.user.roles.findIndex(e => e.toLowerCase() === role) >= 0;
+  }
+
+  protected calculateDuration(startTime: Moment, endTime: Moment): number {
+    return moment.duration(endTime.diff(startTime)).asMinutes();
+  }
+
+  protected formatDuration(durationInMinutes: number): string {
+    const durationHours = Math.floor(durationInMinutes / 60).toString().padStart(2, '0');
+    const durationMinutes = (durationInMinutes % 60).toString().padStart(2, '0');
+    const duration = `${durationHours}:${durationMinutes}`;
+    return duration;
+  }
+
+  protected convertDateToMoment(dateToConvert: Date): Moment {
+    return moment().set({
+      year: dateToConvert.getFullYear(),
+      month: dateToConvert.getMonth(),
+      date: dateToConvert.getDate(),
+      hour: dateToConvert.getHours(),
+      minute: dateToConvert.getMinutes(),
+      second: 0,
+      millisecond: 0,
+    });
+  }
+
+  protected convertMomentToDate(date: Moment): Date {
+    return new Date(
+      date.year(),
+      date.month(),
+      date.date(),
+      date.hour(),
+      date.minute(),
+      0,
+      0,
+    );
   }
 }

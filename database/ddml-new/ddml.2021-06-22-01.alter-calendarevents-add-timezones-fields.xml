@@ -1,0 +1,32 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="danie (generated)" id="1624371121606-1">
+        <addColumn tableName="academicallyreschedulecomments">
+            <column defaultValue="UTC" name="OldTimeZoneId" type="VARCHAR(100 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1624371121606-2">
+        <addColumn tableName="academicallyreschedulecomments">
+            <column defaultValue="UTC" name="NewTimeZoneId" type="VARCHAR(100 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1624371121606-3">
+        <addColumn tableName="academicallycalendarevents">
+            <column defaultValue="UTC" name="TimeZoneId" type="VARCHAR(100 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1624371121606-4">
+        <createIndex indexName="FK_CalendarEvets_TimeZones_TimeZoneId_idx" tableName="academicallycalendarevents">
+            <column name="TimeZoneId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1624371121606-5">
+        <addForeignKeyConstraint baseColumnNames="TimeZoneId" baseTableName="academicallycalendarevents" constraintName="FK_CalendarEvets_TimeZones_TimeZoneId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallytimezones" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

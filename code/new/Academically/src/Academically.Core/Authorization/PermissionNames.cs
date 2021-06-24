@@ -104,8 +104,28 @@
         public const string Pages_TutorWizard_Declaration = "Pages.TutorWizard.Declaration";
 
 
+
         public const string Pages_Widgets_Verifications = "Pages.Widgets.Verifications";
 
+
+        public const string Pages_Calendar = "Pages.Calendar";
+        public const string Pages_Calendar_BlockOuts = "Pages.Calendar.BlockOuts";
+        public const string Pages_Calendar_Bookings = "Pages.Calendar.Bookings";
+
+        public const string Pages_ServiceWizard = "Pages.ServiceWizard";
+        public const string Pages_ServiceWizard_Category = "Pages.ServiceWizard.Category";
+        public const string Pages_ServiceWizard_Level = "Pages.ServiceWizard.Level";
+        public const string Pages_ServiceWizard_Services = "Pages.ServiceWizard.Services";
+        public const string Pages_ServiceWizard_CreateProject = "Pages.ServiceWizard.CreateProject";
+
+        public const string Pages_Projects = "Pages.Projects";
+        public const string Pages_Projects_Overview = "Pages.Projects.Overview";
+        public const string Pages_Projects_Browse = "Pages.Projects.Browse";
+        public const string Pages_Projects_MyProjects = "Pages.Projects.MyProjects";
+        public const string Pages_Projects_UsageAndFinancials = "Pages.Projects.UsageAndFinancials";
+        public const string Pages_Projects_Offer = "Pages.Projects.Offer";
+        public const string Pages_Projects_OfferHistory = "Pages.Projects.OfferHistory";
+        public const string Pages_Projects_Proposals = "Pages.Projects.Proposals";
 
         public const string Pages_Tenants = "Pages.Tenants";
     }

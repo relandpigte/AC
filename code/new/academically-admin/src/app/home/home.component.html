@@ -12,8 +12,11 @@
             </h1>
           </div>
           <div class="col-auto">
-            <a href="javascript:;" class="btn btn-primary">
+            <a [routerLink]="['/app/new-project']" class="btn btn-primary" *ngIf="permission.isGranted('Pages.ServiceWizard.CreateProject')">
               {{ 'CreateNewProject' | localize}}
+            </a>
+            <a [routerLink]="['/app/projects']" class="btn btn-primary ml-2" *ngIf="permission.isGranted('Pages.Projects.Browse')">
+              {{ 'SeeAllProjects' | localize}}
             </a>
           </div>
         </div>

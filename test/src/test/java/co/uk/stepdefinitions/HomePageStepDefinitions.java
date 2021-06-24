@@ -1,7 +1,7 @@
 package co.uk.stepdefinitions;
 
 import co.uk.core.DriverHandler;
-import co.uk.pageobjects.student.Homepage;
+import co.uk.pageobjects.Homepage;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -9,7 +9,7 @@ public class HomePageStepDefinitions {
 
 	@Then("^user successfully login")
 	public void loginIsSucessful() {
-		DriverHandler.delay(10);
+		DriverHandler.delay(15);
 		Homepage.verifyDashBoardIsDisplayed();
 	}
 	
@@ -93,5 +93,11 @@ public class HomePageStepDefinitions {
 	@When("^user navigate to profile settings using profile widget$")
 	public void navigateProfileSettingsUsingWidget() {
 		Homepage.ProfileWidget.clickProfilePhoto();
+		DriverHandler.delay(8);
+	}
+	
+	@Then("^user should see all projects$")
+	public void verifyProjectTableIsDisplayed() {
+		Homepage.MyProject.verifyProjectTableIsDisplayed();
 	}
 }

@@ -136,7 +136,17 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_AccountSettings_Billing,
                 PermissionNames.Pages_AccountSettings_Security,
                 PermissionNames.Pages_AccountSettings_Notifications,
-                PermissionNames.Pages_Widgets_Verifications
+                PermissionNames.Pages_Widgets_Verifications,
+                PermissionNames.Pages_Calendar,
+                PermissionNames.Pages_Calendar_BlockOuts,
+                PermissionNames.Pages_Calendar_Bookings,
+                PermissionNames.Pages_Projects,
+                PermissionNames.Pages_Projects_Overview,
+                PermissionNames.Pages_Projects_Browse,
+                PermissionNames.Pages_Projects_MyProjects,
+                PermissionNames.Pages_Projects_UsageAndFinancials,
+                PermissionNames.Pages_Projects_Offer,
+                PermissionNames.Pages_Projects_OfferHistory
             );
 
             #endregion
@@ -205,7 +215,16 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_TutorWizard_TermsOfUse,
                 PermissionNames.Pages_TutorWizard_PrivacyPolicy,
                 PermissionNames.Pages_TutorWizard_Declaration,
-                PermissionNames.Pages_Widgets_Verifications
+                PermissionNames.Pages_Widgets_Verifications,
+                PermissionNames.Pages_Calendar,
+                PermissionNames.Pages_Calendar_Bookings,
+                PermissionNames.Pages_ServiceWizard,
+                PermissionNames.Pages_ServiceWizard_Category,
+                PermissionNames.Pages_ServiceWizard_Level,
+                PermissionNames.Pages_ServiceWizard_Services,
+                PermissionNames.Pages_ServiceWizard_CreateProject,
+                PermissionNames.Pages_Projects,
+                PermissionNames.Pages_Projects_Proposals
             );
 
             #endregion
