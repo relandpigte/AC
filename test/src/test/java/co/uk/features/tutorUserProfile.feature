@@ -56,7 +56,8 @@ Scenario: C14557 - Verify removing a profile photo
 	Then successfully displayed profile picture message was removed
 	And profile photo is removed
 	
-Scenario: ??? - Verify select a cover photo
+@UI @TestRails(C14740)	
+Scenario: C14740 - Verify select a cover photo
 	
 	Given User is in academically login page
 	When user login as "admin"
@@ -575,8 +576,97 @@ Scenario: C14571	Verify editing research interest
 	And user saving research interest information
 	Then sucessful message is displayed
 	And editing research interest is successful
-	
+
+@UI @TestRails(14566)	
 Scenario: C14566 - Verify adding research methodology without research method
+
+	Given User is in academically login page
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated38XXX  |Test    |automated38XXX |Test@12345 |automated38XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated38XXX" and password "Test@12345"
+	Then user successfully login
+	When user navigate to profile settings using profile widget
+	Then user is in profile settings
+	When user proceed to research tab
+	And user add research methodology
+	Then "Add Research" Methodology modal is displayed
+	When user enter research methodology information
+		|Title         |Research method   |Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+		|Quantitative	 |null              |"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
+	And user saving research methodology information
+	Then sucessful message is displayed
+  And adding methodology "Quantitative" is successful
+
+@UI @TestRails(14570)	  
 Scenario: C14570 - Verify adding research interest without knowledge base
+
+	Given User is in academically login page
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated39XXX  |Test    |automated39XXX |Test@12345 |automated39XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated39XXX" and password "Test@12345"
+	Then user successfully login
+	When user navigate to profile settings using profile widget
+	Then user is in profile settings
+	When user proceed to research tab
+	And user add research interest
+	Then "Add Research" interest modal is displayed
+	When user enter research interest information
+	|Title                                        |Knowledge Base   |Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+	|Computer Science and Information Technology  |null             |"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
+	And user saving research interest information
+	Then sucessful message is displayed
+	And adding research interest "Computer Science and Information Technology" is successful
+
+@UI @TestRails(14574)	  	
 Scenario: C14574 - Verify adding publication without tag
+
+	Given User is in academically login page
+	When user login as "admin"
+	Then user successfully login
+	When user proceed to manage user
+	Then user is in manage user page
+	When user add a new user
+	And user enter a user details
+		|Name            |Surname |Username       |Password   |Email          |Active |Public |
+		|Automated40XXX  |Test    |automated40XXX |Test@12345 |automated40XXX |Yes    |Yes    |
+	And user select a "Tutor" role
+	And user saving user details
+	Then sucessful message is displayed
+	When user logout in academically
+	Then user is in academically login page
+	When user enter username "automated40XXX" and password "Test@12345"
+	Then user successfully login
+	When user navigate to profile settings using profile widget
+	Then user is in profile settings
+	When user proceed to research tab
+	And user add publication
+	Then "Add" publication modal is displayed
+	When user enter publication information
+	|Title              |Publication Type  |Publisher            |Date       |Tag   |Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                               
+	|Silence the storm  |Book              |Automated40XXX Test  |06/02/2013 |null  |"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."| 
+	And user saving publication information
+  Then adding publication "Silence the storm" is successful
+  
 Scenario: C14577 - Verify adding services
