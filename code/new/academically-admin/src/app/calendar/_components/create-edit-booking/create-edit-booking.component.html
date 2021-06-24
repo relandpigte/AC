@@ -68,7 +68,7 @@
                 </div>
               </div>
               <timepicker [(ngModel)]="startTime" [disabled]="isFormViewOnly" id="startTime" name="startTime"
-                #startTimeModel="ngModel" #startTimeEl [minuteStep]="1" (ngModelChange)="onStartTimeChange()"
+                #startTimeModel="ngModel" #startTimeEl [minuteStep]="30" (ngModelChange)="onStartTimeChange()"
                 class="datetimepicker" required>
               </timepicker>
             </div>
@@ -86,7 +86,7 @@
                 </div>
               </div>
               <timepicker [(ngModel)]="endTime" [disabled]="isFormViewOnly" id="endTime" name="endTime"
-                #endTimeModel="ngModel" #endTimeEl [minuteStep]="1" (ngModelChange)="onEndTimeChange()"
+                #endTimeModel="ngModel" #endTimeEl [minuteStep]="30" (ngModelChange)="onEndTimeChange()"
                 class="datetimepicker" required>
               </timepicker>
             </div>
@@ -128,9 +128,9 @@
 
       </div>
     </div>
-    <abp-modal-footer *ngIf="!model.id" [isLoading]="isLoading" [saveLabel]="'BookSession' | localize"
-      [cancelDisabled]="isLoading" [saveDisabled]="!form.form.valid || isLoading || duration <= 0"
-      (onCancelClick)="onCloseClick()">
+    <abp-modal-footer *ngIf="!model.id" [isLoading]="isLoading"
+      [saveLabel]="(isFromViewOffer ? 'Add' : 'BookSession') | localize" [cancelDisabled]="isLoading"
+      [saveDisabled]="!form.form.valid || isLoading || duration <= 0" (onCancelClick)="onCloseClick()">
     </abp-modal-footer>
     <ng-container *ngIf="model.id">
 

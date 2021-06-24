@@ -9,7 +9,7 @@ import { ProjectDetailsHeaderComponent } from './_components/project-details-hea
 @NgModule({
   declarations: [
     HeaderComponent,
-    ProjectDetailsHeaderComponent
+    ProjectDetailsHeaderComponent,
   ],
   imports: [
     CommonModule,

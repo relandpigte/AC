@@ -1,0 +1,163 @@
+<form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+    <div class="modal-card card">
+      <div class="card-header">
+        <h4 class="card-header-title">
+          {{ (isEditing ? 'EditSession' : 'AddSession') | localize }}
+        </h4>
+        <ul *ngIf="model.id" class="mr-4 nav nav-tabs nav-tabs-sm card-header-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab"
+              aria-controls="details" aria-selected="true">
+              {{ 'BookingDetails' | localize}}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history"
+              aria-selected="true">
+              {{ 'RescheduleHistory' | localize}}
+            </a>
+          </li>
+        </ul>
+        <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="card-body" [loader]="isLoading">
+        <div class="tab-content row">
+
+          <div class="col-12 tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
+            <div class="form-group mb-2 d-flex justify-content-between">
+              <label class="col-form-label">{{ 'Date' | localize}}: <b>{{ startTime | date: 'MMMM d, yyyy' }}</b></label>
+              <label class="col-form-label">{{ 'Duration' | localize}}: <b>{{ durationText }}</b></label>
+            </div>
+            <div *ngIf="model.id" class="form-group mb-2 d-flex justify-content-between">
+              <label class="col-form-label">{{ 'Project' | localize}}: <b>{{ model.project.name }}</b></label>
+              <label class="col-form-label">{{ 'Title' | localize}}: <b>{{ model.title }}</b></label>
+            </div>
+
+            <div *ngIf="!model.id" class="form-group">
+              <label class="col-form-label" for="projectId">{{ 'Project' | localize }}</label>
+              <select class="custom-select" select2 [defaultValue]="model.projectId" [disabled]="isFormViewOnly"
+                (select2ValueChange)="model.projectId = $event" [(ngModel)]="model.projectId" id="projectId"
+                name="projectId" #projectIdModel="ngModel" #projectIdEl required [disabled]="true">
+                <option *ngFor="let project of projects" [value]="project.id">
+                  {{ project.name | localize }}
+                </option>
+              </select>
+              <abp-validation-summary [control]="projectIdModel" [controlEl]="projectIdEl">
+              </abp-validation-summary>
+            </div>
+
+
+            <div *ngIf="!model.id" class="form-group required">
+              <label class="col-form-label" for="title">{{ 'Title' | localize}}</label>
+              <input [(ngModel)]="model.title" [disabled]="isFormViewOnly" #titleModel="ngModel" #titleEl
+                class="form-control" type="text" id="title" name="title" required />
+              <abp-validation-summary [control]="titleModel" [controlEl]="titleEl">
+              </abp-validation-summary>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-6 required">
+                <label class="col-form-label" for="startTime">{{ 'StartTime' | localize}}</label>
+                <div class="input-group input-group-merge" (click)="!isFormViewOnly && startTimeDp.show()">
+                  <input [(ngModel)]="startTime" [disabled]="isFormViewOnly" #startTimeDateModel="ngModel" #startTimeDate
+                    class="form-control form-control-appended" type="text" id="startTimeDate" name="startTimeDate"
+                    required #startTimeDp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" />
+                  <div class="input-group-append">
+                    <div class="input-group-text">
+                      <span class="fas fa-calendar"></span>
+                    </div>
+                  </div>
+                </div>
+                <timepicker [(ngModel)]="startTime" [disabled]="isFormViewOnly" id="startTime" name="startTime"
+                  #startTimeModel="ngModel" #startTimeEl [minuteStep]="1" (ngModelChange)="onStartTimeChange()"
+                  class="datetimepicker" required>
+                </timepicker>
+              </div>
+
+              <div class="form-group col-6 required">
+                <label class="col-form-label" for="endTime">{{ 'EndTime' | localize}}</label>
+                <div class="input-group input-group-merge" (click)="!isFormViewOnly && endTimeDp.show()">
+                  <input [(ngModel)]="endTime" [disabled]="isFormViewOnly" #endTimeDateModel="ngModel" #endTimeDate
+                    class="form-control form-control-appended" type="text" id="endTimeDate" name="endTimeDate" required
+                    #endTimeDp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" />
+                  <div class="input-group-append">
+                    <div class="input-group-text">
+                      <span class="fas fa-calendar"></span>
+                    </div>
+                  </div>
+                </div>
+                <timepicker [(ngModel)]="endTime" [disabled]="isFormViewOnly" id="endTime" name="endTime"
+                  #endTimeModel="ngModel" #endTimeEl [minuteStep]="30" [max]="maxTime" (ngModelChange)="onEndTimeChange()"
+                  class="datetimepicker" required>
+                </timepicker>
+              </div>
+            </div>
+
+            <div class="form-group required">
+              <label class="col-form-label" for="recurrence">{{ 'Recurrence' | localize }}</label>
+              <select class="custom-select" select2 [defaultValue]="model.recurrence" [disabled]="isFormViewOnly"
+                (select2ValueChange)="model.recurrence = $event" [(ngModel)]="model.recurrence" id="recurrence"
+                name="recurrence" #recurrenceModel="ngModel" #recurrenceEl required>
+                <option *ngFor="let relationship of CalendarEventRecurrence | enumToArray | keyvalue"
+                  [value]="relationship.key">
+                  {{ relationship.value | localize }}
+                </option>
+              </select>
+              <abp-validation-summary [control]="recurrenceModel" [controlEl]="recurrenceEl">
+              </abp-validation-summary>
+            </div>
+
+            <div *ngIf="model.id && !isFormViewOnly" class="form-group required">
+              <label class="col-form-label" for="comments">{{ 'Comments' | localize}}</label>
+              <textarea [rows]="4" [(ngModel)]="comments" #commentsModel="ngModel" #commentsEl class="form-control"
+                id="comments" name="comments" required>
+              </textarea>
+              <abp-validation-summary [control]="commentsModel" [controlEl]="commentsEl">
+              </abp-validation-summary>
+            </div>
+
+          </div>
+
+          <div *ngIf="model.id" class="col-12 tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+            <app-reschedule-history [rescheduleComments]="model.rescheduleComments"></app-reschedule-history>
+          </div>
+
+        </div>
+      </div>
+      <abp-modal-footer *ngIf="!model.id" [isLoading]="isLoading" [saveLabel]="'BookSession' | localize"
+        [cancelDisabled]="isLoading" [saveDisabled]="!form.form.valid || isLoading || duration <= 0"
+        (onCancelClick)="onCloseClick()">
+      </abp-modal-footer>
+      <ng-container *ngIf="model.id">
+
+        <div *ngIf="isFormViewOnly" class="card-footer justify-content-between">
+          <button type="button" class="btn btn-white" (click)="onCloseClick()">
+            {{ 'Close' | localize }}
+          </button>
+          <div>
+            <button type="button" class="btn btn-success mr-2" (click)="isFormViewOnly = false">
+              {{ 'ProposeNewTime' | localize }}
+            </button>
+            <button type="button" class="btn btn-primary" (click)="onAcceptClick()">
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              {{ (isLoading ? 'SavingWithDots' : 'Accept') | localize }}
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="!isFormViewOnly" class="card-footer justify-content-between">
+          <button type="button" class="btn btn-white" (click)="isFormViewOnly = true">
+            {{ 'Cancel' | localize }}
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="!form.form.valid || isLoading || duration <= 0">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            {{ (isLoading ? 'SavingWithDots' : 'Submit') | localize }}
+          </button>
+        </div>
+
+      </ng-container>
+
+    </div>
+  </form>

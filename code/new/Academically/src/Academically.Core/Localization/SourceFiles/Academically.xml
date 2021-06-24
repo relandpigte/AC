@@ -1061,5 +1061,16 @@
     <text name="Hr">hr</text>
     <text name="Hrs">hrs</text>
     <text name="PaymentMethods">Payment methods</text>
+    <text name="TermsAndCoditionsMessageLine1">
+        By accepting a session, under our terms and coditions, you are obliged to attend it unless you rearrange it at least 24 hours before the session is due to start, otherwise its non-refundable.
+    </text>
+    <text name="TermsAndCoditionsMessageLine2">Please indicate that you accept our terms and conditions by toggling the switch to the right.</text>
+    <text name="TermsAndCoditionsMessageLine3">You can view our Terms &amp; Conditions</text>
+    <text name="Paying">Paying</text>
+    <text name="TutorName">Tutor name</text>
+    <text name="NextSession">Next session</text>
+    <text name="Completion">Completion</text>
+    <text name="AddSession">Add Session</text>
+    <text name="EditSession">Edit Session</text>
   </texts>
 </localizationDictionary>
