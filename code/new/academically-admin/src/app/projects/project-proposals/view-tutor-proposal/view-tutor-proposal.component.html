@@ -1,6 +1,6 @@
 <div class="modal-card card" id="offer-modal">
-	<abp-modal-header [title]="modalTitle | titlecase" (onCloseClick)="onCloseClick()"></abp-modal-header>
-	<div class="card-body">
+  <abp-modal-header [title]="modalTitle | titlecase" (onCloseClick)="onCloseClick()"></abp-modal-header>
+  <div class="card-body">
     <div class="row align-items-center">
       <div class="col">
         <ul class="nav nav-tabs nav-overflow">
@@ -9,8 +9,9 @@
               aria-controls="overview" aria-selected="true" (click)="onTabClick(0)">{{ 'Overview' | localize }}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="book-session-tab" data-toggle="tab" href="#bookSession" role="tab" #bookSessionTabBtn
-              aria-controls="projects" aria-selected="false" (click)="onTabClick(1)">{{ 'BookSession' | localize }}</a>
+            <a class="nav-link" id="book-session-tab" data-toggle="tab" href="#bookSession" role="tab"
+              #bookSessionTabBtn aria-controls="projects" aria-selected="false" (click)="onTabClick(1)">{{ 'BookSession'
+              | localize }}</a>
           </li>
         </ul>
       </div>
@@ -21,7 +22,7 @@
           <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
             <div class="row">
               <div class="col">
-                <div class="card col">
+                <div class="card">
                   <div class="card-header">
                     <h4 class="card-header-title">
                       {{ 'CoverLetter' | localize }}
@@ -37,17 +38,25 @@
                       </div>
                       <div class="col-auto me-n3">
                         <div class="avatar-group d-none d-sm-flex">
-                          <a href="javascript:;" class="avatar avatar-xs" data-bs-toggle="tooltip" title="" data-bs-original-title="Ab Hadley">
-                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..." class="avatar-img rounded-circle">
+                          <a href="javascript:;" class="avatar avatar-xs" data-bs-toggle="tooltip" title=""
+                            data-bs-original-title="Ab Hadley">
+                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..."
+                              class="avatar-img rounded-circle">
                           </a>
-                          <a href="javascript:;" class="avatar avatar-xs" data-bs-toggle="tooltip" title="" data-bs-original-title="Adolfo Hess">
-                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" alt="..." class="avatar-img rounded-circle">
+                          <a href="javascript:;" class="avatar avatar-xs" data-bs-toggle="tooltip" title=""
+                            data-bs-original-title="Adolfo Hess">
+                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" alt="..."
+                              class="avatar-img rounded-circle">
                           </a>
-                          <a href="javascript:;" class="avatar avatar-xs" data-bs-toggle="tooltip" title="" data-bs-original-title="Daniela Dewitt">
-                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-4.jpg" alt="..." class="avatar-img rounded-circle">
+                          <a href="javascript:;" class="avatar avatar-xs" data-bs-toggle="tooltip" title=""
+                            data-bs-original-title="Daniela Dewitt">
+                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-4.jpg" alt="..."
+                              class="avatar-img rounded-circle">
                           </a>
-                          <a href="javascript:;" class="avatar avatar-xs" data-bs-toggle="tooltip" title="" data-bs-original-title="Miyah Myles">
-                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-5.jpg" alt="..." class="avatar-img rounded-circle">
+                          <a href="javascript:;" class="avatar avatar-xs" data-bs-toggle="tooltip" title=""
+                            data-bs-original-title="Miyah Myles">
+                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-5.jpg" alt="..."
+                              class="avatar-img rounded-circle">
                           </a>
                         </div>
                       </div>
@@ -63,7 +72,8 @@
                       <div class="row">
                         <div class="col-auto">
                           <a class="avatar avatar-sm" href="javascript:;">
-                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..." class="avatar-img rounded-circle">
+                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..."
+                              class="avatar-img rounded-circle">
                           </a>
 
                         </div>
@@ -85,7 +95,9 @@
                               </div>
                             </div>
                             <p class="comment-text">
-                              Looking good Dianna! I like the image grid on the left, but it feels like a lot to process and doesn't really <em>show</em> me what the product does? I think using a short looping video or something similar demo'ing the product might be better?
+                              Looking good Dianna! I like the image grid on the left, but it feels like a lot to process
+                              and doesn't really <em>show</em> me what the product does? I think using a short looping
+                              video or something similar demo'ing the product might be better?
                             </p>
                           </div>
 
@@ -96,7 +108,8 @@
                       <div class="row">
                         <div class="col-auto">
                           <a class="avatar avatar-sm" href="javascript:;">
-                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" alt="..." class="avatar-img rounded-circle">
+                            <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" alt="..."
+                              class="avatar-img rounded-circle">
                           </a>
 
                         </div>
@@ -118,7 +131,8 @@
                               </div>
                             </div>
                             <p class="comment-text">
-                              Any chance you're going to link the grid up to a public gallery of sites built with Launchday?
+                              Any chance you're going to link the grid up to a public gallery of sites built with
+                              Launchday?
                             </p>
                           </div>
                         </div>
@@ -130,26 +144,32 @@
                     <div class="row">
                       <div class="col-auto">
                         <div class="avatar avatar-sm">
-                          <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" alt="..." class="avatar-img rounded-circle">
+                          <img src="../../../../assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" alt="..."
+                            class="avatar-img rounded-circle">
                         </div>
 
                       </div>
                       <div class="col ms-n2">
                         <form class="mt-1">
                           <label class="visually-hidden d-none">Leave a comment...</label>
-                          <textarea class="form-control form-control-flush" data-autosize="" rows="1" placeholder="Leave a comment" style="overflow: hidden; overflow-wrap: break-word; height: 41px;"></textarea>
+                          <textarea class="form-control form-control-flush" data-autosize="" rows="1"
+                            placeholder="Leave a comment"
+                            style="overflow: hidden; overflow-wrap: break-word; height: 41px;"></textarea>
                         </form>
 
                       </div>
                       <div class="col-auto align-self-end">
                         <div class="text-muted mb-2">
-                          <a class="text-reset mr-3" href="javascropt:;" data-bs-toggle="tooltip" title="" data-bs-original-title="Add photo">
+                          <a class="text-reset mr-3" href="javascropt:;" data-bs-toggle="tooltip" title=""
+                            data-bs-original-title="Add photo">
                             <i class="fe fe-camera"></i>
                           </a>
-                          <a class="text-reset mr-3" href="javascropt:;" data-bs-toggle="tooltip" title="" data-bs-original-title="Attach file">
+                          <a class="text-reset mr-3" href="javascropt:;" data-bs-toggle="tooltip" title=""
+                            data-bs-original-title="Attach file">
                             <i class="fe fe-paperclip"></i>
                           </a>
-                          <a class="text-reset" href="javascropt:;" data-bs-toggle="tooltip" title="" data-bs-original-title="Record audio">
+                          <a class="text-reset" href="javascropt:;" data-bs-toggle="tooltip" title=""
+                            data-bs-original-title="Record audio">
                             <i class="fe fe-mic"></i>
                           </a>
                         </div>
@@ -162,125 +182,182 @@
             </div>
           </div>
           <div class="tab-pane fade" id="bookSession" role="tabpanel" aria-labelledby="book-session-tab">
-            <form class="row">
+            <div class="row">
               <div class="col">
-                  <div class="card">
-                    <div class="card-header">
-                      <h4 class="card-header-title">
-                        {{ 'Tutorial' | localize }}
-                      </h4>
-                    </div>
-                    <div class="card-body">
-                      <div class="row">
-                        <div class="col-md-4">
-                          <label for="sessionDate" class="form-label">{{ 'SessionDate' | localize }}</label>
-                          <input type="text" class="form-control" id="sessionDate">
-                        </div>
-                        <div class="col-md-4">
-                          <label for="startTime" class="form-label">{{ 'StartTime' | localize }}</label>
-                          <input type="text" class="form-control" id="startTime">
-                        </div>
-                        <div class="col-md-4">
-                          <label for="sessionDuration" class="form-label">{{ 'SessionDuration' | localize }}</label>
-                          <input type="text" class="form-control" id="sessionDuration">
-                        </div>
+                <div class="card">
+                  <div class="card-header">
+                    <div class="row">
+                      <div class="col">
+                        <h4 class="card-header-title">
+                          {{ 'Tutorial' | localize }}
+                        </h4>
+                      </div>
+                      <div class="col-auto">
+                        <button type="button" class="bg-primary-soft btn btn-sm text-secondary" [disabled]="isLoading"
+                          (click)="onAddSessionClick()">
+                          <i class="fe fe-plus"></i>
+                          Add
+                        </button>
                       </div>
                     </div>
                   </div>
-                  <div class="card mt-3">
-                    <div class="card-header">
-                      <h4 class="card-header-title">
-                        {{ 'PaymentMethods' | localize }}
-                      </h4>
-                    </div>
-                    <div class="card-body">
-                      <div class="list-group list-group-flush my-n3">
-                        <div class="list-group-item">
-                          <div class="row align-items-center">
-                            <div class="col-auto">
-                              <img class="img-fluid" src="../../../../assets/themes/dashkit/img/payment-methods/visa.svg" alt="..." style="max-width: 38px;">
-                            </div>
-                            <div class="col ms-n2">
-                              <h4 class="mb-1">
-                                Visa ending in 1234
-                              </h4>
-                              <small class="text-muted">
-                                Expires 3/2024
-                              </small>
-                            </div>
-                            <div class="col-auto me-n3">
-                              <span class="badge bg-light">
-                                Default
-                              </span>
-
-                            </div>
-                            <div class="col-auto">
-                              <div dropdown class="dropdown" container="#offer-modal">
-                                <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;" role="button">
-                                  <i class="fe fe-more-vertical"></i>
-                                </a>
-                                <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
-                                  <a href="javascript:;" class="dropdown-item">
-                                    <i class="fe fe-edit"></i> {{ 'Edit' | localize }}
-                                  </a>
-                                  <a href="javascript:;" class="dropdown-item">
-                                    <i class="fe fe-trash"></i> {{ 'Remove' | localize }}
-                                  </a>
-                                </div>
-                              </div>
-                            </div>
+                  <div class="table-responsive">
+                    <table class="table table-sm table-nowrap card-table">
+                      <thead>
+                        <tr>
+                          <th>{{ 'Title' | localize }}</th>
+                          <th>{{ 'SessionDate' | localize }}</th>
+                          <th>{{ 'StartTime' | localize }}</th>
+                          <th>{{ 'SessionDuration' | localize }}</th>
+                          <th width="1%"></th>
+                        </tr>
+                      </thead>
+                      <tbody class="fs-base">
+                        <tr *ngFor="let session of sessions">
+                          <td>{{ session.title }}</td>
+                          <td>{{ session.startTime | dateFormat: 'MMMM DD, YYYY' }}</td>
+                          <td>{{ session.startTime | dateFormat: 'hh:mm A' }}</td>
+                          <td>{{ getFormatedDuration(session.startTime, session.endTime) }}</td>
+                          <td>
+                            <button (click)="onRemoveSessionClick(session)" type="button"
+                              class="btn btn-outline-danger btn-sm btn-rounded-circle">
+                              <span class="fe fe-trash-2"></span>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr *ngIf="sessions.length === 0">
+                          <td colspan="5" class="text-center">
+                            <span>{{ 'NoRecordsFound' | localize }}</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="card mt-3">
+                  <div class="card-header">
+                    <h4 class="card-header-title">
+                      {{ 'PaymentMethods' | localize }}
+                    </h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="list-group list-group-flush my-n3">
+                      <div class="list-group-item">
+                        <div class="row align-items-center">
+                          <div class="col-auto">
+                            <img class="img-fluid" src="../../../../assets/themes/dashkit/img/payment-methods/visa.svg"
+                              alt="..." style="max-width: 38px;">
                           </div>
-                        </div>
-                        <div class="list-group-item">
-                          <div class="row align-items-center">
-                            <div class="col-auto">
-                              <img class="img-fluid" src="../../../../assets/themes/dashkit/img/payment-methods/mastercard.svg" alt="..." style="max-width: 38px;">
-                            </div>
-                            <div class="col ms-n2">
-                              <h4 class="mb-1">
-                                Mastercard ending in 1234
-                              </h4>
-                              <small class="text-muted">
-                                Expires 3/2024
-                              </small>
+                          <div class="col ms-n2">
+                            <h4 class="mb-1">
+                              Visa ending in 1234
+                            </h4>
+                            <small class="text-muted">
+                              Expires 3/2024
+                            </small>
+                          </div>
+                          <div class="col-auto me-n3">
+                            <span class="badge bg-light">
+                              Default
+                            </span>
 
-                            </div>
-                            <div class="col-auto">
-                              <div dropdown class="dropdown" container="#offer-modal">
-                                <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;" role="button">
-                                  <i class="fe fe-more-vertical"></i>
+                          </div>
+                          <div class="col-auto">
+                            <div dropdown class="dropdown" container="#offer-modal">
+                              <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;"
+                                role="button">
+                                <i class="fe fe-more-vertical"></i>
+                              </a>
+                              <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
+                                <a href="javascript:;" class="dropdown-item">
+                                  <i class="fe fe-edit"></i> {{ 'Edit' | localize }}
                                 </a>
-                                <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
-                                  <a href="javascript:;" class="dropdown-item">
-                                    <i class="fe fe-edit"></i> {{ 'Edit' | localize }}
-                                  </a>
-                                  <a href="javascript:;" class="dropdown-item">
-                                    <i class="fe fe-trash"></i> {{ 'Remove' | localize }}
-                                  </a>
-                                </div>
+                                <a href="javascript:;" class="dropdown-item">
+                                  <i class="fe fe-trash"></i> {{ 'Remove' | localize }}
+                                </a>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
+                      <div class="list-group-item">
+                        <div class="row align-items-center">
+                          <div class="col-auto">
+                            <img class="img-fluid"
+                              src="../../../../assets/themes/dashkit/img/payment-methods/mastercard.svg" alt="..."
+                              style="max-width: 38px;">
+                          </div>
+                          <div class="col ms-n2">
+                            <h4 class="mb-1">
+                              Mastercard ending in 1234
+                            </h4>
+                            <small class="text-muted">
+                              Expires 3/2024
+                            </small>
+
+                          </div>
+                          <div class="col-auto">
+                            <div dropdown class="dropdown" container="#offer-modal">
+                              <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;"
+                                role="button">
+                                <i class="fe fe-more-vertical"></i>
+                              </a>
+                              <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
+                                <a href="javascript:;" class="dropdown-item">
+                                  <i class="fe fe-edit"></i> {{ 'Edit' | localize }}
+                                </a>
+                                <a href="javascript:;" class="dropdown-item">
+                                  <i class="fe fe-trash"></i> {{ 'Remove' | localize }}
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
+                </div>
+
+                <div class="card mt-3">
+                  <div class="card-body">
+                    <div class="row justify-content-between align-items-center">
+                      <div class="col">
+                        <h4 class="mb-2">
+                          {{ 'TermsAndConditions' | localize }}
+                        </h4>
+                        <p class="text-muted font-size-sm">{{ 'TermsAndCoditionsMessageLine1' | localize }}</p>
+                        <p class="text-muted font-size-sm">{{ 'TermsAndCoditionsMessageLine2' | localize }}</p>
+                        <p class="text-muted font-size-sm mb-0">{{ 'TermsAndCoditionsMessageLine3' | localize }}
+                          <a href="javascript:;">here.</a>
+                        </p>
+                      </div>
+                      <div class="col-12 col-md-auto">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchOne">
+                          <label class="custom-control-label" for="subscriptionsSwitchOne"></label>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-            </form>
+            </div>
           </div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="card mb-0" [busy]="isLoading">
           <img *ngIf="!projectOffer.creatorUser.coverPhotoUrl"
-            src="/assets/themes/dashkit/img/covers/profile-cover-2.jpg"
-            alt="..." class="card-img-top">
-          <img *ngIf="projectOffer.creatorUser.coverPhotoUrl" [src]="projectOffer.creatorUser.coverPhotoUrl" alt="..." class="card-img-top">
+            src="/assets/themes/dashkit/img/covers/profile-cover-2.jpg" alt="..." class="card-img-top">
+          <img *ngIf="projectOffer.creatorUser.coverPhotoUrl" [src]="projectOffer.creatorUser.coverPhotoUrl" alt="..."
+            class="card-img-top">
 
           <div class="card-body overflow-visible">
             <a href="javascript:;" class="avatar avatar-xl card-avatar card-avatar-top">
-              <img [src]="getProfilePicture(projectOffer.creatorUser.profilePictureUrl)" class="avatar-img rounded-circle border border-4 border-card" alt="...">
+              <img [src]="getProfilePicture(projectOffer.creatorUser.profilePictureUrl)"
+                class="avatar-img rounded-circle border border-4 border-card" alt="...">
             </a>
 
             <h2 class="card-title text-center">
@@ -300,11 +377,13 @@
                 <div class="row align-items-center">
                   <div class="col">
                     <p class="mb-0 font-size-sm">{{ 'TutorInterview15min' | localize }}</p>
-                    <p class="text-muted font-size-sm mb-0">{{ 'Free' | localize }}<p>
+                    <p class="text-muted font-size-sm mb-0">{{ 'Free' | localize }}
+                    <p>
                   </div>
                   <div class="col-auto">
                     <div class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" name="isFreeSessionOffered" id="isFreeSessionOffered" [(ngModel)]="projectOffer.isFreeSessionOffered" />
+                      <input type="checkbox" class="custom-control-input" name="isFreeSessionOffered"
+                        id="isFreeSessionOffered" [(ngModel)]="projectOffer.isFreeSessionOffered" />
                       <label class="custom-control-label mt-2" for="isFreeSessionOffered"></label>
                     </div>
                   </div>
@@ -314,7 +393,8 @@
                 <div class="row align-items-center">
                   <div class="col">
                     <p class="mb-0 font-size-sm">
-                      {{ 'Tutorial' | localize }} ({{ projectOffer.discountedHours }}/{{ (projectOffer.discountedHours > 1 ? 'Hrs' : 'Hr') | localize }})
+                      {{ 'Tutorial' | localize }} ({{ projectOffer.discountedHours }}/{{ (projectOffer.discountedHours >
+                      1 ? 'Hrs' : 'Hr') | localize }})
                     </p>
                     <p class="text-muted font-size-sm mb-0">
                       <span>&#163;</span>
@@ -323,7 +403,8 @@
                   </div>
                   <div class="col-auto">
                     <div class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" name="isDiscountedHourlySessionOffered" id="isDiscountedHourlySessionOffered"
+                      <input type="checkbox" class="custom-control-input" name="isDiscountedHourlySessionOffered"
+                        id="isDiscountedHourlySessionOffered"
                         [(ngModel)]="projectOffer.isDiscountedHourlySessionOffered" />
                       <label class="custom-control-label mt-2" for="isDiscountedHourlySessionOffered"></label>
                     </div>
@@ -363,21 +444,22 @@
               </div>
             </div>
             <button *ngIf="!showPayButton" class="btn btn-block btn-primary" (click)="bookSessionTabBtn.click()">
-                {{ 'BookSession' | localize }}
+              {{ 'BookSession' | localize }}
             </button>
-            <button *ngIf="showPayButton" type="button" class="btn btn-block btn-primary">
-              {{ 'Pay' | localize }}
-          </button>
+            <button *ngIf="showPayButton" [disabled]="isLoading || sessions.length === 0" type="button"
+              class="btn btn-block btn-primary" (click)="onPayClick()">
+              {{ (isLoading ? 'Paying' : 'Pay') | localize }}
+            </button>
           </div>
         </div>
       </div>
     </div>
 
 
-	</div>
-	<div class="card-footer justify-content-between">
-	  <button type="button" class="btn btn-white" (click)="onCloseClick()">
-		{{ 'Close' | localize }}
-	  </button>
-	</div>
+  </div>
+  <div class="card-footer justify-content-between">
+    <button type="button" class="btn btn-white" (click)="onCloseClick()">
+      {{ 'Close' | localize }}
+    </button>
+  </div>
 </div>

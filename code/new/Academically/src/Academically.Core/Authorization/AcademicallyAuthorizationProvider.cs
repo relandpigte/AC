@@ -134,6 +134,7 @@ namespace Academically.Authorization
             projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Offer, L("Offer"));
             projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_OfferHistory, L("OfferHistory"));
             projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Proposals, L("Proposals"));
+            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Hired, L("Hired"));
 
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
         }
