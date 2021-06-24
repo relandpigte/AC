@@ -49,9 +49,6 @@
     <text name="ManageYourEvents">Manage your events</text>
     <text name="Calendar">Calendar</text>
     <text name="LinkCopiedToClipboard">Link copied to clipboard</text>
-    <text name="DeleteYourAccount">Delete your account</text>
-    <text name="DeleteYourAccountMessage">Don't need ScholarPro anymore?</text>
-    <text name="Print">Print</text>
     <text name="AcceptTermsOfUseMessage">I agree to the terms &amp; conditions</text>
     <text name="AcceptPrivacyPolicyMessage">I agree to the privacy policy</text>
     <text name="CreateANewProject">Create a New Project</text>
@@ -1007,7 +1004,6 @@
     <text name="ResetPasswordStepOneInfo">1. Enter your administrator password</text>
     <text name="ResetPasswordStepTwoInfo">2. Copy this random password so you can send it to the user</text>
     <text name="ThisWeeksIncome">This Weeks Income</text>
-    <text name="LinkCopiedToClipboard">Link copied to clipboard</text>
     <text name="DeleteYourAccount">Delete your account</text>
     <text name="DeleteYourAccountMessage">Don't need ScholarPro anymore?</text>
     <text name="Print">Print</text>
