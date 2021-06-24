@@ -2,6 +2,7 @@ import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angul
 import { AppComponentBase } from '@shared/app-component-base';
 import { CalendarEventDto, CalendarEventRecurrence, CalendarEventsServiceProxy, CalendarEventType } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { takeUntil, finalize } from 'rxjs/operators';
 
@@ -18,6 +19,7 @@ export class CreateEditBlockOutComponent extends AppComponentBase implements OnI
   endTime: Date;
   tempStartTime: Date;
   tempEndTime: Date;
+  datePickerConfig: BsDatepickerConfig;
 
   CalendarEventRecurrence = CalendarEventRecurrence;
 
@@ -29,6 +31,9 @@ export class CreateEditBlockOutComponent extends AppComponentBase implements OnI
     super(injector);
     this.startTime = new Date();
     this.endTime = new Date();
+    this.datePickerConfig = new BsDatepickerConfig();
+    this.datePickerConfig.showWeekNumbers = false;
+    this.datePickerConfig.dateInputFormat = 'DD/MM/YYYY';
   }
 
   get duration(): number {
@@ -41,8 +46,6 @@ export class CreateEditBlockOutComponent extends AppComponentBase implements OnI
 
   ngOnInit(): void {
     if (this.model) {
-      this.tempStartTime = this.startTime;
-      this.tempEndTime = this.endTime;
       if (!this.model.id) {
         this.startTime = this.model.startTime.toDate();
         this.endTime = this.model.startTime.toDate();
@@ -51,6 +54,8 @@ export class CreateEditBlockOutComponent extends AppComponentBase implements OnI
         this.startTime = this.convertMomentToDate(this.model.startTime);
         this.endTime = this.convertMomentToDate(this.model.endTime);
       }
+      this.tempStartTime = this.startTime;
+      this.tempEndTime = this.endTime;
     }
   }
 
@@ -80,24 +85,22 @@ export class CreateEditBlockOutComponent extends AppComponentBase implements OnI
   }
 
   onStartTimeChange(): void {
-    if (this.durationText.length > 5) {
+    if (this.startTime && this.startTime > this.endTime) {
+      this.endTime = this.startTime;
+    } else if (this.durationText.length > 5) {
       setTimeout(() => {
         this.startTime = this.tempStartTime;
       });
     }
-    if (this.startTime > this.endTime) {
-      this.endTime = this.startTime;
-    }
   }
 
   onEndTimeChange(): void {
-    if (this.durationText.length > 5) {
+    if (this.endTime && this.endTime < this.startTime) {
+      this.startTime = this.endTime;
+    } else if (this.durationText.length > 5) {
       setTimeout(() => {
         this.endTime = this.tempEndTime;
       });
-    }
-    if (this.endTime < this.startTime) {
-      this.startTime = this.endTime;
     }
   }
 }

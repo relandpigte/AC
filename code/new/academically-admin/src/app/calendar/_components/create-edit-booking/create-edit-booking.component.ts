@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { CalendarEventDto, CalendarEventRecurrence, CalendarEventsServiceProxy, CalendarEventType, ProjectDto, RescheduleCalendarEventDto, RescheduleCommentDto } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
@@ -27,8 +27,10 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
   isDecliningABooking = false;
   comments = '';
   datePickerConfig: BsDatepickerConfig;
+  autoAccept = false;
 
   CalendarEventRecurrence = CalendarEventRecurrence;
+  CalendarEventType = CalendarEventType;
 
   constructor(
     injector: Injector,
@@ -65,6 +67,9 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
         if (this.model.rescheduleComments && this.model.rescheduleComments.length > 0) {
           this.lastRescheduleComment = this.model.rescheduleComments[this.model.rescheduleComments.length - 1];
         }
+        if (this.autoAccept) {
+          this.acceptEvent();
+        }
       }
       this.tempStartTime = this.startTime;
       this.tempEndTime = this.endTime;
@@ -85,7 +90,7 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
           }),
         )
         .subscribe(() => {
-          this.notify.success(this.l('SavedSuccessfully'));
+          this.notify.success(this.l('TheBookingRequestWasCreated'));
           this.modelSaved.emit();
           this._modal.hide();
         });
@@ -96,7 +101,7 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
         rescheduleModel.oldStartTime = this.convertDateToMoment(this.tempStartTime);
         rescheduleModel.oldEndTime = this.convertDateToMoment(this.tempEndTime);
         rescheduleModel.comments = this.comments;
-        this._calendarEventsService.declineOffer(rescheduleModel)
+        this._calendarEventsService.decline(rescheduleModel)
           .pipe(
             takeUntil(this.destroyed$),
             finalize(() => {
@@ -104,7 +109,7 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
             }),
           )
           .subscribe(() => {
-            this.notify.success(this.l('SavedSuccessfully'));
+            this.notify.success(this.l('TheBookingRequestWasDeclined'));
             this.modelSaved.emit();
             this._modal.hide();
           });
@@ -122,7 +127,7 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
             }),
           )
           .subscribe(() => {
-            this.notify.success(this.l('SavedSuccessfully'));
+            this.notify.success(this.l('TheBookingRequestWasRescheduled'));
             this.modelSaved.emit();
             this._modal.hide();
           });
@@ -131,19 +136,7 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
   }
 
   onSubmitClick(): void {
-    this.isLoading = true;
-    this._calendarEventsService.acceptOffer(this.model.id)
-      .pipe(
-        takeUntil(this.destroyed$),
-        finalize(() => {
-          this.isLoading = false;
-        }),
-      )
-      .subscribe(() => {
-        this.notify.success(this.l('SavedSuccessfully'));
-        this.modelSaved.emit();
-        this._modal.hide();
-      });
+    this.acceptEvent();
   }
 
   onDeclineClick(): void {
@@ -190,6 +183,25 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
       )
       .subscribe(projects => {
         this.projects = projects;
+      });
+  }
+
+  private acceptEvent(): void {
+    this.isLoading = true;
+    this._calendarEventsService.accept(this.model.id, this.model.tutorId)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+          if (this.autoAccept) {
+            this.autoAccept = false;
+          }
+        }),
+      )
+      .subscribe(() => {
+        this.notify.success(this.l('TheBookingRequestWasAccepted'));
+        this.modelSaved.emit();
+        this._modal.hide();
       });
   }
 }
