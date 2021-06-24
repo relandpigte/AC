@@ -145,7 +145,7 @@ export abstract class AppComponentBase implements OnDestroy {
   }
 
   protected calculateDuration(startTime: Moment, endTime: Moment): number {
-    return moment.duration(endTime.diff(startTime)).asMinutes();
+    return Math.round(moment.duration(endTime.diff(startTime)).asMinutes());
   }
 
   protected formatDuration(durationInMinutes: number): string {

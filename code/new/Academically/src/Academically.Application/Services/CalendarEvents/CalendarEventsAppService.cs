@@ -337,5 +337,15 @@ namespace Academically.Services.CalendarEvents
                 });
             await _emailService.SendAsync(recipient.Name, recipient.EmailAddress, L("BookingConfirmedEmailSubject"), emailBody);
         }
+
+        public async Task CreateBatch(CalendarEventDto[] inputs)
+        {
+            foreach(var input in inputs)
+            {
+                input.CreatorUserId = AbpSession.UserId.Value;
+                var calendarEvent = ObjectMapper.Map<CalendarEvent>(input);
+                await _calendarEventsRepository.InsertAsync(calendarEvent);
+            }
+        }
     }
 }

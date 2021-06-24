@@ -16,5 +16,6 @@ namespace Academically.Services.CalendarEvents
         Task Reschedule(RescheduleCalendarEventDto input);
         Task Accept(Guid id, long tutorId);
         Task Decline(RescheduleCalendarEventDto input);
+        Task CreateBatch(CalendarEventDto[] inputs);
     }
 }
