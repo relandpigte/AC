@@ -4,11 +4,6 @@
     </abp-modal-header>
     <div class="card-body">
 
-      <div class="form-group mb-2 d-flex justify-content-between">
-        <label class="col-form-label">{{ 'Date' | localize}}: {{ startTime | date: 'MMMM d, yyyy' }}</label>
-        <label class="col-form-label">{{ 'Duration' | localize}}: {{ durationText }}</label>
-      </div>
-
       <div class="form-group required">
         <label class="col-form-label" for="title">{{ 'Title' | localize}}</label>
         <input [(ngModel)]="model.title" #titleModel="ngModel" #titleEl class="form-control" type="text" id="title"
@@ -21,6 +16,16 @@
 
         <div class="form-group col-6 required">
           <label class="col-form-label" for="startTime">{{ 'StartTime' | localize}}</label>
+          <div class="input-group input-group-merge" (click)="startTimeDp.show()">
+            <input [(ngModel)]="startTime" #startTimeDateModel="ngModel" #startTimeDate
+              class="form-control form-control-appended" type="text" id="startTimeDate" name="startTimeDate" required
+              #startTimeDp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" />
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-calendar"></span>
+              </div>
+            </div>
+          </div>
           <timepicker [(ngModel)]="startTime" id="startTime" name="startTime" #startTimeModel="ngModel" #startTimeEl
             [minuteStep]="1" (ngModelChange)="onStartTimeChange()" required>
           </timepicker>
@@ -28,9 +33,23 @@
 
         <div class="form-group col-6 required">
           <label class="col-form-label" for="endTime">{{ 'EndTime' | localize}}</label>
+          <div class="input-group input-group-merge" (click)="endTimeDp.show()">
+            <input [(ngModel)]="endTime" #endTimeDateModel="ngModel" #endTimeDate
+              class="form-control form-control-appended" type="text" id="endTimeDate" name="endTimeDate" required
+              #endTimeDp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" />
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-calendar"></span>
+              </div>
+            </div>
+          </div>
           <timepicker [(ngModel)]="endTime" id="endTime" name="endTime" #endTimeModel="ngModel" #endTimeEl
             [minuteStep]="1" (ngModelChange)="onEndTimeChange()" required>
           </timepicker>
+        </div>
+
+        <div class="form-group col-12 mb-2">
+          <label class="col-form-label">{{ 'Duration' | localize}}: <b>{{ durationText }}</b></label>
         </div>
 
       </div>

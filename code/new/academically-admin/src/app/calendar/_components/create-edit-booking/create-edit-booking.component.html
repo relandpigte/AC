@@ -91,7 +91,6 @@
               </timepicker>
             </div>
 
-
             <div class="form-group col-12 mb-2">
               <label class="col-form-label">{{ 'Duration' | localize}}: <b>{{ durationText }}</b></label>
             </div>
@@ -139,8 +138,9 @@
         <button type="button" class="btn btn-white" (click)="onCloseClick()">
           {{ 'Close' | localize }}
         </button>
-        <div *ngIf="(!lastRescheduleComment && model.creatorUserId !== appSession.userId)
-          || (lastRescheduleComment && lastRescheduleComment.creatorUser.id !== appSession.userId)">
+        <div *ngIf="((!lastRescheduleComment && model.creatorUserId !== appSession.userId)
+          || (lastRescheduleComment && lastRescheduleComment.creatorUser.id !== appSession.userId))
+          && model.type !== CalendarEventType.ConfirmedBooking">
           <button type="button" class="btn btn-success mr-2"
             (click)="detailsTabButton.nativeElement.click(); isFormViewOnly = false">
             {{ 'ProposeNewTime' | localize }}
@@ -149,7 +149,7 @@
             (click)="detailsTabButton.nativeElement.click(); onDeclineClick()">
             {{ 'Decline' | localize }}
           </button>
-          <button type="button" class="btn btn-primary" (click)="onSubmitClick()">
+          <button [disabled]="isLoading" type="button" class="btn btn-primary" (click)="onSubmitClick()">
             <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             {{ (isLoading ? 'SavingWithDots' : 'Accept') | localize }}
           </button>
