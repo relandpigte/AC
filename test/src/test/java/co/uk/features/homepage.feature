@@ -44,30 +44,6 @@ Feature: Title of your feature
     And user should see all total projects
     And user should see overview graph
 
-  @NOT
-  Scenario: C14489 - Verify user profile widget is displayed
-    Given User is in academically login page
-    When user register a student
-    And user enter account details
-      | Firstname | Lastname | Email        | Date of Birth |
-      | Benjamin  | Franklin | automatedXXX | 04/02/1981    |
-    Then sent email modal is displayed
-    And user activate account
-    Then user is in complete registration form
-    And email address "automatedXXX" matched
-    When user enter password "Test@12345" and confirm passoword "Test@12345"
-    And user register an account
-    Then registered the account successfully
-    When user enter username "automatedXXX" and password "Test@12345"
-    Then user successfully login
-    And user profile widget is displayed on the dashboard
-    And profile widget information is displayed
-
-  #- Verify profile picture is displayed
-  #- Verify background image is displayed
-  #- Verify student name is displayed
-  #- Verify university name is displayed
-  #- Verify user type is displayed
   @UI @TestRails(14490)
   Scenario: C14490 - Verify user verification widget is displayed
     Given User is in academically login page
