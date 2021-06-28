@@ -198,7 +198,7 @@ public class UserProfilePageEducation {
 		private static Button saveBtn = new Button("Save",By.xpath("//app-create-edit-education//button[@type='submit']"));
 		private static TextBox documentUploader = new TextBox("Upload evidence",By.xpath("//input[@id='DocumentUploader']"));
 		private static Element evidenceName(String name) {
-			return new Element(name,By.xpath("//app-document-uploader//h4[contains(text(),'Sample1.jpg')]"));
+			return new Element(name,By.xpath("//app-document-uploader//h4[contains(text(),'"+name+"')]"));
 		}
 		
 		private static TextBox evidenceCategory = new TextBox("Evidence category",By.xpath("//app-document-uploader//input[@id='Categiry_0']"));
