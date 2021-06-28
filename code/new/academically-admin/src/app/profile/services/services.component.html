@@ -23,7 +23,7 @@
                 <i class="fe {{ getServiceIcon(category.name) }}"></i>
                 {{ category.name }}
               </h4>
-              <a class="collapse-button ml-auto"></a>
+              <a class="collapse-button ml-auto rotate"></a>
             </div>
             <div class="collapse-content">
               <ul [id]="'category_' + category.id" class="service-items">
@@ -31,7 +31,7 @@
                   <div [accordion]="j !== 0 || i !== 0">
                     <div class="collapse-header d-flex justify-content-between align-items-center service-title">
                       <p class="m-0 service-name">{{ service.name }}</p>
-                      <a class="collapse-button"></a>
+                      <a class="collapse-button rotate"></a>
                     </div>
                     <div class="collapse-content">
                       <ul [id]="'service_' + service.id" class="service-items pl-3">
