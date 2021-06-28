@@ -27,6 +27,9 @@ namespace Academically.Authorization
 
             var profileServices = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Services, L("Services"));
             profileServices.CreateChildPermission(PermissionNames.Pages_Profile_Services_SuggestSubject, L("SuggestSubject"));
+            profileServices.CreateChildPermission(PermissionNames.Pages_Profile_Services_Create, L("Create"));
+            profileServices.CreateChildPermission(PermissionNames.Pages_Profile_Services_Update, L("Update"));
+            profileServices.CreateChildPermission(PermissionNames.Pages_Profile_Services_Delete, L("Delete"));
 
             var profileEducationPermission = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Education, L("Education"));
             profileEducationPermission.CreateChildPermission(PermissionNames.Pages_Profile_Education_Create, L("Create"));
@@ -77,7 +80,6 @@ namespace Academically.Authorization
             var suggestionsServiceSubjectsPermission = suggestionsPermission.CreateChildPermission(PermissionNames.Pages_Suggestions_ServiceSubjects, L("ServiceSubjects"));
             suggestionsServiceSubjectsPermission.CreateChildPermission(PermissionNames.Pages_Suggestions_ServiceSubjects_Approve, L("Approve"));
             suggestionsServiceSubjectsPermission.CreateChildPermission(PermissionNames.Pages_Suggestions_ServiceSubjects_Reject, L("Reject"));
-
 
             var rolePermission = context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
             rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Create, L("Create"));

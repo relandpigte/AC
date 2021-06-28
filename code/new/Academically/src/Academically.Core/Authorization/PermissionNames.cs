@@ -20,6 +20,9 @@
 
         public const string Pages_Profile_Services = "Pages.Profile.Services";
         public const string Pages_Profile_Services_SuggestSubject = "Pages.Profile.Services.SuggestSubject";
+        public const string Pages_Profile_Services_Create = "Pages.Profile.Services.Create";
+        public const string Pages_Profile_Services_Update = "Pages.Profile.Services.Update";
+        public const string Pages_Profile_Services_Delete = "Pages.Profile.Services.Delete";
 
         public const string Pages_Profile_Education = "Pages.Profile.Education";
         public const string Pages_Profile_Education_Create = "Pages.Profile.Education.Create";

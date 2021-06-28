@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Auditing;
+using Abp.Domain.Repositories;
 using Academically.Domain.Entities;
 using Academically.Services.Services.Dto;
 using Academically.Services.UserServices.Dto;
@@ -27,7 +28,7 @@ namespace Academically.Services.UserServices
             _userServicesRespository = userServicesRespository;
         }
 
-        public async Task<IEnumerable<UserServiceDto>> Get(long userId, Guid serviceId)
+        public async Task<IEnumerable<UserServiceForListDto>> Get(long userId, Guid serviceId)
         {
             var userServices = await _userServicesRespository.GetAll()
                 .Where(e => e.CreatorUserId == userId && e.ServiceMapping.Node3Id == serviceId)
@@ -35,7 +36,7 @@ namespace Academically.Services.UserServices
                     .ThenInclude(e => e.Subject)
                 .Include(e => e.UserServiceDisciplineTaxonomies)
                     .ThenInclude(e => e.DisciplineTaxonomy)
-                 .Select(e => ObjectMapper.Map<UserServiceDto>(e))
+                 .Select(e => ObjectMapper.Map<UserServiceForListDto>(e))
                 .ToListAsync();
 
             return userServices;
@@ -110,6 +111,77 @@ namespace Academically.Services.UserServices
             }
 
             await _userServicesRespository.InsertAsync(userService);
+        }
+
+        public async Task UpdateAsync(UserServiceDto input)
+        {
+            
+
+            var userService = await _userServicesRespository.GetAll()
+                .Include(s => s.UserServiceDisciplineTaxonomies)
+                .FirstOrDefaultAsync(s => s.Id == input.Id);
+
+            if (userService != null)
+            {
+                ObjectMapper.Map(input, userService);
+
+                if (input.Subjects != null && input.Subjects.Any())
+                {
+                    userService.UserServiceSubjects = new List<UserServiceSubject>();
+                    userService.Title = string.Join(", ", input.Subjects.Select(e => e.Name));
+                    input.Subjects.ToList().ForEach(subject =>
+                    {
+                        userService.UserServiceSubjects.Add(new UserServiceSubject()
+                        {
+                            SubjectId = subject.Id,
+                        });
+                    });
+                }
+                else if (input.DisciplineTaxonomies != null && input.DisciplineTaxonomies.Any())
+                {
+                    userService.UserServiceDisciplineTaxonomies = new List<UserServiceDisciplineTaxonomy>();
+                    input.DisciplineTaxonomies.ToList().ForEach(disciplineTaxonomy =>
+                    {
+                        if (!userService.UserServiceDisciplineTaxonomies.Any(x => x.Id == disciplineTaxonomy.Id))
+                        {
+                            userService.UserServiceDisciplineTaxonomies.Add(new UserServiceDisciplineTaxonomy()
+                            {
+                                DisciplineTaxonomyId = disciplineTaxonomy.Id,
+                            });
+                        }
+                    });
+                }
+
+                await _userServicesRespository.UpdateAsync(userService);
+            }
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var service = await _userServicesRespository.GetAll()
+                .Where(u => u.Id == id)
+                .Include(u => u.UserServiceDisciplineTaxonomies)
+                .Include(u => u.UserServiceSubjects)
+                .FirstOrDefaultAsync();
+
+            if (service != null)
+                await _userServicesRespository.DeleteAsync(service);
+        }
+
+        public async Task<UserServiceDto> GetService(Guid id)
+        {
+            var service = await _userServicesRespository.GetAll()
+                .Where(s => s.Id == id)
+                .Include(s => s.ServiceMapping)
+                .Include(s => s.UserServiceSubjects)
+                    .ThenInclude(e => e.Subject)
+                .Include(s => s.UserServiceDisciplineTaxonomies)
+                    .ThenInclude(e => e.DisciplineTaxonomy)
+                .Select(s => ObjectMapper.Map<UserServiceDto>(s))
+                .FirstOrDefaultAsync();
+
+
+            return service;
         }
     }
 }

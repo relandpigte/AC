@@ -1,25 +1,21 @@
 <div class="row">
   <div class="col-md-4 service-header" [loader]="isLoading">
-    <div *ngIf="categories.length === 0" class="card">
-      <div class="card-body">
-        <p class="text-muted text-center m-0">{{ 'NoServicesFound' | localize}}</p>
-      </div>
-    </div>
-    <div *ngIf="categories.length > 0" class="card">
+    <div class="card">
       <div class="card-header">
         <div class="row">
           <div class="col-auto d-flex justify-content-between align-items-center">
             <h2 class="m-0">{{ 'MyServices' | localize }}</h2>
           </div>
           <div class="col text-right">
-            <button (click)="onAddClick()" class="btn btn-sm btn-light">
+            <button (click)="onAddClick()" *ngIf="permission.isGranted('Pages.Profile.Services.Create')" class="btn btn-sm btn-light">
               <i class="fe fe-edit-2"></i>
               {{ 'Add' | localize }}
             </button>
           </div>
         </div>
       </div>
-      <div class="card-body mb-5 service">
+      <div class="card-body service">
+        <p  *ngIf="!categories || categories.length === 0" class="text-muted text-center m-0">{{ 'NoServicesFound' | localize}}</p>
         <div [accordion]="i !== 0" *ngFor="let category of categories; let i = index" class="service">
           <div class="service-category-nav">
             <div class="service-title d-flex">
@@ -96,19 +92,22 @@
                     <div *ngIf="userService.disciplineTaxonomies && userService.disciplineTaxonomies.length > 0">
                       <span *ngFor="let disciplineTaxonomy of userService.disciplineTaxonomies"
                         class="badge badge-soft-info mr-1">
-                        {{ disciplineTaxonomy.name }}
+                        {{ disciplineTaxonomy }}
                       </span>
                     </div>
                   </div>
                   <div class="col-auto d-flex justify-content-center align-items-center">
-                    <button *ngIf="permission.isGranted('Pages.Profile.Services')" (click)="onEditClick(userService.id)"
-                      type="button" class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+                    <button *ngIf="permission.isGranted('Pages.Profile.Services.Update')"
+                      [disabled]="deleteLoaders[userService.id]" (click)="onEditClick(userService)" type="button"
+                      class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
                       <span class="fe fe-edit-2"></span>
                     </button>
-                    <button *ngIf="permission.isGranted('Pages.Profile.Services')"
-                      (click)="onDeleteClick(userService.id)" type="button"
+                    <button *ngIf="permission.isGranted('Pages.Profile.Services.Delete')"
+                      [disabled]="deleteLoaders[userService.id]" (click)="onDeleteClick(userService.id)" type="button"
                       class="btn btn-outline-danger btn-sm btn-rounded-circle">
-                      <span class="fe fe-trash-2"></span>
+                      <span *ngIf="deleteLoaders[userService.id]" class="spinner-border spinner-border-sm" role="status"
+                        aria-hidden="true"></span>
+                      <span *ngIf="!deleteLoaders[userService.id]" class="fe fe-trash-2"></span>
                     </button>
                   </div>
                 </div>

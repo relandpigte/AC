@@ -48,7 +48,7 @@
           </abp-validation-summary>
         </div>
 
-        <div *ngIf="model.levelId" class="form-group col-md-6 required">
+        <div *ngIf="model.levelId && levels.length > 0" class="form-group col-md-6 required">
           <label class="col-form-label" for="expertiseLevel">{{ 'ExpertiseLevel' | localize}}</label>
 
           <div class="form-select-wrapper" [class.is-invalid]="!expertiseLevelModel.valid && expertiseLevelModel.touched">
@@ -66,7 +66,7 @@
         </div>
       </div>
 
-      <ng-container *ngIf="model.levelId">
+      <ng-container *ngIf="model.levelId && selectedLevel?.service">
         <ng-container *ngIf="levelsWithSubjects.includes(selectedLevel.service.name); else notSubjectTemplate">
 
           <div class="form-group required mb-0">
@@ -160,10 +160,10 @@
         <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl.elementRef.nativeElement">
         </abp-validation-summary>
       </div>
-
     </div>
     <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading"
-      [saveDisabled]="!createEditForm.form.valid || isLoading || !model.description || !HasValidSubject" (onCancelClick)="onCloseClick()">
+      [saveDisabled]="!createEditForm.form.valid || isLoading || !model.description || !HasValidSubject || (serviceId && model.disciplineTaxonomies.length === 0)"
+      (onCancelClick)="onCloseClick()">
     </abp-modal-footer>
   </div>
 </form>
