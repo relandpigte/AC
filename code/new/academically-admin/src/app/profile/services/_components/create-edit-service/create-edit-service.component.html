@@ -162,7 +162,8 @@
       </div>
     </div>
     <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading"
-      [saveDisabled]="!createEditForm.form.valid || isLoading || !model.description || !HasValidSubject || (serviceId && model.disciplineTaxonomies.length === 0)"
+      [saveDisabled]="!createEditForm.form.valid || isLoading || !model.description || !HasValidSubject
+        || (serviceId && model.disciplineTaxonomies.length === 0 && !HasValidSubject)"
       (onCancelClick)="onCloseClick()">
     </abp-modal-footer>
   </div>

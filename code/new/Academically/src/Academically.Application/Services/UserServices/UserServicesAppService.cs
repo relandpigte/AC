@@ -115,10 +115,9 @@ namespace Academically.Services.UserServices
 
         public async Task UpdateAsync(UserServiceDto input)
         {
-            
-
             var userService = await _userServicesRespository.GetAll()
                 .Include(s => s.UserServiceDisciplineTaxonomies)
+                .Include(s => s.UserServiceSubjects)
                 .FirstOrDefaultAsync(s => s.Id == input.Id);
 
             if (userService != null)
