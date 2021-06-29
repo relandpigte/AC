@@ -27,7 +27,7 @@ public class TutorWizardStepDefinitions {
 		String overview = data.get(0).get("Overview");
 
 		if (!firstname.equals("null")) {
-			TutorWizardPageAboutYou.enterFirstname(firstname);
+			TutorWizardPageAboutYou.enterFirstname(firstname.replace("XXX", DriverHandler.timestamp));
 		}
 
 		if (!lastname.equals("null")) {
@@ -36,6 +36,7 @@ public class TutorWizardStepDefinitions {
 
 		if (!overview.equals("null")) {
 			TutorWizardPageAboutYou.enterProfessionalOverview(overview);
+			DriverHandler.delay(2);
 		}
 	}
 
