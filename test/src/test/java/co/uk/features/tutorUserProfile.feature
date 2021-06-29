@@ -429,7 +429,7 @@ Scenario: C14573	Verify adding publication
 	And user saving publication information
   Then adding publication "Silence the storm" is successful	
   
-@UI @TestRails(14576) @Adhoc
+@UI @TestRails(14576)
 Scenario: C14576	Verify removing publication
 
 	Given User is in academically login page

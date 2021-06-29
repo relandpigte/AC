@@ -62,5 +62,21 @@ public class CommonObjects {
 	public static void clickProfileDropUp() {
 		profileDropdown.click();
 	}
+	
+	public static class TutorWizardConfirmation {
+
+		private static Element modalMessage = new Element("Confirmation to apply a tutor",
+				By.xpath("//div[contains(text(),'You are applying to become a tutor')]"));
+		private static Button yes = new Button("Yes",
+				By.xpath("//div[contains(text(),'You are applying to become a tutor')]/following::button[text()='Yes']"));
+
+		public static void modalMessageIsDisplayed() {
+			modalMessage.verifyDisplayed();
+		}
+
+		public static void clickYes() {
+			yes.click();
+		}
+	}
 }
 

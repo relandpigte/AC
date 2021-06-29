@@ -46,6 +46,10 @@ public class TutorWizardPageLanguage {
 			otherlanguageAndProficieny(language,proficiency).verifyDisplayed();
 		}
 		
+		public static void clickSave() {
+			save.click();
+		}
+		
 		public static class AddLanguageModal{
 			
 			private static ListBox languageDropdown = new ListBox("Language",By.xpath("//select[@id='newOtherSpokenLanguage']"));

@@ -1,4 +1,4 @@
-Feature: Title of your feature
+Feature: Dashboard
 
   @UI @TestRails(14484)
   Scenario: C14484 - Verify menu items on the dashboard as student

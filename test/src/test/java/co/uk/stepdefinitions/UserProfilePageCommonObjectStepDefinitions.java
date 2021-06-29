@@ -109,6 +109,11 @@ public class UserProfilePageCommonObjectStepDefinitions {
     public void verifyDeletedMessage() {
     	UserProfilePageCommonObjects.verifySuccesfulyDeletedMessageIsDisplayed();
     }
-   
+    
+    @When("^user wants to become a tutor on the profile page$")
+    public void userBecomeAtutor() {
+    	DriverHandler.delay(5);
+    	UserProfilePageCommonObjects.clickBecomeATutor();
+    }
     
 }
