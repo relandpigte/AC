@@ -22,7 +22,7 @@ Feature: Tutor Wizard
     When user confirms to become a tutor
     Then user is in tutor wizard page
     
-	 @EMAIL @Adhoc
+	 @EMAIL 
    Scenario: C14522 - Verify adding about user information from the tutor wizard
     
     Given User is in academically login page

@@ -39,7 +39,7 @@ public class RegisterPageStepDefinitions {
 	@When("^user activate account$")
 	public void activateAccount() {
 		DriverHandler.delay(5);
-		String value = GmailReader.getEmailContent();
+		String value = GmailReader.getEmailContent("test.email.academically@gmail.com","Test@12345");
 		 value = TextUtility.getValueByRegex(value, "<p>https://academically(.+?)<p/>").replace("<p>", "").replace("<p/>", "");
 		 DriverHandler.navigateUrl(value);
 		 DriverHandler.delay(10);
