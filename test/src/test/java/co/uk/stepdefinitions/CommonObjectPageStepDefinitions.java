@@ -34,4 +34,14 @@ public class CommonObjectPageStepDefinitions {
 		CommonObjects.clickLogout();
 		DriverHandler.delay(4);
 	}
+	
+	@Then("^confirmation of  become a tutor modal is displayed")
+	public void verifyConfirmatioinToBecomeATutorIsDisplayed() {
+		CommonObjects.TutorWizardConfirmation.modalMessageIsDisplayed();
+	}
+	
+	@When("^user confirms to become a tutor$")
+	public void userConfirmToBecomeAtutor() {
+		CommonObjects.TutorWizardConfirmation.clickYes();
+	}
 }

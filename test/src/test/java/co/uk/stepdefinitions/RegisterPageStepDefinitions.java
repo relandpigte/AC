@@ -21,13 +21,13 @@ public class RegisterPageStepDefinitions {
 	        String email = data.get(0).get("Email");
 	        String dateOfBirth = data.get(0).get("Date of Birth");
 	        if(!firstname.equals("null")) {
-	        	RegisterPage.enterFirstName(firstname);
+	        	RegisterPage.enterFirstName(firstname.replace("XXX", DriverHandler.timestamp));
 	        }
 	        if(!lastname.equals("null")) {	 
 	        	RegisterPage.enterLastName(lastname);
 	        }
 	        if(!email.equals("null")) {	 
-	        	RegisterPage.enterEmail(email.replace("XXX",DriverHandler.timestamp)+"@gilmatugas.33mail.com");
+	        	RegisterPage.enterEmail(email.replace("XXX",DriverHandler.timestamp)+"@academically.33mail.com");
 	        				        }
 	        if(!dateOfBirth.equals("null")) {	 
 	        	RegisterPage.enterDateOfBirth(dateOfBirth);
@@ -39,7 +39,7 @@ public class RegisterPageStepDefinitions {
 	@When("^user activate account$")
 	public void activateAccount() {
 		DriverHandler.delay(5);
-		String value = GmailReader.getEmailContent();
+		String value = GmailReader.getEmailContent("test.email.academically@gmail.com","Test@12345");
 		 value = TextUtility.getValueByRegex(value, "<p>https://academically(.+?)<p/>").replace("<p>", "").replace("<p/>", "");
 		 DriverHandler.navigateUrl(value);
 		 DriverHandler.delay(10);

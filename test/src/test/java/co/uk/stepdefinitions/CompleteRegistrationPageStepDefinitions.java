@@ -31,7 +31,7 @@ public class CompleteRegistrationPageStepDefinitions {
 	
 	@Then("^email address \"(.*)\" matched$")
 	public void verifyEmailIsMatched(String email) {
-		CompleteRegistrationPage.verifyEmailisMatched(email.replace("XXX", DriverHandler.timestamp)+"@gilmatugas.33mail.com");
+		CompleteRegistrationPage.verifyEmailisMatched(email.replace("XXX", DriverHandler.timestamp)+"@academically.33mail.com");
 		DriverHandler.delay(2);
 	}
 }

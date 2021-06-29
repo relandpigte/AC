@@ -100,4 +100,9 @@ public class HomePageStepDefinitions {
 	public void verifyProjectTableIsDisplayed() {
 		Homepage.MyProject.verifyProjectTableIsDisplayed();
 	}
+	
+	@When("^user wants to become a tutor on the dashboard page$")
+	public void userWantsTobecomeATutorOnTheDashboardPage() {
+		Homepage.ProfileWidget.clickBecomeTutor();
+	}
 }
