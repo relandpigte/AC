@@ -39,9 +39,10 @@ export class AboutYouComponent extends AppComponentBase implements OnInit {
       .subscribe(() => {
         const nextStep = BecomeATutorStep.Education;
         this._tutorWizardService.updateStep(nextStep)
-          .subscribe(() => {
+          .subscribe((result) => {
             this.notify.success(this.l('SavedSuccessfully'));
-            this._becomeATutorService.currentStep = BecomeATutorStep.Education;
+            this._becomeATutorService.currentStep = nextStep;
+            this._becomeATutorService.currentTutorWizardStep = result;
           });
       });
   }

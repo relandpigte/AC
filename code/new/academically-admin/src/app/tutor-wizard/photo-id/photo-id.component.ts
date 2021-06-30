@@ -52,10 +52,10 @@ export class PhotoIdComponent extends AppComponentBase implements OnInit, AfterV
           takeUntil(this.destroyed$),
         )
         .subscribe(() => {
-          this.updateStep();
+          this.updateCurrentStep();
         });
     } else {
-      this.updateStep();
+      this.updateCurrentStep();
     }
   }
 
@@ -79,6 +79,19 @@ export class PhotoIdComponent extends AppComponentBase implements OnInit, AfterV
       });
   }
 
+  private updateCurrentStep(): void {
+    this._tutorWizardService.updateStep(BecomeATutorStep.PhotoId)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+      )
+      .subscribe(() => {
+        this.updateStep();
+      });
+  }
+
   private updateStep(): void {
     const nextStep = BecomeATutorStep.Address;
     this._tutorWizardService.updateStep(nextStep)
@@ -88,9 +101,10 @@ export class PhotoIdComponent extends AppComponentBase implements OnInit, AfterV
           this.isLoading = false;
         }),
       )
-      .subscribe(() => {
+      .subscribe((result) => {
         this.notify.success(this.l('SavedSuccessfully'));
         this._becomeATutorService.currentStep = nextStep;
+        this._becomeATutorService.currentTutorWizardStep = result;
       });
   }
 }

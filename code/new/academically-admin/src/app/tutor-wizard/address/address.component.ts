@@ -144,9 +144,10 @@ export class AddressComponent extends AppComponentBase implements OnInit {
           this.isLoading = false;
         }),
       )
-      .subscribe(() => {
+      .subscribe((result) => {
         this.notify.success(this.l('SavedSuccessfully'));
         this._becomeATutorService.currentStep = nextStep;
+        this._becomeATutorService.currentTutorWizardStep = result;
       });
   }
 }

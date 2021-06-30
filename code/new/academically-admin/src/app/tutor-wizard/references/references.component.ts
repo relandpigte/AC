@@ -58,8 +58,7 @@ export class ReferencesComponent extends PagedListingComponentBase<ReferenceDto>
 
   onNextClick(): void {
     this.isTableLoading = true;
-    const nextStep = BecomeATutorStep.DbsCheck;
-    this._tutorWizardService.updateStep(nextStep)
+    this._tutorWizardService.updateStep(BecomeATutorStep.References)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
@@ -67,8 +66,7 @@ export class ReferencesComponent extends PagedListingComponentBase<ReferenceDto>
         }),
       )
       .subscribe(() => {
-        this.notify.success(this.l('SavedSuccessfully'));
-        this._becomeATutorService.currentStep = nextStep;
+        this.updateNextStep();
       });
   }
 
@@ -117,6 +115,23 @@ export class ReferencesComponent extends PagedListingComponentBase<ReferenceDto>
       .subscribe(() => {
         this.pageNumber = 1;
         this.refresh();
+      });
+  }
+
+  private updateNextStep(): void {
+    this.isTableLoading = true;
+    const nextStep = BecomeATutorStep.DbsCheck;
+    this._tutorWizardService.updateStep(nextStep)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isTableLoading = false;
+        }),
+      )
+      .subscribe((result) => {
+        this.notify.success(this.l('SavedSuccessfully'));
+        this._becomeATutorService.currentStep = nextStep;
+        this._becomeATutorService.currentTutorWizardStep = result;
       });
   }
 }

@@ -28,6 +28,20 @@ export class ServicesOfferedComponent extends AppComponentBase {
 
   onNextClick(): void {
     this.isLoading = true;
+    this._tutorWizardService.updateStep(BecomeATutorStep.ServicesOffered)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+      )
+      .subscribe(() => {
+        this.updateNextStep();
+      });
+  }
+
+  private updateNextStep(): void {
+    this.isLoading = true;
     const nextStep = BecomeATutorStep.ProfilePicture;
     this._tutorWizardService.updateStep(nextStep)
       .pipe(
@@ -36,9 +50,10 @@ export class ServicesOfferedComponent extends AppComponentBase {
           this.isLoading = false;
         }),
       )
-      .subscribe(() => {
+      .subscribe((result) => {
         this.notify.success(this.l('SavedSuccessfully'));
         this._becomeATutorService.currentStep = nextStep;
+        this._becomeATutorService.currentTutorWizardStep = result;
       });
   }
 }

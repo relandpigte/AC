@@ -34,6 +34,20 @@ export class DeclarationComponent extends AppComponentBase {
 
   onNextClick(): void {
     this.isLoading = true;
+    this._tutorWizardService.updateStep(BecomeATutorStep.Declaration)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+      )
+      .subscribe(() => {
+        this.updateNext();
+      });
+  }
+
+  private updateNext(): void {
+    this.isLoading = true;
     const nextStep = BecomeATutorStep.CompleteApplication;
     this._tutorWizardService.updateStep(nextStep)
       .pipe(
@@ -42,9 +56,10 @@ export class DeclarationComponent extends AppComponentBase {
           this.isLoading = false;
         }),
       )
-      .subscribe(() => {
+      .subscribe((result) => {
         this.notify.success(this.l('SavedSuccessfully'));
         this._becomeATutorService.currentStep = nextStep;
+        this._becomeATutorService.currentTutorWizardStep = result;
       });
   }
 

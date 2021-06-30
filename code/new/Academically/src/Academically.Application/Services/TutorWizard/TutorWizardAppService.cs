@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization;
@@ -15,29 +16,64 @@ namespace Academically.Services.TutorWizard
     public class TutorWizardAppService : AcademicallyAppServiceBase, ITutorWizardAppService
     {
         private readonly IRepository<TutorVerification, Guid> _tutorVerificationsRepository;
+        private readonly IRepository<TutorVerificationStep, Guid> _tutorVerificationStepsRepository;
 
         public TutorWizardAppService(
-            IRepository<TutorVerification, Guid> tutorVerificationsRepository
+            IRepository<TutorVerification, Guid> tutorVerificationsRepository,
+            IRepository<TutorVerificationStep, Guid> tutorVerificationStepsRepository
             )
         {
             _tutorVerificationsRepository = tutorVerificationsRepository;
+            _tutorVerificationStepsRepository = tutorVerificationStepsRepository;
         }
 
-        public async Task<BecomeATutorStep> GetCurrentStep()
+        public async Task<TutorVerificationStepDto> GetCurrentStep()
         {
             var tutorVerification = await GetCurrent();
+            var currentStep = new TutorVerificationStep();
 
             if (tutorVerification == null)
             {
+                currentStep = new TutorVerificationStep()
+                {
+                    Status = TutorVerificationStepStatus.Incomplete,
+                    Step = BecomeATutorStep.AboutYou,
+                };
+
                 tutorVerification = new TutorVerification()
                 {
                     CurrentStep = BecomeATutorStep.AboutYou,
                     Status = TutorVerificationStatus.Pending,
+                    TutorVerificationSteps = new List<TutorVerificationStep>
+                    {
+                        currentStep
+                    }
                 };
                 await _tutorVerificationsRepository.InsertAsync(tutorVerification);
             }
+            else
+            {
+                currentStep = tutorVerification.TutorVerificationSteps.FirstOrDefault(e => e.Step == tutorVerification.CurrentStep);
+            }
 
-            return tutorVerification.CurrentStep;
+            return ObjectMapper.Map<TutorVerificationStepDto>(currentStep);
+        }
+
+        public async Task<TutorVerificationDto> GetTutorVerificationAsync()
+        {
+            var tutorVerification = await GetCurrent();
+
+            if (!tutorVerification.TutorVerificationSteps.Any())
+            {
+                var tutorVerificationStep = new TutorVerificationStep()
+                {
+                    Step = BecomeATutorStep.AboutYou,
+                    Status = TutorVerificationStepStatus.Incomplete
+                };
+                tutorVerification.TutorVerificationSteps.Add(tutorVerificationStep);
+            }
+
+            return ObjectMapper.Map<TutorVerificationDto>(tutorVerification);
         }
 
         [AbpAuthorize(PermissionNames.Pages_TutorWizard_AboutYou)]
@@ -54,19 +90,40 @@ namespace Academically.Services.TutorWizard
             var user = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
             ObjectMapper.Map(input, user);
             await UserManager.UpdateAsync(user);
+
+            await UpdateCurrentStepStatus();
         }
 
-        public async Task UpdateStep(BecomeATutorStep step)
+        public async Task<TutorVerificationStepDto> UpdateStep(BecomeATutorStep step)
         {
             var tutorVerification = await GetCurrent();
-            tutorVerification.CurrentStep = step;
+            var tutorVerificationStep = tutorVerification.TutorVerificationSteps.FirstOrDefault(e => e.Step == step);
 
-            if (step == BecomeATutorStep.CompleteApplication)
+            if (tutorVerificationStep == null)
             {
-                tutorVerification.Status = TutorVerificationStatus.Completed;
+                tutorVerificationStep = new TutorVerificationStep()
+                {
+                    Step = step,
+                    Status = step == BecomeATutorStep.CompleteApplication
+                        ? TutorVerificationStepStatus.Saved : TutorVerificationStepStatus.Incomplete,
+                };
+                tutorVerification.TutorVerificationSteps.Add(tutorVerificationStep);
+            }
+            else
+            {
+                tutorVerificationStep.Status = TutorVerificationStepStatus.Saved;
+            }
+
+            if (tutorVerificationStep.Step > tutorVerification.CurrentStep)
+            {
+                tutorVerification.CurrentStep = step;
+                tutorVerification.Status = step == BecomeATutorStep.CompleteApplication
+                    ? TutorVerificationStatus.Completed : tutorVerification.Status;
             }
 
             await _tutorVerificationsRepository.UpdateAsync(tutorVerification);
+
+            return ObjectMapper.Map<TutorVerificationStepDto>(tutorVerificationStep);
         }
 
         public async Task UpdateAddress(UpdateAddressDto input)
@@ -74,13 +131,25 @@ namespace Academically.Services.TutorWizard
             var user = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
             ObjectMapper.Map(input, user);
             await UserManager.UpdateAsync(user);
+
+            await UpdateCurrentStepStatus();
         }
 
         private async Task<TutorVerification> GetCurrent()
         {
             return await _tutorVerificationsRepository
                 .GetAll()
+                .Include(e => e.TutorVerificationSteps)
                 .FirstOrDefaultAsync(e => e.CreatorUserId == AbpSession.UserId.Value);
+        }
+
+        private async Task UpdateCurrentStepStatus(TutorVerificationStepStatus status = TutorVerificationStepStatus.Saved)
+        {
+            var tutorVerification = await GetCurrent();
+            var step = tutorVerification.TutorVerificationSteps.FirstOrDefault(e => e.Step == tutorVerification.CurrentStep);
+
+            step.Status = status;
+            await _tutorVerificationStepsRepository.UpdateAsync(step);
         }
     }
 }

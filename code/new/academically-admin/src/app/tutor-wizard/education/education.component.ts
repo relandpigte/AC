@@ -24,8 +24,7 @@ export class EducationComponent extends AppComponentBase {
 
   onNextClick(): void {
     this.isLoading = true;
-    const nextStep = BecomeATutorStep.Research;
-    this._tutorWizardService.updateStep(nextStep)
+    this._tutorWizardService.updateStep(BecomeATutorStep.Education)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
@@ -33,8 +32,24 @@ export class EducationComponent extends AppComponentBase {
         }),
       )
       .subscribe(() => {
-        this.notify.success(this.l('SavedSuccessfully'));
-        this._becomeATutorService.currentStep = nextStep;
+        this.updateStep();
       });
+  }
+
+  private updateStep(): void {
+    this.isLoading = true;
+    const nextStep = BecomeATutorStep.Research;
+    this._tutorWizardService.updateStep(nextStep)
+    .pipe(
+      takeUntil(this.destroyed$),
+      finalize(() => {
+        this.isLoading = false;
+      }),
+    )
+    .subscribe((result) => {
+      this.notify.success(this.l('SavedSuccessfully'));
+      this._becomeATutorService.currentStep = result.step;
+      this._becomeATutorService.currentTutorWizardStep = result;
+    });
   }
 }

@@ -28,12 +28,12 @@ export class PrivacyPolicyComponent extends AppComponentBase implements OnInit {
   }
 
   onPrint(): void {
-    var printWindow = window.open('', 'PRINT', 'height=1000,width=1300');
+    const printWindow = window.open('', 'PRINT', 'height=1000,width=1300');
 
     printWindow.document.write('<html><head><title>' + document.title + '</title>');
     printWindow.document.write('</head><body >');
     printWindow.document.write('<h1>' + document.title + '</h1>');
-    printWindow.document.write(document.getElementById("print-section").innerHTML);
+    printWindow.document.write(document.getElementById('print-section').innerHTML);
     printWindow.document.write('</body></html>');
 
     printWindow.document.close(); // necessary for IE >= 10
@@ -56,7 +56,21 @@ export class PrivacyPolicyComponent extends AppComponentBase implements OnInit {
         }),
       )
       .subscribe(() => {
-        this.nextStep()
+        this.updateCurrentStep();
+      });
+  }
+
+  private updateCurrentStep(): void {
+    this.isLoading = true;
+    this._tutorWizardService.updateStep(BecomeATutorStep.PrivacyPolicy)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+      )
+      .subscribe(() => {
+        this.nextStep();
       });
   }
 
@@ -70,9 +84,10 @@ export class PrivacyPolicyComponent extends AppComponentBase implements OnInit {
           this.isLoading = false;
         }),
       )
-      .subscribe(() => {
+      .subscribe((result) => {
         this.notify.success(this.l('SavedSuccessfully'));
         this._becomeATutorService.currentStep = nextStep;
+        this._becomeATutorService.currentTutorWizardStep = result;
       });
   }
 

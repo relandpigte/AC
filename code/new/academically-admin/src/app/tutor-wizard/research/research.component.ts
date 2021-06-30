@@ -30,8 +30,7 @@ export class ResearchComponent extends AppComponentBase {
 
   onNextClick(): void {
     this.isLoading = true;
-    const nextStep = BecomeATutorStep.Languages;
-    this._tutorWizardService.updateStep(nextStep)
+    this._tutorWizardService.updateStep(BecomeATutorStep.Research)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
@@ -39,9 +38,25 @@ export class ResearchComponent extends AppComponentBase {
         }),
       )
       .subscribe(() => {
-        this.notify.success(this.l('SavedSuccessfully'));
-        this._becomeATutorService.currentStep = nextStep;
+        this.updateNextStep();
       });
+  }
+
+  private updateNextStep(): void {
+    this.isLoading = true;
+    const nextStep = BecomeATutorStep.Languages;
+    this._tutorWizardService.updateStep(nextStep)
+    .pipe(
+      takeUntil(this.destroyed$),
+      finalize(() => {
+        this.isLoading = false;
+      }),
+    )
+    .subscribe((result) => {
+      this.notify.success(this.l('SavedSuccessfully'));
+      this._becomeATutorService.currentStep = nextStep;
+      this._becomeATutorService.currentTutorWizardStep = result;
+    });
   }
 
 }

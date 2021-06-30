@@ -32,6 +32,20 @@ export class LanguagesComponent extends AppComponentBase {
 
   onNextClick(): void {
     this.isLoading = true;
+    this._tutorWizardService.updateStep(BecomeATutorStep.Languages)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+      )
+      .subscribe(() => {
+        this.updateNextStep();
+      });
+  }
+
+  private updateNextStep(): void {
+    this.isLoading = true;
     const nextStep = BecomeATutorStep.ServicesOffered;
     this._tutorWizardService.updateStep(nextStep)
       .pipe(
@@ -40,9 +54,10 @@ export class LanguagesComponent extends AppComponentBase {
           this.isLoading = false;
         }),
       )
-      .subscribe(() => {
+      .subscribe((result) => {
         this.notify.success(this.l('SavedSuccessfully'));
         this._becomeATutorService.currentStep = nextStep;
+        this._becomeATutorService.currentTutorWizardStep = result;
       });
   }
 }

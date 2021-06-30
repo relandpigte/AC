@@ -15,25 +15,25 @@
     <div class="col-md-3">
       <div class="card">
         <div class="card-header">
-          {{ 'Profile' | localize }}
+          {{ 'Profile' | localize }} {{ steps.length }}
         </div>
         <div class="card-body">
           <div class="bs-vertical-wizard">
             <ul>
               <li app-tutor-wizard-step title="AboutYou" link="/app/tutor-wizard/about-you"
-                [step]="BecomeATutorStep.AboutYou" [currentStep]="currentStep">
+                [step]="BecomeATutorStep.AboutYou" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.AboutYou)" >
               </li>
               <li app-tutor-wizard-step title="Education" link="/app/tutor-wizard/education"
-                [step]="BecomeATutorStep.Education" [currentStep]="currentStep">
+                [step]="BecomeATutorStep.Education" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.Education)">
               </li>
               <li app-tutor-wizard-step title="Research" link="/app/tutor-wizard/research"
-                [step]="BecomeATutorStep.Research" [currentStep]="currentStep">
+                [step]="BecomeATutorStep.Research" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.Research)">
               </li>
               <li app-tutor-wizard-step title="Languages" link="/app/tutor-wizard/languages"
-                [step]="BecomeATutorStep.Languages" [currentStep]="currentStep">
+                [step]="BecomeATutorStep.Languages" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.Languages)">
               </li>
               <li app-tutor-wizard-step title="ServicesOffered" link="/app/tutor-wizard/services-offered"
-                [step]="BecomeATutorStep.ServicesOffered" [currentStep]="currentStep">
+                [step]="BecomeATutorStep.ServicesOffered" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.ServicesOffered)">
               </li>
             </ul>
           </div>
@@ -47,22 +47,22 @@
           <div class="bs-vertical-wizard">
             <ul>
               <li app-tutor-wizard-step title="ProfilePicture" link="/app/tutor-wizard/profile-picture"
-                [step]="BecomeATutorStep.ProfilePicture" [currentStep]="currentStep">
+                [step]="BecomeATutorStep.ProfilePicture" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.ProfilePicture)">
               </li>
               <li app-tutor-wizard-step title="PhotoId" link="/app/tutor-wizard/photo-id"
-                [step]="BecomeATutorStep.PhotoId" [currentStep]="currentStep">
+                [step]="BecomeATutorStep.PhotoId" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.PhotoId)">
               </li>
               <li app-tutor-wizard-step title="Address" link="/app/tutor-wizard/address"
-                [step]="BecomeATutorStep.Address" [currentStep]="currentStep">
+                [step]="BecomeATutorStep.Address" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.Address)">
               </li>
               <li app-tutor-wizard-step title="ContactNumber" link="/app/tutor-wizard/contact-number"
-                [step]="BecomeATutorStep.ContactNumber" [currentStep]="currentStep">
+                [step]="BecomeATutorStep.ContactNumber" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.ContactNumber)">
               </li>
               <li app-tutor-wizard-step title="References" link="/app/tutor-wizard/references"
-                [step]="BecomeATutorStep.References" [currentStep]="currentStep">
+                [step]="BecomeATutorStep.References" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.References)">
               </li>
               <li app-tutor-wizard-step title="DbsCheck" link="/app/tutor-wizard/dbs-check"
-                [step]="BecomeATutorStep.DbsCheck" [currentStep]="currentStep">
+                [step]="BecomeATutorStep.DbsCheck" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.DbsCheck)">
               </li>
             </ul>
           </div>
@@ -76,13 +76,13 @@
           <div class="bs-vertical-wizard">
             <ul>
               <li app-tutor-wizard-step title="TermsOfUse" link="/app/tutor-wizard/terms-of-use"
-                [step]="BecomeATutorStep.TermsOfUse" [currentStep]="currentStep">
+                [step]="BecomeATutorStep.TermsOfUse" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.TermsOfUse)">
               </li>
               <li app-tutor-wizard-step title="PrivacyPolicy" link="/app/tutor-wizard/privacy-policy"
-                [step]="BecomeATutorStep.PrivacyPolicy" [currentStep]="currentStep">
+                [step]="BecomeATutorStep.PrivacyPolicy" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.PrivacyPolicy)">
               </li>
               <li app-tutor-wizard-step title="Declaration" link="/app/tutor-wizard/declaration"
-                [step]="BecomeATutorStep.Declaration" [currentStep]="currentStep">
+                [step]="BecomeATutorStep.Declaration" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.Declaration)">
               </li>
             </ul>
           </div>

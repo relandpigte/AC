@@ -176,6 +176,19 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
   }
 
   private updateStep(): void {
+    this._tutorWizardService.updateStep(BecomeATutorStep.ContactNumber)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+      )
+      .subscribe(() => {
+        this.updateNextStep();
+      });
+  }
+
+  private updateNextStep(): void {
     const nextStep = BecomeATutorStep.References;
     this._tutorWizardService.updateStep(nextStep)
       .pipe(
@@ -184,9 +197,10 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
           this.isLoading = false;
         }),
       )
-      .subscribe(() => {
+      .subscribe((result) => {
         this.notify.success(this.l('SavedSuccessfully'));
         this._becomeATutorService.currentStep = nextStep;
+        this._becomeATutorService.currentTutorWizardStep = result;
       });
   }
 }

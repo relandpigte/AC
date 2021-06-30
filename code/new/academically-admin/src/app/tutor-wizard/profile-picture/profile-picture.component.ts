@@ -41,6 +41,20 @@ export class ProfilePictureComponent extends AppComponentBase implements OnInit 
 
   onNextClick(): void {
     this.isLoading = true;
+    this._tutorWizardService.updateStep(BecomeATutorStep.ProfilePicture)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+      )
+      .subscribe(() => {
+        this.updateNextStep();
+      });
+  }
+
+  private updateNextStep(): void {
+    this.isLoading = true;
     const nextStep = BecomeATutorStep.PhotoId;
     this._tutorWizardService.updateStep(nextStep)
       .pipe(
@@ -49,9 +63,10 @@ export class ProfilePictureComponent extends AppComponentBase implements OnInit 
           this.isLoading = false;
         }),
       )
-      .subscribe(() => {
+      .subscribe((result) => {
         this.notify.success(this.l('SavedSuccessfully'));
         this._becomeATutorService.currentStep = nextStep;
+        this._becomeATutorService.currentTutorWizardStep = result;
       });
   }
 }

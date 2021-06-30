@@ -62,6 +62,20 @@ export class TermsOfUseComponent extends AppComponentBase implements OnInit {
 
   private nextStep(): void {
     this.isLoading = true;
+    this._tutorWizardService.updateStep(BecomeATutorStep.TermsOfUse)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+      )
+      .subscribe(() => {
+        this.updateNextStep();
+      });
+  }
+
+  private updateNextStep(): void {
+    this.isLoading = true;
     const nextStep = BecomeATutorStep.PrivacyPolicy;
     this._tutorWizardService.updateStep(nextStep)
       .pipe(
@@ -70,9 +84,10 @@ export class TermsOfUseComponent extends AppComponentBase implements OnInit {
           this.isLoading = false;
         }),
       )
-      .subscribe(() => {
+      .subscribe((result) => {
         this.notify.success(this.l('SavedSuccessfully'));
         this._becomeATutorService.currentStep = nextStep;
+        this._becomeATutorService.currentTutorWizardStep = result;
       });
   }
 
