@@ -11,6 +11,11 @@ public class TutorWizardPageEducation {
 	
 	private static Button addEducationBtn = new Button("Add education",By.xpath("//app-educations//a[contains(text(),'Add')]")); 
 	private static Button removeEducation = new Button("Remove education",By.xpath("//app-education//span[contains(@class,'trash')]"));
+	private static Button next = new Button("Next",By.xpath("//button[contains(text(),'Next')]"));
+	
+	public static void clickNext() {
+		next.click();
+	}
 	
 	public static void clickRemoveEducation() {
 		removeEducation.click();
@@ -118,6 +123,42 @@ public class TutorWizardPageEducation {
 		
 		public static void clickSave() {
 			saveBtn.click();
+		}
+		
+		public static class CourseModal {
+			
+			private static Element header(String header) {
+				return new Element(header+" Modal",By.xpath("//app-create-edit-education-level//h4[contains(text(),'"+header+"')]"));
+			}
+			private static Element coursetitleDropdown = new Element("Course title dropdown",By.xpath("//span[@id='select2-EducationLevel-container']"));
+			private static Element selectCoursetitleDropdown(String title) {
+				return new Element(title,By.xpath("//ul[@id='select2-EducationLevel-results']//li[contains(text(),'"+title+"')]"));
+			}
+			private static TextBox academicLevelTextBox = new TextBox("Academic level",By.xpath("//input[@id='Degree']"));
+			private static TextBox gradeTextbox = new TextBox("Grade",By.xpath("//input[@id='Grade']"));
+			private static Button addBtn = new Button("Add",By.xpath("//app-create-edit-education-level//button[@type='submit']"));
+			
+			public static void verifyHeader(String headerTitle) {
+				header(headerTitle).verifyDisplayed();
+			}
+			
+			public static void selectCourseTitle(String course) {
+				coursetitleDropdown.click();
+				selectCoursetitleDropdown(course).click();
+			}
+			
+			public static void enterAcademicLevel(String academicLevel) {
+				academicLevelTextBox.setText(academicLevel);
+			}
+			
+			public static void enterGrade(String grade) {
+				gradeTextbox.setText(grade);
+			}
+			
+			public static void clickAddCourse() {
+				addBtn.click();
+			}
+			
 		}
 	}
 }

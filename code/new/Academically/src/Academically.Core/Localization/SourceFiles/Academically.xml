@@ -1065,6 +1065,7 @@
     <text name="BrowseTutors">Browse tutors</text>
     <text name="Hired">Hired</text>
     <text name="DateCreated">Date created</text>
+    <text name="ProposalAlreadySent">Proposal already sent</text>
     <text name="TutorInterview15min">Tutor interview (15 mins)</text>
     <text name="Total">Total</text>
     <text name="Pay">Pay</text>

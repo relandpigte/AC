@@ -103,6 +103,7 @@ public class HomePageStepDefinitions {
 	
 	@When("^user wants to become a tutor on the dashboard page$")
 	public void userWantsTobecomeATutorOnTheDashboardPage() {
+		DriverHandler.delay(5);
 		Homepage.ProfileWidget.clickBecomeTutor();
 	}
 }

@@ -96,8 +96,8 @@
       </div>
     </div>
   </div>
-  <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading" [saveLabel]="l('Confirm')"
-    [saveDisabled]="!createProjectOfferForm.form.valid || isLoading || !hasValidValues()"
+  <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading" [saveLabel]="project.canSubmitOffer ? l('Confirm') : l('ProposalAlreadySent')"
+    [saveDisabled]="!createProjectOfferForm.form.valid || isLoading || !hasValidValues() || !project.canSubmitOffer"
     (onCancelClick)="onCloseClick()">
   </abp-modal-footer>
 

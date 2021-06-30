@@ -11373,6 +11373,7 @@ export class ProjectDto implements IProjectDto {
     serviceLevel3: string | undefined;
     serviceNameLevel3: string | undefined;
     creatorUser: UserDto;
+    canSubmitOffer: boolean;
 
     constructor(data?: IProjectDto) {
         if (data) {
@@ -11396,6 +11397,7 @@ export class ProjectDto implements IProjectDto {
             this.serviceLevel3 = _data["serviceLevel3"];
             this.serviceNameLevel3 = _data["serviceNameLevel3"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.canSubmitOffer = _data["canSubmitOffer"];
         }
     }
 
@@ -11419,6 +11421,7 @@ export class ProjectDto implements IProjectDto {
         data["serviceLevel3"] = this.serviceLevel3;
         data["serviceNameLevel3"] = this.serviceNameLevel3;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["canSubmitOffer"] = this.canSubmitOffer;
         return data; 
     }
 
@@ -11442,6 +11445,7 @@ export interface IProjectDto {
     serviceLevel3: string | undefined;
     serviceNameLevel3: string | undefined;
     creatorUser: UserDto;
+    canSubmitOffer: boolean;
 }
 
 export class ProjectDtoPagedResultDto implements IProjectDtoPagedResultDto {
