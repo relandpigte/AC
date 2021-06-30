@@ -68,6 +68,7 @@ namespace Academically.Services.Projects
                 .Include(p => p.CreatorUser)
                     .ThenInclude(u => u.UserEducations)
                 .Include(p => p.CreatorUser.ProfilePictureDocument)
+                .Include(p => p.Offers)
                 .Include(p => p.CreatorUser.CoverPhotoDocument)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
@@ -77,6 +78,7 @@ namespace Academically.Services.Projects
             var projectDto = ObjectMapper.Map<ProjectDto>(project);
 
             projectDto.CreatorUser.RoleNames = await _userManager.GetRolesAsync(project.CreatorUser);
+            projectDto.CanSubmitOffer = !project.Offers.Any(p => p.CreatorUserId == AbpSession.UserId.Value);
 
             if (project.CreatorUser.ProfilePictureDocumentId.HasValue)
                 projectDto.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(project.CreatorUser.ProfilePictureDocumentId.Value);

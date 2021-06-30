@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
@@ -21,5 +22,7 @@ namespace Academically.Domain.Entities
 
         [ForeignKey("CreatorUserId")]
         public User CreatorUser { get; set; }
+
+        public virtual ICollection<ProjectOffer> Offers { get; set; }
     }
 }

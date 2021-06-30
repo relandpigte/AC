@@ -22,5 +22,7 @@ namespace Academically.Services.Projects.Dto
         public string ServiceNameLevel3 { get; set; }
 
         public UserDto CreatorUser { get; set; }
+
+        public bool CanSubmitOffer { get; set; } = true;
     }
 }
