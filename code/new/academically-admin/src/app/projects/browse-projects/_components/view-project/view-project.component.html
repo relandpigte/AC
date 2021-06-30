@@ -76,8 +76,8 @@
 	  <button type="button" class="btn btn-white" (click)="onCloseClick()">
 		{{ 'Close' | localize }}
 	  </button>
-      <button type="button" class="btn btn-primary ml-auto" (click)="onMakeAnOfferClick()">
-		{{ 'MakeAnOffer' | localize }}
+    <button type="button" class="btn btn-primary ml-auto" (click)="onMakeAnOfferClick()" [disabled]="isLoading || !project.canSubmitOffer">
+		{{ (project.canSubmitOffer ? 'MakeAnOffer' : 'ProposalAlreadySent') | localize }}
 	  </button>
 	</div>
 </div>

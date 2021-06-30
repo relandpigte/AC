@@ -43,6 +43,10 @@ export class ViewProjectComponent extends AppComponentBase implements OnInit {
   }
 
   onMakeAnOfferClick(): void {
+    if (!this.project.canSubmitOffer || this.isLoading) {
+      return;
+    }
+
     const modalSettings = this.defaultModalSettings;
     modalSettings.initialState = {
       project: this.project
