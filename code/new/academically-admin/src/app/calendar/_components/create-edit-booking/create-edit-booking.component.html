@@ -68,7 +68,7 @@
                 </div>
               </div>
               <timepicker [(ngModel)]="startTime" [disabled]="isFormViewOnly" id="startTime" name="startTime"
-                #startTimeModel="ngModel" #startTimeEl [minuteStep]="1" (ngModelChange)="onStartTimeChange()"
+                #startTimeModel="ngModel" #startTimeEl [minuteStep]="30" (ngModelChange)="onStartTimeChange()"
                 class="datetimepicker" required>
               </timepicker>
             </div>
@@ -86,11 +86,10 @@
                 </div>
               </div>
               <timepicker [(ngModel)]="endTime" [disabled]="isFormViewOnly" id="endTime" name="endTime"
-                #endTimeModel="ngModel" #endTimeEl [minuteStep]="1" (ngModelChange)="onEndTimeChange()"
+                #endTimeModel="ngModel" #endTimeEl [minuteStep]="30" (ngModelChange)="onEndTimeChange()"
                 class="datetimepicker" required>
               </timepicker>
             </div>
-
 
             <div class="form-group col-12 mb-2">
               <label class="col-form-label">{{ 'Duration' | localize}}: <b>{{ durationText }}</b></label>
@@ -129,9 +128,9 @@
 
       </div>
     </div>
-    <abp-modal-footer *ngIf="!model.id" [isLoading]="isLoading" [saveLabel]="'BookSession' | localize"
-      [cancelDisabled]="isLoading" [saveDisabled]="!form.form.valid || isLoading || duration <= 0"
-      (onCancelClick)="onCloseClick()">
+    <abp-modal-footer *ngIf="!model.id" [isLoading]="isLoading"
+      [saveLabel]="(isFromViewOffer ? 'Add' : 'BookSession') | localize" [cancelDisabled]="isLoading"
+      [saveDisabled]="!form.form.valid || isLoading || duration <= 0" (onCancelClick)="onCloseClick()">
     </abp-modal-footer>
     <ng-container *ngIf="model.id">
 
@@ -139,8 +138,9 @@
         <button type="button" class="btn btn-white" (click)="onCloseClick()">
           {{ 'Close' | localize }}
         </button>
-        <div *ngIf="(!lastRescheduleComment && model.creatorUserId !== appSession.userId)
-          || (lastRescheduleComment && lastRescheduleComment.creatorUser.id !== appSession.userId)">
+        <div *ngIf="((!lastRescheduleComment && model.creatorUserId !== appSession.userId)
+          || (lastRescheduleComment && lastRescheduleComment.creatorUser.id !== appSession.userId))
+          && model.type !== CalendarEventType.ConfirmedBooking">
           <button type="button" class="btn btn-success mr-2"
             (click)="detailsTabButton.nativeElement.click(); isFormViewOnly = false">
             {{ 'ProposeNewTime' | localize }}
@@ -149,7 +149,7 @@
             (click)="detailsTabButton.nativeElement.click(); onDeclineClick()">
             {{ 'Decline' | localize }}
           </button>
-          <button type="button" class="btn btn-primary" (click)="onSubmitClick()">
+          <button [disabled]="isLoading" type="button" class="btn btn-primary" (click)="onSubmitClick()">
             <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             {{ (isLoading ? 'SavingWithDots' : 'Accept') | localize }}
           </button>

@@ -1,6 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="BookingConfirmedEmailSubject">Academically - Booking Confirmed</text>
+    <text name="BookingRequestEmailSubject">Academically - New Booking Request</text>
+    <text name="TheBookingRequestWasDeclined">The booking request was declined.</text>
+    <text name="TheBookingRequestWasRescheduled">The booking request was rescheduled.</text>
+    <text name="TheBookingRequestWasAccepted">The booking request was accepted.</text>
+    <text name="TheBookingRequestWasCreated">The booking request was created.</text>
     <text name="NoProjectOfferBookingDomainErrorMessage">There was no offer made by {0} for {1}. Please select a tutur that has submitted an offer for this project.</text>
     <text name="BookingFailed">Booking Failed</text>
     <text name="Decline">Decline</text>
@@ -1049,11 +1055,23 @@
     <text name="BrowseTutors">Browse tutors</text>
     <text name="Hired">Hired</text>
     <text name="DateCreated">Date created</text>
+    <text name="ProposalAlreadySent">Proposal already sent</text>
     <text name="TutorInterview15min">Tutor interview (15 mins)</text>
     <text name="Total">Total</text>
     <text name="Pay">Pay</text>
     <text name="Hr">hr</text>
     <text name="Hrs">hrs</text>
     <text name="PaymentMethods">Payment methods</text>
+    <text name="TermsAndCoditionsMessageLine1">
+        By accepting a session, under our terms and coditions, you are obliged to attend it unless you rearrange it at least 24 hours before the session is due to start, otherwise its non-refundable.
+    </text>
+    <text name="TermsAndCoditionsMessageLine2">Please indicate that you accept our terms and conditions by toggling the switch to the right.</text>
+    <text name="TermsAndCoditionsMessageLine3">You can view our Terms &amp; Conditions</text>
+    <text name="Paying">Paying</text>
+    <text name="TutorName">Tutor name</text>
+    <text name="NextSession">Next session</text>
+    <text name="Completion">Completion</text>
+    <text name="AddSession">Add Session</text>
+    <text name="EditSession">Edit Session</text>
   </texts>
 </localizationDictionary>

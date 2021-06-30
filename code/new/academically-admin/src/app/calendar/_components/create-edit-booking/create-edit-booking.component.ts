@@ -1,6 +1,7 @@
-import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { CalendarEventDto, CalendarEventRecurrence, CalendarEventsServiceProxy, CalendarEventType, ProjectDto, RescheduleCalendarEventDto, RescheduleCommentDto } from '@shared/service-proxies/service-proxies';
+import * as _ from 'lodash';
 import * as moment from 'moment';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -14,6 +15,7 @@ import { takeUntil, finalize } from 'rxjs/operators';
 export class CreateEditBookingComponent extends AppComponentBase implements OnInit {
   @Input() model: CalendarEventDto = new CalendarEventDto();
   @Output() modelSaved = new EventEmitter();
+  @Output() modelAdded = new EventEmitter();
   @ViewChild('detailsTabButton') detailsTabButton: ElementRef<HTMLElement>;
 
   projects: ProjectDto[] = [];
@@ -27,8 +29,11 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
   isDecliningABooking = false;
   comments = '';
   datePickerConfig: BsDatepickerConfig;
+  autoAccept = false;
+  isFromViewOffer = false;
 
   CalendarEventRecurrence = CalendarEventRecurrence;
+  CalendarEventType = CalendarEventType;
 
   constructor(
     injector: Injector,
@@ -48,6 +53,12 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
   }
 
   get durationText(): string {
+    if (!this.duration || this.duration <= 0) {
+      return '00:00';
+    }
+    if (this.duration > 120) {
+      return '02:00';
+    }
     return this.formatDuration(this.duration);
   }
 
@@ -65,6 +76,9 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
         if (this.model.rescheduleComments && this.model.rescheduleComments.length > 0) {
           this.lastRescheduleComment = this.model.rescheduleComments[this.model.rescheduleComments.length - 1];
         }
+        if (this.autoAccept) {
+          this.acceptEvent();
+        }
       }
       this.tempStartTime = this.startTime;
       this.tempEndTime = this.endTime;
@@ -76,6 +90,13 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
     this.model.startTime = this.convertDateToMoment(this.startTime);
     this.model.endTime = this.convertDateToMoment(this.endTime);
     this.model.type = CalendarEventType.BookingRequest;
+
+    if (this.isFromViewOffer) {
+      this.modelAdded.emit(this.model);
+      this._modal.hide();
+      return;
+    }
+
     if (!this.model.id) {
       this._calendarEventsService.create(this.model)
         .pipe(
@@ -85,7 +106,7 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
           }),
         )
         .subscribe(() => {
-          this.notify.success(this.l('SavedSuccessfully'));
+          this.notify.success(this.l('TheBookingRequestWasCreated'));
           this.modelSaved.emit();
           this._modal.hide();
         });
@@ -96,7 +117,7 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
         rescheduleModel.oldStartTime = this.convertDateToMoment(this.tempStartTime);
         rescheduleModel.oldEndTime = this.convertDateToMoment(this.tempEndTime);
         rescheduleModel.comments = this.comments;
-        this._calendarEventsService.declineOffer(rescheduleModel)
+        this._calendarEventsService.decline(rescheduleModel)
           .pipe(
             takeUntil(this.destroyed$),
             finalize(() => {
@@ -104,7 +125,7 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
             }),
           )
           .subscribe(() => {
-            this.notify.success(this.l('SavedSuccessfully'));
+            this.notify.success(this.l('TheBookingRequestWasDeclined'));
             this.modelSaved.emit();
             this._modal.hide();
           });
@@ -122,7 +143,7 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
             }),
           )
           .subscribe(() => {
-            this.notify.success(this.l('SavedSuccessfully'));
+            this.notify.success(this.l('TheBookingRequestWasRescheduled'));
             this.modelSaved.emit();
             this._modal.hide();
           });
@@ -131,19 +152,7 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
   }
 
   onSubmitClick(): void {
-    this.isLoading = true;
-    this._calendarEventsService.acceptOffer(this.model.id)
-      .pipe(
-        takeUntil(this.destroyed$),
-        finalize(() => {
-          this.isLoading = false;
-        }),
-      )
-      .subscribe(() => {
-        this.notify.success(this.l('SavedSuccessfully'));
-        this.modelSaved.emit();
-        this._modal.hide();
-      });
+    this.acceptEvent();
   }
 
   onDeclineClick(): void {
@@ -162,9 +171,15 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
   onStartTimeChange(): void {
     if (this.startTime && this.startTime > this.endTime) {
       this.endTime = this.startTime;
-    } else if (this.durationText.length > 5) {
+    } else if (_.isNaN(this.duration)) {
       setTimeout(() => {
         this.startTime = this.tempStartTime;
+      });
+    } else if (this.duration > 120) {
+      setTimeout(() => {
+        const temp = _.cloneDeep(this.endTime);
+        temp.setMinutes(temp.getMinutes() - (this.duration - 120));
+        this.endTime = temp;
       });
     }
   }
@@ -172,9 +187,15 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
   onEndTimeChange(): void {
     if (this.endTime && this.endTime < this.startTime) {
       this.startTime = this.endTime;
-    } else if (this.durationText.length > 5) {
+    } else if (_.isNaN(this.duration)) {
       setTimeout(() => {
         this.endTime = this.tempEndTime;
+      });
+    } else if (this.duration > 120) {
+      setTimeout(() => {
+        const temp = _.cloneDeep(this.startTime);
+        temp.setMinutes(temp.getMinutes() + (this.duration - 120));
+        this.startTime = temp;
       });
     }
   }
@@ -190,6 +211,25 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
       )
       .subscribe(projects => {
         this.projects = projects;
+      });
+  }
+
+  private acceptEvent(): void {
+    this.isLoading = true;
+    this._calendarEventsService.accept(this.model.id, this.model.tutorId)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+          if (this.autoAccept) {
+            this.autoAccept = false;
+          }
+        }),
+      )
+      .subscribe(() => {
+        this.notify.success(this.l('TheBookingRequestWasAccepted'));
+        this.modelSaved.emit();
+        this._modal.hide();
       });
   }
 }

@@ -60,6 +60,13 @@ import { ProjectDetailsHeaderComponent } from './_components/project-details-hea
                 (m) => m.ProjectProposalsModule,
               ),
           },
+          {
+            path: 'hired',
+            loadChildren: () =>
+              import('@app/projects/hired/hired.module').then(
+                (m) => m.HiredModule,
+              ),
+          },
         ]
       }
     ]),

@@ -126,6 +126,7 @@
         public const string Pages_Projects_Offer = "Pages.Projects.Offer";
         public const string Pages_Projects_OfferHistory = "Pages.Projects.OfferHistory";
         public const string Pages_Projects_Proposals = "Pages.Projects.Proposals";
+        public const string Pages_Projects_Hired = "Pages.Projects.Hired";
 
         public const string Pages_Tenants = "Pages.Tenants";
     }

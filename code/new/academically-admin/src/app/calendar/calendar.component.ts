@@ -1,6 +1,6 @@
-import { Component, Injector, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { CalendarOptions, DateSelectArg, EventClickArg, EventInput } from '@fullcalendar/angular';
+import { AfterViewInit, Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Calendar, CalendarOptions, DateSelectArg, EventClickArg, EventInput, FullCalendarComponent } from '@fullcalendar/angular';
 import { DateClickArg } from '@fullcalendar/interaction';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -18,7 +18,9 @@ import { CreateEditBookingComponent } from './_components/create-edit-booking/cr
   styleUrls: ['./calendar.component.less'],
   animations: [appModuleAnimation()],
 })
-export class CalendarComponent extends AppComponentBase implements OnInit {
+export class CalendarComponent extends AppComponentBase implements OnInit, AfterViewInit {
+  @ViewChild('calendar', { static: true }) calendarComponent: FullCalendarComponent;
+
   user: UserDto = new UserDto();
   timeZones: TimeZoneDto[] = [];
   userId: number;
@@ -26,6 +28,10 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
   endTime: Date;
   isLoading = false;
   isBlockOutClicked = false;
+  calendar: Calendar;
+  gotoDate: string;
+  calendarEventId: string;
+  calendarEventAutoAccept = false;
 
   calendarOptions: CalendarOptions = {
     initialView: 'timeGridWeek',
@@ -55,6 +61,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _modalService: BsModalService,
+    private _router: Router,
     private _route: ActivatedRoute,
     private _calendarEventsService: CalendarEventsServiceProxy,
     private _profilesService: ProfilesServiceProxy,
@@ -64,9 +71,31 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+    this.calendar = this.calendarComponent.getApi();
     this._route.paramMap.subscribe(paramMap => {
       this.userId = paramMap.has('user-id') ? +paramMap.get('user-id') : this.appSession.userId;
       this.getUser();
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.calendar = this.calendarComponent.getApi();
+    this._route.queryParamMap.subscribe(paramMap => {
+      if (paramMap.has('goto')) {
+        this.gotoDate = paramMap.get('goto');
+        const gotoDate = abp.timing.convertToUserTimezone(moment.utc(paramMap.get('goto')).toDate());
+        this.calendar.gotoDate(gotoDate);
+        this.calendar.scrollToTime({
+          hour: gotoDate.getHours(),
+          minute: gotoDate.getMinutes(),
+        });
+        if (paramMap.has('event-id')) {
+          this.calendarEventId = paramMap.get('event-id');
+          if (paramMap.has('auto-accept')) {
+            this.calendarEventAutoAccept = paramMap.get('auto-accept').toLowerCase() === "true";
+          }
+        }
+      }
     });
   }
 
@@ -120,9 +149,12 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
         break;
       case CalendarEventType.BookingRequest:
       case CalendarEventType.RescheduledBooking:
+      case CalendarEventType.ConfirmedBooking:
         if ((calendarEvent.creatorUserId === this.appSession.userId || this.userId === this.appSession.userId)
           && this.permission.isGranted('Pages.Calendar.Bookings')) {
-          this.showCreateEditBookingModal(_.cloneDeep((args.event.extendedProps.calendarEvent as CalendarEventDto)));
+          var model = (args.event.extendedProps.calendarEvent as CalendarEventDto);
+          model.tutorId = this.userId;
+          this.showCreateEditBookingModal(_.cloneDeep(model));
         } else {
           this.isBlockOutClicked = true;
         }
@@ -149,10 +181,11 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
       });
   }
 
-  private showCreateEditBookingModal(model?: CalendarEventDto): void {
+  private showCreateEditBookingModal(model?: CalendarEventDto, autoAcceptEvent = false): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditBookingComponent>;
     modalSettings.initialState = {
       model: model,
+      autoAccept: autoAcceptEvent,
     };
     const modal = this._modalService.show(CreateEditBookingComponent, modalSettings).content;
     modal.modelSaved
@@ -160,7 +193,14 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
         takeUntil(this.destroyed$),
       )
       .subscribe(() => {
-        this.getCalendarEvents();
+        if (this.calendarEventAutoAccept) {
+          const calendarUrl = this.userId === this.appSession.userId
+            ? `/app/calendar?goto=${this.gotoDate}`
+            : `/app/calendar/${this.userId}?goto=${this.gotoDate}`;
+          this._router.navigate([calendarUrl]);
+        } else {
+          this.getCalendarEvents();
+        }
       });
   }
 
@@ -189,8 +229,8 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
 
   private getCalendarEvents(): void {
     this.isLoading = true;
-    const startTime = moment(this.startTime);
-    const endTime = moment(this.endTime);
+    const startTime = this.convertDateToMoment(this.startTime);
+    const endTime = this.convertDateToMoment(this.endTime);
     this._calendarEventsService.getAll(this.userId, startTime, endTime)
       .pipe(
         takeUntil(this.destroyed$),
@@ -259,6 +299,16 @@ export class CalendarComponent extends AppComponentBase implements OnInit {
           return calendarEventInput;
         });
         this.calendarOptions.events = calendarEventInputs;
+
+        if (this.calendarEventId) {
+          const calendarEvent = _.find(calendarEvents, e => e.id === this.calendarEventId);
+          if (calendarEvent && calendarEvent.type !== CalendarEventType.Blocker) {
+            calendarEvent.tutorId = this.userId;
+            this.showCreateEditBookingModal(_.cloneDeep(calendarEvent), this.calendarEventAutoAccept);
+            this.calendarEventId = undefined;
+            this.calendarEventAutoAccept = false;
+          }
+        }
       });
   }
 }

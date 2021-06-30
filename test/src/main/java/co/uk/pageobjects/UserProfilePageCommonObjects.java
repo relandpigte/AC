@@ -35,6 +35,20 @@ public class UserProfilePageCommonObjects {
             By.xpath("//div[contains(@class,'header-avatar-top')]//img[@src='assets/img/anonymous.png']"));
 	private static Element successfulyDeletedMesssage = new Element("Successfuly deleted message",By.xpath("//span[text()='Successfully Deleted']"));
 	
+	private static Button becomeaTutor = new Button("Become a tutor",By.xpath("//button[contains(text(),'Become a Tutor')]"));
+	
+	public static void clickBecomeATutor() {
+		becomeaTutor.click();
+	}
+	
+	public static void verifyBecomeAtutorIsDisplayed() {
+		becomeaTutor.verifyDisplayed();
+	}
+	
+	public static void verifyBecomeAtutorIsNotDisplayed() {
+		becomeaTutor.verifyNotDisplayed();
+	}
+	
 	public static void verifySuccesfulyDeletedMessageIsDisplayed() {
 		successfulyDeletedMesssage.verifyDisplayed();
 	}

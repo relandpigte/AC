@@ -224,7 +224,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_ServiceWizard_Services,
                 PermissionNames.Pages_ServiceWizard_CreateProject,
                 PermissionNames.Pages_Projects,
-                PermissionNames.Pages_Projects_Proposals
+                PermissionNames.Pages_Projects_Proposals,
+                PermissionNames.Pages_Projects_Hired
             );
 
             #endregion

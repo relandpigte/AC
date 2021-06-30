@@ -57,9 +57,9 @@ namespace Academically.Services.ProjectOffers
 
             var projectOffers = await query
                 .Include(e => e.CreatorUser)
-                    .ThenInclude(e => e.UserEducations)
-                        .ThenInclude(e => e.University)
-                .Include(e => e.CreatorUser.ProfilePictureDocument)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.CreatorUser.UserEducations)
+                    .ThenInclude(e => e.University)
                 .PageBy(input)
                 .Select(e => ObjectMapper.Map<ProjectOfferDto>(e))
                 .ToListAsync();
