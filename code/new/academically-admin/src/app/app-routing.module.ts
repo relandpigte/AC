@@ -97,10 +97,10 @@ import { CreateProjectComponent } from './create-project/create-project.componen
               ),
           },
           {
-            path: 'service-wizard',
+            path: 'project-wizard',
             loadChildren: () =>
-              import('@app/service-wizard/service-wizard.module').then(
-                (m) => m.ServiceWizardModule
+              import('@app/project-wizard/project-wizard.module').then(
+                (m) => m.ProjectWizardModule
               ),
           },
           {

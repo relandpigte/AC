@@ -58,12 +58,12 @@ export class ServiceLevelComponent extends AppComponentBase implements OnInit {
   }
 
   onBackClick(): void {
-    this._router.navigate(['/app/service-wizard']);
+    this._router.navigate(['/app/project-wizard']);
   }
 
   onNextClick(): void {
     if (this.validStep()) {
-      this._router.navigate(['/app/service-wizard/services']);
+      this._router.navigate(['/app/project-wizard/services']);
     }
   }
 
