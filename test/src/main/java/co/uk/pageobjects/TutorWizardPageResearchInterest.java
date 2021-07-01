@@ -10,7 +10,8 @@ import co.uk.webelements.TextBox;
 
 public class TutorWizardPageResearchInterest {
 
-
+	private static Button next = new Button("Next",By.xpath("//button[contains(text(),'Next')]"));
+	private static Button skipbtn = new Button("Skip",By.xpath("//button[contains(text(),'Skip')]"));
 	private static Button addResearchInterestBtn = new Button("Add Research Interest",By.xpath("//button[contains(text(),'Add Research Interest')]"));
 	private static Button addMethodologyBtn = new Button("Add Methodology",By.xpath("//button[contains(text(),'Add Methodology')]"));
 	private static Button addPublicationBtn = new Button("Add Publication",By.xpath("//button[contains(text(),'Add Publication')]"));
@@ -52,6 +53,9 @@ public class TutorWizardPageResearchInterest {
 	public static void clickRemoveResearchInterest(String title) {
 		removeResearchInterest(title).click();
 	}
+	public static void clicknext() {
+		next.click();
+	}
 	
 	public static void clickEditResearchInterest(String title) {
 		editResearchIntereset(title).click();
@@ -59,6 +63,10 @@ public class TutorWizardPageResearchInterest {
 	
 	public static void clickRemoveMethodology(String title) {
 		removeMethodology(title).click();
+	}
+	
+	public static void clickSkip() {
+		skipbtn.click();
 	}
 	
 	public static void clickEditMethodology(String title) {

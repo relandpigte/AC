@@ -2,6 +2,7 @@ package co.uk.pageobjects;
 
 import org.openqa.selenium.By;
 
+import co.uk.webelements.Button;
 import co.uk.webelements.Element;
 
 public class TutorWizardCommonObject {
@@ -11,4 +12,25 @@ public class TutorWizardCommonObject {
 	public static void verifyTutorWizardIsDisplayed() {
 		tutorWizard.verifyDisplayed();
 	}
+    public static class ConfirmationModal {
+
+        private static Element confirmationModalIsDisplayed = new Element("Confirmation modal",
+                By.xpath("//div[@class='swal2-header']//h2[text()='Are you sure?']"));
+        private static Button yes = new Button("Yes",
+                By.xpath("//div[@class='swal2-header']//h2[text()='Are you sure?']//following::button[text()='Yes']"));
+        private static Button cancel = new Button("Cancel",
+                By.xpath("//div[@class='swal2-header']//h2[text()='Are you sure?']//following::button[text()='Cancel']"));
+
+        public static void verifyConfirmationModalIsDisplayed() {
+            confirmationModalIsDisplayed.verifyDisplayed();
+        }
+
+        public static void clickYes() {
+            yes.click();
+        }
+
+        public static void clickCancel() {
+            cancel.click();
+        }
+    }
 }
