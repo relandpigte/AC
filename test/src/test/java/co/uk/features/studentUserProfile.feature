@@ -418,7 +418,7 @@ Feature: Student user profile settings
     When the user confirms to remove a publication
     Then removing "Silence the storm" publication is successful
 
-   @Adhoc
+ @UI @TestRails(C14516)
   Scenario: C14516	Verify editing publication
     Given User is in academically login page
     When user register a student
@@ -444,19 +444,19 @@ Feature: Student user profile settings
       | Silence the storm | Book             | Rosalind Barker | 06/02/2013 | tag1 | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
     And user saving publication information
     Then adding publication "Silence the storm" is successful
-    When user edit publication "Silence the storm"
-    Then "Edit" publication modal is displayed
-    When user enter publication information
-      | Title         | Publication Type | Publisher           | Date       | Tag  | Abstarct |
-      | Strange tides | Chapter          | Automated17XXX Test | 03/01/2013 | tag2 | null     |
-    And user saving publication information
-    When user edit publication "Strange tides"
+   When user edit publication "Silence the storm"
+   Then "Edit" publication modal is displayed
+   When user enter publication information
+     | Title         | Publication Type | Publisher           | Date       | Tag  | Abstarct |
+     | Strange tides | Chapter          | Automated17XXX Test | 03/02/2013 | null | Test1    |
+   And user saving publication information
+    And user edit publication "Strange tides"
     Then "Edit" publication modal is displayed
     And verify publication informations are correct
       | Title         | Publication Type | Publisher           | Date       | Tag  | Abstarct |
-      | Strange tides | Chapter          | Automated17XXX Test | 03/01/2013 | tag2 | null     |
+      | Strange tides | Chapter          | Automated17XXX Test  | 03/02/2013 | null | Test1    |
 
-  @??
+   @UI @TestRails(C14517)
   Scenario: C14517	Verify editing research methodology
     Given User is in academically login page
     When user register a student
@@ -490,23 +490,27 @@ Feature: Student user profile settings
       | Qualitative | Data Quality and Data Management | Test        |
     And user saving research methodology information
     Then sucessful message is displayed
-    And editing reseach methodology is successful
-
-  @??
+    When user edit "Qualitative" research methodology
+    Then "Edit Research" Methodology modal is displayed
+    And verify research methodology informations are correct
+      | Title       | Research method                  | Description |
+      | Qualitative | Data Quality and Data Management | Test        |
+      |             | Methodological Pluralism         |             |
+  @?? @Adhoc
   Scenario: C14518	Verify editing research interest
     Given User is in academically login page
-    When user register a student
-    And user enter account details
-      | Firstname      | Lastname | Email          | Date of Birth |
-      | Automated19XXX | Test     | automated19XXX | 04/02/1971    |
-    Then sent email modal is displayed
-    And user activate account
-    Then user is in complete registration form
-    And email address "automated19XXX" matched
-    When user enter password "Test@12345" and confirm passoword "Test@12345"
-    And user register an account
-    Then registered the account successfully
-    When user enter username "automated19XXX" and password "Test@12345"
+#    When user register a student
+#    And user enter account details
+#      | Firstname      | Lastname | Email          | Date of Birth |
+#      | Automated19XXX | Test     | automated19XXX | 04/02/1971    |
+#    Then sent email modal is displayed
+#    And user activate account
+#    Then user is in complete registration form
+#    And email address "automated19XXX" matched
+#    When user enter password "Test@12345" and confirm passoword "Test@12345"
+#    And user register an account
+#    Then registered the account successfully
+    When user enter username "automated17134117" and password "Test@12345"
     Then user successfully login
     When user navigate to profile settings using profile widget
     Then user is in profile settings
@@ -520,9 +524,13 @@ Feature: Student user profile settings
     Then sucessful message is displayed
     And adding research interest "Computer Science and Information Technology" is successful
     When user edit research interest "Computer Science and Information Technology"
-    When user enter research interest information
+    And user enter research interest information
       | Title                | Knowledge Base | Description |
-      | Computer programming | null           | null        |
+      | Computer programming | null           | Test1        |
     And user saving research interest information
     Then sucessful message is displayed
-    And editing research interest is successful
+    When user edit research interest "Computer programming"
+    Then verify research interest informations are correct
+      | Title                | Knowledge Base | Description |
+      | Computer programming | Computational Engineering           | Test1        |
+ 
