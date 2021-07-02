@@ -221,6 +221,7 @@ public class UserProfilePageResearch {
 			return new Element(title+" Publication modal",By.xpath("//app-create-edit-publication//h4[contains(text(),'"+title+"')]"));
 		}
 		private static TextBox titleTextbox = new TextBox("Title",By.xpath("//app-create-edit-publication//input[@id='Title']"));
+		private static Element pubType = new Element("Publication Type",By.xpath("//app-create-edit-publication//select[@id='PublicationType']"));
 		private static ListBox publicationType = new ListBox("Publication Type",By.xpath("//app-create-edit-publication//select[@id='PublicationType']"));
 		private static TextBox publisherTextBox = new TextBox("Publisher",By.xpath("//app-create-edit-publication//input[@id='Publisher']"));
 		private static TextBox publicationDate = new TextBox("Publication date",By.xpath("//app-create-edit-publication//input[@id='PublicationDate']"));
@@ -228,6 +229,31 @@ public class UserProfilePageResearch {
 		private static TextBox tagTextBox = new TextBox("Tag",By.xpath("//app-create-edit-publication//input[@id='PublicationTags']"));
 		private static Element tagDropdown = new Element("Tag dropdown",By.xpath("//typeahead-container//span"));
 		private static Button save = new Button("Save",By.xpath("//app-create-edit-publication//button[@type='submit']"));
+        private static Element tagAlert(String tagname) {
+        	return new Element("Tag: "+tagname,By.xpath("//app-create-edit-publication//div[contains(@class,'ac-alerts')]//div[contains(text(),'"+tagname+"')]"));
+        }
+        public static void verifyTitleValueIsCorrect(String value) {
+        	titleTextbox.verifyTextEquals(value);
+        }
+        public static void verifyTagIsDisplayed(String value) {
+        	tagAlert(value).verifyDisplayed();
+        }
+        
+		public static void verifyPublicationTypeValueIsCorrect(String value) {
+			pubType.verifySelected();
+		}
+		
+		public static void verifyPublisherValueIsCorrect(String value) {
+			publisherTextBox.verifyTextEquals(value);
+		}
+		public static void verifypublicationDateValueIsCorrect(String value) {
+			publicationDate.verifyTextEquals(value);
+		}
+		
+		public static void verifyAbstractValueIsCorrect(String value) {
+			abstractTextBox.verifyTextEquals(value);
+		}
+		
 		
 		public static void clickSave() {
 			save.click();
