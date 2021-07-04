@@ -1,4 +1,5 @@
 import { Component, Injector, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { BecomeATutorStep, PhoneVerificationsServiceProxy, ProfilesServiceProxy, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
@@ -33,24 +34,46 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
   resendTimer: number;
   resendTimerSubscription: Subscription;
   currentState = PhoneVerificationState.NotSent;
+  userId: number;
+  isReadOnly = false;
+
+  userPhoneNumber = '';
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _phoneVerificationsService: PhoneVerificationsServiceProxy,
     private _profilesService: ProfilesServiceProxy,
     private _tutorWizardService: TutorWizardServiceProxy,
     private _becomeATutorService: BecomeATutorService,
   ) {
     super(injector);
+
   }
 
   ngOnInit(): void {
-    this.getUser();
+    this._becomeATutorService.userId$.subscribe(userId => {
+      this.userId = userId ?? this.appSession.userId;
+      this.isReadOnly = (this.userId !== this.appSession.userId);
+      this.getUser();
+    });
   }
 
   ngOnDestroy(): void {
     if (this.resendTimerSubscription) {
       this.resendTimerSubscription.unsubscribe();
+    }
+  }
+
+  onNavigateNextScreen(): void {
+    this._router.navigate([`app/tutor-applications/${this.userId}/references`]);
+  }
+
+  onBackClick(): void {
+    if (this.isReadOnly) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/address`]);
+    } else {
+      this._router.navigate([`app/tutor-wizard/address`]);
     }
   }
 
@@ -157,7 +180,7 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
 
   private getUser(): void {
     this.isLoading = true;
-    this._profilesService.get(this.appSession.userId)
+    this._profilesService.get(this.userId)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
@@ -168,6 +191,7 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
         if (user.isPhoneNumberConfirmed) {
           this.currentState = PhoneVerificationState.Verified;
           if (user.phoneNumber) {
+            this.userPhoneNumber = user.phoneNumber;
             this.phoneNumber = this.formatPhoneNumber(user.phoneNumber);
           }
         }

@@ -117,6 +117,13 @@ import { CreateProjectComponent } from './create-project/create-project.componen
                 (m) => m.CalendarModule
               ),
           },
+          {
+            path: 'tutor-applications',
+            loadChildren: () =>
+              import('@app/tutor-applications/tutor-applications.module').then(
+                (m) => m.TutorAppliactionsModule
+              ),
+          },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent }

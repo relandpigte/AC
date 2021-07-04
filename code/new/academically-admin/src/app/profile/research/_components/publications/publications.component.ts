@@ -1,4 +1,4 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
 import { UserResearchMethodologyDto, UserPublicationDto, UserPublicationsServiceProxy, UserPublicationDtoPagedResultDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
@@ -19,6 +19,7 @@ class PagedUserPublicationsRequestDto extends PagedAndSortedRequestDto {
 export class PublicationsComponent extends PagedListingComponentBase<UserResearchMethodologyDto> {
   userPublications: UserPublicationDto[];
   searchFilter: string;
+  @Input() userId: number;
 
   constructor(
     injector: Injector,
@@ -30,8 +31,7 @@ export class PublicationsComponent extends PagedListingComponentBase<UserResearc
   }
 
   list(request: PagedUserPublicationsRequestDto, pageNumber: number, finishedCallback: Function): void {
-    request.userIdFilter = this.appSession.userId;
-    request.searchFilter = this.searchFilter;
+    request.userIdFilter = this.userId;
 
     this._userPublicationsService
       .getPaged(

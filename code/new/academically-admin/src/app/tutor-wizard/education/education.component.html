@@ -1,10 +1,13 @@
-<app-educations #educations [userId]="appSession.userId"></app-educations>
+<app-educations #educations [isReadOnly]="isReadOnly" [userId]="userId"></app-educations>
 <div class="d-flex justify-content-between">
-  <button [routerLink]="['/app/tutor-wizard/about-you']" type="button" class="btn btn-white">
+  <button (click)="onBackClick()" type="button" class="btn btn-white">
     {{ 'Back' | localize }}
   </button>
-  <button (click)="onNextClick()" [disabled]="!educations.universities || !educations.universities.length || isLoading" type="submit"
+  <button *ngIf="!isReadOnly" (click)="onNextClick()" [disabled]="!educations.universities || !educations.universities.length || isLoading" type="submit"
     class="btn btn-primary">
+    {{ 'Next' | localize }}
+  </button>
+  <button *ngIf="isReadOnly" type="button" class="btn btn-primary" (click)="onNavigateNextScreen()">
     {{ 'Next' | localize }}
   </button>
 </div>

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Academically.Services.UserPublications
 {
-    [AbpAuthorize(PermissionNames.Pages_Profile_Research_ResearchPublications)]
+    [AbpAuthorize(PermissionNames.Pages_Profile_Research_ResearchPublications,PermissionNames.Pages_TutorApplications_Research)]
     public class UserPublicationsAppService : AcademicallyAppServiceBase, IUserPublicationsAppService
     {
         private readonly IRepository<UserPublication, Guid> _userPublicationsRepository;

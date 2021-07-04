@@ -1,4 +1,4 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
 import { UserResearchInterestDto, UserResearchInterestDtoPagedResultDto, UserResearchInterestsServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
@@ -17,6 +17,7 @@ class PagedUserResearchInterestsRequestDto extends PagedAndSortedRequestDto {
 })
 export class InterestsComponent extends PagedListingComponentBase<UserResearchInterestDto> {
   userResearchInterests: UserResearchInterestDto[];
+  @Input() userId: number;
 
   constructor(
     injector: Injector,
@@ -28,7 +29,7 @@ export class InterestsComponent extends PagedListingComponentBase<UserResearchIn
   }
 
   list(request: PagedUserResearchInterestsRequestDto, pageNumber: number, finishedCallback: Function): void {
-    request.userIdFilter = this.appSession.userId;
+    request.userIdFilter = this.userId;
 
     this._userResearchInterestsService
       .getPaged(

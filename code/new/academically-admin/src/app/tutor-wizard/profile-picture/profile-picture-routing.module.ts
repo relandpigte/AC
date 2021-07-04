@@ -11,7 +11,9 @@ import { ProfilePictureComponent } from './profile-picture.component';
       {
         path: '',
         component: ProfilePictureComponent,
-        data: { permission: 'Pages.TutorWizard.ProfilePicture' },
+        data: { permission:
+            'Pages.TutorWizard.ProfilePicture',
+        },
         canActivate: [AppRouteGuard],
         canActivateChild: [AppRouteGuard],
       },

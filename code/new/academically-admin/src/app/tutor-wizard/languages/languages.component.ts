@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component, Injector, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { SpokenLanguagesComponent } from '@app/profile/spoken-languages/spoken-languages.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { BecomeATutorStep, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { AppSessionService } from '@shared/session/app-session.service';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { BecomeATutorService } from '../_services/become-a-tutor.service';
 
@@ -13,14 +15,21 @@ import { BecomeATutorService } from '../_services/become-a-tutor.service';
 export class LanguagesComponent extends AppComponentBase {
   @ViewChild(SpokenLanguagesComponent) spokenLanguages: SpokenLanguagesComponent;
   isLoading = false;
-
+  userId: number;
+  isReadOnly = false;
   constructor(
     injector: Injector,
+    private _router: Router,
     private _becomeATutorService: BecomeATutorService,
     private _tutorWizardService: TutorWizardServiceProxy,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private _appSession: AppSessionService
   ) {
     super(injector);
+    this._becomeATutorService.userId$.subscribe(userId => {
+      this.userId = userId;
+      this.isReadOnly = (this.userId !== this._appSession.userId);
+    });
   }
 
   ngOnInit(): void {
@@ -42,6 +51,18 @@ export class LanguagesComponent extends AppComponentBase {
       .subscribe(() => {
         this.updateNextStep();
       });
+  }
+
+  onNavigateNextScreen(): void {
+    this._router.navigate([`app/tutor-applications/${this.userId}/services-offered`]);
+  }
+
+  onBackClick(): void {
+    if (this.isReadOnly) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/research`]);
+    } else {
+      this._router.navigate([`app/tutor-wizard/research`]);
+    }
   }
 
   private updateNextStep(): void {

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Academically.Services.UserResearchInterests
 {
-    [AbpAuthorize(PermissionNames.Pages_Profile_Research_ResearchInterests)]
+    [AbpAuthorize(PermissionNames.Pages_Profile_Research_ResearchInterests,PermissionNames.Pages_TutorApplications_Research)]
     public class UserResearchInterestsAppService : AcademicallyAppServiceBase, IUserResearchInterestsAppService
     {
         private readonly IRepository<UserResearchInterest, Guid> _userResearchInterestsRepository;
