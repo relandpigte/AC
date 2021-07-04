@@ -27,7 +27,7 @@ export class LanguagesComponent extends AppComponentBase {
   ) {
     super(injector);
     this._becomeATutorService.userId$.subscribe(userId => {
-      this.userId = userId;
+      this.userId = userId ?? this._appSession.userId;
       this.isReadOnly = (this.userId !== this._appSession.userId);
     });
   }
