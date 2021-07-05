@@ -140,7 +140,7 @@ public class UserProfilePageResearch {
 		}
 		
 		public static void veriftyDescriptionValueIsCorrect(String value) {
-			descriptionTextBox.verifyAttributeContains("value", value);
+			descriptionTextBox.verifyTextContains(value);
 		}
 		
 		public static void enterTitle(String title) {
