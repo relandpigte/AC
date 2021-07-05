@@ -569,6 +569,46 @@ input[type='file'].inline-file-upload {
       }
     }
 
+    >li.declined:not(.current) {
+      >a {
+        &:before {
+          background-color: #e63757;
+          opacity         : 1;
+          height          : calc(100% - 25px);
+          bottom          : -9px;
+        }
+
+        &:after {
+          display: none;
+        }
+
+        .ico {
+          left : 9px;
+          color: #e63757;
+        }
+      }
+    }
+
+    >li.saved:not(.current) {
+      >a {
+        &:before {
+          background-color: #2c7be5;
+          opacity         : 1;
+          height          : calc(100% - 25px);
+          bottom          : -9px;
+        }
+
+        &:after {
+          display: none;
+        }
+
+        .ico {
+          left : 8px;
+          color: #2c7be5;
+        }
+      }
+    }
+
     >li.locked {
       >a {
         &:after {
@@ -733,4 +773,16 @@ app-tutor-reviews {
 
 .virtical-center {
   vertical-align: middle !important;
+}
+
+.navbar-nav .nav-link > .fas,
+.navbar-nav .nav-link > .fa {
+  display: inline-block;
+  min-width: 1.75rem;
+}
+
+.form-control-style > div {
+  border: 1px solid #d2ddec !important;
+  border-radius: .375rem !important;
+  padding: 10px !important;
 }

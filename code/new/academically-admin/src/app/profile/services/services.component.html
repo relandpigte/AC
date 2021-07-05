@@ -5,7 +5,7 @@
         <h2 class="m-0">{{ 'Categories' | localize }}</h2>
       </div>
       <div class="col-md-8 text-right">
-        <button (click)="onAddClick()" class="btn btn-sm btn-primary">Add Service</button>
+        <button (click)="onAddClick()" *ngIf="permission.isGranted('Pages.TutorWizard.ServicesOffered.Create')" class="btn btn-sm btn-primary">Add Service</button>
       </div>
     </div>
   </div>

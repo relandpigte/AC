@@ -1,0 +1,151 @@
+      <div [@routerTransition]>
+        <div class="header">
+          <div class="header-body">
+            <div class="row align-items-center">
+              <div class="col">
+                <h6 class="header-pretitle">{{ 'ApproveOrRegectApplications' | localize }}</h6>
+                <h1 class="header-title">{{ 'TutorApplications' | localize }}</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="row align-items-center">
+              <div class="col">
+                <form>
+                  <div class="input-group input-group-flush">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="fe fe-search"></i>
+                      </span>
+                    </div>
+                    <input class="list-search form-control" type="search" name="Search" placeholder="Search"
+                      [(ngModel)]="keyword" (keyup.enter)="getDataPage(1)" />
+                  </div>
+                </form>
+              </div>
+              <div class="col-auto mr-n3">
+                <form>
+                  <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize"
+                    (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
+                    class="custom-select custom-select-sm form-control-flush" data-toggle="select">
+                    <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
+                      {{ pageSizeSelection }} {{ 'PerPage' | localize }}
+                    </option>
+                  </select>
+                </form>
+              </div>
+              <div class="col-auto">
+                <div class="dropdown" dropdown #filterDropdown="bs-dropdown" [isAnimated]="true" [autoClose]="false">
+                  <button class="btn btn-sm btn-white" type="button" dropdownToggle>
+                    <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }} <span
+                      class="badge badge-primary ml-1 d-none">0</span>
+                  </button>
+                  <form *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-card"
+                    (ngSubmit)="getDataPage(1)">
+                    <div class="card-header">
+                      <h4 class="card-header-title">{{ 'Filters' | localize }}</h4>
+                      <button class="btn btn-sm btn-link text-reset btn-white" type="submit"
+                        (click)="filterDropdown.hide(); onClearFiltersClick()">
+                        <small>{{ 'ClearFilters' | localize }}</small>
+                      </button>
+                    </div>
+                    <div class="card-body">
+                      <div class="list-group list-group-flush mt-n4 mb-4">
+                        <div class="list-group-item">
+                          <div class="row">
+                            <div class="col">
+                              <small>{{ 'IsActive' | localize }}</small>
+                            </div>
+                            <div class="col-auto">
+                              <div class="custom-control custom-radio d-inline">
+                                <input type="radio" class="custom-control-input" id="isActiveAll" name="isActiveFilter"
+                                  [(ngModel)]="isActive" [value]="undefined" checked />
+                                <label class="custom-control-label" for="isActiveAll">
+                                  {{ 'All' | localize }}
+                                </label>
+                              </div>
+                              <div class="custom-control custom-radio d-inline mx-3">
+                                <input type="radio" class="custom-control-input" id="isActiveActive" name="isActiveFilter"
+                                  [(ngModel)]="isActive" [value]="true" />
+                                <label class="custom-control-label" for="isActiveActive">
+                                  {{ 'Yes' | localize }}
+                                </label>
+                              </div>
+                              <div class="custom-control custom-radio d-inline">
+                                <input type="radio" class="custom-control-input" id="isActivePassive"
+                                  name="isActiveFilter" [(ngModel)]="isActive" [value]="false" />
+                                <label class="custom-control-label" for="isActivePassive">
+                                  {{ 'No' | localize }}
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <button class="btn btn-block btn-primary" type="submit" (click)="filterDropdown.hide()">
+                        {{ 'ApplyFilter' | localize }}
+                      </button>
+                    </div>
+                    &nbsp;
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm table-hover table-nowrap card-table" [loader]="isTableLoading">
+              <thead table-header-sort [headers]="headers" (sortChange)="sortChange($event)"></thead>
+              <tbody class="list font-size-base">
+                <tr *ngFor="
+                    let application of (tutorApplications | paginate: { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
+                  ">
+                  <td>
+                    <div class="avatar avatar-xs align-middle mr-2">
+                      <img class="avatar-img rounded-circle" alt="..."
+                        [src]="getProfilePictureFromDocument(application.creatorUser.profilePictureDocument, application.creatorUser.id)">
+                    </div>
+                    <a class="item-name text-reset" href="javascript:;">{{ application.creatorUser.fullName | titlecase }}</a>
+                  </td>
+                  <td>{{ application.creatorUser.emailAddress }}</td>
+                  <td>{{ application.creatorUser.currentUniversity | titlecase }}</td>
+                  <td>
+
+                    <span *ngIf="application.status === TutorVerificationStatus.Completed">Pending</span>
+                    <span *ngIf="application.status !== TutorVerificationStatus.Completed">
+                      {{ TutorVerificationStatus[application.status] }}
+                    </span>
+                  </td>
+                  <!-- <td class="table-action">
+                    <div dropdown class="dropdown" container="body">
+                      <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;" role="button">
+                        <i class="fe fe-more-vertical"></i>
+                      </a>
+                      <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
+                        <a href="javascript:;" class="dropdown-item" (click)="onApproveClick(application.id)"
+                        *ngIf="permission.isGranted('Pages.Suggestions.ServiceSubjects.Approve')" [tooltip]="'Approve'">
+                          <i class="fe fe-thumbs-up"></i> {{ 'Approve' | localize }}
+                        </a>
+                        <a href="javascript:;" class="dropdown-item" (click)="onRejectClick(application.id)"
+                          *ngIf="permission.isGranted('Pages.TutorApplications.Reject')" [tooltip]="'Decline'">
+                          <i class="fe fe-thumbs-down"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </td> -->
+                  <td width="1%" class="align-middle">
+                    <button *ngIf="permission.isGranted('Pages.TutorApplications')"
+                      (click)="onViewClick(application.creatorUser.id)" type="button"
+                      class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+                      <span class="fe fe-eye"></span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <abp-pagination-controls id="server" (pageChange)="getDataPage($event)"> </abp-pagination-controls>
+          </div>
+        </div>
+      </div>

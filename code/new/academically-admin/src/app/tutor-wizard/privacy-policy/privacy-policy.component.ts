@@ -1,6 +1,8 @@
 import { Component, Injector, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { AcceptanceLogDto, AcceptanceLogsServiceProxy, AcceptanceType, BecomeATutorStep, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { AppSessionService } from '@shared/session/app-session.service';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { BecomeATutorService } from '../_services/become-a-tutor.service';
 
@@ -13,27 +15,35 @@ export class PrivacyPolicyComponent extends AppComponentBase implements OnInit {
   isLoading = false;
   isAccepted = false;
   acceptanceDto = new AcceptanceLogDto();
+  userId: number;
+  isReadOnly: boolean;
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _becomeATutorService: BecomeATutorService,
     private _tutorWizardService: TutorWizardServiceProxy,
     private _acceptanceLogsService: AcceptanceLogsServiceProxy,
+    private _appSession: AppSessionService
   ) {
     super(injector);
   }
 
   ngOnInit(): void {
-    this.getAcceptanceLog();
+    this._becomeATutorService.userId$.subscribe(userId => {
+      this.userId = userId ?? this._appSession.userId;
+      this.isReadOnly = (this.userId !== this._appSession.userId);
+      this.getAcceptanceLog();
+    });
   }
 
   onPrint(): void {
-    var printWindow = window.open('', 'PRINT', 'height=1000,width=1300');
+    const printWindow = window.open('', 'PRINT', 'height=1000,width=1300');
 
     printWindow.document.write('<html><head><title>' + document.title + '</title>');
     printWindow.document.write('</head><body >');
     printWindow.document.write('<h1>' + document.title + '</h1>');
-    printWindow.document.write(document.getElementById("print-section").innerHTML);
+    printWindow.document.write(document.getElementById('print-section').innerHTML);
     printWindow.document.write('</body></html>');
 
     printWindow.document.close(); // necessary for IE >= 10
@@ -56,7 +66,33 @@ export class PrivacyPolicyComponent extends AppComponentBase implements OnInit {
         }),
       )
       .subscribe(() => {
-        this.nextStep()
+        this.updateCurrentStep();
+      });
+  }
+
+  onNavigateNextScreen(): void {
+    this._router.navigate([`app/tutor-applications/${this.userId}/declaration`]);
+  }
+
+  onBackClick(): void {
+    if (this.isReadOnly) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/terms-of-use`]);
+    } else {
+      this._router.navigate([`app/tutor-wizard/terms-of-use`]);
+    }
+  }
+
+  private updateCurrentStep(): void {
+    this.isLoading = true;
+    this._tutorWizardService.updateStep(BecomeATutorStep.PrivacyPolicy)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+      )
+      .subscribe(() => {
+        this.nextStep();
       });
   }
 
@@ -70,15 +106,16 @@ export class PrivacyPolicyComponent extends AppComponentBase implements OnInit {
           this.isLoading = false;
         }),
       )
-      .subscribe(() => {
+      .subscribe((result) => {
         this.notify.success(this.l('SavedSuccessfully'));
         this._becomeATutorService.currentStep = nextStep;
+        this._becomeATutorService.currentTutorWizardStep = result;
       });
   }
 
   private getAcceptanceLog(): void {
     this.isLoading = true;
-    this._acceptanceLogsService.getLatest(AcceptanceType.PrivacyPolicy)
+    this._acceptanceLogsService.getLatest(AcceptanceType.PrivacyPolicy, this.userId)
     .pipe(
       takeUntil(this.destroyed$),
       finalize(() => {

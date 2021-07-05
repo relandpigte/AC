@@ -15,6 +15,9 @@ import { TutorWizardStepComponent } from './_components/tutor-wizard-step/tutor-
     CommonModule,
     TutorWizardRoutingModule,
     SharedModule,
+  ],
+  exports: [
+    TutorWizardStepComponent
   ]
 })
 export class TutorWizardModule { }

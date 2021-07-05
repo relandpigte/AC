@@ -43,13 +43,14 @@
   </div>
 </div>
 <div class="d-flex justify-content-between">
-  <button [routerLink]="['/app/tutor-wizard/privacy-policy']" type="button" class="btn btn-white">
+  <button (click)="onBackClick()" type="button" class="btn btn-white">
     {{ 'Back' | localize }}
   </button>
-  <button (click)="onNextClick()" [disabled]="isLoading || !allDeclarationsChecked()" type="submit"
+  <button *ngIf="!isReadOnly" (click)="onNextClick()" [disabled]="isLoading || !allDeclarationsChecked()" type="submit"
     class="btn btn-success">
     {{ 'CompleteApplication' | localize }}
   </button>
+
 </div>
 
 <ng-template #declarationTemplate let-id="id">

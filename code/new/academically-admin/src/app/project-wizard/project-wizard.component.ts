@@ -6,11 +6,11 @@ import { AppComponentBase } from '@shared/app-component-base';
 
 @Component({
   selector: 'app-service-wizard',
-  templateUrl: './service-wizard.component.html',
-  styleUrls: ['./service-wizard.component.less'],
+  templateUrl: './project-wizard.component.html',
+  styleUrls: ['./project-wizard.component.less'],
   animations: [appModuleAnimation()],
 })
-export class  ServiceWizardComponent extends AppComponentBase implements OnInit {
+export class  ProjectWizardComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,

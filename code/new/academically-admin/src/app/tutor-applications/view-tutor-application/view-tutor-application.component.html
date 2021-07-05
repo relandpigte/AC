@@ -1,0 +1,96 @@
+<div class="container-fluid" [@routerTransition]>
+    <div class="row justify-content-center tutor-wizard">
+      <div class="col-12">
+        <div class="header">
+          <div class="header-body">
+            <div class="row align-items-center">
+              <div class="col">
+                <h6 class="header-pretitle">{{ 'BecomeATutor' | localize }}</h6>
+                <h1 class="header-title">{{ 'TutorWizard' | localize }}</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card">
+          <div class="card-header">
+            {{ 'Profile' | localize }}
+          </div>
+          <div class="card-body">
+            <div class="bs-vertical-wizard">
+              <ul>
+                <li app-tutor-wizard-step title="AboutYou" [link]="'/app/tutor-applications/' + userId + '/about-you'"
+                  [step]="BecomeATutorStep.AboutYou" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.AboutYou)" >
+                </li>
+                <li app-tutor-wizard-step title="Education" [link]="'/app/tutor-applications/' + userId + '/education'"
+                  [step]="BecomeATutorStep.Education" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.Education)">
+                </li>
+                <li app-tutor-wizard-step title="Research" [link]="'/app/tutor-applications/' + userId + '/research'"
+                  [step]="BecomeATutorStep.Research" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.Research)">
+                </li>
+                <li app-tutor-wizard-step title="Languages" [link]="'/app/tutor-applications/' + userId + '/languages'"
+                  [step]="BecomeATutorStep.Languages" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.Languages)">
+                </li>
+                <li app-tutor-wizard-step title="ServicesOffered" [link]="'/app/tutor-applications/' + userId + '/services-offered'"
+                  [step]="BecomeATutorStep.ServicesOffered" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.ServicesOffered)">
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            {{ 'Verifications' | localize }}
+          </div>
+          <div class="card-body">
+            <div class="bs-vertical-wizard">
+              <ul>
+                <li app-tutor-wizard-step title="ProfilePicture" [link]="'/app/tutor-applications/' + userId + '/profile-picture'"
+                  [step]="BecomeATutorStep.ProfilePicture" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.ProfilePicture)">
+                </li>
+                <li app-tutor-wizard-step title="PhotoId" [link]="'/app/tutor-applications/' + userId + '/photo-id'"
+                  [step]="BecomeATutorStep.PhotoId" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.PhotoId)">
+                </li>
+                <li app-tutor-wizard-step title="Address" [link]="'/app/tutor-applications/' + userId + '/address'"
+                  [step]="BecomeATutorStep.Address" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.Address)">
+                </li>
+                <li app-tutor-wizard-step title="ContactNumber" [link]="'/app/tutor-applications/' + userId + '/contact-number'"
+                  [step]="BecomeATutorStep.ContactNumber" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.ContactNumber)">
+                </li>
+                <li app-tutor-wizard-step title="References" [link]="'/app/tutor-applications/' + userId + '/references'"
+                  [step]="BecomeATutorStep.References" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.References)">
+                </li>
+                <li app-tutor-wizard-step title="DbsCheck" [link]="'/app/tutor-applications/' + userId + '/dbs-check'"
+                  [step]="BecomeATutorStep.DbsCheck" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.DbsCheck)">
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            {{ 'TermsAndConditions' | localize }}
+          </div>
+          <div class="card-body">
+            <div class="bs-vertical-wizard">
+              <ul>
+                <li app-tutor-wizard-step title="TermsOfUse" [link]="'/app/tutor-applications/' + userId + '/terms-of-use'"
+                  [step]="BecomeATutorStep.TermsOfUse" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.TermsOfUse)">
+                </li>
+                <li app-tutor-wizard-step title="PrivacyPolicy" [link]="'/app/tutor-applications/' + userId + '/privacy-policy'"
+                  [step]="BecomeATutorStep.PrivacyPolicy" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.PrivacyPolicy)">
+                </li>
+                <li app-tutor-wizard-step title="Declaration" [link]="'/app/tutor-applications/' + userId + '/declaration'"
+                  [step]="BecomeATutorStep.Declaration" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.Declaration)">
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>

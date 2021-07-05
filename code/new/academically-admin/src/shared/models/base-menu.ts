@@ -48,6 +48,7 @@ export abstract class BaseMenu extends AppComponentBase {
         new MenuItem(this.l('Roles'), '/app/roles', 'fe fe-lock', 'Pages.Roles')
       ]),
       new MenuItem(this.l('SeeAllProjects'), '/app/projects/browse', 'fe fe-briefcase', 'Pages.Projects.Browse'),
+      new MenuItem(this.l('TutorApplications'), '/app/tutor-applications', 'fe fe-user-check',  'Pages.TutorApplications'),
       new MenuItem(this.l('Schedule'), '/app/calendar', 'fe fe-calendar'),
     ];
   }
