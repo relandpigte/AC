@@ -30,8 +30,8 @@ export abstract class BaseMenu extends AppComponentBase {
     return [
       // new MenuItem(this.l('Dashboard'), '/app/home', 'fe fe-home', 'Pages.Dashboard'),
       new MenuItem(this.l('Dashboard'), '/app/home', 'fe fe-home'),
-      new MenuItem(this.l('OverseasStudy'), '#', 'fe fe-globe'),
-      new MenuItem(this.l('Blog'), '#', 'fe fe-message-circle'),
+      // new MenuItem(this.l('OverseasStudy'), '#', 'fe fe-globe'),
+      // new MenuItem(this.l('Blog'), '#', 'fe fe-message-circle'),
       new MenuItem(this.l('AcademicSupport'), '', 'fe fe-book', 'Pages.Dashboard.Navigations.AcademicSupport', [
         new MenuItem(this.l('PeerSupport'), '/app/peer-support', 'fe fe-users', 'Pages.PeerSupport', [
           new MenuItem(this.l('Tutorial'), '/app/tutorial', 'fe fe-book-open', 'Pages.PeerSupport.Tutorial'),
@@ -44,8 +44,9 @@ export abstract class BaseMenu extends AppComponentBase {
         new MenuItem(this.l('ServiceSubjects'), '/app/suggestions/service-subjects', 'fe fe-bookmark', 'Pages.Suggestions.ServiceSubjects'),
       ]),
       new MenuItem(this.l('Settings'), '', 'fe fe-settings', '', [
+        new MenuItem(this.l('TutorApplications'), '/app/tutor-applications', 'fe fe-user-check',  'Pages.TutorApplications'),
         new MenuItem(this.l('Users'), '/app/users', 'fe fe-users', 'Pages.Users'),
-        new MenuItem(this.l('Roles'), '/app/roles', 'fe fe-lock', 'Pages.Roles')
+        new MenuItem(this.l('Roles'), '/app/roles', 'fe fe-lock', 'Pages.Roles'),
       ]),
       new MenuItem(this.l('SeeAllProjects'), '/app/projects/browse', 'fe fe-briefcase', 'Pages.Projects.Browse'),
       new MenuItem(this.l('Schedule'), '/app/calendar', 'fe fe-calendar'),

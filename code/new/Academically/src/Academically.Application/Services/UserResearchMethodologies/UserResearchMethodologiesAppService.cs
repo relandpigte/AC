@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Academically.Services.UserResearchMethodologies
 {
-    [AbpAuthorize(PermissionNames.Pages_Profile_Research_ResearchMethodologies)]
+    [AbpAuthorize(PermissionNames.Pages_Profile_Research_ResearchMethodologies,PermissionNames.Pages_TutorApplications_Research)]
     public class UserResearchMethodologiesAppService : AcademicallyAppServiceBase, IUserResearchMethodologiesAppService
     {
         private readonly IRepository<UserResearchMethodology, Guid> _userResearchMethodologiesRepository;

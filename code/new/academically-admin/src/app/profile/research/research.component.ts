@@ -1,4 +1,4 @@
-import { Component, Injector, ViewChild } from '@angular/core';
+import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { InterestsComponent } from './_components/interests/interests.component';
 import { MethodologiesComponent } from './_components/methodologies/methodologies.component';
@@ -13,6 +13,7 @@ export class ResearchComponent extends AppComponentBase {
   @ViewChild('interests') interests: InterestsComponent;
   @ViewChild('methodologies') methodologies: MethodologiesComponent;
   @ViewChild('publications') publications: PublicationsComponent;
+  @Input() userId: number;
 
   constructor(
     injector: Injector,

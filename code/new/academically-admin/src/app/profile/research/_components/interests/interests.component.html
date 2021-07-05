@@ -6,8 +6,9 @@
       </div>
       <div class="col-auto">
         <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchInterests.Create')" (click)="onAddClick()"
-          type="button" class="btn btn-sm btn-primary">
-          {{ 'AddResearchInterest' | localize}}
+          type="button" class="btn btn-sm btn-light">
+          <i class="fe fe-edit-2"></i>
+          {{ 'Add' | localize}}
         </button>
       </div>
     </div>

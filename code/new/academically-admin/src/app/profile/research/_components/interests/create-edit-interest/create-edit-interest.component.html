@@ -5,7 +5,7 @@
     <div class="card-body">
 
       <div class="form-group required">
-        <label class="col-form-label" for="Title">{{ 'Title' | localize}}</label>
+        <label class="col-form-label" for="Title">{{ 'ResearchArea' | localize}}</label>
         <input [(ngModel)]="userResearchInterest.title" #titleModel="ngModel" #titleEl class="form-control" type="text"
           id="Title" name="Title" required />
         <abp-validation-summary [control]="titleModel" [controlEl]="titleEl">
@@ -20,8 +20,8 @@
         </abp-validation-summary>
       </div>
 
-      <div class="form-group mb-0">
-        <label class="col-form-label" for="DisciplineTaxonomies">{{ 'KnowledgeBase' | localize }}</label>
+      <!-- <div class="form-group mb-0">
+        <label class="col-form-label" for="DisciplineTaxonomies">{{ 'ResearchFields' | localize }}</label>
         <input class="form-control" type="search" id="DisciplineTaxonomies" [(ngModel)]="disciplineTaxonomy"
           name="DisciplineTaxonomies" typeaheadOptionField="name" [typeahead]="disciplineTaxonomiesTypeaheadSource"
           [typeaheadAsync]="true" [typeaheadOptionsLimit]="10"
@@ -35,6 +35,24 @@
               <span aria-hidden="true">×</span>
             </button>
           </div>
+        </div>
+      </div> -->
+
+      <div class="form-group mb-0">
+        <label class="col-form-label pb-0" for="DisciplineTaxonomies">{{ 'ResearchFields' | localize }}</label>
+        <div class="ac-alerts">
+          <div *ngFor="let selectedTaxonomy of userResearchInterest.userResearchInterestDisciplineTaxonomies"
+            class="alert alert-info alert-dismissible ac-alert" role="alert">
+            {{ selectedTaxonomy.disciplineTaxonomy.name }}
+            <button (click)="onRemoveDisciplineTaxonomyClick(selectedTaxonomy.disciplineTaxonomy.id)" type="button" class="close"
+              data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <a (click)="$event.preventDefault(); onAddResearchFieldsClick()" class="btn btn-light ac-alert"
+            role="alert" href="#">
+            <i class="fe fe-plus"></i> {{ 'Add' | localize}}
+          </a>
         </div>
       </div>
 

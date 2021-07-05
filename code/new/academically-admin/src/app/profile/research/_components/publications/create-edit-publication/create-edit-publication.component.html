@@ -65,7 +65,7 @@
       </div>
 
       <div class="form-group">
-        <label class="col-form-label" for="PublicationTags">{{ 'Tags' | localize}}</label>
+        <label class="col-form-label" for="PublicationTags">{{ 'Keywords' | localize}}</label>
         <input [(ngModel)]="publicationTag" #publicationTagsModel="ngModel" #publicationTagsEl class="form-control"
           type="text" id="PublicationTags" name="PublicationTags" typeaheadOptionField="name"
           [typeahead]="publicationTagsTypeaheadSource" [typeaheadAsync]="true" [typeaheadOptionsLimit]="10"
@@ -88,3 +88,7 @@
     </abp-modal-footer>
   </div>
 </form>
+
+<ng-template #formulaPopoverTemplate>
+  <p class="m-0" [innerHtml]="'PublicationKeywordsDescription' | localize"></p>
+</ng-template>

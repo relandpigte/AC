@@ -385,5 +385,73 @@ public class UserProfilePageStepDefinitions {
 	public void editResearchInterest(String title) {
 		UserProfilePageResearch.clickEditResearchInterest(title);
 	}
+	
+	@Then("^verify publication informations are correct$")
+	public void verifyPublication(DataTable publicationInformation) {
+        List<Map<String, String>> data = publicationInformation.asMaps(String.class, String.class);
+        String title = data.get(0).get("Title");
+        String publicationType = data.get(0).get("Publication Type");
+        String publisher = data.get(0).get("Publisher");
+        String date = data.get(0).get("Date");
+        String tag = data.get(0).get("Tag");
+        String abstarct = data.get(0).get("Abstarct");
+        DriverHandler.delay(3);
+        if(!title.equals("null")) {
+        	UserProfilePageResearch.PublicationModal.verifyTitleValueIsCorrect(title);
+        }
+        if(!publicationType.equals("null")) {
+        	UserProfilePageResearch.PublicationModal.verifyPublicationTypeValueIsCorrect(publicationType);
+        }
+        if(!publisher.equals("null")) {
+        	UserProfilePageResearch.PublicationModal.verifyPublisherValueIsCorrect(publisher.replace("XXX", DriverHandler.timestamp));
+        }
+        if(!date.equals("null")) {
+        	UserProfilePageResearch.PublicationModal.verifypublicationDateValueIsCorrect(date);
+        }
+        if(!abstarct.equals("null")) {
+        	UserProfilePageResearch.PublicationModal.verifyAbstractValueIsCorrect(abstarct);
+        }
+        if(!tag.equals("null")) {
+        	UserProfilePageResearch.PublicationModal.verifyTagIsDisplayed(tag);
+        }
+	}
+	
+	@Then("^verify research methodology informations are correct$")
+	public void verifyResearchMethodologyInformation(DataTable methodologyInformation) {
+        List<Map<String, String>> data = methodologyInformation.asMaps(String.class, String.class);
+        String title1 = data.get(0).get("Title");
+        String ResearchMethod1 = data.get(0).get("Research method");
+        String ResearchMethod2 = data.get(1).get("Research method");
+        String description = data.get(0).get("Description");
+        if(!title1.equals("null")) {
+        	UserProfilePageResearch.MethodologyModal.verifyTitleValueIsCorrect(title1);
+        }
+        if(!description.equals("null")) {
+        	UserProfilePageResearch.MethodologyModal.verifyDescriptionValueIsCorrect(description);
+        }
+        if(!ResearchMethod1.equals("null")) {
+        	UserProfilePageResearch.MethodologyModal.verifyResearchMethodAlertIsDisplayed(ResearchMethod1);
+        }
+        if(!ResearchMethod2.equals("null")) {
+        	UserProfilePageResearch.MethodologyModal.verifyResearchMethodAlertIsDisplayed(ResearchMethod2);
+        }
+	}
+	
+	@Then("^verify research interest informations are correct$")
+	public void verifyResearchInterestInformation(DataTable researchInterestInformation) {
+        List<Map<String, String>> data = researchInterestInformation.asMaps(String.class, String.class);
+        String title = data.get(0).get("Title");
+        String knowledge = data.get(0).get("Knowledge Base");
+        String description = data.get(0).get("Description");
+        if(!title.equals("null")) {
+        	UserProfilePageResearch.ResearchInterestModal.verifyTitleValueIsCorrect(title);
+        }
+        if(!description.equals("null")) {	 
+        	UserProfilePageResearch.ResearchInterestModal.veriftyDescriptionValueIsCorrect(description);
+        }
+        if(!knowledge.equals("null")) {	 
+        	UserProfilePageResearch.ResearchInterestModal.verifyKnowledgeBaseIsDisplayed(knowledge);
+        }
+	}
 }
 

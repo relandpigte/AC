@@ -34,10 +34,10 @@ namespace Academically.Services.AcceptanceLogs
             await _acceptanceLogsRepository.InsertAsync(acceptanceLog);
         }
 
-        public async Task<AcceptanceLogDto> GetLatest(AcceptanceType type)
+        public async Task<AcceptanceLogDto> GetLatest(AcceptanceType type, long userId)
         {
             var acceptanceLog = await _acceptanceLogsRepository.GetAll()
-                .Where(e => e.Type == type && e.CreatorUserId == AbpSession.UserId.Value)
+                .Where(e => e.Type == type && e.CreatorUserId == userId)
                 .OrderByDescending(e => e.CreationTime)
                 .Select(e => ObjectMapper.Map<AcceptanceLogDto>(e))
                 .FirstOrDefaultAsync();

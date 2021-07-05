@@ -1,6 +1,7 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
 import { UserResearchMethodologyDto, UserPublicationDto, UserPublicationsServiceProxy, UserPublicationDtoPagedResultDto } from '@shared/service-proxies/service-proxies';
+import { AppSessionService } from '@shared/session/app-session.service';
 import * as _ from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
@@ -19,9 +20,11 @@ class PagedUserPublicationsRequestDto extends PagedAndSortedRequestDto {
 export class PublicationsComponent extends PagedListingComponentBase<UserResearchMethodologyDto> {
   userPublications: UserPublicationDto[];
   searchFilter: string;
+  @Input() userId: number;
 
   constructor(
     injector: Injector,
+    private _appSession: AppSessionService,
     private _modalService: BsModalService,
     private _userPublicationsService: UserPublicationsServiceProxy,
   ) {
@@ -30,8 +33,7 @@ export class PublicationsComponent extends PagedListingComponentBase<UserResearc
   }
 
   list(request: PagedUserPublicationsRequestDto, pageNumber: number, finishedCallback: Function): void {
-    request.userIdFilter = this.appSession.userId;
-    request.searchFilter = this.searchFilter;
+    request.userIdFilter = this.userId ?? this._appSession.userId;
 
     this._userPublicationsService
       .getPaged(

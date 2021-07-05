@@ -5,7 +5,7 @@ namespace Academically.Services.PhotoIdVerifications
 {
     public interface IPhotoIdVerificationsAppService
     {
-        Task<PhotoIdVerificationDto> GetLatest();
+        Task<PhotoIdVerificationDto> GetLatest(long userId);
         Task Create(CreatePhotoIdVerificationDto input);
     }
 }

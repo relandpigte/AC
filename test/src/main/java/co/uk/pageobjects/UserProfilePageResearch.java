@@ -119,14 +119,28 @@ public class UserProfilePageResearch {
 		}
 		
 		private static TextBox titleTextbox = new TextBox("Title",By.xpath("//app-create-edit-interest//input[@id='Title']"));
-		private static TextBox descriptionTextBox = new TextBox("Description",By.xpath("//app-create-edit-interest//div[@class='ql-editor ql-blank']/p"));
+		private static TextBox descriptionTextBox = new TextBox("Description",By.xpath("//app-create-edit-interest//div[contains(@class,'ql-editor')]/p"));
 		private static TextBox knowledgeBaseTextBox = new TextBox("Knowledge base",By.xpath("//app-create-edit-interest//input[@id='DisciplineTaxonomies']"));
 		private static Element knowlegeBaseDropDown = new Element("Knowledge dropdown",By.xpath("//typeahead-container//button"));
 		
 		private static Button save = new Button("Save",By.xpath("//app-create-edit-interest//button[@type='submit']"));
-		
+		 private static Element knowledgeBaseAlert(String knowledge) {
+	        	return new Element("Knowledge base: "+knowledge,By.xpath("//app-create-edit-interest//div[contains(@class,'ac-alerts')]//div[contains(text(),'"+knowledge+"')]"));
+	        }
 		public static void verifyModalTitle(String title) {
 			modalTitle(title).verifyDisplayed();
+		}
+		
+		public static void verifyKnowledgeBaseIsDisplayed(String value) {
+			knowledgeBaseAlert(value).verifyDisplayed();
+		}
+		
+		public static void verifyTitleValueIsCorrect(String value) {
+			titleTextbox.verifyAttributeContains("value", value);
+		}
+		
+		public static void veriftyDescriptionValueIsCorrect(String value) {
+			descriptionTextBox.verifyTextContains(value);
 		}
 		
 		public static void enterTitle(String title) {
@@ -158,9 +172,24 @@ public class UserProfilePageResearch {
 			return new Element(title,By.xpath("//app-create-edit-methodology//h4[contains(text(),'"+title+"')]"));
 		}
 		private static ListBox title = new ListBox("Title",By.xpath("//app-create-edit-methodology//select[@id='Title']"));
-		private static TextBox descriptionTextBox = new TextBox("Description",By.xpath("//app-create-edit-methodology//div[@class='ql-editor ql-blank']/p"));
+		private static Element verifytitle = new Element("Title",By.xpath("//app-create-edit-methodology//select[@id='Title']"));
+		private static TextBox descriptionTextBox = new TextBox("Description",By.xpath("//app-create-edit-methodology//div[contains(@class,'ql-editor')]/p"));
 		private static Button addMethod = new Button("Add method",By.xpath("//app-create-edit-methodology//a[contains(text(),'Add Method')]"));
 		private static Button save = new Button("Save",By.xpath("//app-create-edit-methodology//button[@type='submit']"));
+		private static Element researchMethodAlert(String method) {
+	        	return new Element("Research method: "+method,By.xpath("//app-create-edit-methodology//div[contains(@class,'ac-alerts')]//div[contains(text(),'"+method+"')]"));
+	        }
+		public static void verifyTitleValueIsCorrect(String value) {
+			verifytitle.verifyAttributeContains("value", value);
+		}
+		
+		public static void verifyDescriptionValueIsCorrect(String value) {
+			descriptionTextBox.verifyTextContains(value);
+		}
+		
+		public static void verifyResearchMethodAlertIsDisplayed(String value) {
+			researchMethodAlert(value).verifyDisplayed();
+		}
 		
 		public static void clickSave() {
 			save.click();
@@ -220,14 +249,40 @@ public class UserProfilePageResearch {
 		private static Element modalTitle(String title) {
 			return new Element(title+" Publication modal",By.xpath("//app-create-edit-publication//h4[contains(text(),'"+title+"')]"));
 		}
-		private static TextBox titleTextbox = new TextBox("Title",By.xpath("//app-create-edit-publication//input[@id='Title']"));
+		private static TextBox titleTextbox = new TextBox("Title",By.xpath("//app-create-edit-publication//input[contains(@id,'Title')]"));
+		private static Element pubType = new Element("Publication Type",By.xpath("//app-create-edit-publication//select[@id='PublicationType']"));
 		private static ListBox publicationType = new ListBox("Publication Type",By.xpath("//app-create-edit-publication//select[@id='PublicationType']"));
 		private static TextBox publisherTextBox = new TextBox("Publisher",By.xpath("//app-create-edit-publication//input[@id='Publisher']"));
 		private static TextBox publicationDate = new TextBox("Publication date",By.xpath("//app-create-edit-publication//input[@id='PublicationDate']"));
-		private static TextBox abstractTextBox = new TextBox("Abstract",By.xpath("//app-create-edit-publication//div[@class='ql-editor ql-blank']/p"));
+		private static TextBox abstractTextBox = new TextBox("Abstract",By.xpath("//app-create-edit-publication//div[contains(@class,'ql-editor')]/p"));
 		private static TextBox tagTextBox = new TextBox("Tag",By.xpath("//app-create-edit-publication//input[@id='PublicationTags']"));
 		private static Element tagDropdown = new Element("Tag dropdown",By.xpath("//typeahead-container//span"));
 		private static Button save = new Button("Save",By.xpath("//app-create-edit-publication//button[@type='submit']"));
+        private static Element tagAlert(String tagname) {
+        	return new Element("Tag: "+tagname,By.xpath("//app-create-edit-publication//div[contains(@class,'ac-alerts')]//div[contains(text(),'"+tagname+"')]"));
+        }
+        public static void verifyTitleValueIsCorrect(String value) {
+        	titleTextbox.verifyAttributeContains("value", value);
+        }
+        public static void verifyTagIsDisplayed(String value) {
+        	tagAlert(value).verifyDisplayed();
+        }
+        
+		public static void verifyPublicationTypeValueIsCorrect(String value) {
+			pubType.verifyTextContains(value);
+		}
+		
+		public static void verifyPublisherValueIsCorrect(String value) {
+			publisherTextBox.verifyAttributeContains("value", value);
+		}
+		public static void verifypublicationDateValueIsCorrect(String value) {
+			publicationDate.verifyAttributeContains("value", value);
+		}
+		
+		public static void verifyAbstractValueIsCorrect(String value) {
+			abstractTextBox.verifyTextEquals(value);
+		}
+		
 		
 		public static void clickSave() {
 			save.click();

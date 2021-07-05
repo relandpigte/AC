@@ -1,0 +1,51 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="root (generated)" id="1625072819239-1">
+        <createTable tableName="academicallytutorverificationsteps">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Step" type="TINYINT(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Status" type="TINYINT(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ReviewTime" type="datetime"/>
+            <column name="ReviewerUserId" type="BIGINT"/>
+            <column name="TutorVerificationId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1625072819239-2">
+        <createIndex indexName="FK_TutorVerificationSteps_Users_CreatorUserId_idx" tableName="academicallytutorverificationsteps">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1625072819239-3">
+        <createIndex indexName="FK_TutorVerificationSteps_Users_ReviewerUserId_idx" tableName="academicallytutorverificationsteps">
+            <column name="ReviewerUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1625072819239-4">
+        <createIndex indexName="FK_TutorVerificationSteps_TutorVerificationId_idx" tableName="academicallytutorverificationsteps">
+            <column name="TutorVerificationId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1625072819239-5">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="AcademicallyTutorVerificationSteps" constraintName="FK_TutorVerificationSteps_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1625072819239-6">
+        <addForeignKeyConstraint baseColumnNames="ReviewerUserId" baseTableName="AcademicallyTutorVerificationSteps" constraintName="FK_TutorVerificationSteps_Users_ReviewerUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1625072819239-7">
+        <addForeignKeyConstraint baseColumnNames="TutorVerificationId" baseTableName="AcademicallyTutorVerificationSteps" constraintName="FK_TutorVerificationSteps_TutorVerificationId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyTutorVerifications" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

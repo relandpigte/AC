@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace Academically.Services.Profiles
 {
-    [AbpAuthorize(PermissionNames.Pages_Profile)]
+    [AbpAuthorize(PermissionNames.Pages_Profile, PermissionNames.Pages_TutorApplications_ProfilePicture)]
     public class ProfilesAppService : AcademicallyAppServiceBase, IProfilesAppService
     {
         private readonly UserManager _userManager;

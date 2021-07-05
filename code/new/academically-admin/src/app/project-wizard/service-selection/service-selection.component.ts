@@ -70,12 +70,12 @@ export class ServiceSelectionComponent extends AppComponentBase implements OnIni
   }
 
   onBackClick(): void {
-    this._router.navigate(['/app/service-wizard/service-level']);
+    this._router.navigate(['/app/project-wizard/service-level']);
   }
 
   onNextClick(): void {
     if (this.validStep()) {
-      this._router.navigate(['/app/service-wizard/create']);
+      this._router.navigate(['/app/project-wizard/create']);
     }
   }
 

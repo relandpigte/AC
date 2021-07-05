@@ -24,6 +24,7 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
   @Input() hasCategory = false;
   @Input() previewImages = false;
   @Input() largeImagePreview = false;
+  @Input() hasRemoveButton = true;
   @Input() defaultFile: DefaultFile;
   @Output() filesChanged = new EventEmitter<FileParameter[]>();
   @Output() defaultFileRemoved = new EventEmitter();

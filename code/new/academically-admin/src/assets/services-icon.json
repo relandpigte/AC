@@ -1,0 +1,40 @@
+{
+    "Services": [
+        {
+            "name": "Academic English Coaching",
+            "icon": "fe-message-square"
+          },
+          {
+            "name": "Academic Support",
+            "icon": "fe-user"
+          },
+          {
+            "name": "Career Consultancy",
+            "icon": "fe-briefcase"
+          },
+          {
+            "name": "English Language Test for Professionals Coaching",
+            "icon": "fe-globe"
+          },
+          {
+            "name": "Language Tutoring",
+            "icon": "fe-cast"
+          },
+          {
+            "name": "School Admissions",
+            "icon": "fe-file"
+          },
+          {
+            "name": "Study Skills",
+            "icon": "fe-award"
+          },
+          {
+            "name": "University Admissions",
+            "icon": "fe-grid"
+          },
+          {
+            "name": "Visa Application Consultancy",
+            "icon": "fe-send"
+          }
+    ]
+}

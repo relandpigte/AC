@@ -9,6 +9,7 @@ namespace Academically.Services.AcceptanceLogs
     public interface IAcceptanceLogsAppService : IApplicationService
     {
         Task Accept(AcceptanceType type);
-        Task<AcceptanceLogDto> GetLatest(AcceptanceType type);
+        Task<AcceptanceLogDto> GetLatest(AcceptanceType type, long userId);
+
     }
 }
