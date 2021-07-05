@@ -11,10 +11,11 @@ namespace Academically.Services.TutorWizard
         Task<TutorVerificationStepDto> GetCurrentStep();
         Task<TutorVerificationDto> GetTutorVerificationAsync();
 
-        Task<AboutYouDto> GetAboutYou();
+        Task<AboutYouDto> GetAboutYou(long? userId);
         Task UpdateAboutYou(AboutYouDto input);
         Task UpdateAddress(UpdateAddressDto input);
 
         Task<TutorVerificationStepDto> UpdateStep(BecomeATutorStep step);
+        Task<TutorVerificationStepDto> GetPendingStep(long userId);
     }
 }

@@ -25,10 +25,10 @@ namespace Academically.Services.PhotoIdVerifications
             _documentsDomainService = documentsDomainService;
         }
 
-        public async Task<PhotoIdVerificationDto> GetLatest()
+        public async Task<PhotoIdVerificationDto> GetLatest(long userId)
         {
             var photoIdVerification = await _photoIdVerificationsRepository.GetAll()
-                .Where(e => e.Status != PhotoIdVerificationStatus.Declined && e.CreatorUserId == AbpSession.UserId.Value)
+                .Where(e => e.Status != PhotoIdVerificationStatus.Declined && e.CreatorUserId == userId)
                 .OrderByDescending(e => e.CreationTime)
                 .Include(e => e.Document)
                 .FirstOrDefaultAsync();

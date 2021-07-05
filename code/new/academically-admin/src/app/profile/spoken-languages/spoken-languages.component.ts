@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from "@angular/core";
+import { Component, Injector, Input, OnInit } from "@angular/core";
 import { AppComponentBase } from "@shared/app-component-base";
 import {
   SpokenLanguageProficiency,
@@ -14,9 +14,8 @@ import { EditSpokenLanguageModalComponent } from "./edit-spoken-languages-modal/
   templateUrl: "./spoken-languages.component.html",
   styleUrls: ["./spoken-languages.component.less"],
 })
-export class SpokenLanguagesComponent
-  extends AppComponentBase
-  implements OnInit {
+export class SpokenLanguagesComponent extends AppComponentBase implements OnInit {
+  @Input() userId: number;
   userSpokenLanguages: UserSpokenLanguageDto[] = [];
   isLoading: boolean = false;
   SpokenLanguageProficiency = SpokenLanguageProficiency;
@@ -28,19 +27,25 @@ export class SpokenLanguagesComponent
     private _userSpokenlanguageServiceProxy: UserSpokenlanguageServiceProxy
   ) {
     super(injector);
-      this.getUserSpokenLanguage();
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.getUserSpokenLanguage();
+   }
 
   onEdit(): void {
     this.showEditUserSpokenLanguages();
   }
 
+  canCreate(): boolean {
+    return this.isGranted('Pages.TutorWizard.Languages.Create') ||
+      this.isGranted('Pages.Profile.LanguageSpoken.Create');
+  }
+
   private getUserSpokenLanguage(): void {
     this.isLoading = true;
     this._userSpokenlanguageServiceProxy
-      .getUserSpokenLanguages(this._appSession.user.id)
+      .getUserSpokenLanguages(this.userId ?? this._appSession.userId)
       .subscribe((result) => {
         this.userSpokenLanguages = result;
         this.isLoading = false;

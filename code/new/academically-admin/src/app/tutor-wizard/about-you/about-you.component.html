@@ -8,24 +8,24 @@
     <div class="card-body">
 
       <div class="form-row">
-        <div class="form-group col-md-6 required">
+        <div class="form-group col-md-6 required" [class.required]="!isReadOnly">
           <label class="col-form-label" for="name">{{ 'FirstName' | localize }}</label>
           <input [(ngModel)]="model.name" #nameModel="ngModel" #nameEl class="form-control" type="text" id="name"
-            name="name" required />
+            name="name" required [readonly]="isReadOnly"/>
           <abp-validation-summary [control]="nameModel" [controlEl]="nameEl">
           </abp-validation-summary>
         </div>
 
-        <div class="form-group col-md-6 required">
+        <div class="form-group col-md-6 required" [class.required]="!isReadOnly">
           <label class="col-form-label" for="surname">{{ 'LastName' | localize }}</label>
           <input [(ngModel)]="model.surname" #surnameModel="ngModel" #surnameEl class="form-control" type="text"
-            id="surname" name="surname" required />
+            id="surname" name="surname" required [readonly]="isReadOnly"/>
           <abp-validation-summary [control]="surnameModel" [controlEl]="surnameEl">
           </abp-validation-summary>
         </div>
       </div>
 
-      <div class="form-group required m-0">
+      <div class="form-group required m-0" *ngIf="!isReadOnly">
         <label class="col-form-label" for="about">{{ 'ProfessionalOverview' | localize }}</label>
         <quill-editor [(ngModel)]="model.about" #aboutModel="ngModel" #aboutEl id="about" name="about" required
           style="height: 500px">
@@ -33,6 +33,11 @@
         <abp-validation-summary [control]="aboutModel" [controlEl]="aboutEl.elementRef.nativeElement">
         </abp-validation-summary>
       </div>
+      <div class="form-group m-0" *ngIf="isReadOnly && !isLoading">
+        <label class="col-form-label" for="about">{{ 'ProfessionalOverview' | localize }}</label>
+        <quill-view-html [classList]="'form-control-style'" [content]="model.about" theme="snow"></quill-view-html>
+      </div>
+
 
     </div>
   </div>
@@ -40,7 +45,10 @@
     <button (click)="onCancelClick()" type="button" class="btn btn-white">
       {{ 'Cancel' | localize }}
     </button>
-    <button [disabled]="!createEditForm.form.valid || isLoading" type="submit" class="btn btn-primary">
+    <button *ngIf="!isReadOnly" [disabled]="!createEditForm.form.valid || isLoading" type="submit" class="btn btn-primary">
+      {{ 'Next' | localize }}
+    </button>
+    <button *ngIf="isReadOnly" type="button" class="btn btn-primary" (click)="onNavigateNextScreen()">
       {{ 'Next' | localize }}
     </button>
   </div>

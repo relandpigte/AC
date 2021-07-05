@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ServiceWizardComponent } from './service-wizard.component';
+import { ProjectWizardComponent } from './project-wizard.component';
 
-describe('ServiceWizardComponent', () => {
-  let component: ServiceWizardComponent;
-  let fixture: ComponentFixture<ServiceWizardComponent>;
+describe('ProjectWizardComponent', () => {
+  let component: ProjectWizardComponent;
+  let fixture: ComponentFixture<ProjectWizardComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ServiceWizardComponent ]
+      declarations: [ ProjectWizardComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ServiceWizardComponent);
+    fixture = TestBed.createComponent(ProjectWizardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

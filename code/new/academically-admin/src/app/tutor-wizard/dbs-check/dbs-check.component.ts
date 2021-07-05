@@ -1,4 +1,5 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { DefaultFile, DocumentUploaderComponent } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
@@ -25,9 +26,12 @@ export class DbsCheckComponent extends AppComponentBase implements OnInit {
   isLoading = false;
   isDbsRequired = false;
   isDbsCheckAgreed = false;
+  userId: number;
+  isReadOnly = false;
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _becomeATutorService: BecomeATutorService,
     private _tutorWizardService: TutorWizardServiceProxy,
     private _dbsCertificatesService: DbsCertificatesServiceProxy,
@@ -36,6 +40,11 @@ export class DbsCheckComponent extends AppComponentBase implements OnInit {
     this.datePickerConfig = new BsDatepickerConfig();
     this.datePickerConfig.showWeekNumbers = false;
     this.datePickerConfig.dateInputFormat = 'DD/MM/YYYY';
+
+    this._becomeATutorService.userId$.subscribe(userId => {
+      this.userId = userId ?? this.appSession.userId;
+      this.isReadOnly = (this.userId !== this.appSession.userId);
+    });
   }
 
   ngOnInit(): void {
@@ -95,6 +104,18 @@ export class DbsCheckComponent extends AppComponentBase implements OnInit {
 
   onSkipClick(): void {
     this.updateStep();
+  }
+
+  onNavigateNextScreen(): void {
+    this._router.navigate([`app/tutor-applications/${this.userId}/terms-of-use`]);
+  }
+
+  onBackClick(): void {
+    if (this.isReadOnly) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/references`]);
+    } else {
+      this._router.navigate([`app/tutor-wizard/references`]);
+    }
   }
 
   private updateStep(): void {

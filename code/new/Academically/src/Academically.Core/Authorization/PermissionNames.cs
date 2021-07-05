@@ -19,7 +19,13 @@
         public const string Pages_Profile_Introduction_Reviews = "Pages.Profile.Introduction.Reviews";
 
         public const string Pages_Profile_Services = "Pages.Profile.Services";
+        public const string Pages_Profile_Services_Create = "Pages.Profile.Services.Create";
         public const string Pages_Profile_Services_SuggestSubject = "Pages.Profile.Services.SuggestSubject";
+        public const string Pages_Profile_Services_Update = "Pages.Profile.Services.Update";
+        public const string Pages_Profile_Services_Delete = "Pages.Profile.Services.Delete";
+
+        public const string Pages_Profile_LanguageSpoken = "Pages.Profile.LanguageSpoken";
+        public const string Pages_Profile_LanguageSpoken_Create = "Pages.Profile.LanguageSpoken.Create";
 
         public const string Pages_Profile_Education = "Pages.Profile.Education";
         public const string Pages_Profile_Education_Create = "Pages.Profile.Education.Create";
@@ -83,7 +89,11 @@
         public const string Pages_TutorWizard_Education = "Pages.TutorWizard.Education";
         public const string Pages_TutorWizard_Research = "Pages.TutorWizard.Research";
         public const string Pages_TutorWizard_Languages = "Pages.TutorWizard.Languages";
+        public const string Pages_TutorWizard_Languages_Create = "Pages.TutorWizard.Languages.Create";
         public const string Pages_TutorWizard_ServicesOffered = "Pages.TutorWizard.ServicesOffered";
+        public const string Pages_TutorWizard_ServicesOffered_Create = "Pages.TutorWizard.ServicesOffered.Create";
+        public const string Pages_TutorWizard_ServicesOffered_Update = "Pages.TutorWizard.ServicesOffered.Update";
+        public const string Pages_TutorWizard_ServicesOffered_Delete = "Pages.TutorWizard.ServicesOffered.Delete";
         public const string Pages_TutorWizard_ProfilePicture = "Pages.TutorWizard.ProfilePicture";
         public const string Pages_TutorWizard_PhotoId = "Pages.TutorWizard.PhotoId";
         public const string Pages_TutorWizard_Address = "Pages.TutorWizard.Address";
@@ -127,6 +137,27 @@
         public const string Pages_Projects_OfferHistory = "Pages.Projects.OfferHistory";
         public const string Pages_Projects_Proposals = "Pages.Projects.Proposals";
         public const string Pages_Projects_Hired = "Pages.Projects.Hired";
+
+        public const string Pages_TutorApplications = "Pages.TutorApplications";
+        public const string Pages_TutorApplications_List = "Pages.TutorApplications.List";
+        public const string Pages_TutorApplications_Approve = "Pages.TutorApplications.Approve";
+        public const string Pages_TutorApplications_Reject = "Pages.TutorApplications.Reject";
+
+        public const string Pages_TutorApplications_AboutYou = "Pages.TutorApplications.AboutYou";
+        public const string Pages_TutorApplications_Education = "Pages.TutorApplications.Education";
+        public const string Pages_TutorApplications_Research = "Pages.TutorApplications.Research";
+        public const string Pages_TutorApplications_Languages = "Pages.TutorApplications.Languages";
+        public const string Pages_TutorApplications_ServicesOffered = "Pages.TutorApplications.ServicesOffered";
+        public const string Pages_TutorApplications_ProfilePicture = "Pages.TutorApplications.ProfilePicture";
+        public const string Pages_TutorApplications_PhotoId = "Pages.TutorApplications.PhotoId";
+        public const string Pages_TutorApplications_Address = "Pages.TutorApplications.Address";
+        public const string Pages_TutorApplications_ContactNumber = "Pages.TutorApplications.ContactNumber";
+        public const string Pages_TutorApplications_References = "Pages.TutorApplications.References";
+        public const string Pages_TutorApplications_DbsCheck = "Pages.TutorApplications.DbsCheck";
+        public const string Pages_TutorApplications_TermsOfUse = "Pages.TutorApplications.TermsOfUse";
+        public const string Pages_TutorApplications_PrivacyPolicy = "Pages.TutorApplications.PrivacyPolicy";
+        public const string Pages_TutorApplications_Declaration = "Pages.TutorApplications.Declaration";
+
 
         public const string Pages_Tenants = "Pages.Tenants";
     }

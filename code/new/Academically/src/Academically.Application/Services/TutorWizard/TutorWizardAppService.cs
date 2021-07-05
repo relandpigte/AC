@@ -29,7 +29,7 @@ namespace Academically.Services.TutorWizard
 
         public async Task<TutorVerificationStepDto> GetCurrentStep()
         {
-            var tutorVerification = await GetCurrent();
+            var tutorVerification = await GetCurrent(AbpSession.UserId.Value);
             var currentStep = new TutorVerificationStep();
 
             if (tutorVerification == null)
@@ -59,9 +59,19 @@ namespace Academically.Services.TutorWizard
             return ObjectMapper.Map<TutorVerificationStepDto>(currentStep);
         }
 
+        public async Task<TutorVerificationStepDto> GetPendingStep(long userId)
+        {
+            var tutorVerification = await GetCurrent(userId);
+            var currentStep = tutorVerification.TutorVerificationSteps
+                .OrderBy(e => e.Step)
+                .FirstOrDefault(e => e.Status == TutorVerificationStepStatus.Saved);
+
+            return ObjectMapper.Map<TutorVerificationStepDto>(currentStep);
+        }
+
         public async Task<TutorVerificationDto> GetTutorVerificationAsync()
         {
-            var tutorVerification = await GetCurrent();
+            var tutorVerification = await GetCurrent(AbpSession.UserId.Value);
 
             if (!tutorVerification.TutorVerificationSteps.Any())
             {
@@ -77,9 +87,9 @@ namespace Academically.Services.TutorWizard
         }
 
         [AbpAuthorize(PermissionNames.Pages_TutorWizard_AboutYou)]
-        public async Task<AboutYouDto> GetAboutYou()
+        public async Task<AboutYouDto> GetAboutYou(long? userId)
         {
-            var user = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
+            var user = await UserManager.GetUserByIdAsync(userId ?? AbpSession.UserId.Value);
             var output = ObjectMapper.Map<AboutYouDto>(user);
             return output;
         }
@@ -87,7 +97,7 @@ namespace Academically.Services.TutorWizard
         [AbpAuthorize(PermissionNames.Pages_TutorWizard_AboutYou)]
         public async Task UpdateAboutYou(AboutYouDto input)
         {
-            var user = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
+            var user = await UserManager.GetUserByIdAsync(input.UserId ?? AbpSession.UserId.Value);
             ObjectMapper.Map(input, user);
             await UserManager.UpdateAsync(user);
 
@@ -96,7 +106,7 @@ namespace Academically.Services.TutorWizard
 
         public async Task<TutorVerificationStepDto> UpdateStep(BecomeATutorStep step)
         {
-            var tutorVerification = await GetCurrent();
+            var tutorVerification = await GetCurrent(AbpSession.UserId.Value);
             var tutorVerificationStep = tutorVerification.TutorVerificationSteps.FirstOrDefault(e => e.Step == step);
 
             if (tutorVerificationStep == null)
@@ -135,17 +145,17 @@ namespace Academically.Services.TutorWizard
             await UpdateCurrentStepStatus();
         }
 
-        private async Task<TutorVerification> GetCurrent()
+        private async Task<TutorVerification> GetCurrent(long userId)
         {
             return await _tutorVerificationsRepository
                 .GetAll()
                 .Include(e => e.TutorVerificationSteps)
-                .FirstOrDefaultAsync(e => e.CreatorUserId == AbpSession.UserId.Value);
+                .FirstOrDefaultAsync(e => e.CreatorUserId == userId);
         }
 
         private async Task UpdateCurrentStepStatus(TutorVerificationStepStatus status = TutorVerificationStepStatus.Saved)
         {
-            var tutorVerification = await GetCurrent();
+            var tutorVerification = await GetCurrent(AbpSession.UserId.Value);
             var step = tutorVerification.TutorVerificationSteps.FirstOrDefault(e => e.Step == tutorVerification.CurrentStep);
 
             step.Status = status;

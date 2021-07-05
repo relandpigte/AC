@@ -45,6 +45,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.CalendarEventsServiceProxy,
         ApiServiceProxies.ProjectsServiceProxy,
         ApiServiceProxies.ProjectOffersServiceProxy,
+        ApiServiceProxies.TutorApplicationServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

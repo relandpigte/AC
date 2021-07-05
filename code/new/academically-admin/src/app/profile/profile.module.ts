@@ -7,7 +7,6 @@ import { ProfileComponent } from './profile.component';
 import { HeaderComponent } from './_components/header/header.component';
 import { CoverPhotoChangerComponent } from './_components/cover-photo-changer/cover-photo-changer.component';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
-
 @NgModule({
   declarations: [
     ProfileComponent,

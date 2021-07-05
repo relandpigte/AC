@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Route, RouterModule } from '@angular/router';
 
 import { AppRouteGuard } from '@shared/auth/auth-route-guard';
 import { BecomeATutorResolver } from './_resolvers/become-a-tutor.resolver';

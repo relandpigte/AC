@@ -77,7 +77,7 @@ export class ServiceCategoryComponent extends AppComponentBase implements OnInit
 
   onNextClick(): void {
     if (this.validStep()) {
-      this._router.navigate(['/app/service-wizard/service-level']);
+      this._router.navigate(['/app/project-wizard/service-level']);
     }
   }
 

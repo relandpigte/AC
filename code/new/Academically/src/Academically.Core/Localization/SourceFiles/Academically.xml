@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="FromUniversity">From University</text>
+    <text name="ApproveOrRegectApplications">Approve or reject applications</text>
+    <text name="TutorApplications">Tutor Applications</text>
+    <text name="TutorApplicationsList">Tutor Applications List</text>
     <text name="BookingConfirmedEmailSubject">Academically - Booking Confirmed</text>
     <text name="BookingRequestEmailSubject">Academically - New Booking Request</text>
     <text name="TheBookingRequestWasDeclined">The booking request was declined.</text>
@@ -49,9 +53,6 @@
     <text name="ManageYourEvents">Manage your events</text>
     <text name="Calendar">Calendar</text>
     <text name="LinkCopiedToClipboard">Link copied to clipboard</text>
-    <text name="DeleteYourAccount">Delete your account</text>
-    <text name="DeleteYourAccountMessage">Don't need ScholarPro anymore?</text>
-    <text name="Print">Print</text>
     <text name="AcceptTermsOfUseMessage">I agree to the terms &amp; conditions</text>
     <text name="AcceptPrivacyPolicyMessage">I agree to the privacy policy</text>
     <text name="CreateANewProject">Create a New Project</text>
@@ -266,7 +267,7 @@
     <text name="NoPublicationsFound">No Publications Found</text>
     <text name="Tags">Tags</text>
     <text name="Abstract">Abstract</text>
-    <text name="PublicationDate">Publication Date</text>
+    <text name="PublicationDate">Publication date</text>
     <text name="SelectPublicationType">Select Publication Type</text>
     <text name="PublicationType_6">Data</text>
     <text name="PublicationType_5">Thesis</text>
@@ -274,16 +275,18 @@
     <text name="PublicationType_3">Chapter</text>
     <text name="PublicationType_2">Book</text>
     <text name="PublicationType_1">Article</text>
-    <text name="PublicationType">Publication Type</text>
+    <text name="PublicationType">Publication type</text>
     <text name="AddPublication">Add Publication</text>
     <text name="Qualitative">Qualitative</text>
     <text name="Quantitative">Quantitative</text>
     <text name="NoResearchMethodologiesFound">No Research Methodologies Found</text>
-    <text name="AddMethod">Add Method</text>
+    <text name="AddMethod">Add method</text>
+    <text name="Type">Type</text>
     <text name="AddResearchMethodology">Add Research Methodology</text>
     <text name="EditResearchMethodology">Edit Research Methodology</text>
     <text name="AddMethodology">Add Methodology</text>
     <text name="Methodology">Methodology</text>
+    <text name="Methodologies">Methodologies</text>
     <text name="NoResearchInterestsFound">No Research Interests Found</text>
     <text name="ResearchInterests">Research Interests</text>
     <text name="Description">Description</text>
@@ -667,6 +670,8 @@
     <text name="TheResearchMethodWasRemoved">The Research Method was removed.</text>
     <text name="TheResearchMethodsWereAdded">The Research Methods were added.</text>
     <text name="NoResearchMethod">No Research Method</text>
+    <text name="ResearchFields">Research fields</text>
+    <text name="ResearhFieldsNotSavedWarning">The research fields you selected has not been saved yet. If you leave, your changes will be lost.</text>
     <text name="ViewTutor">View Tutor</text>
     <text name="Experience">Experience</text>
     <text name="Reviews">Reviews</text>
@@ -677,7 +682,7 @@
     <text name="MyEducation">My Education</text>
     <text name="Website">Website</text>
     <text name="Services">Services</text>
-    <text name="ResearchMethods">Research Methods</text>
+    <text name="ResearchMethods">Research methods</text>
     <text name="Location">Location</text>
     <text name="Joined">Joined</text>
     <text name="MemberSince">Member since</text>
@@ -687,6 +692,7 @@
     <text name="AreasOfStudyNotSavedWarning">The areas of study you selected has not been saved yet. If you leave, your changes will be lost.</text>
     <text name="NoAreaOfStudySelected">No Area of Study Selected</text>
     <text name="SearchAreasOfStudy">Search Areas of Study</text>
+    <text name="ResearchArea">Research area</text>
     <text name="Update">Update</text>
     <text name="NoAreaOfStudy">No Area of Study</text>
     <text name="TheAreaOfStudyWasRemoved">The Area of Study was removed.</text>
@@ -694,6 +700,7 @@
     <text name="ResearchMethodologies">Research Methodologies</text>
     <text name="AddResearchMethodologies">Add Research Methodologies</text>
     <text name="KnowledgeBase">Knowledge Base</text>
+    <text name="AddResearchFields">Add Research Fields</text>
     <text name="AddAreaOfStudy">Add Area of Study</text>
     <text name="ProfileDetailsNotSavedWarning">Your changes on Prfoile Details tab were not yet saved. If you leave, your changes will be lost.</text>
     <text name="LostChangesWarning">You have unsaved changes! If you leave, your changes will be lost.</text>
@@ -789,6 +796,7 @@
     <text name="EndYear">End year</text>
     <text name="Level">Level</text>
     <text name="Publication">Publication</text>
+    <text name="Keywords">Keywords</text>
     <text name="Publications">Publications</text>
     <text name="UniversityOrCollege">University/College</text>
     <text name="PublicationCertificateOrAward">Publication Certificate or Award</text>
@@ -1000,6 +1008,12 @@
     <text name="ResetPasswordStepOneInfo">1. Enter your administrator password</text>
     <text name="ResetPasswordStepTwoInfo">2. Copy this random password so you can send it to the user</text>
     <text name="ThisWeeksIncome">This Weeks Income</text>
+    <text name="DeleteYourAccount">Delete your account</text>
+    <text name="DeleteYourAccountMessage">Don't need ScholarPro anymore?</text>
+    <text name="Print">Print</text>
+    <text name="StudyArea">Study area</text>
+    <text name="StudyFields">Study fields</text>
+    <text name="MyServices">My Services</text>
     <text name="CancelServiceWizardMessage">Are you sure you want to leave the service wizard?</text>
     <text name="ServiceWizard">Service Wizard</text>
     <text name="CreateProject">Create Project</text>

@@ -33,6 +33,20 @@ public class TutorWizardPageLanguage {
 			return new Element("Language: "+language+", Proficiency: "+proficiency,By.xpath("//td[text()='"+language+"']/following-sibling::td[contains(text(),'"+proficiency+"')]"));
 		}
 		private static Button save = new Button("Save",By.xpath("//app-edit-spoken-language-form//button[contains(text(),'Save')]"));
+		private static Button editOtherLanguage(String language) {
+			return new Button(language+" edit",By.xpath("//td[text()='"+language+"']/following::span[contains(@class,'edit')]/parent::button"));
+		}
+		private static Button removeOtherLanguage(String language) {
+			return new Button(language+" edit",By.xpath("//td[text()='"+language+"']/following::span[contains(@class,'trash')]/parent::button"));
+		}
+		
+		public static void clickEditOtherLanguage(String language) {
+			editOtherLanguage(language).click();
+		}
+		
+		public static void removeEditOtherLanguage(String language) {
+			removeOtherLanguage(language).click();
+		}
 		
 		public static void selectEnglishProficiency(String Proficiency) {
 			englishProficiency.selectByVisibleText(Proficiency);
@@ -50,11 +64,16 @@ public class TutorWizardPageLanguage {
 			save.click();
 		}
 		
-		public static class AddLanguageModal{
+		public static class AddEditLanguageModal{
 			
 			private static ListBox languageDropdown = new ListBox("Language",By.xpath("//select[@id='newOtherSpokenLanguage']"));
 			private static ListBox proficiencyDropdown = new ListBox("Proficiency",By.xpath("//select[@id='newProficiency']"));
 			private static Button add = new Button("Add",By.xpath("//button[contains(text(),'Add')]"));
+			private static Button update = new Button("Update",By.xpath("//button[contains(text(),'Update')]"));
+			
+			public static void clickUpdate() {
+				update.click();
+			}
 			
 			public static void selectLanguage(String language) {
 				languageDropdown.selectByVisibleText(language);

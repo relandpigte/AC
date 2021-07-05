@@ -24,6 +24,7 @@ class UserEducation {
 })
 export class EducationsComponent extends AppComponentBase implements OnInit {
   @Input() userId: number;
+  @Input() isReadOnly = false;
   public universities: UniversityDto[] = [];
   isLoading = false;
 
