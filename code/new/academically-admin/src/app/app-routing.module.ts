@@ -97,10 +97,10 @@ import { CreateProjectComponent } from './create-project/create-project.componen
               ),
           },
           {
-            path: 'service-wizard',
+            path: 'project-wizard',
             loadChildren: () =>
-              import('@app/service-wizard/service-wizard.module').then(
-                (m) => m.ServiceWizardModule
+              import('@app/project-wizard/project-wizard.module').then(
+                (m) => m.ProjectWizardModule
               ),
           },
           {
@@ -115,6 +115,13 @@ import { CreateProjectComponent } from './create-project/create-project.componen
             loadChildren: () =>
               import('@app/calendar/calendar.module').then(
                 (m) => m.CalendarModule
+              ),
+          },
+          {
+            path: 'tutor-applications',
+            loadChildren: () =>
+              import('@app/tutor-applications/tutor-applications.module').then(
+                (m) => m.TutorAppliactionsModule
               ),
           },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },

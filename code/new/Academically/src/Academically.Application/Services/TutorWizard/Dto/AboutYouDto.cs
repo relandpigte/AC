@@ -6,6 +6,7 @@ namespace Academically.Services.TutorWizard.Dto
     [AutoMap(typeof(User))]
     public class AboutYouDto
     {
+        public long? UserId { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string About { get; set; }

@@ -386,7 +386,7 @@ public class UserProfilePageStepDefinitions {
 		UserProfilePageResearch.clickEditResearchInterest(title);
 	}
 	
-	@When("^verify publication informations are correct$")
+	@Then("^verify publication informations are correct$")
 	public void verifyPublication(DataTable publicationInformation) {
         List<Map<String, String>> data = publicationInformation.asMaps(String.class, String.class);
         String title = data.get(0).get("Title");
@@ -416,7 +416,7 @@ public class UserProfilePageStepDefinitions {
         }
 	}
 	
-	@When("^verify research methodology informations are correct$")
+	@Then("^verify research methodology informations are correct$")
 	public void verifyResearchMethodologyInformation(DataTable methodologyInformation) {
         List<Map<String, String>> data = methodologyInformation.asMaps(String.class, String.class);
         String title1 = data.get(0).get("Title");

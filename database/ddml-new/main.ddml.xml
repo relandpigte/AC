@@ -56,5 +56,6 @@
 	<include file="ddml-new/ddml.2021-06-16-01.create-projectoffers-table.xml"/>
 	<include file="ddml-new/ddml.2021-06-16-02.alter-calendarevents-add-projectid-field.xml"/>
 	<include file="ddml-new/ddml.2021-06-17-01.add-reschedulecomments-table.xml"/>
+	<include file="ddml-new/ddml.2021-06-30-01.add-tutorverificationsteps-table.xml"/>
 </databaseChangeLog>
 	

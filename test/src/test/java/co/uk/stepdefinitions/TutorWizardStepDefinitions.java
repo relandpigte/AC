@@ -276,6 +276,12 @@ public class TutorWizardStepDefinitions {
 		DriverHandler.delay(4);
 	}
 
+	@When("^user edit language spoken on tutor wizard$")
+	public void editLanguageSpoken() {
+		TutorWizardPageLanguage.clickEdit();
+		DriverHandler.delay(4);
+	}
+
 	@When("^select \"(.*)\" english proficiency on tutor wizard$")
 	public void selectEnglishProficiency(String englishLevel) {
 		TutorWizardPageLanguage.LanguageModal.selectEnglishProficiency(englishLevel);
@@ -289,12 +295,12 @@ public class TutorWizardStepDefinitions {
 		TutorWizardPageLanguage.LanguageModal.clickAddLanguage();
 		DriverHandler.delay(1);
 		if (!proficiency.equals("null")) {
-			TutorWizardPageLanguage.LanguageModal.AddLanguageModal.selectLanguage(language);
+			TutorWizardPageLanguage.LanguageModal.AddEditLanguageModal.selectLanguage(language);
 		}
 		if (!proficiency.equals("null")) {
-			TutorWizardPageLanguage.LanguageModal.AddLanguageModal.selectProficiency(proficiency);
+			TutorWizardPageLanguage.LanguageModal.AddEditLanguageModal.selectProficiency(proficiency);
 		}
-		TutorWizardPageLanguage.LanguageModal.AddLanguageModal.clickAdd();
+		TutorWizardPageLanguage.LanguageModal.AddEditLanguageModal.clickAdd();
 	}
 
 	@When("^user saving spoken language information on tutor wizard$")
@@ -303,7 +309,7 @@ public class TutorWizardStepDefinitions {
 		DriverHandler.delay(5);
 	}
 
-	@Then("^\"(.*)\" \"(.*)\" language is added$")
+	@Then("^\"(.*)\" \"(.*)\" language is added on tutor wizard$")
 	public void verifyAddedLanguage(String proficiency, String language) {
 		TutorWizardPageLanguage.verifyLanguageAndProficiencyAreDisplayed(language, proficiency);
 	}
@@ -404,5 +410,113 @@ public class TutorWizardStepDefinitions {
 	@Then("^removing \"(.*)\" publication is successful on tutor wizard$")
 	public void verifyPublicationIsNotDisplayed(String title) {
 		TutorWizardPageResearchInterest.verifyPublicationIsNotDisplayed(title);
+	}
+	
+	@When("^user edit \"(.*)\" research methodology on tutor wizard$")
+	public void editResearchMethodology(String title) {
+		TutorWizardPageResearchInterest.clickEditMethodology(title);
+	}
+	
+	@Then("^verify research methodology informations are correct on tutor wizard$")
+	public void verifyResearchMethodologyInformation(DataTable methodologyInformation) {
+        List<Map<String, String>> data = methodologyInformation.asMaps(String.class, String.class);
+        String title1 = data.get(0).get("Title");
+        String ResearchMethod1 = data.get(0).get("Research method");
+        String ResearchMethod2 = data.get(1).get("Research method");
+        String description = data.get(0).get("Description");
+        if(!title1.equals("null")) {
+        	TutorWizardPageResearchInterest.MethodologyModal.verifyTitleValueIsCorrect(title1);
+        }
+        if(!description.equals("null")) {
+        	TutorWizardPageResearchInterest.MethodologyModal.verifyDescriptionValueIsCorrect(description);
+        }
+        if(!ResearchMethod1.equals("null")) {
+        	TutorWizardPageResearchInterest.MethodologyModal.verifyResearchMethodAlertIsDisplayed(ResearchMethod1);
+        }
+        if(!ResearchMethod2.equals("null")) {
+        	TutorWizardPageResearchInterest.MethodologyModal.verifyResearchMethodAlertIsDisplayed(ResearchMethod2);
+        }
+	}
+	
+	@When("^user edit publication \"(.*)\" on tutor wizard$")
+	public void editPublication(String title) {
+		TutorWizardPageResearchInterest.clickEditPublication(title);
+	}
+	
+	@Then("^verify publication informations are correct on tutor wizard$")
+	public void verifyPublication(DataTable publicationInformation) {
+        List<Map<String, String>> data = publicationInformation.asMaps(String.class, String.class);
+        String title = data.get(0).get("Title");
+        String publicationType = data.get(0).get("Publication Type");
+        String publisher = data.get(0).get("Publisher");
+        String date = data.get(0).get("Date");
+        String tag = data.get(0).get("Tag");
+        String abstarct = data.get(0).get("Abstarct");
+        DriverHandler.delay(3);
+        if(!title.equals("null")) {
+        	TutorWizardPageResearchInterest.PublicationModal.verifyTitleValueIsCorrect(title);
+        }
+        if(!publicationType.equals("null")) {
+        	TutorWizardPageResearchInterest.PublicationModal.verifyPublicationTypeValueIsCorrect(publicationType);
+        }
+        if(!publisher.equals("null")) {
+        	TutorWizardPageResearchInterest.PublicationModal.verifyPublisherValueIsCorrect(publisher.replace("XXX", DriverHandler.timestamp));
+        }
+        if(!date.equals("null")) {
+        	TutorWizardPageResearchInterest.PublicationModal.verifypublicationDateValueIsCorrect(date);
+        }
+        if(!abstarct.equals("null")) {
+        	TutorWizardPageResearchInterest.PublicationModal.verifyAbstractValueIsCorrect(abstarct);
+        }
+        if(!tag.equals("null")) {
+        	TutorWizardPageResearchInterest.PublicationModal.verifyTagIsDisplayed(tag);
+        }
+	}
+	
+	@When("^user edit research interest \"(.*)\" on tutor wizard$")
+	public void editResearchInterest(String title) {
+		TutorWizardPageResearchInterest.clickEditResearchInterest(title);
+	}
+	
+	@When("^user saving research interest information on tutor wizard$")
+	public static void saveResearchInterestInformation() {
+		TutorWizardPageResearchInterest.ResearchInterestModal.clickSave();
+	}
+	
+	@Then("^verify research interest informations are correct on tutor wizard$")
+	public void verifyResearchInterestInformation(DataTable researchInterestInformation) {
+        List<Map<String, String>> data = researchInterestInformation.asMaps(String.class, String.class);
+        String title = data.get(0).get("Title");
+        String knowledge = data.get(0).get("Knowledge Base");
+        String description = data.get(0).get("Description");
+        if(!title.equals("null")) {
+        	TutorWizardPageResearchInterest.ResearchInterestModal.verifyTitleValueIsCorrect(title);
+        }
+        if(!description.equals("null")) {	 
+        	TutorWizardPageResearchInterest.ResearchInterestModal.veriftyDescriptionValueIsCorrect(description);
+        }
+        if(!knowledge.equals("null")) {	 
+        	TutorWizardPageResearchInterest.ResearchInterestModal.verifyKnowledgeBaseIsDisplayed(knowledge);
+        }
+	}
+	
+	@When("^user edit \"(.*)\" language on tutor wizard$")
+	public void editOtherLanguage(String language) {
+		TutorWizardPageLanguage.LanguageModal.clickEditOtherLanguage(language);
+	}
+	
+	@When("^user edit other language on tutor wizard$")
+	public void editOtherLanguage(DataTable otherLanguage) {
+		List<Map<String, String>> data = otherLanguage.asMaps(String.class, String.class);
+		String language = data.get(0).get("Language");
+		String proficiency = data.get(0).get("Proficiency");
+		DriverHandler.delay(1);
+		if (!proficiency.equals("null")) {
+			TutorWizardPageLanguage.LanguageModal.AddEditLanguageModal.selectLanguage(language);
+		}
+		if (!proficiency.equals("null")) {
+			TutorWizardPageLanguage.LanguageModal.AddEditLanguageModal.selectProficiency(proficiency);
+		}
+		TutorWizardPageLanguage.LanguageModal.AddEditLanguageModal.clickUpdate();
 	}
 }

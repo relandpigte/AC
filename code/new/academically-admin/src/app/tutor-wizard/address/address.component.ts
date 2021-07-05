@@ -1,5 +1,6 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { NgForm, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { countries } from '@shared/constants/countries';
 import { BecomeATutorStep, LocationSuggestion, ProfilesServiceProxy, TutorWizardServiceProxy, UpdateAddressDto } from '@shared/service-proxies/service-proxies';
@@ -20,14 +21,22 @@ export class AddressComponent extends AppComponentBase implements OnInit {
   countries = countries;
   isFullAddressRequired = false;
   isLoading = false;
+  userId: number;
+  isReadOnly = false;
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _profilesService: ProfilesServiceProxy,
     private _tutorWizardService: TutorWizardServiceProxy,
     private _becomeATutorService: BecomeATutorService,
   ) {
     super(injector);
+
+    this._becomeATutorService.userId$.subscribe(userId => {
+      this.userId = userId ?? this.appSession.userId;
+      this.isReadOnly = (this.userId !== this.appSession.userId);
+    });
   }
 
   ngOnInit(): void {
@@ -57,9 +66,22 @@ export class AddressComponent extends AppComponentBase implements OnInit {
     this.getLocationDetail(e.item.id);
   }
 
+
+  onNavigateNextScreen(): void {
+    this._router.navigate([`app/tutor-applications/${this.userId}/contact-number`]);
+  }
+
+  onBackClick(): void {
+    if (this.isReadOnly) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/photo-id`]);
+    } else {
+      this._router.navigate([`app/tutor-wizard/photo-id`]);
+    }
+  }
+
   private getUser(): void {
     this.isLoading = true;
-    this._profilesService.get(this.appSession.userId)
+    this._profilesService.get(this.userId)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
@@ -69,7 +91,7 @@ export class AddressComponent extends AppComponentBase implements OnInit {
       )
       .subscribe(user => {
         this.model = user;
-      })
+      });
   }
 
   private setRequiredFields(): void {
@@ -144,9 +166,10 @@ export class AddressComponent extends AppComponentBase implements OnInit {
           this.isLoading = false;
         }),
       )
-      .subscribe(() => {
+      .subscribe((result) => {
         this.notify.success(this.l('SavedSuccessfully'));
         this._becomeATutorService.currentStep = nextStep;
+        this._becomeATutorService.currentTutorWizardStep = result;
       });
   }
 }

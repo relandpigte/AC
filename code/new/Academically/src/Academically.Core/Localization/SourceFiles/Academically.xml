@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="FromUniversity">From University</text>
+    <text name="ApproveOrRegectApplications">Approve or reject applications</text>
+    <text name="TutorApplications">Tutor Applications</text>
+    <text name="TutorApplicationsList">Tutor Applications List</text>
     <text name="BookingConfirmedEmailSubject">Academically - Booking Confirmed</text>
     <text name="BookingRequestEmailSubject">Academically - New Booking Request</text>
     <text name="TheBookingRequestWasDeclined">The booking request was declined.</text>

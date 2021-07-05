@@ -32,10 +32,14 @@
     <Folder Include="Services\PasswordResets\Dto\" />
     <Folder Include="Services\Projects\" />
     <Folder Include="Services\Projects\Dto\" />
+    <Folder Include="Services\TutorApplications\" />
+    <Folder Include="Services\TutorApplications\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Services\Projects\" />
     <None Remove="Services\Projects\Dto\" />
     <None Remove="Services\ProjectOffers\Dto\" />
+    <None Remove="Services\TutorApplications\" />
+    <None Remove="Services\TutorApplications\Dto\" />
   </ItemGroup>
 </Project>

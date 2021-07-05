@@ -32,7 +32,7 @@
           class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
           <span class="fe fe-eye"></span>
         </a>
-        <button (click)="onRemoveDefaultFileClick()" type="button"
+        <button (click)="onRemoveDefaultFileClick()" type="button" *ngIf="hasRemoveButton"
           class="btn btn-outline-danger btn-sm btn-rounded-circle">
           <span class="fe fe-trash-2"></span>
         </button>

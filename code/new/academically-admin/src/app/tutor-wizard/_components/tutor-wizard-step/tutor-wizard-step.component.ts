@@ -1,5 +1,5 @@
 import { Component, HostBinding, Input, OnInit } from '@angular/core';
-import { BecomeATutorStep } from '@shared/service-proxies/service-proxies';
+import { BecomeATutorStep, TutorVerificationStepDto, TutorVerificationStepStatus } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'li[app-tutor-wizard-step]',
@@ -12,12 +12,21 @@ export class TutorWizardStepComponent implements OnInit {
   @Input() step: BecomeATutorStep;
   @Input() set currentStep(step: BecomeATutorStep) {
     this.isCurrentStep = step === this.step;
-    this.isCompletedStep = step > this.step;
     this.isLockedStep = step < this.step;
-    this.navigationLink = step >= this.step ? [this.link] : null;
   }
+  @Input() set verificationStep(wizardStep: TutorVerificationStepDto) {
+    if (wizardStep != null && wizardStep.step >= 0) {
+      this.isDeclinedStep = wizardStep.status === TutorVerificationStepStatus.Declined;
+      this.isCompletedStep = wizardStep.status === TutorVerificationStepStatus.Approved;
+      this.isSavedStep = wizardStep.status === TutorVerificationStepStatus.Saved;
+      this.navigationLink = wizardStep.step >= this.step ? [this.link] : null;
+    }
+  }
+
   @HostBinding('class.current') isCurrentStep: boolean;
+  @HostBinding('class.declined') isDeclinedStep: boolean;
   @HostBinding('class.complete') isCompletedStep: boolean;
+  @HostBinding('class.saved') isSavedStep: boolean;
   @HostBinding('class.locked') isLockedStep: boolean;
   navigationLink: string[];
 

@@ -16,3 +16,6 @@ Feature: Register
     Then registered the account successfully
     When user enter username "automatedXXX" and password "Test@12345"
     Then user successfully login
+
+    @??
+   Scenario: C14771 - Verify registration with existing email

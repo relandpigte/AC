@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceDto, ServiceExpertiseLevel, UserServiceDto, UserServiceForListDto, UserServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -22,6 +22,7 @@ class ServiceMenuItem extends ServiceDto {
   styleUrls: ['./services.component.less']
 })
 export class ServicesComponent extends AppComponentBase implements OnInit {
+  @Input() userId: number;
   ServiceExptertiseLevel = ServiceExpertiseLevel;
   collapsedItems: boolean[] = [];
   categories: ServiceDto[] = [];
@@ -94,7 +95,7 @@ export class ServicesComponent extends AppComponentBase implements OnInit {
 
   private getServiceTree(): void {
     this.isLoading = true;
-    this._userServicesService.getServiceTree(this.appSession.userId)
+    this._userServicesService.getServiceTree(this.userId)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
@@ -119,7 +120,7 @@ export class ServicesComponent extends AppComponentBase implements OnInit {
 
   private getUserServices(service: ServiceDto): void {
     this.isServicesLoading = true;
-    this._userServicesService.get(this.appSession.userId, service.id)
+    this._userServicesService.get(this.userId ?? this.appSession.userId, service.id)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {

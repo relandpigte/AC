@@ -75,7 +75,9 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
           takeUntil(this.destroyed$)
         )
         .subscribe(currentStep => {
-          this.canBecomeATutor = currentStep <= BecomeATutorStep.Declaration;
+          if (currentStep) {
+            this.canBecomeATutor = currentStep.step <= BecomeATutorStep.Declaration;
+          }
         });
     }
   }
