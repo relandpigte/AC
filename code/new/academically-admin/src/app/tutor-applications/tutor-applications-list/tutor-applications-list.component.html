@@ -102,6 +102,7 @@
                 <tr *ngFor="
                     let application of (tutorApplications | paginate: { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
                   ">
+                  <td>{{ application.creatorUser.id }}</td>
                   <td>
                     <div class="avatar avatar-xs align-middle mr-2">
                       <img class="avatar-img rounded-circle" alt="..."
@@ -110,31 +111,12 @@
                     <a class="item-name text-reset" href="javascript:;">{{ application.creatorUser.fullName | titlecase }}</a>
                   </td>
                   <td>{{ application.creatorUser.emailAddress }}</td>
-                  <td>{{ application.creatorUser.currentUniversity | titlecase }}</td>
                   <td>
-
                     <span *ngIf="application.status === TutorVerificationStatus.Completed">Pending</span>
                     <span *ngIf="application.status !== TutorVerificationStatus.Completed">
                       {{ TutorVerificationStatus[application.status] }}
                     </span>
                   </td>
-                  <!-- <td class="table-action">
-                    <div dropdown class="dropdown" container="body">
-                      <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;" role="button">
-                        <i class="fe fe-more-vertical"></i>
-                      </a>
-                      <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
-                        <a href="javascript:;" class="dropdown-item" (click)="onApproveClick(application.id)"
-                        *ngIf="permission.isGranted('Pages.Suggestions.ServiceSubjects.Approve')" [tooltip]="'Approve'">
-                          <i class="fe fe-thumbs-up"></i> {{ 'Approve' | localize }}
-                        </a>
-                        <a href="javascript:;" class="dropdown-item" (click)="onRejectClick(application.id)"
-                          *ngIf="permission.isGranted('Pages.TutorApplications.Reject')" [tooltip]="'Decline'">
-                          <i class="fe fe-thumbs-down"></i>
-                        </a>
-                      </div>
-                    </div>
-                  </td> -->
                   <td width="1%" class="align-middle">
                     <button *ngIf="permission.isGranted('Pages.TutorApplications')"
                       (click)="onViewClick(application.creatorUser.id)" type="button"

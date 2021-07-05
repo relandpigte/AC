@@ -27,9 +27,9 @@ export class TutorApplicationsListComponent extends PagedListingComponentBase<Us
   isActive: boolean;
   advancedFiltersVisible = false;
   headers: TableHeaderSortData[] = [
+    { title: 'AccountNumber', sortColumn: 'creatorUser.id' },
     { title: this.l('Name'), sortColumn: 'creatorUser.name' },
     { title: this.l('EmailAddress'), sortColumn: 'creatorUser.emailAddress' },
-    { title: this.l('FromUniversity'), sortColumn: 'currentUniversity' },
     { title: this.l('Status'), sortColumn: 'status', colspan: 2},
   ];
   testRatingsGeneratorLoader: boolean[] = [];
