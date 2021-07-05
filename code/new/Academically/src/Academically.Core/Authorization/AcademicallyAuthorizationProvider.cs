@@ -26,8 +26,10 @@ namespace Academically.Authorization
             profileIntoductionPermission.CreateChildPermission(PermissionNames.Pages_Profile_Introduction_Reviews, L("Reviews"));
 
             var profileServices = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Services, L("Services"));
-            profileServices.CreateChildPermission(PermissionNames.Pages_Profile_Services_Create, L("Create"));
             profileServices.CreateChildPermission(PermissionNames.Pages_Profile_Services_SuggestSubject, L("SuggestSubject"));
+            profileServices.CreateChildPermission(PermissionNames.Pages_Profile_Services_Create, L("Create"));
+            profileServices.CreateChildPermission(PermissionNames.Pages_Profile_Services_Update, L("Update"));
+            profileServices.CreateChildPermission(PermissionNames.Pages_Profile_Services_Delete, L("Delete"));
 
             var profileEducationPermission = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Education, L("Education"));
             profileEducationPermission.CreateChildPermission(PermissionNames.Pages_Profile_Education_Create, L("Create"));
@@ -82,7 +84,6 @@ namespace Academically.Authorization
             suggestionsServiceSubjectsPermission.CreateChildPermission(PermissionNames.Pages_Suggestions_ServiceSubjects_Approve, L("Approve"));
             suggestionsServiceSubjectsPermission.CreateChildPermission(PermissionNames.Pages_Suggestions_ServiceSubjects_Reject, L("Reject"));
 
-
             var rolePermission = context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
             rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Create, L("Create"));
             rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Update, L("Update"));
@@ -104,6 +105,8 @@ namespace Academically.Authorization
 
             var tutorWizardServicesOfferedPermission = tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_ServicesOffered, L("ServicesOffered"));
             tutorWizardServicesOfferedPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_ServicesOffered_Create, L("Create"));
+            tutorWizardServicesOfferedPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_ServicesOffered_Update, L("Update"));
+            tutorWizardServicesOfferedPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_ServicesOffered_Delete, L("Delete"));
 
             var tutorWizardReferencesPermission = tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_References, L("References"));
             tutorWizardReferencesPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_References_Create, L("Create"));

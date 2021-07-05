@@ -17,10 +17,11 @@ namespace Academically.Services.UserServices.Dto
         public string Description { get; set; }
         public ServiceExpertiseLevel ExpertiseLevel { get; set; }
         public Guid ServiceMappingId { get; set; }
+        public ServiceMappingDto ServiceMapping { get; set; }
 
         [Ignore]
         public IEnumerable<SubjectDto> Subjects { get; set; }
         [Ignore]
-        public IEnumerable<DisciplineTaxonomyDto> DisciplineTaxonomies { get; set; }
+        public IEnumerable<ServiceDisciplineTaxonomyDto> DisciplineTaxonomies { get; set; }
     }
 }
