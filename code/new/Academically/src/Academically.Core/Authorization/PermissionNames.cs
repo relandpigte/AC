@@ -22,8 +22,8 @@
         public const string Pages_Profile_Services_Create = "Pages.Profile.Services.Create";
         public const string Pages_Profile_Services_SuggestSubject = "Pages.Profile.Services.SuggestSubject";
 
-        public const string Pages_Profile_Languages = "Pages.Profile.Language";
-        public const string Pages_Profile_Languages_Create = "Pages.Profile.Language.Create";
+        public const string Pages_Profile_LanguageSpoken = "Pages.Profile.LanguageSpoken";
+        public const string Pages_Profile_LanguageSpoken_Create = "Pages.Profile.LanguageSpoken.Create";
 
         public const string Pages_Profile_Education = "Pages.Profile.Education";
         public const string Pages_Profile_Education_Create = "Pages.Profile.Education.Create";

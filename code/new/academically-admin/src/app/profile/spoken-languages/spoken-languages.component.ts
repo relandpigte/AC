@@ -39,7 +39,7 @@ export class SpokenLanguagesComponent extends AppComponentBase implements OnInit
 
   canCreate(): boolean {
     return this.isGranted('Pages.TutorWizard.Languages.Create') ||
-      this.isGranted('Pages.Profile.Languages.Create');
+      this.isGranted('Pages.Profile.LanguageSpoken.Create');
   }
 
   private getUserSpokenLanguage(): void {
