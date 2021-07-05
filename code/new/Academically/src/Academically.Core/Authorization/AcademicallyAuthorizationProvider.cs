@@ -41,8 +41,8 @@ namespace Academically.Authorization
 
             var profileResearchPermission = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Research, L("Research"));
 
-            var profileLanguagesPermission = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Languages, L("Languages"));
-            profileLanguagesPermission.CreateChildPermission(PermissionNames.Pages_Profile_Languages_Create, L("Create"));
+            var profileLanguagesPermission = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_LanguageSpoken, L("LanguageSpoken"));
+            profileLanguagesPermission.CreateChildPermission(PermissionNames.Pages_Profile_LanguageSpoken_Create, L("Create"));
 
             var profileResearchInterestsPermission = profileResearchPermission.CreateChildPermission(PermissionNames.Pages_Profile_Research_ResearchInterests, L("ResearchInterests"));
             profileResearchInterestsPermission.CreateChildPermission(PermissionNames.Pages_Profile_Research_ResearchInterests_Create, L("Create"));
