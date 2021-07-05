@@ -44,13 +44,24 @@ export class ServicesComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.getServiceTree();
+    console.log(this.permission.isGranted('Pages.TutorWizard.ServicesOffered.Create'))
   }
 
   onToggleCollapse(id: number): void {
     this.collapsedItems[id] = !this.collapsedItems[id];
   }
 
+  canCreate(): boolean {
+    return this.permission.isGranted('Pages.Profile.Services.Create') || this.permission.isGranted('Pages.TutorWizard.ServicesOffered.Create');
+  }
 
+  canUpdate(): boolean {
+    return this.permission.isGranted('Pages.Profile.Services.Update') || this.permission.isGranted('Pages.TutorWizard.ServicesOffered.Update');
+  }
+
+  canDelete(): boolean {
+    return this.permission.isGranted('Pages.Profile.Services.Delete') || this.permission.isGranted('Pages.TutorWizard.ServicesOffered.Delete');
+  }
 
   onAddClick(): void {
     this.showCreateEditServiceMdoal();
@@ -95,6 +106,7 @@ export class ServicesComponent extends AppComponentBase implements OnInit {
 
   private getServiceTree(): void {
     this.isLoading = true;
+    this.userId = this.userId ?? this.appSession.userId;
     this._userServicesService.getServiceTree(this.userId)
       .pipe(
         takeUntil(this.destroyed$),

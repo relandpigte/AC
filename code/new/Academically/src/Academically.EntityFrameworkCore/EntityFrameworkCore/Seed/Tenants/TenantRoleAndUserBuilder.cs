@@ -245,6 +245,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_TutorWizard_Languages_Create,
                 PermissionNames.Pages_TutorWizard_ServicesOffered,
                 PermissionNames.Pages_TutorWizard_ServicesOffered_Create,
+                PermissionNames.Pages_TutorWizard_ServicesOffered_Update,
+                PermissionNames.Pages_TutorWizard_ServicesOffered_Delete,
                 PermissionNames.Pages_TutorWizard_ProfilePicture,
                 PermissionNames.Pages_TutorWizard_PhotoId,
                 PermissionNames.Pages_TutorWizard_Address,

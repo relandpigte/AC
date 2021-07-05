@@ -7,7 +7,9 @@
             <h2 class="m-0">{{ 'MyServices' | localize }}</h2>
           </div>
           <div class="col text-right">
-            <button (click)="onAddClick()" *ngIf="permission.isGranted('Pages.Profile.Services.Create')" class="btn btn-sm btn-light">
+            <button (click)="onAddClick()"
+              *ngIf="canCreate()"
+              class="btn btn-sm btn-light">
               <i class="fe fe-edit-2"></i>
               {{ 'Add' | localize }}
             </button>
@@ -97,12 +99,13 @@
                     </div>
                   </div>
                   <div class="col-auto d-flex justify-content-center align-items-center">
-                    <button *ngIf="permission.isGranted('Pages.Profile.Services.Update')"
+                    <button
+                      *ngIf="canUpdate()"
                       [disabled]="deleteLoaders[userService.id]" (click)="onEditClick(userService)" type="button"
                       class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
                       <span class="fe fe-edit-2"></span>
                     </button>
-                    <button *ngIf="permission.isGranted('Pages.Profile.Services.Delete')"
+                    <button *ngIf="canDelete()"
                       [disabled]="deleteLoaders[userService.id]" (click)="onDeleteClick(userService.id)" type="button"
                       class="btn btn-outline-danger btn-sm btn-rounded-circle">
                       <span *ngIf="deleteLoaders[userService.id]" class="spinner-border spinner-border-sm" role="status"
