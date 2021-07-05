@@ -13,6 +13,8 @@ import { CreateEditMethodologyComponent } from './_components/methodologies/crea
 import { ResearchMethodTreeComponent } from './_components/methodologies/research-method-tree/research-method-tree.component';
 import { PublicationsComponent } from './_components/publications/publications.component';
 import { CreateEditPublicationComponent } from './_components/publications/create-edit-publication/create-edit-publication.component';
+import { ResearchFieldsTreeComponent } from './_components/interests/research-fields-tree/research-fields-tree.component';
+import { PopoverModule } from 'ngx-bootstrap/popover';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,7 @@ import { CreateEditPublicationComponent } from './_components/publications/creat
     ResearchMethodTreeComponent,
     PublicationsComponent,
     CreateEditPublicationComponent,
+    ResearchFieldsTreeComponent,
   ],
   imports: [
     CommonModule,
@@ -31,6 +34,7 @@ import { CreateEditPublicationComponent } from './_components/publications/creat
     SharedModule,
     AppSharedModule,
     TreeModule,
+    PopoverModule.forRoot(),
   ],
   exports: [
     ResearchComponent,

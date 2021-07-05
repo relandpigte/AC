@@ -1,57 +1,65 @@
 <div class="row">
-  <div class="col-12 service-header">
-    <div class="row">
-      <div class="col-md-4 d-flex justify-content-between align-items-center">
-        <h2 class="m-0">{{ 'Categories' | localize }}</h2>
-      </div>
-      <div class="col-md-8 text-right">
-        <button (click)="onAddClick()" *ngIf="permission.isGranted('Pages.TutorWizard.ServicesOffered.Create')" class="btn btn-sm btn-primary">Add Service</button>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-4 services">
-    <div [loader]="isLoading">
-      <div *ngIf="categories.length === 0" class="card">
-        <div class="card-body">
-          <p class="text-muted text-center m-0">{{ 'NoServicesFound' | localize}}</p>
+  <div class="col-md-4 service-header" [loader]="isLoading">
+    <div class="card">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-auto d-flex justify-content-between align-items-center">
+            <h2 class="m-0">{{ 'MyServices' | localize }}</h2>
+          </div>
+          <div class="col text-right">
+            <button (click)="onAddClick()"
+              *ngIf="canCreate()"
+              class="btn btn-sm btn-light">
+              <i class="fe fe-edit-2"></i>
+              {{ 'Add' | localize }}
+            </button>
+          </div>
         </div>
+      </div>
+      <div class="card-body service">
+        <p  *ngIf="!categories || categories.length === 0" class="text-muted text-center m-0">{{ 'NoServicesFound' | localize}}</p>
+        <div [accordion]="i !== 0" *ngFor="let category of categories; let i = index" class="service">
+          <div class="service-category-nav">
+            <div class="service-title d-flex">
+              <h4 class="service-name mb-0 p-0">
+                <i class="fe {{ getServiceIcon(category.name) }}"></i>
+                {{ category.name }}
+              </h4>
+              <a class="collapse-button ml-auto rotate"></a>
+            </div>
+            <div class="collapse-content">
+              <ul [id]="'category_' + category.id" class="service-items">
+                <li *ngFor="let service of category.children; let j = index">
+                  <div [accordion]="j !== 0 || i !== 0">
+                    <div class="collapse-header d-flex justify-content-between align-items-center service-title">
+                      <p class="m-0 service-name">{{ service.name }}</p>
+                      <a class="collapse-button rotate"></a>
+                    </div>
+                    <div class="collapse-content">
+                      <ul [id]="'service_' + service.id" class="service-items pl-3">
+                        <li *ngFor="let level of service.children" class="service-title">
+                          <a *ngIf="!selectedService || level.id !== selectedService.id" href="#"
+                            (click)="$event.preventDefault(); onServiceClick(level)" class="service-name">
+                            {{ level.name }}
+                          </a>
+                          <span class="service-name active" *ngIf="selectedService && level.id === selectedService.id">
+                            {{ level.name }}
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
       </div>
 
-      <div [accordion]="i !== 0" *ngFor="let category of categories; let i = index" class="card service">
-        <div class="card-body">
-          <div class="service-title">
-            <h4 class="service-name">{{ category.name }}</h4>
-            <a class="collapse-button"></a>
-          </div>
-          <div class="collapse-content">
-            <ul [id]="'category_' + category.id" class="service-items">
-              <li *ngFor="let service of category.children; let j = index">
-                <div [accordion]="j !== 0 || i !== 0">
-                  <div class="collapse-header d-flex justify-content-between align-items-center">
-                    <p class="m-0 service-name">{{ service.name }}</p>
-                    <a class="collapse-button"></a>
-                  </div>
-                  <div class="collapse-content">
-                    <ul [id]="'service_' + service.id" class="service-items">
-                      <li *ngFor="let level of service.children">
-                        <a *ngIf="!selectedService || level.id !== selectedService.id" href="#"
-                          (click)="$event.preventDefault(); onServiceClick(level)" class="service-name">
-                          {{ level.name }}
-                        </a>
-                        <span class="text-success" *ngIf="selectedService && level.id === selectedService.id">
-                          {{ level.name }}
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
+
   <div class="col-md-8">
     <div class="card" [loader]="isServicesLoading">
       <ng-container *ngIf="selectedService; else noServiceTemplate">
@@ -66,27 +74,47 @@
         <div class="table-responsive">
           <table class="table card-table">
             <tr *ngFor="let userService of userServices">
-              <td>
-                <h5 class="d-flex align-items-center">
-                  {{ userService.title }}
-                  <span class="ml-2 badge badge-success">
-                    {{ ServiceExptertiseLevel[userService.expertiseLevel] | localize }}
-                  </span>
-                </h5>
-                <div toggableContent [identifier]="userService.id" contentClass="ql-container">
-                  <quill-view-html [content]="userService.description" theme="snow"></quill-view-html>
+              <td class="service-content">
+                <div class="row">
+                  <div class="col">
+                    <h4 class="d-flex align-items-center">
+                      {{ userService.title }}
+                      <span class="ml-2 badge badge-success">
+                        {{ ServiceExptertiseLevel[userService.expertiseLevel] | localize }}
+                      </span>
+                    </h4>
+                    <div toggableContent [identifier]="userService.id" contentClass="ql-container">
+                      <quill-view-html [content]="userService.description" theme="snow"></quill-view-html>
+                    </div>
+                    <div *ngIf="userService.subjects && userService.subjects.length > 0">
+                      <span *ngFor="let subject of userService.subjects" class="badge badge-soft-info mr-1">
+                        {{ subject }}
+                      </span>
+                    </div>
+                    <div *ngIf="userService.disciplineTaxonomies && userService.disciplineTaxonomies.length > 0">
+                      <span *ngFor="let disciplineTaxonomy of userService.disciplineTaxonomies"
+                        class="badge badge-soft-info mr-1">
+                        {{ disciplineTaxonomy }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-auto d-flex justify-content-center align-items-center">
+                    <button
+                      *ngIf="canUpdate()"
+                      [disabled]="deleteLoaders[userService.id]" (click)="onEditClick(userService)" type="button"
+                      class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+                      <span class="fe fe-edit-2"></span>
+                    </button>
+                    <button *ngIf="canDelete()"
+                      [disabled]="deleteLoaders[userService.id]" (click)="onDeleteClick(userService.id)" type="button"
+                      class="btn btn-outline-danger btn-sm btn-rounded-circle">
+                      <span *ngIf="deleteLoaders[userService.id]" class="spinner-border spinner-border-sm" role="status"
+                        aria-hidden="true"></span>
+                      <span *ngIf="!deleteLoaders[userService.id]" class="fe fe-trash-2"></span>
+                    </button>
+                  </div>
                 </div>
-                <div *ngIf="userService.subjects && userService.subjects.length > 0">
-                  <span *ngFor="let subject of userService.subjects" class="badge badge-soft-info mr-1">
-                    {{ subject.name }}
-                  </span>
-                </div>
-                <div *ngIf="userService.disciplineTaxonomies && userService.disciplineTaxonomies.length > 0">
-                  <span *ngFor="let disciplineTaxonomy of userService.disciplineTaxonomies"
-                    class="badge badge-soft-info mr-1">
-                    {{ disciplineTaxonomy.name }}
-                  </span>
-                </div>
+
               </td>
             </tr>
           </table>

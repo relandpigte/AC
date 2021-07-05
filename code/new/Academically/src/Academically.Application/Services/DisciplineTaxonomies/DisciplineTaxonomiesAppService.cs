@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Auditing;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
@@ -20,6 +21,18 @@ namespace Academically.Services.DisciplineTaxonomies
             )
         {
             _disciplineTaxonomiesRepository = disciplineTaxonomiesRepository;
+        }
+
+        public async Task<IEnumerable<DisciplineTaxonomyDto>> GetAll()
+        {
+            var disciplineTaxonomies = await _disciplineTaxonomiesRepository.GetAll()
+                .Include(e => e.Children)
+                .OrderBy(e => e.Name)
+                .ToListAsync();
+
+            var rootDisciplineTaxonomies = disciplineTaxonomies.Where(e => e.ParentId == null)
+                .Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e));
+            return rootDisciplineTaxonomies;
         }
 
         public async Task<IEnumerable<DisciplineTaxonomyDto>> Search(string keyword)

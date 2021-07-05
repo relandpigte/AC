@@ -9,8 +9,11 @@ namespace Academically.Services.UserServices
 {
     public interface IUserServicesAppService : IApplicationService
     {
-        Task<IEnumerable<UserServiceDto>> Get(long userId, Guid serviceId);
+        Task<IEnumerable<UserServiceForListDto>> Get(long userId, Guid serviceId);
         Task<IEnumerable<ServiceDto>> GetServiceTree(long userId);
+        Task<UserServiceDto> GetService(Guid id);
         Task Create(UserServiceDto input);
+        Task UpdateAsync(UserServiceDto input);
+        Task DeleteAsync(Guid id);
     }
 }

@@ -1,17 +1,19 @@
 <form class="form-horizontal" autocomplete="off" #createEditResearchInterestForm="ngForm" (ngSubmit)="onFormSubmit()">
   <div class="modal-card card">
     <abp-modal-header
-      [title]="(userResearchMethodology.id ? 'EditResearchMethodology' : 'AddResearchMethodology') | localize"
+      [title]="(userResearchMethodology.id ? 'EditResearchMethodology' : 'AddMethodology') | localize"
       (onCloseClick)="onCloseClick()"></abp-modal-header>
     <div class="card-body">
 
       <div class="form-group required">
-        <label class="col-form-label" for="Title">{{ 'Title' | localize}}</label>
-        <select [(ngModel)]="userResearchMethodology.title" #titleModel="ngModel" #titleEl class="form-control"
-          type="text" id="Title" name="Title" required>
-          <option value="{{ 'Quantitative' | localize }}">{{ 'Quantitative' | localize }}</option>
-          <option value="{{ 'Qualitative' | localize }}">{{ 'Qualitative' | localize }}</option>
-        </select>
+        <label class="col-form-label" for="Title">{{ 'Type' | localize}}</label>
+        <div class="form-select-wrapper">
+          <select [(ngModel)]="userResearchMethodology.title" #titleModel="ngModel" #titleEl class="form-control"
+            type="text" id="Title" name="Title" required>
+            <option value="{{ 'Quantitative' | localize }}">{{ 'Quantitative' | localize }}</option>
+            <option value="{{ 'Qualitative' | localize }}">{{ 'Qualitative' | localize }}</option>
+          </select>
+        </div>
         <abp-validation-summary [control]="titleModel" [controlEl]="titleEl">
         </abp-validation-summary>
       </div>
@@ -35,9 +37,9 @@
               <span aria-hidden="true">×</span>
             </button>
           </div>
-          <a (click)="$event.preventDefault(); onAddResearchMethodsClick()" class="alert alert-success ac-alert"
+          <a (click)="$event.preventDefault(); onAddResearchMethodsClick()" class="btn btn-light ac-alert"
             role="alert" href="#">
-            <i class="fe fe-plus"></i> {{ 'AddMethod' | localize}}
+            <i class="fe fe-plus"></i> {{ 'Add' | localize}}
           </a>
         </div>
       </div>

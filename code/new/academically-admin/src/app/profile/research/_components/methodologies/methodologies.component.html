@@ -2,12 +2,13 @@
   <div class="card-header">
     <div class="row align-items-center">
       <div class="col">
-        <h4 class="card-header-title">{{ 'Methodology' | localize}}</h4>
+        <h4 class="card-header-title">{{ 'Methodologies' | localize}}</h4>
       </div>
       <div class="col-auto">
         <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchMethodologies.Create')"
-          (click)="onAddClick()" type="button" class="btn btn-sm btn-primary">
-          {{ 'AddMethodology' | localize}}
+          (click)="onAddClick()" type="button" class="btn btn-sm btn-light">
+          <i class="fe fe-edit-2"></i>
+          {{ 'Add' | localize}}
         </button>
       </div>
     </div>

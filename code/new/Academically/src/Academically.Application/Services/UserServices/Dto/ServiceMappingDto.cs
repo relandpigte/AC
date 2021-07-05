@@ -10,5 +10,9 @@ namespace Academically.Services.UserServices.Dto
     public class ServiceMappingDto : EntityDto<Guid>
     {
         public ServiceDto Service { get; set; }
+
+        public Guid? Node1Id { get; set; }
+        public Guid? Node2Id { get; set; }
+        public Guid? Node3Id { get; set; }
     }
 }

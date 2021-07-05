@@ -21,6 +21,8 @@
         public const string Pages_Profile_Services = "Pages.Profile.Services";
         public const string Pages_Profile_Services_Create = "Pages.Profile.Services.Create";
         public const string Pages_Profile_Services_SuggestSubject = "Pages.Profile.Services.SuggestSubject";
+        public const string Pages_Profile_Services_Update = "Pages.Profile.Services.Update";
+        public const string Pages_Profile_Services_Delete = "Pages.Profile.Services.Delete";
 
         public const string Pages_Profile_LanguageSpoken = "Pages.Profile.LanguageSpoken";
         public const string Pages_Profile_LanguageSpoken_Create = "Pages.Profile.LanguageSpoken.Create";
@@ -90,6 +92,8 @@
         public const string Pages_TutorWizard_Languages_Create = "Pages.TutorWizard.Languages.Create";
         public const string Pages_TutorWizard_ServicesOffered = "Pages.TutorWizard.ServicesOffered";
         public const string Pages_TutorWizard_ServicesOffered_Create = "Pages.TutorWizard.ServicesOffered.Create";
+        public const string Pages_TutorWizard_ServicesOffered_Update = "Pages.TutorWizard.ServicesOffered.Update";
+        public const string Pages_TutorWizard_ServicesOffered_Delete = "Pages.TutorWizard.ServicesOffered.Delete";
         public const string Pages_TutorWizard_ProfilePicture = "Pages.TutorWizard.ProfilePicture";
         public const string Pages_TutorWizard_PhotoId = "Pages.TutorWizard.PhotoId";
         public const string Pages_TutorWizard_Address = "Pages.TutorWizard.Address";

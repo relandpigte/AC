@@ -5,8 +5,7 @@ import { AfterViewInit, Directive, ElementRef, Input } from '@angular/core';
 })
 export class AccordionDirective implements AfterViewInit {
   @Input() collapse = false;
-  private _expandIconTemplate = '<i class="fe fe-chevron-down"></i>';
-  private _collapseIconTemplate = '<i class="fe fe-chevron-up"></i>';
+  private _collapseIconTemplate = '<i class="fe fe-chevron-up rotate"></i>';
 
   constructor(private _el: ElementRef) {
   }
@@ -17,23 +16,20 @@ export class AccordionDirective implements AfterViewInit {
     const collapseButton = container.find('.collapse-button').first();
     const collapseContent = container.find('.collapse-content').first();
     this.toggleCollapse(collapseButton);
+    collapseButton.html(self._collapseIconTemplate);
     if (self.collapse) {
-      collapseContent.hide()
+      collapseContent.hide();
     }
-    collapseButton.on('click', () => {
-      collapseContent.slideToggle(100, () => {
+    collapseButton.parent().on('click', () => {
+      collapseContent.slideToggle(350, () => {
         this.collapse = !this.collapse;
-        this.toggleCollapse(collapseButton);
+
       });
+      this.toggleCollapse(collapseButton);
     });
   }
 
   private toggleCollapse(collapseButton: JQuery): void {
-    const self = this;
-    if (self.collapse) {
-      collapseButton.html(self._expandIconTemplate);
-    } else {
-      collapseButton.html(self._collapseIconTemplate);
-    }
+    collapseButton.toggleClass('down');
   }
 }
