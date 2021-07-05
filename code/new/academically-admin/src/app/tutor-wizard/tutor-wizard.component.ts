@@ -2,7 +2,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { BecomeATutorStep } from '@shared/service-proxies/service-proxies';
+import { BecomeATutorStep, TutorVerificationStepDto, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 import { BecomeATutorService } from './_services/become-a-tutor.service';
 
@@ -14,11 +14,14 @@ import { BecomeATutorService } from './_services/become-a-tutor.service';
 })
 export class TutorWizardComponent extends AppComponentBase implements OnInit {
   BecomeATutorStep = BecomeATutorStep;
-  currentStep: BecomeATutorStep;
+  activeStep: BecomeATutorStep;
+  currentStep: TutorVerificationStepDto = new TutorVerificationStepDto();
+  steps: TutorVerificationStepDto[] = [];
 
   constructor(
     injector: Injector,
     private _becomeATutorService: BecomeATutorService,
+    private _tutorWizardServiceProxy: TutorWizardServiceProxy,
     private _router: Router,
     private _route: ActivatedRoute,
   ) {
@@ -27,27 +30,34 @@ export class TutorWizardComponent extends AppComponentBase implements OnInit {
       .pipe(
         takeUntil(this.destroyed$),
       ).subscribe(data => {
-        this.currentStep = data.currentStep as BecomeATutorStep;
+        this.currentStep = data.currentStep as TutorVerificationStepDto;
         this.navigateToStep();
       });
-    this._becomeATutorService.currentStep$
+    this._becomeATutorService.currentTutorWizardStep$
       .pipe(
         takeUntil(this.destroyed$),
       )
       .subscribe(currentStep => {
         if (currentStep !== null && currentStep !== undefined) {
           this.currentStep = currentStep;
+          this.getAllSteps();
           this.navigateToStep();
         }
       });
+
+    this.getAllSteps();
   }
 
   ngOnInit(): void {
   }
 
+  getTutorWizardStep(step: BecomeATutorStep): TutorVerificationStepDto {
+    return this.steps.find(e => e.step === step);
+  }
+
   private navigateToStep(): void {
     let routeName = '';
-    switch (this.currentStep) {
+    switch (this.currentStep.step) {
       case BecomeATutorStep.AboutYou:
         routeName = 'about-you';
         break;
@@ -97,5 +107,18 @@ export class TutorWizardComponent extends AppComponentBase implements OnInit {
     if (routeName) {
       this._router.navigate([`/app/tutor-wizard/${routeName}`]);
     }
+  }
+
+  private getAllSteps(): void {
+    this._tutorWizardServiceProxy.getTutorVerification()
+      .pipe(
+        takeUntil(this.destroyed$),
+      )
+      .subscribe(result => {
+        if (result) {
+          this.activeStep = result.currentStep;
+          this.steps = result.tutorVerificationSteps;
+        }
+      });
   }
 }

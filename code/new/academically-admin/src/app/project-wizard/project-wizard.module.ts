@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ServiceWizardRoutingModule } from './service-wizard-routing.module';
+import { ServiceWizardRoutingModule } from './project-wizard-routing.module';
 import { SharedModule } from '@shared/shared.module';
 
-import { ServiceWizardComponent } from './service-wizard.component';
+import { ProjectWizardComponent } from './project-wizard.component';
 
 @NgModule({
   declarations: [
-    ServiceWizardComponent,
+    ProjectWizardComponent,
   ],
   imports: [
     CommonModule,
@@ -16,4 +16,4 @@ import { ServiceWizardComponent } from './service-wizard.component';
     SharedModule,
   ]
 })
-export class ServiceWizardModule { }
+export class ProjectWizardModule { }

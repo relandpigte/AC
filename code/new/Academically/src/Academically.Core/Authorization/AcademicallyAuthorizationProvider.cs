@@ -26,6 +26,7 @@ namespace Academically.Authorization
             profileIntoductionPermission.CreateChildPermission(PermissionNames.Pages_Profile_Introduction_Reviews, L("Reviews"));
 
             var profileServices = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Services, L("Services"));
+            profileServices.CreateChildPermission(PermissionNames.Pages_Profile_Services_Create, L("Create"));
             profileServices.CreateChildPermission(PermissionNames.Pages_Profile_Services_SuggestSubject, L("SuggestSubject"));
 
             var profileEducationPermission = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Education, L("Education"));
@@ -39,6 +40,9 @@ namespace Academically.Authorization
             profileEducationQualificationsPermission.CreateChildPermission(PermissionNames.Pages_Profile_Education_Qualifications_Delete, L("Delete"));
 
             var profileResearchPermission = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Research, L("Research"));
+
+            var profileLanguagesPermission = profilePermission.CreateChildPermission(PermissionNames.Pages_Profile_Languages, L("Languages"));
+            profileLanguagesPermission.CreateChildPermission(PermissionNames.Pages_Profile_Languages_Create, L("Create"));
 
             var profileResearchInterestsPermission = profileResearchPermission.CreateChildPermission(PermissionNames.Pages_Profile_Research_ResearchInterests, L("ResearchInterests"));
             profileResearchInterestsPermission.CreateChildPermission(PermissionNames.Pages_Profile_Research_ResearchInterests_Create, L("Create"));
@@ -89,12 +93,17 @@ namespace Academically.Authorization
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_AboutYou, L("AboutYou"));
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_Education, L("Education"));
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_Research, L("Research"));
-            tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_Languages, L("Languages"));
-            tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_ServicesOffered, L("ServicesOffered"));
+            
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_ProfilePicture, L("ProfilePicture"));
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_PhotoId, L("PhotoId"));
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_Address, L("Address"));
             tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_ContactNumber, L("ContactNumber"));
+
+            var tutorWizardLanguagesPermission = tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_Languages, L("Languages"));
+            tutorWizardLanguagesPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_Languages_Create, L("Create"));
+
+            var tutorWizardServicesOfferedPermission = tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_ServicesOffered, L("ServicesOffered"));
+            tutorWizardServicesOfferedPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_ServicesOffered_Create, L("Create"));
 
             var tutorWizardReferencesPermission = tutorWizardPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_References, L("References"));
             tutorWizardReferencesPermission.CreateChildPermission(PermissionNames.Pages_TutorWizard_References_Create, L("Create"));
@@ -135,6 +144,26 @@ namespace Academically.Authorization
             projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_OfferHistory, L("OfferHistory"));
             projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Proposals, L("Proposals"));
             projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Hired, L("Hired"));
+
+            var tutorApplicationsPermission = context.CreatePermission(PermissionNames.Pages_TutorApplications, L("TutorApplications"));
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_List, L("TutorApplicationsList"));
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_Approve, L("Approve"));
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_Reject, L("Reject"));
+
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_AboutYou, L("AboutYou"));
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_Education, L("Education"));
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_Research, L("Research"));
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_Languages, L("Languages"));
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_ServicesOffered, L("ServicesOffered"));
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_ProfilePicture, L("ProfilePicture"));
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_PhotoId, L("PhotoId"));
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_Address, L("Address"));
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_ContactNumber, L("ContactNumber"));
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_References, L("References"));
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_DbsCheck, L("DbsCheck"));
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_TermsOfUse, L("TermsOfUse"));
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_PrivacyPolicy, L("PrivacyPolicy"));
+            tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_Declaration, L("Declaration"));
 
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
         }

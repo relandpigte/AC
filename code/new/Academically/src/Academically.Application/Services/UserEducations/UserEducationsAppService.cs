@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 
 namespace Academically.Services.UserEducations
 {
-    [AbpAuthorize(PermissionNames.Pages_Profile_Education)]
+    [AbpAuthorize(PermissionNames.Pages_Profile_Education,PermissionNames.Pages_TutorApplications_Education)]
     public class UserEducationsAppService : AcademicallyAppServiceBase, IUserEducationsAppService
     {
         private readonly IRepository<UserEducation, Guid> _userEducationsRepository;

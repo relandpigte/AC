@@ -4,7 +4,7 @@ import { WrapperComponent } from '@app/layout/wrapper/wrapper.component';
 
 import { AppRouteGuard } from '@shared/auth/auth-route-guard';
 
-import { ServiceWizardComponent } from './service-wizard.component';
+import { ProjectWizardComponent } from './project-wizard.component';
 
 @NgModule({
   imports: [
@@ -18,33 +18,33 @@ import { ServiceWizardComponent } from './service-wizard.component';
         children: [
           {
             path: '',
-            component: ServiceWizardComponent,
+            component: ProjectWizardComponent,
             children: [
               {
                 path: '',
                 loadChildren: () =>
-                  import('@app/service-wizard/service-category/service-category.module').then(
+                  import('@app/project-wizard/service-category/service-category.module').then(
                     (m) => m.ServiceCategoryModule,
                   ),
               },
               {
                 path: 'service-level',
                 loadChildren: () =>
-                  import('@app/service-wizard/service-level/service-level.module').then(
+                  import('@app/project-wizard/service-level/service-level.module').then(
                     (m) => m.ServiceLevelModule,
                   ),
               },
               {
                 path: 'services',
                 loadChildren: () =>
-                  import('@app/service-wizard/service-selection/service-selection.module').then(
+                  import('@app/project-wizard/service-selection/service-selection.module').then(
                     (m) => m.ServiceSelectionModule,
                   ),
               },
               {
                 path: 'create',
                 loadChildren: () =>
-                  import('@app/service-wizard/create-project/create-project.module').then(
+                  import('@app/project-wizard/create-project/create-project.module').then(
                     (m) => m.CreateProjectModule,
                   ),
               },

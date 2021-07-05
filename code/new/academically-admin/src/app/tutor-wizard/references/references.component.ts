@@ -1,7 +1,9 @@
 import { Component, Injector } from '@angular/core';
+import { Router } from '@angular/router';
 import { TableHeaderSortData } from '@shared/components/table-header-sort/table-header-sort.component';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
 import { BecomeATutorStep, ReferenceDto, ReferenceDtoPagedResultDto, ReferenceRelationshipType, ReferencesServiceProxy, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { AppSessionService } from '@shared/session/app-session.service';
 import * as _ from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { pipe } from 'rxjs';
@@ -23,26 +25,36 @@ export class ReferencesComponent extends PagedListingComponentBase<ReferenceDto>
     { title: 'Phone', sortColumn: 'phone' },
     { title: 'Relationship', sortColumn: 'relationship', colspan: 2, },
   ];
+  userId: number;
+  isReadOnly: boolean;
 
   ReferenceRelationshipType = ReferenceRelationshipType;
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _modalService: BsModalService,
     private _becomeATutorService: BecomeATutorService,
     private _tutorWizardService: TutorWizardServiceProxy,
     private _referencesService: ReferencesServiceProxy,
+    private _appSession: AppSessionService
   ) {
     super(injector);
     this.sorting = this.headers[0].sortColumn;
+
+    this._becomeATutorService.userId$.subscribe(userId => {
+      this.userId = userId ?? this._appSession.userId;
+      this.isReadOnly = (this.userId !== this._appSession.userId);
+    });
   }
 
   list(request: PagedAndSortedRequestDto, pageNumber: number, finishedCallback: Function): void {
     this._referencesService
       .getAll(
-        request.skipCount,
-        request.maxResultCount,
+        this.userId,
         request.sort,
+        request.skipCount,
+        request.maxResultCount
       )
       .pipe(
         takeUntil(this.destroyed$),
@@ -58,8 +70,7 @@ export class ReferencesComponent extends PagedListingComponentBase<ReferenceDto>
 
   onNextClick(): void {
     this.isTableLoading = true;
-    const nextStep = BecomeATutorStep.DbsCheck;
-    this._tutorWizardService.updateStep(nextStep)
+    this._tutorWizardService.updateStep(BecomeATutorStep.References)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
@@ -67,8 +78,7 @@ export class ReferencesComponent extends PagedListingComponentBase<ReferenceDto>
         }),
       )
       .subscribe(() => {
-        this.notify.success(this.l('SavedSuccessfully'));
-        this._becomeATutorService.currentStep = nextStep;
+        this.updateNextStep();
       });
   }
 
@@ -104,6 +114,18 @@ export class ReferencesComponent extends PagedListingComponentBase<ReferenceDto>
     );
   }
 
+  onNavigateNextScreen(): void {
+    this._router.navigate([`app/tutor-applications/${this.userId}/dbs-check`]);
+  }
+
+  onBackClick(): void {
+    if (this.isReadOnly) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/contact-number`]);
+    } else {
+      this._router.navigate([`app/tutor-wizard/contact-number`]);
+    }
+  }
+
   private showCreateEditReferenceModal(reference?: ReferenceDto): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditReferenceComponent>;
     modalSettings.initialState = {
@@ -117,6 +139,23 @@ export class ReferencesComponent extends PagedListingComponentBase<ReferenceDto>
       .subscribe(() => {
         this.pageNumber = 1;
         this.refresh();
+      });
+  }
+
+  private updateNextStep(): void {
+    this.isTableLoading = true;
+    const nextStep = BecomeATutorStep.DbsCheck;
+    this._tutorWizardService.updateStep(nextStep)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isTableLoading = false;
+        }),
+      )
+      .subscribe((result) => {
+        this.notify.success(this.l('SavedSuccessfully'));
+        this._becomeATutorService.currentStep = nextStep;
+        this._becomeATutorService.currentTutorWizardStep = result;
       });
   }
 }

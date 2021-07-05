@@ -1,12 +1,14 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Academically.Authorization;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
 using Academically.Services.References.Dto;
+using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,7 +18,7 @@ using System.Threading.Tasks;
 namespace Academically.Services.References
 {
     [AbpAuthorize(PermissionNames.Pages_TutorWizard_References)]
-    public class ReferencesAppService : AsyncCrudAppService<Reference, ReferenceDto, Guid, PagedAndSortedResultRequestDto, CreateReferenceDto, UpdateReferenceDto>, IReferencesAppService
+    public class ReferencesAppService : AsyncCrudAppService<Reference, ReferenceDto, Guid, PagedReferenceResultRequestDto, CreateReferenceDto, UpdateReferenceDto>, IReferencesAppService
     {
         private readonly IDocumentsDomainService _documentsDomainService;
 
@@ -32,14 +34,14 @@ namespace Academically.Services.References
             _documentsDomainService = documentsDomainService;
         }
 
-        protected override IQueryable<Reference> CreateFilteredQuery(PagedAndSortedResultRequestDto input)
+        protected override IQueryable<Reference> CreateFilteredQuery(PagedReferenceResultRequestDto input)
         {
             return base.CreateFilteredQuery(input)
                 .Include(e => e.Document)
-                .Where(e => e.CreatorUserId == AbpSession.UserId.Value);
+                .Where(e => e.CreatorUserId == input.UserIdFilter);
         }
 
-        public override async Task<PagedResultDto<ReferenceDto>> GetAllAsync(PagedAndSortedResultRequestDto input)
+        public override async Task<PagedResultDto<ReferenceDto>> GetAllAsync(PagedReferenceResultRequestDto input)
         {
             var output = await base.GetAllAsync(input);
             foreach (var item in output.Items)
