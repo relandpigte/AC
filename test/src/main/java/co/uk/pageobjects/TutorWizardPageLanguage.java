@@ -25,6 +25,10 @@ public class TutorWizardPageLanguage {
 		languageAndProficiency(language,proficiency).verifyDisplayed();
 	}
 	
+	public static void verifyLanguageIsNotDisplayed(String language, String proficiency) {
+		languageAndProficiency(language,proficiency).verifyNotDisplayed();
+	}
+	
 	public static class LanguageModal{
 		
 		private static ListBox englishProficiency = new ListBox("English proficeieny",By.xpath("//select[@id='englishProficiency']"));

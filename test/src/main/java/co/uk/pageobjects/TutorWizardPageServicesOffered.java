@@ -10,7 +10,7 @@ import co.uk.webelements.TextBox;
 
 public class TutorWizardPageServicesOffered {
 
-	private static Button addService = new Button("Add service",By.xpath("//app-services//Button[text()='Add Service']"));
+	private static Button addService = new Button("Add service",By.xpath("//app-services//Button[contains(text(),'Add')]"));
 	private static Button next = new Button("Next",By.xpath("//button[contains(text(),'Next')]"));
 		
 	public static void clickAddService() {

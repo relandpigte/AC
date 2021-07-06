@@ -9,6 +9,7 @@ import co.uk.pageobjects.TutorWizardCommonObject;
 import co.uk.pageobjects.TutorWizardPageAboutYou;
 import co.uk.pageobjects.TutorWizardPageEducation;
 import co.uk.pageobjects.TutorWizardPageLanguage;
+import co.uk.pageobjects.TutorWizardPageProfilePicture;
 import co.uk.pageobjects.TutorWizardPageResearchInterest;
 import co.uk.pageobjects.TutorWizardPageServicesOffered;
 import co.uk.pageobjects.UserProfilePageCommonObjects;
@@ -19,7 +20,10 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class TutorWizardStepDefinitions {
-
+	
+	private static String sampleFile = System.getProperty("user.dir").replace("\\", "/") + "/src/main/resources/Data/"
+			+ DriverHandler.environment + "/Sample1.jpg";
+	
 	@Then("^user is in tutor wizard page$")
 	public void verifyTutorWizardIsDisplayed() {
 		TutorWizardCommonObject.verifyTutorWizardIsDisplayed();
@@ -112,9 +116,6 @@ public class TutorWizardStepDefinitions {
 	public void savingEducationInformation() {
 		TutorWizardPageEducation.AddEditEducationModal.clickSave();
 	}
-
-	private static String sampleFile = System.getProperty("user.dir").replace("\\", "/") + "/src/main/resources/Data/"
-			+ DriverHandler.environment + "/Sample1.jpg";
 
 	@When("^user add evidence file on tutor wizard$")
 	public void userAddEvidenceFile() {
@@ -335,23 +336,34 @@ public class TutorWizardStepDefinitions {
 		String subject = data.get(0).get("Subject");
 		String subjectDetails = data.get(0).get("Subject Details");
 		String description = data.get(0).get("Description");
+		String studyArea = data.get(0).get("Study area");
+		String studyfield = data.get(0).get("Study field");
+		DriverHandler.delay(1);
 		if (!category.equals("null")) {
 			TutorWizardPageServicesOffered.AddEditServicesModal.selectCategory(category);
+			DriverHandler.delay(1);
 		}
 		if (!service.equals("null")) {
 			TutorWizardPageServicesOffered.AddEditServicesModal.selectService(service);
+			DriverHandler.delay(1);
 		}
 		if (!level.equals("null")) {
 			TutorWizardPageServicesOffered.AddEditServicesModal.selectLevel(level);
+			DriverHandler.delay(1);
 		}
 		if (!expertiselevel.equals("null")) {
 			TutorWizardPageServicesOffered.AddEditServicesModal.selectExpertiseLeve(expertiselevel);
+			DriverHandler.delay(1);
 		}
-		if (!subjectDetails.equals("null")) {
-			TutorWizardPageServicesOffered.AddEditServicesModal.enterSubject(subjectDetails);
+		
+		if (!subject.equals("null")) {
+			TutorWizardPageServicesOffered.AddEditServicesModal.enterSubject(subject);
+			DriverHandler.delay(1);
 		}
-		if (!description.equals("null")) {
+		
+		if (!description.equals("null")) {;
 			TutorWizardPageServicesOffered.AddEditServicesModal.enterDescription(description);
+			DriverHandler.delay(1);
 		}
 	}
 
@@ -519,4 +531,41 @@ public class TutorWizardStepDefinitions {
 		}
 		TutorWizardPageLanguage.LanguageModal.AddEditLanguageModal.clickUpdate();
 	}
+	
+	@When("^user removes \"(.*)\" language on tutor wizard$")
+	public void removeLanguage(String language) {
+		TutorWizardPageLanguage.LanguageModal.removeEditOtherLanguage(language);
+	}
+	
+	@Then("^removing \"(.*)\" \"(.*)\" language is successful on tutor wizard$")
+	public void verifyLanguageIsRemoved(String proficient, String language) {
+		TutorWizardPageLanguage.verifyLanguageIsNotDisplayed(language, proficient);
+	}
+	
+	@When("^user next to profile picture$")
+	public void nextToProfilePicture() {
+		DriverHandler.delay(3);
+		TutorWizardPageLanguage.clickNext();
+	}
+	
+	@When("^user uploads a profile photo on tutor wizard$")
+	public void uploadProfilePhoto() {
+		TutorWizardPageProfilePicture.uploadProfilePhoto(sampleFile);
+	}
+	
+	@Then("^crop image modal is displayed on tutor wizard$")
+	public void verifyCropImageModalIsDisplayed() {
+		TutorWizardPageProfilePicture.CropImageModal.verifyCropImageModalIsDisplayed();
+	}
+	
+    @When("^user crop the image on tutor wizard$")
+    public void cropImage() {
+    	TutorWizardPageProfilePicture.CropImageModal.clickCrop();
+    	DriverHandler.delay(5);
+    }
+    
+    @Then("^upload a profile photo is successful$")
+    public void verifyUploadProfilePhotoIsSuccessful() {
+    	TutorWizardPageProfilePicture.verifyAnonyomousPhotoIsNotDisplayed();
+    }
 }
