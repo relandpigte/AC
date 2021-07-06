@@ -839,3 +839,29 @@ app-methodologies .badge{
   border-radius: .375rem !important;
   padding: 10px !important;
 }
+
+.modal.fade {
+
+  &.show .modal-dialog-vertical.fixed-right  {
+    transform: translateX(0) !important;
+  }
+
+  &:not(.show) .modal-dialog-vertical.fixed-right  {
+    transform: translateX(100%) !important;
+  }
+
+  .modal-dialog-vertical.fixed-right {
+    margin-left: auto;
+    max-width: 430px;
+
+    .modal-card,
+    app-create-edit-booking ,
+    form {
+      height: inherit;
+
+      .card-body {
+        height: calc(100% - 166px);
+      }
+    }
+  }
+}
