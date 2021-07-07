@@ -107,7 +107,22 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_TutorApplications_DbsCheck,
                 PermissionNames.Pages_TutorApplications_TermsOfUse,
                 PermissionNames.Pages_TutorApplications_PrivacyPolicy,
-                PermissionNames.Pages_TutorApplications_Declaration
+                PermissionNames.Pages_TutorApplications_Declaration,
+                PermissionNames.Pages_TutorWizard,
+                PermissionNames.Pages_TutorWizard_AboutYou,
+                PermissionNames.Pages_TutorWizard_Education,
+                PermissionNames.Pages_TutorWizard_Research,
+                PermissionNames.Pages_TutorWizard_Languages,
+                PermissionNames.Pages_TutorWizard_ServicesOffered,
+                PermissionNames.Pages_TutorWizard_ProfilePicture,
+                PermissionNames.Pages_TutorWizard_PhotoId,
+                PermissionNames.Pages_TutorWizard_Address,
+                PermissionNames.Pages_TutorWizard_ContactNumber,
+                PermissionNames.Pages_TutorWizard_References,
+                PermissionNames.Pages_TutorWizard_DbsCheck,
+                PermissionNames.Pages_TutorWizard_TermsOfUse,
+                PermissionNames.Pages_TutorWizard_PrivacyPolicy,
+                PermissionNames.Pages_TutorWizard_Declaration
             );
 
             var adminUser = _context.Users.IgnoreQueryFilters().FirstOrDefault(u => u.TenantId == _tenantId && u.UserName == AbpUserBase.AdminUserName);
