@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1623928823381-1">
+        <addColumn tableName="academicallycalendarevents">
+            <column name="ProjectOfferId" type="CHAR(36 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1623928823381-2">
+        <createIndex indexName="FK_CalendarEvents_ProjectOffers_ProjectOfferId_idx" tableName="academicallycalendarevents">
+            <column name="ProjectId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1623928823381-3">
+        <addForeignKeyConstraint baseColumnNames="ProjectOfferId" baseTableName="academicallycalendarevents" constraintName="FK_CalendarEvents_ProjectOffers_ProjectId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyprojectoffers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
