@@ -138,7 +138,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
 
   onEventClick(event: CalendarEventDto): void {
     const model = event;
-    model.tutorId = this.userId;
+    model.tutorId = event.projectOffer.creatorUserId ?? this.userId;
     this.showCreateEditBookingModal(_.cloneDeep(model));
   }
 
@@ -187,8 +187,8 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
       case CalendarEventType.ConfirmedBooking:
         if ((calendarEvent.creatorUserId === this.appSession.userId || this.userId === this.appSession.userId)
           && this.permission.isGranted('Pages.Calendar.Bookings')) {
-          var model = (args.event.extendedProps.calendarEvent as CalendarEventDto);
-          model.tutorId = this.userId;
+          const model = (args.event.extendedProps.calendarEvent as CalendarEventDto);
+          model.tutorId = model.projectOffer.creatorUserId ?? this.userId;
           this.showCreateEditBookingModal(_.cloneDeep(model));
         } else {
           this.isBlockOutClicked = true;
@@ -346,7 +346,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
         if (this.calendarEventId) {
           const calendarEvent = _.find(calendarEvents, e => e.id === this.calendarEventId);
           if (calendarEvent && calendarEvent.type !== CalendarEventType.Blocker) {
-            calendarEvent.tutorId = this.userId;
+            calendarEvent.tutorId = calendarEvent.projectOffer.creatorUserId ?? this.userId;
             this.showCreateEditBookingModal(_.cloneDeep(calendarEvent), this.calendarEventAutoAccept);
             this.calendarEventId = undefined;
             this.calendarEventAutoAccept = false;
