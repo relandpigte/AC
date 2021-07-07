@@ -19,6 +19,7 @@ public class TutorWizardPageContactNumber {
 	private static Button send = new Button("Send",By.xpath("//button[contains(text(),'Send')]"));
 	private static Button edit = new Button("Edit",By.xpath("//button[contains(text(),'Edit')]"));
 	private static Button next = new Button("Next",By.xpath("//button[contains(text(),'Next')]"));
+	private static Button back = new Button("Back",By.xpath("//button[contains(text(),'Back')]"));
 	private static Button resend = new Button("Resend",By.xpath("//button[contains(text(),'Resend')]"));
 	
 	public static void selectDialCode(String country) {
@@ -49,5 +50,9 @@ public class TutorWizardPageContactNumber {
 	
 	public static void clickNext() {
 		next.click();
+	}
+	
+	public static void clickBack() {
+		back.click();
 	}
 }

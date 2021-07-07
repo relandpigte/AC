@@ -7,8 +7,11 @@ import co.uk.core.DriverHandler;
 import co.uk.pageobjects.RegisterPage;
 import co.uk.pageobjects.TutorWizardCommonObject;
 import co.uk.pageobjects.TutorWizardPageAboutYou;
+import co.uk.pageobjects.TutorWizardPageAddress;
+import co.uk.pageobjects.TutorWizardPageContactNumber;
 import co.uk.pageobjects.TutorWizardPageEducation;
 import co.uk.pageobjects.TutorWizardPageLanguage;
+import co.uk.pageobjects.TutorWizardPagePhotoID;
 import co.uk.pageobjects.TutorWizardPageProfilePicture;
 import co.uk.pageobjects.TutorWizardPageResearchInterest;
 import co.uk.pageobjects.TutorWizardPageServicesOffered;
@@ -273,6 +276,7 @@ public class TutorWizardStepDefinitions {
 
 	@When("^user add language spoken on tutor wizard$")
 	public void addLanguageSpoken() {
+		DriverHandler.delay(3);
 		TutorWizardPageLanguage.clickEdit();
 		DriverHandler.delay(4);
 	}
@@ -564,8 +568,115 @@ public class TutorWizardStepDefinitions {
     	DriverHandler.delay(5);
     }
     
-    @Then("^upload a profile photo is successful$")
+    @Then("^upload a profile photo is successful on tutor wizard$")
     public void verifyUploadProfilePhotoIsSuccessful() {
     	TutorWizardPageProfilePicture.verifyAnonyomousPhotoIsNotDisplayed();
+    }
+    @When("^user removes a profile photo on tutor wizard$")
+    public void removesProfilePhoto() {
+    	TutorWizardPageProfilePicture.removeProfilePhoto();
+    }
+    
+    @When("^the user confirms to remove a profile photo on tutor wizard$")
+    public void confirmsToRemoveProfilePhoto() {
+    	TutorWizardCommonObject.ConfirmationModal.clickYes();
+    }
+    
+    @Then("^removing a profile photo is successful on tutor wizard$")
+    public void verifyRemovingProfilePhotoIsSuccessful() {
+    	TutorWizardPageProfilePicture.verifyAnonymousPhoto();
+    }
+    
+    @When("^user next to photo id$")
+    public void nextToPhotoId() {
+    	DriverHandler.delay(3);
+    	TutorWizardPageProfilePicture.clickNext();
+    }
+    
+    @When("^user uploads a photo id on tutor wizard$")
+    public void uploadPhotoId() {
+    	DriverHandler.delay(3);
+    	TutorWizardPagePhotoID.uploadProfilePhoto(sampleFile);
+    }
+    
+    @Then("^upload a photo id is successful on tutor wizard$")
+    public void verifyImagePreviewIsDisplayed() {
+    	TutorWizardPagePhotoID.verifyImagePreviewIsDisplayed();
+    }
+    
+    @When("^user next to address$")
+    public void nextToAddress() {
+    	TutorWizardPagePhotoID.clickNext();
+    }
+    
+    @When("^user enter address information on tutor wizard$")
+    public void enterAddressInformation(DataTable addressInformation) {
+		List<Map<String, String>> data = addressInformation.asMaps(String.class, String.class);
+		String country = data.get(0).get("Country");
+		String address1 = data.get(0).get("Address 1");
+		String address2 = data.get(0).get("Address 2");
+		String city = data.get(0).get("City");
+		String zipcode = data.get(0).get("Zip code");
+		String province = data.get(0).get("Province");
+		DriverHandler.delay(3);
+		if (!country.equals("null")) {
+			TutorWizardPageAddress.selectCountry(country);
+		}
+		if (!address1.equals("null")) {
+			TutorWizardPageAddress.enterAddress1(address1);
+		}
+		if (!address2.equals("null")) {
+			TutorWizardPageAddress.enterAddress2(address2);
+		}
+		if (!city.equals("null")) {
+			TutorWizardPageAddress.enterCity(city);
+		}
+		if (!zipcode.equals("null")) {
+			TutorWizardPageAddress.enterPostcode(zipcode);
+		}
+		if (!province.equals("null")) {
+			TutorWizardPageAddress.enterState(province);
+		}
+    }
+    
+    @When("^user next to contact number")
+    public void nextToContactNumber() {
+    	TutorWizardPageAddress.clickNext();
+    	DriverHandler.delay(3);
+    }
+    
+    @When("^user back to address$")
+    public void backToAddress() {
+    	TutorWizardPageContactNumber.clickBack();
+    }
+    
+    @Then("^verify address information is correct on tutor wizard$")
+    public void verifyAddressInformation(DataTable addressInformation) {
+		List<Map<String, String>> data = addressInformation.asMaps(String.class, String.class);
+		String country = data.get(0).get("Country");
+		String address1 = data.get(0).get("Address 1");
+		String address2 = data.get(0).get("Address 2");
+		String city = data.get(0).get("City");
+		String zipcode = data.get(0).get("Zip code");
+		String province = data.get(0).get("Province");
+		DriverHandler.delay(3);
+		if (!country.equals("null")) {
+			TutorWizardPageAddress.verifyCountryValueIsCorrect(country);
+		}
+		if (!address1.equals("null")) {
+			TutorWizardPageAddress.verifyAddress1ValueIsCorrect(address1);
+		}
+		if (!address2.equals("null")) {
+			TutorWizardPageAddress.verifyAddress2ValueIsCorrect(address2);
+		}
+		if (!city.equals("null")) {
+			TutorWizardPageAddress.verifyCityValueIsCorrect(city);
+		}
+		if (!zipcode.equals("null")) {
+			TutorWizardPageAddress.verifyPostcodeValueIsCorrect(zipcode);
+		}
+		if (!province.equals("null")) {
+			TutorWizardPageAddress.verifyStateValueIsCorrect(province);
+		}
     }
 }
