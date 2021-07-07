@@ -3,6 +3,7 @@ using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Services.Projects.Dto;
+using Academically.Users.Dto;
 using System;
 using System.Collections.Generic;
 
@@ -18,8 +19,12 @@ namespace Academically.Services.CalendarEvents.Dto
         public CalendarEventRecurrence Recurrence { get; set; }
         public Guid? ProjectId { get; set; }
         public long CreatorUserId { get; set; }
+        public UserDto CreatorUser { get; set; }
 
         public long TutorId { get; set; }
+
+        public Guid? ProjectOfferId { get; set; }
+        public ProjectOffer ProjectOffer { get; set; }
 
         public ProjectDto Project { get; set; }
         public IEnumerable<RescheduleCommentDto> RescheduleComments { get; set; }

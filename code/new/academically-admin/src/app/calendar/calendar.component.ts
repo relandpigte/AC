@@ -4,13 +4,26 @@ import { Calendar, CalendarOptions, DateSelectArg, EventClickArg, EventInput, Fu
 import { DateClickArg } from '@fullcalendar/interaction';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CalendarEventDto, CalendarEventRecurrence, CalendarEventsServiceProxy, CalendarEventType, ProfilesServiceProxy, TimeZoneDto, TimeZonesServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
+import { CalendarEventDto,
+  CalendarEventRecurrence,
+  CalendarEventsServiceProxy,
+  CalendarEventType,
+  ProfilesServiceProxy,
+  TimeZoneDto,
+  TimeZonesServiceProxy,
+  UserDto } from '@shared/service-proxies/service-proxies';
+import { AppSessionService } from '@shared/session/app-session.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { CreateEditBlockOutComponent } from './_components/create-edit-block-out/create-edit-block-out.component';
 import { CreateEditBookingComponent } from './_components/create-edit-booking/create-edit-booking.component';
+
+export enum CalendarEventSessionType {
+  Upcoming = 'upcoming',
+  Past = 'past',
+}
 
 @Component({
   selector: 'app-calendar',
@@ -32,6 +45,11 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
   gotoDate: string;
   calendarEventId: string;
   calendarEventAutoAccept = false;
+  CalendarEventSessionType = CalendarEventSessionType;
+  filteredSessionType = CalendarEventSessionType.Upcoming;
+  calendarEventInputs: EventInput[] = [];
+  calendarEvents: CalendarEventDto[] = [];
+  calendarEventsTemp: CalendarEventDto[] = [];
 
   calendarOptions: CalendarOptions = {
     initialView: 'timeGridWeek',
@@ -63,6 +81,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
     private _modalService: BsModalService,
     private _router: Router,
     private _route: ActivatedRoute,
+    private _appSession: AppSessionService,
     private _calendarEventsService: CalendarEventsServiceProxy,
     private _profilesService: ProfilesServiceProxy,
     private _timeZonesService: TimeZonesServiceProxy,
@@ -92,7 +111,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
         if (paramMap.has('event-id')) {
           this.calendarEventId = paramMap.get('event-id');
           if (paramMap.has('auto-accept')) {
-            this.calendarEventAutoAccept = paramMap.get('auto-accept').toLowerCase() === "true";
+            this.calendarEventAutoAccept = paramMap.get('auto-accept').toLowerCase() === 'true';
           }
         }
       }
@@ -114,7 +133,23 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
       )
       .subscribe(() => {
         this.notify.success(this.l('TimeZoneUpdatedMessage'));
-      })
+      });
+  }
+
+  onEventClick(event: CalendarEventDto): void {
+    const model = event;
+    model.tutorId = this.userId;
+    this.showCreateEditBookingModal(_.cloneDeep(model));
+  }
+
+  onSessionTypeChange(sessionType: CalendarEventSessionType): void{
+    this.filteredSessionType = sessionType;
+    const rightNow = new Date();
+    if (sessionType === CalendarEventSessionType.Upcoming) {
+      this.calendarEvents = this.calendarEventsTemp.filter(e => e.startTime.toDate() >= rightNow);
+    } else {
+      this.calendarEvents = this.calendarEventsTemp.filter(e => e.startTime.toDate() < rightNow);
+    }
   }
 
   private dateSet(args: DateSelectArg): void {
@@ -224,7 +259,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
       )
       .subscribe(timeZones => {
         this.timeZones = timeZones;
-      })
+      });
   }
 
   private getCalendarEvents(): void {
@@ -239,7 +274,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
         }),
       )
       .subscribe(calendarEvents => {
-        const calendarEventInputs: EventInput[] = _.map(calendarEvents, calendarEvent => {
+        this.calendarEventInputs = _.map(calendarEvents, calendarEvent => {
           const calendarEventInput: EventInput = {
             id: calendarEvent.id,
             title: calendarEvent.creatorUserId === this.appSession.userId ? calendarEvent.title : '',
@@ -298,8 +333,16 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
           }
           return calendarEventInput;
         });
-        this.calendarOptions.events = calendarEventInputs;
 
+        this.calendarEventsTemp = calendarEvents.filter(e => e.type !== CalendarEventType.Blocker);
+        const rightNow = new Date();
+        if (this.filteredSessionType === CalendarEventSessionType.Upcoming) {
+          this.calendarEvents = this.calendarEventsTemp.filter(e => e.startTime.toDate() >= rightNow);
+        } else {
+          this.calendarEvents = this.calendarEventsTemp.filter(e => e.startTime.toDate() < rightNow);
+        }
+
+        this.calendarOptions.events = this.calendarEventInputs;
         if (this.calendarEventId) {
           const calendarEvent = _.find(calendarEvents, e => e.id === this.calendarEventId);
           if (calendarEvent && calendarEvent.type !== CalendarEventType.Blocker) {

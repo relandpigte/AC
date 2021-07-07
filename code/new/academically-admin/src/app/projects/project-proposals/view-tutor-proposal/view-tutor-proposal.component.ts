@@ -65,6 +65,7 @@ export class ViewTutorProposalComponent extends AppComponentBase implements OnIn
 
   onAddSessionClick(): void {
     const model = new CalendarEventDto();
+    model.projectOfferId = this.projectOffer.id;
     model.projectId = this.projectOffer.projectId;
     model.startTime = moment().set({ second: 0 });
     model.endTime = model.startTime;

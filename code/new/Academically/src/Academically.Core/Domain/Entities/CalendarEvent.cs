@@ -21,12 +21,16 @@ namespace Academically.Domain.Entities
         public DateTime EndTime { get; set; }
         public CalendarEventRecurrence Recurrence { get; set; }
         public Guid? ProjectId { get; set; }
+        public Guid? ProjectOfferId { get; set; }
 
         [ForeignKey("ProjectId")]
         public virtual Project Project { get; set; }
 
         [ForeignKey("CreatorUserId")]
         public virtual User CreatorUser { get; set; }
+
+        [ForeignKey("ProjectOfferId")]
+        public virtual ProjectOffer ProjectOffer { get; set; }
 
         public virtual ICollection<RescheduleComment> RescheduleComments { get; set; }
     }

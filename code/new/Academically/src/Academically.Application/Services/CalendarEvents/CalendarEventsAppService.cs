@@ -12,6 +12,7 @@ using Academically.Domain.Services.Documents;
 using Academically.Emails;
 using Academically.Services.CalendarEvents.Dto;
 using Academically.Services.Projects.Dto;
+using Academically.Users.Dto;
 using Microsoft.EntityFrameworkCore;
 using SourceCloud.Core.Services;
 using System;
@@ -80,6 +81,9 @@ namespace Academically.Services.CalendarEvents
             var eventsQuery = _calendarEventsRepository.GetAll()
                 .Where(e => userIds.Any(id => id == e.CreatorUserId))
                 .Include(e => e.Project)
+                    .ThenInclude(e => e.CreatorUser)
+                .Include(e => e.ProjectOffer)
+                    .ThenInclude(e => e.CreatorUser)
                 .Include(e => e.RescheduleComments)
                     .ThenInclude(e => e.CreatorUser)
                         .ThenInclude(e => e.ProfilePictureDocument);
@@ -344,6 +348,7 @@ namespace Academically.Services.CalendarEvents
             {
                 input.CreatorUserId = AbpSession.UserId.Value;
                 var calendarEvent = ObjectMapper.Map<CalendarEvent>(input);
+                calendarEvent.ProjectOfferId = input.ProjectOfferId;
                 await _calendarEventsRepository.InsertAsync(calendarEvent);
             }
         }
