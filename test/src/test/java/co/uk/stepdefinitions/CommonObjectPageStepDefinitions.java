@@ -19,6 +19,7 @@ public class CommonObjectPageStepDefinitions {
 	
 	@Then("sucessful message is displayed$")
 	public void verifySuccessfulMessageIsDisplayed() {
+		DriverHandler.delay(2);
 		CommonObjects.successfulMessageAtTheRightCornerIsDisplayed();
 	}
 	

@@ -2,6 +2,7 @@ package co.uk.pageobjects;
 
 import org.openqa.selenium.By;
 
+import co.uk.core.DriverHandler;
 import co.uk.webelements.Button;
 import co.uk.webelements.CheckBox;
 import co.uk.webelements.Element;
@@ -50,6 +51,7 @@ public class AdminManageUserPage {
 		private static TextBox  passwordTextBox = new TextBox("Password",By.xpath("//input[@id='password']"));
 		private static TextBox  confirmPasswordTextBox = new TextBox("Confirm password",By.xpath("//input[@id='confirmPassword']"));
 		private static TextBox  emailTextBox = new TextBox("Email",By.xpath("//input[@id='emailAddress']"));
+		private static Element  emailclick = new Element("Email",By.xpath("//input[@id='emailAddress']"));
 		private static CheckBox activeStatus = new CheckBox("Active status",By.xpath("//input[@id='isActive']"));
 		private static CheckBox publicStatus = new CheckBox("Public status",By.xpath("//input[@id='isPublic']"));
 		private static CheckBox userRole(String role) {
@@ -96,6 +98,8 @@ public class AdminManageUserPage {
 		}
 		
 		public static void enterEmail(String email) {
+			emailclick.click();
+			DriverHandler.delay(1);
 			emailTextBox.setText(email);
 		}
 		

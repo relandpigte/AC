@@ -10,7 +10,12 @@ import co.uk.webelements.TextBox;
 public class TutorWizardPagePhotoID {
 
 	private static TextBox documentUploader = new TextBox("Photo file",By.xpath("//app-photo-id//input[@id='DocumentUploader']"));
+	private static Element imagePreview = new Element ("Image preview",By.xpath("//app-photo-id//img[@class='image-preview']"));
 	private static Button next = new Button("Next",By.xpath("//button[contains(text(),'Next')]"));
+	
+	public static void verifyImagePreviewIsDisplayed() {
+		imagePreview.verifyDisplayed();
+	}
 	
 	public static void uploadProfilePhoto(String filePath) {
 		documentUploader.uploadFile(filePath);
