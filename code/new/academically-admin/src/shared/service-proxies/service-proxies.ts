@@ -2765,6 +2765,65 @@ export class ProfilesServiceProxy {
     }
 
     /**
+     * @param introVideo (optional) 
+     * @return Success
+     */
+    updateIntroVideo(introVideo: FileParameter | undefined): Observable<string> {
+        let url_ = this.baseUrl + "/api/services/app/Profiles/UpdateIntroVideo";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (introVideo === null || introVideo === undefined) {
+            // do nothing
+        } else
+            content_.append("IntroVideo", introVideo.data, introVideo.fileName ? introVideo.fileName : "IntroVideo");
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateIntroVideo(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateIntroVideo(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateIntroVideo(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
+    }
+
+    /**
      * @return Success
      */
     deleteCoverPhoto(): Observable<void> {
@@ -2840,6 +2899,53 @@ export class ProfilesServiceProxy {
     }
 
     protected processDeleteProfilePicture(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    deleteIntroVideo(): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Profiles/DeleteIntroVideo";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteIntroVideo(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteIntroVideo(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeleteIntroVideo(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -10682,7 +10788,7 @@ export interface IDocumentDto {
     size: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -10693,6 +10799,7 @@ export enum DocumentType {
     PhotoId = 6,
     Reference = 7,
     DbsCertificate = 8,
+    IntroVideo = 9,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {
@@ -13067,7 +13174,6 @@ export class ServiceDisciplineTaxonomyDto implements IServiceDisciplineTaxonomyD
     parentId: string | undefined;
     parentIdMap: string | undefined;
     isEditable: boolean;
-    children: ServiceDisciplineTaxonomyDto[] | undefined;
 
     constructor(data?: IServiceDisciplineTaxonomyDto) {
         if (data) {
@@ -13085,11 +13191,6 @@ export class ServiceDisciplineTaxonomyDto implements IServiceDisciplineTaxonomyD
             this.parentId = _data["parentId"];
             this.parentIdMap = _data["parentIdMap"];
             this.isEditable = _data["isEditable"];
-            if (Array.isArray(_data["children"])) {
-                this.children = [] as any;
-                for (let item of _data["children"])
-                    this.children.push(ServiceDisciplineTaxonomyDto.fromJS(item));
-            }
         }
     }
 
@@ -13107,11 +13208,6 @@ export class ServiceDisciplineTaxonomyDto implements IServiceDisciplineTaxonomyD
         data["parentId"] = this.parentId;
         data["parentIdMap"] = this.parentIdMap;
         data["isEditable"] = this.isEditable;
-        if (Array.isArray(this.children)) {
-            data["children"] = [];
-            for (let item of this.children)
-                data["children"].push(item.toJSON());
-        }
         return data; 
     }
 
@@ -13129,7 +13225,6 @@ export interface IServiceDisciplineTaxonomyDto {
     parentId: string | undefined;
     parentIdMap: string | undefined;
     isEditable: boolean;
-    children: ServiceDisciplineTaxonomyDto[] | undefined;
 }
 
 export class ServiceDto implements IServiceDto {
@@ -14506,6 +14601,7 @@ export class UserDto implements IUserDto {
     profilePictureDocument: DocumentDto;
     coverPhotoUrl: string | undefined;
     profilePictureUrl: string | undefined;
+    introVideoUrl: string | undefined;
     currentUniversity: string | undefined;
     isPresentUniversity: boolean;
     timeZoneId: string | undefined;
@@ -14548,6 +14644,7 @@ export class UserDto implements IUserDto {
             this.profilePictureDocument = _data["profilePictureDocument"] ? DocumentDto.fromJS(_data["profilePictureDocument"]) : <any>undefined;
             this.coverPhotoUrl = _data["coverPhotoUrl"];
             this.profilePictureUrl = _data["profilePictureUrl"];
+            this.introVideoUrl = _data["introVideoUrl"];
             this.currentUniversity = _data["currentUniversity"];
             this.isPresentUniversity = _data["isPresentUniversity"];
             this.timeZoneId = _data["timeZoneId"];
@@ -14598,6 +14695,7 @@ export class UserDto implements IUserDto {
         data["profilePictureDocument"] = this.profilePictureDocument ? this.profilePictureDocument.toJSON() : <any>undefined;
         data["coverPhotoUrl"] = this.coverPhotoUrl;
         data["profilePictureUrl"] = this.profilePictureUrl;
+        data["introVideoUrl"] = this.introVideoUrl;
         data["currentUniversity"] = this.currentUniversity;
         data["isPresentUniversity"] = this.isPresentUniversity;
         data["timeZoneId"] = this.timeZoneId;
@@ -14648,6 +14746,7 @@ export interface IUserDto {
     profilePictureDocument: DocumentDto;
     coverPhotoUrl: string | undefined;
     profilePictureUrl: string | undefined;
+    introVideoUrl: string | undefined;
     currentUniversity: string | undefined;
     isPresentUniversity: boolean;
     timeZoneId: string | undefined;

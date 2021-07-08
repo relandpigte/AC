@@ -21,6 +21,7 @@ namespace Academically.Authorization.Users
         public DateTime? DateOfBirth { get; set; }
         public Guid? CoverPhotoDocumentId { get; set; }
         public Guid? ProfilePictureDocumentId { get; set; }
+        public Guid? IntroVideoDocumentId { get; set; }
         public double? Longitude { get; set; }
         public double? Latitude { get; set; }
         public string StripeUserId { get; set; }
@@ -30,6 +31,9 @@ namespace Academically.Authorization.Users
 
         [ForeignKey("ProfilePictureDocumentId")]
         public virtual Document ProfilePictureDocument { get; set; }
+
+        [ForeignKey("IntroVideoDocumentId")]
+        public virtual Document IntroVideoDocument { get; set; }
 
         public virtual ICollection<UserEducation> UserEducations { get; set; }
         public virtual ICollection<UserSpokenLanguage> UserSpokenLanguages { get; set; }

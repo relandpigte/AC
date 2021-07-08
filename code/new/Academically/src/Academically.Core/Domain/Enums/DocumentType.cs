@@ -11,5 +11,6 @@
         PhotoId,
         Reference,
         DbsCertificate,
+        IntroVideo,
     }
 }

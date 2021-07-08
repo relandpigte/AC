@@ -40,12 +40,15 @@ export class ImageCropperComponent extends AppComponentBase {
     setTimeout(() => {
       const croppedImage = this.imageCropper.crop();
       const imageFile = this.base64ToFile(croppedImage.base64, this.image.name);
-      if (this.validateFileSize(imageFile.size)) {
-        this.imageCropped.emit(imageFile);
-      }
-      else {
-        this.isImageCropping = false;
-      }
+      this.resizeImage(imageFile, croppedImage.width, croppedImage.height).then(imageBlob => {
+        const resizedImage = new File([imageBlob], this.image.name, { type: this.image.type });
+        if (this.validateFileSize(resizedImage.size)) {
+          this.imageCropped.emit(resizedImage);
+        }
+        else {
+          this.isImageCropping = false;
+        }
+      });
     }, 0);
   }
 
@@ -54,7 +57,7 @@ export class ImageCropperComponent extends AppComponentBase {
   }
 
   private base64ToFile(dataurl: string, filename: string): File {
-    var arr = dataurl.split(','),
+    let arr = dataurl.split(','),
       mime = arr[0].match(/:(.*?);/)[1],
       bstr = atob(arr[1]),
       n = bstr.length,
@@ -67,10 +70,44 @@ export class ImageCropperComponent extends AppComponentBase {
     return new File([u8arr], filename, { type: mime });
   }
 
+  private resizeImage(file: File, maxWidth: number, maxHeight: number): Promise<Blob> {
+    const resizePercentage = 33;
+    maxWidth = maxWidth - ((maxWidth * resizePercentage) / 100);
+    maxHeight = maxHeight - ((maxHeight * resizePercentage) / 100);
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = URL.createObjectURL(file);
+      image.onload = () => {
+        const width = image.width;
+        const height = image.height;
+
+        let newWidth: number;
+        let newHeight: number;
+
+        if (width > height) {
+          newHeight = height * (maxWidth / width);
+          newWidth = maxWidth;
+        } else {
+          newWidth = width * (maxHeight / height);
+          newHeight = maxHeight;
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+
+        const context = canvas.getContext('2d');
+        context.drawImage(image, 0, 0, newWidth, newHeight);
+        canvas.toBlob(resolve, file.type);
+      };
+      image.onerror = reject;
+    });
+  }
+
   private validateFileSize(size: number) {
     const isValid = size <= fileUploadConfiguration.maxFileSize;
     if (!isValid) {
-      this.notify.error(this.l('InvalidFileSizeUploadError', '1MB'), this.l('InvalidFileUploadError'));
+      this.notify.error(this.l('InvalidFileSizeUploadError', '5MB'), this.l('InvalidFileUploadError'));
     }
     return isValid;
   }

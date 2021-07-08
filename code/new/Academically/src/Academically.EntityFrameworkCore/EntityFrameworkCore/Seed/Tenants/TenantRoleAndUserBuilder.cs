@@ -146,6 +146,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Profile_Services_Delete,
                 PermissionNames.Pages_Profile_Services_SuggestSubject,
                 PermissionNames.Pages_Profile_Introduction,
+                PermissionNames.Pages_Profile_Introduction_Video,
                 PermissionNames.Pages_Profile_Introduction_Metrics,
                 PermissionNames.Pages_Profile_Introduction_Reviews,
                 PermissionNames.Pages_Profile_Education,
