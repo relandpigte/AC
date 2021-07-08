@@ -2,6 +2,8 @@
 </app-metrics>
 <div class="row">
   <div class="col-md-8">
+    <app-intro-video>
+    </app-intro-video>
     <app-about></app-about>
     <app-student-reviews *ngIf="permission.isGranted('Pages.Profile.Introduction.Reviews') && !isTutor">
     </app-student-reviews>
