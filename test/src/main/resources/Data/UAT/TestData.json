@@ -13,5 +13,9 @@
 			"email": "Admin"
 		}
 		
+	},
+	"phone":{
+		"TestdialCode": "+63",
+		"Testnumber": "9760172834"
 	}
 }

@@ -534,3 +534,106 @@ Feature: Student user profile settings
     Then verify research interest informations are correct
       | Title                | Knowledge Base            | Description |
       | Computer programming | Computational Engineering | Test1       |
+
+  @UI @TestRails(C14519)
+  Scenario: C14519 - Verify adding spoken languages
+    Given User is in academically login page
+    When user register a student
+    And user enter account details
+      | Firstname      | Lastname | Email          | Date of Birth |
+      | Automated63XXX | Test     | automated63XXX | 04/02/1971    |
+    Then sent email modal is displayed
+    And user activate account
+    Then user is in complete registration form
+    And email address "automated63XXX" matched
+    When user enter password "Test@12345" and confirm passoword "Test@12345"
+    And user register an account
+    Then registered the account successfully
+    When user enter username "automated63XXX" and password "Test@12345"
+    Then user successfully login
+    When user navigate to profile settings using profile widget
+    Then user is in profile settings
+    When user add language spoken
+    And select "Fluent" english proficiency
+    And user add other language
+      | Language | Proficiency |
+      | Czech    | Basic       |
+    And user saving spoken language information
+    Then "Fluent" "English" language is added
+    And "Basic" "Czech" language is added
+
+  @??
+  Scenario: C14705 - Verify editing user education information
+
+  @Adhoc
+  Scenario: C14706 - Verify removing spoken languages
+    Given User is in academically login page
+    When user register a student
+    And user enter account details
+      | Firstname      | Lastname | Email          | Date of Birth |
+      | Automated65XXX | Test     | automated65XXX | 04/02/1971    |
+    Then sent email modal is displayed
+    And user activate account
+    Then user is in complete registration form
+    And email address "automated65XXX" matched
+    When user enter password "Test@12345" and confirm passoword "Test@12345"
+    And user register an account
+    Then registered the account successfully
+    When user enter username "automated65XXX" and password "Test@12345"
+    Then user successfully login
+    When user navigate to profile settings using profile widget
+    Then user is in profile settings
+    When user add language spoken
+    And select "Fluent" english proficiency
+    And user add other language
+      | Language | Proficiency |
+      | Czech    | Basic       |
+    And user saving spoken language information
+    Then "Fluent" "English" language is added
+    And "Basic" "Czech" language is added
+    When user add language spoken
+    And user removes "Czech" language
+    And user saving spoken language information
+    Then removing "Basic" "Czech" language is successful
+
+  @UI @TestRails(C14707)
+  Scenario: C14707 - Verify editing spoken languages
+    Given User is in academically login page
+    When user register a student
+    And user enter account details
+      | Firstname      | Lastname | Email          | Date of Birth |
+      | Automated64XXX | Test     | automated64XXX | 04/02/1971    |
+    Then sent email modal is displayed
+    And user activate account
+    Then user is in complete registration form
+    And email address "automated64XXX" matched
+    When user enter password "Test@12345" and confirm passoword "Test@12345"
+    And user register an account
+    Then registered the account successfully
+    When user enter username "automated64XXX" and password "Test@12345"
+    Then user successfully login
+    When user navigate to profile settings using profile widget
+    Then user is in profile settings
+    When user add language spoken
+    And select "Fluent" english proficiency
+    And user add other language
+      | Language | Proficiency |
+      | Czech    | Basic       |
+    And user saving spoken language information
+    Then "Fluent" "English" language is added
+    And "Basic" "Czech" language is added
+    When user edit language spoken
+    And select "Basic" english proficiency
+    And user add other language
+      | Language | Proficiency |
+      | Dutch    | Fluent      |
+    And user edit "Czech" language
+    And user edit other language
+      | Language | Proficiency    |
+      | Greek    | Conversational |
+    And user saving spoken language information
+    Then "Basic" "English" language is added
+    And "Conversational" "Greek" language is added
+    And "Fluent" "Dutch" language is added
+
+  Scenario: C14777 - Verify the available tab in the profile settings as student

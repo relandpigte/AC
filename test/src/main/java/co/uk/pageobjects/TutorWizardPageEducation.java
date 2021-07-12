@@ -10,7 +10,7 @@ import co.uk.webelements.TextBox;
 public class TutorWizardPageEducation {
 	
 	private static Button addEducationBtn = new Button("Add education",By.xpath("//app-educations//a[contains(text(),'Add')]")); 
-	private static Button removeEducation = new Button("Remove education",By.xpath("//app-education//span[contains(@class,'trash')]"));
+	private static Button removeEducation = new Button("Remove education",By.xpath("//app-education//span[contains(@class,'trash')]/parent::button"));
 	private static Button next = new Button("Next",By.xpath("//button[contains(text(),'Next')]"));
 	
 	public static void clickNext() {

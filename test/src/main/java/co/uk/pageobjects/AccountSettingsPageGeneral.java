@@ -2,17 +2,23 @@ package co.uk.pageobjects;
 
 import org.openqa.selenium.By;
 
+import co.uk.webelements.Button;
 import co.uk.webelements.CheckBox;
 import co.uk.webelements.Element;
 import co.uk.webelements.ListBox;
+import co.uk.webelements.Tab;
 import co.uk.webelements.TextBox;
 
 public class AccountSettingsPageGeneral {
-
+	
+	private static Tab generalTabIsActive = new Tab("General",By.xpath("//a[@class='nav-link active' and contains(text(),'General')]"));
 	private static TextBox firstnameTextBox = new TextBox("Firstname",By.xpath("//input[@id='name']"));
 	private static TextBox lastnameTextBox = new TextBox("Lastname",By.xpath("//input[@id='surname']"));
 	private static TextBox dateofBirthTextBox = new TextBox("Date of Birth",By.xpath("//input[@id='dateOfBirth']"));
-	private static Element phoneCountry = new Element("",By.xpath(""));
+	private static Element phoneCountry = new Element("Dial code container",By.xpath("//div[@class='iti__flag-container']"));
+	private static Element phoneCountryDropdown(String dialcode) {
+		return new Element(dialcode,By.xpath("//span[@class='iti__dial-code' and text()='"+dialcode+"']//parent::li"));
+	}
 	private static TextBox phoneNumberTextBox = new TextBox("Phone Number",By.xpath("//input[@id='phone']"));
 	private static TextBox emailTextBox = new TextBox("Email",By.xpath("//input[@id='emailAddress']"));
 	private static TextBox address1TextBox = new TextBox("Address 1",By.xpath("//input[@id='AddressLine1']"));
@@ -22,7 +28,21 @@ public class AccountSettingsPageGeneral {
 	private static TextBox stateTextBox = new TextBox("State/Province",By.xpath("//input[@id='StateOrProvince']"));
 	private static ListBox timezoneDropdown = new ListBox("Timezone",By.xpath("//select[@id='TimeZone']"));
 	private static ListBox countryDropdown = new ListBox("Country",By.xpath("//select[@id='country']"));
-	private static CheckBox studentprofile =new CheckBox("Student profile",By.xpath("//input[@id='isPublic']"));
+	private static CheckBox studentprofile = new CheckBox("Student profile",By.xpath("//input[@id='isPublic']"));
+	private static Button saveChanges = new Button("Save changes",By.xpath("//button[contains(text(),'Save Changes')]"));
+	
+	public static void selectDialCode(String dialCode) {
+		phoneCountry.click();
+		phoneCountryDropdown(dialCode).click();
+	}
+	
+	public static void clicksaveChanges() {
+		saveChanges.click();
+	}
+	
+	public static void verifyGeneralTabIsActive() {
+		generalTabIsActive.verifyDisplayed();
+	}
 	
 	public static void enterFirstName(String fname) {
 		firstnameTextBox.setText(fname);

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import co.uk.core.DriverHandler;
 import co.uk.pageobjects.RegisterPage;
+import co.uk.pageobjects.TutorWizardPageLanguage;
 import co.uk.pageobjects.UserProfilePageCommonObjects;
 import co.uk.pageobjects.UserProfilePageEducation;
 import co.uk.pageobjects.UserProfilePageIntroduction;
@@ -452,6 +453,83 @@ public class UserProfilePageStepDefinitions {
         if(!knowledge.equals("null")) {	 
         	UserProfilePageResearch.ResearchInterestModal.verifyKnowledgeBaseIsDisplayed(knowledge);
         }
+	}
+	
+	
+	
+	@When("^user add language spoken$")
+	public void addLanguageSpoken() {
+		DriverHandler.delay(3);
+		UserProfilePageIntroduction.LanguageSpoken.clickEdit();
+		DriverHandler.delay(4);
+	}
+
+	@When("^user edit language spoken$")
+	public void editLanguageSpoken() {
+		UserProfilePageIntroduction.LanguageSpoken.clickEdit();
+		DriverHandler.delay(4);
+	}
+
+	@When("^select \"(.*)\" english proficiency$")
+	public void selectEnglishProficiency(String englishLevel) {
+		UserProfilePageIntroduction.LanguageSpoken.LanguageModal.selectEnglishProficiency(englishLevel);
+	}
+
+	@When("^user add other language$")
+	public void enterOtherLanguage(DataTable otherLanguage) {
+		List<Map<String, String>> data = otherLanguage.asMaps(String.class, String.class);
+		String language = data.get(0).get("Language");
+		String proficiency = data.get(0).get("Proficiency");
+		UserProfilePageIntroduction.LanguageSpoken.LanguageModal.clickAddLanguage();
+		DriverHandler.delay(1);
+		if (!proficiency.equals("null")) {
+			UserProfilePageIntroduction.LanguageSpoken.LanguageModal.AddEditLanguageModal.selectLanguage(language);
+		}
+		if (!proficiency.equals("null")) {
+			UserProfilePageIntroduction.LanguageSpoken.LanguageModal.AddEditLanguageModal.selectProficiency(proficiency);
+		}
+		UserProfilePageIntroduction.LanguageSpoken.LanguageModal.AddEditLanguageModal.clickAdd();
+	}
+
+	@When("^user saving spoken language information$")
+	public void saveSpokenLanguageInformation() {
+		UserProfilePageIntroduction.LanguageSpoken.LanguageModal.clickSave();
+		DriverHandler.delay(5);
+	}
+
+	@Then("^\"(.*)\" \"(.*)\" language is added$")
+	public void verifyAddedLanguage(String proficiency, String language) {
+		UserProfilePageIntroduction.LanguageSpoken.verifyLanguageAndProficiencyAreDisplayed(language, proficiency);
+	}
+	
+	@When("^user edit \"(.*)\" language$")
+	public void editOtherLanguage(String language) {
+		UserProfilePageIntroduction.LanguageSpoken.LanguageModal.clickEditOtherLanguage(language);
+	}
+	
+	@When("^user edit other language$")
+	public void editOtherLanguage(DataTable otherLanguage) {
+		List<Map<String, String>> data = otherLanguage.asMaps(String.class, String.class);
+		String language = data.get(0).get("Language");
+		String proficiency = data.get(0).get("Proficiency");
+		DriverHandler.delay(1);
+		if (!proficiency.equals("null")) {
+			UserProfilePageIntroduction.LanguageSpoken.LanguageModal.AddEditLanguageModal.selectLanguage(language);
+		}
+		if (!proficiency.equals("null")) {
+			UserProfilePageIntroduction.LanguageSpoken.LanguageModal.AddEditLanguageModal.selectProficiency(proficiency);
+		}
+		UserProfilePageIntroduction.LanguageSpoken.LanguageModal.AddEditLanguageModal.clickUpdate();
+	}
+	
+	@When("^user removes \"(.*)\" language$")
+	public void removeLanguage(String language) {
+		UserProfilePageIntroduction.LanguageSpoken.LanguageModal.removeEditOtherLanguage(language);
+	}
+	
+	@Then("^removing \"(.*)\" \"(.*)\" language is successful$")
+	public void verifyLanguageIsRemoved(String proficient, String language) {
+		UserProfilePageIntroduction.LanguageSpoken.verifyLanguageIsNotDisplayed(language, proficient);
 	}
 }
 

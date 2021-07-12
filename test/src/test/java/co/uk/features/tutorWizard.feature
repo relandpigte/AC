@@ -383,7 +383,49 @@ Feature: Tutor Wizard
 
   @?? @automated48XXX
   Scenario: C14530 - Verify removing user education information
-
+    Given User is in academically login page
+    When user login as "admin"
+    Then user successfully login
+    When user proceed to manage user
+    Then user is in manage user page
+    When user add a new user
+    And user enter a user details
+      | Name           | Surname | Username       | Password   | Email          | Active | Public |
+      | Automated48XXX | Test    | automated48XXX | Test@12345 | automated48XXX | Yes    | Yes    |
+    And user select a "Student" role
+    And user saving user details
+    Then sucessful message is displayed
+    When user logout in academically
+    Then user is in academically login page
+   When user enter username "automated48154625" and password "Test@12345"
+   Then user successfully login
+   When user wants to become a tutor on the dashboard page
+   Then confirmation of  become a tutor modal is displayed
+   When user confirms to become a tutor
+   Then user is in tutor wizard page
+    When user adds about information
+      | Firstname | Lastname | Overview                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+      | null      | null     | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
+    And user next to education
+    Then sucessful message is displayed
+    When user add education information on tutor wizard
+    And user enter education information on tutor wizard
+      | Country        | Institution                 | City      | Start year | End year |
+      | United Kingdom | The University of Cambridge | Cambridge |       1995 |     2000 |
+    And user add education level on tutor wizard
+      | Course title                           | Academic Level | Grade |
+      | Level 7 (Masters degree or equivalent) | Masters        |     4 |
+    And user add evidence file on tutor wizard
+    Then "Sample1" evidence is added on tutor wizard
+    When user enter "Certificate" category evidence on tutor wizard
+    And user saving the education information on tutor wizard
+    Then sucessful message is displayed
+    
+    When user delete education information on tutor wizard
+    Then confirmation is displayed on tutor wizard
+    When the user confirms to remove a education information on tutor wizard
+    Then removing education information is successful on tutor wizard
+    
   @?? @automated49XXX
   Scenario: C14633 - Verify editing user education information
 
@@ -1118,8 +1160,85 @@ Feature: Tutor Wizard
       | Country        | Address 1     | Address 2       | City   | Zip code | Province |
       | United Kingdom | Londonwriteup | 21 Hanover Road | London | NW10 3DR | Brent    |
 
-	@??
+   @UI @TestRails(C14609)
   Scenario: C14609 - Verify previous saved address will be loaded
+    Given User is in academically login page
+    When user login as "admin"
+    Then user successfully login
+    When user proceed to manage user
+    Then user is in manage user page
+    When user add a new user
+    And user enter a user details
+      | Name           | Surname | Username       | Password   | Email          | Active | Public |
+      | Automated62XXX | Test    | automated62XXX | Test@12345 | automated62XXX | Yes    | Yes    |
+    And user select a "Student" role
+    And user saving user details
+    Then sucessful message is displayed
+    When user logout in academically
+    Then user is in academically login page
+    When user enter username "automated62XXX" and password "Test@12345"
+    Then user successfully login
+    When user proceed to account settings
+    Then the user is in the account settings general tab
+    When user enter general information
+      | First name | Last name | Date of birth | Dial code    | Phone number | Email | Timezone                                                     | Country        | Address 1     | Address 2       | City   | Zip code | Province |
+      | null       | null      | 07/05/1986    | TestdialCode | Testnumber   | null  | (UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna | United Kingdom | Londonwriteup | 21 Hanover Road | London | NW10 3DR | Brent    |
+    And user saving general information
+    And user proceed to the dashboard page
+    Then user is in dashboard page
+    When user wants to become a tutor on the dashboard page
+    Then confirmation of  become a tutor modal is displayed
+    When user confirms to become a tutor
+    Then user is in tutor wizard page
+    When user adds about information
+      | Firstname | Lastname | Overview                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+      | null      | null     | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
+    And user next to education
+    Then sucessful message is displayed
+    When user add education information on tutor wizard
+    And user enter education information on tutor wizard
+      | Country        | Institution                 | City      | Start year | End year |
+      | United Kingdom | The University of Cambridge | Cambridge |       1995 |     2000 |
+    And user add education level on tutor wizard
+      | Course title                           | Academic Level | Grade |
+      | Level 7 (Masters degree or equivalent) | Masters        |     4 |
+    And user add evidence file on tutor wizard
+    Then "Sample1" evidence is added on tutor wizard
+    When user enter "Certificate" category evidence on tutor wizard
+    And user saving the education information on tutor wizard
+    Then sucessful message is displayed
+    When user next to research
+    And user skip to enter research information
+    And user add language spoken on tutor wizard
+    And select "Fluent" english proficiency on tutor wizard
+    And user add other language on tutor wizard
+      | Language | Proficiency |
+      | Czech    | Basic       |
+    And user saving spoken language information on tutor wizard
+    Then "Fluent" "English" language is added on tutor wizard
+    And "Basic" "Czech" language is added on tutor wizard
+    When user next to services offered
+    And user adds support service on tutor wizard
+    And user enters services information on tutor wizard
+      | Category         | Service           | Level | Expertise level | Subject        | Subject details | Description      | Study area | Study field |
+      | Academic Support | Academic Tutoring | GCSE  | Expert          | Art and design | null            | Test description | null       | null        |
+    And user saving support services information on tutor wizard
+    Then sucessful message is displayed
+    When user next to profile picture
+    And user uploads a profile photo on tutor wizard
+    Then crop image modal is displayed on tutor wizard
+    When user crop the image on tutor wizard
+    Then upload a profile photo is successful on tutor wizard
+    When user next to photo id
+    And user uploads a photo id on tutor wizard
+    Then crop image modal is displayed on tutor wizard
+    When user crop the image on tutor wizard
+    Then upload a photo id is successful on tutor wizard
+    When user next to address
+    Then sucessful message is displayed
+    And verify address information is correct on tutor wizard
+      | Country        | Address 1     | Address 2       | City   | Zip code | Province |
+      | United Kingdom | Londonwriteup | 21 Hanover Road | London | NW10 3DR | Brent    |
 
   Scenario: C14610 - Verify adding contact number
 

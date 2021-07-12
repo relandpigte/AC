@@ -670,3 +670,4 @@ Scenario: C14574 - Verify adding publication without tag
   Then adding publication "Silence the storm" is successful
   
 Scenario: C14577 - Verify adding services
+
