@@ -565,7 +565,7 @@ Feature: Student user profile settings
   @??
   Scenario: C14705 - Verify editing user education information
 
-  @Adhoc
+  @UI @TestRails(C14706)
   Scenario: C14706 - Verify removing spoken languages
     Given User is in academically login page
     When user register a student
@@ -636,4 +636,15 @@ Feature: Student user profile settings
     And "Conversational" "Greek" language is added
     And "Fluent" "Dutch" language is added
 
+  @UI @TestRails(C14777)
   Scenario: C14777 - Verify the available tab in the profile settings as student
+    Given User is in academically login page
+    When user login as "student"
+    Then user successfully login
+    When user navigate to profile settings using profile widget
+    Then user is in profile settings
+    And "Introduction" tab is displayed on profile settings
+    And "Education" tab is displayed on profile settings
+    And "Research" tab is displayed on profile settings
+    And "Industry" tab is displayed on profile settings
+    And "Service" tab is not displayed on profile settings
