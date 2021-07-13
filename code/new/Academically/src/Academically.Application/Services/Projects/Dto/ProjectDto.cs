@@ -1,10 +1,9 @@
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Abp.Domain.Entities.Auditing;
 using Academically.Domain.Entities;
+using Academically.Services.ProjectOffers.Dto;
 using Academically.Users.Dto;
+using System;
 
 namespace Academically.Services.Projects.Dto
 {
@@ -24,5 +23,9 @@ namespace Academically.Services.Projects.Dto
         public UserDto CreatorUser { get; set; }
 
         public bool CanSubmitOffer { get; set; } = true;
+
+        public int TotalSessions { get; set; }
+
+        public ProjectOfferDto AcceptedOffer { get; set; }
     }
 }

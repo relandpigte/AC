@@ -84,18 +84,25 @@ export class ViewTutorProposalComponent extends AppComponentBase implements OnIn
   }
 
   onPayClick(): void {
-    const newSessions = this.sessions.filter(s => !s.id);
-    this._calendarEventsService.createBatch(newSessions)
+    this.isLoading = true;
+    this._projectOffersService.accept(this.projectOffer.id)
       .pipe(
         takeUntil(this.destroyed$),
-        finalize(() => {
-          this.isLoading = false;
-        }),
       )
       .subscribe(() => {
-        this.notify.success(this.l('SavedSuccessfully'));
-        this._router.navigate([`/app/projects/${this.projectOffer.projectId}/hired`]);
-        this._modal.hide();
+        const newSessions = this.sessions.filter(s => !s.id);
+        this._calendarEventsService.createBatch(newSessions)
+          .pipe(
+            takeUntil(this.destroyed$),
+            finalize(() => {
+              this.isLoading = false;
+            }),
+          )
+          .subscribe(() => {
+            this.notify.success(this.l('SavedSuccessfully'));
+            this._router.navigate([`/app/projects/${this.projectOffer.projectId}/hired`]);
+            this._modal.hide();
+          });
       });
   }
 

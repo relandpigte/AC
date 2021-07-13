@@ -2977,58 +2977,6 @@ export class ProjectOffersServiceProxy {
     }
 
     /**
-     * @param body (optional) 
-     * @return Success
-     */
-    create(body: CreateProjectOfferDto | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/ProjectOffers/Create";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json-patch+json",
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreate(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCreate(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processCreate(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
-
-    /**
      * @param userIdFilter (optional) 
      * @param projectIdFilter (optional) 
      * @param searchFilter (optional) 
@@ -3158,6 +3106,110 @@ export class ProjectOffersServiceProxy {
             }));
         }
         return _observableOf<ProjectOfferDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateProjectOfferDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/ProjectOffers/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    accept(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/ProjectOffers/Accept?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAccept(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAccept(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAccept(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -11816,6 +11868,8 @@ export class ProjectDto implements IProjectDto {
     serviceNameLevel3: string | undefined;
     creatorUser: UserDto;
     canSubmitOffer: boolean;
+    totalSessions: number;
+    acceptedOffer: ProjectOfferDto;
 
     constructor(data?: IProjectDto) {
         if (data) {
@@ -11840,6 +11894,8 @@ export class ProjectDto implements IProjectDto {
             this.serviceNameLevel3 = _data["serviceNameLevel3"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.canSubmitOffer = _data["canSubmitOffer"];
+            this.totalSessions = _data["totalSessions"];
+            this.acceptedOffer = _data["acceptedOffer"] ? ProjectOfferDto.fromJS(_data["acceptedOffer"]) : <any>undefined;
         }
     }
 
@@ -11864,6 +11920,8 @@ export class ProjectDto implements IProjectDto {
         data["serviceNameLevel3"] = this.serviceNameLevel3;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["canSubmitOffer"] = this.canSubmitOffer;
+        data["totalSessions"] = this.totalSessions;
+        data["acceptedOffer"] = this.acceptedOffer ? this.acceptedOffer.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -11888,6 +11946,8 @@ export interface IProjectDto {
     serviceNameLevel3: string | undefined;
     creatorUser: UserDto;
     canSubmitOffer: boolean;
+    totalSessions: number;
+    acceptedOffer: ProjectOfferDto;
 }
 
 export class ProjectDtoPagedResultDto implements IProjectDtoPagedResultDto {
