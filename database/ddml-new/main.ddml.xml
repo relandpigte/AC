@@ -58,5 +58,6 @@
 	<include file="ddml-new/ddml.2021-06-17-01.add-reschedulecomments-table.xml"/>
 	<include file="ddml-new/ddml.2021-06-30-01.add-tutorverificationsteps-table.xml"/>
 	<include file="ddml-new/ddml.2021-07-07-01.alter-users-add-introvideodocumentid-field.xml"/>
+	<include file="ddml-new/ddml.2021-07-09-01.alter-projectoffers-add-isaccepted-field.xml"/>
 </databaseChangeLog>
 	

@@ -31,8 +31,12 @@ export class RecentProjectsComponent extends AppComponentBase implements OnInit 
 
   private getProjects(): void {
     this._projectsService
-      .getAll(this.appSession.userId, '', 1, 5)
-      .pipe( finalize(() =>  this.isLoading = false))
+      .getAll(this.appSession.userId, undefined, 0, 3)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
       .subscribe((result: ProjectDtoPagedResultDto) => {
         this.projects = result.items;
       });
