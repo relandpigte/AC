@@ -12,6 +12,10 @@
 			"password": "123qwe",
 			"email": "Admin"
 		}
+		,"tutor":{
+			"password": "Test@12345",
+			"email": "tutor@academically.33mail.com"
+		}
 		
 	},
 	"phone":{

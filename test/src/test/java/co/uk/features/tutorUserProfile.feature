@@ -754,7 +754,25 @@ Feature: Tutor user profile settings
     Then "Basic" "English" language is added
     And "Conversational" "Greek" language is added
     And "Fluent" "Dutch" language is added
-    
-Scenario: C14779 - Verify tutor can able to upload/play a video on introduction tab			
-Scenario: C14780 - Verify that the student can play a video in the tutor profile			
-Scenario: C14781 - Verify tutor can able to remove video on introduction tab   
+
+  @??
+  Scenario: C14779 - Verify tutor can able to upload/play a video on introduction tab
+
+  @??
+  Scenario: C14780 - Verify that the student can play a video in the tutor profile
+
+  @??
+  Scenario: C14781 - Verify tutor can able to remove video on introduction tab
+
+  @UI @TestRails(C14787)
+  Scenario: C14787	Verify the available tab in the profile settings as tutor
+    Given User is in academically login page
+    When user login as "tutor"
+    Then user successfully login
+    When user navigate to profile settings using profile widget
+    Then user is in profile settings
+    And "Introduction" tab is displayed on profile settings
+    And "Education" tab is displayed on profile settings
+    And "Research" tab is displayed on profile settings
+    And "Industry" tab is displayed on profile settings
+    And "Service" tab is displayed on profile settings

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.json.JSONException;
 
 import co.uk.core.DriverHandler;import co.uk.dataobjects.TestDataObjects;
+import co.uk.pageobjects.AccountSettingsPageCommonObjects;
 import co.uk.pageobjects.AccountSettingsPageGeneral;
 import co.uk.pageobjects.TutorWizardPageAddress;
 import io.cucumber.datatable.DataTable;
@@ -68,6 +69,9 @@ public class AccountSettingsPageStepDefinitions {
 		if (!address2.equals("null")) {
 			AccountSettingsPageGeneral.enterAddress2(address2);
 		}
+		if (!city.equals("null")) {
+			AccountSettingsPageGeneral.enterCity(city);
+		}
 		if (!zipcode.equals("null")) {
 			AccountSettingsPageGeneral.enterPostcode(zipcode);
 		}
@@ -76,9 +80,74 @@ public class AccountSettingsPageStepDefinitions {
 		}
 	}
 	
+	@Then("^the all details in general information are correct$")
+	public void verifyGeneralInformation(DataTable generalInformation) throws JSONException, InterruptedException, IOException {
+		List<Map<String, String>> data = generalInformation.asMaps(String.class, String.class);
+		String firstname = data.get(0).get("First name");
+		String lastname = data.get(0).get("Last name");
+		String dateOfBirth = data.get(0).get("Date of birth");
+		String dialCode = data.get(0).get("Dial code");
+		String phoneNumber = data.get(0).get("Phone number");		
+		String email = data.get(0).get("Email");
+		String timezone = data.get(0).get("Timezone");
+		String country = data.get(0).get("Country");		
+		String address1 = data.get(0).get("Address 1");
+		String address2 = data.get(0).get("Address 2");
+		String city = data.get(0).get("City");
+		String zipcode = data.get(0).get("Zip code");
+		String province = data.get(0).get("Province");
+		DriverHandler.delay(2);
+		
+		if (!firstname.equals("null")) {
+			AccountSettingsPageGeneral.verifyFirstName(lastname);
+		}
+		if (!lastname.equals("null")) {
+			AccountSettingsPageGeneral.verifyLastName(lastname);
+		}
+		if (!dateOfBirth.equals("null")) {
+			AccountSettingsPageGeneral.verifyDateOfBirth(dateOfBirth);
+		}
+		if (!dialCode.equals("null")) {
+			AccountSettingsPageGeneral.verifyDialCode(TestDataObjects.getphoneNumber(dialCode));
+		}
+		if (!phoneNumber.equals("null")) {
+			AccountSettingsPageGeneral.verifyPhoneNumber(TestDataObjects.getphoneNumber(phoneNumber));
+		}
+		if (!email.equals("null")) {
+			AccountSettingsPageGeneral.verifyEmail(email);
+		}
+		if (!timezone.equals("null")) {
+			AccountSettingsPageGeneral.verifyTimezone(timezone);
+		}
+		if (!country.equals("null")) {
+			AccountSettingsPageGeneral.verifyCountry(country);
+		}
+		if (!address1.equals("null")) {
+			AccountSettingsPageGeneral.verifyAddress1(address1);
+		}
+		if (!address2.equals("null")) {
+			AccountSettingsPageGeneral.verifyAddress2(address2);
+		}
+		if (!city.equals("null")) {
+			AccountSettingsPageGeneral.verifyCity(city);
+		}
+		if (!zipcode.equals("null")) {
+			AccountSettingsPageGeneral.verifyPostCode(zipcode);
+		}
+		if (!province.equals("null")) {
+			AccountSettingsPageGeneral.verifyState(province);
+		}
+	}
+	
 	@When("^user saving general information$")
 	public void savingGeneralInformation() {
 		AccountSettingsPageGeneral.clicksaveChanges();
 		DriverHandler.delay(6);
 	}
+	
+	@When("^user proceed to security tab$")
+	public void proceedToSecurityTab() {
+		AccountSettingsPageCommonObjects.clickSecurityTab();
+	}
+
 }
