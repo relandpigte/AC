@@ -25,6 +25,7 @@ namespace Academically.Authorization.Users
         public double? Longitude { get; set; }
         public double? Latitude { get; set; }
         public string StripeUserId { get; set; }
+        public DateTime? DeleteDate { get; set; }
 
         [ForeignKey("CoverPhotoDocumentId")]
         public virtual Document CoverPhotoDocument { get; set; }

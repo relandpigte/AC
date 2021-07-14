@@ -1,6 +1,7 @@
 ﻿using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Timing;
 using Academically.Authorization;
@@ -301,6 +302,15 @@ namespace Academically.Services.Profiles
                 await _usersRepository.UpdateAsync(user);
                 await _documentsDomainService.DeleteAsync(previousIntroVideoDocumentId);
             }
+        }
+
+        [UnitOfWork(IsDisabled = true)]
+        public async Task DeleteAccount()
+        {
+            var user = await _usersRepository.GetAsync(AbpSession.UserId.Value);
+            user.DeleteDate = Clock.Now.AddDays(7);
+            await _usersRepository.UpdateAsync(user);
+            await _usersRepository.DeleteAsync(AbpSession.UserId.Value);
         }
     }
 }

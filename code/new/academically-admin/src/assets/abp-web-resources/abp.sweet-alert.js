@@ -7,7 +7,7 @@ var abp = abp || {};
   /* MESSAGE **************************************************/
 
 
-  var showMessage = function showMessage(type, message, title, isHtml, options) {
+  var showMessage = function showMessage(type, message, title, options) {
     if (!title) {
       title = message;
       message = undefined;
@@ -18,8 +18,9 @@ var abp = abp || {};
     options.icon = type;
     options.confirmButtonText = options.confirmButtonText || abp.localization.abpWeb("Ok");
 
-    if (isHtml) {
+    if (options.isHtml) {
       options.html = message;
+      delete options.isHtml;
     } else {
       options.text = message;
     }
@@ -27,23 +28,23 @@ var abp = abp || {};
     return Swal.fire(options);
   };
 
-  abp.message.info = function (message, title, isHtml, options) {
-    return showMessage("info", message, title, isHtml, options);
+  abp.message.info = function (message, title, options) {
+    return showMessage("info", message, title, options);
   };
 
-  abp.message.success = function (message, title, isHtml, options) {
-    return showMessage("success", message, title, isHtml, options);
+  abp.message.success = function (message, title, options) {
+    return showMessage("success", message, title, options);
   };
 
-  abp.message.warn = function (message, title, isHtml, options) {
-    return showMessage("warning", message, title, isHtml, options);
+  abp.message.warn = function (message, title, options) {
+    return showMessage("warning", message, title, options);
   };
 
-  abp.message.error = function (message, title, isHtml, options) {
-    return showMessage("error", message, title, isHtml, options);
+  abp.message.error = function (message, title, options) {
+    return showMessage("error", message, title, options);
   };
 
-  abp.message.confirm = function (message, titleOrCallback, callback, isHtml, options) {
+  abp.message.confirm = function (message, titleOrCallback, callback, options) {
     var title = undefined;
 
     if (typeof titleOrCallback === "function") {
@@ -59,8 +60,9 @@ var abp = abp || {};
     options.cancelButtonText = options.cancelButtonText || abp.localization.abpWeb("Cancel");
     options.showCancelButton = true;
 
-    if (isHtml) {
+    if (options.isHtml) {
       options.html = message;
+      delete options.isHtml
     } else {
       options.text = message;
     }
