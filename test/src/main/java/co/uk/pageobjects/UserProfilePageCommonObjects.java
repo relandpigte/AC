@@ -1,9 +1,6 @@
 package co.uk.pageobjects;
 
-import java.nio.file.Path;
-
 import org.openqa.selenium.By;
-
 import co.uk.core.DriverHandler;
 import co.uk.webelements.Button;
 import co.uk.webelements.Element;
@@ -11,7 +8,10 @@ import co.uk.webelements.Tab;
 import co.uk.webelements.TextBox;
 
 public class UserProfilePageCommonObjects {
-
+	
+	private static Tab profileSettingsTab(String tab) {
+		return new Tab(tab+" Tab",By.xpath("//a[contains(@class,'nav-link') and contains(text(),'"+tab+"')]"));
+	}
     private static Tab introductionTab = new Tab("Introduction", By.xpath("//a[contains(@class,'nav-link') and contains(text(),'Introduction')]"));
     private static Tab educationTab = new Tab("Education", By.xpath("//a[contains(@class,'nav-link') and contains(text(),'Education')]"));
     private static Tab researchTab = new Tab("Research", By.xpath("//a[contains(@class,'nav-link') and contains(text(),' Research ')]"));
@@ -36,6 +36,14 @@ public class UserProfilePageCommonObjects {
 	private static Element successfulyDeletedMesssage = new Element("Successfuly deleted message",By.xpath("//span[text()='Successfully Deleted']"));
 	
 	private static Button becomeaTutor = new Button("Become a tutor",By.xpath("//button[contains(text(),'Become a Tutor')]"));
+	
+	public static void verifyTabIsDisplayed(String tab) {
+		profileSettingsTab(tab).verifyDisplayed();
+	}
+	
+	public static void verifyTabIsNotDisplayed(String tab) {
+		profileSettingsTab(tab).verifyNotDisplayed();
+	}
 	
 	public static void clickBecomeATutor() {
 		becomeaTutor.click();

@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="DeleteAccountConfirmationTextErrorMessage">You did not enter the required confirmation text for deleting your account. Please double check your entry and try again.</text>
+    <text name="DeleteMyAccount">Delete My Account</text>
+    <text name="DeleteAccountConfirmedMessage">You have successfully deleted your account. Thank you for using Academically.</text>
+    <text name="DeleteAccountConfirmationMessage">Are you sure you want to delete your account? Once deleted, you will not be able to retrieve your account or history. Please type CONFIRM to delete your account.</text>
+    <text name="Status">Status</text>
+    <text name="Tutor">Tutor</text>
+    <text name="IntroductoryVideoUploadMessage">Upload your introductory video. Click or drag a file here.</text>
+    <text name="IntroductoryVideo">Introductory Video</text>
     <text name="FromUniversity">From University</text>
     <text name="ApproveOrRegectApplications">Approve or reject applications</text>
     <text name="TutorApplications">Tutor Applications</text>
@@ -1017,7 +1025,7 @@
     <text name="CancelServiceWizardMessage">Are you sure you want to leave the service wizard?</text>
     <text name="ServiceWizard">Service Wizard</text>
     <text name="CreateProject">Create Project</text>
-    <text name="ProjectName">Project Name</text>
+    <text name="ProjectName">Project name</text>
     <text name="Continue">Continue</text>
     <text name="Browse">Browse</text>
     <text name="BrowseProjects">Browse Projects</text>

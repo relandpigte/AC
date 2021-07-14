@@ -1,7 +1,7 @@
 <div *ngIf="(!maxFiles || (files.length < maxFiles)) && !defaultFile" class="document-uploader"
   [dragClassUpdater]="'document-uploader-dragover'">
   <label class="document-input-label m-0 p-0" for="DocumentUploader">
-    <span *ngIf="!loadingImageCropper">{{ 'DropFileOrClickHereToUpload' | localize }}</span>
+    <span *ngIf="!loadingImageCropper">{{ noFilePlaceholder }}</span>
     <span *ngIf="loadingImageCropper">
       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
       {{ 'LoadingImageCropper' | localize }}...

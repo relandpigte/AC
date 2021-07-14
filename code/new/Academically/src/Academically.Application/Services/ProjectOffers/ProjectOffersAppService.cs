@@ -35,12 +35,6 @@ namespace Academically.Services.ProjectOffers
             _userEducationsRepository = userEducationsRepository;
         }
 
-        public async Task CreateAsync(CreateProjectOfferDto input)
-        {
-            var projectOffer = ObjectMapper.Map<ProjectOffer>(input);
-            await _projectOffersRepository.InsertAsync(projectOffer);
-        }
-
         public async Task<PagedResultDto<ProjectOfferDto>> GetAllAsync(PagedProjectOfferRequestDto input)
         {
             input.SearchFilter = input.SearchFilter?.ToLower();
@@ -91,6 +85,19 @@ namespace Academically.Services.ProjectOffers
                 projectOfferDto.CreatorUser.CoverPhotoUrl = await _documentsDomainService.GetFileUrlAsync(projectOffer.CreatorUser.CoverPhotoDocumentId.Value);
 
             return projectOfferDto;
+        }
+
+        public async Task CreateAsync(CreateProjectOfferDto input)
+        {
+            var projectOffer = ObjectMapper.Map<ProjectOffer>(input);
+            await _projectOffersRepository.InsertAsync(projectOffer);
+        }
+
+        public async Task Accept(Guid id)
+        {
+            var offer = await _projectOffersRepository.GetAsync(id);
+            offer.IsAccepted = true;
+            await _projectOffersRepository.UpdateAsync(offer);
         }
     }
 }
