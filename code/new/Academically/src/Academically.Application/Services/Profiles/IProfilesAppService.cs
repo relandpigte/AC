@@ -23,5 +23,6 @@ namespace Academically.Services.Profiles
         Task DeleteCoverPhoto();
         Task DeleteProfilePicture();
         Task DeleteIntroVideo();
+        Task DeleteAccount();
     }
 }

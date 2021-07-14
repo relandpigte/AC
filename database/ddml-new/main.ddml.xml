@@ -60,5 +60,6 @@
 	<include file="ddml-new/ddml.2021-07-07-01.alter-calendarevents-add-projectoffer-field.xml"/>
 	<include file="ddml-new/ddml.2021-07-07-01.alter-users-add-introvideodocumentid-field.xml"/>
 	<include file="ddml-new/ddml.2021-07-09-01.alter-projectoffers-add-isaccepted-field.xml"/>
+	<include file="ddml-new/ddml.2021-07-12-01.alter-users-add-deletedate-field.xml"/>
 </databaseChangeLog>
 	
