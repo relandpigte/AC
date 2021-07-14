@@ -9,6 +9,7 @@ import org.json.JSONException;
 import co.uk.core.DriverHandler;import co.uk.dataobjects.TestDataObjects;
 import co.uk.pageobjects.AccountSettingsPageCommonObjects;
 import co.uk.pageobjects.AccountSettingsPageGeneral;
+import co.uk.pageobjects.AccountSettingsPageSecurity;
 import co.uk.pageobjects.TutorWizardPageAddress;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Then;
@@ -81,8 +82,8 @@ public class AccountSettingsPageStepDefinitions {
 	}
 	
 	@Then("^the all details in general information are correct$")
-	public void verifyGeneralInformation(DataTable generalInformation) throws JSONException, InterruptedException, IOException {
-		List<Map<String, String>> data = generalInformation.asMaps(String.class, String.class);
+	public void verifyGeneralInformation(DataTable verifygeneralInformation) throws JSONException, InterruptedException, IOException {
+		List<Map<String, String>> data = verifygeneralInformation.asMaps(String.class, String.class);
 		String firstname = data.get(0).get("First name");
 		String lastname = data.get(0).get("Last name");
 		String dateOfBirth = data.get(0).get("Date of birth");
@@ -96,10 +97,10 @@ public class AccountSettingsPageStepDefinitions {
 		String city = data.get(0).get("City");
 		String zipcode = data.get(0).get("Zip code");
 		String province = data.get(0).get("Province");
-		DriverHandler.delay(2);
+		DriverHandler.delay(4);
 		
 		if (!firstname.equals("null")) {
-			AccountSettingsPageGeneral.verifyFirstName(lastname);
+			AccountSettingsPageGeneral.verifyFirstName(firstname);
 		}
 		if (!lastname.equals("null")) {
 			AccountSettingsPageGeneral.verifyLastName(lastname);
@@ -149,5 +150,36 @@ public class AccountSettingsPageStepDefinitions {
 	public void proceedToSecurityTab() {
 		AccountSettingsPageCommonObjects.clickSecurityTab();
 	}
-
+	
+	@Then("^user is in security tab$")
+	public void verifySecurityTabIsActive() {
+		AccountSettingsPageSecurity.verifySecurityTabIsActive();
+	}
+	
+	@When("^user enter invalid current password \"(.*)\"$")
+	public void enterInvalidCurrentPassword(String password) {
+		AccountSettingsPageSecurity.enterCurrentPassword(password);
+	}
+	
+	@When("^user enter current password \"(.*)\"$")
+	public void enterCurrentPassword(String password) {
+		AccountSettingsPageSecurity.enterCurrentPassword(password);
+	}
+	
+	@When("^user enter a new password \"(.*)\"$")
+	public void enterNewPassword(String password) {
+		AccountSettingsPageSecurity.enterNewPassword(password);
+		AccountSettingsPageSecurity.enterConfirmPassword(password);
+	}
+	
+	@When("^user update the password$")
+	public void clickUpdatePassword() {
+		AccountSettingsPageSecurity.clickUpdatePassword();
+		DriverHandler.delay(4);
+	}
+	
+	@Then("^existing password did not match the one on record message is displayed$")
+	public void verifyPasswordDidnotMatchModalIsDisplayed() {
+		AccountSettingsPageSecurity.verifyPasswordDidNotMatchModalIsDisplayed();
+	}
 }

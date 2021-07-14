@@ -1,6 +1,6 @@
 Feature: Tutor account settings
 
-  @Adhoc
+  @UI @TestRails(C14579)
   Scenario: C14579 - Verify editing general information
     Given User is in academically login page
     When user login as "admin"
@@ -31,7 +31,9 @@ Feature: Tutor account settings
       | First name | Last name | Date of birth | Dial code    | Phone number | Email | Timezone                                                     | Country        | Address 1     | Address 2       | City   | Zip code | Province |
       | Brunce     | Wayne     | 07/05/1986    | TestdialCode | Testnumber   | null  | (UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna | United Kingdom | Londonwriteup | 21 Hanover Road | London | NW10 3DR | Brent    |
 
+  @UI @TestRails(C14580)
   Scenario: C14580 - Verify changing password using invalid current password
+    Given User is in academically login page
     When user login as "admin"
     Then user successfully login
     When user proceed to manage user
@@ -51,15 +53,14 @@ Feature: Tutor account settings
     Then the user is in the account settings general tab
     When user proceed to security tab
     Then user is in security tab
-    And user enter invalid current password
-    #Enter invalid current password
-    And user enter a new password
-    #Enter new password
-    #Enter confirm new password
-    #Click update password
-    Then existing password' did not match the one on record message is displayed
+    When user enter invalid current password "Test@11111"
+    And user enter a new password "Test@22222"
+    And user update the password
+    Then existing password did not match the one on record message is displayed
 
+  @UI @TestRails(C14581)
   Scenario: C14581 - Verify changing password
+    Given User is in academically login page
     When user login as "admin"
     Then user successfully login
     When user proceed to manage user
@@ -79,3 +80,10 @@ Feature: Tutor account settings
     Then the user is in the account settings general tab
     When user proceed to security tab
     Then user is in security tab
+    When user enter current password "Test@12345"
+    And user enter a new password "Test@22222"
+    And user update the password
+    And user logout in academically
+    Then user is in academically login page
+    When user enter username "automated74XXX" and password "Test@22222"
+    Then user successfully login
