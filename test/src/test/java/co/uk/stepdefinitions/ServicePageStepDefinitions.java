@@ -19,12 +19,33 @@ public class ServicePageStepDefinitions {
 	
 	@When("^user select \"(.*)\" service$")
 	public void clickServices(String service) {
-		DriverHandler.delay(1);
+		DriverHandler.delay(3);
 		ServicesPage.Step1.clickService(service);
 	}
 	
-	@When("^user click continue to step 2$")
+	@When("^user click continue to step2$")
 	public void clickContinuetostep2() {
 		ServicesPage.Step1.clickContinue();
+	}
+	
+	@Then("^user is in step 2$")
+	public void verifyServiceLevelIsDisplayed() {
+		DriverHandler.delay(1);
+		ServicesPage.Steps2.verifyPage2IsDisplayed();
+	}
+	
+	@When("^user select \"(.*)\" level for the service$")
+	public void clickServiceLevel(String serviceLevel) {
+		ServicesPage.Steps2.clickServiceLevel(serviceLevel);
+	}
+	
+	@When("^user click continue to step 3$")
+	public void clickContinueToStep3() {
+		ServicesPage.Steps2.clickContinue();
+	}
+	
+	@Then("^user in in step 3$")
+	public void verifyStep3IsDisplayed() {
+		ServicesPage.Step3.verifyPage3IsDisplayed();
 	}
 }
