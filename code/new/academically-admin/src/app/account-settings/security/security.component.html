@@ -4,14 +4,14 @@
 
 <app-change-password></app-change-password>
 
-<hr class="my-5">
+<hr class="mt-5 mb-0">
 
 <div class="row">
-  <div class="col-12 text-center mb-5">
+  <div class="col-12 text-center py-5" [loader]="isLoading">
     <p class="small text-muted mb-md-0">
       {{ 'DeleteYourAccountMessage' | localize }}
 
-      <a href="javascript:;">{{ 'DeleteYourAccount' | localize }}</a>
+      <a href="#" (click)="$event.preventDefault(); onDeleteAccountClick()">{{ 'DeleteYourAccount' | localize }}</a>
     </p>
   </div>
 </div>
