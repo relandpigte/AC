@@ -1,5 +1,5 @@
 Feature: Services
- 
+@UI @TestRails(C14773)
 Scenario:	C14773 - Verify service wizard page is displayed
 		Given User is in academically login page
     When user login as "student"
@@ -13,6 +13,10 @@ Scenario:	C14774 - Verifythat user can able to select a service
     Then user successfully login
     When user create a new project
     Then user is in service wizard page	
+    When user click request support
+And user select "Academic Support" service
+And user click continue to step 2
+Then successful selecting a service
     			
 Scenario:	C14775 - Verify user can able to select a level for the service			
 Scenario: C14776 - Verify the level options are displayed			

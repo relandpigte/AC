@@ -61,6 +61,9 @@ public class Homepage {
 		usageTab.click();
 	}
 	
+	public static void clickCreateNewProject() {
+		createNewProject.click();	
+	}
 	public static void verifyCreateNewProjectIsDisplayed() {
 		createNewProject.verifyDisplayed();
 	}
