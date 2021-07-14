@@ -65,10 +65,11 @@
 
                 <li class="list-group-item" *ngIf="calendarEvents.length === 0">
                   <div class="row align-items-center">
-                    <div class="col ms-n2">
-                      <p *ngIf="filteredSessionType === CalendarEventSessionType.Past" class="m-0">{{ 'NoPastEvents' | localize }}</p>
-                      <p *ngIf="filteredSessionType === CalendarEventSessionType.Upcoming" class="m-0">{{ 'NoUpcomingEvents' | localize }}</p>
+                    <div class="col ms-n2" *ngIf="!isLoading">
+                      <p *ngIf="filteredSessionType === CalendarEventSessionType.Past" class="m-0">{{ 'NoPastSessions' | localize }}</p>
+                      <p *ngIf="filteredSessionType === CalendarEventSessionType.Upcoming" class="m-0">{{ 'NoUpcomingSessions' | localize }}</p>
                     </div>
+
                   </div>
                 </li>
 

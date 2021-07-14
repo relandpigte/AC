@@ -113,7 +113,10 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
     } else {
       if (this.isDecliningABooking) {
         const rescheduleModel = new RescheduleCalendarEventDto();
-        rescheduleModel.calendarEvent = this.model;
+        rescheduleModel.calendarEvent = _.cloneDeep(this.model);
+        rescheduleModel.calendarEvent.creatorUser = null;
+        rescheduleModel.calendarEvent.projectOffer = null;
+        rescheduleModel.calendarEvent.project = null;
         rescheduleModel.oldStartTime = this.convertDateToMoment(this.tempStartTime);
         rescheduleModel.oldEndTime = this.convertDateToMoment(this.tempEndTime);
         rescheduleModel.comments = this.comments;
@@ -131,7 +134,10 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
           });
       } else {
         const rescheduleModel = new RescheduleCalendarEventDto();
-        rescheduleModel.calendarEvent = this.model;
+        rescheduleModel.calendarEvent = _.cloneDeep(this.model);
+        rescheduleModel.calendarEvent.creatorUser = null;
+        rescheduleModel.calendarEvent.projectOffer = null;
+        rescheduleModel.calendarEvent.project = null;
         rescheduleModel.oldStartTime = this.convertDateToMoment(this.tempStartTime);
         rescheduleModel.oldEndTime = this.convertDateToMoment(this.tempEndTime);
         rescheduleModel.comments = this.comments;

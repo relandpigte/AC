@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="LoadingSessions">Loading sessions</text>
     <text name="NoPastSessions">No past sessions</text>
     <text name="NoUpcomingSessions">No upcoming sessions</text>
     <text name="PastSessions">Past Sessions</text>
