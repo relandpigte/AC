@@ -28,5 +28,12 @@ export const fileUploadConfiguration = {
     '.doc',
     '.docx',
   ],
-  maxFileSize: 1000000,
+  videoExtensions: [
+    '.mp4',
+    '.mov',
+    '.wmv',
+    '.avi',
+    '.mkv',
+  ],
+  maxFileSize: 5242880,
 };

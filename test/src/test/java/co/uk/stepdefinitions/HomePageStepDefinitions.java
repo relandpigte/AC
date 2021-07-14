@@ -13,6 +13,11 @@ public class HomePageStepDefinitions {
 		Homepage.verifyDashBoardIsDisplayed();
 	}
 	
+	@Then("^user is in dashboard page")
+	public void verifyDashboardIsDisplayed() {
+		Homepage.verifyDashBoardIsDisplayed();
+	}
+	
 	@Then("^overview, my project and usage tab are displayed$")
 	public void verifyTabsForStudentAreDisplayed() {
 		Homepage.verifyMyProjectTabIsDisplayed();

@@ -36,6 +36,12 @@ public class CommonObjectPageStepDefinitions {
 		DriverHandler.delay(4);
 	}
 	
+	@When("^user proceed to account settings$")
+	public void proceedToAccountSettings() {
+		CommonObjects.clickProfileDropUp();
+		CommonObjects.clickAccountSettings();
+	}
+	
 	@Then("^confirmation of  become a tutor modal is displayed")
 	public void verifyConfirmatioinToBecomeATutorIsDisplayed() {
 		CommonObjects.TutorWizardConfirmation.modalMessageIsDisplayed();
@@ -44,5 +50,10 @@ public class CommonObjectPageStepDefinitions {
 	@When("^user confirms to become a tutor$")
 	public void userConfirmToBecomeAtutor() {
 		CommonObjects.TutorWizardConfirmation.clickYes();
+	}
+	
+	@When("^user proceed to the dashboard page$")
+	public void proceedToTheDashboard() {
+		CommonObjects.clicknavDashboard();
 	}
 }

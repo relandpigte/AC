@@ -16,6 +16,7 @@ import { TutorReviewsComponent } from './_components/tutor-reviews/tutor-reviews
 import { StarRatingComponent } from './_components/star-rating/star-rating.component';
 import { SummaryComponent } from './_components/summary/summary.component';
 import { SpokenLanguagesModule } from '../spoken-languages/spoken-languages.module';
+import { IntroVideoComponent } from './_components/intro-video/intro-video.component';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import { SpokenLanguagesModule } from '../spoken-languages/spoken-languages.modu
     TutorReviewsComponent,
     StarRatingComponent,
     SummaryComponent,
+    IntroVideoComponent,
   ],
   imports: [
     SpokenLanguagesModule,

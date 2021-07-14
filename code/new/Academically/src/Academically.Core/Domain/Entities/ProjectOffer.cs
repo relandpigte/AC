@@ -15,6 +15,7 @@ namespace Academically.Domain.Entities
         public double DiscountedHours { get; set; }
         public decimal DiscountedHourlyRate { get; set; }
         public bool IsFreeSessionOffered { get; set; }
+        public bool IsAccepted { get; set; }
 
         [ForeignKey("ProjectId")]
         public virtual Project Project { get; set; }

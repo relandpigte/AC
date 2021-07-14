@@ -8,10 +8,16 @@ import co.uk.webelements.Element;
 public class TutorWizardCommonObject {
 
 	private static Element tutorWizard = new Element("Tutor wizard",By.xpath("//app-tutor-wizard//h1[text()='Tutor Wizard']"));
+	private static Element successfulyDeletedMesssage = new Element("Successfuly deleted message",By.xpath("//span[text()='Successfully Deleted']"));
+	
+	public static void verifySuccesfulyDeletedMessageIsDisplayed() {
+		successfulyDeletedMesssage.verifyDisplayed();
+	}
 	
 	public static void verifyTutorWizardIsDisplayed() {
 		tutorWizard.verifyDisplayed();
 	}
+	
     public static class ConfirmationModal {
 
         private static Element confirmationModalIsDisplayed = new Element("Confirmation modal",
@@ -33,4 +39,5 @@ public class TutorWizardCommonObject {
             cancel.click();
         }
     }
+    
 }

@@ -19,7 +19,9 @@ namespace Academically.Services.Profiles
         Task UpdateAbout(string about);
         Task<string> UpdateCoverPhoto(UpdateCoverPhotoRequestDto input);
         Task<string> UpdateProfilePicture(UpdateProfilePictureRequestDto input);
+        Task<string> UpdateIntroVideo(UpdateIntroVideoRequestDto input);
         Task DeleteCoverPhoto();
         Task DeleteProfilePicture();
+        Task DeleteIntroVideo();
     }
 }

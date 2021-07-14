@@ -63,6 +63,7 @@ namespace Academically.Services.Profiles
             var user = await _usersRepository.GetAll()
                 .Include(e => e.CoverPhotoDocument)
                 .Include(e => e.ProfilePictureDocument)
+                .Include(e => e.IntroVideoDocument)
                 .Include(e => e.Roles)
                 .Include(e => e.UserEducations)
                     .ThenInclude(e => e.University)
@@ -77,6 +78,10 @@ namespace Academically.Services.Profiles
             if (user.ProfilePictureDocumentId.HasValue)
             {
                 output.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(user.ProfilePictureDocument);
+            }
+            if (user.IntroVideoDocumentId.HasValue)
+            {
+                output.IntroVideoUrl = await _documentsDomainService.GetFileUrlAsync(user.IntroVideoDocument);
             }
             if (user.UserEducations != null && user.UserEducations.Count > 0)
             {
@@ -245,6 +250,23 @@ namespace Academically.Services.Profiles
             return await _documentsDomainService.GetFileUrlAsync(profilePictureDocument);
         }
 
+        public async Task<string> UpdateIntroVideo([FromForm] UpdateIntroVideoRequestDto input)
+        {
+            long userId = AbpSession.UserId.Value;
+            var user = await _usersRepository.GetAsync(userId);
+            var previousIntroVideoDocumentId = user.IntroVideoDocumentId;
+            var introVideoDocument = await _documentsDomainService.CreateAsync(user.Id, input.IntroVideo, DocumentType.IntroVideo);
+            user.IntroVideoDocumentId = introVideoDocument.Id;
+
+            if (previousIntroVideoDocumentId.HasValue)
+            {
+                await _documentsDomainService.DeleteAsync(previousIntroVideoDocumentId.Value);
+            }
+
+            await _usersRepository.UpdateAsync(user);
+            return await _documentsDomainService.GetFileUrlAsync(introVideoDocument);
+        }
+
         public async Task DeleteCoverPhoto()
         {
             var user = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
@@ -266,6 +288,18 @@ namespace Academically.Services.Profiles
                 user.ProfilePictureDocumentId = null;
                 await _usersRepository.UpdateAsync(user);
                 await _documentsDomainService.DeleteAsync(previousProfilePictureDocumentId);
+            }
+        }
+
+        public async Task DeleteIntroVideo()
+        {
+            var user = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
+            if (user.IntroVideoDocumentId.HasValue)
+            {
+                var previousIntroVideoDocumentId = user.IntroVideoDocumentId.Value;
+                user.IntroVideoDocumentId = null;
+                await _usersRepository.UpdateAsync(user);
+                await _documentsDomainService.DeleteAsync(previousIntroVideoDocumentId);
             }
         }
     }

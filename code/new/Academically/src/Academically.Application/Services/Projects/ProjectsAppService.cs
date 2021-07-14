@@ -1,21 +1,16 @@
-using System;
-using System.Threading.Tasks;
-using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
-using Academically.Domain.Entities;
-using Academically.Services.Projects.Dto;
-
-using Abp.Authorization;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
-using Academically.Authorization;
-using Academically.Services.UserPublications.Dto;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using Academically.Domain.Services.Documents;
 using Academically.Authorization.Users;
+using Academically.Domain.Entities;
+using Academically.Domain.Services.Documents;
+using Academically.Services.ProjectOffers.Dto;
+using Academically.Services.Projects.Dto;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Academically.Services.Projects
 {
@@ -23,15 +18,21 @@ namespace Academically.Services.Projects
     {
         private readonly UserManager _userManager;
         private readonly IRepository<Project, Guid> _projectsRepository;
+        private readonly IRepository<ProjectOffer, Guid> _projectOffersRepository;
+        private readonly IRepository<CalendarEvent, Guid> _calendarEventsRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
 
         public ProjectsAppService(
             UserManager userManager,
             IRepository<Project, Guid> projectsRepository,
+            IRepository<ProjectOffer, Guid> projectOffersRepository,
+            IRepository<CalendarEvent, Guid> calendarEventsRepository,
             IDocumentsDomainService documentsDomainService
             )
         {
             _projectsRepository = projectsRepository;
+            _projectOffersRepository = projectOffersRepository;
+            _calendarEventsRepository = calendarEventsRepository;
             _documentsDomainService = documentsDomainService;
             _userManager = userManager;
         }
@@ -40,9 +41,6 @@ namespace Academically.Services.Projects
         {
             input.SearchFilter = input.SearchFilter?.ToLower();
             var query = _projectsRepository.GetAll()
-                .Include(p => p.CreatorUser)
-                    .ThenInclude(u => u.UserEducations)
-                    .ThenInclude(u => u.University)
                 .WhereIf(input.UserIdFilter > 0, e => e.CreatorUserId == input.UserIdFilter)
                 .WhereIf(!input.SearchFilter.IsNullOrWhiteSpace(), e => e.Name.ToLower().Contains(input.SearchFilter)
                     || e.ServiceNameLevel1.Contains(input.SearchFilter)
@@ -55,9 +53,23 @@ namespace Academically.Services.Projects
             var projects = await query
                 .Include(e => e.CreatorUser)
                     .ThenInclude(e => e.UserEducations)
+                .Include(p => p.CreatorUser)
+                    .ThenInclude(u => u.UserEducations)
+                        .ThenInclude(u => u.University)
                 .PageBy(input)
                 .Select(e => ObjectMapper.Map<ProjectDto>(e))
                 .ToListAsync();
+
+            foreach (var project in projects)
+            {
+                project.AcceptedOffer = await _projectOffersRepository.GetAll()
+                    .Include(e => e.CreatorUser)
+                    .Where(e => e.IsAccepted && e.ProjectId == project.Id)
+                    .Select(e => ObjectMapper.Map<ProjectOfferDto>(e))
+                    .FirstOrDefaultAsync();
+                project.TotalSessions = await _calendarEventsRepository.GetAll()
+                    .CountAsync(e => e.ProjectId == project.Id);
+            }
 
             return new PagedResultDto<ProjectDto>(totalCount, projects);
         }

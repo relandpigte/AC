@@ -29,5 +29,10 @@ public class TestDataObjects {
 	public static String getPassword(String credentialType) throws JSONException, InterruptedException, IOException {
 		return getObject().getJSONObject("credentials").getJSONObject(credentialType).getString("password");
 	}
-
+	
+	public static String getphoneNumber(String data) throws JSONException, InterruptedException, IOException {
+		return getObject().getJSONObject("phone").getString(data);
+		
+	}
+	
 }
