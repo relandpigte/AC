@@ -74,6 +74,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
     datesSet: this.dateSet.bind(this),
     dateClick: this.dateClicked.bind(this),
     eventClick: this.eventClick.bind(this),
+    nowIndicator: true,
   };
 
   constructor(

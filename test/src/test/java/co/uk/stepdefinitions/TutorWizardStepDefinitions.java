@@ -679,4 +679,20 @@ public class TutorWizardStepDefinitions {
 			TutorWizardPageAddress.verifyStateValueIsCorrect(province);
 		}
     }
+    
+	@When("^user delete education information on tutor wizard$")
+	public void deleteEducationInformation() {
+		DriverHandler.delay(2);
+		TutorWizardPageEducation.clickRemoveEducation();
+	}
+	
+	@Then("^removing education information is successful on tutor wizard$")
+	public void verifyDeletedMessage() {
+		TutorWizardCommonObject.verifySuccesfulyDeletedMessageIsDisplayed();
+	}
+	
+	@When("^the user confirms to remove a education information on tutor wizard$")
+	public void confirmsToRemoveEducationInformation() {
+		TutorWizardCommonObject.ConfirmationModal.clickYes();
+	}
 }

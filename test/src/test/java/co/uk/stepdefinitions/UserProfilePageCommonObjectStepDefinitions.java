@@ -116,4 +116,13 @@ public class UserProfilePageCommonObjectStepDefinitions {
     	UserProfilePageCommonObjects.clickBecomeATutor();
     }
     
+    @Then("^\"(.*)\" tab is displayed on profile settings$")
+	public void verifyTabIsDisplayed(String tab) {
+    	UserProfilePageCommonObjects.verifyTabIsDisplayed(tab);
+	}
+    
+    @Then("^\"(.*)\" tab is not displayed on profile settings$")
+   	public void verifyTabIsNotDisplayed(String tab) {
+       	UserProfilePageCommonObjects.verifyTabIsNotDisplayed(tab);
+   	}
 }

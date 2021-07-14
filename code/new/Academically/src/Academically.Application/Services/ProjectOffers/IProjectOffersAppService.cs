@@ -9,9 +9,9 @@ namespace Academically.Services.ProjectOffers
 {
     public interface IProjectOffersAppService : IApplicationService
     {
-        Task CreateAsync(CreateProjectOfferDto input);
         Task<PagedResultDto<ProjectOfferDto>> GetAllAsync(PagedProjectOfferRequestDto input);
         Task<ProjectOfferDto> GetAsync(Guid id);
-
+        Task CreateAsync(CreateProjectOfferDto input);
+        Task Accept(Guid id);
     }
 }

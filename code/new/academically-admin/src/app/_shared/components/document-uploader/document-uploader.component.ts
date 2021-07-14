@@ -26,6 +26,7 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
   @Input() largeImagePreview = false;
   @Input() hasRemoveButton = true;
   @Input() defaultFile: DefaultFile;
+  @Input() noFilePlaceholder = this.l('DropFileOrClickHereToUpload');
   @Output() filesChanged = new EventEmitter<FileParameter[]>();
   @Output() defaultFileRemoved = new EventEmitter();
   @ViewChild('documentUploader') documentUploaderInput: ElementRef;
