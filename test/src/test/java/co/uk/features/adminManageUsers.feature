@@ -116,8 +116,8 @@ Feature: Manage users
     And user select a "Student" role
     And user saving user details
     Then sucessful message is displayed
-    #
-    When user search "automated80XXX" on user management	
+    When user search "automated80XXX" on user management
+    Then "automated80XXX" is displayed	
     And user edit "automated80XXX" user
     And user enter a user details
       | Name           | Surname | Username       | Password   | Email          | Active | Public |
@@ -126,7 +126,6 @@ Feature: Manage users
     Then sucessful message is displayed
     When user search "automated81XXX" on user management	
     Then "automated81XXX" is displayed
-    #
     When user logout in academically
     Then user is in academically login page
     When user enter username "Automated81XXX" and password "Test@12345"

@@ -1,4 +1,4 @@
-Feature: Services
+Feature: Create new project
 
   @UI @TestRails(14773)
   Scenario: C14773 - Verify service wizard page is displayed
@@ -89,3 +89,22 @@ Feature: Services
     When user select "Academic Tutoring"
     And user click continue to step 4
     Then user is in step 4
+    
+     @UI @TestRails(C14790)
+    Scenario: C14790 - Verify single field called Project Name is displayed
+   Given User is in academically login page
+    When user login as "student"
+    Then user successfully login
+    When user create a new project
+    Then user is in service wizard page
+    When user click request support
+    And user select "Academic Support" service
+    And user click continue to step2
+    Then user is in step 2
+    When user select "Graduate" level for the service
+    And user click continue to step 3
+    Then user in in step 3
+    When user select "Academic Tutoring"
+    And user click continue to step 4
+    Then user is in step 4
+    And project name textbox is displayed

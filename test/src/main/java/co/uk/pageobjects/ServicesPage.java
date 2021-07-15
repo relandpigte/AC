@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 
 import co.uk.webelements.Button;
 import co.uk.webelements.Element;
+import co.uk.webelements.TextBox;
 
 public class ServicesPage {
 
@@ -107,7 +108,24 @@ public class ServicesPage {
 	public static class Step4{
 		
 		private static Element page4 = new Element("Page 4",By.xpath("//div[contains(@class,'justify-content-between')]//p[contains(text(),'Step 4 Of 4')]"));
+		private static TextBox projectName = new TextBox("Project name",By.xpath("//input[@id='ProjectName']"));
+		private static Button continueBtn = new Button("Continue",By.xpath("//button[contains(text(),'Continue')]"));
+		private static Button backBtn = new Button("Cancel",By.xpath("//button[contains(text(),'Back')]"));
 		
+		public static void clickContinue() {
+			continueBtn.click();
+		}
+		
+		public static void clickBack() {
+			backBtn.click();
+		}
+		public static void verifyPrjectNameTextBoxIsDisplayed() {
+			projectName.verifyDisplayed();
+		}
+		
+		public static void enterProjectName(String project) {
+			projectName.setText(project);
+		}
 		public static void verifyPage4IsDisplayed() {
 			page4.verifyDisplayed();
 		}

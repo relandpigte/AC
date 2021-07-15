@@ -1,5 +1,6 @@
 package co.uk.stepdefinitions;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -76,7 +77,8 @@ public class AdminManageUserPageStepDefinitions {
 	}
 	
 	@When("^user search \"(.*)\" on user management$")
-	public void enterSearch(String email) {
+	public void enterSearch(String email) throws IOException {
+		DriverHandler.refreshPage();
 		AdminManageUserPage.enterSearch(email.replace("XXX", DriverHandler.timestamp+"@academically.33mail.com"));
 		DriverHandler.delay(5);
 	}
@@ -103,6 +105,7 @@ public class AdminManageUserPageStepDefinitions {
 	
 	@When("^user edit \"(.*)\" user$")
 	public void clickEdit(String email) {
+		DriverHandler.delay(3);
 		AdminManageUserPage.clickEdit(email);
 	}
 	

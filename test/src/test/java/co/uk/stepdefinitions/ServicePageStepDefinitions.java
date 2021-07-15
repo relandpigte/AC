@@ -75,4 +75,9 @@ public class ServicePageStepDefinitions {
 		DriverHandler.delay(2);
 		ServicesPage.Step4.verifyPage4IsDisplayed();
 	}
+	
+	@Then("^project name textbox is displayed$")
+	public void verifyProjectNameTextboxIsDisplayed(){
+		ServicesPage.Step4.verifyPrjectNameTextBoxIsDisplayed();
+	}
 }
