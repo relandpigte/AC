@@ -1,6 +1,6 @@
 Feature: Student account settings
 
-  @Adhoc
+  @UI @TestRails(C14493)
   Scenario: C14493 - Verify editing general information
     Given User is in academically login page
     When user login as "admin"
@@ -16,22 +16,24 @@ Feature: Student account settings
     Then sucessful message is displayed
     When user logout in academically
     Then user is in academically login page
-    When user enter username "automated69XXX" and password "Test@12345"
+    When user enter username "automated69140836" and password "Test@12345"
     Then user successfully login
     When user proceed to account settings
     Then the user is in the account settings general tab
     When user enter general information
       | First name | Last name | Date of birth | Dial code    | Phone number | Email | Timezone                                                     | Country        | Address 1     | Address 2       | City   | Zip code | Province |
-      | Brunce     | Wayne     | 07/05/1986    | TestdialCode | Testnumber   | null  | (UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna | United Kingdom | Londonwriteup | 21 Hanover Road | London | NW10 3DR | Brent    |
+      | Brown      | Dog       | 07/05/1986    | TestdialCode | Testnumber   | null  | (UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna | United Kingdom | Londonwriteup | 21 Hanover Road | London | NW10 3DR | Brent    |
     And user saving general information
     And user proceed to the dashboard page
     Then user is in dashboard page
     When user proceed to account settings
     Then the all details in general information are correct
       | First name | Last name | Date of birth | Dial code    | Phone number | Email | Timezone                                                     | Country        | Address 1     | Address 2       | City   | Zip code | Province |
-      | Brunce     | Wayne     | 07/05/1986    | TestdialCode | Testnumber   | null  | (UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna | United Kingdom | Londonwriteup | 21 Hanover Road | London | NW10 3DR | Brent    |
+      | Brown      | Dog       | 07/05/1986    | TestdialCode | Testnumber   | null  | (UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna | United Kingdom | Londonwriteup | 21 Hanover Road | London | NW10 3DR | Brent    |
 
+  @UI @TestRails(C14494)
   Scenario: C14494 - Verify changing password using invalid current password
+    Given User is in academically login page
     When user login as "admin"
     Then user successfully login
     When user proceed to manage user
@@ -51,15 +53,14 @@ Feature: Student account settings
     Then the user is in the account settings general tab
     When user proceed to security tab
     Then user is in security tab
-    And user enter invalid current password
-    #Enter invalid current password
-    And user enter a new password
-    #Enter new password
-    #Enter confirm new password
-    #Click update password
-    Then existing password' did not match the one on record message is displayed
+    When user enter invalid current password "Test@11111"
+    And user enter a new password "Test@22222"
+    And user update the password
+    Then existing password did not match the one on record message is displayed
 
+  @UI @TestRails(C14495)
   Scenario: C14495 - Verify changing password
+    Given User is in academically login page
     When user login as "admin"
     Then user successfully login
     When user proceed to manage user
@@ -79,3 +80,10 @@ Feature: Student account settings
     Then the user is in the account settings general tab
     When user proceed to security tab
     Then user is in security tab
+    When user enter current password "Test@12345"
+    And user enter a new password "Test@22222"
+    And user update the password
+    And user logout in academically
+    Then user is in academically login page
+    When user enter username "automated71XXX" and password "Test@22222"
+    Then user successfully login
