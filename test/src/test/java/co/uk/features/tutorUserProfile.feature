@@ -54,7 +54,7 @@ Feature: Tutor user profile settings
     Then successfully displayed profile picture message was removed
     And profile photo is removed
 
-  @UI @TestRails(C14740)
+  @UI @TestRails(14740)
   Scenario: C14740 - Verify select a cover photo
     Given User is in academically login page
     When user login as "admin"
@@ -288,7 +288,7 @@ Feature: Tutor user profile settings
     Then sucessful message is displayed
     And adding research interest "Computer Science and Information Technology" is successful
 
-  @UI @TestRails(C14572)
+  @UI @TestRails(14572)
   Scenario: C14572	Verify removing research interest
     Given User is in academically login page
     When user login as "admin"
@@ -651,7 +651,7 @@ Feature: Tutor user profile settings
   @??
   Scenario: C14577 - Verify adding services
 
-  @UI @TestRails(C14782)
+  @UI @TestRails(14782)
   Scenario: C14782 - Verify adding spoken languages
     Given User is in academically login page
     When user login as "admin"
@@ -680,7 +680,7 @@ Feature: Tutor user profile settings
     Then "Fluent" "English" language is added
     And "Basic" "Czech" language is added
 
-  @UI @TestRails(C14783)
+  @UI @TestRails(14783)
   Scenario: C14783 - Verify removing spoken languages
     Given User is in academically login page
     When user login as "admin"
@@ -713,7 +713,7 @@ Feature: Tutor user profile settings
     And user saving spoken language information
     Then removing "Basic" "Czech" language is successful
 
-  @UI @TestRails(C14784)
+  @UI @TestRails(14784)
   Scenario: C14784 - Verify editing spoken languages
     Given User is in academically login page
     When user login as "admin"
@@ -764,7 +764,7 @@ Feature: Tutor user profile settings
   @??
   Scenario: C14781 - Verify tutor can able to remove video on introduction tab
 
-  @UI @TestRails(C14787)
+  @UI @TestRails(14787)
   Scenario: C14787	Verify the available tab in the profile settings as tutor
     Given User is in academically login page
     When user login as "tutor"
