@@ -74,4 +74,40 @@ public class AdminManageUserPageStepDefinitions {
 	public void saveUserDetails() {
 		AdminManageUserPage.CreateOrEditUserModal.clickSave();
 	}
+	
+	@When("^user search \"(.*)\" on user management$")
+	public void enterSearch(String email) {
+		AdminManageUserPage.enterSearch(email.replace("XXX", DriverHandler.timestamp+"@academically.33mail.com"));
+		DriverHandler.delay(5);
+	}
+	
+	@When("^user delete \"(.*)\" user$")
+	public void deleteAUser(String email) {
+		AdminManageUserPage.clickDelete(email.replace("XXX", DriverHandler.timestamp+"@academically.33mail.com"));
+	}
+	
+	@Then("^delete modal is displayed on user management$")
+	public void verifyDeleteModalisDisplayed() {
+		AdminManageUserPage.conformationDelete.verifydeleteMessageModalIsDisplayed();
+	}
+	
+	@When("^user click yes to delete on user management$")
+	public void clickYesToDelete() {
+		AdminManageUserPage.conformationDelete.clickYes();
+	}
+	
+	@Then("^\"(.*)\" is not displayed$")
+	public void verifyUserIsNotDisplayed(String email) {
+		AdminManageUserPage.verifyEmailIsNotDisplayed(email.replace("XXX", DriverHandler.timestamp+"@academically.33mail.com"));
+	}
+	
+	@When("^user edit \"(.*)\" user$")
+	public void clickEdit(String email) {
+		AdminManageUserPage.clickEdit(email);
+	}
+	
+	@Then("^\"(.*)\" is displayed$")
+	public void verifyEmailIsDisplayed(String email) {
+		AdminManageUserPage.verifyEmailIsDisplayed(email.replace("XXX", DriverHandler.timestamp+"@academically.33mail.com"));
+	}
 }
