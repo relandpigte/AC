@@ -65,7 +65,7 @@ public class AccountSettingsPageGeneral {
 	}
 	
 	public static void verifyLastName(String lname) {
-		lastnameTextBox.verifyAttributeContains("value", lname);
+		lastnameTextBox.verifyAttributeEquals("value", lname);
 	}
 	
 	public static void enterDateOfBirth(String date) {
@@ -73,15 +73,15 @@ public class AccountSettingsPageGeneral {
 	}
 	
 	public static void verifyDateOfBirth(String date) {
-		dateofBirthTextBox.verifyAttributeEquals("value", date);
+		dateofBirthTextBox.verifyAttributeEquals("value",date);
 	}
 	
 	public static void enterPhoneNumber(String number) {
 		phoneNumberTextBox.setText(number);
 	}
 	
-	public static void verifyPhoneNumber(String number) {
-		phoneNumberTextBox.verifyAttributeEquals("value", number);
+	public static void verifyPhoneNumber(String phoneNumber) {
+		phoneNumberTextBox.verifyAttributeEquals("value", phoneNumber);
 	}
 	
 	public static void enterEmail(String email) {
@@ -137,7 +137,7 @@ public class AccountSettingsPageGeneral {
 	}
 	
 	public static void verifyTimezone(String timezone) {
-		verifytimezone.verifyAttributeEquals("value", timezone);
+		verifytimezone.verifyTextContains(timezone);
 	}
 	
 	public static void selectCountry(String country) {
