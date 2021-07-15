@@ -56,4 +56,9 @@ public class CommonObjectPageStepDefinitions {
 	public void proceedToTheDashboard() {
 		CommonObjects.clicknavDashboard();
 	}
+	
+	@Then("^sucessfuly deleted is displayed$")
+	public void verifySuccesfulyDeletedIsDisplayed() {
+		CommonObjects.verifySuccessfulDeleteMessageIsDisplayed();
+	}
 }

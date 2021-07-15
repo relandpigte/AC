@@ -1,5 +1,6 @@
 package co.uk.stepdefinitions;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -73,5 +74,43 @@ public class AdminManageUserPageStepDefinitions {
 	@When("^user saving user details$")
 	public void saveUserDetails() {
 		AdminManageUserPage.CreateOrEditUserModal.clickSave();
+	}
+	
+	@When("^user search \"(.*)\" on user management$")
+	public void enterSearch(String email) throws IOException {
+		DriverHandler.refreshPage();
+		AdminManageUserPage.enterSearch(email.replace("XXX", DriverHandler.timestamp+"@academically.33mail.com"));
+		DriverHandler.delay(5);
+	}
+	
+	@When("^user delete \"(.*)\" user$")
+	public void deleteAUser(String email) {
+		AdminManageUserPage.clickDelete(email.replace("XXX", DriverHandler.timestamp+"@academically.33mail.com"));
+	}
+	
+	@Then("^delete modal is displayed on user management$")
+	public void verifyDeleteModalisDisplayed() {
+		AdminManageUserPage.conformationDelete.verifydeleteMessageModalIsDisplayed();
+	}
+	
+	@When("^user click yes to delete on user management$")
+	public void clickYesToDelete() {
+		AdminManageUserPage.conformationDelete.clickYes();
+	}
+	
+	@Then("^\"(.*)\" is not displayed$")
+	public void verifyUserIsNotDisplayed(String email) {
+		AdminManageUserPage.verifyEmailIsNotDisplayed(email.replace("XXX", DriverHandler.timestamp+"@academically.33mail.com"));
+	}
+	
+	@When("^user edit \"(.*)\" user$")
+	public void clickEdit(String email) {
+		DriverHandler.delay(3);
+		AdminManageUserPage.clickEdit(email);
+	}
+	
+	@Then("^\"(.*)\" is displayed$")
+	public void verifyEmailIsDisplayed(String email) {
+		AdminManageUserPage.verifyEmailIsDisplayed(email.replace("XXX", DriverHandler.timestamp+"@academically.33mail.com"));
 	}
 }

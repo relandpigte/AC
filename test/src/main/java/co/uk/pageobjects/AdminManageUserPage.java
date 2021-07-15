@@ -17,8 +17,19 @@ public class AdminManageUserPage {
 	private static Element actionbutton(String email) {
 		return new Element(email+" action button",By.xpath("//td[text()='"+email+"']/following::td[contains(@class,'table-action')][1]//a"));
 	}
+	private static Element verifyEmail(String email) {
+		return new Element(email+" action button",By.xpath("//td[text()='"+email+"']"));
+	}
 	private static Element actionEdit = new Element("Edit",By.xpath("//div[contains(@class,'dropdown')]/a[contains(text(),'Edit')]"));
 	private static Element actionDelete = new Element("Delete",By.xpath("//div[contains(@class,'dropdown')]/a[contains(text(),'Delete')]"));
+	
+	public static void verifyEmailIsNotDisplayed(String email) {
+		verifyEmail(email).verifyNotDisplayed();
+	}
+	
+	public static void verifyEmailIsDisplayed(String email) {
+		verifyEmail(email).verifyDisplayed();
+	}
 	
 	public static void verifyTitleHeader() {
 		titleHeader.verifyDisplayed();
@@ -42,6 +53,25 @@ public class AdminManageUserPage {
 		actionDelete.click();
 	}
 	
+	public static class conformationDelete{
+		
+		private static Element deleteMessageModal = new Element("Delete modal",By.xpath("//div[@id='swal2-content' and contains(text(),'will be deleted')]"));
+		private static Button yesBtn = new Button("Yes",By.xpath("//button[@class='swal2-confirm swal2-styled']"));
+		private static Button cancelBtn = new Button("Cancel",By.xpath("//button[@class='swal2-cancel swal2-styled']"));
+		
+		public static void verifydeleteMessageModalIsDisplayed() {
+			deleteMessageModal.verifyDisplayed();
+		}
+		
+		public static void clickYes() {
+			yesBtn.click();
+		}
+		
+		public static void clickCancel() {
+			cancelBtn.click();
+		}
+		
+	}
 	public static class CreateOrEditUserModal{
 		
 		private static Tab userRoles = new Tab("User roles",By.xpath("//span[text()='User roles']/parent::a"));

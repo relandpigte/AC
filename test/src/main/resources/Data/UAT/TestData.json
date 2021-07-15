@@ -16,6 +16,10 @@
 			"password": "Test@12345",
 			"email": "tutor@academically.33mail.com"
 		}
+		,"superadmin":{
+			"password": "Test@12345",
+			"email": "superadmin@academically.33mail.com"
+		}
 		
 	},
 	"phone":{
