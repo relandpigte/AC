@@ -111,4 +111,9 @@ public class HomePageStepDefinitions {
 		DriverHandler.delay(5);
 		Homepage.ProfileWidget.clickBecomeTutor();
 	}
+	
+	@When("^user create a new project$")
+	public void clickCreateNewProject() {
+		Homepage.clickCreateNewProject();
+	}
 }
