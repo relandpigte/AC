@@ -30,6 +30,7 @@ export class RecentProjectsComponent extends AppComponentBase implements OnInit 
   }
 
   private getProjects(): void {
+    this.isLoading = true;
     this._projectsService
       .getAll(this.appSession.userId, undefined, 0, 3)
       .pipe(

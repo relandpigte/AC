@@ -2,8 +2,8 @@
   <div class="card-header">
     <h4 class="card-header-title">Projects</h4>
   </div>
-  <div class="table-responsive mb-0">
-    <table class="table table-sm table-nowrap card-table" [loader]="isTableLoading">
+  <div class="table-responsive mb-0" [loader]="isTableLoading">
+    <table class="table table-sm table-nowrap card-table" >
       <thead>
         <tr>
           <th>{{ 'ProjectName' | localize }}</th>

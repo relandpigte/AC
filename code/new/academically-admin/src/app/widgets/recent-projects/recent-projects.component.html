@@ -2,8 +2,8 @@
   <div class="card-header">
     <h4 class="card-header-title">Recent Projects</h4>
   </div>
-  <div class="table-responsive mb-0">
-    <table class="table table-sm table-nowrap card-table" [loader]="isLoading">
+  <div class="table-responsive mb-0" [loader]="isLoading">
+    <table class="table table-sm table-nowrap card-table" >
       <thead>
         <tr>
           <th>{{ 'ProjectName' | localize }}</th>
@@ -41,7 +41,7 @@
             </td>
           </tr>
         </ng-container>
-        <tr *ngIf="projects && !projects.length">
+        <tr *ngIf="projects && !projects.length && !isLoading">
           <td colspan="10">
             <p class="m-0 text-muted text-center">{{ 'NoRecordsFound' | localize }}</p>
           </td>
