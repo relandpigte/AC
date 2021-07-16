@@ -1,7 +1,6 @@
 package co.uk.pageobjects;
 
-import org.openqa.selenium.By;
-
+import org.openqa.selenium.By;import co.uk.core.DriverHandler;
 import co.uk.webelements.Button;
 import co.uk.webelements.Element;
 import co.uk.webelements.Tab;
@@ -87,9 +86,15 @@ public class Homepage {
 	public static class MyProject{
 		
 		private static Element projects = new Element("Project table",By.xpath("//app-dashboard-projects//h4[text()='Projects']"));
-		
+		private static Element projectTable(String project) {
+			return new Element(project,By.xpath("//div[@id='projects']//a[text()='"+project+"']"));
+		}
 		public static void verifyProjectTableIsDisplayed() {
 			projects.verifyDisplayed();
+		}
+		
+		public static void clickProject(String project) {
+			projectTable(project).click();
 		}
 		
 	}

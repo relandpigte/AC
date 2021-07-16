@@ -61,4 +61,11 @@ public class CommonObjectPageStepDefinitions {
 	public void verifySuccesfulyDeletedIsDisplayed() {
 		CommonObjects.verifySuccessfulDeleteMessageIsDisplayed();
 	}
+	
+	@When("^user see all projects$")
+	public void proceedToAllProjects() {
+		CommonObjects.clicknavSeeAllProject();
+		DriverHandler.delay(4);
+	}
+	
 }

@@ -80,4 +80,11 @@ public class ServicePageStepDefinitions {
 	public void verifyProjectNameTextboxIsDisplayed(){
 		ServicesPage.Step4.verifyPrjectNameTextBoxIsDisplayed();
 	}
+	
+	@When("^user enter project name \"(.*)\"$")
+	public void enterProjectName(String projectname) {
+		ServicesPage.Step4.enterProjectName(projectname.replace("XXX", DriverHandler.timestamp));
+		ServicesPage.Step4.clickCreate();
+		DriverHandler.delay(2);
+	}
 }

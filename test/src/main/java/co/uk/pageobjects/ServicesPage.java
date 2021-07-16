@@ -109,11 +109,11 @@ public class ServicesPage {
 		
 		private static Element page4 = new Element("Page 4",By.xpath("//div[contains(@class,'justify-content-between')]//p[contains(text(),'Step 4 Of 4')]"));
 		private static TextBox projectName = new TextBox("Project name",By.xpath("//input[@id='ProjectName']"));
-		private static Button continueBtn = new Button("Continue",By.xpath("//button[contains(text(),'Continue')]"));
+		private static Button createBtn = new Button("Continue",By.xpath("//button[contains(text(),'Create')]"));
 		private static Button backBtn = new Button("Cancel",By.xpath("//button[contains(text(),'Back')]"));
 		
-		public static void clickContinue() {
-			continueBtn.click();
+		public static void clickCreate() {
+			createBtn.click();
 		}
 		
 		public static void clickBack() {

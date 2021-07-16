@@ -101,7 +101,7 @@ Feature: Manage users
     Then user is in academically login page
     When user enter username "Automated79XXX" and password "Test@12345"
     Then user is not successfully login
-@Adhoc
+@??
   Scenario: C14596 - Edit user details
 
     Given User is in academically login page

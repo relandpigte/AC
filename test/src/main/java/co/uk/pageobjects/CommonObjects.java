@@ -21,9 +21,13 @@ public class CommonObjects {
 	private static Element navSchedule = new Element("Navigation schedule",By.xpath("//nav//a[contains(text(),'Schedule')]"));
 	private static Element navSuggestion = new Element("Navigation suggestion",By.xpath("//nav//a[contains(text(),'Suggestions')]"));
 	private static Element navServiceSubject = new Element("Navigation service subject",By.xpath("//nav//a[contains(text(),'Service Subjects')]"));
-	
+	private static Element navSeeAllProject = new Element("Navigation see all project",By.xpath("//nav//a[contains(text(),'See All Projects')]"));
 	public static void verifySuccessfulDeleteMessageIsDisplayed() {
 		successfuldeleteMesssage.verifyDisplayed();
+	}
+	
+	public static void clicknavSeeAllProject() {
+		navSeeAllProject.click();
 	}
 	
 	public static void clicknavDashboard() {

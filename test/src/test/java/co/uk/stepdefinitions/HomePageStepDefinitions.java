@@ -116,4 +116,10 @@ public class HomePageStepDefinitions {
 	public void clickCreateNewProject() {
 		Homepage.clickCreateNewProject();
 	}
+	
+	@When("^user proceed to project \"(.*)\"$")
+	public void proceedToProject(String projectName) {
+		Homepage.MyProject.clickProject(projectName.replace("XXX", DriverHandler.timestamp));
+		DriverHandler.delay(4);
+	}
 }
