@@ -8,6 +8,7 @@ export class Select2Directive implements AfterViewInit {
   @Input() select2options: Options = {};
   @Input() defaultValue: any;
   @Input() placeholder = 'Select an item';
+  @Input() hideSearchBox = false;
   @Output() select2ValueChange: EventEmitter<any> = new EventEmitter();
   private el: any;
 
@@ -20,7 +21,9 @@ export class Select2Directive implements AfterViewInit {
   ngAfterViewInit(): void {
     const self = this;
     const el = self.el;
-    // this.select2options.minimumResultsForSearch = -1;
+    if (this.hideSearchBox) {
+      this.select2options.minimumResultsForSearch = -1;
+    }
     this.select2options.containerCssClass = el.getAttribute('class');
     this.select2options.dropdownAutoWidth = !0;
     this.select2options.dropdownCssClass = el.classList.contains('custom-select-sm') || el.classList.contains('form-control-sm') ? 'dropdown-menu dropdown-menu-sm show' : 'dropdown-menu show';

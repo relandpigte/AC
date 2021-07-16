@@ -22,11 +22,65 @@
           </div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-body" [loader]="isLoading">
-          <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+
+      <div class="row">
+        <div class="col-md-8 col-lg-9">
+          <div class="card">
+            <div class="card-body" [loader]="isLoading">
+              <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-lg-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="form-group mb-0">
+                <select class="custom-select" select2 [(ngModel)]="filteredSessionType" [defaultValue]="CalendarEventSessionType.Upcoming"
+                  (select2ValueChange)="onSessionTypeChange($event)" id="sessionType" name="sessionOrder" #sessionType="ngModel" [hideSearchBox]="true">
+                    <option [value]="CalendarEventSessionType.Upcoming">{{ 'UpcomingSessions' | localize }}</option>
+                    <option [value]="CalendarEventSessionType.Past">{{ 'PastSessions' | localize }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body" [loader]="isLoading">
+              <ul class="list-group list-group-flush list my-n3">
+                <li class="list-group-item" *ngFor="let item of calendarEvents">
+                  <div class="row align-items-center">
+                    <div class="col ms-n2">
+                      <div class="row">
+                        <h4 class="col text-primary">
+                          <a href="javascript:;" (click)="onEventClick(item)">{{ item.title }}</a>
+                        </h4>
+                      </div>
+                      <p class="small mb-0">
+                        <span *ngIf="isTutor">{{ item.project.creatorUser.fullName }}</span>
+                        <span *ngIf="!isTutor && item.projectOffer && item.projectOffer.creatorUser">{{ item.projectOffer.creatorUser.fullName }}</span>
+                        @{{ item.startTime | dateFormat: 'hh:mm A DD/MM/YY' }}
+                      </p>
+                    </div>
+                  </div>
+                </li>
+
+                <li class="list-group-item" *ngIf="calendarEvents.length === 0">
+                  <div class="row align-items-center">
+                    <div class="col ms-n2" *ngIf="!isLoading">
+                      <p *ngIf="filteredSessionType === CalendarEventSessionType.Past" class="m-0">{{ 'NoPastSessions' | localize }}</p>
+                      <p *ngIf="filteredSessionType === CalendarEventSessionType.Upcoming" class="m-0">{{ 'NoUpcomingSessions' | localize }}</p>
+                    </div>
+
+                  </div>
+                </li>
+
+              </ul>
+            </div>
+          </div>
+
+
         </div>
       </div>
+
     </div>
   </div>
 </div>
