@@ -13,7 +13,7 @@ public class AdminManageUserPage {
 
 	private static Element titleHeader = new Element("Users page",By.xpath("//h1[text()='Users']"));
 	private static Element create = new Element("Create",By.xpath("//a[contains(text(),'Create')]"));
-	private static TextBox search = new TextBox("Search",By.xpath("//div[@class='card-header ng-tns-c121-2']//input[@type='search']"));
+	private static TextBox search = new TextBox("Search",By.xpath("//div[contains(@class,'card-header')]//input[@type='search']"));
 	private static Element actionbutton(String email) {
 		return new Element(email+" action button",By.xpath("//td[text()='"+email+"']/following::td[contains(@class,'table-action')][1]//a"));
 	}

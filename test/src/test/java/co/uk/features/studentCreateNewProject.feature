@@ -143,7 +143,7 @@ Feature: Create new project
    	And user proceed to project "Test Project XXX"
    	Then user is in proposal screen
    	
-   	@Adhoc
+   	@??
    	Scenario: C14792 - Verify that student see all the offers from tutors relating to my Project
    	
    	Given User is in academically login page

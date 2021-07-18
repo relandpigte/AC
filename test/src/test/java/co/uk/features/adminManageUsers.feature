@@ -75,7 +75,7 @@ Feature: Manage users
     Then user is in academically login page
     When user enter username "Automated78XXX" and password "Test@12345"
     Then user successfully login
-    
+
   @UI @TestRails(C14595)
   Scenario: C14595 - Delete a user
     Given User is in academically login page
@@ -90,20 +90,20 @@ Feature: Manage users
     And user select a "Student" role
     And user saving user details
     Then sucessful message is displayed
-  	When user search "automated79XXX" on user management	
+    When user search "automated79XXX" on user management
     And user delete "automated79XXX" user
     Then delete modal is displayed on user management
-    When user click yes to delete on user management 
+    When user click yes to delete on user management
     Then sucessfuly deleted is displayed
-   	When user search "automated79XXX" on user management	
-   	Then "automated79XXX" is not displayed
+    When user search "automated79XXX" on user management
+    Then "automated79XXX" is not displayed
     When user logout in academically
     Then user is in academically login page
     When user enter username "Automated79XXX" and password "Test@12345"
     Then user is not successfully login
-@??
-  Scenario: C14596 - Edit user details
 
+    @UI @TestRails(C14596)
+  Scenario: C14596 - Edit user details
     Given User is in academically login page
     When user login as "admin"
     Then user successfully login
@@ -117,16 +117,16 @@ Feature: Manage users
     And user saving user details
     Then sucessful message is displayed
     When user search "automated80XXX" on user management
-    Then "automated80XXX" is displayed	
+    Then "automated80XXX" is displayed
     And user edit "automated80XXX" user
-    And user enter a user details
-      | Name           | Surname | Username       | Password   | Email          | Active | Public |
-      | Automated81XXX | Test    | automated81XXX | Test@12345 | automated81XXX | Yes    | No     |
+    And user edit details
+      | Name           | Surname | Username       | Email          | Active | Public |
+      | Automated81XXX | Test    | automated81XXX | automated81XXX | Yes    | No     |
     And user saving user details
     Then sucessful message is displayed
-    When user search "automated81XXX" on user management	
+    When user search "automated81XXX" on user management
     Then "automated81XXX" is displayed
     When user logout in academically
     Then user is in academically login page
     When user enter username "Automated81XXX" and password "Test@12345"
-    Then user is not successfully login
+    Then user successfully login

@@ -24,6 +24,43 @@ public class AdminManageUserPageStepDefinitions {
 		AdminManageUserPage.clickCreate();
 	}
 	
+	@When("^user edit details$")
+	public void editUserDetails(DataTable edituserDetails) {
+        List<Map<String, String>> data = edituserDetails.asMaps(String.class, String.class);
+        String name = data.get(0).get("Name");
+        String surname = data.get(0).get("Surname");
+        String username = data.get(0).get("Username");
+        String email = data.get(0).get("Email");
+        String activeStatus = data.get(0).get("Active");
+        String publicStatus = data.get(0).get("Public");
+        if(!name.equals("null")) {
+        	AdminManageUserPage.CreateOrEditUserModal.enterName(name.replace("XXX", DriverHandler.timestamp));
+        }
+        if(!surname.equals("null")) {	 
+        	AdminManageUserPage.CreateOrEditUserModal.enterSurname(surname);
+        }
+        if(!username.equals("null")) {	 
+        	AdminManageUserPage.CreateOrEditUserModal.enterUsername(username.replace("XXX", DriverHandler.timestamp));
+        }
+        
+        if(!email.equals("null")) {	 
+        	AdminManageUserPage.CreateOrEditUserModal.enterEmail(email.replace("XXX", DriverHandler.timestamp)+"@academically.33mail.com");
+        }
+        if(activeStatus.equals("Yes")) {	 
+        	AdminManageUserPage.CreateOrEditUserModal.enableActiveStatus();
+        }
+        if(publicStatus.equals("Yes")) {	 
+        	AdminManageUserPage.CreateOrEditUserModal.enablePublicStatus();
+        }
+        if(activeStatus.equals("No")) {	 
+        	AdminManageUserPage.CreateOrEditUserModal.disableActiveStatus();
+        }
+        if(publicStatus.equals("No")) {	 
+        	AdminManageUserPage.CreateOrEditUserModal.disablePublicStatus();
+        }
+    
+	}
+	
 	@When("^user enter a user details$")
 	public void enterUserDetails(DataTable userDetails) {
         List<Map<String, String>> data = userDetails.asMaps(String.class, String.class);
@@ -74,13 +111,14 @@ public class AdminManageUserPageStepDefinitions {
 	@When("^user saving user details$")
 	public void saveUserDetails() {
 		AdminManageUserPage.CreateOrEditUserModal.clickSave();
+		DriverHandler.delay(2);
 	}
 	
 	@When("^user search \"(.*)\" on user management$")
 	public void enterSearch(String email) throws IOException {
 		DriverHandler.refreshPage();
-		AdminManageUserPage.enterSearch(email.replace("XXX", DriverHandler.timestamp+"@academically.33mail.com"));
 		DriverHandler.delay(5);
+		AdminManageUserPage.enterSearch(email.replace("XXX", DriverHandler.timestamp+"@academically.33mail.com"));
 	}
 	
 	@When("^user delete \"(.*)\" user$")
@@ -106,7 +144,7 @@ public class AdminManageUserPageStepDefinitions {
 	@When("^user edit \"(.*)\" user$")
 	public void clickEdit(String email) {
 		DriverHandler.delay(3);
-		AdminManageUserPage.clickEdit(email);
+		AdminManageUserPage.clickEdit(email.replace("XXX", DriverHandler.timestamp+"@academically.33mail.com"));
 	}
 	
 	@Then("^\"(.*)\" is displayed$")

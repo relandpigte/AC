@@ -50,8 +50,12 @@ public class TutorProjectsPageFindWork {
 			makeAnOfferBtn.click();
 		}
 		
-		public void verifyProjectNameIsDisplayed(String project) {
+		public static void verifyProjectNameIsDisplayed(String project) {
 			projectName(project).verifyDisplayed();
+		}
+		
+		public static void clickClose() {
+			closeBtn.click();
 		}
 	}
 }

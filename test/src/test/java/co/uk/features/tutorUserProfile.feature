@@ -448,7 +448,7 @@ Feature: Tutor user profile settings
     When the user confirms to remove a publication
     Then removing "Silence the storm" publication is successful
 
-  @??
+  @UI @TestRails(C14575)
   Scenario: C14575	Verify editing publication
     Given User is in academically login page
     When user login as "admin"
@@ -482,7 +482,11 @@ Feature: Tutor user profile settings
       | Title         | Publication Type | Publisher           | Date       | Tag  | Abstarct |
       | Strange tides | Chapter          | Automated35XXX Test | 03/01/2013 | tag2 | null     |
     And user saving publication information
-    Then editing a publication is successful
+    And user edit publication "Strange tides"
+    Then "Edit" publication modal is displayed
+    And verify publication informations are correct
+      | Title         | Publication Type | Publisher           | Date       | Tag  | Abstarct |
+      | Strange tides | Chapter          | Automated35XXX Test | 03/02/2013 | null | Test1    |
 
   @??
   Scenario: C14567	Verify editing research methodology
