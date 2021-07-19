@@ -209,7 +209,7 @@ public class UserProfilePageStepDefinitions {
 	public void enterResearchInterest(DataTable researchInterestInformation) {
         List<Map<String, String>> data = researchInterestInformation.asMaps(String.class, String.class);
         String title = data.get(0).get("Title");
-        String knowledge = data.get(0).get("Knowledge Base");
+        String researchfields = data.get(0).get("Research fields");
         String description = data.get(0).get("Description");
         if(!title.equals("null")) {
         	UserProfilePageResearch.ResearchInterestModal.enterTitle(title);
@@ -217,8 +217,12 @@ public class UserProfilePageStepDefinitions {
         if(!description.equals("null")) {	 
         	UserProfilePageResearch.ResearchInterestModal.enterDescription(description);
         }
-        if(!knowledge.equals("null")) {	 
-        	UserProfilePageResearch.ResearchInterestModal.enterAndSelectKnowledgeBase(knowledge);
+        if(!researchfields.equals("null")) {	 
+        	UserProfilePageResearch.ResearchInterestModal.clickAddResearchField();
+        	UserProfilePageResearch.ResearchInterestModal.ResearchFieldModal.enterTreeFilter(researchfields);
+        	UserProfilePageResearch.ResearchInterestModal.ResearchFieldModal.clickTreeItem(researchfields);
+        	UserProfilePageResearch.ResearchInterestModal.ResearchFieldModal.verifyItemIsAdded(researchfields);
+        	UserProfilePageResearch.ResearchInterestModal.ResearchFieldModal.clickAdd();
         }
 	}
 	
@@ -256,7 +260,7 @@ public class UserProfilePageStepDefinitions {
 	
 	@Then("^\"(.*)\" Methodology modal is displayed$")
 	public void verifyMethodologyModalIsDisplayed(String title) {
-		UserProfilePageResearch.MethodologyModal.verifyModalTitle(title+" Methodology");
+		UserProfilePageResearch.MethodologyModal.verifyModalTitle(title);
 	}
 	
 	@When("^user enter research methodology information$")
@@ -442,7 +446,7 @@ public class UserProfilePageStepDefinitions {
 	public void verifyResearchInterestInformation(DataTable researchInterestInformation) {
         List<Map<String, String>> data = researchInterestInformation.asMaps(String.class, String.class);
         String title = data.get(0).get("Title");
-        String knowledge = data.get(0).get("Knowledge Base");
+        String researchfields = data.get(0).get("Research fields");
         String description = data.get(0).get("Description");
         if(!title.equals("null")) {
         	UserProfilePageResearch.ResearchInterestModal.verifyTitleValueIsCorrect(title);
@@ -450,8 +454,8 @@ public class UserProfilePageStepDefinitions {
         if(!description.equals("null")) {	 
         	UserProfilePageResearch.ResearchInterestModal.veriftyDescriptionValueIsCorrect(description);
         }
-        if(!knowledge.equals("null")) {	 
-        	UserProfilePageResearch.ResearchInterestModal.verifyKnowledgeBaseIsDisplayed(knowledge);
+        if(!researchfields.equals("null")) {	 
+        	UserProfilePageResearch.ResearchInterestModal.verifyresearchFieldAlertIsDisplayed(researchfields);
         }
 	}
 	

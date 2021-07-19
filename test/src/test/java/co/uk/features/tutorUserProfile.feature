@@ -282,7 +282,7 @@ Feature: Tutor user profile settings
     And user add research interest
     Then "Add Research" interest modal is displayed
     When user enter research interest information
-      | Title                                       | Knowledge Base            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+      | Title                                       | Research fields           | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
       | Computer Science and Information Technology | Computational Engineering | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
     And user saving research interest information
     Then sucessful message is displayed
@@ -312,7 +312,7 @@ Feature: Tutor user profile settings
     And user add research interest
     Then "Add Research" interest modal is displayed
     When user enter research interest information
-      | Title                                       | Knowledge Base            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+      | Title                                       | Research fields           | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
       | Computer Science and Information Technology | Computational Engineering | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
     And user saving research interest information
     Then sucessful message is displayed
@@ -488,29 +488,29 @@ Feature: Tutor user profile settings
       | Title         | Publication Type | Publisher           | Date       | Tag  | Abstarct |
       | Strange tides | Chapter          | Automated35XXX Test | 03/02/2013 | null | Test1    |
 
-  @?? @Adhoc
+  @UI @TestRails(C14567)
   Scenario: C14567	Verify editing research methodology
     Given User is in academically login page
-  #  When user login as "admin"
-  #  Then user successfully login
-  #  When user proceed to manage user
-  #  Then user is in manage user page
-  #  When user add a new user
-  #  And user enter a user details
-  #    | Name           | Surname | Username       | Password   | Email          | Active | Public |
-  #    | Automated36XXX | Test    | automated36XXX | Test@12345 | automated36XXX | Yes    | Yes    |
-  #  And user select a "Tutor" role
-  #  And user saving user details
-  #  Then sucessful message is displayed
-  #  When user logout in academically
-  #  Then user is in academically login page
-    When user enter username "automated36112522" and password "Test@12345"
+    When user login as "admin"
+    Then user successfully login
+    When user proceed to manage user
+    Then user is in manage user page
+    When user add a new user
+    And user enter a user details
+      | Name           | Surname | Username       | Password   | Email          | Active | Public |
+      | Automated36XXX | Test    | automated36XXX | Test@12345 | automated36XXX | Yes    | Yes    |
+    And user select a "Tutor" role
+    And user saving user details
+    Then sucessful message is displayed
+    When user logout in academically
+    Then user is in academically login page
+    When user enter username "automated36XXX" and password "Test@12345"
     Then user successfully login
     When user navigate to profile settings using profile widget
     Then user is in profile settings
     When user proceed to research tab
     And user add research methodology
-    Then "Add Research" Methodology modal is displayed
+    Then "Add" Methodology modal is displayed
     When user enter research methodology information
       | Title        | Research method          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
       | Quantitative | Methodological Pluralism | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
@@ -518,20 +518,20 @@ Feature: Tutor user profile settings
     Then sucessful message is displayed
     And adding methodology "Quantitative" is successful
     When user edit "Quantitative" research methodology
-    Then "Edit Research" Methodology modal is displayed
+    Then "Edit" Methodology modal is displayed
     When user enter research methodology information
       | Title       | Research method                  | Description |
       | Qualitative | Data Quality and Data Management | Test        |
     And user saving research methodology information
     Then sucessful message is displayed
-    
-		When user edit "Qualitative" research methodology
-    Then "Edit Research" Methodology modal is displayed
+    When user edit "Qualitative" research methodology
+    Then "Edit " Methodology modal is displayed
     And verify research methodology informations are correct
       | Title       | Research method                  | Description |
       | Qualitative | Data Quality and Data Management | Test        |
       |             | Methodological Pluralism         |             |
-  @??
+
+  @UI @TestRails(C14571)
   Scenario: C14571	Verify editing research interest
     Given User is in academically login page
     When user login as "admin"
@@ -555,20 +555,20 @@ Feature: Tutor user profile settings
     And user add research interest
     Then "Add Research" interest modal is displayed
     When user enter research interest information
-      | Title                                       | Knowledge Base            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+      | Title                                       | Research fields           | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
       | Computer Science and Information Technology | Computational Engineering | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
     And user saving research interest information
     Then sucessful message is displayed
     And adding research interest "Computer Science and Information Technology" is successful
     When user edit research interest "Computer Science and Information Technology"
     When user enter research interest information
-      | Title                | Knowledge Base | Description |
-      | Computer programming | null           | null        |
+      | Title                | Research fields | Description |
+      | Computer programming | null            | Test1       |
     And user saving research interest information
     Then sucessful message is displayed
- When user edit research interest "Computer programming"
+    When user edit research interest "Computer programming"
     Then verify research interest informations are correct
-      | Title                | Knowledge Base            | Description |
+      | Title                | Research fields           | Description |
       | Computer programming | Computational Engineering | Test1       |
 
   @UI @TestRails(14566)
@@ -625,8 +625,8 @@ Feature: Tutor user profile settings
     And user add research interest
     Then "Add Research" interest modal is displayed
     When user enter research interest information
-      | Title                                       | Knowledge Base | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-      | Computer Science and Information Technology | null           | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
+      | Title                                       | Research fields | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+      | Computer Science and Information Technology | null            | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
     And user saving research interest information
     Then sucessful message is displayed
     And adding research interest "Computer Science and Information Technology" is successful

@@ -120,19 +120,23 @@ public class UserProfilePageResearch {
 		
 		private static TextBox titleTextbox = new TextBox("Title",By.xpath("//app-create-edit-interest//input[@id='Title']"));
 		private static TextBox descriptionTextBox = new TextBox("Description",By.xpath("//app-create-edit-interest//div[contains(@class,'ql-editor')]/p"));
-		private static TextBox knowledgeBaseTextBox = new TextBox("Knowledge base",By.xpath("//app-create-edit-interest//input[@id='DisciplineTaxonomies']"));
-		private static Element knowlegeBaseDropDown = new Element("Knowledge dropdown",By.xpath("//typeahead-container//button"));
-		
+	//	private static TextBox knowledgeBaseTextBox = new TextBox("Knowledge base",By.xpath("//app-create-edit-interest//input[@id='DisciplineTaxonomies']"));
+	//	private static Element knowlegeBaseDropDown = new Element("Knowledge dropdown",By.xpath("//typeahead-container//button"));
+		private static Button addResearchField = new Button("Add research field",By.xpath("//label[text()='Research fields']/following::a[text()=' Add ']"));	
 		private static Button save = new Button("Save",By.xpath("//app-create-edit-interest//button[@type='submit']"));
-		 private static Element knowledgeBaseAlert(String knowledge) {
-	        	return new Element("Knowledge base: "+knowledge,By.xpath("//app-create-edit-interest//div[contains(@class,'ac-alerts')]//div[contains(text(),'"+knowledge+"')]"));
+		private static Element researchFieldAlert(String researchField) {
+	        	return new Element("Knowledge base: "+researchField,By.xpath("//div[contains(@class,'ac-alerts')]//div[text()=' "+researchField+" ']"));
 	        }
+		public static void clickAddResearchField() {
+			addResearchField.click();
+		}
+		
 		public static void verifyModalTitle(String title) {
 			modalTitle(title).verifyDisplayed();
 		}
 		
-		public static void verifyKnowledgeBaseIsDisplayed(String value) {
-			knowledgeBaseAlert(value).verifyDisplayed();
+		public static void verifyresearchFieldAlertIsDisplayed(String value) {
+			researchFieldAlert(value).verifyDisplayed();
 		}
 		
 		public static void verifyTitleValueIsCorrect(String value) {
@@ -150,20 +154,54 @@ public class UserProfilePageResearch {
 		public static void enterDescription(String details) {
 			descriptionTextBox.setText(details);
 		}
-		
+		/*
 		public static void enterFreeKnowldegeBase(String knowledgeBase) {
 			knowledgeBaseTextBox.setText(knowledgeBase);
 		}
 		
-		public static void enterAndSelectKnowledgeBase(String knowledgeBase) {
+			public static void enterAndSelectKnowledgeBase(String knowledgeBase) {
 			knowledgeBaseTextBox.setText(knowledgeBase);
 			DriverHandler.delay(4);
 			knowlegeBaseDropDown.click();
 		}
-		
+		*/
 		public static void clickSave() {
 			save.click();
 		}
+		
+		public static class ResearchFieldModal{
+			
+			private static TextBox treefilter = new TextBox("Tree filter",By.xpath("//div//input[contains(@class,'tree-filter')]"));
+			private static Element treeItem(String item) {
+				return new Element(item,By.xpath("//div[@role='treeitem' and @aria-label='"+item+"']"));
+			}
+			private static Element ItemAdded(String item) {
+				return new Element(item,By.xpath("//div[@role='alert' and contains(text(),'"+item+"')]"));
+			}
+			private static Button add = new Button("Add",By.xpath("//abp-modal-footer//button[text()=' Add ']"));
+			private static Element tree = new Element("Tree items",By.xpath("//ul[@role='tree']"));
+			
+			public static void enterTreeFilter(String filter) {
+				if(tree.isDisplayed()) {
+					treefilter.setText(filter);
+				}
+				
+			}
+			
+			public static void clickTreeItem(String item) {
+				treeItem(item).click();
+			}
+			
+			public static void verifyItemIsAdded(String item) {
+				ItemAdded(item).verifyDisplayed();
+			}
+			
+			public static void clickAdd() {
+				add.click();
+			}
+		
+		}	
+		
 	}
 	
 	public static class MethodologyModal{
@@ -174,7 +212,7 @@ public class UserProfilePageResearch {
 		private static ListBox title = new ListBox("Title",By.xpath("//app-create-edit-methodology//select[@id='Title']"));
 		private static Element verifytitle = new Element("Title",By.xpath("//app-create-edit-methodology//select[@id='Title']"));
 		private static TextBox descriptionTextBox = new TextBox("Description",By.xpath("//app-create-edit-methodology//div[contains(@class,'ql-editor')]/p"));
-		private static Button addMethod = new Button("Add method",By.xpath("//label[text()='Research fields']/following::a[text()=' Add ']"));
+		private static Button addMethod = new Button("Add method",By.xpath("//label[text()='Research methods']/following::a[text()=' Add ']"));
 		private static Button save = new Button("Save",By.xpath("//app-create-edit-methodology//button[@type='submit']"));
 		private static Element researchMethodAlert(String method) {
 	        	return new Element("Research method: "+method,By.xpath("//app-create-edit-methodology//div[contains(@class,'ac-alerts')]//div[contains(text(),'"+method+"')]"));
