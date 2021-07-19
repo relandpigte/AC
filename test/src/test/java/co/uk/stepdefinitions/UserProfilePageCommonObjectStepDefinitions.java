@@ -16,6 +16,7 @@ public class UserProfilePageCommonObjectStepDefinitions {
     @Then("^user is in profile settings$")
     public void verifyUserProfilePageIsDisplayed() {
         UserProfilePageCommonObjects.verifyUserProfilePageIsDisplayed();
+        DriverHandler.delay(2);
     }
 
     @When("^user upload a profile photo$")
@@ -97,7 +98,7 @@ public class UserProfilePageCommonObjectStepDefinitions {
     @When("^user proceed to research tab$")
     public void proceedToResearchTab() {
     	UserProfilePageCommonObjects.clickResearchTab();
-    	DriverHandler.delay(4);
+    	DriverHandler.delay(5);
     }
     
     @Then("^new profile photo is displayed$")

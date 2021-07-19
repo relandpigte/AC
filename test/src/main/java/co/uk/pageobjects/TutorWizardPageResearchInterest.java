@@ -12,9 +12,9 @@ public class TutorWizardPageResearchInterest {
 
 	private static Button next = new Button("Next",By.xpath("//button[contains(text(),'Next')]"));
 	private static Button skipbtn = new Button("Skip",By.xpath("//button[contains(text(),'Skip')]"));
-	private static Button addResearchInterestBtn = new Button("Add Research Interest",By.xpath("//button[contains(text(),'Add Research Interest')]"));
-	private static Button addMethodologyBtn = new Button("Add Methodology",By.xpath("//button[contains(text(),'Add Methodology')]"));
-	private static Button addPublicationBtn = new Button("Add Publication",By.xpath("//button[contains(text(),'Add Publication')]"));
+	private static Button addResearchInterestBtn = new Button("Add Research Interest",By.xpath("//app-interests//button[text()=' Add ']"));
+	private static Button addMethodologyBtn = new Button("Add Methodology",By.xpath("//app-methodologies//button[text()=' Add ']"));
+	private static Button addPublicationBtn = new Button("Add Publication",By.xpath("//app-publications//button[text()=' Add ']"));
 	private static TextBox filterPublication = new TextBox("Filter publication",By.xpath("//app-publications//input[@id='SearchFilter']"));
 	private static Button removeResearchInterest(String title) {
 		return new Button(title+" Remove",By.xpath("//app-interests//h4[text()='"+title+"']/ancestor::tr//span[contains(@class,'trash')]"));

@@ -174,7 +174,7 @@ public class UserProfilePageResearch {
 		private static ListBox title = new ListBox("Title",By.xpath("//app-create-edit-methodology//select[@id='Title']"));
 		private static Element verifytitle = new Element("Title",By.xpath("//app-create-edit-methodology//select[@id='Title']"));
 		private static TextBox descriptionTextBox = new TextBox("Description",By.xpath("//app-create-edit-methodology//div[contains(@class,'ql-editor')]/p"));
-		private static Button addMethod = new Button("Add method",By.xpath("//app-create-edit-methodology//a[contains(text(),'Add Method')]"));
+		private static Button addMethod = new Button("Add method",By.xpath("//label[text()='Research fields']/following::a[text()=' Add ']"));
 		private static Button save = new Button("Save",By.xpath("//app-create-edit-methodology//button[@type='submit']"));
 		private static Element researchMethodAlert(String method) {
 	        	return new Element("Research method: "+method,By.xpath("//app-create-edit-methodology//div[contains(@class,'ac-alerts')]//div[contains(text(),'"+method+"')]"));
@@ -212,14 +212,14 @@ public class UserProfilePageResearch {
 		
 		public static class ResearchMethodModal{
 			
-			private static TextBox treefilter = new TextBox("Tree filter",By.xpath("//app-research-method-tree//input[contains(@class,'tree-filter')]"));
+			private static TextBox treefilter = new TextBox("Tree filter",By.xpath("//div//input[contains(@class,'tree-filter')]"));
 			private static Element treeItem(String item) {
-				return new Element(item,By.xpath("//app-research-method-tree//div[@role='treeitem' and @aria-label='"+item+"']"));
+				return new Element(item,By.xpath("//div[@role='treeitem' and @aria-label='"+item+"']"));
 			}
 			private static Element ItemAdded(String item) {
-				return new Element(item,By.xpath("//app-research-method-tree//div[@role='alert' and contains(text(),'"+item+"')]"));
+				return new Element(item,By.xpath("//div[@role='alert' and contains(text(),'"+item+"')]"));
 			}
-			private static Button add = new Button("Add",By.xpath("//app-research-method-tree//button[@type='submit']"));
+			private static Button add = new Button("Add",By.xpath("//abp-modal-footer//button[text()=' Add ']"));
 			private static Element tree = new Element("Tree items",By.xpath("//ul[@role='tree']"));
 			
 			public static void enterTreeFilter(String filter) {

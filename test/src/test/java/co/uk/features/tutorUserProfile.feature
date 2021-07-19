@@ -488,23 +488,23 @@ Feature: Tutor user profile settings
       | Title         | Publication Type | Publisher           | Date       | Tag  | Abstarct |
       | Strange tides | Chapter          | Automated35XXX Test | 03/02/2013 | null | Test1    |
 
-  @??
+  @?? @Adhoc
   Scenario: C14567	Verify editing research methodology
     Given User is in academically login page
-    When user login as "admin"
-    Then user successfully login
-    When user proceed to manage user
-    Then user is in manage user page
-    When user add a new user
-    And user enter a user details
-      | Name           | Surname | Username       | Password   | Email          | Active | Public |
-      | Automated36XXX | Test    | automated36XXX | Test@12345 | automated36XXX | Yes    | Yes    |
-    And user select a "Tutor" role
-    And user saving user details
-    Then sucessful message is displayed
-    When user logout in academically
-    Then user is in academically login page
-    When user enter username "automated36XXX" and password "Test@12345"
+  #  When user login as "admin"
+  #  Then user successfully login
+  #  When user proceed to manage user
+  #  Then user is in manage user page
+  #  When user add a new user
+  #  And user enter a user details
+  #    | Name           | Surname | Username       | Password   | Email          | Active | Public |
+  #    | Automated36XXX | Test    | automated36XXX | Test@12345 | automated36XXX | Yes    | Yes    |
+  #  And user select a "Tutor" role
+  #  And user saving user details
+  #  Then sucessful message is displayed
+  #  When user logout in academically
+  #  Then user is in academically login page
+    When user enter username "automated36112522" and password "Test@12345"
     Then user successfully login
     When user navigate to profile settings using profile widget
     Then user is in profile settings
@@ -524,8 +524,13 @@ Feature: Tutor user profile settings
       | Qualitative | Data Quality and Data Management | Test        |
     And user saving research methodology information
     Then sucessful message is displayed
-    And editing reseach methodology is successful
-
+    
+		When user edit "Qualitative" research methodology
+    Then "Edit Research" Methodology modal is displayed
+    And verify research methodology informations are correct
+      | Title       | Research method                  | Description |
+      | Qualitative | Data Quality and Data Management | Test        |
+      |             | Methodological Pluralism         |             |
   @??
   Scenario: C14571	Verify editing research interest
     Given User is in academically login page
@@ -561,7 +566,10 @@ Feature: Tutor user profile settings
       | Computer programming | null           | null        |
     And user saving research interest information
     Then sucessful message is displayed
-    And editing research interest is successful
+ When user edit research interest "Computer programming"
+    Then verify research interest informations are correct
+      | Title                | Knowledge Base            | Description |
+      | Computer programming | Computational Engineering | Test1       |
 
   @UI @TestRails(14566)
   Scenario: C14566 - Verify adding research methodology without research method
