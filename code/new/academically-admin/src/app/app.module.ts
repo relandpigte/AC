@@ -69,6 +69,7 @@ import { DashboardUsageOverviewGraphComponent } from './home/dashboard-usage/das
 import { MetricsComponent } from './home/dashboard-overview/metrics/metrics.component';
 import { CreateProjectComponent } from './create-project/create-project.component';
 import { ProjectsComponent } from './projects/projects.component';
+import { UpcomingSessionsComponent } from './home/dashboard-overview/upcoming-sessions/upcoming-sessions.component';
 
 // Settings is subject to change
 //
@@ -154,6 +155,7 @@ const cookieConfig: NgcCookieConsentConfig = {
     MetricsComponent,
     CreateProjectComponent,
     ProjectsComponent,
+    UpcomingSessionsComponent,
   ],
   imports: [
     CommonModule,
