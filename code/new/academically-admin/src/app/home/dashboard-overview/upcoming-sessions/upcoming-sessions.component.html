@@ -1,0 +1,36 @@
+<div class="card" [loader]="isLoading">
+  <div class="card-header">
+    <h4 class="card-header-title">{{ 'UpcomingSessions' | localize}}</h4>
+  </div>
+  <div class="card-body pt-0 pb-0">
+    <div class="list-group list-group-flush list-group-focus">
+      <div *ngFor="let model of models" class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col">
+
+            <h4 class="text-body text-focus mb-1 name">
+              {{ model.project.name }}
+            </h4>
+
+            <p class="small text-muted mb-0">
+              <span class="fe fe-calendar"></span>
+              <time class="ml-1">{{ model.title }}</time>
+            </p>
+
+            <p class="small text-muted mb-0">
+              <span class="fe fe-clock"></span>
+              <time class="ml-1">{{ convertMomentToUserDate(model.startTime) | date: 'dd/MM/yyyy hh:mm a' }}</time>
+            </p>
+
+          </div>
+
+          <div class="col-auto">
+            <button class="btn btn-sm btn-primary">
+              {{ 'Join' | localize }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

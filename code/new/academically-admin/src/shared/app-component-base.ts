@@ -21,8 +21,6 @@ export abstract class AppComponentBase implements OnDestroy {
   public isTutor: boolean;
   public isStudent: boolean;
 
-  protected destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-
   localizationSourceName = AppConsts.localization.defaultLocalizationSourceName;
 
   localization: LocalizationService;
@@ -36,6 +34,8 @@ export abstract class AppComponentBase implements OnDestroy {
   elementRef: ElementRef;
 
   defaultModalSettings: any;
+
+  protected destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(injector: Injector) {
     this.localization = injector.get(LocalizationService);
@@ -108,32 +108,22 @@ export abstract class AppComponentBase implements OnDestroy {
     return 'assets/themes/dashkit/img/covers/profile-cover-1.jpg';
   }
 
-  protected convertToUserDate(date: Date): Date {
+  convertToUserDate(date: Date): Date {
     return abp.timing.convertToUserTimezone(date);
   }
 
-  protected convertMomentToUserDate(date: Moment): Date {
+  convertMomentToUserDate(date: Moment): Date {
     return this.convertToUserDate(date.toDate());
   }
 
   protected diffDatesSeconds(date1: Date, date2: Date): number {
-    var diffDatesSeconds = date1.getTime() - date2.getTime();
-    var diffSeconds = diffDatesSeconds / 1000;
+    const diffDatesSeconds = date1.getTime() - date2.getTime();
+    const diffSeconds = diffDatesSeconds / 1000;
     return Math.round(diffSeconds);
   }
 
   protected diffMomentDatesSeconds(date1: Moment, date2: Moment): number {
     return this.diffDatesSeconds(this.convertMomentToUserDate(date1), this.convertMomentToUserDate(date2));
-  }
-
-  private isValidUrl(url: string): boolean {
-    try {
-      new URL(url);
-    } catch (_) {
-      return false;
-    }
-
-    return true;
   }
 
   protected formatPhoneNumber(phoneNumber: string): string {
@@ -177,5 +167,16 @@ export abstract class AppComponentBase implements OnDestroy {
       0,
       0,
     );
+  }
+
+  private isValidUrl(url: string): boolean {
+    try {
+      // tslint:disable-next-line: no-unused-expression
+      new URL(url);
+    } catch (_) {
+      return false;
+    }
+
+    return true;
   }
 }

@@ -1,4 +1,10 @@
-﻿using Abp.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Timing;
 using Abp.Timing.Timezone;
@@ -12,15 +18,8 @@ using Academically.Domain.Services.Documents;
 using Academically.Emails;
 using Academically.Services.CalendarEvents.Dto;
 using Academically.Services.Projects.Dto;
-using Academically.Users.Dto;
 using Microsoft.EntityFrameworkCore;
 using SourceCloud.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace Academically.Services.CalendarEvents
 {
@@ -104,6 +103,47 @@ namespace Academically.Services.CalendarEvents
             calendarEvents.AddRange(recurringEvents);
 
             return calendarEvents.OrderBy(e => e.StartTime).ThenBy(e => e.EndTime);
+        }
+
+        public async Task<IEnumerable<CalendarEventDto>> GetUpcoming(long userId)
+        {
+            var user = await UserManager.GetUserByIdAsync(userId);
+            var userRoles = await UserManager.GetRolesAsync(user);
+
+            List<long?> userIds;
+            if (userRoles.Contains(StaticRoleNames.Tenants.Tutor))
+            {
+                userIds = await _projectOffersRepository.GetAll()
+                    .Where(e => e.CreatorUserId == userId)
+                    .Select(e => e.Project.CreatorUserId)
+                    .ToListAsync();
+            }
+            else
+            {
+                userIds = new List<long?>();
+            }
+            userIds.Add(user.Id);
+
+            var eventsQuery = _calendarEventsRepository.GetAll()
+                .Where(e => userIds.Any(id => id == e.CreatorUserId) && e.Type == CalendarEventType.ConfirmedBooking)
+                .Include(e => e.Project)
+                .OrderByDescending(e => e.StartTime)
+                .Take(3);
+
+            var oneTimeEvents = await eventsQuery
+                .Where(e => e.Recurrence == CalendarEventRecurrence.OneTime)
+                .Select(e => ObjectMapper.Map<CalendarEventDto>(e))
+                .ToListAsync();
+            var recurringEvents = await eventsQuery
+                .Where(e => e.Recurrence != CalendarEventRecurrence.OneTime)
+                .Select(e => ObjectMapper.Map<CalendarEventDto>(e))
+                .ToListAsync();
+
+            var calendarEvents = new List<CalendarEventDto>();
+            calendarEvents.AddRange(oneTimeEvents);
+            calendarEvents.AddRange(recurringEvents);
+
+            return calendarEvents.OrderBy(e => e.StartTime).ThenBy(e => e.EndTime).Take(3);
         }
 
         public async Task<IEnumerable<ProjectDto>> GetUserProjects(long userId)
