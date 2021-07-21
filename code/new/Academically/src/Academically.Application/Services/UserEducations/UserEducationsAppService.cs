@@ -21,22 +21,28 @@ namespace Academically.Services.UserEducations
     {
         private readonly IRepository<UserEducation, Guid> _userEducationsRepository;
         private readonly IRepository<University, Guid> _universitesRepository;
-        private readonly IRepository<UserEducationLevel, Guid> _userEducationLevelsRepository;
+        private readonly IRepository<UserEducationCourse, Guid> _userEducationCoursesRepository;
         private readonly IRepository<UserEducationDocument, Guid> _userEducationDocumentsRepository;
+        private readonly IRepository<AcademicLevel, Guid> _academiclLevelsRepository;
+        private readonly IRepository<AcademicLevelQualification, Guid> _academiclLevelQualificationsRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
 
         public UserEducationsAppService(
             IRepository<UserEducation, Guid> userEducationsRepository,
             IRepository<University, Guid> universitesRepository,
-            IRepository<UserEducationLevel, Guid> userEducationLevelsRepository,
+            IRepository<UserEducationCourse, Guid> userEducationCoursesRepository,
             IRepository<UserEducationDocument, Guid> userEducationDocumentsRepository,
+            IRepository<AcademicLevel, Guid> academiclLevelsRepository,
+            IRepository<AcademicLevelQualification, Guid> academiclLevelQualificationsRepository,
             IDocumentsDomainService documentsDomainService
             )
         {
             _userEducationsRepository = userEducationsRepository;
             _universitesRepository = universitesRepository;
-            _userEducationLevelsRepository = userEducationLevelsRepository;
+            _userEducationCoursesRepository = userEducationCoursesRepository;
             _userEducationDocumentsRepository = userEducationDocumentsRepository;
+            _academiclLevelsRepository = academiclLevelsRepository;
+            _academiclLevelQualificationsRepository = academiclLevelQualificationsRepository;
             _documentsDomainService = documentsDomainService;
         }
 
@@ -44,8 +50,10 @@ namespace Academically.Services.UserEducations
         {
             var userEducations = await _userEducationsRepository.GetAll()
                 .Include(e => e.University)
-                .Include(e => e.UserEducationLevels)
-                    .ThenInclude(e => e.EducationLevel)
+                .Include(e => e.UserEducationCourses)
+                    .ThenInclude(e => e.AcademicLevel)
+                .Include(e => e.UserEducationCourses)
+                    .ThenInclude(e => e.AcademicLevelQualification)
                 .Include(e => e.UserEducationDocuments)
                     .ThenInclude(e => e.Document)
                 .Where(e => e.UserId == userId)
@@ -67,8 +75,30 @@ namespace Academically.Services.UserEducations
             return userUniversities;
         }
 
+        public async Task<IEnumerable<AcademicLevelDto>> GetAcademicLevels()
+        {
+            var academicLevels = await _academiclLevelsRepository.GetAll()
+                .OrderBy(e => e.DisplayOrder)
+                .Select(e => ObjectMapper.Map<AcademicLevelDto>(e))
+                .ToListAsync();
+            return academicLevels;
+        }
+
+        public async Task<IEnumerable<AcademicLevelQualificationDto>> GetQualifications(Guid academicLevelId)
+        {
+            var qualifications = await _academiclLevelQualificationsRepository.GetAll()
+                .Where(e => e.AcademicLevelId == academicLevelId)
+                .Where(e => e.ReviewStatus == AcademicLevelQualificationReviewStatus.Approved
+                    || (e.ReviewStatus != AcademicLevelQualificationReviewStatus.Rejected && (e.CreatorUserId == AbpSession.UserId.Value
+                    || e.CreatorUserId == null)))
+                .OrderBy(e => e.DisplayOrder)
+                .Select(e => ObjectMapper.Map<AcademicLevelQualificationDto>(e))
+                .ToListAsync();
+            return qualifications;
+        }
+
         [AbpAuthorize(PermissionNames.Pages_Profile_Education_Create)]
-        public async Task<Guid> Create(UserEducationDto input)
+        public async Task<Guid> Create(CreateEditUserEducationDto input)
         {
             var university = await CreateAndGetUniverisityIfNotExists(input.UniversityName, input.UniversityCountryCode);
             var userEducaton = ObjectMapper.Map<UserEducation>(input);
@@ -78,40 +108,54 @@ namespace Academically.Services.UserEducations
         }
 
         [AbpAuthorize(PermissionNames.Pages_Profile_Education_Update)]
-        public async Task<Guid> Update(UserEducationDto input)
+        public async Task<Guid> Update(CreateEditUserEducationDto input)
         {
-            input.UserEducationDocuments = null;
-            var userEducationLevelInputs = input.UserEducationLevels;
-            input.UserEducationLevels = null;
+            var userEducationCourseInputs = input.UserEducationCourses;
+            input.UserEducationCourses = null;
 
             var university = await CreateAndGetUniverisityIfNotExists(input.UniversityName, input.UniversityCountryCode);
-            var userEducation = await _userEducationsRepository.GetAsync(input.Id);
+            var userEducation = await _userEducationsRepository.GetAsync(input.Id.Value);
             ObjectMapper.Map(input, userEducation);
             userEducation.UniversityId = university.Id;
 
-            var userEducationLevels = await _userEducationLevelsRepository.GetAll()
+            var userEducationCourses = await _userEducationCoursesRepository.GetAll()
                 .Where(e => e.UserEducationId == userEducation.Id)
                 .ToListAsync();
-            foreach (var userEducationLevelInput in userEducationLevelInputs)
+            foreach (var userEducationCourseInput in userEducationCourseInputs)
             {
-                var userEducationLevel = userEducationLevels.FirstOrDefault(e => e.Id == userEducationLevelInput.Id);
-                if (userEducationLevel == null)
+                var userEducationCourse = userEducationCourses.FirstOrDefault(e => e.Id == userEducationCourseInput.Id);
+                if (userEducationCourse == null)
                 {
-                    userEducationLevel = new UserEducationLevel();
+                    userEducationCourse = new UserEducationCourse();
                 }
-                ObjectMapper.Map(userEducationLevelInput, userEducationLevel);
-                userEducationLevel.UserEducationId = userEducation.Id;
-                await _userEducationLevelsRepository.InsertOrUpdateAsync(userEducationLevel);
+                ObjectMapper.Map(userEducationCourseInput, userEducationCourse);
+                userEducationCourse.UserEducationId = userEducation.Id;
+                await _userEducationCoursesRepository.InsertOrUpdateAsync(userEducationCourse);
             }
-            foreach (var userEducationLevel in userEducationLevels)
+            foreach (var userEducationCourse in userEducationCourses)
             {
-                if (userEducationLevelInputs.FirstOrDefault(e => e.Id == userEducationLevel.Id) == null)
+                if (userEducationCourseInputs.FirstOrDefault(e => e.Id == userEducationCourse.Id) == null)
                 {
-                    await _userEducationLevelsRepository.DeleteAsync(userEducationLevel.Id);
+                    await _userEducationCoursesRepository.DeleteAsync(userEducationCourse.Id);
                 }
             }
             await _userEducationsRepository.UpdateAsync(userEducation);
             return userEducation.Id;
+        }
+
+        public async Task<AcademicLevelQualificationDto> SuggestionQualification(SuggestQualificationDto input)
+        {
+            var latestQualification = await _academiclLevelQualificationsRepository.GetAll()
+                .Where(e => e.AcademicLevelId == input.AcademicLevelId)
+                .OrderByDescending(e => e.DisplayOrder)
+                .FirstOrDefaultAsync();
+            var qualification = new AcademicLevelQualification();
+            qualification.AcademicLevelId = input.AcademicLevelId;
+            qualification.Name = input.Name;
+            qualification.DisplayOrder = latestQualification.DisplayOrder + 1;
+            qualification.ReviewStatus = AcademicLevelQualificationReviewStatus.Pending;
+            await _academiclLevelQualificationsRepository.InsertAsync(qualification);
+            return ObjectMapper.Map<AcademicLevelQualificationDto>(qualification);
         }
 
         [AbpAuthorize(PermissionNames.Pages_Profile_Education_Create, PermissionNames.Pages_Profile_Education_Qualifications_Update)]
@@ -148,7 +192,7 @@ namespace Academically.Services.UserEducations
                 await _documentsDomainService.DeleteAsync(e.DocumentId);
                 await _userEducationDocumentsRepository.DeleteAsync(e.Id);
             });
-            await _userEducationLevelsRepository.DeleteAsync(e => e.UserEducationId == id);
+            await _userEducationCoursesRepository.DeleteAsync(e => e.UserEducationId == id);
             await _userEducationsRepository.DeleteAsync(id);
         }
 

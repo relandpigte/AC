@@ -44,7 +44,6 @@ export class ServicesComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.getServiceTree();
-    console.log(this.permission.isGranted('Pages.TutorWizard.ServicesOffered.Create'))
   }
 
   onToggleCollapse(id: number): void {
@@ -115,8 +114,6 @@ export class ServicesComponent extends AppComponentBase implements OnInit {
         }),
       )
       .subscribe(services => {
-        console.log(services);
-
         this.categories = services;
         if (this.categories && this.categories.length) {
           if (!this.selectedService) {

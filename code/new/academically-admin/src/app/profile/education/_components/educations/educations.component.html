@@ -45,13 +45,13 @@
                 </p>
               </td>
               <td width="10%">
-                <p class="p-0 m-0" *ngFor="let userEducationLevel of userEducation.userEducationLevels">
-                  <span class="badge badge-soft-secondary">{{ userEducationLevel.educationLevelName }}</span>
+                <p class="p-0 m-0" *ngFor="let userEducationCourse of userEducation.userEducationCourses">
+                  <span class="badge badge-soft-secondary">{{ userEducationCourse.title }}</span>
                 </p>
               </td>
               <td width="10%">
-                <p class="p-0 m-0" *ngFor="let userEducationLevel of userEducation.userEducationLevels">
-                  {{ userEducationLevel.grade }}
+                <p class="p-0 m-0" *ngFor="let userEducationCourse of userEducation.userEducationCourses">
+                  {{ userEducationCourse.grade }}
                 </p>
               </td>
               <td width="1%" class="align-middle">

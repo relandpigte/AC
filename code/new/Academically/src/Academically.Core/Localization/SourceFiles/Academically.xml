@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="QualificationSuggestionSubmittedMessage">Your suggestion for a new qualification has been submitted and will undergo a review process by our administrators.</text>
+    <text name="SuggestAQualification">Suggest a qualification</text>
+    <text name="SelectQualification">Select qualification</text>
+    <text name="Qualification">Qualification</text>
+    <text name="SelectAcademicLevel">Select academic level</text>
     <text name="LoadingSessions">Loading sessions</text>
     <text name="NoPastSessions">No past sessions</text>
     <text name="NoUpcomingSessions">No upcoming sessions</text>
@@ -192,7 +197,7 @@
     <text name="ServiceSubjectSuggestionEmailSubject">Academically - Service Subject Suggestion Reviewed</text>
     <text name="SuggestSubjectInfoMessage">If your desired subject is not available, you can suggest a new subject by clicking the Suggest button.</text>
     <text name="Suggest">Suggest</text>
-    <text name="SuggestASubject">Subject a Subject</text>
+    <text name="SuggestASubject">Subject a subject</text>
     <text name="SubjectSuggestionSubmittedMessage">The subject suggestion was submitted. It will now undergo our verification process. We will notify you by email once your suggestion was accepted or rejected.</text>
     <text name="SubjectSuggestionRejectedMessage">The suggested subject was rejected.</text>
     <text name="SubjectSuggestionApprovedMessage">The suggested subject was approved and will be visible to all users.</text>

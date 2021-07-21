@@ -1,0 +1,109 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1626832853255-1">
+        <createTable tableName="academicallyacademiclevelqualifications">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DisplayOrder" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AcademicLevelId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="ReviewTime" type="datetime"/>
+            <column name="ReviewerUserId" type="BIGINT"/>
+            <column name="ReviewStatus" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626832853255-2">
+        <createTable tableName="academicallyacademiclevels">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DisplayOrder" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626832853255-3">
+        <createTable tableName="academicallyusereducationcourses">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Title" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Grade" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AcademicLevelId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AcademicLevelQualificationId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UserEducationId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626832853255-4">
+        <createIndex indexName="FK_ALQ_AcademicLevel_AcademicLevelId_idx" tableName="academicallyacademiclevelqualifications">
+            <column name="AcademicLevelId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626832853255-5">
+        <createIndex indexName="FK_ALQ_Users_CreatorUserId_idx" tableName="academicallyacademiclevelqualifications">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626832853255-6">
+        <createIndex indexName="FK_ALQ_Users_ReviewerUserId_idx" tableName="academicallyacademiclevelqualifications">
+            <column name="ReviewerUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626832853255-7">
+        <createIndex indexName="FK_UEC_ALQ_AcademicLevelQualificationId_idx" tableName="academicallyusereducationcourses">
+            <column name="AcademicLevelQualificationId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626832853255-8">
+        <createIndex indexName="FK_UEC_UserEducations_UserEducationId_idx" tableName="academicallyusereducationcourses">
+            <column name="UserEducationId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626832853255-9">
+        <createIndex indexName="FK_UserEducationCourses_AcademicLevels_AcademicLevelId_idx" tableName="academicallyusereducationcourses">
+            <column name="AcademicLevelId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626832853255-10">
+        <addForeignKeyConstraint baseColumnNames="AcademicLevelId" baseTableName="academicallyacademiclevelqualifications" constraintName="FK_ALQ_AcademicLevel_AcademicLevelId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyacademiclevels" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626832853255-11">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallyacademiclevelqualifications" constraintName="FK_ALQ_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626832853255-12">
+        <addForeignKeyConstraint baseColumnNames="ReviewerUserId" baseTableName="academicallyacademiclevelqualifications" constraintName="FK_ALQ_Users_ReviewerUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626832853255-13">
+        <addForeignKeyConstraint baseColumnNames="AcademicLevelQualificationId" baseTableName="academicallyusereducationcourses" constraintName="FK_UEC_ALQ_AcademicLevelQualificationId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyacademiclevelqualifications" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626832853255-14">
+        <addForeignKeyConstraint baseColumnNames="AcademicLevelId" baseTableName="academicallyusereducationcourses" constraintName="FK_UEC_AcademicLevels_AcademicLevelId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyacademiclevels" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626832853255-15">
+        <addForeignKeyConstraint baseColumnNames="UserEducationId" baseTableName="academicallyusereducationcourses" constraintName="FK_UEC_UserEducations_UserEducationId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyUserEducations" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

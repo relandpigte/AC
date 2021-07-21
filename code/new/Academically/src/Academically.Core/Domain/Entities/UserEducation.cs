@@ -11,7 +11,7 @@ namespace Academically.Domain.Entities
     {
         public UserEducation()
         {
-            UserEducationLevels = new HashSet<UserEducationLevel>();
+            UserEducationCourses = new HashSet<UserEducationCourse>();
             UserEducationDocuments = new HashSet<UserEducationDocument>();
         }
 
@@ -27,7 +27,7 @@ namespace Academically.Domain.Entities
         [ForeignKey("UniversityId")]
         public virtual University University { get; set; }
 
-        public virtual ICollection<UserEducationLevel> UserEducationLevels { get; set; }
+        public virtual ICollection<UserEducationCourse> UserEducationCourses { get; set; }
         public virtual ICollection<UserEducationDocument> UserEducationDocuments { get; set; }
     }
 }

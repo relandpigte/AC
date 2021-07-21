@@ -9,6 +9,7 @@ using Abp.MultiTenancy;
 using Academically.Authorization;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
+using Academically.EntityFrameworkCore.Seed.Tenants.DataSeeder;
 
 namespace Academically.EntityFrameworkCore.Seed.Tenants
 {
@@ -26,6 +27,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
         public void Create()
         {
             CreateRolesAndUsers();
+            RunDataSeeders();
         }
 
         private void CreateRolesAndUsers()
@@ -292,6 +294,11 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
             );
 
             #endregion
+        }
+
+        private void RunDataSeeders()
+        {
+            new AcademicLevelsBuilder(_context);
         }
 
         private Role CreateRoleIfNotExisting(string roleName)

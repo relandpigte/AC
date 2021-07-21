@@ -36,14 +36,14 @@ export class SuggestServiceSubjectComponent extends AppComponentBase implements 
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
-          this.isLoading = false
+          this.isLoading = false;
         }),
       )
       .subscribe(() => {
         this.modelSaved.emit();
         this.message.success(this.l('SubjectSuggestionSubmittedMessage'));
         this._modal.hide();
-      })
+      });
   }
 
   onCloseClick(): void {

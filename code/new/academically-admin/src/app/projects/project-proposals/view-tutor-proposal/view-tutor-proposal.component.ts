@@ -119,7 +119,6 @@ export class ViewTutorProposalComponent extends AppComponentBase implements OnIn
         takeUntil(this.destroyed$),
       )
       .subscribe((event: CalendarEventDto) => {
-        console.log(event.startTime);
         if (event) {
           const sessionIndex = this.sessions.indexOf(this.forEdit);
           if (sessionIndex >= 0) {

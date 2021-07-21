@@ -10,12 +10,6 @@ namespace Academically
     {
         public AcademicallyMapperProfile()
         {
-            CreateMap<UserEducationLevel, UserEducationLevelDto>()
-                .ForMember(dest => dest.EducationLevelName, opt =>
-                {
-                    opt.PreCondition(src => src.EducationLevel != null);
-                    opt.MapFrom(src => src.EducationLevel.ShortName);
-                });
             CreateMap<UserEducation, UserEducationDto>()
                 .ForMember(dest => dest.UniversityName, opt =>
                 {

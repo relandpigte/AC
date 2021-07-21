@@ -66,13 +66,10 @@ export class CreateEditSessionComponent extends AppComponentBase implements OnIn
         this.isFormViewOnly = true;
       }
       this.updateMaxTime();
-
-      console.log(this.endTimePicker);
     }
   }
 
   checkMinute(min: string): boolean {
-    console.log(min);
     return false;
   }
   onFormSubmit(): void {
@@ -129,11 +126,9 @@ export class CreateEditSessionComponent extends AppComponentBase implements OnIn
   onStartTimeChange(): void {
     if (this.startTime && this.startTime > this.endTime) {
       this.endTime = this.startTime;
-      console.log('start time changed');
     } else if (this.durationText.length > 5) {
       setTimeout(() => {
         this.startTime = this.tempStartTime;
-        console.warn('start time changed');
       });
     }
     this.updateMaxTime();

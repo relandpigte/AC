@@ -7,24 +7,26 @@ import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { EducationComponent } from './education.component';
 import { EducationsComponent } from './_components/educations/educations.component';
 import { CreateEditEducationComponent } from './_components/educations/create-edit-education/create-edit-education.component';
-import { EducationLevelsComponent } from './_components/educations/education-levels/education-levels.component';
-import { CreateEditEducationLevelComponent } from './_components/educations/education-levels/create-edit-education-level/create-edit-education-level.component';
 import { ViewEducationDocumentsComponent } from './_components/educations/view-education-documents/view-education-documents.component';
 import { QualificationsComponent } from './_components/qualifications/qualifications.component';
 import { CreateEditQualificationComponent } from './_components/qualifications/create-edit-qualification/create-edit-qualification.component';
 import { ViewQualificationDocumentsComponent } from './_components/qualifications/view-qualification-documents/view-qualification-documents.component';
+import { CoursesComponent } from './_components/educations/courses/courses.component';
+import { CreateEditCourseComponent } from './_components/educations/courses/create-edit-course/create-edit-course.component';
+import { SuggestQualificationComponent } from './_components/educations/courses/suggest-qualification/suggest-qualification.component';
 
 @NgModule({
   declarations: [
     EducationComponent,
     EducationsComponent,
     CreateEditEducationComponent,
-    EducationLevelsComponent,
-    CreateEditEducationLevelComponent,
     ViewEducationDocumentsComponent,
     QualificationsComponent,
     CreateEditQualificationComponent,
     ViewQualificationDocumentsComponent,
+    CoursesComponent,
+    CreateEditCourseComponent,
+    SuggestQualificationComponent,
   ],
   imports: [
     CommonModule,
