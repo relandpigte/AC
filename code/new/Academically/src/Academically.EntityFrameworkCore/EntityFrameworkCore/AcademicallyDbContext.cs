@@ -13,7 +13,6 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<EducationLevel> EducationLevels { get; set; }
         public virtual DbSet<University> Universities { get; set; }
         public virtual DbSet<UserEducation> UserEducations { get; set; }
-        public virtual DbSet<UserEducationLevel> UserEducationLevels { get; set; }
         public virtual DbSet<PhoneVerification> PhoneVerifications { get; set; }
         public virtual DbSet<StudentRating> StudentRatings { get; set; }
         public virtual DbSet<TutorRating> TutorRatings { get; set; }
@@ -54,6 +53,9 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<ProjectOffer> ProjectOffers { get; set; }
         public virtual DbSet<RescheduleComment> RescheduleComments { get; set; }
         public virtual DbSet<TutorVerificationStep> TutorVerificationSteps { get; set; }
+        public virtual DbSet<AcademicLevel> AcademicLevels { get; set; }
+        public virtual DbSet<AcademicLevelQualification> AcademicLevelQualifications { get; set; }
+        public virtual DbSet<UserEducationCourse> UserEducationCourses { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

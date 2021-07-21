@@ -28,7 +28,7 @@ namespace Academically.Services.Profiles
     {
         private readonly UserManager _userManager;
         private readonly IRepository<User, long> _usersRepository;
-        private readonly IRepository<UserEducationLevel, Guid> _userEducationLevelsRepository;
+        private readonly IRepository<UserEducationCourse, Guid> _userEducationCoursesRepository;
         private readonly IRepository<StudentRating, Guid> _studentRatingsRepository;
         private readonly IRepository<TutorRating, Guid> _tutorRatingsRepository;
         private readonly IRepository<PassportVerification, Guid> _passportVerifications;
@@ -39,7 +39,7 @@ namespace Academically.Services.Profiles
         public ProfilesAppService(
             UserManager userManager,
             IRepository<User, long> usersRepository,
-            IRepository<UserEducationLevel, Guid> userEducationLevelsRepository,
+            IRepository<UserEducationCourse, Guid> userEducationCoursesRepository,
             IRepository<StudentRating, Guid> studentRatingsRepository,
             IRepository<TutorRating, Guid> tutorRatingsRepository,
             IRepository<PassportVerification, Guid> passportVerifications,
@@ -50,7 +50,7 @@ namespace Academically.Services.Profiles
         {
             _userManager = userManager;
             _usersRepository = usersRepository;
-            _userEducationLevelsRepository = userEducationLevelsRepository;
+            _userEducationCoursesRepository = userEducationCoursesRepository;
             _studentRatingsRepository = studentRatingsRepository;
             _tutorRatingsRepository = tutorRatingsRepository;
             _passportVerifications = passportVerifications;
@@ -135,14 +135,14 @@ namespace Academically.Services.Profiles
 
             var user = await UserManager.GetUserByIdAsync(id);
 
-            var highestAcademicLevel = await _userEducationLevelsRepository.GetAll()
+            var highestAcademicLevel = await _userEducationCoursesRepository.GetAll()
                 .Where(e => e.UserEducation.UserId == id)
-                .OrderByDescending(e => e.EducationLevel.DisplayOrder)
-                .Select(e => e.EducationLevel)
+                .OrderByDescending(e => e.AcademicLevel.DisplayOrder)
+                .Select(e => e.AcademicLevel)
                 .FirstOrDefaultAsync();
             if (highestAcademicLevel != null)
             {
-                profileMetric.AcademicLevel = highestAcademicLevel.ShortName;
+                profileMetric.AcademicLevel = highestAcademicLevel.Name;
             }
 
             int totalPositiveReviews = 0;

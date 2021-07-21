@@ -1,0 +1,12 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1626835694813-1">
+        <dropForeignKeyConstraint baseTableName="AcademicallyUserEducationLevels" constraintName="FK_UEL_EducationLevel_EducationLevelId"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626835694813-2">
+        <dropForeignKeyConstraint baseTableName="AcademicallyUserEducationLevels" constraintName="FK_UEL_UserEducation_UserEducationId"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626835694813-3">
+        <dropTable tableName="AcademicallyUserEducationLevels"/>
+    </changeSet>
+</databaseChangeLog>

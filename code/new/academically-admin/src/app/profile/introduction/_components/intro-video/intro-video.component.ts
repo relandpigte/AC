@@ -26,7 +26,6 @@ export class IntroVideoComponent extends AppComponentBase implements OnInit {
   ) {
     super(injector);
     this._profileService.user$.subscribe(user => {
-      console.log(user);
       this.user = user;
     });
   }

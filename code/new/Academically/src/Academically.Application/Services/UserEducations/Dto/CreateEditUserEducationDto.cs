@@ -6,8 +6,8 @@ using Academically.Domain.Entities;
 
 namespace Academically.Services.UserEducations.Dto
 {
-    [AutoMap(typeof(UserEducation))]
-    public class UserEducationDto : EntityDto<Guid>
+    [AutoMapTo(typeof(UserEducation))]
+    public class CreateEditUserEducationDto : EntityDto<Guid?>
     {
         public long UserId { get; set; }
         public string City { get; set; }
@@ -17,7 +17,6 @@ namespace Academically.Services.UserEducations.Dto
         public string UniversityName { get; set; }
         public string UniversityCountryCode { get; set; }
 
-        public IEnumerable<UserEducationCourseDto> UserEducationCourses { get; set; }
-        public IEnumerable<UserEducationDocumentDto> UserEducationDocuments { get; set; }
+        public IEnumerable<CreateEditUserEducationCourseDto> UserEducationCourses { get; set; }
     }
 }

@@ -18,9 +18,6 @@ export class SecurityComponent extends AppComponentBase {
     private _authService: AppAuthService,
   ) {
     super(injector);
-    abp.event.on('abp.dynamicScriptsInitialized', function () {
-      console.log('hello!');
-    });
   }
 
   onDeleteAccountClick(): void {

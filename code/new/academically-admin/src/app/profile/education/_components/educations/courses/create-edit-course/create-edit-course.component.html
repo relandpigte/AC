@@ -1,0 +1,64 @@
+<form class="form-horizontal" autocomplete="off" #createEditUserEducationLevelForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <abp-modal-header [title]="(isCreateMode ? 'AddCourse' : 'EditCourse') | localize" (onCloseClick)="onCloseClick()">
+    </abp-modal-header>
+    <div class="card-body">
+
+      <div class="form-group required">
+        <label class="col-form-label" for="CourseTitle">{{ 'CourseTitle' | localize }}</label>
+        <input class="form-control" type="text" [(ngModel)]="model.title" id="CourseTitle" name="CourseTitle"
+          #courseTitleModel="ngModel" #courseTitleEl required />
+        <abp-validation-summary [control]="courseTitleModel" [controlEl]="courseTitleEl">
+        </abp-validation-summary>
+      </div>
+
+      <div class="form-group required" [loader]="isLevelsLoading">
+        <label class="col-form-label" for="AcademicLevel">{{ 'AcademicLevel' | localize }}</label>
+        <select select2 [defaultValue]="model.academicLevelId" [placeholder]="'SelectAcademicLevel' | localize"
+          (select2ValueChange)="onAcademicLevelSelect($event)" [(ngModel)]="model.academicLevelId" id="AcademicLevel"
+          name="AcademicLevel" type="text" class="custom-select" #academicLevelModel="ngModel" #academicLevelEl
+          required>
+          <option *ngFor="let academicLevel of academicLevels" [value]="academicLevel.id">{{ academicLevel.name }}
+          </option>
+        </select>
+        <abp-validation-summary [control]="academicLevelModel" [controlEl]="academicLevelEl">
+        </abp-validation-summary>
+      </div>
+
+      <div *ngIf="model.academicLevelId" class="form-group required" [loader]="isQualificationsLoading">
+        <label class="col-form-label" for="Qualification">{{ 'Qualification' | localize }}</label>
+        <div class="input-group">
+          <select select2 [defaultValue]="model.academicLevelQualificationId"
+            [placeholder]="'SelectQualification' | localize" (select2ValueChange)="onQualificationSelect($event)"
+            [(ngModel)]="model.academicLevelQualificationId" id="Qualification" name="Qualification" type="text"
+            class="custom-select" #qualificationModel="ngModel" #qualificationEl required>
+            <option *ngFor="let academicLevelQualification of academicLevelQualifications"
+              [value]="academicLevelQualification.id">
+              {{ academicLevelQualification.name }}
+            </option>
+          </select>
+          <div class="input-group-append">
+            <button [disabled]="!model.academicLevelId" class="btn btn-primary" (click)="onSuggestQualificationClick()"
+              type="button">
+              {{ 'Suggest' | localize }} <i class="fe fe-plus"></i>
+            </button>
+          </div>
+        </div>
+        <i><small><i class="fe fe-alert-circle"></i>{{ 'SuggestSubjectInfoMessage' | localize }}</small></i>
+        <abp-validation-summary [control]="qualificationModel" [controlEl]="qualificationEl">
+        </abp-validation-summary>
+      </div>
+
+      <div class="form-group required">
+        <label class="col-form-label" for="Grade">{{ 'Grade' | localize }}</label>
+        <input class="form-control" type="text" [(ngModel)]="model.grade" id="Grade" name="Grade" #gradeModel="ngModel"
+          #gradeEl required />
+        <abp-validation-summary [control]="gradeModel" [controlEl]="gradeEl">
+        </abp-validation-summary>
+      </div>
+    </div>
+    <abp-modal-footer [saveLabel]="(isCreateMode ? 'Add' : 'Update') | localize"
+      [saveDisabled]="!createEditUserEducationLevelForm.form.valid" (onCancelClick)="onCloseClick()">
+    </abp-modal-footer>
+  </div>
+</form>

@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "plugins": [
+      {
+        "name": "typescript-tslint-plugin"
+      }
+    ],
     "declaration": false,
     "downlevelIteration": true,
     "emitDecoratorMetadata": true,

@@ -7790,10 +7790,131 @@ export class UserEducationsServiceProxy {
     }
 
     /**
+     * @return Success
+     */
+    getAcademicLevels(): Observable<AcademicLevelDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/UserEducations/GetAcademicLevels";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAcademicLevels(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAcademicLevels(<any>response_);
+                } catch (e) {
+                    return <Observable<AcademicLevelDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AcademicLevelDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAcademicLevels(response: HttpResponseBase): Observable<AcademicLevelDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(AcademicLevelDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AcademicLevelDto[]>(<any>null);
+    }
+
+    /**
+     * @param academicLevelId (optional) 
+     * @return Success
+     */
+    getQualifications(academicLevelId: string | undefined): Observable<AcademicLevelQualificationDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/UserEducations/GetQualifications?";
+        if (academicLevelId === null)
+            throw new Error("The parameter 'academicLevelId' cannot be null.");
+        else if (academicLevelId !== undefined)
+            url_ += "academicLevelId=" + encodeURIComponent("" + academicLevelId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetQualifications(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetQualifications(<any>response_);
+                } catch (e) {
+                    return <Observable<AcademicLevelQualificationDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AcademicLevelQualificationDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetQualifications(response: HttpResponseBase): Observable<AcademicLevelQualificationDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(AcademicLevelQualificationDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AcademicLevelQualificationDto[]>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
-    create(body: UserEducationDto | undefined): Observable<string> {
+    create(body: CreateEditUserEducationDto | undefined): Observable<string> {
         let url_ = this.baseUrl + "/api/services/app/UserEducations/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -7849,7 +7970,7 @@ export class UserEducationsServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    update(body: UserEducationDto | undefined): Observable<string> {
+    update(body: CreateEditUserEducationDto | undefined): Observable<string> {
         let url_ = this.baseUrl + "/api/services/app/UserEducations/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -7899,6 +8020,62 @@ export class UserEducationsServiceProxy {
             }));
         }
         return _observableOf<string>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    suggestionQualification(body: SuggestQualificationDto | undefined): Observable<AcademicLevelQualificationDto> {
+        let url_ = this.baseUrl + "/api/services/app/UserEducations/SuggestionQualification";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSuggestionQualification(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSuggestionQualification(<any>response_);
+                } catch (e) {
+                    return <Observable<AcademicLevelQualificationDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AcademicLevelQualificationDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSuggestionQualification(response: HttpResponseBase): Observable<AcademicLevelQualificationDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AcademicLevelQualificationDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AcademicLevelQualificationDto>(<any>null);
     }
 
     /**
@@ -9747,6 +9924,269 @@ export interface IAboutYouDto {
     about: string | undefined;
 }
 
+export class AcademicLevel implements IAcademicLevel {
+    id: string;
+    name: string | undefined;
+    displayOrder: number;
+
+    constructor(data?: IAcademicLevel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.displayOrder = _data["displayOrder"];
+        }
+    }
+
+    static fromJS(data: any): AcademicLevel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AcademicLevel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["displayOrder"] = this.displayOrder;
+        return data; 
+    }
+
+    clone(): AcademicLevel {
+        const json = this.toJSON();
+        let result = new AcademicLevel();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAcademicLevel {
+    id: string;
+    name: string | undefined;
+    displayOrder: number;
+}
+
+export class AcademicLevelDto implements IAcademicLevelDto {
+    id: string;
+    name: string | undefined;
+    displayOrder: number;
+
+    constructor(data?: IAcademicLevelDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.displayOrder = _data["displayOrder"];
+        }
+    }
+
+    static fromJS(data: any): AcademicLevelDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AcademicLevelDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["displayOrder"] = this.displayOrder;
+        return data; 
+    }
+
+    clone(): AcademicLevelDto {
+        const json = this.toJSON();
+        let result = new AcademicLevelDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAcademicLevelDto {
+    id: string;
+    name: string | undefined;
+    displayOrder: number;
+}
+
+export class AcademicLevelQualification implements IAcademicLevelQualification {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    name: string | undefined;
+    displayOrder: number;
+    academicLevelId: string;
+    reviewerUserId: number | undefined;
+    reviewTime: moment.Moment | undefined;
+    reviewStatus: AcademicLevelQualificationReviewStatus;
+    academicLevel: AcademicLevel;
+    creatorUser: User;
+    reviewerUser: User;
+
+    constructor(data?: IAcademicLevelQualification) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.name = _data["name"];
+            this.displayOrder = _data["displayOrder"];
+            this.academicLevelId = _data["academicLevelId"];
+            this.reviewerUserId = _data["reviewerUserId"];
+            this.reviewTime = _data["reviewTime"] ? moment(_data["reviewTime"].toString()) : <any>undefined;
+            this.reviewStatus = _data["reviewStatus"];
+            this.academicLevel = _data["academicLevel"] ? AcademicLevel.fromJS(_data["academicLevel"]) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? User.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.reviewerUser = _data["reviewerUser"] ? User.fromJS(_data["reviewerUser"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AcademicLevelQualification {
+        data = typeof data === 'object' ? data : {};
+        let result = new AcademicLevelQualification();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["name"] = this.name;
+        data["displayOrder"] = this.displayOrder;
+        data["academicLevelId"] = this.academicLevelId;
+        data["reviewerUserId"] = this.reviewerUserId;
+        data["reviewTime"] = this.reviewTime ? this.reviewTime.toISOString() : <any>undefined;
+        data["reviewStatus"] = this.reviewStatus;
+        data["academicLevel"] = this.academicLevel ? this.academicLevel.toJSON() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["reviewerUser"] = this.reviewerUser ? this.reviewerUser.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): AcademicLevelQualification {
+        const json = this.toJSON();
+        let result = new AcademicLevelQualification();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAcademicLevelQualification {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    name: string | undefined;
+    displayOrder: number;
+    academicLevelId: string;
+    reviewerUserId: number | undefined;
+    reviewTime: moment.Moment | undefined;
+    reviewStatus: AcademicLevelQualificationReviewStatus;
+    academicLevel: AcademicLevel;
+    creatorUser: User;
+    reviewerUser: User;
+}
+
+export class AcademicLevelQualificationDto implements IAcademicLevelQualificationDto {
+    id: string;
+    name: string | undefined;
+    displayOrder: number;
+    academicLevelId: string;
+    reviewerUserId: number | undefined;
+    reviewTime: moment.Moment | undefined;
+    reviewStatus: AcademicLevelQualificationReviewStatus;
+
+    constructor(data?: IAcademicLevelQualificationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.displayOrder = _data["displayOrder"];
+            this.academicLevelId = _data["academicLevelId"];
+            this.reviewerUserId = _data["reviewerUserId"];
+            this.reviewTime = _data["reviewTime"] ? moment(_data["reviewTime"].toString()) : <any>undefined;
+            this.reviewStatus = _data["reviewStatus"];
+        }
+    }
+
+    static fromJS(data: any): AcademicLevelQualificationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AcademicLevelQualificationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["displayOrder"] = this.displayOrder;
+        data["academicLevelId"] = this.academicLevelId;
+        data["reviewerUserId"] = this.reviewerUserId;
+        data["reviewTime"] = this.reviewTime ? this.reviewTime.toISOString() : <any>undefined;
+        data["reviewStatus"] = this.reviewStatus;
+        return data; 
+    }
+
+    clone(): AcademicLevelQualificationDto {
+        const json = this.toJSON();
+        let result = new AcademicLevelQualificationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAcademicLevelQualificationDto {
+    id: string;
+    name: string | undefined;
+    displayOrder: number;
+    academicLevelId: string;
+    reviewerUserId: number | undefined;
+    reviewTime: moment.Moment | undefined;
+    reviewStatus: AcademicLevelQualificationReviewStatus;
+}
+
+/** 0 = Pending 1 = Approved 2 = Rejected */
+export enum AcademicLevelQualificationReviewStatus {
+    Pending = 0,
+    Approved = 1,
+    Rejected = 2,
+}
+
 export class AcceptanceLogDto implements IAcceptanceLogDto {
     id: string;
     type: AcceptanceType;
@@ -10302,6 +10742,144 @@ export class ChangeUserLanguageDto implements IChangeUserLanguageDto {
 
 export interface IChangeUserLanguageDto {
     languageName: string;
+}
+
+export class CreateEditUserEducationCourseDto implements ICreateEditUserEducationCourseDto {
+    id: string | undefined;
+    title: string | undefined;
+    grade: string | undefined;
+    academicLevelId: string;
+    academicLevelQualificationId: string;
+
+    constructor(data?: ICreateEditUserEducationCourseDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.grade = _data["grade"];
+            this.academicLevelId = _data["academicLevelId"];
+            this.academicLevelQualificationId = _data["academicLevelQualificationId"];
+        }
+    }
+
+    static fromJS(data: any): CreateEditUserEducationCourseDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateEditUserEducationCourseDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["grade"] = this.grade;
+        data["academicLevelId"] = this.academicLevelId;
+        data["academicLevelQualificationId"] = this.academicLevelQualificationId;
+        return data; 
+    }
+
+    clone(): CreateEditUserEducationCourseDto {
+        const json = this.toJSON();
+        let result = new CreateEditUserEducationCourseDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateEditUserEducationCourseDto {
+    id: string | undefined;
+    title: string | undefined;
+    grade: string | undefined;
+    academicLevelId: string;
+    academicLevelQualificationId: string;
+}
+
+export class CreateEditUserEducationDto implements ICreateEditUserEducationDto {
+    id: string | undefined;
+    userId: number;
+    city: string | undefined;
+    startYear: string | undefined;
+    endYear: string | undefined;
+    universityName: string | undefined;
+    universityCountryCode: string | undefined;
+    userEducationCourses: CreateEditUserEducationCourseDto[] | undefined;
+
+    constructor(data?: ICreateEditUserEducationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userId = _data["userId"];
+            this.city = _data["city"];
+            this.startYear = _data["startYear"];
+            this.endYear = _data["endYear"];
+            this.universityName = _data["universityName"];
+            this.universityCountryCode = _data["universityCountryCode"];
+            if (Array.isArray(_data["userEducationCourses"])) {
+                this.userEducationCourses = [] as any;
+                for (let item of _data["userEducationCourses"])
+                    this.userEducationCourses.push(CreateEditUserEducationCourseDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateEditUserEducationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateEditUserEducationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userId"] = this.userId;
+        data["city"] = this.city;
+        data["startYear"] = this.startYear;
+        data["endYear"] = this.endYear;
+        data["universityName"] = this.universityName;
+        data["universityCountryCode"] = this.universityCountryCode;
+        if (Array.isArray(this.userEducationCourses)) {
+            data["userEducationCourses"] = [];
+            for (let item of this.userEducationCourses)
+                data["userEducationCourses"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): CreateEditUserEducationDto {
+        const json = this.toJSON();
+        let result = new CreateEditUserEducationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateEditUserEducationDto {
+    id: string | undefined;
+    userId: number;
+    city: string | undefined;
+    startYear: string | undefined;
+    endYear: string | undefined;
+    universityName: string | undefined;
+    universityCountryCode: string | undefined;
+    userEducationCourses: CreateEditUserEducationCourseDto[] | undefined;
 }
 
 export class CreateProjectDto implements ICreateProjectDto {
@@ -11088,61 +11666,6 @@ export interface IEditUserSpokenLanguagesDto {
     userId: number;
     englishProficiency: SpokenLanguageProficiency;
     otherUserSpokenLanguages: EditOtherUserSpokenLanguageDto[] | undefined;
-}
-
-export class EducationLevel implements IEducationLevel {
-    id: string;
-    name: string | undefined;
-    shortName: string | undefined;
-    displayOrder: number;
-
-    constructor(data?: IEducationLevel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.shortName = _data["shortName"];
-            this.displayOrder = _data["displayOrder"];
-        }
-    }
-
-    static fromJS(data: any): EducationLevel {
-        data = typeof data === 'object' ? data : {};
-        let result = new EducationLevel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["shortName"] = this.shortName;
-        data["displayOrder"] = this.displayOrder;
-        return data; 
-    }
-
-    clone(): EducationLevel {
-        const json = this.toJSON();
-        let result = new EducationLevel();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IEducationLevel {
-    id: string;
-    name: string | undefined;
-    shortName: string | undefined;
-    displayOrder: number;
 }
 
 export class EducationLevelDto implements IEducationLevelDto {
@@ -12296,6 +12819,7 @@ export class ProjectOffer implements IProjectOffer {
     discountedHours: number;
     discountedHourlyRate: number;
     isFreeSessionOffered: boolean;
+    isAccepted: boolean;
     project: Project;
     creatorUser: User;
 
@@ -12320,6 +12844,7 @@ export class ProjectOffer implements IProjectOffer {
             this.discountedHours = _data["discountedHours"];
             this.discountedHourlyRate = _data["discountedHourlyRate"];
             this.isFreeSessionOffered = _data["isFreeSessionOffered"];
+            this.isAccepted = _data["isAccepted"];
             this.project = _data["project"] ? Project.fromJS(_data["project"]) : <any>undefined;
             this.creatorUser = _data["creatorUser"] ? User.fromJS(_data["creatorUser"]) : <any>undefined;
         }
@@ -12344,6 +12869,7 @@ export class ProjectOffer implements IProjectOffer {
         data["discountedHours"] = this.discountedHours;
         data["discountedHourlyRate"] = this.discountedHourlyRate;
         data["isFreeSessionOffered"] = this.isFreeSessionOffered;
+        data["isAccepted"] = this.isAccepted;
         data["project"] = this.project ? this.project.toJSON() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         return data; 
@@ -12368,6 +12894,7 @@ export interface IProjectOffer {
     discountedHours: number;
     discountedHourlyRate: number;
     isFreeSessionOffered: boolean;
+    isAccepted: boolean;
     project: Project;
     creatorUser: User;
 }
@@ -14243,6 +14770,53 @@ export interface ISubjectSuggestionDto {
     creatorUser: UserDto;
 }
 
+export class SuggestQualificationDto implements ISuggestQualificationDto {
+    academicLevelId: string;
+    name: string | undefined;
+
+    constructor(data?: ISuggestQualificationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.academicLevelId = _data["academicLevelId"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): SuggestQualificationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SuggestQualificationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["academicLevelId"] = this.academicLevelId;
+        data["name"] = this.name;
+        return data; 
+    }
+
+    clone(): SuggestQualificationDto {
+        const json = this.toJSON();
+        let result = new SuggestQualificationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISuggestQualificationDto {
+    academicLevelId: string;
+    name: string | undefined;
+}
+
 export class SuggestSubjectDto implements ISuggestSubjectDto {
     name: string | undefined;
     serviceId: string;
@@ -15243,11 +15817,14 @@ export class User implements IUser {
     dateOfBirth: moment.Moment | undefined;
     coverPhotoDocumentId: string | undefined;
     profilePictureDocumentId: string | undefined;
+    introVideoDocumentId: string | undefined;
     longitude: number | undefined;
     latitude: number | undefined;
     stripeUserId: string | undefined;
+    deleteDate: moment.Moment | undefined;
     coverPhotoDocument: Document;
     profilePictureDocument: Document;
+    introVideoDocument: Document;
     userEducations: UserEducation[] | undefined;
     userSpokenLanguages: UserSpokenLanguage[] | undefined;
 
@@ -15337,11 +15914,14 @@ export class User implements IUser {
             this.dateOfBirth = _data["dateOfBirth"] ? moment(_data["dateOfBirth"].toString()) : <any>undefined;
             this.coverPhotoDocumentId = _data["coverPhotoDocumentId"];
             this.profilePictureDocumentId = _data["profilePictureDocumentId"];
+            this.introVideoDocumentId = _data["introVideoDocumentId"];
             this.longitude = _data["longitude"];
             this.latitude = _data["latitude"];
             this.stripeUserId = _data["stripeUserId"];
+            this.deleteDate = _data["deleteDate"] ? moment(_data["deleteDate"].toString()) : <any>undefined;
             this.coverPhotoDocument = _data["coverPhotoDocument"] ? Document.fromJS(_data["coverPhotoDocument"]) : <any>undefined;
             this.profilePictureDocument = _data["profilePictureDocument"] ? Document.fromJS(_data["profilePictureDocument"]) : <any>undefined;
+            this.introVideoDocument = _data["introVideoDocument"] ? Document.fromJS(_data["introVideoDocument"]) : <any>undefined;
             if (Array.isArray(_data["userEducations"])) {
                 this.userEducations = [] as any;
                 for (let item of _data["userEducations"])
@@ -15439,11 +16019,14 @@ export class User implements IUser {
         data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
         data["coverPhotoDocumentId"] = this.coverPhotoDocumentId;
         data["profilePictureDocumentId"] = this.profilePictureDocumentId;
+        data["introVideoDocumentId"] = this.introVideoDocumentId;
         data["longitude"] = this.longitude;
         data["latitude"] = this.latitude;
         data["stripeUserId"] = this.stripeUserId;
+        data["deleteDate"] = this.deleteDate ? this.deleteDate.toISOString() : <any>undefined;
         data["coverPhotoDocument"] = this.coverPhotoDocument ? this.coverPhotoDocument.toJSON() : <any>undefined;
         data["profilePictureDocument"] = this.profilePictureDocument ? this.profilePictureDocument.toJSON() : <any>undefined;
+        data["introVideoDocument"] = this.introVideoDocument ? this.introVideoDocument.toJSON() : <any>undefined;
         if (Array.isArray(this.userEducations)) {
             data["userEducations"] = [];
             for (let item of this.userEducations)
@@ -15517,11 +16100,14 @@ export interface IUser {
     dateOfBirth: moment.Moment | undefined;
     coverPhotoDocumentId: string | undefined;
     profilePictureDocumentId: string | undefined;
+    introVideoDocumentId: string | undefined;
     longitude: number | undefined;
     latitude: number | undefined;
     stripeUserId: string | undefined;
+    deleteDate: moment.Moment | undefined;
     coverPhotoDocument: Document;
     profilePictureDocument: Document;
+    introVideoDocument: Document;
     userEducations: UserEducation[] | undefined;
     userSpokenLanguages: UserSpokenLanguage[] | undefined;
 }
@@ -15836,7 +16422,7 @@ export class UserEducation implements IUserEducation {
     endYear: string | undefined;
     user: User;
     university: University;
-    userEducationLevels: UserEducationLevel[] | undefined;
+    userEducationCourses: UserEducationCourse[] | undefined;
     userEducationDocuments: UserEducationDocument[] | undefined;
 
     constructor(data?: IUserEducation) {
@@ -15858,10 +16444,10 @@ export class UserEducation implements IUserEducation {
             this.endYear = _data["endYear"];
             this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
             this.university = _data["university"] ? University.fromJS(_data["university"]) : <any>undefined;
-            if (Array.isArray(_data["userEducationLevels"])) {
-                this.userEducationLevels = [] as any;
-                for (let item of _data["userEducationLevels"])
-                    this.userEducationLevels.push(UserEducationLevel.fromJS(item));
+            if (Array.isArray(_data["userEducationCourses"])) {
+                this.userEducationCourses = [] as any;
+                for (let item of _data["userEducationCourses"])
+                    this.userEducationCourses.push(UserEducationCourse.fromJS(item));
             }
             if (Array.isArray(_data["userEducationDocuments"])) {
                 this.userEducationDocuments = [] as any;
@@ -15888,10 +16474,10 @@ export class UserEducation implements IUserEducation {
         data["endYear"] = this.endYear;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         data["university"] = this.university ? this.university.toJSON() : <any>undefined;
-        if (Array.isArray(this.userEducationLevels)) {
-            data["userEducationLevels"] = [];
-            for (let item of this.userEducationLevels)
-                data["userEducationLevels"].push(item.toJSON());
+        if (Array.isArray(this.userEducationCourses)) {
+            data["userEducationCourses"] = [];
+            for (let item of this.userEducationCourses)
+                data["userEducationCourses"].push(item.toJSON());
         }
         if (Array.isArray(this.userEducationDocuments)) {
             data["userEducationDocuments"] = [];
@@ -15918,8 +16504,146 @@ export interface IUserEducation {
     endYear: string | undefined;
     user: User;
     university: University;
-    userEducationLevels: UserEducationLevel[] | undefined;
+    userEducationCourses: UserEducationCourse[] | undefined;
     userEducationDocuments: UserEducationDocument[] | undefined;
+}
+
+export class UserEducationCourse implements IUserEducationCourse {
+    id: string;
+    title: string | undefined;
+    grade: string | undefined;
+    academicLevelId: string;
+    academicLevelQualificationId: string;
+    userEducationId: string;
+    academicLevel: AcademicLevel;
+    academicLevelQualification: AcademicLevelQualification;
+
+    constructor(data?: IUserEducationCourse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.grade = _data["grade"];
+            this.academicLevelId = _data["academicLevelId"];
+            this.academicLevelQualificationId = _data["academicLevelQualificationId"];
+            this.userEducationId = _data["userEducationId"];
+            this.academicLevel = _data["academicLevel"] ? AcademicLevel.fromJS(_data["academicLevel"]) : <any>undefined;
+            this.academicLevelQualification = _data["academicLevelQualification"] ? AcademicLevelQualification.fromJS(_data["academicLevelQualification"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserEducationCourse {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserEducationCourse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["grade"] = this.grade;
+        data["academicLevelId"] = this.academicLevelId;
+        data["academicLevelQualificationId"] = this.academicLevelQualificationId;
+        data["userEducationId"] = this.userEducationId;
+        data["academicLevel"] = this.academicLevel ? this.academicLevel.toJSON() : <any>undefined;
+        data["academicLevelQualification"] = this.academicLevelQualification ? this.academicLevelQualification.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): UserEducationCourse {
+        const json = this.toJSON();
+        let result = new UserEducationCourse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserEducationCourse {
+    id: string;
+    title: string | undefined;
+    grade: string | undefined;
+    academicLevelId: string;
+    academicLevelQualificationId: string;
+    userEducationId: string;
+    academicLevel: AcademicLevel;
+    academicLevelQualification: AcademicLevelQualification;
+}
+
+export class UserEducationCourseDto implements IUserEducationCourseDto {
+    id: string;
+    title: string | undefined;
+    grade: string | undefined;
+    academicLevelId: string;
+    academicLevelQualificationId: string;
+    academicLevel: AcademicLevelDto;
+    academicLevelQualification: AcademicLevelQualificationDto;
+
+    constructor(data?: IUserEducationCourseDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.grade = _data["grade"];
+            this.academicLevelId = _data["academicLevelId"];
+            this.academicLevelQualificationId = _data["academicLevelQualificationId"];
+            this.academicLevel = _data["academicLevel"] ? AcademicLevelDto.fromJS(_data["academicLevel"]) : <any>undefined;
+            this.academicLevelQualification = _data["academicLevelQualification"] ? AcademicLevelQualificationDto.fromJS(_data["academicLevelQualification"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserEducationCourseDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserEducationCourseDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["grade"] = this.grade;
+        data["academicLevelId"] = this.academicLevelId;
+        data["academicLevelQualificationId"] = this.academicLevelQualificationId;
+        data["academicLevel"] = this.academicLevel ? this.academicLevel.toJSON() : <any>undefined;
+        data["academicLevelQualification"] = this.academicLevelQualification ? this.academicLevelQualification.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): UserEducationCourseDto {
+        const json = this.toJSON();
+        let result = new UserEducationCourseDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserEducationCourseDto {
+    id: string;
+    title: string | undefined;
+    grade: string | undefined;
+    academicLevelId: string;
+    academicLevelQualificationId: string;
+    academicLevel: AcademicLevelDto;
+    academicLevelQualification: AcademicLevelQualificationDto;
 }
 
 export class UserEducationDocument implements IUserEducationDocument {
@@ -16056,7 +16780,7 @@ export class UserEducationDto implements IUserEducationDto {
     endYear: string | undefined;
     universityName: string | undefined;
     universityCountryCode: string | undefined;
-    userEducationLevels: UserEducationLevelDto[] | undefined;
+    userEducationCourses: UserEducationCourseDto[] | undefined;
     userEducationDocuments: UserEducationDocumentDto[] | undefined;
 
     constructor(data?: IUserEducationDto) {
@@ -16077,10 +16801,10 @@ export class UserEducationDto implements IUserEducationDto {
             this.endYear = _data["endYear"];
             this.universityName = _data["universityName"];
             this.universityCountryCode = _data["universityCountryCode"];
-            if (Array.isArray(_data["userEducationLevels"])) {
-                this.userEducationLevels = [] as any;
-                for (let item of _data["userEducationLevels"])
-                    this.userEducationLevels.push(UserEducationLevelDto.fromJS(item));
+            if (Array.isArray(_data["userEducationCourses"])) {
+                this.userEducationCourses = [] as any;
+                for (let item of _data["userEducationCourses"])
+                    this.userEducationCourses.push(UserEducationCourseDto.fromJS(item));
             }
             if (Array.isArray(_data["userEducationDocuments"])) {
                 this.userEducationDocuments = [] as any;
@@ -16106,10 +16830,10 @@ export class UserEducationDto implements IUserEducationDto {
         data["endYear"] = this.endYear;
         data["universityName"] = this.universityName;
         data["universityCountryCode"] = this.universityCountryCode;
-        if (Array.isArray(this.userEducationLevels)) {
-            data["userEducationLevels"] = [];
-            for (let item of this.userEducationLevels)
-                data["userEducationLevels"].push(item.toJSON());
+        if (Array.isArray(this.userEducationCourses)) {
+            data["userEducationCourses"] = [];
+            for (let item of this.userEducationCourses)
+                data["userEducationCourses"].push(item.toJSON());
         }
         if (Array.isArray(this.userEducationDocuments)) {
             data["userEducationDocuments"] = [];
@@ -16135,138 +16859,8 @@ export interface IUserEducationDto {
     endYear: string | undefined;
     universityName: string | undefined;
     universityCountryCode: string | undefined;
-    userEducationLevels: UserEducationLevelDto[] | undefined;
+    userEducationCourses: UserEducationCourseDto[] | undefined;
     userEducationDocuments: UserEducationDocumentDto[] | undefined;
-}
-
-export class UserEducationLevel implements IUserEducationLevel {
-    id: string;
-    userEducationId: string;
-    educationLevelId: string;
-    degree: string | undefined;
-    grade: string | undefined;
-    userEducation: UserEducation;
-    educationLevel: EducationLevel;
-
-    constructor(data?: IUserEducationLevel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.userEducationId = _data["userEducationId"];
-            this.educationLevelId = _data["educationLevelId"];
-            this.degree = _data["degree"];
-            this.grade = _data["grade"];
-            this.userEducation = _data["userEducation"] ? UserEducation.fromJS(_data["userEducation"]) : <any>undefined;
-            this.educationLevel = _data["educationLevel"] ? EducationLevel.fromJS(_data["educationLevel"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): UserEducationLevel {
-        data = typeof data === 'object' ? data : {};
-        let result = new UserEducationLevel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["userEducationId"] = this.userEducationId;
-        data["educationLevelId"] = this.educationLevelId;
-        data["degree"] = this.degree;
-        data["grade"] = this.grade;
-        data["userEducation"] = this.userEducation ? this.userEducation.toJSON() : <any>undefined;
-        data["educationLevel"] = this.educationLevel ? this.educationLevel.toJSON() : <any>undefined;
-        return data; 
-    }
-
-    clone(): UserEducationLevel {
-        const json = this.toJSON();
-        let result = new UserEducationLevel();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IUserEducationLevel {
-    id: string;
-    userEducationId: string;
-    educationLevelId: string;
-    degree: string | undefined;
-    grade: string | undefined;
-    userEducation: UserEducation;
-    educationLevel: EducationLevel;
-}
-
-export class UserEducationLevelDto implements IUserEducationLevelDto {
-    id: string | undefined;
-    userEducationId: string;
-    educationLevelId: string;
-    degree: string | undefined;
-    grade: string | undefined;
-    educationLevelName: string | undefined;
-
-    constructor(data?: IUserEducationLevelDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.userEducationId = _data["userEducationId"];
-            this.educationLevelId = _data["educationLevelId"];
-            this.degree = _data["degree"];
-            this.grade = _data["grade"];
-            this.educationLevelName = _data["educationLevelName"];
-        }
-    }
-
-    static fromJS(data: any): UserEducationLevelDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UserEducationLevelDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["userEducationId"] = this.userEducationId;
-        data["educationLevelId"] = this.educationLevelId;
-        data["degree"] = this.degree;
-        data["grade"] = this.grade;
-        data["educationLevelName"] = this.educationLevelName;
-        return data; 
-    }
-
-    clone(): UserEducationLevelDto {
-        const json = this.toJSON();
-        let result = new UserEducationLevelDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IUserEducationLevelDto {
-    id: string | undefined;
-    userEducationId: string;
-    educationLevelId: string;
-    degree: string | undefined;
-    grade: string | undefined;
-    educationLevelName: string | undefined;
 }
 
 export class UserLogin implements IUserLogin {

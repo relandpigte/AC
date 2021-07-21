@@ -3,11 +3,19 @@ import { DocumentUploaderComponent } from '@app/_shared/components/document-uplo
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { countries } from '@shared/constants/countries';
-import { FileParameter, UniversitiesServiceProxy, UniversityDto, UserEducationDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  FileParameter,
+  UniversitiesServiceProxy,
+  UniversityDto,
+  UserEducationDto,
+  UserEducationsServiceProxy,
+  CreateEditUserEducationDto,
+  CreateEditUserEducationCourseDto,
+} from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Observable, Observer } from 'rxjs';
 import { finalize, switchMap } from 'rxjs/operators';
-import { EducationLevelsComponent } from '../education-levels/education-levels.component';
+import { CoursesComponent } from '../courses/courses.component';
 
 @Component({
   selector: 'app-create-edit-education',
@@ -19,7 +27,7 @@ export class CreateEditEducationComponent extends AppComponentBase implements On
   public model: UserEducationDto = new UserEducationDto();
 
   @Output() userEducationSaved = new EventEmitter<boolean>();
-  @ViewChild(EducationLevelsComponent) educationLevelsComponent: EducationLevelsComponent;
+  @ViewChild(CoursesComponent) coursesComponent: CoursesComponent;
 
   countries = countries;
   isLoading = false;
@@ -37,7 +45,7 @@ export class CreateEditEducationComponent extends AppComponentBase implements On
   ) {
     super(injector);
     this.currentYear = this.convertToUserDate(new Date()).getFullYear();
-    this.yearSelections.push('Present')
+    this.yearSelections.push('Present');
     for (let year = this.currentYear; year >= 1900; year--) {
       const sYear = year.toString();
       this.yearSelections.push(sYear);
@@ -53,7 +61,7 @@ export class CreateEditEducationComponent extends AppComponentBase implements On
 
   ngAfterViewInit(): void {
     if (this.model && this.model.id) {
-      this.educationLevelsComponent.userEducationLevels = this.model.userEducationLevels;
+      this.coursesComponent.userEducationCourses = this.model.userEducationCourses;
       this.countryCode = this.model.universityCountryCode;
     }
   }
@@ -61,10 +69,29 @@ export class CreateEditEducationComponent extends AppComponentBase implements On
   onFormSubmit(): void {
     this.isLoading = true;
     this.model.universityCountryCode = this.countryCode;
-    this.model.userEducationLevels = this.educationLevelsComponent.userEducationLevels;
-    const saveSubscription = this.model.id
-      ? this._userEducationsService.update(this.model)
-      : this._userEducationsService.create(this.model);
+    this.model.userEducationCourses = this.coursesComponent.userEducationCourses;
+
+    const request = new CreateEditUserEducationDto();
+    request.id = this.model.id;
+    request.userId = this.model.userId;
+    request.city = this.model.city;
+    request.startYear = this.model.startYear;
+    request.endYear = this.model.endYear;
+    request.universityName = this.model.universityName;
+    request.universityCountryCode = this.model.universityCountryCode;
+    request.userEducationCourses = this.coursesComponent.userEducationCourses.map(courseModel => {
+      const courseRequest = new CreateEditUserEducationCourseDto();
+      courseRequest.id = courseModel.id;
+      courseRequest.title = courseModel.title;
+      courseRequest.grade = courseModel.grade;
+      courseRequest.academicLevelId = courseModel.academicLevelId;
+      courseRequest.academicLevelQualificationId = courseModel.academicLevelQualificationId;
+      return courseRequest;
+    });
+
+    const saveSubscription = request.id
+      ? this._userEducationsService.update(request)
+      : this._userEducationsService.create(request);
     saveSubscription.subscribe(userEducationId => {
       const documentsToUpload = this.documentUploaderComponent.files.map(file => {
         const fileParameter: FileParameter = {

@@ -10,8 +10,11 @@ namespace Academically.Services.UserEducations
     public interface IUserEducationsAppService : IApplicationService
     {
         Task<IEnumerable<UniversityDto>> GetAll(long userId);
-        Task<Guid> Create(UserEducationDto input);
-        Task<Guid> Update(UserEducationDto input);
+        Task<IEnumerable<AcademicLevelDto>> GetAcademicLevels();
+        Task<IEnumerable<AcademicLevelQualificationDto>> GetQualifications(Guid academicLevelId);
+        Task<Guid> Create(CreateEditUserEducationDto input);
+        Task<Guid> Update(CreateEditUserEducationDto input);
+        Task<AcademicLevelQualificationDto> SuggestionQualification(SuggestQualificationDto input);
         Task UploadDocuments(UploadUserEducationDocumentsDto input);
         Task Delete(Guid id);
         Task DeleteDocument(Guid userEducationDocumentId);
