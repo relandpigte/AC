@@ -2,6 +2,7 @@ import { Component, OnInit, Injector } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { CalendarEventDto, CalendarEventsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { takeUntil, finalize } from 'rxjs/operators';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-upcoming-sessions',
@@ -23,9 +24,13 @@ export class UpcomingSessionsComponent extends AppComponentBase implements OnIni
     this.getUpcomingSessions();
   }
 
+  getDateIsoString(startTime: moment.Moment): string {
+    return startTime.toDate().toISOString();
+  }
+
   private getUpcomingSessions(): void {
     this.isLoading = true;
-    this._calendarEventsService.getUpcoming(this.appSession.userId)
+    this._calendarEventsService.getUpcoming(this.convertDateToMoment(new Date()), this.appSession.userId)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {

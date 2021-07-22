@@ -4,14 +4,16 @@ import { Calendar, CalendarOptions, DateSelectArg, EventClickArg, EventInput, Fu
 import { DateClickArg } from '@fullcalendar/interaction';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CalendarEventDto,
+import {
+  CalendarEventDto,
   CalendarEventRecurrence,
   CalendarEventsServiceProxy,
   CalendarEventType,
   ProfilesServiceProxy,
   TimeZoneDto,
   TimeZonesServiceProxy,
-  UserDto } from '@shared/service-proxies/service-proxies';
+  UserDto
+} from '@shared/service-proxies/service-proxies';
 import { AppSessionService } from '@shared/session/app-session.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -103,7 +105,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
     this._route.queryParamMap.subscribe(paramMap => {
       if (paramMap.has('goto')) {
         this.gotoDate = paramMap.get('goto');
-        const gotoDate = abp.timing.convertToUserTimezone(moment.utc(paramMap.get('goto')).toDate());
+        const gotoDate = this.convertMomentToDate(moment(paramMap.get('goto')));
         this.calendar.gotoDate(gotoDate);
         this.calendar.scrollToTime({
           hour: gotoDate.getHours(),
@@ -143,7 +145,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
     this.showCreateEditBookingModal(_.cloneDeep(model));
   }
 
-  onSessionTypeChange(sessionType: CalendarEventSessionType): void{
+  onSessionTypeChange(sessionType: CalendarEventSessionType): void {
     this.filteredSessionType = sessionType;
     const rightNow = new Date();
     if (sessionType === CalendarEventSessionType.Upcoming) {

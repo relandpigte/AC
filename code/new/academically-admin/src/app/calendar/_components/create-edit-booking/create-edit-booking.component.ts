@@ -1,6 +1,14 @@
 import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CalendarEventDto, CalendarEventRecurrence, CalendarEventsServiceProxy, CalendarEventType, ProjectDto, RescheduleCalendarEventDto, RescheduleCommentDto } from '@shared/service-proxies/service-proxies';
+import {
+  CalendarEventDto,
+  CalendarEventRecurrence,
+  CalendarEventsServiceProxy,
+  CalendarEventType,
+  ProjectDto,
+  RescheduleCalendarEventDto,
+  RescheduleCommentDto,
+} from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
@@ -27,6 +35,7 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
   tempEndTime: Date;
   isFormViewOnly = false;
   isDecliningABooking = false;
+  isCancellingABooking = false;
   comments = '';
   datePickerConfig: BsDatepickerConfig;
   autoAccept = false;
@@ -111,8 +120,8 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
           this._modal.hide();
         });
     } else {
+      const rescheduleModel = new RescheduleCalendarEventDto();
       if (this.isDecliningABooking) {
-        const rescheduleModel = new RescheduleCalendarEventDto();
         rescheduleModel.calendarEvent = _.cloneDeep(this.model);
         rescheduleModel.calendarEvent.creatorUser = null;
         rescheduleModel.calendarEvent.projectOffer = null;
@@ -132,27 +141,64 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
             this.modelSaved.emit();
             this._modal.hide();
           });
+      } else if (this.isCancellingABooking) {
+        this.isLoading = false;
+        this.message.confirm(
+          this.l('CancelBookingConfirmationMessage'),
+          undefined,
+          (result: boolean) => {
+            if (result) {
+              this.isLoading = true;
+              rescheduleModel.calendarEvent = _.cloneDeep(this.model);
+              rescheduleModel.calendarEvent.creatorUser = null;
+              rescheduleModel.calendarEvent.projectOffer = null;
+              rescheduleModel.calendarEvent.project = null;
+              rescheduleModel.comments = this.comments;
+              this._calendarEventsService.cancel(rescheduleModel)
+                .pipe(
+                  takeUntil(this.destroyed$),
+                  finalize(() => {
+                    this.isLoading = false;
+                  }),
+                )
+                .subscribe(() => {
+                  this.notify.success(this.l('TheBookingRequestWasCancelled'));
+                  this.modelSaved.emit();
+                  this._modal.hide();
+                });
+            }
+          }
+        );
       } else {
-        const rescheduleModel = new RescheduleCalendarEventDto();
-        rescheduleModel.calendarEvent = _.cloneDeep(this.model);
-        rescheduleModel.calendarEvent.creatorUser = null;
-        rescheduleModel.calendarEvent.projectOffer = null;
-        rescheduleModel.calendarEvent.project = null;
-        rescheduleModel.oldStartTime = this.convertDateToMoment(this.tempStartTime);
-        rescheduleModel.oldEndTime = this.convertDateToMoment(this.tempEndTime);
-        rescheduleModel.comments = this.comments;
-        this._calendarEventsService.reschedule(rescheduleModel)
-          .pipe(
-            takeUntil(this.destroyed$),
-            finalize(() => {
-              this.isLoading = false;
-            }),
-          )
-          .subscribe(() => {
-            this.notify.success(this.l('TheBookingRequestWasRescheduled'));
-            this.modelSaved.emit();
-            this._modal.hide();
-          });
+        this.isLoading = false;
+        this.message.confirm(
+          this.l('RescheduleBookingConfirmationMessage'),
+          undefined,
+          (result: boolean) => {
+            if (result) {
+              this.isLoading = true;
+              rescheduleModel.calendarEvent = _.cloneDeep(this.model);
+              rescheduleModel.calendarEvent.creatorUser = null;
+              rescheduleModel.calendarEvent.projectOffer = null;
+              rescheduleModel.calendarEvent.project = null;
+              rescheduleModel.oldStartTime = this.convertDateToMoment(this.tempStartTime);
+              rescheduleModel.oldEndTime = this.convertDateToMoment(this.tempEndTime);
+              rescheduleModel.comments = this.comments;
+              this._calendarEventsService.reschedule(rescheduleModel)
+                .pipe(
+                  takeUntil(this.destroyed$),
+                  finalize(() => {
+                    this.isLoading = false;
+                  }),
+                )
+                .subscribe(() => {
+                  this.notify.success(this.l('TheBookingRequestWasRescheduled'));
+                  this.modelSaved.emit();
+                  this._modal.hide();
+                });
+            }
+          }
+        );
       }
     }
   }
@@ -165,6 +211,10 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
     this.isDecliningABooking = true;
   }
 
+  onCancelSessionClick(): void {
+    this.isCancellingABooking = true;
+  }
+
   onCloseClick(): void {
     this._modal.hide();
   }
@@ -172,6 +222,7 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
   onCancelClick(): void {
     this.isFormViewOnly = true;
     this.isDecliningABooking = false;
+    this.isCancellingABooking = false;
   }
 
   onStartTimeChange(): void {
@@ -212,7 +263,7 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
-          this.isLoading = false
+          this.isLoading = false;
         }),
       )
       .subscribe(projects => {

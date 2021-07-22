@@ -559,11 +559,16 @@ export class CalendarEventsServiceProxy {
     }
 
     /**
+     * @param currentTime (optional) 
      * @param userId (optional) 
      * @return Success
      */
-    getUpcoming(userId: number | undefined): Observable<CalendarEventDto[]> {
+    getUpcoming(currentTime: moment.Moment | undefined, userId: number | undefined): Observable<CalendarEventDto[]> {
         let url_ = this.baseUrl + "/api/services/app/CalendarEvents/GetUpcoming?";
+        if (currentTime === null)
+            throw new Error("The parameter 'currentTime' cannot be null.");
+        else if (currentTime !== undefined)
+            url_ += "currentTime=" + encodeURIComponent(currentTime ? "" + currentTime.toJSON() : "") + "&";
         if (userId === null)
             throw new Error("The parameter 'userId' cannot be null.");
         else if (userId !== undefined)
@@ -931,6 +936,58 @@ export class CalendarEventsServiceProxy {
     }
 
     protected processDecline(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    cancel(body: RescheduleCalendarEventDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/CalendarEvents/Cancel";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCancel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCancel(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCancel(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -10666,12 +10723,13 @@ export enum CalendarEventRecurrence {
     Yearly = 4,
 }
 
-/** 0 = Blocker 1 = ConfirmedBooking 2 = BookingRequest 3 = RescheduledBooking */
+/** 0 = Blocker 1 = ConfirmedBooking 2 = BookingRequest 3 = RescheduledBooking 4 = Cancelled */
 export enum CalendarEventType {
     Blocker = 0,
     ConfirmedBooking = 1,
     BookingRequest = 2,
     RescheduledBooking = 3,
+    Cancelled = 4,
 }
 
 export class ChangePasswordDto implements IChangePasswordDto {

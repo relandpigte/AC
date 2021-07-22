@@ -27,8 +27,19 @@
 
         <div class="col-12 tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
           <div *ngIf="model.id" class="form-group mb-2 d-flex justify-content-between">
-            <label class="col-form-label">{{ 'Project' | localize}}: <b>{{ model.project.name }}</b></label>
-            <label class="col-form-label">{{ 'Title' | localize}}: <b>{{ model.title }}</b></label>
+            <div>
+              <label class="col-form-label">
+                {{ 'Project' | localize}}: <b>{{ model.project.name }}</b>
+              </label><br />
+              <label *ngIf="model.creatorUserId !== appSession.userId" class="col-form-label">
+                {{ 'Student' | localize}}: <b>{{ model.creatorUser.fullName }}</b>
+              </label>
+            </div>
+            <div>
+              <label class="col-form-label text-right">
+                {{ 'Topic' | localize}}: <b>{{ model.title }}</b>
+              </label>
+            </div>
           </div>
 
           <div *ngIf="!model.id" class="form-group required">
@@ -46,7 +57,7 @@
 
 
           <div *ngIf="!model.id" class="form-group required">
-            <label class="col-form-label" for="title">{{ 'Title' | localize}}</label>
+            <label class="col-form-label" for="title">{{ 'Topic' | localize}}</label>
             <input [(ngModel)]="model.title" [disabled]="isFormViewOnly" #titleModel="ngModel" #titleEl
               class="form-control" type="text" id="title" name="title" required />
             <abp-validation-summary [control]="titleModel" [controlEl]="titleEl">
@@ -111,7 +122,8 @@
             </abp-validation-summary>
           </div>
 
-          <div *ngIf="model.id && (!isFormViewOnly || isDecliningABooking)" class="form-group required">
+          <div *ngIf="model.id && (!isFormViewOnly || isDecliningABooking || isCancellingABooking)"
+            class="form-group required">
             <label class="col-form-label" for="comments">{{ 'Comments' | localize}}</label>
             <textarea [rows]="4" [(ngModel)]="comments" #commentsModel="ngModel" #commentsEl class="form-control"
               id="comments" name="comments" required>
@@ -134,17 +146,15 @@
     </abp-modal-footer>
     <ng-container *ngIf="model.id">
 
-      <div *ngIf="isFormViewOnly && !isDecliningABooking" class="card-footer justify-content-between">
+      <div *ngIf="isFormViewOnly && !isDecliningABooking && !isCancellingABooking"
+        class="card-footer justify-content-between">
         <button type="button" class="btn btn-white" (click)="onCloseClick()">
           {{ 'Close' | localize }}
         </button>
         <div *ngIf="((!lastRescheduleComment && model.creatorUserId !== appSession.userId)
           || (lastRescheduleComment && lastRescheduleComment.creatorUser.id !== appSession.userId))
           && model.type !== CalendarEventType.ConfirmedBooking">
-          <button type="button" class="btn btn-success mr-2"
-            (click)="detailsTabButton.nativeElement.click(); isFormViewOnly = false">
-            {{ 'ProposeNewTime' | localize }}
-          </button>
+          <ng-container [ngTemplateOutlet]="proposeNewTime"></ng-container>
           <button *ngIf="lastRescheduleComment" type="button" class="btn btn-secondary mr-2"
             (click)="detailsTabButton.nativeElement.click(); onDeclineClick()">
             {{ 'Decline' | localize }}
@@ -154,9 +164,17 @@
             {{ (isLoading ? 'SavingWithDots' : 'Accept') | localize }}
           </button>
         </div>
+        <div *ngIf="model.type === CalendarEventType.ConfirmedBooking && model.creatorUserId !== appSession.userId">
+          <ng-container [ngTemplateOutlet]="proposeNewTime"></ng-container>
+          <button type=" button" class="btn btn-secondary mr-2"
+            (click)="detailsTabButton.nativeElement.click(); onCancelSessionClick()">
+            {{ 'CancelSession' | localize }}
+          </button>
+        </div>
       </div>
 
-      <div *ngIf="!isFormViewOnly || isDecliningABooking" class="card-footer justify-content-between">
+      <div *ngIf="!isFormViewOnly || isDecliningABooking || isCancellingABooking"
+        class="card-footer justify-content-between">
         <button type="button" class="btn btn-white" (click)="detailsTabButton.nativeElement.click(); onCancelClick()">
           {{ 'Cancel' | localize }}
         </button>
@@ -170,3 +188,9 @@
 
   </div>
 </form>
+<ng-template #proposeNewTime>
+  <button type="button" class="btn btn-success mr-2"
+    (click)="detailsTabButton.nativeElement.click(); isFormViewOnly = false">
+    {{ 'ProposeNewTime' | localize }}
+  </button>
+</ng-template>

@@ -8,18 +8,22 @@
         <div class="row align-items-center">
           <div class="col">
 
-            <h4 class="text-body text-focus mb-1 name">
-              {{ model.project.name }}
-            </h4>
+            <a [routerLink]="['/app/calendar']" [queryParams]="{ 'goto': getDateIsoString(model.startTime) }">
+              <h4 class="text-focus mb-1 name">
+                {{ model.title }}
+              </h4>
+            </a>
 
             <p class="small text-muted mb-0">
               <span class="fe fe-calendar"></span>
-              <time class="ml-1">{{ model.title }}</time>
+              <time class="ml-1">{{ model.project.name }}</time>
             </p>
 
             <p class="small text-muted mb-0">
               <span class="fe fe-clock"></span>
-              <time class="ml-1">{{ convertMomentToUserDate(model.startTime) | date: 'dd/MM/yyyy hh:mm a' }}</time>
+              <time class="ml-1">
+                {{ convertMomentToDate(model.startTime) | date: 'dd/MM/yyyy hh:mm a' }}
+              </time>
             </p>
 
           </div>
