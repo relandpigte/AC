@@ -6,5 +6,6 @@
         ConfirmedBooking = 1,
         BookingRequest = 2,
         RescheduledBooking = 3,
+        Cancelled = 4,
     }
 }

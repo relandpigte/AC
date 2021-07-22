@@ -10,13 +10,14 @@ namespace Academically.Services.CalendarEvents
     public interface ICalendarEventsAppService : IApplicationService
     {
         Task<IEnumerable<CalendarEventDto>> GetAll(GetAllCalendarEventsRequestDto input);
-        Task<IEnumerable<CalendarEventDto>> GetUpcoming(long userId);
+        Task<IEnumerable<CalendarEventDto>> GetUpcoming(DateTime currentTime, long userId);
         Task<IEnumerable<ProjectDto>> GetUserProjects(long userId);
         Task Create(CalendarEventDto input);
         Task Update(CalendarEventDto input);
         Task Reschedule(RescheduleCalendarEventDto input);
         Task Accept(Guid id, long tutorId);
         Task Decline(RescheduleCalendarEventDto input);
+        Task Cancel(RescheduleCalendarEventDto input);
         Task CreateBatch(CalendarEventDto[] inputs);
     }
 }

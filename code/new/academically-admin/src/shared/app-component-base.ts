@@ -116,6 +116,34 @@ export abstract class AppComponentBase implements OnDestroy {
     return this.convertToUserDate(date.toDate());
   }
 
+  convertDateToMoment(dateToConvert: Date): Moment {
+    return moment().set({
+      year: dateToConvert.getFullYear(),
+      month: dateToConvert.getMonth(),
+      date: dateToConvert.getDate(),
+      hour: dateToConvert.getHours(),
+      minute: dateToConvert.getMinutes(),
+      second: 0,
+      millisecond: 0,
+    });
+  }
+
+  convertMomentToDate(date: Moment): Date {
+    return new Date(
+      date.year(),
+      date.month(),
+      date.date(),
+      date.hour(),
+      date.minute(),
+      0,
+      0,
+    );
+  }
+
+  convertMomentToDateIsoString(date: Moment): string {
+    return this.convertMomentToDate(date).toISOString();
+  }
+
   protected diffDatesSeconds(date1: Date, date2: Date): number {
     const diffDatesSeconds = date1.getTime() - date2.getTime();
     const diffSeconds = diffDatesSeconds / 1000;
@@ -143,30 +171,6 @@ export abstract class AppComponentBase implements OnDestroy {
     const durationMinutes = (durationInMinutes % 60).toString().padStart(2, '0');
     const duration = `${durationHours}:${durationMinutes}`;
     return duration;
-  }
-
-  protected convertDateToMoment(dateToConvert: Date): Moment {
-    return moment().set({
-      year: dateToConvert.getFullYear(),
-      month: dateToConvert.getMonth(),
-      date: dateToConvert.getDate(),
-      hour: dateToConvert.getHours(),
-      minute: dateToConvert.getMinutes(),
-      second: 0,
-      millisecond: 0,
-    });
-  }
-
-  protected convertMomentToDate(date: Moment): Date {
-    return new Date(
-      date.year(),
-      date.month(),
-      date.date(),
-      date.hour(),
-      date.minute(),
-      0,
-      0,
-    );
   }
 
   private isValidUrl(url: string): boolean {

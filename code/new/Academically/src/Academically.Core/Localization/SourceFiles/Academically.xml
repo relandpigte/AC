@@ -1,6 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="RescheduleBookingConfirmationMessage">Should the student accept the new time, would they’d like the current timeslot opened back up?</text>
+    <text name="BookingCancelledTutorEmailSubject">Academically - Booking Cancelled for {0} Event</text>
+    <text name="BookingCancelledTutorEmailMessage">
+        <![CDATA[
+        <p>Hi {0},</p>
+        <p>You cancelled the {2} event for {3} project. We already informed {1} about your cancellation.</p>
+        <p>Cancellation Notes: {4}</p>
+      ]]>
+    </text>
+    <text name="BookingCancelledStudentEmailSubject">Academically - Booking Cancelled for {0} Event</text>
+    <text name="BookingCancelledStudentEmailMessage">
+        <![CDATA[
+        <p>Hi {0},</p>
+        <p>Your {2} event for {3} project was cancelled by {1}.</p>
+        <p>Cancellation Notes: {4}</p>
+      ]]>
+    </text>
+    <text name="CancelBookingConfirmationMessage">Are you sure you want to cancel your confirmed booking? This cancellation cannot be undone.</text>
+    <text name="Topic">Topic</text>
+    <text name="CancelSession">Cancel session</text>
     <text name="QualificationSuggestionSubmittedMessage">Your suggestion for a new qualification has been submitted and will undergo a review process by our administrators.</text>
     <text name="SuggestAQualification">Suggest a qualification</text>
     <text name="SelectQualification">Select qualification</text>
@@ -24,11 +44,12 @@
     <text name="TutorApplicationsList">Tutor Applications List</text>
     <text name="BookingConfirmedEmailSubject">Academically - Booking Confirmed</text>
     <text name="BookingRequestEmailSubject">Academically - New Booking Request</text>
+    <text name="TheBookingRequestWasCancelled">The booking request was cancelled.</text>
     <text name="TheBookingRequestWasDeclined">The booking request was declined.</text>
     <text name="TheBookingRequestWasRescheduled">The booking request was rescheduled.</text>
     <text name="TheBookingRequestWasAccepted">The booking request was accepted.</text>
     <text name="TheBookingRequestWasCreated">The booking request was created.</text>
-    <text name="NoProjectOfferBookingDomainErrorMessage">There was no offer made by {0} for {1}. Please select a tutur that has submitted an offer for this project.</text>
+    <text name="NoProjectOfferBookingDomainErrorMessage">There was no offer made by {0} for {1}. Please select a tutor that has submitted an offer for this project.</text>
     <text name="BookingFailed">Booking Failed</text>
     <text name="Decline">Decline</text>
     <text name="EndTime">End time</text>

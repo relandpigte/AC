@@ -78,7 +78,8 @@ namespace Academically.Services.CalendarEvents
             userIds.Add(user.Id);
 
             var eventsQuery = _calendarEventsRepository.GetAll()
-                .Where(e => userIds.Any(id => id == e.CreatorUserId))
+                .Where(e => userIds.Any(id => id == e.CreatorUserId) && e.Type != CalendarEventType.Cancelled)
+                .Include(e => e.CreatorUser)
                 .Include(e => e.Project)
                     .ThenInclude(e => e.CreatorUser)
                 .Include(e => e.ProjectOffer)
@@ -105,7 +106,7 @@ namespace Academically.Services.CalendarEvents
             return calendarEvents.OrderBy(e => e.StartTime).ThenBy(e => e.EndTime);
         }
 
-        public async Task<IEnumerable<CalendarEventDto>> GetUpcoming(long userId)
+        public async Task<IEnumerable<CalendarEventDto>> GetUpcoming(DateTime currentTime, long userId)
         {
             var user = await UserManager.GetUserByIdAsync(userId);
             var userRoles = await UserManager.GetRolesAsync(user);
@@ -125,9 +126,10 @@ namespace Academically.Services.CalendarEvents
             userIds.Add(user.Id);
 
             var eventsQuery = _calendarEventsRepository.GetAll()
-                .Where(e => userIds.Any(id => id == e.CreatorUserId) && e.Type == CalendarEventType.ConfirmedBooking)
+                .Where(e => userIds.Any(id => id == e.CreatorUserId) && e.Type == CalendarEventType.ConfirmedBooking
+                    && e.StartTime >= currentTime)
                 .Include(e => e.Project)
-                .OrderByDescending(e => e.StartTime)
+                .OrderBy(e => e.StartTime)
                 .Take(3);
 
             var oneTimeEvents = await eventsQuery
@@ -161,30 +163,31 @@ namespace Academically.Services.CalendarEvents
             if (input.Type != CalendarEventType.Blocker)
             {
                 tutor = await UserManager.GetUserByIdAsync(input.TutorId);
-                var hasTutorOffer = await _projectOffersRepository.GetAll()
-                    .Where(e => e.ProjectId == input.ProjectId && e.CreatorUserId == input.TutorId)
-                    .AnyAsync();
+                var projectOffer = await _projectOffersRepository.GetAll()
+                    .Where(e => e.ProjectId == input.ProjectId && e.CreatorUserId == input.TutorId && e.IsAccepted)
+                    .FirstOrDefaultAsync();
 
-                if (!hasTutorOffer)
+                if (projectOffer == null)
                 {
                     var project = await _projectsRepository.GetAsync(input.ProjectId.Value);
                     throw new UserFriendlyException(L("BookingFailed"), L("NoProjectOfferBookingDomainErrorMessage", tutor.FullName, project.Name));
                 }
-            }
 
-            input.CreatorUserId = AbpSession.UserId.Value;
-            var calendarEvent = ObjectMapper.Map<CalendarEvent>(input);
-            await _calendarEventsRepository.InsertAsync(calendarEvent);
+                input.CreatorUserId = AbpSession.UserId.Value;
+                input.ProjectOfferId = projectOffer.Id;
+                var calendarEvent = ObjectMapper.Map<CalendarEvent>(input);
+                await _calendarEventsRepository.InsertAsync(calendarEvent);
 
-            switch (input.Type)
-            {
-                case CalendarEventType.ConfirmedBooking:
-                    break;
-                case CalendarEventType.BookingRequest:
-                    await SendBookingRequestEmail(calendarEvent, tutor);
-                    break;
-                case CalendarEventType.RescheduledBooking:
-                    break;
+                switch (input.Type)
+                {
+                    case CalendarEventType.ConfirmedBooking:
+                        break;
+                    case CalendarEventType.BookingRequest:
+                        await SendBookingRequestEmail(calendarEvent, tutor);
+                        break;
+                    case CalendarEventType.RescheduledBooking:
+                        break;
+                }
             }
         }
 
@@ -252,6 +255,34 @@ namespace Academically.Services.CalendarEvents
 
             await _rescheduleCommentsRepository.InsertAsync(rescheduleComment);
             await _calendarEventsRepository.UpdateAsync(calendarEvent);
+        }
+
+        public async Task Cancel(RescheduleCalendarEventDto input)
+        {
+            var calendarEvent = await _calendarEventsRepository.GetAsync(input.CalendarEvent.Id.Value);
+            calendarEvent.Type = CalendarEventType.Cancelled;
+
+            var rescheduleComment = new RescheduleComment();
+            rescheduleComment.OldStartTime = calendarEvent.StartTime;
+            rescheduleComment.OldEndTime = calendarEvent.EndTime;
+            rescheduleComment.NewStartTime = calendarEvent.StartTime;
+            rescheduleComment.NewEndTime = calendarEvent.EndTime;
+            rescheduleComment.Comments = input.Comments;
+            rescheduleComment.CalendarEventId = input.CalendarEvent.Id.Value;
+
+            await _rescheduleCommentsRepository.InsertAsync(rescheduleComment);
+            await _calendarEventsRepository.UpdateAsync(calendarEvent);
+        }
+
+        public async Task CreateBatch(CalendarEventDto[] inputs)
+        {
+            foreach (var input in inputs)
+            {
+                input.CreatorUserId = AbpSession.UserId.Value;
+                var calendarEvent = ObjectMapper.Map<CalendarEvent>(input);
+                calendarEvent.ProjectOfferId = input.ProjectOfferId;
+                await _calendarEventsRepository.InsertAsync(calendarEvent);
+            }
         }
 
         private async Task SendBookingRequestEmail(CalendarEvent calendarEvent, User tutor)
@@ -380,17 +411,6 @@ namespace Academically.Services.CalendarEvents
                     new KeyValuePair<string, string>("viewDetailsLink", viewDetailsLink),
                 });
             await _emailService.SendAsync(recipient.Name, recipient.EmailAddress, L("BookingConfirmedEmailSubject"), emailBody);
-        }
-
-        public async Task CreateBatch(CalendarEventDto[] inputs)
-        {
-            foreach(var input in inputs)
-            {
-                input.CreatorUserId = AbpSession.UserId.Value;
-                var calendarEvent = ObjectMapper.Map<CalendarEvent>(input);
-                calendarEvent.ProjectOfferId = input.ProjectOfferId;
-                await _calendarEventsRepository.InsertAsync(calendarEvent);
-            }
         }
     }
 }
