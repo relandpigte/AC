@@ -821,26 +821,31 @@ app-methodologies .badge {
   }
 }
 
-.btn-group-toggle
-.btn-check:checked+.btn-white,
-.btn-group-toggle
-.btn-white:not(:disabled):not(.disabled).active, .btn-group-toggle .btn-white:not(:disabled):not(.disabled):active {
+.btn-group-toggle .btn-check:checked+.btn-white,
+.btn-group-toggle .btn-white:not(:disabled):not(.disabled).active,
+.btn-group-toggle .btn-white:not(:disabled):not(.disabled):active {
   background-color: #fff;
-  border-color: #2c7be5;
-  box-shadow: none;
-  color: #2c7be5;
+  border-color    : #2c7be5;
+  box-shadow      : none;
+  color           : #2c7be5;
 }
 
 .btn-check {
-  clip: rect(0,0,0,0);
+  clip          : rect(0, 0, 0, 0);
   pointer-events: none;
-  position: absolute;
+  position      : absolute;
 }
 
-.btn-check:active+.btn-white, .btn-check:checked+.btn-white, .btn-white.active, .btn-white:active, .show>.btn-white.dropdown-toggle {
+.btn-check:active+.btn-white,
+.btn-check:checked+.btn-white,
+.btn-white.active,
+.btn-white:active,
+.show>.btn-white.dropdown-toggle {
   background-color: #fff;
-  border-color: #fff;
-  color: #283e59;
+  border-color    : #fff;
+  color           : #283e59;
+}
+
 .input-group>.select2-container--default {
   width: auto !important;
   flex : 1 1 auto;
@@ -897,5 +902,4 @@ app-methodologies .badge {
     padding-left : 2.25rem !important;
     padding-right: 2.25rem !important;
   }
-}
 }
