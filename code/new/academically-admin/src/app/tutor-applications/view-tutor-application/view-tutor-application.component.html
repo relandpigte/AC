@@ -20,19 +20,24 @@
           <div class="card-body">
             <div class="bs-vertical-wizard">
               <ul>
-                <li app-tutor-wizard-step title="AboutYou" [link]="'/app/tutor-applications/' + userId + '/about-you'"
+                <li app-tutor-wizard-step title="AboutYou"
+                  [link]="getTutorWizardStep(BecomeATutorStep.AboutYou)?.status === TutorVerificationStepStatus.Saved ? '/app/tutor-applications/' + userId + '/about-you' : null"
                   [step]="BecomeATutorStep.AboutYou" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.AboutYou)" >
                 </li>
-                <li app-tutor-wizard-step title="Education" [link]="'/app/tutor-applications/' + userId + '/education'"
+                <li app-tutor-wizard-step title="Education"
+                  [link]="getTutorWizardStep(BecomeATutorStep.Education)?.status === TutorVerificationStepStatus.Saved ? '/app/tutor-applications/' + userId + '/education' : null"
                   [step]="BecomeATutorStep.Education" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.Education)">
                 </li>
-                <li app-tutor-wizard-step title="Research" [link]="'/app/tutor-applications/' + userId + '/research'"
+                <li app-tutor-wizard-step title="Research"
+                  [link]="getTutorWizardStep(BecomeATutorStep.Research)?.status === TutorVerificationStepStatus.Saved ? '/app/tutor-applications/' + userId + '/research' : null"
                   [step]="BecomeATutorStep.Research" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.Research)">
                 </li>
-                <li app-tutor-wizard-step title="Languages" [link]="'/app/tutor-applications/' + userId + '/languages'"
+                <li app-tutor-wizard-step title="Languages"
+                  [link]="getTutorWizardStep(BecomeATutorStep.Languages)?.status === TutorVerificationStepStatus.Saved ? '/app/tutor-applications/' + userId + '/languages' : null"
                   [step]="BecomeATutorStep.Languages" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.Languages)">
                 </li>
-                <li app-tutor-wizard-step title="ServicesOffered" [link]="'/app/tutor-applications/' + userId + '/services-offered'"
+                <li app-tutor-wizard-step title="ServicesOffered"
+                  [link]="getTutorWizardStep(BecomeATutorStep.ServicesOffered)?.status === TutorVerificationStepStatus.Saved ? '/app/tutor-applications/' + userId + '/services-offered' : null"
                   [step]="BecomeATutorStep.ServicesOffered" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.ServicesOffered)">
                 </li>
               </ul>
@@ -46,22 +51,28 @@
           <div class="card-body">
             <div class="bs-vertical-wizard">
               <ul>
-                <li app-tutor-wizard-step title="ProfilePicture" [link]="'/app/tutor-applications/' + userId + '/profile-picture'"
+                <li app-tutor-wizard-step title="ProfilePicture"
+                  [link]="getTutorWizardStep(BecomeATutorStep.ProfilePicture)?.status === TutorVerificationStepStatus.Saved ? '/app/tutor-applications/' + userId + '/profile-picture' : null"
                   [step]="BecomeATutorStep.ProfilePicture" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.ProfilePicture)">
                 </li>
-                <li app-tutor-wizard-step title="PhotoId" [link]="'/app/tutor-applications/' + userId + '/photo-id'"
+                <li app-tutor-wizard-step title="PhotoId"
+                  [link]="getTutorWizardStep(BecomeATutorStep.PhotoId)?.status === TutorVerificationStepStatus.Saved ? '/app/tutor-applications/' + userId + '/photo-id' : null"
                   [step]="BecomeATutorStep.PhotoId" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.PhotoId)">
                 </li>
-                <li app-tutor-wizard-step title="Address" [link]="'/app/tutor-applications/' + userId + '/address'"
+                <li app-tutor-wizard-step title="Address"
+                  [link]="getTutorWizardStep(BecomeATutorStep.Address)?.status === TutorVerificationStepStatus.Saved ? '/app/tutor-applications/' + userId + '/address' : null"
                   [step]="BecomeATutorStep.Address" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.Address)">
                 </li>
-                <li app-tutor-wizard-step title="ContactNumber" [link]="'/app/tutor-applications/' + userId + '/contact-number'"
+                <li app-tutor-wizard-step title="ContactNumber"
+                  [link]="getTutorWizardStep(BecomeATutorStep.ContactNumber)?.status === TutorVerificationStepStatus.Saved ? '/app/tutor-applications/' + userId + '/contact-number' : null"
                   [step]="BecomeATutorStep.ContactNumber" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.ContactNumber)">
                 </li>
-                <li app-tutor-wizard-step title="References" [link]="'/app/tutor-applications/' + userId + '/references'"
+                <li app-tutor-wizard-step title="References"
+                  [link]="getTutorWizardStep(BecomeATutorStep.References)?.status === TutorVerificationStepStatus.Saved ? '/app/tutor-applications/' + userId + '/references' : null"
                   [step]="BecomeATutorStep.References" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.References)">
                 </li>
-                <li app-tutor-wizard-step title="DbsCheck" [link]="'/app/tutor-applications/' + userId + '/dbs-check'"
+                <li app-tutor-wizard-step title="DbsCheck"
+                  [link]="getTutorWizardStep(BecomeATutorStep.DbsCheck)?.status === TutorVerificationStepStatus.Saved ? '/app/tutor-applications/' + userId + '/dbs-check' : null"
                   [step]="BecomeATutorStep.DbsCheck" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.DbsCheck)">
                 </li>
               </ul>
@@ -75,13 +86,16 @@
           <div class="card-body">
             <div class="bs-vertical-wizard">
               <ul>
-                <li app-tutor-wizard-step title="TermsOfUse" [link]="'/app/tutor-applications/' + userId + '/terms-of-use'"
+                <li app-tutor-wizard-step title="TermsOfUse"
+                  [link]="getTutorWizardStep(BecomeATutorStep.TermsOfUse)?.status === TutorVerificationStepStatus.Saved ? '/app/tutor-applications/' + userId + '/terms-of-use' : null"
                   [step]="BecomeATutorStep.TermsOfUse" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.TermsOfUse)">
                 </li>
-                <li app-tutor-wizard-step title="PrivacyPolicy" [link]="'/app/tutor-applications/' + userId + '/privacy-policy'"
+                <li app-tutor-wizard-step title="PrivacyPolicy"
+                  [link]="getTutorWizardStep(BecomeATutorStep.PrivacyPolicy)?.status === TutorVerificationStepStatus.Saved ? '/app/tutor-applications/' + userId + '/privacy-policy' : null"
                   [step]="BecomeATutorStep.PrivacyPolicy" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.PrivacyPolicy)">
                 </li>
-                <li app-tutor-wizard-step title="Declaration" [link]="'/app/tutor-applications/' + userId + '/declaration'"
+                <li app-tutor-wizard-step title="Declaration"
+                  [link]="getTutorWizardStep(BecomeATutorStep.Declaration)?.status === TutorVerificationStepStatus.Saved ? '/app/tutor-applications/' + userId + '/declaration' : null"
                   [step]="BecomeATutorStep.Declaration" [currentStep]="activeStep" [verificationStep]="getTutorWizardStep(BecomeATutorStep.Declaration)">
                 </li>
               </ul>

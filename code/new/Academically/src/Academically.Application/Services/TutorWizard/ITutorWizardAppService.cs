@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Academically.Domain.Enums;
@@ -17,5 +17,8 @@ namespace Academically.Services.TutorWizard
 
         Task<TutorVerificationStepDto> UpdateStep(BecomeATutorStep step);
         Task<TutorVerificationStepDto> GetPendingStep(long userId);
+
+        Task Approve(Guid id);
+        Task Decline(DeclineTutorVerificationStepDto input);
     }
 }

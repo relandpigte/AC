@@ -1,12 +1,14 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { BecomeATutorStep, PhoneVerificationsServiceProxy, ProfilesServiceProxy, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { BecomeATutorStep, PhoneVerificationsServiceProxy, ProfilesServiceProxy, TutorApplicationServiceProxy, TutorVerificationStepDto, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
 import { interval } from 'rxjs';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { finalize, takeUntil } from 'rxjs/operators';
+import { TutorWizardStepDeclinedComponent } from '../_components/tutor-wizard-step-declined/tutor-wizard-step-declined.component';
 import { BecomeATutorService } from '../_services/become-a-tutor.service';
 
 enum PhoneVerificationState {
@@ -38,10 +40,15 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
   isReadOnly = false;
 
   userPhoneNumber = '';
+  tutorVerificationStep: TutorVerificationStepDto;
+  isDeclining = false;
+  isApproving = false;
 
   constructor(
     injector: Injector,
     private _router: Router,
+    private _modalService: BsModalService,
+    private _tutorApplicationService: TutorApplicationServiceProxy,
     private _phoneVerificationsService: PhoneVerificationsServiceProxy,
     private _profilesService: ProfilesServiceProxy,
     private _tutorWizardService: TutorWizardServiceProxy,
@@ -57,6 +64,16 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
       this.isReadOnly = (this.userId !== this.appSession.userId);
       this.getUser();
     });
+    this._becomeATutorService.currentTutorWizardStep$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(step => {
+      this.tutorVerificationStep = step;
+      if (this.isReadOnly && this.tutorVerificationStep.step !== BecomeATutorStep.ContactNumber) {
+        this._tutorApplicationService.getStep(step.tutorVerificationId, BecomeATutorStep.ContactNumber).subscribe(result => {
+          this.tutorVerificationStep = result;
+        });
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -67,6 +84,20 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
 
   onNavigateNextScreen(): void {
     this._router.navigate([`app/tutor-applications/${this.userId}/references`]);
+  }
+
+  onStatusChange(event: any): void {
+    const isApproved = event.target.value === 'approved';
+    if (isApproved) {
+      this.isApproving = true;
+      this._tutorWizardService.approve(this.tutorVerificationStep.id)
+        .subscribe(() => {
+          this.getPendingStep();
+        });
+    } else {
+      event.preventDefault();
+      this.showDeclinedModal(this.tutorVerificationStep);
+    }
   }
 
   onBackClick(): void {
@@ -225,6 +256,34 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
         this.notify.success(this.l('SavedSuccessfully'));
         this._becomeATutorService.currentStep = nextStep;
         this._becomeATutorService.currentTutorWizardStep = result;
+      });
+  }
+
+  private getPendingStep(): void {
+    this._tutorWizardService.getPendingStep(this.userId)
+    .pipe(
+      takeUntil(this.destroyed$),
+      finalize(() => this.isApproving = false)
+    )
+    .subscribe(result => {
+      this._becomeATutorService.currentStep = result.step;
+      this._becomeATutorService.currentTutorWizardStep = result;
+      this.onNavigateNextScreen();
+    });
+  }
+
+  private showDeclinedModal(model: TutorVerificationStepDto): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<TutorWizardStepDeclinedComponent>;
+    modalSettings.initialState = {
+      model: model,
+    };
+    const modal = this._modalService.show(TutorWizardStepDeclinedComponent, modalSettings).content;
+    modal.modelSaved
+      .pipe(
+        takeUntil(this.destroyed$),
+      )
+      .subscribe(() => {
+        this.getPendingStep();
       });
   }
 }

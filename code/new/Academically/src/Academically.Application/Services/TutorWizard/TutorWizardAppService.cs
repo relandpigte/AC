@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Academically.Authorization;
+using Academically.Authorization.Roles;
+using Academically.Authorization.Users;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Services.TutorWizard.Dto;
@@ -17,14 +19,23 @@ namespace Academically.Services.TutorWizard
     {
         private readonly IRepository<TutorVerification, Guid> _tutorVerificationsRepository;
         private readonly IRepository<TutorVerificationStep, Guid> _tutorVerificationStepsRepository;
+        private readonly IRepository<TutorVerificationStepReviewer, Guid> _tutorVerificationStepReviewersRepository;
+        private readonly UserManager _userManager;
+        private readonly RoleManager _roleManager;
 
         public TutorWizardAppService(
             IRepository<TutorVerification, Guid> tutorVerificationsRepository,
-            IRepository<TutorVerificationStep, Guid> tutorVerificationStepsRepository
+            IRepository<TutorVerificationStep, Guid> tutorVerificationStepsRepository,
+            IRepository<TutorVerificationStepReviewer, Guid> tutorVerificationStepReviewersRepository,
+            UserManager userManager,
+            RoleManager roleManager
             )
         {
             _tutorVerificationsRepository = tutorVerificationsRepository;
             _tutorVerificationStepsRepository = tutorVerificationStepsRepository;
+            _tutorVerificationStepReviewersRepository = tutorVerificationStepReviewersRepository;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task<TutorVerificationStepDto> GetCurrentStep()
@@ -160,6 +171,79 @@ namespace Academically.Services.TutorWizard
 
             step.Status = status;
             await _tutorVerificationStepsRepository.UpdateAsync(step);
+        }
+
+        public async Task Approve(Guid id)
+        {
+
+            var step = await _tutorVerificationStepsRepository.GetAsync(id);
+
+            var reviewer = new TutorVerificationStepReviewer
+            {
+                OldStatus = step.Status,
+                NewStatus = TutorVerificationStepStatus.Approved,
+                Comments = string.Empty,
+                TutorVerificationStepId = step.Id,
+            };
+            await _tutorVerificationStepReviewersRepository.InsertAsync(reviewer);
+
+            step.Status = TutorVerificationStepStatus.Approved;
+            await _tutorVerificationStepsRepository.UpdateAsync(step);
+
+            await UpdateTutorVerificationStatus(step.TutorVerificationId);
+        }
+
+        public async Task Decline(DeclineTutorVerificationStepDto input)
+        {
+            var step = await _tutorVerificationStepsRepository.GetAsync(input.TutorVerificationStepId);
+
+            var reviewer = new TutorVerificationStepReviewer
+            {
+                OldStatus = step.Status,
+                NewStatus = TutorVerificationStepStatus.Declined,
+                Comments = input.Comments,
+                TutorVerificationStepId = step.Id,
+            };
+            await _tutorVerificationStepReviewersRepository.InsertAsync(reviewer);
+
+            step.Status = TutorVerificationStepStatus.Declined;
+            await _tutorVerificationStepsRepository.UpdateAsync(step);
+
+            await UpdateTutorVerificationStatus(step.TutorVerificationId);
+        }
+
+        private async Task UpdateTutorVerificationStatus(Guid id)
+        {
+            var verification = await _tutorVerificationsRepository.GetAll()
+                .Include(e => e.TutorVerificationSteps)
+                .Where(e => e.Id == id)
+                .FirstAsync();
+
+            var allChecked = verification.TutorVerificationSteps
+                   .Any(e => e.Status != TutorVerificationStepStatus.Saved && e.Status != TutorVerificationStepStatus.Incomplete);
+
+            if (allChecked)
+            {
+                var isNotApproved = verification.TutorVerificationSteps
+                    .Where(e => e.Step != BecomeATutorStep.CompleteApplication)
+                    .Any(e => e.Status != TutorVerificationStepStatus.Approved);
+
+                verification.Status = isNotApproved ? TutorVerificationStatus.Rejected : TutorVerificationStatus.Approved;
+                await _tutorVerificationsRepository.UpdateAsync(verification);
+
+                if (verification.Status == TutorVerificationStatus.Approved)
+                {
+                    await ChangeRoleToTutor(verification.CreatorUserId.Value);
+                }
+            }
+        }
+
+        private async Task ChangeRoleToTutor(long userId)
+        {
+            var user = await _userManager.GetUserByIdAsync(userId);
+
+            string[] role = { StaticRoleNames.Tenants.Tutor };
+            CheckErrors(await _userManager.SetRolesAsync(user, role));
         }
     }
 }

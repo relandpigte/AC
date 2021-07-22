@@ -1,0 +1,44 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="root (generated)" id="1626312544022-1">
+        <createTable tableName="academicallytutorverificationstepreviewers">
+            <column name="Id" type="CHAR(36)">././Z
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Comments" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OldStatus" type="TINYINT(3)">
+                <constraints nullable="false"/>
+            </column>
+             <column name="NewStatus" type="TINYINT(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TutorVerificationStepId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626312544022-2">
+        <createIndex indexName="FK_TutorVerificationSteps_Users_CreatorUserId_idx" tableName="academicallytutorverificationstepreviewers">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626312544022-4">
+        <createIndex indexName="FK_TutorVerificationSteps_TutorVerificationStepId_idx" tableName="academicallytutorverificationstepreviewers">
+            <column name="TutorVerificationStepId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626312544022-5">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallytutorverificationstepreviewers" constraintName="FK_TutorVerificationStepReviewers_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AbpUsers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1626312544022-7">
+        <addForeignKeyConstraint baseColumnNames="TutorVerificationStepId" baseTableName="academicallytutorverificationstepreviewers" constraintName="FK_TutorVerificationStepReviewers_TutorVerificationStepId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyTutorVerificationSteps" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

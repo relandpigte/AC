@@ -1,0 +1,38 @@
+<form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+    <div class="modal-card card">
+      <div class="card-header">
+        <h4 class="card-header-title">
+          {{ 'ReasonForDeclining' | localize }}
+        </h4>
+        <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="card-body" [loader]="isSaving">
+        <div class="tab-content row">
+
+          <div class="col-12 tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
+
+
+            <div class="form-group required">
+              <label class="col-form-label" for="reason">{{ 'Reason' | localize}}</label>
+              <textarea [rows]="4" [(ngModel)]="reason" #reasonModel="ngModel" #reasonEl class="form-control"
+                id="reason" name="reason" required>
+              </textarea>
+              <abp-validation-summary [control]="reasonModel" [controlEl]="reasonEl">
+              </abp-validation-summary>
+            </div>
+
+          </div>
+
+
+        </div>
+      </div>
+      <abp-modal-footer [isLoading]="isSaving"
+        [saveLabel]="'Save' | localize" [cancelDisabled]="isSaving"
+        [saveDisabled]="!form.form.valid || isSaving" (onCancelClick)="onCloseClick()">
+      </abp-modal-footer>
+
+
+    </div>
+  </form>
