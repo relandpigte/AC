@@ -81,5 +81,16 @@ namespace Academically.Services.TutorApplications
                 .Include(e => e.TutorVerificationSteps)
                 .FirstOrDefaultAsync(e => e.CreatorUserId == userId);
         }
+
+        public async Task<TutorVerificationStepDto> GetStepAsync(Guid verificationId, BecomeATutorStep step)
+        {
+            var currentStep = await _tutorVerificationsRepository.GetAll()
+                .Where(e => e.Id == verificationId)
+                .Include(e => e.TutorVerificationSteps)
+                .SelectMany(e => e.TutorVerificationSteps)
+                .FirstOrDefaultAsync(e => e.Step == step);
+
+            return ObjectMapper.Map<TutorVerificationStepDto>(currentStep);
+        }
     }
 }

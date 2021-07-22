@@ -3,7 +3,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { BecomeATutorService } from '@app/tutor-wizard/_services/become-a-tutor.service';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { BecomeATutorStep, TutorApplicationServiceProxy, TutorVerificationStepDto, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  BecomeATutorStep,
+  TutorApplicationServiceProxy,
+  TutorVerificationStepDto,
+  TutorVerificationStepStatus,
+  TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -15,6 +20,7 @@ import { takeUntil } from 'rxjs/operators';
 export class ViewTutorApplicationComponent extends AppComponentBase implements OnInit {
   BecomeATutorStep = BecomeATutorStep;
   activeStep: BecomeATutorStep;
+  TutorVerificationStepStatus = TutorVerificationStepStatus;
   currentStep: TutorVerificationStepDto = new TutorVerificationStepDto();
   steps: TutorVerificationStepDto[] = [];
   userId: number;
@@ -22,7 +28,6 @@ export class ViewTutorApplicationComponent extends AppComponentBase implements O
   constructor(
     injector: Injector,
     private _becomeATutorService: BecomeATutorService,
-    private _tutorWizardServiceProxy: TutorWizardServiceProxy,
     private _tutorApplicationService: TutorApplicationServiceProxy,
     private _router: Router,
     private _route: ActivatedRoute,
@@ -45,6 +50,7 @@ export class ViewTutorApplicationComponent extends AppComponentBase implements O
       )
       .subscribe(currentStep => {
         if (currentStep !== null && currentStep !== undefined) {
+          console.log('Loading all steps', currentStep);
           this.currentStep = currentStep;
           this.getAllSteps();
           this.navigateToStep();

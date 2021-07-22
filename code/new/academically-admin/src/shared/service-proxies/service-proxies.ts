@@ -6844,6 +6844,95 @@ export class TutorApplicationServiceProxy {
         }
         return _observableOf<TutorVerificationDto>(<any>null);
     }
+
+    /**
+     * @param verificationId (optional) 
+     * @param step (optional) 0 = AboutYou
+    
+    1 = Education
+    
+    2 = Research
+    
+    3 = Languages
+    
+    4 = ServicesOffered
+    
+    5 = ProfilePicture
+    
+    6 = PhotoId
+    
+    7 = Address
+    
+    8 = ContactNumber
+    
+    9 = References
+    
+    10 = DbsCheck
+    
+    11 = TermsOfUse
+    
+    12 = PrivacyPolicy
+    
+    13 = Declaration
+    
+    14 = CompleteApplication
+     * @return Success
+     */
+    getStep(verificationId: string | undefined, step: BecomeATutorStep | undefined): Observable<TutorVerificationStepDto> {
+        let url_ = this.baseUrl + "/api/services/app/TutorApplication/GetStep?";
+        if (verificationId === null)
+            throw new Error("The parameter 'verificationId' cannot be null.");
+        else if (verificationId !== undefined)
+            url_ += "verificationId=" + encodeURIComponent("" + verificationId) + "&";
+        if (step === null)
+            throw new Error("The parameter 'step' cannot be null.");
+        else if (step !== undefined)
+            url_ += "step=" + encodeURIComponent("" + step) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetStep(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetStep(<any>response_);
+                } catch (e) {
+                    return <Observable<TutorVerificationStepDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TutorVerificationStepDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetStep(response: HttpResponseBase): Observable<TutorVerificationStepDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TutorVerificationStepDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TutorVerificationStepDto>(<any>null);
+    }
 }
 
 @Injectable()
@@ -7213,6 +7302,110 @@ export class TutorWizardServiceProxy {
     }
 
     protected processUpdateAddress(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    approve(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/TutorWizard/Approve?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processApprove(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processApprove(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processApprove(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    decline(body: DeclineTutorVerificationStepDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/TutorWizard/Decline";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDecline(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDecline(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDecline(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -11460,6 +11653,53 @@ export interface IDbsCertificateDtoPagedResultDto {
     totalCount: number;
 }
 
+export class DeclineTutorVerificationStepDto implements IDeclineTutorVerificationStepDto {
+    comments: string | undefined;
+    tutorVerificationStepId: string;
+
+    constructor(data?: IDeclineTutorVerificationStepDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.comments = _data["comments"];
+            this.tutorVerificationStepId = _data["tutorVerificationStepId"];
+        }
+    }
+
+    static fromJS(data: any): DeclineTutorVerificationStepDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeclineTutorVerificationStepDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["comments"] = this.comments;
+        data["tutorVerificationStepId"] = this.tutorVerificationStepId;
+        return data; 
+    }
+
+    clone(): DeclineTutorVerificationStepDto {
+        const json = this.toJSON();
+        let result = new DeclineTutorVerificationStepDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDeclineTutorVerificationStepDto {
+    comments: string | undefined;
+    tutorVerificationStepId: string;
+}
+
 export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
     id: string;
     name: string | undefined;
@@ -15556,6 +15796,7 @@ export enum TutorVerificationStatus {
 }
 
 export class TutorVerificationStepDto implements ITutorVerificationStepDto {
+    id: string;
     step: BecomeATutorStep;
     status: TutorVerificationStepStatus;
     reviewTime: moment.Moment | undefined;
@@ -15573,6 +15814,7 @@ export class TutorVerificationStepDto implements ITutorVerificationStepDto {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.step = _data["step"];
             this.status = _data["status"];
             this.reviewTime = _data["reviewTime"] ? moment(_data["reviewTime"].toString()) : <any>undefined;
@@ -15590,6 +15832,7 @@ export class TutorVerificationStepDto implements ITutorVerificationStepDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["step"] = this.step;
         data["status"] = this.status;
         data["reviewTime"] = this.reviewTime ? this.reviewTime.toISOString() : <any>undefined;
@@ -15607,6 +15850,7 @@ export class TutorVerificationStepDto implements ITutorVerificationStepDto {
 }
 
 export interface ITutorVerificationStepDto {
+    id: string;
     step: BecomeATutorStep;
     status: TutorVerificationStepStatus;
     reviewTime: moment.Moment | undefined;

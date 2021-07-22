@@ -46,6 +46,28 @@
     <button (click)="onBackClick()" type="button" class="btn btn-white">
       {{ 'Back' | localize }}
     </button>
+
+    <div class="btn-group-toggle text-center d-flex">
+      <div *ngIf="permission.isGranted('Pages.TutorApplications.Approve')">
+        <input type="radio" class="btn-check" [disabled]="isApproving || isDeclining || isLoading"
+          name="approval" id="declined" autocomplete="off" value="declined" (click)="onStatusChange($event)">
+        <label class="btn btn-white mr-lg-2" for="declined">
+          <span *ngIf="isDeclining" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <i *ngIf="!isDeclining" class="fe fe-x-circle"></i>
+          {{ 'Declined' | localize }}
+        </label>
+      </div>
+      <div *ngIf="permission.isGranted('Pages.TutorApplications.Reject')">
+        <input type="radio" class="btn-check" [disabled]="isApproving || isDeclining || isLoading"
+          name="approval" id="approved" value="approved" autocomplete="off" (click)="onStatusChange($event)">
+        <label class="btn btn-white" for="approved">
+          <span *ngIf="isApproving" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <i *ngIf="!isApproving" class="fe fe-check-circle"></i>
+          {{ 'Approved' | localize }}
+        </label>
+      </div>
+    </div>
+
     <ng-container
       *ngIf="currentState === PhoneVerificationState.NotSent || currentState === PhoneVerificationState.EditSent; else verificationCodeSentTemplate">
       <button *ngIf="!isLoading || isSending" (click)="onSendClick()" type="submit" class="btn btn-primary"
@@ -69,6 +91,9 @@
           </span>
           {{ (!isLoading ? 'Resend' : 'Resending') | localize }}
         </button>
+
+
+
         <button *ngIf="!isReadOnly" (click)="onVerifyClick()" type="submit" class="btn btn-primary"
           [disabled]="!verificationCode && currentState !== PhoneVerificationState.Verified || isLoading">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

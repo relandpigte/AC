@@ -1,9 +1,11 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { AcceptanceLogDto, AcceptanceLogsServiceProxy, AcceptanceType, BecomeATutorStep, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { AcceptanceLogDto, AcceptanceLogsServiceProxy, AcceptanceType, BecomeATutorStep, TutorApplicationServiceProxy, TutorVerificationStepDto, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppSessionService } from '@shared/session/app-session.service';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
+import { TutorWizardStepDeclinedComponent } from '../_components/tutor-wizard-step-declined/tutor-wizard-step-declined.component';
 import { BecomeATutorService } from '../_services/become-a-tutor.service';
 
 @Component({
@@ -17,10 +19,15 @@ export class TermsOfUseComponent extends AppComponentBase implements OnInit {
   acceptanceDto = new AcceptanceLogDto();
   userId: number;
   isReadOnly: boolean;
+  tutorVerificationStep: TutorVerificationStepDto;
+  isDeclining = false;
+  isApproving = false;
 
   constructor(
     injector: Injector,
     private _router: Router,
+    private _modalService: BsModalService,
+    private _tutorApplicationService: TutorApplicationServiceProxy,
     private _becomeATutorService: BecomeATutorService,
     private _tutorWizardService: TutorWizardServiceProxy,
     private _acceptanceLogsService: AcceptanceLogsServiceProxy,
@@ -34,6 +41,17 @@ export class TermsOfUseComponent extends AppComponentBase implements OnInit {
       this.userId = userId ?? this._appSession.userId;
       this.isReadOnly = (this.userId !== this._appSession.userId);
       this.getAcceptanceLog();
+    });
+    this._becomeATutorService.currentTutorWizardStep$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(step => {
+      this.tutorVerificationStep = step;
+
+      if (this.isReadOnly && this.tutorVerificationStep.step !== BecomeATutorStep.TermsOfUse) {
+        this._tutorApplicationService.getStep(step.tutorVerificationId, BecomeATutorStep.TermsOfUse).subscribe(result => {
+          this.tutorVerificationStep = result;
+        });
+      }
     });
   }
 
@@ -72,6 +90,20 @@ export class TermsOfUseComponent extends AppComponentBase implements OnInit {
 
   onNavigateNextScreen(): void {
     this._router.navigate([`app/tutor-applications/${this.userId}/declaration`]);
+  }
+
+  onStatusChange(event: any): void {
+    const isApproved = event.target.value === 'approved';
+    if (isApproved) {
+      this.isApproving = true;
+      this._tutorWizardService.approve(this.tutorVerificationStep.id)
+        .subscribe(() => {
+          this.getPendingStep();
+        });
+    } else {
+      event.preventDefault();
+      this.showDeclinedModal(this.tutorVerificationStep);
+    }
   }
 
   onBackClick(): void {
@@ -127,5 +159,33 @@ export class TermsOfUseComponent extends AppComponentBase implements OnInit {
       this.acceptanceDto = result;
       this.isAccepted = result != null && result.id != null;
     });
+  }
+
+  private getPendingStep(): void {
+    this._tutorWizardService.getPendingStep(this.userId)
+    .pipe(
+      takeUntil(this.destroyed$),
+      finalize(() => this.isApproving = false)
+    )
+    .subscribe(result => {
+      this._becomeATutorService.currentStep = result.step;
+      this._becomeATutorService.currentTutorWizardStep = result;
+      this.onNavigateNextScreen();
+    });
+  }
+
+  private showDeclinedModal(model: TutorVerificationStepDto): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<TutorWizardStepDeclinedComponent>;
+    modalSettings.initialState = {
+      model: model,
+    };
+    const modal = this._modalService.show(TutorWizardStepDeclinedComponent, modalSettings).content;
+    modal.modelSaved
+      .pipe(
+        takeUntil(this.destroyed$),
+      )
+      .subscribe(() => {
+        this.getPendingStep();
+      });
   }
 }

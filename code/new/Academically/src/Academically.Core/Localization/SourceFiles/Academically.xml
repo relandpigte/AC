@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="ReasonForDeclining">Reason for declining</text>
     <text name="RescheduleBookingConfirmationMessage">Should the student accept the new time, would they’d like the current timeslot opened back up?</text>
     <text name="BookingCancelledTutorEmailSubject">Academically - Booking Cancelled for {0} Event</text>
     <text name="BookingCancelledTutorEmailMessage">

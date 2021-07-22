@@ -19,7 +19,7 @@ export class TutorWizardStepComponent implements OnInit {
       this.isDeclinedStep = wizardStep.status === TutorVerificationStepStatus.Declined;
       this.isCompletedStep = wizardStep.status === TutorVerificationStepStatus.Approved;
       this.isSavedStep = wizardStep.status === TutorVerificationStepStatus.Saved;
-      this.navigationLink = wizardStep.step >= this.step ? [this.link] : null;
+      this.navigationLink = wizardStep.step >= this.step && this.link ? [this.link] : null;
     }
   }
 
