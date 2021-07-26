@@ -4,7 +4,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { AppConsts } from '@shared/AppConsts';
 import { countries } from '@shared/constants/countries';
-import { LocationSuggestion, PaymentsServiceProxy, ProfilesServiceProxy, TimeZoneDto, TimeZonesServiceProxy, UserDto, UserLoginInfoDto } from '@shared/service-proxies/service-proxies';
+import {
+  LocationSuggestion,
+  PaymentsServiceProxy,
+  ProfilesServiceProxy,
+  TimeZoneDto,
+  TimeZonesServiceProxy,
+  UserDto,
+  UserLoginInfoDto,
+} from '@shared/service-proxies/service-proxies';
 import { environment } from 'environments/environment';
 import * as moment from 'moment';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
@@ -36,6 +44,9 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
   isOnboarding = true;
   isTutorProfile = false;
   isFullAddressRequired = false;
+  phoneNumber: ChangeData = {
+    countryCode: CountryISO.UnitedKingdom,
+  };
 
   constructor(
     injector: Injector,
@@ -77,15 +88,13 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
   }
 
   onFormSubmit(): void {
+    this.model.phoneNumber = JSON.stringify(this.phoneNumber);
     this.isLoading = true;
-    const tempPhoneNumber = (this.model.phoneNumber as ChangeData).internationalNumber
-    this.model.phoneNumber = tempPhoneNumber;
     this._profilesService.update(this.model)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
           this.isLoading = false;
-          this.model.phoneNumber = this.formatPhoneNumber(tempPhoneNumber);
           if (this.currentTimeZone !== this.model.timeZoneId) {
             this.currentTimeZone = this.model.timeZoneId;
             const timeZone = this.timeZones.find(e => e.id === this.model.timeZoneId);
@@ -135,12 +144,12 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
         this.model = user;
         this.currentTimeZone = this.model.timeZoneId;
         if (this.model.phoneNumber) {
-          this.model.phoneNumber = this.formatPhoneNumber(this.model.phoneNumber);
+          this.phoneNumber = JSON.parse(this.model.phoneNumber) as ChangeData;
         }
         if (this.model.dateOfBirth) {
           this.dateOfBirth = this.model.dateOfBirth.toDate();
         }
-      })
+      });
   }
 
   private getTimeZones(): void {

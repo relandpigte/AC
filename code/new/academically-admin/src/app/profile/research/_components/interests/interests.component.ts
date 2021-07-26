@@ -17,8 +17,9 @@ class PagedUserResearchInterestsRequestDto extends PagedAndSortedRequestDto {
   styleUrls: ['./interests.component.less']
 })
 export class InterestsComponent extends PagedListingComponentBase<UserResearchInterestDto> {
+  @Input() userId = this.appSession.userId;
+  @Input() isViewOnly = false;
   userResearchInterests: UserResearchInterestDto[];
-  @Input() userId: number;
 
   constructor(
     injector: Injector,
@@ -31,7 +32,7 @@ export class InterestsComponent extends PagedListingComponentBase<UserResearchIn
   }
 
   list(request: PagedUserResearchInterestsRequestDto, pageNumber: number, finishedCallback: Function): void {
-    request.userIdFilter = this.userId ?? this._appSession.userId;
+    request.userIdFilter = this.userId;
 
     this._userResearchInterestsService
       .getPaged(
@@ -69,7 +70,7 @@ export class InterestsComponent extends PagedListingComponentBase<UserResearchIn
               this.notify.success('SuccessfullyDeleted');
               this.pageNumber = 1;
               this.refresh();
-            })
+            });
         }
       }
     );

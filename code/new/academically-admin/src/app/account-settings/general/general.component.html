@@ -69,7 +69,7 @@
     <div class="form-group col-md-6 required">
       <label class="col-form-label" for="phoneNumber">{{ 'PhoneNumber' | localize}}</label>
       <div>
-        <ngx-intl-tel-input [(ngModel)]="model.phoneNumber" [enableAutoCountrySelect]="false" [searchCountryFlag]="true"
+        <ngx-intl-tel-input [(ngModel)]="phoneNumber" [enableAutoCountrySelect]="true" [searchCountryFlag]="true"
           [phoneValidation]="true" [enablePlaceholder]="true" [selectFirstCountry]="false"
           [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
           [selectedCountryISO]="CountryISO.UnitedKingdom" [maxLength]="15" [separateDialCode]="true"

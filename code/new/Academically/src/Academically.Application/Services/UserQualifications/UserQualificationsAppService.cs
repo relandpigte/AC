@@ -44,10 +44,10 @@ namespace Academically.Services.UserQualifications
             _fileManagerService = fileManagerService;
         }
 
-        public async Task<IEnumerable<UserQualificationDto>> GetAll()
+        public async Task<IEnumerable<UserQualificationDto>> GetAll(long userId)
         {
             var userQualifications = await _userQualificationsRepository.GetAll()
-                .Where(e => e.CreatorUserId == AbpSession.UserId.Value)
+                .Where(e => e.CreatorUserId == userId)
                 .Include(e => e.UserQualificationDocuments)
                     .ThenInclude(e => e.Document)
                 .Select(e => ObjectMapper.Map<UserQualificationDto>(e))

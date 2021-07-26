@@ -5,7 +5,7 @@
         <h4 class="card-header-title">{{ 'Methodologies' | localize}}</h4>
       </div>
       <div class="col-auto">
-        <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchMethodologies.Create')"
+        <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchMethodologies.Create') && !isViewOnly"
           (click)="onAddClick()" type="button" class="btn btn-sm btn-light">
           <i class="fe fe-edit-2"></i>
           {{ 'Add' | localize}}
@@ -35,7 +35,7 @@
             </div>
           </div>
         </td>
-        <td class="table-action align-middle">
+        <td *ngIf="!isViewOnly" class="table-action align-middle">
           <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchMethodologies.Update')"
             (click)="onEditClick(userResearchMethodology)" type="button"
             class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">

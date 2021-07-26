@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ChangeData, CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
 import { interval, Subscription } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 enum PhoneVerificationState {
   NotSent,
@@ -27,6 +27,7 @@ export class MobileVerificationComponent extends AppComponentBase implements OnI
   PhoneVerificationState = PhoneVerificationState;
   phoneNumber: ChangeData;
   verificationCode: string;
+  isGettingLastVerification = false;
   isLoading = false;
   defaultResendTimerValue = 60;
   resendTimer: number;
@@ -53,7 +54,7 @@ export class MobileVerificationComponent extends AppComponentBase implements OnI
 
   onSendClick(): void {
     this.isLoading = true;
-    this._phoneVerificationsService.create(this.phoneNumber.internationalNumber)
+    this._phoneVerificationsService.create(JSON.stringify(this.phoneNumber))
       .pipe(finalize(() => {
         this.isLoading = false;
       }))
@@ -82,7 +83,7 @@ export class MobileVerificationComponent extends AppComponentBase implements OnI
 
   onResendClick(): void {
     this.isLoading = true;
-    this._phoneVerificationsService.create(this.phoneNumber.internationalNumber)
+    this._phoneVerificationsService.create(JSON.stringify(this.phoneNumber.internationalNumber))
       .pipe(finalize(() => {
         this.currentState = PhoneVerificationState.Sent;
         this.isLoading = false;
@@ -115,12 +116,17 @@ export class MobileVerificationComponent extends AppComponentBase implements OnI
   }
 
   private getLatestUnverifiedVerification(): void {
+    this.isGettingLastVerification = true;
     this._phoneVerificationsService.getLastUnverified()
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isGettingLastVerification = false;
+        }),
+      )
       .subscribe(phoneVerification => {
         if (phoneVerification && phoneVerification.id) {
-          this.phoneNumber = {
-            internationalNumber: phoneVerification.recipient,
-          };
+          this.phoneNumber = JSON.parse(phoneVerification.recipient);
           this.currentState = PhoneVerificationState.Sent;
           const resendTimer = this.diffMomentDatesSeconds(
             phoneVerification.dateSent.add(this.defaultResendTimerValue, 'seconds'),

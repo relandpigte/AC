@@ -333,7 +333,7 @@ namespace Academically.Services.CalendarEvents
                 $"&event-id={calendarEvent.Id}";
             string confirmLink = viewDetailsLink + "&auto-accept=true";
 
-            string emailBody = await _emailTemplateHelper.GetTemplate("booking-request.html", new List<KeyValuePair<string, string>>
+            string tutorEmailBody = await _emailTemplateHelper.GetTemplate("booking-request.html", new List<KeyValuePair<string, string>>
                 {
                     new KeyValuePair<string, string>("eventName", calendarEvent.Title),
                     new KeyValuePair<string, string>("studentName", student.FullName),
@@ -348,7 +348,23 @@ namespace Academically.Services.CalendarEvents
                     new KeyValuePair<string, string>("confirmLink", confirmLink),
                     new KeyValuePair<string, string>("viewDetailsLink", viewDetailsLink),
                 });
-            await _emailService.SendAsync(tutor.Name, tutor.EmailAddress, L("BookingRequestEmailSubject"), emailBody);
+            await _emailService.SendAsync(tutor.Name, tutor.EmailAddress, L("BookingRequestEmailSubject"), tutorEmailBody);
+
+            string studentEmailBody = await _emailTemplateHelper.GetTemplate("booking-requested.html", new List<KeyValuePair<string, string>>
+                {
+                    new KeyValuePair<string, string>("tutorName", tutor.FullName),
+                    new KeyValuePair<string, string>("studentName", student.FullName),
+                    new KeyValuePair<string, string>("universityName", universityName),
+                    new KeyValuePair<string, string>("eventName", calendarEvent.Title),
+                    new KeyValuePair<string, string>("startDate", startTime.ToString("dd/MM/yyyy")),
+                    new KeyValuePair<string, string>("startTime", startTime.ToString("h:mm tt")),
+                    new KeyValuePair<string, string>("duration", durationText),
+                    new KeyValuePair<string, string>("timeZone", timeZone),
+                    new KeyValuePair<string, string>("year", Clock.Now.Year.ToString()),
+                    new KeyValuePair<string, string>("studentProfilePicture", studentProfilePicture),
+                    new KeyValuePair<string, string>("viewDetailsLink", viewDetailsLink),
+                });
+            await _emailService.SendAsync(student.Name, student.EmailAddress, L("BookingRequestEmailSubject"), studentEmailBody);
         }
 
         private async Task SendBookingConfirmedEmail(CalendarEvent calendarEvent, User attendee, User recipient, User student)

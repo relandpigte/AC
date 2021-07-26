@@ -1,14 +1,14 @@
 <form autocomplete="off" #verifyMobileNumberForm="ngForm">
   <div class="modal-card card">
     <abp-modal-header [title]="'PhoneNumberVerification' | localize" (onCloseClick)="onCloseClick()"></abp-modal-header>
-    <div class="card-body overflow-visible">
+    <div class="card-body overflow-visible" [loader]="isGettingLastVerification">
 
       <div class="form-group" [class.required]="currentState === PhoneVerificationState.NotSent">
         <label class="col-form-label" for="PhoneNumber">{{ 'PhoneNumber' | localize }}</label>
         <ng-container
           *ngIf="currentState === PhoneVerificationState.NotSent || currentState === PhoneVerificationState.EditSent; else verificationCodeSentPhoneTemplate">
           <ngx-intl-tel-input [(ngModel)]="phoneNumber" [disabled]="isVerificationCodeSent"
-            [enableAutoCountrySelect]="false" [searchCountryFlag]="true" [phoneValidation]="true"
+            [enableAutoCountrySelect]="true" [searchCountryFlag]="true" [phoneValidation]="true"
             [enablePlaceholder]="true" [selectFirstCountry]="false"
             [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
             [selectedCountryISO]="CountryISO.UnitedKingdom" [maxLength]="15" [separateDialCode]="true"

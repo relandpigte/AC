@@ -2,7 +2,8 @@
   <div class="card-header">
     <h4 class="card-header-title">{{ "LanguageSpoken" | localize }}</h4>
     <div class="col-auto row">
-      <button class="btn btn-sm btn-light" type="button" *ngIf="canCreate()" (click)="$event.preventDefault(); onEdit()">
+      <button class="btn btn-sm btn-light" type="button" *ngIf="canCreate && !isViewOnly"
+        (click)="$event.preventDefault(); onEdit()">
         <i class="fe fe-edit-2"></i>
       </button>
     </div>

@@ -1,4 +1,4 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 
 @Component({
@@ -7,14 +7,9 @@ import { AppComponentBase } from '@shared/app-component-base';
   styleUrls: ['./education.component.less']
 })
 export class EducationComponent extends AppComponentBase {
-
   constructor(
     injector: Injector,
   ) {
     super(injector);
   }
-
-  ngOnInit(): void {
-  }
-
 }

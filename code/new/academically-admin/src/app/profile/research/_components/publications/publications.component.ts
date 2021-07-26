@@ -18,9 +18,10 @@ class PagedUserPublicationsRequestDto extends PagedAndSortedRequestDto {
   styleUrls: ['./publications.component.less']
 })
 export class PublicationsComponent extends PagedListingComponentBase<UserResearchMethodologyDto> {
+  @Input() userId: number;
+  @Input() isViewOnly = false;
   userPublications: UserPublicationDto[];
   searchFilter: string;
-  @Input() userId: number;
 
   constructor(
     injector: Injector,

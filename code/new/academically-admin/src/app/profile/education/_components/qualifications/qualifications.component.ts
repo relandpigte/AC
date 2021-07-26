@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, Input } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { UserQualificationDto, UserQualificationsServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
@@ -6,6 +6,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { CreateEditQualificationComponent } from './create-edit-qualification/create-edit-qualification.component';
 import { ViewQualificationDocumentsComponent } from './view-qualification-documents/view-qualification-documents.component';
+import { ProfileService } from '@app/profile/_services/profile.service';
 
 @Component({
   selector: 'app-qualifications',
@@ -13,20 +14,31 @@ import { ViewQualificationDocumentsComponent } from './view-qualification-docume
   styleUrls: ['./qualifications.component.less']
 })
 export class QualificationsComponent extends AppComponentBase implements OnInit {
+  userId: number;
   userQualifications: UserQualificationDto[] = [];
-  isLoading = false;
   deleteLoaders: boolean[] = [];
+  isLoading = false;
+  isViewOnly = false;
 
   constructor(
     injector: Injector,
     private _modalService: BsModalService,
     private _userQualificationsService: UserQualificationsServiceProxy,
+    private _profileService: ProfileService,
   ) {
     super(injector);
   }
 
   ngOnInit(): void {
-    this.getQualifications();
+    this._profileService.isViewOnly$.subscribe(isViewOnly => {
+      this.isViewOnly = isViewOnly;
+    });
+    this._profileService.user$.subscribe(user => {
+      if (user && user.id) {
+        this.userId = user.id;
+        this.getQualifications();
+      }
+    });
   }
 
   onAddClick(): void {
@@ -81,7 +93,7 @@ export class QualificationsComponent extends AppComponentBase implements OnInit 
 
   private getQualifications(): void {
     this.isLoading = true;
-    this._userQualificationsService.getAll()
+    this._userQualificationsService.getAll(this.userId)
       .subscribe(userQualifications => {
         this.userQualifications = userQualifications;
         this.isLoading = false;

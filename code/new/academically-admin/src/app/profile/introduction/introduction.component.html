@@ -12,7 +12,7 @@
   </div>
   <div class="col-md-4">
     <app-summary></app-summary>
-    <app-spoken-languages></app-spoken-languages>
-    <app-verifications [isTutor]="isTutor"></app-verifications>
+    <app-spoken-languages [userId]="userId" [isViewOnly]="isViewOnly"></app-spoken-languages>
+    <app-verifications [userId]="userId" [isTutor]="isTutor" [isViewOnly]="isViewOnly"></app-verifications>
   </div>
 </div>

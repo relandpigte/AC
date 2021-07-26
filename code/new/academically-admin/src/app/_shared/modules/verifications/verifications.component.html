@@ -30,11 +30,19 @@
             </div>
             <h5 class="mb-0 text-normal">{{ 'Phone' | localize }}</h5>
           </div>
-          <div class="col-auto">
+          <div *ngIf="!isViewOnly" class="col-auto">
             <span *ngIf="verifcationStatus.isPhoneNumberConfirmed" class="text-success"><i
                 class="fe fe-check"></i></span>
             <a *ngIf="!verifcationStatus.isPhoneNumberConfirmed"
               (click)="$event.preventDefault(); onVerifyMobileNumberClick();" href="#">Verify</a>
+          </div>
+          <div *ngIf="isViewOnly" class="col-auto">
+            <span *ngIf="verifcationStatus.isPhoneNumberConfirmed" class="text-success">
+              <i class="fe fe-check"></i>
+            </span>
+            <span *ngIf="!verifcationStatus.isPhoneNumberConfirmed" class="text-muted">
+              <i class="fe fe-x"></i>
+            </span>
           </div>
         </div>
       </div>
@@ -48,7 +56,7 @@
             </div>
             <h5 class="mb-0 text-normal">{{ 'Passport' | localize }}</h5>
           </div>
-          <div class="col-auto d-flex align-items-center">
+          <div *ngIf="!isViewOnly" class="col-auto d-flex align-items-center">
             <span
               *ngIf="verifcationStatus.passportVerificationStatus === PassportVerificationStatus.PendingVerification"
               popover="{{ 'PendingVerification' | localize}}" container="body" placement="top"
@@ -61,6 +69,16 @@
             <a *ngIf="verifcationStatus.passportVerificationStatus === PassportVerificationStatus.None
               || verifcationStatus.passportVerificationStatus === PassportVerificationStatus.Declined"
               (click)="$event.preventDefault(); onVerifiyPassportClick();" href="#">Verify</a>
+          </div>
+          <div *ngIf="isViewOnly" class="col-auto">
+            <span *ngIf="verifcationStatus.passportVerificationStatus === PassportVerificationStatus.Accepted"
+              class="text-success">
+              <i class="fe fe-check"></i>
+            </span>
+            <span *ngIf="verifcationStatus.passportVerificationStatus !== PassportVerificationStatus.Accepted"
+              class="text-muted">
+              <i class="fe fe-x"></i>
+            </span>
           </div>
         </div>
       </div>

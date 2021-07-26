@@ -3,6 +3,6 @@
     <app-educations></app-educations>
   </div>
   <div *ngIf="permission.isGranted('Pages.Profile.Education.Qualifications')" class="col-12">
-    <app-qualifications></app-qualifications>
+    <app-qualifications [userId]></app-qualifications>
   </div>
 </div>

@@ -5,11 +5,11 @@
         <h4 class="card-header-title">Publications</h4>
       </div>
       <div class="col-auto">
-        <button (click)="onAddClick()" type="button" class="btn btn-sm btn-light bg-white mr-2">
+        <button type="button" class="btn btn-sm btn-light bg-white mr-2">
           <i class="fe fe-sliders"></i>
           {{ 'Filter' | localize}}
         </button>
-        <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchPublications.Create')"
+        <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchPublications.Create') && !isViewOnly"
           (click)="onAddClick()" type="button" class="btn btn-sm btn-light">
           <i class="fe fe-edit-2"></i>
           {{ 'Add' | localize}}
@@ -72,7 +72,7 @@
             </div>
           </div>
         </td>
-        <td class="table-action align-middle">
+        <td *ngIf="!isViewOnly" class="table-action align-middle">
           <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchPublications.Update')"
             (click)="onEditClick(userPublication)" type="button"
             class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">

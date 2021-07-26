@@ -41,6 +41,7 @@ namespace Academically.Services.Projects
         {
             input.SearchFilter = input.SearchFilter?.ToLower();
             var query = _projectsRepository.GetAll()
+                .Where(e => !e.CreatorUser.IsDeleted)
                 .WhereIf(input.UserIdFilter > 0, e => e.CreatorUserId == input.UserIdFilter)
                 .WhereIf(!input.SearchFilter.IsNullOrWhiteSpace(), e => e.Name.ToLower().Contains(input.SearchFilter)
                     || e.ServiceNameLevel1.Contains(input.SearchFilter)
