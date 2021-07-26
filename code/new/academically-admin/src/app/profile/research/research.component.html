@@ -1,14 +1,14 @@
 <app-interests #interests
     *ngIf="permission.isGranted('Pages.Profile.Research.ResearchInterests') || permission.isGranted('Pages.TutorApplications.Research')"
-    [userId]="userId">
+    [userId]="userId" [isViewOnly]="isViewOnly">
 </app-interests>
 
 <app-methodologies #methodologies
     *ngIf="permission.isGranted('Pages.Profile.Research.ResearchMethodologies') || permission.isGranted('Pages.TutorApplications.Research')"
-    [userId]="userId">
+    [userId]="userId" [isViewOnly]="isViewOnly">
 </app-methodologies>
 
 <app-publications #publications
     *ngIf="permission.isGranted('Pages.Profile.Research.ResearchPublications') || permission.isGranted('Pages.TutorApplications.Research')"
-    [userId]="userId">
+    [userId]="userId" [isViewOnly]="isViewOnly">
 </app-publications>

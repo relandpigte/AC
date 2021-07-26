@@ -12,19 +12,20 @@
         <ng-container
           *ngIf="currentState === PhoneVerificationState.NotSent || currentState === PhoneVerificationState.EditSent; else verificationCodeSentPhoneTemplate">
           <ngx-intl-tel-input [(ngModel)]="phoneNumber" [disabled]="isVerificationCodeSent"
-            [enableAutoCountrySelect]="false" [searchCountryFlag]="true" [phoneValidation]="true"
+            [enableAutoCountrySelect]="true" [searchCountryFlag]="true" [phoneValidation]="true"
             [enablePlaceholder]="true" [selectFirstCountry]="false"
             [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
             [selectedCountryISO]="CountryISO.UnitedKingdom" [maxLength]="15" [separateDialCode]="true"
-            [selectedCountryCode]="'+63'"
-            [numberFormat]="PhoneNumberFormat.International" id="PhoneNumber" name="PhoneNumber">
+            [selectedCountryCode]="'+63'" [numberFormat]="PhoneNumberFormat.International" id="PhoneNumber"
+            name="PhoneNumber">
           </ngx-intl-tel-input>
         </ng-container>
         <ng-template #verificationCodeSentPhoneTemplate>
           <div class="input-group input-group-merge">
-            <input class="form-control" [class.form-control-appended]="!isReadOnly" type="text" [value]="phoneNumber" readonly disabled />
+            <input class="form-control" [class.form-control-appended]="!isReadOnly" type="text"
+              [value]="phoneNumber.internationalNumber" readonly disabled />
             <div class="input-group-append">
-              <button (click)="onEditPhoneNumberClick()" class="btn btn-sm btn-light"  *ngIf="!isReadOnly">
+              <button (click)="onEditPhoneNumberClick()" class="btn btn-sm btn-light" *ngIf="!isReadOnly">
                 <i class="fe fe-edit mr-1"></i>Edit
               </button>
             </div>
@@ -49,8 +50,8 @@
 
     <div class="btn-group-toggle text-center d-flex">
       <div *ngIf="permission.isGranted('Pages.TutorApplications.Approve')">
-        <input type="radio" class="btn-check" [disabled]="isApproving || isDeclining || isLoading"
-          name="approval" id="declined" autocomplete="off" value="declined" (click)="onStatusChange($event)">
+        <input type="radio" class="btn-check" [disabled]="isApproving || isDeclining || isLoading" name="approval"
+          id="declined" autocomplete="off" value="declined" (click)="onStatusChange($event)">
         <label class="btn btn-white mr-lg-2" for="declined">
           <span *ngIf="isDeclining" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           <i *ngIf="!isDeclining" class="fe fe-x-circle"></i>
@@ -58,8 +59,8 @@
         </label>
       </div>
       <div *ngIf="permission.isGranted('Pages.TutorApplications.Reject')">
-        <input type="radio" class="btn-check" [disabled]="isApproving || isDeclining || isLoading"
-          name="approval" id="approved" value="approved" autocomplete="off" (click)="onStatusChange($event)">
+        <input type="radio" class="btn-check" [disabled]="isApproving || isDeclining || isLoading" name="approval"
+          id="approved" value="approved" autocomplete="off" (click)="onStatusChange($event)">
         <label class="btn btn-white" for="approved">
           <span *ngIf="isApproving" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           <i *ngIf="!isApproving" class="fe fe-check-circle"></i>

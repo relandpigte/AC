@@ -48,6 +48,9 @@ export class EducationsComponent extends AppComponentBase implements OnInit {
       }
       this.getUserEducations();
     });
+    this._profileService.isViewOnly$.subscribe(isViewOnly => {
+      this.isReadOnly = isViewOnly;
+    });
   }
 
   onAddClick(): void {

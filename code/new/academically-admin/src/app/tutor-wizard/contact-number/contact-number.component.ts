@@ -1,10 +1,17 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { BecomeATutorStep, PhoneVerificationsServiceProxy, ProfilesServiceProxy, TutorApplicationServiceProxy, TutorVerificationStepDto, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  BecomeATutorStep,
+  PhoneVerificationsServiceProxy,
+  ProfilesServiceProxy,
+  TutorApplicationServiceProxy,
+  TutorVerificationStepDto,
+  TutorWizardServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
+import { CountryISO, PhoneNumberFormat, SearchCountryField, ChangeData } from 'ngx-intl-tel-input';
 import { interval } from 'rxjs';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -23,12 +30,12 @@ enum PhoneVerificationState {
   templateUrl: './contact-number.component.html',
   styleUrls: ['./contact-number.component.less']
 })
-export class ContactNumberComponent extends AppComponentBase implements OnInit {
+export class ContactNumberComponent extends AppComponentBase implements OnInit, OnDestroy {
   CountryISO = CountryISO;
   SearchCountryField = SearchCountryField;
   PhoneNumberFormat = PhoneNumberFormat;
   PhoneVerificationState = PhoneVerificationState;
-  phoneNumber: any;
+  phoneNumber: ChangeData;
   verificationCode: string;
   isLoading = false;
   isSending = false;
@@ -67,13 +74,13 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
     this._becomeATutorService.currentTutorWizardStep$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(step => {
-      this.tutorVerificationStep = step;
-      if (this.isReadOnly && this.tutorVerificationStep.step !== BecomeATutorStep.ContactNumber) {
-        this._tutorApplicationService.getStep(step.tutorVerificationId, BecomeATutorStep.ContactNumber).subscribe(result => {
-          this.tutorVerificationStep = result;
-        });
-      }
-    });
+        this.tutorVerificationStep = step;
+        if (this.isReadOnly && this.tutorVerificationStep.step !== BecomeATutorStep.ContactNumber) {
+          this._tutorApplicationService.getStep(step.tutorVerificationId, BecomeATutorStep.ContactNumber).subscribe(result => {
+            this.tutorVerificationStep = result;
+          });
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -111,7 +118,7 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
   onSendClick(): void {
     this.isLoading = true;
     this.isSending = true;
-    this._phoneVerificationsService.create(this.phoneNumber.internationalNumber)
+    this._phoneVerificationsService.create(JSON.stringify(this.phoneNumber))
       .pipe(finalize(() => {
         this.isLoading = false;
         this.isSending = true;
@@ -122,7 +129,6 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
           this.initiateResendTimer();
         }
         this.currentState = PhoneVerificationState.Sent;
-        this.phoneNumber = this.formatPhoneNumber(this.phoneNumber.internationalNumber);
         this.notify.success(this.l('PhoneNumberVerificationSentMessage'));
       });
   }
@@ -133,7 +139,12 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
     } else {
       this.isLoading = true;
       this._phoneVerificationsService.verify(this.verificationCode)
-        .pipe(takeUntil(this.destroyed$))
+        .pipe(
+          takeUntil(this.destroyed$),
+          finalize(() => {
+            this.isLoading = false;
+          }),
+        )
         .subscribe(() => {
           this.currentState = PhoneVerificationState.Verified;
           this.updateStep();
@@ -143,8 +154,7 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
 
   onResendClick(): void {
     this.isLoading = true;
-    const phoneNumber = this.phoneNumber.internationalNumber ? this.phoneNumber.internationalNumber : this.phoneNumber;
-    this._phoneVerificationsService.create(phoneNumber)
+    this._phoneVerificationsService.create(JSON.stringify(this.phoneNumber))
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
@@ -195,7 +205,7 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
       )
       .subscribe(phoneVerification => {
         if (this.currentState !== PhoneVerificationState.Verified && phoneVerification && phoneVerification.id) {
-          this.phoneNumber = this.formatPhoneNumber(phoneVerification.recipient);
+          this.phoneNumber = JSON.parse(phoneVerification.recipient);
           this.currentState = PhoneVerificationState.Sent;
           const resendTimer = this.diffMomentDatesSeconds(
             phoneVerification.dateSent.add(this.defaultResendTimerValue, 'seconds'),
@@ -223,7 +233,7 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
           this.currentState = PhoneVerificationState.Verified;
           if (user.phoneNumber) {
             this.userPhoneNumber = user.phoneNumber;
-            this.phoneNumber = this.formatPhoneNumber(user.phoneNumber);
+            this.phoneNumber = JSON.parse(user.phoneNumber);
           }
         }
         this.getLatestUnverifiedVerification();
@@ -261,15 +271,15 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit {
 
   private getPendingStep(): void {
     this._tutorWizardService.getPendingStep(this.userId)
-    .pipe(
-      takeUntil(this.destroyed$),
-      finalize(() => this.isApproving = false)
-    )
-    .subscribe(result => {
-      this._becomeATutorService.currentStep = result.step;
-      this._becomeATutorService.currentTutorWizardStep = result;
-      this.onNavigateNextScreen();
-    });
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => this.isApproving = false)
+      )
+      .subscribe(result => {
+        this._becomeATutorService.currentStep = result.step;
+        this._becomeATutorService.currentTutorWizardStep = result;
+        this.onNavigateNextScreen();
+      });
   }
 
   private showDeclinedModal(model: TutorVerificationStepDto): void {

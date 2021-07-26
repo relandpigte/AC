@@ -35,8 +35,7 @@ export class ProfileResolver implements Resolve<UserDto> {
             if (!user.isPublic) {
               this._router.navigate(['/pages/403']);
             }
-          } else {
-            this._profileService.isViewOnly = false;
+            this._profileService.isViewOnly = true;
           }
           this._profileService.user = user;
         }),

@@ -8,7 +8,7 @@ namespace Academically.Services.UserQualifications
 {
     public interface IUserQualificationsAppService : IApplicationService
     {
-        Task<IEnumerable<UserQualificationDto>> GetAll();
+        Task<IEnumerable<UserQualificationDto>> GetAll(long userId);
         Task Create(CreateEditUserQualificationDto input);
         Task Update(Guid id, CreateEditUserQualificationDto input);
         Task Delete(Guid id);

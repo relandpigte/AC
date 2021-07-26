@@ -41,9 +41,11 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
           this.calendarRoute = `${this.calendarRoute}/${user.id}`;
         }
       });
-    route.data.subscribe(data => {
-      this.isViewOnly = data.isViewOnly;
-    });
+    this._profileService.isViewOnly$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(isViewOnly => {
+        this.isViewOnly = isViewOnly;
+      });
   }
 
   ngOnInit(): void {

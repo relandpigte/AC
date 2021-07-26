@@ -11,7 +11,9 @@ import { PassportVerificationComponent } from './passport-verification/passport-
   styleUrls: ['./verifications.component.less']
 })
 export class VerificationsComponent extends AppComponentBase implements OnInit {
+  @Input() userId = this.appSession.userId;
   @Input() isTutor: boolean;
+  @Input() isViewOnly = false;
   PassportVerificationStatus = PassportVerificationStatus;
   verifcationStatus: VerificationStatusDto = new VerificationStatusDto();
   isLoading = false;
@@ -50,10 +52,10 @@ export class VerificationsComponent extends AppComponentBase implements OnInit {
 
   private getVerificationStatus(): void {
     this.isLoading = true;
-    this._profilesService.getVerificationStatus(this.appSession.userId)
+    this._profilesService.getVerificationStatus(this.userId)
       .subscribe(verificationStatus => {
         this.verifcationStatus = verificationStatus;
         this.isLoading = false;
-      })
+      });
   }
 }

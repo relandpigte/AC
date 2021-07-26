@@ -145,6 +145,14 @@
                   "with": "src/environments/environment.hmr.ts"
                 }
               ]
+            },
+            "dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
             }
           }
         },
@@ -160,6 +168,9 @@
             },
             "hmr": {
               "browserTarget": "academically:build:hmr"
+            },
+            "dev": {
+              "browserTarget": "academically:build:dev"
             }
           }
         },

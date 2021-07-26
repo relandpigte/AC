@@ -8875,10 +8875,15 @@ export class UserQualificationsServiceProxy {
     }
 
     /**
+     * @param userId (optional) 
      * @return Success
      */
-    getAll(): Observable<UserQualificationDto[]> {
-        let url_ = this.baseUrl + "/api/services/app/UserQualifications/GetAll";
+    getAll(userId: number | undefined): Observable<UserQualificationDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/UserQualifications/GetAll?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

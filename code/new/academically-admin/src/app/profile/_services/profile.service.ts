@@ -16,7 +16,7 @@ export class ProfileService {
   constructor() {
     this._profileSubject = new BehaviorSubject<UserDto>(new UserDto());
     this.user$ = this._profileSubject.asObservable();
-    this._isViewOnlySubject = new BehaviorSubject<boolean>(true);
+    this._isViewOnlySubject = new BehaviorSubject<boolean>(false);
     this.isViewOnly$ = this._isViewOnlySubject.asObservable();
   }
 

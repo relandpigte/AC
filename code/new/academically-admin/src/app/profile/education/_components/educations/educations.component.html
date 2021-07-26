@@ -5,7 +5,7 @@
         <h4 class="card-header-title">{{ 'FormalEducation' | localize }}</h4>
       </div>
       <div class="col-auto">
-        <a *ngIf="permission.isGranted('Pages.Profile.Education.Create')"
+        <a *ngIf="permission.isGranted('Pages.Profile.Education.Create') && !isReadOnly"
           (click)="$event.preventDefault(); onAddClick()" href="#" class="btn btn-sm btn-light">
           <i class="fe fe-plus"></i>
           {{ 'Add' | localize }}
@@ -54,7 +54,7 @@
                   {{ userEducationCourse.grade }}
                 </p>
               </td>
-              <td width="1%" class="align-middle">
+              <td *ngIf="!isReadOnly" width="1%" class="align-middle">
                 <button (click)="onViewDocumentsClick(userEducation)" type="button"
                   class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
                   <span class="fe fe-folder"></span>

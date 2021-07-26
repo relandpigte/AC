@@ -4,7 +4,8 @@
       <div class="col">
         <h4 class="card-header-title">{{ 'OtherCourses' | localize}}</h4>
       </div>
-      <div *ngIf="permission.isGranted('Pages.Profile.Education.Qualifications.Create')" class="col-auto">
+      <div *ngIf="permission.isGranted('Pages.Profile.Education.Qualifications.Create') && !isViewOnly"
+        class="col-auto">
         <button (click)="onAddClick()" type="button" class="btn btn-sm btn-light">
           <i class="fe fe-plus"></i>
           {{ 'Add' | localize }}
@@ -43,7 +44,7 @@
             <td width="10%">
               {{ qualification.gradeAttained }}
             </td>
-            <td rowspan="2" width="1%" class="align-middle">
+            <td *ngIf="!isViewOnly" rowspan="2" width="1%" class="align-middle">
               <button [disabled]="deleteLoaders[qualification.id]" (click)="onViewDocumentsClick(qualification)"
                 type="button" class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
                 <span class="fe fe-folder"></span>

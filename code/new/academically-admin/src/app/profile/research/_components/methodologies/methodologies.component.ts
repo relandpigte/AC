@@ -17,8 +17,9 @@ class PagedUserResearchMethodologiesRequestDto extends PagedAndSortedRequestDto 
   styleUrls: ['./methodologies.component.less']
 })
 export class MethodologiesComponent extends PagedListingComponentBase<UserResearchMethodologyDto> {
-  userResearchMethodologies: UserResearchMethodologyDto[];
   @Input() userId: number;
+  @Input() isViewOnly = false;
+  userResearchMethodologies: UserResearchMethodologyDto[];
 
   constructor(
     injector: Injector,
@@ -69,7 +70,7 @@ export class MethodologiesComponent extends PagedListingComponentBase<UserResear
               this.notify.success('SuccessfullyDeleted');
               this.pageNumber = 1;
               this.refresh();
-            })
+            });
         }
       }
     );
