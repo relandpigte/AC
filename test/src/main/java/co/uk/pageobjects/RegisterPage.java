@@ -33,7 +33,7 @@ public class RegisterPage {
 	}
 	
 	public static void enterDateOfBirth(String dateOfBirth) {
-		textboxDateOfBirth.setTextAndEnter(dateOfBirth);
+		textboxDateOfBirth.setValueWithJavascript(dateOfBirth);
 		//Example: 09/12/2021
 	}
 	

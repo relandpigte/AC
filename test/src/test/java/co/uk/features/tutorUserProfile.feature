@@ -132,8 +132,8 @@ Feature: Tutor user profile settings
       | Country        | Institution                 | City      | Start year | End year |
       | United Kingdom | The University of Cambridge | Cambridge |       1995 |     2000 |
     And user add education level
-      | Course title                           | Academic Level | Grade |
-      | Level 7 (Masters degree or equivalent) | Masters        |     4 |
+      | Course title             | Academic Level | Qualification | Grade |
+      | Economics & Econometrics | Graduate       | BA            |     4 |
     And user saving education information
     Then sucessful message is displayed
 
@@ -410,8 +410,8 @@ Feature: Tutor user profile settings
     And user add publication
     Then "Add" publication modal is displayed
     When user enter publication information
-      | Title             | Publication Type | Publisher           | Date       | Tag  | Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-      | Silence the storm | Book             | Automated33XXX Test | 06/02/2013 | tag1 | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
+      | Title             | Publication Type | Publisher           | Date       | Keyword | Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+      | Silence the storm | Book             | Automated33XXX Test | 06/02/2013 | Storm   | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
     And user saving publication information
     Then adding publication "Silence the storm" is successful
 
@@ -439,8 +439,8 @@ Feature: Tutor user profile settings
     And user add publication
     Then "Add" publication modal is displayed
     When user enter publication information
-      | Title             | Publication Type | Publisher           | Date       | Tag  | Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-      | Silence the storm | Book             | Automated34XXX Test | 06/02/2013 | tag1 | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
+      | Title             | Publication Type | Publisher           | Date       | Keyword | Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+      | Silence the storm | Book             | Automated34XXX Test | 06/02/2013 | Storm   | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
     And user saving publication information
     Then adding publication "Silence the storm" is successful
     When user delete publication "Silence the storm"
@@ -448,7 +448,7 @@ Feature: Tutor user profile settings
     When the user confirms to remove a publication
     Then removing "Silence the storm" publication is successful
 
-  @UI @TestRails(C14575)
+  @UI @TestRails(C14575) 
   Scenario: C14575	Verify editing publication
     Given User is in academically login page
     When user login as "admin"
@@ -472,23 +472,23 @@ Feature: Tutor user profile settings
     And user add publication
     Then "Add" publication modal is displayed
     When user enter publication information
-      | Title             | Publication Type | Publisher       | Date       | Tag  | Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-      | Silence the storm | Book             | Rosalind Barker | 06/02/2013 | tag1 | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
+      | Title             | Publication Type | Publisher       | Date       | Keyword | Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+      | Silence the storm | Book             | Rosalind Barker | 06/02/2013 | Storm   | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
     And user saving publication information
     Then adding publication "Silence the storm" is successful
     When user edit publication "Silence the storm"
     Then "Edit" publication modal is displayed
     When user enter publication information
-      | Title         | Publication Type | Publisher           | Date       | Tag  | Abstarct |
-      | Strange tides | Chapter          | Automated35XXX Test | 03/01/2013 | tag2 | null     |
+      | Title         | Publication Type | Publisher           | Date       | Keyword | Abstarct |
+      | Strange tides | Chapter          | Automated35XXX Test | 03/01/2013 | null    | Test1    |
     And user saving publication information
     And user edit publication "Strange tides"
     Then "Edit" publication modal is displayed
     And verify publication informations are correct
-      | Title         | Publication Type | Publisher           | Date       | Tag  | Abstarct |
-      | Strange tides | Chapter          | Automated35XXX Test | 03/02/2013 | null | Test1    |
+      | Title         | Publication Type | Publisher           | Date       | Keyword | Abstarct |
+      | Strange tides | Chapter          | Automated35XXX Test | 03/01/2013 | null    | Test1    |
 
-  @UI @TestRails(C14567)
+  @UI @TestRails(C14567) 
   Scenario: C14567	Verify editing research methodology
     Given User is in academically login page
     When user login as "admin"
@@ -593,7 +593,7 @@ Feature: Tutor user profile settings
     Then user is in profile settings
     When user proceed to research tab
     And user add research methodology
-    Then "Add Research" Methodology modal is displayed
+    Then "Add" Methodology modal is displayed
     When user enter research methodology information
       | Title        | Research method | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
       | Quantitative | null            | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |

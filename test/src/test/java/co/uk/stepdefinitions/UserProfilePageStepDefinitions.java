@@ -65,18 +65,24 @@ public class UserProfilePageStepDefinitions {
 		List<Map<String, String>> data = educationLevelInformation.asMaps(String.class, String.class);
         String coursetitle = data.get(0).get("Course title");
         String academicLevel = data.get(0).get("Academic Level");
+        String qualification = data.get(0).get("Qualification");
         String grade = data.get(0).get("Grade");
         UserProfilePageEducation.AddEditEducationModal.clickAddCourse();
+        DriverHandler.delay(7);
         if(!coursetitle.equals("null")) {
-        	UserProfilePageEducation.AddEditEducationModal.CourseModal.selectCourseTitle(coursetitle);
+        	UserProfilePageEducation.AddEditEducationModal.CourseModal.EnterCourseTitle(coursetitle);
         }
         if(!academicLevel.equals("null")) {
-        	UserProfilePageEducation.AddEditEducationModal.CourseModal.enterAcademicLevel(academicLevel);
+        	UserProfilePageEducation.AddEditEducationModal.CourseModal.SelectAcademicLevel(academicLevel);
+        	DriverHandler.delay(3);
+        }
+        if(!qualification.equals("null")) {
+        	UserProfilePageEducation.AddEditEducationModal.CourseModal.selectQualification(qualification);
         }
         if(!grade.equals("null")) {
         	UserProfilePageEducation.AddEditEducationModal.CourseModal.enterGrade(grade);
         }
-        UserProfilePageEducation.AddEditEducationModal.CourseModal.clickAddCourse();
+        UserProfilePageEducation.AddEditEducationModal.CourseModal.clickAdd();
 	}
 	
 	@When("^user saving education information$")
@@ -327,7 +333,7 @@ public class UserProfilePageStepDefinitions {
         String publicationType = data.get(0).get("Publication Type");
         String publisher = data.get(0).get("Publisher");
         String date = data.get(0).get("Date");
-        String tag = data.get(0).get("Tag");
+        String keyword = data.get(0).get("Keyword");
         String abstarct = data.get(0).get("Abstarct");
         if(!title.equals("null")) {
         	UserProfilePageResearch.PublicationModal.enterTitle(title);
@@ -344,8 +350,8 @@ public class UserProfilePageStepDefinitions {
         if(!abstarct.equals("null")) {
         	UserProfilePageResearch.PublicationModal.enterAbstract(abstarct);
         }
-        if(!tag.equals("null")) {
-        	UserProfilePageResearch.PublicationModal.enterAndSelectTag(tag);
+        if(!keyword.equals("null")) {
+        	UserProfilePageResearch.PublicationModal.enterkeyword(keyword);
         }
 	}
 	
@@ -398,7 +404,7 @@ public class UserProfilePageStepDefinitions {
         String publicationType = data.get(0).get("Publication Type");
         String publisher = data.get(0).get("Publisher");
         String date = data.get(0).get("Date");
-        String tag = data.get(0).get("Tag");
+        String keyword = data.get(0).get("Keyword");
         String abstarct = data.get(0).get("Abstarct");
         DriverHandler.delay(3);
         if(!title.equals("null")) {
@@ -416,8 +422,8 @@ public class UserProfilePageStepDefinitions {
         if(!abstarct.equals("null")) {
         	UserProfilePageResearch.PublicationModal.verifyAbstractValueIsCorrect(abstarct);
         }
-        if(!tag.equals("null")) {
-        	UserProfilePageResearch.PublicationModal.verifyTagIsDisplayed(tag);
+        if(!keyword.equals("null")) {
+        	UserProfilePageResearch.PublicationModal.verifyTagIsDisplayed(keyword);
         }
 	}
 	

@@ -293,8 +293,8 @@ public class UserProfilePageResearch {
 		private static TextBox publisherTextBox = new TextBox("Publisher",By.xpath("//app-create-edit-publication//input[@id='Publisher']"));
 		private static TextBox publicationDate = new TextBox("Publication date",By.xpath("//app-create-edit-publication//input[@id='PublicationDate']"));
 		private static TextBox abstractTextBox = new TextBox("Abstract",By.xpath("//app-create-edit-publication//div[contains(@class,'ql-editor')]/p"));
-		private static TextBox tagTextBox = new TextBox("Tag",By.xpath("//app-create-edit-publication//input[@id='PublicationTags']"));
-		private static Element tagDropdown = new Element("Tag dropdown",By.xpath("//typeahead-container//span"));
+		private static TextBox keywordTextBox = new TextBox("Tag",By.xpath("//app-create-edit-publication//input[@id='PublicationTags']"));
+		//private static Element tagDropdown = new Element("Tag dropdown",By.xpath("//typeahead-container//span"));
 		private static Button save = new Button("Save",By.xpath("//app-create-edit-publication//button[@type='submit']"));
         private static Element tagAlert(String tagname) {
         	return new Element("Tag: "+tagname,By.xpath("//app-create-edit-publication//div[contains(@class,'ac-alerts')]//div[contains(text(),'"+tagname+"')]"));
@@ -350,15 +350,11 @@ public class UserProfilePageResearch {
 			abstractTextBox.setText(details);
 		}
 		
-		public static void enterAndSelectTag(String tag) {
-			tagTextBox.setText(tag);
-			DriverHandler.delay(4);
-			tagDropdown.click();
+		public static void enterkeyword(String Keyword) {
+			keywordTextBox.setTextAndEnter(Keyword);
+			
 		}
-		
-		public static void enterTag(String tag) {
-			tagTextBox.setText(tag);
-		}
+
 	}
 	
 	public static class confirmationModal{

@@ -6,7 +6,7 @@ import co.uk.webelements.Button;
 import co.uk.webelements.Element;
 import co.uk.webelements.TextBox;
 
-public class ServicesPage {
+public class StudentProjectCreationPage {
 
 	private static Element servicePage = new Element("Services page",By.xpath("//app-create-project//h1[contains(text(),'Create a New Project')]"));
 	private static Button requestSupport = new Button("Request",By.xpath("//app-create-project//a[contains(text(),'Request Support')]"));

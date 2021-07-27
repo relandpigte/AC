@@ -2,6 +2,7 @@ package co.uk.pageobjects;
 
 import org.openqa.selenium.By;
 
+import co.uk.core.DriverHandler;
 import co.uk.webelements.Button;
 import co.uk.webelements.Element;
 import co.uk.webelements.ListBox;
@@ -193,7 +194,7 @@ public class UserProfilePageEducation {
 		private static Element verifyEndYear(String year) {
 			return new Element("End year: "+year,By.xpath("//span[@id='select2-EndYear-container' and text()='"+year+"']"));
 		}
-		private static Button addCourseBtn = new Button("Add Course",By.xpath("//app-education-levels//a[contains(text(),'Add')]"));
+		private static Button addCourseBtn = new Button("Add Course",By.xpath("//app-courses//a[contains(text(),'Add')]"));
 		private static Tab evidenceTab = new Tab("Evidence tab",By.xpath("//a[@id='evidences-tab']"));
 		private static Button saveBtn = new Button("Save",By.xpath("//app-create-edit-education//button[@type='submit']"));
 		private static TextBox documentUploader = new TextBox("Upload evidence",By.xpath("//input[@id='DocumentUploader']"));
@@ -275,44 +276,48 @@ public class UserProfilePageEducation {
 			private static Element header(String header) {
 				return new Element(header+" Modal",By.xpath("//abp-modal-header//h4[contains(text(),'"+header+"')]"));
 			}
-			private static Element coursetitleDropdown = new Element("Course title dropdown",By.xpath("//span[@id='select2-EducationLevel-container']"));
-			private static Element selectCoursetitleDropdown(String title) {
-				return new Element(title,By.xpath("//ul[@id='select2-EducationLevel-results']//li[contains(text(),'"+title+"')]"));
+			private static TextBox coursetitleText = new TextBox("Course title dropdown",By.xpath("//input[@id='CourseTitle']"));
+			private static Element selectAcademicLevelDropdown(String title) {
+				return new Element(title,By.xpath("//ul[@id='select2-AcademicLevel-results']//li[contains(text(),'"+title+"')]"));
 			}
-			private static TextBox academicLevelTextBox = new TextBox("Academic level",By.xpath("//input[@id='Degree']"));
+			
+			private static Element academicLevelDropdown = new Element ("Academic level",By.xpath("//span[@id='select2-AcademicLevel-container']"));
+			private static Element qualificationDropdown = new Element("Qualification",By.xpath("//span[@id='select2-Qualification-container']"));
+			private static Element selectQualificationDropdown(String option) {
+				return new Element(option+" qualification",By.xpath("//ul[@id='select2-Qualification-results']/li[contains(text(),'"+option+"')]"));
+			}
+			
+			private static Button addBtn = new Button("Add",By.xpath("//app-create-edit-course//button[@type='submit']"));
+			
+			public static void clickAdd() {
+				addBtn.click();
+			}
+			
+			public static void selectQualification(String qualification) {
+				qualificationDropdown.click();
+				selectQualificationDropdown(qualification).click();
+			}
+			
 			private static TextBox gradeTextbox = new TextBox("Grade",By.xpath("//input[@id='Grade']"));
-			private static Button addBtn = new Button("Add",By.xpath("//app-create-edit-education-level//button[@type='submit']"));
-			private static Button editCourseBtn = new Button("Edit course",By.xpath("//app-education-levels//span[contains(@class,'edit')]//parent::button"));
-			private static Button removeCourseBtn = new Button("Remove course",By.xpath("//app-education-levels//span[contains(@class,'trash')]//parent::button"));
 			
 			public static void verifyHeader(String headerTitle) {
 				header(headerTitle).verifyDisplayed();
 			}
 			
-			public static void selectCourseTitle(String course) {
-				coursetitleDropdown.click();
-				selectCoursetitleDropdown(course).click();
+			public static void EnterCourseTitle(String course) {
+				coursetitleText.setText(course);
 			}
 			
-			public static void enterAcademicLevel(String academicLevel) {
-				academicLevelTextBox.setText(academicLevel);
+			public static void SelectAcademicLevel(String academicLevel) {
+				academicLevelDropdown.click();
+				DriverHandler.delay(1);
+				selectAcademicLevelDropdown(academicLevel).click();
 			}
 			
 			public static void enterGrade(String grade) {
 				gradeTextbox.setText(grade);
 			}
 			
-			public static void clickAddCourse() {
-				addBtn.click();
-			}
-			
-			public static void clickEditCourse() {
-				editCourseBtn.click();
-			}
-			
-			public static void clickRemoveCourse() {
-				removeCourseBtn.click();
-			}
 		}
 	}
 }

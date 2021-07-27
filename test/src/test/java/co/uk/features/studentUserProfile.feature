@@ -98,13 +98,13 @@ Feature: Student user profile settings
     When user add about information
     Then adding about user information is successful
 
-  @UI @TestRails(14505) @Email
+  @UI @TestRails(14505) @Email 
   Scenario: C14505 - Verify adding user education information by levels
     Given User is in academically login page
     When user register a student
     And user enter account details
       | Firstname     | Lastname | Email         | Date of Birth |
-      | Automated6XXX | Test     | automated6XXX | 04/02/1971    |
+      | Automated6XXX | Test     | automated6XXX | 02/04/1971  |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -122,8 +122,8 @@ Feature: Student user profile settings
       | Country        | Institution                 | City      | Start year | End year |
       | United Kingdom | The University of Cambridge | Cambridge |       1995 |     2000 |
     And user add education level
-      | Course title                           | Academic Level | Grade |
-      | Level 7 (Masters degree or equivalent) | Masters        |     4 |
+      | Course title             | Academic Level | Qualification | Grade |
+      | Economics & Econometrics | Graduate       | BA            |     4 |
     And user saving education information
     Then sucessful message is displayed
 
@@ -133,7 +133,7 @@ Feature: Student user profile settings
     When user register a student
     And user enter account details
       | Firstname     | Lastname | Email         | Date of Birth |
-      | Automated7XXX | Test     | automated7XXX | 04/02/1971    |
+      | Automated7XXX | Test     | automated7XXX | 02/04/1971  |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -158,7 +158,7 @@ Feature: Student user profile settings
     When user register a student
     And user enter account details
       | Firstname     | Lastname | Email         | Date of Birth |
-      | Automated8XXX | Test     | automated8XXX | 04/02/1971    |
+      | Automated8XXX | Test     | automated8XXX | 02/04/1971  |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -187,7 +187,7 @@ Feature: Student user profile settings
     When user register a student
     And user enter account details
       | Firstname     | Lastname | Email         | Date of Birth |
-      | Automated9XXX | Test     | automated9XXX | 04/02/1971    |
+      | Automated9XXX | Test     | automated9XXX | 02/04/1971  |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -215,7 +215,7 @@ Feature: Student user profile settings
     When user register a student
     And user enter account details
       | Firstname     | Lastname | Email          | Date of Birth |
-      | Automated5XXX | Test     | automated10XXX | 04/02/1971    |
+      | Automated5XXX | Test     | automated10XXX | 02/04/1971  |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -246,7 +246,7 @@ Feature: Student user profile settings
     When user register a student
     And user enter account details
       | Firstname      | Lastname | Email          | Date of Birth |
-      | Automated11XXX | Test     | automated11XXX | 04/02/1971    |
+      | Automated11XXX | Test     | automated11XXX | 02/04/1971  |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -274,7 +274,7 @@ Feature: Student user profile settings
     When user register a student
     And user enter account details
       | Firstname      | Lastname | Email          | Date of Birth |
-      | Automated12XXX | Test     | automated12XXX | 04/02/1971    |
+      | Automated12XXX | Test     | automated12XXX | 02/04/1971  |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -306,7 +306,7 @@ Feature: Student user profile settings
     When user register a student
     And user enter account details
       | Firstname      | Lastname | Email          | Date of Birth |
-      | Automated13XXX | Test     | automated13XXX | 04/02/1971    |
+      | Automated13XXX | Test     | automated13XXX | 02/04/1971  |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -334,7 +334,7 @@ Feature: Student user profile settings
     When user register a student
     And user enter account details
       | Firstname      | Lastname | Email          | Date of Birth |
-      | Automated14XXX | Test     | automated14XXX | 04/02/1971    |
+      | Automated14XXX | Test     | automated14XXX | 02/04/1971  |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -366,7 +366,7 @@ Feature: Student user profile settings
     When user register a student
     And user enter account details
       | Firstname      | Lastname | Email          | Date of Birth |
-      | Automated15XXX | Test     | automated15XXX | 04/02/1971    |
+      | Automated15XXX | Test     | automated15XXX | 15/07/1971    |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -382,18 +382,18 @@ Feature: Student user profile settings
     And user add publication
     Then "Add" publication modal is displayed
     When user enter publication information
-      | Title             | Publication Type | Publisher       | Date       | Tag  | Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-      | Silence the storm | Book             | Rosalind Barker | 06/02/2013 | tag1 | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
+      | Title             | Publication Type | Publisher       | Date       | Keyword  | Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+      | Silence the storm | Book             | Rosalind Barker | 06/02/2013 | ss | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
     And user saving publication information
     Then adding publication "Silence the storm" is successful
 
-  @UI @TestRails(14515) @Email
+  @UI @TestRails(14515) @Email 
   Scenario: C14515	Verify removing publication
     Given User is in academically login page
     When user register a student
     And user enter account details
       | Firstname      | Lastname | Email          | Date of Birth |
-      | Automated16XXX | Test     | automated16XXX | 04/02/1971    |
+      | Automated16XXX | Test     | automated16XXX | 02/04/1971  |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -409,8 +409,8 @@ Feature: Student user profile settings
     And user add publication
     Then "Add" publication modal is displayed
     When user enter publication information
-      | Title             | Publication Type | Publisher       | Date       | Tag  | Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-      | Silence the storm | Book             | Rosalind Barker | 06/02/2013 | tag1 | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
+      | Title             | Publication Type | Publisher       | Date       | Keyword  | Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+      | Silence the storm | Book             | Rosalind Barker | 06/02/2013 | strom | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
     And user saving publication information
     Then adding publication "Silence the storm" is successful
     When user delete publication "Silence the storm"
@@ -418,13 +418,13 @@ Feature: Student user profile settings
     When the user confirms to remove a publication
     Then removing "Silence the storm" publication is successful
 
-  @UI @TestRails(14516) @Email
+  @UI @TestRails(14516) @Email 
   Scenario: C14516	Verify editing publication
     Given User is in academically login page
     When user register a student
     And user enter account details
       | Firstname      | Lastname | Email          | Date of Birth |
-      | Automated17XXX | Test     | automated17XXX | 04/02/1971    |
+      | Automated17XXX | Test     | automated17XXX | 02/04/1971  |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -440,29 +440,29 @@ Feature: Student user profile settings
     And user add publication
     Then "Add" publication modal is displayed
     When user enter publication information
-      | Title             | Publication Type | Publisher       | Date       | Tag  | Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-      | Silence the storm | Book             | Rosalind Barker | 06/02/2013 | tag1 | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
+      | Title             | Publication Type | Publisher       | Date       | Keyword  | Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+      | Silence the storm | Book             | Rosalind Barker | 06/02/2013 | silence | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
     And user saving publication information
     Then adding publication "Silence the storm" is successful
     When user edit publication "Silence the storm"
     Then "Edit" publication modal is displayed
     When user enter publication information
-      | Title         | Publication Type | Publisher           | Date       | Tag  | Abstarct |
+      | Title         | Publication Type | Publisher           | Date       | Keyword  | Abstarct |
       | Strange tides | Chapter          | Automated17XXX Test | 03/02/2013 | null | Test1    |
     And user saving publication information
     And user edit publication "Strange tides"
     Then "Edit" publication modal is displayed
     And verify publication informations are correct
-      | Title         | Publication Type | Publisher           | Date       | Tag  | Abstarct |
+      | Title         | Publication Type | Publisher           | Date       | Keyword  | Abstarct |
       | Strange tides | Chapter          | Automated17XXX Test | 03/02/2013 | null | Test1    |
 
-  @UI @TestRails(14517) @Email
+  @UI @TestRails(14517) @Email 
   Scenario: C14517	Verify editing research methodology
     Given User is in academically login page
     When user register a student
     And user enter account details
       | Firstname      | Lastname | Email          | Date of Birth |
-      | Automated18XXX | Test     | automated18XXX | 04/02/1971    |
+      | Automated18XXX | Test     | automated18XXX | 02/04/1971  |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -476,7 +476,7 @@ Feature: Student user profile settings
     Then user is in profile settings
     When user proceed to research tab
     And user add research methodology
-    Then "Add Research" Methodology modal is displayed
+    Then "Add" Methodology modal is displayed
     When user enter research methodology information
       | Title        | Research method          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
       | Quantitative | Methodological Pluralism | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
@@ -484,26 +484,26 @@ Feature: Student user profile settings
     Then sucessful message is displayed
     And adding methodology "Quantitative" is successful
     When user edit "Quantitative" research methodology
-    Then "Edit Research" Methodology modal is displayed
+    Then "Edit" Methodology modal is displayed
     When user enter research methodology information
       | Title       | Research method                  | Description |
       | Qualitative | Data Quality and Data Management | Test        |
     And user saving research methodology information
     Then sucessful message is displayed
     When user edit "Qualitative" research methodology
-    Then "Edit Research" Methodology modal is displayed
+    Then "Edit" Methodology modal is displayed
     And verify research methodology informations are correct
       | Title       | Research method                  | Description |
       | Qualitative | Data Quality and Data Management | Test        |
       |             | Methodological Pluralism         |             |
 
-  @UI @TestRails(14518) @Email
+  @UI @TestRails(14518) @Email 
   Scenario: C14518	Verify editing research interest
     Given User is in academically login page
     When user register a student
     And user enter account details
       | Firstname      | Lastname | Email          | Date of Birth |
-      | Automated19XXX | Test     | automated19XXX | 04/02/1971    |
+      | Automated19XXX | Test     | automated19XXX | 02/04/1971  |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -519,20 +519,20 @@ Feature: Student user profile settings
     And user add research interest
     Then "Add Research" interest modal is displayed
     When user enter research interest information
-      | Title                                       | Knowledge Base            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+      | Title                                       | Research fields            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
       | Computer Science and Information Technology | Computational Engineering | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
     And user saving research interest information
     Then sucessful message is displayed
     And adding research interest "Computer Science and Information Technology" is successful
     When user edit research interest "Computer Science and Information Technology"
     And user enter research interest information
-      | Title                | Knowledge Base | Description |
+      | Title                | Research fields | Description |
       | Computer programming | null           | Test1       |
     And user saving research interest information
     Then sucessful message is displayed
     When user edit research interest "Computer programming"
     Then verify research interest informations are correct
-      | Title                | Knowledge Base            | Description |
+      | Title                | Research fields            | Description |
       | Computer programming | Computational Engineering | Test1       |
 
   @UI @TestRails(14519) @Email
@@ -541,7 +541,7 @@ Feature: Student user profile settings
     When user register a student
     And user enter account details
       | Firstname      | Lastname | Email          | Date of Birth |
-      | Automated63XXX | Test     | automated63XXX | 04/02/1971    |
+      | Automated63XXX | Test     | automated63XXX | 02/04/1971  |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -565,13 +565,13 @@ Feature: Student user profile settings
   @??
   Scenario: C14705 - Verify editing user education information
 
-  @UI @TestRails(14706)  @Email
+  @UI @TestRails(14706) @Email
   Scenario: C14706 - Verify removing spoken languages
     Given User is in academically login page
     When user register a student
     And user enter account details
       | Firstname      | Lastname | Email          | Date of Birth |
-      | Automated65XXX | Test     | automated65XXX | 04/02/1971    |
+      | Automated65XXX | Test     | automated65XXX | 02/04/1971  |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -596,13 +596,13 @@ Feature: Student user profile settings
     And user saving spoken language information
     Then removing "Basic" "Czech" language is successful
 
-  @UI @TestRails(14707)  @Email
+  @UI @TestRails(14707) @Email
   Scenario: C14707 - Verify editing spoken languages
     Given User is in academically login page
     When user register a student
     And user enter account details
       | Firstname      | Lastname | Email          | Date of Birth |
-      | Automated64XXX | Test     | automated64XXX | 04/02/1971    |
+      | Automated64XXX | Test     | automated64XXX | 02/04/1971  |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
