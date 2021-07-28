@@ -6,6 +6,7 @@ import { RegistrationDto, RegistrationsServiceProxy } from '@shared/service-prox
 import { accountModuleAnimation } from '@shared/animations/routerTransition';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import * as moment from 'moment';
+import { AbpValidationError } from '@shared/components/validation/abp-validation.api';
 
 @Component({
   templateUrl: './register.component.html',
@@ -17,6 +18,12 @@ export class RegisterComponent extends AppComponentBase {
   isTAndCAccepted = false;
   dateOfBirth: Date;
   datePickerConfig: BsDatepickerConfig;
+  emailCustomValidationErrors: Partial<AbpValidationError>[] = [
+    {
+      name: 'emailTaken',
+      localizationKey: 'EmailTakenValidationError',
+    },
+  ];
 
   constructor(
     injector: Injector,

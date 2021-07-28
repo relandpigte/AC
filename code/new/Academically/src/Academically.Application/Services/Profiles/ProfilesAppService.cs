@@ -4,6 +4,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Timing;
+using Abp.UI;
 using Academically.Authorization;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
@@ -191,10 +192,20 @@ namespace Academically.Services.Profiles
         public async Task Update(UserDto input)
         {
             var userId = AbpSession.UserId.Value;
+            var existingUser = await _usersRepository.GetAll()
+                .Where(e => e.Id != AbpSession.UserId.Value && (e.UserName == input.EmailAddress || e.EmailAddress == input.EmailAddress))
+                .FirstOrDefaultAsync();
+
+            if (existingUser != null)
+            {
+                throw new UserFriendlyException(L("UserExistsErrorTitle"), L("UserExistsErrorMessage"));
+            }
+
             var user = await _usersRepository.GetAsync(userId);
             ObjectMapper.Map(input, user);
 
             user.ProfilePictureDocument = null;
+            user.UserName = user.EmailAddress;
             await _usersRepository.InsertOrUpdateAsync(user);
 
             if (!input.TimeZoneId.IsNullOrWhiteSpace())

@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="EmailTakenValidationError">This email address is already in use.</text>
+    <text name="UserExistsErrorMessage">
+        The email you are trying to use is already associated with a registered user. Please use a different email address and try again.
+    </text>
+    <text name="UserExistsErrorTitle">Invalid email address</text>
+    <text name="CalendarEventConflictDomainErrorMessage">
+        {0} is not available from {1} to {2}. A conflict on the user's schedule was detected for {3} event with the schedule of {4} to {5}. Please update the time of your booking and try again.
+    </text>
+    <text name="CalendarEventConflictDomainErrorTitle">Booking failed</text>
     <text name="ReasonForDeclining">Reason for declining</text>
     <text name="RescheduleBookingConfirmationMessage">Should the student accept the new time, would they’d like the current timeslot opened back up?</text>
     <text name="BookingCancelledTutorEmailSubject">Academically - Booking Cancelled for {0} Event</text>
@@ -219,7 +228,7 @@
     <text name="ServiceSubjectSuggestionEmailSubject">Academically - Service Subject Suggestion Reviewed</text>
     <text name="SuggestSubjectInfoMessage">If your desired subject is not available, you can suggest a new subject by clicking the Suggest button.</text>
     <text name="Suggest">Suggest</text>
-    <text name="SuggestASubject">Subject a subject</text>
+    <text name="SuggestASubject">Suggest a subject</text>
     <text name="SubjectSuggestionSubmittedMessage">The subject suggestion was submitted. It will now undergo our verification process. We will notify you by email once your suggestion was accepted or rejected.</text>
     <text name="SubjectSuggestionRejectedMessage">The suggested subject was rejected.</text>
     <text name="SubjectSuggestionApprovedMessage">The suggested subject was approved and will be visible to all users.</text>

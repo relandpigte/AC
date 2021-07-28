@@ -25,14 +25,15 @@
           <div class="input-group input-group-merge">
             <input type="email" class="form-control form-control-appended" id="EmailAddress" name="EmailAddress"
               required maxlength="256" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$"
-              [(ngModel)]="model.emailAddress" #emailAddressModel="ngModel" #emailAddressEl />
+              [(ngModel)]="model.emailAddress" #emailAddressModel="ngModel" #emailAddressEl uniqueEmail />
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>
               </div>
             </div>
           </div>
-          <abp-validation-summary [control]="emailAddressModel" [controlEl]="emailAddressEl"></abp-validation-summary>
+          <abp-validation-summary [control]="emailAddressModel" [controlEl]="emailAddressEl"
+            [customValidationErrors]="emailCustomValidationErrors"></abp-validation-summary>
         </div>
 
         <div class="form-group required">
