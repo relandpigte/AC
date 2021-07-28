@@ -9,5 +9,6 @@
         public const string PasswordRegexValidator = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[" + PasswordSpecialChars + @"])[A-Za-z\d" + PasswordSpecialChars + "]{8,32}$";
         public const string DefaultSmsSender = "Academ";
         public const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+        public const string DisplayDateTimeFormat = "dd/MM/yyyy h:mm tt";
     }
 }

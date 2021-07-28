@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1627434479120-1">
+        <sql>
+            DELETE FROM AcademicallyCalendarEvents;
+        </sql>
+    </changeSet>
+    <changeSet author="root (generated)" id="1627434479120-2">
+        <createTable tableName="AcademicallyUserCalendarEvents">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UserId" type="BIGINT"/>
+            <column name="CalendarEventId" type="CHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1627434479120-3">
+        <createIndex indexName="FK_UCEs_CalendarEvents_CalendarEventId_idx" tableName="AcademicallyUserCalendarEvents">
+            <column name="CalendarEventId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1627434479120-4">
+        <createIndex indexName="FK_UCEs_Users_UserId_idx" tableName="AcademicallyUserCalendarEvents">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1627434479120-5">
+        <addForeignKeyConstraint baseColumnNames="CalendarEventId" baseTableName="AcademicallyUserCalendarEvents" constraintName="FK_UCEs_CalendarEvents_CalendarEventId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallycalendarevents" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1627434479120-6">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="AcademicallyUserCalendarEvents" constraintName="FK_UCEs_Users_UserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

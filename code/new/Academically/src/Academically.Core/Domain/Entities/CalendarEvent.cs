@@ -13,6 +13,7 @@ namespace Academically.Domain.Entities
         public CalendarEvent()
         {
             RescheduleComments = new HashSet<RescheduleComment>();
+            UserCalendarEvents = new HashSet<UserCalendarEvent>();
         }
 
         public string Title { get; set; }
@@ -33,5 +34,6 @@ namespace Academically.Domain.Entities
         public virtual ProjectOffer ProjectOffer { get; set; }
 
         public virtual ICollection<RescheduleComment> RescheduleComments { get; set; }
+        public virtual ICollection<UserCalendarEvent> UserCalendarEvents { get; set; }
     }
 }

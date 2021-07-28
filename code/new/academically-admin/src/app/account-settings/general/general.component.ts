@@ -21,6 +21,7 @@ import { ChangeData, CountryISO, PhoneNumberFormat, SearchCountryField } from 'n
 import { Observer } from 'rxjs';
 import { Observable } from 'rxjs';
 import { finalize, switchMap, takeUntil } from 'rxjs/operators';
+import { AbpValidationError } from '@shared/components/validation/abp-validation.api';
 
 @Component({
   selector: 'app-general',
@@ -47,6 +48,12 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
   phoneNumber: ChangeData = {
     countryCode: CountryISO.UnitedKingdom,
   };
+  emailCustomValidationErrors: Partial<AbpValidationError>[] = [
+    {
+      name: 'emailTaken',
+      localizationKey: 'EmailTakenValidationError',
+    },
+  ];
 
   constructor(
     injector: Injector,
@@ -90,6 +97,9 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
   onFormSubmit(): void {
     this.model.phoneNumber = JSON.stringify(this.phoneNumber);
     this.isLoading = true;
+    if (this.dateOfBirth) {
+      this.model.dateOfBirth = moment(this.convertDateToMoment(this.dateOfBirth).format('YYYY-MM-DD'));
+    }
     this._profilesService.update(this.model)
       .pipe(
         takeUntil(this.destroyed$),

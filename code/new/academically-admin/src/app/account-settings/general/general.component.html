@@ -91,13 +91,16 @@
 
   <div class="form-group required">
     <label class="col-form-label" for="emailAddress">{{ 'EmailAddress' | localize}}</label>
-    <input [(ngModel)]="model.emailAddress" #emailAddressModel="ngModel" #emailAddressEl class="form-control"
-      type="email" id="emailAddress" name="emailAddress" required />
-    <abp-validation-summary [control]="emailAddressModel" [controlEl]="emailAddressEl">
+    <div class="position-relative">
+      <input [(ngModel)]="model.emailAddress" #emailAddressModel="ngModel" #emailAddressEl class="form-control"
+        type="email" id="emailAddress" name="emailAddress" required uniqueEmail />
+    </div>
+    <abp-validation-summary [control]="emailAddressModel" [controlEl]="emailAddressEl"
+      [customValidationErrors]="emailCustomValidationErrors">
     </abp-validation-summary>
   </div>
 
-  <div class="form-group required">
+  <div class=" form-group required">
     <label class="col-form-label" for="TimeZone">{{ 'TimeZone' | localize }}</label>
     <div class="form-select-wrapper" [class.is-invalid]="!timeZoneModel.valid && timeZoneModel.touched">
       <select [(ngModel)]="model.timeZoneId" id="TimeZone" name="TimeZone" type="text" class="form-control"
