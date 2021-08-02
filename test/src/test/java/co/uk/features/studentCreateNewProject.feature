@@ -143,7 +143,7 @@ Feature: Create new project
    	And user proceed to project "Test Project XXX"
    	Then user is in proposal screen
    	
-   	@??
+   	@?? @Adhoc
    	Scenario: C14792 - Verify that student see all the offers from tutors relating to my Project
    	
    	Given User is in academically login page
@@ -187,4 +187,25 @@ Feature: Create new project
    	And project name "Test Project XXX" is displayed
    	When user view a full details of the project "Test Project XXX"
    	Then project details modal is displayed
+   	#
+   	When tutor make an offer
+   	 | Price per hour  | Discounted number of hours  | Discounted price per hour | Free interview| 
+     | 15              | 1                           | 18                        | Yes           |
+    And user proceed to the dashboard page
+    Then user is in dashboard page
+    When user see all projects
+   	Then user in in find work screen
+   	And project name "Test Project XXX" is displayed
+   	When user view a full details of the project "Test Project XXX"
+   	Then project details modal is displayed
+   	And proposal already sent button is displayed
+    When user logout in academically
+    Then user is in academically login page
+    #
+    When user enter username "automated82XXX" and password "Test@12345"
+    Then user successfully login
+    When user navigate to my projects tab
+   	And user proceed to project "Test Project XXX"
+   	Then user is in proposal screen
+   	And "Tutor" offer is displayed
     

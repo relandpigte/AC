@@ -9,4 +9,9 @@ public class StudentProjectPageProposalStepDefinitions {
 	public void verifyProposalTabIsActive() {
 		StudentProjectPageProposal.verifyProposalTabIsActive();
 	}
+	
+	@Then("^\"(.*)\" offer is displayed$")
+	public void verifyTutorNameIsDisplayed(String name) {
+		StudentProjectPageProposal.verifyTutorNameIsDisplayed(name);
+	}
 }

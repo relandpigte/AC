@@ -13,7 +13,14 @@ public class StudentProjectPageProposal {
 	private static Tab proposalTabIsActive = new Tab("Proposal",
 			By.xpath("//a[@class='nav-link ng-star-inserted active' and contains(text(),'Proposals')]"));
 	private static Button fullDetails = new Button("Full details", By.xpath("//button[text()= ' View offer ']"));
-
+	private static Element tutorName(String name) {
+		return new Element(name,By.xpath("//a[contains(text(),'"+name+"')]"));
+	}
+	
+	public static void verifyTutorNameIsDisplayed(String name) {
+		tutorName(name).verifyDisplayed();
+	}
+	
 	public static void verifyProposalTabIsActive() {
 		proposalTabIsActive.verifyDisplayed();
 	}
