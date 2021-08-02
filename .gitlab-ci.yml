@@ -132,6 +132,13 @@ variables:
     - "SLS_DEBUG=* serverless create_domain"
     - echo "run serverless deploy"v1
     - "SLS_DEBUG=* serverless deploy"  
+    # NEXT SECTION WILL UTIMATELY REPLACE LAMBDA / SERVERLESS DEPLOY ABOVE
+    # Copy iis artifacts to S3 for deployment
+    - cd $CI_PROJECT_DIR/artifacts/
+    - ls -la # debug line
+    - aws s3 rm s3://$APP_NAME-$ENV_NAME-gitlab-artifacts/ --recursive
+    - aws s3 cp . s3://$APP_NAME-$ENV_NAME-gitlab-artifacts/ --recursive # TEMP APP_NAME until we completely switch, SAME for aws line below
+
 
 
 .frontend: &frontend
