@@ -225,6 +225,34 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
     this.isCancellingABooking = false;
   }
 
+  onJoinSessionClick(): void {
+    const w = 1024;
+    const h = 768;
+
+    const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+    const dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+
+    const width = window.innerWidth
+      ? window.innerWidth
+      : document.documentElement.clientWidth
+        ? document.documentElement.clientWidth
+        : screen.width;
+    const height = window.innerHeight
+      ? window.innerHeight
+      : document.documentElement.clientHeight
+        ? document.documentElement.clientHeight
+        : screen.height;
+
+    const systemZoom = width / window.screen.availWidth;
+    const left = (width - w) / 2 / systemZoom + dualScreenLeft;
+    const top = (height - h) / 2 / systemZoom + dualScreenTop;
+    window.open(
+      `/app/sessions/${this.model.id}`,
+      this.model.title,
+      `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=${w / systemZoom},height=${h / systemZoom},left=${left},top=${top}`
+    );
+  }
+
   onStartTimeChange(): void {
     if (this.startTime && this.startTime > this.endTime) {
       this.endTime = this.startTime;

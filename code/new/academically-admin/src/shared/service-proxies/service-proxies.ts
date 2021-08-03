@@ -486,6 +486,62 @@ export class CalendarEventsServiceProxy {
     }
 
     /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<CalendarEventDto> {
+        let url_ = this.baseUrl + "/api/services/app/CalendarEvents/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<CalendarEventDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CalendarEventDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<CalendarEventDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CalendarEventDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CalendarEventDto>(<any>null);
+    }
+
+    /**
      * @param userId (optional) 
      * @param startTime (optional) 
      * @param endTime (optional) 
@@ -5572,6 +5628,241 @@ export class SessionServiceProxy {
             }));
         }
         return _observableOf<GetCurrentLoginInformationsOutput>(<any>null);
+    }
+}
+
+@Injectable()
+export class SessionsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param calendarEventId (optional) 
+     * @return Success
+     */
+    get(calendarEventId: string | undefined): Observable<SessionDto> {
+        let url_ = this.baseUrl + "/api/services/app/Sessions/Get?";
+        if (calendarEventId === null)
+            throw new Error("The parameter 'calendarEventId' cannot be null.");
+        else if (calendarEventId !== undefined)
+            url_ += "calendarEventId=" + encodeURIComponent("" + calendarEventId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<SessionDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<SessionDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<SessionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SessionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<SessionDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createCandidate(body: SessionCandidateDto | undefined): Observable<SessionCandidateDto> {
+        let url_ = this.baseUrl + "/api/services/app/Sessions/CreateCandidate";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateCandidate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateCandidate(<any>response_);
+                } catch (e) {
+                    return <Observable<SessionCandidateDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<SessionCandidateDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateCandidate(response: HttpResponseBase): Observable<SessionCandidateDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SessionCandidateDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<SessionCandidateDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: SessionDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Sessions/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param type (optional) 1 = Offer
+    
+    2 = Answer
+     * @return Success
+     */
+    deleteCandidates(id: string | undefined, type: SessionCandidateType | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Sessions/DeleteCandidates?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (type === null)
+            throw new Error("The parameter 'type' cannot be null.");
+        else if (type !== undefined)
+            url_ += "type=" + encodeURIComponent("" + type) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteCandidates(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteCandidates(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeleteCandidates(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -10880,6 +11171,7 @@ export class CalendarEventDto implements ICalendarEventDto {
     projectOffer: ProjectOffer;
     project: ProjectDto;
     rescheduleComments: RescheduleCommentDto[] | undefined;
+    userCalendarEvents: UserCalendarEventDto[] | undefined;
 
     constructor(data?: ICalendarEventDto) {
         if (data) {
@@ -10909,6 +11201,11 @@ export class CalendarEventDto implements ICalendarEventDto {
                 this.rescheduleComments = [] as any;
                 for (let item of _data["rescheduleComments"])
                     this.rescheduleComments.push(RescheduleCommentDto.fromJS(item));
+            }
+            if (Array.isArray(_data["userCalendarEvents"])) {
+                this.userCalendarEvents = [] as any;
+                for (let item of _data["userCalendarEvents"])
+                    this.userCalendarEvents.push(UserCalendarEventDto.fromJS(item));
             }
         }
     }
@@ -10940,6 +11237,11 @@ export class CalendarEventDto implements ICalendarEventDto {
             for (let item of this.rescheduleComments)
                 data["rescheduleComments"].push(item.toJSON());
         }
+        if (Array.isArray(this.userCalendarEvents)) {
+            data["userCalendarEvents"] = [];
+            for (let item of this.userCalendarEvents)
+                data["userCalendarEvents"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -10966,6 +11268,7 @@ export interface ICalendarEventDto {
     projectOffer: ProjectOffer;
     project: ProjectDto;
     rescheduleComments: RescheduleCommentDto[] | undefined;
+    userCalendarEvents: UserCalendarEventDto[] | undefined;
 }
 
 /** 0 = OneTime 1 = Daily 2 = Weekly 3 = Monthly 4 = Yearly */
@@ -14732,6 +15035,138 @@ export interface IServiceMappingDto {
     node3Id: string | undefined;
 }
 
+export class SessionCandidateDto implements ISessionCandidateDto {
+    id: string;
+    value: string | undefined;
+    type: SessionCandidateType;
+    sessionId: string;
+
+    constructor(data?: ISessionCandidateDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.value = _data["value"];
+            this.type = _data["type"];
+            this.sessionId = _data["sessionId"];
+        }
+    }
+
+    static fromJS(data: any): SessionCandidateDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SessionCandidateDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["value"] = this.value;
+        data["type"] = this.type;
+        data["sessionId"] = this.sessionId;
+        return data; 
+    }
+
+    clone(): SessionCandidateDto {
+        const json = this.toJSON();
+        let result = new SessionCandidateDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISessionCandidateDto {
+    id: string;
+    value: string | undefined;
+    type: SessionCandidateType;
+    sessionId: string;
+}
+
+/** 1 = Offer 2 = Answer */
+export enum SessionCandidateType {
+    Offer = 1,
+    Answer = 2,
+}
+
+export class SessionDto implements ISessionDto {
+    id: string;
+    offer: string | undefined;
+    answer: string | undefined;
+    calendarEventId: string;
+    calendarEvent: CalendarEventDto;
+    sessionCandidates: SessionCandidateDto[] | undefined;
+
+    constructor(data?: ISessionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.offer = _data["offer"];
+            this.answer = _data["answer"];
+            this.calendarEventId = _data["calendarEventId"];
+            this.calendarEvent = _data["calendarEvent"] ? CalendarEventDto.fromJS(_data["calendarEvent"]) : <any>undefined;
+            if (Array.isArray(_data["sessionCandidates"])) {
+                this.sessionCandidates = [] as any;
+                for (let item of _data["sessionCandidates"])
+                    this.sessionCandidates.push(SessionCandidateDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SessionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SessionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["offer"] = this.offer;
+        data["answer"] = this.answer;
+        data["calendarEventId"] = this.calendarEventId;
+        data["calendarEvent"] = this.calendarEvent ? this.calendarEvent.toJSON() : <any>undefined;
+        if (Array.isArray(this.sessionCandidates)) {
+            data["sessionCandidates"] = [];
+            for (let item of this.sessionCandidates)
+                data["sessionCandidates"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): SessionDto {
+        const json = this.toJSON();
+        let result = new SessionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISessionDto {
+    id: string;
+    offer: string | undefined;
+    answer: string | undefined;
+    calendarEventId: string;
+    calendarEvent: CalendarEventDto;
+    sessionCandidates: SessionCandidateDto[] | undefined;
+}
+
 export class Setting implements ISetting {
     id: number;
     creationTime: moment.Moment;
@@ -16536,6 +16971,57 @@ export interface IUser {
     introVideoDocument: Document;
     userEducations: UserEducation[] | undefined;
     userSpokenLanguages: UserSpokenLanguage[] | undefined;
+}
+
+export class UserCalendarEventDto implements IUserCalendarEventDto {
+    id: string;
+    userId: number;
+    calendarEventId: string;
+
+    constructor(data?: IUserCalendarEventDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userId = _data["userId"];
+            this.calendarEventId = _data["calendarEventId"];
+        }
+    }
+
+    static fromJS(data: any): UserCalendarEventDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserCalendarEventDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userId"] = this.userId;
+        data["calendarEventId"] = this.calendarEventId;
+        return data; 
+    }
+
+    clone(): UserCalendarEventDto {
+        const json = this.toJSON();
+        let result = new UserCalendarEventDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserCalendarEventDto {
+    id: string;
+    userId: number;
+    calendarEventId: string;
 }
 
 export class UserClaim implements IUserClaim {

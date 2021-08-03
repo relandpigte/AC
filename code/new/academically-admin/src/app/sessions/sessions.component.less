@@ -1,0 +1,84 @@
+.session {
+  display         : flex;
+  flex-direction  : column;
+  justify-content : space-between;
+  background-color: #12263f;
+  height          : 100%;
+
+  .session-header {
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+    background-color: #162D4D;
+    height          : 70px;
+    color           : #FFFFFF;
+
+    .session-title {
+      padding: 0;
+      margin : 0;
+    }
+  }
+
+  .session-videos {
+    height: 100%;
+    margin: 0;
+
+    .local-video-container {
+      padding: 20px 10px 20px 20px;
+
+      .local-video {
+        background   : black;
+        border-radius: 10px;
+        width        : 100%;
+        height       : 100%;
+      }
+    }
+
+    .remote-video-container {
+      padding: 20px 20px 20px 10px;
+
+      .remote-video {
+        background   : black;
+        border-radius: 10px;
+        width        : 100%;
+        height       : auto;
+      }
+
+      .waiting {
+        color     : #FFFFFF;
+        width     : 100%;
+        text-align: center;
+        position  : absolute;
+        top       : 50%;
+        left      : 50%;
+        transform : translate(-50%, -50%);
+      }
+    }
+  }
+
+  .session-footer {
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+    background-color: #162D4D;
+    height          : 70px;
+    color           : #FFFFFF;
+
+    .btn {
+      margin: 0 5px;
+    }
+  }
+}
+
+// video {
+//   width     : 200px;
+//   height    : 200px;
+//   margin    : 2rem;
+//   background: #2c3e50;
+// }
+
+// .videos {
+//   display        : flex;
+//   align-items    : center;
+//   justify-content: center;
+// }

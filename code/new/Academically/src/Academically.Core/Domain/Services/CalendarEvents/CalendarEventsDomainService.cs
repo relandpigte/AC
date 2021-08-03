@@ -1,5 +1,6 @@
 ﻿using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Abp.Timing;
 using Abp.Timing.Timezone;
 using Abp.UI;
@@ -69,6 +70,7 @@ namespace Academically.Domain.Services.CalendarEvents
             if (calendarEvent.Type != CalendarEventType.Cancelled && calendarEvent.Type != CalendarEventType.Blocker)
             {
                 var eventConflict = await _userCalendarEventsRepository.GetAll()
+                    .WhereIf(calendarEvent.Id != null || calendarEvent.Id != Guid.Empty, e => e.CalendarEventId != calendarEvent.Id)
                     .Where(e => e.UserId == userId && e.CalendarEvent.Type != CalendarEventType.Cancelled
                         && ((calendarEvent.StartTime >= e.CalendarEvent.StartTime && calendarEvent.StartTime < e.CalendarEvent.EndTime)
                         || (calendarEvent.EndTime > e.CalendarEvent.StartTime && calendarEvent.EndTime <= e.CalendarEvent.EndTime)))

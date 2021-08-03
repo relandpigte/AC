@@ -139,6 +139,10 @@
         </div>
 
       </div>
+
+      <div class="p-1 text-center" *ngIf="model.type === CalendarEventType.ConfirmedBooking">
+        <a href="#" (click)="$event.preventDefault(); onJoinSessionClick()">Join Session</a>
+      </div>
     </div>
     <abp-modal-footer *ngIf="!model.id" [isLoading]="isLoading"
       [saveLabel]="(isFromViewOffer ? 'Add' : 'BookSession') | localize" [cancelDisabled]="isLoading"

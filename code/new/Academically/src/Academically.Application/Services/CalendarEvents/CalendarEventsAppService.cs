@@ -64,6 +64,16 @@ namespace Academically.Services.CalendarEvents
             _emailTemplateHelper = emailTemplateHelper;
         }
 
+        public async Task<CalendarEventDto> Get(Guid id)
+        {
+            var calendarEvent = await _calendarEventsRepository.GetAll()
+                .Where(e => e.Id == id)
+                .Include(e => e.UserCalendarEvents)
+                .Select(e => ObjectMapper.Map<CalendarEventDto>(e))
+                .FirstOrDefaultAsync();
+            return calendarEvent;
+        }
+
         public async Task<IEnumerable<CalendarEventDto>> GetAll(GetAllCalendarEventsRequestDto input)
         {
             var eventsQuery = _userCalendarEventsRepository.GetAll()
