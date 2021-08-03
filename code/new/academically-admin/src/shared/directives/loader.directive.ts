@@ -10,8 +10,10 @@ export class LoaderDirective {
       <div class="spinner spinner-border" role="status"></div>
     </div>
   `;
-
   private _loader: JQuery;
+
+  constructor(private _el: ElementRef) { }
+
   @Input() set loader(isLoading: boolean) {
     const self = this;
     const block = $(self._el.nativeElement);
@@ -32,8 +34,6 @@ export class LoaderDirective {
       }
     }
   }
-
-  constructor(private _el: ElementRef) { }
 
   private getPixelNumberValue(pixelValue: string): number {
     return +pixelValue.replace('px', '');

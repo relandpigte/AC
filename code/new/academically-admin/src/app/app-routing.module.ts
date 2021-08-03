@@ -124,6 +124,13 @@ import { CreateProjectComponent } from './create-project/create-project.componen
                 (m) => m.TutorAppliactionsModule
               ),
           },
+          {
+            path: 'sessions',
+            loadChildren: () =>
+              import('@app/sessions/sessions.module').then(
+                (m) => m.SessionsModule
+              ),
+          },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent }

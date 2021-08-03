@@ -9,6 +9,7 @@ namespace Academically.Services.CalendarEvents
 {
     public interface ICalendarEventsAppService : IApplicationService
     {
+        Task<CalendarEventDto> Get(Guid id);
         Task<IEnumerable<CalendarEventDto>> GetAll(GetAllCalendarEventsRequestDto input);
         Task<IEnumerable<CalendarEventDto>> GetUpcoming(DateTime currentTime, long userId);
         Task<IEnumerable<ProjectDto>> GetUserProjects(long userId);

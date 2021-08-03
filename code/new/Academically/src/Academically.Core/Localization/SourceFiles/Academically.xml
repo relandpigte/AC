@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="WaitingForUserToJoin">Waiting for {0} to join</text>
     <text name="EmailTakenValidationError">This email address is already in use.</text>
     <text name="UserExistsErrorMessage">
         The email you are trying to use is already associated with a registered user. Please use a different email address and try again.

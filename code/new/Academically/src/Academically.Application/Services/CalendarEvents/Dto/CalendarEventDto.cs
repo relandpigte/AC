@@ -28,5 +28,6 @@ namespace Academically.Services.CalendarEvents.Dto
 
         public ProjectDto Project { get; set; }
         public IEnumerable<RescheduleCommentDto> RescheduleComments { get; set; }
+        public IEnumerable<UserCalendarEventDto> UserCalendarEvents { get; set; }
     }
 }

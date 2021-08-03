@@ -1,0 +1,32 @@
+<div class="session" [@routerTransition] [loader]="isLoading">
+
+  <div class="session-header">
+    <h1 class="session-title">{{ calendarEvent.title }}</h1>
+  </div>
+
+  <div class="session-videos row">
+    <div class="col-8 local-video-container">
+      <video class="local-video" #localVideoEl autoplay playsinline></video>
+    </div>
+
+    <div class="col-4 remote-video-container">
+      <div class="position-relative">
+        <video class="remote-video" #remoteVideoEl autoplay playsinline>
+        </video>
+        <p *ngIf="otherUser" class="waiting">{{ 'WaitingForUserToJoin' | localize: otherUser.name }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="session-footer">
+    <button class="btn btn-md btn-primary">
+      <i class="fe fe-mic"></i>
+    </button>
+    <button class="btn btn-md btn-primary">
+      <i class="fe fe-video"></i>
+    </button>
+    <button class="btn btn-md btn-danger">
+      <i class="fe fe-phone-off"></i>
+    </button>
+  </div>
+</div>

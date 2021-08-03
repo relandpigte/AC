@@ -1,5 +1,5 @@
 {
-  "remoteServiceBaseUrl": "https://api-academically-ci.sourcecloud-dev.uk/ci",
+  "remoteServiceBaseUrl": "https://api-academically-gitlab-uat.sourcecloud-dev.uk",
   "appBaseUrl": "https://academically-ci.sourcecloud-dev.uk",
   "localeMappings": [
     {
