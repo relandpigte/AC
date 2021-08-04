@@ -1,6 +1,7 @@
 stages:
   - build
   - deploy
+  - refresh
 
 variables:
   BUILD_IMAGE: "mcr.microsoft.com/dotnet/core/sdk:3.1" 
@@ -181,6 +182,31 @@ variables:
     - aws s3 cp dist s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN --recursive
     - aws s3 ls s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN
 
+###########
+# refresh #
+###########
+.refresh: &refresh
+  stage: refresh
+  image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
+  variables:
+    TF_ROOT: ${CI_PROJECT_DIR}/terraform
+    TF_CACHE_KEY: default
+    TF_VAR_APP_NAME: $APP_NAME
+    TF_VAR_ENV_NAME: ${ENVIRONMENT}
+    TF_STATE_NAME: academically-${ENVIRONMENT}
+    TF_VAR_SUPPORT_PASSWORD: $SUPPORT_PASSWORD
+    TF_VAR_DEPLOY_PASSWORD: $DEPLOY_PASSWORD
+  before_script:
+    - echo "pre script (refresh backend)"
+  script:
+    - echo "terraform APPLY with ${ENVIRONMENT}"
+    - gitlab-terraform plan -var-file=${TF_ROOT}/config/${ENVIRONMENT}.tfvars
+    - gitlab-terraform apply -auto-approve 
+    - ls -la
+    - gitlab-terraform state list
+  cache:
+    paths:
+      - ${TF_ROOT}/plan.cache
 
 #########
 # Build #
@@ -292,6 +318,15 @@ deploy_backend_to_ci:
     - build_backend
   environment:
     name: ci_backend
+  only:
+    - develop
+
+refresh_backend_to_ci:
+  <<: *refresh
+  dependencies:
+    - deploy_backend_to_ci
+  environment:
+    name: ci
   only:
     - develop
 
