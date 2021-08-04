@@ -325,6 +325,8 @@ refresh_backend_to_ci:
   <<: *refresh
   dependencies:
     - deploy_backend_to_ci
+  variables:
+    ENVIRONMENT: ci
   environment:
     name: ci
   only:
