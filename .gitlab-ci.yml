@@ -190,11 +190,14 @@ variables:
   image: ubuntu:18.04
   before_script:
     - echo "pre script (refresh backend)"
+    - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
+    - apt-get update
+    - apt-get install -y software-properties-common 
     # install python, awscli & jq
     - apt-get install -y python3-pip
     - pip3 install awscli boto boto3
-    - apt-get install -y jq
     - aws --version
+
   script:
     - echo "reset InstanceRefresh Tag on $ENV_NAME-$APP_NAME.aws.asg to force Refresh on ${ENVIRONMENT}"
     - aws autoscaling create-or-update-tags \
