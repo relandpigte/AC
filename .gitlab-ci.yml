@@ -200,7 +200,8 @@ variables:
 
   script:
     - echo "reset InstanceRefresh Tag on $ENV_NAME-$APP_NAME.aws.asg to force Refresh on ${ENVIRONMENT}"
-    - aws autoscaling create-or-update-tags \
+    - > 
+      aws autoscaling create-or-update-tags
       --tags ResourceId=$ENV_NAME-$APP_NAME.aws.asg,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
 
 #########
