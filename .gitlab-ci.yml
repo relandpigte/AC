@@ -187,27 +187,18 @@ variables:
 ###########
 .refresh:
   stage: refresh
-  image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
-  variables:
-    TF_ROOT: ${CI_PROJECT_DIR}/terraform
-    TF_CACHE_KEY: default
-    TF_VAR_APP_NAME: $APP_NAME
-    TF_VAR_ENV_NAME: ${ENVIRONMENT}
-    TF_STATE_NAME: academically-${ENVIRONMENT}
-    TF_VAR_SUPPORT_PASSWORD: $SUPPORT_PASSWORD
-    TF_VAR_DEPLOY_PASSWORD: $DEPLOY_PASSWORD
+  image: ubuntu 18:40
   before_script:
     - echo "pre script (refresh backend)"
-    - cd ${TF_ROOT} 
+    # install python, awscli & jq
+    - apt-get install -y python3-pip
+    - pip3 install awscli boto boto3
+    - apt-get install -y jq
+    - aws --version
   script:
-    - echo "terraform APPLY with ${ENVIRONMENT}"
-    - gitlab-terraform plan -var-file=${TF_ROOT}/config/${ENVIRONMENT}.tfvars
-    - gitlab-terraform apply -auto-approve 
-    - ls -la
-    - gitlab-terraform state list
-  cache:
-    paths:
-      - ${TF_ROOT}/plan.cache
+    - echo "reset InstanceRefresh Tag on $ENV_NAME-$APP_NAME.aws.asg to force Refresh on ${ENVIRONMENT}"
+    - aws autoscaling create-or-update-tags \
+      --tags ResourceId=$ENV_NAME-$APP_NAME.aws.asg,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
 
 #########
 # Build #
