@@ -199,10 +199,10 @@ variables:
     - aws --version
 
   script:
-    - echo "reset InstanceRefresh Tag on $ENV_NAME-$APP_NAME.aws.asg to force Refresh on ${ENVIRONMENT}"
+    - echo "reset InstanceRefresh Tag on $ENV_NAME-$APP_NAME-gitlab.aws.asg to force Refresh on ${ENVIRONMENT}" #TEMP gitlab
     - > 
       aws autoscaling create-or-update-tags
-      --tags ResourceId=$ENV_NAME-$APP_NAME.aws.asg,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
+      --tags ResourceId=$ENV_NAME-$APP_NAME-gitlab.aws.asg,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
 
 #########
 # Build #
