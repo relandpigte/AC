@@ -185,7 +185,7 @@ variables:
 ###########
 # refresh #
 ###########
-.refresh: &refresh
+.refresh:
   stage: refresh
   image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
   variables:
@@ -198,6 +198,7 @@ variables:
     TF_VAR_DEPLOY_PASSWORD: $DEPLOY_PASSWORD
   before_script:
     - echo "pre script (refresh backend)"
+    - cd ${TF_ROOT} 
   script:
     - echo "terraform APPLY with ${ENVIRONMENT}"
     - gitlab-terraform plan -var-file=${TF_ROOT}/config/${ENVIRONMENT}.tfvars
@@ -322,7 +323,8 @@ deploy_backend_to_ci:
     - develop
 
 refresh_backend_to_ci:
-  <<: *refresh
+  extends:
+    .refresh
   dependencies:
     - deploy_backend_to_ci
   variables:
