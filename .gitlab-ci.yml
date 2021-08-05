@@ -198,6 +198,7 @@ variables:
     TF_VAR_DEPLOY_PASSWORD: $DEPLOY_PASSWORD
   before_script:
     - echo "pre script (refresh backend)"
+    - cd ${TF_ROOT} 
   script:
     - echo "terraform APPLY with ${ENVIRONMENT}"
     - gitlab-terraform plan -var-file=${TF_ROOT}/config/${ENVIRONMENT}.tfvars
