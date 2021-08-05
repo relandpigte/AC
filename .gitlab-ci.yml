@@ -187,7 +187,7 @@ variables:
 ###########
 .refresh:
   stage: refresh
-  image: ubuntu 18:40
+  image: ubuntu:18.04
   before_script:
     - echo "pre script (refresh backend)"
     # install python, awscli & jq
