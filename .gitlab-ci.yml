@@ -185,7 +185,7 @@ variables:
 ###########
 # refresh #
 ###########
-.refresh: &refresh
+.refresh:
   stage: refresh
   image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
   variables:
@@ -322,7 +322,8 @@ deploy_backend_to_ci:
     - develop
 
 refresh_backend_to_ci:
-  <<: *refresh
+  extends:
+    .refresh
   dependencies:
     - deploy_backend_to_ci
   variables:
