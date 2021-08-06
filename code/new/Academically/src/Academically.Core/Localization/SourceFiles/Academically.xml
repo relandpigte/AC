@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Admit">Admit</text>
+    <text name="MeetingStarted">Meeting Started</text>
+    <text name="UserWillAdmitYouSoon">{0} will admit you soon</text>
+    <text name="UserIsNowInTheLobby">{0} is now in the lobby</text>
+    <text name="WaitingForUserToStartTheMeeting">Waiting for {0} to start the meeting</text>
     <text name="WaitingForUserToJoin">Waiting for {0} to join</text>
     <text name="EmailTakenValidationError">This email address is already in use.</text>
     <text name="UserExistsErrorMessage">

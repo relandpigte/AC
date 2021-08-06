@@ -1,28 +1,54 @@
-﻿using Abp.AspNetCore.SignalR.Hubs;
+﻿using Abp;
+using Abp.AspNetCore.SignalR.Hubs;
 using Abp.Dependency;
-using Abp.Domain.Repositories;
-using Academically.Domain.Entities;
+using Abp.RealTime;
+using Academically.Authorization.Users;
 using Microsoft.AspNetCore.SignalR;
-using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Academically.Web.Host.Hubs
 {
     public class SessionsHub : AbpHubBase, ITransientDependency
     {
-        private readonly IRepository<Session, Guid> _sessionsRepository;
-
-        public SessionsHub(
-            IRepository<Session, Guid> sessionsRepository
-            )
+        public async Task StudentJoined(IEnumerable<long> userIds)
         {
-            _sessionsRepository = sessionsRepository;
+            foreach (var userId in userIds)
+            {
+                await Clients.User(userId.ToString()).SendAsync("startSession");
+            }
         }
 
-        public async Task SendCall(Guid id)
+        public async Task ConnectStudent(IEnumerable<long> userIds)
         {
-            var call = await _sessionsRepository.GetAsync(id);
-            await Clients.All.SendAsync("getCall", call);
+            foreach (var userId in userIds)
+            {
+                await Clients.User(userId.ToString()).SendAsync("joinSession");
+            }
+        }
+
+        public async Task StudentConnected(IEnumerable<long> userIds)
+        {
+            foreach (var userId in userIds)
+            {
+                await Clients.User(userId.ToString()).SendAsync("admitStudent");
+            }
+        }
+
+        public async Task AdmittingStudent(IEnumerable<long> userIds)
+        {
+            foreach (var userId in userIds)
+            {
+                await Clients.User(userId.ToString()).SendAsync("waitForAdmission");
+            }
+        }
+
+        public async Task EstablishConnection(IEnumerable<long> userIds)
+        {
+            foreach (var userId in userIds)
+            {
+                await Clients.User(userId.ToString()).SendAsync("connectionEstablished");
+            }
         }
     }
 }
