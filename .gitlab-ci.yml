@@ -203,7 +203,10 @@ variables:
     - > 
       aws autoscaling create-or-update-tags
       --tags ResourceId=$ENV_NAME-$APP_NAME-gitlab.aws.asg,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
-
+    - >
+      aws autoscaling start-instance-refresh 
+      --auto-scaling-group-name $ENV_NAME-$APP_NAME-gitlab.aws.asg 
+      --preferences '{"InstanceWarmup": 240, "MinHealthyPercentage": 50}'
 #########
 # Build #
 #########
