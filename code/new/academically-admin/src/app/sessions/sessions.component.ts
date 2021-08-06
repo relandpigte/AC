@@ -3,7 +3,6 @@ import {
   SessionsServiceProxy,
   SessionCandidateDto,
   SessionCandidateType,
-  SessionDto,
   ProfilesServiceProxy,
   CalendarEventsServiceProxy,
   UserDto,
@@ -14,7 +13,15 @@ import * as _ from 'lodash';
 import { ActivatedRoute } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { takeUntil } from 'rxjs/operators';
+
+enum SessionState {
+  Initializing,
+  Initiated,
+  Waiting,
+  InLobby,
+  Admitting,
+  Connected,
+}
 
 @Component({
   selector: 'app-sessions',
@@ -26,9 +33,11 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   @ViewChild('localVideoEl', { static: true }) localVideoEl: ElementRef;
   @ViewChild('remoteVideoEl', { static: true }) remoteVideoEl: ElementRef;
 
+  SessionState = SessionState;
+
   calendarEvent: CalendarEventDto = new CalendarEventDto;
   calendarEventId: string;
-  isLoading = false;
+  sessionState = SessionState.Initializing;
   peerConnection: RTCPeerConnection;
   localStream: MediaStream;
   remoteStream: MediaStream;
@@ -36,6 +45,9 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   remoteVideo: HTMLVideoElement;
   meetingsHub: any;
   otherUser: UserDto;
+  isAudioEnabled = true;
+  isVideoEnabled = true;
+  isLoading = false;
 
   constructor(
     injector: Injector,
@@ -60,8 +72,8 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
             'turn:74.125.247.128:3478?transport=tcp',
             'turn:[2001:4860:4864:4:8000::]:3478?transport=tcp',
           ],
-          username: 'CIWPkYcGEgbpfcnrnFYYqvGggqMKIICjBTAK',
-          credential: 'DPHca2l2XLGAiCYkqpAVJUu5A+0=',
+          username: 'CJWSuIgGEgZSI/xQOIwYqvGggqMKIICjBTAK',
+          credential: 'X4XOZ4ONlAer1rXeORX+WKt8gAY=',
         },
       ],
       iceTransportPolicy: 'all',
@@ -70,6 +82,12 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     this._activatedRoute.paramMap.subscribe(paramMap => {
       this.calendarEventId = paramMap.get('calendar-event-id');
     });
+  }
+
+  public get isRemoteLoading(): boolean {
+    return this.sessionState !== SessionState.Waiting
+      && this.sessionState !== SessionState.InLobby
+      && this.sessionState !== SessionState.Connected;
   }
 
   ngOnInit(): void {
@@ -101,68 +119,133 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
 
     this.localVideo.srcObject = this.localStream;
     this.remoteVideo.srcObject = this.remoteStream;
+    this.sessionState = SessionState.Initiated;
+  }
+
+  async onAdmitClick(): Promise<void> {
+    this.sessionState = SessionState.Admitting;
+
+    this.meetingsHub.invoke('admittingStudent', [this.otherUser.id]);
+    console.log('invoke - admittingStudent');
+
+    const session = await this._sessionsService.get(this.calendarEventId).toPromise();
+    if (!this.peerConnection.currentRemoteDescription && session.answer) {
+      const answerDescription = JSON.parse(session.answer);
+      this.peerConnection.setRemoteDescription(answerDescription);
+      if (session.sessionCandidates) {
+
+        _.filter(session.sessionCandidates, e => e.type === SessionCandidateType.Offer)
+          .forEach(async offerCandidate => {
+            const iceCandidate = JSON.parse(offerCandidate.value);
+            await this.peerConnection.addIceCandidate(iceCandidate);
+          });
+
+
+        _.filter(session.sessionCandidates, e => e.type === SessionCandidateType.Answer)
+          .forEach(async answerCandidate => {
+            const iceCandidate = JSON.parse(answerCandidate.value);
+            await this.peerConnection.addIceCandidate(iceCandidate);
+          });
+
+        this.meetingsHub.invoke('establishConnection', [this.otherUser.id, this.appSession.userId]);
+        console.log('invoke - establishConnection');
+      }
+    }
+  }
+
+  onMuteAudioClick(): void {
+    this.isAudioEnabled = !this.isAudioEnabled;
+    this.localStream.getAudioTracks().forEach(track => track.enabled = this.isAudioEnabled);
+  }
+
+  onMuteVideoClick(): void {
+    this.isVideoEnabled = !this.isVideoEnabled;
+    this.localStream.getVideoTracks().forEach(track => track.enabled = this.isVideoEnabled);
   }
 
   onHangupClick(): void {
 
   }
 
-  private initializeHub(): void {
-    jQuery.getScript(AppConsts.appBaseUrl + '/assets/abp/abp.signalr-client.js', () => {
-      abp.signalr.startConnection(abp.appPath + 'signalr-sessionsHub', (connection: any) => {
+  private async initializeHub(): Promise<void> {
+    jQuery.getScript(AppConsts.appBaseUrl + '/assets/abp/abp.signalr-client.js', async () => {
+      await abp.signalr.startConnection(abp.appPath + 'signalr-sessionsHub', (connection: any) => {
         this.meetingsHub = connection;
 
-        connection.on('getCall', async (session: SessionDto) => {
-          session = await this._sessionsService.get(this.calendarEventId).toPromise();
-          if (!this.peerConnection.currentRemoteDescription && session.answer) {
-            const answerDescription = JSON.parse(session.answer);
-            this.peerConnection.setRemoteDescription(answerDescription);
-            if (session.sessionCandidates) {
-              _.filter(session.sessionCandidates, e => e.type === SessionCandidateType.Offer)
-                .forEach(async offerCandidate => {
-                  const iceCandidate = JSON.parse(offerCandidate.value);
-                  await this.peerConnection.addIceCandidate(iceCandidate);
-                });
-
-
-              _.filter(session.sessionCandidates, e => e.type === SessionCandidateType.Answer)
-                .forEach(async answerCandidate => {
-                  const iceCandidate = JSON.parse(answerCandidate.value);
-                  await this.peerConnection.addIceCandidate(iceCandidate);
-                });
-            }
+        connection.on('startSession', async () => {
+          console.log('startSession');
+          if (this.otherUser) {
+            this.meetingsHub.invoke('connectStudent', [this.otherUser.id]);
+            console.log('invoke - connectStudent');
           }
         });
-      }).then(connection => {
-        abp.event.trigger('connected');
-        this._calendarEventsService.get(this.calendarEventId)
-          .pipe(
-            takeUntil(this.destroyed$),
-          )
-          .subscribe(calendarEvent => {
-            this.calendarEvent = calendarEvent;
-            const userCalendarEvent = _.first(_.filter(calendarEvent.userCalendarEvents, e => e.userId !== this.appSession.userId));
-            this.initializeDevice()
-              .then(() => {
-                this.isLoading = false;
-                if (this.isTutor) {
-                  this._profilesService.get(userCalendarEvent.userId)
-                    .subscribe(user => {
-                      this.otherUser = user;
-                      this.startSession()
-                        .then(() => {
 
-                        });
-                    });
-                } else {
-                  // this.joinSession()
-                  //   .then(() => {
+        connection.on('joinSession', async () => {
+          console.log('joinSession');
+          if (this.sessionState === SessionState.Waiting) {
+            await this.joinSession();
+            this.sessionState = SessionState.InLobby;
+          }
+        });
 
-                  //   });
-                }
-              });
-          });
+        connection.on('admitStudent', async () => {
+          console.log('admitStudent');
+          this.sessionState = SessionState.InLobby;
+        });
+
+        connection.on('waitForAdmission', async () => {
+          console.log('waitForAdmission');
+          this.sessionState = SessionState.Admitting;
+        });
+
+        connection.on('connectionEstablished', async () => {
+          console.log('connectionEstablished');
+          this.sessionState = SessionState.Connected;
+        });
+
+        // connection.on('sessionStarted', async () => {
+        //   console.log('sessionStarted');
+        //   if (this.sessionState !== SessionState.InLobby) {
+        //     this.meetingsHub.invoke('joinSession', [this.otherUser.id]);
+        //     this.sessionState = SessionState.InLobby;
+        //   }
+        // });
+
+        // connection.on('sessionJoined', async () => {
+        //   console.log('sessionJoined');
+        //   if (this.sessionState !== SessionState.InLobby) {
+        //     this.meetingsHub.invoke('startSession', [this.otherUser.id]);
+        //     this.sessionState = SessionState.InLobby;
+        //   }
+        // });
+
+        // connection.on('studentAdmitted', async () => {
+        //   console.log('studentAdmitted');
+        //   this.sessionState = SessionState.Admitting;
+        // });
+
+        // connection.on('connectionEstablished', async () => {
+        //   console.log('connectionEstablished');
+        //   this.sessionState = SessionState.Connected;
+        // });
       });
+
+      this.calendarEvent = await this._calendarEventsService.get(this.calendarEventId).toPromise();
+      const userCalendarEvent = _.first(_.filter(this.calendarEvent.userCalendarEvents, e => e.userId !== this.appSession.userId));
+
+      await this.initializeDevice();
+
+      this.otherUser = await this._profilesService.get(userCalendarEvent.userId).toPromise();
+      this.sessionState = SessionState.Waiting;
+
+      if (this.isTutor) {
+        await this.startSession();
+      } else {
+        this.meetingsHub.invoke('studentJoined', [this.otherUser.id]);
+        console.log('invoke - studentJoined');
+      }
+
+      this.isLoading = false;
     });
   }
 
@@ -176,7 +259,7 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
         sessionCandidate.value = JSON.stringify(event.candidate.toJSON());
         sessionCandidate.sessionId = session.id;
         sessionCandidate.type = SessionCandidateType.Offer;
-        const output = await this._sessionsService.createCandidate(sessionCandidate).toPromise();
+        await this._sessionsService.createCandidate(sessionCandidate).toPromise();
       }
     };
 
@@ -185,6 +268,9 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
 
     session.offer = JSON.stringify(offerDescription);
     await this._sessionsService.update(session).toPromise();
+
+    this.meetingsHub.invoke('connectStudent', [this.otherUser.id]);
+    console.log('invoke - connectStudent');
   }
 
   private async joinSession(): Promise<void> {
@@ -197,7 +283,7 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
         sessionCandidate.value = JSON.stringify(event.candidate.toJSON());
         sessionCandidate.sessionId = session.id;
         sessionCandidate.type = SessionCandidateType.Answer;
-        const output = await this._sessionsService.createCandidate(sessionCandidate).toPromise();
+        await this._sessionsService.createCandidate(sessionCandidate).toPromise();
       }
     };
 
@@ -209,6 +295,8 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
 
     session.answer = JSON.stringify(answerDescription);
     await this._sessionsService.update(session).toPromise();
-    this.meetingsHub.invoke('sendCall', session.id);
+
+    this.meetingsHub.invoke('studentConnected', [this.otherUser.id]);
+    console.log('invoke - studentConnected');
   }
 }

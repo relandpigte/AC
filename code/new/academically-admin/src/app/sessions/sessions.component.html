@@ -1,4 +1,4 @@
-<div class="session" [@routerTransition] [loader]="isLoading">
+<div class="session" [@routerTransition]>
 
   <div class="session-header">
     <h1 class="session-title">{{ calendarEvent.title }}</h1>
@@ -6,26 +6,58 @@
 
   <div class="session-videos row">
     <div class="col-8 local-video-container">
-      <video class="local-video" #localVideoEl autoplay playsinline></video>
+      <div class="local-video-block" [loader]="isLoading">
+        <video class="local-video" #localVideoEl autoplay playsinline></video>
+      </div>
     </div>
 
     <div class="col-4 remote-video-container">
-      <div class="position-relative">
+      <div class="remote-video-block" [loader]="isRemoteLoading">
         <video class="remote-video" #remoteVideoEl autoplay playsinline>
         </video>
-        <p *ngIf="otherUser" class="waiting">{{ 'WaitingForUserToJoin' | localize: otherUser.name }}</p>
+        <ng-container *ngIf="otherUser">
+          <p *ngIf="sessionState <= SessionState.Waiting" class="waiting">
+            <ng-container *ngIf="isTutor">
+              {{ 'WaitingForUserToJoin' | localize: otherUser.name }}
+            </ng-container>
+            <ng-container *ngIf="!isTutor">
+              {{ 'WaitingForUserToStartTheMeeting' | localize: otherUser.name }}
+            </ng-container>
+          </p>
+          <div *ngIf="sessionState === SessionState.InLobby" class="user-in-lobby">
+            <ng-container *ngIf="isTutor">
+              <p class="admit-user-message">
+                <i class="fe fe-info text-success admit-user-icon"></i>
+                {{ 'UserIsNowInTheLobby' | localize: otherUser.name }}
+              </p>
+              <div class="admit-user-actions">
+                <button class="btn btn-sm btn-success" (click)="onAdmitClick()">
+                  {{ 'Admit' | localize }}
+                </button>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!isTutor">
+              <p class="admit-user-message p-0 m-0">
+                {{ 'MeetingStarted' | localize }} <br />
+                {{ 'UserWillAdmitYouSoon' | localize: otherUser.name }}
+              </p>
+            </ng-container>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>
 
   <div class="session-footer">
-    <button class="btn btn-md btn-primary">
-      <i class="fe fe-mic"></i>
+    <button (click)="onMuteAudioClick()" [disabled]="isLoading" class="btn btn-md btn-primary">
+      <i *ngIf="isAudioEnabled" class="fe fe-mic"></i>
+      <i *ngIf="!isAudioEnabled" class="fe fe-mic-off"></i>
     </button>
-    <button class="btn btn-md btn-primary">
-      <i class="fe fe-video"></i>
+    <button (click)="onMuteVideoClick()" [disabled]="isLoading" class="btn btn-md btn-primary">
+      <i *ngIf="isVideoEnabled" class="fe fe-video"></i>
+      <i *ngIf="!isVideoEnabled" class="fe fe-video-off"></i>
     </button>
-    <button class="btn btn-md btn-danger">
+    <button [disabled]="isLoading" class="btn btn-md btn-danger">
       <i class="fe fe-phone-off"></i>
     </button>
   </div>

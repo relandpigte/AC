@@ -28,6 +28,34 @@ export class UpcomingSessionsComponent extends AppComponentBase implements OnIni
     return startTime.toDate().toISOString();
   }
 
+  onJoinSessionClick(model: CalendarEventDto): void {
+    const w = 1024;
+    const h = 768;
+
+    const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+    const dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+
+    const width = window.innerWidth
+      ? window.innerWidth
+      : document.documentElement.clientWidth
+        ? document.documentElement.clientWidth
+        : screen.width;
+    const height = window.innerHeight
+      ? window.innerHeight
+      : document.documentElement.clientHeight
+        ? document.documentElement.clientHeight
+        : screen.height;
+
+    const systemZoom = width / window.screen.availWidth;
+    const left = (width - w) / 2 / systemZoom + dualScreenLeft;
+    const top = (height - h) / 2 / systemZoom + dualScreenTop;
+    window.open(
+      `/app/sessions/${model.id}`,
+      model.title,
+      `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=${w / systemZoom},height=${h / systemZoom},left=${left},top=${top}`
+    );
+  }
+
   private getUpcomingSessions(): void {
     this.isLoading = true;
     this._calendarEventsService.getUpcoming(this.convertDateToMoment(new Date()), this.appSession.userId)
