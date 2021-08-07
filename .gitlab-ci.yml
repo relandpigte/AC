@@ -123,7 +123,7 @@ variables:
     - export DATABASE_ID=$(aws cloudformation list-exports | jq -r ".[] | .[] | select(.Name==\"$APP_NAME$ENV_NAME-RDSEndId\") | .Value")
     - echo "Database Id $DATABASE_ID"
     # Configure Logging jq, no good file is XML not json
-    # - jq ".log4net.appender.file=\"/var/log/academically.log\"" log4net.bak > log4net.config
+    - sudo sed -i 's|App_Data/Logs/Logs.txt|/var/log/'"$APP_NAME"'/'"$APP_NAME"'.log|g' log4net.config
     # Subsitute the Connection String
     - jq ".ConnectionStrings.Default=\"server=$DATABASE_ID``;database=$APP_NAME``_$ENV_NAME;uid=deployAdmin;password=$db_master_password;port=3306\"" appsettings.bak > appsettings.v1
     # Subsitute the Other Variables
