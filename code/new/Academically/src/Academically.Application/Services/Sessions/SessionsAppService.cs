@@ -1,4 +1,6 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Configuration;
+using Abp.Domain.Repositories;
+using Academically.Configuration;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Services.Sessions.Dto;
@@ -13,14 +15,17 @@ namespace Academically.Services.Sessions
     {
         private readonly IRepository<Session, Guid> _sessionsRepository;
         private readonly IRepository<SessionCandidate, Guid> _sessionCandidatesRepository;
+        private readonly ISettingManager _settingManager;
 
         public SessionsAppService(
             IRepository<Session, Guid> sessionsRepository,
-            IRepository<SessionCandidate, Guid> sessionCandidatesRepository
+            IRepository<SessionCandidate, Guid> sessionCandidatesRepository,
+            ISettingManager settingManager
         )
         {
             _sessionsRepository = sessionsRepository;
             _sessionCandidatesRepository = sessionCandidatesRepository;
+            _settingManager = settingManager;
         }
 
         public async Task<SessionDto> Get(Guid calendarEventId)
@@ -39,6 +44,14 @@ namespace Academically.Services.Sessions
             }
 
             return ObjectMapper.Map<SessionDto>(session);
+        }
+
+        public async Task<TurnServerConfigDto> GetConfiguration()
+        {
+            var config = new TurnServerConfigDto();
+            config.Username = await _settingManager.GetSettingValueAsync(AppSettingNames.Providers_TurnServer_Username);
+            config.Password = await _settingManager.GetSettingValueAsync(AppSettingNames.Providers_TurnServer_Password);
+            return config;
         }
 
         public async Task<SessionCandidateDto> CreateCandidate(SessionCandidateDto input)

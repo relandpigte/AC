@@ -57,6 +57,30 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     private _calendarEventsService: CalendarEventsServiceProxy,
   ) {
     super(injector);
+    this._activatedRoute.paramMap.subscribe(paramMap => {
+      this.calendarEventId = paramMap.get('calendar-event-id');
+    });
+  }
+
+  public get isRemoteLoading(): boolean {
+    return this.sessionState !== SessionState.Waiting
+      && this.sessionState !== SessionState.InLobby
+      && this.sessionState !== SessionState.Connected;
+  }
+
+  async ngOnInit(): Promise<void> {
+    this.isLoading = true;
+    await this.initializeWebRTC();
+    await this.initializeHub();
+  }
+
+  ngAfterViewInit(): void {
+    this.localVideo = this.localVideoEl.nativeElement;
+    this.remoteVideo = this.remoteVideoEl.nativeElement;
+  }
+
+  async initializeWebRTC(): Promise<void> {
+    const creds = await this._sessionsService.getConfiguration().toPromise();
     this.peerConnection = new RTCPeerConnection({
       iceServers: [
         {
@@ -72,32 +96,13 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
             'turn:74.125.247.128:3478?transport=tcp',
             'turn:[2001:4860:4864:4:8000::]:3478?transport=tcp',
           ],
-          username: 'CJWSuIgGEgZSI/xQOIwYqvGggqMKIICjBTAK',
-          credential: 'X4XOZ4ONlAer1rXeORX+WKt8gAY=',
+          username: creds.username,
+          credential: creds.password,
         },
       ],
       iceTransportPolicy: 'all',
       iceCandidatePoolSize: 10,
     });
-    this._activatedRoute.paramMap.subscribe(paramMap => {
-      this.calendarEventId = paramMap.get('calendar-event-id');
-    });
-  }
-
-  public get isRemoteLoading(): boolean {
-    return this.sessionState !== SessionState.Waiting
-      && this.sessionState !== SessionState.InLobby
-      && this.sessionState !== SessionState.Connected;
-  }
-
-  ngOnInit(): void {
-    this.isLoading = true;
-    this.initializeHub();
-  }
-
-  ngAfterViewInit(): void {
-    this.localVideo = this.localVideoEl.nativeElement;
-    this.remoteVideo = this.remoteVideoEl.nativeElement;
   }
 
   async initializeDevice(): Promise<void> {
@@ -202,32 +207,6 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
           console.log('connectionEstablished');
           this.sessionState = SessionState.Connected;
         });
-
-        // connection.on('sessionStarted', async () => {
-        //   console.log('sessionStarted');
-        //   if (this.sessionState !== SessionState.InLobby) {
-        //     this.meetingsHub.invoke('joinSession', [this.otherUser.id]);
-        //     this.sessionState = SessionState.InLobby;
-        //   }
-        // });
-
-        // connection.on('sessionJoined', async () => {
-        //   console.log('sessionJoined');
-        //   if (this.sessionState !== SessionState.InLobby) {
-        //     this.meetingsHub.invoke('startSession', [this.otherUser.id]);
-        //     this.sessionState = SessionState.InLobby;
-        //   }
-        // });
-
-        // connection.on('studentAdmitted', async () => {
-        //   console.log('studentAdmitted');
-        //   this.sessionState = SessionState.Admitting;
-        // });
-
-        // connection.on('connectionEstablished', async () => {
-        //   console.log('connectionEstablished');
-        //   this.sessionState = SessionState.Connected;
-        // });
       });
 
       this.calendarEvent = await this._calendarEventsService.get(this.calendarEventId).toPromise();

@@ -35,6 +35,8 @@ namespace Academically.Configuration
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.ITagg_Sms_Password),
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.Email_FromName),
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.Email_FromEmail),
+                CreateSettingDefinitionFromAppSetting(AppSettingNames.Providers_TurnServer_Username),
+                CreateSettingDefinitionFromAppSetting(AppSettingNames.Providers_TurnServer_Password),
             };
         }
 

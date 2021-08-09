@@ -24,6 +24,8 @@
         public const string Providers_Stripe_PublicKey = "Providers.Stripe.PublicKey";
         public const string Providers_Stripe_SecretKey = "Providers.Stripe.SecretKey";
         public const string Providers_GetAddress_ApiKey = "Providers.GetAddress.ApiKey";
+        public const string Providers_TurnServer_Username = "Providers.TurnServer.Username";
+        public const string Providers_TurnServer_Password = "Providers.TurnServer.Password";
 
         public static string ToAppSettingKey(this string settingName)
         {
