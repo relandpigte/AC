@@ -202,21 +202,21 @@ variables:
     - aws --version
 
   script:
-    - echo "reset InstanceRefresh Tag on $ENV_NAME-$APP_NAME-gitlab.api.asg to force Refresh on ${ENVIRONMENT}" #TEMP gitlab
+    - echo "reset InstanceRefresh Tag on $ENV_NAME-acad-tlab.api.asg to force Refresh on ${ENVIRONMENT}" #TEMP gitlab
     - > 
       aws autoscaling create-or-update-tags
-      --tags ResourceId=$ENV_NAME-$APP_NAME-gitlab.api.asg,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
+      --tags ResourceId=$ENV_NAME-acad-tlab.api.asg,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
     - >
       aws autoscaling start-instance-refresh 
-      --auto-scaling-group-name $ENV_NAME-$APP_NAME-gitlab.api.asg 
+      --auto-scaling-group-name $ENV_NAME-acad-tlab.api.asg 
       --preferences '{"InstanceWarmup": 240, "MinHealthyPercentage": 50}'
-    - echo "reset InstanceRefresh Tag on $ENV_NAME-$APP_NAME-gitlab.turn.asg to force Refresh on ${ENVIRONMENT}" #TEMP gitlab
+    - echo "reset InstanceRefresh Tag on $ENV_NAME-acad-tlab.turn.asg to force Refresh on ${ENVIRONMENT}" #TEMP gitlab
     - > 
       aws autoscaling create-or-update-tags
       --tags ResourceId=$ENV_NAME-$APP_NAME-gitlab.turn.asg,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
     - >
       aws autoscaling start-instance-refresh 
-      --auto-scaling-group-name $ENV_NAME-$APP_NAME-gitlab.turn.asg 
+      --auto-scaling-group-name $ENV_NAME-acad-tlab.turn.asg 
       --preferences '{"InstanceWarmup": 240, "MinHealthyPercentage": 50}'
 #########
 # Build #
