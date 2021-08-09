@@ -202,10 +202,10 @@ variables:
     - aws --version
 
   script:
-    - echo "reset InstanceRefresh Tag on $ENV_NAME--acad-tlab.aws-api-asg to force Refresh on ${ENVIRONMENT}" #TEMP gitlab
+    - echo "reset InstanceRefresh Tag on $ENV_NAME-acad-tlab.aws-api-asg to force Refresh on ${ENVIRONMENT}" #TEMP gitlab
     - > 
       aws autoscaling create-or-update-tags
-      --tags ResourceId=$ENV_NAME--acad-tlab.aws-api-asg,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
+      --tags ResourceId=$ENV_NAME-acad-tlab.aws-api-asg,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
     - >
       aws autoscaling start-instance-refresh 
       --auto-scaling-group-name $ENV_NAME-acad-tlab.aws-api-asg 
