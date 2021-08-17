@@ -43,11 +43,11 @@ namespace Academically.Web.Host.Hubs
             }
         }
 
-        public async Task EstablishConnection(IEnumerable<long> userIds)
+        public async Task EstablishConnection(int durationInSeconds, IEnumerable<long> userIds)
         {
             foreach (var userId in userIds)
             {
-                await Clients.User(userId.ToString()).SendAsync("connectionEstablished");
+                await Clients.User(userId.ToString()).SendAsync("connectionEstablished", durationInSeconds);
             }
         }
     }

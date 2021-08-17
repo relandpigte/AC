@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Okay">Okay</text>
+    <text name="SessionEndedMessage">Your session has ended.</text>
     <text name="Admit">Admit</text>
     <text name="MeetingStarted">Meeting Started</text>
     <text name="UserWillAdmitYouSoon">{0} will admit you soon</text>

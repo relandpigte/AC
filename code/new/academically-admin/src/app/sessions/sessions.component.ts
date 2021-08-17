@@ -13,6 +13,8 @@ import * as _ from 'lodash';
 import { ActivatedRoute } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
+import { Subscription, interval } from 'rxjs';
+import * as moment from 'moment';
 
 enum SessionState {
   Initializing,
@@ -21,6 +23,11 @@ enum SessionState {
   InLobby,
   Admitting,
   Connected,
+}
+
+enum StreamTrackType {
+  Audio = 'audio',
+  Video = 'video',
 }
 
 @Component({
@@ -45,6 +52,8 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   remoteVideo: HTMLVideoElement;
   meetingsHub: any;
   otherUser: UserDto;
+  sessionTimerSubscription: Subscription;
+  sessionTimerSeconds = -1;
   isAudioEnabled = true;
   isVideoEnabled = true;
   isLoading = false;
@@ -66,6 +75,12 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     return this.sessionState !== SessionState.Waiting
       && this.sessionState !== SessionState.InLobby
       && this.sessionState !== SessionState.Connected;
+  }
+
+  public get sessionTimer(): string {
+    const minutes = Math.floor(this.sessionTimerSeconds / 60);
+    const seconds = this.sessionTimerSeconds % 60;
+    return this.strPadLeft(minutes, '0', 2) + ':' + this.strPadLeft(seconds, '0', 2);
   }
 
   async ngOnInit(): Promise<void> {
@@ -113,6 +128,14 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     this.remoteStream = new MediaStream();
 
     this.localStream.getTracks().forEach(track => {
+      switch (track.kind) {
+        case StreamTrackType.Audio:
+          track.enabled = this.isAudioEnabled;
+          break;
+        case StreamTrackType.Video:
+          track.enabled = this.isVideoEnabled;
+          break;
+      }
       this.peerConnection.addTrack(track, this.localStream);
     });
 
@@ -152,7 +175,9 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
             await this.peerConnection.addIceCandidate(iceCandidate);
           });
 
-        this.meetingsHub.invoke('establishConnection', [this.otherUser.id, this.appSession.userId]);
+        const duration = moment.duration(this.calendarEvent.endTime.diff(this.calendarEvent.startTime)).asSeconds();
+
+        this.meetingsHub.invoke('establishConnection', duration, [this.otherUser.id, this.appSession.userId]);
         console.log('invoke - establishConnection');
       }
     }
@@ -169,7 +194,9 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   }
 
   onHangupClick(): void {
-
+    this.localStream = undefined;
+    this.remoteStream = undefined;
+    window.close();
   }
 
   private async initializeHub(): Promise<void> {
@@ -203,9 +230,11 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
           this.sessionState = SessionState.Admitting;
         });
 
-        connection.on('connectionEstablished', async () => {
+        connection.on('connectionEstablished', async (durationInSeconds: number) => {
           console.log('connectionEstablished');
           this.sessionState = SessionState.Connected;
+          this.sessionTimerSeconds = 10;
+          await this.startSessionTimer();
         });
       });
 
@@ -277,5 +306,46 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
 
     this.meetingsHub.invoke('studentConnected', [this.otherUser.id]);
     console.log('invoke - studentConnected');
+  }
+
+  private async startSessionTimer(): Promise<void> {
+    this.sessionTimerSubscription = interval(1000).subscribe(() => {
+      if (this.sessionTimerSeconds > 1) {
+        this.sessionTimerSeconds--;
+      } else {
+        this.sessionTimerSeconds = 0;
+        this.sessionTimerSubscription.unsubscribe();
+        this.disconnectTrack(this.localStream);
+        this.disconnectTrack(this.remoteStream);
+        this.message.confirm('', this.l('SessionEndedMessage'), (result) => {
+          if (result) {
+            window.close();
+          }
+        }, {
+          confirmButtonText: this.l('Okay'),
+          showCancelButton: false,
+        });
+      }
+    });
+  }
+
+
+  private strPadLeft(value: number, paddingText: string, length: number) {
+    return (new Array(length + 1).join(paddingText) + value).slice(-length);
+  }
+
+  private disconnectTrack(stream: MediaStream): void {
+    stream.getAudioTracks().forEach(track => {
+      track.enabled = false;
+      setTimeout(() => {
+        stream.removeTrack(track);
+      }, 500);
+    });
+    stream.getVideoTracks().forEach(track => {
+      track.enabled = false;
+      setTimeout(() => {
+        stream.removeTrack(track);
+      }, 500);
+    });
   }
 }
