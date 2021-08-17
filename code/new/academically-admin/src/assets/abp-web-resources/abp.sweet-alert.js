@@ -58,7 +58,7 @@ var abp = abp || {};
     options.icon = "warning";
     options.confirmButtonText = options.confirmButtonText || abp.localization.abpWeb("Yes");
     options.cancelButtonText = options.cancelButtonText || abp.localization.abpWeb("Cancel");
-    options.showCancelButton = true;
+    options.showCancelButton = typeof options.showCancelButton === 'undefined' ? true : options.showCancelButton;
 
     if (options.isHtml) {
       options.html = message;

@@ -1,7 +1,9 @@
 <div class="session" [@routerTransition]>
 
   <div class="session-header">
-    <h1 class="session-title">{{ calendarEvent.title }}</h1>
+    <h1 class="session-title">
+      {{ calendarEvent.title }}&nbsp;
+    </h1>
   </div>
 
   <div class="session-videos row">
@@ -48,17 +50,27 @@
     </div>
   </div>
 
-  <div class="session-footer">
-    <button (click)="onMuteAudioClick()" [disabled]="isLoading" class="btn btn-md btn-primary">
-      <i *ngIf="isAudioEnabled" class="fe fe-mic"></i>
-      <i *ngIf="!isAudioEnabled" class="fe fe-mic-off"></i>
-    </button>
-    <button (click)="onMuteVideoClick()" [disabled]="isLoading" class="btn btn-md btn-primary">
-      <i *ngIf="isVideoEnabled" class="fe fe-video"></i>
-      <i *ngIf="!isVideoEnabled" class="fe fe-video-off"></i>
-    </button>
-    <button [disabled]="isLoading" class="btn btn-md btn-danger">
-      <i class="fe fe-phone-off"></i>
-    </button>
+  <div class="session-footer row">
+    <div class="col-4 track-controls">
+      <button (click)="onMuteAudioClick()" [disabled]="isLoading" class="btn btn-md btn-primary">
+        <i *ngIf="isAudioEnabled" class="fe fe-mic"></i>
+        <i *ngIf="!isAudioEnabled" class="fe fe-mic-off"></i>
+      </button>
+      <button (click)="onMuteVideoClick()" [disabled]="isLoading" class="btn btn-md btn-primary">
+        <i *ngIf="isVideoEnabled" class="fe fe-video"></i>
+        <i *ngIf="!isVideoEnabled" class="fe fe-video-off"></i>
+      </button>
+    </div>
+    <div class="col-4 timer">
+      <p *ngIf="sessionTimerSeconds >= 0 && sessionTimerSeconds <= 300"
+        [class.last-two-minutes]="sessionTimerSeconds <= 120">
+        {{ sessionTimer }}
+      </p>
+    </div>
+    <div class="col-4 other-controls">
+      <button (click)="onHangupClick()" [disabled]="isLoading" class="btn btn-md btn-danger">
+        <i class="fe fe-phone-off"></i>
+      </button>
+    </div>
   </div>
 </div>
