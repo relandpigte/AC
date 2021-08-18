@@ -233,7 +233,7 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
         connection.on('connectionEstablished', async (durationInSeconds: number) => {
           console.log('connectionEstablished');
           this.sessionState = SessionState.Connected;
-          this.sessionTimerSeconds = 10;
+          this.sessionTimerSeconds = durationInSeconds;
           await this.startSessionTimer();
         });
       });
