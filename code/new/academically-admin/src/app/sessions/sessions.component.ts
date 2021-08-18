@@ -80,7 +80,7 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   public get sessionTimer(): string {
     const minutes = Math.floor(this.sessionTimerSeconds / 60);
     const seconds = this.sessionTimerSeconds % 60;
-    return this.strPadLeft(minutes, '0', 2) + ':' + this.strPadLeft(seconds, '0', 2);
+    return this.strPadLeft(minutes, 2) + ':' + this.strPadLeft(seconds, 2);
   }
 
   async ngOnInit(): Promise<void> {
@@ -327,11 +327,6 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
         });
       }
     });
-  }
-
-
-  private strPadLeft(value: number, paddingText: string, length: number) {
-    return (new Array(length + 1).join(paddingText) + value).slice(-length);
   }
 
   private disconnectTrack(stream: MediaStream): void {

@@ -35,6 +35,8 @@
     <Folder Include="Services\TutorApplications\" />
     <Folder Include="Services\TutorApplications\Dto\" />
     <Folder Include="Users\Dto\NewFolder\" />
+    <Folder Include="Services\UserAvailabilities\" />
+    <Folder Include="Services\UserAvailabilities\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Services\Projects\" />
@@ -42,5 +44,7 @@
     <None Remove="Services\ProjectOffers\Dto\" />
     <None Remove="Services\TutorApplications\" />
     <None Remove="Services\TutorApplications\Dto\" />
+    <None Remove="Services\UserAvailabilities\" />
+    <None Remove="Services\UserAvailabilities\Dto\" />
   </ItemGroup>
 </Project>

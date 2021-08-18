@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1629260219221-1">
+        <createTable tableName="AcademicallyUserAvailabilities">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="DayOfWeek" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsAvailable" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="StartTime" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EndTime" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1629260219221-2">
+        <createIndex indexName="FK_UserAvailabilities_Users_UserId_idx" tableName="AcademicallyUserAvailabilities">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1629260219221-3">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="AcademicallyUserAvailabilities" constraintName="FK_UserAvailabilities_Users_UserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

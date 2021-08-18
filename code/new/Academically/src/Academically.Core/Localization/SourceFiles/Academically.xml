@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Schedules">Schedules</text>
+    <text name="Available">Available</text>
     <text name="Okay">Okay</text>
     <text name="SessionEndedMessage">Your session has ended.</text>
     <text name="Admit">Admit</text>

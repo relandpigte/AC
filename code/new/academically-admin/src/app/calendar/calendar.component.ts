@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Calendar, CalendarOptions, DateSelectArg, EventClickArg, EventInput, FullCalendarComponent } from '@fullcalendar/angular';
+import { Calendar, CalendarOptions, DateSelectArg, EventClickArg, EventInput, FullCalendarComponent, BusinessHoursInput } from '@fullcalendar/angular';
 import { DateClickArg } from '@fullcalendar/interaction';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -12,7 +12,9 @@ import {
   ProfilesServiceProxy,
   TimeZoneDto,
   TimeZonesServiceProxy,
-  UserDto
+  UserDto,
+  UserAvailabilitiesServiceProxy,
+  UserAvailabilityDto
 } from '@shared/service-proxies/service-proxies';
 import { AppSessionService } from '@shared/session/app-session.service';
 import * as _ from 'lodash';
@@ -21,6 +23,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { CreateEditBlockOutComponent } from './_components/create-edit-block-out/create-edit-block-out.component';
 import { CreateEditBookingComponent } from './_components/create-edit-booking/create-edit-booking.component';
+import { CreateEditSchedulesComponent } from './_components/create-edit-schedules/create-edit-schedules.component';
 
 export enum CalendarEventSessionType {
   Upcoming = 'upcoming',
@@ -43,6 +46,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
   endTime: Date;
   isLoading = false;
   isBlockOutClicked = false;
+  isUserAvailabilitiesLoading = false;
   calendar: Calendar;
   gotoDate: string;
   calendarEventId: string;
@@ -52,6 +56,8 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
   calendarEventInputs: EventInput[] = [];
   calendarEvents: CalendarEventDto[] = [];
   calendarEventsTemp: CalendarEventDto[] = [];
+  userAvailabilities: UserAvailabilityDto[] = [];
+  isTutorCalendarUser = false;
 
   calendarOptions: CalendarOptions = {
     initialView: 'timeGridWeek',
@@ -73,10 +79,12 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
         click: this.refreshClick.bind(this),
       }
     },
+    nowIndicator: true,
+    eventConstraint: 'businessHours',
+    height: 'auto',
     datesSet: this.dateSet.bind(this),
     dateClick: this.dateClicked.bind(this),
     eventClick: this.eventClick.bind(this),
-    nowIndicator: true,
   };
 
   constructor(
@@ -84,10 +92,10 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
     private _modalService: BsModalService,
     private _router: Router,
     private _route: ActivatedRoute,
-    private _appSession: AppSessionService,
     private _calendarEventsService: CalendarEventsServiceProxy,
     private _profilesService: ProfilesServiceProxy,
     private _timeZonesService: TimeZonesServiceProxy,
+    private _userAvailabilitiesService: UserAvailabilitiesServiceProxy,
   ) {
     super(injector);
   }
@@ -155,6 +163,21 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
     }
   }
 
+  onScheduleClick(): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditSchedulesComponent>;
+    modalSettings.initialState = {
+      userAvailabilities: this.userAvailabilities,
+    };
+    const modal = this._modalService.show(CreateEditSchedulesComponent, modalSettings).content;
+    modal.modelSaved
+      .pipe(
+        takeUntil(this.destroyed$),
+      )
+      .subscribe(() => {
+        this.getUserAvailabilities();
+      });
+  }
+
   private dateSet(args: DateSelectArg): void {
     this.startTime = args.start;
     this.endTime = args.end;
@@ -164,16 +187,18 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
   }
 
   private dateClicked(args: DateClickArg): void {
-    const model = new CalendarEventDto();
-    model.startTime = moment(args.date);
-    model.endTime = moment(args.date);
-    if (!this.isBlockOutClicked && this.permission.isGranted('Pages.Calendar.BlockOuts')) {
-      this.showCreateEditBlockOutModal(model);
-    } else if (!this.isBlockOutClicked && !this.isTutor && this.permission.isGranted('Pages.Calendar.Bookings')) {
-      model.tutorId = this.userId;
-      this.showCreateEditBookingModal(model);
+    if (!(args.jsEvent.target as HTMLDivElement).classList.contains('fc-non-business')) {
+      const model = new CalendarEventDto();
+      model.startTime = moment(args.date);
+      model.endTime = moment(args.date);
+      if (!this.isBlockOutClicked && this.permission.isGranted('Pages.Calendar.BlockOuts')) {
+        this.showCreateEditBlockOutModal(model);
+      } else if (!this.isBlockOutClicked && !this.isTutor && this.permission.isGranted('Pages.Calendar.Bookings')) {
+        model.tutorId = this.userId;
+        this.showCreateEditBookingModal(model);
+      }
+      this.isBlockOutClicked = false;
     }
-    this.isBlockOutClicked = false;
   }
 
   private eventClick(args: EventClickArg): void {
@@ -202,6 +227,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
 
   private refreshClick(): void {
     this.getCalendarEvents();
+    this.getUserAvailabilities();
   }
 
   private showCreateEditBlockOutModal(model?: CalendarEventDto): void {
@@ -252,6 +278,8 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
       )
       .subscribe(user => {
         this.user = user;
+        this.isTutorCalendarUser = this.user.roleNames.includes('Tutor');
+        this.getUserAvailabilities();
       });
   }
 
@@ -356,5 +384,62 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
           }
         }
       });
+  }
+
+  private getUserAvailabilities(): void {
+    if (this.isTutorCalendarUser) {
+      this.isUserAvailabilitiesLoading = true;
+      this._userAvailabilitiesService.getAll(this.userId)
+        .pipe(
+          takeUntil(this.destroyed$),
+          finalize(() => {
+            this.isUserAvailabilitiesLoading = false;
+          }),
+        )
+        .subscribe(userAvailabilities => {
+          this.userAvailabilities = userAvailabilities;
+          let minMinutes = 0;
+          let maxMinutes = 1440;
+          const businessHours: BusinessHoursInput[] = [];
+          _.forEach(userAvailabilities, userAvailability => {
+            if (userAvailability.isAvailable) {
+              const startTimeMinutes = this.convertTimeToMinutes(userAvailability.startTime);
+              if (minMinutes === 0 || minMinutes > startTimeMinutes) {
+                minMinutes = startTimeMinutes;
+              }
+              const endTimeMinutes = this.convertTimeToMinutes(userAvailability.endTime);
+              if (maxMinutes === 1440 || endTimeMinutes > maxMinutes) {
+                maxMinutes = endTimeMinutes;
+              }
+
+              const businessHour: BusinessHoursInput = {
+                daysOfWeek: [userAvailability.dayOfWeek],
+                startTime: userAvailability.startTime,
+                endTime: userAvailability.endTime,
+              };
+              businessHours.push(businessHour);
+            }
+          });
+          this.calendarOptions.businessHours = businessHours;
+          this.calendarOptions.slotMinTime = `${this.convertMinutesToTime(this.addMinutesPadding(minMinutes))}:00`;
+          this.calendarOptions.slotMaxTime = `${this.convertMinutesToTime(this.addMinutesPadding(maxMinutes, true))}:00`;
+        });
+    }
+  }
+
+  private convertTimeToMinutes(time: string): number {
+    const timeParts = time.split(':');
+    return (+timeParts[0] * 60) + (+timeParts[1]);
+  }
+
+  private convertMinutesToTime(totalMinutes: number): string {
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return this.strPadLeft(hours, 2) + ':' + this.strPadLeft(minutes, 2);
+  }
+
+  private addMinutesPadding(minutes: number, isEnd = false): number {
+    const minutesPadding = minutes % 60 === 0 ? 60 : 30;
+    return isEnd ? minutes + minutesPadding : minutes - minutesPadding;
   }
 }

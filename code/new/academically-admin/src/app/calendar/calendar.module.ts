@@ -8,12 +8,13 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
-import rrulePlugin from '@fullcalendar/rrule'
+import rrulePlugin from '@fullcalendar/rrule';
 
 import { CalendarComponent } from './calendar.component';
 import { CreateEditBlockOutComponent } from './_components/create-edit-block-out/create-edit-block-out.component';
 import { CreateEditBookingComponent } from './_components/create-edit-booking/create-edit-booking.component';
 import { RescheduleHistoryComponent } from './_components/reschedule-history/reschedule-history.component';
+import { CreateEditSchedulesComponent } from './_components/create-edit-schedules/create-edit-schedules.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -30,6 +31,7 @@ FullCalendarModule.registerPlugins([
     CreateEditBlockOutComponent,
     CreateEditBookingComponent,
     RescheduleHistoryComponent,
+    CreateEditSchedulesComponent,
   ],
   imports: [
     CommonModule,
