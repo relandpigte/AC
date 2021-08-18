@@ -77,8 +77,16 @@ full-calendar {
     cursor: cell;
   }
 
+  .fc-timegrid-slot-lane {
+    background: #EDF2F9;
+    opacity   : 0.5;
+    border    : 1px solid #edf2f9 !important;
+  }
+
   .fc-non-business {
-    cursor: default;
+    cursor    : default;
+    background: #FFFFFF !important;
+    opacity   : 1 !important;
 
     &.tutor {
       cursor: pointer;
@@ -155,8 +163,10 @@ body.swal2-height-auto {
   .card-body {
     max-height: initial !important;
 
-    .nav-link {
-      padding-top: 0 !important;
+    .nav-tabs {
+      .nav-link {
+        padding-top: 0 !important;
+      }
     }
   }
 }
@@ -286,6 +296,10 @@ form {
 body.theme-dark {
   .freeze-ui {
     background: #11273f;
+  }
+
+  .dow-menu {
+    border-right: 1px solid #1F3A5C;
   }
 }
 

@@ -173,6 +173,10 @@ export abstract class AppComponentBase implements OnDestroy {
     return duration;
   }
 
+  protected strPadLeft(value: number, length: number, paddingText = '0') {
+    return (new Array(length + 1).join(paddingText) + value).slice(-length);
+  }
+
   private isValidUrl(url: string): boolean {
     try {
       // tslint:disable-next-line: no-unused-expression

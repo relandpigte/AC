@@ -8,8 +8,12 @@
               <h6 class="header-pretitle">{{ 'ManageYourEvents' | localize }}</h6>
               <h1 class="header-title"><span *ngIf="user.id">{{ user.fullName }}'s Calendar</span></h1>
             </div>
+            <div *ngIf="isTutorCalendarUser && isGranted('Pages.Calendar.Schedules')" class="col-auto mr-n3">
+              <button [disabled]="isUserAvailabilitiesLoading" (click)="onScheduleClick()" class="btn btn-primary">
+                {{ 'Schedules' | localize }}
+              </button>
+            </div>
             <div class="col-auto">
-
               <select class="custom-select" [disabled]="isLoading" select2 [defaultValue]="user.timeZoneId"
                 (select2ValueChange)="onTimeZoneChange($event)" [(ngModel)]="user.timeZoneId" id="timeZoneId"
                 name="timeZoneId" #timeZoneIdModel="ngModel" #timeZoneIdEl required>
@@ -17,7 +21,6 @@
                   {{ timeZone.name }}
                 </option>
               </select>
-
             </div>
           </div>
         </div>
@@ -26,7 +29,7 @@
       <div class="row">
         <div class="col-md-8 col-lg-9">
           <div class="card">
-            <div class="card-body" [loader]="isLoading">
+            <div class="card-body" [loader]="isLoading || isUserAvailabilitiesLoading">
               <full-calendar #calendar [options]="calendarOptions"></full-calendar>
             </div>
           </div>
@@ -35,10 +38,11 @@
           <div class="card">
             <div class="card-body">
               <div class="form-group mb-0">
-                <select class="custom-select" select2 [(ngModel)]="filteredSessionType" [defaultValue]="CalendarEventSessionType.Upcoming"
-                  (select2ValueChange)="onSessionTypeChange($event)" id="sessionType" name="sessionOrder" #sessionType="ngModel" [hideSearchBox]="true">
-                    <option [value]="CalendarEventSessionType.Upcoming">{{ 'UpcomingSessions' | localize }}</option>
-                    <option [value]="CalendarEventSessionType.Past">{{ 'PastSessions' | localize }}</option>
+                <select class="custom-select" select2 [(ngModel)]="filteredSessionType"
+                  [defaultValue]="CalendarEventSessionType.Upcoming" (select2ValueChange)="onSessionTypeChange($event)"
+                  id="sessionType" name="sessionOrder" #sessionType="ngModel" [hideSearchBox]="true">
+                  <option [value]="CalendarEventSessionType.Upcoming">{{ 'UpcomingSessions' | localize }}</option>
+                  <option [value]="CalendarEventSessionType.Past">{{ 'PastSessions' | localize }}</option>
                 </select>
               </div>
             </div>
@@ -56,7 +60,8 @@
                       </div>
                       <p class="small mb-0">
                         <span *ngIf="isTutor">{{ item.project.creatorUser.fullName }}</span>
-                        <span *ngIf="!isTutor && item.projectOffer && item.projectOffer.creatorUser">{{ item.projectOffer.creatorUser.fullName }}</span>
+                        <span *ngIf="!isTutor && item.projectOffer && item.projectOffer.creatorUser">{{
+                          item.projectOffer.creatorUser.fullName }}</span>
                         @{{ item.startTime | dateFormat: 'hh:mm A DD/MM/YY' }}
                       </p>
                     </div>
@@ -66,8 +71,10 @@
                 <li class="list-group-item" *ngIf="calendarEvents.length === 0">
                   <div class="row align-items-center">
                     <div class="col ms-n2" *ngIf="!isLoading">
-                      <p *ngIf="filteredSessionType === CalendarEventSessionType.Past" class="m-0">{{ 'NoPastSessions' | localize }}</p>
-                      <p *ngIf="filteredSessionType === CalendarEventSessionType.Upcoming" class="m-0">{{ 'NoUpcomingSessions' | localize }}</p>
+                      <p *ngIf="filteredSessionType === CalendarEventSessionType.Past" class="m-0">{{ 'NoPastSessions' |
+                        localize }}</p>
+                      <p *ngIf="filteredSessionType === CalendarEventSessionType.Upcoming" class="m-0">{{
+                        'NoUpcomingSessions' | localize }}</p>
                     </div>
 
                   </div>

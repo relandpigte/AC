@@ -214,6 +214,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Calendar,
                 PermissionNames.Pages_Calendar_BlockOuts,
                 PermissionNames.Pages_Calendar_Bookings,
+                PermissionNames.Pages_Calendar_Schedules,
                 PermissionNames.Pages_Projects,
                 PermissionNames.Pages_Projects_Overview,
                 PermissionNames.Pages_Projects_Browse,

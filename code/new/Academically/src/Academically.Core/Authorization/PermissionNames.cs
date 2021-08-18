@@ -122,6 +122,7 @@
         public const string Pages_Calendar = "Pages.Calendar";
         public const string Pages_Calendar_BlockOuts = "Pages.Calendar.BlockOuts";
         public const string Pages_Calendar_Bookings = "Pages.Calendar.Bookings";
+        public const string Pages_Calendar_Schedules = "Pages.Calendar.Schedules";
 
         public const string Pages_ServiceWizard = "Pages.ServiceWizard";
         public const string Pages_ServiceWizard_Category = "Pages.ServiceWizard.Category";

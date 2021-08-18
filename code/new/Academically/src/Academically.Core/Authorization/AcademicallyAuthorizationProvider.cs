@@ -130,6 +130,7 @@ namespace Academically.Authorization
             var calendarPermissions = context.CreatePermission(PermissionNames.Pages_Calendar, L("Calendar"));
             calendarPermissions.CreateChildPermission(PermissionNames.Pages_Calendar_BlockOuts, L("BlockOuts"));
             calendarPermissions.CreateChildPermission(PermissionNames.Pages_Calendar_Bookings, L("Bookings"));
+            calendarPermissions.CreateChildPermission(PermissionNames.Pages_Calendar_Schedules, L("Schedules"));
 
 
             var serviceWizardPermission = context.CreatePermission(PermissionNames.Pages_ServiceWizard, L("ServiceWizard"));
