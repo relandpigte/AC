@@ -14,10 +14,13 @@ using Academically.Services.CalendarEvents.Dto;
 using Academically.Services.Projects.Dto;
 using Microsoft.EntityFrameworkCore;
 using SourceCloud.Core.Services;
+using SourceCloud.Core.Services.Email;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -265,6 +268,7 @@ namespace Academically.Services.CalendarEvents
             await _calendarEventsDomainService.UpdateAsync(calendarEvent);
         }
 
+
         public async Task CreateBatch(CalendarEventDto[] inputs)
         {
             if (inputs != null && inputs.Any())
@@ -346,6 +350,7 @@ namespace Academically.Services.CalendarEvents
                     new KeyValuePair<string, string>("confirmLink", confirmLink),
                     new KeyValuePair<string, string>("viewDetailsLink", viewDetailsLink),
                 });
+
             await _emailService.SendAsync(tutor.Name, tutor.EmailAddress, L("BookingRequestEmailSubject"), tutorEmailBody);
 
             string studentEmailBody = await _emailTemplateHelper.GetTemplate("booking-requested.html", new List<KeyValuePair<string, string>>
@@ -362,6 +367,7 @@ namespace Academically.Services.CalendarEvents
                     new KeyValuePair<string, string>("studentProfilePicture", studentProfilePicture),
                     new KeyValuePair<string, string>("viewDetailsLink", viewDetailsLink),
                 });
+
             await _emailService.SendAsync(student.Name, student.EmailAddress, L("BookingRequestEmailSubject"), studentEmailBody);
         }
 
@@ -407,7 +413,6 @@ namespace Academically.Services.CalendarEvents
             string viewDetailsLink = $"{clientRootAddress}/app/calendar/{tutorId}?goto={HttpUtility.UrlEncode(calendarEvent.StartTime.ToString("o", CultureInfo.InvariantCulture))}" +
                 $"&event-id={calendarEvent.Id}";
             string joinSessionLink = "javascript:;";
-
             string emailBody = await _emailTemplateHelper.GetTemplate("booking-confirmed.html", new List<KeyValuePair<string, string>>
                 {
                     new KeyValuePair<string, string>("eventName", calendarEvent.Title),
@@ -424,7 +429,17 @@ namespace Academically.Services.CalendarEvents
                     new KeyValuePair<string, string>("joinSessionLink", joinSessionLink),
                     new KeyValuePair<string, string>("viewDetailsLink", viewDetailsLink),
                 });
-            await _emailService.SendAsync(recipient.Name, recipient.EmailAddress, L("BookingConfirmedEmailSubject"), emailBody);
+
+            List<EmailAttachment> attachments = new List<EmailAttachment>()
+            {
+                  new EmailAttachment
+                  {
+                      FileName = "event.ics",
+                      FileData=_emailService.GetCalenderIcsFormat(calendarEvent.Id,calendarEvent.Title,calendarEvent.Type.ToString(),calendarEvent.StartTime,calendarEvent.EndTime)
+                  }
+            };
+
+            await _emailService.SendAsync(recipient.Name, recipient.EmailAddress, L("BookingConfirmedEmailSubject"), emailBody, attachments);
         }
     }
 }
