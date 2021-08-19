@@ -105,16 +105,16 @@ namespace SourceCloud.Provider.Aws
             return mStream;
         }
 
-        public  MemoryStream GetCalenderIcsFormat(Guid calenderId,string title,string type,DateTime startTime,DateTime endTime)
+        public MemoryStream GetCalenderIcsFormat(Guid calenderId, string title, string type, DateTime startTime, DateTime endTime)
         {
             StringBuilder strCalFormat = new StringBuilder();
             strCalFormat.AppendLine("BEGIN:VCALENDAR");
             strCalFormat.AppendLine("VERSION:2.0");
             strCalFormat.AppendLine("PRODID:-//Schedule a Meeting");
             strCalFormat.AppendLine("X-WR-RELCALID:ABC");
-            strCalFormat.AppendLine(type.Equals("Cancelled") ? "METHOD:CANCEL" : "METHOD:REQUEST");
+            strCalFormat.AppendLine("METHOD:REQUEST");
             strCalFormat.AppendLine("BEGIN:VEVENT");
-            strCalFormat.AppendLine(type.Equals("Cancelled") ? "UID:\"" + calenderId + "\"" : "UID:" + calenderId + "");
+            strCalFormat.AppendLine("UID:" + calenderId);
             strCalFormat.AppendLine(type.Equals("Cancelled") ? "SEQUENCE:2" : "SEQUENCE:0");
             strCalFormat.AppendLine(string.Format("SUMMARY:{0}", title));
             strCalFormat.AppendLine("CLASS:PUBLIC");

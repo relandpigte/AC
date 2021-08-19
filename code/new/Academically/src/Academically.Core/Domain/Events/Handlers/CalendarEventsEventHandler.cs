@@ -71,6 +71,7 @@ namespace Academically.Domain.Events.Handlers
                 await SendEmailCancelledCalenderEvent(tutor.FullName, tutor.EmailAddress, tutorEmailSubject, tutorEmailBody, calendarEvent);
             }
         }
+
         private async Task SendEmailCancelledCalenderEvent(string name, string email, string emailSubject, string emailbody, CalendarEvent calendarEvent)
         {
             List<EmailAttachment> attachments = new List<EmailAttachment>()
@@ -78,7 +79,7 @@ namespace Academically.Domain.Events.Handlers
                   new EmailAttachment
                   {
                       FileName = "cancelledEvent.ics",
-                      FileData=_emailService.GetCalenderIcsFormat(calendarEvent.Id,calendarEvent.Title,calendarEvent.Type.ToString(),calendarEvent.StartTime,calendarEvent.EndTime)
+                      FileData = _emailService.GetCalenderIcsFormat(calendarEvent.Id,calendarEvent.Title,calendarEvent.Type.ToString(),calendarEvent.StartTime,calendarEvent.EndTime)
                   }
             };
 

@@ -435,7 +435,7 @@ namespace Academically.Services.CalendarEvents
                   new EmailAttachment
                   {
                       FileName = "event.ics",
-                      FileData=_emailService.GetCalenderIcsFormat(calendarEvent.Id,calendarEvent.Title,calendarEvent.Type.ToString(),calendarEvent.StartTime,calendarEvent.EndTime)
+                      FileData = _emailService.GetCalenderIcsFormat(calendarEvent.Id,calendarEvent.Title,calendarEvent.Type.ToString(),calendarEvent.StartTime,calendarEvent.EndTime)
                   }
             };
 
