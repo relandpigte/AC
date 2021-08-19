@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Configuration;
@@ -12,6 +13,7 @@ using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using SourceCloud.Core.Services;
+using SourceCloud.Core.Services.Email;
 
 namespace Academically.Domain.Events.Handlers
 {
@@ -60,13 +62,27 @@ namespace Academically.Domain.Events.Handlers
 
                 string studentEmailSubject = L("BookingCancelledStudentEmailSubject", calendarEvent.Title);
                 string studentEmailBody = L("BookingCancelledStudentEmailMessage", student.FullName, tutor.FullName, calendarEvent.Title, project.Name, rescheduleComment.Comments);
-                await _emailService.SendAsync(student.FullName, student.EmailAddress, studentEmailSubject, studentEmailBody);
+
+                await SendEmailCancelledCalenderEvent(student.FullName, student.EmailAddress, studentEmailSubject, studentEmailBody, calendarEvent);
 
                 string tutorEmailSubject = L("BookingCancelledTutorEmailSubject", calendarEvent.Title);
                 string tutorEmailBody = L("BookingCancelledTutorEmailMessage", tutor.FullName, student.FullName, calendarEvent.Title, project.Name, rescheduleComment.Comments);
-                await _emailService.SendAsync(tutor.FullName, tutor.EmailAddress, tutorEmailSubject, tutorEmailBody);
-            }
 
+                await SendEmailCancelledCalenderEvent(tutor.FullName, tutor.EmailAddress, tutorEmailSubject, tutorEmailBody, calendarEvent);
+            }
+        }
+        private async Task SendEmailCancelledCalenderEvent(string name, string email, string emailSubject, string emailbody, CalendarEvent calendarEvent)
+        {
+            List<EmailAttachment> attachments = new List<EmailAttachment>()
+            {
+                  new EmailAttachment
+                  {
+                      FileName = "cancelledEvent.ics",
+                      FileData=_emailService.GetCalenderIcsFormat(calendarEvent.Id,calendarEvent.Title,calendarEvent.Type.ToString(),calendarEvent.StartTime,calendarEvent.EndTime)
+                  }
+            };
+
+            await _emailService.SendAsync(name, email, emailSubject, emailbody, attachments);
         }
     }
 }
