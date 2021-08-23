@@ -81,6 +81,7 @@ namespace Academically.Services.CalendarEvents
         {
             var eventsQuery = _userCalendarEventsRepository.GetAll()
                 .Where(e => e.UserId == input.UserId)
+                .Where(e => !e.CalendarEvent.Project.IsDeleted)
                 .Select(e => e.CalendarEvent)
                 .Distinct()
                 .Where(e => e.Type != CalendarEventType.Cancelled)
@@ -115,6 +116,7 @@ namespace Academically.Services.CalendarEvents
         {
             var eventsQuery = _userCalendarEventsRepository.GetAll()
                 .Where(e => e.UserId == userId)
+                .Where(e => !e.CalendarEvent.Project.IsDeleted)
                 .Select(e => e.CalendarEvent)
                 .Distinct()
                 .Where(e => e.Type == CalendarEventType.ConfirmedBooking && e.StartTime >= currentTime)

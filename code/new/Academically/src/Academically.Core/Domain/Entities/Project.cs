@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Academically.Authorization.Users;
 
 namespace Academically.Domain.Entities
 {
     [Table("AcademicallyProjects")]
-    public class Project : CreationAuditedEntity<Guid>
+    public class Project : FullAuditedEntity<Guid>
     {
         public string Name { get; set; }
         public Guid? ServiceLevel1 { get; set; }
