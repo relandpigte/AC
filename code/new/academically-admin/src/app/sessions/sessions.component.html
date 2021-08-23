@@ -7,16 +7,31 @@
   </div>
 
   <div class="session-videos row">
-    <div class="col-8 local-video-container">
-      <div class="local-video-block" [loader]="isLoading">
-        <video class="local-video" #localVideoEl autoplay playsinline></video>
+    <div class="col-8 presenter-video-container">
+      <div class="presenter-video-block" [loader]="isLoading">
+        <video class="presenter-video" #presenterVideoEl autoplay playsinline></video>
+        <div class="user-info-container">
+          <p *ngIf="!isScreenSharing || (isScreenSharing && !isRemoteScreenSharing)" class="user-name user-info">
+            {{ appSession.user.name }} {{ appSession.user.surname }}
+          </p>
+          <p *ngIf="isScreenSharing && isRemoteScreenSharing" class="user-name user-info">
+            {{ otherUser.fullName }}
+          </p>
+        </div>
       </div>
     </div>
 
-    <div class="col-4 remote-video-container">
-      <div class="remote-video-block" [loader]="isRemoteLoading">
-        <video class="remote-video" #remoteVideoEl autoplay playsinline>
+    <div class="col-4 user-video-container">
+      <div class="user-video-block" [loader]="isRemoteLoading">
+        <video class="user-video" #remoteVideoEl autoplay playsinline>
         </video>
+        <div *ngIf="otherUser" class="user-info-container">
+          <p class="user-name user-info">
+            {{ otherUser.fullName }}
+          </p>
+          <i *ngIf="isRemoteAudioEnabled" class="user-audio user-info fe fe-mic user-info active"></i>
+          <i *ngIf="!isRemoteAudioEnabled" class="user-audio user-info fe fe-mic-off user-info"></i>
+        </div>
         <ng-container *ngIf="otherUser">
           <p *ngIf="sessionState <= SessionState.Waiting" class="waiting">
             <ng-container *ngIf="isTutor">
@@ -47,18 +62,35 @@
           </div>
         </ng-container>
       </div>
+      <div [class.hidden]="!isScreenSharing" class="user-video-block">
+        <video class="user-video" #localVideoEl autoplay playsinline>
+        </video>
+        <div class="user-info-container">
+          <p class="user-name user-info">
+            {{ appSession.user.name }} {{ appSession.user.surname }}
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="session-footer row">
     <div class="col-4 track-controls">
-      <button (click)="onMuteAudioClick()" [disabled]="isLoading" class="btn btn-md btn-primary">
+      <button (click)="onMuteAudioClick()" [disabled]="isLoading" class="btn btn-md btn-primary"
+        [class.btn-primary]="isAudioEnabled" [class.btn-secondary]="!isAudioEnabled">
         <i *ngIf="isAudioEnabled" class="fe fe-mic"></i>
         <i *ngIf="!isAudioEnabled" class="fe fe-mic-off"></i>
       </button>
-      <button (click)="onMuteVideoClick()" [disabled]="isLoading" class="btn btn-md btn-primary">
-        <i *ngIf="isVideoEnabled" class="fe fe-video"></i>
-        <i *ngIf="!isVideoEnabled" class="fe fe-video-off"></i>
+      <button (click)="onMuteVideoClick()" [disabled]="isLoading" class="btn btn-md btn-primary"
+        [class.btn-primary]="isVideoEnabled" [class.btn-secondary]="!isVideoEnabled">
+        <i *ngIf="isVideoEnabled" class="fe fe-camera"></i>
+        <i *ngIf="!isVideoEnabled" class="fe fe-camera-off"></i>
+      </button>
+      <button (click)="onShareScreenClick()" [disabled]="isLoading || isRemoteScreenSharing"
+        class="btn btn-md btn-primary" [class.btn-primary]="isScreenSharing && !isRemoteScreenSharing"
+        [class.btn-secondary]="!isScreenSharing || isRemoteScreenSharing">
+        <i *ngIf="!isScreenSharing || isRemoteScreenSharing" class="fe fe-airplay"></i>
+        <i *ngIf="isScreenSharing && !isRemoteScreenSharing" class="fe fe-video-off"></i>
       </button>
     </div>
     <div class="col-4 timer">
