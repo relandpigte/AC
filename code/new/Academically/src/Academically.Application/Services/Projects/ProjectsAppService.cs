@@ -123,9 +123,7 @@ namespace Academically.Services.Projects
 
         public async Task DeleteAsync(Guid id)
         {
-            var project = await _projectsRepository.GetAsync(id);
-            if (project != null)
-                await _projectsRepository.UpdateAsync(project);
+            await _projectsRepository.DeleteAsync(id);
         }
     }
 }
