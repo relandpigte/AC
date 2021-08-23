@@ -1,11 +1,8 @@
-﻿using Abp;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Abp.AspNetCore.SignalR.Hubs;
 using Abp.Dependency;
-using Abp.RealTime;
-using Academically.Authorization.Users;
 using Microsoft.AspNetCore.SignalR;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Academically.Web.Host.Hubs
 {
@@ -48,6 +45,30 @@ namespace Academically.Web.Host.Hubs
             foreach (var userId in userIds)
             {
                 await Clients.User(userId.ToString()).SendAsync("connectionEstablished", durationInSeconds);
+            }
+        }
+
+        public async Task ToggleAudio(bool isEnabled, IEnumerable<long> userIds)
+        {
+            foreach (var userId in userIds)
+            {
+                await Clients.User(userId.ToString()).SendAsync("audioToggled", isEnabled);
+            }
+        }
+
+        public async Task ShareScreen(long presenterUserId, IEnumerable<long> userIds)
+        {
+            foreach (var userId in userIds)
+            {
+                await Clients.User(userId.ToString()).SendAsync("screenShared", presenterUserId);
+            }
+        }
+
+        public async Task StopScreenShare(long presenterUserId, IEnumerable<long> userIds)
+        {
+            foreach (var userId in userIds)
+            {
+                await Clients.User(userId.ToString()).SendAsync("screenShareStopped", presenterUserId);
             }
         }
     }

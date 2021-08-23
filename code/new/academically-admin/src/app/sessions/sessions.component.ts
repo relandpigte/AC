@@ -7,6 +7,7 @@ import {
   CalendarEventsServiceProxy,
   UserDto,
   CalendarEventDto,
+  UserLoginInfoDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppConsts } from '@shared/AppConsts';
 import * as _ from 'lodash';
@@ -15,10 +16,12 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { Subscription, interval } from 'rxjs';
 import * as moment from 'moment';
+import { NumberSymbol } from '@angular/common';
 
 enum SessionState {
   Initializing,
   Initiated,
+  ConnectStudent,
   Waiting,
   InLobby,
   Admitting,
@@ -37,6 +40,7 @@ enum StreamTrackType {
   animations: [appModuleAnimation()],
 })
 export class SessionsComponent extends AppComponentBase implements OnInit, AfterViewInit {
+  @ViewChild('presenterVideoEl', { static: true }) presenterVideoEl: ElementRef;
   @ViewChild('localVideoEl', { static: true }) localVideoEl: ElementRef;
   @ViewChild('remoteVideoEl', { static: true }) remoteVideoEl: ElementRef;
 
@@ -46,16 +50,21 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   calendarEventId: string;
   sessionState = SessionState.Initializing;
   peerConnection: RTCPeerConnection;
-  localStream: MediaStream;
+  presenterStream: MediaStream;
   remoteStream: MediaStream;
-  localVideo: HTMLVideoElement;
+  presenterVideo: HTMLVideoElement;
   remoteVideo: HTMLVideoElement;
+  localVideo: HTMLVideoElement;
+  presenterSender: RTCRtpSender;
   meetingsHub: any;
   otherUser: UserDto;
   sessionTimerSubscription: Subscription;
   sessionTimerSeconds = -1;
   isAudioEnabled = true;
   isVideoEnabled = true;
+  isScreenSharing = false;
+  isRemoteScreenSharing = false;
+  isRemoteAudioEnabled = false;
   isLoading = false;
 
   constructor(
@@ -90,8 +99,9 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   }
 
   ngAfterViewInit(): void {
-    this.localVideo = this.localVideoEl.nativeElement;
+    this.presenterVideo = this.presenterVideoEl.nativeElement;
     this.remoteVideo = this.remoteVideoEl.nativeElement;
+    this.localVideo = this.localVideoEl.nativeElement;
   }
 
   async initializeWebRTC(): Promise<void> {
@@ -111,8 +121,8 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
             'turn:74.125.247.128:3478?transport=tcp',
             'turn:[2001:4860:4864:4:8000::]:3478?transport=tcp',
           ],
-          username: creds.username,
-          credential: creds.password,
+          username: 'CJL8kokGEgZ9eARpCUwYqvGggqMKIICjBTAK',
+          credential: 'DyyYyerG+RbPOlWQg3El0vJTaCY=',
         },
       ],
       iceTransportPolicy: 'all',
@@ -121,22 +131,31 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   }
 
   async initializeDevice(): Promise<void> {
-    this.localStream = await navigator.mediaDevices.getUserMedia({
+    this.presenterStream = await navigator.mediaDevices.getUserMedia({
       video: true,
-      audio: true,
+      audio: {
+        echoCancellation: {
+          exact: true,
+        },
+        // @ts-ignore
+        googEchoCancellation: { exact: true },
+        googAutoGainControl: { exact: true },
+        googNoiseSuppression: { exact: true },
+      },
     });
     this.remoteStream = new MediaStream();
 
-    this.localStream.getTracks().forEach(track => {
+    this.presenterStream.getTracks().forEach(track => {
       switch (track.kind) {
         case StreamTrackType.Audio:
           track.enabled = this.isAudioEnabled;
+          this.peerConnection.addTrack(track, this.presenterStream);
           break;
         case StreamTrackType.Video:
           track.enabled = this.isVideoEnabled;
+          this.presenterSender = this.peerConnection.addTrack(track, this.presenterStream);
           break;
       }
-      this.peerConnection.addTrack(track, this.localStream);
     });
 
     this.peerConnection.ontrack = (event) => {
@@ -145,8 +164,10 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
       });
     };
 
-    this.localVideo.srcObject = this.localStream;
+    this.presenterVideo.srcObject = this.presenterStream;
+    this.presenterVideo.volume = 0;
     this.remoteVideo.srcObject = this.remoteStream;
+
     this.sessionState = SessionState.Initiated;
   }
 
@@ -185,17 +206,42 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
 
   onMuteAudioClick(): void {
     this.isAudioEnabled = !this.isAudioEnabled;
-    this.localStream.getAudioTracks().forEach(track => track.enabled = this.isAudioEnabled);
+    this.presenterStream.getAudioTracks().forEach(track => track.enabled = this.isAudioEnabled);
+    this.meetingsHub.invoke('toggleAudio', this.isAudioEnabled, [this.otherUser.id]);
   }
 
   onMuteVideoClick(): void {
     this.isVideoEnabled = !this.isVideoEnabled;
-    this.localStream.getVideoTracks().forEach(track => track.enabled = this.isVideoEnabled);
+    this.presenterStream.getVideoTracks().forEach(track => track.enabled = this.isVideoEnabled);
+  }
+
+  async onShareScreenClick(): Promise<void> {
+    if (!this.isScreenSharing) {
+      // @ts-ignore
+      const shareScreenStream: MediaStream = await navigator.mediaDevices.getDisplayMedia();
+      const shareScreenTrack = shareScreenStream.getTracks()[0];
+      this.presenterSender.replaceTrack(shareScreenTrack);
+      this.presenterVideo.srcObject = shareScreenStream;
+      this.localVideo.srcObject = this.presenterStream;
+      this.isScreenSharing = true;
+
+      this.meetingsHub.invoke('shareScreen', this.appSession.userId, [this.otherUser.id]);
+      console.log('invoke - shareScreen');
+    } else {
+      const localVideoStream: MediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const localVideoTrack = localVideoStream.getTracks().find(e => e.kind === StreamTrackType.Video);
+      this.presenterSender.replaceTrack(localVideoTrack);
+      this.presenterVideo.srcObject = localVideoStream;
+      this.isScreenSharing = false;
+
+      this.meetingsHub.invoke('stopScreenShare', this.appSession.userId, [this.otherUser.id]);
+      console.log('invoke - stopScreenShare');
+    }
   }
 
   onHangupClick(): void {
-    this.localStream = undefined;
-    this.remoteStream = undefined;
+    this.disconnectTrack(this.presenterStream);
+    this.disconnectTrack(this.remoteStream);
     window.close();
   }
 
@@ -206,8 +252,9 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
 
         connection.on('startSession', async () => {
           console.log('startSession');
-          if (this.otherUser) {
+          if (this.otherUser && this.sessionState !== SessionState.ConnectStudent) {
             this.meetingsHub.invoke('connectStudent', [this.otherUser.id]);
+            this.sessionState = SessionState.ConnectStudent;
             console.log('invoke - connectStudent');
           }
         });
@@ -235,6 +282,31 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
           this.sessionState = SessionState.Connected;
           this.sessionTimerSeconds = durationInSeconds;
           await this.startSessionTimer();
+          this.isRemoteAudioEnabled = true;
+        });
+
+        connection.on('audioToggled', async (isEnabled: boolean) => {
+          console.log('audioToggled');
+          this.isRemoteAudioEnabled = isEnabled;
+        });
+
+        connection.on('screenShared', async (presenterUserId: NumberSymbol) => {
+          console.log('screenShared');
+          if (presenterUserId !== this.appSession.userId) {
+            this.presenterVideo.srcObject = this.remoteStream;
+            this.localVideo.srcObject = this.presenterStream;
+            this.isScreenSharing = true;
+            this.isRemoteScreenSharing = true;
+          }
+        });
+
+        connection.on('screenShareStopped', async (presenterUserId: NumberSymbol) => {
+          console.log('screenShareStopped');
+          if (presenterUserId !== this.appSession.userId) {
+            this.presenterVideo.srcObject = this.presenterStream;
+            this.isScreenSharing = false;
+            this.isRemoteScreenSharing = false;
+          }
         });
       });
 
@@ -277,8 +349,10 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     session.offer = JSON.stringify(offerDescription);
     await this._sessionsService.update(session).toPromise();
 
-    this.meetingsHub.invoke('connectStudent', [this.otherUser.id]);
-    console.log('invoke - connectStudent');
+    if (this.sessionState !== SessionState.ConnectStudent) {
+      this.meetingsHub.invoke('connectStudent', [this.otherUser.id]);
+      console.log('invoke - connectStudent');
+    }
   }
 
   private async joinSession(): Promise<void> {
@@ -315,7 +389,7 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
       } else {
         this.sessionTimerSeconds = 0;
         this.sessionTimerSubscription.unsubscribe();
-        this.disconnectTrack(this.localStream);
+        this.disconnectTrack(this.presenterStream);
         this.disconnectTrack(this.remoteStream);
         this.message.confirm('', this.l('SessionEndedMessage'), (result) => {
           if (result) {
