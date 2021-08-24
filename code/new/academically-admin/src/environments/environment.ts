@@ -12,6 +12,24 @@ export const environment = {
     appId: '61dfaf37a1ca4dfdb89d305d29914a09',
     appCertificate: '37b27c2d394341b19886a401211c16d8',
   },
+  webRtc: {
+    stun: {
+      servers: [
+        'stun:74.125.247.128:3478',
+        'stun:[2001:4860:4864:4:8000::]:3478',
+      ]
+    },
+    turn: {
+      servers: [
+        'turn:74.125.247.128:3478?transport=udp',
+        'turn:[2001:4860:4864:4:8000::]:3478?transport=udp',
+        'turn:74.125.247.128:3478?transport=tcp',
+        'turn:[2001:4860:4864:4:8000::]:3478?transport=tcp',
+      ],
+      username: 'CJL8kokGEgZ9eARpCUwYqvGggqMKIICjBTAK',
+      password: 'DyyYyerG+RbPOlWQg3El0vJTaCY=',
+    }
+  },
   providers: {
     stripe: {
       clientId: 'ca_JTqXUdOGoHuPu5xa30NV6ywErQwqkFrO',

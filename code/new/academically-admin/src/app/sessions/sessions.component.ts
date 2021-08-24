@@ -17,6 +17,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { Subscription, interval } from 'rxjs';
 import * as moment from 'moment';
 import { NumberSymbol } from '@angular/common';
+import { environment } from 'environments/environment';
 
 enum SessionState {
   Initializing,
@@ -109,20 +110,12 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     this.peerConnection = new RTCPeerConnection({
       iceServers: [
         {
-          urls: [
-            'stun:74.125.247.128:3478',
-            'stun:[2001:4860:4864:4:8000::]:3478',
-          ]
+          urls: environment.webRtc.stun.servers,
         },
         {
-          urls: [
-            'turn:74.125.247.128:3478?transport=udp',
-            'turn:[2001:4860:4864:4:8000::]:3478?transport=udp',
-            'turn:74.125.247.128:3478?transport=tcp',
-            'turn:[2001:4860:4864:4:8000::]:3478?transport=tcp',
-          ],
-          username: 'CJL8kokGEgZ9eARpCUwYqvGggqMKIICjBTAK',
-          credential: 'DyyYyerG+RbPOlWQg3El0vJTaCY=',
+          urls: environment.webRtc.turn.servers,
+          username: environment.webRtc.turn.username,
+          credential: environment.webRtc.turn.password,
         },
       ],
       iceTransportPolicy: 'all',
