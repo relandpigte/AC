@@ -378,6 +378,18 @@ deploy_backend_to_uat:
   only:
     - develop
 
+refresh_backend_to_uat:
+  extends:
+    .refresh
+  dependencies:
+    - deploy_backend_to_uat
+  variables:
+    ENVIRONMENT: uat
+  environment:
+    name: uat
+  only:
+    - develop
+
 deploy_frontend_to_uat:
   <<: *frontend
   variables:
