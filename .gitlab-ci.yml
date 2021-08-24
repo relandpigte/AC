@@ -328,7 +328,7 @@ deploy_backend_to_ci:
 refresh_backend_to_ci:
   extends:
     .refresh
-  dependencies:
+  needs:
     - deploy_backend_to_ci
   variables:
     ENVIRONMENT: ci
@@ -375,7 +375,7 @@ deploy_backend_to_uat:
 refresh_backend_to_uat:
   extends:
     .refresh
-  dependencies:
+  needs:
     - deploy_backend_to_uat
   variables:
     ENVIRONMENT: uat
