@@ -182,7 +182,7 @@ export class DbsCheckComponent extends AppComponentBase implements OnInit {
 
   private getDbsCertificate(): void {
     this.isLoading = true;
-    this._dbsCertificatesService.getAll(undefined, undefined, undefined)
+    this._dbsCertificatesService.getAll(this.userId, undefined, undefined, undefined)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {

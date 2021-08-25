@@ -8,11 +8,10 @@
       </div>
     </div>
     <div class="card-body" [loader]="isLoading">
-
       <div class="form-group">
         <div class="custom-control custom-checkbox">
           <input [(ngModel)]="isDbsRequired" class="custom-control-input" id="isDbsRequired" name="isDbsRequired"
-            type="checkbox" (change)="onDbsRequiredChange()"  [disabled]="isReadOnly" />
+            type="checkbox" (change)="onDbsRequiredChange()" />
           <label class="custom-control-label" for="isDbsRequired">{{ 'DbsCheckMessage' | localize }}</label>
         </div>
       </div>

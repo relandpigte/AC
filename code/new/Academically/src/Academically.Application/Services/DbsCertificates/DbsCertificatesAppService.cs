@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace Academically.Services.DbsCertificates
 {
     [AbpAuthorize(PermissionNames.Pages_TutorWizard_DbsCheck)]
-    public class DbsCertificatesAppService : AsyncCrudAppService<DbsCertificate, DbsCertificateDto, Guid, PagedAndSortedResultRequestDto, CreateDbsCertificateDto, UpdateDbsCertificateDto>, IDbsCertificatesAppService
+    public class DbsCertificatesAppService : AsyncCrudAppService<DbsCertificate, DbsCertificateDto, Guid, PagedDbsResultDto, CreateDbsCertificateDto, UpdateDbsCertificateDto>, IDbsCertificatesAppService
     {
         private readonly IDocumentsDomainService _documentsDomainService;
 
@@ -32,14 +32,14 @@ namespace Academically.Services.DbsCertificates
             _documentsDomainService = documentsDomainService;
         }
 
-        protected override IQueryable<DbsCertificate> CreateFilteredQuery(PagedAndSortedResultRequestDto input)
+        protected override IQueryable<DbsCertificate> CreateFilteredQuery(PagedDbsResultDto input)
         {
             return base.CreateFilteredQuery(input)
                 .Include(e => e.Document)
-                .Where(e => e.CreatorUserId == AbpSession.UserId.Value);
+                .Where(e => e.CreatorUserId == input.UserIdFilter);
         }
 
-        public override async Task<PagedResultDto<DbsCertificateDto>> GetAllAsync(PagedAndSortedResultRequestDto input)
+        public override async Task<PagedResultDto<DbsCertificateDto>> GetAllAsync(PagedDbsResultDto input)
         {
             var output = await base.GetAllAsync(input);
             foreach (var item in output.Items)

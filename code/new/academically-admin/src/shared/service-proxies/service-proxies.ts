@@ -1191,13 +1191,22 @@ export class DbsCertificatesServiceProxy {
     }
 
     /**
+     * @param userIdFilter (optional) 
+     * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
-     * @param sorting (optional) 
      * @return Success
      */
-    getAll(skipCount: number | undefined, maxResultCount: number | undefined, sorting: string | undefined): Observable<DbsCertificateDtoPagedResultDto> {
+    getAll(userIdFilter: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<DbsCertificateDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/DbsCertificates/GetAll?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -1206,10 +1215,6 @@ export class DbsCertificatesServiceProxy {
             throw new Error("The parameter 'maxResultCount' cannot be null.");
         else if (maxResultCount !== undefined)
             url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
-        if (sorting === null)
-            throw new Error("The parameter 'sorting' cannot be null.");
-        else if (sorting !== undefined)
-            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

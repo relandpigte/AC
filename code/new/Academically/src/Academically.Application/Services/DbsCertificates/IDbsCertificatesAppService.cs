@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Academically.Services.DbsCertificates
 {
-    public interface IDbsCertificatesAppService : IAsyncCrudAppService<DbsCertificateDto, Guid, PagedAndSortedResultRequestDto, CreateDbsCertificateDto, UpdateDbsCertificateDto>
+    public interface IDbsCertificatesAppService : IAsyncCrudAppService<DbsCertificateDto, Guid, PagedDbsResultDto, CreateDbsCertificateDto, UpdateDbsCertificateDto>
     {
     }
 }
