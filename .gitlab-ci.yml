@@ -364,6 +364,8 @@ deploy_backend_to_uat:
   <<: *backend
   variables:
     ENV_NAME: "uat"
+  needs:
+    - deploy_backend_to_ci
   dependencies:
     - build_backend
   environment:
