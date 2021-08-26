@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
 import { DocumentUploaderComponent } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { countries } from '@shared/constants/countries';
+import { Select2Directive } from '@shared/directives/select2.directive';
 import {
   FileParameter,
   UniversitiesServiceProxy,
@@ -135,6 +136,10 @@ export class CreateEditEducationComponent extends AppComponentBase implements On
     }
   }
 
+  getYear(year: string): number {
+    return year === 'Present' ? this.currentYear + 1 : +year;
+  }
+
   private getUniversities(): void {
     this.universitiesTypeaheadSource = new Observable((observer: Observer<string>) => {
       observer.next(this.model.universityName);
@@ -143,9 +148,5 @@ export class CreateEditEducationComponent extends AppComponentBase implements On
         return this._universitiesService.search(this.countryCode, query);
       })
     );
-  }
-
-  private getYear(year: string): number {
-    return year === 'Present' ? this.currentYear + 1 : +year;
   }
 }
