@@ -55,9 +55,9 @@
         <div class="form-group col-md-6 required">
           <label class="col-form-label" for="StartYear">{{ 'StartYear' | localize }}</label>
           <select select2 [defaultValue]="model.startYear" [placeholder]="'SelectYear' | localize"
-            (select2ValueChange)="model.startYear = $event" [(ngModel)]="model.startYear" id="StartYear"
-            name="StartYear" type="number" class="custom-select" #startYearModel="ngModel" #startYearEl
-            (change)="onStartYearChange()" required>
+            (select2ValueChange)="model.startYear = $event; onStartYearChange()" [(ngModel)]="model.startYear"
+            id="StartYear" name="StartYear" type="number" class="custom-select" #startYearModel="ngModel" #startYearEl
+            required>
             <option *ngFor="let year of yearSelections" [value]="year">{{ year }}</option>
           </select>
           <abp-validation-summary [control]="startYearModel" [controlEl]="startYearEl"></abp-validation-summary>
@@ -65,9 +65,8 @@
         <div class="form-group col-md-6 required">
           <label class="col-form-label" for="EndYear">{{ 'EndYear' | localize }}</label>
           <select select2 [defaultValue]="model.endYear" [placeholder]="'SelectYear' | localize"
-            (select2ValueChange)="model.endYear = $event" [(ngModel)]="model.endYear" id="EndYear" name="EndYear"
-            type="number" class="custom-select" #endYearModel="ngModel" #endYearEl (change)="onEndYearChange()"
-            required>
+            (select2ValueChange)="model.endYear = $event; onEndYearChange()" [(ngModel)]="model.endYear" id="EndYear"
+            name="EndYear" type="number" class="custom-select" #endYearModel="ngModel" #endYearEl required>
             <option *ngFor="let year of yearSelections" [value]="year">{{ year }}</option>
           </select>
           <abp-validation-summary [control]="endYearModel" [controlEl]="endYearEl"></abp-validation-summary>
@@ -94,7 +93,8 @@
 
     </div>
     <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading"
-      [saveDisabled]="!createEditUserEducationForm.form.valid || isLoading" (onCancelClick)="onCloseClick()">
+      [saveDisabled]="!createEditUserEducationForm.form.valid || isLoading || getYear(model.startYear) > getYear(model.endYear)"
+      (onCancelClick)="onCloseClick()">
     </abp-modal-footer>
   </div>
 </form>
