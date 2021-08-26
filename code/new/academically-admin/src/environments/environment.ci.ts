@@ -18,8 +18,8 @@ export const environment = {
         'turn:turn-academically-gitlab-ci.sourcecloud-dev.uk:3478?transport=udp',
         'turn:turn-academically-gitlab-ci.sourcecloud-dev.uk:3478?transport=tcp',
       ],
-      username: '',
-      password: '',
+      username: 'turn_user',
+      password: 'Wsc4e9dnckso1ejz97zorjf',
     }
   },
   providers: {
