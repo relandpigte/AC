@@ -12,7 +12,9 @@ public class StudentProjectPageProposal {
 
 	private static Tab proposalTabIsActive = new Tab("Proposal",
 			By.xpath("//a[@class='nav-link ng-star-inserted active' and contains(text(),'Proposals')]"));
-	private static Button fullDetails = new Button("Full details", By.xpath("//button[text()= ' View offer ']"));
+	private static Button fullDetails(String tutorName) {
+		return new Button("Full details", By.xpath("//a[contains(text(),'"+tutorName+"')]/following::button[text()=' View offer '][1]"));
+	}
 	private static Element tutorName(String name) {
 		return new Element(name,By.xpath("//a[contains(text(),'"+name+"')]"));
 	}
@@ -25,8 +27,8 @@ public class StudentProjectPageProposal {
 		proposalTabIsActive.verifyDisplayed();
 	}
 
-	public static void clickFullDetails() {
-		fullDetails.click();
+	public static void clickFullDetails(String tutorName) {
+		fullDetails(tutorName).click();
 	}
 
 	public static class FullDetailsModal {
@@ -60,6 +62,7 @@ public class StudentProjectPageProposal {
 		}
 
 		public static class BookingModal {
+			private static Element bookingModal = new Element("Booking modal",By.xpath("//app-create-edit-booking"));
 			private static Element projectIdDropdown = new Element("Project Id dropdown",
 					By.xpath("//app-create-edit-booking//span[@id='select2-projectId-container']"));
 
@@ -68,7 +71,7 @@ public class StudentProjectPageProposal {
 						By.xpath("//app-create-edit-booking//li[contains(@id,'projectId-result') and text()=' "
 								+ projectId + " ']"));
 			}
-
+			
 			private static TextBox titleTextBox = new TextBox("Title",
 					By.xpath("//app-create-edit-booking//input[@id='title']"));
 			private static TextBox startDate = new TextBox("Start Date",
@@ -107,7 +110,11 @@ public class StudentProjectPageProposal {
 			public static void enterStartDate(String date) {
 				startDate.setValueWithJavascript(date);
 			}
-
+			
+			public static void verifyBookingModalIsDisplayed() {
+				bookingModal.verifyDisplayed();
+			}
+			
 			public static void enterEndDate(String date) {
 				endDate.setValueWithJavascript(date);
 			}

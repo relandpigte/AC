@@ -73,6 +73,11 @@ public class TutorProjectsPageFindWork {
 			private static TextBox DiscountedpricePerHour = new TextBox("Price per hour",By.xpath("//input[@id='DiscountedPricePerHour']"));
 			private static CheckBox freeInterviewToggle = new CheckBox("Free interview",By.xpath("//input[@id='IsFreeInterview']"));
 			private static Button confirmBtn = new Button("Confirm",By.xpath("//button[text()=' Confirm ']"));
+			private static Button closeBtn = new Button("Close",By.xpath("//button[text()=' Close ']"));
+			
+			public static void clickClose() {
+				closeBtn.click();
+			}
 			
 			public static void enablePricePerHour() {
 				if(!pricePerHourToggle.isSelected()){

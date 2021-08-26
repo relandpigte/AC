@@ -6,7 +6,7 @@
 	"credentials": {
 		"student": {
 			"password": "Test@12345",
-			"email": "test.student@gilmatugas.33mail.com"
+			"email": "student1@academically.33mail.com"
 		}
 		,"admin":{
 			"password": "123qwe",

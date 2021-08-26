@@ -55,4 +55,15 @@ public class RegisterPageStepDefinitions {
 	public void sentEmailIsDisplayed() {
 		RegisterPage.SentEmailModal.verifySentToEmailMessageIsDisplayed();
 	}
+	
+	@Then("^email address is already in use$")
+	public void verifyEmailAddressWarningMessageIsDisplayed() {
+		RegisterPage.verifyEmailWarningMessageIsDisplayed();
+	}
+	
+	@Then("^register button is disabled$")
+	public void verifyRegisterButtonIsDisabled() {
+		RegisterPage.verifyDisableRegisterButtonIsDisplayed();
+	}
+	
 }

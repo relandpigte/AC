@@ -89,10 +89,10 @@ Feature: Create new project
     When user select "Academic Tutoring"
     And user click continue to step 4
     Then user is in step 4
-    
-     @UI @TestRails(C14790)
-    Scenario: C14790 - Verify single field called Project Name is displayed
-   Given User is in academically login page
+
+  @UI @TestRails(C14790)
+  Scenario: C14790 - Verify single field called Project Name is displayed
+    Given User is in academically login page
     When user login as "student"
     Then user successfully login
     When user create a new project
@@ -108,10 +108,10 @@ Feature: Create new project
     And user click continue to step 4
     Then user is in step 4
     And project name textbox is displayed
-    
-     @UI @TestRails(C14791) @Email
-    Scenario: C14791 - Verify that the student has successfully created a new project 
-     Given User is in academically login page
+
+  @UI @TestRails(C14791) @Email
+  Scenario: C14791 - Verify that the student has successfully created a new project
+    Given User is in academically login page
     When user register a student
     And user enter account details
       | Firstname      | Lastname | Email          | Date of Birth |
@@ -138,27 +138,26 @@ Feature: Create new project
     And user click continue to step 4
     Then user is in step 4
     When user enter project name "Test Project XXX"
-   	Then user is in dashboard page
-   	When user navigate to my projects tab
-   	And user proceed to project "Test Project XXX"
-   	Then user is in proposal screen
-   	
-   	@?? @Adhoc
-   	Scenario: C14792 - Verify that student see all the offers from tutors relating to my Project
-   	
-   	Given User is in academically login page
+    Then user is in dashboard page
+    When user navigate to my projects tab
+    And user proceed to project "Test Project XXX"
+    Then user is in proposal screen
+
+  @UI @TestRails(C14792) @Email
+  Scenario: C14792 - Verify that student see all the offers from tutors relating to my Project
+    Given User is in academically login page
     When user register a student
     And user enter account details
       | Firstname      | Lastname | Email          | Date of Birth |
-      | Automated82XXX | Test     | automated82XXX | 04/02/1971    |
+      | Automated83XXX | Test     | automated83XXX | 04/02/1971    |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
-    And email address "automated82XXX" matched
+    And email address "automated83XXX" matched
     When user enter password "Test@12345" and confirm passoword "Test@12345"
     And user register an account
     Then registered the account successfully
-    When user enter username "automated82XXX" and password "Test@12345"
+    When user enter username "automated83XXX" and password "Test@12345"
     Then user successfully login
     When user create a new project
     Then user is in service wizard page
@@ -172,40 +171,37 @@ Feature: Create new project
     When user select "Academic Tutoring"
     And user click continue to step 4
     Then user is in step 4
-    When user enter project name "Test Project XXX"
-   	Then user is in dashboard page
-   	When user navigate to my projects tab
-   	And user proceed to project "Test Project XXX"
-   	Then user is in proposal screen
-   	When user logout in academically
+    When user enter project name "Test Project 83XXX"
+    Then user is in dashboard page
+    When user navigate to my projects tab
+    And user proceed to project "Test Project 83XXX"
+    Then user is in proposal screen
+    When user logout in academically
     Then user is in academically login page
-    #
     When user login as "tutor"
     Then user successfully login
-   	When user see all projects
-   	Then user in in find work screen
-   	And project name "Test Project XXX" is displayed
-   	When user view a full details of the project "Test Project XXX"
-   	Then project details modal is displayed
-   	#
-   	When tutor make an offer
-   	 | Price per hour  | Discounted number of hours  | Discounted price per hour | Free interview| 
-     | 15              | 1                           | 18                        | Yes           |
+    When user see all projects
+    Then user in in find work screen
+    And project name "Test Project 83XXX" is displayed
+    When user view a full details of the project "Test Project 83XXX"
+    Then project details modal is displayed
+    When tutor make an offer
+      | Price per hour | Discounted number of hours | Discounted price per hour | Free interview |
+      |             15 |                          1 |                        18 | Yes            |
+    And user close the offer modal
     And user proceed to the dashboard page
     Then user is in dashboard page
     When user see all projects
-   	Then user in in find work screen
-   	And project name "Test Project XXX" is displayed
-   	When user view a full details of the project "Test Project XXX"
-   	Then project details modal is displayed
-   	And proposal already sent button is displayed
+    Then user in in find work screen
+    And project name "Test Project 83XXX" is displayed
+    When user view a full details of the project "Test Project 83XXX"
+    Then project details modal is displayed
+    And proposal already sent button is displayed
     When user logout in academically
     Then user is in academically login page
-    #
-    When user enter username "automated82XXX" and password "Test@12345"
+    When user enter username "automated83XXX" and password "Test@12345"
     Then user successfully login
     When user navigate to my projects tab
-   	And user proceed to project "Test Project XXX"
-   	Then user is in proposal screen
-   	And "Tutor" offer is displayed
-    
+    And user proceed to project "Test Project 83XXX"
+    Then user is in proposal screen
+    And "Tutor" offer is displayed

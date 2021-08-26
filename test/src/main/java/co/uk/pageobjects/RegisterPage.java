@@ -15,6 +15,16 @@ public class RegisterPage {
 	private static TextBox textboxDateOfBirth = new TextBox("Date of birth",By.xpath("//input[@id='DateOfBirth']"));
 	private static Element checkboxTermAndCondition = new Element("Term of condition",By.xpath("//input[@id='AcceptTAndC']"));		
 	private static Button register = new Button("Register",By.xpath("//button[contains(text(),'Register')]"));
+	private static Element emailWarningMessage = new Element("Email warning message",By.xpath("//span[text()=' This email address is already in use. ']"));
+	private static Button disabledRegister = new Button("Disabled register",By.xpath("//button[@disabled and text()=' Register ']"));
+	
+	public static void verifyDisableRegisterButtonIsDisplayed() {
+		disabledRegister.verifyDisplayed();
+	}
+	
+	public static void verifyEmailWarningMessageIsDisplayed() {
+		emailWarningMessage.verifyDisplayed();
+	}
 	
 	public static void verifyRegisterIsDisplayed() {
 		registerTitle.verifyDisplayed();

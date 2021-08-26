@@ -76,6 +76,11 @@ public class HomePageStepDefinitions {
 		Homepage.verifyProfileWidgetIsDisplayed();
 	}
 	
+	@Then("^\"(.*)\" type is displayed$")
+	public void verifyUsertype(String type) {
+		Homepage.ProfileWidget.verifyBadge(type);
+	}
+		
 	@Then("^verification widget is displayed on the dashboard$")
 	public void verifyVerificationWidget() {
 		Homepage.verifyVerificationWidgetIsDisplayed();

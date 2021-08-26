@@ -1,12 +1,12 @@
 Feature: Register
 
-  @UI @TestRails(14474) 
+  @UI @TestRails(14474)
   Scenario: C14474 - Verify successful register a student
     Given User is in academically login page
     When user register a student
     And user enter account details
-      | Firstname     | Lastname | Email        | Date of Birth |
-      | AutomatedXXX  | Test     | automatedXXX | 04/02/1981    |
+      | Firstname    | Lastname | Email        | Date of Birth |
+      | AutomatedXXX | Test     | automatedXXX | 04/02/1981    |
     Then sent email modal is displayed
     And user activate account
     Then user is in complete registration form
@@ -17,5 +17,12 @@ Feature: Register
     When user enter username "automatedXXX" and password "Test@12345"
     Then user successfully login
 
-    @??
-   Scenario: C14771 - Verify registration with existing email
+  @UI @TestRails(14771)
+  Scenario: C14771 - Verify registration with existing email
+    Given User is in academically login page
+    When user register a student
+    And user enter account details
+      | Firstname      | Lastname | Email    | Date of Birth |
+      | Automated88XXX | Test     | student1 | 04/02/1981    |
+    Then email address is already in use
+    And register button is disabled

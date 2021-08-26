@@ -68,4 +68,10 @@ public class TutorProjectPageStepDefinitions {
     public void verfyPropoalAlreadySentButtonIsDisplayed(){
     	 TutorProjectsPageFindWork.ProjectDetails.verifyProposalalreadySentButtonIsDisplayed();
     }
+    
+    @When("^user close the offer modal$")
+    public void closeTheOfferModal() {
+    	TutorProjectsPageFindWork.ProjectDetails.OfferModal.clickClose();
+    	DriverHandler.delay(2);
+    }
 }
