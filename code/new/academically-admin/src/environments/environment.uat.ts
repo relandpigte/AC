@@ -10,16 +10,19 @@ export const environment = {
   webRtc: {
     stun: {
       servers: [
-        'stun:turn-academically-gitlab-ci.sourcecloud-dev.uk:3478',
+        'stun:74.125.247.128:3478',
+        'stun:[2001:4860:4864:4:8000::]:3478',
       ]
     },
     turn: {
       servers: [
-        'turn:turn-academically-gitlab-ci.sourcecloud-dev.uk:3478?transport=udp',
-        'turn:turn-academically-gitlab-ci.sourcecloud-dev.uk:3478?transport=tcp',
+        'turn:74.125.247.128:3478?transport=udp',
+        'turn:[2001:4860:4864:4:8000::]:3478?transport=udp',
+        'turn:74.125.247.128:3478?transport=tcp',
+        'turn:[2001:4860:4864:4:8000::]:3478?transport=tcp',
       ],
-      username: '',
-      password: '',
+      username: 'CJL8kokGEgZ9eARpCUwYqvGggqMKIICjBTAK',
+      password: 'DyyYyerG+RbPOlWQg3El0vJTaCY=',
     }
   },
   providers: {
