@@ -71,5 +71,21 @@ namespace Academically.Web.Host.Hubs
                 await Clients.User(userId.ToString()).SendAsync("screenShareStopped", presenterUserId);
             }
         }
+
+        public async Task GrantShareScreenAccess(IEnumerable<long> userIds)
+        {
+            foreach (var userId in userIds)
+            {
+                await Clients.User(userId.ToString()).SendAsync("screenShareAccessGranted");
+            }
+        }
+
+        public async Task RevokeShareScreenAccess(IEnumerable<long> userIds)
+        {
+            foreach (var userId in userIds)
+            {
+                await Clients.User(userId.ToString()).SendAsync("screenShareAccessRevoked");
+            }
+        }
     }
 }

@@ -3,7 +3,7 @@
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "url": "https://qt-ac-api.ngrok.io/swagger/v1/swagger.json",
+      "url": "https://qt-ac-api.ap.ngrok.io/swagger/v1/swagger.json",
       "output": null
     }
   },

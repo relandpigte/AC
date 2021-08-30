@@ -64,8 +64,10 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   isAudioEnabled = true;
   isVideoEnabled = true;
   isScreenSharing = false;
+  isScreenSharingAllowed = false;
   isRemoteScreenSharing = false;
   isRemoteAudioEnabled = false;
+  isRemoteScreenSharingAllowed = false;
   isLoading = false;
 
   constructor(
@@ -76,6 +78,8 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     private _calendarEventsService: CalendarEventsServiceProxy,
   ) {
     super(injector);
+    this.isScreenSharingAllowed = this.isTutor;
+    this.isRemoteScreenSharingAllowed = !this.isTutor;
     this._activatedRoute.paramMap.subscribe(paramMap => {
       this.calendarEventId = paramMap.get('calendar-event-id');
     });
@@ -209,6 +213,10 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   }
 
   async onShareScreenClick(): Promise<void> {
+    if (!this.isScreenSharingAllowed && !this.isTutor) {
+      this.message.error(this.l('YouAreNotAllowedToShareYourScreen'));
+      return;
+    }
     if (!this.isScreenSharing) {
       // @ts-ignore
       const shareScreenStream: MediaStream = await navigator.mediaDevices.getDisplayMedia();
@@ -221,14 +229,21 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
       this.meetingsHub.invoke('shareScreen', this.appSession.userId, [this.otherUser.id]);
       console.log('invoke - shareScreen');
     } else {
-      const localVideoStream: MediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
-      const localVideoTrack = localVideoStream.getTracks().find(e => e.kind === StreamTrackType.Video);
-      this.presenterSender.replaceTrack(localVideoTrack);
-      this.presenterVideo.srcObject = localVideoStream;
-      this.isScreenSharing = false;
+      await this.stopScreenSharing();
+    }
+  }
 
-      this.meetingsHub.invoke('stopScreenShare', this.appSession.userId, [this.otherUser.id]);
-      console.log('invoke - stopScreenShare');
+  onToggleRemoteShareScreenAccess(): void {
+    if (this.isTutor) {
+      if (this.isRemoteScreenSharingAllowed) {
+        this.meetingsHub.invoke('revokeShareScreenAccess', [this.otherUser.id]);
+        console.log('invoke - revokeShareScreenAccess');
+        this.isRemoteScreenSharingAllowed = false;
+      } else {
+        this.meetingsHub.invoke('grantShareScreenAccess', [this.otherUser.id]);
+        console.log('invoke - grantShareScreenAccess');
+        this.isRemoteScreenSharingAllowed = true;
+      }
     }
   }
 
@@ -300,6 +315,19 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
             this.isScreenSharing = false;
             this.isRemoteScreenSharing = false;
           }
+        });
+
+        connection.on('screenShareAccessGranted', async (presenterUserId: NumberSymbol) => {
+          console.log('screenShareAccessGranted');
+          this.isScreenSharingAllowed = true;
+        });
+
+        connection.on('screenShareAccessRevoked', async (presenterUserId: NumberSymbol) => {
+          console.log('screenShareAccessRevoked');
+          if (this.isScreenSharing) {
+            await this.stopScreenSharing();
+          }
+          this.isScreenSharingAllowed = false;
         });
       });
 
@@ -409,5 +437,16 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
         stream.removeTrack(track);
       }, 500);
     });
+  }
+
+  private async stopScreenSharing(): Promise<void> {
+    const localVideoStream: MediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+    const localVideoTrack = localVideoStream.getTracks().find(e => e.kind === StreamTrackType.Video);
+    this.presenterSender.replaceTrack(localVideoTrack);
+    this.presenterVideo.srcObject = localVideoStream;
+    this.isScreenSharing = false;
+
+    this.meetingsHub.invoke('stopScreenShare', this.appSession.userId, [this.otherUser.id]);
+    console.log('invoke - stopScreenShare');
   }
 }

@@ -1,6 +1,6 @@
 {
-  "remoteServiceBaseUrl": "https://qt-ac-api.ngrok.io",
-  "appBaseUrl": "https://qt-ac.ngrok.io",
+  "remoteServiceBaseUrl": "https://qt-ac-api.ap.ngrok.io",
+  "appBaseUrl": "http://localhost:6365",
   "localeMappings": [
     {
       "from": "pt-BR",
