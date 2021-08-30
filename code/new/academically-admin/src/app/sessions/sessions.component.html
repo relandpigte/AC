@@ -29,8 +29,16 @@
           <p class="user-name user-info">
             {{ otherUser.fullName }}
           </p>
-          <i *ngIf="isRemoteAudioEnabled" class="user-audio user-info fe fe-mic user-info active"></i>
-          <i *ngIf="!isRemoteAudioEnabled" class="user-audio user-info fe fe-mic-off user-info"></i>
+
+          <div class="user-controls">
+            <i class="user-control user-info fe" [ngClass]="isRemoteAudioEnabled ? 'fe-mic active': 'fe-mic-off'"></i>
+
+            <ng-container *ngIf="isTutor">
+              <i class="user-control user-info fe" (click)="onToggleRemoteShareScreenAccess()"
+                [ngClass]="isRemoteScreenSharingAllowed ? 'fe-video-off active': 'fe-airplay'"></i>
+            </ng-container>
+          </div>
+
         </div>
         <ng-container *ngIf="otherUser">
           <p *ngIf="sessionState <= SessionState.Waiting" class="waiting">
@@ -86,7 +94,8 @@
         <i *ngIf="isVideoEnabled" class="fe fe-camera"></i>
         <i *ngIf="!isVideoEnabled" class="fe fe-camera-off"></i>
       </button>
-      <button (click)="onShareScreenClick()" [disabled]="isLoading || isRemoteScreenSharing"
+      <button (click)="onShareScreenClick()"
+        [disabled]="isLoading || isRemoteScreenSharing || sessionState !== SessionState.Connected"
         class="btn btn-md btn-primary" [class.btn-primary]="isScreenSharing && !isRemoteScreenSharing"
         [class.btn-secondary]="!isScreenSharing || isRemoteScreenSharing">
         <i *ngIf="!isScreenSharing || isRemoteScreenSharing" class="fe fe-airplay"></i>
