@@ -11,7 +11,7 @@
     justify-content : center;
     background-color: #162D4D;
     color           : #FFFFFF;
-    padding         : 20px;
+    height          : 8vh;
 
     .session-title {
       padding: 0;
@@ -20,11 +20,20 @@
   }
 
   .session-videos {
-    height: 100%;
-    margin: 0;
+    height       : 100%;
+    margin       : 0;
+    border-top   : 1px solid #12263f;
+    border-bottom: 1px solid #12263f;
+
+    .session-videos-container {
+      display       : flex;
+      flex-direction: column;
+    }
 
     .presenter-video-container {
-      padding: 20px 10px 20px 20px;
+      padding-top   : 12px;
+      padding-bottom: 6px;
+      height        : 56vh;
 
       .presenter-video-block {
         height  : 100%;
@@ -41,13 +50,16 @@
     }
 
     .user-video-container {
-      padding: 20px 20px 20px 10px;
+      padding-top   : 6px;
+      padding-bottom: 12px;
+      flex-grow     : 1;
+      display       : flex;
 
       .user-video-block {
         position     : relative;
         border-radius: 10px;
         display      : flex;
-        margin-bottom: 20px;
+        height       : 100%;
 
         &.hidden {
           display: none;
@@ -56,7 +68,7 @@
         .user-video {
           background   : black;
           width        : 100%;
-          height       : auto;
+          height       : 100%;
           border-radius: 10px;
         }
 
@@ -102,53 +114,111 @@
         }
       }
     }
-  }
 
-  .session-footer {
-    background-color: #162D4D;
-    color           : #FFFFFF;
-    margin          : 0 !important;
+    .conversations-container {
+      background-color: #162D4D;
+      display         : flex;
+      flex-direction  : column;
 
-    &>* {
-      padding    : 20px;
-      display    : flex;
-      align-items: center;
+      .conversations {
+        flex-grow    : 1;
+        padding      : 20px 20px 0 20px;
+        overflow-y   : auto;
+        margin-bottom: 10px;
+        margin-top   : 10px;
 
-      &.track-controls {
-        .btn {
-          margin-right: 5px;
+        .my-comment {
+          flex-direction: row-reverse;
+
+          .comment-body-container {
+            display        : flex;
+            justify-content: flex-end;
+          }
+        }
+
+        .comment-body {
+          background-color: #1e3a5c;
+          color           : #FFFFFF;
+
+          .comment-time {
+            color: #6e84a3;
+          }
         }
       }
 
-      &.timer {
-        justify-content: center;
+      .conversations-footer {
+        color : #FFFFFF;
+        margin: 0 !important;
 
-        p {
-          margin       : 0;
-          text-align   : center;
-          padding      : 5px;
-          background   : #00d97e;
-          border-radius: 10px;
+        .conversation-actions {
+          align-items  : center;
+          margin-bottom: 10px;
 
-          &.last-two-minutes {
-            background: #e63757;
-            animation : timer-blinker 1s linear infinite;
+          textarea {
+            color: #FFFFFF;
           }
 
-          @keyframes timer-blinker {
-            50% {
-              background: #f6c343;
+          .attachment-actions {
+            height     : 100%;
+            align-items: center;
+            display    : flex;
+          }
+        }
+      }
+    }
+  }
+
+  .session-videos-footer {
+    color : #FFFFFF;
+    margin: 0 !important;
+    height: 8vh;
+
+    .video-actions {
+      background-color: #162D4D;
+      height          : 100%;
+      border-right    : 1px solid #12263f;
+
+      &>* {
+        display    : flex;
+        align-items: center;
+
+        &.track-controls {
+          .btn {
+            margin-right: 5px;
+          }
+        }
+
+        &.timer {
+          justify-content: center;
+
+          p {
+            margin       : 0;
+            text-align   : center;
+            padding      : 5px;
+            background   : #00d97e;
+            border-radius: 10px;
+
+            &.last-two-minutes {
+              background: #e63757;
+              animation : timer-blinker 1s linear infinite;
+            }
+
+            @keyframes timer-blinker {
+              50% {
+                background: #f6c343;
+              }
             }
           }
         }
-      }
 
-      &.other-controls {
-        justify-content: flex-end;
+        &.other-controls {
+          justify-content: flex-end;
+        }
       }
     }
   }
 }
+
 
 .user-info-container {
   position       : absolute;

@@ -94,7 +94,7 @@ export abstract class AppComponentBase implements OnDestroy {
     return 'assets/img/anonymous.png';
   }
 
-  getProfilePictureFromDocument(document: DocumentDto, userId: number): string {
+  getProfilePictureFromDocument(document?: DocumentDto, userId?: number): string {
     if (document) {
       return this.getProfilePicture(document.name, userId);
     }

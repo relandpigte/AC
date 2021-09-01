@@ -15,16 +15,19 @@ namespace Academically.Services.Sessions
     {
         private readonly IRepository<Session, Guid> _sessionsRepository;
         private readonly IRepository<SessionCandidate, Guid> _sessionCandidatesRepository;
+        private readonly IRepository<ConversationGroup, Guid> _conversationGroupsRepository;
         private readonly ISettingManager _settingManager;
 
         public SessionsAppService(
             IRepository<Session, Guid> sessionsRepository,
             IRepository<SessionCandidate, Guid> sessionCandidatesRepository,
+            IRepository<ConversationGroup, Guid> conversationGroupsRepository,
             ISettingManager settingManager
         )
         {
             _sessionsRepository = sessionsRepository;
             _sessionCandidatesRepository = sessionCandidatesRepository;
+            _conversationGroupsRepository = conversationGroupsRepository;
             _settingManager = settingManager;
         }
 
@@ -32,6 +35,7 @@ namespace Academically.Services.Sessions
         {
             var session = await _sessionsRepository.GetAll()
                 .Where(e => e.CalendarEventId == calendarEventId)
+                .Include(e => e.CalendarEvent)
                 .Include(e => e.SessionCandidates)
                 .FirstOrDefaultAsync();
             if (session == null)
@@ -43,7 +47,21 @@ namespace Academically.Services.Sessions
                 await _sessionsRepository.InsertAsync(session);
             }
 
-            return ObjectMapper.Map<SessionDto>(session);
+            var conversationGroup = await _conversationGroupsRepository.FirstOrDefaultAsync(e => e.ProjectId == session.CalendarEvent.ProjectId.Value);
+            if (conversationGroup == null)
+            {
+                conversationGroup = new ConversationGroup()
+                {
+                    Name = session.CalendarEvent.Title,
+                    ProjectId = session.CalendarEvent.ProjectId.Value,
+                };
+                await _conversationGroupsRepository.InsertAsync(conversationGroup);
+            }
+
+            var output = ObjectMapper.Map<SessionDto>(session);
+            output.ConversationGroupId = conversationGroup.Id;
+
+            return output;
         }
 
         public async Task<TurnServerConfigDto> GetConfiguration()

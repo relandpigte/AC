@@ -13,6 +13,9 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
 import { DateFormatPipe } from './pipes/date-format.pipe';
 
+import { FixedHeightDirective } from './directives/fixed-height.directive';
+import { BottomScrollerDirective } from './directives/bottom-scroller.directive';
+
 import { DocumentUploaderComponent } from './components/document-uploader/document-uploader.component';
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
 import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
@@ -26,6 +29,8 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
     DateFormatPipe,
+    FixedHeightDirective,
+    BottomScrollerDirective,
   ],
   imports: [
     CommonModule,
@@ -55,6 +60,8 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
     TimepickerModule,
     EnumToArrayPipe,
     DateFormatPipe,
+    FixedHeightDirective,
+    BottomScrollerDirective,
     DocumentUploaderComponent,
     ImageCropperComponent,
     ImageGalleryComponent,

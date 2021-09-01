@@ -7,111 +7,173 @@
   </div>
 
   <div class="session-videos row">
-    <div class="col-8 presenter-video-container">
-      <div class="presenter-video-block" [loader]="isLoading">
-        <video class="presenter-video" #presenterVideoEl autoplay playsinline></video>
-        <div class="user-info-container">
-          <p *ngIf="!isScreenSharing || (isScreenSharing && !isRemoteScreenSharing)" class="user-name user-info">
-            {{ appSession.user.name }} {{ appSession.user.surname }}
-          </p>
-          <p *ngIf="isScreenSharing && isRemoteScreenSharing" class="user-name user-info">
-            {{ otherUser.fullName }}
-          </p>
+
+    <div class="col-8 session-videos-container">
+      <div class="presenter-video-container">
+        <div class="presenter-video-block" [loader]="isLoading">
+          <video class="presenter-video" #presenterVideoEl autoplay playsinline></video>
+          <div class="user-info-container">
+            <p *ngIf="!isScreenSharing || (isScreenSharing && !isRemoteScreenSharing)" class="user-name user-info">
+              {{ user.fullName }}
+            </p>
+            <p *ngIf="isScreenSharing && isRemoteScreenSharing" class="user-name user-info">
+              {{ otherUser.fullName }}
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="col-4 user-video-container">
-      <div class="user-video-block" [loader]="isRemoteLoading">
-        <video class="user-video" #remoteVideoEl autoplay playsinline>
-        </video>
-        <div *ngIf="otherUser" class="user-info-container">
-          <p class="user-name user-info">
-            {{ otherUser.fullName }}
-          </p>
-
-          <div class="user-controls">
-            <i class="user-control user-info fe" [ngClass]="isRemoteAudioEnabled ? 'fe-mic active': 'fe-mic-off'"></i>
-
-            <ng-container *ngIf="isTutor">
-              <i class="user-control user-info fe" (click)="onToggleRemoteShareScreenAccess()"
-                [ngClass]="isRemoteScreenSharingAllowed ? 'fe-video-off active': 'fe-airplay'"></i>
-            </ng-container>
-          </div>
-
-        </div>
-        <ng-container *ngIf="otherUser">
-          <p *ngIf="sessionState <= SessionState.Waiting" class="waiting">
-            <ng-container *ngIf="isTutor">
-              {{ 'WaitingForUserToJoin' | localize: otherUser.name }}
-            </ng-container>
-            <ng-container *ngIf="!isTutor">
-              {{ 'WaitingForUserToStartTheMeeting' | localize: otherUser.name }}
-            </ng-container>
-          </p>
-          <div *ngIf="sessionState === SessionState.InLobby" class="user-in-lobby">
-            <ng-container *ngIf="isTutor">
-              <p class="admit-user-message">
-                <i class="fe fe-info text-success admit-user-icon"></i>
-                {{ 'UserIsNowInTheLobby' | localize: otherUser.name }}
+      <div class="user-video-container row">
+        <div class="col-6">
+          <div class="user-video-block" [loader]="isRemoteLoading">
+            <video class="user-video" #remoteVideoEl autoplay playsinline>
+            </video>
+            <div *ngIf="otherUser" class="user-info-container">
+              <p class="user-name user-info">
+                {{ otherUser.fullName }}
               </p>
-              <div class="admit-user-actions">
-                <button class="btn btn-sm btn-success" (click)="onAdmitClick()">
-                  {{ 'Admit' | localize }}
-                </button>
+
+              <div class="user-controls">
+                <i class="user-control user-info fe"
+                  [ngClass]="isRemoteAudioEnabled ? 'fe-mic active': 'fe-mic-off'"></i>
+
+                <ng-container *ngIf="isTutor">
+                  <i class="user-control user-info fe" (click)="onToggleRemoteShareScreenAccess()"
+                    [ngClass]="isRemoteScreenSharingAllowed ? 'fe-video-off active': 'fe-airplay'"></i>
+                </ng-container>
+              </div>
+
+            </div>
+            <ng-container *ngIf="otherUser">
+              <p *ngIf="sessionState <= SessionState.Waiting" class="waiting">
+                <ng-container *ngIf="isTutor">
+                  {{ 'WaitingForUserToJoin' | localize: otherUser.name }}
+                </ng-container>
+                <ng-container *ngIf="!isTutor">
+                  {{ 'WaitingForUserToStartTheMeeting' | localize: otherUser.name }}
+                </ng-container>
+              </p>
+              <div *ngIf="sessionState === SessionState.InLobby" class="user-in-lobby">
+                <ng-container *ngIf="isTutor">
+                  <p class="admit-user-message">
+                    <i class="fe fe-info text-success admit-user-icon"></i>
+                    {{ 'UserIsNowInTheLobby' | localize: otherUser.name }}
+                  </p>
+                  <div class="admit-user-actions">
+                    <button class="btn btn-sm btn-success" (click)="onAdmitClick()">
+                      {{ 'Admit' | localize }}
+                    </button>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="!isTutor">
+                  <p class="admit-user-message p-0 m-0">
+                    {{ 'MeetingStarted' | localize }} <br />
+                    {{ 'UserWillAdmitYouSoon' | localize: otherUser.name }}
+                  </p>
+                </ng-container>
               </div>
             </ng-container>
-            <ng-container *ngIf="!isTutor">
-              <p class="admit-user-message p-0 m-0">
-                {{ 'MeetingStarted' | localize }} <br />
-                {{ 'UserWillAdmitYouSoon' | localize: otherUser.name }}
-              </p>
-            </ng-container>
           </div>
-        </ng-container>
+        </div>
+        <div class="col-6">
+          <div [class.hidden]="!isScreenSharing" class="user-video-block">
+            <video class="user-video" #localVideoEl autoplay playsinline>
+            </video>
+            <div class="user-info-container">
+              <p class="user-name user-info">
+                {{ user.fullName }}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div [class.hidden]="!isScreenSharing" class="user-video-block">
-        <video class="user-video" #localVideoEl autoplay playsinline>
-        </video>
-        <div class="user-info-container">
-          <p class="user-name user-info">
-            {{ appSession.user.name }} {{ appSession.user.surname }}
-          </p>
+
+      <div class="session-videos-footer">
+        <div class="row video-actions">
+          <div class="col-4 track-controls">
+            <button (click)="onMuteAudioClick()" [disabled]="isLoading" class="btn btn-md btn-primary"
+              [class.btn-primary]="isAudioEnabled" [class.btn-secondary]="!isAudioEnabled">
+              <i *ngIf="isAudioEnabled" class="fe fe-mic"></i>
+              <i *ngIf="!isAudioEnabled" class="fe fe-mic-off"></i>
+            </button>
+            <button (click)="onMuteVideoClick()" [disabled]="isLoading" class="btn btn-md btn-primary"
+              [class.btn-primary]="isVideoEnabled" [class.btn-secondary]="!isVideoEnabled">
+              <i *ngIf="isVideoEnabled" class="fe fe-camera"></i>
+              <i *ngIf="!isVideoEnabled" class="fe fe-camera-off"></i>
+            </button>
+            <button (click)="onShareScreenClick()"
+              [disabled]="isLoading || isRemoteScreenSharing || sessionState !== SessionState.Connected"
+              class="btn btn-md btn-primary" [class.btn-primary]="isScreenSharing && !isRemoteScreenSharing"
+              [class.btn-secondary]="!isScreenSharing || isRemoteScreenSharing">
+              <i *ngIf="!isScreenSharing || isRemoteScreenSharing" class="fe fe-airplay"></i>
+              <i *ngIf="isScreenSharing && !isRemoteScreenSharing" class="fe fe-video-off"></i>
+            </button>
+          </div>
+          <div class="col-4 timer">
+            <p *ngIf="sessionTimerSeconds >= 0 && sessionTimerSeconds <= 300"
+              [class.last-two-minutes]="sessionTimerSeconds <= 120">
+              {{ sessionTimer }}
+            </p>
+          </div>
+          <div class="col-4 other-controls">
+            <button (click)="onHangupClick()" [disabled]="isLoading" class="btn btn-md btn-danger">
+              <i class="fe fe-phone-off"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-4 conversations-container" [loader]="isConversationsLoading">
+      <div class="conversations" fixedHeight [bottomScroller]="conversations">
+        <div *ngFor="let conversation of conversations" class="comment mb-3">
+          <div class="row" [class.my-comment]="conversation.creatorUserId === appSession.userId">
+            <div class="col-auto">
+              <div class="avatar avatar-sm">
+                <img
+                  [src]="getProfilePictureFromDocument(conversation.creatorUser.profilePictureDocument, conversation.creatorUserId)"
+                  class="avatar-img rounded-circle" alt="profile" />
+              </div>
+            </div>
+            <div class="col comment-body-container">
+              <div class="comment-body">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="comment-title">
+                      {{ conversation.creatorUser.fullName }}
+                    </h5>
+                  </div>
+                  <div class="col-auto">
+                    <time class="comment-time">
+                      {{ conversation.creationTime | dateFormat: 'MMM DD, YYYY hh:mm A' }}
+                    </time>
+                  </div>
+                </div>
+                <p class="comment-text">
+                  <quill-view-html [content]="conversation.message"></quill-view-html>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p *ngIf="!conversations || !conversations.length" class="text-muted text-center m-0">
+          {{ 'NoPreviousConversation' | localize }}
+        </p>
+      </div>
+
+      <div class="conversations-footer">
+        <div class="row conversation-actions">
+          <div class="col-12">
+            <form autocomplete="off" #messageForm="ngForm" (ngSubmit)="onMessageFormSubmit()">
+              <quill-editor [modules]="quillModules" [(ngModel)]="conversationMessage" id="conversationMessage"
+                name="conversationMessage" (keydown.enter)="$event.preventDefault(); messageForm.ngSubmit.emit();">
+              </quill-editor>
+            </form>
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 
-  <div class="session-footer row">
-    <div class="col-4 track-controls">
-      <button (click)="onMuteAudioClick()" [disabled]="isLoading" class="btn btn-md btn-primary"
-        [class.btn-primary]="isAudioEnabled" [class.btn-secondary]="!isAudioEnabled">
-        <i *ngIf="isAudioEnabled" class="fe fe-mic"></i>
-        <i *ngIf="!isAudioEnabled" class="fe fe-mic-off"></i>
-      </button>
-      <button (click)="onMuteVideoClick()" [disabled]="isLoading" class="btn btn-md btn-primary"
-        [class.btn-primary]="isVideoEnabled" [class.btn-secondary]="!isVideoEnabled">
-        <i *ngIf="isVideoEnabled" class="fe fe-camera"></i>
-        <i *ngIf="!isVideoEnabled" class="fe fe-camera-off"></i>
-      </button>
-      <button (click)="onShareScreenClick()"
-        [disabled]="isLoading || isRemoteScreenSharing || sessionState !== SessionState.Connected"
-        class="btn btn-md btn-primary" [class.btn-primary]="isScreenSharing && !isRemoteScreenSharing"
-        [class.btn-secondary]="!isScreenSharing || isRemoteScreenSharing">
-        <i *ngIf="!isScreenSharing || isRemoteScreenSharing" class="fe fe-airplay"></i>
-        <i *ngIf="isScreenSharing && !isRemoteScreenSharing" class="fe fe-video-off"></i>
-      </button>
-    </div>
-    <div class="col-4 timer">
-      <p *ngIf="sessionTimerSeconds >= 0 && sessionTimerSeconds <= 300"
-        [class.last-two-minutes]="sessionTimerSeconds <= 120">
-        {{ sessionTimer }}
-      </p>
-    </div>
-    <div class="col-4 other-controls">
-      <button (click)="onHangupClick()" [disabled]="isLoading" class="btn btn-md btn-danger">
-        <i class="fe fe-phone-off"></i>
-      </button>
-    </div>
-  </div>
 </div>

@@ -151,6 +151,7 @@ namespace Academically.Web.Host.Startup
             {
                 endpoints.MapHub<AbpCommonHub>("/signalr");
                 endpoints.MapHub<SessionsHub>("/signalr-sessionsHub");
+                endpoints.MapHub<ConversationsHub>("/signalr-conversationsHub");
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
             });
