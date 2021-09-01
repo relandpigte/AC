@@ -1180,6 +1180,81 @@ export class ConfigurationServiceProxy {
 }
 
 @Injectable()
+export class ConversationsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param projectId (optional) 
+     * @return Success
+     */
+    getAll(projectId: string | undefined): Observable<ConversationDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Conversations/GetAll?";
+        if (projectId === null)
+            throw new Error("The parameter 'projectId' cannot be null.");
+        else if (projectId !== undefined)
+            url_ += "projectId=" + encodeURIComponent("" + projectId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<ConversationDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ConversationDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<ConversationDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ConversationDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ConversationDto[]>(<any>null);
+    }
+}
+
+@Injectable()
 export class DbsCertificatesServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -11600,6 +11675,69 @@ export interface IChangeUserLanguageDto {
     languageName: string;
 }
 
+export class ConversationDto implements IConversationDto {
+    id: string | undefined;
+    message: string | undefined;
+    conversationGroupId: string;
+    creationTime: moment.Moment;
+    creatorUserId: number;
+    creatorUser: UserDto;
+
+    constructor(data?: IConversationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.message = _data["message"];
+            this.conversationGroupId = _data["conversationGroupId"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ConversationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ConversationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["message"] = this.message;
+        data["conversationGroupId"] = this.conversationGroupId;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): ConversationDto {
+        const json = this.toJSON();
+        let result = new ConversationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IConversationDto {
+    id: string | undefined;
+    message: string | undefined;
+    conversationGroupId: string;
+    creationTime: moment.Moment;
+    creatorUserId: number;
+    creatorUser: UserDto;
+}
+
 export class CreateEditUserEducationCourseDto implements ICreateEditUserEducationCourseDto {
     id: string | undefined;
     title: string | undefined;
@@ -13481,6 +13619,11 @@ export class Project implements IProject {
     id: string;
     creationTime: moment.Moment;
     creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
     name: string | undefined;
     serviceLevel1: string | undefined;
     serviceNameLevel1: string | undefined;
@@ -13505,6 +13648,11 @@ export class Project implements IProject {
             this.id = _data["id"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? moment(_data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
             this.name = _data["name"];
             this.serviceLevel1 = _data["serviceLevel1"];
             this.serviceNameLevel1 = _data["serviceNameLevel1"];
@@ -13533,6 +13681,11 @@ export class Project implements IProject {
         data["id"] = this.id;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
         data["name"] = this.name;
         data["serviceLevel1"] = this.serviceLevel1;
         data["serviceNameLevel1"] = this.serviceNameLevel1;
@@ -13561,6 +13714,11 @@ export interface IProject {
     id: string;
     creationTime: moment.Moment;
     creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
     name: string | undefined;
     serviceLevel1: string | undefined;
     serviceNameLevel1: string | undefined;
@@ -15290,6 +15448,7 @@ export class SessionDto implements ISessionDto {
     offer: string | undefined;
     answer: string | undefined;
     calendarEventId: string;
+    conversationGroupId: string;
     calendarEvent: CalendarEventDto;
     sessionCandidates: SessionCandidateDto[] | undefined;
 
@@ -15308,6 +15467,7 @@ export class SessionDto implements ISessionDto {
             this.offer = _data["offer"];
             this.answer = _data["answer"];
             this.calendarEventId = _data["calendarEventId"];
+            this.conversationGroupId = _data["conversationGroupId"];
             this.calendarEvent = _data["calendarEvent"] ? CalendarEventDto.fromJS(_data["calendarEvent"]) : <any>undefined;
             if (Array.isArray(_data["sessionCandidates"])) {
                 this.sessionCandidates = [] as any;
@@ -15330,6 +15490,7 @@ export class SessionDto implements ISessionDto {
         data["offer"] = this.offer;
         data["answer"] = this.answer;
         data["calendarEventId"] = this.calendarEventId;
+        data["conversationGroupId"] = this.conversationGroupId;
         data["calendarEvent"] = this.calendarEvent ? this.calendarEvent.toJSON() : <any>undefined;
         if (Array.isArray(this.sessionCandidates)) {
             data["sessionCandidates"] = [];
@@ -15352,6 +15513,7 @@ export interface ISessionDto {
     offer: string | undefined;
     answer: string | undefined;
     calendarEventId: string;
+    conversationGroupId: string;
     calendarEvent: CalendarEventDto;
     sessionCandidates: SessionCandidateDto[] | undefined;
 }

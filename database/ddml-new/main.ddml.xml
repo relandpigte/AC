@@ -70,5 +70,6 @@
 	<include file="ddml-new/ddml.2021-07-27-01-create-sessions-table.xml"/>
 	<include file="ddml-new/ddml.2021-08-06-01-create-useravailabilities-table.xml"/>
 	<include file="ddml-new/ddml.2021-08-18-01-alter-projects-table.xml"/>
+	<include file="ddml-new/ddml.2021-08-25-01-create-conversations-tables.xml"/>
 </databaseChangeLog>
 	

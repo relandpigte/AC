@@ -7,7 +7,8 @@ import {
   CalendarEventsServiceProxy,
   UserDto,
   CalendarEventDto,
-  UserLoginInfoDto,
+  ConversationDto,
+  ConversationsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppConsts } from '@shared/AppConsts';
 import * as _ from 'lodash';
@@ -18,6 +19,8 @@ import { Subscription, interval } from 'rxjs';
 import * as moment from 'moment';
 import { NumberSymbol } from '@angular/common';
 import { environment } from 'environments/environment';
+import { HubService } from '@app/_shared/services/hub.service';
+import { QuillModules } from 'ngx-quill';
 
 enum SessionState {
   Initializing,
@@ -34,6 +37,12 @@ enum StreamTrackType {
   Video = 'video',
 }
 
+class ConversationModel {
+  userId: number;
+  userName: string;
+  message: string;
+}
+
 @Component({
   selector: 'app-sessions',
   templateUrl: './sessions.component.html',
@@ -47,8 +56,10 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
 
   SessionState = SessionState;
 
+  user: UserDto = new UserDto();
   calendarEvent: CalendarEventDto = new CalendarEventDto;
   calendarEventId: string;
+  conversationGroupId: string;
   sessionState = SessionState.Initializing;
   peerConnection: RTCPeerConnection;
   presenterStream: MediaStream;
@@ -57,7 +68,6 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   remoteVideo: HTMLVideoElement;
   localVideo: HTMLVideoElement;
   presenterSender: RTCRtpSender;
-  meetingsHub: any;
   otherUser: UserDto;
   sessionTimerSubscription: Subscription;
   sessionTimerSeconds = -1;
@@ -68,7 +78,49 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   isRemoteScreenSharing = false;
   isRemoteAudioEnabled = false;
   isRemoteScreenSharingAllowed = false;
+  conversationMessage = '';
+
+  sessionsHub: any;
+  conversationsHub: any;
+
   isLoading = false;
+  isConversationsLoading = true;
+
+  conversations: ConversationDto[] = [];
+
+  quillModules: QuillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      ['blockquote', 'code-block'],
+      [{ header: 1 }, { header: 2 }],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ script: 'sub' }, { script: 'super' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      [{ direction: 'rtl' }],
+      [{ size: ['small', false, 'large', 'huge'] }],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      [
+        { color: [] },
+        { background: [] }
+      ],
+      [{ font: [] }],
+      [{ align: [] }],
+      ['clean'],
+      ['link', 'image']
+    ],
+    keyboard: {
+      bindings: {
+        handleEnter: {
+          key: 13,
+          handler: () => { },
+        },
+        'header enter': {
+          key: 13,
+          handler: () => { },
+        },
+      },
+    },
+  };
 
   constructor(
     injector: Injector,
@@ -76,6 +128,8 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     private _sessionsService: SessionsServiceProxy,
     private _profilesService: ProfilesServiceProxy,
     private _calendarEventsService: CalendarEventsServiceProxy,
+    private _conversationsService: ConversationsServiceProxy,
+    private _hubService: HubService,
   ) {
     super(injector);
     this.isScreenSharingAllowed = this.isTutor;
@@ -100,7 +154,8 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   async ngOnInit(): Promise<void> {
     this.isLoading = true;
     await this.initializeWebRTC();
-    await this.initializeHub();
+    await this.initializeSessionsHub();
+    await this.initializeConversationsHub();
   }
 
   ngAfterViewInit(): void {
@@ -129,7 +184,14 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
 
   async initializeDevice(): Promise<void> {
     this.presenterStream = await navigator.mediaDevices.getUserMedia({
-      video: true,
+      video: {
+        width: {
+          exact: 1280
+        },
+        height: {
+          exact: 720
+        },
+      },
       audio: {
         echoCancellation: {
           exact: true,
@@ -171,7 +233,7 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   async onAdmitClick(): Promise<void> {
     this.sessionState = SessionState.Admitting;
 
-    this.meetingsHub.invoke('admittingStudent', [this.otherUser.id]);
+    this.sessionsHub.invoke('admittingStudent', [this.otherUser.id]);
     console.log('invoke - admittingStudent');
 
     const session = await this._sessionsService.get(this.calendarEventId).toPromise();
@@ -195,7 +257,7 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
 
         const duration = moment.duration(this.calendarEvent.endTime.diff(this.calendarEvent.startTime)).asSeconds();
 
-        this.meetingsHub.invoke('establishConnection', duration, [this.otherUser.id, this.appSession.userId]);
+        this.sessionsHub.invoke('establishConnection', duration, [this.otherUser.id, this.appSession.userId]);
         console.log('invoke - establishConnection');
       }
     }
@@ -204,7 +266,7 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   onMuteAudioClick(): void {
     this.isAudioEnabled = !this.isAudioEnabled;
     this.presenterStream.getAudioTracks().forEach(track => track.enabled = this.isAudioEnabled);
-    this.meetingsHub.invoke('toggleAudio', this.isAudioEnabled, [this.otherUser.id]);
+    this.sessionsHub.invoke('toggleAudio', this.isAudioEnabled, [this.otherUser.id]);
   }
 
   onMuteVideoClick(): void {
@@ -226,7 +288,7 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
       this.localVideo.srcObject = this.presenterStream;
       this.isScreenSharing = true;
 
-      this.meetingsHub.invoke('shareScreen', this.appSession.userId, [this.otherUser.id]);
+      this.sessionsHub.invoke('shareScreen', this.appSession.userId, [this.otherUser.id]);
       console.log('invoke - shareScreen');
     } else {
       await this.stopScreenSharing();
@@ -236,11 +298,11 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   onToggleRemoteShareScreenAccess(): void {
     if (this.isTutor) {
       if (this.isRemoteScreenSharingAllowed) {
-        this.meetingsHub.invoke('revokeShareScreenAccess', [this.otherUser.id]);
+        this.sessionsHub.invoke('revokeShareScreenAccess', [this.otherUser.id]);
         console.log('invoke - revokeShareScreenAccess');
         this.isRemoteScreenSharingAllowed = false;
       } else {
-        this.meetingsHub.invoke('grantShareScreenAccess', [this.otherUser.id]);
+        this.sessionsHub.invoke('grantShareScreenAccess', [this.otherUser.id]);
         console.log('invoke - grantShareScreenAccess');
         this.isRemoteScreenSharingAllowed = true;
       }
@@ -253,105 +315,130 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     window.close();
   }
 
-  private async initializeHub(): Promise<void> {
-    jQuery.getScript(AppConsts.appBaseUrl + '/assets/abp/abp.signalr-client.js', async () => {
-      await abp.signalr.startConnection(abp.appPath + 'signalr-sessionsHub', (connection: any) => {
-        this.meetingsHub = connection;
+  onMessageFormSubmit(): void {
+    if (this.conversationMessage.trim()) {
+      const conversation = new ConversationDto();
+      conversation.message = this.conversationMessage;
+      conversation.creatorUserId = this.user.id;
+      conversation.conversationGroupId = this.conversationGroupId;
+      conversation.creatorUser = this.user;
+      this.conversations.push(conversation);
+      this.conversations = _.clone(this.conversations);
+      this.conversationsHub.invoke('sendConversation', [this.otherUser.id], conversation);
+      this.conversationMessage = '';
+    }
+  }
 
-        connection.on('startSession', async () => {
-          console.log('startSession');
-          if (this.otherUser && this.sessionState !== SessionState.ConnectStudent) {
-            this.meetingsHub.invoke('connectStudent', [this.otherUser.id]);
-            this.sessionState = SessionState.ConnectStudent;
-            console.log('invoke - connectStudent');
-          }
-        });
+  private async initializeSessionsHub(): Promise<void> {
+    this.sessionsHub = await this._hubService.getSessionsHub();
 
-        connection.on('joinSession', async () => {
-          console.log('joinSession');
-          if (this.sessionState === SessionState.Waiting) {
-            await this.joinSession();
-            this.sessionState = SessionState.InLobby;
-          }
-        });
-
-        connection.on('admitStudent', async () => {
-          console.log('admitStudent');
-          this.sessionState = SessionState.InLobby;
-        });
-
-        connection.on('waitForAdmission', async () => {
-          console.log('waitForAdmission');
-          this.sessionState = SessionState.Admitting;
-        });
-
-        connection.on('connectionEstablished', async (durationInSeconds: number) => {
-          console.log('connectionEstablished');
-          this.sessionState = SessionState.Connected;
-          this.sessionTimerSeconds = durationInSeconds;
-          await this.startSessionTimer();
-          this.isRemoteAudioEnabled = true;
-        });
-
-        connection.on('audioToggled', async (isEnabled: boolean) => {
-          console.log('audioToggled');
-          this.isRemoteAudioEnabled = isEnabled;
-        });
-
-        connection.on('screenShared', async (presenterUserId: NumberSymbol) => {
-          console.log('screenShared');
-          if (presenterUserId !== this.appSession.userId) {
-            this.presenterVideo.srcObject = this.remoteStream;
-            this.localVideo.srcObject = this.presenterStream;
-            this.isScreenSharing = true;
-            this.isRemoteScreenSharing = true;
-          }
-        });
-
-        connection.on('screenShareStopped', async (presenterUserId: NumberSymbol) => {
-          console.log('screenShareStopped');
-          if (presenterUserId !== this.appSession.userId) {
-            this.presenterVideo.srcObject = this.presenterStream;
-            this.isScreenSharing = false;
-            this.isRemoteScreenSharing = false;
-          }
-        });
-
-        connection.on('screenShareAccessGranted', async (presenterUserId: NumberSymbol) => {
-          console.log('screenShareAccessGranted');
-          this.isScreenSharingAllowed = true;
-        });
-
-        connection.on('screenShareAccessRevoked', async (presenterUserId: NumberSymbol) => {
-          console.log('screenShareAccessRevoked');
-          if (this.isScreenSharing) {
-            await this.stopScreenSharing();
-          }
-          this.isScreenSharingAllowed = false;
-        });
-      });
-
-      this.calendarEvent = await this._calendarEventsService.get(this.calendarEventId).toPromise();
-      const userCalendarEvent = _.first(_.filter(this.calendarEvent.userCalendarEvents, e => e.userId !== this.appSession.userId));
-
-      await this.initializeDevice();
-
-      this.otherUser = await this._profilesService.get(userCalendarEvent.userId).toPromise();
-      this.sessionState = SessionState.Waiting;
-
-      if (this.isTutor) {
-        await this.startSession();
-      } else {
-        this.meetingsHub.invoke('studentJoined', [this.otherUser.id]);
-        console.log('invoke - studentJoined');
+    this.sessionsHub.on('startSession', async () => {
+      console.log('startSession');
+      if (this.otherUser && this.sessionState !== SessionState.ConnectStudent) {
+        this.sessionsHub.invoke('connectStudent', [this.otherUser.id]);
+        this.sessionState = SessionState.ConnectStudent;
+        console.log('invoke - connectStudent');
       }
-
-      this.isLoading = false;
     });
+
+    this.sessionsHub.on('joinSession', async () => {
+      console.log('joinSession');
+      if (this.sessionState === SessionState.Waiting) {
+        await this.joinSession();
+        this.sessionState = SessionState.InLobby;
+      }
+    });
+
+    this.sessionsHub.on('admitStudent', async () => {
+      console.log('admitStudent');
+      this.sessionState = SessionState.InLobby;
+    });
+
+    this.sessionsHub.on('waitForAdmission', async () => {
+      console.log('waitForAdmission');
+      this.sessionState = SessionState.Admitting;
+    });
+
+    this.sessionsHub.on('connectionEstablished', async (durationInSeconds: number) => {
+      console.log('connectionEstablished');
+      this.sessionState = SessionState.Connected;
+      this.sessionTimerSeconds = durationInSeconds;
+      await this.startSessionTimer();
+      this.isRemoteAudioEnabled = true;
+    });
+
+    this.sessionsHub.on('audioToggled', async (isEnabled: boolean) => {
+      console.log('audioToggled');
+      this.isRemoteAudioEnabled = isEnabled;
+    });
+
+    this.sessionsHub.on('screenShared', async (presenterUserId: NumberSymbol) => {
+      console.log('screenShared');
+      if (presenterUserId !== this.appSession.userId) {
+        this.presenterVideo.srcObject = this.remoteStream;
+        this.localVideo.srcObject = this.presenterStream;
+        this.isScreenSharing = true;
+        this.isRemoteScreenSharing = true;
+      }
+    });
+
+    this.sessionsHub.on('screenShareStopped', async (presenterUserId: NumberSymbol) => {
+      console.log('screenShareStopped');
+      if (presenterUserId !== this.appSession.userId) {
+        this.presenterVideo.srcObject = this.presenterStream;
+        this.isScreenSharing = false;
+        this.isRemoteScreenSharing = false;
+      }
+    });
+
+    this.sessionsHub.on('screenShareAccessGranted', async (presenterUserId: NumberSymbol) => {
+      console.log('screenShareAccessGranted');
+      this.isScreenSharingAllowed = true;
+    });
+
+    this.sessionsHub.on('screenShareAccessRevoked', async (presenterUserId: NumberSymbol) => {
+      console.log('screenShareAccessRevoked');
+      if (this.isScreenSharing) {
+        await this.stopScreenSharing();
+      }
+      this.isScreenSharingAllowed = false;
+    });
+
+    this.calendarEvent = await this._calendarEventsService.get(this.calendarEventId).toPromise();
+    const userCalendarEvent = _.first(_.filter(this.calendarEvent.userCalendarEvents, e => e.userId !== this.appSession.userId));
+
+    await this.initializeDevice();
+
+    this.user = await this._profilesService.get(this.appSession.userId).toPromise();
+    this.otherUser = await this._profilesService.get(userCalendarEvent.userId).toPromise();
+    this.sessionState = SessionState.Waiting;
+
+    if (this.isTutor) {
+      await this.startSession();
+    } else {
+      this.sessionsHub.invoke('studentJoined', [this.otherUser.id]);
+      console.log('invoke - studentJoined');
+    }
+
+    this.isLoading = false;
+  }
+
+  private async initializeConversationsHub(): Promise<void> {
+    this.conversationsHub = await this._hubService.getConversationsHub();
+
+    this.conversationsHub.on('conversationSent', async (conversation: ConversationDto) => {
+      console.log('conversationSent');
+      this.conversations.push(conversation);
+      this.conversations = _.clone(this.conversations);
+    });
+
+    this.conversations = await this._conversationsService.getAll(this.calendarEvent.projectId).toPromise();
+    this.isConversationsLoading = false;
   }
 
   private async startSession(): Promise<void> {
     const session = await this._sessionsService.get(this.calendarEventId).toPromise();
+    this.conversationGroupId = session.conversationGroupId;
     await this._sessionsService.deleteCandidates(session.id, SessionCandidateType.Offer).toPromise();
 
     this.peerConnection.onicecandidate = async (event) => {
@@ -371,13 +458,14 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     await this._sessionsService.update(session).toPromise();
 
     if (this.sessionState !== SessionState.ConnectStudent) {
-      this.meetingsHub.invoke('connectStudent', [this.otherUser.id]);
+      this.sessionsHub.invoke('connectStudent', [this.otherUser.id]);
       console.log('invoke - connectStudent');
     }
   }
 
   private async joinSession(): Promise<void> {
     const session = await this._sessionsService.get(this.calendarEventId).toPromise();
+    this.conversationGroupId = session.conversationGroupId;
     await this._sessionsService.deleteCandidates(session.id, SessionCandidateType.Answer).toPromise();
 
     this.peerConnection.onicecandidate = async (event) => {
@@ -399,7 +487,7 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     session.answer = JSON.stringify(answerDescription);
     await this._sessionsService.update(session).toPromise();
 
-    this.meetingsHub.invoke('studentConnected', [this.otherUser.id]);
+    this.sessionsHub.invoke('studentConnected', [this.otherUser.id]);
     console.log('invoke - studentConnected');
   }
 
@@ -446,7 +534,7 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     this.presenterVideo.srcObject = localVideoStream;
     this.isScreenSharing = false;
 
-    this.meetingsHub.invoke('stopScreenShare', this.appSession.userId, [this.otherUser.id]);
+    this.sessionsHub.invoke('stopScreenShare', this.appSession.userId, [this.otherUser.id]);
     console.log('invoke - stopScreenShare');
   }
 }

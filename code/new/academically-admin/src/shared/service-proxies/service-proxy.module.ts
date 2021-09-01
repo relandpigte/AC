@@ -48,6 +48,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.TutorApplicationServiceProxy,
         ApiServiceProxies.SessionsServiceProxy,
         ApiServiceProxies.UserAvailabilitiesServiceProxy,
+        ApiServiceProxies.ConversationsServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

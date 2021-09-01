@@ -13,6 +13,7 @@ namespace Academically.Services.Sessions.Dto
         public string Offer { get; set; }
         public string Answer { get; set; }
         public Guid CalendarEventId { get; set; }
+        public Guid ConversationGroupId { get; set; }
 
         public CalendarEventDto CalendarEvent { get; set; }
 

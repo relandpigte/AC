@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Loading">Loading</text>
+    <text name="NoPreviousConversation">No previous conversation</text>
+    <text name="AttachFile">Attach file</text>
+    <text name="AddPhoto">Add photo</text>
+    <text name="TypeYourMessageHere">Type your message here</text>
     <text name="YouAreNotAllowedToShareYourScreen">You are not allowed to share your screen. Please ask your tutor to grant you access.</text>
     <text name="DeleteProjectConfirmationMessage">Are you sure you want to permanently delete this project?</text>
     <text name="Schedules">Schedules</text>

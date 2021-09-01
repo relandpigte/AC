@@ -301,6 +301,14 @@ body.theme-dark {
   .dow-menu {
     border-right: 1px solid #1F3A5C;
   }
+
+  .loader-parent {
+    .loader {
+      .spinner {
+        color: #FFFFFF !important;
+      }
+    }
+  }
 }
 
 .modal-open .modal {
@@ -885,6 +893,55 @@ app-methodologies .badge {
   right   : 10px;
   height  : 20px !important;
   width   : 20px !important;
+}
+
+.session {
+  .loader-parent {
+    .loader {
+      .spinner {
+        color: #FFFFFF !important;
+      }
+    }
+  }
+
+
+
+  .ql-editor {
+    background-color: #1e3a5c !important;
+    color           : #FFFFFF;
+  }
+
+  quill-editor {
+    .ql-editor {
+      height    : 90px !important;
+      overflow-y: auto;
+    }
+
+    .ql-editor,
+    .ql-toolbar {
+      background-color: #1e3a5c !important;
+      color           : #FFFFFF;
+    }
+
+    .ql-toolbar,
+    .ql-container {
+      border: none;
+    }
+
+    .ql-formats {
+      button {
+        color: #95aac9 !important;
+      }
+    }
+
+    .ql-picker-label {
+      color: #95aac9 !important;
+    }
+  }
+}
+
+.comment-text {
+  word-break: break-all !important;
 }
 
 @media (min-width: 576px) {
