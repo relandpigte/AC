@@ -38,10 +38,10 @@ export enum CalendarEventSessionType {
 })
 export class CalendarComponent extends AppComponentBase implements OnInit, AfterViewInit {
   @ViewChild('calendar', { static: true }) calendarComponent: FullCalendarComponent;
-
   user: UserDto = new UserDto();
   timeZones: TimeZoneDto[] = [];
   userId: number;
+  eventId: number;
   startTime: Date;
   endTime: Date;
   isLoading = false;
@@ -123,6 +123,8 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
           this.calendarEventId = paramMap.get('event-id');
           if (paramMap.has('auto-accept')) {
             this.calendarEventAutoAccept = paramMap.get('auto-accept').toLowerCase() === 'true';
+          } else if (this.calendarEventId) {
+            this.getEventDetailsbyId();
           }
         }
       }
@@ -246,6 +248,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
   }
 
   private showCreateEditBookingModal(model?: CalendarEventDto, autoAcceptEvent = false): void {
+
     const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditBookingComponent>;
     modalSettings.initialState = {
       model: model,
@@ -374,14 +377,25 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
         }
 
         this.calendarOptions.events = this.calendarEventInputs;
-        if (this.calendarEventId) {
-          const calendarEvent = _.find(calendarEvents, e => e.id === this.calendarEventId);
-          if (calendarEvent && calendarEvent.type !== CalendarEventType.Blocker) {
-            calendarEvent.tutorId = calendarEvent.projectOffer.creatorUserId ?? this.userId;
-            this.showCreateEditBookingModal(_.cloneDeep(calendarEvent), this.calendarEventAutoAccept);
-            this.calendarEventId = undefined;
-            this.calendarEventAutoAccept = false;
-          }
+      });
+  }
+
+  private getEventDetailsbyId(): void {
+    this.isLoading = true;
+    this._calendarEventsService.getAllEventDetailsbyEventId(this.calendarEventId)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+      )
+      .subscribe(calendarEvents => {
+        if (calendarEvents !== undefined && calendarEvents.type !== undefined && calendarEvents.type !== CalendarEventType.Cancelled) {
+          this.showCreateEditBookingModal(calendarEvents, this.calendarEventAutoAccept);
+          this.calendarEventId = undefined;
+          this.calendarEventAutoAccept = false;
+        } else {
+          this.notify.error(this.l('TheBookingRequestWasCancelled'));
         }
       });
   }

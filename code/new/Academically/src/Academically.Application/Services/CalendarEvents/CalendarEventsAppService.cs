@@ -77,6 +77,24 @@ namespace Academically.Services.CalendarEvents
             return calendarEvent;
         }
 
+        public async Task<CalendarEventDto> GetAllEventDetailsbyEventId(Guid id)
+        {
+            var calendarEvent = await _calendarEventsRepository.GetAll()
+                .Where(e => e.Id == id)
+                .Include(e => e.UserCalendarEvents)
+                .Include(e => e.CreatorUser)
+                .Include(e => e.Project)
+                    .ThenInclude(e => e.CreatorUser)
+                .Include(e => e.ProjectOffer)
+                    .ThenInclude(e => e.CreatorUser)
+                .Include(e => e.RescheduleComments)
+                    .ThenInclude(e => e.CreatorUser)
+                        .ThenInclude(e => e.ProfilePictureDocument)
+                .Select(e => ObjectMapper.Map<CalendarEventDto>(e))
+                .FirstOrDefaultAsync();
+            return calendarEvent;
+        }
+
         public async Task<IEnumerable<CalendarEventDto>> GetAll(GetAllCalendarEventsRequestDto input)
         {
             var eventsQuery = _userCalendarEventsRepository.GetAll()
