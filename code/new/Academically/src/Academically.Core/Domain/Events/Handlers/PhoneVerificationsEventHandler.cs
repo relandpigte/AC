@@ -7,6 +7,7 @@ using Abp.Localization;
 using Abp.Timing;
 using Academically.Authorization.Users;
 using Academically.Domain.Entities;
+using Newtonsoft.Json;
 using SourceCloud.Core.Services;
 
 namespace Academically.Domain.Events.Handlers
@@ -39,7 +40,9 @@ namespace Academically.Domain.Events.Handlers
         {
             var message = L("PhoneNumberVerificationSmsMessage", code);
 #if !DEBUG
-            await _smsService.SendAsync(AcademicallyConsts.DefaultSmsSender, recipient, message);
+            dynamic recipientNo = JsonConvert.DeserializeObject(recipient);
+
+            await _smsService.SendAsync(AcademicallyConsts.DefaultSmsSender, recipientNo.internationalNumber.Value, message);
 #endif
         }
     }
