@@ -96,7 +96,7 @@ namespace Academically.Services.CalendarEvents
 
             var oneTimeEvents = await eventsQuery
                 .Where(e => e.Recurrence == CalendarEventRecurrence.OneTime
-                    && e.StartTime >= input.StartTime
+                    && e.StartTime >= input.StartTime.AddDays(-7)
                     && e.EndTime <= input.EndTime)
                 .Select(e => ObjectMapper.Map<CalendarEventDto>(e))
                 .ToListAsync();
