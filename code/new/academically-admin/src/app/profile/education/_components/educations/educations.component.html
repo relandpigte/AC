@@ -19,15 +19,15 @@
         <ng-container *ngFor="let university of universities">
           <ng-container *ngFor="let userEducation of university.userEducations; let i = index;">
             <tr>
+              <td><div class="col-auto">
+                <div class="avatar avatar-sm">
+                  <div class="avatar-title font-size-lg bg-primary-soft rounded-circle text-primary">
+                    <i class="fe fe-book-open"></i>
+                  </div>
+                </div>
+              </div></td>
               <td *ngIf="i === 0" [attr.rowspan]="university.userEducations.length" [class.multilevel]="i === 0">
                 <div class="row align-items-center">
-                  <div class="col-auto">
-                    <div class="avatar avatar-sm">
-                      <div class="avatar-title font-size-lg bg-primary-soft rounded-circle text-primary">
-                        <i class="fe fe-book-open"></i>
-                      </div>
-                    </div>
-                  </div>
                   <div class="col">
                     <h4 class="mb-1">{{ university.heProvider }}</h4>
                     <p class="card-text small text-muted">
