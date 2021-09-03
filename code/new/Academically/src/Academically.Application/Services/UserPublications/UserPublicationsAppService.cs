@@ -53,6 +53,7 @@ namespace Academically.Services.UserPublications
                     || e.Publisher.Contains(input.SearchFilter)
                     || e.Abstract.Contains(input.SearchFilter)
                     || e.UserPublicationTags.Any(e => e.PublicationTag.Name.ToLower().Contains(input.SearchFilter)))
+                .WhereIf(input.ProjectType != null, e => (int)e.PublicationType == input.ProjectType)
                 .OrderByDescending(e => e.PublicationDate);
 
             var totalCount = await query.CountAsync();

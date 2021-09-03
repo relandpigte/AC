@@ -4,11 +4,49 @@
       <div class="col">
         <h4 class="card-header-title">Publications</h4>
       </div>
-      <div class="col-auto">
-        <button type="button" class="btn btn-sm btn-light bg-white mr-2">
-          <i class="fe fe-sliders"></i>
-          {{ 'Filter' | localize}}
+      <div class="dropdown" dropdown #filterDropdown="bs-dropdown" [isAnimated]="true" [autoClose]="false">
+        <button class="btn btn-sm btn-light bg-white " type="button" dropdownToggle>
+          <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }} <span
+            class="badge badge-primary ml-1 d-none">0</span>
         </button>
+        <form *dropdownMenu style="min-width: 380px;" class="dropdown-menu dropdown-menu-right dropdown-menu-card"
+          (ngSubmit)="getDataPage(1)">
+          <div class="card-header">
+            <h4 class="card-header-title">{{ 'Filters' | localize }}</h4>
+            <button class="btn btn-sm btn-link text-reset btn-white" type="submit"
+              (click)="filterDropdown.hide(); onClearFiltersClick()">
+              <small>{{ 'ClearFilters' | localize }}</small>
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="list-group list-group-flush mt-n4 mb-4">
+              <div class="list-group-item">
+                <div class="row">
+                  <div class="col-auto">
+                    <small>{{ 'PublicationType' | localize }}</small>
+                  </div>
+                  <div class="col-auto">
+                      <select class="form-control"  [(ngModel)]="publicationType"  type="text" id="PublicationType" name="publicationType">
+                        <option [ngValue]="undefined">{{ 'SelectPublicationType' | localize }}</option>
+                        <option [value]="1">{{ 'Article' | localize }}</option>
+                        <option [value]="2">{{ 'Book' | localize }}</option>
+                        <option [value]="3">{{ 'Chapter' | localize }}</option>
+                        <option [value]="4">{{ 'ConferencePaper' | localize }}</option>
+                        <option [value]="5">{{ 'Thesis' | localize }}</option>
+                        <option [value]="6">{{ 'Data' | localize }}</option>
+                      </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-block btn-primary" type="submit" (click)="filterDropdown.hide()">
+              {{ 'ApplyFilter' | localize }}
+            </button>
+          </div>
+          &nbsp;
+        </form>
+      </div>
+      <div class="col-auto">
         <button *ngIf="permission.isGranted('Pages.Profile.Research.ResearchPublications.Create') && !isViewOnly"
           (click)="onAddClick()" type="button" class="btn btn-sm btn-light">
           <i class="fe fe-edit-2"></i>
