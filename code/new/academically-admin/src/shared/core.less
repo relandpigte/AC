@@ -293,24 +293,6 @@ form {
   height    : 40px;
 }
 
-body.theme-dark {
-  .freeze-ui {
-    background: #11273f;
-  }
-
-  .dow-menu {
-    border-right: 1px solid #1F3A5C;
-  }
-
-  .loader-parent {
-    .loader {
-      .spinner {
-        color: #FFFFFF !important;
-      }
-    }
-  }
-}
-
 .modal-open .modal {
   background: #00000077;
 }
@@ -895,53 +877,39 @@ app-methodologies .badge {
   width   : 20px !important;
 }
 
-.session {
-  .loader-parent {
-    .loader {
-      .spinner {
-        color: #FFFFFF !important;
-      }
-    }
-  }
-
-
-
+.conversation-group {
   .ql-editor {
-    background-color: #1e3a5c !important;
-    color           : #FFFFFF;
+    color           : #95aac9 !important;
+    background-color: transparent !important;
   }
+}
 
-  quill-editor {
-    .ql-editor {
-      height    : 90px !important;
-      overflow-y: auto;
-    }
-
-    .ql-editor,
-    .ql-toolbar {
-      background-color: #1e3a5c !important;
-      color           : #FFFFFF;
-    }
-
-    .ql-toolbar,
-    .ql-container {
-      border: none;
-    }
-
-    .ql-formats {
-      button {
-        color: #95aac9 !important;
-      }
-    }
-
-    .ql-picker-label {
-      color: #95aac9 !important;
-    }
+.conversations-container {
+  .ql-editor {
+    background-color: transparent !important;
   }
 }
 
 .comment-text {
   word-break: break-all !important;
+}
+
+.line-clamp {
+  overflow          : hidden;
+  text-overflow     : ellipsis;
+  display           : -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  * {
+    margin         : 0 !important;
+    padding        : 0 !important;
+    font-size      : 12px !important;
+    font-family    : inherit !important;
+    font-weight    : normal;
+    text-transform : unset;
+    text-decoration: unset;
+  }
 }
 
 @media (min-width: 576px) {

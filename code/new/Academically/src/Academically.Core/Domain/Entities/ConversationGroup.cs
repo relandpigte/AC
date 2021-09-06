@@ -15,6 +15,10 @@ namespace Academically.Domain.Entities
 
         public string Name { get; set; }
         public Guid? ProjectId { get; set; }
+        public DateTime? LastConversationCreationTime { get; set; }
+        public long? LastConversationCreatorUserId { get; set; }
+        public string LastConversationMessage { get; set; }
+
 
         [ForeignKey("ProjectId")]
         public virtual Project Project { get; set; }

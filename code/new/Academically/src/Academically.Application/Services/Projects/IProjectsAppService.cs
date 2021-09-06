@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
@@ -10,6 +11,7 @@ namespace Academically.Services.Projects
     {
         Task<PagedResultDto<ProjectDto>> GetAllAsync(PagedProjectRequestDto input);
         Task<ProjectDto> GetAsync(Guid id);
+        Task<IEnumerable<ProjectDto>> GetForUserAsync();
         Task CreateAsync(CreateProjectDto input);
         Task<ProjectDto> UpdateAsync(UpdateProjectDto input);
         Task DeleteAsync(Guid id);

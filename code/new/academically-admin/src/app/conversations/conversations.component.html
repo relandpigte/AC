@@ -1,0 +1,77 @@
+<div class="h-100" [@routerTransition]>
+  <div class="row ml-0 justify-content-center h-100">
+    <div class="col-4 conversation-groups-container py-3" [loader]="isLoading">
+      <select class="custom-select mb-3" select2 [(ngModel)]="projectId" [defaultValue]="projectId"
+        [hideSearchBox]="true" [placeholder]="'SelectAProject' | localize"
+        (select2ValueChange)="onProjectSelect($event)" id="projectId" name="projectId" #projectIdModel="ngModel">
+        <option *ngFor="let project of projects" [value]="project.id">{{ project.name }}</option>
+      </select>
+      <p *ngIf="!conversationGroups || !conversationGroups.length" class="text-center text-muted m-0 p-0">
+        {{ 'NoConversation' | localize }}
+      </p>
+      <div *ngFor="let conversationGroup of conversationGroups" class="conversation-groups">
+        <a href="!#" (click)="$event.preventDefault(); onConversationGroupClick(conversationGroup)"
+          class="card border-0 text-reset">
+          <div class="card-body conversation-group">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <h4 class="mb-0">{{ conversationGroup.name }}</h4>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="line-clamp me-auto text-muted" [innerHTML]="conversationGroup.lastConversationMessage">
+              </div>
+
+              <div *ngIf="conversationGroups.unseenCount" class="badge badge-circle bg-primary ml-5 unread-count">
+                <span>
+                  {{ conversationGroups.unseenCount }}
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="card-footer">
+            <div class="conversation-group-info d-flex justify-content-between align-items-center">
+              <div>
+                <time *ngIf="conversationGroup.lastConversationCreationTime" class="comment-time m-0">
+                  {{ conversationGroup.lastConversationCreationTime | dateFormat: 'MMM DD, YYYY hh:mm A' }}
+                </time>
+              </div>
+              <div class="avatar-group">
+                <a (click)="$event.preventDefault();" class="avatar avatar-xs"
+                  [tooltip]="users[conversationGroup.id].fullName">
+                  <img
+                    [src]="getProfilePictureFromDocument(users[conversationGroup.id].profilePictureDocument, users[conversationGroup.id].id)"
+                    class="avatar-img rounded-circle" alt="...">
+                </a>
+                <a (click)="$event.preventDefault();" class="avatar avatar-xs"
+                  [tooltip]="otherUsers[conversationGroup.id].fullName">
+                  <img
+                    [src]="getProfilePictureFromDocument(otherUsers[conversationGroup.id].profilePictureDocument, otherUsers[conversationGroup.id].id)"
+                    class="avatar-img rounded-circle" alt="...">
+                </a>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="col-8 conversation-messages-container">
+      <div class="card h-100 conversation-messages">
+        <div class="card-body p-0">
+          <app-conversation *ngIf="selectedConversationGroup" [conversationsHub]="conversationsHub"
+            [projectId]="selectedConversationGroup.projectId" [conversationGroupId]="selectedConversationGroup.id"
+            [user]="users[selectedConversationGroup.id]" [otherUser]="otherUsers[selectedConversationGroup.id]"
+            (conversationUpdated)="onConversationUpdated($event)">
+          </app-conversation>
+          <div *ngIf="!selectedConversationGroup" class="d-flex justify-content-center align-items-center h-100">
+            <p class="text-center text-muted m-0 p-0">
+              {{ 'SelectAGroup' | localize }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -6,14 +6,10 @@ import { Options } from 'select2';
 })
 export class Select2Directive implements AfterViewInit {
   @Input() select2options: Options = {};
-  @Input() set defaultValue(defaultValue: string) {
-    if (this._select2) {
-      this._select2.val(defaultValue).trigger('change');
-    }
-  };
   @Input() placeholder = 'Select an item';
   @Input() hideSearchBox = false;
   @Output() select2ValueChange: EventEmitter<any> = new EventEmitter();
+
   private _el: any;
   private _select2: JQuery<any>;
 
@@ -21,6 +17,14 @@ export class Select2Directive implements AfterViewInit {
     _element: ElementRef,
   ) {
     this._el = _element.nativeElement;
+  }
+
+  @Input() set defaultValue(defaultValue: string) {
+    if (this._select2) {
+      setTimeout(() => {
+        this._select2.val(defaultValue).trigger('change');
+      });
+    }
   }
 
   ngAfterViewInit(): void {

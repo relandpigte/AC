@@ -2,6 +2,7 @@ using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 using Academically.Domain.Entities;
 using Academically.Domain.Services.Documents;
@@ -9,6 +10,7 @@ using Academically.Services.ProjectOffers.Dto;
 using Academically.Services.Projects.Dto;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -100,6 +102,28 @@ namespace Academically.Services.Projects
                 projectDto.CreatorUser.CoverPhotoUrl = await _documentsDomainService.GetFileUrlAsync(project.CreatorUser.CoverPhotoDocumentId.Value);
 
             return projectDto;
+        }
+
+        public async Task<IEnumerable<ProjectDto>> GetForUserAsync()
+        {
+            var user = await _userManager.GetUserByIdAsync(AbpSession.UserId.Value);
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (userRoles.Any(e => e == StaticRoleNames.Tenants.Tutor))
+            {
+                return await _projectOffersRepository.GetAll()
+                    .Where(e => e.CreatorUserId == user.Id)
+                    .Select(e => e.Project)
+                    .Distinct()
+                    .Select(e => ObjectMapper.Map<ProjectDto>(e))
+                    .ToListAsync();
+            }
+            else
+            {
+                return await _projectsRepository.GetAll()
+                    .Where(e => e.CreatorUserId == user.Id)
+                    .Select(e => ObjectMapper.Map<ProjectDto>(e))
+                    .ToListAsync();
+            }
         }
 
         public async Task CreateAsync(CreateProjectDto input)

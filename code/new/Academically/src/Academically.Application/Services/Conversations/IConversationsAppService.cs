@@ -9,5 +9,6 @@ namespace Academically.Services.Conversations
     public interface IConversationsAppService : IApplicationService
     {
         Task<IEnumerable<ConversationDto>> GetAll(Guid projectId);
+        Task<IEnumerable<ConversationGroupDto>> GetGroups(Guid? projectId);
     }
 }

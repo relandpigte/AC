@@ -9,6 +9,7 @@ namespace Academically.Domain.Entities
     public class Conversation : CreationAuditedEntity<Guid>
     {
         public string Message { get; set; }
+        public bool IsSeen { get; set; }
         public Guid ConversationGroupId { get; set; }
 
         [ForeignKey("ConversationGroupId")]

@@ -1,22 +1,50 @@
-<nav
-  *ngIf="themeSettings.navigationPosition === NavigationPosition.Combo"
-  class="navbar navbar-expand-md navbar-light d-none d-md-flex"
-  id="topbar"
->
+<nav *ngIf="themeSettings.navigationPosition === NavigationPosition.Combo"
+  class="navbar navbar-expand-md navbar-light d-none d-md-flex" id="topbar">
   <div class="container-fluid justify-content-end">
     <!-- User -->
     <div class="navbar-user mr-3">
+
+      <!-- Messages -->
+      <div class="dropdown mr-4 d-none d-md-flex">
+        <a [routerLink]="['/app/conversations']" class="navbar-user-link" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <span class="icon">
+            <i class="fe fe-message-square"></i>
+          </span>
+        </a>
+
+        <!-- <div class="dropdown-menu dropdown-menu-right dropdown-menu-card">
+            <div class="card-header">
+              <h5 class="card-header-title">
+                Messages - Coming Soon
+              </h5>
+            </div>
+          </div> -->
+      </div>
+
+      <!-- Notifications -->
+      <div class="dropdown mr-4 d-none d-md-flex">
+        <a href="#" class="navbar-user-link" role="button" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false">
+          <span class="icon active">
+            <i class="fe fe-bell"></i>
+          </span>
+        </a>
+
+        <div class="dropdown-menu dropdown-menu-right dropdown-menu-card">
+          <div class="card-header">
+            <h5 class="card-header-title">
+              Alerts - Coming Soon
+            </h5>
+          </div>
+        </div>
+      </div>
+
       <!-- Dropdown -->
       <div class="dropdown">
         <!-- Toggle -->
-        <a
-          href="javascript:;"
-          class="avatar avatar-sm avatar-online dropdown-toggle"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
+        <a href="javascript:;" class="avatar avatar-sm avatar-online dropdown-toggle" role="button"
+          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <img [src]="getProfilePicture(user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
         </a>
 

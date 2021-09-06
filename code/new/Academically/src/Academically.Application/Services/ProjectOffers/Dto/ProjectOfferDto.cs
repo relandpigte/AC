@@ -17,6 +17,7 @@ namespace Academically.Services.ProjectOffers.Dto
         public double DiscountedHours { get; set; }
         public decimal DiscountedHourlyRate { get; set; }
         public bool IsFreeSessionOffered { get; set; }
+        public bool IsAccepted { get; set; }
 
         public ProjectDto Project { get; set; }
         public UserDto CreatorUser { get; set; }
