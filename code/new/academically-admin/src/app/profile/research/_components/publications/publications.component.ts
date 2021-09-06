@@ -10,6 +10,7 @@ import { CreateEditPublicationComponent } from './create-edit-publication/create
 class PagedUserPublicationsRequestDto extends PagedAndSortedRequestDto {
   userIdFilter: number;
   searchFilter: string;
+  publicationType: number;
 }
 
 @Component({
@@ -22,6 +23,8 @@ export class PublicationsComponent extends PagedListingComponentBase<UserResearc
   @Input() isViewOnly = false;
   userPublications: UserPublicationDto[];
   searchFilter: string;
+  keyword = '';
+  publicationType: number;
 
   constructor(
     injector: Injector,
@@ -35,11 +38,14 @@ export class PublicationsComponent extends PagedListingComponentBase<UserResearc
 
   list(request: PagedUserPublicationsRequestDto, pageNumber: number, finishedCallback: Function): void {
     request.userIdFilter = this.userId ?? this._appSession.userId;
+    request.publicationType = this.publicationType
+    request.searchFilter = this.searchFilter
 
     this._userPublicationsService
       .getPaged(
         request.userIdFilter,
         request.searchFilter,
+        request.publicationType,
         request.skipCount,
         request.maxResultCount
       )
@@ -95,5 +101,11 @@ export class PublicationsComponent extends PagedListingComponentBase<UserResearc
       this.pageNumber = 1;
       this.refresh();
     });
+  }
+
+  onClearFiltersClick(): void {
+    this.keyword = '';
+    this.publicationType = undefined;
+    this.getDataPage(1);
   }
 }

@@ -9420,11 +9420,12 @@ export class UserPublicationsServiceProxy {
     /**
      * @param userIdFilter (optional) 
      * @param searchFilter (optional) 
+     * @param projectType (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getPaged(userIdFilter: number | undefined, searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserPublicationDtoPagedResultDto> {
+    getPaged(userIdFilter: number | undefined, searchFilter: string | undefined, projectType: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserPublicationDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/UserPublications/GetPaged?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
@@ -9434,6 +9435,10 @@ export class UserPublicationsServiceProxy {
             throw new Error("The parameter 'searchFilter' cannot be null.");
         else if (searchFilter !== undefined)
             url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (projectType === null)
+            throw new Error("The parameter 'projectType' cannot be null.");
+        else if (projectType !== undefined)
+            url_ += "ProjectType=" + encodeURIComponent("" + projectType) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)

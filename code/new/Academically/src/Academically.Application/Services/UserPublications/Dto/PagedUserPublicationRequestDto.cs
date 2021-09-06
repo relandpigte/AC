@@ -7,5 +7,6 @@ namespace Academically.Services.UserPublications.Dto
     {
         public long UserIdFilter { get; set; }
         public string SearchFilter { get; set; }
+        public int? ProjectType { get; set; }
     }
 }
