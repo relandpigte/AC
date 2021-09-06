@@ -7,10 +7,7 @@ import {
   CalendarEventsServiceProxy,
   UserDto,
   CalendarEventDto,
-  ConversationDto,
-  ConversationsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
-import { AppConsts } from '@shared/AppConsts';
 import * as _ from 'lodash';
 import { ActivatedRoute } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
@@ -20,7 +17,7 @@ import * as moment from 'moment';
 import { NumberSymbol } from '@angular/common';
 import { environment } from 'environments/environment';
 import { HubService } from '@app/_shared/services/hub.service';
-import { QuillModules } from 'ngx-quill';
+import { takeUntil } from 'rxjs/operators';
 
 enum SessionState {
   Initializing,
@@ -78,49 +75,11 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   isRemoteScreenSharing = false;
   isRemoteAudioEnabled = false;
   isRemoteScreenSharingAllowed = false;
-  conversationMessage = '';
 
   sessionsHub: any;
   conversationsHub: any;
 
   isLoading = false;
-  isConversationsLoading = true;
-
-  conversations: ConversationDto[] = [];
-
-  quillModules: QuillModules = {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      ['blockquote', 'code-block'],
-      [{ header: 1 }, { header: 2 }],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ script: 'sub' }, { script: 'super' }],
-      [{ indent: '-1' }, { indent: '+1' }],
-      [{ direction: 'rtl' }],
-      [{ size: ['small', false, 'large', 'huge'] }],
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      [
-        { color: [] },
-        { background: [] }
-      ],
-      [{ font: [] }],
-      [{ align: [] }],
-      ['clean'],
-      ['link', 'image']
-    ],
-    keyboard: {
-      bindings: {
-        handleEnter: {
-          key: 13,
-          handler: () => { },
-        },
-        'header enter': {
-          key: 13,
-          handler: () => { },
-        },
-      },
-    },
-  };
 
   constructor(
     injector: Injector,
@@ -128,7 +87,6 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     private _sessionsService: SessionsServiceProxy,
     private _profilesService: ProfilesServiceProxy,
     private _calendarEventsService: CalendarEventsServiceProxy,
-    private _conversationsService: ConversationsServiceProxy,
     private _hubService: HubService,
   ) {
     super(injector);
@@ -136,6 +94,13 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     this.isRemoteScreenSharingAllowed = !this.isTutor;
     this._activatedRoute.paramMap.subscribe(paramMap => {
       this.calendarEventId = paramMap.get('calendar-event-id');
+      this._calendarEventsService.get(this.calendarEventId)
+        .pipe(
+          takeUntil(this.destroyed$),
+        )
+        .subscribe(calendarEvent => {
+          this.calendarEvent = calendarEvent;
+        });
     });
   }
 
@@ -153,9 +118,9 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
 
   async ngOnInit(): Promise<void> {
     this.isLoading = true;
+    this.conversationsHub = await this._hubService.getConversationsHub();
     await this.initializeWebRTC();
     await this.initializeSessionsHub();
-    await this.initializeConversationsHub();
   }
 
   ngAfterViewInit(): void {
@@ -315,20 +280,6 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     window.close();
   }
 
-  onMessageFormSubmit(): void {
-    if (this.conversationMessage.trim()) {
-      const conversation = new ConversationDto();
-      conversation.message = this.conversationMessage;
-      conversation.creatorUserId = this.user.id;
-      conversation.conversationGroupId = this.conversationGroupId;
-      conversation.creatorUser = this.user;
-      this.conversations.push(conversation);
-      this.conversations = _.clone(this.conversations);
-      this.conversationsHub.invoke('sendConversation', [this.otherUser.id], conversation);
-      this.conversationMessage = '';
-    }
-  }
-
   private async initializeSessionsHub(): Promise<void> {
     this.sessionsHub = await this._hubService.getSessionsHub();
 
@@ -404,7 +355,6 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
       this.isScreenSharingAllowed = false;
     });
 
-    this.calendarEvent = await this._calendarEventsService.get(this.calendarEventId).toPromise();
     const userCalendarEvent = _.first(_.filter(this.calendarEvent.userCalendarEvents, e => e.userId !== this.appSession.userId));
 
     await this.initializeDevice();
@@ -421,19 +371,6 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     }
 
     this.isLoading = false;
-  }
-
-  private async initializeConversationsHub(): Promise<void> {
-    this.conversationsHub = await this._hubService.getConversationsHub();
-
-    this.conversationsHub.on('conversationSent', async (conversation: ConversationDto) => {
-      console.log('conversationSent');
-      this.conversations.push(conversation);
-      this.conversations = _.clone(this.conversations);
-    });
-
-    this.conversations = await this._conversationsService.getAll(this.calendarEvent.projectId).toPromise();
-    this.isConversationsLoading = false;
   }
 
   private async startSession(): Promise<void> {

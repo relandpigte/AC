@@ -1,0 +1,49 @@
+<div class="conversations-container" [loader]="isConversationsLoading">
+  <div class="conversations" fixedHeight [bottomScroller]="conversations">
+    <div *ngFor="let conversation of conversations" class="comment mb-4">
+      <div class="row" [class.my-comment]="conversation.creatorUserId === appSession.userId">
+        <div class="col-auto avatar-container">
+          <div class="avatar avatar-sm">
+            <img
+              [src]="getProfilePictureFromDocument(conversation.creatorUser.profilePictureDocument, conversation.creatorUserId)"
+              class="avatar-img rounded-circle" alt="profile" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="comment-body-container">
+            <div class="comment-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="comment-title">
+                    {{ conversation.creatorUser.name }}
+                  </h5>
+                </div>
+              </div>
+              <p class="comment-text">
+                <quill-view-html [content]="conversation.message"></quill-view-html>
+              </p>
+            </div>
+          </div>
+          <time class="comment-time">
+            {{ conversation.creationTime | dateFormat: 'MMM DD, YYYY hh:mm A' }}
+          </time>
+        </div>
+      </div>
+    </div>
+    <p *ngIf="!conversations || !conversations.length" class="text-muted text-center m-0">
+      {{ 'NoPreviousConversation' | localize }}
+    </p>
+  </div>
+
+  <div class="conversations-footer">
+    <div class="row conversation-actions">
+      <div class="col-12">
+        <form autocomplete="off" #messageForm="ngForm" (ngSubmit)="onMessageFormSubmit()">
+          <quill-editor [modules]="quillModules" [(ngModel)]="conversationMessage" id="conversationMessage"
+            name="conversationMessage" (keydown.enter)="$event.preventDefault(); messageForm.ngSubmit.emit();">
+          </quill-editor>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+.conversations-container {
+  display       : flex;
+  flex-direction: column;
+  height        : 100%;
+  width         : 100%;
+  padding       : 10px;
+  position      : absolute;
+
+  .conversations {
+    flex-grow : 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .comment-time {
+      margin : 0;
+      padding: 10px 0 0 0;
+    }
+
+    .my-comment {
+      flex-direction: row-reverse;
+
+      .comment-body-container {
+        display        : flex;
+        justify-content: flex-end;
+      }
+
+      .comment-time {
+        text-align: right;
+      }
+    }
+
+    .avatar-container {
+      align-self: flex-end;
+    }
+
+    .comment-body {
+      min-width: 150px;
+
+      .comment-time {
+        color: #6e84a3;
+      }
+    }
+  }
+
+  .conversations-footer {
+    color : #FFFFFF;
+    margin: 0 !important;
+
+    .conversation-actions {
+      align-items: center;
+
+      textarea {
+        color: #FFFFFF;
+      }
+
+      .attachment-actions {
+        height     : 100%;
+        align-items: center;
+        display    : flex;
+      }
+    }
+  }
+}

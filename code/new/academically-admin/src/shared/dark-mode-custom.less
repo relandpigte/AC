@@ -62,8 +62,75 @@
     }
   }
 
-  .bs-vertical-wizard ul  li > a {
+  .bs-vertical-wizard ul li>a {
     color: #fff;
   }
-}
 
+  .freeze-ui {
+    background: #11273f;
+  }
+
+  .dow-menu {
+    border-right: 1px solid #1F3A5C;
+  }
+
+  .loader-parent {
+    .loader {
+      .spinner {
+        color: #FFFFFF !important;
+      }
+    }
+  }
+
+  &.session {
+    .conversations-container {
+      background-color: #162D4D;
+
+      .comment-body {
+        color           : #FFFFFF;
+        background-color: #1e3a5c;
+      }
+    }
+
+    .loader-parent {
+      .loader {
+        .spinner {
+          color: #FFFFFF !important;
+        }
+      }
+    }
+
+    .ql-editor {
+      background-color: #1e3a5c !important;
+      color           : #FFFFFF;
+    }
+
+    quill-editor {
+      .ql-editor {
+        height    : 90px !important;
+        overflow-y: auto;
+      }
+
+      .ql-editor,
+      .ql-toolbar {
+        background-color: #1e3a5c !important;
+        color           : #FFFFFF;
+      }
+
+      .ql-toolbar,
+      .ql-container {
+        border: none;
+      }
+
+      .ql-formats {
+        button {
+          color: #95aac9 !important;
+        }
+      }
+
+      .ql-picker-label {
+        color: #95aac9 !important;
+      }
+    }
+  }
+}

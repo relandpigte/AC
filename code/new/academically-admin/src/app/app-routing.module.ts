@@ -131,6 +131,13 @@ import { CreateProjectComponent } from './create-project/create-project.componen
                 (m) => m.SessionsModule
               ),
           },
+          {
+            path: 'conversations',
+            loadChildren: () =>
+              import('@app/conversations/conversations.module').then(
+                (m) => m.ConversationsModule
+              ),
+          },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent }

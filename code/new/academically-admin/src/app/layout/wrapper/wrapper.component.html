@@ -18,7 +18,7 @@
 
 <!-- MAIN CONTENT
 ================================================== -->
-<div class="main-content">
+<div class="main-content h-100">
   <topbar *ngIf="themeSetting.navigationPosition === NavigationPosition.Combo"></topbar>
   <ng-container *ngIf="themeSetting.navigationPosition === NavigationPosition.Topnav">
     <router-outlet name="header"></router-outlet>

@@ -16,18 +16,21 @@ namespace Academically.Services.Sessions
         private readonly IRepository<Session, Guid> _sessionsRepository;
         private readonly IRepository<SessionCandidate, Guid> _sessionCandidatesRepository;
         private readonly IRepository<ConversationGroup, Guid> _conversationGroupsRepository;
+        private readonly IRepository<CalendarEvent, Guid> _calendarEventsRepository;
         private readonly ISettingManager _settingManager;
 
         public SessionsAppService(
             IRepository<Session, Guid> sessionsRepository,
             IRepository<SessionCandidate, Guid> sessionCandidatesRepository,
             IRepository<ConversationGroup, Guid> conversationGroupsRepository,
+            IRepository<CalendarEvent, Guid> calendarEventsRepository,
             ISettingManager settingManager
         )
         {
             _sessionsRepository = sessionsRepository;
             _sessionCandidatesRepository = sessionCandidatesRepository;
             _conversationGroupsRepository = conversationGroupsRepository;
+            _calendarEventsRepository = calendarEventsRepository;
             _settingManager = settingManager;
         }
 
@@ -38,16 +41,22 @@ namespace Academically.Services.Sessions
                 .Include(e => e.CalendarEvent)
                 .Include(e => e.SessionCandidates)
                 .FirstOrDefaultAsync();
+            Guid? projectId;
             if (session == null)
             {
+                projectId = (await _calendarEventsRepository.GetAsync(calendarEventId)).ProjectId;
                 session = new Session()
                 {
                     CalendarEventId = calendarEventId,
                 };
                 await _sessionsRepository.InsertAsync(session);
             }
+            else
+            {
+                projectId = session.CalendarEvent.ProjectId;
+            }
 
-            var conversationGroup = await _conversationGroupsRepository.FirstOrDefaultAsync(e => e.ProjectId == session.CalendarEvent.ProjectId.Value);
+            var conversationGroup = await _conversationGroupsRepository.FirstOrDefaultAsync(e => e.ProjectId == projectId);
             if (conversationGroup == null)
             {
                 conversationGroup = new ConversationGroup()

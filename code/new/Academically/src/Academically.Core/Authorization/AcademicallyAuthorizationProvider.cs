@@ -170,6 +170,10 @@ namespace Academically.Authorization
             tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_PrivacyPolicy, L("PrivacyPolicy"));
             tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_Declaration, L("Declaration"));
 
+
+            context.CreatePermission(PermissionNames.Pages_Conversations, L("Conversations"));
+
+
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
         }
 

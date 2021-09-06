@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1630663849010-1">
+        <addColumn tableName="AcademicallyConversations">
+            <column defaultValueBoolean="false" name="IsSeen" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1630663849010-2">
+        <addColumn tableName="AcademicallyConversationGroups">
+            <column name="LastConversationCreationTime" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1630663849010-3">
+        <addColumn tableName="AcademicallyConversationGroups">
+            <column name="LastConversationCreatorUserId" type="BIGINT(19)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1630663849010-4">
+        <addColumn tableName="AcademicallyConversationGroups">
+            <column name="LastConversationMessage" type="VARCHAR(255 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1630663849010-5">
+        <createIndex indexName="FK_ConversationGroups_Users_LCCreatorUserId_idx" tableName="AcademicallyConversationGroups">
+            <column name="LastConversationCreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1630663849010-6">
+        <addForeignKeyConstraint baseColumnNames="LastConversationCreatorUserId" baseTableName="AcademicallyConversationGroups" constraintName="FK_ConversationGroups_Users_LCCreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

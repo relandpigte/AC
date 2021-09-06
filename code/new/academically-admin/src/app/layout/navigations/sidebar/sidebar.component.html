@@ -69,7 +69,7 @@
       <!-- User (md) -->
       <div class="navbar-user d-none d-md-flex" id="sidebarUser" *ngIf="themeSettings.navigationPosition !== NavigationPosition.Combo">
         <!-- Messages -->
-        <a href="#" class="navbar-user-link" data-toggle="modal">
+        <a [routerLink]="['/app/conversations']" class="navbar-user-link" data-toggle="modal">
           <span class="icon">
             <i class="fe fe-message-square"></i>
           </span>
