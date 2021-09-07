@@ -228,7 +228,7 @@ namespace Academically.Services.TutorWizard
                     .Where(e => e.Step != BecomeATutorStep.CompleteApplication)
                     .Any(e => e.Status != TutorVerificationStepStatus.Approved);
 
-                verification.Status = isNotApproved ? TutorVerificationStatus.Rejected : TutorVerificationStatus.Approved;
+                verification.Status = isNotApproved ? TutorVerificationStatus.Completed : TutorVerificationStatus.Approved;
                 await _tutorVerificationsRepository.UpdateAsync(verification);
 
                 if (verification.Status == TutorVerificationStatus.Approved)
