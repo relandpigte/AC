@@ -8,7 +8,7 @@
           </div>
           <div class="col text-right">
             <button (click)="onAddClick()"
-              *ngIf="canCreate()"
+              *ngIf="canCreate() && !isReadOnly"
               class="btn btn-sm btn-light">
               <i class="fe fe-edit-2"></i>
               {{ 'Add' | localize }}
