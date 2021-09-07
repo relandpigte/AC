@@ -2,7 +2,7 @@ import { Component, Injector, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { uiEvents } from '@shared/constants/ui-events.constant';
-import { BecomeATutorStep, ProfilesServiceProxy, TutorApplicationServiceProxy, TutorVerificationStepDto, TutorWizardServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
+import { BecomeATutorStep, ProfilesServiceProxy, TutorApplicationServiceProxy, TutorVerificationStepDto, TutorWizardServiceProxy, UserDto, TutorVerificationStepStatus } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { TutorWizardStepDeclinedComponent } from '../_components/tutor-wizard-step-declined/tutor-wizard-step-declined.component';
@@ -21,6 +21,7 @@ export class ProfilePictureComponent extends AppComponentBase implements OnInit 
   tutorVerificationStep: TutorVerificationStepDto;
   isDeclining = false;
   isApproving = false;
+  tutorVerificationStepStatus = TutorVerificationStepStatus;
 
   constructor(
     injector: Injector,

@@ -3,7 +3,7 @@ import { NgForm, Validators, AbstractControl, ValidatorFn } from '@angular/forms
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { countries } from '@shared/constants/countries';
-import { BecomeATutorStep, LocationSuggestion, ProfilesServiceProxy, TutorApplicationServiceProxy, TutorVerificationStepDto, TutorWizardServiceProxy, UpdateAddressDto } from '@shared/service-proxies/service-proxies';
+import { BecomeATutorStep, LocationSuggestion, ProfilesServiceProxy, TutorApplicationServiceProxy, TutorVerificationStepDto, TutorWizardServiceProxy, UpdateAddressDto, TutorVerificationStepStatus } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { Observable, Observer } from 'rxjs';
@@ -28,6 +28,7 @@ export class AddressComponent extends AppComponentBase implements OnInit {
   tutorVerificationStep: TutorVerificationStepDto;
   isDeclining = false;
   isApproving = false;
+  tutorVerificationStepStatus = TutorVerificationStepStatus;
 
   constructor(
     injector: Injector,

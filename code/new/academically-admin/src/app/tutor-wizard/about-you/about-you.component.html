@@ -47,7 +47,7 @@
       {{ 'Cancel' | localize }}
     </button>
 
-    <div class="btn-group-toggle text-center d-flex">
+    <div *ngIf="tutorVerificationStep?.status === tutorVerificationStepStatus.Saved" class="btn-group-toggle text-center d-flex">
       <div *ngIf="permission.isGranted('Pages.TutorApplications.Approve')">
         <input type="radio" class="btn-check" [disabled]="isApproving || isDeclining || isLoading"
           name="approval" id="declined" autocomplete="off" value="declined" (click)="onStatusChange($event)">
@@ -67,7 +67,6 @@
         </label>
       </div>
     </div>
-
     <button *ngIf="!isReadOnly" [disabled]="!createEditForm.form.valid || isLoading" type="submit" class="btn btn-primary">
       {{ 'Next' | localize }}
     </button>
