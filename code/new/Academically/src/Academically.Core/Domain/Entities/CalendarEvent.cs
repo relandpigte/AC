@@ -25,6 +25,8 @@ namespace Academically.Domain.Entities
         public Guid? ProjectId { get; set; }
         public Guid? ProjectOfferId { get; set; }
 
+        public bool IsBusy { get; set; }
+
         [ForeignKey("ProjectId")]
         public virtual Project Project { get; set; }
 

@@ -7,5 +7,6 @@
         BookingRequest = 2,
         RescheduledBooking = 3,
         Cancelled = 4,
+        Personal = 5
     }
 }

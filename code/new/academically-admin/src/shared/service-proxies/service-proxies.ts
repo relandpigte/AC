@@ -5459,6 +5459,69 @@ export class RoleServiceProxy {
 }
 
 @Injectable()
+export class SampleTestServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    test(): Observable<string> {
+        let url_ = this.baseUrl + "/api/services/app/SampleTest/Test";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTest(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTest(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processTest(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
+    }
+}
+
+@Injectable()
 export class ServicesServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -11805,6 +11868,7 @@ export class CalendarEventDto implements ICalendarEventDto {
     creatorUserId: number;
     creatorUser: UserDto;
     tutorId: number;
+    isBusy: boolean;
     projectOfferId: string | undefined;
     projectOffer: ProjectOffer;
     project: ProjectDto;
@@ -11832,6 +11896,7 @@ export class CalendarEventDto implements ICalendarEventDto {
             this.creatorUserId = _data["creatorUserId"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.tutorId = _data["tutorId"];
+            this.isBusy = _data["isBusy"];
             this.projectOfferId = _data["projectOfferId"];
             this.projectOffer = _data["projectOffer"] ? ProjectOffer.fromJS(_data["projectOffer"]) : <any>undefined;
             this.project = _data["project"] ? ProjectDto.fromJS(_data["project"]) : <any>undefined;
@@ -11867,6 +11932,7 @@ export class CalendarEventDto implements ICalendarEventDto {
         data["creatorUserId"] = this.creatorUserId;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["tutorId"] = this.tutorId;
+        data["isBusy"] = this.isBusy;
         data["projectOfferId"] = this.projectOfferId;
         data["projectOffer"] = this.projectOffer ? this.projectOffer.toJSON() : <any>undefined;
         data["project"] = this.project ? this.project.toJSON() : <any>undefined;
@@ -11902,6 +11968,7 @@ export interface ICalendarEventDto {
     creatorUserId: number;
     creatorUser: UserDto;
     tutorId: number;
+    isBusy: boolean;
     projectOfferId: string | undefined;
     projectOffer: ProjectOffer;
     project: ProjectDto;
@@ -11918,13 +11985,14 @@ export enum CalendarEventRecurrence {
     Yearly = 4,
 }
 
-/** 0 = Blocker 1 = ConfirmedBooking 2 = BookingRequest 3 = RescheduledBooking 4 = Cancelled */
+/** 0 = Blocker 1 = ConfirmedBooking 2 = BookingRequest 3 = RescheduledBooking 4 = Cancelled 5 = Personal */
 export enum CalendarEventType {
     Blocker = 0,
     ConfirmedBooking = 1,
     BookingRequest = 2,
     RescheduledBooking = 3,
     Cancelled = 4,
+    Personal = 5,
 }
 
 export class ChangePasswordDto implements IChangePasswordDto {

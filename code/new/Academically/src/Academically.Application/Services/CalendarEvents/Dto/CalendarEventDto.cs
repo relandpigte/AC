@@ -23,6 +23,8 @@ namespace Academically.Services.CalendarEvents.Dto
 
         public long TutorId { get; set; }
 
+        public bool IsBusy { get; set; }
+
         public Guid? ProjectOfferId { get; set; }
         public ProjectOffer ProjectOffer { get; set; }
 
