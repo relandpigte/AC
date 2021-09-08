@@ -17,6 +17,7 @@ import * as moment from 'moment';
 import { NumberSymbol } from '@angular/common';
 import { environment } from 'environments/environment';
 import { HubService } from '@app/_shared/services/hub.service';
+import { ScreenRecorderService } from '@app/_shared/services/screen-recorder.service';
 import { takeUntil } from 'rxjs/operators';
 
 enum SessionState {
@@ -75,6 +76,7 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   isRemoteScreenSharing = false;
   isRemoteAudioEnabled = false;
   isRemoteScreenSharingAllowed = false;
+  isRecording = false;
 
   sessionsHub: any;
   conversationsHub: any;
@@ -88,6 +90,7 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     private _profilesService: ProfilesServiceProxy,
     private _calendarEventsService: CalendarEventsServiceProxy,
     private _hubService: HubService,
+    private _screenRecorderService: ScreenRecorderService,
   ) {
     super(injector);
     this.isScreenSharingAllowed = this.isTutor;
@@ -245,7 +248,6 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
       return;
     }
     if (!this.isScreenSharing) {
-      // @ts-ignore
       const shareScreenStream: MediaStream = await navigator.mediaDevices.getDisplayMedia();
       const shareScreenTrack = shareScreenStream.getTracks()[0];
       this.presenterSender.replaceTrack(shareScreenTrack);
@@ -278,6 +280,15 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     this.disconnectTrack(this.presenterStream);
     this.disconnectTrack(this.remoteStream);
     window.close();
+  }
+
+  onRecordToggle(): void {
+    this.isRecording = !this.isRecording;
+    if (this.isRecording) {
+      this._screenRecorderService.startRecording();
+    } else {
+      this._screenRecorderService.stopRecording();
+    }
   }
 
   private async initializeSessionsHub(): Promise<void> {

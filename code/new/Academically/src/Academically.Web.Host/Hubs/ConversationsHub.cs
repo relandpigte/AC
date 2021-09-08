@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.AspNetCore.SignalR.Hubs;
+﻿using Abp.AspNetCore.SignalR.Hubs;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Timing;
 using Academically.Domain.Entities;
-using Academically.Domain.Enums;
-using Academically.Domain.Services.Documents;
 using Academically.Services.Conversations.Dto;
-using Academically.Services.Documents.Dto;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Academically.Web.Host.Hubs
 {
