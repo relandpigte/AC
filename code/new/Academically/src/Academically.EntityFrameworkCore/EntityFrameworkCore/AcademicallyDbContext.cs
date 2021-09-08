@@ -63,6 +63,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<UserAvailability> UserAvailabilities { get; set; }
         public virtual DbSet<ConversationGroup> ConversationGroups { get; set; }
         public virtual DbSet<Conversation> Conversations { get; set; }
+        public virtual DbSet<ConversationDocument> ConversationDocuments { get; set; }
 
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)

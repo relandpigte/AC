@@ -37,8 +37,6 @@
     <Folder Include="Users\Dto\NewFolder\" />
     <Folder Include="Services\UserAvailabilities\" />
     <Folder Include="Services\UserAvailabilities\Dto\" />
-    <Folder Include="Services\Conversations\" />
-    <Folder Include="Services\Conversations\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Services\Projects\" />

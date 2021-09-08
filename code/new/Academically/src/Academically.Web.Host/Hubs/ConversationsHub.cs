@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.AspNetCore.SignalR.Hubs;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Timing;
 using Academically.Domain.Entities;
+using Academically.Domain.Enums;
+using Academically.Domain.Services.Documents;
 using Academically.Services.Conversations.Dto;
+using Academically.Services.Documents.Dto;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Academically.Web.Host.Hubs
@@ -27,26 +32,34 @@ namespace Academically.Web.Host.Hubs
 
         public async Task SendConversation(IEnumerable<long> userIds, ConversationDto input)
         {
+            var creatorUser = input.CreatorUser;
+            input.CreationTime = Clock.Now;
+            input.CreatorUser = null;
+            var conversation = new Conversation();
+            ObjectMapper.Map(input, conversation);
+            var id = await _conversationsRepository.InsertAndGetIdAsync(conversation);
+            input.Id = id;
+            input.CreatorUser = creatorUser;
+
+            var conversationGroup = await _conversationGroupsRepository.GetAsync(input.ConversationGroupId);
+            conversationGroup.LastConversationCreationTime = conversation.CreationTime;
+            conversationGroup.LastConversationCreatorUserId = conversation.CreatorUserId;
+            conversationGroup.LastConversationMessage = conversation.Message.Length > 200
+                ? conversation.Message.Substring(0, 200)
+                : conversation.Message; ;
+            await _conversationGroupsRepository.UpdateAsync(conversationGroup);
+
             foreach (var userId in userIds)
             {
-                input.CreationTime = Clock.Now;
-                var fullMessage = input.Message;
-                var shortMessage = input.Message.Length > 200
-                    ? input.Message.Substring(0, 200)
-                    : input.Message;
-                input.Message = shortMessage;
                 await Clients.User(userId.ToString()).SendAsync("conversationSent", input);
-                input.CreatorUser = null;
-                var conversation = new Conversation();
-                ObjectMapper.Map(input, conversation);
-                conversation.Message = fullMessage;
-                await _conversationsRepository.InsertAsync(conversation);
+            }
+        }
 
-                var conversationGroup = await _conversationGroupsRepository.GetAsync(input.ConversationGroupId);
-                conversationGroup.LastConversationCreationTime = conversation.CreationTime;
-                conversationGroup.LastConversationCreatorUserId = conversation.CreatorUserId;
-                conversationGroup.LastConversationMessage = shortMessage;
-                await _conversationGroupsRepository.UpdateAsync(conversationGroup);
+        public async Task SendConversationFiles(IEnumerable<long> userIds, Guid conversationId, IEnumerable<ConversationDocumentDto> documents)
+        {
+            foreach (var userId in userIds)
+            {
+                await Clients.User(userId.ToString()).SendAsync("conversationFilesSent", conversationId, documents);
             }
         }
     }

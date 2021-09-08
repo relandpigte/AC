@@ -121,6 +121,10 @@ namespace Academically.Domain.Services.Documents
                     folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_IntroVideos);
                     isSecured = false;
                     break;
+                case DocumentType.Conversation:
+                    folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_Conversations);
+                    isSecured = true;
+                    break;
                 default:
                     folder = string.Empty;
                     isSecured = false;

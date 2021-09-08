@@ -3,7 +3,6 @@ import { DocumentUploaderComponent } from '@app/_shared/components/document-uplo
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { countries } from '@shared/constants/countries';
-import { Select2Directive } from '@shared/directives/select2.directive';
 import {
   FileParameter,
   UniversitiesServiceProxy,

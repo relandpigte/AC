@@ -12,5 +12,6 @@
         Reference,
         DbsCertificate,
         IntroVideo,
+        Conversation,
     }
 }

@@ -19,9 +19,38 @@
                   </h5>
                 </div>
               </div>
-              <p class="comment-text">
+              <div class="comment-text">
                 <quill-view-html [content]="conversation.message"></quill-view-html>
-              </p>
+                <p *ngIf="conversationFilesLoader[conversation.id]" class="text-center pt-2 m-0">
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  {{ 'Loading' | localize }}...
+                </p>
+              </div>
+              <div *ngIf="conversation.conversationDocuments && conversation.conversationDocuments.length > 0"
+                class="comment-documents">
+                <ul class="list-group">
+                  <li *ngFor="let document of conversation.conversationDocuments" class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+                        <button (click)="onViewDocumentClick(document.document)" type="button"
+                          class="btn btn-primary btn-md btn-rounded-circle mr-1">
+                          <span class="fe fe-arrow-down"></span>
+                        </button>
+                      </div>
+                      <div class="col ml-n2">
+                        <h4 class="mb-1 name">
+                          <a (click)="onViewDocumentClick(document.document)" href="#!">
+                            {{ document.document.originalFileName }}
+                          </a>
+                        </h4>
+                        <p class="card-text small text-muted">
+                          {{ formatBytes(document.document.size) }}
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
           <time class="comment-time">
@@ -38,9 +67,49 @@
   <div class="conversations-footer">
     <div class="row conversation-actions">
       <div class="col-12">
+        <app-document-uploader *ngIf="isAttaching" #documentUploader [allowedExtensions]="allowedExtensions">
+        </app-document-uploader>
         <form autocomplete="off" #messageForm="ngForm" (ngSubmit)="onMessageFormSubmit()">
           <quill-editor [modules]="quillModules" [(ngModel)]="conversationMessage" id="conversationMessage"
             name="conversationMessage" (keydown.enter)="$event.preventDefault(); messageForm.ngSubmit.emit();">
+            <div quill-editor-toolbar>
+              <span class="ql-formats">
+                <button class="ql-bold"></button>
+                <button class="ql-italic"></button>
+                <button class="ql-underline"></button>
+                <button class="ql-strike"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-blockquote"></button>
+                <button class="ql-code-block"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-header" value="1"></button>
+                <button class="ql-header" value="2"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-list" value="ordered"></button>
+                <button class="ql-list" value="bullet"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-script" value="sub"></button>
+                <button class="ql-script" value="super"></button>
+              </span>
+              <span class="ql-formats">
+                <select class="ql-align">
+                </select>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-link"></button>
+                <button class="ql-image"></button>
+                <button (click)="onAttachClick()">
+                  <i class="fe fe-paperclip"></i>
+                </button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-clean"></button>
+              </span>
+            </div>
           </quill-editor>
         </form>
       </div>

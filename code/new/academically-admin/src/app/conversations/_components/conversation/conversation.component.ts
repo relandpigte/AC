@@ -1,8 +1,12 @@
-import { Component, OnInit, Injector, Input, Output, EventEmitter } from '@angular/core';
+import { ThrowStmt } from '@angular/compiler';
+import { Component, OnInit, Injector, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { DocumentUploaderComponent } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ConversationDto, UserDto, ConversationsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { ConversationDto, UserDto, ConversationsServiceProxy, FileParameter, DocumentDto, DocumentsServiceProxy, ConversationDocumentDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { QuillModules } from 'ngx-quill';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-conversation',
@@ -17,21 +21,17 @@ export class ConversationComponent extends AppComponentBase implements OnInit {
   @Input() conversationsHub: any;
   @Output() conversationUpdated = new EventEmitter<ConversationDto>();
 
+  @ViewChild('documentUploader') documentUploaderComponent: DocumentUploaderComponent;
+
   conversations: ConversationDto[] = [];
+  conversationFilesLoader: boolean[] = [];
+  allowedExtensions = fileUploadConfiguration.allowedFileExtensions;
   conversationMessage = '';
   isConversationsLoading = true;
+  isAttaching = false;
+  documents: FileParameter[] = [];
 
   quillModules: QuillModules = {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      ['blockquote', 'code-block'],
-      [{ header: 1 }, { header: 2 }],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ script: 'sub' }, { script: 'super' }],
-      [{ align: [] }],
-      ['link', 'image'],
-      ['clean'],
-    ],
     keyboard: {
       bindings: {
         handleEnter: {
@@ -49,6 +49,7 @@ export class ConversationComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _conversationsService: ConversationsServiceProxy,
+    private _documentsService: DocumentsServiceProxy,
   ) {
     super(injector);
   }
@@ -56,12 +57,31 @@ export class ConversationComponent extends AppComponentBase implements OnInit {
   async ngOnInit(): Promise<void> {
     this.conversationsHub.on('conversationSent', async (conversation: ConversationDto) => {
       console.log('conversationSent');
-      if (conversation.creatorUserId !== this.user.id) {
-        this.conversations.push(conversation);
-        this.conversations = _.clone(this.conversations);
+      if (conversation.hasFiles) {
+        this.conversationFilesLoader[conversation.id] = true;
       }
-      console.log(conversation);
+      this.conversations.push(conversation);
+      this.conversations = _.clone(this.conversations);
+      if (this.documents && this.documents.length) {
+        const sentDocuments = await this._conversationsService.uploadDocuments(conversation.id, this.documents).toPromise();
+        this.isAttaching = false;
+        if (this.documentUploaderComponent) {
+          this.documentUploaderComponent.files = [];
+        }
+        this.documents = [];
+
+        this.conversationsHub.invoke('sendConversationFiles', [this.otherUser.id, this.user.id], conversation.id, sentDocuments);
+        console.log('invoke - sendConversationFiles');
+        this.conversationMessage = '';
+      }
       this.conversationUpdated.emit(conversation);
+    });
+
+    this.conversationsHub.on('conversationFilesSent', async (conversationId: string, documents: ConversationDocumentDto[]) => {
+      console.log('conversationFilesSent');
+      this.conversationFilesLoader[conversationId] = false;
+      this.conversations.find(e => e.id === conversationId).conversationDocuments = documents;
+      this.conversations = _.clone(this.conversations);
     });
 
     this.conversations = await this._conversationsService.getAll(this.projectId).toPromise();
@@ -69,17 +89,55 @@ export class ConversationComponent extends AppComponentBase implements OnInit {
   }
 
   onMessageFormSubmit(): void {
-    if (this.conversationMessage.trim()) {
+    if (this.conversationMessage || (this.isAttaching && this.documentUploaderComponent.files.length)) {
       const conversation = new ConversationDto();
       conversation.message = this.conversationMessage;
       conversation.creatorUserId = this.user.id;
       conversation.conversationGroupId = this.conversationGroupId;
       conversation.creatorUser = this.user;
-      console.log(this.user);
-      this.conversations.push(conversation);
-      this.conversations = _.clone(this.conversations);
+
+      if (this.isAttaching && this.documentUploaderComponent.files.length) {
+        conversation.hasFiles = true;
+        this.documents = this.documentUploaderComponent.files.map(file => {
+          const fileParameter: FileParameter = {
+            fileName: file.name,
+            data: file,
+          };
+          return fileParameter;
+        });
+        this.isAttaching = false;
+      }
+
       this.conversationsHub.invoke('sendConversation', [this.otherUser.id, this.user.id], conversation);
+      console.log('invoke - sendConversation');
       this.conversationMessage = '';
     }
+  }
+
+  onAttachClick(): void {
+    if (this.isAttaching) {
+      this.documentUploaderComponent.files = [];
+    }
+    this.isAttaching = !this.isAttaching;
+  }
+
+  onViewDocumentClick(document: DocumentDto): void {
+    this._documentsService.getSecuredUrl(document.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(url => {
+        window.open(url, '_blank');
+      });
+  }
+
+  formatBytes(bytes: number, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 }

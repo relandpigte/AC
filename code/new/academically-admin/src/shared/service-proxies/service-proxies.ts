@@ -1371,6 +1371,77 @@ export class ConversationsServiceProxy {
         }
         return _observableOf<ConversationGroupDto[]>(<any>null);
     }
+
+    /**
+     * @param conversationId (optional) 
+     * @param documents (optional) 
+     * @return Success
+     */
+    uploadDocuments(conversationId: string | undefined, documents: FileParameter[] | undefined): Observable<ConversationDocumentDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Conversations/UploadDocuments";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (conversationId === null || conversationId === undefined) {
+            // do nothing
+        } else
+            content_.append("ConversationId", conversationId.toString());
+        if (documents === null || documents === undefined) {
+            // do nothing
+        } else
+            documents.forEach(item_ => content_.append("Documents", item_.data, item_.fileName ? item_.fileName : "Documents") );
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUploadDocuments(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUploadDocuments(<any>response_);
+                } catch (e) {
+                    return <Observable<ConversationDocumentDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ConversationDocumentDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUploadDocuments(response: HttpResponseBase): Observable<ConversationDocumentDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ConversationDocumentDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ConversationDocumentDto[]>(<any>null);
+    }
 }
 
 @Injectable()
@@ -11989,6 +12060,65 @@ export interface IChangeUserLanguageDto {
     languageName: string;
 }
 
+export class ConversationDocumentDto implements IConversationDocumentDto {
+    id: string;
+    conversationId: string;
+    documentId: string;
+    conversation: ConversationDto;
+    document: DocumentDto;
+
+    constructor(data?: IConversationDocumentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.conversationId = _data["conversationId"];
+            this.documentId = _data["documentId"];
+            this.conversation = _data["conversation"] ? ConversationDto.fromJS(_data["conversation"]) : <any>undefined;
+            this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ConversationDocumentDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ConversationDocumentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["conversationId"] = this.conversationId;
+        data["documentId"] = this.documentId;
+        data["conversation"] = this.conversation ? this.conversation.toJSON() : <any>undefined;
+        data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): ConversationDocumentDto {
+        const json = this.toJSON();
+        let result = new ConversationDocumentDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IConversationDocumentDto {
+    id: string;
+    conversationId: string;
+    documentId: string;
+    conversation: ConversationDto;
+    document: DocumentDto;
+}
+
 export class ConversationDto implements IConversationDto {
     id: string | undefined;
     message: string | undefined;
@@ -11996,6 +12126,8 @@ export class ConversationDto implements IConversationDto {
     creationTime: moment.Moment;
     creatorUserId: number;
     creatorUser: UserDto;
+    hasFiles: boolean;
+    conversationDocuments: ConversationDocumentDto[] | undefined;
 
     constructor(data?: IConversationDto) {
         if (data) {
@@ -12014,6 +12146,12 @@ export class ConversationDto implements IConversationDto {
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.creatorUserId = _data["creatorUserId"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.hasFiles = _data["hasFiles"];
+            if (Array.isArray(_data["conversationDocuments"])) {
+                this.conversationDocuments = [] as any;
+                for (let item of _data["conversationDocuments"])
+                    this.conversationDocuments.push(ConversationDocumentDto.fromJS(item));
+            }
         }
     }
 
@@ -12032,6 +12170,12 @@ export class ConversationDto implements IConversationDto {
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["creatorUserId"] = this.creatorUserId;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["hasFiles"] = this.hasFiles;
+        if (Array.isArray(this.conversationDocuments)) {
+            data["conversationDocuments"] = [];
+            for (let item of this.conversationDocuments)
+                data["conversationDocuments"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -12050,6 +12194,8 @@ export interface IConversationDto {
     creationTime: moment.Moment;
     creatorUserId: number;
     creatorUser: UserDto;
+    hasFiles: boolean;
+    conversationDocuments: ConversationDocumentDto[] | undefined;
 }
 
 export class ConversationGroupDto implements IConversationGroupDto {
@@ -12985,7 +13131,7 @@ export interface IDocumentDto {
     size: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -12997,6 +13143,7 @@ export enum DocumentType {
     Reference = 7,
     DbsCertificate = 8,
     IntroVideo = 9,
+    Conversation = 10,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {

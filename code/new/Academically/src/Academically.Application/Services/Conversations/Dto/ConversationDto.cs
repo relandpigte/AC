@@ -1,8 +1,9 @@
-﻿using System;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Users.Dto;
+using System;
+using System.Collections.Generic;
 
 namespace Academically.Services.Conversations.Dto
 {
@@ -15,5 +16,8 @@ namespace Academically.Services.Conversations.Dto
         public long CreatorUserId { get; set; }
 
         public UserDto CreatorUser { get; set; }
+
+        public bool HasFiles { get; set; }
+        public List<ConversationDocumentDto> ConversationDocuments { get; set; }
     }
 }

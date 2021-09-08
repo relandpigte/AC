@@ -4,6 +4,14 @@ export const fileUploadConfiguration = {
     '.jpeg',
     '.png',
   ],
+  allowedFileExtensions: [
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.pdf',
+    '.doc',
+    '.docx',
+  ],
   allowedQualificationExtensions: [
     '.jpg',
     '.jpeg',

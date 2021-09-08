@@ -1,16 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Authorization;
+﻿using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Academically.Authorization;
 using Academically.Authorization.Roles;
 using Academically.Domain.Entities;
+using Academically.Domain.Enums;
+using Academically.Domain.Services.Documents;
 using Academically.Services.Conversations.Dto;
-using Academically.Users.Dto;
+using Academically.Services.Documents.Dto;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Academically.Services.Conversations
 {
@@ -22,13 +25,17 @@ namespace Academically.Services.Conversations
         private readonly IRepository<Project, Guid> _projectsRepository;
         private readonly IRepository<ProjectOffer, Guid> _projectOffersRepository;
         private readonly IRepository<UserCalendarEvent, Guid> _userCalendarEventsRepository;
+        private readonly IRepository<ConversationDocument, Guid> _conversationDocumentsRepository;
+        private readonly IDocumentsDomainService _documentsDomainService;
 
         public ConversationsAppService(
             IRepository<ConversationGroup, Guid> conversationGroupsRepository,
             IRepository<Conversation, Guid> conversationsRepository,
             IRepository<Project, Guid> projectsRepository,
             IRepository<ProjectOffer, Guid> projectOffersRepository,
-            IRepository<UserCalendarEvent, Guid> userCalendarEventsRepository
+            IRepository<UserCalendarEvent, Guid> userCalendarEventsRepository,
+            IRepository<ConversationDocument, Guid> conversationDocumentsRepository,
+            IDocumentsDomainService documentsDomainService
             )
         {
             _conversationGroupsRepository = conversationGroupsRepository;
@@ -36,6 +43,8 @@ namespace Academically.Services.Conversations
             _projectsRepository = projectsRepository;
             _projectOffersRepository = projectOffersRepository;
             _userCalendarEventsRepository = userCalendarEventsRepository;
+            _conversationDocumentsRepository = conversationDocumentsRepository;
+            _documentsDomainService = documentsDomainService;
         }
 
         public async Task<IEnumerable<ConversationDto>> GetAll(Guid projectId)
@@ -45,6 +54,9 @@ namespace Academically.Services.Conversations
                 .Include(e => e.Conversations)
                     .ThenInclude(e => e.CreatorUser)
                         .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.Conversations)
+                    .ThenInclude(e => e.ConversationDocuments)
+                        .ThenInclude(e => e.Document)
                 .SelectMany(e => e.Conversations)
                 .OrderBy(e => e.CreationTime)
                 .Select(e => ObjectMapper.Map<ConversationDto>(e))
@@ -96,6 +108,32 @@ namespace Academically.Services.Conversations
             }
 
             return conversationGroups;
+        }
+
+        public async Task<IEnumerable<ConversationDocumentDto>> UploadDocuments([FromForm] UploadConversationDocumentsDto input)
+        {
+            var documents = new List<ConversationDocumentDto>();
+            if (input.Documents != null && input.Documents.Any())
+            {
+                var conversation = await _conversationsRepository.GetAsync(input.ConversationId);
+                foreach (var attachment in input.Documents)
+                {
+                    var document = await _documentsDomainService.CreateAsync(conversation.CreatorUserId.Value, attachment, DocumentType.Conversation);
+                    await _conversationDocumentsRepository.InsertAsync(new ConversationDocument()
+                    {
+                        ConversationId = conversation.Id,
+                        DocumentId = document.Id,
+                    });
+                    documents.Add(new ConversationDocumentDto()
+                    {
+                        ConversationId = conversation.Id,
+                        DocumentId = document.Id,
+                        Conversation = ObjectMapper.Map<ConversationDto>(conversation),
+                        Document = ObjectMapper.Map<DocumentDto>(document),
+                    });
+                }
+            }
+            return documents;
         }
     }
 }
