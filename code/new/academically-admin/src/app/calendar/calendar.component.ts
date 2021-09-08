@@ -195,10 +195,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
       model.endTime = moment(args.date);
       if (!this.isBlockOutClicked && this.permission.isGranted('Pages.Calendar.BlockOuts')) {
         this.showCreateEditBlockOutModal(model);
-      } else if (!this.isBlockOutClicked && !this.isTutor && this.permission.isGranted('Pages.Calendar.Bookings')) {
-        model.tutorId = this.userId;
-        this.showCreateEditBookingModal(model);
-      }
+      } 
       this.isBlockOutClicked = false;
     }
   }
