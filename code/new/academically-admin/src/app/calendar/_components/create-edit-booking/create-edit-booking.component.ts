@@ -40,7 +40,8 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
   datePickerConfig: BsDatepickerConfig;
   autoAccept = false;
   isFromViewOffer = false;
-
+  isBusy = true;
+  isPersonalEvent = false;
   CalendarEventRecurrence = CalendarEventRecurrence;
   CalendarEventType = CalendarEventType;
 
@@ -82,6 +83,8 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
         this.isFormViewOnly = true;
         this.startTime = this.convertMomentToDate(this.model.startTime);
         this.endTime = this.convertMomentToDate(this.model.endTime);
+        this.isBusy = this.model.isBusy
+        this.isPersonalEvent = this.model.type == CalendarEventType.Personal ? true : false;
         if (this.model.rescheduleComments && this.model.rescheduleComments.length > 0) {
           this.lastRescheduleComment = this.model.rescheduleComments[this.model.rescheduleComments.length - 1];
         }
@@ -98,7 +101,10 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
     this.isLoading = true;
     this.model.startTime = this.convertDateToMoment(this.startTime);
     this.model.endTime = this.convertDateToMoment(this.endTime);
-    this.model.type = CalendarEventType.BookingRequest;
+    this.model.type = this.isPersonalEvent ? CalendarEventType.Personal : CalendarEventType.BookingRequest;
+    this.model.projectId = this.isPersonalEvent ? null : this.model.projectId;
+    this.model.isBusy = this.isBusy;
+
 
     if (this.isFromViewOffer) {
       this.modelAdded.emit(this.model);
@@ -107,6 +113,7 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
     }
 
     if (!this.model.id) {
+      debugger;
       this._calendarEventsService.create(this.model)
         .pipe(
           takeUntil(this.destroyed$),
@@ -199,6 +206,21 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
             }
           }
         );
+      }
+      if (this.model.type == CalendarEventType.Personal) {
+        this.model.tutorId = this.model.creatorUserId
+        this._calendarEventsService.update(this.model)
+          .pipe(
+            takeUntil(this.destroyed$),
+            finalize(() => {
+              this.isLoading = false;
+            }),
+          )
+          .subscribe(() => {
+            this.notify.success('The event has been updated successfully');
+            this.modelSaved.emit();
+            this._modal.hide();
+          });
       }
     }
   }
@@ -316,5 +338,9 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
         this.modelSaved.emit();
         this._modal.hide();
       });
+  }
+
+  onTabSwitch(): void {
+    this.model.projectId = null;
   }
 }

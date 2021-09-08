@@ -99,7 +99,7 @@ namespace Academically.Services.CalendarEvents
         {
             var eventsQuery = _userCalendarEventsRepository.GetAll()
                 .Where(e => e.UserId == input.UserId)
-                .Where(e => !e.CalendarEvent.Project.IsDeleted)
+                .Where(e => e.CalendarEvent.ProjectId == null || !e.CalendarEvent.Project.IsDeleted)
                 .Select(e => e.CalendarEvent)
                 .Distinct()
                 .Where(e => e.Type != CalendarEventType.Cancelled)
@@ -171,7 +171,7 @@ namespace Academically.Services.CalendarEvents
         {
             User tutor = new User();
             var userIds = new List<long>();
-            if (input.Type != CalendarEventType.Blocker)
+            if (input.Type != CalendarEventType.Blocker && input.ProjectId != null)
             {
                 tutor = await UserManager.GetUserByIdAsync(input.TutorId);
                 var projectOffer = await _projectOffersRepository.GetAll()
@@ -198,7 +198,8 @@ namespace Academically.Services.CalendarEvents
                 case CalendarEventType.ConfirmedBooking:
                     break;
                 case CalendarEventType.BookingRequest:
-                    await SendBookingRequestEmail(calendarEvent, tutor);
+                    if (input.ProjectId != null)
+                        await SendBookingRequestEmail(calendarEvent, tutor);
                     break;
                 case CalendarEventType.RescheduledBooking:
                     break;

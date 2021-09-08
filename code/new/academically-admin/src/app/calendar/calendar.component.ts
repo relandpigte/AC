@@ -215,10 +215,11 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
       case CalendarEventType.BookingRequest:
       case CalendarEventType.RescheduledBooking:
       case CalendarEventType.ConfirmedBooking:
+      case CalendarEventType.Personal:
         if ((calendarEvent.creatorUserId === this.appSession.userId || this.userId === this.appSession.userId)
           && this.permission.isGranted('Pages.Calendar.Bookings')) {
           const model = (args.event.extendedProps.calendarEvent as CalendarEventDto);
-          model.tutorId = model.projectOffer.creatorUserId ?? this.userId;
+          model.tutorId = model.projectOffer ? model.projectOffer.creatorUserId ?? this.userId : null;
           this.showCreateEditBookingModal(_.cloneDeep(model));
         } else {
           this.isBlockOutClicked = true;

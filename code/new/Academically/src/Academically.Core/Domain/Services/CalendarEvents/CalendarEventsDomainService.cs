@@ -1,4 +1,5 @@
 ﻿using Abp.Configuration;
+using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Timing;
@@ -69,14 +70,17 @@ namespace Academically.Domain.Services.CalendarEvents
         {
             if (calendarEvent.Type != CalendarEventType.Cancelled && calendarEvent.Type != CalendarEventType.Blocker)
             {
-                var eventConflict = await _userCalendarEventsRepository.GetAll()
+                var eventConflictList = await _userCalendarEventsRepository.GetAll()
                     .WhereIf(calendarEvent.Id != null || calendarEvent.Id != Guid.Empty, e => e.CalendarEventId != calendarEvent.Id)
                     .Where(e => e.UserId == userId && e.CalendarEvent.Type != CalendarEventType.Cancelled
                         && ((calendarEvent.StartTime >= e.CalendarEvent.StartTime && calendarEvent.StartTime < e.CalendarEvent.EndTime)
                         || (calendarEvent.EndTime > e.CalendarEvent.StartTime && calendarEvent.EndTime <= e.CalendarEvent.EndTime)))
                     .Include(e => e.User)
                     .Include(e => e.CalendarEvent)
-                    .FirstOrDefaultAsync();
+                    .ToListAsync();
+                var eventConflict = eventConflictList
+                    .Where(e => e.CalendarEvent.ProjectId == null ? e.CalendarEvent.IsBusy == true : e.CalendarEvent.Id != null)
+                    .FirstOrDefault();
                 if (eventConflict != null)
                 {
                     var conflictStartTime = ConvertToTimezoneFromUtc(timeZone, eventConflict.CalendarEvent.StartTime);
