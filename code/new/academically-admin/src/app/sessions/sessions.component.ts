@@ -248,6 +248,7 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
       return;
     }
     if (!this.isScreenSharing) {
+      // @ts-ignore
       const shareScreenStream: MediaStream = await navigator.mediaDevices.getDisplayMedia();
       const shareScreenTrack = shareScreenStream.getTracks()[0];
       this.presenterSender.replaceTrack(shareScreenTrack);

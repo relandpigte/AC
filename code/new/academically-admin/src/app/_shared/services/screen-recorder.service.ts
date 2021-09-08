@@ -37,6 +37,7 @@ export class ScreenRecorderService {
 
   startRecording(): any {
     this.nav = navigator;
+    // @ts-ignore
     this.nav.mediaDevices.getDisplayMedia({
       video: {
         width: 1920,
