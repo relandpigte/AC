@@ -11,9 +11,7 @@
             <column name="Subtitle" type="VARCHAR(250)"/>
             <column name="Description" type="TEXT"/>
             <column name="Price" type="DECIMAL(18, 2)"/>
-            <column name="Type" type="INT">
-                <constraints unique="true"/>
-            </column>
+            <column name="Type" type="INT" />
             <column name="IsVisible" type="BIT(1)"/>
             <column name="IsOpen" type="BIT(1)"/>
             <column name="ImageDocumentId" type="CHAR(36)"/>
