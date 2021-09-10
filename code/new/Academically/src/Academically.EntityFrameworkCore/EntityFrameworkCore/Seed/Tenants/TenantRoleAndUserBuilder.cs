@@ -317,6 +317,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
         private void RunDataSeeders()
         {
             new AcademicLevelsBuilder(_context);
+            new CurrenciesBuilder(_context);
         }
 
         private Role CreateRoleIfNotExisting(string roleName)
