@@ -12,6 +12,7 @@ import { TenantsComponent } from './tenants/tenants.component';
 import { RolesComponent } from 'app/roles/roles.component';
 import { ChangePasswordComponent } from './users/change-password/change-password.component';
 import { CreateProjectComponent } from './create-project/create-project.component';
+import { TutorHomeComponent } from './tutor-home/tutor-home.component';
 
 @NgModule({
   imports: [
@@ -140,7 +141,19 @@ import { CreateProjectComponent } from './create-project/create-project.componen
           },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
-          { path: 'update-password', component: ChangePasswordComponent }
+          { path: 'update-password', component: ChangePasswordComponent },
+          {
+            path: 'tutor-home',
+            component: WrapperComponent,
+            data: { permission: 'Pages.TutorHome' },
+            canActivate: [AppRouteGuard],
+            children: [
+              {
+                path: '',
+                component: TutorHomeComponent,
+              },
+            ],
+          },
         ]
       }
     ])

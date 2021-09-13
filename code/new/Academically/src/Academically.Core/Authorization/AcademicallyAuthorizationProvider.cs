@@ -175,6 +175,12 @@ namespace Academically.Authorization
 
 
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
+
+            var tutorHome = context.CreatePermission(PermissionNames.Pages_Tutor_Home, L("TutorHome"));
+
+            var courses = tutorHome.CreateChildPermission(PermissionNames.Pages_Tutor_Courses, L("Courses"));
+
+
         }
 
         private static ILocalizableString L(string name)
