@@ -107,10 +107,9 @@
             </button>
             <button (click)="onShareScreenClick()"
               [disabled]="isLoading || isRemoteScreenSharing || sessionState !== SessionState.Connected"
-              class="btn btn-md btn-primary" [class.btn-primary]="isScreenSharing && !isRemoteScreenSharing"
-              [class.btn-secondary]="!isScreenSharing || isRemoteScreenSharing">
+              class="btn btn-md" [class.btn-secondary]="!isScreenSharing || isRemoteScreenSharing">
               <i *ngIf="!isScreenSharing || isRemoteScreenSharing" class="fe fe-airplay"></i>
-              <i *ngIf="isScreenSharing && !isRemoteScreenSharing" class="fe fe-video-off"></i>
+              <img *ngIf="isScreenSharing && !isRemoteScreenSharing" style="margin-left: -13px;border-radius: 7px;" src="/assets/img/airplay-off.png"/>
             </button>
           </div>
           <div class="col-4 timer">
