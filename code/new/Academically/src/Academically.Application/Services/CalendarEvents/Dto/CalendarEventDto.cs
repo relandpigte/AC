@@ -2,6 +2,7 @@
 using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Services.ProjectOffers.Dto;
 using Academically.Services.Projects.Dto;
 using Academically.Users.Dto;
 using System;
@@ -26,7 +27,7 @@ namespace Academically.Services.CalendarEvents.Dto
         public bool IsBusy { get; set; }
 
         public Guid? ProjectOfferId { get; set; }
-        public ProjectOffer ProjectOffer { get; set; }
+        public ProjectOfferDto ProjectOffer { get; set; }
 
         public ProjectDto Project { get; set; }
         public IEnumerable<RescheduleCommentDto> RescheduleComments { get; set; }
