@@ -90,7 +90,7 @@ export class TermsOfUseComponent extends AppComponentBase implements OnInit {
   }
 
   onNavigateNextScreen(): void {
-    this._router.navigate([`app/tutor-applications/${this.userId}/declaration`]);
+    this._router.navigate([`app/tutor-applications/${this.userId}/privacy-policy`]);
   }
 
   onStatusChange(event: any): void {
