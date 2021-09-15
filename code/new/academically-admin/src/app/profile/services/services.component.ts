@@ -1,4 +1,5 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
+import { ProfileService } from '@app/profile/_services/profile.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceDto, ServiceExpertiseLevel, UserServiceDto, UserServiceForListDto, UserServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -23,6 +24,7 @@ class ServiceMenuItem extends ServiceDto {
 })
 export class ServicesComponent extends AppComponentBase implements OnInit {
   @Input() userId: number;
+  @Input() isReadOnly = false;
   ServiceExptertiseLevel = ServiceExpertiseLevel;
   collapsedItems: boolean[] = [];
   categories: ServiceDto[] = [];
@@ -38,12 +40,22 @@ export class ServicesComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     private _modalService: BsModalService,
     private _userServicesService: UserServicesServiceProxy,
+    private _profileService: ProfileService,
   ) {
     super(injector);
   }
 
   ngOnInit(): void {
-    this.getServiceTree();
+    this._profileService.user$.subscribe(user => {
+      if (user && user.id) {
+        this.userId = user.id;
+      }
+      this.getServiceTree();
+    });
+    this._profileService.isViewOnly$.subscribe(isViewOnly => {
+      this.isReadOnly = isViewOnly;
+    });
+    
   }
 
   onToggleCollapse(id: number): void {
