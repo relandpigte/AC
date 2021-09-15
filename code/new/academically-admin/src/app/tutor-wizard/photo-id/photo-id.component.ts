@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { DefaultFile, DocumentUploaderComponent } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { BecomeATutorStep, FileParameter, PhotoIdVerificationsServiceProxy, TutorApplicationServiceProxy, TutorVerificationStepDto, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { BecomeATutorStep, FileParameter, PhotoIdVerificationsServiceProxy, TutorApplicationServiceProxy, TutorVerificationStepDto, TutorWizardServiceProxy, TutorVerificationStepStatus } from '@shared/service-proxies/service-proxies';
 import { AppSessionService } from '@shared/session/app-session.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -26,6 +26,7 @@ export class PhotoIdComponent extends AppComponentBase implements OnInit, AfterV
   tutorVerificationStep: TutorVerificationStepDto;
   isDeclining = false;
   isApproving = false;
+  tutorVerificationStepStatus = TutorVerificationStepStatus;
 
   constructor(
     injector: Injector,

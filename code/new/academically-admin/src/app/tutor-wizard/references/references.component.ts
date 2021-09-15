@@ -2,7 +2,7 @@ import { Component, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { TableHeaderSortData } from '@shared/components/table-header-sort/table-header-sort.component';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
-import { BecomeATutorStep, ReferenceDto, ReferenceDtoPagedResultDto, ReferenceRelationshipType, ReferencesServiceProxy, TutorApplicationServiceProxy, TutorVerificationStepDto, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { BecomeATutorStep, ReferenceDto, ReferenceDtoPagedResultDto, ReferenceRelationshipType, ReferencesServiceProxy, TutorApplicationServiceProxy, TutorVerificationStepDto, TutorWizardServiceProxy, TutorVerificationStepStatus } from '@shared/service-proxies/service-proxies';
 import { AppSessionService } from '@shared/session/app-session.service';
 import * as _ from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -33,6 +33,7 @@ export class ReferencesComponent extends PagedListingComponentBase<ReferenceDto>
   tutorVerificationStep: TutorVerificationStepDto;
   isDeclining = false;
   isApproving = false;
+  tutorVerificationStepStatus = TutorVerificationStepStatus;
 
   constructor(
     injector: Injector,

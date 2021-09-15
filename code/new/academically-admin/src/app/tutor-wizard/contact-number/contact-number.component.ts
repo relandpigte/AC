@@ -8,6 +8,7 @@ import {
   TutorApplicationServiceProxy,
   TutorVerificationStepDto,
   TutorWizardServiceProxy,
+  TutorVerificationStepStatus
 } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -50,6 +51,7 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit, 
   tutorVerificationStep: TutorVerificationStepDto;
   isDeclining = false;
   isApproving = false;
+  tutorVerificationStepStatus = TutorVerificationStepStatus;
 
   constructor(
     injector: Injector,

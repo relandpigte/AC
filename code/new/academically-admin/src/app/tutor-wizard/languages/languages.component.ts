@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Injector, ViewChild } from '@angular/core
 import { Router } from '@angular/router';
 import { SpokenLanguagesComponent } from '@app/profile/spoken-languages/spoken-languages.component';
 import { AppComponentBase } from '@shared/app-component-base';
-import { BecomeATutorStep, TutorApplicationServiceProxy, TutorVerificationStepDto, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { BecomeATutorStep, TutorApplicationServiceProxy, TutorVerificationStepDto, TutorWizardServiceProxy, TutorVerificationStepStatus } from '@shared/service-proxies/service-proxies';
 import { AppSessionService } from '@shared/session/app-session.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -22,6 +22,7 @@ export class LanguagesComponent extends AppComponentBase {
   tutorVerificationStep: TutorVerificationStepDto;
   isDeclining = false;
   isApproving = false;
+  tutorVerificationStepStatus = TutorVerificationStepStatus;
 
   constructor(
     injector: Injector,

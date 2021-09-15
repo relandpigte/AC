@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { DefaultFile, DocumentUploaderComponent } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { BecomeATutorStep, DbsCertificateDto, DbsCertificatesServiceProxy, FileParameter, TutorApplicationServiceProxy, TutorVerificationStepDto, TutorWizardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { BecomeATutorStep, DbsCertificateDto, DbsCertificatesServiceProxy, FileParameter, TutorApplicationServiceProxy, TutorVerificationStepDto, TutorWizardServiceProxy, TutorVerificationStepStatus } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -33,7 +33,8 @@ export class DbsCheckComponent extends AppComponentBase implements OnInit {
   tutorVerificationStep: TutorVerificationStepDto;
   isDeclining = false;
   isApproving = false;
-
+  tutorVerificationStepStatus = TutorVerificationStepStatus;
+  
   constructor(
     injector: Injector,
     private _router: Router,
