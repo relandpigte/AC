@@ -65,7 +65,6 @@
           </abp-validation-summary>
         </div>
       </div>
-
       <ng-container *ngIf="model.levelId && selectedLevel?.service">
         <ng-container *ngIf="levelsWithSubjects.includes(selectedLevel.service.name); else notSubjectTemplate">
 
@@ -94,7 +93,6 @@
               </div>
             </div>
           </div>
-
         </ng-container>
         <ng-template #notSubjectTemplate>
 
@@ -105,15 +103,7 @@
             <abp-validation-summary [control]="titleModel" [controlEl]="titleEl">
             </abp-validation-summary>
           </div>
-
-          <div *ngIf="model.disciplineTaxonomies.length > 0 || model.subjects.length > 0" class="form-group required">
-            <label class="col-form-label" for="Description">{{ 'Description' | localize}}</label>
-            <quill-editor [(ngModel)]="model.description" #descriptionModel="ngModel" #descriptionEl id="Description"
-              name="Description" required></quill-editor>
-            <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl.elementRef.nativeElement">
-            </abp-validation-summary>
-          </div>
-
+          
           <!-- <div class="form-group required mb-0">
             <label class="col-form-label" for="DisciplineTaxonomies">{{ 'StudyFields' | localize }}</label>
             <input class="form-control" type="search" id="DisciplineTaxonomies" [(ngModel)]="disciplineTaxonomy"
@@ -148,22 +138,20 @@
                 <i class="fe fe-plus"></i> {{ 'Add' | localize}}
               </a>
             </div>
-          </div>
-
+          </div>       
         </ng-template>
+        <div class="form-group required">
+          <label class="col-form-label" for="Description">{{ 'Description' | localize}}</label>
+          <quill-editor [(ngModel)]="model.description" #descriptionModel="ngModel" #descriptionEl id="Description"
+            name="Description" required></quill-editor>
+          <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl.elementRef.nativeElement">
+          </abp-validation-summary>
+        </div>
       </ng-container>
-      <div *ngIf="levelsWithSubjects && levelsWithSubjects.indexOf(selectedLevel?.service?.name) !== -1"
-        class="form-group required mb-0">
-        <label class="col-form-label" for="Description">{{ 'Description' | localize}}</label>
-        <quill-editor [(ngModel)]="model.description" #descriptionModel="ngModel" #descriptionEl id="Description"
-          name="Description" required></quill-editor>
-        <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl.elementRef.nativeElement">
-        </abp-validation-summary>
-      </div>
     </div>
     <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading"
-      [saveDisabled]="!createEditForm.form.valid || isLoading || !model.description || !HasValidSubject
-        || (serviceId && model.disciplineTaxonomies.length === 0 && !HasValidSubject)"
+      [saveDisabled]="!createEditForm.form.valid || isLoading || !model.description ||  !HasValidSubject
+        || (serviceId && model.disciplineTaxonomies.length === 0 && !HasValidSubject)" 
       (onCancelClick)="onCloseClick()">
     </abp-modal-footer>
   </div>
