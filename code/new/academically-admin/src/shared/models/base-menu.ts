@@ -29,6 +29,7 @@ export abstract class BaseMenu extends AppComponentBase {
   protected getMenuItems(): MenuItem[] {
     return [
       // new MenuItem(this.l('Dashboard'), '/app/home', 'fe fe-home', 'Pages.Dashboard'),
+      new MenuItem(this.l('Home'), '/app/tutor-home', 'fe fe-home', 'Pages.TutorHome'),
       new MenuItem(this.l('Dashboard'), '/app/home', 'fe fe-home'),
       // new MenuItem(this.l('OverseasStudy'), '#', 'fe fe-globe'),
       // new MenuItem(this.l('Blog'), '#', 'fe fe-message-circle'),
