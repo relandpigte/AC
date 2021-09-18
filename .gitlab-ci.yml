@@ -331,7 +331,7 @@ refresh_backend_to_ci:
   needs:
     - deploy_backend_to_ci
   variables:
-    ENV_NAME: "uat"
+    ENV_NAME: "ci"
   environment:
     name: ci
   only:
