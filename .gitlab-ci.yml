@@ -202,7 +202,7 @@ variables:
     - aws --version
 
   script:
-    - echo "reset InstanceRefresh Tag on $ENV_NAME-acad-tlab.aws-api-asg to force Refresh on ${ENVIRONMENT}" #TEMP gitlab
+    - echo "reset InstanceRefresh Tag on $ENV_NAME-acad-tlab.aws-api-asg to force Refresh on $ENV_NAME" #TEMP gitlab
     - > 
       aws autoscaling create-or-update-tags
       --tags ResourceId=$ENV_NAME-acad-tlab.aws-api-asg,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
@@ -331,7 +331,7 @@ refresh_backend_to_ci:
   needs:
     - deploy_backend_to_ci
   variables:
-    ENVIRONMENT: ci
+    ENV_NAME: "uat"
   environment:
     name: ci
   only:
@@ -363,7 +363,7 @@ deploy_schema_to_uat:
 deploy_backend_to_uat:
   <<: *backend
   variables:
-    ENV_NAME: "uat"
+    
   needs:
     - deploy_backend_to_ci
     - build_backend
@@ -381,7 +381,7 @@ refresh_backend_to_uat:
   needs:
     - deploy_backend_to_uat
   variables:
-    ENVIRONMENT: uat
+    ENV_NAME: "uat"
   environment:
     name: uat
   only:
