@@ -170,14 +170,9 @@ variables:
   script:
     # build dist previously saved as an artifact
     - echo "Build $ENV_NAME"
-    - ls -la
-    - "cd $CI_PROJECT_DIR"
-    - ls -la
     - "cd $CI_PROJECT_DIR/artifacts" 
-    - pwd
     - ls -la
     - ng build --configuration $ENV_NAME
-    - cat app.config
     - ls -la
     # Copy Dist to S3 Bucket
     - echo "Copy dist to S3"
@@ -320,6 +315,8 @@ deploy_backend_to_ci:
   <<: *backend
   dependencies:
     - build_backend
+  variables:
+    ENV_NAME: "ci"
   environment:
     name: ci_backend
   only:
@@ -362,13 +359,13 @@ deploy_schema_to_uat:
 
 deploy_backend_to_uat:
   <<: *backend
-  variables:
-    
   needs:
     - deploy_backend_to_ci
     - build_backend
   dependencies:
     - build_backend
+  variables:
+    ENV_NAME: "uat"
   environment:
     name: uat_backend
   when: manual
