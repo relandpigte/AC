@@ -6,6 +6,7 @@
     <text name="SelectAProject">Select a Project</text>
     <text name="Conversations">Conversations</text>
     <text name="Loading">Loading</text>
+    <text name="CreateCourse">Create course</text>
     <text name="NoPreviousConversation">No previous conversation</text>
     <text name="AttachFile">Attach file</text>
     <text name="AddPhoto">Add photo</text>
