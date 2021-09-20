@@ -23,6 +23,7 @@ export class TutorHomeComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
     this.greetings = this.getGreetings();
   }
+
   getGreetings(): string {
     const currentTime = new Date();
     const currentHours = currentTime.getHours();
