@@ -222,7 +222,9 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Projects_UsageAndFinancials,
                 PermissionNames.Pages_Projects_Offer,
                 PermissionNames.Pages_Projects_OfferHistory,
-                PermissionNames.Pages_Conversations
+                PermissionNames.Pages_Conversations,
+                PermissionNames.Pages_TutorHome,
+                PermissionNames.Pages_Courses
             );
 
             #endregion
@@ -317,6 +319,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
         private void RunDataSeeders()
         {
             new AcademicLevelsBuilder(_context);
+            new CurrenciesBuilder(_context);
         }
 
         private Role CreateRoleIfNotExisting(string roleName)
