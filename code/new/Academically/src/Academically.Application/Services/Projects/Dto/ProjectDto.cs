@@ -1,16 +1,16 @@
+using System;
+using System.Collections.Generic;
+using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
-using Abp.Domain.Entities.Auditing;
 using Academically.Domain.Entities;
 using Academically.Services.CalendarEvents.Dto;
 using Academically.Services.ProjectOffers.Dto;
 using Academically.Users.Dto;
-using System;
-using System.Collections.Generic;
 
 namespace Academically.Services.Projects.Dto
 {
     [AutoMap(typeof(Project))]
-    public class ProjectDto : CreationAuditedEntity<Guid>
+    public class ProjectDto : EntityDto<Guid>
     {
         public string Name { get; set; }
         public Guid? ServiceLevel1 { get; set; }
@@ -29,6 +29,9 @@ namespace Academically.Services.Projects.Dto
         public int TotalSessions { get; set; }
 
         public ProjectOfferDto AcceptedOffer { get; set; }
+
+        public DateTime CreationTime { get; set; }
+        public long CreatorUserId { get; set; }
 
         public IEnumerable<ProjectOfferDto> Offers { get; set; }
         public IEnumerable<CalendarEventDto> CalendarEvents { get; set; }
