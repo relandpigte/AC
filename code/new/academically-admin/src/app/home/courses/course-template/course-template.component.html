@@ -1,0 +1,31 @@
+<form class="form-horizontal" autocomplete="off" #createUserModal="ngForm">
+    <div class="modal-card card">
+        <abp-modal-header [title]="'Choose a course template' | localize" (onCloseClick)="bsModalRef.hide()">
+        </abp-modal-header>
+        <div class="card-body">
+            <div class="row listAlias">
+                <div *ngFor='let template of [1]' class="col-12 col-md-6 col-xl-4 cursor-pointer">
+                    <!-- Card -->
+                    <div class="card">
+                        <!-- Image -->
+                        <a (click)="onCreateClick(template)">
+                            <img src="https://dashkit.goodthemes.co/assets/img/avatars/projects/project-1.jpg" alt="..."
+                                class="card-img-top">
+                        </a>
+                        <!-- Body -->
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <!-- Title -->
+                                    <h4 class="mb-2 name">
+                                        Blank
+                                    </h4>
+                                </div>
+                            </div> <!-- / .row -->
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- / .row -->
+        </div>
+    </div>
+</form>

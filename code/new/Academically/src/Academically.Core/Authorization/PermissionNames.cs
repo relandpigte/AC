@@ -168,5 +168,10 @@
 
 
         public const string Pages_Tenants = "Pages.Tenants";
+
+        public const string Pages_TutorHome = "Pages.TutorHome";
+
+        public const string Pages_Courses = "Pages.Courses";
+
     }
 }

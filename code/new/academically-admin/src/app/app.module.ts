@@ -70,6 +70,9 @@ import { MetricsComponent } from './home/dashboard-overview/metrics/metrics.comp
 import { CreateProjectComponent } from './create-project/create-project.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { UpcomingSessionsComponent } from './home/dashboard-overview/upcoming-sessions/upcoming-sessions.component';
+import { TutorHomeComponent } from './tutor-home/tutor-home.component';
+import { CoursesComponent } from './home/courses/courses.component';
+import { CoursesModule } from './home/courses/courses.module';
 
 // Settings is subject to change
 //
@@ -156,6 +159,8 @@ const cookieConfig: NgcCookieConsentConfig = {
     CreateProjectComponent,
     ProjectsComponent,
     UpcomingSessionsComponent,
+    TutorHomeComponent,
+    CoursesComponent
   ],
   imports: [
     CommonModule,
@@ -177,7 +182,8 @@ const cookieConfig: NgcCookieConsentConfig = {
     NgPipesModule,
     TypeaheadModule.forRoot(),
     PopoverModule.forRoot(),
-    NgcCookieConsentModule.forRoot(cookieConfig)
+    NgcCookieConsentModule.forRoot(cookieConfig),
+    CoursesModule
   ],
   entryComponents: [
     // tenants

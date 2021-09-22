@@ -54,8 +54,7 @@ namespace Academically.Web.Host.Startup
                 {
                     NamingStrategy = new CamelCaseNamingStrategy(),
                 };
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
-                options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
 
