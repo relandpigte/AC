@@ -22,6 +22,6 @@ export class CurriculumComponent extends AppComponentBase implements OnInit {
 
   onAddLessionClick(): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<LessonWizardComponent>;
-    const modal = this._modalService.show(LessonWizardComponent, modalSettings).content;
+    this._modalService.show(LessonWizardComponent, modalSettings);
   }
 }
