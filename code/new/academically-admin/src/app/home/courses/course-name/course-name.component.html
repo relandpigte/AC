@@ -1,0 +1,17 @@
+<form class="form-horizontal" autocomplete="off" #form="ngForm">
+  <div class="modal-card card">
+    <abp-modal-header [title]="'NameYourNewCourse' | localize" (onCloseClick)="onCloseClick()">
+    </abp-modal-header>
+    <div class="card-body">
+      <div class="col-md-12 form-group required">
+        <input type="text" class="form-control" name="name" id="name" required [(ngModel)]="model.name"
+          #courseNameModel="ngModel" #courseNameEl required />
+        <abp-validation-summary [control]="courseNameModel" [controlEl]="courseNameEl"></abp-validation-summary>
+      </div>
+    </div>
+    <abp-modal-footer [isLoading]="isLoading" [saveLabel]=" 'Save' | localize" [cancelLabel]="'Back' | localize"
+      [cancelDisabled]="isLoading" [saveDisabled]="!form.form.valid || isLoading " (onCancelClick)="onBackClick()"
+      (click)="onSubmitClick()">
+    </abp-modal-footer>
+  </div>
+</form>
