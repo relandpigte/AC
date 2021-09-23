@@ -1,6 +1,11 @@
 import { Component, OnInit, Injector, } from '@angular/core';
-import { CourseDto } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+
+enum CourseWizardState {
+  Template,
+  Name,
+}
 
 @Component({
   selector: 'app-course-wizard',
@@ -8,10 +13,14 @@ import { AppComponentBase } from '@shared/app-component-base';
   styleUrls: ['./course-wizard.component.less']
 })
 export class CourseWizardComponent extends AppComponentBase implements OnInit {
-  currentStep = 1;
+  CourseWizardState = CourseWizardState;
+
+  currentWizardState = CourseWizardState.Template;
+  isTemplateSelected = false;
 
   constructor(
     injector: Injector,
+    private _modalRef: BsModalRef,
   ) {
     super(injector);
   }
@@ -19,29 +28,11 @@ export class CourseWizardComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
   }
 
-  courseTemplateChangedHandler(templateId: number) {
-    if (templateId) {
-      this.setStepperIncrement();
-    }
+  onModalClose(): void {
+    this._modalRef.hide();
   }
 
-  courseNameBackBtnClickedHandler(event) {
-    if (event) {
-      this.setStepperDecrement();
-    }
-  }
-
-  onCourseSaved(course: CourseDto) {
-    if (course) {
-      this.setStepperIncrement();
-    }
-  }
-
-  setStepperIncrement() {
-    this.currentStep += 1;
-  }
-
-  setStepperDecrement() {
-    this.currentStep -= 1;
+  onStateChange(wizardState: CourseWizardState): void {
+    this.currentWizardState = wizardState;
   }
 }

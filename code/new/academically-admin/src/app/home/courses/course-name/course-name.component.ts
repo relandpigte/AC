@@ -1,7 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Injector } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
 import { CourseDto, CoursesServiceProxy } from '@shared/service-proxies/service-proxies';
-import { finalize } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/app-component-base';
 
 @Component({
@@ -11,15 +10,15 @@ import { AppComponentBase } from '@shared/app-component-base';
 })
 
 export class CourseNameComponent extends AppComponentBase implements OnInit {
+  @Output() modalClose = new EventEmitter();
+  @Output() backClick = new EventEmitter();
+
   model: CourseDto = new CourseDto();
   isLoading = false;
-  @Output() backBtnClicked: EventEmitter<any> = new EventEmitter();
-  @Output() courseSaved: EventEmitter<CourseDto> = new EventEmitter();
 
   constructor(
     injector: Injector,
     private _coursesService: CoursesServiceProxy,
-    private _modal: BsModalRef,
   ) {
     super(injector);
   }
@@ -27,26 +26,27 @@ export class CourseNameComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
   }
 
-  onBackClick() {
-    this.backBtnClicked.emit(true);
-  }
-
   onCloseClick(): void {
-    this._modal.hide();
+    this.modalClose.emit();
   }
 
-  onSubmitClick() {
+  onBackClick(): void {
+    this.backClick.emit();
+  }
+
+  onFormSubmit(): void {
     this.isLoading = true;
     this._coursesService
       .create(this.model)
       .pipe(
+        takeUntil(this.destroyed$),
         finalize(() => {
           this.isLoading = false;
         })
       )
       .subscribe((result) => {
-        this._modal.hide();
         this.notify.success(this.l('SavedSuccessfully'));
+        this.modalClose.emit();
       });
   }
 }

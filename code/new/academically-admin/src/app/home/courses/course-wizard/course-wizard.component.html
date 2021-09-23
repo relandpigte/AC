@@ -1,7 +1,6 @@
-<div *ngIf='currentStep===1'>
-  <app-course-template (courseTemplateChanged)="courseTemplateChangedHandler($event)"></app-course-template>
-</div>
-<div *ngIf='currentStep===2'>
-  <app-course-name (backBtnClicked)="courseNameBackBtnClickedHandler($event)"
-    (courseSaved)="onCourseSaved($event)"></app-course-name>
-</div>
+<app-course-template *ngIf="currentWizardState === CourseWizardState.Template" (modalClose)="onModalClose()"
+  (selectTemplate)="onStateChange(CourseWizardState.Name)">
+</app-course-template>
+<app-course-name *ngIf="currentWizardState === CourseWizardState.Name" (modalClose)="onModalClose()"
+  (backClick)="onStateChange(CourseWizardState.Template)">
+</app-course-name>
