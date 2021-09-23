@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Blank">Blank</text>
+    <text name="ChooseALessonTemplate">Choose a lesson template</text>
     <text name="AddModule">Add module</text>
     <text name="AddLesson">Add lesson</text>
     <text name="StartByAddingALessonOrModule">Start by adding a lesson or a module</text>

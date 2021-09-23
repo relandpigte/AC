@@ -1,0 +1,21 @@
+<form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <abp-modal-header [title]="'ChooseALessonTemplate' | localize" (onCloseClick)="onCloseClick()">
+    </abp-modal-header>
+    <div class="card-body">
+      <button [class.btn-primary]="isTemplateSelected" [class.btn-white]="!isTemplateSelected"
+        class="btn blank-template" (click)="onTemplateSelected()">
+        <i class="fe fe-file"></i>
+        <p>{{ 'Blank' | localize }}</p>
+      </button>
+    </div>
+    <div class="card-footer justify-content-between">
+      <button type="button" class="btn btn-white" (click)="onCloseClick()">
+        {{ 'Cancel' | localize }}
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="!isTemplateSelected">
+        {{ 'Next' | localize }}
+      </button>
+    </div>
+  </div>
+</form>

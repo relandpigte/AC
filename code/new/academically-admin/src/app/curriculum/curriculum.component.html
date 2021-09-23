@@ -4,7 +4,7 @@
       <h1 class="mb-3">{{ 'NoLessonsOrModules' | localize }}</h1>
       <p class="text-muted mb-5">{{ 'StartByAddingALessonOrModule' | localize }}</p>
       <div class="d-flex">
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" (click)="onAddLessionClick()">
           <i class="fe fe-plus"></i>&nbsp;{{ 'AddLesson' | localize }}
         </button>
         <button class="btn btn-white ml-5">
