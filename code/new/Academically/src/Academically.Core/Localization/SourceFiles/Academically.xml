@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="AddModule">Add module</text>
+    <text name="AddLesson">Add lesson</text>
+    <text name="StartByAddingALessonOrModule">Start by adding a lesson or a module</text>
+    <text name="NoLessonsOrModules">No lessons or modules</text>
     <text name="SelectAGroup">Select a Group</text>
     <text name="NoConversation">No Conversation</text>
     <text name="SelectAProject">Select a Project</text>
