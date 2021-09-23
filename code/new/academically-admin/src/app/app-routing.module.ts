@@ -139,6 +139,13 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
                 (m) => m.ConversationsModule
               ),
           },
+          {
+            path: 'curriculum',
+            loadChildren: () =>
+              import('@app/curriculum/curriculum.module').then(
+                (m) => m.CurriculumModule
+              ),
+          },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent },
