@@ -1158,5 +1158,6 @@
     <text name="AddSession">Add Session</text>
     <text name="EditSession">Edit Session</text>
     <text name="TutorHome">Tutor Home</text>
+    <text name="NameYourNewCourse">Name your new course</text>
   </texts>
 </localizationDictionary>

@@ -16,9 +16,9 @@ namespace Academically.Domain.Entities
         public bool IsVisible { get; set; }
         public bool IsOpen { get; set; }
 
-        public Guid ImageDocumentId { get; set; }
-        public Guid LanguageId { get; set; }
-        public Guid CurrencyId { get; set; }
+        public Guid? ImageDocumentId { get; set; }
+        public Guid? LanguageId { get; set; }
+        public Guid? CurrencyId { get; set; }
 
         [ForeignKey("ImageDocumentId")]
         public virtual Document ImageDocument { get; set; }

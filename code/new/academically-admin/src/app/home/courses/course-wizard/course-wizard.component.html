@@ -1,3 +1,7 @@
-<div *ngIf='stepper===1'>
-    <app-course-template (courseTemplateChanged)="courseTemplateChangedHandler($event)"></app-course-template>
+<div *ngIf='currentStep===1'>
+  <app-course-template (courseTemplateChanged)="courseTemplateChangedHandler($event)"></app-course-template>
+</div>
+<div *ngIf='currentStep===2'>
+  <app-course-name (backBtnClicked)="courseNameBackBtnClickedHandler($event)"
+    (courseSaved)="onCourseSaved($event)"></app-course-name>
 </div>
