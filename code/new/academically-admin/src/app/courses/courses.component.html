@@ -17,7 +17,7 @@
             <ul class="nav nav-tabs nav-overflow header-tabs">
               <li class="nav-item">
                 <a class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab"
-                  aria-controls="details" aria-selected="true">{{ 'Details' | localize }}</a>
+                  aria-controls="details" aria-selected="true" #detailsNav>{{ 'Details' | localize }}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab"
@@ -35,7 +35,7 @@
         <app-details></app-details>
       </div>
       <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-        <app-settings></app-settings>
+        <app-settings (backClicked)="detailsNav.click()"></app-settings>
       </div>
     </div>
   </div>

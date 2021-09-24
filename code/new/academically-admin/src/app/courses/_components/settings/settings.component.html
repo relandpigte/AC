@@ -1,263 +1,267 @@
-<div class="row">
-  <div class="col-8">
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-header-title">
-          Course configuration
-        </h4>
-      </div>
-      <div class="card-body">
-        <div class="form-check">
-          <input [checked]="true" class="form-check-input" type="radio" name="standard" id="standard" value="standard"
-            [readonly]="true">
-          <label class="form-check-label" for="standard">
-            Standard
-            <p class="small text-muted">Available immidiately, students study at their own pace</p>
-          </label>
+<form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="row">
+    <div class="col-8">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            Course configuration
+          </h4>
         </div>
+        <div class="card-body">
+          <div class="form-check">
+            <input [checked]="true" class="form-check-input" type="radio" name="standard" id="standard" value="standard"
+              [readonly]="true">
+            <label class="form-check-label" for="standard">
+              Standard
+              <p class="small text-muted">Available immidiately, students study at their own pace</p>
+            </label>
+          </div>
 
-        <div class="form-check">
-          <input [checked]="false" class="form-check-input" type="radio" name="cohort" id="cohort" value="cohort"
-            [readonly]="true" [disabled]="true">
-          <label class="form-check-label" for="cohort">
-            Cohort
-            <p class="small text-muted">Available from a specific date, students study concurrently</p>
-          </label>
-        </div>
+          <div class="form-check">
+            <input [checked]="false" class="form-check-input" type="radio" name="cohort" id="cohort" value="cohort"
+              [readonly]="true" [disabled]="true">
+            <label class="form-check-label" for="cohort">
+              Cohort
+              <p class="small text-muted">Available from a specific date, students study concurrently</p>
+            </label>
+          </div>
 
-        <div class="form-group">
-          <label class="col-form-label">Number of places</label>
-          <input class="form-control" type="text" />
-        </div>
-
-        <div class="form-row">
-          <div class="form-group col-6">
-            <label class="col-form-label">Start Date</label>
+          <div class="form-group">
+            <label class="col-form-label">Number of places</label>
             <input class="form-control" type="text" />
           </div>
 
-          <div class="form-group col-6">
-            <label class="col-form-label">Start Time</label>
-            <input class="form-control" type="text" />
+          <div class="form-row">
+            <div class="form-group col-6">
+              <label class="col-form-label">Start Date</label>
+              <input class="form-control" type="text" />
+            </div>
+
+            <div class="form-group col-6">
+              <label class="col-form-label">Start Time</label>
+              <input class="form-control" type="text" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-6 mb-0">
+              <label class="col-form-label">End Date</label>
+              <input class="form-control" type="text" />
+            </div>
+
+            <div class="form-group col-6 mb-0">
+              <label class="col-form-label">End Time</label>
+              <input class="form-control" type="text" />
+            </div>
           </div>
         </div>
+      </div>
 
-        <div class="form-row">
-          <div class="form-group col-6 mb-0">
-            <label class="col-form-label">End Date</label>
-            <input class="form-control" type="text" />
-          </div>
-
-          <div class="form-group col-6 mb-0">
-            <label class="col-form-label">End Time</label>
-            <input class="form-control" type="text" />
-          </div>
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            Course progress
+          </h4>
         </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-header-title">
-          Course progress
-        </h4>
-      </div>
-      <div class="card-body pt-0 pb-0">
-        <ul class="list-group list-group-flush list-group-focus">
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              Lock lesson order
-              <p class="small text-muted p-0 m-0">Prevent student from skipping ahead</p>
-            </div>
-            <div class="custom-control custom-switch">
-              <input type="checkbox" [checked]="true" class="custom-control-input" id="p1">
-              <label class="custom-control-label" for="p1"></label>
-            </div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              Mandatory video watching
-              <p class="small text-muted p-0 m-0">Students must watch 90% of videos to advance</p>
-            </div>
-            <div class="custom-control custom-switch">
-              <input type="checkbox" [checked]="true" class="custom-control-input" id="p2">
-              <label class="custom-control-label" for="p2"></label>
-            </div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              Mandatory quiz
-              <p class="small text-muted p-0 m-0">Students must complete any quizes to advance</p>
-            </div>
-            <div class="custom-control custom-switch">
-              <input type="checkbox" [checked]="true" class="custom-control-input" id="p3">
-              <label class="custom-control-label" for="p3"></label>
-            </div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              Mandatory assignment
-              <p class="small text-muted p-0 m-0">Students must submit any assignments to advance</p>
-            </div>
-            <div class="custom-control custom-switch">
-              <input type="checkbox" [checked]="true" class="custom-control-input" id="p4">
-              <label class="custom-control-label" for="p4"></label>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-header-title">
-          Comments
-        </h4>
-      </div>
-      <div class="card-body pt-0 pb-0">
-        <ul class="list-group list-group-flush list-group-focus">
-          <li class="list-group-item">
-            <div class="d-flex justify-content-between align-items-center">
+        <div class="card-body pt-0 pb-0">
+          <ul class="list-group list-group-flush list-group-focus">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
               <div>
-                Visible:
-                <span class="small text-muted">all comments are visible and new ones can be posted</span>
-              </div>
-              <input class="mr-3" type="radio" [checked]="true">
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="ml-5">
-                Visible:
-                <span class="small text-muted">comments need approving by administrator</span>
+                Lock lesson order
+                <p class="small text-muted p-0 m-0">Prevent student from skipping ahead</p>
               </div>
               <div class="custom-control custom-switch">
-                <input type="checkbox" [checked]="true" class="custom-control-input" id="c1">
-                <label class="custom-control-label" for="c1"></label>
+                <input type="checkbox" [checked]="true" class="custom-control-input" id="p1">
+                <label class="custom-control-label" for="p1"></label>
               </div>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="d-flex justify-content-between align-items-center">
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
               <div>
-                Hidden:
-                <span class="small text-muted">hides all comments and prevents from being posted</span>
+                Mandatory video watching
+                <p class="small text-muted p-0 m-0">Students must watch 90% of videos to advance</p>
               </div>
-              <input class="mr-3" type="radio" [checked]="true">
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" [checked]="true" class="custom-control-input" id="p2">
+                <label class="custom-control-label" for="p2"></label>
+              </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
               <div>
-                Locked:
-                <span class="small text-muted">previous comments remain visible but prevents from being posted</span>
+                Mandatory quiz
+                <p class="small text-muted p-0 m-0">Students must complete any quizes to advance</p>
               </div>
-              <input class="mr-3" type="radio" [checked]="false">
-            </div>
-          </li>
-        </ul>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" [checked]="true" class="custom-control-input" id="p3">
+                <label class="custom-control-label" for="p3"></label>
+              </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                Mandatory assignment
+                <p class="small text-muted p-0 m-0">Students must submit any assignments to advance</p>
+              </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" [checked]="true" class="custom-control-input" id="p4">
+                <label class="custom-control-label" for="p4"></label>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-header-title">
-          Custom course URL
-        </h4>
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            Comments
+          </h4>
+        </div>
+        <div class="card-body pt-0 pb-0">
+          <ul class="list-group list-group-flush list-group-focus">
+            <li class="list-group-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  Visible:
+                  <span class="small text-muted">all comments are visible and new ones can be posted</span>
+                </div>
+                <input class="mr-3" type="radio" [checked]="true">
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="ml-5">
+                  Visible:
+                  <span class="small text-muted">comments need approving by administrator</span>
+                </div>
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" [checked]="true" class="custom-control-input" id="c1">
+                  <label class="custom-control-label" for="c1"></label>
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  Hidden:
+                  <span class="small text-muted">hides all comments and prevents from being posted</span>
+                </div>
+                <input class="mr-3" type="radio" [checked]="true">
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  Locked:
+                  <span class="small text-muted">previous comments remain visible but prevents from being posted</span>
+                </div>
+                <input class="mr-3" type="radio" [checked]="false">
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="card-body">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">
-              <a href=":javascript">www.academically.com/course/</a>
-            </span>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            Custom course URL
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <a href=":javascript">www.academically.com/course/</a>
+              </span>
+            </div>
+            <input type="text" class="form-control">
           </div>
-          <input type="text" class="form-control">
         </div>
       </div>
     </div>
+
+    <div class="col-4">
+      <div class="card" [loader]="isLoading">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            Course visibility
+          </h4>
+        </div>
+        <div class="card-body py-0">
+          <ul class="list-group list-group-flush list-group-focus">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                Visible
+                <p class="small text-muted p-0 m-0">Available in your profile and in the store</p>
+              </div>
+              <input [(ngModel)]="model.isVisible" class="mr-3" id="hidden" name="isVisible" type="radio"
+                [value]="true">
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                Invisible
+                <p class="small text-muted p-0 m-0">Unavailable on both your profile and in the store</p>
+              </div>
+              <input [(ngModel)]="model.isVisible" class="mr-3" id="visible" name="isVisible" type="radio"
+                [value]="false">
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card" [loader]="isLoading">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            Course access
+          </h4>
+        </div>
+        <div class="card-body py-0">
+          <ul class="list-group list-group-flush list-group-focus">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                Open
+                <p class="small text-muted p-0 m-0">Enrollment open and accepting students</p>
+              </div>
+              <input [(ngModel)]="model.isOpen" class="mr-3" id="open" name="isOpen" type="radio" [value]="true">
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                Closed
+                <p class="small text-muted p-0 m-0">Enrollment closed, no longer accepting students</p>
+              </div>
+              <input [(ngModel)]="model.isOpen" class="mr-3" id="closed" name="isOpen" type="radio" [value]="false">
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            Autoplay
+          </h4>
+        </div>
+        <div class="card-body py-0">
+          <ul class="list-group list-group-flush list-group-focus">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                Video
+                <p class="small text-muted p-0 m-0">4 seconds delay</p>
+              </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" [checked]="true" class="custom-control-input" id="v1">
+                <label class="custom-control-label" for="v1"></label>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="d-flex justify-content-between mb-4">
+        <button type="button" class="btn btn-white" (click)="onBackClick()">
+          {{ 'Back' | localize }}
+        </button>
+        <button type="submit" [disabled]="isLoading" class="btn btn-primary">
+          {{ 'Save' | localize }}
+        </button>
+      </div>
+    </div>
   </div>
-
-  <div class="col-4">
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-header-title">
-          Course visibility
-        </h4>
-      </div>
-      <div class="card-body py-0">
-        <ul class="list-group list-group-flush list-group-focus">
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              Visible
-              <p class="small text-muted p-0 m-0">Available in your profile and in the store</p>
-            </div>
-            <input class="mr-3" type="radio" [checked]="true">
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              Invisible
-              <p class="small text-muted p-0 m-0">Unavailable on both your profile and in the store</p>
-            </div>
-            <input class="mr-3" type="radio" [checked]="false">
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-header-title">
-          Course access
-        </h4>
-      </div>
-      <div class="card-body py-0">
-        <ul class="list-group list-group-flush list-group-focus">
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              Open
-              <p class="small text-muted p-0 m-0">Enrollment open and accepting students</p>
-            </div>
-            <input class="mr-3" type="radio" [checked]="true">
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              Closed
-              <p class="small text-muted p-0 m-0">Enrollment closed, no longer accepting students</p>
-            </div>
-            <input class="mr-3" type="radio" [checked]="false">
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-header-title">
-          Autoplay
-        </h4>
-      </div>
-      <div class="card-body py-0">
-        <ul class="list-group list-group-flush list-group-focus">
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              Video
-              <p class="small text-muted p-0 m-0">4 seconds delay</p>
-            </div>
-            <div class="custom-control custom-switch">
-              <input type="checkbox" [checked]="true" class="custom-control-input" id="v1">
-              <label class="custom-control-label" for="v1"></label>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-12">
-    <div class="d-flex justify-content-between mb-4">
-      <button type="submit" class="btn btn-white">
-        {{ 'Back' | localize }}
-      </button>
-      <button type="submit" class="btn btn-primary">
-        {{ 'Save' | localize }}
-      </button>
-    </div>
-  </div>
-</div>
+</form>

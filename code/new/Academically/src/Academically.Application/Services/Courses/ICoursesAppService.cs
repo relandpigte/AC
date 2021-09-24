@@ -12,5 +12,6 @@ namespace Academically.Services.Courses
         Task<IEnumerable<CourseDto>> GetAll();
         Task Create(CourseDto input);
         Task<CourseDto> UpdateDetails(UpdateCourseDetailsDto input);
+        Task<CourseDto> UpdateSettings(UpdateCourseSettingsDto input);
     }
 }
