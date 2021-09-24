@@ -3,6 +3,8 @@ import { ModalOptions } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CourseWizardComponent } from './course-wizard/course-wizard.component';
 import { AppComponentBase } from '@shared/app-component-base';
+import { CourseDto, CoursesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { takeUntil, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-courses',
@@ -10,24 +12,37 @@ import { AppComponentBase } from '@shared/app-component-base';
   styleUrls: ['./courses.component.less']
 })
 export class CoursesComponent extends AppComponentBase implements OnInit {
-  courses = [{ 'courseName': 'English', 'createdAt': '2021-05-02', 'status': true, 'categories': 'Test' },
-  { 'courseName': 'C#', 'createdAt': '2021-05-02', 'status': false, 'categories': 'Test' },
-  { 'courseName': 'C', 'createdAt': '2021-08-02', 'status': true, 'categories': 'Test' },
-  { 'courseName': 'C++', 'createdAt': '2021-02-02', 'status': true, 'categories': 'Test' },
-  { 'courseName': 'Java', 'createdAt': '2021-01-02', 'status': false, 'categories': 'Test' }];
+  courses: CourseDto[] = [];
+  isLoading = false;
 
   constructor(
     injector: Injector,
     private _modalService: BsModalService,
+    private _coursesService: CoursesServiceProxy,
   ) {
     super(injector);
   }
 
   ngOnInit(): void {
+    this.getCourses();
   }
 
   onCreateClick(): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<CourseWizardComponent>;
     this._modalService.show(CourseWizardComponent, modalSettings);
+  }
+
+  private getCourses(): void {
+    this.isLoading = true;
+    this._coursesService.getAll()
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+      )
+      .subscribe(courses => {
+        this.courses = courses;
+      });
   }
 }

@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities.Auditing;
+using Academically.Authorization.Users;
 using Academically.Domain.Enums;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -26,5 +27,7 @@ namespace Academically.Domain.Entities
         public virtual SpokenLanguage Language { get; set; }
         [ForeignKey("CurrencyId")]
         public virtual Currency Currency { get; set; }
+        [ForeignKey("CreatorUserId")]
+        public virtual User CreatorUser { get; set; }
     }
 }

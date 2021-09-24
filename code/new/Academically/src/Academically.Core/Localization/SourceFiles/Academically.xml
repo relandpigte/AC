@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="CourseNameDetails">Course Name / Details</text>
     <text name="ChooseACourseTemplate">Choose a course template</text>
     <text name="Blank">Blank</text>
     <text name="ChooseALessonTemplate">Choose a lesson template</text>
