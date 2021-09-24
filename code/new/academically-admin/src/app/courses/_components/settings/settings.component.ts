@@ -11,6 +11,7 @@ import { takeUntil, finalize } from 'rxjs/operators';
 })
 export class SettingsComponent extends AppComponentBase implements OnInit {
   @Output() backClicked = new EventEmitter();
+  @Output() settingsSaved = new EventEmitter();
   model = new CourseDto();
   isLoading = false;
 
@@ -55,6 +56,7 @@ export class SettingsComponent extends AppComponentBase implements OnInit {
       .subscribe(course => {
         this._courseService.course = course;
         this.notify.success(this.l('SavedSuccessfully'));
+        this.settingsSaved.emit();
       });
   }
 }

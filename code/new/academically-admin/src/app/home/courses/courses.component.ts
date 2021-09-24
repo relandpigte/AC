@@ -29,7 +29,10 @@ export class CoursesComponent extends AppComponentBase implements OnInit {
 
   onCreateClick(): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<CourseWizardComponent>;
-    this._modalService.show(CourseWizardComponent, modalSettings);
+    const modal = this._modalService.show(CourseWizardComponent, modalSettings).content;
+    modal.courseSaved.subscribe(() => {
+      this.getCourses();
+    });
   }
 
   getCourseImageUrl(coverPhotoUrl: string): string {

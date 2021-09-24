@@ -10,6 +10,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 })
 
 export class CourseNameComponent extends AppComponentBase implements OnInit {
+  @Output() courseSaved = new EventEmitter();
   @Output() modalClose = new EventEmitter();
   @Output() backClick = new EventEmitter();
 
@@ -46,6 +47,7 @@ export class CourseNameComponent extends AppComponentBase implements OnInit {
       )
       .subscribe((result) => {
         this.notify.success(this.l('SavedSuccessfully'));
+        this.courseSaved.emit();
         this.modalClose.emit();
       });
   }

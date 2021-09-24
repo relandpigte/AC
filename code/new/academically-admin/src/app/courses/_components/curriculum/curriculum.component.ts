@@ -1,7 +1,7 @@
 import { Component, OnInit, Injector } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ModalOptions, BsModalService } from 'ngx-bootstrap/modal';
-import { LessonWizardComponent } from './_components/lesson-wizard/lesson-wizard.component';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { LessonWizardComponent } from '../lesson-wizard/lesson-wizard.component';
 
 @Component({
   selector: 'app-curriculum',

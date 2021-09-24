@@ -7,12 +7,16 @@ import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { CoursesComponent } from './courses.component';
 import { DetailsComponent } from './_components/details/details.component';
 import { SettingsComponent } from './_components/settings/settings.component';
+import { CurriculumComponent } from './_components/curriculum/curriculum.component';
+import { LessonWizardComponent } from './_components/lesson-wizard/lesson-wizard.component';
 
 @NgModule({
   declarations: [
     CoursesComponent,
     DetailsComponent,
     SettingsComponent,
+    CurriculumComponent,
+    LessonWizardComponent,
   ],
   imports: [
     CommonModule,
