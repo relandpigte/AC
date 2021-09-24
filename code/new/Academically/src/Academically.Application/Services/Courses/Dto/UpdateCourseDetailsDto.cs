@@ -15,8 +15,8 @@ namespace Academically.Services.Courses.Dto
         public string Subtitle { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
-
         public Guid? CurrencyId { get; set; }
+        public Guid? LanguageId { get; set; }
 
         public IFormFile File { get; set; }
     }
