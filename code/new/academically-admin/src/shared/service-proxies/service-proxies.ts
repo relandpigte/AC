@@ -1714,6 +1714,62 @@ export class CoursesServiceProxy {
         }
         return _observableOf<CourseDto>(<any>null);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateSettings(body: UpdateCourseSettingsDto | undefined): Observable<CourseDto> {
+        let url_ = this.baseUrl + "/api/services/app/Courses/UpdateSettings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateSettings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateSettings(<any>response_);
+                } catch (e) {
+                    return <Observable<CourseDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CourseDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateSettings(response: HttpResponseBase): Observable<CourseDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CourseDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CourseDto>(<any>null);
+    }
 }
 
 @Injectable()
@@ -17342,6 +17398,57 @@ export interface IUpdateAddressDto {
     city: string | undefined;
     stateOrProvince: string | undefined;
     zipOrPostCode: string | undefined;
+}
+
+export class UpdateCourseSettingsDto implements IUpdateCourseSettingsDto {
+    id: string;
+    isVisible: boolean;
+    isOpen: boolean;
+
+    constructor(data?: IUpdateCourseSettingsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.isVisible = _data["isVisible"];
+            this.isOpen = _data["isOpen"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCourseSettingsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCourseSettingsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["isVisible"] = this.isVisible;
+        data["isOpen"] = this.isOpen;
+        return data; 
+    }
+
+    clone(): UpdateCourseSettingsDto {
+        const json = this.toJSON();
+        let result = new UpdateCourseSettingsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateCourseSettingsDto {
+    id: string;
+    isVisible: boolean;
+    isOpen: boolean;
 }
 
 export class UpdateProjectDto implements IUpdateProjectDto {

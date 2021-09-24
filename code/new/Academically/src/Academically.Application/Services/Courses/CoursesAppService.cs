@@ -87,5 +87,14 @@ namespace Academically.Services.Courses
             await _coursesRepository.UpdateAsync(course);
             return ObjectMapper.Map<CourseDto>(course);
         }
+
+        public async Task<CourseDto> UpdateSettings(UpdateCourseSettingsDto input)
+        {
+            var course = await _coursesRepository.GetAsync(input.Id);
+            ObjectMapper.Map(input, course);
+            course.Type = CourseType.Standard;
+            await _coursesRepository.UpdateAsync(course);
+            return ObjectMapper.Map<CourseDto>(course);
+        }
     }
 }
