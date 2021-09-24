@@ -3,6 +3,7 @@ using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Services.Documents.Dto;
 using Academically.Users.Dto;
 
 namespace Academically.Services.Courses.Dto
@@ -20,7 +21,9 @@ namespace Academically.Services.Courses.Dto
         public bool IsOpen { get; set; }
 
         public DateTime CreationTime { get; set; }
+        public string CourseImageUrl { get; set; }
 
         public UserDto CreatorUser { get; set; }
+        public DocumentDto ImageDocument { get; set; }
     }
 }

@@ -33,13 +33,26 @@
             </abp-validation-summary>
           </div>
 
+          <div class="form-group">
+            <label class="col-form-label" for="categories">{{ 'Categories' | localize}}</label>
+            <input class="form-control" type="text" id="categories" name="categories" />
+          </div>
+
         </div>
       </div>
     </div>
     <div class="col-4">
       <div class="card" [loader]="isLoading">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'CourseImage' | localize }}
+          </h4>
+        </div>
         <div class="card-body">
-          <h4>Coming Soon</h4>
+          <app-document-uploader [previewImages]="true" [largeImagePreview]="true" [maxFiles]="1" [cropImages]="true"
+            [cropperAspectRatioWidth]="350" [cropperAspectRationHeight]="263"
+            [allowedExtensions]="allowedImageExtensions">
+          </app-document-uploader>
         </div>
       </div>
     </div>

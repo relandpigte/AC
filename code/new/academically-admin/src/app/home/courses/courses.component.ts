@@ -32,6 +32,13 @@ export class CoursesComponent extends AppComponentBase implements OnInit {
     this._modalService.show(CourseWizardComponent, modalSettings);
   }
 
+  getCourseImageUrl(coverPhotoUrl: string): string {
+    if (coverPhotoUrl) {
+      return coverPhotoUrl;
+    }
+    return 'assets/themes/dashkit/img/covers/profile-cover-1.jpg';
+  }
+
   private getCourses(): void {
     this.isLoading = true;
     this._coursesService.getAll()
