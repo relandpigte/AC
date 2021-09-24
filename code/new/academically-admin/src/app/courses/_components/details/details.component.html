@@ -41,6 +41,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-4">
       <div class="card" [loader]="isLoading">
         <div class="card-header">
@@ -53,6 +54,44 @@
             [cropperAspectRatioWidth]="350" [cropperAspectRationHeight]="263"
             [allowedExtensions]="allowedImageExtensions">
           </app-document-uploader>
+        </div>
+      </div>
+
+      <div class="card" [loader]="isLoading">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Pricing' | localize }}
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="form-check">
+            <input [checked]="currenctPricingState === PricingState.Free" class="form-check-input" type="radio"
+              name="free" id="free" value="free" (click)="onPricingClick(PricingState.Free)">
+            <label class="form-check-label" for="free">
+              {{ 'Free' | localize }}
+              <p class="small text-muted">{{ 'AllowAccessToContentFreeOfCharge' | localize }}</p>
+            </label>
+          </div>
+          <div class="form-check">
+            <input [checked]="currenctPricingState === PricingState.Charged" class="form-check-input" type="radio"
+              name="charged" id="charged" value="charged" (click)="onPricingClick(PricingState.Charged)">
+            <label class="form-check-label mb-1" for="charged">{{ 'ChargeAFee' | localize }}</label>
+            <div class="input-group">
+              <input type="number" [(ngModel)]="course.price" id="price" name="price" class="form-control"
+                [disabled]="currenctPricingState === PricingState.Free"
+                [readonly]="currenctPricingState === PricingState.Free">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false" [disabled]="currenctPricingState === PricingState.Free">
+                  {{ this.selectedCurrency.code }}
+                </button>
+                <div class="dropdown-menu">
+                  <a *ngFor="let currency of currencies" class="dropdown-item"
+                    (click)="$event.preventDefault(); onCurrencyClick(currency);" href="#">{{ currency.code }}</a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
