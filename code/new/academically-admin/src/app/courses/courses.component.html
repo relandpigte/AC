@@ -16,12 +16,12 @@
           <div class="col">
             <ul class="nav nav-tabs nav-overflow header-tabs">
               <li class="nav-item">
-                <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab"
-                  aria-controls="overview" aria-selected="true">{{ 'Details' | localize }}</a>
+                <a class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab"
+                  aria-controls="details" aria-selected="true">{{ 'Details' | localize }}</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="projects-tab" data-toggle="tab" href="#projects" role="tab"
-                  aria-controls="projects" aria-selected="false">{{ 'Settings' | localize }}</a>
+                <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab"
+                  aria-controls="settings" aria-selected="false">{{ 'Settings' | localize }}</a>
               </li>
             </ul>
           </div>
@@ -31,11 +31,11 @@
   </div>
   <div class="container-fluid">
     <div class="tab-content">
-      <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+      <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
         <app-details></app-details>
       </div>
-      <div class="tab-pane fade" id="projects" role="tabpanel" aria-labelledby="projects-tab">
-        Settings
+      <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+        <app-settings></app-settings>
       </div>
     </div>
   </div>
