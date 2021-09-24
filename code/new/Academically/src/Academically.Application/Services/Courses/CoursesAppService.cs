@@ -1,14 +1,13 @@
-﻿using Abp.Authorization;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Academically.Authorization;
 using Academically.Domain.Entities;
 using Academically.Services.Courses.Dto;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Academically.Services.Courses
 {
@@ -17,15 +16,41 @@ namespace Academically.Services.Courses
     {
         private readonly IRepository<Course, Guid> _coursesRepository;
 
-        public CoursesAppService(IRepository<Course, Guid> coursesRepository)
+        public CoursesAppService(
+            IRepository<Course, Guid> coursesRepository
+            )
         {
             _coursesRepository = coursesRepository;
         }
-        public async Task<CourseDto> Create(CourseDto input)
+
+        public async Task<CourseDto> Get(Guid id)
+        {
+            var course = await _coursesRepository.GetAsync(id);
+            return ObjectMapper.Map<CourseDto>(course);
+        }
+
+        public async Task<IEnumerable<CourseDto>> GetAll()
+        {
+            return await _coursesRepository.GetAll()
+                .Where(e => e.CreatorUserId == AbpSession.UserId.Value)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .OrderBy(e => e.Name)
+                .Select(e => ObjectMapper.Map<CourseDto>(e))
+                .ToListAsync();
+        }
+
+        public async Task Create(CourseDto input)
         {
             var course = ObjectMapper.Map<Course>(input);
-            course.CreatorUserId = AbpSession.UserId.Value;
-            var response= await _coursesRepository.InsertAsync(course);
+            await _coursesRepository.InsertAsync(course);
+        }
+
+        public async Task<CourseDto> UpdateDetails(UpdateCourseDetailsDto input)
+        {
+            var course = await _coursesRepository.GetAsync(input.Id);
+            ObjectMapper.Map(input, course);
+            await _coursesRepository.UpdateAsync(course);
             return ObjectMapper.Map<CourseDto>(course);
         }
     }

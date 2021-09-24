@@ -1456,11 +1456,177 @@ export class CoursesServiceProxy {
     }
 
     /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<CourseDto> {
+        let url_ = this.baseUrl + "/api/services/app/Courses/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<CourseDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CourseDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<CourseDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CourseDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CourseDto>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAll(): Observable<CourseDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Courses/GetAll";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<CourseDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CourseDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<CourseDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(CourseDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CourseDto[]>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
-    create(body: CourseDto | undefined): Observable<CourseDto> {
+    create(body: CourseDto | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Courses/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateDetails(body: UpdateCourseDetailsDto | undefined): Observable<CourseDto> {
+        let url_ = this.baseUrl + "/api/services/app/Courses/UpdateDetails";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -1475,12 +1641,12 @@ export class CoursesServiceProxy {
             })
         };
 
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreate(response_);
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateDetails(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCreate(<any>response_);
+                    return this.processUpdateDetails(<any>response_);
                 } catch (e) {
                     return <Observable<CourseDto>><any>_observableThrow(e);
                 }
@@ -1489,7 +1655,7 @@ export class CoursesServiceProxy {
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<CourseDto> {
+    protected processUpdateDetails(response: HttpResponseBase): Observable<CourseDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -12080,6 +12246,14 @@ export interface IConversationGroupDto {
 export class CourseDto implements ICourseDto {
     id: string;
     name: string | undefined;
+    subtitle: string | undefined;
+    description: string | undefined;
+    price: number;
+    type: CourseType;
+    isVisible: boolean;
+    isOpen: boolean;
+    creationTime: moment.Moment;
+    creatorUser: UserDto;
 
     constructor(data?: ICourseDto) {
         if (data) {
@@ -12094,6 +12268,14 @@ export class CourseDto implements ICourseDto {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
+            this.subtitle = _data["subtitle"];
+            this.description = _data["description"];
+            this.price = _data["price"];
+            this.type = _data["type"];
+            this.isVisible = _data["isVisible"];
+            this.isOpen = _data["isOpen"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
         }
     }
 
@@ -12108,6 +12290,14 @@ export class CourseDto implements ICourseDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
+        data["subtitle"] = this.subtitle;
+        data["description"] = this.description;
+        data["price"] = this.price;
+        data["type"] = this.type;
+        data["isVisible"] = this.isVisible;
+        data["isOpen"] = this.isOpen;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -12122,6 +12312,20 @@ export class CourseDto implements ICourseDto {
 export interface ICourseDto {
     id: string;
     name: string | undefined;
+    subtitle: string | undefined;
+    description: string | undefined;
+    price: number;
+    type: CourseType;
+    isVisible: boolean;
+    isOpen: boolean;
+    creationTime: moment.Moment;
+    creatorUser: UserDto;
+}
+
+/** 1 = Standard 2 = Cohort */
+export enum CourseType {
+    Standard = 1,
+    Cohort = 2,
 }
 
 export class CreateEditUserEducationCourseDto implements ICreateEditUserEducationCourseDto {
@@ -16900,6 +17104,61 @@ export interface IUpdateAddressDto {
     city: string | undefined;
     stateOrProvince: string | undefined;
     zipOrPostCode: string | undefined;
+}
+
+export class UpdateCourseDetailsDto implements IUpdateCourseDetailsDto {
+    id: string;
+    name: string;
+    subtitle: string | undefined;
+    description: string | undefined;
+
+    constructor(data?: IUpdateCourseDetailsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.subtitle = _data["subtitle"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCourseDetailsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCourseDetailsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["subtitle"] = this.subtitle;
+        data["description"] = this.description;
+        return data; 
+    }
+
+    clone(): UpdateCourseDetailsDto {
+        const json = this.toJSON();
+        let result = new UpdateCourseDetailsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateCourseDetailsDto {
+    id: string;
+    name: string;
+    subtitle: string | undefined;
+    description: string | undefined;
 }
 
 export class UpdateProjectDto implements IUpdateProjectDto {
