@@ -13,5 +13,6 @@
         DbsCertificate,
         IntroVideo,
         Conversation,
+        CourseImage,
     }
 }

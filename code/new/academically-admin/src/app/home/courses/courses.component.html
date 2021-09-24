@@ -12,7 +12,9 @@
     <div class="row listAlias">
       <div *ngFor="let course of courses" class="col-12 col-md-6 col-xl-4">
         <div class="card cursor-pointer" [routerLink]="['/app/courses', course.id]">
-          <img src="/assets/themes/dashkit/img/avatars/projects/project-1.jpg" alt="..." class="card-img-top">
+          <img *ngIf="!course.courseImageUrl" src="/assets/themes/dashkit/img/avatars/projects/project-1.jpg" alt="..."
+            class="card-img-top">
+          <img *ngIf="course.courseImageUrl" [src]="course.courseImageUrl" alt="..." class="card-img-top">
           <div class="card-body">
             <div class="row align-items-center">
               <div class="col">

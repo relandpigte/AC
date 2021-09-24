@@ -21,6 +21,8 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
   @Input() allowedExtensions: string[] = [];
   @Input() maxFiles: number;
   @Input() cropImages = false;
+  @Input() cropperAspectRatioWidth = 1;
+  @Input() cropperAspectRationHeight = 1;
   @Input() hasCategory = false;
   @Input() previewImages = false;
   @Input() largeImagePreview = false;
@@ -62,7 +64,7 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
 
     if (this.maxFiles && this.files.length === this.maxFiles) {
       const sFile = this.maxFiles > 1 ? `${this.maxFiles} files` : '1 file';
-      this.notify.error(`You are allowed to upload only ${sFile} at a time.`)
+      this.notify.error(`You are allowed to upload only ${sFile} at a time.`);
     }
 
     if (this.allowedExtensions.includes(`.${fileExtension}`)) {
@@ -74,15 +76,18 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
         };
         const modal = this._modalService.show(ImageCropperComponent, modalSettings);
         const imageCropper: ImageCropperComponent = modal.content;
+        imageCropper.aspectRatioWidth = this.cropperAspectRatioWidth;
+        imageCropper.aspectRationHeight = this.cropperAspectRationHeight;
+        imageCropper.maintainAspectRatio = this.cropperAspectRatioWidth > 1 || this.cropperAspectRationHeight > 1;
         imageCropper.imageLoaded.subscribe(() => {
           this.loadingImageCropper = false;
         });
-        imageCropper.imageCropped.subscribe((file: File) => {
+        imageCropper.imageCropped.subscribe((croppedFile: File) => {
           if (this.hasCategory) {
             this.categories.push('');
           }
-          if (this.validateFileSize(file.size)) {
-            this.files.push(file);
+          if (this.validateFileSize(croppedFile.size)) {
+            this.files.push(croppedFile);
             this.filesChanged.emit(this.getFileParameterFromFiles());
           }
           imageCropper.close();
@@ -117,7 +122,7 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
   }
 
   formatBytes(bytes: number, decimals = 2) {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) { return '0 Bytes'; }
 
     const k = 1024;
     const dm = decimals < 0 ? 0 : decimals;
@@ -144,7 +149,7 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
         data: file,
       };
       return fileParameter;
-    })
+    });
   }
 
   private getFileExtension(fileName: string): string {
@@ -152,7 +157,7 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
   }
 
   private getFileUrl(file: File): string {
-    return URL.createObjectURL(file)
+    return URL.createObjectURL(file);
   }
 
   private validateFileSize(size: number) {

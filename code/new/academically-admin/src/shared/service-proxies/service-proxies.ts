@@ -1622,21 +1622,44 @@ export class CoursesServiceProxy {
     }
 
     /**
-     * @param body (optional) 
+     * @param name (optional) 
+     * @param subtitle (optional) 
+     * @param description (optional) 
+     * @param file (optional) 
+     * @param id (optional) 
      * @return Success
      */
-    updateDetails(body: UpdateCourseDetailsDto | undefined): Observable<CourseDto> {
+    updateDetails(name: string | undefined, subtitle: string | undefined, description: string | undefined, file: FileParameter | undefined, id: string | undefined): Observable<CourseDto> {
         let url_ = this.baseUrl + "/api/services/app/Courses/UpdateDetails";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
+        const content_ = new FormData();
+        if (name === null || name === undefined) {
+            // do nothing
+        } else
+            content_.append("Name", name.toString());
+        if (subtitle === null || subtitle === undefined) {
+            // do nothing
+        } else
+            content_.append("Subtitle", subtitle.toString());
+        if (description === null || description === undefined) {
+            // do nothing
+        } else
+            content_.append("Description", description.toString());
+        if (file === null || file === undefined) {
+            // do nothing
+        } else
+            content_.append("File", file.data, file.fileName ? file.fileName : "File");
+        if (id === null || id === undefined) {
+            // do nothing
+        } else
+            content_.append("Id", id.toString());
 
         let options_ : any = {
             body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Content-Type": "application/json-patch+json",
                 "Accept": "text/plain"
             })
         };
@@ -12253,7 +12276,9 @@ export class CourseDto implements ICourseDto {
     isVisible: boolean;
     isOpen: boolean;
     creationTime: moment.Moment;
+    courseImageUrl: string | undefined;
     creatorUser: UserDto;
+    imageDocument: DocumentDto;
 
     constructor(data?: ICourseDto) {
         if (data) {
@@ -12275,7 +12300,9 @@ export class CourseDto implements ICourseDto {
             this.isVisible = _data["isVisible"];
             this.isOpen = _data["isOpen"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.courseImageUrl = _data["courseImageUrl"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.imageDocument = _data["imageDocument"] ? DocumentDto.fromJS(_data["imageDocument"]) : <any>undefined;
         }
     }
 
@@ -12297,7 +12324,9 @@ export class CourseDto implements ICourseDto {
         data["isVisible"] = this.isVisible;
         data["isOpen"] = this.isOpen;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["courseImageUrl"] = this.courseImageUrl;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["imageDocument"] = this.imageDocument ? this.imageDocument.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -12319,7 +12348,9 @@ export interface ICourseDto {
     isVisible: boolean;
     isOpen: boolean;
     creationTime: moment.Moment;
+    courseImageUrl: string | undefined;
     creatorUser: UserDto;
+    imageDocument: DocumentDto;
 }
 
 /** 1 = Standard 2 = Cohort */
@@ -13119,7 +13150,7 @@ export interface IDocumentDto {
     size: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -13132,6 +13163,7 @@ export enum DocumentType {
     DbsCertificate = 8,
     IntroVideo = 9,
     Conversation = 10,
+    CourseImage = 11,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {
@@ -17104,61 +17136,6 @@ export interface IUpdateAddressDto {
     city: string | undefined;
     stateOrProvince: string | undefined;
     zipOrPostCode: string | undefined;
-}
-
-export class UpdateCourseDetailsDto implements IUpdateCourseDetailsDto {
-    id: string;
-    name: string;
-    subtitle: string | undefined;
-    description: string | undefined;
-
-    constructor(data?: IUpdateCourseDetailsDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.subtitle = _data["subtitle"];
-            this.description = _data["description"];
-        }
-    }
-
-    static fromJS(data: any): UpdateCourseDetailsDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateCourseDetailsDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["subtitle"] = this.subtitle;
-        data["description"] = this.description;
-        return data; 
-    }
-
-    clone(): UpdateCourseDetailsDto {
-        const json = this.toJSON();
-        let result = new UpdateCourseDetailsDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IUpdateCourseDetailsDto {
-    id: string;
-    name: string;
-    subtitle: string | undefined;
-    description: string | undefined;
 }
 
 export class UpdateProjectDto implements IUpdateProjectDto {
