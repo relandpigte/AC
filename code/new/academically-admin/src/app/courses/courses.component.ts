@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, OnDestroy } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ActivatedRoute } from '@angular/router';
@@ -12,7 +12,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./courses.component.less'],
   animations: [appModuleAnimation()],
 })
-export class CoursesComponent extends AppComponentBase implements OnInit {
+export class CoursesComponent extends AppComponentBase implements OnInit, OnDestroy {
   id: string;
   course: CourseDto = new CourseDto;
 
@@ -39,6 +39,10 @@ export class CoursesComponent extends AppComponentBase implements OnInit {
       .subscribe(course => {
         this.course = course;
       });
+  }
+
+  ngOnDestroy(): void {
+    this._courseService.course = new CourseDto();
   }
 
   private getCourse(): void {

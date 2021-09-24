@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, } from '@angular/core';
+import { Component, OnInit, Injector, Output, EventEmitter, } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
@@ -13,6 +13,7 @@ enum CourseWizardState {
   styleUrls: ['./course-wizard.component.less']
 })
 export class CourseWizardComponent extends AppComponentBase implements OnInit {
+  @Output() courseSaved = new EventEmitter();
   CourseWizardState = CourseWizardState;
 
   currentWizardState = CourseWizardState.Template;
@@ -34,5 +35,9 @@ export class CourseWizardComponent extends AppComponentBase implements OnInit {
 
   onStateChange(wizardState: CourseWizardState): void {
     this.currentWizardState = wizardState;
+  }
+
+  onCourseSaved(): void {
+    this.courseSaved.emit();
   }
 }

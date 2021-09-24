@@ -140,13 +140,6 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
               ),
           },
           {
-            path: 'curriculum',
-            loadChildren: () =>
-              import('@app/curriculum/curriculum.module').then(
-                (m) => m.CurriculumModule
-              ),
-          },
-          {
             path: 'courses',
             loadChildren: () =>
               import('@app/courses/courses.module').then(

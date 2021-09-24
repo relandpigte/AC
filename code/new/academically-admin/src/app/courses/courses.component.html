@@ -16,8 +16,12 @@
           <div class="col">
             <ul class="nav nav-tabs nav-overflow header-tabs">
               <li class="nav-item">
-                <a class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab"
-                  aria-controls="details" aria-selected="true" #detailsNav>{{ 'Details' | localize }}</a>
+                <a #detailsNav class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab"
+                  aria-controls="details" aria-selected="true">{{ 'Details' | localize }}</a>
+              </li>
+              <li class="nav-item" [hidden]="!course.type">
+                <a #curriculumNav class="nav-link" id="curriculum-tab" data-toggle="tab" href="#curriculum" role="tab"
+                  aria-controls="curriculum" aria-selected="true">{{ 'Curriculum' | localize }}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab"
@@ -34,8 +38,12 @@
       <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
         <app-details></app-details>
       </div>
+      <div [hidden]="!course.type" class="tab-pane fade" id="curriculum" role="tabpanel"
+        aria-labelledby="curriculum-tab">
+        <app-curriculum></app-curriculum>
+      </div>
       <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-        <app-settings (backClicked)="detailsNav.click()"></app-settings>
+        <app-settings (backClicked)="detailsNav.click()" (settingsSaved)="curriculumNav.click()"></app-settings>
       </div>
     </div>
   </div>

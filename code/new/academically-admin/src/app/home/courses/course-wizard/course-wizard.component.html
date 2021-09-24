@@ -2,5 +2,5 @@
   (selectTemplate)="onStateChange(CourseWizardState.Name)">
 </app-course-template>
 <app-course-name *ngIf="currentWizardState === CourseWizardState.Name" (modalClose)="onModalClose()"
-  (backClick)="onStateChange(CourseWizardState.Template)">
+  (backClick)="onStateChange(CourseWizardState.Template)" (courseSaved)="onCourseSaved()">
 </app-course-name>
