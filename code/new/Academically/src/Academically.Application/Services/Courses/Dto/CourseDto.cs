@@ -19,6 +19,7 @@ namespace Academically.Services.Courses.Dto
         public CourseType Type { get; set; }
         public bool IsVisible { get; set; }
         public bool IsOpen { get; set; }
+        public Guid? CurrencyId { get; set; }
 
         public DateTime CreationTime { get; set; }
         public string CourseImageUrl { get; set; }

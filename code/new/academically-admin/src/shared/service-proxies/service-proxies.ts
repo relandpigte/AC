@@ -1625,11 +1625,13 @@ export class CoursesServiceProxy {
      * @param name (optional) 
      * @param subtitle (optional) 
      * @param description (optional) 
+     * @param price (optional) 
+     * @param currencyId (optional) 
      * @param file (optional) 
      * @param id (optional) 
      * @return Success
      */
-    updateDetails(name: string | undefined, subtitle: string | undefined, description: string | undefined, file: FileParameter | undefined, id: string | undefined): Observable<CourseDto> {
+    updateDetails(name: string | undefined, subtitle: string | undefined, description: string | undefined, price: number | undefined, currencyId: string | undefined, file: FileParameter | undefined, id: string | undefined): Observable<CourseDto> {
         let url_ = this.baseUrl + "/api/services/app/Courses/UpdateDetails";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1646,6 +1648,14 @@ export class CoursesServiceProxy {
             // do nothing
         } else
             content_.append("Description", description.toString());
+        if (price === null || price === undefined) {
+            // do nothing
+        } else
+            content_.append("Price", price.toString());
+        if (currencyId === null || currencyId === undefined) {
+            // do nothing
+        } else
+            content_.append("CurrencyId", currencyId.toString());
         if (file === null || file === undefined) {
             // do nothing
         } else
@@ -1698,6 +1708,76 @@ export class CoursesServiceProxy {
             }));
         }
         return _observableOf<CourseDto>(<any>null);
+    }
+}
+
+@Injectable()
+export class CurrenciesServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    getAll(): Observable<CurrencyDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Currencies/GetAll";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<CurrencyDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CurrencyDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<CurrencyDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(CurrencyDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CurrencyDto[]>(<any>null);
     }
 }
 
@@ -12275,6 +12355,7 @@ export class CourseDto implements ICourseDto {
     type: CourseType;
     isVisible: boolean;
     isOpen: boolean;
+    currencyId: string | undefined;
     creationTime: moment.Moment;
     courseImageUrl: string | undefined;
     creatorUser: UserDto;
@@ -12299,6 +12380,7 @@ export class CourseDto implements ICourseDto {
             this.type = _data["type"];
             this.isVisible = _data["isVisible"];
             this.isOpen = _data["isOpen"];
+            this.currencyId = _data["currencyId"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.courseImageUrl = _data["courseImageUrl"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
@@ -12323,6 +12405,7 @@ export class CourseDto implements ICourseDto {
         data["type"] = this.type;
         data["isVisible"] = this.isVisible;
         data["isOpen"] = this.isOpen;
+        data["currencyId"] = this.currencyId;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["courseImageUrl"] = this.courseImageUrl;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
@@ -12347,6 +12430,7 @@ export interface ICourseDto {
     type: CourseType;
     isVisible: boolean;
     isOpen: boolean;
+    currencyId: string | undefined;
     creationTime: moment.Moment;
     courseImageUrl: string | undefined;
     creatorUser: UserDto;
@@ -12834,6 +12918,61 @@ export interface ICreateUserDto {
     isPublic: boolean;
     roleNames: string[] | undefined;
     password: string;
+}
+
+export class CurrencyDto implements ICurrencyDto {
+    id: string;
+    name: string | undefined;
+    code: string | undefined;
+    isEnabled: boolean;
+
+    constructor(data?: ICurrencyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.code = _data["code"];
+            this.isEnabled = _data["isEnabled"];
+        }
+    }
+
+    static fromJS(data: any): CurrencyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CurrencyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["code"] = this.code;
+        data["isEnabled"] = this.isEnabled;
+        return data; 
+    }
+
+    clone(): CurrencyDto {
+        const json = this.toJSON();
+        let result = new CurrencyDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICurrencyDto {
+    id: string;
+    name: string | undefined;
+    code: string | undefined;
+    isEnabled: boolean;
 }
 
 /** 0 = Sunday 1 = Monday 2 = Tuesday 3 = Wednesday 4 = Thursday 5 = Friday 6 = Saturday */

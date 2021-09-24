@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
-    <text name="CourseImage">CourseImage</text>
+    <text name="AllowAccessToContentFreeOfCharge">Allow access to content free of charge</text>
+    <text name="Pricing">Pricing</text>
+    <text name="ChargeAFee">Charge a fee</text>
+    <text name="CourseImage">Course Image</text>
     <text name="CourseNameDetails">Course Name / Details</text>
     <text name="ChooseACourseTemplate">Choose a course template</text>
     <text name="Blank">Blank</text>
