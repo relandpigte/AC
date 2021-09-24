@@ -1,12 +1,11 @@
-﻿using Abp.Domain.Repositories;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Abp.Domain.Repositories;
 using Academically.Domain.Entities;
 using Academically.Services.SpokenLanugages.Dto;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Academically.Services.SpokenLanugages
 {
@@ -28,5 +27,12 @@ namespace Academically.Services.SpokenLanugages
             return spokenLanguages;
         }
 
+        public async Task<IEnumerable<SpokenLanguageDto>> GetAll()
+        {
+            return await _spokenLanguages.GetAll()
+                .OrderBy(e => e.Name)
+                .Select(e => ObjectMapper.Map<SpokenLanguageDto>(e))
+                .ToListAsync();
+        }
     }
 }

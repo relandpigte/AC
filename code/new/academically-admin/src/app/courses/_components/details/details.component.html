@@ -11,7 +11,7 @@
 
           <div class="form-group required">
             <label class="col-form-label" for="name">{{ 'Name' | localize}}</label>
-            <input [(ngModel)]="course.name" #nameModel="ngModel" #nameEl class="form-control" type="text" id="name"
+            <input [(ngModel)]="model.name" #nameModel="ngModel" #nameEl class="form-control" type="text" id="name"
               name="name" required />
             <abp-validation-summary [control]="nameModel" [controlEl]="nameEl">
             </abp-validation-summary>
@@ -19,7 +19,7 @@
 
           <div class="form-group">
             <label class="col-form-label" for="subtitle">{{ 'Subtitle' | localize}}</label>
-            <input [(ngModel)]="course.subtitle" #subtitleModel="ngModel" #subtitleEl class="form-control" type="text"
+            <input [(ngModel)]="model.subtitle" #subtitleModel="ngModel" #subtitleEl class="form-control" type="text"
               id="subtitle" name="subtitle" />
             <abp-validation-summary [control]="subtitleModel" [controlEl]="subtitleEl">
             </abp-validation-summary>
@@ -27,7 +27,7 @@
 
           <div class="form-group">
             <label class="col-form-label" for="description">{{ 'Description' | localize}}</label>
-            <quill-editor [(ngModel)]="course.description" #descriptionModel="ngModel" #descriptionEl id="description"
+            <quill-editor [(ngModel)]="model.description" #descriptionModel="ngModel" #descriptionEl id="description"
               name="description"></quill-editor>
             <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl.elementRef.nativeElement">
             </abp-validation-summary>
@@ -46,7 +46,7 @@
       <div class="card" [loader]="isLoading">
         <div class="card-header">
           <h4 class="card-header-title">
-            {{ 'CourseImage' | localize }}
+            {{ 'model.mage' | localize }}
           </h4>
         </div>
         <div class="card-body">
@@ -77,7 +77,7 @@
               name="charged" id="charged" value="charged" (click)="onPricingClick(PricingState.Charged)">
             <label class="form-check-label mb-1" for="charged">{{ 'ChargeAFee' | localize }}</label>
             <div class="input-group">
-              <input type="number" [(ngModel)]="course.price" id="price" name="price" class="form-control"
+              <input type="number" [(ngModel)]="model.price" id="price" name="price" class="form-control"
                 [disabled]="currenctPricingState === PricingState.Free"
                 [readonly]="currenctPricingState === PricingState.Free">
               <div class="input-group-append">
@@ -91,6 +91,25 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" [loader]="isLoading">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Language' | localize }}
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="form-group mb-0">
+            <select class="custom-select" select2 [defaultValue]="model.languageId"
+              (select2ValueChange)="model.languageId = $event" [(ngModel)]="model.languageId" id="language"
+              name="language" #languageIdModel="ngModel" #languageIdEl>
+              <option *ngFor="let langauge of languages" [value]="langauge.id">
+                {{ langauge.name | localize }}
+              </option>
+            </select>
           </div>
         </div>
       </div>

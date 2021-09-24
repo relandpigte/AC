@@ -2,6 +2,7 @@
 <localizationDictionary culture="en">
   <texts>
     <text name="AllowAccessToContentFreeOfCharge">Allow access to content free of charge</text>
+    <text name="Language">Language</text>
     <text name="Pricing">Pricing</text>
     <text name="ChargeAFee">Charge a fee</text>
     <text name="CourseImage">Course Image</text>

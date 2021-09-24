@@ -5,6 +5,8 @@ import {
   CourseDto,
   CurrenciesServiceProxy,
   CurrencyDto,
+  SpokenLanguagesServiceProxy,
+  SpokenLanguageDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { CourseService } from '@app/courses/_services/course.service';
@@ -25,8 +27,9 @@ enum PricingState {
 export class DetailsComponent extends AppComponentBase implements OnInit {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
 
-  course = new CourseDto();
+  model = new CourseDto();
   currencies: CurrencyDto[] = [];
+  languages: SpokenLanguageDto[] = [];
   selectedCurrency: CurrencyDto = new CurrencyDto();
   isLoading = false;
   allowedImageExtensions = fileUploadConfiguration.allowedImageExtensions;
@@ -40,6 +43,7 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
     private _courseService: CourseService,
     private _coursesService: CoursesServiceProxy,
     private _currenciesService: CurrenciesServiceProxy,
+    private _spokenLanguagesService: SpokenLanguagesServiceProxy
   ) {
     super(injector);
   }
@@ -53,8 +57,8 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
         }),
       )
       .subscribe(course => {
-        this.course = course;
-        this.currenctPricingState = this.course.price > 0 ? PricingState.Charged : PricingState.Free;
+        this.model = course;
+        this.currenctPricingState = this.model.price > 0 ? PricingState.Charged : PricingState.Free;
         if (course.imageDocument) {
           this.defaultFile = new DefaultFile();
           this.defaultFile.name = course.imageDocument.originalFileName;
@@ -73,18 +77,20 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
     });
 
     this.getCurrencies();
+    this.getLanguages();
   }
 
   onFormSubmit(): void {
     this.isLoading = true;
     this._coursesService.updateDetails(
-      this.course.name,
-      this.course.subtitle,
-      this.course.description,
-      this.course.price,
+      this.model.name,
+      this.model.subtitle,
+      this.model.description,
+      this.model.price,
       this.selectedCurrency.id,
+      this.model.languageId,
       this.courseImage,
-      this.course.id,
+      this.model.id,
     )
       .pipe(
         takeUntil(this.destroyed$),
@@ -105,7 +111,7 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
   onPricingClick(pricingState: PricingState): void {
     this.currenctPricingState = pricingState;
     if (this.currenctPricingState === PricingState.Free) {
-      this.course.price = 0;
+      this.model.price = 0;
     }
   }
 
@@ -116,11 +122,21 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
       )
       .subscribe(currencies => {
         this.currencies = currencies;
-        if (this.course.currencyId) {
-          this.selectedCurrency = this.currencies.find(e => e.id === this.course.currencyId);
+        if (this.model.currencyId) {
+          this.selectedCurrency = this.currencies.find(e => e.id === this.model.currencyId);
         } else {
           this.selectedCurrency = this.currencies.find(e => e.code === 'GBP');
         }
+      });
+  }
+
+  private getLanguages(): void {
+    this._spokenLanguagesService.getAll()
+      .pipe(
+        takeUntil(this.destroyed$),
+      )
+      .subscribe(languages => {
+        this.languages = languages;
       });
   }
 }
