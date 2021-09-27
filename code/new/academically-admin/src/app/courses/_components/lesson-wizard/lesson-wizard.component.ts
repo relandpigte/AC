@@ -1,6 +1,11 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, EventEmitter, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+
+enum LessonWizardState {
+  Template,
+  Name,
+}
 
 @Component({
   selector: 'app-lesson-wizard',
@@ -8,11 +13,15 @@ import { BsModalService } from 'ngx-bootstrap/modal';
   styleUrls: ['./lesson-wizard.component.less']
 })
 export class LessonWizardComponent extends AppComponentBase implements OnInit {
+  @Output() courseSaved = new EventEmitter();
+  LessonWizardState = LessonWizardState;
+
+  currentWizardState = LessonWizardState.Template;
   isTemplateSelected = false;
 
   constructor(
     injector: Injector,
-    private _modal: BsModalService,
+    private _modalRef: BsModalRef,
   ) {
     super(injector);
   }
@@ -20,15 +29,15 @@ export class LessonWizardComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
   }
 
-  onCloseClick(): void {
-    this._modal.hide();
+  onModalClose(): void {
+    this._modalRef.hide();
   }
 
-  onTemplateSelected(): void {
-    this.isTemplateSelected = !this.isTemplateSelected;
+  onStateChange(wizardState: LessonWizardState): void {
+    this.currentWizardState = wizardState;
   }
 
-  onFormSubmit(): void {
-
+  onCourseSaved(): void {
+    this.courseSaved.emit();
   }
 }

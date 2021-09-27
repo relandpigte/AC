@@ -61,10 +61,11 @@ namespace Academically.Services.Courses
             return outputs;
         }
 
-        public async Task Create(CourseDto input)
+        public async Task<CourseDto> Create(CourseDto input)
         {
             var course = ObjectMapper.Map<Course>(input);
             await _coursesRepository.InsertAsync(course);
+            return ObjectMapper.Map<CourseDto>(course);
         }
 
         public async Task<CourseDto> UpdateDetails([FromForm] UpdateCourseDetailsDto input)

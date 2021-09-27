@@ -10,7 +10,7 @@ namespace Academically.Services.Courses
     {
         Task<CourseDto> Get(Guid id);
         Task<IEnumerable<CourseDto>> GetAll();
-        Task Create(CourseDto input);
+        Task<CourseDto> Create(CourseDto input);
         Task<CourseDto> UpdateDetails(UpdateCourseDetailsDto input);
         Task<CourseDto> UpdateSettings(UpdateCourseSettingsDto input);
     }

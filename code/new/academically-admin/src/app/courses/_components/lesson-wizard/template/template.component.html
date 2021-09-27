@@ -1,0 +1,19 @@
+<div class="modal-card card">
+  <abp-modal-header [title]="'ChooseACourseTemplate' | localize" (onCloseClick)="onCancelClick()">
+  </abp-modal-header>
+  <div class="card-body">
+    <button [class.btn-primary]="isTemplateSelected" [class.btn-white]="!isTemplateSelected" class="btn blank-template"
+      (click)="onTemplateSelected()">
+      <i class="fe fe-file"></i>
+      <p>{{ 'Blank' | localize }}</p>
+    </button>
+  </div>
+  <div class="card-footer justify-content-between">
+    <button type="button" class="btn btn-white" (click)="onCancelClick()">
+      {{ 'Cancel' | localize }}
+    </button>
+    <button type="submit" class="btn btn-primary" [disabled]="!isTemplateSelected" (click)="onNextClick()">
+      {{ 'Next' | localize }}
+    </button>
+  </div>
+</div>

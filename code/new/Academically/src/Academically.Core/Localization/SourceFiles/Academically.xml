@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="NameYourNewLesson">Name your new lesson</text>
+    <text name="Paying">Paying</text>
+    <text name="TutorName">Tutor name</text>
+    <text name="NextSession">Next session</text>
+    <text name="Completion">Completion</text>
+    <text name="AddSession">Add Session</text>
+    <text name="EditSession">Edit Session</text>
+    <text name="TutorHome">Tutor Home</text>
+    <text name="NameYourNewCourse">Name your new course</text>
     <text name="AllowAccessToContentFreeOfCharge">Allow access to content free of charge</text>
     <text name="Language">Language</text>
     <text name="Pricing">Pricing</text>
@@ -1164,13 +1173,5 @@
     </text>
     <text name="TermsAndCoditionsMessageLine2">Please indicate that you accept our terms and conditions by toggling the switch to the right.</text>
     <text name="TermsAndCoditionsMessageLine3">You can view our Terms &amp; Conditions</text>
-    <text name="Paying">Paying</text>
-    <text name="TutorName">Tutor name</text>
-    <text name="NextSession">Next session</text>
-    <text name="Completion">Completion</text>
-    <text name="AddSession">Add Session</text>
-    <text name="EditSession">Edit Session</text>
-    <text name="TutorHome">Tutor Home</text>
-    <text name="NameYourNewCourse">Name your new course</text>
   </texts>
 </localizationDictionary>
