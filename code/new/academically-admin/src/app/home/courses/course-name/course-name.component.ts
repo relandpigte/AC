@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Injector } from '@angular/core
 import { CourseDto, CoursesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/app-component-base';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-course-name',
@@ -19,6 +20,7 @@ export class CourseNameComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _coursesService: CoursesServiceProxy,
   ) {
     super(injector);
@@ -45,10 +47,10 @@ export class CourseNameComponent extends AppComponentBase implements OnInit {
           this.isLoading = false;
         })
       )
-      .subscribe((result) => {
+      .subscribe((response) => {
         this.notify.success(this.l('SavedSuccessfully'));
-        this.courseSaved.emit();
         this.modalClose.emit();
+        this._router.navigate(['/app/courses', response.id]);
       });
   }
 }

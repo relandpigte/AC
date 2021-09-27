@@ -9,6 +9,8 @@ import { DetailsComponent } from './_components/details/details.component';
 import { SettingsComponent } from './_components/settings/settings.component';
 import { CurriculumComponent } from './_components/curriculum/curriculum.component';
 import { LessonWizardComponent } from './_components/lesson-wizard/lesson-wizard.component';
+import { TemplateComponent } from './_components/lesson-wizard/template/template.component';
+import { NameComponent } from './_components/lesson-wizard/name/name.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +19,8 @@ import { LessonWizardComponent } from './_components/lesson-wizard/lesson-wizard
     SettingsComponent,
     CurriculumComponent,
     LessonWizardComponent,
+    TemplateComponent,
+    NameComponent,
   ],
   imports: [
     CommonModule,
