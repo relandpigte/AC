@@ -1777,6 +1777,133 @@ export class CoursesServiceProxy {
 }
 
 @Injectable()
+export class CourseSectionsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param courseId (optional) 
+     * @return Success
+     */
+    getAll(courseId: string | undefined): Observable<CourseSectionDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/CourseSections/GetAll?";
+        if (courseId === null)
+            throw new Error("The parameter 'courseId' cannot be null.");
+        else if (courseId !== undefined)
+            url_ += "courseId=" + encodeURIComponent("" + courseId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<CourseSectionDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CourseSectionDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<CourseSectionDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(CourseSectionDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CourseSectionDto[]>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CourseSectionDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/CourseSections/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class CurrenciesServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -12562,6 +12689,90 @@ export interface ICourseDto {
     courseImageUrl: string | undefined;
     creatorUser: UserDto;
     imageDocument: DocumentDto;
+}
+
+export class CourseSectionDto implements ICourseSectionDto {
+    id: string;
+    name: string | undefined;
+    type: CourseSectionType;
+    status: CourseSectionStatus;
+    displayOrder: number;
+    courseId: string;
+    parentId: string | undefined;
+    creationTime: moment.Moment;
+
+    constructor(data?: ICourseSectionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.type = _data["type"];
+            this.status = _data["status"];
+            this.displayOrder = _data["displayOrder"];
+            this.courseId = _data["courseId"];
+            this.parentId = _data["parentId"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CourseSectionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CourseSectionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["type"] = this.type;
+        data["status"] = this.status;
+        data["displayOrder"] = this.displayOrder;
+        data["courseId"] = this.courseId;
+        data["parentId"] = this.parentId;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        return data; 
+    }
+
+    clone(): CourseSectionDto {
+        const json = this.toJSON();
+        let result = new CourseSectionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICourseSectionDto {
+    id: string;
+    name: string | undefined;
+    type: CourseSectionType;
+    status: CourseSectionStatus;
+    displayOrder: number;
+    courseId: string;
+    parentId: string | undefined;
+    creationTime: moment.Moment;
+}
+
+/** 0 = Draft 1 = Published */
+export enum CourseSectionStatus {
+    Draft = 0,
+    Published = 1,
+}
+
+/** 1 = Module 2 = Unit 3 = Lesson */
+export enum CourseSectionType {
+    Module = 1,
+    Unit = 2,
+    Lesson = 3,
 }
 
 /** 1 = Standard 2 = Cohort */

@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Publish">Publish</text>
+    <text name="Draft">Draft</text>
+    <text name="View">View</text>
     <text name="NameYourNewLesson">Name your new lesson</text>
     <text name="Paying">Paying</text>
     <text name="TutorName">Tutor name</text>

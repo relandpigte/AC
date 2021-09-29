@@ -11,6 +11,7 @@ namespace Academically.Domain.Entities
         public string Name { get; set; }
         public CourseSectionType Type { get; set; }
         public CourseSectionStatus Status { get; set; }
+        public int DisplayOrder { get; set; }
         public Guid CourseId { get; set; }
         public Guid? ParentId { get; set; }
 

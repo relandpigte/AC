@@ -39,7 +39,7 @@
         <app-details></app-details>
       </div>
       <div class="tab-pane fade" id="curriculum" role="tabpanel" aria-labelledby="curriculum-tab">
-        <app-curriculum></app-curriculum>
+        <app-curriculum [courseId]="id"></app-curriculum>
       </div>
       <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
         <app-settings (backClicked)="detailsNav.click()" (settingsSaved)="curriculumNav.click()"></app-settings>
