@@ -85,6 +85,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
     datesSet: this.dateSet.bind(this),
     dateClick: this.dateClicked.bind(this),
     eventClick: this.eventClick.bind(this),
+    dayHeaderContent: this.dayHeaderContent.bind(this)
   };
 
   constructor(
@@ -178,6 +179,14 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
       .subscribe(() => {
         this.getUserAvailabilities();
       });
+  }
+
+  dayHeaderContent(args) {
+    var argDate = new Date(args.date)
+    var currentDate = new Date(Date.now())
+    if (argDate.getDate() === currentDate.getDate()) {
+      return this.l('Today');
+    }
   }
 
   private dateSet(args: DateSelectArg): void {
