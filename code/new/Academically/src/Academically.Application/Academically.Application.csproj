@@ -39,6 +39,8 @@
     <Folder Include="Services\UserAvailabilities\Dto\" />
     <Folder Include="Services\Currencies\" />
     <Folder Include="Services\Currencies\Dto\" />
+    <Folder Include="Services\CourseSections\" />
+    <Folder Include="Services\CourseSections\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Services\Projects\" />
@@ -52,5 +54,7 @@
     <None Remove="Services\Conversations\Dto\" />
     <None Remove="Services\Currencies\" />
     <None Remove="Services\Currencies\Dto\" />
+    <None Remove="Services\CourseSections\" />
+    <None Remove="Services\CourseSections\Dto\" />
   </ItemGroup>
 </Project>

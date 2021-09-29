@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Injector, EventEmitter, Output, Input } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
@@ -13,6 +13,7 @@ enum LessonWizardState {
   styleUrls: ['./lesson-wizard.component.less']
 })
 export class LessonWizardComponent extends AppComponentBase implements OnInit {
+  @Input() courseId: string;
   @Output() courseSaved = new EventEmitter();
   LessonWizardState = LessonWizardState;
 
