@@ -96,7 +96,7 @@ variables:
     - export SG_WEB=$(aws cloudformation list-exports | jq -r ".[] | .[] | select(.Name==\"$APP_NAME$ENV_NAME-SGWebId\") | .Value")
     - echo "Web Security Group $SG_WEB"
     - pwd
-
+    
   script:
     # Deploy using serverless
     - "cd $CI_PROJECT_DIR" 
@@ -108,6 +108,9 @@ variables:
     - echo "install plugins"
     - "yarn add serverless-plugin-log-retention --dev"
     - "yarn add serverless-domain-manager --dev"
+    # create academically-gitlab folder under /var/log
+    - mkdir /var/log/academically-gitlab
+    - chmod 777 /var/log/academically-gitlab
     # perform subsitutions on appsettings (need to unzip and rezip)
     - mkdir $CI_PROJECT_DIR/temp
     - unzip $CI_PROJECT_DIR/artifacts/backend.zip -d $CI_PROJECT_DIR/temp
@@ -127,7 +130,7 @@ variables:
     # Subsitute the Connection String
     - jq ".ConnectionStrings.Default=\"server=$DATABASE_ID``;database=$APP_NAME``_$ENV_NAME;uid=deployAdmin;password=$db_master_password;port=3306\"" appsettings.bak > appsettings.v1
     # Subsitute the Other Variables
-    - jq ".App.ClientRootAddress=\"$URL_HTTPS\" | .App.CorsOrigins=\"$URL_HTTPS``,$URL_HTTP\" | .App.ServerBasePath=\"\" | .Kestrel.Endpoints.Http.Url=\"http://localhost:5000\" | .Aws.Id=\"$AWS_ACC_NUM\" | .Aws.Profile=\"\" | .Aws.Region=\"$AWS_DEFAULT_REGION\" | .Aws.S3.AssetsBucket=\"$APP_NAME``-$ENV_NAME``-assets\" | .Aws.S3.SecureAssetsBucket=\"$APP_NAME``-$ENV_NAME``-assets-secured\" | .ITagg.Sms.Username=\"d9d7ec2c\" | .ITagg.Sms.Password=\"p5sswm6g\"" appsettings.v1 > appsettings.json
+    - jq ".App.ClientRootAddress=\"$URL_HTTPS\" | .App.CorsOrigins=\"$URL_HTTPS``,$URL_HTTP\" | .App.ServerBasePath=\"\" | .Kestrel.Endpoints.Http.Url=\"http://localhost:5000\" | .Aws.Id=\"$AWS_ACC_NUM\" | .Aws.Profile=\"\" | .Aws.Region=\"$AWS_DEFAULT_REGION\" | .Aws.S3.AssetsBucket=\"$APP_NAME``-gitlab-$ENV_NAME``-assets\" | .Aws.S3.SecureAssetsBucket=\"$APP_NAME``-gitlab-$ENV_NAME``-assets-secure\" | .ITagg.Sms.Username=\"d9d7ec2c\" | .ITagg.Sms.Password=\"p5sswm6g\"" appsettings.v1 > appsettings.json
     - cat appsettings.json
     - rm appsettings.bak
     - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
