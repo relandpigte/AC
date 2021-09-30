@@ -1176,5 +1176,6 @@
     </text>
     <text name="TermsAndCoditionsMessageLine2">Please indicate that you accept our terms and conditions by toggling the switch to the right.</text>
     <text name="TermsAndCoditionsMessageLine3">You can view our Terms &amp; Conditions</text>
+    <text name="NameYourNewModule">Name your new Module</text>
   </texts>
 </localizationDictionary>

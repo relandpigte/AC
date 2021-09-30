@@ -1,5 +1,6 @@
 import { Component, OnInit, Injector, EventEmitter, Output, Input } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { CourseSectionType } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 enum LessonWizardState {
@@ -14,10 +15,11 @@ enum LessonWizardState {
 })
 export class LessonWizardComponent extends AppComponentBase implements OnInit {
   @Input() courseId: string;
+  @Input() courseSectionType: CourseSectionType
   @Output() courseSaved = new EventEmitter();
   LessonWizardState = LessonWizardState;
 
-  currentWizardState = LessonWizardState.Template;
+  currentWizardState = LessonWizardState.Name;
   isTemplateSelected = false;
 
   constructor(

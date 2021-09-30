@@ -99,10 +99,10 @@
           <h1 class="mb-3">{{ 'NoLessonsOrModules' | localize }}</h1>
           <p class="text-muted mb-5">{{ 'StartByAddingALessonOrModule' | localize }}</p>
           <div class="d-flex">
-            <button class="btn btn-primary" (click)="onAddLessionClick()">
+            <button class="btn btn-primary" (click)="onAddCourseSectionClick(courseSectionType.Lesson)">
               <i class="fe fe-plus"></i>&nbsp;{{ 'AddLesson' | localize }}
             </button>
-            <button class="btn btn-white ml-5">
+            <button class="btn btn-white ml-5" (click)="onAddCourseSectionClick(courseSectionType.Module)">
               <i class="fe fe-plus"></i>&nbsp;{{ 'AddModule' | localize }}
             </button>
           </div>
