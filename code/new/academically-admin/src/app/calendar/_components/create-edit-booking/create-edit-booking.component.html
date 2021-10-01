@@ -45,7 +45,7 @@
           <div *ngIf="!model.id && !model.projectId" class="form-group">
             <div class="custom-control custom-checkbox">
               <input [(ngModel)]="isPersonalEvent" class="custom-control-input" id="isPersonalEvent"
-                name="isPersonalEvent" type="checkbox"  />
+                name="isPersonalEvent" type="checkbox" />
               <label class="custom-control-label" for="isPersonalEvent">{{ 'MarkAsPersonalEvent' | localize }}</label>
             </div>
           </div>
@@ -131,8 +131,7 @@
           </div>
           <div *ngIf="isPersonalEvent" class="form-group">
             <div class="custom-control custom-checkbox">
-              <input [(ngModel)]="isBusy" class="custom-control-input" id="isBusy"
-                name="isBusy" type="checkbox"  />
+              <input [(ngModel)]="isBusy" class="custom-control-input" id="isBusy" name="isBusy" type="checkbox" />
               <label class="custom-control-label" for="isBusy">{{ 'MarkMeBusy' | localize }}</label>
             </div>
           </div>
@@ -191,7 +190,8 @@
             {{ 'CancelSession' | localize }}
           </button>
         </div>
-        <button *ngIf="isPersonalEvent" (click)="onFormSubmit()" class="btn btn-primary" [disabled]="!form.form.valid || isLoading || duration <= 0">
+        <button *ngIf="isPersonalEvent" (click)="onFormSubmit()" class="btn btn-primary"
+          [disabled]="!form.form.valid || isLoading || duration <= 0">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           {{ (isLoading ? 'SavingWithDots' : 'Save') | localize }}
         </button>
@@ -208,7 +208,7 @@
         </button>
 
       </div>
-       
+
     </ng-container>
 
   </div>
