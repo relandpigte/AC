@@ -23,7 +23,9 @@ export class EducationComponent extends AppComponentBase implements OnInit {
   isDeclining = false;
   isApproving = false;
   tutorVerificationStepStatus = TutorVerificationStepStatus
-  
+  tutorVerificationPrevStep: TutorVerificationStepDto;
+  tutorVerificationNextStep: TutorVerificationStepDto;
+
   constructor(
     injector: Injector,
     private _router: Router,
@@ -51,11 +53,22 @@ export class EducationComponent extends AppComponentBase implements OnInit {
           this.tutorVerificationStep = result;
         });
       }
+      if (this.isReadOnly) {
+        this._tutorApplicationService.getPreviousStep(step.tutorVerificationId, BecomeATutorStep.Education).subscribe(result => {
+          this.tutorVerificationPrevStep = result;
+        });
+
+        this._tutorApplicationService.getNextStep(step.tutorVerificationId, BecomeATutorStep.Education).subscribe(result => {
+          this.tutorVerificationNextStep = result;
+        });
+      }
     });
   }
 
   onNavigateNextScreen(): void {
-    this._router.navigate([`app/tutor-applications/${this.userId}/research`]);
+    if (this.tutorVerificationNextStep?.status === TutorVerificationStepStatus.Saved) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/research`]);
+    }
   }
 
   onBackClick(): void {

@@ -22,6 +22,8 @@ export class ResearchComponent extends AppComponentBase {
   isDeclining = false;
   isApproving = false;
   tutorVerificationStepStatus = TutorVerificationStepStatus;
+  tutorVerificationPrevStep: TutorVerificationStepDto;
+  tutorVerificationNextStep: TutorVerificationStepDto;
 
   constructor(
     injector: Injector,
@@ -48,6 +50,15 @@ export class ResearchComponent extends AppComponentBase {
           this.tutorVerificationStep = result;
         });
       }
+      if (this.isReadOnly) {
+        this._tutorApplicationService.getPreviousStep(step.tutorVerificationId, BecomeATutorStep.Research).subscribe(result => {
+          this.tutorVerificationPrevStep = result;
+        });
+
+        this._tutorApplicationService.getNextStep(step.tutorVerificationId, BecomeATutorStep.Research).subscribe(result => {
+          this.tutorVerificationNextStep = result;
+        });
+      }
     });
   }
 
@@ -72,7 +83,9 @@ export class ResearchComponent extends AppComponentBase {
   }
 
   onNavigateNextScreen(): void {
-    this._router.navigate([`app/tutor-applications/${this.userId}/languages`]);
+    if (this.tutorVerificationNextStep?.status === TutorVerificationStepStatus.Saved) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/languages`]);
+    }
   }
 
   onStatusChange(event: any): void {

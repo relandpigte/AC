@@ -44,7 +44,7 @@
     </div>
   </div>
   <div class="d-flex justify-content-between">
-    <button (click)="onBackClick()" type="button" class="btn btn-white">
+    <button [disabled]="(isReadOnly && !(tutorVerificationPrevStep?.status === tutorVerificationStepStatus.Saved))" (click)="onBackClick()" type="button" class="btn btn-white">
       {{ 'Back' | localize }}
     </button>
 
@@ -100,9 +100,11 @@
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           {{ (!isLoading ? 'Next' : 'Verifying') | localize }}
         </button>
-        <button *ngIf="isReadOnly" type="button" class="btn btn-primary" (click)="onNavigateNextScreen()">
+        <button *ngIf="isReadOnly && tutorVerificationNextStep?.status === tutorVerificationStepStatus.Saved" type="button" class="btn btn-primary" (click)="onNavigateNextScreen()">
           {{ 'Next' | localize }}
         </button>
+        <div *ngIf="(isReadOnly && !(tutorVerificationNextStep?.status === tutorVerificationStepStatus.Saved))">
+        </div>
       </div>
     </ng-template>
   </div>

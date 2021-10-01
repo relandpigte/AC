@@ -22,6 +22,7 @@ export class AboutYouComponent extends AppComponentBase implements OnInit {
   isDeclining = false;
   isApproving = false;
   tutorVerificationStepStatus = TutorVerificationStepStatus;
+  tutorVerificationNextStep: TutorVerificationStepDto;
 
   constructor(
     injector: Injector,
@@ -49,6 +50,11 @@ export class AboutYouComponent extends AppComponentBase implements OnInit {
       if (this.isReadOnly && this.tutorVerificationStep.step !== BecomeATutorStep.AboutYou) {
         this._tutorApplicationService.getStep(step.tutorVerificationId, BecomeATutorStep.AboutYou).subscribe(result => {
           this.tutorVerificationStep = result;
+        });
+      }
+      if (this.isReadOnly) {
+        this._tutorApplicationService.getNextStep(step.tutorVerificationId, BecomeATutorStep.AboutYou).subscribe(result => {
+          this.tutorVerificationNextStep = result;
         });
       }
     });
@@ -87,7 +93,9 @@ export class AboutYouComponent extends AppComponentBase implements OnInit {
   }
 
   onNavigateNextScreen(): void {
-    this._router.navigate([`app/tutor-applications/${this.userId}/education`]);
+    if (this.tutorVerificationNextStep?.status === TutorVerificationStepStatus.Saved) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/education`]);
+    }
   }
 
   onStatusChange(event: any): void {

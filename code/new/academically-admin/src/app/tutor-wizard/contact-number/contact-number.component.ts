@@ -52,6 +52,8 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit, 
   isDeclining = false;
   isApproving = false;
   tutorVerificationStepStatus = TutorVerificationStepStatus;
+  tutorVerificationPrevStep: TutorVerificationStepDto;
+  tutorVerificationNextStep: TutorVerificationStepDto;
 
   constructor(
     injector: Injector,
@@ -82,6 +84,15 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit, 
             this.tutorVerificationStep = result;
           });
         }
+        if (this.isReadOnly) {
+          this._tutorApplicationService.getPreviousStep(step.tutorVerificationId, BecomeATutorStep.ContactNumber).subscribe(result => {
+            this.tutorVerificationPrevStep = result;
+          });
+
+          this._tutorApplicationService.getNextStep(step.tutorVerificationId, BecomeATutorStep.ContactNumber).subscribe(result => {
+            this.tutorVerificationNextStep = result;
+          });
+        }
       });
   }
 
@@ -92,7 +103,9 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit, 
   }
 
   onNavigateNextScreen(): void {
-    this._router.navigate([`app/tutor-applications/${this.userId}/references`]);
+    if (this.tutorVerificationNextStep?.status === TutorVerificationStepStatus.Saved) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/references`]);
+    }
   }
 
   onStatusChange(event: any): void {

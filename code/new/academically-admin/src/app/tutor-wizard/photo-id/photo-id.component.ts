@@ -27,6 +27,8 @@ export class PhotoIdComponent extends AppComponentBase implements OnInit, AfterV
   isDeclining = false;
   isApproving = false;
   tutorVerificationStepStatus = TutorVerificationStepStatus;
+  tutorVerificationPrevStep: TutorVerificationStepDto;
+  tutorVerificationNextStep: TutorVerificationStepDto;
 
   constructor(
     injector: Injector,
@@ -55,6 +57,15 @@ export class PhotoIdComponent extends AppComponentBase implements OnInit, AfterV
       if (this.isReadOnly && this.tutorVerificationStep.step !== BecomeATutorStep.PhotoId) {
         this._tutorApplicationService.getStep(step.tutorVerificationId, BecomeATutorStep.PhotoId).subscribe(result => {
           this.tutorVerificationStep = result;
+        });
+      }
+      if (this.isReadOnly) {
+        this._tutorApplicationService.getPreviousStep(step.tutorVerificationId, BecomeATutorStep.PhotoId).subscribe(result => {
+          this.tutorVerificationPrevStep = result;
+        });
+
+        this._tutorApplicationService.getNextStep(step.tutorVerificationId, BecomeATutorStep.PhotoId).subscribe(result => {
+          this.tutorVerificationNextStep = result;
         });
       }
     });
@@ -90,7 +101,9 @@ export class PhotoIdComponent extends AppComponentBase implements OnInit, AfterV
   }
 
   onNavigateNextScreen(): void {
-    this._router.navigate([`app/tutor-applications/${this.userId}/address`]);
+    if (this.tutorVerificationNextStep?.status === TutorVerificationStepStatus.Saved) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/address`]);
+    }
   }
 
   onStatusChange(event: any): void {

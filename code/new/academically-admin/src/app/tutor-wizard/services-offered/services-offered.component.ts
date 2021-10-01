@@ -23,6 +23,8 @@ export class ServicesOfferedComponent extends AppComponentBase {
   isDeclining = false;
   isApproving = false;
   tutorVerificationStepStatus = TutorVerificationStepStatus;
+  tutorVerificationPrevStep: TutorVerificationStepDto;
+  tutorVerificationNextStep: TutorVerificationStepDto;
 
   constructor(
     injector: Injector,
@@ -50,6 +52,15 @@ export class ServicesOfferedComponent extends AppComponentBase {
           this.tutorVerificationStep = result;
         });
       }
+      if (this.isReadOnly) {
+        this._tutorApplicationService.getPreviousStep(step.tutorVerificationId, BecomeATutorStep.ServicesOffered).subscribe(result => {
+          this.tutorVerificationPrevStep = result;
+        });
+
+        this._tutorApplicationService.getNextStep(step.tutorVerificationId, BecomeATutorStep.ServicesOffered).subscribe(result => {
+          this.tutorVerificationNextStep = result;
+        });
+      }
     });
   }
 
@@ -72,7 +83,9 @@ export class ServicesOfferedComponent extends AppComponentBase {
   }
 
   onNavigateNextScreen(): void {
-    this._router.navigate([`app/tutor-applications/${this.userId}/profile-picture`]);
+    if (this.tutorVerificationNextStep?.status === TutorVerificationStepStatus.Saved) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/profile-picture`]);
+    }
   }
 
   onStatusChange(event: any): void {

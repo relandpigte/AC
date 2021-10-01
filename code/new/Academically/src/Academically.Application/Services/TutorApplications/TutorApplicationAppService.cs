@@ -18,7 +18,7 @@ using Academically.Domain.Enums;
 namespace Academically.Services.TutorApplications
 {
     [AbpAuthorize(PermissionNames.Pages_TutorApplications)]
-    public class TutorApplicationAppService: AcademicallyAppServiceBase, ITutorApplicationAppService
+    public class TutorApplicationAppService : AcademicallyAppServiceBase, ITutorApplicationAppService
     {
         private readonly IRepository<TutorVerification, Guid> _tutorVerificationsRepository;
 
@@ -91,6 +91,26 @@ namespace Academically.Services.TutorApplications
                 .FirstOrDefaultAsync(e => e.Step == step);
 
             return ObjectMapper.Map<TutorVerificationStepDto>(currentStep);
+        }
+
+        public async Task<TutorVerificationStepDto> GetPreviousStepAsync(Guid verificationId, BecomeATutorStep step)
+        {
+            var previousStep = await _tutorVerificationsRepository.GetAll()
+               .Where(e => e.Id == verificationId)
+               .Include(e => e.TutorVerificationSteps)
+               .SelectMany(e => e.TutorVerificationSteps).FirstOrDefaultAsync(e => (int)e.Step == ((int)step) - 1);
+
+            return ObjectMapper.Map<TutorVerificationStepDto>(previousStep);
+        }
+
+        public async Task<TutorVerificationStepDto> GetNextStepAsync(Guid verificationId, BecomeATutorStep step)
+        {
+            var nextStep = await _tutorVerificationsRepository.GetAll()
+               .Where(e => e.Id == verificationId)
+               .Include(e => e.TutorVerificationSteps)
+               .SelectMany(e => e.TutorVerificationSteps).FirstOrDefaultAsync(e => (int)e.Step == ((int)step) + 1);
+
+            return ObjectMapper.Map<TutorVerificationStepDto>(nextStep);
         }
     }
 }
