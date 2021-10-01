@@ -150,6 +150,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
   }
 
   onEventClick(event: CalendarEventDto): void {
+    console.log('test');
     const model = event;
     model.tutorId = event.projectOffer.creatorUserId ?? this.userId;
     this.showCreateEditBookingModal(_.cloneDeep(model));
@@ -195,12 +196,16 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
       model.endTime = moment(args.date);
       if (!this.isBlockOutClicked && this.permission.isGranted('Pages.Calendar.BlockOuts')) {
         this.showCreateEditBlockOutModal(model);
+      } else if (!this.isBlockOutClicked && !this.isTutor && this.permission.isGranted('Pages.Calendar.Bookings')) {
+        model.tutorId = this.userId;
+        this.showCreateEditBookingModal(model);
       }
       this.isBlockOutClicked = false;
     }
   }
 
   private eventClick(args: EventClickArg): void {
+    console.log('test');
     const calendarEvent = args.event.extendedProps.calendarEvent as CalendarEventDto;
     switch (calendarEvent.type) {
       case CalendarEventType.Blocker:
