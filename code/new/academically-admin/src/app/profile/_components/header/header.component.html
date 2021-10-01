@@ -37,7 +37,8 @@
                 {{ 'Introduction' | localize }}
               </a>
             </li>
-            <li *ngIf="permission.isGranted('Pages.Profile.Services') && isTutor" class="nav-item">
+            <li *ngIf="(permission.isGranted('Pages.Profile.Services') && isTutor)
+              || (isStudent && isCurrentUserTutor)" class="nav-item">
               <a [routerLink]="['services']" routerLinkActive="active" class="nav-link">
                 {{ 'Services' | localize }}
               </a>

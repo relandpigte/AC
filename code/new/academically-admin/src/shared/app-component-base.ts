@@ -12,7 +12,7 @@ import {
 
 import { AppSessionService } from '@shared/session/app-session.service';
 import { Moment } from 'moment';
-import { DocumentDto } from './service-proxies/service-proxies';
+import { DocumentDto, UserDto } from './service-proxies/service-proxies';
 import { ReplaySubject } from 'rxjs';
 import * as moment from 'moment';
 
@@ -160,6 +160,10 @@ export abstract class AppComponentBase implements OnDestroy {
 
   protected checkUserRole(role: string): boolean {
     return this.appSession.user.roles.findIndex(e => e.toLowerCase() === role) >= 0;
+  }
+
+  protected checkUserRoleFromUser(role: string, user: UserDto): boolean {
+    return user.roleNames.findIndex(e => e.toLowerCase() === role) >= 0;
   }
 
   protected calculateDuration(startTime: Moment, endTime: Moment): number {
