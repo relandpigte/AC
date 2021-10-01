@@ -34,6 +34,8 @@ export class ReferencesComponent extends PagedListingComponentBase<ReferenceDto>
   isDeclining = false;
   isApproving = false;
   tutorVerificationStepStatus = TutorVerificationStepStatus;
+  tutorVerificationPrevStep: TutorVerificationStepDto;
+  tutorVerificationNextStep: TutorVerificationStepDto;
 
   constructor(
     injector: Injector,
@@ -60,6 +62,15 @@ export class ReferencesComponent extends PagedListingComponentBase<ReferenceDto>
       if (this.isReadOnly && this.tutorVerificationStep.step !== BecomeATutorStep.References) {
         this._tutorApplicationService.getStep(step.tutorVerificationId, BecomeATutorStep.References).subscribe(result => {
           this.tutorVerificationStep = result;
+        });
+      }
+      if (this.isReadOnly) {
+        this._tutorApplicationService.getPreviousStep(step.tutorVerificationId, BecomeATutorStep.References).subscribe(result => {
+          this.tutorVerificationPrevStep = result;
+        });
+
+        this._tutorApplicationService.getNextStep(step.tutorVerificationId, BecomeATutorStep.References).subscribe(result => {
+          this.tutorVerificationNextStep = result;
         });
       }
     });
@@ -132,7 +143,9 @@ export class ReferencesComponent extends PagedListingComponentBase<ReferenceDto>
   }
 
   onNavigateNextScreen(): void {
-    this._router.navigate([`app/tutor-applications/${this.userId}/dbs-check`]);
+    if (this.tutorVerificationNextStep?.status === TutorVerificationStepStatus.Saved) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/dbs-check`]);
+    }
   }
 
   onStatusChange(event: any): void {

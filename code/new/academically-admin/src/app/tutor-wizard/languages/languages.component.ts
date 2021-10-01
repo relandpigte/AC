@@ -23,6 +23,8 @@ export class LanguagesComponent extends AppComponentBase {
   isDeclining = false;
   isApproving = false;
   tutorVerificationStepStatus = TutorVerificationStepStatus;
+  tutorVerificationPrevStep: TutorVerificationStepDto;
+  tutorVerificationNextStep: TutorVerificationStepDto;
 
   constructor(
     injector: Injector,
@@ -47,6 +49,15 @@ export class LanguagesComponent extends AppComponentBase {
       if (this.isReadOnly && this.tutorVerificationStep.step !== BecomeATutorStep.Languages) {
         this._tutorApplicationService.getStep(step.tutorVerificationId, BecomeATutorStep.Languages).subscribe(result => {
           this.tutorVerificationStep = result;
+        });
+      }
+      if (this.isReadOnly) {
+        this._tutorApplicationService.getPreviousStep(step.tutorVerificationId, BecomeATutorStep.Languages).subscribe(result => {
+          this.tutorVerificationPrevStep = result;
+        });
+
+        this._tutorApplicationService.getNextStep(step.tutorVerificationId, BecomeATutorStep.Languages).subscribe(result => {
+          this.tutorVerificationNextStep = result;
         });
       }
     });
@@ -74,7 +85,9 @@ export class LanguagesComponent extends AppComponentBase {
   }
 
   onNavigateNextScreen(): void {
-    this._router.navigate([`app/tutor-applications/${this.userId}/services-offered`]);
+    if (this.tutorVerificationNextStep?.status === TutorVerificationStepStatus.Saved) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/services-offered`]);
+    }
   }
 
   onStatusChange(event: any): void {

@@ -23,6 +23,8 @@ export class PrivacyPolicyComponent extends AppComponentBase implements OnInit {
   isDeclining = false;
   isApproving = false;
   tutorVerificationStepStatus = TutorVerificationStepStatus;
+  tutorVerificationPrevStep: TutorVerificationStepDto;
+  tutorVerificationNextStep: TutorVerificationStepDto;
 
   constructor(
     injector: Injector,
@@ -51,6 +53,15 @@ export class PrivacyPolicyComponent extends AppComponentBase implements OnInit {
       if (this.isReadOnly && this.tutorVerificationStep.step !== BecomeATutorStep.PrivacyPolicy) {
         this._tutorApplicationService.getStep(step.tutorVerificationId, BecomeATutorStep.PrivacyPolicy).subscribe(result => {
           this.tutorVerificationStep = result;
+        });
+      }
+      if (this.isReadOnly) {
+        this._tutorApplicationService.getPreviousStep(step.tutorVerificationId, BecomeATutorStep.PrivacyPolicy).subscribe(result => {
+          this.tutorVerificationPrevStep = result;
+        });
+
+        this._tutorApplicationService.getNextStep(step.tutorVerificationId, BecomeATutorStep.PrivacyPolicy).subscribe(result => {
+          this.tutorVerificationNextStep = result;
         });
       }
     });
@@ -90,7 +101,9 @@ export class PrivacyPolicyComponent extends AppComponentBase implements OnInit {
   }
 
   onNavigateNextScreen(): void {
-    this._router.navigate([`app/tutor-applications/${this.userId}/declaration`]);
+    if (this.tutorVerificationNextStep?.status === TutorVerificationStepStatus.Saved) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/declaration`]);
+    }
   }
 
   onStatusChange(event: any): void {

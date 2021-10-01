@@ -35,6 +35,7 @@ export class DeclarationComponent extends AppComponentBase {
   isDeclining = false;
   isApproving = false;
   tutorVerificationStepStatus = TutorVerificationStepStatus;
+  tutorVerificationPrevStep: TutorVerificationStepDto;
 
   constructor(
     injector: Injector,
@@ -58,6 +59,11 @@ export class DeclarationComponent extends AppComponentBase {
       if (this.isReadOnly && this.tutorVerificationStep.step !== BecomeATutorStep.Declaration) {
         this._tutorApplicationService.getStep(step.tutorVerificationId, BecomeATutorStep.Declaration).subscribe(result => {
           this.tutorVerificationStep = result;
+        });
+      }
+      if(this.isReadOnly){
+        this._tutorApplicationService.getPreviousStep(step.tutorVerificationId, BecomeATutorStep.Declaration).subscribe(result => {
+          this.tutorVerificationPrevStep = result;
         });
       }
     });

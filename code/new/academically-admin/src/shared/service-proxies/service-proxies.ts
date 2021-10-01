@@ -8246,6 +8246,184 @@ export class TutorApplicationServiceProxy {
         }
         return _observableOf<TutorVerificationStepDto>(<any>null);
     }
+
+    /**
+     * @param verificationId (optional) 
+     * @param step (optional) 0 = AboutYou
+    
+    1 = Education
+    
+    2 = Research
+    
+    3 = Languages
+    
+    4 = ServicesOffered
+    
+    5 = ProfilePicture
+    
+    6 = PhotoId
+    
+    7 = Address
+    
+    8 = ContactNumber
+    
+    9 = References
+    
+    10 = DbsCheck
+    
+    11 = TermsOfUse
+    
+    12 = PrivacyPolicy
+    
+    13 = Declaration
+    
+    14 = CompleteApplication
+     * @return Success
+     */
+    getPreviousStep(verificationId: string | undefined, step: BecomeATutorStep | undefined): Observable<TutorVerificationStepDto> {
+        let url_ = this.baseUrl + "/api/services/app/TutorApplication/GetPreviousStep?";
+        if (verificationId === null)
+            throw new Error("The parameter 'verificationId' cannot be null.");
+        else if (verificationId !== undefined)
+            url_ += "verificationId=" + encodeURIComponent("" + verificationId) + "&";
+        if (step === null)
+            throw new Error("The parameter 'step' cannot be null.");
+        else if (step !== undefined)
+            url_ += "step=" + encodeURIComponent("" + step) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPreviousStep(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPreviousStep(<any>response_);
+                } catch (e) {
+                    return <Observable<TutorVerificationStepDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TutorVerificationStepDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPreviousStep(response: HttpResponseBase): Observable<TutorVerificationStepDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TutorVerificationStepDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TutorVerificationStepDto>(<any>null);
+    }
+
+    /**
+     * @param verificationId (optional) 
+     * @param step (optional) 0 = AboutYou
+    
+    1 = Education
+    
+    2 = Research
+    
+    3 = Languages
+    
+    4 = ServicesOffered
+    
+    5 = ProfilePicture
+    
+    6 = PhotoId
+    
+    7 = Address
+    
+    8 = ContactNumber
+    
+    9 = References
+    
+    10 = DbsCheck
+    
+    11 = TermsOfUse
+    
+    12 = PrivacyPolicy
+    
+    13 = Declaration
+    
+    14 = CompleteApplication
+     * @return Success
+     */
+    getNextStep(verificationId: string | undefined, step: BecomeATutorStep | undefined): Observable<TutorVerificationStepDto> {
+        let url_ = this.baseUrl + "/api/services/app/TutorApplication/GetNextStep?";
+        if (verificationId === null)
+            throw new Error("The parameter 'verificationId' cannot be null.");
+        else if (verificationId !== undefined)
+            url_ += "verificationId=" + encodeURIComponent("" + verificationId) + "&";
+        if (step === null)
+            throw new Error("The parameter 'step' cannot be null.");
+        else if (step !== undefined)
+            url_ += "step=" + encodeURIComponent("" + step) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetNextStep(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetNextStep(<any>response_);
+                } catch (e) {
+                    return <Observable<TutorVerificationStepDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TutorVerificationStepDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetNextStep(response: HttpResponseBase): Observable<TutorVerificationStepDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TutorVerificationStepDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TutorVerificationStepDto>(<any>null);
+    }
 }
 
 @Injectable()
