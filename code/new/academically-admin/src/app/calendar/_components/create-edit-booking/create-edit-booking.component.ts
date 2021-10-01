@@ -78,13 +78,12 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
       if (!this.model.id) {
         this.startTime = this.model.startTime.toDate();
         this.endTime = this.model.startTime.toDate();
-        this.model.recurrence = CalendarEventRecurrence.OneTime;
       } else {
         this.isFormViewOnly = true;
         this.startTime = this.convertMomentToDate(this.model.startTime);
         this.endTime = this.convertMomentToDate(this.model.endTime);
-        this.isBusy = this.model.isBusy
-        this.isPersonalEvent = this.model.type == CalendarEventType.Personal ? true : false;
+        this.isBusy = this.model.isBusy;
+        this.isPersonalEvent = this.model.type === CalendarEventType.Personal ? true : false;
         if (this.model.rescheduleComments && this.model.rescheduleComments.length > 0) {
           this.lastRescheduleComment = this.model.rescheduleComments[this.model.rescheduleComments.length - 1];
         }
@@ -113,7 +112,6 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
     }
 
     if (!this.model.id) {
-      debugger;
       this._calendarEventsService.create(this.model)
         .pipe(
           takeUntil(this.destroyed$),
@@ -207,8 +205,8 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
           }
         );
       }
-      if (this.model.type == CalendarEventType.Personal) {
-        this.model.tutorId = this.model.creatorUserId
+      if (this.model.type === CalendarEventType.Personal) {
+        this.model.tutorId = this.model.creatorUserId;
         this._calendarEventsService.update(this.model)
           .pipe(
             takeUntil(this.destroyed$),
@@ -307,6 +305,10 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
     }
   }
 
+  onTabSwitch(): void {
+    this.model.projectId = null;
+  }
+
   private getProjects(): void {
     this.isLoading = true;
     this._calendarEventsService.getUserProjects(this.appSession.userId)
@@ -338,9 +340,5 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
         this.modelSaved.emit();
         this._modal.hide();
       });
-  }
-
-  onTabSwitch(): void {
-    this.model.projectId = null;
   }
 }
