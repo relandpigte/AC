@@ -21,6 +21,7 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   isViewOnly = false;
   canBecomeATutor = false;
   calendarRoute = '/app/calendar';
+  isCurrentUserTutor = false;
 
   constructor(
     injector: Injector,
@@ -36,6 +37,7 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(user => {
         this.user = user;
+        this.isCurrentUserTutor = this.checkUserRoleFromUser('tutor', this.user);
         this.isTutor = this.user.roleNames.filter(e => e.toLowerCase() === 'tutor').length > 0;
         if (this.user.id !== this.appSession.user.id) {
           this.calendarRoute = `${this.calendarRoute}/${user.id}`;
