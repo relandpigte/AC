@@ -30,6 +30,9 @@ export class LessonWizardComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.courseSectionType === CourseSectionType.Lesson) {
+      this.currentWizardState = LessonWizardState.Template;
+    }
   }
 
   onModalClose(): void {

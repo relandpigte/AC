@@ -24,7 +24,7 @@
     <div *ngFor="let courseSection of courseSections" class="card curriculum">
       <div class="card-body p-3">
         <div class="row align-items-center">
-          <div class="col-auto">
+          <div *ngIf="courseSection.type === courseSectionType.Lesson" class="col-auto">
             <a href="javascript:;" class="avatar avatar-lg avatar-4by3">
               <img src="/assets/themes/dashkit/img/avatars/projects/project-1.jpg" alt="..." class="avatar-img rounded">
             </a>

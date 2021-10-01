@@ -51,4 +51,8 @@ export class NameComponent extends AppComponentBase implements OnInit {
         this.modalClose.emit();
       });
   }
+
+  onBackClick(): void {
+    this.backClick.emit();
+  }
 }
