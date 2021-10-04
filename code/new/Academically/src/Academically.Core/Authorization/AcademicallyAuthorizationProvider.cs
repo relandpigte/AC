@@ -174,6 +174,9 @@ namespace Academically.Authorization
             context.CreatePermission(PermissionNames.Pages_Conversations, L("Conversations"));
 
 
+            context.CreatePermission(PermissionNames.Pages_PageBuilder, L("PageBuilder"));
+
+
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
 
             var tutorHome = context.CreatePermission(PermissionNames.Pages_TutorHome, L("TutorHome"));

@@ -224,7 +224,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Projects_OfferHistory,
                 PermissionNames.Pages_Conversations,
                 PermissionNames.Pages_TutorHome,
-                PermissionNames.Pages_Courses
+                PermissionNames.Pages_Courses,
+                PermissionNames.Pages_PageBuilder
             );
 
             #endregion
