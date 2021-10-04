@@ -167,6 +167,9 @@
         public const string Pages_Conversations = "Pages.Conversations";
 
 
+        public const string Pages_PageBuilder = "Pages.PageBuilder";
+
+
         public const string Pages_Tenants = "Pages.Tenants";
 
         public const string Pages_TutorHome = "Pages.TutorHome";

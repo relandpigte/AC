@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Services.CourseSections.Dto;
 using Microsoft.EntityFrameworkCore;
 
-namespace Academically.Services.CourseSections.Dto
+namespace Academically.Services.CourseSections
 {
     public class CourseSectionsAppService : AcademicallyAppServiceBase, ICourseSectionsAppService
     {
@@ -25,6 +26,15 @@ namespace Academically.Services.CourseSections.Dto
                 .OrderBy(e => e.DisplayOrder)
                 .Select(e => ObjectMapper.Map<CourseSectionDto>(e))
                 .ToListAsync();
+        }
+
+        public async Task<CourseSectionDto> Get(Guid id)
+        {
+            return await _courseSectionsRepository.GetAll()
+                .Include(e => e.Course)
+                .Where(e => e.Id == id)
+                .Select(e => ObjectMapper.Map<CourseSectionDto>(e))
+                .FirstOrDefaultAsync();
         }
 
         public async Task Create(CourseSectionDto input)

@@ -1851,6 +1851,62 @@ export class CourseSectionsServiceProxy {
     }
 
     /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<CourseSectionDto> {
+        let url_ = this.baseUrl + "/api/services/app/CourseSections/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<CourseSectionDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CourseSectionDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<CourseSectionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CourseSectionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CourseSectionDto>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -12878,6 +12934,7 @@ export class CourseSectionDto implements ICourseSectionDto {
     courseId: string;
     parentId: string | undefined;
     creationTime: moment.Moment;
+    course: CourseDto;
 
     constructor(data?: ICourseSectionDto) {
         if (data) {
@@ -12898,6 +12955,7 @@ export class CourseSectionDto implements ICourseSectionDto {
             this.courseId = _data["courseId"];
             this.parentId = _data["parentId"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.course = _data["course"] ? CourseDto.fromJS(_data["course"]) : <any>undefined;
         }
     }
 
@@ -12918,6 +12976,7 @@ export class CourseSectionDto implements ICourseSectionDto {
         data["courseId"] = this.courseId;
         data["parentId"] = this.parentId;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["course"] = this.course ? this.course.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -12938,6 +12997,7 @@ export interface ICourseSectionDto {
     courseId: string;
     parentId: string | undefined;
     creationTime: moment.Moment;
+    course: CourseDto;
 }
 
 /** 0 = Draft 1 = Published */

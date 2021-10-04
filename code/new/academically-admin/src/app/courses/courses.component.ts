@@ -6,6 +6,12 @@ import { CourseService } from './_services/course.service';
 import { CoursesServiceProxy, CourseDto } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 
+enum CourseTab {
+  Details = 'details',
+  Curriculum = 'curriculum',
+  Settings = 'settings',
+}
+
 @Component({
   selector: 'app-courses',
   templateUrl: './courses.component.html',
@@ -15,6 +21,8 @@ import { takeUntil } from 'rxjs/operators';
 export class CoursesComponent extends AppComponentBase implements OnInit, OnDestroy {
   id: string;
   course: CourseDto = new CourseDto;
+  currentTab = CourseTab.Details;
+  CourseTab = CourseTab;
 
   constructor(
     injector: Injector,
@@ -27,6 +35,11 @@ export class CoursesComponent extends AppComponentBase implements OnInit, OnDest
       if (paramMap.has('id')) {
         this.id = paramMap.get('id');
         this.getCourse();
+      }
+    });
+    this._route.fragment.subscribe(fragment => {
+      if (fragment) {
+        this.currentTab = fragment as CourseTab;
       }
     });
   }

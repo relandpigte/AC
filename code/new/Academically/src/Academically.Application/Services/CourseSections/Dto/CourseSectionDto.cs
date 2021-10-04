@@ -3,6 +3,7 @@ using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Services.Courses.Dto;
 
 namespace Academically.Services.CourseSections.Dto
 {
@@ -16,5 +17,7 @@ namespace Academically.Services.CourseSections.Dto
         public Guid CourseId { get; set; }
         public Guid? ParentId { get; set; }
         public DateTime CreationTime { get; set; }
+
+        public CourseDto Course { get; set; }
     }
 }

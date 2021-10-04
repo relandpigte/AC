@@ -31,7 +31,9 @@
           </div>
           <div [class.ml-n2]="courseSection.type === courseSectionType.Lesson" class="col">
             <h4 class="mb-0">
-              <a href="javascript:;">{{ courseSection.name }}</a>
+              <a href="#" [routerLink]="['/app/page-builder', courseSection.id]">
+                {{ courseSection.name }}
+              </a>
             </h4>
           </div>
           <div class="col-auto">
