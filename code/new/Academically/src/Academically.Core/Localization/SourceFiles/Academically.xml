@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="NameYourNewModule">Name your new module</text>
+    <text name="Duplicate">Duplicate</text>
     <text name="ShowMeAsBusy">Show me as busy</text>
     <text name="PersonalEvent">Personal event</text>
     <text name="Publish">Publish</text>
@@ -1178,6 +1180,5 @@
     </text>
     <text name="TermsAndCoditionsMessageLine2">Please indicate that you accept our terms and conditions by toggling the switch to the right.</text>
     <text name="TermsAndCoditionsMessageLine3">You can view our Terms &amp; Conditions</text>
-    <text name="Duplicate">Duplicate</text>
   </texts>
 </localizationDictionary>

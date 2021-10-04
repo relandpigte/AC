@@ -10,12 +10,14 @@ import { takeUntil, finalize } from 'rxjs/operators';
 })
 export class NameComponent extends AppComponentBase implements OnInit {
   @Input() courseId: string;
+  @Input() currentcourseSectionType: CourseSectionType;
   @Output() courseSaved = new EventEmitter();
   @Output() modalClose = new EventEmitter();
   @Output() backClick = new EventEmitter();
 
   model = new CourseSectionDto();
   isLoading = false;
+  CourseSectionType = CourseSectionType;
 
   constructor(
     injector: Injector,
@@ -31,14 +33,10 @@ export class NameComponent extends AppComponentBase implements OnInit {
     this.modalClose.emit();
   }
 
-  onBackClick(): void {
-    this.backClick.emit();
-  }
-
   onFormSubmit(): void {
     this.isLoading = true;
     this.model.courseId = this.courseId;
-    this.model.type = CourseSectionType.Lesson;
+    this.model.type = this.currentcourseSectionType;
     this._courseSectionsService.create(this.model)
       .pipe(
         takeUntil(this.destroyed$),
@@ -52,5 +50,9 @@ export class NameComponent extends AppComponentBase implements OnInit {
         this.courseSaved.emit();
         this.modalClose.emit();
       });
+  }
+
+  onBackClick(): void {
+    this.backClick.emit();
   }
 }

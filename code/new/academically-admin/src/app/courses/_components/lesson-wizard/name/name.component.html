@@ -1,6 +1,8 @@
 <form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
   <div class="modal-card card">
-    <abp-modal-header [title]="'NameYourNewLesson' | localize" (onCloseClick)="onCloseClick()">
+    <abp-modal-header
+      [title]="(currentcourseSectionType === CourseSectionType.Lesson ? 'NameYourNewLesson' : 'NameYourNewModule') | localize"
+      (onCloseClick)="onCloseClick()">
     </abp-modal-header>
     <div class="card-body">
       <div class="col-md-12 form-group mb-0 required">
@@ -9,8 +11,10 @@
         <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
       </div>
     </div>
-    <abp-modal-footer [isLoading]="isLoading" [saveLabel]=" 'Save' | localize" [cancelLabel]="'Back' | localize"
-      [cancelDisabled]="isLoading" [saveDisabled]="!form.form.valid || isLoading " (onCancelClick)="onBackClick()">
+    <abp-modal-footer [isLoading]="isLoading" [saveLabel]=" 'Save' | localize"
+      [cancelLabel]="(currentcourseSectionType === CourseSectionType.Lesson ? 'Back' : 'Close') | localize"
+      [cancelDisabled]="isLoading" [saveDisabled]="!form.form.valid || isLoading "
+      (onCancelClick)="(currentcourseSectionType === CourseSectionType.Lesson ? onBackClick() : onCloseClick())">
     </abp-modal-footer>
   </div>
 </form>
