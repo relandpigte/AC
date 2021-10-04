@@ -29,8 +29,8 @@
               <img src="/assets/themes/dashkit/img/avatars/projects/project-1.jpg" alt="..." class="avatar-img rounded">
             </a>
           </div>
-          <div class="col ml-n2">
-            <h4 class="mb-1">
+          <div [class.ml-n2]="courseSection.type === courseSectionType.Lesson" class="col">
+            <h4 class="mb-0">
               <a href="javascript:;">{{ courseSection.name }}</a>
             </h4>
           </div>
@@ -92,7 +92,17 @@
       </div>
     </div>
     <div class="actions ml-2 mt-n3">
-      <a href="javascript:;"><i class="fe fe-plus"></i>{{ 'Add' | localize }}</a>
+      <a href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fe fe-plus"></i>{{ 'Add' | localize }}
+      </a>
+      <div class="dropdown-menu dropdown-menu-right">
+        <a href="javascript:;" (click)="onAddCourseSectionClick(courseSectionType.Lesson)" class="dropdown-item">
+          {{ 'AddLesson' | localize }}
+        </a>
+        <a href="javascript:;" (click)="onAddCourseSectionClick(courseSectionType.Module)" class="dropdown-item">
+          {{ 'AddModule' | localize }}
+        </a>
+      </div>
     </div>
   </div>
   <ng-template #noCourseSection>

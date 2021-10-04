@@ -16,7 +16,7 @@ export class CurriculumComponent extends AppComponentBase implements OnInit {
   courseSections: CourseSectionDto[];
   isLoading = false;
   CourseSectionStatus = CourseSectionStatus;
-  courseSectionType = CourseSectionType
+  courseSectionType = CourseSectionType;
 
   constructor(
     injector: Injector,

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
-    <text name="NameYourNewModule">Name your new Module</text>
+    <text name="NameYourNewModule">Name your new module</text>
     <text name="Duplicate">Duplicate</text>
     <text name="ShowMeAsBusy">Show me as busy</text>
     <text name="PersonalEvent">Personal event</text>
