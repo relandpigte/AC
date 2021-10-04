@@ -24,13 +24,13 @@
     <div *ngFor="let courseSection of courseSections" class="card curriculum">
       <div class="card-body p-3">
         <div class="row align-items-center">
-          <div class="col-auto">
+          <div *ngIf="courseSection.type === courseSectionType.Lesson" class="col-auto">
             <a href="javascript:;" class="avatar avatar-lg avatar-4by3">
               <img src="/assets/themes/dashkit/img/avatars/projects/project-1.jpg" alt="..." class="avatar-img rounded">
             </a>
           </div>
-          <div class="col ml-n2">
-            <h4 class="mb-1">
+          <div [class.ml-n2]="courseSection.type === courseSectionType.Lesson" class="col">
+            <h4 class="mb-0">
               <a href="javascript:;">{{ courseSection.name }}</a>
             </h4>
           </div>
@@ -92,7 +92,17 @@
       </div>
     </div>
     <div class="actions ml-2 mt-n3">
-      <a href="javascript:;"><i class="fe fe-plus"></i>{{ 'Add' | localize }}</a>
+      <a href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fe fe-plus"></i>{{ 'Add' | localize }}
+      </a>
+      <div class="dropdown-menu dropdown-menu-right">
+        <a href="javascript:;" (click)="onAddCourseSectionClick(courseSectionType.Lesson)" class="dropdown-item">
+          {{ 'AddLesson' | localize }}
+        </a>
+        <a href="javascript:;" (click)="onAddCourseSectionClick(courseSectionType.Module)" class="dropdown-item">
+          {{ 'AddModule' | localize }}
+        </a>
+      </div>
     </div>
   </div>
   <ng-template #noCourseSection>
@@ -102,10 +112,10 @@
           <h1 class="mb-3">{{ 'NoLessonsOrModules' | localize }}</h1>
           <p class="text-muted mb-5">{{ 'StartByAddingALessonOrModule' | localize }}</p>
           <div class="d-flex">
-            <button class="btn btn-primary" (click)="onAddLessionClick()">
+            <button class="btn btn-primary" (click)="onAddCourseSectionClick(courseSectionType.Lesson)">
               <i class="fe fe-plus"></i>&nbsp;{{ 'AddLesson' | localize }}
             </button>
-            <button class="btn btn-white ml-5">
+            <button class="btn btn-white ml-5" (click)="onAddCourseSectionClick(courseSectionType.Module)">
               <i class="fe fe-plus"></i>&nbsp;{{ 'AddModule' | localize }}
             </button>
           </div>
