@@ -16,6 +16,7 @@ enum LessonWizardState {
 export class LessonWizardComponent extends AppComponentBase implements OnInit {
   @Input() courseId: string;
   @Input() courseSectionType: CourseSectionType
+  @Input() parentId: string;
   @Output() courseSaved = new EventEmitter();
   LessonWizardState = LessonWizardState;
 

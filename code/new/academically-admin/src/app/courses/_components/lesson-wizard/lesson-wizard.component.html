@@ -2,5 +2,5 @@
   (selectTemplate)="onStateChange(LessonWizardState.Name)">
 </app-template>
 <app-name *ngIf="currentWizardState === LessonWizardState.Name" [currentcourseSectionType]="courseSectionType" [courseId]="courseId" (modalClose)="onModalClose()"
-  (backClick)="onStateChange(LessonWizardState.Template)" (courseSaved)="onCourseSaved()">
+[parentId]="parentId" (backClick)="onStateChange(LessonWizardState.Template)" (courseSaved)="onCourseSaved()">
 </app-name>

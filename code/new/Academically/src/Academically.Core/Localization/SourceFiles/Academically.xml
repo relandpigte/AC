@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="NameYourNewUnit">Name your new unit</text>
+    <text name="AddUnit">Add unit</text>
     <text name="LessonPreview">Lesson preview</text>
     <text name="AddSection">Add section</text>
     <text name="AddContent">Add content</text>

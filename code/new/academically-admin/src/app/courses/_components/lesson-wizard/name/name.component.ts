@@ -11,6 +11,7 @@ import { takeUntil, finalize } from 'rxjs/operators';
 export class NameComponent extends AppComponentBase implements OnInit {
   @Input() courseId: string;
   @Input() currentcourseSectionType: CourseSectionType;
+  @Input() parentId: string;
   @Output() courseSaved = new EventEmitter();
   @Output() modalClose = new EventEmitter();
   @Output() backClick = new EventEmitter();
@@ -26,6 +27,17 @@ export class NameComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
+  get title(): string {
+    switch (this.currentcourseSectionType) {
+      case CourseSectionType.Module:
+        return 'NameYourNewModule';
+      case CourseSectionType.Unit:
+        return 'NameYourNewUnit';
+      default:
+        return 'NameYourNewLesson';
+    }
+  }
+
   ngOnInit(): void {
   }
 
@@ -36,6 +48,7 @@ export class NameComponent extends AppComponentBase implements OnInit {
   onFormSubmit(): void {
     this.isLoading = true;
     this.model.courseId = this.courseId;
+    this.model.parentId = this.parentId;
     this.model.type = this.currentcourseSectionType;
     this._courseSectionsService.create(this.model)
       .pipe(
