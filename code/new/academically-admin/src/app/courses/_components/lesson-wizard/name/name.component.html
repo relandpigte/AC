@@ -1,8 +1,6 @@
 <form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
   <div class="modal-card card">
-    <abp-modal-header
-      [title]="(currentcourseSectionType === CourseSectionType.Lesson ? 'NameYourNewLesson' : 'NameYourNewModule') | localize"
-      (onCloseClick)="onCloseClick()">
+    <abp-modal-header [title]="title | localize" (onCloseClick)="onCloseClick()">
     </abp-modal-header>
     <div class="card-body">
       <div class="col-md-12 form-group mb-0 required">

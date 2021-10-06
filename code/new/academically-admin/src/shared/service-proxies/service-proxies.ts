@@ -12934,6 +12934,8 @@ export class CourseSectionDto implements ICourseSectionDto {
     courseId: string;
     parentId: string | undefined;
     creationTime: moment.Moment;
+    myProperty: number;
+    children: CourseSectionDto[] | undefined;
     course: CourseDto;
 
     constructor(data?: ICourseSectionDto) {
@@ -12955,6 +12957,12 @@ export class CourseSectionDto implements ICourseSectionDto {
             this.courseId = _data["courseId"];
             this.parentId = _data["parentId"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.myProperty = _data["myProperty"];
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(CourseSectionDto.fromJS(item));
+            }
             this.course = _data["course"] ? CourseDto.fromJS(_data["course"]) : <any>undefined;
         }
     }
@@ -12976,6 +12984,12 @@ export class CourseSectionDto implements ICourseSectionDto {
         data["courseId"] = this.courseId;
         data["parentId"] = this.parentId;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["myProperty"] = this.myProperty;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
         data["course"] = this.course ? this.course.toJSON() : <any>undefined;
         return data; 
     }
@@ -12997,6 +13011,8 @@ export interface ICourseSectionDto {
     courseId: string;
     parentId: string | undefined;
     creationTime: moment.Moment;
+    myProperty: number;
+    children: CourseSectionDto[] | undefined;
     course: CourseDto;
 }
 

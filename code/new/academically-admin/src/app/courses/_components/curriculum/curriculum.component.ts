@@ -30,11 +30,12 @@ export class CurriculumComponent extends AppComponentBase implements OnInit {
     this.getCourseSections();
   }
 
-  onAddCourseSectionClick(courseSectionType: CourseSectionType): void {
+  onAddCourseSectionClick(courseSectionType: CourseSectionType, courseSection?: CourseSectionDto): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<LessonWizardComponent>;
     modalSettings.initialState = {
       courseId: this.courseId,
-      courseSectionType: courseSectionType
+      courseSectionType: courseSectionType,
+      parentId: (courseSection === null || courseSection === undefined) ? null : courseSection.id
     };
     const modal = this._modalService.show(LessonWizardComponent, modalSettings).content;
     modal.courseSaved

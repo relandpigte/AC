@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Domain.Entities;
@@ -17,7 +18,8 @@ namespace Academically.Services.CourseSections.Dto
         public Guid CourseId { get; set; }
         public Guid? ParentId { get; set; }
         public DateTime CreationTime { get; set; }
-
+        public int MyProperty { get; set; }
+        public List<CourseSectionDto> Children { get; set; }
         public CourseDto Course { get; set; }
     }
 }
