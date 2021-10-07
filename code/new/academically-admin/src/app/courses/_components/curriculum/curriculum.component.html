@@ -81,13 +81,13 @@
                 <a href="javascript:;" class="dropdown-item">
                   {{ 'View' | localize }}
                 </a>
-                <a href="javascript:;" class="dropdown-item">
+                <a href="javascript:;" class="dropdown-item" (click)="onDuplicateClick(courseSectionModule)">
                   {{ 'Duplicate' | localize }}
                 </a>
                 <a href="javascript:;" class="dropdown-item">
                   {{ 'Edit' | localize }}
                 </a>
-                <a href="javascript:;" class="dropdown-item">
+                <a href="javascript:;" class="dropdown-item" (click)="onDeleteClick(courseSectionModule.id)">
                   {{ 'Delete' | localize }}
                 </a>
               </div>
@@ -155,13 +155,13 @@
                     <a href="javascript:;" class="dropdown-item">
                       {{ 'View' | localize }}
                     </a>
-                    <a href="javascript:;" class="dropdown-item">
+                    <a href="javascript:;" class="dropdown-item" (click)="onDuplicateClick(courseSectionUnit)">
                       {{ 'Duplicate' | localize }}
                     </a>
                     <a href="javascript:;" class="dropdown-item">
                       {{ 'Edit' | localize }}
                     </a>
-                    <a href="javascript:;" class="dropdown-item">
+                    <a href="javascript:;" class="dropdown-item" (click)="onDeleteClick(courseSectionUnit.id)">
                       {{ 'Delete' | localize }}
                     </a>
                   </div>
@@ -229,13 +229,13 @@
                         <a href="javascript:;" class="dropdown-item">
                           {{ 'View' | localize }}
                         </a>
-                        <a href="javascript:;" class="dropdown-item">
+                        <a href="javascript:;" class="dropdown-item" (click)="onDuplicateClick(courseSectionLesson)">
                           {{ 'Duplicate' | localize }}
                         </a>
                         <a href="javascript:;" class="dropdown-item">
                           {{ 'Edit' | localize }}
                         </a>
-                        <a href="javascript:;" class="dropdown-item">
+                        <a href="javascript:;" class="dropdown-item" (click)="onDeleteClick(courseSectionLesson.id)">
                           {{ 'Delete' | localize }}
                         </a>
                       </div>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Academically.Domain.Entities;
@@ -57,19 +58,31 @@ namespace Academically.Services.CourseSections
             await _courseSectionsRepository.InsertAsync(course);
         }
 
-        private async Task CreateDuplicateChild(CourseSection course, Guid? parentId)
+        public async Task Delete(Guid id)
         {
-            var courseSectionParentCount = _courseSectionsRepository.GetAll().Where(e =>
-                (parentId != null ? e.ParentId == parentId : e.ParentId == course.ParentId)
-                && e.CourseId == course.CourseId).ToList().Count();
-            var childList = _courseSectionsRepository.GetAll().Where(x => x.ParentId == course.Id).ToList();
-            course.Id = new Guid();
-            course.ParentId = (parentId != null) ? parentId : course.ParentId;
-            course.Name = course.Name + " " + "(" + (courseSectionParentCount + 1) + ")";
-            await _courseSectionsRepository.InsertAsync(course);
-            foreach (var childitem in childList)
+            await _courseSectionsRepository.DeleteAsync(e => e.Parent.ParentId == id);
+            await _courseSectionsRepository.DeleteAsync(e => e.ParentId == id);
+            await _courseSectionsRepository.DeleteAsync(e => e.Id == id);
+        }
+
+        public async Task CreateDuplicate(CourseSectionDto input)
+        {
+            await DuplicateSectionChildren(new List<CourseSectionDto>() { input }, input.ParentId);
+        }
+
+        private async Task DuplicateSectionChildren(IEnumerable<CourseSectionDto> inputs, Guid? parentId)
+        {
+            if (inputs != null && inputs.Any())
             {
-                await CreateDuplicateChild(childitem, course.Id);
+                foreach (var input in inputs)
+                {
+                    var courseSection = ObjectMapper.Map<CourseSection>(input);
+                    courseSection.Id = new Guid();
+                    courseSection.ParentId = parentId;
+                    courseSection.Name = GetDuplicateName(input.Name);
+                    var childParentId = await _courseSectionsRepository.InsertAndGetIdAsync(courseSection);
+                    await DuplicateSectionChildren(input.Children, childParentId);
+                }
             }
         }
 
@@ -81,6 +94,24 @@ namespace Academically.Services.CourseSections
                 .Select(e => ObjectMapper.Map<CourseSectionDto>(e))
                 .ToListAsync();
             return courseSectionChild;
+        }
+
+
+
+        private static string GetDuplicateName(string name)
+        {
+            var numericAppend = Regex.Match(name, @"\((\d+)\)[^(]*$").Groups[1].Value;
+            if (numericAppend != "")
+            {
+                var oldNumericAppend = $"({numericAppend})";
+                if (name.EndsWith(oldNumericAppend))
+                {
+                    int strToAppend = Convert.ToInt32(numericAppend);
+                    return name.Replace(oldNumericAppend, $"({++strToAppend})");
+                }
+            }
+
+            return $"{name} (1)";
         }
     }
 }

@@ -11,5 +11,7 @@ namespace Academically.Services.CourseSections
         Task<IEnumerable<CourseSectionDto>> GetAll(Guid courseId);
         Task<CourseSectionDto> Get(Guid id);
         Task Create(CourseSectionDto input);
+        Task CreateDuplicate(CourseSectionDto input);
+        Task Delete(Guid id);
     }
 }
