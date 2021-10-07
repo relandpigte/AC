@@ -1,12 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="NoContentSelected">No content selected</text>
+    <text name="ConfigureComponentInstructions">Configure this comopnent on the right panel</text>
     <text name="NameYourNewUnit">Name your new unit</text>
     <text name="AddUnit">Add unit</text>
+    <text name="Text">Text</text>
+    <text name="ChooseYourComponent">Choose your component</text>
     <text name="LessonPreview">Lesson preview</text>
     <text name="AddSection">Add section</text>
-    <text name="AddContent">Add content</text>
-    <text name="CreateYourLessonSubheader">Create your lesson by adding a content or a section below</text>
+    <text name="AddComponent">Add component</text>
+    <text name="CreateYourLessonSubheader">Create your lesson by adding a component or a section below</text>
     <text name="CreateYourLesson">Create your lesson</text>
     <text name="NoContentYet">No content yet</text>
     <text name="Authors">Authors</text>

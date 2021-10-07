@@ -1,10 +1,11 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CourseSectionsServiceProxy, CourseSectionDto, CourseDto } from '@shared/service-proxies/service-proxies';
+import { CourseSectionsServiceProxy, CourseSectionDto, CourseDto, CourseSectionPagesServiceProxy, CourseSectionPageDto } from '@shared/service-proxies/service-proxies';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { PageBuilderService } from './_services/page-builder.service';
+import { ContentComponent } from './_components/content/content.component';
 
 @Component({
   selector: 'app-page-builder',
@@ -13,6 +14,8 @@ import { PageBuilderService } from './_services/page-builder.service';
   animations: [appModuleAnimation()],
 })
 export class PageBuilderComponent extends AppComponentBase implements OnInit {
+  @ViewChild(ContentComponent, { static: true }) contentComponent: ContentComponent;
+
   id: string;
   model = new CourseSectionDto();
   isLoading = false;
@@ -24,6 +27,7 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
     private _router: Router,
     private _pageBuilderService: PageBuilderService,
     private _courseSectionsService: CourseSectionsServiceProxy,
+    private _courseSectionPagesService: CourseSectionPagesServiceProxy,
   ) {
     super(injector);
     this.model.course = new CourseDto();
@@ -51,11 +55,17 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
 
   onSaveClick(): void {
     this.isSaving = true;
-    setTimeout(() => {
-      this.isSaving = false;
-      this.notify.success(this.l('SavedSuccessfully'));
-      this._router.navigate(['/app/courses/', this.model.courseId], { fragment: 'curriculum' });
-    }, 1000);
+    this._courseSectionPagesService.save(this.contentComponent.prepareContentsForSaving(this.id))
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isSaving = false;
+        })
+      )
+      .subscribe(() => {
+        this.notify.success(this.l('SavedSuccessfully'));
+        this._router.navigate(['/app/courses/', this.model.courseId], { fragment: 'curriculum' });
+      });
   }
 
   private getCourseSection(): void {
@@ -63,12 +73,26 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
     this._courseSectionsService.get(this.id)
       .pipe(
         takeUntil(this.destroyed$),
-        finalize(() => {
-          this.isLoading = false;
-        })
       )
       .subscribe(response => {
         this._pageBuilderService.courseSection = response;
+        this.getCourseSectionPages();
+      });
+  }
+
+  private getCourseSectionPages(): void {
+    this._courseSectionPagesService.get(this.id)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+      )
+      .subscribe(response => {
+        if (response && response.pageContent) {
+          this.contentComponent.courseSectionPage = response;
+        }
+        this.contentComponent.initializeContentManager();
       });
   }
 }

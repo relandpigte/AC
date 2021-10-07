@@ -1,36 +1,21 @@
 <div class="row">
   <div class="col-8">
-    <div class="card">
-      <div class="card-body">
-        <div class="no-content">
-          <img src="/assets/themes/dashkit/img/illustrations/scale.svg" alt="..." class="img-fluid">
-          <h3 class="title">
-            {{ 'CreateYourLesson' | localize }}
-          </h3>
-          <p class="text-muted">
-            {{ 'CreateYourLessonSubheader' | localize }}
-          </p>
-          <a href="javascript:;" class="add-content">
-            <i class="fe fe-plus"></i>
-            {{ 'AddContent' | localize | titlecase }}
-          </a>
-        </div>
+    <div class="card" *ngFor="let pageSection of pageSections">
+      <div class="card-body p-0">
+        <app-page-content-preview [pageContent]="pageSection">
+        </app-page-content-preview>
       </div>
     </div>
     <div class="actions">
-      <a href="javascript:;" class="add-section">
+      <a href="#" (click)="$event.preventDefault(); onAddPageSectionClick();" class="add-page-section">
         <i class="fe fe-plus"></i>
         {{ 'AddSection' | localize | titlecase }}
       </a>
     </div>
   </div>
   <div class="col-4">
-    <div class="card">
-      <div class="card-body">
-        <div class="no-selected-content">
-          <p class="p-0 m-0 text-center">{{ 'NoContentYet' | localize }}</p>
-        </div>
-      </div>
-    </div>
+    <app-page-content-editor [pageContent]="selectedPageContent" (deleteContent)="onDeletePageContent($event)"
+    (selectParent)="onSelectParent()">
+    </app-page-content-editor>
   </div>
 </div>
