@@ -916,6 +916,14 @@ app-methodologies .badge {
   white-space: nowrap;
 }
 
+.page-content-container {
+  &:not(.active) {
+    * {
+      cursor: pointer !important;
+    }
+  }
+}
+
 @media (min-width: 576px) {
   .nav-user-menu .user-image {
     float      : none;
