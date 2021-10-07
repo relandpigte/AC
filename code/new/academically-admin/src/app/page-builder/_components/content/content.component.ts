@@ -28,13 +28,17 @@ export class ContentComponent extends AppComponentBase implements OnInit {
 
     this._pageBuilderService.pageContent$.subscribe(pageContent => {
       this.selectedPageContent = pageContent;
-      if (pageContent.name !== 'Section') {
-        _.forEach(this.pageSections, pageSection => {
-          if (pageSection.pageComponents.findIndex(e => e === this.selectedPageContent) >= 0) {
-            this.selectedPageSection = pageSection;
-            return false;
-          }
-        });
+      if (pageContent) {
+        if (pageContent.name !== 'Section') {
+          _.forEach(this.pageSections, pageSection => {
+            if (pageSection.pageComponents.findIndex(e => e === this.selectedPageContent) >= 0) {
+              this.selectedPageSection = pageSection;
+              return false;
+            }
+          });
+        } else {
+          this.selectedPageSection = pageContent as PageSection;
+        }
       }
     });
   }
@@ -51,8 +55,10 @@ export class ContentComponent extends AppComponentBase implements OnInit {
         });
         return pageSection;
       });
+      if (!this.pageSections || !this.pageSections.length) {
+        this.pageSections = [new PageSection()];
+      }
     }
-
 
     this.selectedPageSection = this.pageSections[0];
     this._pageBuilderService.pageContent = this.pageSections[0];
@@ -84,7 +90,11 @@ export class ContentComponent extends AppComponentBase implements OnInit {
           const index = this.pageSections.findIndex(e => e === pageContent);
           if (index >= 0) {
             this.pageSections.splice(index, 1);
-            this._pageBuilderService.pageContent = undefined;
+            if (this.pageSections && this.pageSections.length) {
+              this._pageBuilderService.pageContent = this.pageSections[0];
+            } else {
+              this._pageBuilderService.pageContent = undefined;
+            }
           }
         } else {
           const index = this.selectedPageSection.pageComponents.findIndex(e => e === pageContent);

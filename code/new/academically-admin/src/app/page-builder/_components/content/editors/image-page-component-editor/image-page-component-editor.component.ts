@@ -10,13 +10,26 @@ import { FileParameter } from '@shared/service-proxies/service-proxies';
   styleUrls: ['./image-page-component-editor.component.less']
 })
 export class ImagePageComponentEditorComponent implements OnInit {
-  @Input() pageComponent: ImagePageComponent;
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
 
   allowedImageExtensions = fileUploadConfiguration.allowedImageExtensions;
   defaultFile: DefaultFile;
+  imagePageComponent: ImagePageComponent = new ImagePageComponent();
 
   constructor() { }
+
+  @Input() set pageComponent(value: ImagePageComponent) {
+    this.documentUploader.files = [];
+    this.documentUploader.defaultFile = undefined;
+    this.imagePageComponent = value;
+    if (this.imagePageComponent.imageName) {
+      this.defaultFile = new DefaultFile();
+      this.defaultFile.name = this.imagePageComponent.imageName;
+      this.defaultFile.url = this.imagePageComponent.base64image;
+      this.defaultFile.size = this.imagePageComponent.imageSize;
+      this.documentUploader.defaultFile = this.defaultFile;
+    }
+  }
 
   ngOnInit(): void {
     this.documentUploader.filesChanged.subscribe((files: FileParameter[]) => {
@@ -27,24 +40,23 @@ export class ImagePageComponentEditorComponent implements OnInit {
         reader.readAsDataURL(file);
         reader.onload = function () {
           setTimeout(() => {
-            self.pageComponent.base64image = reader.result as string;
-            self.pageComponent.imageName = file.name;
-            self.pageComponent.imageSize = file.size;
+            self.imagePageComponent.base64image = reader.result as string;
+            self.imagePageComponent.imageName = file.name;
+            self.imagePageComponent.imageSize = file.size;
           });
         };
       } else {
-        this.pageComponent.base64image = undefined;
-        this.pageComponent.imageName = undefined;
-        this.pageComponent.imageSize = undefined;
+        this.imagePageComponent.base64image = undefined;
+        this.imagePageComponent.imageName = undefined;
+        this.imagePageComponent.imageSize = undefined;
       }
     });
 
-    if (this.pageComponent.imageName) {
-      this.defaultFile = new DefaultFile();
-      this.defaultFile.name = this.pageComponent.imageName;
-      this.defaultFile.url = this.pageComponent.base64image;
-      this.defaultFile.size = this.pageComponent.imageSize;
-      this.documentUploader.defaultFile = this.defaultFile;
-    }
+    this.documentUploader.defaultFileRemoved.subscribe(() => {
+      this.imagePageComponent.base64image = undefined;
+      this.imagePageComponent.imageName = undefined;
+      this.imagePageComponent.imageSize = undefined;
+    });
+
   }
 }
