@@ -96,8 +96,6 @@ namespace Academically.Services.CourseSections
             return courseSectionChild;
         }
 
-
-
         private static string GetDuplicateName(string name)
         {
             var numericAppend = Regex.Match(name, @"\((\d+)\)[^(]*$").Groups[1].Value;

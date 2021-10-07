@@ -78,7 +78,7 @@
                 <i class="fe fe-more-vertical"></i>
               </a>
               <div class="dropdown-menu dropdown-menu-right">
-                <a href="javascript:;" class="dropdown-item">
+                <a href="#" [routerLink]="['/app/page-builder', courseSectionModule.id]" class="dropdown-item">
                   {{ 'View' | localize }}
                 </a>
                 <a href="javascript:;" class="dropdown-item" (click)="onDuplicateClick(courseSectionModule)">
@@ -107,7 +107,7 @@
               </div>
               <div class="col ml-1">
                 <h4 class="mb-1">
-                  <a href="javascript:;">{{ courseSectionUnit.name }}</a>
+                  <a href="#" [routerLink]="['/app/page-builder', courseSectionUnit.id]">{{ courseSectionUnit.name }}</a>
                 </h4>
               </div>
               <div class="col-auto">
@@ -152,7 +152,7 @@
                     <i class="fe fe-more-vertical"></i>
                   </a>
                   <div class="dropdown-menu dropdown-menu-right">
-                    <a href="javascript:;" class="dropdown-item">
+                    <a href="#" [routerLink]="['/app/page-builder', courseSectionUnit.id]" class="dropdown-item">
                       {{ 'View' | localize }}
                     </a>
                     <a href="javascript:;" class="dropdown-item" (click)="onDuplicateClick(courseSectionUnit)">
@@ -181,7 +181,7 @@
                   </div>
                   <div class="col ml-n2">
                     <h4 class="mb-1">
-                      <a href="javascript:;">{{ courseSectionLesson.name }}</a>
+                      <a href="#" [routerLink]="['/app/page-builder', courseSectionLesson.id]">{{ courseSectionLesson.name }}</a>
                     </h4>
                   </div>
                   <div class="col-auto">
@@ -226,7 +226,7 @@
                         <i class="fe fe-more-vertical"></i>
                       </a>
                       <div class="dropdown-menu dropdown-menu-right">
-                        <a href="javascript:;" class="dropdown-item">
+                        <a href="#" [routerLink]="['/app/page-builder', courseSectionLesson.id]" class="dropdown-item">
                           {{ 'View' | localize }}
                         </a>
                         <a href="javascript:;" class="dropdown-item" (click)="onDuplicateClick(courseSectionLesson)">

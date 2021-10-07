@@ -16,8 +16,8 @@ export class CurriculumComponent extends AppComponentBase implements OnInit {
   courseSections: CourseSectionDto[];
   isLoading = false;
   CourseSectionStatus = CourseSectionStatus;
-  courseSectionType=CourseSectionType
-  
+  courseSectionType = CourseSectionType;
+
   constructor(
     injector: Injector,
     private _modalService: BsModalService,
@@ -61,7 +61,7 @@ export class CurriculumComponent extends AppComponentBase implements OnInit {
     );
   }
 
-  onDuplicateClick(courseSection):void{
+  onDuplicateClick(courseSection): void {
     this.isLoading = true;
     this._courseSectionsService.createDuplicate(courseSection)
       .pipe(
@@ -75,7 +75,7 @@ export class CurriculumComponent extends AppComponentBase implements OnInit {
         this.getCourseSections();
       });
   }
-  
+
   private getCourseSections(): void {
     this.isLoading = true;
     this._courseSectionsService.getAll(this.courseId)
