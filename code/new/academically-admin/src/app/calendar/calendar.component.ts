@@ -150,7 +150,6 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
   }
 
   onEventClick(event: CalendarEventDto): void {
-    console.log('test');
     const model = event;
     model.tutorId = event.projectOffer.creatorUserId ?? this.userId;
     this.showCreateEditBookingModal(_.cloneDeep(model));
@@ -205,7 +204,6 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
   }
 
   private eventClick(args: EventClickArg): void {
-    console.log('test');
     const calendarEvent = args.event.extendedProps.calendarEvent as CalendarEventDto;
     switch (calendarEvent.type) {
       case CalendarEventType.Blocker:
