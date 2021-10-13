@@ -70,6 +70,34 @@ namespace Academically.Services.CourseSections
             await DuplicateSectionChildren(new List<CourseSectionDto>() { input }, input.ParentId);
         }
 
+        public async Task UpdateCourseSectionParent(Guid id, Guid? parentId, int newIndex)
+        {
+            var courseSection = await _courseSectionsRepository.GetAll()
+                .Where(e => e.Id == id)
+                .FirstOrDefaultAsync();
+
+            //Update item's parent and displayorder here 
+            courseSection.ParentId = parentId;
+            courseSection.DisplayOrder = newIndex;
+
+            _courseSectionsRepository.Update(courseSection);
+
+
+            var parentElements = _courseSectionsRepository.GetAll()
+                .Where(e => e.ParentId == courseSection.ParentId && e.Id != id).OrderBy(e => e.DisplayOrder).ToList();
+
+            var _lastIndex = parentElements.IndexOf(parentElements.LastOrDefault());
+
+            var sortedNodes = parentElements.Skip(newIndex - 1).Take((_lastIndex - (newIndex - 1)) + 1).ToList();
+
+            for (int i = 1; i <= sortedNodes.Count; i++)
+            {
+                sortedNodes[i - 1].DisplayOrder = newIndex + i;
+                await _courseSectionsRepository.UpdateAsync(sortedNodes[i - 1]);
+
+            }
+        }
+
         private async Task DuplicateSectionChildren(IEnumerable<CourseSectionDto> inputs, Guid? parentId)
         {
             if (inputs != null && inputs.Any())

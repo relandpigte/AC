@@ -7,3 +7,66 @@
   display        : flex;
   justify-content: center;
 }
+
+
+* {
+box-sizing: border-box;
+}
+
+.flex {
+display: flex;
+padding: 8px;
+background: rgba(255, 255, 255, 0.4);
+}
+
+.container {
+flex: 1;
+}
+.container:not(:last-child) {
+margin-right: 8px;
+}
+
+.vamp {
+background: rgba(255, 255, 255, 0.4);
+list-style: none;
+padding: 8px;
+color: #222;
+}
+
+.vamp:not(:last-child) {
+border-bottom: 1px solid #777;
+}
+
+/* in-flight clone */
+.gu-mirror {
+position: fixed !important;
+margin: 0 !important;
+z-index: 9999 !important;
+opacity: 0.8;
+-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+filter: alpha(opacity=80);
+pointer-events: none;
+}
+/* high-performance display:none; helper */
+.gu-hide {
+left: -9999px !important;
+}
+/* added to mirrorContainer (default = body) while dragging */
+.gu-unselectable {
+-webkit-user-select: none !important;
+-moz-user-select: none !important;
+-ms-user-select: none !important;
+user-select: none !important;
+}
+/* added to the source element while its mirror is dragged */
+.gu-transit {
+opacity: 0.2;
+-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+filter: alpha(opacity=20);
+}
+
+.nested {
+  padding: 4px 0;
+  border: 1px dotted #bbb;
+  min-height: 20px;
+}
