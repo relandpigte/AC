@@ -70,6 +70,13 @@ namespace Academically.Services.CourseSections
             await DuplicateSectionChildren(new List<CourseSectionDto>() { input }, input.ParentId);
         }
 
+        public async Task Update(CourseSectionDto input)
+        {
+            var course = ObjectMapper.Map<CourseSection>(input);
+            course.CreatorUserId= AbpSession.UserId.Value;
+            await _courseSectionsRepository.UpdateAsync(course);
+        }
+
         private async Task DuplicateSectionChildren(IEnumerable<CourseSectionDto> inputs, Guid? parentId)
         {
             if (inputs != null && inputs.Any())

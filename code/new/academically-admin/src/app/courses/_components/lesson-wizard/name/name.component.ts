@@ -12,11 +12,11 @@ export class NameComponent extends AppComponentBase implements OnInit {
   @Input() courseId: string;
   @Input() currentcourseSectionType: CourseSectionType;
   @Input() parentId: string;
+  @Input() model: CourseSectionDto;
   @Output() courseSaved = new EventEmitter();
   @Output() modalClose = new EventEmitter();
   @Output() backClick = new EventEmitter();
 
-  model = new CourseSectionDto();
   isLoading = false;
   CourseSectionType = CourseSectionType;
 
@@ -47,22 +47,40 @@ export class NameComponent extends AppComponentBase implements OnInit {
 
   onFormSubmit(): void {
     this.isLoading = true;
-    this.model.courseId = this.courseId;
-    this.model.parentId = this.parentId;
-    this.model.type = this.currentcourseSectionType;
-    this._courseSectionsService.create(this.model)
-      .pipe(
-        takeUntil(this.destroyed$),
-        finalize(() => {
+
+    if (!this.model.id) {
+      this.model.courseId = this.courseId;
+      this.model.parentId = this.parentId;
+      this.model.type = this.currentcourseSectionType;
+      this._courseSectionsService.create(this.model)
+        .pipe(
+          takeUntil(this.destroyed$),
+          finalize(() => {
+            this.isLoading = false;
+          })
+        )
+        .subscribe(() => {
           this.isLoading = false;
-        })
-      )
-      .subscribe(() => {
-        this.isLoading = false;
-        this.notify.success(this.l('SavedSuccessfully'));
-        this.courseSaved.emit();
-        this.modalClose.emit();
-      });
+          this.notify.success(this.l('SavedSuccessfully'));
+          this.courseSaved.emit();
+          this.modalClose.emit();
+        });
+    } else {
+      this._courseSectionsService.update(this.model)
+        .pipe(
+          takeUntil(this.destroyed$),
+          finalize(() => {
+            this.isLoading = false;
+          })
+        )
+        .subscribe(() => {
+          this.isLoading = false;
+          this.notify.success(this.l('SavedSuccessfully'));
+          this.courseSaved.emit();
+          this.modalClose.emit();
+        });
+    }
+
   }
 
   onBackClick(): void {
