@@ -13,5 +13,6 @@ namespace Academically.Services.CourseSections
         Task Create(CourseSectionDto input);
         Task CreateDuplicate(CourseSectionDto input);
         Task Delete(Guid id);
+        Task Update(CourseSectionDto input);
     }
 }
