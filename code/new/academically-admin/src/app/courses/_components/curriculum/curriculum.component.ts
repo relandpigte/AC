@@ -5,6 +5,7 @@ import { LessonWizardComponent } from '../lesson-wizard/lesson-wizard.component'
 import { CourseSectionDto, CourseSectionsServiceProxy, CourseSectionStatus, CourseSectionType } from '@shared/service-proxies/service-proxies';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { DragulaService } from 'ng2-dragula';
+import { CourseEllipseState } from './../../_models/courseEllipseType';
 
 @Component({
   selector: 'app-curriculum',
@@ -18,6 +19,7 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
   isLoading = false;
   CourseSectionStatus = CourseSectionStatus;
   courseSectionType = CourseSectionType;
+  CourseEllipseState = CourseEllipseState;
 
   constructor(
     injector: Injector,
@@ -53,12 +55,20 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
     this.dragulaService.destroy("Course");
   }
   
-  onAddCourseSectionClick(courseSectionType: CourseSectionType, courseSection?: CourseSectionDto): void {
+  onAddEditCourseSectionClick(courseSectionType: CourseSectionType, courseSection?: CourseSectionDto, courseEllipseState?: CourseEllipseState): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<LessonWizardComponent>;
+    var model = new CourseSectionDto();
+    if (courseSection) {
+      if (courseSection.type === courseSectionType) {
+        model = courseSection;
+      }
+    }
     modalSettings.initialState = {
       courseId: this.courseId,
       courseSectionType: courseSectionType,
-      parentId: (courseSection === null || courseSection === undefined) ? null : courseSection.id
+      parentId: (courseSection === null || courseSection === undefined) ? null : courseSection.id,
+      model: model,
+      courseEllipseState: courseEllipseState
     };
     const modal = this._modalService.show(LessonWizardComponent, modalSettings).content;
     modal.courseSaved
