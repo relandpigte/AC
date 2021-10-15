@@ -3,6 +3,10 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { UserLoginInfoDto } from '@shared/service-proxies/service-proxies';
 import { OnInit } from '@angular/core';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { CourseWizardComponent } from './../home/courses/course-wizard/course-wizard.component';
+import { ModalOptions } from 'ngx-bootstrap/modal';
+import { Router } from '@angular/router';
 
 @Component({
   templateUrl: './home.component.html',
@@ -14,6 +18,8 @@ export class HomeComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
+    private _modalService: BsModalService,
+    private _router: Router,
   ) {
     super(injector);
     this.user = this.appSession.user;
@@ -35,5 +41,10 @@ export class HomeComponent extends AppComponentBase implements OnInit {
     } else if (currentHours >= 17 || (currentHours >= 0 && currentHours <= 4) && currentMin <= 59) {
       return this.l('GoodEvening');
     }
+  }
+
+  onCreateClick(): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<CourseWizardComponent>;
+    this._modalService.show(CourseWizardComponent, modalSettings).content;
   }
 }
