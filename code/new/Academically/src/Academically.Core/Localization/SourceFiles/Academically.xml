@@ -1197,5 +1197,12 @@
     <text name="Duplicate">Duplicate</text>
     <text name="DeleteCourseSection">Are you sure want to delete Course Section</text>
     <text name="SuccessfullyDuplicateCreated">Successfully Duplicate Created</text>
+    <text name="Youhave">You have</text>
+    <text name="created">created</text>
+    <text name="edited">edited</text>
+    <text name="deleted">deleted</text>
+    <text name="accepted">accepted</text>
+    <text name="CourseSections">Course section</text>
+    <text name="TokenAuth">Logged in</text>
   </texts>
 </localizationDictionary>

@@ -1,96 +1,31 @@
 <div class="card">
   <div class="card-header">
     <h4 class="card-header-title">
-      Recent Activity
+      {{ 'RecentActivity' | localize }}
     </h4>
     <a class="small" href="javascript:;">View all</a>
   </div>
   <div class="card-body">
     <div class="list-group list-group-flush list-group-activity my-n3">
-      <div class="list-group-item">
+      <div class="list-group-item" *ngFor="let auditlog of auditlogs">
         <div class="row">
           <div class="col-auto">
             <div class="avatar avatar-sm">
               <div class="avatar-title font-size-lg bg-primary-soft rounded-circle text-primary">
-                <i class="fe fe-video"></i>
+                <i *ngIf="auditlog.auditLogsType === AuditLogsType.Edited" class="fe fe-edit-2"></i>
+                <i *ngIf="auditlog.auditLogsType === AuditLogsType.Deleted" class="fe fe-trash-2"></i>
+                <i *ngIf="auditlog.auditLogsType === AuditLogsType.Created" class="fe fe-plus"></i>
+
               </div>
             </div>
           </div>
           <div class="col ml-n2">
             <h5 class="mb-1">
-              You started a video call with John Smith
+              {{ 'Youhave' | localize }} {{ AuditLogsType[auditlog.auditLogsType].toLowerCase() | localize}} {{
+              auditlog.serviceName | localize}}
             </h5>
-            <p class="small text-gray-700 mb-0">
-              Topic: Introduction to the new bacteria speciment found on the moon
-            </p>
             <small class="text-muted">
-              2minutes ago
-            </small>
-          </div>
-        </div>
-      </div>
-      <div class="list-group-item">
-        <div class="row">
-          <div class="col-auto">
-            <div class="avatar avatar-sm">
-              <div class="avatar-title font-size-lg bg-primary-soft rounded-circle text-primary">
-                <i class="fe fe-mail"></i>
-              </div>
-            </div>
-          </div>
-          <div class="col ml-n2">
-            <h5 class="mb-1">
-              John Smith sent a message
-            </h5>
-            <p class="small text-gray-700 mb-0">
-              Howdy, let's do a video call tomorrow
-            </p>
-            <small class="text-muted">
-              Yesterday
-            </small>
-          </div>
-        </div>
-      </div>
-      <div class="list-group-item">
-        <div class="row">
-          <div class="col-auto">
-            <div class="avatar avatar-sm">
-              <div class="avatar-title font-size-lg bg-primary-soft rounded-circle text-primary">
-                <i class="fe fe-briefcase"></i>
-              </div>
-            </div>
-          </div>
-          <div class="col ml-n2">
-            <h5 class="mb-1">
-              A proposal was submitted by John Smith
-            </h5>
-            <p class="small text-gray-700 mb-0">
-              John Smith is a Professor at the University of Oxford
-            </p>
-            <small class="text-muted">
-              1week ago
-            </small>
-          </div>
-        </div>
-      </div>
-      <div class="list-group-item">
-        <div class="row">
-          <div class="col-auto">
-            <div class="avatar avatar-sm">
-              <div class="avatar-title font-size-lg bg-primary-soft rounded-circle text-primary">
-                <i class="fe fe-archive"></i>
-              </div>
-            </div>
-          </div>
-          <div class="col ml-n2">
-            <h5 class="mb-1">
-              New project "Animal Research" created
-            </h5>
-            <p class="small text-gray-700 mb-0">
-              Specific study of new bacteria specimen found on the moon
-            </p>
-            <small class="text-muted">
-              4weeks ago
+              {{convertMomentToDateAgo(auditlog.executionTime)}}
             </small>
           </div>
         </div>

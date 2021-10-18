@@ -68,6 +68,8 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<Course> Courses { get; set; }
         public virtual DbSet<CourseSection> CourseSections { get; set; }
         public virtual DbSet<CourseSectionPage> CourseSectionPages { get; set; }
+        public virtual DbSet<AuditLogs> AuditLogs { get; set; }
+
 
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
