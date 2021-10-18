@@ -1,6 +1,7 @@
 import { Component, OnInit, Injector, EventEmitter, Output, Input } from '@angular/core';
+import { CourseEllipseState } from '@app/courses/_models/courseEllipseType';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CourseSectionType } from '@shared/service-proxies/service-proxies';
+import { CourseSectionDto, CourseSectionType } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 enum LessonWizardState {
@@ -17,6 +18,8 @@ export class LessonWizardComponent extends AppComponentBase implements OnInit {
   @Input() courseId: string;
   @Input() courseSectionType: CourseSectionType
   @Input() parentId: string;
+  @Input() model: CourseSectionDto;
+  @Input() courseEllipseState: CourseEllipseState;
   @Output() courseSaved = new EventEmitter();
   LessonWizardState = LessonWizardState;
 
@@ -31,7 +34,7 @@ export class LessonWizardComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.courseSectionType === CourseSectionType.Lesson) {
+    if (this.courseSectionType === CourseSectionType.Lesson && this.courseEllipseState != CourseEllipseState.Rename) {
       this.currentWizardState = LessonWizardState.Template;
     }
   }

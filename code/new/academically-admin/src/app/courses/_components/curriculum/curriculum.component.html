@@ -87,6 +87,9 @@
                 <a href="#" [routerLink]="['/app/page-builder', courseSectionModule.id]" class="dropdown-item">
                   {{ 'Edit' | localize }}
                 </a>
+                <a href="javascript:;" class="dropdown-item" (click)="onAddEditCourseSectionClick(courseSectionModule.type, courseSectionModule, CourseEllipseState.Rename)">
+                  {{ 'Rename' | localize }}
+                </a>
                 <a href="javascript:;" class="dropdown-item" (click)="onDeleteClick(courseSectionModule.id)">
                   {{ 'Delete' | localize }}
                 </a>
@@ -160,6 +163,9 @@
                     </a>
                     <a href="#" [routerLink]="['/app/page-builder', courseSectionUnit.id]" class="dropdown-item">
                       {{ 'Edit' | localize }}
+                    </a>
+                    <a href="javascript:;" class="dropdown-item" (click)="onAddEditCourseSectionClick(courseSectionUnit.type, courseSectionUnit,CourseEllipseState.Rename)">
+                      {{ 'Rename' | localize }}
                     </a>
                     <a href="javascript:;" class="dropdown-item" (click)="onDeleteClick(courseSectionUnit.id)">
                       {{ 'Delete' | localize }}
@@ -235,6 +241,9 @@
                         <a href="#" [routerLink]="['/app/page-builder', courseSectionLesson.id]" class="dropdown-item">
                           {{ 'Edit' | localize }}
                         </a>
+                        <a href="javascript:;" class="dropdown-item" (click)="onAddEditCourseSectionClick(courseSectionLesson.type, courseSectionLesson, CourseEllipseState.Rename)">
+                          {{ 'Rename' | localize }}
+                        </a>
                         <a href="javascript:;" class="dropdown-item" (click)="onDeleteClick(courseSectionLesson.id)">
                           {{ 'Delete' | localize }}
                         </a>
@@ -250,7 +259,7 @@
               <i class="fe fe-plus"></i>{{ 'Add' | localize }}
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-              <a href="javascript:;" (click)="onAddCourseSectionClick(courseSectionType.Lesson,courseSectionUnit)"
+              <a href="javascript:;" (click)="onAddEditCourseSectionClick(courseSectionType.Lesson, courseSectionUnit)"
                 class="dropdown-item">
                 {{ 'AddLesson' | localize | titlecase }}
               </a>
@@ -263,11 +272,11 @@
           <i class="fe fe-plus"></i>{{ 'Add' | localize }}
         </a>
         <div class="dropdown-menu dropdown-menu-right">
-          <a href="javascript:;" (click)="onAddCourseSectionClick(courseSectionType.Lesson,courseSectionModule)"
+          <a href="javascript:;" (click)="onAddEditCourseSectionClick(courseSectionType.Lesson, courseSectionModule)"
             class="dropdown-item">
             {{ 'AddLesson' | localize | titlecase }}
           </a>
-          <a href="javascript:;" (click)="onAddCourseSectionClick(courseSectionType.Unit,courseSectionModule)"
+          <a href="javascript:;" (click)="onAddEditCourseSectionClick(courseSectionType.Unit, courseSectionModule)"
             class="dropdown-item">
             {{ 'AddUnit' | localize | titlecase }}
           </a>
@@ -280,10 +289,10 @@
           <i class="fe fe-plus"></i>{{ 'Add' | localize }}
         </a>
         <div class="dropdown-menu dropdown-menu-right">
-          <a href="javascript:;" (click)="onAddCourseSectionClick(courseSectionType.Lesson)" class="dropdown-item">
+          <a href="javascript:;" (click)="onAddEditCourseSectionClick(courseSectionType.Lesson)" class="dropdown-item">
             {{ 'AddLesson' | localize | titlecase }}
           </a>
-          <a href="javascript:;" (click)="onAddCourseSectionClick(courseSectionType.Module)" class="dropdown-item">
+          <a href="javascript:;" (click)="onAddEditCourseSectionClick(courseSectionType.Module)" class="dropdown-item">
             {{ 'AddModule' | localize | titlecase }}
           </a>
         </div>
@@ -298,10 +307,10 @@
           <h1 class="mb-3">{{ 'NoLessonsOrModules' | localize }}</h1>
           <p class="text-muted mb-5">{{ 'StartByAddingALessonOrModule' | localize }}</p>
           <div class="d-flex">
-            <button class="btn btn-primary" (click)="onAddCourseSectionClick(courseSectionType.Lesson)">
+            <button class="btn btn-primary" (click)="onAddEditCourseSectionClick(courseSectionType.Lesson)">
               <i class="fe fe-plus"></i>&nbsp;{{ 'AddLesson' | localize | titlecase }}
             </button>
-            <button class="btn btn-white ml-5" (click)="onAddCourseSectionClick(courseSectionType.Module)">
+            <button class="btn btn-white ml-5" (click)="onAddEditCourseSectionClick(courseSectionType.Module)">
               <i class="fe fe-plus"></i>&nbsp;{{ 'AddModule' | localize | titlecase }}
             </button>
           </div>
