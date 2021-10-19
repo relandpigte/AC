@@ -23,7 +23,15 @@ namespace Academically.Services.AuditLogs
             var userId = AbpSession.UserId.Value;
             var auditlogs = await _auditLogsRepository
            .GetAll()
-           .Where(e => e.UserId == userId && !(e.MethodName.ToLower().Contains("get") || e.MethodName.ToLower().Contains("index") || e.MethodName.ToLower().Contains("cookie")))
+           .Where(e => e.UserId == userId
+                && !(e.MethodName.ToLower().Contains("get")
+                    || e.MethodName.ToLower().Contains("index")
+                    || e.MethodName.ToLower().Contains("cookie"))
+                && (e.ServiceName.ToLower().EndsWith("CalendarEventsAppService")
+                    || e.ServiceName.ToLower().EndsWith("ProjectOffersAppService")
+                    || e.ServiceName.ToLower().EndsWith("ProjectsAppService")
+                    || e.ServiceName.ToLower().EndsWith("CourseSectionsAppService")
+                    || e.ServiceName.ToLower().EndsWith("CoursesAppService")))
            .OrderByDescending(e => e.ExecutionTime)
            .Take(5)
            .Select(e => ObjectMapper.Map<AuditLogsDto>(e))

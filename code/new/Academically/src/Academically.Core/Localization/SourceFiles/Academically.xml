@@ -1204,5 +1204,7 @@
     <text name="accepted">accepted</text>
     <text name="CourseSections">Course section</text>
     <text name="TokenAuth">Logged in</text>
+    <text name="CalendarEvents">Calender event</text>
+    <text name="ProjectOffers">Project Offer</text>
   </texts>
 </localizationDictionary>
