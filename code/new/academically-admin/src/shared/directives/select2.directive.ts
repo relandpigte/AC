@@ -20,11 +20,11 @@ export class Select2Directive implements AfterViewInit {
   }
 
   @Input() set defaultValue(defaultValue: string) {
-    if (this._select2) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (this._select2) {
         this._select2.val(defaultValue).trigger('change');
-      });
-    }
+      }
+    }, 200);
   }
 
   ngAfterViewInit(): void {

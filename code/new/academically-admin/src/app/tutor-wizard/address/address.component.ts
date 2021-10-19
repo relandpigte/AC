@@ -29,6 +29,8 @@ export class AddressComponent extends AppComponentBase implements OnInit {
   isDeclining = false;
   isApproving = false;
   tutorVerificationStepStatus = TutorVerificationStepStatus;
+  tutorVerificationPrevStep: TutorVerificationStepDto;
+  tutorVerificationNextStep: TutorVerificationStepDto;
 
   constructor(
     injector: Injector,
@@ -46,12 +48,21 @@ export class AddressComponent extends AppComponentBase implements OnInit {
       this.isReadOnly = (this.userId !== this.appSession.userId);
     });
     this._becomeATutorService.currentTutorWizardStep$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(step => {
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(step => {
       this.tutorVerificationStep = step;
       if (this.isReadOnly && this.tutorVerificationStep.step !== BecomeATutorStep.Address) {
         this._tutorApplicationService.getStep(step.tutorVerificationId, BecomeATutorStep.Address).subscribe(result => {
           this.tutorVerificationStep = result;
+        });
+      }
+      if (this.isReadOnly) {
+        this._tutorApplicationService.getPreviousStep(step.tutorVerificationId, BecomeATutorStep.Address).subscribe(result => {
+          this.tutorVerificationPrevStep = result;
+        });
+
+        this._tutorApplicationService.getNextStep(step.tutorVerificationId, BecomeATutorStep.Address).subscribe(result => {
+          this.tutorVerificationNextStep = result;
         });
       }
     });
@@ -86,7 +97,9 @@ export class AddressComponent extends AppComponentBase implements OnInit {
 
 
   onNavigateNextScreen(): void {
-    this._router.navigate([`app/tutor-applications/${this.userId}/contact-number`]);
+    if (this.tutorVerificationNextStep?.status === TutorVerificationStepStatus.Saved) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/contact-number`]);
+    }
   }
 
   onStatusChange(event: any): void {

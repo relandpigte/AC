@@ -16,16 +16,19 @@
           <div class="col">
             <ul class="nav nav-tabs nav-overflow header-tabs">
               <li class="nav-item">
-                <a #detailsNav class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab"
-                  aria-controls="details" aria-selected="true">{{ 'Details' | localize }}</a>
+                <a #detailsNav [class.active]="currentTab === CourseTab.Details" class="nav-link" id="details-tab"
+                  data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="true">{{ 'Details'
+                  | localize }}</a>
               </li>
               <li class="nav-item">
-                <a #curriculumNav class="nav-link" id="curriculum-tab" data-toggle="tab" href="#curriculum" role="tab"
-                  aria-controls="curriculum" aria-selected="true">{{ 'Curriculum' | localize }}</a>
+                <a #curriculumNav [class.active]="currentTab === CourseTab.Curriculum" class="nav-link"
+                  id="curriculum-tab" data-toggle="tab" href="#curriculum" role="tab" aria-controls="curriculum"
+                  aria-selected="true">{{ 'Curriculum' | localize }}</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab"
-                  aria-controls="settings" aria-selected="false">{{ 'Settings' | localize }}</a>
+                <a [class.active]="currentTab === CourseTab.Settings" class="nav-link" id="settings-tab"
+                  data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">{{
+                  'Settings' | localize }}</a>
               </li>
             </ul>
           </div>
@@ -35,13 +38,16 @@
   </div>
   <div class="container-fluid">
     <div class="tab-content">
-      <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
+      <div [ngClass]="{ 'show active': currentTab === CourseTab.Details }" class="tab-pane fade" id="details"
+        role="tabpanel" aria-labelledby="details-tab">
         <app-details></app-details>
       </div>
-      <div class="tab-pane fade" id="curriculum" role="tabpanel" aria-labelledby="curriculum-tab">
-        <app-curriculum></app-curriculum>
+      <div [ngClass]="{ 'show active': currentTab === CourseTab.Curriculum }" class="tab-pane fade" id="curriculum"
+        role="tabpanel" aria-labelledby="curriculum-tab">
+        <app-curriculum [courseId]="id"></app-curriculum>
       </div>
-      <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+      <div [ngClass]="{ 'show active': currentTab === CourseTab.Settings }" class="tab-pane fade" id="settings"
+        role="tabpanel" aria-labelledby="settings-tab">
         <app-settings (backClicked)="detailsNav.click()" (settingsSaved)="curriculumNav.click()"></app-settings>
       </div>
     </div>

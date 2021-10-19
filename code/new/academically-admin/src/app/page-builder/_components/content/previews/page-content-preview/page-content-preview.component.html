@@ -1,0 +1,17 @@
+<div class="page-content-container" (click)="$event.preventDefault(); $event.stopPropagation(); onPageContentClick()"
+  [class.active]="selectedPageContent === pageContent" [ngSwitch]="pageContent.name">
+  <div *ngIf="pageContent.marginTop > 0" class="page-content-marker-top" [style.top]="marginTop"></div>
+  <div *ngIf="pageContent.marginBottom > 0" class="page-content-marker-bottom" [style.bottom]="marginBottom"></div>
+  <div *ngIf="pageContent.marginLeft > 0" class="page-content-marker-left" [style.left]="marginLeft"></div>
+  <div *ngIf="pageContent.marginRight > 0" class="page-content-marker-right" [style.right]="marginRight"></div>
+  <div class="page-content" [class.has-margin-top]="pageContent.marginTop"
+    [class.has-margin-bottom]="pageContent.marginBottom" [class.has-margin-left]="pageContent.marginLeft"
+    [class.has-margin-right]="pageContent.marginRight" [style.margin]="margin">
+    <app-page-section-preview *ngSwitchCase="'Section'" [pageSection]="pageContent">
+    </app-page-section-preview>
+    <app-text-page-component-preview *ngSwitchCase="'Text'" [pageComponent]="pageContent">
+    </app-text-page-component-preview>
+    <app-image-page-component-preview *ngSwitchCase="'Image'" [pageComponent]="pageContent">
+    </app-image-page-component-preview>
+  </div>
+</div>

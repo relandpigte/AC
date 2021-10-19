@@ -70,8 +70,10 @@
     <button *ngIf="!isReadOnly" [disabled]="!createEditForm.form.valid || isLoading" type="submit" class="btn btn-primary">
       {{ 'Next' | localize }}
     </button>
-    <button *ngIf="isReadOnly" type="button" class="btn btn-primary" (click)="onNavigateNextScreen()">
+    <button *ngIf="isReadOnly && tutorVerificationNextStep?.status === tutorVerificationStepStatus.Saved" type="button" class="btn btn-primary" (click)="onNavigateNextScreen()">
       {{ 'Next' | localize }}
     </button>
+    <div *ngIf="(isReadOnly && !(tutorVerificationNextStep?.status === tutorVerificationStepStatus.Saved))">
+    </div>
   </div>
 </form>

@@ -1,6 +1,6 @@
 <app-template *ngIf="currentWizardState === LessonWizardState.Template" (modalClose)="onModalClose()"
   (selectTemplate)="onStateChange(LessonWizardState.Name)">
 </app-template>
-<app-name *ngIf="currentWizardState === LessonWizardState.Name" (modalClose)="onModalClose()"
-  (backClick)="onStateChange(LessonWizardState.Template)" (courseSaved)="onCourseSaved()">
+<app-name *ngIf="currentWizardState === LessonWizardState.Name" [currentcourseSectionType]="courseSectionType" [courseId]="courseId" (modalClose)="onModalClose()"
+[parentId]="parentId" [model]="model" (backClick)="onStateChange(LessonWizardState.Template)" (courseSaved)="onCourseSaved()">
 </app-name>

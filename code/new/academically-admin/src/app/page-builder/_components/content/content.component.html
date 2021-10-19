@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="col-8">
+    <div class="card" *ngFor="let pageSection of pageSections">
+      <div class="card-body p-0">
+        <app-page-content-preview [pageContent]="pageSection">
+        </app-page-content-preview>
+      </div>
+    </div>
+    <div class="actions">
+      <a href="#" (click)="$event.preventDefault(); onAddPageSectionClick();" class="add-page-section">
+        <i class="fe fe-plus"></i>
+        {{ 'AddSection' | localize | titlecase }}
+      </a>
+    </div>
+  </div>
+  <div class="col-4">
+    <app-page-content-editor [pageContent]="selectedPageContent" (deleteContent)="onDeletePageContent($event)"
+      (selectParent)="onSelectParent()">
+    </app-page-content-editor>
+  </div>
+</div>

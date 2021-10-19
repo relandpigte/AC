@@ -34,7 +34,9 @@ export class DbsCheckComponent extends AppComponentBase implements OnInit {
   isDeclining = false;
   isApproving = false;
   tutorVerificationStepStatus = TutorVerificationStepStatus;
-  
+  tutorVerificationPrevStep: TutorVerificationStepDto;
+  tutorVerificationNextStep: TutorVerificationStepDto;
+
   constructor(
     injector: Injector,
     private _router: Router,
@@ -60,6 +62,14 @@ export class DbsCheckComponent extends AppComponentBase implements OnInit {
       if (this.isReadOnly) {
         this._tutorApplicationService.getStep(step.tutorVerificationId, BecomeATutorStep.DbsCheck).subscribe(result => {
           this.tutorVerificationStep = result;
+        });
+
+        this._tutorApplicationService.getPreviousStep(step.tutorVerificationId, BecomeATutorStep.DbsCheck).subscribe(result => {
+          this.tutorVerificationPrevStep = result;
+        });
+
+        this._tutorApplicationService.getNextStep(step.tutorVerificationId, BecomeATutorStep.DbsCheck).subscribe(result => {
+          this.tutorVerificationNextStep = result;
         });
       }
     });
@@ -125,7 +135,9 @@ export class DbsCheckComponent extends AppComponentBase implements OnInit {
   }
 
   onNavigateNextScreen(): void {
-    this._router.navigate([`app/tutor-applications/${this.userId}/terms-of-use`]);
+    if (this.tutorVerificationNextStep?.status === TutorVerificationStepStatus.Saved) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/terms-of-use`]);
+    }
   }
 
   onStatusChange(event: any): void {

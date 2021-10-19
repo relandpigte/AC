@@ -1,0 +1,118 @@
+<div class="page-content" *ngIf="pageContent && pageContent.name else noContentSelected">
+  <div class="card">
+    <div class="card-header">
+      <div class="row align-items-center">
+        <div class="col">
+          <h4 class="card-header-title">
+            {{ pageContent.name }}
+          </h4>
+        </div>
+        <div class="col-auto">
+          <div *ngIf="pageContent.name !== 'Section'" (click)="onSelectParentClick();"
+            class="btn btn-outline-info btn-sm mr-2">
+            <i class="fe fe-corner-left-up"></i>
+          </div>
+          <div (click)="onContentDelete();" class="btn btn-outline-danger btn-sm">
+            <i class="fe fe-trash"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body" [ngSwitch]="pageContent.name">
+      <app-page-section-editor *ngSwitchCase="'Section'" [pageSection]="pageContent">
+      </app-page-section-editor>
+      <app-text-page-component-editor *ngSwitchCase="'Text'" [pageComponent]="pageContent">
+      </app-text-page-component-editor>
+      <app-image-page-component-editor *ngSwitchCase="'Image'" [pageComponent]="pageContent">
+      </app-image-page-component-editor>
+    </div>
+  </div>
+  <div class="card mb-0">
+    <div class="card-header">
+      <h4 class="card-header-title">
+        {{ 'Margin' | localize }}
+      </h4>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-5">
+          <div *ngFor="let marginType of MarginType | enumToArray | keyvalue" class="form-check">
+            <input [(ngModel)]="pageContent.marginType" (change)="onMarginTypeChange()" class="form-check-input"
+              type="radio" name="marginType" id="margin_{{marginType.key}}"
+              [value]="MarginType[MarginType[marginType.key]]">
+            <label class="form-check-label" for="margin_{{marginType.key}}">
+              {{ marginType.value }}
+            </label>
+          </div>
+        </div>
+        <div class="col-7" *ngIf="pageContent.marginType === MarginType.Custom">
+          <div class="form-group row">
+            <label class="col-form-label-sm col-form-label col-5" for="top">{{ 'Top' | localize}}</label>
+            <div class="col-7">
+              <div class="input-group input-group-sm">
+                <input [(ngModel)]="pageContent.marginTop" #topModel="ngModel" #topEl
+                  class="form-control form-control-sm" type="number" id="top" name="top" [min]="0" />
+                <div class="input-group-append">
+                  <span class="input-group-text">px</span>
+                </div>
+              </div>
+            </div>
+            <abp-validation-summary [control]="topModel" [controlEl]="topEl">
+            </abp-validation-summary>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label-sm col-form-label col-5" for="bottom">{{ 'Bottom' | localize}}</label>
+            <div class="col-7">
+              <div class="input-group input-group-sm">
+                <input [(ngModel)]="pageContent.marginBottom" #bottomModel="ngModel" #bottomEl
+                  class="form-control form-control-sm" type="number" id="bottom" name="bottom" [min]="0" />
+                <div class="input-group-append">
+                  <span class="input-group-text">px</span>
+                </div>
+              </div>
+            </div>
+            <abp-validation-summary [control]="bottomModel" [controlEl]="bottomEl">
+            </abp-validation-summary>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label-sm col-form-label col-5" for="left">{{ 'Left' | localize}}</label>
+            <div class="col-7">
+              <div class="input-group input-group-sm">
+                <input [(ngModel)]="pageContent.marginLeft" #leftModel="ngModel" #leftEl
+                  class="form-control form-control-sm" type="number" id="left" name="left" [min]="0" />
+                <div class="input-group-append">
+                  <span class="input-group-text">px</span>
+                </div>
+              </div>
+            </div>
+            <abp-validation-summary [control]="leftModel" [controlEl]="leftEl">
+            </abp-validation-summary>
+          </div>
+          <div class="form-group row mb-0">
+            <label class="col-form-label-sm col-form-label col-5" for="right">{{ 'Right' | localize}}</label>
+            <div class="col-7">
+              <div class="input-group input-group-sm">
+                <input [(ngModel)]="pageContent.marginRight" #rightModel="ngModel" #rightEl
+                  class="form-control form-control-sm" type="number" id="right" name="right" [min]="0" />
+                <div class="input-group-append">
+                  <span class="input-group-text">px</span>
+                </div>
+              </div>
+            </div>
+            <abp-validation-summary [control]="rightModel" [controlEl]="rightEl">
+            </abp-validation-summary>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #noContentSelected>
+  <div class="card">
+    <div class="card-body">
+      <div class="no-content-selected">
+        <p class="p-0 m-0 text-center">{{ 'NoContentSelected' | localize }}</p>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,6 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="NoContentSelected">No content selected</text>
+    <text name="ConfigureComponentInstructions">Configure this comopnent on the right panel</text>
+    <text name="NameYourNewUnit">Name your new unit</text>
+    <text name="AddUnit">Add unit</text>
+    <text name="Text">Text</text>
+    <text name="ChooseYourComponent">Choose your component</text>
+    <text name="LessonPreview">Lesson preview</text>
+    <text name="AddSection">Add section</text>
+    <text name="AddComponent">Add component</text>
+    <text name="CreateYourLessonSubheader">Create your lesson by adding a component or a section below</text>
+    <text name="CreateYourLesson">Create your lesson</text>
+    <text name="NoContentYet">No content yet</text>
+    <text name="Authors">Authors</text>
+    <text name="Content">Content</text>
+    <text name="PageBuilder">Page builder</text>
+    <text name="NameYourNewModule">Name your new module</text>
+    <text name="ShowMeAsBusy">Show me as busy</text>
+    <text name="PersonalEvent">Personal event</text>
+    <text name="Publish">Publish</text>
+    <text name="Draft">Draft</text>
+    <text name="View">View</text>
     <text name="NameYourNewLesson">Name your new lesson</text>
     <text name="Paying">Paying</text>
     <text name="TutorName">Tutor name</text>
@@ -1174,5 +1195,8 @@
     <text name="TermsAndCoditionsMessageLine2">Please indicate that you accept our terms and conditions by toggling the switch to the right.</text>
     <text name="TermsAndCoditionsMessageLine3">You can view our Terms &amp; Conditions</text>
     <text name="Today">Today</text>
+    <text name="Duplicate">Duplicate</text>
+    <text name="DeleteCourseSection">Are you sure want to delete Course Section</text>
+    <text name="SuccessfullyDuplicateCreated">Successfully Duplicate Created</text>
   </texts>
 </localizationDictionary>

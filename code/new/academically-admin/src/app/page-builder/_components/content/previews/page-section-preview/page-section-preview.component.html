@@ -1,0 +1,23 @@
+<ng-container *ngIf="pageSection.pageComponents && pageSection.pageComponents.length; else noPageComponent">
+  <app-page-content-preview *ngFor="let pageComponent of pageSection.pageComponents" [pageContent]="pageComponent"
+    [isActive]="selectedPageComponent === pageComponent">
+  </app-page-content-preview>
+</ng-container>
+<ng-template #noPageComponent>
+  <div class="no-page-component">
+    <img src="/assets/themes/dashkit/img/illustrations/scale.svg" alt="..." class="img-fluid">
+    <h3 class="title">
+      {{ 'CreateYourLesson' | localize }}
+    </h3>
+    <p class="text-muted">
+      {{ 'CreateYourLessonSubheader' | localize }}
+    </p>
+  </div>
+</ng-template>
+<div class="page-section-actions">
+  <a href="#" (click)="$event.preventDefault(); $event.stopPropagation(); onAddPageComponentClick();"
+    class="add-component">
+    <i class="fe fe-plus"></i>
+    {{ 'AddComponent' | localize | titlecase }}
+  </a>
+</div>

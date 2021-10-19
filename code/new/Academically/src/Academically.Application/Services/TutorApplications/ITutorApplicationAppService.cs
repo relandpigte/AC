@@ -16,5 +16,7 @@ namespace Academically.Services.TutorApplications
 
         Task<TutorVerificationDto> GetAsync(long userId);
         Task<TutorVerificationStepDto> GetStepAsync(Guid verificationId, BecomeATutorStep step);
+        Task<TutorVerificationStepDto> GetPreviousStepAsync(Guid verificationId, BecomeATutorStep step);
+        Task<TutorVerificationStepDto> GetNextStepAsync(Guid verificationId, BecomeATutorStep step);
     }
 }

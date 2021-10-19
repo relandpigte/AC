@@ -23,6 +23,8 @@ export class TermsOfUseComponent extends AppComponentBase implements OnInit {
   isDeclining = false;
   isApproving = false;
   tutorVerificationStepStatus = TutorVerificationStepStatus;
+  tutorVerificationPrevStep: TutorVerificationStepDto;
+  tutorVerificationNextStep: TutorVerificationStepDto;
 
   constructor(
     injector: Injector,
@@ -51,6 +53,15 @@ export class TermsOfUseComponent extends AppComponentBase implements OnInit {
       if (this.isReadOnly && this.tutorVerificationStep.step !== BecomeATutorStep.TermsOfUse) {
         this._tutorApplicationService.getStep(step.tutorVerificationId, BecomeATutorStep.TermsOfUse).subscribe(result => {
           this.tutorVerificationStep = result;
+        });
+      }
+      if (this.isReadOnly) {
+        this._tutorApplicationService.getPreviousStep(step.tutorVerificationId, BecomeATutorStep.TermsOfUse).subscribe(result => {
+          this.tutorVerificationPrevStep = result;
+        });
+
+        this._tutorApplicationService.getNextStep(step.tutorVerificationId, BecomeATutorStep.TermsOfUse).subscribe(result => {
+          this.tutorVerificationNextStep = result;
         });
       }
     });
@@ -90,7 +101,9 @@ export class TermsOfUseComponent extends AppComponentBase implements OnInit {
   }
 
   onNavigateNextScreen(): void {
-    this._router.navigate([`app/tutor-applications/${this.userId}/privacy-policy`]);
+    if (this.tutorVerificationNextStep?.status === TutorVerificationStepStatus.Saved) {
+      this._router.navigate([`app/tutor-applications/${this.userId}/privacy-policy`]);
+    }
   }
 
   onStatusChange(event: any): void {

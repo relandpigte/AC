@@ -1,0 +1,57 @@
+<div [@routerTransition] [loader]="isLoading">
+  <div class="header">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center">
+          <div class="col">
+            <h6 class="header-pretitle">
+              {{ model.course.name }}
+            </h6>
+            <h1 class="header-title">
+              {{ model.name }}
+            </h1>
+          </div>
+          <div class="col-auto">
+            <div class="d-flex align-items-center justify-content-center">
+              <button (click)="onLessonPreviewClick()" class="btn btn-outline-primary btn-block no-wrap">
+                {{ 'LessonPreview' | localize | titlecase }}
+              </button>
+              <button [disabled]="isSaving" (click)="onSaveClick()" class="btn btn-primary btn-block mt-0 ml-3">
+                {{ 'Save' | localize }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col">
+            <ul class="nav nav-tabs nav-overflow header-tabs">
+              <li class="nav-item">
+                <a class="nav-link active" id="content-tab" data-toggle="tab" href="#content" role="tab"
+                  aria-controls="content" aria-selected="true">{{ 'Content' | localize }}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab"
+                  aria-controls="settings" aria-selected="true">{{ 'Settings' | localize }}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="authors-tab" data-toggle="tab" href="#authors" role="tab"
+                  aria-controls="authors" aria-selected="false">{{ 'Authors' | localize }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="tab-content" [loader]="isSaving">
+      <div class="tab-pane fade show active" id="content" role="tabpanel" aria-labelledby="content-tab">
+        <app-content></app-content>
+      </div>
+      <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+      </div>
+      <div class="tab-pane fade" id="authors" role="tabpanel" aria-labelledby="authors-tab">
+      </div>
+    </div>
+  </div>
+</div>
