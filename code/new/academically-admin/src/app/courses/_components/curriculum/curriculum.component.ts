@@ -37,10 +37,17 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
       const _index = [].slice.call(args.el.parentNode.children).findIndex((x) => args.el === x);
       if (args.item.id === parentId
         && args.item.type === args.target['type']
-        || (args.item.type === CourseSectionType.Module && (args.target["type"] === CourseSectionType.Unit || this.courseSectionType.Lesson))
-        || (args.item.type === CourseSectionType.Unit && (args.target["type"] === undefined || CourseSectionType.Unit || this.courseSectionType.Lesson))) {
+        || (args.item.type === CourseSectionType.Module && (args.target["type"] === CourseSectionType.Unit || CourseSectionType.Lesson))
+        || (args.item.type === CourseSectionType.Unit && parentId === "" && (args.target["type"] === undefined || CourseSectionType.Unit || CourseSectionType.Lesson))) {
 
-        this.dragulaService.find('Course').drake.cancel(true);
+        if (parentId === "" && args.item.type === CourseSectionType.Module) {
+          this.updateCourseSectionParent(args.item.id, _index + 1, parentId)
+        }
+        else {
+          this.dragulaService.find('Course').drake.cancel(true);
+
+          args.sourceModel.splice(args.sourceIndex, 0, ...args.targetModel.splice(args.targetIndex, 1));
+        }
       } else {
         this.updateCourseSectionParent(args.item.id, _index + 1, parentId)
       }
@@ -54,7 +61,7 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
   ngOnDestroy(): void {
     this.dragulaService.destroy("Course");
   }
-  
+
   onAddEditCourseSectionClick(courseSectionType: CourseSectionType, courseSection?: CourseSectionDto, courseEllipseState?: CourseEllipseState): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<LessonWizardComponent>;
     var model = new CourseSectionDto();
