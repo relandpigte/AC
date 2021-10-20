@@ -1,5 +1,4 @@
 import { MarginType } from './margin-type';
-import { PageSection } from './page-section';
 
 export class PageContent {
   name: string;
@@ -8,6 +7,7 @@ export class PageContent {
   marginBottom: number;
   marginLeft: number;
   marginRight: number;
+  disableMargins: boolean;
 
   private normalMargin = 40;
   private narrowMargin = 20;
@@ -15,7 +15,7 @@ export class PageContent {
   private wideMargnin = 100;
 
   constructor(
-    marginType?: number,
+    marginType?: MarginType,
     marginTop?: number,
     marginBottom?: number,
     marginLeft?: number,
@@ -36,12 +36,6 @@ export class PageContent {
         this.marginLeft = 0;
         this.marginRight = 0;
         break;
-      case MarginType.Normal:
-        this.marginTop = this.normalMargin;
-        this.marginBottom = this.normalMargin;
-        this.marginLeft = this.normalMargin;
-        this.marginRight = this.normalMargin;
-        break;
       case MarginType.Narrow:
         this.marginTop = this.narrowMargin;
         this.marginBottom = this.narrowMargin;
@@ -59,6 +53,12 @@ export class PageContent {
         this.marginBottom = this.wideMargnin;
         this.marginLeft = this.wideMargnin;
         this.marginRight = this.wideMargnin;
+        break;
+      default:
+        this.marginTop = this.normalMargin;
+        this.marginBottom = this.normalMargin;
+        this.marginLeft = this.normalMargin;
+        this.marginRight = this.normalMargin;
         break;
     }
   }

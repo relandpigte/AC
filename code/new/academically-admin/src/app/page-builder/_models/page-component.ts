@@ -4,8 +4,9 @@ import { MarginType } from './margin-type';
 export class PageComponent extends PageContent {
   icon: string;
 
-  constructor() {
-    super(MarginType.Normal);
+  constructor(marginType?: MarginType, disableMargins?: boolean) {
+    super(marginType);
+    this.disableMargins = disableMargins;
     this.setMargins();
   }
 }

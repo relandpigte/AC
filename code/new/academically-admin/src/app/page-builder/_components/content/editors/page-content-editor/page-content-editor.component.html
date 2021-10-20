@@ -25,9 +25,12 @@
       </app-text-page-component-editor>
       <app-image-page-component-editor *ngSwitchCase="'Image'" [pageComponent]="pageContent">
       </app-image-page-component-editor>
+      <app-image-page-component-editor *ngSwitchCase="'Header'" [pageComponent]="pageContent"
+        [cropperAspectRationWidth]="1440" [cropperAspectRationHeight]="300">
+      </app-image-page-component-editor>
     </div>
   </div>
-  <div class="card mb-0">
+  <div class="card mb-0" *ngIf="!pageContent.disableMargins">
     <div class="card-header">
       <h4 class="card-header-title">
         {{ 'Margin' | localize }}

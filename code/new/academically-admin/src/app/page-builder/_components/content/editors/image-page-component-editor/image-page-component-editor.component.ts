@@ -10,6 +10,8 @@ import { FileParameter } from '@shared/service-proxies/service-proxies';
   styleUrls: ['./image-page-component-editor.component.less']
 })
 export class ImagePageComponentEditorComponent implements OnInit {
+  @Input() cropperAspectRationWidth = 1;
+  @Input() cropperAspectRationHeight = 1;
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
 
   allowedImageExtensions = fileUploadConfiguration.allowedImageExtensions;

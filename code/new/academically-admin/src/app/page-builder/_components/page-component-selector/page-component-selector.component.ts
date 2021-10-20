@@ -4,6 +4,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { PageComponent } from '../../_models/page-component';
 import { TextPageComponent } from '../../_models/text-page-component';
 import { ImagePageComponent } from '../../_models/image-page-component';
+import { HeaderPageComponent } from '../../_models/header-page-component';
 
 @Component({
   selector: 'app-page-component-selector',
@@ -22,6 +23,7 @@ export class PageComponentSelectorComponent extends AppComponentBase implements 
     private _modal: BsModalRef,
   ) {
     super(injector);
+    this.pageComponents.push(new HeaderPageComponent());
     this.pageComponents.push(new TextPageComponent());
     this.pageComponents.push(new ImagePageComponent());
   }

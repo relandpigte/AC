@@ -11,7 +11,9 @@
     </app-page-section-preview>
     <app-text-page-component-preview *ngSwitchCase="'Text'" [pageComponent]="pageContent">
     </app-text-page-component-preview>
-    <app-image-page-component-preview *ngSwitchCase="'Image'" [pageComponent]="pageContent">
+    <app-image-page-component-preview
+      *ngSwitchCase="pageContent.name === 'Image' || pageContent.name === 'Header' ? pageContent.name : ''"
+      [pageComponent]="pageContent">
     </app-image-page-component-preview>
   </div>
 </div>

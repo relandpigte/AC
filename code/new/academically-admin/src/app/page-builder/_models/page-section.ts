@@ -8,7 +8,6 @@ export class PageSection extends PageContent {
 
   constructor() {
     super(MarginType.None);
-    this.setMargins();
     this.name = 'Section';
     this.pageComponents = [];
   }

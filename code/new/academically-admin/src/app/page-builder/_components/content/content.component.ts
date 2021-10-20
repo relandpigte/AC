@@ -24,7 +24,6 @@ export class ContentComponent extends AppComponentBase implements OnInit {
   ) {
     super(injector);
     this.pageSections.push(new PageSection());
-    console.log(this.pageSections);
 
     this._pageBuilderService.pageContent$.subscribe(pageContent => {
       this.selectedPageContent = pageContent;
