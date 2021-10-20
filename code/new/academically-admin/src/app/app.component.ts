@@ -25,13 +25,13 @@ export class AppComponent extends AppComponentBase implements OnInit {
     SignalRAspNetCoreHelper.initSignalR();
 
     abp.event.on('abp.notifications.received', (userNotification) => {
-      abp.notifications.showUiNotifyForUserNotification(userNotification);
+      abp.notifications.showUiNotifyForUserNotification(userNotification, { timer: 10000 });
 
       // Desktop notification
       Push.create('AbpZeroTemplate', {
         body: userNotification.notification.data.message,
-        icon: abp.appPath + 'assets/app-logo-small.png',
-        timeout: 6000,
+        icon: '/assets/img/ac-logo-light.png',
+        timeout: 10000,
         onClick: function () {
           window.focus();
           this.close();

@@ -1,5 +1,9 @@
-﻿using Abp.Configuration;
+﻿using Abp;
+using Abp.Configuration;
+using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.Localization;
+using Abp.Notifications;
 using Abp.Timing;
 using Abp.Timing.Timezone;
 using Abp.UI;
@@ -10,7 +14,9 @@ using Academically.Domain.Enums;
 using Academically.Domain.Services.CalendarEvents;
 using Academically.Domain.Services.Documents;
 using Academically.Emails;
+using Academically.Notifications;
 using Academically.Services.CalendarEvents.Dto;
+using Academically.Services.CalendarEvents.Notifications;
 using Academically.Services.Projects.Dto;
 using Microsoft.EntityFrameworkCore;
 using SourceCloud.Core.Services;
@@ -38,6 +44,7 @@ namespace Academically.Services.CalendarEvents
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly ISettingManager _settingManager;
         private readonly IEmailService _emailService;
+        private readonly INotificationPublisher _notificationPublisher;
         private readonly EmailTemplateHelper _emailTemplateHelper;
 
         public CalendarEventsAppService(
@@ -51,6 +58,7 @@ namespace Academically.Services.CalendarEvents
             IDocumentsDomainService documentsDomainService,
             ISettingManager settingManager,
             IEmailService emailService,
+            INotificationPublisher notificationPublisher,
             EmailTemplateHelper emailTemplateHelper
             )
         {
@@ -64,6 +72,7 @@ namespace Academically.Services.CalendarEvents
             _documentsDomainService = documentsDomainService;
             _settingManager = settingManager;
             _emailService = emailService;
+            _notificationPublisher = notificationPublisher;
             _emailTemplateHelper = emailTemplateHelper;
         }
 
@@ -171,16 +180,18 @@ namespace Academically.Services.CalendarEvents
         {
             User tutor = new User();
             var userIds = new List<long>();
+            var project = await _projectsRepository.GetAsync(input.ProjectId.Value);
             if (input.Type != CalendarEventType.Blocker && input.ProjectId != null)
             {
-                tutor = await UserManager.GetUserByIdAsync(input.TutorId);
+                tutor = await _usersRepository.GetAll()
+                    .Include(e => e.ProfilePictureDocument)
+                    .FirstOrDefaultAsync(e => e.Id == input.TutorId);
                 var projectOffer = await _projectOffersRepository.GetAll()
                     .Where(e => e.ProjectId == input.ProjectId && e.CreatorUserId == input.TutorId && e.IsAccepted)
                     .FirstOrDefaultAsync();
 
                 if (projectOffer == null)
                 {
-                    var project = await _projectsRepository.GetAsync(input.ProjectId.Value);
                     throw new UserFriendlyException(L("BookingFailed"), L("NoProjectOfferBookingDomainErrorMessage", tutor.FullName, project.Name));
                 }
 
@@ -204,6 +215,17 @@ namespace Academically.Services.CalendarEvents
                 case CalendarEventType.RescheduledBooking:
                     break;
             }
+
+            var notificationData = new LocalizableMessageNotificationData(new LocalizableString("NewBookingNotificationMessage", AcademicallyConsts.LocalizationSourceName));
+            notificationData["0"] = tutor.FullName;
+            notificationData["1"] = calendarEvent.Title;
+            notificationData["2"] = project.Name;
+
+            await _notificationPublisher.PublishAsync(
+                NotificationNames.Notifications_CalendarEvents_NewBooking,
+                notificationData,
+                userIds: new[] { new UserIdentifier(tutor.TenantId, tutor.Id) }
+            );
         }
 
         public async Task Update(CalendarEventDto input)
@@ -229,7 +251,39 @@ namespace Academically.Services.CalendarEvents
             rescheduleComment.NewEndTime = input.CalendarEvent.EndTime;
             rescheduleComment.Comments = input.Comments;
             rescheduleComment.CalendarEventId = input.CalendarEvent.Id.Value;
+            rescheduleComment.CreatorUserId = AbpSession.UserId.Value;
             await _rescheduleCommentsRepository.InsertAsync(rescheduleComment);
+
+            var projectOffer = await _projectOffersRepository.GetAll()
+                .Where(e => e.Id == calendarEvent.ProjectOfferId.Value)
+                .Include(e => e.Project)
+                    .ThenInclude(e => e.CreatorUser)
+                .Include(e => e.CreatorUser)
+                .FirstOrDefaultAsync();
+
+            User currentUser;
+            User notificationUser;
+            if (projectOffer.CreatorUserId == AbpSession.UserId.Value)
+            {
+                currentUser = projectOffer.CreatorUser;
+                notificationUser = projectOffer.Project.CreatorUser;
+            }
+            else
+            {
+                currentUser = projectOffer.Project.CreatorUser;
+                notificationUser = projectOffer.CreatorUser;
+            }
+
+            var notificationData = new LocalizableMessageNotificationData(new LocalizableString("BookingRescheduledNotificationMessage", AcademicallyConsts.LocalizationSourceName));
+            notificationData["0"] = currentUser.FullName;
+            notificationData["1"] = calendarEvent.Title;
+            notificationData["2"] = projectOffer.Project.Name;
+
+            await _notificationPublisher.PublishAsync(
+                NotificationNames.Notifications_CalendarEvents_BookingRescheduled,
+                notificationData,
+                userIds: new[] { new UserIdentifier(notificationUser.TenantId, notificationUser.Id) }
+            );
         }
 
         public async Task Accept(Guid id, long tutorId)

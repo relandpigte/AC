@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientJsonpModule } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
-import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -12,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module';
 import { SharedModule } from '@shared/shared.module';
+import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { VerificationsModule } from './_shared/modules/verifications/verifications.module';
 import { NgPipesModule } from 'ngx-pipes';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
@@ -103,11 +103,11 @@ const cookieConfig: NgcCookieConsentConfig = {
     'href': window.location.hostname,
     'policy': 'Cookie Policy'
   }
-}
+};
 
 @NgModule({
   declarations: [
-    //directives
+    // directives
     ChartDirective,
     DragClassUpdaterDirective,
     // components
@@ -168,7 +168,6 @@ const cookieConfig: NgcCookieConsentConfig = {
     ReactiveFormsModule,
     HttpClientModule,
     HttpClientJsonpModule,
-    ModalModule.forChild(),
     BsDropdownModule.forRoot({
       container: 'body',
     }),
@@ -177,6 +176,7 @@ const cookieConfig: NgcCookieConsentConfig = {
     AppRoutingModule,
     ServiceProxyModule,
     SharedModule,
+    AppSharedModule,
     VerificationsModule,
     NgxPaginationModule,
     NgPipesModule,

@@ -7,5 +7,6 @@ namespace Academically.Services.Documents
     public interface IDocumentsAppService : IApplicationService
     {
         Task<string> GetSecuredUrl(Guid id);
+        Task<string> GetProfilePictureUrl(long userId);
     }
 }

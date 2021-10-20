@@ -9,6 +9,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
 import { DateFormatPipe } from './pipes/date-format.pipe';
@@ -20,6 +21,7 @@ import { DocumentUploaderComponent } from './components/document-uploader/docume
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
 import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
 import { ProfilePictureChangerComponent } from './components/profile-picture-changer/profile-picture-changer.component';
+import { NotificationPreviewComponent } from './components/notification-preview/notification-preview.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
     ImageCropperComponent,
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
+    NotificationPreviewComponent,
     DateFormatPipe,
     FixedHeightDirective,
     BottomScrollerDirective,
@@ -46,6 +49,7 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
       container: 'body',
     }),
     TimepickerModule.forRoot(),
+    ModalModule.forRoot(),
   ],
   exports: [
     SharedModule,
@@ -58,6 +62,7 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
     TooltipModule,
     BsDropdownModule,
     TimepickerModule,
+    ModalModule,
     EnumToArrayPipe,
     DateFormatPipe,
     FixedHeightDirective,
@@ -66,6 +71,7 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
     ImageCropperComponent,
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
+    NotificationPreviewComponent,
   ],
 })
 export class AppSharedModule { }

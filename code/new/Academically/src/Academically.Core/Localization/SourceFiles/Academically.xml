@@ -1,6 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="NoRecentNotification">No recent notification</text>
+    <text name="BookingRescheduledNotificationMessage">
+      <![CDATA[
+        <b>{0}</b> rescheduled a session called <b>{1}</b> for the <b>{2}</b> project.
+      ]]>
+    </text>
+    <text name="NewBookingNotificationMessage">
+      <![CDATA[
+        <b>{0}</b> booked a session called <b>{1}</b> for the <b>{2}</b> project.
+      ]]>
+    </text>
     <text name="NoContentSelected">No content selected</text>
     <text name="ConfigureComponentInstructions">Configure this comopnent on the right panel</text>
     <text name="NameYourNewUnit">Name your new unit</text>

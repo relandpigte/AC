@@ -2,6 +2,7 @@
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Academically.Authorization;
+using Academically.Services.CalendarEvents.Notifications;
 
 namespace Academically
 {
@@ -13,6 +14,7 @@ namespace Academically
         public override void PreInitialize()
         {
             Configuration.Authorization.Providers.Add<AcademicallyAuthorizationProvider>();
+            Configuration.Notifications.Providers.Add<CalendarEventsNotificationProvider>();
         }
 
         public override void Initialize()

@@ -1,15 +1,9 @@
-<nav class="navbar navbar-vertical navbar-vertical-sm fixed-left navbar-expand-md {{ navigationColor }}" id="sidebarSmall">
+<nav class="navbar navbar-vertical navbar-vertical-sm fixed-left navbar-expand-md {{ navigationColor }}"
+  id="sidebarSmall">
   <div class="container-fluid">
     <!-- Toggler -->
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#sidebarSmallCollapse"
-      aria-controls="sidebarSmallCollapse"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebarSmallCollapse"
+      aria-controls="sidebarSmallCollapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -23,15 +17,8 @@
       <!-- Dropdown -->
       <div class="dropdown">
         <!-- Toggle -->
-        <a
-          href="javascript:;"
-          id="sidebarSmallIcon"
-          class="dropdown-toggle"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
+        <a href="javascript:;" id="sidebarSmallIcon" class="dropdown-toggle" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
           <div class="avatar avatar-sm avatar-online">
             <img [src]="getProfilePicture(user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
           </div>
@@ -67,24 +54,14 @@
         </a>
 
         <!-- Notifications -->
-        <a href="#" class="navbar-user-link mb-3" data-toggle="modal">
-          <span class="icon active">
-            <i class="fe fe-bell"></i>
-          </span>
-        </a>
+
+        <app-notification-preview [isModal]="true" buttonClass="mb-3"></app-notification-preview>
 
         <!-- Dropup -->
         <div class="dropright">
           <!-- Toggle -->
-          <a
-            href="javascript:;"
-            id="sidebarSmallIconCopy"
-            class="dropdown-toggle"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
+          <a href="javascript:;" id="sidebarSmallIconCopy" class="dropdown-toggle" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
             <div class="avatar avatar-sm avatar-online">
               <img [src]="getProfilePicture(user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
             </div>

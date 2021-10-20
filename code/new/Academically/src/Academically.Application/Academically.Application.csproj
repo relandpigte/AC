@@ -43,6 +43,8 @@
     <Folder Include="Services\CourseSections\Dto\" />
     <Folder Include="Services\CourseSectionPages\" />
     <Folder Include="Services\CourseSectionPages\Dto\" />
+    <Folder Include="Services\CalendarEvents\Notifications\" />
+    <Folder Include="Services\Notifications\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Services\Projects\" />
@@ -60,5 +62,7 @@
     <None Remove="Services\CourseSections\Dto\" />
     <None Remove="Services\CourseSectionPages\" />
     <None Remove="Services\CourseSectionPages\Dto\" />
+    <None Remove="Services\CalendarEvents\Notifications\" />
+    <None Remove="Services\Notifications\" />
   </ItemGroup>
 </Project>

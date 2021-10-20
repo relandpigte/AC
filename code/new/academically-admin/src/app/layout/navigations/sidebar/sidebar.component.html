@@ -1,15 +1,8 @@
 <nav class="navbar navbar-vertical fixed-left navbar-expand-md {{ navigationColor }}" id="sidebar">
   <div class="container-fluid">
     <!-- Toggler -->
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#sidebarCollapse"
-      aria-controls="sidebarCollapse"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebarCollapse"
+      aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -23,15 +16,8 @@
       <!-- Dropdown -->
       <div class="dropdown">
         <!-- Toggle -->
-        <a
-          href="javascript:;"
-          id="sidebarIcon"
-          class="dropdown-toggle"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
+        <a href="javascript:;" id="sidebarIcon" class="dropdown-toggle" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
           <div class="avatar avatar-sm avatar-online">
             <img [src]="getProfilePicture(user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
           </div>
@@ -49,7 +35,8 @@
       <!-- Form -->
       <form class="mt-4 mb-3 d-md-none">
         <div class="input-group input-group-rounded input-group-merge">
-          <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search" aria-label="Search" />
+          <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search"
+            aria-label="Search" />
           <div class="input-group-prepend">
             <div class="input-group-text">
               <span class="fe fe-search"></span>
@@ -64,10 +51,12 @@
       <div class="mt-auto"></div>
 
       <!-- Customize -->
-      <button class="btn btn-block btn-primary mb-4" (click)="onCustomizeClick()"><i class="fe fe-sliders mr-2"></i> Customize</button>
+      <button class="btn btn-block btn-primary mb-4" (click)="onCustomizeClick()"><i class="fe fe-sliders mr-2"></i>
+        Customize</button>
 
       <!-- User (md) -->
-      <div class="navbar-user d-none d-md-flex" id="sidebarUser" *ngIf="themeSettings.navigationPosition !== NavigationPosition.Combo">
+      <div class="navbar-user d-none d-md-flex" id="sidebarUser"
+        *ngIf="themeSettings.navigationPosition !== NavigationPosition.Combo">
         <!-- Messages -->
         <a [routerLink]="['/app/conversations']" class="navbar-user-link" data-toggle="modal">
           <span class="icon">
@@ -78,15 +67,8 @@
         <!-- Dropup -->
         <div class="dropup">
           <!-- Toggle -->
-          <a
-            href="javascript:;"
-            id="sidebarIconCopy"
-            class="dropdown-toggle"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
+          <a href="javascript:;" id="sidebarIconCopy" class="dropdown-toggle" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
             <div class="avatar avatar-sm avatar-online">
               <img [src]="getProfilePicture(user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
             </div>
@@ -99,11 +81,7 @@
         </div>
 
         <!-- Notifications -->
-        <a href="#sidebarModalSearch" class="navbar-user-link" data-toggle="modal">
-          <span class="icon active">
-            <i class="fe fe-bell"></i>
-          </span>
-        </a>
+        <app-notification-preview [isModal]="true"></app-notification-preview>
       </div>
     </div>
     <!-- / .navbar-collapse -->

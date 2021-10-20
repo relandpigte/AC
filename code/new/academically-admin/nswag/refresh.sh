@@ -1,1 +1,1 @@
-../node_modules/.bin/nswag run service.config.nswag
+../node_modules/.bin/nswag run service.config.nswag /runtime:NetCore31

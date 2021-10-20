@@ -19,5 +19,16 @@ namespace Academically.Services.Documents
         {
             return await _documentsDomainService.GetFileUrlAsync(id);
         }
+
+        public async Task<string> GetProfilePictureUrl(long userId)
+        {
+            var user = await UserManager.GetUserByIdAsync(userId);
+            if (user.ProfilePictureDocumentId.HasValue)
+            {
+                return await GetSecuredUrl(user.ProfilePictureDocumentId.Value);
+            }
+
+            return String.Empty;
+        }
     }
 }

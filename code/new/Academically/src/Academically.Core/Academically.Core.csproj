@@ -24,11 +24,15 @@
     <Folder Include="Domain\Services\PhoneVerifications\" />
     <Folder Include="Domain\Services\Documents\" />
     <Folder Include="Domain\Services\PasswordResets\" />
+    <Folder Include="Notifications\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SourceCloud.Provider.Aws\SourceCloud.Provider.Aws.csproj" />
     <ProjectReference Include="..\SourceCloud.Provider.ITagg\SourceCloud.Provider.ITagg.csproj" />
     <ProjectReference Include="..\SourceCloud.Provider.Stripe\SourceCloud.Provider.Stripe.csproj" />
     <ProjectReference Include="..\SourceCloud.Provider.GetAddress\SourceCloud.Provider.GetAddress.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Notifications\" />
   </ItemGroup>
 </Project>
