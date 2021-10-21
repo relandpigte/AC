@@ -17,3 +17,5 @@ import 'core-js/es/symbol';
 import 'core-js/es/reflect';
 import { finalize } from 'rxjs/operators';
 import 'zone.js/dist/zone';
+
+(window as any).global = window;

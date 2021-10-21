@@ -1,7 +1,10 @@
 <ng-container *ngIf="pageSection.pageComponents && pageSection.pageComponents.length; else noPageComponent">
-  <app-page-content-preview *ngFor="let pageComponent of pageSection.pageComponents" [pageContent]="pageComponent"
-    [isActive]="selectedPageComponent === pageComponent">
-  </app-page-content-preview>
+  <div dragula="'COMPONENTS'" [(dragulaModel)]='pageSection.pageComponents'>
+    <div *ngFor="let pageComponent of pageSection.pageComponents">
+      <app-page-content-preview [pageContent]="pageComponent" [isActive]="selectedPageComponent === pageComponent">
+      </app-page-content-preview>
+    </div>
+  </div>
 </ng-container>
 <ng-template #noPageComponent>
   <div class="no-page-component">

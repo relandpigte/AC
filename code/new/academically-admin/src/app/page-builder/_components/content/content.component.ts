@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, OnDestroy } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PageSection } from '@app/page-builder/_models/page-section';
 import { PageContent } from '@app/page-builder/_models/page-content';
@@ -6,13 +6,14 @@ import { PageBuilderService } from '@app/page-builder/_services/page-builder.ser
 import { CourseSectionPageDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { PageComponent } from '@app/page-builder/_models/page-component';
+import { DragulaService } from 'ng2-dragula';
 
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
   styleUrls: ['./content.component.less']
 })
-export class ContentComponent extends AppComponentBase implements OnInit {
+export class ContentComponent extends AppComponentBase implements OnInit, OnDestroy {
   courseSectionPage = new CourseSectionPageDto();
   pageSections: PageSection[] = [];
   selectedPageSection: PageSection;
@@ -21,6 +22,7 @@ export class ContentComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _pageBuilderService: PageBuilderService,
+    private _dragulaService: DragulaService,
   ) {
     super(injector);
     this.pageSections.push(new PageSection());
@@ -39,6 +41,10 @@ export class ContentComponent extends AppComponentBase implements OnInit {
           this.selectedPageSection = pageContent as PageSection;
         }
       }
+    });
+
+    this._dragulaService.createGroup('SECTIONS', {
+      moves: (el, source, handle) => handle.className === 'page-section-actions',
     });
   }
 
@@ -70,6 +76,10 @@ export class ContentComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this._dragulaService.destroy('SECTIONS');
   }
 
   onSelectParent(): void {

@@ -1,9 +1,11 @@
 <div class="row">
   <div class="col-8">
-    <div class="card" *ngFor="let pageSection of pageSections">
-      <div class="card-body p-0">
-        <app-page-content-preview [pageContent]="pageSection">
-        </app-page-content-preview>
+    <div dragula="SECTIONS" [(dragulaModel)]='pageSections'>
+      <div class="card" *ngFor="let pageSection of pageSections">
+        <div class="card-body p-0">
+          <app-page-content-preview [pageContent]="pageSection">
+          </app-page-content-preview>
+        </div>
       </div>
     </div>
     <div class="actions">

@@ -1,5 +1,5 @@
 <ul *ngIf="pageSection.pageComponents && pageSection.pageComponents.length else noSelectedPageComponent"
-  class="list-group list-group-sm">
+  class="list-group list-group-sm" dragula="EDITOR_COMPONENTS" [(dragulaModel)]="pageSection.pageComponents">
   <li (click)="$event.preventDefault(); onSelectComponent(pageComponent);"
     *ngFor="let pageComponent of pageSection.pageComponents" class="list-group-item cursor-pointer">
     <a href="#">{{ pageComponent.name }}</a>

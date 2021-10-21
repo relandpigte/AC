@@ -10,6 +10,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { DragulaModule } from 'ng2-dragula';
 
 import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
 import { DateFormatPipe } from './pipes/date-format.pipe';
@@ -50,6 +51,7 @@ import { NotificationPreviewComponent } from './components/notification-preview/
     }),
     TimepickerModule.forRoot(),
     ModalModule.forRoot(),
+    DragulaModule.forRoot()
   ],
   exports: [
     SharedModule,
@@ -63,6 +65,7 @@ import { NotificationPreviewComponent } from './components/notification-preview/
     BsDropdownModule,
     TimepickerModule,
     ModalModule,
+    DragulaModule,
     EnumToArrayPipe,
     DateFormatPipe,
     FixedHeightDirective,
