@@ -22,6 +22,8 @@ namespace Academically.Services.Projects
         private readonly IRepository<Project, Guid> _projectsRepository;
         private readonly IRepository<ProjectOffer, Guid> _projectOffersRepository;
         private readonly IRepository<CalendarEvent, Guid> _calendarEventsRepository;
+        private readonly IRepository<ResearchMethod, Guid> _researchMethodsRepository;
+        private readonly IRepository<Subject, Guid> _subjectsRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
 
         public ProjectsAppService(
@@ -29,12 +31,16 @@ namespace Academically.Services.Projects
             IRepository<Project, Guid> projectsRepository,
             IRepository<ProjectOffer, Guid> projectOffersRepository,
             IRepository<CalendarEvent, Guid> calendarEventsRepository,
+            IRepository<ResearchMethod, Guid> researchMethodsRepository,
+            IRepository<Subject, Guid> subjectsRepository,
             IDocumentsDomainService documentsDomainService
             )
         {
             _projectsRepository = projectsRepository;
             _projectOffersRepository = projectOffersRepository;
             _calendarEventsRepository = calendarEventsRepository;
+            _researchMethodsRepository = researchMethodsRepository;
+            _subjectsRepository = subjectsRepository;
             _documentsDomainService = documentsDomainService;
             _userManager = userManager;
         }
@@ -75,6 +81,96 @@ namespace Academically.Services.Projects
             }
 
             return new PagedResultDto<ProjectDto>(totalCount, projects);
+        }
+
+        public async Task<IEnumerable<string>> GetAcademicLevels()
+        {
+            return await Task.FromResult(new List<string>()
+            {
+                "Secondary School",
+                "Pre-degree",
+                "Undergraduate",
+                "Graduate",
+                "Postgraduate",
+                "Doctorate",
+            });
+        }
+
+        public async Task<IEnumerable<string>> GetAcademicLevelQualifications(string academicLevel)
+        {
+            var qualifications = new List<string>();
+            switch (academicLevel)
+            {
+                case "Secondary School":
+                    qualifications = new List<string>()
+                    {
+                        "iGCSE",
+                        "GCSE",
+                    };
+                    break;
+                case "Pre-degree":
+                    qualifications = new List<string>()
+                    {
+                        "A Level",
+                        "AP",
+                        "IB",
+                    };
+                    break;
+                case "Undergraduate":
+                    qualifications = new List<string>()
+                    {
+                        "HNC",
+                        "HND",
+                        "Foundation Degree",
+                    };
+                    break;
+                case "Graduate":
+                    qualifications = new List<string>()
+                    {
+                        "BA",
+                        "BSc",
+                        "BEng",
+                    };
+                    break;
+                case "Postgraduate":
+                    qualifications = new List<string>()
+                    {
+                        "MSc",
+                        "MA",
+                        "MEng",
+                        "MPhil",
+                        "PGCE",
+                        "PGDip",
+                        "PGCert",
+                    };
+                    break;
+                case "Doctorate":
+                    qualifications = new List<string>()
+                    {
+                        "PhD",
+                        "DPhil",
+                    };
+                    break;
+            }
+            return await Task.FromResult(qualifications);
+        }
+
+        public async Task<IEnumerable<string>> GetResearchMethods()
+        {
+            return await _researchMethodsRepository.GetAll()
+                .Select(e => e.Name)
+                .Distinct()
+                .OrderBy(e => e)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<string>> GetSubjects()
+        {
+            return await _subjectsRepository.GetAll()
+                .Select(e => e.Name)
+                .Distinct()
+                .OrderBy(e => e)
+                .ToListAsync();
         }
 
         public async Task<ProjectDto> GetAsync(Guid id)

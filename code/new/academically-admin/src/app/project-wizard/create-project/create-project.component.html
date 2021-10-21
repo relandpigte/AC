@@ -8,7 +8,7 @@
     <div class="col-md-12 header mt-md-5">
       <div class="header-body">
         <h1 class="header-title mb-4">
-          {{ createProjectDto.serviceNameLevel3 }}
+          {{ model.serviceNameLevel3 }}
         </h1>
       </div>
     </div>
@@ -20,20 +20,102 @@
           <div class="col-md-7 header">
             <form class="row" autocomplete="off" #createEditForm="ngForm" (ngSubmit)="onFormSubmit()">
               <div class="col-md-12">
-                <div class="form-group m-1 p-3 required">
+                <div class="form-group required">
                   <label class="col-form-label" for="ProjectName">{{ 'ProjectName' | localize }}</label>
-                  <input [(ngModel)]="createProjectDto.name" id="ProjectName" name="ProjectName" type="text"
-                    class="form-control" #projectNameModel="ngModel" #projectNameEl required />
+                  <input [(ngModel)]="model.name" id="ProjectName" name="ProjectName" type="text" class="form-control"
+                    #projectNameModel="ngModel" #projectNameEl required />
                   <abp-validation-summary [control]="projectNameModel" [controlEl]="projectNameEl">
                   </abp-validation-summary>
                 </div>
+
+                <div class="form-group required">
+                  <label class="col-form-label" for="Description">{{ 'Description' | localize }}</label>
+                  <textarea [(ngModel)]="model.description" id="Description" name="Description" class="form-control"
+                    #descriptionModel="ngModel" #descriptionEl required rows="4"></textarea>
+                  <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl">
+                  </abp-validation-summary>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-6 required">
+                    <label class="col-form-label" for="AcademicLevel">{{ 'AcademicLevel' | localize}}</label>
+                    <select [(ngModel)]="model.academicLevel" select2 [defaultValue]="model.academicLevel"
+                      (select2ValueChange)="onAcademicLevelSelect($event)" name="AcademicLevel" id="AcademicLevel"
+                      class="custom-select" data-toggle="select" #academicLevelModel="ngModel" #academicLevelEl
+                      required>
+                      <option *ngFor="let academicLevel of academicLevels" [value]="academicLevel">
+                        {{ academicLevel }}
+                      </option>
+                    </select>
+                    <abp-validation-summary [control]="academicLevelModel" [controlEl]="academicLevelEl">
+                    </abp-validation-summary>
+                  </div>
+
+                  <div class="form-group col-6 required">
+                    <label class="col-form-label" for="Qualification">{{ 'Qualification' | localize}}</label>
+                    <select [(ngModel)]="model.qualification" select2 [defaultValue]="model.qualification"
+                      (select2ValueChange)="model.qualification = $event" name="Qualification" id="Qualification"
+                      class="custom-select" data-toggle="select" #qualificationModel="ngModel" #qualificationEl
+                      required>
+                      <option *ngFor="let qualification of academicLevelQualifications" [value]="qualification">
+                        {{ qualification }}
+                      </option>
+                    </select>
+                    <abp-validation-summary [control]="qualificationModel" [controlEl]="qualificationEl">
+                    </abp-validation-summary>
+                  </div>
+                </div>
+
+                <div *ngIf="showMethodology" class="form-group">
+                  <label class="col-form-label" for="Methodology">{{ 'Methodology' | localize}}</label>
+                  <select [(ngModel)]="model.methodology" select2 [defaultValue]="model.methodology"
+                    (select2ValueChange)="model.methodology = $event" name="Methodology" id="Methodology"
+                    class="custom-select" data-toggle="select" #methodologyModel="ngModel" #methodologyEl>
+                    <option *ngFor="let methodology of methodologies" [value]="methodology">
+                      {{ methodology }}
+                    </option>
+                  </select>
+                  <abp-validation-summary [control]="methodologyModel" [controlEl]="methodologyEl">
+                  </abp-validation-summary>
+                </div>
+
+
+                <div class="form-group required">
+                  <label class="col-form-label" for="SubjectArea">{{ 'SubjectArea' | localize}}</label>
+                  <select [(ngModel)]="model.subjectArea" select2 [defaultValue]="model.subjectArea"
+                    (select2ValueChange)="model.subjectArea = $event" name="SubjectArea" id="SubjectArea"
+                    class="custom-select" data-toggle="select" #subjectAreaModel="ngModel" #subjectAreaEl required>
+                    <option *ngFor="let methodology of methodologies" [value]="methodology">
+                      {{ methodology }}
+                    </option>
+                  </select>
+                  <abp-validation-summary [control]="subjectAreaModel" [controlEl]="subjectAreaEl">
+                  </abp-validation-summary>
+                </div>
+
+                <!-- <div class="form-group required">
+                  <label class="col-form-label" for="SubjectKeywords">{{ 'SubjectKeywords' | localize}}</label>
+                  <input [(ngModel)]="this.model.subjectKeyWords" #subjectKeywowrdsModel="ngModel" #subjectKeywowrdsEl
+                    class="form-control" type="text" id="SubjectKeywords" name="SubjectKeywords"
+                    typeaheadOptionField="name" [typeahead]="subjectKeywordsTypeaheadSource" [typeaheadAsync]="true"
+                    [typeaheadOptionsLimit]="10" (typeaheadOnSelect)="onPublicationTagSelect($event.item)"
+                    container="body" (keydown)="onPublicationTagKeyDown($event)" />
+                  <div class="ac-alerts">
+                    <div *ngFor="let tag of userPublication.tags" class="alert alert-info alert-dismissible ac-alert"
+                      role="alert">
+                      {{ tag }}
+                      <button (click)="onRemovePublicationTagClick(tag)" type="button" class="close"
+                        data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                    </div>
+                  </div>
+                </div> -->
               </div>
             </form>
           </div>
           <div class="col-md-7">
-            <div class="p-3 m-1">
-              <app-availability-setting></app-availability-setting>
-            </div>
+            <app-availability-setting></app-availability-setting>
           </div>
         </div>
       </div>
