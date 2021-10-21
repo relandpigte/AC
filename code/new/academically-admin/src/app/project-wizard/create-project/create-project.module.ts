@@ -5,10 +5,14 @@ import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
 import { CreateProjectComponent } from './create-project.component';
+import { AvailabilitySettingComponent } from './_components/availability-setting/availability-setting.component';
+import { CreateEditAvailabilityComponent } from './_components/create-edit-availability/create-edit-availability.component';
 
 @NgModule({
   declarations: [
     CreateProjectComponent,
+    AvailabilitySettingComponent,
+    CreateEditAvailabilityComponent,
   ],
   imports: [
     CommonModule,
