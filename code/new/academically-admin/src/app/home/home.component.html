@@ -13,7 +13,7 @@
           </div>
           <div style="display: inline-flex;" class="col-md-auto col-12">
             <div class=" btn-group btn-block ml-md-2 inline" dropdown>
-              <button dropdownToggle type="button" class="btn btn-primary  dropdown-toggle">
+              <button *ngIf="permission.isGranted('Pages.Courses')" dropdownToggle type="button" class="btn btn-primary  dropdown-toggle">
                 {{ 'Create' | localize}} <span class="caret"></span>
               </button>
               <ul *dropdownMenu class="dropdown-menu" role="menu">
@@ -21,7 +21,7 @@
               </ul>
             </div>
 
-            <a [routerLink]="['/app/new-project']" class="btn btn-primary col-md-7"
+            <a [routerLink]="['/app/new-project']" class="btn btn-primary col-md-12"
               *ngIf="permission.isGranted('Pages.ServiceWizard.CreateProject')">
               {{ 'CreateNewProject' | localize}}
             </a>
