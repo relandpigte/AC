@@ -144,6 +144,10 @@ export abstract class AppComponentBase implements OnDestroy {
     return this.convertMomentToDate(date).toISOString();
   }
 
+  convertMomentToDateAgo(date: Moment): string {
+    return moment(date).fromNow();
+  }
+
   protected diffDatesSeconds(date1: Date, date2: Date): number {
     const diffDatesSeconds = date1.getTime() - date2.getTime();
     const diffSeconds = diffDatesSeconds / 1000;

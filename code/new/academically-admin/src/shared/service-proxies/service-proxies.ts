@@ -475,6 +475,188 @@ export class AccountServiceProxy {
 }
 
 @Injectable()
+export class AuditLogsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    get(): Observable<AuditLogsDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/AuditLogs/Get";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditLogsDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditLogsDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<AuditLogsDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(AuditLogsDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditLogsDto[]>(<any>null);
+    }
+
+    /**
+     * @param methodName (optional) 
+     * @return Success
+     */
+    getMethodNameType(methodName: string | undefined): Observable<AuditLogsType> {
+        let url_ = this.baseUrl + "/api/services/app/AuditLogs/GetMethodNameType?";
+        if (methodName === null)
+            throw new Error("The parameter 'methodName' cannot be null.");
+        else if (methodName !== undefined)
+            url_ += "methodName=" + encodeURIComponent("" + methodName) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetMethodNameType(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetMethodNameType(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditLogsType>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditLogsType>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetMethodNameType(response: HttpResponseBase): Observable<AuditLogsType> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditLogsType>(<any>null);
+    }
+
+    /**
+     * @param serviceName (optional) 
+     * @return Success
+     */
+    getServiceNameType(serviceName: string | undefined): Observable<string> {
+        let url_ = this.baseUrl + "/api/services/app/AuditLogs/GetServiceNameType?";
+        if (serviceName === null)
+            throw new Error("The parameter 'serviceName' cannot be null.");
+        else if (serviceName !== undefined)
+            url_ += "serviceName=" + encodeURIComponent("" + serviceName) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetServiceNameType(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetServiceNameType(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetServiceNameType(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
+    }
+}
+
+@Injectable()
 export class CalendarEventsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -12767,6 +12949,95 @@ export interface IAssembly {
     securityRuleSet: SecurityRuleSet;
 }
 
+export class AuditLogsDto implements IAuditLogsDto {
+    id: number;
+    executionTime: moment.Moment;
+    methodName: string | undefined;
+    serviceName: string | undefined;
+    userId: number | undefined;
+    impersonatorTenantId: number | undefined;
+    parameters: string | undefined;
+    auditLogsType: AuditLogsType;
+    servicesName: ServicesNameType;
+
+    constructor(data?: IAuditLogsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.executionTime = _data["executionTime"] ? moment(_data["executionTime"].toString()) : <any>undefined;
+            this.methodName = _data["methodName"];
+            this.serviceName = _data["serviceName"];
+            this.userId = _data["userId"];
+            this.impersonatorTenantId = _data["impersonatorTenantId"];
+            this.parameters = _data["parameters"];
+            this.auditLogsType = _data["auditLogsType"];
+            this.servicesName = _data["servicesName"];
+        }
+    }
+
+    static fromJS(data: any): AuditLogsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditLogsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["executionTime"] = this.executionTime ? this.executionTime.toISOString() : <any>undefined;
+        data["methodName"] = this.methodName;
+        data["serviceName"] = this.serviceName;
+        data["userId"] = this.userId;
+        data["impersonatorTenantId"] = this.impersonatorTenantId;
+        data["parameters"] = this.parameters;
+        data["auditLogsType"] = this.auditLogsType;
+        data["servicesName"] = this.servicesName;
+        return data; 
+    }
+
+    clone(): AuditLogsDto {
+        const json = this.toJSON();
+        let result = new AuditLogsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAuditLogsDto {
+    id: number;
+    executionTime: moment.Moment;
+    methodName: string | undefined;
+    serviceName: string | undefined;
+    userId: number | undefined;
+    impersonatorTenantId: number | undefined;
+    parameters: string | undefined;
+    auditLogsType: AuditLogsType;
+    servicesName: ServicesNameType;
+}
+
+/** 0 = Authenticated 1 = Created 2 = Edited 3 = Deleted 4 = Others 5 = Accepted 6 = Approved 7 = Decline 8 = Cancelled 9 = Reschedule */
+export enum AuditLogsType {
+    Authenticated = 0,
+    Created = 1,
+    Edited = 2,
+    Deleted = 3,
+    Others = 4,
+    Accepted = 5,
+    Approved = 6,
+    Decline = 7,
+    Cancelled = 8,
+    Reschedule = 9,
+}
+
 export class AuthenticateModel implements IAuthenticateModel {
     userNameOrEmailAddress: string;
     password: string;
@@ -18980,6 +19251,15 @@ export interface IServiceMappingDto {
     node1Id: string | undefined;
     node2Id: string | undefined;
     node3Id: string | undefined;
+}
+
+/** 0 = CalendarEvents 1 = ProjectOffers 2 = Projects 3 = CourseSections 4 = Courses */
+export enum ServicesNameType {
+    CalendarEvents = 0,
+    ProjectOffers = 1,
+    Projects = 2,
+    CourseSections = 3,
+    Courses = 4,
 }
 
 export class SessionCandidateDto implements ISessionCandidateDto {

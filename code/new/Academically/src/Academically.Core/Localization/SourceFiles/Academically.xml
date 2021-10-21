@@ -1209,5 +1209,18 @@
     <text name="Duplicate">Duplicate</text>
     <text name="DeleteCourseSection">Are you sure want to delete Course Section</text>
     <text name="SuccessfullyDuplicateCreated">Successfully Duplicate Created</text>
+    <text name="Youhave">You have</text>
+    <text name="created">created</text>
+    <text name="edited">edited</text>
+    <text name="deleted">deleted</text>
+    <text name="accepted">accepted</text>
+    <text name="LogsCourseSections">Course section</text>
+    <text name="LogsTokenAuth">Logged in</text>
+    <text name="LogsCalendarEvents">Calender event</text>
+    <text name="LogsProjectOffers">Project offer</text>
+    <text name="LogsProjects">Project</text>
+    <text name="LogsCourses">Course</text>
+    <text name="New">New</text>
+
   </texts>
 </localizationDictionary>

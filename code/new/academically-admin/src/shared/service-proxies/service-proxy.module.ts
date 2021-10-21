@@ -54,6 +54,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.CourseSectionsServiceProxy,
         ApiServiceProxies.CourseSectionPagesServiceProxy,
         ApiServiceProxies.NotificationsServiceProxy,
+        ApiServiceProxies.AuditLogsServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })
