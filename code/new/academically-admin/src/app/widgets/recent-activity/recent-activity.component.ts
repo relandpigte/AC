@@ -1,5 +1,5 @@
 import { Component, OnInit, Injector } from '@angular/core';
-import { AuditLogsDto, AuditLogsServiceProxy, AuditLogsType } from '@shared/service-proxies/service-proxies';
+import { AuditLogsDto, AuditLogsServiceProxy, AuditLogsType, ServicesNameType } from '@shared/service-proxies/service-proxies';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/app-component-base';
 
@@ -12,6 +12,7 @@ export class RecentActivityComponent extends AppComponentBase implements OnInit 
   auditlogs: AuditLogsDto[];
   isLoading = false;
   AuditLogsType = AuditLogsType
+  ServicesNameType = ServicesNameType
   constructor(
     injector: Injector,
     private _auditLogsService: AuditLogsServiceProxy,
@@ -34,5 +35,26 @@ export class RecentActivityComponent extends AppComponentBase implements OnInit 
       .subscribe(auditlogs => {
         this.auditlogs = auditlogs;
       });
+  }
+  jsonFilter(jsonString, inputKey): string {
+    const jsonObj = JSON.parse(jsonString)
+    var result;
+    if(jsonObj['input']){
+      result=this.findKeyJsonObj(jsonObj['input'],inputKey)
+    }
+    else if (jsonObj['inputs']){
+      jsonObj['inputs'].forEach(element => {
+        result=this.findKeyJsonObj(element,inputKey)
+      });
+    }
+    return (result? "\""+result+"\"":"")
+  }
+  findKeyJsonObj(jsonObj,inputKey): string {
+    const keys = Object.keys(jsonObj);
+      for(let key of keys){
+        if (key === inputKey) {
+          return jsonObj[inputKey]
+        }
+      }
   }
 }

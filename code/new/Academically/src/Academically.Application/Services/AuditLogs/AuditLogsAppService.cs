@@ -14,6 +14,7 @@ namespace Academically.Services.AuditLogs
     public class AuditLogsAppService : AcademicallyAppServiceBase, IAuditLogsAppService
     {
         private readonly IRepository<Academically.Domain.Entities.AuditLogs> _auditLogsRepository;
+
         public AuditLogsAppService(IRepository<Academically.Domain.Entities.AuditLogs> auditLogsRepository)
         {
             _auditLogsRepository = auditLogsRepository;
@@ -83,6 +84,8 @@ namespace Academically.Services.AuditLogs
 
                 case "Cancel":
                     return AuditLogsType.Cancelled;
+                case "Reschedule":
+                     return AuditLogsType.Reschedule;
 
                 default:
                     return AuditLogsType.Others;

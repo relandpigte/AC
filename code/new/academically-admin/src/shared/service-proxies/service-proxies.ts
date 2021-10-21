@@ -12636,8 +12636,8 @@ export class AuditLogsDto implements IAuditLogsDto {
     userId: number | undefined;
     impersonatorTenantId: number | undefined;
     parameters: string | undefined;
-    message: string | undefined;
     auditLogsType: AuditLogsType;
+    servicesName: ServicesNameType;
 
     constructor(data?: IAuditLogsDto) {
         if (data) {
@@ -12657,8 +12657,8 @@ export class AuditLogsDto implements IAuditLogsDto {
             this.userId = _data["userId"];
             this.impersonatorTenantId = _data["impersonatorTenantId"];
             this.parameters = _data["parameters"];
-            this.message = _data["message"];
             this.auditLogsType = _data["auditLogsType"];
+            this.servicesName = _data["servicesName"];
         }
     }
 
@@ -12678,8 +12678,8 @@ export class AuditLogsDto implements IAuditLogsDto {
         data["userId"] = this.userId;
         data["impersonatorTenantId"] = this.impersonatorTenantId;
         data["parameters"] = this.parameters;
-        data["message"] = this.message;
         data["auditLogsType"] = this.auditLogsType;
+        data["servicesName"] = this.servicesName;
         return data; 
     }
 
@@ -12699,11 +12699,11 @@ export interface IAuditLogsDto {
     userId: number | undefined;
     impersonatorTenantId: number | undefined;
     parameters: string | undefined;
-    message: string | undefined;
     auditLogsType: AuditLogsType;
+    servicesName: ServicesNameType;
 }
 
-/** 0 = Authenticated 1 = Created 2 = Edited 3 = Deleted 4 = Others 5 = Accepted 6 = Approved 7 = Decline */
+/** 0 = Authenticated 1 = Created 2 = Edited 3 = Deleted 4 = Others 5 = Accepted 6 = Approved 7 = Decline 8 = Cancelled 9 = Reschedule */
 export enum AuditLogsType {
     Authenticated = 0,
     Created = 1,
@@ -12713,6 +12713,8 @@ export enum AuditLogsType {
     Accepted = 5,
     Approved = 6,
     Decline = 7,
+    Cancelled = 8,
+    Reschedule = 9,
 }
 
 export class AuthenticateModel implements IAuthenticateModel {
@@ -17081,6 +17083,15 @@ export interface IServiceMappingDto {
     node1Id: string | undefined;
     node2Id: string | undefined;
     node3Id: string | undefined;
+}
+
+/** 0 = CalendarEvents 1 = ProjectOffers 2 = Projects 3 = CourseSections 4 = Courses */
+export enum ServicesNameType {
+    CalendarEvents = 0,
+    ProjectOffers = 1,
+    Projects = 2,
+    CourseSections = 3,
+    Courses = 4,
 }
 
 export class SessionCandidateDto implements ISessionCandidateDto {

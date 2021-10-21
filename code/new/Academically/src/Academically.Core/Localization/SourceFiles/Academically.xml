@@ -1202,9 +1202,13 @@
     <text name="edited">edited</text>
     <text name="deleted">deleted</text>
     <text name="accepted">accepted</text>
-    <text name="CourseSections">Course section</text>
-    <text name="TokenAuth">Logged in</text>
-    <text name="CalendarEvents">Calender event</text>
-    <text name="ProjectOffers">Project Offer</text>
+    <text name="LogsCourseSections">Course section</text>
+    <text name="LogsTokenAuth">Logged in</text>
+    <text name="LogsCalendarEvents">Calender event</text>
+    <text name="LogsProjectOffers">Project offer</text>
+    <text name="LogsProjects">Project</text>
+    <text name="LogsCourses">Course</text>
+    <text name="New">New</text>
+
   </texts>
 </localizationDictionary>

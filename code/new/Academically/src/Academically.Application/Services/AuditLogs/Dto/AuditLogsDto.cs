@@ -16,5 +16,7 @@ namespace Academically.Services.AuditLogs.Dto
         public int? ImpersonatorTenantId { get; set; }
         public string Parameters { get; set; }
         public AuditLogsType AuditLogsType { get; set; }
+        public ServicesNameType ServicesName { get; set; }
+
     }
 }

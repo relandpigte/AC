@@ -14,6 +14,7 @@ namespace Academically.Domain.Enums
         Accepted,
         Approved,
         Decline,
-        Cancelled
+        Cancelled,
+        Reschedule
     }
 }
