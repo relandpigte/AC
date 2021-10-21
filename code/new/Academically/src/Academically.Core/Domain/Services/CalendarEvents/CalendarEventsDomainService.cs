@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Domain.Uow;
 
 namespace Academically.Domain.Services.CalendarEvents
 {
@@ -51,6 +52,7 @@ namespace Academically.Domain.Services.CalendarEvents
             await _calendarEventsRepository.InsertAsync(calendarEvent);
         }
 
+        [UnitOfWork]
         public async Task UpdateAsync(CalendarEvent calendarEvent)
         {
             var userCalendarEvents = await _userCalendarEventsRepository.GetAll()
@@ -66,6 +68,7 @@ namespace Academically.Domain.Services.CalendarEvents
             await _calendarEventsRepository.UpdateAsync(calendarEvent);
         }
 
+        [UnitOfWork]
         private async Task CheckScheduleConflictsAsync(CalendarEvent calendarEvent, long userId, string timeZone)
         {
             if (calendarEvent.Type != CalendarEventType.Cancelled && calendarEvent.Type != CalendarEventType.Blocker)

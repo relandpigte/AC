@@ -10,6 +10,7 @@ class FormattedUserNotification {
   userProfilePictureUrl: string;
   notificationMessage: string;
   creationTime: string;
+  link: string;
 }
 
 @Component({
@@ -23,7 +24,7 @@ export class NotificationPreviewComponent extends AppComponentBase implements On
   @ViewChild('notificationsModal') notificationsModal: ModalDirective;
 
   notifications: FormattedUserNotification[] = [];
-  isActive = false;
+  unreadCount = 0;
 
   constructor(
     injector: Injector,
@@ -34,9 +35,10 @@ export class NotificationPreviewComponent extends AppComponentBase implements On
     super(injector);
 
     abp.event.on('abp.notifications.received', (notification) => {
+      console.log(notification);
       this.formatNotification(notification, true);
-      this.isActive = true;
       this._cd.detectChanges();
+      this.unreadCount++;
     });
   }
 
@@ -51,7 +53,7 @@ export class NotificationPreviewComponent extends AppComponentBase implements On
   onNotificationsModalShow(): void {
     this.notificationsModal.config.backdrop = false;
     this.notificationsModal.show();
-    this.isActive = false;
+    this.unreadCount = 0;
   }
 
   private getUserNotifications(): void {
@@ -76,6 +78,7 @@ export class NotificationPreviewComponent extends AppComponentBase implements On
       const props = Object.values(notificationProperties);
       formattedNotification.notificationMessage = this.l(notificationData.properties.Message.name, ...props);
       formattedNotification.creationTime = moment(notification.notification.creationTime).fromNow();
+      formattedNotification.link = notificationProperties.Link;
       this._documentsService.getProfilePictureUrl(notification.userId)
         .pipe(takeUntil(this.destroyed$))
         .subscribe(url => {

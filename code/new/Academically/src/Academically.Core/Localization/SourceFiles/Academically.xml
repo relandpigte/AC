@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="You">You</text>
     <text name="NoRecentNotification">No recent notification</text>
     <text name="BookingRescheduledNotificationMessage">
       <![CDATA[

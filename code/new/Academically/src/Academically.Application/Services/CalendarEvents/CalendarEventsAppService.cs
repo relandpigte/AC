@@ -1,6 +1,11 @@
-﻿using Abp;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using Abp;
 using Abp.Configuration;
-using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Localization;
 using Abp.Notifications;
@@ -16,19 +21,10 @@ using Academically.Domain.Services.Documents;
 using Academically.Emails;
 using Academically.Notifications;
 using Academically.Services.CalendarEvents.Dto;
-using Academically.Services.CalendarEvents.Notifications;
 using Academically.Services.Projects.Dto;
 using Microsoft.EntityFrameworkCore;
 using SourceCloud.Core.Services;
 using SourceCloud.Core.Services.Email;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace Academically.Services.CalendarEvents
 {
@@ -216,15 +212,31 @@ namespace Academically.Services.CalendarEvents
                     break;
             }
 
+            string clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
+            string viewDetailsLink = $"{clientRootAddress}/app/calendar/{tutor.Id}?goto={HttpUtility.UrlEncode(calendarEvent.StartTime.ToString("o", CultureInfo.InvariantCulture))}" +
+                $"&event-id={calendarEvent.Id}";
+
+            var currentUser = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
             var notificationData = new LocalizableMessageNotificationData(new LocalizableString("NewBookingNotificationMessage", AcademicallyConsts.LocalizationSourceName));
-            notificationData["0"] = tutor.FullName;
+            notificationData["0"] = currentUser.FullName;
+            notificationData["1"] = calendarEvent.Title;
+            notificationData["2"] = project.Name;
+            notificationData.Properties.Add("Link", viewDetailsLink);
+
+            await _notificationPublisher.PublishAsync(
+                NotificationNames.Notifications_CalendarEvents_NewBooking,
+                notificationData,
+                userIds: new[] { new UserIdentifier(tutor.TenantId, tutor.Id) }
+            );
+
+            notificationData["0"] = L("You");
             notificationData["1"] = calendarEvent.Title;
             notificationData["2"] = project.Name;
 
             await _notificationPublisher.PublishAsync(
                 NotificationNames.Notifications_CalendarEvents_NewBooking,
                 notificationData,
-                userIds: new[] { new UserIdentifier(tutor.TenantId, tutor.Id) }
+                userIds: new[] { new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value) }
             );
         }
 
@@ -274,16 +286,31 @@ namespace Academically.Services.CalendarEvents
                 notificationUser = projectOffer.CreatorUser;
             }
 
-            var notificationData = new LocalizableMessageNotificationData(new LocalizableString("BookingRescheduledNotificationMessage", AcademicallyConsts.LocalizationSourceName));
-            notificationData["0"] = currentUser.FullName;
-            notificationData["1"] = calendarEvent.Title;
-            notificationData["2"] = projectOffer.Project.Name;
+            //string clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
+            //string viewDetailsLink = $"{clientRootAddress}/app/calendar/{projectOffer.CreatorUser.Id}?goto={HttpUtility.UrlEncode(input.CalendarEvent.StartTime.ToString("o", CultureInfo.InvariantCulture))}" +
+            //    $"&event-id={input.CalendarEvent.Id}";
 
-            await _notificationPublisher.PublishAsync(
-                NotificationNames.Notifications_CalendarEvents_BookingRescheduled,
-                notificationData,
-                userIds: new[] { new UserIdentifier(notificationUser.TenantId, notificationUser.Id) }
-            );
+            //var notificationData = new LocalizableMessageNotificationData(new LocalizableString("BookingRescheduledNotificationMessage", AcademicallyConsts.LocalizationSourceName));
+            //notificationData["0"] = currentUser.FullName;
+            //notificationData["1"] = calendarEvent.Title;
+            //notificationData["2"] = projectOffer.Project.Name;
+            //notificationData.Properties.Add("Link", viewDetailsLink);
+
+            //await _notificationPublisher.PublishAsync(
+            //    NotificationNames.Notifications_CalendarEvents_BookingRescheduled,
+            //    notificationData,
+            //    userIds: new[] { new UserIdentifier(notificationUser.TenantId, notificationUser.Id) }
+            //);
+
+            //notificationData["0"] = L("You");
+            //notificationData["1"] = calendarEvent.Title;
+            //notificationData["2"] = projectOffer.Project.Name;
+
+            //await _notificationPublisher.PublishAsync(
+            //    NotificationNames.Notifications_CalendarEvents_BookingRescheduled,
+            //    notificationData,
+            //    userIds: new[] { new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value) }
+            //);
         }
 
         public async Task Accept(Guid id, long tutorId)

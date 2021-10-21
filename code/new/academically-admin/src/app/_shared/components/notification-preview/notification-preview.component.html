@@ -1,8 +1,9 @@
 <div *ngIf="!isModal; else modalTemplate" class="btn-group mr-4 d-none d-md-flex" dropdown placement="bottom left"
   container="body">
-  <a href (click)="$event.preventDefault(); isActive = false" dropdownToggle class="navbar-user-link">
-    <span class="icon" [class.active]="isActive">
+  <a href (click)="$event.preventDefault(); unreadCount = 0" dropdownToggle class="navbar-user-link">
+    <span class="icon">
       <i class="fe fe-bell"></i>
+      <span class="badge bg-primary unread-count" *ngIf="unreadCount">{{ unreadCount }}</span>
     </span>
   </a>
   <div *dropdownMenu class="dropdown-menu dropdown-menu-card dropdown-menu-right">
@@ -16,8 +17,7 @@
     </div>
     <div class="card-body">
       <div class="list-group list-group-flush list-group-activity my-n3">
-        <a *ngFor="let notification of notifications" class="list-group-item text-reset" href
-          (click)="false">
+        <a *ngFor="let notification of notifications" class="list-group-item text-reset" [href]="notification.link">
           <div class=" row">
             <div class="col-auto">
               <div class="avatar avatar-sm">
@@ -47,8 +47,9 @@
 <ng-template #modalTemplate>
   <div [class]="buttonClass">
     <a href (click)="$event.preventDefault(); onNotificationsModalShow();" class="navbar-user-link">
-      <span class="icon" [class.active]="isActive">
+      <span class="icon">
         <i class="fe fe-bell"></i>
+        <span class="badge bg-primary unread-count" *ngIf="unreadCount">{{ unreadCount }}</span>
       </span>
     </a>
   </div>
@@ -63,7 +64,7 @@
           <h2 class="text-center mb-2">Notifications</h2>
           <hr class="mb-4" />
           <div class="list-group list-group-flush list-group-activity my-n3">
-            <a *ngFor="let notification of notifications" class="list-group-item text-reset" href (click)="false">
+            <a *ngFor="let notification of notifications" class="list-group-item text-reset" [href]="notification.link">
               <div class="row">
                 <div class="col-auto">
                   <div class="avatar avatar-sm">

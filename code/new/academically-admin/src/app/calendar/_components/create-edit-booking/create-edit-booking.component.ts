@@ -120,7 +120,6 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
           }),
         )
         .subscribe(() => {
-          this.notify.success(this.l('TheBookingRequestWasCreated'));
           this.modelSaved.emit();
           this._modal.hide();
         });
@@ -197,7 +196,6 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
                   }),
                 )
                 .subscribe(() => {
-                  this.notify.success(this.l('TheBookingRequestWasRescheduled'));
                   this.modelSaved.emit();
                   this._modal.hide();
                 });
