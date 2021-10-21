@@ -50,7 +50,7 @@ namespace SourceCloud.Provider.Aws
             );
         }
 
-        public async Task SendAsync(string toName, string toEmail, string subject, string body, List<EmailAttachment> attachments)
+        public async Task SendAsync(string toName, string toEmail, string subject, string body, List<EmailAttachment> attachments, bool isCalenderAttachment = false)
         {
             var mailMessage = new MailMessage();
             mailMessage.Sender = new MailAddress(fromEmail, fromName);
@@ -62,8 +62,16 @@ namespace SourceCloud.Provider.Aws
             mailMessage.IsBodyHtml = true;
             foreach(var attachment in attachments)
             {
-                System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(attachment.FileData, attachment.FileName);
-                mailMessage.Attachments.Add(attach);
+                if (isCalenderAttachment)
+                {
+                    System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(attachment.FileData, attachment.FileMimeType);
+                    mailMessage.Attachments.Add(attach);
+                }
+                else
+                {
+                    System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(attachment.FileData, attachment.FileName);
+                    mailMessage.Attachments.Add(attach);
+                }
             }
             await _client.SendRawEmailAsync(
                 new SendRawEmailRequest
@@ -112,11 +120,20 @@ namespace SourceCloud.Provider.Aws
             strCalFormat.AppendLine("VERSION:2.0");
             strCalFormat.AppendLine("PRODID:-//Schedule a Meeting");
             strCalFormat.AppendLine("X-WR-RELCALID:ABC");
-            strCalFormat.AppendLine("METHOD:REQUEST");
+
+            if (type.Equals("Cancelled"))
+            {
+                strCalFormat.AppendLine("METHOD:CANCEL");
+            }
+            else
+            {
+                strCalFormat.AppendLine("METHOD:REQUEST");
+            }
+            
             strCalFormat.AppendLine("BEGIN:VEVENT");
             strCalFormat.AppendLine("UID:" + calenderId);
             strCalFormat.AppendLine(type.Equals("Cancelled") ? "SEQUENCE:2" : "SEQUENCE:0");
-            strCalFormat.AppendLine(string.Format("SUMMARY:{0}", title));
+            strCalFormat.AppendLine(string.Format("SUMMARY:{0}", (type.Equals("Cancelled"))? $"Cancelled: {title}" : title));
             strCalFormat.AppendLine("CLASS:PUBLIC");
             strCalFormat.AppendLine("TRANSP:TRANSPARENT");
             strCalFormat.AppendLine(string.Format("DTSTART:{0:yyyyMMddTHHmmssZ}", startTime));
