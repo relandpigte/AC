@@ -50,9 +50,16 @@ export class RecentActivityComponent extends AppComponentBase implements OnInit 
     return (result? "\""+result+"\"":"")
   }
   findKeyJsonObj(jsonObj,inputKey): string {
+   
     const keys = Object.keys(jsonObj);
       for(let key of keys){
         if (key === inputKey) {
+          return jsonObj[inputKey]
+        }
+      }
+      jsonObj=Object.values(jsonObj)[0]
+      if(jsonObj){
+        if(jsonObj[inputKey]){
           return jsonObj[inputKey]
         }
       }
