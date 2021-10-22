@@ -1,7 +1,7 @@
 <div *ngIf="!isModal; else modalTemplate" class="btn-group mr-4 d-none d-md-flex" dropdown placement="bottom left"
   container="body">
   <a href (click)="$event.preventDefault(); unreadCount = 0" dropdownToggle class="navbar-user-link">
-    <span class="icon">
+    <span class="icon notification-icon">
       <i class="fe fe-bell"></i>
       <span class="badge bg-primary unread-count" *ngIf="unreadCount">{{ unreadCount }}</span>
     </span>
@@ -47,7 +47,7 @@
 <ng-template #modalTemplate>
   <div [class]="buttonClass">
     <a href (click)="$event.preventDefault(); onNotificationsModalShow();" class="navbar-user-link">
-      <span class="icon">
+      <span class="icon notification-icon">
         <i class="fe fe-bell"></i>
         <span class="badge bg-primary unread-count" *ngIf="unreadCount">{{ unreadCount }}</span>
       </span>

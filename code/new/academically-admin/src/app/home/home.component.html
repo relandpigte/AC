@@ -12,19 +12,21 @@
             </h1>
           </div>
           <div style="display: inline-flex;" class="col-md-auto col-12">
-            <div class=" btn-group btn-block ml-md-2 inline" dropdown>
+            <div *ngIf="isTutor" class=" btn-group btn-block ml-md-2 inline" dropdown>
               <button dropdownToggle type="button" class="btn btn-primary  dropdown-toggle">
                 {{ 'Create' | localize}} <span class="caret"></span>
               </button>
               <ul *dropdownMenu class="dropdown-menu" role="menu">
-                <li role="menuitem"><a class="dropdown-item btn" (click)="onCreateClick()">{{ 'Course' | localize}}</a></li>
+                <li role="menuitem"><a class="dropdown-item btn" (click)="onCreateClick()">{{ 'Course' | localize}}</a>
+                </li>
               </ul>
             </div>
 
-            <a [routerLink]="['/app/new-project']" class="btn btn-primary col-md-7"
+            <a [routerLink]="['/app/new-project']" class="btn btn-primary"
               *ngIf="permission.isGranted('Pages.ServiceWizard.CreateProject')">
               {{ 'CreateNewProject' | localize}}
             </a>
+
             <a [routerLink]="['/app/projects']" class="btn btn-primary col-md-7"
               [class.ml-md-2]="permission.isGranted('Pages.Projects.Browse')"
               *ngIf="permission.isGranted('Pages.Projects.Browse')">
@@ -48,10 +50,10 @@
                   aria-selected="false">{{ 'Usage' | localize }}</a>
               </li>
               <li *ngIf="permission.isGranted('Pages.Courses')" class="nav-item">
-                <a class="nav-link" id="courses-tab" data-toggle="tab" href="#courses" role="tab" aria-controls="courses"
-                  aria-selected="false">{{ 'Courses' | localize }}</a>
+                <a class="nav-link" id="courses-tab" data-toggle="tab" href="#courses" role="tab"
+                  aria-controls="courses" aria-selected="false">{{ 'Courses' | localize }}</a>
               </li>
-              
+
             </ul>
           </div>
         </div>
@@ -60,17 +62,21 @@
   </div>
   <div class="container-fluid">
     <div class="tab-content">
-      <div *ngIf="permission.isGranted('Pages.Dashboard.Overview')" class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+      <div *ngIf="permission.isGranted('Pages.Dashboard.Overview')" class="tab-pane fade show active" id="overview"
+        role="tabpanel" aria-labelledby="overview-tab">
         <app-dashboard-overview *ngIf="permission.isGranted('Pages.Dashboard.Overview')"></app-dashboard-overview>
       </div>
-      <div *ngIf="permission.isGranted('Pages.Dashboard.MyProjects')" class="tab-pane fade" id="projects" role="tabpanel" aria-labelledby="projects-tab">
+      <div *ngIf="permission.isGranted('Pages.Dashboard.MyProjects')" class="tab-pane fade" id="projects"
+        role="tabpanel" aria-labelledby="projects-tab">
         <app-dashboard-projects *ngIf="permission.isGranted('Pages.Dashboard.MyProjects')"></app-dashboard-projects>
       </div>
-      <div *ngIf="permission.isGranted('Pages.Dashboard.Usage')" class="tab-pane fade" id="usage" role="tabpanel" aria-labelledby="usage-tab">
+      <div *ngIf="permission.isGranted('Pages.Dashboard.Usage')" class="tab-pane fade" id="usage" role="tabpanel"
+        aria-labelledby="usage-tab">
         <app-dashboard-usage *ngIf="permission.isGranted('Pages.Dashboard.Usage')"></app-dashboard-usage>
       </div>
-      <div *ngIf="permission.isGranted('Pages.Courses')" class="tab-pane fade" id="courses" role="tabpanel" aria-labelledby="courses-tab">
-        <app-courses  *ngIf="permission.isGranted('Pages.Courses')"></app-courses>
+      <div *ngIf="permission.isGranted('Pages.Courses')" class="tab-pane fade" id="courses" role="tabpanel"
+        aria-labelledby="courses-tab">
+        <app-courses *ngIf="permission.isGranted('Pages.Courses')"></app-courses>
       </div>
     </div>
   </div>
