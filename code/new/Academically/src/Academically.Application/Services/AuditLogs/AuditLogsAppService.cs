@@ -71,6 +71,7 @@ namespace Academically.Services.AuditLogs
                     return AuditLogsType.Others;
 
                 case "Delete":
+                case "DeleteAsync":
                     return AuditLogsType.Deleted;
 
                 case "Accept":

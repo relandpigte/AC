@@ -9,7 +9,7 @@ namespace SourceCloud.Core.Services
     public interface IEmailService
     {
         Task SendAsync(string toName, string toEmail, string subject, string body);
-        Task SendAsync(string toName, string toEmail, string subject, string body, List<EmailAttachment> attachments);
+        Task SendAsync(string toName, string toEmail, string subject, string body, List<EmailAttachment> attachments, bool isCalenderAttachment);
         MemoryStream GetCalenderIcsFormat(Guid calenderId, string title, string type, DateTime startTime, DateTime endTime);
     }
 }

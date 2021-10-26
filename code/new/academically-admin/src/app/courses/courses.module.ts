@@ -11,6 +11,7 @@ import { CurriculumComponent } from './_components/curriculum/curriculum.compone
 import { LessonWizardComponent } from './_components/lesson-wizard/lesson-wizard.component';
 import { TemplateComponent } from './_components/lesson-wizard/template/template.component';
 import { NameComponent } from './_components/lesson-wizard/name/name.component';
+import { DragulaModule } from 'ng2-dragula';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { NameComponent } from './_components/lesson-wizard/name/name.component';
     CoursesRoutingModule,
     SharedModule,
     AppSharedModule,
+    DragulaModule.forRoot(),
   ],
 })
 export class CoursesModule { }

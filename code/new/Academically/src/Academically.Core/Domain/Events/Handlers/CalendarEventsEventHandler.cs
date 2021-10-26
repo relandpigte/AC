@@ -74,16 +74,25 @@ namespace Academically.Domain.Events.Handlers
 
         private async Task SendEmailCancelledCalenderEvent(string name, string email, string emailSubject, string emailbody, CalendarEvent calendarEvent)
         {
+            var fileName = "cancelledEvent.ics";
+
+            var contype = new System.Net.Mime.ContentType("text/calendar");
+
+            contype.Parameters.Add("method", "CANCEL");
+            contype.Parameters.Add("charSet", "utf-8");
+            contype.Parameters.Add("name", fileName);
+
             List<EmailAttachment> attachments = new List<EmailAttachment>()
             {
                   new EmailAttachment
                   {
-                      FileName = "cancelledEvent.ics",
+                      FileName = fileName,
+                      FileMimeType = contype,
                       FileData = _emailService.GetCalenderIcsFormat(calendarEvent.Id,calendarEvent.Title,calendarEvent.Type.ToString(),calendarEvent.StartTime,calendarEvent.EndTime)
                   }
             };
 
-            await _emailService.SendAsync(name, email, emailSubject, emailbody, attachments);
+            await _emailService.SendAsync(name, email, emailSubject, emailbody, attachments, true);
         }
     }
 }

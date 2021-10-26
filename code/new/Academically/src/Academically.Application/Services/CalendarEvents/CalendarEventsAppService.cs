@@ -532,16 +532,25 @@ namespace Academically.Services.CalendarEvents
                     new KeyValuePair<string, string>("viewDetailsLink", viewDetailsLink),
                 });
 
+            var fileName = "event.ics";
+
+            var contype = new System.Net.Mime.ContentType("text/calendar");
+
+            contype.Parameters.Add("method", "REQUEST");
+            contype.Parameters.Add("charSet", "utf-8");
+            contype.Parameters.Add("name", fileName);
+
             List<EmailAttachment> attachments = new List<EmailAttachment>()
             {
                   new EmailAttachment
                   {
-                      FileName = "event.ics",
+                      FileName = fileName,
+                      FileMimeType =contype,
                       FileData = _emailService.GetCalenderIcsFormat(calendarEvent.Id,calendarEvent.Title,calendarEvent.Type.ToString(),calendarEvent.StartTime,calendarEvent.EndTime)
                   }
             };
 
-            await _emailService.SendAsync(recipient.Name, recipient.EmailAddress, L("BookingConfirmedEmailSubject"), emailBody, attachments);
+            await _emailService.SendAsync(recipient.Name, recipient.EmailAddress, L("BookingConfirmedEmailSubject"), emailBody, attachments, true);
         }
     }
 }
