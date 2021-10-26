@@ -10,6 +10,11 @@ namespace Academically.Services.Projects
     public interface IProjectsAppService : IApplicationService
     {
         Task<PagedResultDto<ProjectDto>> GetAllAsync(PagedProjectRequestDto input);
+        Task<IEnumerable<string>> GetAcademicLevels();
+        Task<IEnumerable<string>> GetAcademicLevelQualifications(string academicLevel);
+        Task<IEnumerable<string>> GetResearchMethods();
+        Task<IEnumerable<string>> GetSubjects();
+        Task<IEnumerable<string>> GetUrgencyLevels();
         Task<ProjectDto> GetAsync(Guid id);
         Task<IEnumerable<ProjectDto>> GetForUserAsync();
         Task CreateAsync(CreateProjectDto input);

@@ -2,6 +2,14 @@
 <localizationDictionary culture="en">
   <texts>
     <text name="You">You</text>
+    <text name="CautionInfo">All information in this form (including files) will be viewable by tutors</text>
+    <text name="Caution">Caution</text>
+    <text name="PrivateRequestInfo">Only tutors you invite to quote will be available to view your request</text>
+    <text name="PrivateRequest">Private request</text>
+    <text name="UploadFilesOptionalInfo">Drag and drop any files that would help tutors understand your needs (more files can be added later)</text>
+    <text name="UploadFilesOptional">Upload files (Optional)</text>
+    <text name="SubjectKeywordsInfo">Add keywords to help us match you with the right tutor</text>
+    <text name="SubjectKeywords">Subject keywords</text>
     <text name="NoRecentNotification">No recent notification</text>
     <text name="BookingRescheduledNotificationMessage">
       <![CDATA[
@@ -771,7 +779,7 @@
     <text name="FreeConsulation">15 MIN CONSULTATION</text>
     <text name="Free">FREE</text>
     <text name="SubjectArea">Subject area</text>
-    <text name="UrgencyLevel">Urgency Level</text>
+    <text name="UrgencyLevel">Urgency level</text>
     <text name="Deadline">Deadline</text>
     <text name="DeclineProject">Decline Project</text>
     <text name="SubmitOffer">Submit Offer</text>

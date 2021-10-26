@@ -5,6 +5,8 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { CreateProjectDto, ProjectsServiceProxy, Service2Dto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { ServiceWizardService } from '../_services/service-wizard.service';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-service-level',
@@ -15,22 +17,39 @@ import { ServiceWizardService } from '../_services/service-wizard.service';
 export class CreateProjectComponent extends AppComponentBase implements OnInit {
   serviceCategories: Service2Dto[] = [];
   selectedServiceCategories: Service2Dto[] = [];
-  createProjectDto: CreateProjectDto = new CreateProjectDto();
+  model: CreateProjectDto = new CreateProjectDto();
   isLoading = false;
+  academicLevels: string[] = [];
+  academicLevelQualifications: string[] = [];
+  methodologies: string[] = [];
+  subjectAreas: string[] = [];
+  subjectKeyword: string;
+  subjectKeywords: string[] = [];
+  urgencyLevels: string[] = [];
+  allowedFileExtensions = fileUploadConfiguration.allowedFileExtensions;
+  deadline: Date;
+  datePickerConfig: BsDatepickerConfig;
 
   constructor(
     injector: Injector,
     private _router: Router,
     private _servicesService: ServicesServiceProxy,
-    private _projectsSErvice: ProjectsServiceProxy,
+    private _projectsService: ProjectsServiceProxy,
     private _serviceWizardService: ServiceWizardService
   ) {
     super(injector);
+    this.datePickerConfig = new BsDatepickerConfig();
+    this.datePickerConfig.showWeekNumbers = false;
+    this.datePickerConfig.dateInputFormat = 'DD/MM/YYYY';
+  }
+
+  get showMethodology(): boolean {
+    return ['Graduate', 'Postgraduate', 'Doctorate'].includes(this.model.academicLevel);
   }
 
   ngOnInit(): void {
     this._serviceWizardService.currentStep$.subscribe(project => {
-      this.createProjectDto = project ?? new CreateProjectDto();
+      this.model = project ?? new CreateProjectDto();
     });
 
     this.isLoading = true;
@@ -46,6 +65,11 @@ export class CreateProjectComponent extends AppComponentBase implements OnInit {
           }
         }
       });
+
+    this.getAcademicLevels();
+    this.getMethodologies();
+    this.getSubjectAreas();
+    this.getUrgencyLevels();
   }
 
   getSelected(id: string): Service2Dto {
@@ -63,7 +87,7 @@ export class CreateProjectComponent extends AppComponentBase implements OnInit {
 
   onFormSubmit(): void {
     this.isLoading = true;
-    this._projectsSErvice.create(this.createProjectDto)
+    this._projectsService.create(this.model)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
@@ -79,5 +103,94 @@ export class CreateProjectComponent extends AppComponentBase implements OnInit {
 
   onBackClick(): void {
     this._router.navigate(['/app/service-wizard/services']);
+  }
+
+  onAcademicLevelSelect(academicLevel: string): void {
+    this.model.academicLevel = academicLevel;
+    this.model.qualification = '';
+    if (!this.showMethodology) {
+      this.model.methodology = '';
+    }
+    this.getAcademicLevelQualifications();
+  }
+
+  onSearchKeywordKeyDown(e: KeyboardEvent): void {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.addSubjectKeyword();
+    }
+  }
+
+  onSearchKeywordBlur(): void {
+    this.addSubjectKeyword();
+  }
+
+  onRemoveSubjectKeywordClick(keyword: string): void {
+    const index = this.subjectKeywords.findIndex(e => e === keyword);
+    if (index > -1) {
+      this.subjectKeywords.splice(index, 1);
+      this.updateSubjectKeywords();
+    }
+  }
+
+  private getAcademicLevels(): void {
+    this.academicLevels = [];
+    this._projectsService.getAcademicLevels()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(responses => {
+        this.academicLevels = responses;
+      });
+  }
+
+  private getAcademicLevelQualifications(): void {
+    this.academicLevelQualifications = [];
+    this._projectsService.getAcademicLevelQualifications(this.model.academicLevel)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(responses => {
+        this.academicLevelQualifications = responses;
+      });
+  }
+
+  private getMethodologies(): void {
+    this.methodologies = [];
+    this._projectsService.getResearchMethods()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(responses => {
+        this.methodologies = responses;
+      });
+  }
+
+  private getSubjectAreas(): void {
+    this.subjectAreas = [];
+    this._projectsService.getSubjects()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(responses => {
+        this.subjectAreas = responses;
+      });
+  }
+
+  private getUrgencyLevels(): void {
+    this.urgencyLevels = [];
+    this._projectsService.getUrgencyLevels()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(responses => {
+        this.urgencyLevels = responses;
+      });
+  }
+
+  private addSubjectKeyword(): void {
+    if (this.subjectKeyword) {
+      const keyword = this.subjectKeyword.toLowerCase();
+      const index = this.subjectKeywords.findIndex(e => e.toLowerCase() === keyword);
+      if (index < 0) {
+        this.subjectKeywords.push(keyword);
+        this.updateSubjectKeywords();
+      }
+    }
+    this.subjectKeyword = undefined;
+  }
+
+  private updateSubjectKeywords(): void {
+    this.model.subjectKeyWords = this.subjectKeywords.join();
   }
 }
