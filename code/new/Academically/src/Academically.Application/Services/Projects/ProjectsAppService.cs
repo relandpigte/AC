@@ -173,6 +173,16 @@ namespace Academically.Services.Projects
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<string>> GetUrgencyLevels()
+        {
+            return await Task.FromResult(new List<string>()
+            {
+                "High",
+                "Medium",
+                "Low",
+            });
+        }
+
         public async Task<ProjectDto> GetAsync(Guid id)
         {
             var project = await _projectsRepository.GetAll()

@@ -3,9 +3,10 @@ import { Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { CreateProjectDto, ProjectsServiceProxy, Service2Dto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
-import { finalize, takeUntil, switchMap } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { ServiceWizardService } from '../_services/service-wizard.service';
-import { Observable, Observer, of } from 'rxjs';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-service-level',
@@ -22,8 +23,12 @@ export class CreateProjectComponent extends AppComponentBase implements OnInit {
   academicLevelQualifications: string[] = [];
   methodologies: string[] = [];
   subjectAreas: string[] = [];
-
-  subjectKeywordsTypeaheadSource: Observable<string[]>;
+  subjectKeyword: string;
+  subjectKeywords: string[] = [];
+  urgencyLevels: string[] = [];
+  allowedFileExtensions = fileUploadConfiguration.allowedFileExtensions;
+  deadline: Date;
+  datePickerConfig: BsDatepickerConfig;
 
   constructor(
     injector: Injector,
@@ -33,6 +38,9 @@ export class CreateProjectComponent extends AppComponentBase implements OnInit {
     private _serviceWizardService: ServiceWizardService
   ) {
     super(injector);
+    this.datePickerConfig = new BsDatepickerConfig();
+    this.datePickerConfig.showWeekNumbers = false;
+    this.datePickerConfig.dateInputFormat = 'DD/MM/YYYY';
   }
 
   get showMethodology(): boolean {
@@ -61,7 +69,7 @@ export class CreateProjectComponent extends AppComponentBase implements OnInit {
     this.getAcademicLevels();
     this.getMethodologies();
     this.getSubjectAreas();
-    this.getSubjectKeywords();
+    this.getUrgencyLevels();
   }
 
   getSelected(id: string): Service2Dto {
@@ -78,8 +86,6 @@ export class CreateProjectComponent extends AppComponentBase implements OnInit {
   }
 
   onFormSubmit(): void {
-    console.log(this.model);
-    return;
     this.isLoading = true;
     this._projectsService.create(this.model)
       .pipe(
@@ -108,9 +114,24 @@ export class CreateProjectComponent extends AppComponentBase implements OnInit {
     this.getAcademicLevelQualifications();
   }
 
-  // onPublicationTagSelect(publicationTag: PublicationTagDto): void {
-  //   this.addTagToUserPublication(publicationTag.name);
-  // }
+  onSearchKeywordKeyDown(e: KeyboardEvent): void {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.addSubjectKeyword();
+    }
+  }
+
+  onSearchKeywordBlur(): void {
+    this.addSubjectKeyword();
+  }
+
+  onRemoveSubjectKeywordClick(keyword: string): void {
+    const index = this.subjectKeywords.findIndex(e => e === keyword);
+    if (index > -1) {
+      this.subjectKeywords.splice(index, 1);
+      this.updateSubjectKeywords();
+    }
+  }
 
   private getAcademicLevels(): void {
     this.academicLevels = [];
@@ -148,20 +169,28 @@ export class CreateProjectComponent extends AppComponentBase implements OnInit {
       });
   }
 
-  private getSubjectKeywords(): void {
-    this.subjectKeywordsTypeaheadSource = new Observable((observer: Observer<string>) => {
-      observer.next(this.model.subjectKeyWords);
-    }).pipe(
-      switchMap((query: string) => {
-        return of([]);
-      })
-    );
+  private getUrgencyLevels(): void {
+    this.urgencyLevels = [];
+    this._projectsService.getUrgencyLevels()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(responses => {
+        this.urgencyLevels = responses;
+      });
   }
 
-  // private addSubjectKeywordsToModel(keyword: string): void {
-  //   if (!this.userPublication.tags.includes(tag.toLowerCase())) {
-  //     this.userPublication.tags.push(tag.toLowerCase());
-  //   }
-  //   this.publicationTag = '';
-  // }
+  private addSubjectKeyword(): void {
+    if (this.subjectKeyword) {
+      const keyword = this.subjectKeyword.toLowerCase();
+      const index = this.subjectKeywords.findIndex(e => e.toLowerCase() === keyword);
+      if (index < 0) {
+        this.subjectKeywords.push(keyword);
+        this.updateSubjectKeywords();
+      }
+    }
+    this.subjectKeyword = undefined;
+  }
+
+  private updateSubjectKeywords(): void {
+    this.model.subjectKeyWords = this.subjectKeywords.join();
+  }
 }

@@ -14,6 +14,7 @@ namespace Academically.Services.Projects
         Task<IEnumerable<string>> GetAcademicLevelQualifications(string academicLevel);
         Task<IEnumerable<string>> GetResearchMethods();
         Task<IEnumerable<string>> GetSubjects();
+        Task<IEnumerable<string>> GetUrgencyLevels();
         Task<ProjectDto> GetAsync(Guid id);
         Task<IEnumerable<ProjectDto>> GetForUserAsync();
         Task CreateAsync(CreateProjectDto input);
