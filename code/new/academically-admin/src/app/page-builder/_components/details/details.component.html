@@ -1,0 +1,107 @@
+<form class="form-horizontal" autocomplete="off" #form="ngForm">
+    <div class="row">
+        <div class="col-8">
+            <div class="card" [loader]="isLoading">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-header-title">{{CourseSectionType[model.type] | localize}} {{ 'name' |
+                                localize}} </h4>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-sm btn-light" (click)="onEnableEditable(EnabledControl.isName)">
+                                <i class="fe fe-edit-2"></i>
+                                {{ 'Edit' | localize}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <input [(ngModel)]="model.name" class="form-control" type="text" id="name" name="name"
+                        [disabled]="isNameDisabled" #nameModel="ngModel" />
+                </div>
+            </div>
+            <div class="card" [loader]="isLoading">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-header-title">{{ 'Description' | localize}}</h4>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-sm btn-light"
+                                (click)="onEnableEditable(EnabledControl.isDescription)">
+                                <i class="fe fe-edit-2"></i>
+                                {{ 'Edit' | localize}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <input [(ngModel)]="courseSectionPageModel.description" class="form-control" type="text"
+                        id="description" name="description" [disabled]="isDescriptionDisabled" />
+                </div>
+            </div>
+            <div class="card" [loader]="isLoading">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-header-title">{{ 'CategoriesTags' | localize}}</h4>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-sm btn-light"
+                                (click)="onEnableEditable(EnabledControl.isCategoriesTags)">
+                                <i class="fe fe-edit-2"></i>
+                                {{ 'Edit' | localize}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <tag-input [(ngModel)]="categoryTags" name="category" #category="ngModel" [modelAsStrings]="true"
+                        [displayBy]="'display'"></tag-input>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-4">
+            <div *ngIf="model.type===CourseSectionType.Lesson" class="card" [loader]="isLoading">
+                <div class="card-header">
+                    <h4 class="card-header-title">
+                        {{ 'LessonImage' | localize }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <app-document-uploader [previewImages]="true" [largeImagePreview]="true" [maxFiles]="1"
+                        [cropImages]="true" [cropperAspectRatioWidth]="350" [cropperAspectRationHeight]="263"
+                        [allowedExtensions]="allowedImageExtensions">
+                    </app-document-uploader>
+                    <div class="mt-2">
+                        <h5> {{ 'UploadInstuction' | localize }}</h5>
+                        <h5> {{ 'RecommendedDimensions' | localize }}</h5>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" [loader]="isLoading">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-header-title">{{ 'ApproximateDuration' | localize}}</h4>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-sm btn-light" (click)="onEnableEditable(EnabledControl.isDuration)">
+                                <i class="fe fe-edit-2"></i>
+                                {{ 'Edit' | localize}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <input type="text" mask="00:00" placeholder="__:__" [disabled]="isDurationDisabled"
+                        [(ngModel)]="courseSectionPageModel.duration" class="form-control" #durationTagsModel="ngModel"
+                        id="duration" name="duration" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

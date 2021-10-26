@@ -2128,6 +2128,91 @@ export class CourseSectionPagesServiceProxy {
         }
         return _observableOf<void>(<any>null);
     }
+
+    /**
+     * @param pageContent (optional) 
+     * @param description (optional) 
+     * @param categoriesTags (optional) 
+     * @param duration (optional) 
+     * @param file (optional) 
+     * @param courseSectionId (optional) 
+     * @param id (optional) 
+     * @return Success
+     */
+    saveUpdateDetails(pageContent: string | undefined, description: string | undefined, categoriesTags: string | undefined, duration: string | undefined, file: FileParameter | undefined, courseSectionId: string | undefined, id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/CourseSectionPages/SaveUpdateDetails";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (pageContent === null || pageContent === undefined) {
+            // do nothing
+        } else
+            content_.append("PageContent", pageContent.toString());
+        if (description === null || description === undefined) {
+            // do nothing
+        } else
+            content_.append("Description", description.toString());
+        if (categoriesTags === null || categoriesTags === undefined) {
+            // do nothing
+        } else
+            content_.append("CategoriesTags", categoriesTags.toString());
+        if (duration === null || duration === undefined) {
+            // do nothing
+        } else
+            content_.append("Duration", duration.toString());
+        if (file === null || file === undefined) {
+            // do nothing
+        } else
+            content_.append("File", file.data, file.fileName ? file.fileName : "File");
+        if (courseSectionId === null || courseSectionId === undefined) {
+            // do nothing
+        } else
+            content_.append("CourseSectionId", courseSectionId.toString());
+        if (id === null || id === undefined) {
+            // do nothing
+        } else
+            content_.append("Id", id.toString());
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveUpdateDetails(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveUpdateDetails(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSaveUpdateDetails(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
 }
 
 @Injectable()
@@ -14114,7 +14199,13 @@ export interface ICourseSectionDto {
 export class CourseSectionPageDto implements ICourseSectionPageDto {
     id: string | undefined;
     pageContent: string | undefined;
+    duration: string | undefined;
+    description: string | undefined;
+    categoriesTags: string | undefined;
+    courseSectionPageImageUrl: string | undefined;
+    file: string | undefined;
     courseSectionId: string;
+    imageDocument: DocumentDto;
 
     constructor(data?: ICourseSectionPageDto) {
         if (data) {
@@ -14129,7 +14220,13 @@ export class CourseSectionPageDto implements ICourseSectionPageDto {
         if (_data) {
             this.id = _data["id"];
             this.pageContent = _data["pageContent"];
+            this.duration = _data["duration"];
+            this.description = _data["description"];
+            this.categoriesTags = _data["categoriesTags"];
+            this.courseSectionPageImageUrl = _data["courseSectionPageImageUrl"];
+            this.file = _data["file"];
             this.courseSectionId = _data["courseSectionId"];
+            this.imageDocument = _data["imageDocument"] ? DocumentDto.fromJS(_data["imageDocument"]) : <any>undefined;
         }
     }
 
@@ -14144,7 +14241,13 @@ export class CourseSectionPageDto implements ICourseSectionPageDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["pageContent"] = this.pageContent;
+        data["duration"] = this.duration;
+        data["description"] = this.description;
+        data["categoriesTags"] = this.categoriesTags;
+        data["courseSectionPageImageUrl"] = this.courseSectionPageImageUrl;
+        data["file"] = this.file;
         data["courseSectionId"] = this.courseSectionId;
+        data["imageDocument"] = this.imageDocument ? this.imageDocument.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -14159,7 +14262,13 @@ export class CourseSectionPageDto implements ICourseSectionPageDto {
 export interface ICourseSectionPageDto {
     id: string | undefined;
     pageContent: string | undefined;
+    duration: string | undefined;
+    description: string | undefined;
+    categoriesTags: string | undefined;
+    courseSectionPageImageUrl: string | undefined;
+    file: string | undefined;
     courseSectionId: string;
+    imageDocument: DocumentDto;
 }
 
 /** 0 = Draft 1 = Published */
@@ -15200,7 +15309,7 @@ export interface IDocumentDto {
     size: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -15214,6 +15323,7 @@ export enum DocumentType {
     IntroVideo = 9,
     Conversation = 10,
     CourseImage = 11,
+    CourseSectionPage = 12,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {

@@ -15,6 +15,9 @@ import { ImagePageComponentPreviewComponent } from './_components/content/previe
 import { PageContentPreviewComponent } from './_components/content/previews/page-content-preview/page-content-preview.component';
 import { PageSectionPreviewComponent } from './_components/content/previews/page-section-preview/page-section-preview.component';
 import { PageSectionEditorComponent } from './_components/content/editors/page-section-editor/page-section-editor.component';
+import { DetailsComponent } from './_components/details/details.component';
+import { TagInputModule } from 'ngx-chips';
+import {NgxMaskModule } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -29,12 +32,15 @@ import { PageSectionEditorComponent } from './_components/content/editors/page-s
     PageContentPreviewComponent,
     PageSectionPreviewComponent,
     PageSectionEditorComponent,
+    DetailsComponent,
   ],
   imports: [
     CommonModule,
     PageBuilderRoutingModule,
     SharedModule,
     AppSharedModule,
+    TagInputModule,
+    NgxMaskModule.forRoot()
   ],
 })
 export class PageBuilderModule { }

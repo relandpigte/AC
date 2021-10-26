@@ -14,5 +14,6 @@
         IntroVideo,
         Conversation,
         CourseImage,
+        CourseSectionPage
     }
 }
