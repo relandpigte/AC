@@ -7,6 +7,8 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { PageBuilderService } from './_services/page-builder.service';
 import { ContentComponent } from './_components/content/content.component';
 import { SettingsComponent } from './_components/settings/settings.component';
+import { DetailsComponent } from './_components/details/details.component';
+import { PagebuilderTabs } from './_models/pagebuilderTabs.enum'
 
 @Component({
   selector: 'app-page-builder',
@@ -14,14 +16,18 @@ import { SettingsComponent } from './_components/settings/settings.component';
   styleUrls: ['./page-builder.component.less'],
   animations: [appModuleAnimation()],
 })
+
 export class PageBuilderComponent extends AppComponentBase implements OnInit {
   @ViewChild(ContentComponent, { static: true }) contentComponent: ContentComponent;
   @ViewChild(SettingsComponent, { static: true }) settingsComponent: SettingsComponent;
+  @ViewChild(DetailsComponent, { static: true }) detailComponent: DetailsComponent;
 
   id: string;
   model = new CourseSectionDto();
   isLoading = false;
   isSaving = false;
+  PagebuilderTabs = PagebuilderTabs;
+  currentActiveTab: number
 
   constructor(
     injector: Injector,
@@ -37,6 +43,7 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
       if (paramMap.has('id')) {
         this.id = paramMap.get('id');
         this.getCourseSection();
+        this.getCourseSectionPages();
       }
     });
   }
@@ -57,19 +64,52 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
 
   onSaveClick(): void {
     this.isSaving = true;
-    this._courseSectionPagesService.save(this.contentComponent.prepareContentsForSaving(this.id))
-      .pipe(
+    if (this.currentActiveTab === PagebuilderTabs.Content) {
+      this._courseSectionPagesService.save(this.contentComponent.prepareContentsForSaving(this.id))
+        .pipe(
+          takeUntil(this.destroyed$),
+          finalize(() => {
+            this.isSaving = false;
+          })
+        )
+        .subscribe(() => {
+          this.notify.success(this.l('SavedSuccessfully'));
+          this._router.navigate(['/app/courses/', this.model.courseId], { fragment: 'curriculum' });
+        });
+    } else if (this.currentActiveTab === PagebuilderTabs.Details) {
+      this._courseSectionsService.update(this.detailComponent.prepareContentsForSaving()).pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
           this.isSaving = false;
         })
       )
-      .subscribe(() => {
-        this.notify.success(this.l('SavedSuccessfully'));
-        this._router.navigate(['/app/courses/', this.model.courseId], { fragment: 'curriculum' });
-      });
+        .subscribe(() => {
+          this.notify.success(this.l('SavedSuccessfully'));
+          this._router.navigate(['/app/courses/', this.model.courseId], { fragment: 'curriculum' });
+        });
 
-      this._courseSectionsService.update(this.settingsComponent.prepareContentsForSaving())
+      var courseSectionPage = this.detailComponent.prepareContentsForCoursePage()
+      this._courseSectionPagesService.saveUpdateDetails(
+        this.contentComponent.preparepageContentForSaving(),
+        courseSectionPage.description,
+        courseSectionPage.categoriesTags,
+        courseSectionPage.duration,
+        this.detailComponent.prepareContentsForImage(),
+        this.id,
+        courseSectionPage.id
+      )
+        .pipe(
+          takeUntil(this.destroyed$),
+          finalize(() => {
+            this.isSaving = false;
+          })
+        )
+        .subscribe(() => {
+          this.notify.success(this.l('SavedSuccessfully'));
+          this._router.navigate(['/app/page-builder/', this.id]);
+        });
+    }
+    this._courseSectionsService.update(this.settingsComponent.prepareContentsForSaving())
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
@@ -80,8 +120,19 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
         this.notify.success(this.l('SavedSuccessfully'));
         this._router.navigate(['/app/page-builder/', this.id], { fragment: 'Settings' });
       });
+
   }
 
+  onTabClick(currentTab): void {
+    switch (currentTab) {
+      case PagebuilderTabs.Content:
+        this.currentActiveTab = PagebuilderTabs.Content
+        break
+      case PagebuilderTabs.Details:
+        this.currentActiveTab = PagebuilderTabs.Details
+        break
+    }
+  }
   private getCourseSection(): void {
     this.isLoading = true;
     this._courseSectionsService.get(this.id)
@@ -90,7 +141,7 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
       )
       .subscribe(response => {
         this._pageBuilderService.courseSection = response;
-        this.getCourseSectionPages();
+
       });
   }
 
@@ -105,6 +156,7 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
       .subscribe(response => {
         if (response && response.pageContent) {
           this.contentComponent.courseSectionPage = response;
+          this._pageBuilderService.courseSectionPage = response;
         }
         this.contentComponent.initializeContentManager();
       });

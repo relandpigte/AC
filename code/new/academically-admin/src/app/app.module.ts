@@ -16,6 +16,8 @@ import { VerificationsModule } from './_shared/modules/verifications/verificatio
 import { NgPipesModule } from 'ngx-pipes';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { PopoverModule } from 'ngx-bootstrap/popover';
+import { TagInputModule } from 'ngx-chips';
+import {NgxMaskModule } from 'ngx-mask'; 
 
 // Cookie Consent
 import { NgcCookieConsentModule, NgcCookieConsentConfig } from 'ngx-cookieconsent';
@@ -73,7 +75,6 @@ import { UpcomingSessionsComponent } from './home/dashboard-overview/upcoming-se
 import { TutorHomeComponent } from './tutor-home/tutor-home.component';
 import { CoursesComponent } from './home/courses/courses.component';
 import { CoursesModule } from './home/courses/courses.module';
-
 // Settings is subject to change
 //
 const cookieConfig: NgcCookieConsentConfig = {
@@ -183,7 +184,11 @@ const cookieConfig: NgcCookieConsentConfig = {
     TypeaheadModule.forRoot(),
     PopoverModule.forRoot(),
     NgcCookieConsentModule.forRoot(cookieConfig),
-    CoursesModule
+    CoursesModule,
+    TagInputModule,
+    NgxMaskModule.forRoot({
+      showMaskTyped : true,
+    })
   ],
   entryComponents: [
     // tenants

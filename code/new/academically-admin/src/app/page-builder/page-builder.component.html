@@ -27,7 +27,11 @@
             <ul class="nav nav-tabs nav-overflow header-tabs">
               <li class="nav-item">
                 <a class="nav-link active" id="content-tab" data-toggle="tab" href="#content" role="tab"
-                  aria-controls="content" aria-selected="true">{{ 'Content' | localize }}</a>
+                  aria-controls="content" aria-selected="true" (click)="onTabClick(PagebuilderTabs.Content)">{{ 'Content' | localize }}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="details-tab" data-toggle="tab" href="#details" role="tab"
+                  aria-controls="details" aria-selected="true" (click)="onTabClick(PagebuilderTabs.Details)">{{ 'Details' | localize }}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab"
@@ -47,6 +51,9 @@
     <div class="tab-content" [loader]="isSaving">
       <div class="tab-pane fade show active" id="content" role="tabpanel" aria-labelledby="content-tab">
         <app-content></app-content>
+      </div>
+      <div class="tab-pane fade" id="details" role="tabpanel" aria-labelledby="details-tab">
+        <app-details></app-details>
       </div>
       <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
         <app-settings></app-settings>

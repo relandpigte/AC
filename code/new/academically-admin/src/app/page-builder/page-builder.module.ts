@@ -16,6 +16,9 @@ import { PageContentPreviewComponent } from './_components/content/previews/page
 import { PageSectionPreviewComponent } from './_components/content/previews/page-section-preview/page-section-preview.component';
 import { PageSectionEditorComponent } from './_components/content/editors/page-section-editor/page-section-editor.component';
 import { SettingsComponent } from './_components/settings/settings.component';
+import { DetailsComponent } from './_components/details/details.component';
+import { TagInputModule } from 'ngx-chips';
+import {NgxMaskModule } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -31,12 +34,15 @@ import { SettingsComponent } from './_components/settings/settings.component';
     PageSectionPreviewComponent,
     PageSectionEditorComponent,
     SettingsComponent,
+    DetailsComponent,
   ],
   imports: [
     CommonModule,
     PageBuilderRoutingModule,
     SharedModule,
     AppSharedModule,
+    TagInputModule,
+    NgxMaskModule.forRoot()
   ],
 })
 export class PageBuilderModule { }
