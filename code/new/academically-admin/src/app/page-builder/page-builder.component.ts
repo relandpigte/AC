@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { PageBuilderService } from './_services/page-builder.service';
 import { ContentComponent } from './_components/content/content.component';
+import { SettingsComponent } from './_components/settings/settings.component';
 
 @Component({
   selector: 'app-page-builder',
@@ -15,6 +16,7 @@ import { ContentComponent } from './_components/content/content.component';
 })
 export class PageBuilderComponent extends AppComponentBase implements OnInit {
   @ViewChild(ContentComponent, { static: true }) contentComponent: ContentComponent;
+  @ViewChild(SettingsComponent, { static: true }) settingsComponent: SettingsComponent;
 
   id: string;
   model = new CourseSectionDto();
@@ -65,6 +67,18 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
       .subscribe(() => {
         this.notify.success(this.l('SavedSuccessfully'));
         this._router.navigate(['/app/courses/', this.model.courseId], { fragment: 'curriculum' });
+      });
+
+      this._courseSectionsService.update(this.settingsComponent.prepareContentsForSaving())
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isSaving = false;
+        })
+      )
+      .subscribe(() => {
+        this.notify.success(this.l('SavedSuccessfully'));
+        this._router.navigate(['/app/page-builder/', this.id], { fragment: 'Settings' });
       });
   }
 

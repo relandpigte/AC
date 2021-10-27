@@ -14387,6 +14387,7 @@ export class CourseSectionDto implements ICourseSectionDto {
     parentId: string | undefined;
     creationTime: moment.Moment;
     myProperty: number;
+    isVisible: boolean;
     children: CourseSectionDto[] | undefined;
     course: CourseDto;
 
@@ -14410,6 +14411,7 @@ export class CourseSectionDto implements ICourseSectionDto {
             this.parentId = _data["parentId"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.myProperty = _data["myProperty"];
+            this.isVisible = _data["isVisible"];
             if (Array.isArray(_data["children"])) {
                 this.children = [] as any;
                 for (let item of _data["children"])
@@ -14437,6 +14439,7 @@ export class CourseSectionDto implements ICourseSectionDto {
         data["parentId"] = this.parentId;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["myProperty"] = this.myProperty;
+        data["isVisible"] = this.isVisible;
         if (Array.isArray(this.children)) {
             data["children"] = [];
             for (let item of this.children)
@@ -14464,6 +14467,7 @@ export interface ICourseSectionDto {
     parentId: string | undefined;
     creationTime: moment.Moment;
     myProperty: number;
+    isVisible: boolean;
     children: CourseSectionDto[] | undefined;
     course: CourseDto;
 }

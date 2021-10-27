@@ -19,6 +19,7 @@ namespace Academically.Services.CourseSections.Dto
         public Guid? ParentId { get; set; }
         public DateTime CreationTime { get; set; }
         public int MyProperty { get; set; }
+        public bool IsVisible { get; set; }
         public List<CourseSectionDto> Children { get; set; }
         public CourseDto Course { get; set; }
     }

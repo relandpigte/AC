@@ -15,6 +15,7 @@ import { ImagePageComponentPreviewComponent } from './_components/content/previe
 import { PageContentPreviewComponent } from './_components/content/previews/page-content-preview/page-content-preview.component';
 import { PageSectionPreviewComponent } from './_components/content/previews/page-section-preview/page-section-preview.component';
 import { PageSectionEditorComponent } from './_components/content/editors/page-section-editor/page-section-editor.component';
+import { SettingsComponent } from './_components/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { PageSectionEditorComponent } from './_components/content/editors/page-s
     PageContentPreviewComponent,
     PageSectionPreviewComponent,
     PageSectionEditorComponent,
+    SettingsComponent,
   ],
   imports: [
     CommonModule,

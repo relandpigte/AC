@@ -77,5 +77,6 @@
 	<include file="ddml-new/ddml.2021-09-09-01-create-courses-and-currencies-tables.xml"/>
 	<include file="ddml-new/ddml.2021-09-28-01-create-coursesections-tables.xml"/>
 	<include file="ddml-new/ddml.2021-10-06-01-create-coursesectionpages-tables.xml"/>
+	<include file="ddml-new/ddml.2021-10-27-01-alter-coursesections-add-isvisible-field.xml"/>
 </databaseChangeLog>
 	
