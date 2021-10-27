@@ -66,20 +66,23 @@ Feature: Dashboard
     Then user successfully login
     When user navigate to profile menu
     Then account settings is displayed
-    
+
   @??
-	Scenario: C14619 - Verify phone number
-	Scenario: C14620 - Verify the phone verification code with an invalid code 
-	@UI @TestRails(C14489)
-	Scenario: C14489 - Verify user profile widget is displayed
-	  Given User is in academically login page
+  Scenario: C14619 - Verify phone number
+	@??
+  Scenario: C14620 - Verify the phone verification code with an invalid code
+
+  @UI @TestRails(14489)
+  Scenario: C14489 - Verify user profile widget is displayed
+    Given User is in academically login page
     When user login as "student"
     Then user successfully login
     And user profile widget is displayed on the dashboard
     And "Student" type is displayed
-   @WW
-	Scenario: C14849 - Verify that the student can see the next 3 upcoming sessions
-	   Given User is in academically login page
+
+  @?? @Email
+  Scenario: C14849 - Verify that the student can see the next 3 upcoming sessions
+    Given User is in academically login page
     When user register a student
     And user enter account details
       | Firstname      | Lastname | Email          | Date of Birth |
@@ -113,6 +116,21 @@ Feature: Dashboard
     When user logout in academically
     Then user is in academically login page
     When user login as "tutor"
+    #   When user login as "admin"
+    # Then user successfully login
+    # When user proceed to manage user
+    # Then user is in manage user page
+    # When user add a new user
+    # And user enter a user details
+    #   | Name           | Surname | Username       | Password   | Email          | Active | Public |
+    #   | Automated90XXX | Test    | automated90XXX | Test@12345 | automated90XXX | Yes    | Yes    |
+    # And user select a "Tutor" role
+    # And user saving user details
+    # Then sucessful message is displayed
+    # When user logout in academically
+    # Then user is in academically login page
+    # When user enter username "automated90XXX" and password "Test@12345"
+    ##
     Then user successfully login
     When user see all projects
     Then user in in find work screen
@@ -126,14 +144,101 @@ Feature: Dashboard
     And user proceed to the dashboard page
     When user logout in academically
     Then user is in academically login page
-     When user enter username "automated85XXX" and password "Test@12345"
+    When user enter username "automated85XXX" and password "Test@12345"
     Then user successfully login
-     When user navigate to my projects tab
+    When user navigate to my projects tab
     And user proceed to project "Test Project 85XXX"
     Then user is in proposal screen
     #
     When the user views the full details of "Tutor" offer
     Then the user has successfully viewed the tutor offer
-    
-	 			
-	Scenario: C14851 - Verify that the student sees the last 3 projects on the dashboard 
+    #
+    When user proceed to book session tab
+    And user add book session on payment page
+    Then Add booking modal is displayed on payment page
+    When user enter booking details on payment page
+      | Project id | Title        | Start date | End date | Start hour | Start minute | Start interval | Start meridiem | End hour | End minute | End meridiem | Recurrence |
+      | null       | Testing85XXX | now        | now      |         02 | null         | null           | PM             |       04 | null       | PM           | One Time   |
+    And the user pays for the session
+    Then sucessful message is displayed
+    When user proceed to the calendar
+    Then the user is on the student calendar
+    And the "Testing85XXX" session is displayed on the student calendar
+ 
+  @UI @TestRails(14851)
+  Scenario: C14851 - Verify that the student sees the last 3 projects on the dashboard
+    Given User is in academically login page
+    When user login as "admin"
+    Then user successfully login
+    When user proceed to manage user
+    Then user is in manage user page
+    When user add a new user
+    And user enter a user details
+      | Name           | Surname | Username       | Password   | Email          | Active | Public |
+      | Automated91XXX | Test    | automated91XXX | Test@12345 | automated91XXX | Yes    | Yes    |
+    And user select a "Student" role
+    And user saving user details
+    Then sucessful message is displayed
+    When user logout in academically
+    Then user is in academically login page
+    When user enter username "automated91XXX" and password "Test@12345"
+    Then user successfully login
+    When user create a new project
+    Then user is in service wizard page
+    When user click request support
+    And user select "Academic Support" service
+    And user click continue to step2
+    Then user is in step 2
+    When user select "Graduate" level for the service
+    And user click continue to step 3
+    Then user in in step 3
+    When user select "Academic Tutoring"
+    And user click continue to step 4
+    Then user is in step 4
+    When user enter project name "Test Project 91XXX-1"
+    Then user is in dashboard page
+    When user create a new project
+    Then user is in service wizard page
+    When user click request support
+    And user select "Academic Support" service
+    And user click continue to step2
+    Then user is in step 2
+    When user select "Undergraduate" level for the service
+    And user click continue to step 3
+    Then user in in step 3
+    When user select "Academic Tutoring"
+    And user click continue to step 4
+    Then user is in step 4
+    When user enter project name "Test Project 91XXX-2"
+    Then user is in dashboard page
+    When user create a new project
+    Then user is in service wizard page
+    When user click request support
+    And user select "Academic Support" service
+    And user click continue to step2
+    Then user is in step 2
+    When user select "Post Graduate" level for the service
+    And user click continue to step 3
+    Then user in in step 3
+    When user select "Academic Tutoring"
+    And user click continue to step 4
+    Then user is in step 4
+    When user enter project name "Test Project 91XXX-3"
+    Then user is in dashboard page
+    When user create a new project
+    Then user is in service wizard page
+    When user click request support
+    And user select "Academic Support" service
+    And user click continue to step2
+    Then user is in step 2
+    When user select "Doctorate" level for the service
+    And user click continue to step 3
+    Then user in in step 3
+    When user select "Academic Tutoring"
+    And user click continue to step 4
+    Then user is in step 4
+    When user enter project name "Test Project 91XXX-4"
+    Then user is in dashboard page
+    And the last 3 projects are shown under recent projects
+      | Project 1            | Project 2            | Project 3            |
+      | Test Project 91XXX-4 | Test Project 91XXX-3 | Test Project 91XXX-2 |

@@ -7,7 +7,7 @@ import co.uk.webelements.Button;
 import co.uk.webelements.Element;
 import co.uk.webelements.TextBox;
 
-public class Calendar {
+public class CalendarStudent {
 
 	private static Element calendarHeader = new Element("Calendar",
 			By.xpath("//app-calendar//span[contains(text(),'Calendar')]"));
@@ -22,7 +22,9 @@ public class Calendar {
 
 	private static Element calendar = new Element("Calendar",
 			By.xpath("//td[@class='fc-timegrid-slot fc-timegrid-slot-lane ' and @data-time='12:00:00']"));
-
+	private static Element sessionBlock(String sessionName) {
+		return new Element(sessionName,By.xpath("//div[@class='fc-event-title fc-sticky' and text()='"+sessionName+"']"));
+	}
 	private static Element blockDate(String date, String title) {
 		return new Element(date + "-" + title, By.xpath("//td[@data-date='" + date
 				+ "]//div[contains(@class,'non-business tutor')]/div[text()='" + title + "']"));
@@ -41,8 +43,12 @@ public class Calendar {
 		calendar.click();
 	}
 
-	public static void verifyCaendarModalIsDisplayed() {
+	public static void verifyCalendarHeaderIsDisplayed() {
 		calendarHeader.verifyDisplayed();
+	}
+	
+	public static void verifySessionBlockIsDisplayedOnTheCalendar(String sessionName) {
+		sessionBlock(sessionName).verifyDisplayed();
 	}
 
 	public static void clickPrev() {

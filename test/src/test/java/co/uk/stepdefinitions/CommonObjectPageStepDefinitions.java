@@ -57,6 +57,12 @@ public class CommonObjectPageStepDefinitions {
 		CommonObjects.clicknavDashboard();
 	}
 	
+	@When("^user proceed to the calendar$")
+	public void proceedToTheCalendar() {
+		CommonObjects.clicknavSchedule();
+		DriverHandler.delay(2);
+	}
+	
 	@Then("^sucessfuly deleted is displayed$")
 	public void verifySuccesfulyDeletedIsDisplayed() {
 		CommonObjects.verifySuccessfulDeleteMessageIsDisplayed();

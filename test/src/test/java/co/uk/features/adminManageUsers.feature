@@ -102,7 +102,7 @@ Feature: Manage users
     When user enter username "Automated79XXX" and password "Test@12345"
     Then user is not successfully login
 
-    @UI @TestRails(C14596)
+  @UI @TestRails(C14596)
   Scenario: C14596 - Edit user details
     Given User is in academically login page
     When user login as "admin"
