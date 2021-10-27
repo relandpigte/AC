@@ -108,19 +108,19 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
           this.notify.success(this.l('SavedSuccessfully'));
           this._router.navigate(['/app/page-builder/', this.id]);
         });
+    } else if (this.currentActiveTab === PagebuilderTabs.Settings) {
+      this._courseSectionsService.update(this.settingsComponent.prepareContentsForSaving())
+        .pipe(
+          takeUntil(this.destroyed$),
+          finalize(() => {
+            this.isSaving = false;
+          })
+        )
+        .subscribe(() => {
+          this.notify.success(this.l('SavedSuccessfully'));
+          this._router.navigate(['/app/page-builder/', this.id], { fragment: 'Settings' });
+        });
     }
-    this._courseSectionsService.update(this.settingsComponent.prepareContentsForSaving())
-      .pipe(
-        takeUntil(this.destroyed$),
-        finalize(() => {
-          this.isSaving = false;
-        })
-      )
-      .subscribe(() => {
-        this.notify.success(this.l('SavedSuccessfully'));
-        this._router.navigate(['/app/page-builder/', this.id], { fragment: 'Settings' });
-      });
-
   }
 
   onTabClick(currentTab): void {
@@ -130,6 +130,9 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
         break
       case PagebuilderTabs.Details:
         this.currentActiveTab = PagebuilderTabs.Details
+        break
+      case PagebuilderTabs.Settings:
+        this.currentActiveTab = PagebuilderTabs.Settings
         break
     }
   }
