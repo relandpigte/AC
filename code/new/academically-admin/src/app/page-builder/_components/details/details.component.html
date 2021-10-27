@@ -58,7 +58,7 @@
                 </div>
                 <div class="card-body">
                     <tag-input [(ngModel)]="categoryTags" name="category" #category="ngModel" [modelAsStrings]="true"
-                        [displayBy]="'display'"></tag-input>
+                        [displayBy]="'display'" [disable]="isCategoriesTagsDisabled"></tag-input>
                 </div>
             </div>
 
@@ -73,12 +73,16 @@
                 <div class="card-body">
                     <app-document-uploader [previewImages]="true" [largeImagePreview]="true" [maxFiles]="1"
                         [cropImages]="true" [cropperAspectRatioWidth]="350" [cropperAspectRationHeight]="263"
-                        [allowedExtensions]="allowedImageExtensions">
+                        [allowedExtensions]="allowedImageExtensions" [disabled]="isCourseSectionPageImageDisabled">
                     </app-document-uploader>
                     <div class="mt-2">
                         <h5> {{ 'UploadInstuction' | localize }}</h5>
                         <h5> {{ 'RecommendedDimensions' | localize }}</h5>
                     </div>
+                    <button class="btn btn-sm btn-light float-right" (click)="onEnableEditable(EnabledControl.isCourseSectionPageImageDisabled)">
+                        <i class="fe fe-edit-2"></i>
+                        {{ 'Edit' | localize}}
+                    </button>
                 </div>
             </div>
 

@@ -25,11 +25,11 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
 
   allowedImageExtensions = fileUploadConfiguration.allowedImageExtensions;
   isLoading: false
-  isNameDisabled = false
-  isDescriptionDisabled = false
-  isCategoriesTagsDisabled = false
-  isCourseSectionPageImageDisabled = false
-  isDurationDisabled = false
+  isNameDisabled = true
+  isDescriptionDisabled = true
+  isCategoriesTagsDisabled = true
+  isCourseSectionPageImageDisabled = true
+  isDurationDisabled = true
   model = new CourseSectionDto();
   courseSectionPageModel = new CourseSectionPageDto();
   CourseSectionType = CourseSectionType
