@@ -1231,5 +1231,7 @@
     <text name="LogsCourses">Course</text>
     <text name="New">New</text>
 
+    <text name="Standard">Standard</text>
+    <text name="Cohort">Cohort</text>
   </texts>
 </localizationDictionary>
