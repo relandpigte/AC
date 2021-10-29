@@ -1,11 +1,12 @@
 import { ThrowStmt } from '@angular/compiler';
-import { Component, OnInit, Injector, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Injector, Input, Output, EventEmitter, ViewChild, Renderer2 } from '@angular/core';
 import { DocumentUploaderComponent } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { ConversationDto, UserDto, ConversationsServiceProxy, FileParameter, DocumentDto, DocumentsServiceProxy, ConversationDocumentDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { QuillModules } from 'ngx-quill';
+import { Observable, ReplaySubject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -22,6 +23,7 @@ export class ConversationComponent extends AppComponentBase implements OnInit {
   @Output() conversationUpdated = new EventEmitter<ConversationDto>();
 
   @ViewChild('documentUploader') documentUploaderComponent: DocumentUploaderComponent;
+  @ViewChild('dropzone') dropzone : any
 
   conversations: ConversationDto[] = [];
   conversationFilesLoader: boolean[] = [];
@@ -50,6 +52,7 @@ export class ConversationComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     private _conversationsService: ConversationsServiceProxy,
     private _documentsService: DocumentsServiceProxy,
+    private render: Renderer2
   ) {
     super(injector);
   }
@@ -139,5 +142,26 @@ export class ConversationComponent extends AppComponentBase implements OnInit {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  }
+
+  onSelect(event) {
+    this.render.setStyle(this.dropzone.nativeElement, 'display','none');
+    this.convertFileTobase64(event.addedFiles[0]).subscribe(base64 => {
+      this.conversationMessage = `<p><img src=\"data:image/jpeg;base64,${ base64 }\"></p>`
+      this.onMessageFormSubmit()
+    });
+  }
+
+  onDragEnter(event) {
+    this.render.removeStyle(this.dropzone.nativeElement, 'display');
+    event.preventDefault();
+  }
+
+  private convertFileTobase64(file: File): Observable<string> {
+    const result = new ReplaySubject<string>(1);
+    const reader = new FileReader();
+    reader.readAsBinaryString(file);
+    reader.onload = (event) => result.next(btoa(event.target.result.toString()));
+    return result;
   }
 }
