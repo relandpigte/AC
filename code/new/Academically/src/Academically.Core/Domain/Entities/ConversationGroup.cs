@@ -15,6 +15,7 @@ namespace Academically.Domain.Entities
 
         public string Name { get; set; }
         public Guid? ProjectId { get; set; }
+        public Guid? CalendarEventId { get; set; }
         public DateTime? LastConversationCreationTime { get; set; }
         public long? LastConversationCreatorUserId { get; set; }
         public string LastConversationMessage { get; set; }
@@ -22,6 +23,8 @@ namespace Academically.Domain.Entities
 
         [ForeignKey("ProjectId")]
         public virtual Project Project { get; set; }
+        [ForeignKey("CalendarEventId")]
+        public virtual CalendarEvent CalendarEvent { get; set; }
 
         public virtual ICollection<Conversation> Conversations { get; set; }
     }

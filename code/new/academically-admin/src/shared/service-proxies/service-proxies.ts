@@ -14215,6 +14215,7 @@ export class ConversationGroupDto implements IConversationGroupDto {
     id: string;
     name: string | undefined;
     projectId: string | undefined;
+    calendarEventId: string | undefined;
     lastConversationCreationTime: moment.Moment | undefined;
     lastConversationCreatorUserId: number | undefined;
     lastConversationMessage: string | undefined;
@@ -14235,6 +14236,7 @@ export class ConversationGroupDto implements IConversationGroupDto {
             this.id = _data["id"];
             this.name = _data["name"];
             this.projectId = _data["projectId"];
+            this.calendarEventId = _data["calendarEventId"];
             this.lastConversationCreationTime = _data["lastConversationCreationTime"] ? moment(_data["lastConversationCreationTime"].toString()) : <any>undefined;
             this.lastConversationCreatorUserId = _data["lastConversationCreatorUserId"];
             this.lastConversationMessage = _data["lastConversationMessage"];
@@ -14255,6 +14257,7 @@ export class ConversationGroupDto implements IConversationGroupDto {
         data["id"] = this.id;
         data["name"] = this.name;
         data["projectId"] = this.projectId;
+        data["calendarEventId"] = this.calendarEventId;
         data["lastConversationCreationTime"] = this.lastConversationCreationTime ? this.lastConversationCreationTime.toISOString() : <any>undefined;
         data["lastConversationCreatorUserId"] = this.lastConversationCreatorUserId;
         data["lastConversationMessage"] = this.lastConversationMessage;
@@ -14275,6 +14278,7 @@ export interface IConversationGroupDto {
     id: string;
     name: string | undefined;
     projectId: string | undefined;
+    calendarEventId: string | undefined;
     lastConversationCreationTime: moment.Moment | undefined;
     lastConversationCreatorUserId: number | undefined;
     lastConversationMessage: string | undefined;
