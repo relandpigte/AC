@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="State">State</text>
+    <text name="Unread">Unread</text>
+    <text name="Read">Read</text>
+    <text name="ManageYourNotifications">Manage your notifications</text>
+    <text name="ViewAll">View all</text>
     <text name="You">You</text>
     <text name="CautionInfo">All information in this form (including files) will be viewable by tutors</text>
     <text name="Caution">Caution</text>

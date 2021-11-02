@@ -73,6 +73,7 @@ import { UpcomingSessionsComponent } from './home/dashboard-overview/upcoming-se
 import { TutorHomeComponent } from './tutor-home/tutor-home.component';
 import { CoursesComponent } from './home/courses/courses.component';
 import { CoursesModule } from './home/courses/courses.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 // Settings is subject to change
 //
@@ -160,7 +161,7 @@ const cookieConfig: NgcCookieConsentConfig = {
     ProjectsComponent,
     UpcomingSessionsComponent,
     TutorHomeComponent,
-    CoursesComponent
+    CoursesComponent,
   ],
   imports: [
     CommonModule,
@@ -183,7 +184,8 @@ const cookieConfig: NgcCookieConsentConfig = {
     TypeaheadModule.forRoot(),
     PopoverModule.forRoot(),
     NgcCookieConsentModule.forRoot(cookieConfig),
-    CoursesModule
+    CoursesModule,
+    NotificationsModule,
   ],
   entryComponents: [
     // tenants

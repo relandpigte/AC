@@ -1,0 +1,85 @@
+<div *ngIf="!isModal; else modalTemplate" class="btn-group mr-4 d-none d-md-flex" dropdown placement="bottom left"
+  container="body">
+  <a href (click)="$event.preventDefault();" dropdownToggle class="navbar-user-link">
+    <span class="icon notification-icon">
+      <i class="fe fe-bell"></i>
+      <span class="badge bg-primary unread-count" *ngIf="unreadCount">{{ unreadCount }}</span>
+    </span>
+  </a>
+  <div *dropdownMenu class="dropdown-menu dropdown-menu-card dropdown-menu-right">
+    <ng-container *ngTemplateOutlet="modalHeader">
+    </ng-container>
+    <div class="card-body notifications-container">
+      <ng-container *ngTemplateOutlet="notificationList"></ng-container>
+    </div>
+  </div>
+</div>
+
+<ng-template #modalTemplate>
+  <div [class]="buttonClass">
+    <a href (click)="$event.preventDefault(); onNotificationsModalShow();" class="navbar-user-link">
+      <span class="icon notification-icon">
+        <i class="fe fe-bell"></i>
+        <span class="badge bg-primary unread-count" *ngIf="unreadCount">{{ unreadCount }}</span>
+      </span>
+    </a>
+  </div>
+  <div bsModal #notificationsModal="bs-modal" class="modal fade fixed-left" id="modalDemo" tabindex="-1" role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog card modal-dialog-vertical rounded-0" role="document">
+      <form class="modal-content">
+        <ng-container *ngTemplateOutlet="modalHeader">
+        </ng-container>
+        <div class="modal-body notifications-container">
+          <ng-container *ngTemplateOutlet="notificationList"></ng-container>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #modalHeader>
+  <div class="card-header">
+    <h5 class="card-header-title">
+      {{ 'Notifications' | localize }}
+    </h5>
+    <a [routerLink]="['/app/notifications']" href="#" class="small">
+      {{ 'ViewAll' | localize }}
+    </a>
+  </div>
+</ng-template>
+
+<ng-template #notificationList>
+  <div class="list-group list-group-flush list-group-activity">
+    <a *ngFor="let notification of notifications"
+      [class.unread-notification]="notification.state === UserNotificationState.Unread"
+      class="list-group-item text-reset notification-item"
+      (click)="$event.preventDefault(); onNotificationClick(notification)" href="#">
+      <div class="row">
+        <div class="col-auto">
+          <div class="avatar avatar-sm">
+            <img [src]="getProfilePicture(notification.userProfilePictureUrl)" alt="..."
+              class="avatar-img rounded-circle">
+          </div>
+        </div>
+        <div class="col ms-n2">
+          <div class="small" [innerHTML]="notification.notificationMessage">
+          </div>
+          <small class="text-muted">
+            {{ notification.creationTime }}
+          </small>
+        </div>
+        <div class="col-auto align-self-center">
+          <button *ngIf="notification.state === UserNotificationState.Unread"
+            (click)="onReadNotificationClick($event, notification)"
+            class="btn btn-sm btn-rounded-circle btn-primary btn-read-notification">&nbsp;</button>
+        </div>
+      </div>
+    </a>
+    <a *ngIf="!notifications || !notifications.length" class="list-group-item text-reset">
+      <p class="text-center text-muted p-0 m-0">
+        {{ 'NoRecentNotification' | localize }}
+      </p>
+    </a>
+  </div>
+</ng-template>

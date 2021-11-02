@@ -1,0 +1,166 @@
+<div class="container-fluid" [@routerTransition]>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ 'ManageYourNotifications' | localize }}</h6>
+              <h1 class="header-title">{{ 'Notifications' | localize }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <form>
+                <div class="input-group input-group-flush">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="fe fe-search"></i>
+                    </span>
+                  </div>
+                  <input class="list-search form-control" type="search" name="Search" placeholder="Search"
+                    [(ngModel)]="searchFilter" (keyup.enter)="getDataPage(1)" />
+                </div>
+              </form>
+            </div>
+            <div class="col-auto mr-n3">
+              <form>
+                <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize"
+                  (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
+                  class="custom-select custom-select-sm form-control-flush" data-toggle="select">
+                  <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
+                    {{ pageSizeSelection }} {{ 'PerPage' | localize }}
+                  </option>
+                </select>
+              </form>
+            </div>
+            <div class="col-auto">
+              <div class="dropdown" dropdown #filterDropdown="bs-dropdown" [isAnimated]="true" [autoClose]="false">
+                <button class="btn btn-sm btn-white" type="button" dropdownToggle>
+                  <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }} <span
+                    class="badge badge-primary ml-1 d-none">0</span>
+                </button>
+                <form *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-card"
+                  (ngSubmit)="getDataPage(1)">
+                  <div class="card-header">
+                    <h4 class="card-header-title">{{ 'Filters' | localize }}</h4>
+                    <button class="btn btn-sm btn-link text-reset btn-white" type="submit"
+                      (click)="filterDropdown.hide(); onClearFiltersClick()">
+                      <small>{{ 'ClearFilters' | localize }}</small>
+                    </button>
+                  </div>
+                  <div class="card-body">
+                    <div class="list-group list-group-flush mt-n4 mb-4">
+                      <div class="list-group-item">
+                        <div class="row">
+                          <div class="col">
+                            <small>{{ 'State' | localize }}</small>
+                          </div>
+                          <div class="col-auto">
+                            <div class="custom-control custom-radio d-inline">
+                              <input type="radio" class="custom-control-input" id="stateAll" name="stateFilter"
+                                [(ngModel)]="stateFilter" [value]="undefined" checked />
+                              <label class="custom-control-label" for="stateAll">
+                                {{ 'All' | localize }}
+                              </label>
+                            </div>
+                            <div class="custom-control custom-radio d-inline mx-3">
+                              <input type="radio" class="custom-control-input" id="stateUnread" name="stateFilter"
+                                [(ngModel)]="stateFilter" [value]="UserNotificationState.Unread" />
+                              <label class="custom-control-label" for="stateUnread">
+                                {{ 'Unread' | localize }}
+                              </label>
+                            </div>
+                            <div class="custom-control custom-radio d-inline">
+                              <input type="radio" class="custom-control-input" id="stateRead" name="stateFilter"
+                                [(ngModel)]="stateFilter" [value]="UserNotificationState.Read" />
+                              <label class="custom-control-label" for="stateRead">
+                                {{ 'Read' | localize }}
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <button class="btn btn-block btn-primary" type="submit" (click)="filterDropdown.hide()">
+                      {{ 'ApplyFilter' | localize }}
+                    </button>
+                  </div>
+                  &nbsp;
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-sm table-hover table-nowrap card-table" [loader]="isTableLoading">
+            <thead table-header-sort [headers]="headers" (sortChange)="sortChange($event)"></thead>
+            <tbody class="list font-size-base">
+              <tr *ngFor="
+                  let notification of (notifications | paginate: { id: 'notifications', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
+                " [class.unread-notification]="notification.state === UserNotificationState.Unread">
+                <td>
+                  <div class="row">
+                    <div class="col-auto align-self-center">
+                      <button *ngIf="notification.state === UserNotificationState.Unread"
+                        (click)="onReadNotificationClick($event, notification)"
+                        class="btn btn-sm btn-rounded-circle btn-primary btn-read-notification">&nbsp;</button>
+                    </div>
+                    <div class="col">
+                      <div class="small" [innerHTML]="notification.message">
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  {{ notification.creationTime | dateFormat: 'MMMM DD, YYYY hh:mm A' }}
+                </td>
+                <td>
+                  <button (click)="onViewClick(notification)"
+                    class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
+                    <span class="fe fe-eye"></span>
+                  </button>
+                </td>
+                <!-- <td>
+                  <div class="custom-control custom-checkbox ml-4">
+                    <input type="checkbox" class="custom-control-input" disabled [checked]="user.isActive" />
+                    <label class="custom-control-label"></label>
+                  </div>
+                </td>
+                <td class="table-action">
+                  <div *ngIf="!this.testRatingsGeneratorLoader[user.id]" dropdown class="dropdown" container="body">
+                    <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;" role="button">
+                      <i class="fe fe-more-vertical"></i>
+                    </a>
+                    <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
+                      <a href="javascript:;" class="dropdown-item" (click)="onEditClick(user)"
+                        *ngIf="permission.isGranted('Pages.Users.Update')">
+                        <i class="fe fe-edit"></i> {{ 'Edit' | localize }}
+                      </a>
+                      <a href="javascript:;" class="dropdown-item" (click)="onDeleteClick(user)"
+                        *ngIf="permission.isGranted('Pages.Users.Delete')">
+                        <i class="fe fe-trash"></i> {{ 'Delete' | localize }}
+                      </a>
+                      <a href="#" class="dropdown-item" (click)="$event.preventDefault(); onGenerateRatingsClick(user)">
+                        <i class="fe fe-sunrise"></i>
+                        Generate Ratings
+                      </a>
+                    </div>
+                  </div>
+                  <span *ngIf="this.testRatingsGeneratorLoader[user.id]"
+                    class="spinner-border spinner-border-sm text-muted" role="status" aria-hidden="true"></span>
+                </td> -->
+              </tr>
+            </tbody>
+          </table>
+          <abp-pagination-controls id="notifications" (pageChange)="getDataPage($event)"> </abp-pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

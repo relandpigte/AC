@@ -22,7 +22,6 @@ import { DocumentUploaderComponent } from './components/document-uploader/docume
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
 import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
 import { ProfilePictureChangerComponent } from './components/profile-picture-changer/profile-picture-changer.component';
-import { NotificationPreviewComponent } from './components/notification-preview/notification-preview.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +30,6 @@ import { NotificationPreviewComponent } from './components/notification-preview/
     ImageCropperComponent,
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
-    NotificationPreviewComponent,
     DateFormatPipe,
     FixedHeightDirective,
     BottomScrollerDirective,
@@ -74,7 +72,6 @@ import { NotificationPreviewComponent } from './components/notification-preview/
     ImageCropperComponent,
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
-    NotificationPreviewComponent,
   ],
 })
 export class AppSharedModule { }

@@ -212,7 +212,7 @@ namespace Academically.Services.CalendarEvents
                     break;
             }
 
-            string clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
+            string clientRootAddress = (await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress)).Trim('/');
             string viewDetailsLink = $"{clientRootAddress}/app/calendar/{tutor.Id}?goto={HttpUtility.UrlEncode(calendarEvent.StartTime.ToString("o", CultureInfo.InvariantCulture))}" +
                 $"&event-id={calendarEvent.Id}";
 
@@ -222,6 +222,7 @@ namespace Academically.Services.CalendarEvents
             notificationData["1"] = calendarEvent.Title;
             notificationData["2"] = project.Name;
             notificationData.Properties.Add("Link", viewDetailsLink);
+            notificationData.Properties.Add("CreatorUserId", AbpSession.UserId.Value);
 
             await _notificationPublisher.PublishAsync(
                 NotificationNames.Notifications_CalendarEvents_NewBooking,
@@ -286,31 +287,32 @@ namespace Academically.Services.CalendarEvents
                 notificationUser = projectOffer.CreatorUser;
             }
 
-            //string clientRootAddress = await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress);
-            //string viewDetailsLink = $"{clientRootAddress}/app/calendar/{projectOffer.CreatorUser.Id}?goto={HttpUtility.UrlEncode(input.CalendarEvent.StartTime.ToString("o", CultureInfo.InvariantCulture))}" +
-            //    $"&event-id={input.CalendarEvent.Id}";
+            string clientRootAddress = (await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress)).Trim('/');
+            string viewDetailsLink = $"{clientRootAddress}/app/calendar/{projectOffer.CreatorUser.Id}?goto={HttpUtility.UrlEncode(input.CalendarEvent.StartTime.ToString("o", CultureInfo.InvariantCulture))}" +
+                $"&event-id={input.CalendarEvent.Id}";
 
-            //var notificationData = new LocalizableMessageNotificationData(new LocalizableString("BookingRescheduledNotificationMessage", AcademicallyConsts.LocalizationSourceName));
-            //notificationData["0"] = currentUser.FullName;
-            //notificationData["1"] = calendarEvent.Title;
-            //notificationData["2"] = projectOffer.Project.Name;
-            //notificationData.Properties.Add("Link", viewDetailsLink);
+            var notificationData = new LocalizableMessageNotificationData(new LocalizableString("BookingRescheduledNotificationMessage", AcademicallyConsts.LocalizationSourceName));
+            notificationData["0"] = currentUser.FullName;
+            notificationData["1"] = calendarEvent.Title;
+            notificationData["2"] = projectOffer.Project.Name;
+            notificationData.Properties.Add("Link", viewDetailsLink);
+            notificationData.Properties.Add("CreatorUserId", AbpSession.UserId.Value);
 
-            //await _notificationPublisher.PublishAsync(
-            //    NotificationNames.Notifications_CalendarEvents_BookingRescheduled,
-            //    notificationData,
-            //    userIds: new[] { new UserIdentifier(notificationUser.TenantId, notificationUser.Id) }
-            //);
+            await _notificationPublisher.PublishAsync(
+                NotificationNames.Notifications_CalendarEvents_BookingRescheduled,
+                notificationData,
+                userIds: new[] { new UserIdentifier(notificationUser.TenantId, notificationUser.Id) }
+            );
 
-            //notificationData["0"] = L("You");
-            //notificationData["1"] = calendarEvent.Title;
-            //notificationData["2"] = projectOffer.Project.Name;
+            notificationData["0"] = L("You");
+            notificationData["1"] = calendarEvent.Title;
+            notificationData["2"] = projectOffer.Project.Name;
 
-            //await _notificationPublisher.PublishAsync(
-            //    NotificationNames.Notifications_CalendarEvents_BookingRescheduled,
-            //    notificationData,
-            //    userIds: new[] { new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value) }
-            //);
+            await _notificationPublisher.PublishAsync(
+                NotificationNames.Notifications_CalendarEvents_BookingRescheduled,
+                notificationData,
+                userIds: new[] { new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value) }
+            );
         }
 
         public async Task Accept(Guid id, long tutorId)

@@ -170,6 +170,9 @@
         public const string Pages_PageBuilder = "Pages.PageBuilder";
 
 
+        public const string Pages_Notifications = "Pages.Notifications";
+
+
         public const string Pages_Tenants = "Pages.Tenants";
 
         public const string Pages_TutorHome = "Pages.TutorHome";

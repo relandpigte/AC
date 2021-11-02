@@ -3276,8 +3276,8 @@ export class NotificationsServiceProxy {
     /**
      * @return Success
      */
-    getAll(): Observable<UserNotification[]> {
-        let url_ = this.baseUrl + "/api/services/app/Notifications/GetAll";
+    getRecent(): Observable<UserNotification[]> {
+        let url_ = this.baseUrl + "/api/services/app/Notifications/GetRecent";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -3289,11 +3289,11 @@ export class NotificationsServiceProxy {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetAll(response_);
+            return this.processGetRecent(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetAll(<any>response_);
+                    return this.processGetRecent(<any>response_);
                 } catch (e) {
                     return <Observable<UserNotification[]>><any>_observableThrow(e);
                 }
@@ -3302,7 +3302,7 @@ export class NotificationsServiceProxy {
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<UserNotification[]> {
+    protected processGetRecent(response: HttpResponseBase): Observable<UserNotification[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3329,6 +3329,131 @@ export class NotificationsServiceProxy {
             }));
         }
         return _observableOf<UserNotification[]>(<any>null);
+    }
+
+    /**
+     * @param searchFilter (optional) 
+     * @param stateFilter (optional) 0 = Unread
+    
+    1 = Read
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(searchFilter: string | undefined, stateFilter: UserNotificationState | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserNotificationPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Notifications/GetAll?";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (stateFilter === null)
+            throw new Error("The parameter 'stateFilter' cannot be null.");
+        else if (stateFilter !== undefined)
+            url_ += "StateFilter=" + encodeURIComponent("" + stateFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<UserNotificationPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserNotificationPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<UserNotificationPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserNotificationPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserNotificationPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    updateNotificationReadState(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Notifications/UpdateNotificationReadState?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateNotificationReadState(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateNotificationReadState(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateNotificationReadState(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -22801,6 +22926,61 @@ export interface IUserNotification {
     userId: number;
     state: UserNotificationState;
     notification: TenantNotification;
+}
+
+export class UserNotificationPagedResultDto implements IUserNotificationPagedResultDto {
+    items: UserNotification[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IUserNotificationPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(UserNotification.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): UserNotificationPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserNotificationPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): UserNotificationPagedResultDto {
+        const json = this.toJSON();
+        let result = new UserNotificationPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserNotificationPagedResultDto {
+    items: UserNotification[] | undefined;
+    totalCount: number;
 }
 
 /** 0 = Unread 1 = Read */
