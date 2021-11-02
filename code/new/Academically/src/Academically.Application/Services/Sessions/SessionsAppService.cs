@@ -56,13 +56,14 @@ namespace Academically.Services.Sessions
                 projectId = session.CalendarEvent.ProjectId;
             }
 
-            var conversationGroup = await _conversationGroupsRepository.FirstOrDefaultAsync(e => e.ProjectId == projectId);
+            var conversationGroup = await _conversationGroupsRepository.FirstOrDefaultAsync(e => e.ProjectId == projectId && e.CalendarEventId == calendarEventId);
             if (conversationGroup == null)
             {
                 conversationGroup = new ConversationGroup()
                 {
                     Name = session.CalendarEvent.Title,
                     ProjectId = session.CalendarEvent.ProjectId.Value,
+                    CalendarEventId = calendarEventId
                 };
                 await _conversationGroupsRepository.InsertAsync(conversationGroup);
             }

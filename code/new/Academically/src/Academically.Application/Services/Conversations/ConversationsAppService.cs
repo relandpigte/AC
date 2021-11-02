@@ -88,7 +88,6 @@ namespace Academically.Services.Conversations
 
             var conversationGroups = await _conversationGroupsRepository.GetAll()
                 .Where(e => projectIds.Any(id => id == e.ProjectId))
-                .OrderByDescending(e => e.LastConversationCreationTime)
                 .Distinct()
                 .Include(e => e.Project)
                     .ThenInclude(e => e.CreatorUser)
@@ -107,7 +106,7 @@ namespace Academically.Services.Conversations
                     .CountAsync(e => !e.IsSeen);
             }
 
-            return conversationGroups;
+            return conversationGroups.OrderByDescending(e=>e.LastConversationCreationTime);
         }
 
         public async Task<IEnumerable<ConversationDocumentDto>> UploadDocuments([FromForm] UploadConversationDocumentsDto input)

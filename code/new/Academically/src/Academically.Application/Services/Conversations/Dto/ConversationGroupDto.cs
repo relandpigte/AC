@@ -12,6 +12,7 @@ namespace Academically.Services.Conversations.Dto
     {
         public string Name { get; set; }
         public Guid? ProjectId { get; set; }
+        public Guid? CalendarEventId { get; set; }
         public DateTime? LastConversationCreationTime { get; set; }
         public long? LastConversationCreatorUserId { get; set; }
         public string LastConversationMessage { get; set; }
