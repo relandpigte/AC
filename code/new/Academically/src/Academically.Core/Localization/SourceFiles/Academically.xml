@@ -1236,6 +1236,8 @@
     <text name="LogsCourses">Course</text>
     <text name="New">New</text>
     <text name="DripDelay">Drip/Delay</text>
+    <text name="Standard">Standard</text>
+    <text name="Cohort">Cohort</text>
     <text name="EnrolmentDateSectionDelayed">Enrolment date-Section delayed</text>
     <text name="DaysFromEnrolmentDate">days from enrolment date</text>
     <text name="CourseStartDateSectionDelayed">Course start date-Section delayed</text>

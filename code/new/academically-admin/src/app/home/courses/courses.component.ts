@@ -3,7 +3,7 @@ import { ModalOptions } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CourseWizardComponent } from './course-wizard/course-wizard.component';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CourseDto, CoursesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CourseDto, CoursesServiceProxy, CourseType } from '@shared/service-proxies/service-proxies';
 import { takeUntil, finalize } from 'rxjs/operators';
 
 @Component({
@@ -14,6 +14,7 @@ import { takeUntil, finalize } from 'rxjs/operators';
 export class CoursesComponent extends AppComponentBase implements OnInit {
   courses: CourseDto[] = [];
   isLoading = false;
+  CourseType = CourseType
 
   constructor(
     injector: Injector,
