@@ -9,5 +9,6 @@ namespace Academically.Services.CourseSectionPages
     {
         Task<CourseSectionPageDto> Get(Guid courseSectionId);
         Task Save(CourseSectionPageDto input);
+        Task SaveUpdateDetails(UpdateCourseSectionPageDto input);
     }
 }

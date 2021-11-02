@@ -74,7 +74,9 @@ export class ContentComponent extends AppComponentBase implements OnInit, OnDest
     this.courseSectionPage.pageContent = JSON.stringify(this.pageSections);
     return this.courseSectionPage;
   }
-
+  public preparepageContentForSaving(): string {
+    return JSON.stringify(this.pageSections);
+  }
   ngOnInit(): void {
   }
 

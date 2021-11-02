@@ -1235,6 +1235,13 @@
     <text name="LogsProjects">Project</text>
     <text name="LogsCourses">Course</text>
     <text name="New">New</text>
-
+    <text name="ApproximateDuration">Approximate Lesson Duration</text>
+    <text name="Module">Module</text>
+    <text name="Unit">Unit</text>
+    <text name="Lesson">Lesson</text>
+    <text name="CategoriesTags">Categories &amp; Tags</text>
+    <text name="LessonImage">Lesson Image</text>
+    <text name="UploadInstuction">Please use .jpg or .png</text>
+  <text name="RecommendedDimensions">Recommended Dimensions of</text>
   </texts>
 </localizationDictionary>
