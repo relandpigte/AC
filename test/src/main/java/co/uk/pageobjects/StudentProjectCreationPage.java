@@ -108,7 +108,16 @@ public class StudentProjectCreationPage {
 	public static class Step4{
 		
 		private static Element page4 = new Element("Page 4",By.xpath("//div[contains(@class,'justify-content-between')]//p[contains(text(),'Step 4 Of 4')]"));
-		private static TextBox projectName = new TextBox("Project name",By.xpath("//input[@id='ProjectName']"));
+		private static TextBox projectNameTxtBox = new TextBox("Project name",By.xpath("//input[@id='ProjectName']"));
+		private static TextBox descriptionTxtBx = new TextBox("Description",By.xpath("//textarea[@id='Description']"));
+		private static Element academicLevelDrpdwn = new Element("Academic level dropdown",By.xpath("//span[contains(@aria-labelledby,'AcademicLevel')]"));
+		private static Element academicLevelOption(String level) {
+			return new Element("Academic level: "+level,By.xpath("//ul[contains(@id,'AcademicLevel-results')]/li[text()=' "+level+" ']"));
+		}
+		private static Element qualificationOption(String qualification) {
+			return new Element("Qualification: "+qualification,By.xpath("//ul[contains(@id,'Qualification-result')]/li[text()=' "+qualification+" ']"));
+		}
+		
 		private static Button createBtn = new Button("Continue",By.xpath("//button[contains(text(),'Create')]"));
 		private static Button backBtn = new Button("Cancel",By.xpath("//button[contains(text(),'Back')]"));
 		
@@ -120,11 +129,11 @@ public class StudentProjectCreationPage {
 			backBtn.click();
 		}
 		public static void verifyPrjectNameTextBoxIsDisplayed() {
-			projectName.verifyDisplayed();
+			projectNameTxtBox.verifyDisplayed();
 		}
 		
 		public static void enterProjectName(String project) {
-			projectName.setText(project);
+			projectNameTxtBox.setText(project);
 		}
 		public static void verifyPage4IsDisplayed() {
 			page4.verifyDisplayed();

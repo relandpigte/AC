@@ -15,6 +15,7 @@ public class TutorProjectPageStepDefinitions {
 	@Then("^user in in find work screen$")
 	public void verifyFindWorkTabIsActive() {
 		TutorProjectsPageFindWork.verifyFindWorkTabIsActive();
+		DriverHandler.delay(5);
 	}
 	
 	@Then("^project name \"(.*)\" is displayed$")
