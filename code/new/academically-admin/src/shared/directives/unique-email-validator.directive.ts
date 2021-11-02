@@ -29,16 +29,18 @@ export class UniqueEmailValidator implements AsyncValidator {
     }
     const inputEl = this._el.nativeElement as HTMLInputElement;
     const parentEl = inputEl.parentElement as HTMLDivElement;
-    const loaderEl = document.createElement('span');
-    loaderEl.classList.add('spinner-border');
-    loaderEl.classList.add('text-primary');
-    loaderEl.classList.add('input-icon');
-    parentEl.prepend(loaderEl);
+    let loaderEl;
+      if(parentEl.childNodes[0]['className'].indexOf('spinner-border')==-1){
+        loaderEl = document.createElement('span');
+        loaderEl.classList.add('spinner-border');
+        loaderEl.classList.add('text-primary');
+        loaderEl.classList.add('input-icon');
+        parentEl.prepend(loaderEl);
+      }
     const value = control.value;
     if (value) {
       return this._registrationsService.checkEmailUniqueness(control.value).pipe(
         map(result => {
-          loaderEl.remove();
           if (result) {
             if (!parentEl.classList.contains('input-group-merge')) {
               this.warningEl = document.createElement('span');
@@ -50,7 +52,13 @@ export class UniqueEmailValidator implements AsyncValidator {
             }
             return { emailTaken: true };
           } else {
-            return null;
+            if(parentEl.childNodes[0]['className'].indexOf('spinner-border')==0 && loaderEl==undefined){
+              parentEl.childNodes[0].remove();
+            }
+            else{
+              parentEl.childNodes[1]['classList'].remove('is-invalid')
+              loaderEl.remove();
+            }
           }
         })
       );
