@@ -15,6 +15,7 @@ namespace Academically.Domain.Entities
         public int DisplayOrder { get; set; }
         public Guid CourseId { get; set; }
         public Guid? ParentId { get; set; }
+        public bool IsVisible { get; set; }
 
         [ForeignKey("CourseId")]
         public virtual Course Course { get; set; }

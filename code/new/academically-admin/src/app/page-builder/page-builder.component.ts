@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { PageBuilderService } from './_services/page-builder.service';
 import { ContentComponent } from './_components/content/content.component';
+import { SettingsComponent } from './_components/settings/settings.component';
 import { DetailsComponent } from './_components/details/details.component';
 import { PagebuilderTabs } from './_models/pagebuilderTabs.enum'
 
@@ -18,6 +19,7 @@ import { PagebuilderTabs } from './_models/pagebuilderTabs.enum'
 
 export class PageBuilderComponent extends AppComponentBase implements OnInit {
   @ViewChild(ContentComponent, { static: true }) contentComponent: ContentComponent;
+  @ViewChild(SettingsComponent, { static: true }) settingsComponent: SettingsComponent;
   @ViewChild(DetailsComponent, { static: true }) detailComponent: DetailsComponent;
 
   id: string;
@@ -83,8 +85,9 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
       )
         .subscribe(() => {
           this.notify.success(this.l('SavedSuccessfully'));
-          this._router.navigate(['/app/page-builder/', this.id]);
+          this._router.navigate(['/app/courses/', this.model.courseId], { fragment: 'curriculum' });
         });
+
       var courseSectionPage = this.detailComponent.prepareContentsForCoursePage()
       this._courseSectionPagesService.saveUpdateDetails(
         this.contentComponent.preparepageContentForSaving(),
@@ -105,6 +108,18 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
           this.notify.success(this.l('SavedSuccessfully'));
           this._router.navigate(['/app/page-builder/', this.id]);
         });
+    } else if (this.currentActiveTab === PagebuilderTabs.Settings) {
+      this._courseSectionsService.update(this.settingsComponent.prepareContentsForSaving())
+        .pipe(
+          takeUntil(this.destroyed$),
+          finalize(() => {
+            this.isSaving = false;
+          })
+        )
+        .subscribe(() => {
+          this.notify.success(this.l('SavedSuccessfully'));
+          this._router.navigate(['/app/page-builder/', this.id], { fragment: 'Settings' });
+        });
     }
   }
 
@@ -115,6 +130,9 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
         break
       case PagebuilderTabs.Details:
         this.currentActiveTab = PagebuilderTabs.Details
+        break
+      case PagebuilderTabs.Settings:
+        this.currentActiveTab = PagebuilderTabs.Settings
         break
     }
   }
