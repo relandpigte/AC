@@ -6,6 +6,7 @@ import { ConversationsRoutingModule } from './converstaions-routing.module';
 
 import { ConversationsComponent } from './conversations.component';
 import { ConversationComponent } from './_components/conversation/conversation.component';
+import {NgxDropzoneModule } from 'ngx-dropzone'
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ConversationComponent } from './_components/conversation/conversation.c
     ConversationsRoutingModule,
     SharedModule,
     AppSharedModule,
+    NgxDropzoneModule
   ],
   exports: [
     ConversationComponent,
