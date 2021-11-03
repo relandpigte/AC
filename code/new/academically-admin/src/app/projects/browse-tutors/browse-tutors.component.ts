@@ -1,8 +1,9 @@
 import { Component, Injector, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
 import { GetAvailalbeTutorDto, GetAvailalbeTutorDtoPagedResultDto, ProjectsServiceProxy, UserDto, UserDtoPagedResultDto } from '@shared/service-proxies/service-proxies';
-import { finalize } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 class PagedTutorsRequestDto extends PagedAndSortedRequestDto {
   searchFilter: string;
@@ -15,14 +16,44 @@ class PagedTutorsRequestDto extends PagedAndSortedRequestDto {
   animations: [appModuleAnimation()],
 })
 export class BrowseTutorsComponent extends PagedListingComponentBase<UserDto> {
+  projectId: string;
   searchFilter: string;
   availableTutors: GetAvailalbeTutorDto[] = [];
+  isSendingInvitation: boolean[] = [];
 
   constructor(
     injector: Injector,
+    private _route: ActivatedRoute,
     private _projectsService: ProjectsServiceProxy,
   ) {
     super(injector);
+    this._route.parent.parent.paramMap.subscribe(paramMap => {
+      if (paramMap.has('project-id')) {
+        this.projectId = paramMap.get('project-id');
+      }
+    });
+  }
+
+  onInviteToQuoteClick(availableTutor: GetAvailalbeTutorDto): void {
+    this.message.confirm(
+      undefined,
+      undefined,
+      (result: boolean) => {
+        if (result) {
+          this.isSendingInvitation[availableTutor.tutor.id] = true;
+          this._projectsService.sendProjectInvitation(this.projectId, availableTutor.tutor.id)
+            .pipe(
+              takeUntil(this.destroyed$),
+              finalize(() => {
+                this.isSendingInvitation[availableTutor.tutor.id] = false;
+              })
+            )
+            .subscribe(() => {
+              this.notify.success(this.l('InvitationSent'));
+            });
+        }
+      }
+    );
   }
 
   protected list(

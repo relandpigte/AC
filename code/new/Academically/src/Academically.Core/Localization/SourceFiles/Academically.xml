@@ -1,7 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
-    <text name="InvoteToQuote">Invote to quote</text>
+    <text name="ProjectInvitationNotificationMessage">
+      <![CDATA[
+        <b>{0}</b> invited you to the <b>{1}</b> project.
+      ]]>
+    </text>
+    <text name="InvitationSent">Invatation sent</text>
+    <text name="ProjectInvitationEmailSubject">Academically - Project Invitation</text>
+    <text name="ProjectInvitationEmailMessage">
+      <![CDATA[
+        <p>Hi {0},</p>
+        <p>You have been invited by {1} to the {2} project.</p>
+        <p>To make your offer for the project, please click this link: <a href="{3}">Project Offer Link</a></p>
+        <br />
+        <p>If for some reason the link is not clickable, please copy and paste the url below to your browser:<p>
+        <p>{3}<p/>
+      ]]>
+    </text>
+    <text name="InviteToQuote">Invite to quote</text>
     <text name="Rating">Rating</text>
     <text name="State">State</text>
     <text name="Unread">Unread</text>

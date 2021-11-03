@@ -20,6 +20,7 @@ namespace Academically.Services.Projects
         Task<ProjectDto> GetAsync(Guid id);
         Task<IEnumerable<ProjectDto>> GetForUserAsync();
         Task<Guid> CreateAsync(CreateProjectDto input);
+        Task SendProjectInvitation(Guid id, long tutorId);
         Task<ProjectDto> UpdateAsync(UpdateProjectDto input);
         Task DeleteAsync(Guid id);
     }

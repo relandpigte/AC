@@ -229,8 +229,15 @@
                           </p>
                         </div>
                         <div class="col-auto">
-                          <button class="btn btn-sm btn-primary">
-                            {{ 'InvoteToQuote' | localize }}
+                          <button (click)="onInviteToQuoteClick(availableTutor)"
+                            [disabled]="isSendingInvitation[availableTutor.tutor.id]" class="btn btn-sm btn-primary">
+                            <span *ngIf="!isSendingInvitation[availableTutor.tutor.id]">
+                              {{ 'InviteToQuote' | localize }}
+                            </span>
+                            <span *ngIf="isSendingInvitation[availableTutor.tutor.id]">
+                              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                              {{ 'Sending' | localize }}
+                            </span>
                           </button>
                         </div>
                       </div>

@@ -1,16 +1,23 @@
+using Abp;
 using Abp.Application.Services.Dto;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.Localization;
+using Abp.Notifications;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
+using Academically.Configuration;
 using Academically.Domain.Entities;
 using Academically.Domain.Services.Documents;
+using Academically.Notifications;
 using Academically.Services.ProjectOffers.Dto;
 using Academically.Services.Projects.Dto;
 using Academically.Services.UserServices.Dto;
 using Academically.Users.Dto;
 using Microsoft.EntityFrameworkCore;
+using SourceCloud.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +36,9 @@ namespace Academically.Services.Projects
         private readonly IRepository<User, long> _usersRepository;
         private readonly IRepository<UserService, Guid> _userServicesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
+        private readonly IEmailService _emailService;
+        private readonly INotificationPublisher _notificationPublisher;
+        private readonly ISettingManager _settingManager;
 
         public ProjectsAppService(
             RoleManager roleManager,
@@ -39,7 +49,10 @@ namespace Academically.Services.Projects
             IRepository<Subject, Guid> subjectsRepository,
             IRepository<User, long> usersRepository,
             IRepository<UserService, Guid> userServicesRepository,
-            IDocumentsDomainService documentsDomainService
+            IDocumentsDomainService documentsDomainService,
+            IEmailService emailService,
+            INotificationPublisher notificationPublisher,
+            ISettingManager settingManager
             )
         {
             _roleManager = roleManager;
@@ -51,6 +64,9 @@ namespace Academically.Services.Projects
             _usersRepository = usersRepository;
             _userServicesRepository = userServicesRepository;
             _documentsDomainService = documentsDomainService;
+            _emailService = emailService;
+            _notificationPublisher = notificationPublisher;
+            _settingManager = settingManager;
         }
 
         public async Task<PagedResultDto<ProjectDto>> GetAllAsync(PagedProjectRequestDto input)
@@ -293,6 +309,32 @@ namespace Academically.Services.Projects
         {
             var project = ObjectMapper.Map<Project>(input);
             return await _projectsRepository.InsertAndGetIdAsync(project);
+        }
+
+        public async Task SendProjectInvitation(Guid id, long tutorId)
+        {
+            var project = await _projectsRepository.GetAsync(id);
+            var student = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
+            var tutor = await UserManager.GetUserByIdAsync(tutorId);
+            string clientRootAddress = (await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress)).Trim('/');
+            string projectLink = $"{clientRootAddress}/app/projects/browse/{id}";
+
+            string subject = L("ProjectInvitationEmailSubject");
+            string body = L("ProjectInvitationEmailMessage", tutor.FullName, student.FullName, project.Name, projectLink);
+
+            await _emailService.SendAsync(tutor.FullName, tutor.EmailAddress, subject, body);
+
+            var notificationData = new LocalizableMessageNotificationData(new LocalizableString("ProjectInvitationNotificationMessage", AcademicallyConsts.LocalizationSourceName));
+            notificationData["0"] = student.FullName;
+            notificationData["1"] = project.Name;
+            notificationData.Properties.Add("Link", projectLink);
+            notificationData.Properties.Add("CreatorUserId", AbpSession.UserId.Value);
+
+            await _notificationPublisher.PublishAsync(
+                NotificationNames.Notifications_Projects_Invitation,
+                notificationData,
+                userIds: new[] { new UserIdentifier(tutor.TenantId, tutor.Id) }
+            );
         }
 
         public async Task<ProjectDto> UpdateAsync(UpdateProjectDto input)

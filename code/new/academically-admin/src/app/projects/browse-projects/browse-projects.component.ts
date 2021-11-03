@@ -16,13 +16,20 @@ import { ViewProjectComponent } from './_components/view-project/view-project.co
 export class BrowseProjectsComponent extends AppComponentBase implements OnInit {
   projects: ProjectDto[] = [];
   isLoading = false;
+  autoOpenId: string;
 
   constructor(
     injector: Injector,
+    private _route: ActivatedRoute,
     private _projectsService: ProjectsServiceProxy,
     private _modalService: BsModalService,
   ) {
     super(injector);
+    this._route.paramMap.subscribe(paramMap => {
+      if (paramMap.has('id')) {
+        this.autoOpenId = paramMap.get('id');
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -31,6 +38,12 @@ export class BrowseProjectsComponent extends AppComponentBase implements OnInit 
       .pipe(finalize(() => this.isLoading = false))
       .subscribe(response => {
         this.projects = response.items;
+        if (this.autoOpenId) {
+          const project = this.projects.find(e => e.id === this.autoOpenId);
+          if (project) {
+            this.onViewProjectDetails(project);
+          }
+        }
       });
   }
 
