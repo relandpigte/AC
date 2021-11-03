@@ -9,7 +9,6 @@ import { CreateEditServiceComponent } from './_components/create-edit-service/cr
 import { SuggestServiceSubjectComponent } from './_components/suggest-service-subject/suggest-service-subject.component';
 import { StudyFieldsTreeComponent } from './_components/study-fields-tree/study-fields-tree.component';
 import { TreeModule } from 'primeng/tree';
-import { AccordionModule } from 'ngx-bootstrap/accordion';
 
 @NgModule({
   declarations: [
@@ -24,7 +23,6 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
     SharedModule,
     AppSharedModule,
     TreeModule,
-    AccordionModule.forRoot(),
   ],
   exports: [ServicesComponent],
 })

@@ -242,9 +242,14 @@ namespace Academically.Services.Projects
 
         public async Task<PagedResultDto<GetAvailalbeTutorDto>> GetAvailableTutors(PagedAvailalbeTutorRequestDto input)
         {
+            input.SearchFilter = input.SearchFilter?.ToLower();
             var tutorRole = await _roleManager.GetRoleByNameAsync(StaticRoleNames.Tenants.Tutor);
             var tutorsQuery = _usersRepository.GetAll()
-                .Where(e => e.Roles.Any(e => e.RoleId == tutorRole.Id));
+                .Where(e => e.Roles.Any(e => e.RoleId == tutorRole.Id))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.Name.ToLower().Contains(input.SearchFilter)
+                    || e.Surname.ToLower().Contains(input.SearchFilter)
+                    || e.UserServices.Any(e => e.UserServiceSubjects.Any(e => e.Subject.Name.ToLower().Contains(input.SearchFilter)))
+                    || e.UserServices.Any(e => e.UserServiceDisciplineTaxonomies.Any(e => e.DisciplineTaxonomy.Name.ToLower().Contains(input.SearchFilter))));
             var totalCount = await tutorsQuery.CountAsync();
             var tutors = await tutorsQuery
                 .Include(e => e.ProfilePictureDocument)

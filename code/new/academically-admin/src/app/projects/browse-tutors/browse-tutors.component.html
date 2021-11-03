@@ -1,6 +1,150 @@
 <div class="container-fluid" [@routerTransition]>
   <div class="row">
-    <div class="col-3"></div>
+    <div class="col-3">
+      <h2 class="mb-1">Filters</h2>
+      <div class="collapse-container" [accordion]="true">
+        <div class="collapse-header d-flex justify-content-between align-items-center service-title">
+          <h4 class="m-0 service-name">Status</h4>
+          <a class="collapse-button rotate"></a>
+        </div>
+        <div class="collapse-content">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">Online <small class="text-muted">(211)</small></label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">Away <small class="text-muted">(154)</small></label>
+          </div>
+        </div>
+      </div>
+      <div class="collapse-container" [accordion]="true">
+        <div class="collapse-header d-flex justify-content-between align-items-center service-title">
+          <h4 class="m-0 service-name">Native Language</h4>
+          <a class="collapse-button rotate"></a>
+        </div>
+        <div class="collapse-content">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">English <small class="text-muted">(441)</small></label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">Chinese <small class="text-muted">(74)</small></label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">Indian <small class="text-muted">(54)</small></label>
+          </div>
+        </div>
+      </div>
+      <div class="collapse-container" [accordion]="true">
+        <div class="collapse-header d-flex justify-content-between align-items-center service-title">
+          <h4 class="m-0 service-name">Minimum Rating</h4>
+          <a class="collapse-button rotate"></a>
+        </div>
+        <div class="collapse-content">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">5 Stars <small class="text-muted">(154)</small></label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">4 Stars <small class="text-muted">(241)</small></label>
+          </div>
+        </div>
+      </div>
+      <div class="collapse-container" [accordion]="true">
+        <div class="collapse-header d-flex justify-content-between align-items-center service-title">
+          <h4 class="m-0 service-name">Minimum Education</h4>
+          <a class="collapse-button rotate"></a>
+        </div>
+        <div class="collapse-content">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">PhD Doctorate <small class="text-muted">(13)</small></label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">Masters <small class="text-muted">(57)</small></label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">BA Hons <small class="text-muted">(297)</small></label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">Undergraduate <small class="text-muted">(567)</small></label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">A Level <small class="text-muted">(1687)</small></label>
+          </div>
+        </div>
+      </div>
+      <div class="collapse-container" [accordion]="true">
+        <div class="collapse-header d-flex justify-content-between align-items-center service-title">
+          <h4 class="m-0 service-name">Instituion</h4>
+          <a class="collapse-button rotate"></a>
+        </div>
+        <div class="collapse-content">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">University of Cambridge <small
+                class="text-muted">(13)</small></label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">Hull University<small class="text-muted">(57)</small></label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">Durham University<small class="text-muted">(297)</small></label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">Nottingham University <small
+                class="text-muted">(567)</small></label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">Newcastle University<small
+                class="text-muted">(1687)</small></label>
+          </div>
+        </div>
+      </div>
+      <div class="collapse-container" [accordion]="true">
+        <div class="collapse-header d-flex justify-content-between align-items-center service-title">
+          <h4 class="m-0 service-name">Expertise Level</h4>
+          <a class="collapse-button rotate"></a>
+        </div>
+        <div class="collapse-content">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">Entry Level <small class="text-muted">(13)</small></label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">Intermediate<small class="text-muted">(57)</small></label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" />
+            <label class="custom-control-label mt-2">Expert<small class="text-muted">(297)</small></label>
+          </div>
+        </div>
+      </div>
+      <div class="card bg-light border mt-2 text-center">
+        <div class="card-body">
+          <h4 class="mb-2">
+            Need some help deciding?
+          </h4>
+          <p class="small text-muted mb-0">
+            We can help you decide what's the best for you the quick brown fox jumps over the lazy dog.
+          </p>
+          <button class="btn btn-sm btn-outline-info mt-3">Contact Us</button>
+        </div>
+      </div>
+    </div>
     <div class="col-9">
       <div class="card">
         <div class="card-header">

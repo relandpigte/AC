@@ -30,8 +30,11 @@ export class BrowseTutorsComponent extends PagedListingComponentBase<UserDto> {
     pageNumber: number,
     finishedCallback: Function
   ): void {
+    request.searchFilter = this.searchFilter;
+
     this._projectsService
       .getAvailableTutors(
+        request.searchFilter,
         request.skipCount,
         request.maxResultCount
       )
@@ -42,7 +45,6 @@ export class BrowseTutorsComponent extends PagedListingComponentBase<UserDto> {
       )
       .subscribe((result: GetAvailalbeTutorDtoPagedResultDto) => {
         this.availableTutors = result.items;
-        console.log(this.availableTutors);
         this.showPaging(result, pageNumber);
       });
   }

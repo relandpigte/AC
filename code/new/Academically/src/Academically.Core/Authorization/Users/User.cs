@@ -9,6 +9,13 @@ namespace Academically.Authorization.Users
 {
     public class User : AbpUser<User>
     {
+        public User()
+        {
+            UserEducations = new HashSet<UserEducation>();
+            UserSpokenLanguages = new HashSet<UserSpokenLanguage>();
+            UserServices = new HashSet<UserService>();
+        }
+
         public bool IsPublic { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
@@ -38,6 +45,7 @@ namespace Academically.Authorization.Users
 
         public virtual ICollection<UserEducation> UserEducations { get; set; }
         public virtual ICollection<UserSpokenLanguage> UserSpokenLanguages { get; set; }
+        public virtual ICollection<UserService> UserServices { get; set; }
 
 
         public const string DefaultPassword = "123qwe";

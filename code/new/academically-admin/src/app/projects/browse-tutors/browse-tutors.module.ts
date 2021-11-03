@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { BrowseTutorsRoutingModule } from './browse-tutors-routing.module';
 import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
+import { IntroductionModule } from '@app/profile/introduction/introduction.module';
 
 import { BrowseTutorsComponent } from './browse-tutors.component';
-import { IntroductionModule } from '@app/profile/introduction/introduction.module';
 
 @NgModule({
   declarations: [

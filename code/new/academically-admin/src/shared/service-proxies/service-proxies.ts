@@ -5691,12 +5691,17 @@ export class ProjectsServiceProxy {
     }
 
     /**
+     * @param searchFilter (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAvailableTutors(skipCount: number | undefined, maxResultCount: number | undefined): Observable<GetAvailalbeTutorDtoPagedResultDto> {
+    getAvailableTutors(searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<GetAvailalbeTutorDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Projects/GetAvailableTutors?";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
