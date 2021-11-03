@@ -67,6 +67,13 @@ import { ProjectDetailsHeaderComponent } from './_components/project-details-hea
                 (m) => m.HiredModule,
               ),
           },
+          {
+            path: 'browse-tutors',
+            loadChildren: () =>
+              import('@app/projects/browse-tutors/browse-tutors.module').then(
+                (m) => m.BrowseTutorsModule,
+              ),
+          },
         ]
       }
     ]),

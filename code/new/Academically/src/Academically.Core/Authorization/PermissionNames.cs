@@ -141,6 +141,7 @@
         public const string Pages_Projects_OfferHistory = "Pages.Projects.OfferHistory";
         public const string Pages_Projects_Proposals = "Pages.Projects.Proposals";
         public const string Pages_Projects_Hired = "Pages.Projects.Hired";
+        public const string Pages_Projects_BrowseTutors = "Pages.Projects.BrowseTutors";
 
 
         public const string Pages_TutorApplications = "Pages.TutorApplications";

@@ -149,6 +149,7 @@ namespace Academically.Authorization
             projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_OfferHistory, L("OfferHistory"));
             projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Proposals, L("Proposals"));
             projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_Hired, L("Hired"));
+            projectsPermission.CreateChildPermission(PermissionNames.Pages_Projects_BrowseTutors, L("BrowseTutors"));
 
             var tutorApplicationsPermission = context.CreatePermission(PermissionNames.Pages_TutorApplications, L("TutorApplications"));
             tutorApplicationsPermission.CreateChildPermission(PermissionNames.Pages_TutorApplications_List, L("TutorApplicationsList"));

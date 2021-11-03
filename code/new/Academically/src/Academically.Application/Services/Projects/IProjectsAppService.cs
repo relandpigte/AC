@@ -17,7 +17,7 @@ namespace Academically.Services.Projects
         Task<IEnumerable<string>> GetUrgencyLevels();
         Task<ProjectDto> GetAsync(Guid id);
         Task<IEnumerable<ProjectDto>> GetForUserAsync();
-        Task CreateAsync(CreateProjectDto input);
+        Task<Guid> CreateAsync(CreateProjectDto input);
         Task<ProjectDto> UpdateAsync(UpdateProjectDto input);
         Task DeleteAsync(Guid id);
     }

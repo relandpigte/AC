@@ -232,10 +232,10 @@ namespace Academically.Services.Projects
             }
         }
 
-        public async Task CreateAsync(CreateProjectDto input)
+        public async Task<Guid> CreateAsync(CreateProjectDto input)
         {
             var project = ObjectMapper.Map<Project>(input);
-            await _projectsRepository.InsertAsync(project);
+            return await _projectsRepository.InsertAndGetIdAsync(project);
         }
 
         public async Task<ProjectDto> UpdateAsync(UpdateProjectDto input)

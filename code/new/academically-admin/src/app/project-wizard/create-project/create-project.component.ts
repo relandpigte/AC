@@ -94,9 +94,9 @@ export class CreateProjectComponent extends AppComponentBase implements OnInit {
           this.isLoading = false;
         }),
       )
-      .subscribe(() => {
+      .subscribe((id) => {
         this.notify.success(this.l('SavedSuccessfully'));
-        this._router.navigate(['/app/home']);
+        this._router.navigate([`/app/projects/${id}/browse-tutors`]);
         this._serviceWizardService.clear();
       });
   }
