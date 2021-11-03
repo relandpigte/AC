@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Academically.Services.Projects.Dto;
+using Academically.Users.Dto;
 
 namespace Academically.Services.Projects
 {
@@ -15,6 +16,7 @@ namespace Academically.Services.Projects
         Task<IEnumerable<string>> GetResearchMethods();
         Task<IEnumerable<string>> GetSubjects();
         Task<IEnumerable<string>> GetUrgencyLevels();
+        Task<PagedResultDto<GetAvailalbeTutorDto>> GetAvailableTutors(PagedAvailalbeTutorRequestDto input);
         Task<ProjectDto> GetAsync(Guid id);
         Task<IEnumerable<ProjectDto>> GetForUserAsync();
         Task<Guid> CreateAsync(CreateProjectDto input);

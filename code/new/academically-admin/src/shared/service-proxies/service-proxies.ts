@@ -5691,6 +5691,67 @@ export class ProjectsServiceProxy {
     }
 
     /**
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAvailableTutors(skipCount: number | undefined, maxResultCount: number | undefined): Observable<GetAvailalbeTutorDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Projects/GetAvailableTutors?";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAvailableTutors(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAvailableTutors(<any>response_);
+                } catch (e) {
+                    return <Observable<GetAvailalbeTutorDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetAvailalbeTutorDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAvailableTutors(response: HttpResponseBase): Observable<GetAvailalbeTutorDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetAvailalbeTutorDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetAvailalbeTutorDtoPagedResultDto>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -16463,6 +16524,116 @@ export enum GenericParameterAttributes {
     NotNullableValueTypeConstraint = 8,
     DefaultConstructorConstraint = 16,
     SpecialConstraintMask = 28,
+}
+
+export class GetAvailalbeTutorDto implements IGetAvailalbeTutorDto {
+    tutor: UserDto;
+    services: UserServiceForListDto[] | undefined;
+
+    constructor(data?: IGetAvailalbeTutorDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.tutor = _data["tutor"] ? UserDto.fromJS(_data["tutor"]) : <any>undefined;
+            if (Array.isArray(_data["services"])) {
+                this.services = [] as any;
+                for (let item of _data["services"])
+                    this.services.push(UserServiceForListDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetAvailalbeTutorDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetAvailalbeTutorDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["tutor"] = this.tutor ? this.tutor.toJSON() : <any>undefined;
+        if (Array.isArray(this.services)) {
+            data["services"] = [];
+            for (let item of this.services)
+                data["services"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): GetAvailalbeTutorDto {
+        const json = this.toJSON();
+        let result = new GetAvailalbeTutorDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetAvailalbeTutorDto {
+    tutor: UserDto;
+    services: UserServiceForListDto[] | undefined;
+}
+
+export class GetAvailalbeTutorDtoPagedResultDto implements IGetAvailalbeTutorDtoPagedResultDto {
+    items: GetAvailalbeTutorDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IGetAvailalbeTutorDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(GetAvailalbeTutorDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): GetAvailalbeTutorDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetAvailalbeTutorDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): GetAvailalbeTutorDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new GetAvailalbeTutorDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetAvailalbeTutorDtoPagedResultDto {
+    items: GetAvailalbeTutorDto[] | undefined;
+    totalCount: number;
 }
 
 export class GetCurrentLoginInformationsOutput implements IGetCurrentLoginInformationsOutput {

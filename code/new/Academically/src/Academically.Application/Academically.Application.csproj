@@ -30,8 +30,6 @@
     <Folder Include="Services\Subjects\Dto\" />
     <Folder Include="Services\PasswordResets\" />
     <Folder Include="Services\PasswordResets\Dto\" />
-    <Folder Include="Services\Projects\" />
-    <Folder Include="Services\Projects\Dto\" />
     <Folder Include="Services\TutorApplications\" />
     <Folder Include="Services\TutorApplications\Dto\" />
     <Folder Include="Users\Dto\NewFolder\" />

@@ -8,6 +8,8 @@ using Academically.Domain.Entities;
 using Academically.Domain.Services.Documents;
 using Academically.Services.ProjectOffers.Dto;
 using Academically.Services.Projects.Dto;
+using Academically.Services.UserServices.Dto;
+using Academically.Users.Dto;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,31 +20,37 @@ namespace Academically.Services.Projects
 {
     public class ProjectsAppService: AcademicallyAppServiceBase, IProjectsAppService
     {
-        private readonly UserManager _userManager;
+        private readonly RoleManager _roleManager;
         private readonly IRepository<Project, Guid> _projectsRepository;
         private readonly IRepository<ProjectOffer, Guid> _projectOffersRepository;
         private readonly IRepository<CalendarEvent, Guid> _calendarEventsRepository;
         private readonly IRepository<ResearchMethod, Guid> _researchMethodsRepository;
         private readonly IRepository<Subject, Guid> _subjectsRepository;
+        private readonly IRepository<User, long> _usersRepository;
+        private readonly IRepository<UserService, Guid> _userServicesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
 
         public ProjectsAppService(
-            UserManager userManager,
+            RoleManager roleManager,
             IRepository<Project, Guid> projectsRepository,
             IRepository<ProjectOffer, Guid> projectOffersRepository,
             IRepository<CalendarEvent, Guid> calendarEventsRepository,
             IRepository<ResearchMethod, Guid> researchMethodsRepository,
             IRepository<Subject, Guid> subjectsRepository,
+            IRepository<User, long> usersRepository,
+            IRepository<UserService, Guid> userServicesRepository,
             IDocumentsDomainService documentsDomainService
             )
         {
+            _roleManager = roleManager;
             _projectsRepository = projectsRepository;
             _projectOffersRepository = projectOffersRepository;
             _calendarEventsRepository = calendarEventsRepository;
             _researchMethodsRepository = researchMethodsRepository;
             _subjectsRepository = subjectsRepository;
+            _usersRepository = usersRepository;
+            _userServicesRepository = userServicesRepository;
             _documentsDomainService = documentsDomainService;
-            _userManager = userManager;
         }
 
         public async Task<PagedResultDto<ProjectDto>> GetAllAsync(PagedProjectRequestDto input)
@@ -198,7 +206,7 @@ namespace Academically.Services.Projects
 
             var projectDto = ObjectMapper.Map<ProjectDto>(project);
 
-            projectDto.CreatorUser.RoleNames = await _userManager.GetRolesAsync(project.CreatorUser);
+            projectDto.CreatorUser.RoleNames = await UserManager.GetRolesAsync(project.CreatorUser);
             projectDto.CanSubmitOffer = !project.Offers.Any(p => p.CreatorUserId == AbpSession.UserId.Value);
 
             if (project.CreatorUser.ProfilePictureDocumentId.HasValue)
@@ -212,8 +220,8 @@ namespace Academically.Services.Projects
 
         public async Task<IEnumerable<ProjectDto>> GetForUserAsync()
         {
-            var user = await _userManager.GetUserByIdAsync(AbpSession.UserId.Value);
-            var userRoles = await _userManager.GetRolesAsync(user);
+            var user = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
+            var userRoles = await UserManager.GetRolesAsync(user);
             if (userRoles.Any(e => e == StaticRoleNames.Tenants.Tutor))
             {
                 return await _projectOffersRepository.GetAll()
@@ -230,6 +238,50 @@ namespace Academically.Services.Projects
                     .Select(e => ObjectMapper.Map<ProjectDto>(e))
                     .ToListAsync();
             }
+        }
+
+        public async Task<PagedResultDto<GetAvailalbeTutorDto>> GetAvailableTutors(PagedAvailalbeTutorRequestDto input)
+        {
+            var tutorRole = await _roleManager.GetRoleByNameAsync(StaticRoleNames.Tenants.Tutor);
+            var tutorsQuery = _usersRepository.GetAll()
+                .Where(e => e.Roles.Any(e => e.RoleId == tutorRole.Id));
+            var totalCount = await tutorsQuery.CountAsync();
+            var tutors = await tutorsQuery
+                .Include(e => e.ProfilePictureDocument)
+                .Include(e => e.UserEducations)
+                    .ThenInclude(e => e.University)
+                .OrderBy(e => e.Name)
+                    .ThenBy(e => e.Surname)
+                .PageBy(input)
+                .Take(input.MaxResultCount)
+                .ToListAsync();
+            var outputs = new List<GetAvailalbeTutorDto>();
+            foreach (var tutor in tutors)
+            {
+                var tutorOutput = ObjectMapper.Map<UserDto>(tutor);
+                if (tutor.UserEducations != null && tutor.UserEducations.Any())
+                {
+                    tutorOutput.CurrentUniversity = tutor.UserEducations
+                        .OrderByDescending(e => e.EndYear)
+                            .ThenByDescending(e => e.StartYear)
+                       .FirstOrDefault()
+                       .University.HeProvider;
+                }
+                var userServicesOutput = await _userServicesRepository.GetAll()
+                    .Where(e => e.CreatorUserId == tutor.Id)
+                    .Include(e => e.UserServiceSubjects)
+                        .ThenInclude(e => e.Subject)
+                    .Include(e => e.UserServiceDisciplineTaxonomies)
+                        .ThenInclude(e => e.DisciplineTaxonomy)
+                     .Select(e => ObjectMapper.Map<UserServiceForListDto>(e))
+                    .ToListAsync();
+
+                outputs.Add(new GetAvailalbeTutorDto() {
+                    Tutor = tutorOutput,
+                    Services = userServicesOutput,
+                });
+            }
+            return new PagedResultDto<GetAvailalbeTutorDto>(totalCount, outputs);
         }
 
         public async Task<Guid> CreateAsync(CreateProjectDto input)

@@ -41,5 +41,8 @@ import { IntroVideoComponent } from './_components/intro-video/intro-video.compo
     NgxPaginationModule,
     PopoverModule.forRoot(),
   ],
+  exports: [
+    StarRatingComponent,
+  ],
 })
 export class IntroductionModule { }

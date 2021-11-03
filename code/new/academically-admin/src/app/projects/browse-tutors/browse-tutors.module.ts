@@ -5,6 +5,7 @@ import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
 import { BrowseTutorsComponent } from './browse-tutors.component';
+import { IntroductionModule } from '@app/profile/introduction/introduction.module';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { BrowseTutorsComponent } from './browse-tutors.component';
     BrowseTutorsRoutingModule,
     SharedModule,
     AppSharedModule,
+    IntroductionModule,
   ],
 })
 export class BrowseTutorsModule { }

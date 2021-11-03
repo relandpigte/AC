@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="InvoteToQuote">Invote to quote</text>
+    <text name="Rating">Rating</text>
     <text name="State">State</text>
     <text name="Unread">Unread</text>
     <text name="Read">Read</text>
@@ -973,7 +975,7 @@
     <text name="MinEducationLevel">Min Education Level</text>
     <text name="MinRating">Min Rating</text>
     <text name="Distance">Distance</text>
-    <text name="BestMatch">Best Match</text>
+    <text name="BestMatch">Best match</text>
     <text name="Feedback">Feedback</text>
     <text name="Proofreading">Proofreading</text>
     <text name="Contacts">Contacts</text>
