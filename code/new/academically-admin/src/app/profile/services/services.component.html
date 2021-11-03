@@ -7,9 +7,7 @@
             <h2 class="m-0">{{ 'MyServices' | localize }}</h2>
           </div>
           <div class="col text-right">
-            <button (click)="onAddClick()"
-              *ngIf="canCreate() && !isReadOnly"
-              class="btn btn-sm btn-light">
+            <button (click)="onAddClick()" *ngIf="canCreate() && !isReadOnly" class="btn btn-sm btn-light">
               <i class="fe fe-edit-2"></i>
               {{ 'Add' | localize }}
             </button>
@@ -17,8 +15,9 @@
         </div>
       </div>
       <div class="card-body service">
-        <p  *ngIf="!categories || categories.length === 0" class="text-muted text-center m-0">{{ 'NoServicesFound' | localize}}</p>
-        <div [accordion]="i !== 0" *ngFor="let category of categories; let i = index" class="service">
+        <p *ngIf="!categories || categories.length === 0" class="text-muted text-center m-0">{{ 'NoServicesFound' |
+          localize}}</p>
+        <div accordion [collapse]="i !== 0" *ngFor="let category of categories; let i = index" class="service">
           <div class="service-category-nav">
             <div class="service-title d-flex">
               <h4 class="service-name mb-0 p-0">
@@ -30,7 +29,7 @@
             <div class="collapse-content">
               <ul [id]="'category_' + category.id" class="service-items">
                 <li *ngFor="let service of category.children; let j = index">
-                  <div [accordion]="j !== 0 || i !== 0">
+                  <div accordion [collapse]="j !== 0 || i !== 0">
                     <div class="collapse-header d-flex justify-content-between align-items-center service-title">
                       <p class="m-0 service-name">{{ service.name }}</p>
                       <a class="collapse-button rotate"></a>
@@ -99,14 +98,13 @@
                     </div>
                   </div>
                   <div class="col-auto d-flex justify-content-center align-items-center">
-                    <button
-                      *ngIf="canUpdate()"
-                      [disabled]="deleteLoaders[userService.id]" (click)="onEditClick(userService)" type="button"
+                    <button *ngIf="canUpdate()" [disabled]="deleteLoaders[userService.id]"
+                      (click)="onEditClick(userService)" type="button"
                       class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
                       <span class="fe fe-edit-2"></span>
                     </button>
-                    <button *ngIf="canDelete()"
-                      [disabled]="deleteLoaders[userService.id]" (click)="onDeleteClick(userService.id)" type="button"
+                    <button *ngIf="canDelete()" [disabled]="deleteLoaders[userService.id]"
+                      (click)="onDeleteClick(userService.id)" type="button"
                       class="btn btn-outline-danger btn-sm btn-rounded-circle">
                       <span *ngIf="deleteLoaders[userService.id]" class="spinner-border spinner-border-sm" role="status"
                         aria-hidden="true"></span>
