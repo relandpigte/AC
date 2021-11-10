@@ -4,37 +4,50 @@ import { PageBuilderRoutingModule } from './page-builder-routing.module';
 import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
-import { PageBuilderComponent } from './page-builder.component';
+import { TagInputModule } from 'ngx-chips';
+import { NgxMaskModule } from 'ngx-mask';
+
 import { ContentComponent } from './_components/content/content.component';
-import { PageComponentSelectorComponent } from './_components/page-component-selector/page-component-selector.component';
-import { PageContentEditorComponent } from './_components/content/editors/page-content-editor/page-content-editor.component';
-import { TextPageComponentEditorComponent } from './_components/content/editors/text-page-component-editor/text-page-component-editor.component';
-import { ImagePageComponentEditorComponent } from './_components/content/editors/image-page-component-editor/image-page-component-editor.component';
-import { TextPageComponentPreviewComponent } from './_components/content/previews/text-page-component-preview/text-page-component-preview.component';
-import { ImagePageComponentPreviewComponent } from './_components/content/previews/image-page-component-preview/image-page-component-preview.component';
-import { PageContentPreviewComponent } from './_components/content/previews/page-content-preview/page-content-preview.component';
-import { PageSectionPreviewComponent } from './_components/content/previews/page-section-preview/page-section-preview.component';
-import { PageSectionEditorComponent } from './_components/content/editors/page-section-editor/page-section-editor.component';
+import { PageBuilderComponent } from './page-builder.component';
 import { SettingsComponent } from './_components/settings/settings.component';
 import { DetailsComponent } from './_components/details/details.component';
-import { TagInputModule } from 'ngx-chips';
-import {NgxMaskModule } from 'ngx-mask';
+import { ContentPreviewComponent } from './_components/content/previews/content-preview/content-preview.component';
+import { PagePreviewComponent } from './_components/content/previews/page-preview/page-preview.component';
+import { SectionPreviewComponent } from './_components/content/previews/section-preview/section-preview.component';
+import { ComponentPreviewComponent } from './_components/content/previews/component-preview/component-preview.component';
+import { TextComponentPreviewComponent } from './_components/content/previews/text-component-preview/text-component-preview.component';
+import { ImageComponentPreviewComponent } from './_components/content/previews/image-component-preview/image-component-preview.component';
+import { HeaderComponentPreviewComponent } from './_components/content/previews/header-component-preview/header-component-preview.component';
+import { ContentSelectorComponent } from './_components/content-selector/content-selector.component';
+import { ContentEditorComponent } from './_components/content/editors/content-editor/content-editor.component';
+import { PageEditorComponent } from './_components/content/editors/page-editor/page-editor.component';
+import { SectionEditorComponent } from './_components/content/editors/section-editor/section-editor.component';
+import { ComponentEditorComponent } from './_components/content/editors/component-editor/component-editor.component';
+import { TextComponentEditorComponent } from './_components/content/editors/text-component-editor/text-component-editor.component';
+import { ImageComponentEditorComponent } from './_components/content/editors/image-component-editor/image-component-editor.component';
+import { HeaderComponentEditorComponent } from './_components/content/editors/header-component-editor/header-component-editor.component';
 
 @NgModule({
   declarations: [
     PageBuilderComponent,
-    ContentComponent,
-    PageComponentSelectorComponent,
-    PageContentEditorComponent,
-    TextPageComponentEditorComponent,
-    ImagePageComponentEditorComponent,
-    TextPageComponentPreviewComponent,
-    ImagePageComponentPreviewComponent,
-    PageContentPreviewComponent,
-    PageSectionPreviewComponent,
-    PageSectionEditorComponent,
     SettingsComponent,
     DetailsComponent,
+    ContentComponent,
+    ContentPreviewComponent,
+    PagePreviewComponent,
+    SectionPreviewComponent,
+    ComponentPreviewComponent,
+    TextComponentPreviewComponent,
+    ImageComponentPreviewComponent,
+    HeaderComponentPreviewComponent,
+    ContentSelectorComponent,
+    ContentEditorComponent,
+    PageEditorComponent,
+    SectionEditorComponent,
+    ComponentEditorComponent,
+    TextComponentEditorComponent,
+    ImageComponentEditorComponent,
+    HeaderComponentEditorComponent,
   ],
   imports: [
     CommonModule,

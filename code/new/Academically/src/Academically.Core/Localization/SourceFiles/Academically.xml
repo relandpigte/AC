@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="AddPage">Add page</text>
     <text name="ProjectInvitationNotificationMessage">
       <![CDATA[
         <b>{0}</b> invited you to the <b>{1}</b> project.

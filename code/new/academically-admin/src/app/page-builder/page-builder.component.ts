@@ -27,7 +27,7 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
   isLoading = false;
   isSaving = false;
   PagebuilderTabs = PagebuilderTabs;
-  currentActiveTab: number
+  currentActiveTab = PagebuilderTabs.Details;
 
   constructor(
     injector: Injector,

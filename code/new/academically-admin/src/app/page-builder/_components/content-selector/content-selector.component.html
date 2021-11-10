@@ -1,0 +1,22 @@
+<div class="modal-card card">
+  <abp-modal-header [title]="'ChooseYourComponent' | localize" (onCloseClick)="onCancelClick()">
+  </abp-modal-header>
+  <div class="card-body">
+    <button *ngFor="let content of contents"
+      [class.btn-primary]="selectedContent && selectedContent.name === content.name"
+      [class.btn-white]="!selectedContent || selectedContent.name !== content.name" class="btn content"
+      (click)="onSelectComponentContent(content)">
+      <i [class]="content.icon"></i>
+      <p>{{ content.name | localize }}</p>
+    </button>
+  </div>
+  <div class="card-footer justify-content-between">
+    <button type="button" class="btn btn-white" (click)="onCancelClick()">
+      {{ 'Cancel' | localize }}
+    </button>
+    <button type="submit" class="btn btn-primary" [disabled]="!selectedContent || !selectedContent.name"
+      (click)="onOkayClick()">
+      {{ 'Okay' | localize }}
+    </button>
+  </div>
+</div>

@@ -1,0 +1,6 @@
+<ng-container [ngSwitch]="content.name">
+  <app-text-component-editor *ngSwitchCase="'Text'" [content]="content"></app-text-component-editor>
+  <app-image-component-editor *ngSwitchCase="'Image'" [content]="content"></app-image-component-editor>
+  <app-image-component-editor *ngSwitchCase="'Header'" [content]="content" [cropperAspectRationWidth]="1440"
+    [cropperAspectRationHeight]="300"></app-image-component-editor>
+</ng-container>

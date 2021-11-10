@@ -1,23 +1,19 @@
 <div class="row">
   <div class="col-8">
-    <div dragula="SECTIONS" [(dragulaModel)]='pageSections'>
-      <div class="card" *ngFor="let pageSection of pageSections">
-        <div class="card-body p-0">
-          <app-page-content-preview [pageContent]="pageSection">
-          </app-page-content-preview>
-        </div>
-      </div>
-    </div>
+    <ng-container *ngFor="let content of contents">
+      <app-content-preview [content]="content">
+      </app-content-preview>
+      <hr class="divider">
+    </ng-container>
     <div class="actions">
-      <a href="#" (click)="$event.preventDefault(); onAddPageSectionClick();" class="add-page-section">
+      <a href="#" (click)="$event.preventDefault(); $event.stopPropagation(); onAddClick();">
         <i class="fe fe-plus"></i>
-        {{ 'AddSection' | localize | titlecase }}
+        {{ 'AddPage' | localize | titlecase }}
       </a>
     </div>
   </div>
   <div class="col-4">
-    <app-page-content-editor [pageContent]="selectedPageContent" (deleteContent)="onDeletePageContent($event)"
-      (selectParent)="onSelectParent()">
-    </app-page-content-editor>
+    <app-content-editor [content]="currentContent" (deleteContent)="onDeleteContent($event)"
+      (selectParent)="onSelectParent($event)"></app-content-editor>
   </div>
 </div>

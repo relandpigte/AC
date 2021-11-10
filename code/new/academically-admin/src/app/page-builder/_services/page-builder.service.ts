@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { CourseSectionDto, CourseDto, CourseSectionPageDto } from '@shared/service-proxies/service-proxies';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { PageContent } from '../_models/page-content';
+import { Content } from '../_models/content';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PageBuilderService {
   public courseSection$: Observable<CourseSectionDto>;
-  public pageContent$: Observable<PageContent>;
+  public content$: Observable<Content>;
   public courseSectionPage$: Observable<CourseSectionPageDto>;
 
 
   private courseSectionSubject: BehaviorSubject<CourseSectionDto>;
-  private pageContentSubject: BehaviorSubject<PageContent>;
+  private contentSubject: BehaviorSubject<Content>;
   private courseSectionPageSubject: BehaviorSubject<CourseSectionPageDto>;
 
 
@@ -22,8 +22,8 @@ export class PageBuilderService {
     courseSectionDefaultValue.course = new CourseDto();
     this.courseSectionSubject = new BehaviorSubject<CourseSectionDto>(courseSectionDefaultValue);
     this.courseSection$ = this.courseSectionSubject.asObservable();
-    this.pageContentSubject = new BehaviorSubject<PageContent>(new PageContent());
-    this.pageContent$ = this.pageContentSubject.asObservable();
+    this.contentSubject = new BehaviorSubject<Content>(undefined);
+    this.content$ = this.contentSubject.asObservable();
     const courseSectionPageDefaultValue = new CourseSectionPageDto();
     this.courseSectionPageSubject = new BehaviorSubject<CourseSectionPageDto>(courseSectionPageDefaultValue);
     this.courseSectionPage$ = this.courseSectionPageSubject.asObservable();
@@ -33,8 +33,8 @@ export class PageBuilderService {
     this.courseSectionSubject.next(value);
   }
 
-  public set pageContent(value: PageContent) {
-    this.pageContentSubject.next(value);
+  public set content(value: Content) {
+    this.contentSubject.next(value);
   }
 
   public set courseSectionPage(value: CourseSectionPageDto) {

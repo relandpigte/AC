@@ -1,0 +1,12 @@
+<ul *ngIf="content.components && content.components.length else noSelectedPageComponent"
+  class="list-group list-group-sm" dragula="EDITOR_COMPONENTS" [(dragulaModel)]="content.components">
+  <li (click)="$event.preventDefault(); onSelectContent(component);" *ngFor="let component of content.components"
+    class="list-group-item cursor-pointer">
+    <a href="#">{{ component.name }}</a>
+  </li>
+</ul>
+<ng-template #noSelectedPageComponent>
+  <div class="no-content">
+    <p class="p-0 m-0 text-center">{{ 'NoContentYet' | localize }}</p>
+  </div>
+</ng-template>

@@ -1,120 +1,141 @@
-import { Component, OnInit, Injector, OnDestroy } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
-import { PageSection } from '@app/page-builder/_models/page-section';
+import { Component, Injector, OnInit } from '@angular/core';
+import { ComponentContent } from '@app/page-builder/_models/component-content';
+import { Content } from '@app/page-builder/_models/content';
 import { PageContent } from '@app/page-builder/_models/page-content';
+import { SectionContent } from '@app/page-builder/_models/section-content';
 import { PageBuilderService } from '@app/page-builder/_services/page-builder.service';
+import { AppComponentBase } from '@shared/app-component-base';
 import { CourseSectionPageDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
-import { PageComponent } from '@app/page-builder/_models/page-component';
-import { DragulaService } from 'ng2-dragula';
 
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
   styleUrls: ['./content.component.less']
 })
-export class ContentComponent extends AppComponentBase implements OnInit, OnDestroy {
+export class ContentComponent extends AppComponentBase implements OnInit {
   courseSectionPage = new CourseSectionPageDto();
-  pageSections: PageSection[] = [];
-  selectedPageSection: PageSection;
-  selectedPageContent: PageContent;
+  contents: PageContent[] = [];
+  currentContent: Content;
 
   constructor(
     injector: Injector,
     private _pageBuilderService: PageBuilderService,
-    private _dragulaService: DragulaService,
   ) {
     super(injector);
-    this.pageSections.push(new PageSection());
-
-    this._pageBuilderService.pageContent$.subscribe(pageContent => {
-      this.selectedPageContent = pageContent;
-      if (pageContent) {
-        if (pageContent.name !== 'Section') {
-          _.forEach(this.pageSections, pageSection => {
-            if (pageSection.pageComponents.findIndex(e => e === this.selectedPageContent) >= 0) {
-              this.selectedPageSection = pageSection;
-              return false;
-            }
-          });
-        } else {
-          this.selectedPageSection = pageContent as PageSection;
-        }
-      }
+    this._pageBuilderService.content$.subscribe(content => {
+      this.currentContent = content;
     });
+  }
 
-    this._dragulaService.createGroup('SECTIONS', {
-      moves: (el, source, handle) => handle.className === 'page-section-actions',
-    });
+  ngOnInit(): void {
   }
 
   public initializeContentManager(): void {
     if (!this.courseSectionPage || !this.courseSectionPage.id) {
-      this.pageSections = [new PageSection()];
+      this.setDefaultContents();
     } else {
-      const pageSectionObjects: any[] = JSON.parse(this.courseSectionPage.pageContent);
-      this.pageSections = _.map(pageSectionObjects, pageSectionObject => {
-        const pageSection: PageSection = Object.assign(new PageSection(), pageSectionObject);
-        pageSection.pageComponents = _.map(pageSection.pageComponents, pageComponent => {
-          return Object.assign(new PageComponent(), pageComponent);
+      const pageContentObjects: any[] = JSON.parse(this.courseSectionPage.pageContent);
+      this.contents = _.map(pageContentObjects, pageContentObject => {
+        const pageContent: PageContent = Object.assign(new PageContent(), pageContentObject);
+        pageContent.sections = _.map(pageContent.sections, sectionContentObject => {
+          const sectionContent = Object.assign(new SectionContent(), sectionContentObject);
+          sectionContent.components = _.map(sectionContent.components, componentContent => {
+            return Object.assign(new ComponentContent(), componentContent);
+          })
+          return sectionContent;
         });
-        return pageSection;
+        return pageContent;
       });
-      if (!this.pageSections || !this.pageSections.length) {
-        this.pageSections = [new PageSection()];
+      if (!this.contents || !this.contents.length) {
+        this.setDefaultContents();
       }
     }
-
-    this.selectedPageSection = this.pageSections[0];
-    this._pageBuilderService.pageContent = this.pageSections[0];
   }
 
   public prepareContentsForSaving(courseSectionId: string): CourseSectionPageDto {
     this.courseSectionPage.courseSectionId = courseSectionId;
-    this.courseSectionPage.pageContent = JSON.stringify(this.pageSections);
+    this.courseSectionPage.pageContent = JSON.stringify(this.contents);
     return this.courseSectionPage;
   }
+
   public preparepageContentForSaving(): string {
-    return JSON.stringify(this.pageSections);
-  }
-  ngOnInit(): void {
+    return JSON.stringify(this.contents);
   }
 
-  ngOnDestroy(): void {
-    this._dragulaService.destroy('SECTIONS');
+  onAddClick(): void {
+    const page = new PageContent();
+    page.sections.push(new SectionContent());
+    this.contents.push(page);
+    this._pageBuilderService.content = page;
   }
 
-  onSelectParent(): void {
-    this._pageBuilderService.pageContent = this.selectedPageSection;
-  }
-
-  onAddPageSectionClick(): void {
-    const pageSection = new PageSection();
-    this.pageSections.push(pageSection);
-    this._pageBuilderService.pageContent = pageSection;
-  }
-
-  onDeletePageContent(pageContent: PageContent): void {
+  onDeleteContent(content: Content): void {
     this.message.confirm(undefined, undefined, (result) => {
       if (result) {
-        if (pageContent.name === 'Section') {
-          const index = this.pageSections.findIndex(e => e === pageContent);
-          if (index >= 0) {
-            this.pageSections.splice(index, 1);
-            if (this.pageSections && this.pageSections.length) {
-              this._pageBuilderService.pageContent = this.pageSections[0];
-            } else {
-              this._pageBuilderService.pageContent = undefined;
-            }
+        _.forEach(this.contents, page => {
+          if (!this.deleteIfFound(this.contents, content)) {
+            _.forEach(page.sections, section => {
+              if (!this.deleteIfFound(page.sections, content)) {
+                _.forEach(section.components, component => {
+                  if (this.deleteIfFound(section.components, content)) {
+                    return false;
+                  }
+                });
+              } else {
+                return false;
+              }
+            });
+          } else {
+            return false;
           }
-        } else {
-          const index = this.selectedPageSection.pageComponents.findIndex(e => e === pageContent);
-          if (index >= 0) {
-            this.selectedPageSection.pageComponents.splice(index, 1);
-            this._pageBuilderService.pageContent = this.selectedPageSection;
-          }
-        }
+        });
+        this._pageBuilderService.content = undefined;
       }
     });
+  }
+
+  onSelectParent(content: Content): void {
+    let parent: Content;
+    _.forEach(this.contents, page => {
+      if (parent) {
+        return false;
+      }
+      _.forEach(page.sections, section => {
+        if (section === content) {
+          parent = page;
+        }
+        if (parent) {
+          return false;
+        }
+        _.forEach(section.components, component => {
+          if (component === content) {
+            parent = section;
+          }
+          if (parent) {
+            return false;
+          }
+        });
+      });
+    });
+    if (parent) {
+      this._pageBuilderService.content = parent;
+    }
+  }
+
+  private deleteIfFound(items: Content[], item: Content): boolean {
+    const index = items.findIndex(e => e === item);
+    if (index >= 0) {
+      items.splice(index, 1);
+      return true;
+    }
+    return false;
+  }
+
+  private setDefaultContents(): void {
+    const page = new PageContent();
+    const section = new SectionContent();
+    page.sections.push(section);
+    this.contents.push(page);
   }
 }
