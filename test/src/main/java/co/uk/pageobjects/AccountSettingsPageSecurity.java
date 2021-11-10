@@ -15,6 +15,11 @@ public class AccountSettingsPageSecurity {
 	private static TextBox confirmPasswordTextBox = new TextBox("Confirm password",By.xpath("//input[@id='confirmNewPassword']"));
 	private static Button updatePassword = new Button("Update password",By.xpath("//button[@Type='submit' and contains(text(),' Update password')]"));
 	private static Element passwordDidNotMatchMessage = new Element("Warning message: password did not match",By.xpath("//h2[@id='swal2-title' and contains(text(),'did not match the one on record')]"));
+	private static Element deleteAccountLink = new Element("Delete account",By.xpath("//a[text()='Delete your account']"));
+	
+	public static void clickDeleteAccount() {
+		deleteAccountLink.click();
+	}
 	
 	public static void verifyPasswordDidNotMatchModalIsDisplayed() {
 		passwordDidNotMatchMessage.verifyDisplayed();
@@ -40,4 +45,16 @@ public class AccountSettingsPageSecurity {
 		updatePassword.click();
 	}
 	
+	public static class DeleteConfirmModal{
+		private static TextBox confirmTxtBox = new TextBox("Confirm",By.xpath("//input[@class='swal2-input']"));
+		private static Button delete = new Button("Delete",By.xpath("//button[text()='Delete My Account']"));
+		
+		public static void enterConfirm(String confirm) {
+			confirmTxtBox.setText(confirm);
+		}
+		
+		public static void clickDelete() {
+			delete.click();
+		}
+	}
 }

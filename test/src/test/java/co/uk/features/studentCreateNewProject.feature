@@ -1,6 +1,6 @@
 Feature: Create new project
 
-  @UI @TestRails(14773)
+  @UI @Adhoc  @TestRails(14773)
   Scenario: C14773 - Verify service wizard page is displayed
     Given User is in academically login page
     When user login as "student"
@@ -8,7 +8,7 @@ Feature: Create new project
     When user create a new project
     Then user is in service wizard page
 
-  @UI @TestRails(14774)
+  @UI @Adhoc  @TestRails(14774)
   Scenario: C14774 - Verify that user can able to select a service
     Given User is in academically login page
     When user login as "student"
@@ -20,7 +20,7 @@ Feature: Create new project
     And user click continue to step2
     Then user is in step 2
 
-  @UI @TestRails(14775)
+  @UI @Adhoc  @TestRails(14775)
   Scenario: C14775 - Verify user can able to select a level for the service
     Given User is in academically login page
     When user login as "student"
@@ -35,7 +35,7 @@ Feature: Create new project
     And user click continue to step 3
     Then user in in step 3
 
-  @UI @TestRails(14776)
+  @UI @Adhoc  @TestRails(14776)
   Scenario: C14776 - Verify the level options are displayed
     Given User is in academically login page
     When user login as "student"
@@ -53,7 +53,7 @@ Feature: Create new project
     And the "Post Graduate" level is displyed
     And the "Doctorate" level is displyed
 
-  @UI @TestRails(14788)
+  @UI @Adhoc  @TestRails(14788)
   Scenario: C14788 - Verify the service category options are displayed
     Given User is in academically login page
     When user login as "student"
@@ -72,7 +72,7 @@ Feature: Create new project
     And the service "Study Skills" is displayed
     And the service "Visa Application Consultancy" is displayed
 
-  @UI @TestRails(14778)
+  @UI @Adhoc  @TestRails(14778)
   Scenario: C14778 - Verify page 3 of the wizard be able to navigate and select a single service
     Given User is in academically login page
     When user login as "student"
@@ -90,7 +90,7 @@ Feature: Create new project
     And user click continue to step 4
     Then user is in step 4
 
-  @UI @TestRails(C14790)
+  @UI @Adhoc  @TestRails(14790)
   Scenario: C14790 - Verify single field called Project Name is displayed
     Given User is in academically login page
     When user login as "student"
@@ -109,7 +109,7 @@ Feature: Create new project
     Then user is in step 4
     And project name textbox is displayed
 
-  @UI @TestRails(C14791) @Email
+  @UI @Adhoc  @TestRails(14791) @Email
   Scenario: C14791 - Verify that the student has successfully created a new project
     Given User is in academically login page
     When user register a student
@@ -143,7 +143,7 @@ Feature: Create new project
     And user proceed to project "Test Project XXX"
     Then user is in proposal screen
 
-  @UI @TestRails(C14792) @Email
+  @UI @Adhoc  @TestRails(14792) @Email
   Scenario: C14792 - Verify that student see all the offers from tutors relating to my Project
     Given User is in academically login page
     When user register a student

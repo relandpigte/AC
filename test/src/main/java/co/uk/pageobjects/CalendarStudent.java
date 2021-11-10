@@ -13,13 +13,17 @@ public class CalendarStudent {
 			By.xpath("//app-calendar//span[contains(text(),'Calendar')]"));
 	private static Button prevBtn = new Button("Previous", By.xpath("//app-calendar//button[@aria-label='prev']"));
 	private static Button nextBtn = new Button("Next", By.xpath("//app-calendar//button[@aria-label='next']"));
-	private static Element sessionType = new Element("Session type dropdown",
-			By.xpath("//app-calendar//span[@aria-labelledby='select2-sessionType-container']"));
-
+	private static Element sessionFilter = new Element("Session type dropdown",
+			By.xpath("//app-calendar//span[@id='select2-sessionType-container']"));
+	
+	private static Element selectedSessionFilter(String session) {
+		return new Element (session,By.xpath("//span[@id='select2-sessionType-container' and text()='"+session+"']"));
+	}
+	
 	private static Element sessionTypeDropdown(String Option) {
 		return new Element(Option, By.xpath("//ul[@id='select2-sessionType-results']//li[text()='" + Option + "']"));
 	}
-
+	//span[@id='select2-sessionType-container' and text()='Upcoming Sessions']
 	private static Element calendar = new Element("Calendar",
 			By.xpath("//td[@class='fc-timegrid-slot fc-timegrid-slot-lane ' and @data-time='12:00:00']"));
 	private static Element sessionBlock(String sessionName) {
@@ -58,14 +62,18 @@ public class CalendarStudent {
 	public static void clickNext() {
 		nextBtn.click();
 	}
-
+	
+	public static void verifySelectedSessionIsDisplayed(String session) {
+		selectedSessionFilter(session).verifyDisplayed();
+	}
+	
 	public static void selectSessionType(String session) {
-		sessionType.click();
+		sessionFilter.click();
 		sessionTypeDropdown(session).click();
 	}
 
 	public static void clickSesstionType() {
-		sessionType.click();
+		sessionFilter.click();
 
 	}
 

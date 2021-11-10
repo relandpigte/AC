@@ -7,7 +7,7 @@ import io.cucumber.java.en.Then;
 
 public class CalendarTutorStepDefinitions {
 
-	@Then("^the user is on the tutor calendar$")
+	@Then("^user is on the tutor calendar$")
 	public void verifyUserIsOnTheTutorCalendar() {
 		CalendarTutor.verifyCalendarHeaderIsDisplayed();
 	}

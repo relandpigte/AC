@@ -182,4 +182,15 @@ public class AccountSettingsPageStepDefinitions {
 	public void verifyPasswordDidnotMatchModalIsDisplayed() {
 		AccountSettingsPageSecurity.verifyPasswordDidNotMatchModalIsDisplayed();
 	}
+	
+	@When("^user wants to delete his account$")
+	public void deleteAccount() {
+		AccountSettingsPageSecurity.clickDeleteAccount();
+	}
+	
+	@When("^user confirmed to delete account$")
+	public void confirmedToDeleteAccount() {
+		AccountSettingsPageSecurity.DeleteConfirmModal.enterConfirm("CONFIRM");
+		AccountSettingsPageSecurity.DeleteConfirmModal.clickDelete();
+	}
 }

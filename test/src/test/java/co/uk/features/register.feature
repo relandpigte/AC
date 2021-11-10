@@ -1,6 +1,6 @@
 Feature: Register
 
-  @UI @TestRails(14474)
+  @UI @Adhoc  @TestRails(14474)
   Scenario: C14474 - Verify successful register a student
     Given User is in academically login page
     When user register a student
@@ -17,7 +17,7 @@ Feature: Register
     When user enter username "automatedXXX" and password "Test@12345"
     Then user successfully login
 
-  @UI @TestRails(14771)
+  @UI @Adhoc  @TestRails(14771)
   Scenario: C14771 - Verify registration with existing email
     Given User is in academically login page
     When user register a student

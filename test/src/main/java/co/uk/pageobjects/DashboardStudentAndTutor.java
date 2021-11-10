@@ -7,7 +7,7 @@ import co.uk.webelements.Element;
 import co.uk.webelements.Tab;
 import co.uk.webelements.TextBox;
 
-public class Dashboard {
+public class DashboardStudentAndTutor {
 
 	private static Tab overviewTab = new Tab("Overview", By.xpath("//a[@id='overview-tab']"));
 	private static Tab projectTab = new Tab("My projects", By.xpath("//a[@id='projects-tab']"));
@@ -70,6 +70,10 @@ public class Dashboard {
 	public static void clickUsageTab() {
 		usageTab.click();
 	}
+	
+	public static void clickCourseTab() {
+		courseTab.click();
+	}
 
 	public static void clickCreateNewProject() {
 		createNewProject.click();
@@ -95,56 +99,6 @@ public class Dashboard {
 		dashboardHeader.verifyDisplayed();
 	}
 
-	public static class MyProject {
-
-		private static Element projects = new Element("Project table",
-				By.xpath("//app-dashboard-projects//h4[text()='Projects']"));
-
-		private static Element projectTable(String project) {
-			return new Element(project, By.xpath("//div[@id='projects']//a[text()='" + project + "']"));
-		}
-
-		public static void verifyProjectTableIsDisplayed() {
-			projects.verifyDisplayed();
-		}
-
-		public static void clickProject(String project) {
-			projectTable(project).click();
-		}
-		
-		public static void verifyProjectIsNotDisplayed(String project) {
-			projectTable(project).verifyDisplayed();
-		}
-	}
-
-	public static class Metric {
-
-		private static Element totalHour = new Element("Total hours",
-				By.xpath("//app-metrics//h6[text()='Total Hours']"));
-		private static Element academicLevel = new Element("Academic level",
-				By.xpath("//app-metrics//h6[text()='Academic Level']"));
-		private static Element userType = new Element("User type", By.xpath("//app-metrics//h6[text()='User Type']"));
-		private static Element reviews = new Element("Reviews",
-				By.xpath("//app-metrics//h6[contains(text(),'Reviews')]"));
-
-		public static void verifyTotalHoursMetricIsDisplayed() {
-			totalHour.verifyDisplayed();
-		}
-
-		public static void verifyAcademicLevelMetricIsDisplayed() {
-			academicLevel.verifyDisplayed();
-		}
-
-		public static void verifyUserTypeMetricIsDisplayed() {
-			userType.verifyDisplayed();
-		}
-
-		public static void verifyReviewsMetricIsDisplayed() {
-			reviews.verifyDisplayed();
-		}
-
-	}
-
 	public static class OverviewTab {
 
 		public static class RecentProject {
@@ -156,6 +110,10 @@ public class Dashboard {
 			public static void verifyProjectIsDisplayed(String project) {
 				projectName(project).verifyDisplayed();
 			}
+		}
+
+		public static class RecentActivity {
+
 		}
 
 		public static class ProfileWidget {
@@ -209,7 +167,57 @@ public class Dashboard {
 
 	}
 
-	public static class Usage {
+	public static class MyProjectTab {
+
+		private static Element projects = new Element("Project table",
+				By.xpath("//app-dashboard-projects//h4[text()='Projects']"));
+
+		private static Element projectTable(String project) {
+			return new Element(project, By.xpath("//div[@id='projects']//a[text()='" + project + "']"));
+		}
+
+		public static void verifyProjectTableIsDisplayed() {
+			projects.verifyDisplayed();
+		}
+
+		public static void clickProject(String project) {
+			projectTable(project).click();
+		}
+
+		public static void verifyProjectIsNotDisplayed(String project) {
+			projectTable(project).verifyNotDisplayed();
+		}
+	}
+
+	public static class Metric {
+
+		private static Element totalHour = new Element("Total hours",
+				By.xpath("//app-metrics//h6[text()='Total Hours']"));
+		private static Element academicLevel = new Element("Academic level",
+				By.xpath("//app-metrics//h6[text()='Academic Level']"));
+		private static Element userType = new Element("User type", By.xpath("//app-metrics//h6[text()='User Type']"));
+		private static Element reviews = new Element("Reviews",
+				By.xpath("//app-metrics//h6[contains(text(),'Reviews')]"));
+
+		public static void verifyTotalHoursMetricIsDisplayed() {
+			totalHour.verifyDisplayed();
+		}
+
+		public static void verifyAcademicLevelMetricIsDisplayed() {
+			academicLevel.verifyDisplayed();
+		}
+
+		public static void verifyUserTypeMetricIsDisplayed() {
+			userType.verifyDisplayed();
+		}
+
+		public static void verifyReviewsMetricIsDisplayed() {
+			reviews.verifyDisplayed();
+		}
+
+	}
+
+	public static class UsageTab {
 
 		private static Tab usageIsActive = new Tab("Usage",
 				By.xpath("//a[@id='usage-tab' and contains(@class,'active')]"));
@@ -239,19 +247,66 @@ public class Dashboard {
 
 	public static class CourseTab {
 		private static Button createCourseBtn = new Button("Create course", By.xpath("//a[text()= ' Create course ']"));
-	}
-
-	public static class CreateCourseModal {
-		private static Button nextBtn = new Button("Next", By.xpath("//button[text()= ' Next ']"));
-		private static Button cancelBtn = new Button("Cancel", By.xpath("//button[text()= ' Cancel ']"));
-		private static Button backBtn = new Button("Back", By.xpath("//button[text()= ' Back ']"));
-		private static Button saveBtn = new Button("Save", By.xpath("//button[text()= ' Save ']"));
-
-		private static Element courseTemplate(String template) {
-			return new Element("Template: " + template, By.xpath("//p[text()='" + template + "']//parent::Button"));
+		private static Element courseName(String course) {
+			return new Element("Course name "+course,By.xpath("//a[text()='"+course+"']/ancestor::div[contains(@class,'cursor-pointer')]"));
 		}
+		
+		private static Element courseDefaultThumbnail(String courseName) {
+			return new Element("Course thumbnail",By.xpath("//img[contains(@src,'academically')]/following::a[text()='"+courseName+"']"));
+		}
+		
+		public static void verifyCourseDefaultThumbnailisDisplayed(String courseName) {
+			courseDefaultThumbnail(courseName).verifyDisplayed();
+		}
+		
+		public static void verifyCourseIsDisplayed(String course) {
+			courseName(course).verifyDisplayed();
+		}
+		
+		public static void clickCourseDetails(String course) {
+			courseName(course).click();
+		}
+		
+		public static void clickCreateCourse() {
+			createCourseBtn.click();
+		}
+		
+		public static class CreateCourseModal {
+			private static Button nextBtn = new Button("Next", By.xpath("//button[text()= ' Next ']"));
+			private static Button cancelBtn = new Button("Cancel", By.xpath("//button[text()= ' Cancel ']"));
+			private static Button backBtn = new Button("Back", By.xpath("//button[text()= ' Back ']"));
+			private static Button saveBtn = new Button("Save", By.xpath("//button[text()= ' Save ']"));
 
-		private static TextBox courseNameTxtBox = new TextBox("Course name", By.xpath("//input[@id='name']"));
+			private static Element courseTemplate(String template) {
+				return new Element("Template: " + template, By.xpath("//p[text()='" + template + "']//parent::Button"));
+			}
+
+			private static TextBox courseNameTxtBox = new TextBox("Course name", By.xpath("//input[@id='name']"));
+			
+			public static void selectCourseTemplate(String template) {
+				courseTemplate(template).click();
+			}
+			
+			public static void enterCourseNameTxtBox(String courseName) {
+				courseNameTxtBox.setText(courseName);
+			}
+			
+			public static void clickNext() {
+				nextBtn.click();
+			}
+			
+			public static void clickBack() {
+				backBtn.click();
+			}
+			
+			public static void clickSave() {
+				saveBtn.click();
+			}
+			
+			public static void clickCancel() {
+				cancelBtn.click();
+			}
+
+		}
 	}
-
 }

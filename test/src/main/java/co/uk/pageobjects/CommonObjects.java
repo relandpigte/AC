@@ -17,7 +17,7 @@ public class CommonObjects {
 	private static Element navSettings = new Element("Navigation settings",By.xpath("//nav//a[contains(text(),'Settings')]"));
 	private static Element navUsers = new Element("Navigation users",By.xpath("//nav//a[contains(text(),'Users')]"));
 	private static Element navRoles = new Element("Navigation roles",By.xpath("//nav//a[contains(text(),'Roles')]"));
-	private static Element navDashboard = new Element("Navigation roles",By.xpath("//nav//a[contains(text(),'Dashboard')]"));
+	private static Element navDashboard = new Element("Navigation Dashboard",By.xpath("//nav//a[contains(text(),'Dashboard')]"));
 	private static Element navSchedule = new Element("Navigation schedule",By.xpath("//nav//a[contains(text(),'Schedule')]"));
 	private static Element navSuggestion = new Element("Navigation suggestion",By.xpath("//nav//a[contains(text(),'Suggestions')]"));
 	private static Element navServiceSubject = new Element("Navigation service subject",By.xpath("//nav//a[contains(text(),'Service Subjects')]"));

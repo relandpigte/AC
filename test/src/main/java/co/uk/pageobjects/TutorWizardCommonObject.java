@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 
 import co.uk.webelements.Button;
 import co.uk.webelements.Element;
+import co.uk.webelements.Tab;
 
 public class TutorWizardCommonObject {
 

@@ -1,6 +1,6 @@
 Feature: Manage users
 
-  @UI @TestRails(14594)
+  @UI @Adhoc  @TestRails(14594)
   Scenario: C14594 - Create an admin
     Given User is in academically login page
     When user login as "admin"
@@ -19,7 +19,7 @@ Feature: Manage users
     When user enter username "Automated75XXX" and password "Test@12345"
     Then user successfully login
 
-  @UI @TestRails(14592)
+  @UI @Adhoc  @TestRails(14592)
   Scenario: C14592 - Create a super admin
     Given User is in academically login page
     When user login as "admin"
@@ -38,7 +38,7 @@ Feature: Manage users
     When user enter username "Automated76XXX" and password "Test@12345"
     Then user successfully login
 
-  @UI @TestRails(14593)
+  @UI @Adhoc  @TestRails(14593)
   Scenario: C14593 - Create a tutor
     Given User is in academically login page
     When user login as "admin"
@@ -57,7 +57,7 @@ Feature: Manage users
     When user enter username "Automated77XXX" and password "Test@12345"
     Then user successfully login
 
-  @UI @TestRails(14594)
+  @UI @Adhoc  @TestRails(14594)
   Scenario: C14594 - Create a student
     Given User is in academically login page
     When user login as "admin"
@@ -76,7 +76,7 @@ Feature: Manage users
     When user enter username "Automated78XXX" and password "Test@12345"
     Then user successfully login
 
-  @UI @TestRails(C14595)
+  @UI @Adhoc  @TestRails(C14595)
   Scenario: C14595 - Delete a user
     Given User is in academically login page
     When user login as "admin"
@@ -102,7 +102,7 @@ Feature: Manage users
     When user enter username "Automated79XXX" and password "Test@12345"
     Then user is not successfully login
 
-  @UI @TestRails(C14596)
+  @UI @Adhoc  @TestRails(C14596)
   Scenario: C14596 - Edit user details
     Given User is in academically login page
     When user login as "admin"
