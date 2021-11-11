@@ -28,7 +28,7 @@ export const environment = {
   providers: {
     stripe: {
       clientId: 'ca_JTqXUdOGoHuPu5xa30NV6ywErQwqkFrO',
-      onbloardLink: (clientId: string, host: string) => `https://connect.stripe.com/oauth/authorize?response_type=code&scope=read_write&client_id=${clientId}&redirect_uri=${host}/app/account-settings/general`,
+      onbloardLink: (clientId: string, host: string) => `https://connect.stripe.com/express/oauth/authorize?response_type=code&scope=read_write&client_id=${clientId}&redirect_uri=${host}/app/account-settings/general`,
     }
   },
 };
