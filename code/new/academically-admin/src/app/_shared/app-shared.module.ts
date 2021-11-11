@@ -11,6 +11,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { DragulaModule } from 'ng2-dragula';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
 import { DateFormatPipe } from './pipes/date-format.pipe';
@@ -22,6 +23,7 @@ import { DocumentUploaderComponent } from './components/document-uploader/docume
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
 import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
 import { ProfilePictureChangerComponent } from './components/profile-picture-changer/profile-picture-changer.component';
+import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,7 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
     ImageCropperComponent,
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
+    ColorPickerComponent,
     DateFormatPipe,
     FixedHeightDirective,
     BottomScrollerDirective,
@@ -49,7 +52,8 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
     }),
     TimepickerModule.forRoot(),
     ModalModule.forRoot(),
-    DragulaModule.forRoot()
+    DragulaModule.forRoot(),
+    ColorPickerModule,
   ],
   exports: [
     SharedModule,
@@ -64,6 +68,7 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
     TimepickerModule,
     ModalModule,
     DragulaModule,
+    ColorPickerModule,
     EnumToArrayPipe,
     DateFormatPipe,
     FixedHeightDirective,
@@ -72,6 +77,7 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
     ImageCropperComponent,
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
+    ColorPickerComponent,
   ],
 })
 export class AppSharedModule { }

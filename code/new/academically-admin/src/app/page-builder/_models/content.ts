@@ -1,7 +1,8 @@
-import { MarginType } from "./margin-type";
+import { MarginType } from './margin-type';
 
 export abstract class Content {
   name: string;
+  backgroundColor: string;
   marginType: number;
   marginTop: number;
   marginBottom: number;
@@ -16,6 +17,7 @@ export abstract class Content {
 
   constructor() {
     this.marginType = MarginType.None;
+    this.backgroundColor = '#FFFFFF';
     this.setMargins();
   }
 

@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="ClickHereToChooseColor">Click here to choose color</text>
     <text name="AddPage">Add page</text>
     <text name="ProjectInvitationNotificationMessage">
       <![CDATA[
