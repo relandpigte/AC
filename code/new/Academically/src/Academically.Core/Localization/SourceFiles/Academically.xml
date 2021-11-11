@@ -1290,5 +1290,6 @@
     <text name="LessonImage">Lesson Image</text>
     <text name="UploadInstuction">Please use .jpg or .png</text>
   <text name="RecommendedDimensions">Recommended Dimensions of</text>
+    <text name="Coaching">Coaching</text>
   </texts>
 </localizationDictionary>
