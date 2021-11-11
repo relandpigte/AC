@@ -9,6 +9,7 @@ import { ContentComponent } from './_components/content/content.component';
 import { SettingsComponent } from './_components/settings/settings.component';
 import { DetailsComponent } from './_components/details/details.component';
 import { PagebuilderTabs } from './_models/pagebuilderTabs.enum'
+import { AppConsts } from '@shared/AppConsts';
 
 @Component({
   selector: 'app-page-builder',
@@ -59,7 +60,9 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
   }
 
   onLessonPreviewClick(): void {
-    this.message.info('Coming Soon!');
+    const url = `${AppConsts.appBaseUrl}/pages/lesson-preview/${this.id}`;
+    console.log(url);
+    window.open(url, '_blank');
   }
 
   onSaveClick(): void {
@@ -136,6 +139,7 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
         break
     }
   }
+
   private getCourseSection(): void {
     this.isLoading = true;
     this._courseSectionsService.get(this.id)
