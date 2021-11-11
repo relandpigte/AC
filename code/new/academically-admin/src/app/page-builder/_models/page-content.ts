@@ -7,6 +7,7 @@ export class PageContent extends Content {
   constructor() {
     super();
     this.name = 'Page';
+    this.backgroundColor = 'transparent';
     this.sections = [];
   }
 }

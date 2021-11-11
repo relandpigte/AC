@@ -1,0 +1,6 @@
+<div class="app-color-picker-container">
+  <div class="app-color-picker" [(colorPicker)]="color" (colorPickerSelect)="onColorChange()" [cpOKButton]="true"
+    [cpOKButtonClass]="'btn btn-sm btn-primary'" [style.background-color]="color">
+    <p class="app-color-picker-info">{{ 'ClickHereToChooseColor' | localize }}</p>
+  </div>
+</div>

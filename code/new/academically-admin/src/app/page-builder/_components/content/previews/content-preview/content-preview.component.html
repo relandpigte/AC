@@ -1,17 +1,14 @@
-<div [ngClass]="{'card mb-0': content.name === 'Section'}">
-  <div class="content-container" [class.active]="selectedContent === content"
-    [ngClass]="{'card-body p-0': content.name === 'Section'}"
-    (click)="$event.preventDefault(); $event.stopPropagation(); onContentClick();" [ngSwitch]="content.name">
-    <div *ngIf="content.marginTop > 0" class="page-content-marker-top" [style.top]="marginTop"></div>
-    <div *ngIf="content.marginBottom > 0" class="page-content-marker-bottom" [style.bottom]="marginBottom"></div>
-    <div *ngIf="content.marginLeft > 0" class="page-content-marker-left" [style.left]="marginLeft"></div>
-    <div *ngIf="content.marginRight > 0" class="page-content-marker-right" [style.right]="marginRight"></div>
-    <div class="content" [class.has-margin-top]="content.marginTop" [class.has-margin-bottom]="content.marginBottom"
-      [class.has-margin-left]="content.marginLeft" [class.has-margin-right]="content.marginRight"
-      [style.margin]="margin">
-      <app-page-preview *ngSwitchCase="'Page'" [content]="content"></app-page-preview>
-      <app-section-preview *ngSwitchCase="'Section'" [content]="content"></app-section-preview>
-      <app-component-preview *ngSwitchDefault [content]="content"></app-component-preview>
-    </div>
+<div class="content-container" [style.background-color]="content.backgroundColor"
+  [class.active]="selectedContent === content"
+  (click)="$event.preventDefault(); $event.stopPropagation(); onContentClick();" [ngSwitch]="content.name">
+  <div *ngIf="content.marginTop > 0" class="page-content-marker-top" [style.top]="marginTop"></div>
+  <div *ngIf="content.marginBottom > 0" class="page-content-marker-bottom" [style.bottom]="marginBottom"></div>
+  <div *ngIf="content.marginLeft > 0" class="page-content-marker-left" [style.left]="marginLeft"></div>
+  <div *ngIf="content.marginRight > 0" class="page-content-marker-right" [style.right]="marginRight"></div>
+  <div class="content" [class.has-margin-top]="content.marginTop" [class.has-margin-bottom]="content.marginBottom"
+    [class.has-margin-left]="content.marginLeft" [class.has-margin-right]="content.marginRight" [style.margin]="margin">
+    <app-page-preview *ngSwitchCase="'Page'" [content]="content"></app-page-preview>
+    <app-section-preview *ngSwitchCase="'Section'" [content]="content"></app-section-preview>
+    <app-component-preview *ngSwitchDefault [content]="content"></app-component-preview>
   </div>
 </div>

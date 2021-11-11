@@ -1,3 +1,4 @@
+<app-color-picker [(color)]="content.backgroundColor"></app-color-picker>
 <ul *ngIf="content.components && content.components.length else noSelectedPageComponent"
   class="list-group list-group-sm" dragula="EDITOR_COMPONENTS" [(dragulaModel)]="content.components">
   <li (click)="$event.preventDefault(); onSelectContent(component);" *ngFor="let component of content.components"
