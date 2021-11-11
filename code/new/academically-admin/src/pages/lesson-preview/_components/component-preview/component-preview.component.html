@@ -1,0 +1,5 @@
+<div class="component-content" [ngSwitch]="content.name" [style.padding]="content.margin"
+  [style.background-color]="content.backgroundColor">
+  <app-text-component-preview *ngSwitchCase="'Text'" [content]="content"></app-text-component-preview>
+  <app-image-component-preview *ngSwitchDefault [content]="content"></app-image-component-preview>
+</div>

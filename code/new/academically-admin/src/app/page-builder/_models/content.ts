@@ -21,6 +21,15 @@ export abstract class Content {
     this.setMargins();
   }
 
+  get margin(): string {
+    if (!this.marginTop && !this.marginBottom && !this.marginLeft && !this.marginRight) {
+      return '0';
+    }
+
+    return `${this.marginTop}px ${this.marginRight}px `
+      + `${this.marginBottom}px ${this.marginLeft}px`;
+  }
+
   public setMargins(): void {
     switch (this.marginType) {
       case MarginType.None:

@@ -1,0 +1,17 @@
+<div class="lesson-preview-container">
+  <div class="lesson-preview-toolbar">
+    <button [disabled]="currentPage === 0" (click)="onPreviousClick()" class="btn btn-md btn-primary">
+      <i class="fe fe-chevron-left"></i>
+      {{ 'Previous' | localize }}
+    </button>
+    <h2 class="page-title">{{ 'Page' | localize }} {{ currentPage + 1 }}</h2>
+    <button [disabled]="currentPage === contents.length - 1" (click)="onNextClick()" class="btn btn-md btn-primary">
+      {{ 'Next' | localize }}
+      <i class="fe fe-chevron-right"></i>
+    </button>
+  </div>
+  <div class="lesson-preview">
+    <app-content-preview [content]="contents[currentPage]">
+    </app-content-preview>
+  </div>
+</div>
