@@ -1,6 +1,6 @@
 Feature: Tutor account settings
 
-  @UI @Adhoc  @TestRails(14579)
+  @UI  @TestRails(14579)
   Scenario: C14579 - Verify editing general information
     Given User is in academically login page
     When user login as "admin"
@@ -31,7 +31,7 @@ Feature: Tutor account settings
       | First name | Last name | Date of birth | Dial code    | Phone number | Email | Timezone                                                     | Country        | Address 1     | Address 2       | City   | Zip code | Province |
       | Brunce     | Wayne     | 07/05/1986    | TestdialCode | Testnumber   | null  | (UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna | United Kingdom | Londonwriteup | 21 Hanover Road | London | NW10 3DR | Brent    |
 
-  @UI @Adhoc  @TestRails(14580)
+  @UI  @TestRails(14580)
   Scenario: C14580 - Verify changing password using invalid current password
     Given User is in academically login page
     When user login as "admin"
@@ -58,7 +58,7 @@ Feature: Tutor account settings
     And user update the password
     Then existing password did not match the one on record message is displayed
 
-  @UI @Adhoc  @TestRails(14581)
+  @UI  @TestRails(14581)
   Scenario: C14581 - Verify changing password
     Given User is in academically login page
     When user login as "admin"

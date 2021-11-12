@@ -1,6 +1,6 @@
 Feature: Student project
 
-  @UI @Adhoc  @TestRails(14812)
+  @UI  @TestRails(14812)
   Scenario: C14812	Verify student can able to view project details
     Given User is in academically login page
     When user login as "admin"
@@ -39,7 +39,7 @@ Feature: Student project
     And user proceed to project "Test Project XXX"
     Then user is in proposal screen
 
-  @UI @Adhoc  @TestRails(14813)
+  @UI  @TestRails(14813)
   Scenario: C14813	Verify that student can able to view tutor offer
     Given User is in academically login page
     When user login as "admin"
@@ -184,7 +184,7 @@ Feature: Student project
   #    When user proceed to the calendar
   #    Then the user is on the tutor calendar
   #    And the "Testing87XXX" session is displayed on the tutor calendar
-  @UI @Adhoc  @TestRails(14988)
+  @UI  @TestRails(14988)
   Scenario: C14988 Verify that student can delete a project
     Given User is in academically login page
         When user login as "admin"

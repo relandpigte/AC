@@ -1,6 +1,6 @@
 Feature: Tutor project
 	
-	@UI @Adhoc  @TestRails(C14830)
+	@UI  @TestRails(C14830)
   Scenario: C14830	Verify tutor can not send multiple offers for the same project
     Given User is in academically login page
     When user login as "admin"

@@ -1,6 +1,6 @@
 Feature: Tutor Wizard
 
-  @UI @Adhoc  @Adhoc  @TestRails(14520)
+  @UI  @TestRails(14520)
   Scenario: C14520 - Verify opening the tutor wizard from dashboard
     Given User is in academically login page
     When user login as "student"
@@ -10,7 +10,7 @@ Feature: Tutor Wizard
     When user confirms to become a tutor
     Then user is in tutor wizard page
 
-  @UI @Adhoc  @Adhoc  @TestRails(14521)
+  @UI  @TestRails(14521)
   Scenario: C14521 - Verify opening the tutor wizard from dashboard
     Given User is in academically login page
     When user login as "student"
@@ -22,7 +22,7 @@ Feature: Tutor Wizard
     When user confirms to become a tutor
     Then user is in tutor wizard page
 
-  @UI @Adhoc  @Adhoc  @TestRails(14522)
+  @UI  @TestRails(14522)
   Scenario: C14522 - Verify adding about user information from the tutor wizard
     Given User is in academically login page
     When user login as "admin"
@@ -50,7 +50,7 @@ Feature: Tutor Wizard
     And user next to education
     Then sucessful message is displayed
 
-  @UI @Adhoc  @Adhoc  @TestRails(14523)
+  @UI  @TestRails(14523)
   Scenario: C14523 -Verify adding user education information by levels from the tutor wizard
     Given User is in academically login page
     When user login as "admin"
@@ -87,7 +87,7 @@ Feature: Tutor Wizard
     And user saving the education information on tutor wizard
     Then sucessful message is displayed
 
-  @UI @Adhoc  @Adhoc  @TestRails(14524)
+  @UI  @TestRails(14524)
   Scenario: C14524 - Verify adding user education information by evidence from the tutor wizard
     Given User is in academically login page
     When user login as "admin"
@@ -127,7 +127,7 @@ Feature: Tutor Wizard
     And user saving the education information on tutor wizard
     Then sucessful message is displayed
 
-  @UI @Adhoc  @Adhoc  @TestRails(14525)
+  @UI  @TestRails(14525)
   Scenario: C14525 - Verify adding research interest from the tutor wizard
     Given User is in academically login page
     When user login as "admin"
@@ -176,7 +176,7 @@ Feature: Tutor Wizard
     Then sucessful message is displayed
     And adding research interest "Computer Science and Information Technology" is successful on tutor wizard
 
-  @UI @Adhoc  @Adhoc  @TestRails(14526)
+  @UI  @TestRails(14526)
   Scenario: C14526- Verify adding research methodology from the tutor wizard
     Given User is in academically login page
     When user login as "admin"
@@ -225,7 +225,7 @@ Feature: Tutor Wizard
     Then sucessful message is displayed
     And adding methodology "Quantitative" is successful on tutor wizard
 
-  @UI @Adhoc  @Adhoc  @TestRails(14527)
+  @UI  @TestRails(14527)
   Scenario: C14527 - Verify adding publication from the tutor wizard
     Given User is in academically login page
     When user login as "admin"
@@ -273,7 +273,7 @@ Feature: Tutor Wizard
     And user saving publication information on tutor wizard
     Then adding publication "Silence the storm" is successful on tutor wizard
 
-  @UI @Adhoc  @Adhoc  @TestRails(14528)
+  @UI  @TestRails(14528)
   Scenario: C14528 - Verify adding spoken languages from the tutor wizard
     Given User is in academically login page
     When user login as "admin"
@@ -324,7 +324,7 @@ Feature: Tutor Wizard
     And "Fluent" "English" language is added on tutor wizard
     And "Basic" "Czech" language is added on tutor wizard
 
-  @UI @Adhoc  @Adhoc  @TestRails(14529)
+  @UI  @TestRails(14529)
   Scenario: C14529 - Verify adding support services from the tutor wizard
     Given User is in academically login page
     When user login as "admin"
@@ -432,7 +432,7 @@ Feature: Tutor Wizard
   @?? @automated50XXX
   Scenario: C14532 - Verify removing user education information by evidence
 
-  @UI @Adhoc  @Adhoc  @TestRails(14528)
+  @UI  @TestRails(14528)
   Scenario: C14533 - Verify removing research interest
     Given User is in academically login page
     When user login as "admin"
@@ -485,7 +485,7 @@ Feature: Tutor Wizard
     When the user confirms to remove a research interest on tutor wizard
     Then removing "Computer Science and Information Technology" research interest is successful on tutor wizard
 
-  @UI @Adhoc  @Adhoc  @TestRails(14534)
+  @UI  @TestRails(14534)
   Scenario: C14534 - Verify editing research interest
     Given User is in academically login page
     When user login as "admin"
@@ -544,7 +544,7 @@ Feature: Tutor Wizard
       | Title                | Knowledge Base            | Description |
       | Computer programming | Computational Engineering | Test1       |
 
-  @UI @Adhoc  @Adhoc  @TestRails(14535)
+  @UI  @TestRails(14535)
   Scenario: C14535 - Verify removing research methodology
     Given User is in academically login page
     When user login as "admin"
@@ -597,7 +597,7 @@ Feature: Tutor Wizard
     When the user confirms to remove a research methodology on tutor wizard
     Then removing "Quantitative" research methodology is successful on tutor wizard
 
-  @UI @Adhoc  @Adhoc  @TestRails(14536)
+  @UI  @TestRails(14536)
   Scenario: C14536 - Verify editing research methodology
     Given User is in academically login page
     When user login as "admin"
@@ -659,7 +659,7 @@ Feature: Tutor Wizard
       | Qualitative | Data Quality and Data Management | Test        |
       |             | Methodological Pluralism         |             |
 
-  @UI @Adhoc  @Adhoc  @TestRails(14537)
+  @UI  @TestRails(14537)
   Scenario: C14537 - Verify removing publication
     Given User is in academically login page
     When user login as "admin"
@@ -711,7 +711,7 @@ Feature: Tutor Wizard
     When the user confirms to remove a publication on tutor wizard
     Then removing "Silence the storm" publication is successful on tutor wizard
 
-  @UI @Adhoc  @Adhoc  @TestRails(14538)
+  @UI  @TestRails(14538)
   Scenario: C14538 - Verify editing publication
     Given User is in academically login page
     When user login as "admin"
@@ -770,7 +770,7 @@ Feature: Tutor Wizard
       | Title         | Publication Type | Publisher           | Date       | Tag  | Abstarct |
       | Strange tides | Chapter          | Automated55XXX Test | 03/02/2013 | null | Test1    |
 
-  @UI @Adhoc  @Adhoc  @TestRails(14539)
+  @UI  @TestRails(14539)
   Scenario: C14539 - Verify editing spoken languages
     Given User is in academically login page
     When user login as "admin"
@@ -833,7 +833,7 @@ Feature: Tutor Wizard
     And "Conversational" "Greek" language is added on tutor wizard
     And "Fluent" "Dutch" language is added on tutor wizard
 
-  @UI @Adhoc  @Adhoc  @TestRails(14540)
+  @UI  @TestRails(14540)
   Scenario: C14540 - Verify removing spoken languages
     Given User is in academically login page
     When user login as "admin"
@@ -887,7 +887,7 @@ Feature: Tutor Wizard
     And user saving spoken language information on tutor wizard
     Then removing "Basic" "Czech" language is successful on tutor wizard
 
-  @UI @Adhoc  @Adhoc  @TestRails(14541)
+  @UI  @TestRails(14541)
   Scenario: C14541 - Verify uploading a profile photo when using tutor wizard
     Given User is in academically login page
     When user login as "admin"
@@ -949,7 +949,7 @@ Feature: Tutor Wizard
     When user crop the image on tutor wizard
     Then upload a profile photo is successful on tutor wizard
 
-  @UI @Adhoc  @Adhoc  @TestRails(14542)
+  @UI  @TestRails(14542)
   Scenario: C14542 - Verify removing a profile photo
     Given User is in academically login page
     When user login as "admin"
@@ -1015,7 +1015,7 @@ Feature: Tutor Wizard
     When the user confirms to remove a profile photo on tutor wizard
     Then removing a profile photo is successful on tutor wizard
 
-  @UI @Adhoc  @Adhoc  @TestRails(14692)
+  @UI  @TestRails(14692)
   Scenario: C14692 - Verify uploading a photo id when using tutor wizard
     Given User is in academically login page
     When user login as "admin"
@@ -1082,7 +1082,7 @@ Feature: Tutor Wizard
     When user crop the image on tutor wizard
     Then upload a photo id is successful on tutor wizard
 
-  @UI @Adhoc  @Adhoc  @TestRails(14608)
+  @UI  @TestRails(14608)
   Scenario: C14608 - Verify adding address information
     Given User is in academically login page
     When user login as "admin"
@@ -1160,7 +1160,7 @@ Feature: Tutor Wizard
       | Country        | Address 1     | Address 2       | City   | Zip code | Province |
       | United Kingdom | Londonwriteup | 21 Hanover Road | London | NW10 3DR | Brent    |
 
-   @UI @Adhoc  @Adhoc  @TestRails(14609)
+   @UI  @TestRails(14609)
   Scenario: C14609 - Verify previous saved address will be loaded
     Given User is in academically login page
     When user login as "admin"

@@ -4,7 +4,7 @@ Feature: Student calendar
 
   Scenario: C14700	- Verify selecting a session from the tutors calendar
 
-	@UI @Adhoc  @TestRails(14727)
+	@UI  @TestRails(14727)
   Scenario: C14727	- Verify student viewing own calendar
     Given User is in academically login page
     When user login as "admin"
@@ -25,7 +25,7 @@ Feature: Student calendar
 		When user proceed to the calendar
 		Then user is on the student calendar
 		
-	@UI @Adhoc  @TestRails(14795)	
+	@UI  @TestRails(14795)	
   Scenario: C14795	- Verify upcoming sessions is default
     Given User is in academically login page
     When user login as "admin"
@@ -46,7 +46,7 @@ Feature: Student calendar
 		When user proceed to the calendar
 		Then user is on the student calendar
 		And the default is "Upcoming Sessions" on student calendar
-	@UI @Adhoc  @TestRails(14796)	
+	@UI  @TestRails(14796)	
   Scenario: C14796	- Verify dropdown showing past sessions and upcoming sessions
     Given User is in academically login page
     When user login as "admin"

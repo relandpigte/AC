@@ -11,7 +11,7 @@ import io.cucumber.testng.CucumberOptions;
 
 public class AdhocTestRunner extends BaseTestRunner {
 
-    @DataProvider(parallel = false)
+    @DataProvider(parallel = true)
     @Override
     public Object[][] scenarios() {
         return super.scenarios();

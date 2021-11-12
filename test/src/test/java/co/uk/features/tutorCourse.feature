@@ -1,6 +1,6 @@
 Feature: Tutor course
 
-  @UI @Adhoc  @TestRails(C15195)
+  @UI  @TestRails(C15195)
   Scenario: C15195	Verify that tutor can see the list of courses
     Given User is in academically login page
     When user login as "admin"
@@ -34,7 +34,7 @@ Feature: Tutor course
     Then user should see "automated100-1XXX" course
     Then user should see "automated100-2XXX" course
 
-  @UI @Adhoc  @TestRails(15198)
+  @UI  @TestRails(15198)
   Scenario: C15198	Verify that tutor can create a course
     Given User is in academically login page
     When user login as "admin"
@@ -58,7 +58,7 @@ Feature: Tutor course
       | Blank    | automated101XXX |
     Then user is in the course details
 
-  @UI @Adhoc  @TestRails(15199)
+  @UI  @TestRails(15199)
   Scenario: C15199	Verify that tutor is able to add course details
     Given User is in academically login page
     When user login as "admin"
@@ -93,7 +93,7 @@ Feature: Tutor course
       | Name              | Subtitle | Description | Categories | Course image | Pricing | Language |
       | automated102XXX-1 | Testing  | Lorem ipsum | null       | null         | null    | null     |
 
-  @UI @Adhoc  @TestRails(15193) 
+  @UI  @TestRails(15193) 
   Scenario: C15193	Verify that tutor can upload an image for the main thumbnail of his or her course
     Given User is in academically login page
     When user login as "admin"
@@ -129,7 +129,7 @@ Feature: Tutor course
       | Name            | Subtitle | Description | Categories | Course image | Pricing | Currency | Language |
       | automated103XXX | Testing  | Lorem ipsum | null       | Sample1.jpg  | null    | null     | null     |
 
-  @UI @Adhoc  @TestRails(15194)
+  @UI  @TestRails(15194)
   Scenario: C15194	Verify that tutor can set the course price
     Given User is in academically login page
     When user login as "admin"
@@ -164,7 +164,7 @@ Feature: Tutor course
       | Name            | Subtitle | Description | Categories | Course image | Pricing | Currency | Language |
       | automated104XXX | Testing  | Lorem ipsum | null       | null         |      50 | USD      | null     |
 
-  @UI @Adhoc  @TestRails(15197)
+  @UI  @TestRails(15197)
   Scenario: C15197	Verify that tutor can add a language of the course
     Given User is in academically login page
     When user login as "admin"
@@ -199,7 +199,7 @@ Feature: Tutor course
       | Name            | Subtitle | Description | Categories | Course image | Pricing | Currency | Language |
       | automated105XXX | Testing  | Lorem ipsum | null       | null         | null    | null     | English  |
 
-  @UI @Adhoc  @TestRails(15200)
+  @UI  @TestRails(15200)
   Scenario: C15200	Verify that tutor should see a category in detail for the course
     Given User is in academically login page
     When user login as "admin"
@@ -224,7 +224,7 @@ Feature: Tutor course
     Then user is in the course details
     And category field is displayed
 
-  @UI @Adhoc  @TestRails(15201)
+  @UI  @TestRails(15201)
   Scenario: C15201	Verify that tutor can change the course type -draft
     Given User is in academically login page
     When user login as "admin"
@@ -252,7 +252,7 @@ Feature: Tutor course
     And user save the course settings
     Then sucessful message is displayed
 
-  @UI @Adhoc  @TestRails(15202)
+  @UI  @TestRails(15202)
   Scenario: C15202	Verify that tutor should see course progress in course settings -draft
     Given User is in academically login page
     When user login as "admin"
@@ -278,7 +278,7 @@ Feature: Tutor course
     When user proceed to the course settings tab
     Then course progress section is displayed
 
-  @UI @Adhoc  @TestRails(15203)
+  @UI  @TestRails(15203)
   Scenario: C15203	Verify that tutor should see comments section in course settings -draft
     Given User is in academically login page
     When user login as "admin"
@@ -304,7 +304,7 @@ Feature: Tutor course
     When user proceed to the course settings tab
     Then comment section is displayed
 
-  @UI @Adhoc  @TestRails(15204)
+  @UI  @TestRails(15204)
   Scenario: C15204	Verify that tutor should see custom url section in course settings -draft
     Given User is in academically login page
     When user login as "admin"
@@ -330,7 +330,7 @@ Feature: Tutor course
     When user proceed to the course settings tab
     Then custom url section is displayed
 
-  @UI @Adhoc  @TestRails(15205)
+  @UI  @TestRails(15205)
   Scenario: C15205	Verify that tutor should see autoplay section in course settings -draft
     Given User is in academically login page
      When user login as "admin"
@@ -355,7 +355,7 @@ Feature: Tutor course
     Then user is in the course details
     When user proceed to the course settings tab
     Then autoplay section is displayed
-@UI @Adhoc  @TestRails(15212)
+@UI  @TestRails(15212)
     Scenario: C15212	Verify that tutor should see course visibility section in course settings -draft 
         Given User is in academically login page
      When user login as "admin"
