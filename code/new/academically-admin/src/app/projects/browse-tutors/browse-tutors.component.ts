@@ -20,6 +20,7 @@ export class BrowseTutorsComponent extends PagedListingComponentBase<UserDto> {
   searchFilter: string;
   availableTutors: GetAvailalbeTutorDto[] = [];
   isSendingInvitation: boolean[] = [];
+  invitedTutors: GetAvailalbeTutorDto[] = [];
 
   constructor(
     injector: Injector,
@@ -50,6 +51,8 @@ export class BrowseTutorsComponent extends PagedListingComponentBase<UserDto> {
             )
             .subscribe(() => {
               this.notify.success(this.l('InvitationSent'));
+
+              this.list(new PagedTutorsRequestDto,this.pageNumber,Function)
             });
         }
       }
@@ -76,6 +79,32 @@ export class BrowseTutorsComponent extends PagedListingComponentBase<UserDto> {
       )
       .subscribe((result: GetAvailalbeTutorDtoPagedResultDto) => {
         this.availableTutors = result.items;
+        this.showPaging(result, pageNumber);
+      });
+
+    this.getInvitedTutors(request, pageNumber, finishedCallback)
+  }
+
+  private getInvitedTutors(
+    request: PagedTutorsRequestDto,
+    pageNumber: number,
+    finishedCallback: Function
+  ): void {
+    request.searchFilter = this.searchFilter;
+    this._projectsService
+      .getProjectInvitationTutors(
+        request.searchFilter,
+        request.skipCount,
+        request.maxResultCount,
+        this.projectId
+      )
+      .pipe(
+        finalize(() => {
+          finishedCallback();
+        })
+      )
+      .subscribe((result: GetAvailalbeTutorDtoPagedResultDto) => {
+        this.invitedTutors = result.items;
         this.showPaging(result, pageNumber);
       });
   }

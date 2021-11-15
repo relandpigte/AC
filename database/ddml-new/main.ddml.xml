@@ -81,5 +81,6 @@
 	<include file="ddml-new/ddml.2021-10-25-02-alter-coursesectionpages-add-categoryTags-fields.xml"/>
 	<include file="ddml-new/ddml.2021-10-27-01-alter-coursesections-add-isvisible-field.xml"/>
 	<include file="ddml-new/ddml.2021-11-01-01-alter-academicallyconversationgroups-table-add-calendareventid-field.xml"/>
+	<include file="ddml-new/ddml.2021-11-10-01-create-projectinvitations-table.xml"/>
 </databaseChangeLog>
 	
