@@ -162,108 +162,213 @@
                 </div>
               </form>
             </div>
+            <div class="col-auto me-n3">
+              <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+                <li class="nav-item">
+                  <a class="nav-link active" id="alltutors-tab" data-toggle="tab" href="#alltutors" role="tab"
+                    aria-controls="alltutors" aria-selected="true">{{ 'AllTutors' | localize }}</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="invitetoquote-tab" data-toggle="tab" href="#invitetoquote" role="tab"
+                    aria-controls="invitetoquote" aria-selected="false">{{ 'InviteToQuote' | localize }}</a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-        <div class="table-responsive">
-          <table class="table table-sm card-table" [loader]="isTableLoading">
-            <tbody>
-              <tr class="filter-row table-nowrap">
-                <td>
-                  <b>{{ totalItems }}</b> {{ 'TutorsFound' | localize }}
-                </td>
-                <td width="1%">
-                  <div class="d-flex align-items-center">
-                    <label class="m-0 pr-2" for="ukOnly">UK Only</label>
-                    <div class="custom-control custom-switch">
-                      <input type="checkbox" class="custom-control-input" id="ukOnly">
-                      <label class="custom-control-label" for="ukOnly"></label>
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="alltutors" role="tabpanel" aria-labelledby="alltutors-tab">
+            <table class="table table-sm card-table" [loader]="isTableLoading">
+              <tbody>
+                <tr class="filter-row table-nowrap">
+                  <td>
+                    <b>{{ availableTutors.length }}</b> {{ 'TutorsFound' | localize }}
+                  </td>
+                  <td width="1%">
+                    <div class="d-flex align-items-center">
+                      <label class="m-0 pr-2" for="ukOnly">UK Only</label>
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="ukOnly">
+                        <label class="custom-control-label" for="ukOnly"></label>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td width="1%">
-                  <div class="d-flex align-items-center">
-                    <label class="col-form-label pr-2" for="sort">Sort:</label>
-                    <select select2 [defaultValue]="'Best match'" (select2ValueChange)="pageSizeChange($event)"
-                      name="sort" class="custom-select custom-select-sm" data-toggle="select">
-                      <option>{{ 'BestMatch' | localize }}</option>
-                      <option>{{ 'Rating' | localize }}</option>
-                      <option>{{ 'AcademicLevel' | localize }}</option>
-                      <option>{{ 'Distance' | localize }}</option>
+                  </td>
+                  <td width="1%">
+                    <div class="d-flex align-items-center">
+                      <label class="col-form-label pr-2" for="sort">Sort:</label>
+                      <select select2 [defaultValue]="'Best match'" (select2ValueChange)="pageSizeChange($event)"
+                        name="sort" class="custom-select custom-select-sm" data-toggle="select">
+                        <option>{{ 'BestMatch' | localize }}</option>
+                        <option>{{ 'Rating' | localize }}</option>
+                        <option>{{ 'AcademicLevel' | localize }}</option>
+                        <option>{{ 'Distance' | localize }}</option>
+                      </select>
+                    </div>
+                  </td>
+                  <td width="1%">
+                    <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize"
+                      (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
+                      class="custom-select custom-select-sm" data-toggle="select">
+                      <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
+                        {{ pageSizeSelection }} {{ 'PerPage' | localize }}
+                      </option>
                     </select>
-                  </div>
-                </td>
-                <td width="1%">
-                  <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize"
-                    (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
-                    class="custom-select custom-select-sm" data-toggle="select">
-                    <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
-                      {{ pageSizeSelection }} {{ 'PerPage' | localize }}
-                    </option>
-                  </select>
-                </td>
-              </tr>
-              <tr
-                *ngFor="let availableTutor of (availableTutors | paginate: { id: 'available-tutors', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })">
-                <td colspan="4">
-                  <div class="row align-items-center">
-                    <div class="col-12">
-                      <div class="row align-items-center">
-                        <div class="col-auto">
-                          <a href="javascript:;" class="avatar avatar-md">
-                            <img
-                              [src]="getProfilePictureFromDocument(availableTutor.tutor.profilePictureDocument, availableTutor.tutor.id)"
-                              alt="..." class="avatar-img rounded-circle">
-                          </a>
-                        </div>
-                        <div class="col ml-n2">
-                          <div class="d-flex align-items-center">
-                            <h4 class="mb-0 mr-2">
-                              <a href="javascript:;">{{ availableTutor.tutor.fullName }}</a>
-                            </h4>
-                            <app-star-rating [actualRating]="4"></app-star-rating>
-                            <p class="small text-muted mb-0 ml-2">101</p>
+                  </td>
+                </tr>
+                <tr
+                  *ngFor="let availableTutor of (availableTutors | paginate: { id: 'available-tutors', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })">
+                  <td colspan="4">
+                    <div class="row align-items-center">
+                      <div class="col-12">
+                        <div class="row align-items-center">
+                          <div class="col-auto">
+                            <a href="javascript:;" class="avatar avatar-md">
+                              <img
+                                [src]="getProfilePictureFromDocument(availableTutor.tutor.profilePictureDocument, availableTutor.tutor.id)"
+                                alt="..." class="avatar-img rounded-circle">
+                            </a>
                           </div>
-                          <p class="small text-muted mb-0">
-                            {{ availableTutor.tutor.currentUniversity ?availableTutor. tutor.currentUniversity :
-                            ('NoFormalEducation' | localize) }}
-                          </p>
+                          <div class="col ml-n2">
+                            <div class="d-flex align-items-center">
+                              <h4 class="mb-0 mr-2">
+                                <a href="javascript:;">{{ availableTutor.tutor.fullName }}</a>
+                              </h4>
+                              <app-star-rating [actualRating]="4"></app-star-rating>
+                              <p class="small text-muted mb-0 ml-2">101</p>
+                            </div>
+                            <p class="small text-muted mb-0">
+                              {{ availableTutor.tutor.currentUniversity ?availableTutor. tutor.currentUniversity :
+                              ('NoFormalEducation' | localize) }}
+                            </p>
+                          </div>
+                          <div class="col-auto">
+                            <button (click)="onInviteToQuoteClick(availableTutor)"
+                              [disabled]="isSendingInvitation[availableTutor.tutor.id]" class="btn btn-sm btn-primary">
+                              <span *ngIf="!isSendingInvitation[availableTutor.tutor.id]">
+                                {{ 'InviteToQuote' | localize }}
+                              </span>
+                              <span *ngIf="isSendingInvitation[availableTutor.tutor.id]">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                {{ 'Sending' | localize }}
+                              </span>
+                            </button>
+                          </div>
                         </div>
-                        <div class="col-auto">
-                          <button (click)="onInviteToQuoteClick(availableTutor)"
-                            [disabled]="isSendingInvitation[availableTutor.tutor.id]" class="btn btn-sm btn-primary">
-                            <span *ngIf="!isSendingInvitation[availableTutor.tutor.id]">
-                              {{ 'InviteToQuote' | localize }}
+                      </div>
+                      <div class="col-12 p-3">
+                        <div toggableContent identifier="about{{ availableTutor.tutor.id }}"
+                          contentClass="ql-container">
+                          <quill-view-html [content]="availableTutor.tutor.about" theme="snow"></quill-view-html>
+                        </div>
+                        <div *ngIf="availableTutor.services && availableTutor.services.length" class="pt-3">
+                          <ng-container *ngFor="let service of availableTutor.services">
+                            <span *ngFor="let subject of service.subjects" class="badge badge-soft-info mr-1">
+                              {{ subject }}
                             </span>
-                            <span *ngIf="isSendingInvitation[availableTutor.tutor.id]">
-                              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                              {{ 'Sending' | localize }}
+                            <span *ngFor="let disciplineTaxonomy of service.disciplineTaxonomies"
+                              class="badge badge-soft-info mr-1">
+                              {{ disciplineTaxonomy }}
                             </span>
-                          </button>
+                          </ng-container>
                         </div>
                       </div>
                     </div>
-                    <div class="col-12 p-3">
-                      <div toggableContent identifier="about{{ availableTutor.tutor.id }}" contentClass="ql-container">
-                        <quill-view-html [content]="availableTutor.tutor.about" theme="snow"></quill-view-html>
-                      </div>
-                      <div *ngIf="availableTutor.services && availableTutor.services.length" class="pt-3">
-                        <ng-container *ngFor="let service of availableTutor.services">
-                          <span *ngFor="let subject of service.subjects" class="badge badge-soft-info mr-1">
-                            {{ subject }}
-                          </span>
-                          <span *ngFor="let disciplineTaxonomy of service.disciplineTaxonomies"
-                            class="badge badge-soft-info mr-1">
-                            {{ disciplineTaxonomy }}
-                          </span>
-                        </ng-container>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <abp-pagination-controls id="available-tutors" (pageChange)="getDataPage($event)"></abp-pagination-controls>
+          </div>
+          <div class="tab-pane fade" id="invitetoquote" role="tabpanel" aria-labelledby="invitetoquote-tab">
+            <table class="table table-sm card-table" [loader]="isTableLoading">
+              <tbody>
+                <tr class="filter-row table-nowrap">
+                  <td>
+                    <b>{{ invitedTutors.length }}</b> {{ 'TutorsFound' | localize }}
+                  </td>
+                  <td width="1%">
+                    <div class="d-flex align-items-center">
+                      <label class="m-0 pr-2" for="ukOnly">UK Only</label>
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="ukOnly">
+                        <label class="custom-control-label" for="ukOnly"></label>
                       </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <abp-pagination-controls id="available-tutors" (pageChange)="getDataPage($event)"></abp-pagination-controls>
+                  </td>
+                  <td width="1%">
+                    <div class="d-flex align-items-center">
+                      <label class="col-form-label pr-2" for="sort">Sort:</label>
+                      <select select2 [defaultValue]="'Best match'" (select2ValueChange)="pageSizeChange($event)"
+                        name="sort" class="custom-select custom-select-sm" data-toggle="select">
+                        <option>{{ 'BestMatch' | localize }}</option>
+                        <option>{{ 'Rating' | localize }}</option>
+                        <option>{{ 'AcademicLevel' | localize }}</option>
+                        <option>{{ 'Distance' | localize }}</option>
+                      </select>
+                    </div>
+                  </td>
+                  <td width="1%">
+                    <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize"
+                      (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
+                      class="custom-select custom-select-sm" data-toggle="select">
+                      <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
+                        {{ pageSizeSelection }} {{ 'PerPage' | localize }}
+                      </option>
+                    </select>
+                  </td>
+                </tr>
+                <tr
+                  *ngFor="let availableTutor of (invitedTutors | paginate: { id: 'available-tutors', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })">
+                  <td colspan="4">
+                    <div class="row align-items-center">
+                      <div class="col-12">
+                        <div class="row align-items-center">
+                          <div class="col-auto">
+                            <a href="javascript:;" class="avatar avatar-md">
+                              <img
+                                [src]="getProfilePictureFromDocument(availableTutor.tutor.profilePictureDocument, availableTutor.tutor.id)"
+                                alt="..." class="avatar-img rounded-circle">
+                            </a>
+                          </div>
+                          <div class="col ml-n2">
+                            <div class="d-flex align-items-center">
+                              <h4 class="mb-0 mr-2">
+                                <a href="javascript:;">{{ availableTutor.tutor.fullName }}</a>
+                              </h4>
+                              <app-star-rating [actualRating]="4"></app-star-rating>
+                              <p class="small text-muted mb-0 ml-2">101</p>
+                            </div>
+                            <p class="small text-muted mb-0">
+                              {{ availableTutor.tutor.currentUniversity ?availableTutor. tutor.currentUniversity :
+                              ('NoFormalEducation' | localize) }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-12 p-3">
+                        <div toggableContent identifier="about{{ availableTutor.tutor.id }}"
+                          contentClass="ql-container">
+                          <quill-view-html [content]="availableTutor.tutor.about" theme="snow"></quill-view-html>
+                        </div>
+                        <div *ngIf="availableTutor.services && availableTutor.services.length" class="pt-3">
+                          <ng-container *ngFor="let service of availableTutor.services">
+                            <span *ngFor="let subject of service.subjects" class="badge badge-soft-info mr-1">
+                              {{ subject }}
+                            </span>
+                            <span *ngFor="let disciplineTaxonomy of service.disciplineTaxonomies"
+                              class="badge badge-soft-info mr-1">
+                              {{ disciplineTaxonomy }}
+                            </span>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <abp-pagination-controls id="available-tutors" (pageChange)="getDataPage($event)"></abp-pagination-controls>
+          </div>
         </div>
       </div>
     </div>
