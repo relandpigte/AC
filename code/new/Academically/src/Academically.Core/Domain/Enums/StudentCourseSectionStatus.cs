@@ -3,7 +3,7 @@
     public enum StudentCourseSectionStatus
     {
         NotStarted = 0,
-        InProgress = 2,
-        Finished = 1,
+        InProgress = 1,
+        Finished = 2,
     }
 }

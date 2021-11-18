@@ -83,5 +83,6 @@
 	<include file="ddml-new/ddml.2021-11-01-01-alter-academicallyconversationgroups-table-add-calendareventid-field.xml"/>
 	<include file="ddml-new/ddml.2021-11-10-01-create-projectinvitations-table.xml"/>
 	<include file="ddml-new/ddml.2021-11-12-01-create-studentcourses-tables.xml"/>
+	<include file="ddml-new/ddml.2021-11-17-01-alter-studentcoursesections-add-coursesectionid-field.xml"/>
 </databaseChangeLog>
 	
