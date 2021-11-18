@@ -15,10 +15,12 @@ namespace Academically.Services.Courses.Dto
         public string Name { get; set; }
         public string Subtitle { get; set; }
         public string Description { get; set; }
+        public CourseStatus Status { get; set; }
         public decimal Price { get; set; }
         public CourseType Type { get; set; }
         public bool IsVisible { get; set; }
         public bool IsOpen { get; set; }
+        public Guid? ImageDocumentId { get; set; }
         public Guid? CurrencyId { get; set; }
         public Guid? LanguageId { get; set; }
 

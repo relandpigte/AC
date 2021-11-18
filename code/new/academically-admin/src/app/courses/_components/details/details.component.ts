@@ -60,11 +60,13 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
         this.model = course;
         this.currenctPricingState = this.model.price > 0 ? PricingState.Charged : PricingState.Free;
         if (course.imageDocument) {
-          this.defaultFile = new DefaultFile();
-          this.defaultFile.name = course.imageDocument.originalFileName;
-          this.defaultFile.url = course.courseImageUrl;
-          this.defaultFile.size = course.imageDocument.size;
-          this.documentUploader.defaultFile = this.defaultFile;
+          if (!this.courseImage) {
+            this.defaultFile = new DefaultFile();
+            this.defaultFile.name = course.imageDocument.originalFileName;
+            this.defaultFile.url = course.courseImageUrl;
+            this.defaultFile.size = course.imageDocument.size;
+            this.documentUploader.defaultFile = this.defaultFile;
+          }
         }
       });
 

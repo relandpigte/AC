@@ -1698,7 +1698,7 @@ export class CoursesServiceProxy {
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
         else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1746,10 +1746,37 @@ export class CoursesServiceProxy {
     }
 
     /**
+     * @param searchFilter (optional) 
+     * @param statusFilter (optional) 0 = Draft
+    
+    1 = Published
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(): Observable<CourseDto[]> {
-        let url_ = this.baseUrl + "/api/services/app/Courses/GetAll";
+    getAll(searchFilter: string | undefined, statusFilter: CourseStatus | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CourseDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Courses/GetAll?";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (statusFilter === null)
+            throw new Error("The parameter 'statusFilter' cannot be null.");
+        else if (statusFilter !== undefined)
+            url_ += "StatusFilter=" + encodeURIComponent("" + statusFilter) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1767,14 +1794,14 @@ export class CoursesServiceProxy {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<CourseDto[]>><any>_observableThrow(e);
+                    return <Observable<CourseDtoPagedResultDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<CourseDto[]>><any>_observableThrow(response_);
+                return <Observable<CourseDtoPagedResultDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<CourseDto[]> {
+    protected processGetAll(response: HttpResponseBase): Observable<CourseDtoPagedResultDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1785,14 +1812,7 @@ export class CoursesServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200.push(CourseDto.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
+            result200 = CourseDtoPagedResultDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1800,63 +1820,7 @@ export class CoursesServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<CourseDto[]>(<any>null);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    create(body: CourseDto | undefined): Observable<CourseDto> {
-        let url_ = this.baseUrl + "/api/services/app/Courses/Create";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json-patch+json",
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreate(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCreate(<any>response_);
-                } catch (e) {
-                    return <Observable<CourseDto>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<CourseDto>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processCreate(response: HttpResponseBase): Observable<CourseDto> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = CourseDto.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<CourseDto>(<any>null);
+        return _observableOf<CourseDtoPagedResultDto>(<any>null);
     }
 
     /**
@@ -2007,6 +1971,170 @@ export class CoursesServiceProxy {
             }));
         }
         return _observableOf<CourseDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateCourseDto | undefined): Observable<CourseDto> {
+        let url_ = this.baseUrl + "/api/services/app/Courses/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<CourseDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CourseDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<CourseDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CourseDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CourseDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: CourseDto | undefined): Observable<CourseDto> {
+        let url_ = this.baseUrl + "/api/services/app/Courses/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<CourseDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CourseDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<CourseDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CourseDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CourseDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Courses/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -14703,10 +14831,12 @@ export class CourseDto implements ICourseDto {
     name: string | undefined;
     subtitle: string | undefined;
     description: string | undefined;
+    status: CourseStatus;
     price: number;
     type: CourseType;
     isVisible: boolean;
     isOpen: boolean;
+    imageDocumentId: string | undefined;
     currencyId: string | undefined;
     languageId: string | undefined;
     creationTime: moment.Moment;
@@ -14729,10 +14859,12 @@ export class CourseDto implements ICourseDto {
             this.name = _data["name"];
             this.subtitle = _data["subtitle"];
             this.description = _data["description"];
+            this.status = _data["status"];
             this.price = _data["price"];
             this.type = _data["type"];
             this.isVisible = _data["isVisible"];
             this.isOpen = _data["isOpen"];
+            this.imageDocumentId = _data["imageDocumentId"];
             this.currencyId = _data["currencyId"];
             this.languageId = _data["languageId"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
@@ -14755,10 +14887,12 @@ export class CourseDto implements ICourseDto {
         data["name"] = this.name;
         data["subtitle"] = this.subtitle;
         data["description"] = this.description;
+        data["status"] = this.status;
         data["price"] = this.price;
         data["type"] = this.type;
         data["isVisible"] = this.isVisible;
         data["isOpen"] = this.isOpen;
+        data["imageDocumentId"] = this.imageDocumentId;
         data["currencyId"] = this.currencyId;
         data["languageId"] = this.languageId;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
@@ -14781,16 +14915,73 @@ export interface ICourseDto {
     name: string | undefined;
     subtitle: string | undefined;
     description: string | undefined;
+    status: CourseStatus;
     price: number;
     type: CourseType;
     isVisible: boolean;
     isOpen: boolean;
+    imageDocumentId: string | undefined;
     currencyId: string | undefined;
     languageId: string | undefined;
     creationTime: moment.Moment;
     courseImageUrl: string | undefined;
     creatorUser: UserDto;
     imageDocument: DocumentDto;
+}
+
+export class CourseDtoPagedResultDto implements ICourseDtoPagedResultDto {
+    items: CourseDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: ICourseDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(CourseDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): CourseDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CourseDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): CourseDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new CourseDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICourseDtoPagedResultDto {
+    items: CourseDto[] | undefined;
+    totalCount: number;
 }
 
 export class CourseSectionDto implements ICourseSectionDto {
@@ -14976,10 +15167,59 @@ export enum CourseSectionType {
     Lesson = 3,
 }
 
+/** 0 = Draft 1 = Published */
+export enum CourseStatus {
+    Draft = 0,
+    Published = 1,
+}
+
 /** 1 = Standard 2 = Cohort */
 export enum CourseType {
     Standard = 1,
     Cohort = 2,
+}
+
+export class CreateCourseDto implements ICreateCourseDto {
+    name: string | undefined;
+
+    constructor(data?: ICreateCourseDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): CreateCourseDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCourseDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        return data; 
+    }
+
+    clone(): CreateCourseDto {
+        const json = this.toJSON();
+        let result = new CreateCourseDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateCourseDto {
+    name: string | undefined;
 }
 
 export class CreateEditUserEducationCourseDto implements ICreateEditUserEducationCourseDto {

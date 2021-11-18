@@ -12,6 +12,7 @@ namespace Academically.Domain.Entities
         public string Name { get; set; }
         public string Subtitle { get; set; }
         public string Description { get; set; }
+        public CourseStatus Status { get; set; }
         public decimal Price { get; set; }
         public CourseType Type { get; set; }
         public bool IsVisible { get; set; }

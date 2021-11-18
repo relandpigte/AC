@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Abp.Application.Services;
+﻿using Abp.Application.Services;
 using Academically.Services.Courses.Dto;
+using System;
+using System.Threading.Tasks;
 
 namespace Academically.Services.Courses
 {
-    public interface ICoursesAppService : IApplicationService
+    public interface ICoursesAppService : IAsyncCrudAppService<CourseDto, Guid, PagedCourseResultRequestDto, CreateCourseDto, CourseDto>
     {
-        Task<CourseDto> Get(Guid id);
-        Task<IEnumerable<CourseDto>> GetAll();
-        Task<CourseDto> Create(CourseDto input);
         Task<CourseDto> UpdateDetails(UpdateCourseDetailsDto input);
         Task<CourseDto> UpdateSettings(UpdateCourseSettingsDto input);
     }
