@@ -13,7 +13,6 @@ using Abp.Castle.Logging.Log4Net;
 using Abp.Extensions;
 using Academically.Configuration;
 using Academically.Identity;
-//using Abp.AspNetCore.SignalR.Hubs;
 using Abp.Dependency;
 using Abp.Json;
 using Microsoft.OpenApi.Models;
@@ -40,7 +39,7 @@ namespace Academically.Web.Host.Startup
             _appConfiguration = env.GetAppConfiguration();
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             //MVC
             services.AddControllersWithViews(
@@ -122,8 +121,7 @@ namespace Academically.Web.Host.Startup
                 });
             });
 
-            // Configure Abp and Dependency Injection
-            services.AddAbpWithoutCreatingServiceProvider<AcademicallyWebHostModule>(
+            return services.AddAbp<AcademicallyWebHostModule>(
                 // Configure Log4Net logging
                 options => options.IocManager.IocContainer.AddFacility<LoggingFacility>(
                     f => f.UseAbpLog4Net().WithConfig("log4net.config")
