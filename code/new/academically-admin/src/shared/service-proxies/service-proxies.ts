@@ -3792,7 +3792,7 @@ export class PaymentsServiceProxy {
      * @param code (optional) 
      * @return Success
      */
-    onboardUser(code: string | undefined): Observable<void> {
+    onboardUser(code: string | undefined): Observable<string> {
         let url_ = this.baseUrl + "/api/services/app/Payments/OnboardUser?";
         if (code === null)
             throw new Error("The parameter 'code' cannot be null.");
@@ -3804,6 +3804,7 @@ export class PaymentsServiceProxy {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "text/plain"
             })
         };
 
@@ -3814,14 +3815,14 @@ export class PaymentsServiceProxy {
                 try {
                     return this.processOnboardUser(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<string>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<string>><any>_observableThrow(response_);
         }));
     }
 
-    protected processOnboardUser(response: HttpResponseBase): Observable<void> {
+    protected processOnboardUser(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3830,14 +3831,17 @@ export class PaymentsServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<string>(<any>null);
     }
 }
 
@@ -23221,6 +23225,7 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
     profilePictureUrl: string | undefined;
     coverPictureUrl: string | undefined;
     currentUniversity: string | undefined;
+    stripeUserId: string | undefined;
     roles: string[] | undefined;
 
     constructor(data?: IUserLoginInfoDto) {
@@ -23242,6 +23247,7 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
             this.profilePictureUrl = _data["profilePictureUrl"];
             this.coverPictureUrl = _data["coverPictureUrl"];
             this.currentUniversity = _data["currentUniversity"];
+            this.stripeUserId = _data["stripeUserId"];
             if (Array.isArray(_data["roles"])) {
                 this.roles = [] as any;
                 for (let item of _data["roles"])
@@ -23267,6 +23273,7 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
         data["profilePictureUrl"] = this.profilePictureUrl;
         data["coverPictureUrl"] = this.coverPictureUrl;
         data["currentUniversity"] = this.currentUniversity;
+        data["stripeUserId"] = this.stripeUserId;
         if (Array.isArray(this.roles)) {
             data["roles"] = [];
             for (let item of this.roles)
@@ -23292,6 +23299,7 @@ export interface IUserLoginInfoDto {
     profilePictureUrl: string | undefined;
     coverPictureUrl: string | undefined;
     currentUniversity: string | undefined;
+    stripeUserId: string | undefined;
     roles: string[] | undefined;
 }
 

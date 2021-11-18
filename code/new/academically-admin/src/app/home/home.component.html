@@ -61,6 +61,32 @@
     </div>
   </div>
   <div class="container-fluid">
+    <ng-container *ngIf="!isOnboarding && !user.stripeUserId && isTutor">
+
+      <div class="row justify-content-between align-items-center">
+        <div class="col-12">
+          <div class="alert alert-warning alert-dismissible mb-0 mt-3" role="alert">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <i class="fe fe-alert-triangle display-5"></i>
+              </div>
+              <div class="col">
+                <h3 class="mb-2">{{ 'StripeConnectionRequired' | localize }}!</h3>
+                {{ 'StripeConnectionMessage' | localize }}
+              </div>
+              <div class="col-auto mr-n5">
+                <button (click)="onConnectStripeClick()" class="btn btn-primary btn-sm" type="button">
+                  {{ 'ConnectStripe' | localize }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="my-5">
+
+    </ng-container>
     <div class="tab-content">
       <div *ngIf="permission.isGranted('Pages.Dashboard.Overview')" class="tab-pane fade show active" id="overview"
         role="tabpanel" aria-labelledby="overview-tab">
