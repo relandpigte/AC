@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Abp.Application.Services;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Academically.Authorization;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
@@ -11,28 +11,30 @@ using Academically.Domain.Services.Documents;
 using Academically.Services.Courses.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 
 namespace Academically.Services.Courses
 {
     [AbpAuthorize(PermissionNames.Pages_Courses)]
-    public class CoursesAppService : AcademicallyAppServiceBase, ICoursesAppService
+    public class CoursesAppService : AsyncCrudAppService<Course, CourseDto, Guid, PagedCourseResultRequestDto, CreateCourseDto, CourseDto>, ICoursesAppService
     {
-        private readonly IRepository<Course, Guid> _coursesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
 
         public CoursesAppService(
             IRepository<Course, Guid> coursesRepository,
             IDocumentsDomainService documentsDomainService
-            )
+            ) : base(coursesRepository)
         {
-            _coursesRepository = coursesRepository;
             _documentsDomainService = documentsDomainService;
         }
 
-        public async Task<CourseDto> Get(Guid id)
+        public override async Task<CourseDto> GetAsync(EntityDto<Guid> input)
         {
-            var course = await _coursesRepository.GetAll()
-                .Where(e => e.Id == id)
+            var course = await Repository.GetAll()
+                .Where(e => e.Id == input.Id)
                 .Include(e => e.ImageDocument)
                 .FirstOrDefaultAsync();
             var output = ObjectMapper.Map<CourseDto>(course);
@@ -40,37 +42,30 @@ namespace Academically.Services.Courses
             return output;
         }
 
-        public async Task<IEnumerable<CourseDto>> GetAll()
+        protected override IQueryable<Course> CreateFilteredQuery(PagedCourseResultRequestDto input)
         {
-            var courses = await _coursesRepository.GetAll()
+            return base.CreateFilteredQuery(input)
                 .Where(e => e.CreatorUserId == AbpSession.UserId.Value)
-                .Include(e => e.CreatorUser)
-                    .ThenInclude(e => e.ProfilePictureDocument)
-                .Include(e => e.ImageDocument)
-                .OrderBy(e => e.Name)
-                .ToListAsync();
-
-            var outputs = new List<CourseDto>();
-            foreach (var course in courses)
-            {
-                var output = ObjectMapper.Map<CourseDto>(course);
-                output.CourseImageUrl = await _documentsDomainService.GetFileUrlAsync(course.ImageDocument);
-                outputs.Add(output);
-            }
-
-            return outputs;
+                .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.Name.ToLower().Contains(input.SearchFilter.ToLower()))
+                .WhereIf(input.StatusFilter.HasValue, e => e.Status == input.StatusFilter.Value);
         }
 
-        public async Task<CourseDto> Create(CourseDto input)
+        public override async Task<PagedResultDto<CourseDto>> GetAllAsync(PagedCourseResultRequestDto input)
         {
-            var course = ObjectMapper.Map<Course>(input);
-            await _coursesRepository.InsertAsync(course);
-            return ObjectMapper.Map<CourseDto>(course);
+            var output = await base.GetAllAsync(input);
+            foreach (var item in output.Items)
+            {
+                if (item.ImageDocumentId.HasValue)
+                {
+                    item.CourseImageUrl = await _documentsDomainService.GetFileUrlAsync(item.ImageDocumentId.Value);
+                }
+            }
+            return output;
         }
 
         public async Task<CourseDto> UpdateDetails([FromForm] UpdateCourseDetailsDto input)
         {
-            var course = await _coursesRepository.GetAsync(input.Id);
+            var course = await Repository.GetAsync(input.Id);
             ObjectMapper.Map(input, course);
 
             if (input.File != null)
@@ -85,16 +80,16 @@ namespace Academically.Services.Courses
                 }
             }
 
-            await _coursesRepository.UpdateAsync(course);
+            await Repository.UpdateAsync(course);
             return ObjectMapper.Map<CourseDto>(course);
         }
 
         public async Task<CourseDto> UpdateSettings(UpdateCourseSettingsDto input)
         {
-            var course = await _coursesRepository.GetAsync(input.Id);
+            var course = await Repository.GetAsync(input.Id);
             ObjectMapper.Map(input, course);
             course.Type = CourseType.Standard;
-            await _coursesRepository.UpdateAsync(course);
+            await Repository.UpdateAsync(course);
             return ObjectMapper.Map<CourseDto>(course);
         }
     }

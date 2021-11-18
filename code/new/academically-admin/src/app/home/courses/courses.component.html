@@ -1,52 +1,166 @@
-<div class="row">
-  <div class="col"></div>
-  <div class="col-auto ng-star-inserted">
-    <a class="btn btn-primary" (click)="onCreateClick()">
-      {{ 'CreateCourse' | localize}}
-    </a>
-  </div>
-</div>
-<br />
-<div class="tab-content" [loader]="isLoading">
-  <div class="tab-pane fade active show" id="tabPaneOne" role="tabpanel">
-    <div class="row listAlias">
-      <div *ngFor="let course of courses" class="col-12 col-md-6 col-xl-4">
-        <div class="card cursor-pointer" [routerLink]="['/app/courses', course.id]">
-          <img *ngIf="!course.courseImageUrl" src="/assets/themes/dashkit/img/avatars/projects/project-1.jpg" alt="..."
-            class="card-img-top">
-          <img *ngIf="course.courseImageUrl" [src]="course.courseImageUrl" alt="..." class="card-img-top">
-          <div class="card-body">
-            <div class="row align-items-center">
-              <div class="col">
-                <h4 class="mb-2 name">
-                  <a href="project-overview.html">{{ course.name }}</a>
-                </h4>
-                <p class="card-text small text-muted">
-                  {{ course.subtitle }}
-                </p>
-              </div>
-              <div>
-                <h4 *ngIf="course.type!==0" class="mb-4 name">{{CourseType[course.type] | localize}}</h4>
-              </div>
+<div class="card">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <form>
+          <div class="input-group input-group-flush">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fe fe-search"></i>
+              </span>
             </div>
+            <input class="list-search form-control" type="search" name="Search" placeholder="Search"
+              [(ngModel)]="searchFilter" (keyup.enter)="getDataPage(1)" />
           </div>
-          <div class="card-footer card-footer-boxed">
-            <div class="d-flex justify-content-between align-items-center w-100">
-              <div class="col"><time class="small">{{ course.creationTime | date: 'MMM dd, yyyy' }}</time>
-                <span *ngIf="!course.isVisible" class="badge badge-soft-success ml-2">{{'Active' | localize}}</span>
-                <span *ngIf="course.isVisible" class="badge badge-soft-danger ml-2">{{'Inctive' | localize}}</span>
-              </div>
-              <div class="avatar-group col-auto">
-                <a href="#" (click)="$event.preventDefault();" class="avatar avatar-xs"
-                  [tooltip]="course.creatorUser.fullName">
-                  <img
-                    [src]="getProfilePictureFromDocument(course.creatorUser.profilePictureDocument, course.creatorUser.id)"
-                    class="avatar-img rounded-circle" alt="...">
-                </a>
-              </div>
+        </form>
+      </div>
+      <div class="col-auto mr-n3">
+        <form>
+          <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize"
+            (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
+            class="custom-select custom-select-sm form-control-flush" data-toggle="select">
+            <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
+              {{ pageSizeSelection }} {{ 'PerPage' | localize }}
+            </option>
+          </select>
+        </form>
+      </div>
+      <div class="col-auto">
+        <div class="dropdown" dropdown #filterDropdown="bs-dropdown" [isAnimated]="true" [autoClose]="false">
+          <button class="btn btn-sm btn-white" type="button" dropdownToggle>
+            <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }}
+            <span *ngIf="statusFilter || statusFilter >= 0" class="badge badge-primary ml-1">1</span>
+          </button>
+          <form *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-card" (ngSubmit)="getDataPage(1)">
+            <div class="card-header">
+              <h4 class="card-header-title">{{ 'Filters' | localize }}</h4>
+              <button class="btn btn-sm btn-link text-reset btn-white" type="submit"
+                (click)="filterDropdown.hide(); onClearFiltersClick()">
+                <small>{{ 'ClearFilters' | localize }}</small>
+              </button>
             </div>
-          </div>
+            <div class="card-body">
+              <div class="list-group list-group-flush mt-n4 mb-4">
+                <div class="list-group-item">
+                  <div class="row">
+                    <div class="col">
+                      <small>{{ 'IsActive' | localize }}</small>
+                    </div>
+                    <div class="col-auto">
+                      <div class="custom-control custom-radio d-inline">
+                        <input type="radio" class="custom-control-input" id="allStatus" name="statusFilter"
+                          [(ngModel)]="statusFilter" [value]="undefined" checked />
+                        <label class="custom-control-label" for="allStatus">
+                          {{ 'All' | localize }}
+                        </label>
+                      </div>
+                      <div class="custom-control custom-radio d-inline mx-3">
+                        <input type="radio" class="custom-control-input" id="draftStatus" name="statusFilter"
+                          [(ngModel)]="statusFilter" [value]="CourseStatus.Draft" />
+                        <label class="custom-control-label" for="draftStatus">
+                          {{ 'Draft' | localize }}
+                        </label>
+                      </div>
+                      <div class="custom-control custom-radio d-inline">
+                        <input type="radio" class="custom-control-input" id="publishedStatus" name="statusFilter"
+                          [(ngModel)]="statusFilter" [value]="CourseStatus.Published" />
+                        <label class="custom-control-label" for="publishedStatus">
+                          {{ 'Published' | localize }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-block btn-primary" type="submit" (click)="filterDropdown.hide()">
+                {{ 'ApplyFilter' | localize }}
+              </button>
+            </div>
+            &nbsp;
+          </form>
         </div>
+      </div>
+      <div class="col-auto">
+        <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" id="teaching-tab" data-toggle="tab" href="#teaching" role="tab"
+              aria-controls="teaching" aria-selected="true">
+              {{ 'Teaching' | localize }}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="learning-tab" data-toggle="tab" href="#learning" role="tab" aria-controls="learning"
+              aria-selected="true">
+              {{ 'Learning' | localize }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="tab-content row">
+    <div class="col-12 tab-pane fade show active" id="teaching" role="tabpanel" aria-labelledby="teaching-tab">
+
+      <div class="table-responsive">
+        <table class="table table-sm table-hover table-nowrap card-table" [loader]="isTableLoading">
+          <thead table-header-sort [headers]="headers" (sortChange)="sortChange($event)"></thead>
+          <tbody class="list font-size-base">
+            <tr *ngFor="
+                  let course of (courses | paginate: { id: 'courses', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
+                ">
+              <td>
+                <div class="row">
+                  <div class="col-auto d-flex align-items-center">
+                    <div class="avatar avatar-lg avatar-4by3">
+                      <img [src]="getCourseImageUrl(course.courseImageUrl)" alt="..." class="avatar-img rounded">
+                    </div>
+                  </div>
+                  <div class="col d-flex flex-column justify-content-center">
+                    <h5 class="mb-1">{{ course.name }}</h5>
+                    <p *ngIf="course.subtitle" class="text-muted mb-1">
+                      {{ course.subtitle }}
+                    </p>
+                    <p class="m-0 p-0">
+                      <i class="fe fe-user">
+                      </i>
+                      <span class="text-muted">
+                        0 Students
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="badge" [class.badge-info]="course.status === CourseStatus.Draft"
+                  [class.badge-primary]="course.status === CourseStatus.Published">
+                  {{ CourseStatus[course.status] }}
+                </span>
+              </td>
+              <td class="table-action">
+                <button [routerLink]="['/app/courses', course.id]" type="button"
+                  class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+                  <span class="fe fe-edit-2"></span>
+                </button>
+                <button (click)="onDeleteClick(course.id)" type="button"
+                  class="btn btn-outline-danger btn-sm btn-rounded-circle">
+                  <span class="fe fe-trash-2"></span>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="courses.length === 0">
+              <td colspan="10">
+                <p class="text-center m-0 p-0">{{ 'NoRecordsFound' | localize }}</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <abp-pagination-controls id="courses" (pageChange)="getDataPage($event)"> </abp-pagination-controls>
+      </div>
+
+    </div>
+    <div class="col-12 tab-pane fade" id="learning" role="tabpanel" aria-labelledby="learning-tab">
+      <div class="card-body">
+        <h1>Coming Soon!</h1>
       </div>
     </div>
   </div>
