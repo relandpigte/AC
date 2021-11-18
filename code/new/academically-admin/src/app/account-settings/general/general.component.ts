@@ -75,7 +75,7 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
     this.getUser();
     this.getLocationSuggestions();
     this._route.queryParams.subscribe(paramMap => {
-      if (paramMap.scope && paramMap.code) {
+      if (paramMap.code) {
         this._paymentsService.onboardUser(paramMap.code)
           .pipe(
             takeUntil(this.destroyed$),

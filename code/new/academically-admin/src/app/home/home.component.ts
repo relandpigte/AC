@@ -34,7 +34,7 @@ export class HomeComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
     this.greetings = this.getGreetings();
     this._route.queryParams.subscribe(paramMap => {
-      if (paramMap.scope && paramMap.code) {
+      if (paramMap.code) {
         this.isOnboarding = true;
         this._paymentsService.onboardUser(paramMap.code)
           .pipe(
