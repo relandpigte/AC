@@ -22,6 +22,8 @@ namespace Academically.Sessions.Dto
 
         public string CurrentUniversity { get; set; }
 
+        public string StripeUserId { get; set; }
+
         public IEnumerable<string> Roles { get; set; }
     }
 }
