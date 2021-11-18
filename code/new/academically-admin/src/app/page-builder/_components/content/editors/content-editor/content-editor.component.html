@@ -42,13 +42,14 @@
             </label>
           </div>
         </div>
-        <div class="col-7" *ngIf="content.marginType === MarginType.Custom">
+        <div class="col-7">
           <div class="form-group row">
             <label class="col-form-label-sm col-form-label col-5" for="top">{{ 'Top' | localize}}</label>
             <div class="col-7">
               <div class="input-group input-group-sm">
-                <input [(ngModel)]="content.marginTop" #topModel="ngModel" #topEl class="form-control form-control-sm"
-                  type="number" id="top" name="top" [min]="0" />
+                <input [readonly]="content.marginType !== MarginType.Custom" [(ngModel)]="content.marginTop"
+                  #topModel="ngModel" #topEl class="form-control form-control-sm" type="number" id="top" name="top"
+                  [min]="0" />
                 <div class="input-group-append">
                   <span class="input-group-text">px</span>
                 </div>
@@ -61,8 +62,9 @@
             <label class="col-form-label-sm col-form-label col-5" for="bottom">{{ 'Bottom' | localize}}</label>
             <div class="col-7">
               <div class="input-group input-group-sm">
-                <input [(ngModel)]="content.marginBottom" #bottomModel="ngModel" #bottomEl
-                  class="form-control form-control-sm" type="number" id="bottom" name="bottom" [min]="0" />
+                <input [readonly]="content.marginType !== MarginType.Custom" [(ngModel)]="content.marginBottom"
+                  #bottomModel="ngModel" #bottomEl class="form-control form-control-sm" type="number" id="bottom"
+                  name="bottom" [min]="0" />
                 <div class="input-group-append">
                   <span class="input-group-text">px</span>
                 </div>
@@ -75,8 +77,9 @@
             <label class="col-form-label-sm col-form-label col-5" for="left">{{ 'Left' | localize}}</label>
             <div class="col-7">
               <div class="input-group input-group-sm">
-                <input [(ngModel)]="content.marginLeft" #leftModel="ngModel" #leftEl
-                  class="form-control form-control-sm" type="number" id="left" name="left" [min]="0" />
+                <input [readonly]="content.marginType !== MarginType.Custom" [(ngModel)]="content.marginLeft"
+                  #leftModel="ngModel" #leftEl class="form-control form-control-sm" type="number" id="left" name="left"
+                  [min]="0" />
                 <div class="input-group-append">
                   <span class="input-group-text">px</span>
                 </div>
@@ -89,8 +92,9 @@
             <label class="col-form-label-sm col-form-label col-5" for="right">{{ 'Right' | localize}}</label>
             <div class="col-7">
               <div class="input-group input-group-sm">
-                <input [(ngModel)]="content.marginRight" #rightModel="ngModel" #rightEl
-                  class="form-control form-control-sm" type="number" id="right" name="right" [min]="0" />
+                <input [readonly]="content.marginType !== MarginType.Custom" [(ngModel)]="content.marginRight"
+                  #rightModel="ngModel" #rightEl class="form-control form-control-sm" type="number" id="right"
+                  name="right" [min]="0" />
                 <div class="input-group-append">
                   <span class="input-group-text">px</span>
                 </div>

@@ -1,20 +1,42 @@
-.page-section-actions {
-  width        : 100%;
-  text-align   : center;
-  margin-top   : 10px;
-  margin-bottom: 10px;
-}
+.section-preview {
+  position: relative;
 
-.no-component-content {
-  text-align: center;
-  padding   : 20px;
-
-  img {
-    width        : 300px;
-    margin-bottom: 10px;
+  .section-contents {
+    &.no-content {
+      z-index : 1;
+      position: absolute;
+      height  : 100%;
+      width   : 100%;
+    }
   }
 
-  .title {
-    margin-bottom: 5px;
+  .no-component-content {
+    z-index   : 0;
+    text-align: center;
+    padding   : 20px;
+    background: #FFFFFF;
+
+    img {
+      width        : 300px;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      margin-bottom: 5px;
+    }
+  }
+}
+
+.page-section-actions {
+  width         : 100%;
+  text-align    : center;
+  margin-top    : 10px;
+  padding-bottom: 10px;
+
+  * {
+    text-shadow: 0px 0px 1px #ffffff,
+      0px 0px 1px #ffffff,
+      0px 0px 1px #ffffff,
+      0px 0px 1px #ffffff;
   }
 }

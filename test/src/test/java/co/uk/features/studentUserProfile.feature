@@ -1,6 +1,6 @@
 Feature: Student user profile settings
 
-  @UI @Adhoc  @TestRails(14499) @Email
+  @UI  @TestRails(14499) @Email
   Scenario: C14499 - Verify uploading a profile photo
     Given User is in academically login page
     When user register a student
@@ -23,7 +23,7 @@ Feature: Student user profile settings
     When user crop the image
     Then upload a profile photo is successful
 
-  @UI @Adhoc  @TestRails(14500) @Email
+  @UI  @TestRails(14500) @Email
   Scenario: C14500 - Verify removing a profile photo
     Given User is in academically login page
     When user register a student
@@ -50,7 +50,7 @@ Feature: Student user profile settings
     Then successfully displayed profile picture message was removed
     And profile photo is removed
 
-  @UI @Adhoc  @TestRails(14501) @Email
+  @UI  @TestRails(14501) @Email
   Scenario: C14501 - Verify select a cover photo
     Given User is in academically login page
     When user register a student
@@ -73,7 +73,7 @@ Feature: Student user profile settings
     And user crop the cover photo
     Then upload a cover photo is successful
 
-  @UI @Adhoc  @TestRails(14503) @Email
+  @UI  @TestRails(14503) @Email
   Scenario: C14503 - Verify adding about user information
     Given User is in academically login page
     When user register a student
@@ -98,7 +98,7 @@ Feature: Student user profile settings
     When user add about information
     Then adding about user information is successful
 
-  @UI @Adhoc  @TestRails(14505) @Email 
+  @UI  @TestRails(14505) @Email 
   Scenario: C14505 - Verify adding user education information by levels
     Given User is in academically login page
     When user register a student
@@ -127,7 +127,7 @@ Feature: Student user profile settings
     And user saving education information
     Then sucessful message is displayed
 
-  @UI @Adhoc  @TestRails(14506) @Email
+  @UI  @TestRails(14506) @Email
   Scenario: C14506 - Verify adding user education information by evidence
     Given User is in academically login page
     When user register a student
@@ -146,13 +146,20 @@ Feature: Student user profile settings
     When user navigate to profile settings using profile widget
     Then user is in profile settings
     When user proceed to education tab
+     And user add education
+    And user enter education information
+      | Country        | Institution                 | City      | Start year | End year |
+      | United Kingdom | The University of Cambridge | Cambridge |       1995 |     2000 |
+    And user add education level
+      | Course title             | Academic Level | Qualification | Grade |
+      | Economics & Econometrics | Graduate       | BA            |     4 |
     And user add evidence file
     Then "Sample1" evidence is added
     When user enter "Certificate" category evidence
     And user saving the education information
     Then sucessful message is displayed
 
-  @UI @Adhoc  @TestRails(14507) @Email
+  @UI  @TestRails(14507) @Email
   Scenario: C14507 Verify removing user education information
     Given User is in academically login page
     When user register a student
@@ -171,6 +178,13 @@ Feature: Student user profile settings
     When user navigate to profile settings using profile widget
     Then user is in profile settings
     When user proceed to education tab
+    And user add education
+        And user enter education information
+      | Country        | Institution                 | City      | Start year | End year |
+      | United Kingdom | The University of Cambridge | Cambridge |       1995 |     2000 |
+    And user add education level
+      | Course title             | Academic Level | Qualification | Grade |
+      | Economics & Econometrics | Graduate       | BA            |     4 |	
     And user add evidence file
     Then "Sample1" evidence is added
     When user enter "Certificate" category evidence
@@ -181,7 +195,7 @@ Feature: Student user profile settings
     When the user confirms to remove a education information
     Then message show successfully deleted
 
-  @UI @Adhoc  @TestRails(14508) @Email
+  @UI  @TestRails(14508) @Email
   Scenario: C14508 - Verify adding other courses information
     Given User is in academically login page
     When user register a student
@@ -209,7 +223,7 @@ Feature: Student user profile settings
     And user saving qualification information
     Then sucessful message is displayed
 
-  @UI @Adhoc  @TestRails(14509) @Email
+  @UI  @TestRails(14509) @Email
   Scenario: C14509 - Verify removing other course information
     Given User is in academically login page
     When user register a student
@@ -240,7 +254,7 @@ Feature: Student user profile settings
     When the user confirms to remove a course
     Then removing "Risk Management" course is successful
 
-  @UI @Adhoc  @TestRails(14510) @Email
+  @UI  @TestRails(14510) @Email
   Scenario: C14510	Verify adding research interest
     Given User is in academically login page
     When user register a student
@@ -268,7 +282,7 @@ Feature: Student user profile settings
     Then sucessful message is displayed
     And adding research interest "Computer Science and Information Technology" is successful
 
-  @UI @Adhoc  @TestRails(14511) @Email
+  @UI  @TestRails(14511) @Email
   Scenario: C14511	Verify removing research interest
     Given User is in academically login page
     When user register a student
@@ -300,7 +314,7 @@ Feature: Student user profile settings
     When the user confirms to remove a research interest
     Then removing "Computer Science and Information Technology" research interest is successful
 
-  @UI @Adhoc  @TestRails(14512) @Email
+  @UI  @TestRails(14512) @Email
   Scenario: C14512	Verify adding research methodology
     Given User is in academically login page
     When user register a student
@@ -328,7 +342,7 @@ Feature: Student user profile settings
     Then sucessful message is displayed
     And adding methodology "Quantitative" is successful
 
-  @UI @Adhoc  @TestRails(14513) @Email
+  @UI  @TestRails(14513) @Email
   Scenario: C14513	Verify removing research methodology
     Given User is in academically login page
     When user register a student
@@ -360,7 +374,7 @@ Feature: Student user profile settings
     When the user confirms to remove a research methodology
     Then removing "Quantitative" research methodology is successful
 
-  @UI @Adhoc  @TestRails(14514) @Email
+  @UI  @TestRails(14514) @Email
   Scenario: C14514	Verify adding publication
     Given User is in academically login page
     When user register a student
@@ -387,7 +401,7 @@ Feature: Student user profile settings
     And user saving publication information
     Then adding publication "Silence the storm" is successful
 
-  @UI @Adhoc  @TestRails(14515) @Email 
+  @UI  @TestRails(14515) @Email 
   Scenario: C14515	Verify removing publication
     Given User is in academically login page
     When user register a student
@@ -418,7 +432,7 @@ Feature: Student user profile settings
     When the user confirms to remove a publication
     Then removing "Silence the storm" publication is successful
 
-  @UI @Adhoc  @TestRails(14516) @Email 
+  @UI  @TestRails(14516) @Email 
   Scenario: C14516	Verify editing publication
     Given User is in academically login page
     When user register a student
@@ -456,7 +470,7 @@ Feature: Student user profile settings
       | Title         | Publication Type | Publisher           | Date       | Keyword  | Abstarct |
       | Strange tides | Chapter          | Automated17XXX Test | 03/02/2013 | null | Test1    |
 
-  @UI @Adhoc  @TestRails(14517) @Email 
+  @UI  @TestRails(14517) @Email 
   Scenario: C14517	Verify editing research methodology
     Given User is in academically login page
     When user register a student
@@ -497,7 +511,7 @@ Feature: Student user profile settings
       | Qualitative | Data Quality and Data Management | Test        |
       |             | Methodological Pluralism         |             |
 
-  @UI @Adhoc  @TestRails(14518) @Email 
+  @UI  @TestRails(14518) @Email 
   Scenario: C14518	Verify editing research interest
     Given User is in academically login page
     When user register a student
@@ -535,7 +549,7 @@ Feature: Student user profile settings
       | Title                | Research fields            | Description |
       | Computer programming | Computational Engineering | Test1       |
 
-  @UI @Adhoc  @TestRails(14519) @Email
+  @UI  @TestRails(14519) @Email
   Scenario: C14519 - Verify adding spoken languages
     Given User is in academically login page
     When user register a student
@@ -565,7 +579,7 @@ Feature: Student user profile settings
   @??
   Scenario: C14705 - Verify editing user education information
 
-  @UI @Adhoc  @TestRails(14706) @Email
+  @UI  @TestRails(14706) @Email
   Scenario: C14706 - Verify removing spoken languages
     Given User is in academically login page
     When user register a student
@@ -596,7 +610,7 @@ Feature: Student user profile settings
     And user saving spoken language information
     Then removing "Basic" "Czech" language is successful
 
-  @UI @Adhoc  @TestRails(14707) @Email
+  @UI  @TestRails(14707) @Email
   Scenario: C14707 - Verify editing spoken languages
     Given User is in academically login page
     When user register a student
@@ -636,7 +650,7 @@ Feature: Student user profile settings
     And "Conversational" "Greek" language is added
     And "Fluent" "Dutch" language is added
 
-  @UI @Adhoc  @TestRails(14777)
+  @UI  @TestRails(14777)
   Scenario: C14777 - Verify the available tab in the profile settings as student
     Given User is in academically login page
     When user login as "student"

@@ -1,20 +1,12 @@
-<ng-container *ngIf="content.components && content.components.length; else noPageComponent">
-  <div dragula="PREVIEW_COMPONENTS" [(dragulaModel)]='content.components'>
+<div class="section-preview">
+  <div class="section-contents" [class.no-content]="!content.components || !content.components.length"
+    dragula="PREVIEW_COMPONENTS" [(dragulaModel)]='content.components'>
     <div *ngFor="let sectionComponent of content.components">
       <app-content-preview [content]="sectionComponent">
       </app-content-preview>
     </div>
   </div>
-</ng-container>
-<div class="page-section-actions">
-  <a href="#" (click)="$event.preventDefault(); $event.stopPropagation(); onAddComponentContentClick();">
-    <i class="fe fe-plus"></i>
-    {{ 'AddComponent' | localize | titlecase }}
-  </a>
-</div>
-
-<ng-template #noPageComponent>
-  <div class="no-component-content">
+  <div *ngIf="!content.components || !content.components.length" class="no-component-content">
     <img src="/assets/themes/dashkit/img/illustrations/scale.svg" alt="..." class="img-fluid">
     <h3 class="title">
       {{ 'CreateYourLesson' | localize }}
@@ -23,4 +15,10 @@
       {{ 'CreateYourLessonSubheader' | localize }}
     </p>
   </div>
-</ng-template>
+</div>
+<div class="page-section-actions">
+  <a href="#" (click)="$event.preventDefault(); $event.stopPropagation(); onAddComponentContentClick();">
+    <i class="fe fe-plus"></i>
+    {{ 'AddComponent' | localize | titlecase }}
+  </a>
+</div>

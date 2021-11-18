@@ -1,7 +1,8 @@
-import { MarginType } from "./margin-type";
+import { MarginType } from './margin-type';
 
 export abstract class Content {
   name: string;
+  backgroundColor: string;
   marginType: number;
   marginTop: number;
   marginBottom: number;
@@ -16,7 +17,17 @@ export abstract class Content {
 
   constructor() {
     this.marginType = MarginType.None;
+    this.backgroundColor = '#FFFFFF';
     this.setMargins();
+  }
+
+  get margin(): string {
+    if (!this.marginTop && !this.marginBottom && !this.marginLeft && !this.marginRight) {
+      return '0';
+    }
+
+    return `${this.marginTop}px ${this.marginRight}px `
+      + `${this.marginBottom}px ${this.marginLeft}px`;
   }
 
   public setMargins(): void {

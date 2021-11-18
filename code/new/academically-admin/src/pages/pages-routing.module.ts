@@ -14,7 +14,12 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
           { path: '404', component: NotFoundComponent },
           { path: '403', component: UnauthorizedComponent },
         ]
-      }
+      },
+      {
+        path: 'lesson-preview',
+        loadChildren: () => import('./lesson-preview/lesson-preview.module').then(m => m.LessonPreviewModule),
+        data: { preload: true }
+      },
     ])
   ],
   exports: [

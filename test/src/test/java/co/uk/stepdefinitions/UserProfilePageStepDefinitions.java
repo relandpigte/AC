@@ -114,27 +114,35 @@ public class UserProfilePageStepDefinitions {
         
         if(!certificate.equals("null")) {
         	UserProfilePageEducation.OtherCourse.enterProfessionalCertification(certificate);
+        	DriverHandler.delay(1);
         }
         if(!organization.equals("null")) {
         	UserProfilePageEducation.OtherCourse.enterOrganization(organization);
+        	DriverHandler.delay(1);
         }
         if(!grade.equals("null")) {
         	UserProfilePageEducation.OtherCourse.enterGrade(grade);
+        	DriverHandler.delay(1);
         }
         if(!startYear.equals("null")) {
         	UserProfilePageEducation.OtherCourse.selectStartYear(startYear);
+        	DriverHandler.delay(1);
         }
         if(!endYear.equals("null")) {
         	UserProfilePageEducation.OtherCourse.selectEndYear(endYear);
+        	DriverHandler.delay(1);
         }
         if(!country.equals("null")) {
         	UserProfilePageEducation.OtherCourse.selectCountry(country);
+        	DriverHandler.delay(1);
         }
         if(!city.equals("null")) {
         	UserProfilePageEducation.OtherCourse.enterCity(city);
+        	DriverHandler.delay(1);
         }
         if(!summary.equals("null")) {
         	UserProfilePageEducation.OtherCourse.enterSummary(summary);
+        	DriverHandler.delay(1);
         }
 	}
 	
@@ -219,12 +227,15 @@ public class UserProfilePageStepDefinitions {
         String description = data.get(0).get("Description");
         if(!title.equals("null")) {
         	UserProfilePageResearch.ResearchInterestModal.enterTitle(title);
+        	DriverHandler.delay(1);
         }
         if(!description.equals("null")) {	 
         	UserProfilePageResearch.ResearchInterestModal.enterDescription(description);
+        	DriverHandler.delay(1);
         }
         if(!researchfields.equals("null")) {	 
         	UserProfilePageResearch.ResearchInterestModal.clickAddResearchField();
+        	DriverHandler.delay(8);
         	UserProfilePageResearch.ResearchInterestModal.ResearchFieldModal.enterTreeFilter(researchfields);
         	UserProfilePageResearch.ResearchInterestModal.ResearchFieldModal.clickTreeItem(researchfields);
         	UserProfilePageResearch.ResearchInterestModal.ResearchFieldModal.verifyItemIsAdded(researchfields);
@@ -264,7 +275,7 @@ public class UserProfilePageStepDefinitions {
 		DriverHandler.delay(8);
 	}
 	
-	@Then("^\"(.*)\" Methodology modal is displayed$")
+	@Then("^\"(.*)\" modal is displayed$")
 	public void verifyMethodologyModalIsDisplayed(String title) {
 		UserProfilePageResearch.MethodologyModal.verifyModalTitle(title);
 	}
@@ -283,6 +294,7 @@ public class UserProfilePageStepDefinitions {
         }
         if(!ResearchMethod.equals("null")) {	 
         	UserProfilePageResearch.MethodologyModal.clickAddMethod();
+        	DriverHandler.delay(10);
         	UserProfilePageResearch.MethodologyModal.ResearchMethodModal.enterTreeFilter(ResearchMethod);
         	UserProfilePageResearch.MethodologyModal.ResearchMethodModal.clickTreeItem(ResearchMethod);
         	UserProfilePageResearch.MethodologyModal.ResearchMethodModal.verifyItemIsAdded(ResearchMethod);

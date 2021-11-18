@@ -108,7 +108,7 @@ public class DashboardStepDefinitions {
 	@When("^user navigate to profile settings using profile widget$")
 	public void navigateProfileSettingsUsingWidget() {
 		DashboardStudentAndTutor.OverviewTab.ProfileWidget.clickProfilePhoto();
-		DriverHandler.delay(8);
+		DriverHandler.delay(9);
 	}
 	
 	@Then("^user should see all projects$")

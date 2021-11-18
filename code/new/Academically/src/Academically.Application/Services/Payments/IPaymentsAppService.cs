@@ -5,6 +5,6 @@ namespace Academically.Services.Payments
 {
     public interface IPaymentsAppService : IApplicationService
     {
-        Task OnboardUser(string code);
+        Task<string> OnboardUser(string code);
     }
 }

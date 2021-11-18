@@ -1,0 +1,70 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="danie (generated)" id="1637129032131-1">
+        <createTable tableName="academicallystudentcourses">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CourseId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1637129032131-2">
+        <createTable tableName="academicallystudentcoursesections">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Status" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="StudentCourseId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1637129032131-3">
+        <createIndex indexName="FK_SCS_StudentCourses_StudentCourseId_idx" tableName="academicallystudentcoursesections">
+            <column name="StudentCourseId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1637129032131-4">
+        <createIndex indexName="FK_SCS_Users_CreatorUserId_idx" tableName="academicallystudentcoursesections">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1637129032131-5">
+        <createIndex indexName="FK_StudentCourses_Courses_CourseId_idx" tableName="academicallystudentcourses">
+            <column name="CourseId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1637129032131-6">
+        <createIndex indexName="FK_StudentCourses_Users_CreatorUserId_idx" tableName="academicallystudentcourses">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1637129032131-7">
+        <addForeignKeyConstraint baseColumnNames="StudentCourseId" baseTableName="academicallystudentcoursesections" constraintName="FK_SCS_StudentCourses_StudentCourseId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallystudentcourses" validate="true"/>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1637129032131-8">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallystudentcoursesections" constraintName="FK_SCS_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1637129032131-9">
+        <addForeignKeyConstraint baseColumnNames="CourseId" baseTableName="academicallystudentcourses" constraintName="FK_StudentCourses_Courses_CourseId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallycourses" validate="true"/>
+    </changeSet>
+    <changeSet author="danie (generated)" id="1637129032131-10">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallystudentcourses" constraintName="FK_StudentCourses_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

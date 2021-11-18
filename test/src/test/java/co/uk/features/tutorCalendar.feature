@@ -1,5 +1,5 @@
 Feature: Tutor calendar
-	@UI @Adhoc  @TestRails(14821)	
+	@UI  @TestRails(14821)	
   Scenario: C14821	- Verify tutor viewing own calendar
     Given User is in academically login page
     When user login as "admin"
@@ -22,7 +22,7 @@ Feature: Tutor calendar
 	
 	@??
   Scenario: C14726	- Verify blocking out dates and times - draft
-	@UI @Adhoc  @TestRails(14800)	
+	@UI  @TestRails(14800)	
   Scenario: C14800	- Verify dropdown showing past sessions and upcoming sessions
       Given User is in academically login page
     When user login as "admin"

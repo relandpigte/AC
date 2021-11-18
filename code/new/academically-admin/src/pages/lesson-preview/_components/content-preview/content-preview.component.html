@@ -1,0 +1,5 @@
+<div *ngIf="content" class="content" [ngSwitch]="content.name">
+  <app-page-preview *ngSwitchCase="'Page'" [content]="content"></app-page-preview>
+  <app-section-preview *ngSwitchCase="'Section'" [content]="content"></app-section-preview>
+  <app-component-preview *ngSwitchDefault [content]="content"></app-component-preview>
+</div>

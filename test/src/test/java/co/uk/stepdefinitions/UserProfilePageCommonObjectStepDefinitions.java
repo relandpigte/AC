@@ -9,9 +9,9 @@ import io.cucumber.java.en.When;
 
 
 public class UserProfilePageCommonObjectStepDefinitions {
-
-    private static String profilePhotoFile = System.getProperty("user.dir").replace("\\", "/") + "/src/main/resources/Data/"
-            + DriverHandler.environment + "/ProfilePhoto_Benjamin_Franklin.jpg";
+ 
+    private static String photoFile1 = System.getProperty("user.dir").replace("\\", "/") + "/src/main/resources/Data/"
+            + DriverHandler.environment + "/Sample1.jpg";
     
     @Then("^user is in profile settings$")
     public void verifyUserProfilePageIsDisplayed() {
@@ -21,7 +21,8 @@ public class UserProfilePageCommonObjectStepDefinitions {
 
     @When("^user upload a profile photo$")
     public void uploadProfilePhoto() {
-        UserProfilePageCommonObjects.uploadProfilePhoto(profilePhotoFile);
+    	DriverHandler.delay(2);
+        UserProfilePageCommonObjects.uploadProfilePhoto(photoFile1);
     }
 
     @When("^user add a cover photo$")

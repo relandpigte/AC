@@ -15,11 +15,12 @@ namespace Academically.Services.Payments
             _paymentService = paymentService;
         }
 
-        public async Task OnboardUser(string code)
+        public async Task<string> OnboardUser(string code)
         {
             var user = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
             user.StripeUserId = await _paymentService.OnboardAsync(code);
             await UserManager.UpdateAsync(user);
+            return user.StripeUserId;
         }
     }
 }

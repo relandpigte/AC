@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 
 namespace Academically.Services.Projects
 {
-    public class ProjectsAppService: AcademicallyAppServiceBase, IProjectsAppService
+    public class ProjectsAppService : AcademicallyAppServiceBase, IProjectsAppService
     {
         private readonly RoleManager _roleManager;
         private readonly IRepository<Project, Guid> _projectsRepository;
@@ -39,6 +39,7 @@ namespace Academically.Services.Projects
         private readonly IEmailService _emailService;
         private readonly INotificationPublisher _notificationPublisher;
         private readonly ISettingManager _settingManager;
+        private readonly IRepository<ProjectInvitation, Guid> _projectInvitationsRepository;
 
         public ProjectsAppService(
             RoleManager roleManager,
@@ -52,7 +53,8 @@ namespace Academically.Services.Projects
             IDocumentsDomainService documentsDomainService,
             IEmailService emailService,
             INotificationPublisher notificationPublisher,
-            ISettingManager settingManager
+            ISettingManager settingManager,
+            IRepository<ProjectInvitation, Guid> projectInvitationsRepository
             )
         {
             _roleManager = roleManager;
@@ -67,6 +69,7 @@ namespace Academically.Services.Projects
             _emailService = emailService;
             _notificationPublisher = notificationPublisher;
             _settingManager = settingManager;
+            _projectInvitationsRepository = projectInvitationsRepository;
         }
 
         public async Task<PagedResultDto<ProjectDto>> GetAllAsync(PagedProjectRequestDto input)
@@ -266,7 +269,7 @@ namespace Academically.Services.Projects
                     || e.Surname.ToLower().Contains(input.SearchFilter)
                     || e.UserServices.Any(e => e.UserServiceSubjects.Any(e => e.Subject.Name.ToLower().Contains(input.SearchFilter)))
                     || e.UserServices.Any(e => e.UserServiceDisciplineTaxonomies.Any(e => e.DisciplineTaxonomy.Name.ToLower().Contains(input.SearchFilter))));
-            var totalCount = await tutorsQuery.CountAsync();
+
             var tutors = await tutorsQuery
                 .Include(e => e.ProfilePictureDocument)
                 .Include(e => e.UserEducations)
@@ -276,33 +279,7 @@ namespace Academically.Services.Projects
                 .PageBy(input)
                 .Take(input.MaxResultCount)
                 .ToListAsync();
-            var outputs = new List<GetAvailalbeTutorDto>();
-            foreach (var tutor in tutors)
-            {
-                var tutorOutput = ObjectMapper.Map<UserDto>(tutor);
-                if (tutor.UserEducations != null && tutor.UserEducations.Any())
-                {
-                    tutorOutput.CurrentUniversity = tutor.UserEducations
-                        .OrderByDescending(e => e.EndYear)
-                            .ThenByDescending(e => e.StartYear)
-                       .FirstOrDefault()
-                       .University.HeProvider;
-                }
-                var userServicesOutput = await _userServicesRepository.GetAll()
-                    .Where(e => e.CreatorUserId == tutor.Id)
-                    .Include(e => e.UserServiceSubjects)
-                        .ThenInclude(e => e.Subject)
-                    .Include(e => e.UserServiceDisciplineTaxonomies)
-                        .ThenInclude(e => e.DisciplineTaxonomy)
-                     .Select(e => ObjectMapper.Map<UserServiceForListDto>(e))
-                    .ToListAsync();
-
-                outputs.Add(new GetAvailalbeTutorDto() {
-                    Tutor = tutorOutput,
-                    Services = userServicesOutput,
-                });
-            }
-            return new PagedResultDto<GetAvailalbeTutorDto>(totalCount, outputs);
+            return await GetTutorsFromQuery(tutors, input);
         }
 
         public async Task<Guid> CreateAsync(CreateProjectDto input)
@@ -335,6 +312,18 @@ namespace Academically.Services.Projects
                 notificationData,
                 userIds: new[] { new UserIdentifier(tutor.TenantId, tutor.Id) }
             );
+            var invitationSent = _projectInvitationsRepository.FirstOrDefault(e => e.ProjectId == project.Id && e.TutorId == tutor.Id && e.CreatorUserId == AbpSession.UserId.Value);
+            if (invitationSent == null)
+            {
+                var projectInvitation = ObjectMapper.Map<ProjectInvitation>(
+                new ProjectInvitationsDto
+                {
+                    ProjectId = project.Id,
+                    TutorId = tutor.Id,
+                    CreatorUserId = AbpSession.UserId.Value
+                });
+                await _projectInvitationsRepository.InsertAsync(projectInvitation);
+            }
         }
 
         public async Task<ProjectDto> UpdateAsync(UpdateProjectDto input)
@@ -353,6 +342,63 @@ namespace Academically.Services.Projects
         public async Task DeleteAsync(Guid id)
         {
             await _projectsRepository.DeleteAsync(id);
+        }
+
+        public async Task<PagedResultDto<GetAvailalbeTutorDto>> GetProjectInvitationTutors(PagedAvailalbeTutorRequestDto input, Guid projectId)
+        {
+            input.SearchFilter = input.SearchFilter?.ToLower();
+            var tutorRole = await _roleManager.GetRoleByNameAsync(StaticRoleNames.Tenants.Tutor);
+            var tutorsQuery = _projectInvitationsRepository.GetAll().Where(e => e.CreatorUserId == AbpSession.UserId.Value && e.ProjectId == projectId)
+                    .Include(e => e.Tutor)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.Tutor.Name.ToLower().Contains(input.SearchFilter)
+                    || e.Tutor.Surname.ToLower().Contains(input.SearchFilter)
+                    || e.Tutor.UserServices.Any(e => e.UserServiceSubjects.Any(e => e.Subject.Name.ToLower().Contains(input.SearchFilter)))
+                    || e.Tutor.UserServices.Any(e => e.UserServiceDisciplineTaxonomies.Any(e => e.DisciplineTaxonomy.Name.ToLower().Contains(input.SearchFilter))));
+            var tutors = await tutorsQuery
+                .Include(e => e.Tutor.ProfilePictureDocument)
+                .Include(e => e.Tutor.UserEducations)
+                    .ThenInclude(e => e.University)
+                .OrderBy(e => e.Tutor.Name)
+                    .ThenBy(e => e.Tutor.Surname)
+                .PageBy(input)
+                .Take(input.MaxResultCount)
+                .Select(e => e.Tutor)
+                .ToListAsync();
+            return await GetTutorsFromQuery(tutors, input);
+        }
+
+        private async Task<PagedResultDto<GetAvailalbeTutorDto>> GetTutorsFromQuery(List<User> tutors, PagedAvailalbeTutorRequestDto input)
+        {
+            var totalCount = tutors.Count();
+
+            var outputs = new List<GetAvailalbeTutorDto>();
+            foreach (var tutor in tutors)
+            {
+                var tutorOutput = ObjectMapper.Map<UserDto>(tutor);
+                if (tutor.UserEducations != null && tutor.UserEducations.Any())
+                {
+                    tutorOutput.CurrentUniversity = tutor.UserEducations
+                        .OrderByDescending(e => e.EndYear)
+                            .ThenByDescending(e => e.StartYear)
+                       .FirstOrDefault()
+                       .University.HeProvider;
+                }
+                var userServicesOutput = await _userServicesRepository.GetAll()
+                    .Where(e => e.CreatorUserId == tutor.Id)
+                    .Include(e => e.UserServiceSubjects)
+                        .ThenInclude(e => e.Subject)
+                    .Include(e => e.UserServiceDisciplineTaxonomies)
+                        .ThenInclude(e => e.DisciplineTaxonomy)
+                     .Select(e => ObjectMapper.Map<UserServiceForListDto>(e))
+                    .ToListAsync();
+
+                outputs.Add(new GetAvailalbeTutorDto()
+                {
+                    Tutor = tutorOutput,
+                    Services = userServicesOutput,
+                });
+            }
+            return new PagedResultDto<GetAvailalbeTutorDto>(totalCount, outputs);
         }
     }
 }

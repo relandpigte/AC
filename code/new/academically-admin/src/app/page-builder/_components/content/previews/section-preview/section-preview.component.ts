@@ -23,7 +23,6 @@ export class SectionPreviewComponent extends AppComponentBase implements OnInit 
   }
 
   ngOnInit(): void {
-    console.log(this.content);
   }
 
   onAddComponentContentClick(): void {

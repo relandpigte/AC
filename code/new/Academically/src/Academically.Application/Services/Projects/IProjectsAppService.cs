@@ -23,5 +23,6 @@ namespace Academically.Services.Projects
         Task SendProjectInvitation(Guid id, long tutorId);
         Task<ProjectDto> UpdateAsync(UpdateProjectDto input);
         Task DeleteAsync(Guid id);
+        Task<PagedResultDto<GetAvailalbeTutorDto>> GetProjectInvitationTutors(PagedAvailalbeTutorRequestDto input,Guid projectId);
     }
 }

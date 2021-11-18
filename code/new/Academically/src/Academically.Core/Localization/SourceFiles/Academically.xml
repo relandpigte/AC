@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Published">Published</text>
+    <text name="ClickHereToChooseColor">Click here to choose color</text>
     <text name="AddPage">Add page</text>
     <text name="ProjectInvitationNotificationMessage">
       <![CDATA[
@@ -1289,5 +1291,7 @@
     <text name="LessonImage">Lesson Image</text>
     <text name="UploadInstuction">Please use .jpg or .png</text>
   <text name="RecommendedDimensions">Recommended Dimensions of</text>
+    <text name="AllTutors">All Tutors</text>
+    <text name="Coaching">Coaching</text>
   </texts>
 </localizationDictionary>
