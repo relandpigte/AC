@@ -11,7 +11,6 @@ namespace Academically.Web.Host.Startup
             BuildWebHost(args).Run();
         }
 
-
         public static IWebHost BuildWebHost(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)

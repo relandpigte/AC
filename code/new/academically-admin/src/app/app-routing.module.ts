@@ -160,6 +160,13 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
                 (m) => m.NotificationsModule
               ),
           },
+          {
+            path: 'tutor-portal',
+            loadChildren: () =>
+              import('@app/tutor-portal/tutor-portal.module').then(
+                (m) => m.TutorPortalModule
+              ),
+          },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent },
