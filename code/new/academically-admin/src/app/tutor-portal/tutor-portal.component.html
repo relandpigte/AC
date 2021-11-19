@@ -1,0 +1,66 @@
+<div [@routerTransition]>
+  <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light" id="sidebar">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebarCollapse"
+        aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <a class="navbar-brand text-left pt-0 pb-3" href="javascript:;">
+        <div class="d-flex">
+          <div class="avatar avatar-4by3 ml-n3">
+            <img [src]="getCourseImageUrl(model.courseImageUrl)" alt="..." class="avatar-img rounded">
+          </div>
+          <div class="navbar-brand-header ml-3 mr-n3">
+            <h6 class="header-pretitle">{{ 'Courses' | localize }}</h6>
+            <h3 class="header-title">{{ model.name }}</h3>
+          </div>
+        </div>
+      </a>
+
+      <div class="collapse navbar-collapse" id="sidebarCollapse">
+        <ul class="navbar-nav list-group">
+          <li class="nav-item list-group-item">
+            <a [routerLink]="['overview']" routerLinkActive="active" class="nav-link" role="button">
+              Overview
+            </a>
+          </li>
+          <li class="nav-item list-group-item">
+            <a class="nav-link" role="button">
+              Students
+            </a>
+          </li>
+          <li class="nav-item list-group-item">
+            <a class="nav-link" role="button">
+              Messages
+            </a>
+          </li>
+          <li class="nav-item list-group-item">
+            <a class="nav-link" role="button">
+              Assignments
+            </a>
+          </li>
+          <li class="nav-item list-group-item">
+            <a class="nav-link" role="button">
+              Reviews
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="mt-auto"></div>
+
+      <div class="d-flex justify-content-between align-items-center">
+        <a [routerLink]="['/app/home']" class="text-muted">
+          <i class="fe fe-arrow-left"></i> {{ 'Back' |localize }}
+        </a>
+        <button [routerLink]="['/app/courses', id]" class="btn btn-sm btn-outline-primary">
+          {{ 'EditCourse' | localize }}
+        </button>
+      </div>
+    </div>
+  </nav>
+  <div class="main-content h-100">
+    <router-outlet></router-outlet>
+  </div>
+</div>

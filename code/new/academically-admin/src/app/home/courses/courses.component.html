@@ -116,7 +116,9 @@
                     </div>
                   </div>
                   <div class="col d-flex flex-column justify-content-center">
-                    <h5 class="mb-1">{{ course.name }}</h5>
+                    <a [routerLink]="['/app/tutor-portal', course.id]">
+                      <h5 class="mb-1">{{ course.name }}</h5>
+                    </a>
                     <p *ngIf="course.subtitle" class="text-muted mb-1">
                       {{ course.subtitle }}
                     </p>
@@ -135,6 +137,10 @@
                 </span>
               </td>
               <td class="table-action">
+                <button [routerLink]="['/app/tutor-portal', course.id]" type="button"
+                  class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
+                  <span class="fe fe-trending-up"></span>
+                </button>
                 <button [routerLink]="['/app/courses', course.id]" type="button"
                   class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
                   <span class="fe fe-edit-2"></span>
