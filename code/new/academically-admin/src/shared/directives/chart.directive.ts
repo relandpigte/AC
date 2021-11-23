@@ -6,10 +6,14 @@ declare var Chart: any;
   selector: '[chart]',
 })
 export class ChartDirective {
+  private chart: any;
   constructor(private _el: ElementRef) { }
-  chart: any;
 
   @Input() set chartSettings(settings: any) {
+    if (this.chart) {
+      this.chart.destroy();
+      console.log('destroyed');
+    }
     this.chart = new Chart(this._el.nativeElement, settings);
   }
 
