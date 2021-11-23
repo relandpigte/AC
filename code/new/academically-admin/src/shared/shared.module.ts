@@ -16,6 +16,7 @@ import { Select2Directive } from './directives/select2.directive';
 import { ToggableContentDirective } from './directives/toggable-content.directive';
 import { AccordionDirective } from './directives/accordion.directive';
 import { LoaderDirective } from './directives/loader.directive';
+import { ChartDirective } from './directives/chart.directive';
 
 import { AppSessionService } from './session/app-session.service';
 import { AppUrlService } from './nav/app-url.service';
@@ -50,6 +51,7 @@ import { PasswordToggleComponent } from './components/password-toggle/password-t
     ToggableContentDirective,
     AccordionDirective,
     LoaderDirective,
+    ChartDirective,
     AbpPaginationControlsComponent,
     AbpValidationSummaryComponent,
     AbpModalHeaderComponent,
@@ -69,6 +71,7 @@ import { PasswordToggleComponent } from './components/password-toggle/password-t
     ToggableContentDirective,
     AccordionDirective,
     LoaderDirective,
+    ChartDirective,
     AbpPaginationControlsComponent,
     AbpValidationSummaryComponent,
     AbpModalHeaderComponent,

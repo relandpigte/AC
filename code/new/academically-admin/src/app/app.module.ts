@@ -17,13 +17,12 @@ import { NgPipesModule } from 'ngx-pipes';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { TagInputModule } from 'ngx-chips';
-import {NgxMaskModule } from 'ngx-mask'; 
+import { NgxMaskModule } from 'ngx-mask';
 
 // Cookie Consent
 import { NgcCookieConsentModule, NgcCookieConsentConfig } from 'ngx-cookieconsent';
 
 // directives
-import { ChartDirective } from '@shared/directives/chart.directive';
 import { DragClassUpdaterDirective } from '@shared/directives/drag-class-updater.directive';
 
 // tenants
@@ -110,7 +109,6 @@ const cookieConfig: NgcCookieConsentConfig = {
 @NgModule({
   declarations: [
     // directives
-    ChartDirective,
     DragClassUpdaterDirective,
     // components
     AppComponent,
@@ -189,7 +187,7 @@ const cookieConfig: NgcCookieConsentConfig = {
     NotificationsModule,
     TagInputModule,
     NgxMaskModule.forRoot({
-      showMaskTyped : true,
+      showMaskTyped: true,
     })
   ],
   entryComponents: [

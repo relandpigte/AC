@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="LastYearComparison">Last year comparison</text>
+    <text name="Completed">Completed</text>
+    <text name="Students">Students</text>
+    <text name="Revenue">Revenue</text>
+    <text name="ThisYear">This year</text>
+    <text name="ThisMonth">This month</text>
+    <text name="ThisWeek">This week</text>
     <text name="Published">Published</text>
     <text name="ClickHereToChooseColor">Click here to choose color</text>
     <text name="AddPage">Add page</text>
