@@ -46,7 +46,7 @@ public class RegisterPageStepDefinitions {
 	}
 	
 	public static void main(String[] args) {
-		String value = GmailReader.getEmailContent();
+		String value = GmailReader.getEmailContent("test.email.academically@gmail.com","Test@12345");
 	//	value = TextUtility.getValueByRegex(value, "<p>https://academically(.+?)<p/>").replace("<p>", "").replace("<p/>", "");
 		System.out.println(value);
 	}

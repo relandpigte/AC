@@ -183,6 +183,11 @@ public class DashboardStepDefinitions {
        }
 	}
 	
+	@When("^user proceed to the course name \"(.*)\"$")
+	public void clickCoureName(String name) {
+		DashboardStudentAndTutor.CourseTab.clickCourseDetails(name.replace("XXX", DriverHandler.timestamp));
+	}
+	
 	@Then("^user should see \"(.*)\" course$")
 	public void verifyCourseIsDisplayed(String name) {
 		DashboardStudentAndTutor.CourseTab.verifyCourseIsDisplayed(name.replace("XXX", DriverHandler.timestamp));

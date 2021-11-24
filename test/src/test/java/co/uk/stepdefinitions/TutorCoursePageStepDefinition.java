@@ -5,6 +5,7 @@ import java.util.Map;
 
 import co.uk.core.DriverHandler;
 import co.uk.pageobjects.TutorCoursePageCommonObjects;
+import co.uk.pageobjects.TutorCoursePageCurriculumTab;
 import co.uk.pageobjects.TutorCoursePageDetailsTab;
 import co.uk.pageobjects.TutorCoursePageSettingsTab;
 import co.uk.pageobjects.TutorWizardCommonObject;
@@ -26,6 +27,11 @@ public class TutorCoursePageStepDefinition {
 	public void clickCourseSettingsTab() {
 		TutorCoursePageCommonObjects.clickSettingsTab();
 		DriverHandler.delay(1);
+	}
+	
+	@When("^user proceed to the curriculum tab$")
+	public void clickCurriculumTab() {
+		TutorCoursePageCommonObjects.clickCurriculumTab();
 	}
 
 	@When("^user add course details$")
@@ -163,6 +169,11 @@ public class TutorCoursePageStepDefinition {
 		TutorCoursePageSettingsTab.verifyCommentSectionIsDisplayed();
 	}
 	
+	@Then("^user is in curriculum tab$")
+	public static void verifyCurriculumTabIsActive() {
+		TutorCoursePageCurriculumTab.verifyCurriculumTabIsActive();
+	}
+	
 	@Then("^custom url section is displayed$")
 	public static void verifyCustomURLSectionIsDisplayed() {
 		TutorCoursePageSettingsTab.verifyCustomCourseURLsectionIsDisplayed();
@@ -176,5 +187,78 @@ public class TutorCoursePageStepDefinition {
 	@Then("^course visibility section is displayed$")
 	public static void verifyCOurseVisibilitySectionIsDisplayed() {
 		TutorCoursePageSettingsTab.verifyCourseVisibilitySectionIsDisplayed();
+	}
+	
+	@When("^user create a first module$")
+	public static void createFirstModule() {
+		TutorCoursePageCurriculumTab.clickAddModule();
+		TutorCoursePageCurriculumTab.ModuleModal.enterModuleName("Module 1");
+		TutorCoursePageCurriculumTab.ModuleModal.clickSave();
+	}
+	
+	@When("^user create a first lesson$")
+	public static void createFirstLesson() {
+		TutorCoursePageCurriculumTab.clickAddLesson();
+		TutorCoursePageCurriculumTab.LessonModal.clickTemplate("Blank");
+		TutorCoursePageCurriculumTab.LessonModal.clickNext();
+		TutorCoursePageCurriculumTab.LessonModal.enterLessonName("Lesson 1");
+		TutorCoursePageCurriculumTab.LessonModal.clickSave();
+	}
+	
+	@Then("^module name \"(.*)\" is displayed in curriculum tab$")
+	public void verifyModuleIsDisplayed(String name) {
+		DriverHandler.delay(8);
+		TutorCoursePageCurriculumTab.verifyCurriculumItemIsDisplayed("Module", name);
+	}
+	
+	@Then("^lesson name \"(.*)\" is displayed in curriculum tab$")
+	public void verifyLessonIsDisplayed(String name) {
+		DriverHandler.delay(8);
+		TutorCoursePageCurriculumTab.verifyCurriculumItemIsDisplayed("Lesson", name);
+	}
+	
+	@When("^user create a new module \"(.*)\"$")
+	public void createNewModule(String name) {
+		TutorCoursePageCurriculumTab.clickAddnewModule();
+		TutorCoursePageCurriculumTab.ModuleModal.enterModuleName(name);
+		TutorCoursePageCurriculumTab.ModuleModal.clickSave();
+	}
+	
+	@When("^user create a new lesson \"(.*)\" within \"(.*)\"$")
+	public void createNewLessonWithinModule(String lessonName,String moduleName) {
+		TutorCoursePageCurriculumTab.clickAddnewLessonWithinModule(moduleName);
+		TutorCoursePageCurriculumTab.LessonModal.clickTemplate("Blank");
+		TutorCoursePageCurriculumTab.LessonModal.clickNext();
+		TutorCoursePageCurriculumTab.LessonModal.enterLessonName(lessonName);
+		TutorCoursePageCurriculumTab.LessonModal.clickSave();
+	}
+	
+	@Then("^created lesson \"(.*)\" within \"(.*)\" is displayed$")
+	public void verifyLessonIsDisplayedWithinModule(String lessonName, String moduleName) {
+		DriverHandler.delay(2);
+		TutorCoursePageCurriculumTab.verifyCirriculumNestedItemIsDisplayed(moduleName, lessonName);
+	}
+	
+	@Then("^created unit \"(.*)\" within \"(.*)\" is displayed$")
+	public void verifyUnitIsDisplayedWithinModule(String unitName, String moduleName) {
+		DriverHandler.delay(2);
+		TutorCoursePageCurriculumTab.verifyCirriculumNestedItemIsDisplayed(moduleName, unitName);
+	}
+	
+	@When("^user create a new unit \"(.*)\" within \"(.*)\"$")
+	public void createNewUnitnWithinModule(String unitName,String moduleName) {
+		TutorCoursePageCurriculumTab.clickAddNewUnitWithinModule(moduleName);
+		TutorCoursePageCurriculumTab.UnitModal.enterLessonName(unitName);
+		TutorCoursePageCurriculumTab.UnitModal.clickSave();
+	}
+	
+	@When("^user create a new Lesson \"(.*)\" within \"(.*)\"$")
+	public void createLessonWithinUnit(String lessonName, String unitName) {
+		TutorCoursePageCurriculumTab.clickAddNewLessonWithinUnit(unitName);
+		TutorCoursePageCurriculumTab.LessonModal.clickTemplate("Blank");
+		TutorCoursePageCurriculumTab.LessonModal.clickNext();
+		TutorCoursePageCurriculumTab.LessonModal.enterLessonName(lessonName);
+		TutorCoursePageCurriculumTab.LessonModal.clickSave();
+		
 	}
 }

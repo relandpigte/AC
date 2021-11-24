@@ -334,7 +334,7 @@ Feature: Student user profile settings
     Then user is in profile settings
     When user proceed to research tab
     And user add research methodology
-    Then "Add Research" Methodology modal is displayed
+    Then "Add" modal is displayed
     When user enter research methodology information
       | Title        | Research method          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
       | Quantitative | Methodological Pluralism | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
@@ -362,7 +362,7 @@ Feature: Student user profile settings
     Then user is in profile settings
     When user proceed to research tab
     And user add research methodology
-    Then "Add Research" Methodology modal is displayed
+    Then "Add Research" modal is displayed
     When user enter research methodology information
       | Title        | Research method          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
       | Quantitative | Methodological Pluralism | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
@@ -490,7 +490,7 @@ Feature: Student user profile settings
     Then user is in profile settings
     When user proceed to research tab
     And user add research methodology
-    Then "Add" Methodology modal is displayed
+    Then "Add" modal is displayed
     When user enter research methodology information
       | Title        | Research method          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
       | Quantitative | Methodological Pluralism | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
@@ -498,14 +498,14 @@ Feature: Student user profile settings
     Then sucessful message is displayed
     And adding methodology "Quantitative" is successful
     When user edit "Quantitative" research methodology
-    Then "Edit" Methodology modal is displayed
+    Then "Edit" modal is displayed
     When user enter research methodology information
       | Title       | Research method                  | Description |
       | Qualitative | Data Quality and Data Management | Test        |
     And user saving research methodology information
     Then sucessful message is displayed
     When user edit "Qualitative" research methodology
-    Then "Edit" Methodology modal is displayed
+    Then "Edit" modal is displayed
     And verify research methodology informations are correct
       | Title       | Research method                  | Description |
       | Qualitative | Data Quality and Data Management | Test        |

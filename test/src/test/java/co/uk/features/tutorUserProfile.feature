@@ -1,6 +1,6 @@
 Feature: Tutor user profile settings
 
-  @UI @TestRails(14556)
+  @UI @TestRails(14556)  
   Scenario: C14556 - Verify uploading a profile photo
     Given User is in academically login page
     When user login as "admin"
@@ -54,7 +54,7 @@ Feature: Tutor user profile settings
     Then successfully displayed profile picture message was removed
     And profile photo is removed
 
-  @UI @TestRails(14740)
+  @UI @TestRails(14740)  
   Scenario: C14740 - Verify select a cover photo
     Given User is in academically login page
     When user login as "admin"
@@ -79,7 +79,7 @@ Feature: Tutor user profile settings
     And user crop the cover photo
     Then upload a cover photo is successful
 
-  @UI @TestRails(14558)
+  @UI @TestRails(14558)  
   Scenario: C14558 - Verify adding about user information
     Given User is in academically login page
     When user login as "admin"
@@ -106,7 +106,7 @@ Feature: Tutor user profile settings
     When user add about information
     Then adding about user information is successful
 
-  @UI @TestRails(14560)
+  @UI @TestRails(14560)  
   Scenario: C14560 - Verify adding user education information
     Given User is in academically login page
     When user login as "admin"
@@ -209,7 +209,7 @@ Feature: Tutor user profile settings
     When the user confirms to remove a education information
     Then message show successfully deleted
 
-  @UI @TestRails(14563)
+  @UI @TestRails(14563)  
   Scenario: C14563 - Verify adding other courses information
     Given User is in academically login page
     When user login as "admin"
@@ -272,7 +272,7 @@ Feature: Tutor user profile settings
     When the user confirms to remove a course
     Then removing "Risk Management" course is successful
 
-  @UI @TestRails(14569)
+  @UI @TestRails(14569)  
   Scenario: C14569	Verify adding research interest
     Given User is in academically login page
     When user login as "admin"
@@ -336,24 +336,25 @@ Feature: Tutor user profile settings
     When the user confirms to remove a research interest
     Then removing "Computer Science and Information Technology" research interest is successful
 
-  @UI @TestRails(14565) @Adhoc
+  @UI @TestRails(14565)   
   Scenario: C14565	Verify adding research methodology
     Given User is in academically login page
-    When user login as "admin"
-    Then user successfully login
-    When user proceed to manage user
-    Then user is in manage user page
-    When user add a new user
-    And user enter a user details
-      | Name           | Surname | Username       | Password   | Email          | Active | Public |
-      | Automated31XXX | Test    | automated31XXX | Test@12345 | automated31XXX | Yes    | Yes    |
-    And user select a "Tutor" role
-    And user saving user details
-    Then sucessful message is displayed
-    When user logout in academically
-    Then user is in academically login page
-    When user enter username "automated31XXX" and password "Test@12345"
-    #    When user enter username "automated27100701" and password "Test@12345"
+     When user login as "admin"
+     Then user successfully login
+     When user proceed to manage user
+     Then user is in manage user page
+     When user add a new user
+     And user enter a user details
+       | Name           | Surname | Username       | Password   | Email          | Active | Public |
+       | Automated31XXX | Test    | automated31XXX | Test@12345 | automated31XXX | Yes    | Yes    |
+     And user select a "Tutor" role
+     And user saving user details
+     Then sucessful message is displayed
+     When user logout in academically
+     Then user is in academically login page
+     When user enter username "automated31XXX" and password "Test@12345"
+     
+
     Then user successfully login
     When user navigate to profile settings using profile widget
     Then user is in profile settings
@@ -401,7 +402,7 @@ Feature: Tutor user profile settings
     When the user confirms to remove a research methodology
     Then removing "Quantitative" research methodology is successful
 
-  @UI @TestRails(14573)
+  @UI @TestRails(14573)  
   Scenario: C14573	Verify adding publication
     Given User is in academically login page
     When user login as "admin"
@@ -525,7 +526,7 @@ Feature: Tutor user profile settings
     Then user is in profile settings
     When user proceed to research tab
     And user add research methodology
-    Then "Add" Methodology modal is displayed
+    Then "Add" modal is displayed
     When user enter research methodology information
       | Title        | Research method          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
       | Quantitative | Methodological Pluralism | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
@@ -533,14 +534,14 @@ Feature: Tutor user profile settings
     Then sucessful message is displayed
     And adding methodology "Quantitative" is successful
     When user edit "Quantitative" research methodology
-    Then "Edit" Methodology modal is displayed
+    Then "Edit" modal is displayed
     When user enter research methodology information
       | Title       | Research method                  | Description |
       | Qualitative | Data Quality and Data Management | Test        |
     And user saving research methodology information
     Then sucessful message is displayed
     When user edit "Qualitative" research methodology
-    Then "Edit " Methodology modal is displayed
+    Then "Edit" modal is displayed
     And verify research methodology informations are correct
       | Title       | Research method                  | Description |
       | Qualitative | Data Quality and Data Management | Test        |
@@ -586,7 +587,7 @@ Feature: Tutor user profile settings
       | Title                | Research fields           | Description |
       | Computer programming | Computational Engineering | Test1       |
 
-  @UI @TestRails(14566)
+  @UI @TestRails(14566) 
   Scenario: C14566 - Verify adding research methodology without research method
     Given User is in academically login page
     When user login as "admin"
@@ -608,7 +609,7 @@ Feature: Tutor user profile settings
     Then user is in profile settings
     When user proceed to research tab
     And user add research methodology
-    Then "Add" Methodology modal is displayed
+    Then "Add" modal is displayed
     When user enter research methodology information
       | Title        | Research method | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
       | Quantitative | null            | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
@@ -616,7 +617,7 @@ Feature: Tutor user profile settings
     Then sucessful message is displayed
     And adding methodology "Quantitative" is successful
 
-  @UI @TestRails(14570)
+  @UI @TestRails(14570)  
   Scenario: C14570 - Verify adding research interest without knowledge base
     Given User is in academically login page
     When user login as "admin"
@@ -646,7 +647,7 @@ Feature: Tutor user profile settings
     Then sucessful message is displayed
     And adding research interest "Computer Science and Information Technology" is successful
 
-  @UI @TestRails(14574)
+  @UI @TestRails(14574) 
   Scenario: C14574 - Verify adding publication without tag
     Given User is in academically login page
     When user login as "admin"
@@ -663,6 +664,7 @@ Feature: Tutor user profile settings
     When user logout in academically
     Then user is in academically login page
     When user enter username "automated40XXX" and password "Test@12345"
+     
     Then user successfully login
     When user navigate to profile settings using profile widget
     Then user is in profile settings
@@ -670,15 +672,15 @@ Feature: Tutor user profile settings
     And user add publication
     Then "Add" publication modal is displayed
     When user enter publication information
-      | Title             | Publication Type | Publisher           | Date       | Tag  | Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-      | Silence the storm | Book             | Automated40XXX Test | 06/02/2013 | null | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
+      | Title             | Publication Type | Publisher           | Date       | Tag |Keyword | Abstarct                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+      | Silence the storm | Book             | Automated40XXX Test | 06/02/2013 | null|null | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." |
     And user saving publication information
     Then adding publication "Silence the storm" is successful
 
   @??
   Scenario: C14577 - Verify adding services
 
-  @UI @TestRails(14782)
+  @UI @TestRails(14782) 
   Scenario: C14782 - Verify adding spoken languages
     Given User is in academically login page
     When user login as "admin"

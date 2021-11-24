@@ -50,7 +50,7 @@ Feature: Tutor Wizard
     And user next to education
     Then sucessful message is displayed
 
-  @UI  @TestRails(14523)
+  @UI  @TestRails(14523) @Adhoc
   Scenario: C14523 -Verify adding user education information by levels from the tutor wizard
     Given User is in academically login page
     When user login as "admin"
@@ -60,13 +60,13 @@ Feature: Tutor Wizard
     When user add a new user
     And user enter a user details
       | Name           | Surname | Username       | Password   | Email          | Active | Public |
-      | Automated42XXX | Test    | automated42XXX | Test@12345 | automated42XXX | Yes    | Yes    |
+      | Automated42XXX | Test    | automated42XXX | Test@12345 | automated42-1XXX | Yes    | Yes    |
     And user select a "Student" role
     And user saving user details
     Then sucessful message is displayed
     When user logout in academically
     Then user is in academically login page
-    When user enter username "Automated42XXX" and password "Test@12345"
+    When user enter username "Automated42-1XXX" and password "Test@12345"
     Then user successfully login
     When user wants to become a tutor on the dashboard page
     Then confirmation of  become a tutor modal is displayed
@@ -87,7 +87,7 @@ Feature: Tutor Wizard
     And user saving the education information on tutor wizard
     Then sucessful message is displayed
 
-  @UI  @TestRails(14524)
+  @UI  @TestRails(14524) @Adhoc
   Scenario: C14524 - Verify adding user education information by evidence from the tutor wizard
     Given User is in academically login page
     When user login as "admin"
