@@ -1,0 +1,67 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">{{ 'Courses' | localize}}</h4>
+  </div>
+  <div class="tab-content row">
+    <div class="col-12 tab-pane fade show active" id="teaching" role="tabpanel" aria-labelledby="teaching-tab">
+
+      <div class="table-responsive">
+        <table class="table table-sm table-hover table-nowrap card-table" [loader]="isTableLoading">
+          <thead table-header-sort [headers]="headers" (sortChange)="sortChange($event)"></thead>
+          <tbody class="list font-size-base">
+            <tr *ngFor="
+                  let course of (courses | paginate: { id: 'courses', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
+                ">
+              <td>
+                <div class="row">
+                  <div class="col-auto d-flex align-items-center">
+                    <div class="avatar avatar-lg avatar-4by3">
+                      <img [src]="getCourseImageUrl(course.courseImageUrl)" alt="..." class="avatar-img rounded">
+                    </div>
+                  </div>
+                  <div class="col d-flex flex-column justify-content-center">
+                    <a [routerLink]="['/app/student-portal', course.id]">
+                      <h5 class="mb-1">{{ course.name }}</h5>
+                    </a>
+                    <p *ngIf="course.subtitle" class="text-muted mb-1">
+                      {{ course.subtitle }}
+                    </p>
+                    <p class="m-0 p-0 text-muted">
+                      <i class="fe fe-user">
+                      </i>
+                      0 Students
+                    </p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="badge" [class.badge-info]="course.status === CourseStatus.Draft"
+                  [class.badge-primary]="course.status === CourseStatus.Published">
+                  {{ CourseStatus[course.status] }}
+                </span>
+              </td>
+              <td class="table-action">
+                <button [routerLink]="['/app/student-portal', course.id]" type="button"
+                  class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
+                  <span class="fe fe-layout"></span>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="courses.length === 0">
+              <td colspan="10">
+                <p class="text-center m-0 p-0">{{ 'NoRecordsFound' | localize }}</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <abp-pagination-controls id="courses" (pageChange)="getDataPage($event)"> </abp-pagination-controls>
+      </div>
+
+    </div>
+    <div class="col-12 tab-pane fade" id="learning" role="tabpanel" aria-labelledby="learning-tab">
+      <div class="card-body">
+        <h1>Coming Soon!</h1>
+      </div>
+    </div>
+  </div>
+</div>

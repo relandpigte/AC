@@ -69,7 +69,7 @@ export class ServiceCategoryComponent extends AppComponentBase implements OnInit
       (result: boolean) => {
         if (result) {
           this._serviceWizardService.clear();
-          this._router.navigate(['/app/home']);
+          this._router.navigate(['/app/dashboard']);
         }
       }
     );

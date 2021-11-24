@@ -1,0 +1,43 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'RecentActivity' | localize }}
+    </h4>
+    <a class="small" href="javascript:;">View all</a>
+  </div>
+  <div class="card-body">
+    <div class="list-group list-group-flush list-group-activity my-n3">
+      <div class="list-group-item" *ngFor="let auditlog of auditlogs">
+        <div class="row">
+          <div class="col-auto">
+            <div class="avatar avatar-sm">
+              <div class="avatar-title font-size-lg bg-primary-soft rounded-circle text-primary">
+                <i *ngIf="ServicesNameType[auditlog.serviceName] === (ServicesNameType.Courses)" class="fe fe-book"></i>
+                <i *ngIf="ServicesNameType[auditlog.serviceName] === (ServicesNameType.CourseSections)" class="fe fe-file-text"></i>
+                <i *ngIf="ServicesNameType[auditlog.serviceName] === (ServicesNameType.ProjectOffers)" class="fe fe-briefcase"></i>
+                <i *ngIf="ServicesNameType[auditlog.serviceName] === (ServicesNameType.Projects)" class="fe fe-archive"></i>
+                <i *ngIf="ServicesNameType[auditlog.serviceName] === (ServicesNameType.CalendarEvents)" class="fe fe-calendar"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col ml-n2">
+            <h5 class="mb-1">
+              <span *ngIf="((ServicesNameType[auditlog.serviceName] === ServicesNameType.Projects) || (ServicesNameType[auditlog.serviceName] === ServicesNameType.Courses) || (ServicesNameType[auditlog.serviceName] === ServicesNameType.CourseSections)) && auditlog.auditLogsType === AuditLogsType.Created">
+                {{ 'New' | localize }} {{'Logs'+auditlog.serviceName | localize }} {{jsonFilter(auditlog.parameters,'name')}} {{ AuditLogsType[auditlog.auditLogsType].toLowerCase() | localize}}
+              </span>
+              <span *ngIf="ServicesNameType[auditlog.serviceName] === (ServicesNameType.CalendarEvents) && auditlog.auditLogsType === AuditLogsType.Created">
+                {{ 'New' | localize }} {{'Logs'+auditlog.serviceName | localize }} {{jsonFilter(auditlog.parameters,'title')}} {{ AuditLogsType[auditlog.auditLogsType].toLowerCase() | localize}}
+              </span>
+              <span *ngIf="auditlog.auditLogsType !== AuditLogsType.Created">
+                {{ 'Youhave' | localize }} {{ AuditLogsType[auditlog.auditLogsType].toLowerCase() | localize}} {{jsonFilter(auditlog.parameters,'title')}} {{jsonFilter(auditlog.parameters,'name')}} {{'Logs'+auditlog.serviceName | localize }}
+              </span>
+            </h5>
+            <small class="text-muted">
+              {{convertMomentToDateAgo(auditlog.executionTime)}}
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

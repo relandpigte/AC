@@ -171,6 +171,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Overview_ProfileSummary,
                 PermissionNames.Pages_Dashboard_MyProjects,
                 PermissionNames.Pages_Dashboard_Usage,
+                PermissionNames.Pages_Dashboard_Courses,
                 PermissionNames.Pages_Profile,
                 PermissionNames.Pages_Profile_Services,
                 PermissionNames.Pages_Profile_Services_Create,
@@ -223,10 +224,12 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Projects_Offer,
                 PermissionNames.Pages_Projects_OfferHistory,
                 PermissionNames.Pages_Conversations,
-                PermissionNames.Pages_TutorHome,
+                PermissionNames.Pages_Home,
+                PermissionNames.Pages_Home_Courses,
                 PermissionNames.Pages_Courses,
                 PermissionNames.Pages_PageBuilder,
-                PermissionNames.Pages_Notifications
+                PermissionNames.Pages_Notifications,
+                PermissionNames.Pages_StudentPortal
             );
 
             #endregion
@@ -314,7 +317,10 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Projects_Hired,
                 PermissionNames.Pages_Projects_BrowseTutors,
                 PermissionNames.Pages_Conversations,
-                PermissionNames.Pages_Notifications
+                PermissionNames.Pages_Notifications,
+                PermissionNames.Pages_Home,
+                PermissionNames.Pages_Home_Courses,
+                PermissionNames.Pages_StudentPortal
             );
 
             #endregion

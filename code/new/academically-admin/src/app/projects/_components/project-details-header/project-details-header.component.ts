@@ -40,7 +40,7 @@ export class ProjectDetailsHeaderComponent extends AppComponentBase implements O
           this._projectsService.delete(this.project.id)
             .subscribe(() => {
               this.notify.success('SuccessfullyDeleted');
-              this._router.navigate(['/app/home']);
+              this._router.navigate(['/app/dashboard']);
             });
         }
       }

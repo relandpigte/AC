@@ -40,7 +40,6 @@ import { EditUserDialogComponent } from '@app/users/edit-user/edit-user-dialog.c
 import { ChangePasswordComponent } from './users/change-password/change-password.component';
 import { ResetPasswordDialogComponent } from './users/reset-password/reset-password.component';
 // layout
-import { HomeComponent } from '@app/home/home.component';
 import { AboutComponent } from '@app/about/about.component';
 import { HeaderComponent } from './layout/header.component';
 import { HeaderLeftNavbarComponent } from './layout/header-left-navbar.component';
@@ -59,21 +58,12 @@ import { TopbarMenuComponent } from './layout/menu/topbar-menu/topbar-menu.compo
 import { SidebarSmallComponent } from './layout/navigations/sidebar-small/sidebar-small.component';
 import { SidebarSmallMenuComponent } from './layout/menu/sidebar-small-menu/sidebar-small-menu.component';
 import { TopbarComponent } from './layout/navigations/topbar/topbar.component';
-import { DashboardOverviewComponent } from './home/dashboard-overview/dashboard-overview.component';
 import { RecentProjectsComponent } from './widgets/recent-projects/recent-projects.component';
 import { RecentActivityComponent } from './widgets/recent-activity/recent-activity.component';
 import { ProfileSummaryComponent } from './widgets/profile-summary/profile-summary.component';
-import { DashboardProjectsComponent } from './home/dashboard-projects/dashboard-projects.component';
-import { DashboardUsageComponent } from './home/dashboard-usage/dashboard-usage.component';
-import { DashboardUsageOverviewComponent } from './home/dashboard-usage/dashboard-usage-overview/dashboard-usage-overview.component';
-import { DashboardUsageOverviewGraphComponent } from './home/dashboard-usage/dashboard-usage-overview-graph/dashboard-usage-overview-graph.component';
-import { MetricsComponent } from './home/dashboard-overview/metrics/metrics.component';
 import { CreateProjectComponent } from './create-project/create-project.component';
 import { ProjectsComponent } from './projects/projects.component';
-import { UpcomingSessionsComponent } from './home/dashboard-overview/upcoming-sessions/upcoming-sessions.component';
 import { TutorHomeComponent } from './tutor-home/tutor-home.component';
-import { CoursesComponent } from './home/courses/courses.component';
-import { CoursesModule } from './home/courses/courses.module';
 import { NotificationsModule } from './notifications/notifications.module';
 // Settings is subject to change
 //
@@ -112,7 +102,6 @@ const cookieConfig: NgcCookieConsentConfig = {
     DragClassUpdaterDirective,
     // components
     AppComponent,
-    HomeComponent,
     AboutComponent,
     // tenants
     TenantsComponent,
@@ -147,20 +136,12 @@ const cookieConfig: NgcCookieConsentConfig = {
     SidebarSmallMenuComponent,
     TopbarComponent,
     // academically components
-    DashboardOverviewComponent,
     RecentProjectsComponent,
     RecentActivityComponent,
     ProfileSummaryComponent,
-    DashboardProjectsComponent,
-    DashboardUsageComponent,
-    DashboardUsageOverviewComponent,
-    DashboardUsageOverviewGraphComponent,
-    MetricsComponent,
     CreateProjectComponent,
     ProjectsComponent,
-    UpcomingSessionsComponent,
     TutorHomeComponent,
-    CoursesComponent,
   ],
   imports: [
     CommonModule,
@@ -183,7 +164,6 @@ const cookieConfig: NgcCookieConsentConfig = {
     TypeaheadModule.forRoot(),
     PopoverModule.forRoot(),
     NgcCookieConsentModule.forRoot(cookieConfig),
-    CoursesModule,
     NotificationsModule,
     TagInputModule,
     NgxMaskModule.forRoot({

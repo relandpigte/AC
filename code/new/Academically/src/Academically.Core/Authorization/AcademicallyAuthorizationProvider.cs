@@ -17,6 +17,7 @@ namespace Academically.Authorization
 
             dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_MyProjects, L("MyProjects"));
             dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Usage, L("Usage"));
+            dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Courses, L("Courses"));
 
 
             var profilePermission = context.CreatePermission(PermissionNames.Pages_Profile, L("Profile"));
@@ -181,11 +182,17 @@ namespace Academically.Authorization
             context.CreatePermission(PermissionNames.Pages_Notifications, L("Notifications"));
 
 
+            var homePermission = context.CreatePermission(PermissionNames.Pages_Home, L("Home"));
+            homePermission.CreateChildPermission(PermissionNames.Pages_Home_Courses, L("Courses"));
+
+
+            context.CreatePermission(PermissionNames.Pages_Courses, L("Courses"));
+
+
+            context.CreatePermission(PermissionNames.Pages_StudentPortal, L("StudentPortal"));
+
+
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
-
-            var tutorHome = context.CreatePermission(PermissionNames.Pages_TutorHome, L("TutorHome"));
-
-            var courses = tutorHome.CreateChildPermission(PermissionNames.Pages_Courses, L("Courses"));
 
 
         }

@@ -1746,6 +1746,7 @@ export class CoursesServiceProxy {
     }
 
     /**
+     * @param userIdFilter (optional) 
      * @param searchFilter (optional) 
      * @param statusFilter (optional) 0 = Draft
     
@@ -1755,8 +1756,12 @@ export class CoursesServiceProxy {
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(searchFilter: string | undefined, statusFilter: CourseStatus | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CourseDtoPagedResultDto> {
+    getAll(userIdFilter: number | undefined, searchFilter: string | undefined, statusFilter: CourseStatus | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CourseDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Courses/GetAll?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
         if (searchFilter === null)
             throw new Error("The parameter 'searchFilter' cannot be null.");
         else if (searchFilter !== undefined)
