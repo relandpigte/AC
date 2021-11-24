@@ -101,7 +101,7 @@ export class TutorWizardComponent extends AppComponentBase implements OnInit {
         routeName = 'declaration';
         break;
       default:
-        this._router.navigate(['/app/home']);
+        this._router.navigate(['/app/dashboard']);
         break;
     }
     if (routeName) {

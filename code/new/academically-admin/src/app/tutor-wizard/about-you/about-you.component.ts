@@ -86,7 +86,7 @@ export class AboutYouComponent extends AppComponentBase implements OnInit {
       undefined,
       (result: boolean) => {
         if (result) {
-          this._router.navigate(['/app/home']);
+          this._router.navigate(['/app/dashboard']);
         }
       }
     );

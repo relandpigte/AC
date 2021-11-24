@@ -1,0 +1,110 @@
+<div [@routerTransition]>
+  <div class="header">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-end">
+          <div class="col mb-md-0 mb-3">
+            <h6 class="header-pretitle">
+              {{ 'Dashboard' | localize }}
+            </h6>
+            <h1 class="header-title">
+              {{ greetings }}, {{ user.name }}
+            </h1>
+          </div>
+          <div style="display: inline-flex;" class="col-md-auto col-12">
+            <div *ngIf="isTutor" class=" btn-group btn-block ml-md-2 inline" dropdown>
+              <button *ngIf="permission.isGranted('Pages.Courses')" dropdownToggle type="button"
+                class="btn btn-primary  dropdown-toggle">
+                {{ 'Create' | localize}} <span class="caret"></span>
+              </button>
+              <ul *dropdownMenu class="dropdown-menu" role="menu">
+                <li role="menuitem"><a class="dropdown-item btn" (click)="onCreateClick()">{{ 'Course' | localize}}</a>
+                </li>
+              </ul>
+            </div>
+
+            <a [routerLink]="['/app/new-project']" class="btn btn-primary"
+              *ngIf="permission.isGranted('Pages.ServiceWizard.CreateProject')">
+              {{ 'CreateNewProject' | localize}}
+            </a>
+
+            <a [routerLink]="['/app/projects']" class="btn btn-primary col-md-7"
+              [class.ml-md-2]="permission.isGranted('Pages.Projects.Browse')"
+              *ngIf="permission.isGranted('Pages.Projects.Browse')">
+              {{ 'SeeAllProjects' | localize}}
+            </a>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col">
+            <ul class="nav nav-tabs nav-overflow header-tabs">
+              <li *ngIf="permission.isGranted('Pages.Dashboard.Overview')" class="nav-item">
+                <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab"
+                  aria-controls="overview" aria-selected="true">{{ 'Overview' | localize }}</a>
+              </li>
+              <li *ngIf="permission.isGranted('Pages.Dashboard.MyProjects')" class="nav-item">
+                <a class="nav-link" id="projects-tab" data-toggle="tab" href="#projects" role="tab"
+                  aria-controls="projects" aria-selected="false">{{ 'Coaching' | localize }}</a>
+              </li>
+              <li *ngIf="permission.isGranted('Pages.Dashboard.Usage')" class="nav-item">
+                <a class="nav-link" id="usage-tab" data-toggle="tab" href="#usage" role="tab" aria-controls="usage"
+                  aria-selected="false">{{ 'Usage' | localize }}</a>
+              </li>
+              <li *ngIf="permission.isGranted('Pages.Dashboard.Courses')" class="nav-item">
+                <a class="nav-link" id="courses-tab" data-toggle="tab" href="#courses" role="tab"
+                  aria-controls="courses" aria-selected="false">{{ 'Courses' | localize }}</a>
+              </li>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <ng-container *ngIf="!isOnboarding && !user.stripeUserId && isTutor">
+
+      <div class="row justify-content-between align-items-center">
+        <div class="col-12">
+          <div class="alert alert-warning alert-dismissible mb-0 mt-3" role="alert">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <i class="fe fe-alert-triangle display-5"></i>
+              </div>
+              <div class="col">
+                <h3 class="mb-2">{{ 'StripeConnectionRequired' | localize }}!</h3>
+                {{ 'StripeConnectionMessage' | localize }}
+              </div>
+              <div class="col-auto mr-n5">
+                <button (click)="onConnectStripeClick()" class="btn btn-primary btn-sm" type="button">
+                  {{ 'ConnectStripe' | localize }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="my-5">
+
+    </ng-container>
+    <div class="tab-content">
+      <div *ngIf="permission.isGranted('Pages.Dashboard.Overview')" class="tab-pane fade show active" id="overview"
+        role="tabpanel" aria-labelledby="overview-tab">
+        <app-overview *ngIf="permission.isGranted('Pages.Dashboard.Overview')"></app-overview>
+      </div>
+      <div *ngIf="permission.isGranted('Pages.Dashboard.MyProjects')" class="tab-pane fade" id="projects"
+        role="tabpanel" aria-labelledby="projects-tab">
+        <app-projects *ngIf="permission.isGranted('Pages.Dashboard.MyProjects')"></app-projects>
+      </div>
+      <div *ngIf="permission.isGranted('Pages.Dashboard.Usage')" class="tab-pane fade" id="usage" role="tabpanel"
+        aria-labelledby="usage-tab">
+        <app-usage *ngIf="permission.isGranted('Pages.Dashboard.Usage')"></app-usage>
+      </div>
+      <div *ngIf="permission.isGranted('Pages.Courses')" class="tab-pane fade" id="courses" role="tabpanel"
+        aria-labelledby="courses-tab">
+        <app-courses *ngIf="permission.isGranted('Pages.Dashboard.Courses')"></app-courses>
+      </div>
+    </div>
+  </div>
+</div>

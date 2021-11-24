@@ -5,7 +5,6 @@ import { AppRouteGuard } from '@shared/auth/auth-route-guard';
 
 import { WrapperComponent } from './layout/wrapper/wrapper.component';
 
-import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { UsersComponent } from './users/users.component';
 import { TenantsComponent } from './tenants/tenants.component';
@@ -22,16 +21,18 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
         component: AppComponent,
         children: [
           {
+            path: 'dashboard',
+            loadChildren: () =>
+              import('@app/dashboard/dashboard.module').then(
+                (m) => m.DashboardModule
+              ),
+          },
+          {
             path: 'home',
-            component: WrapperComponent,
-            data: { permission: 'Pages.Dashboard' },
-            canActivate: [AppRouteGuard],
-            children: [
-              {
-                path: '',
-                component: HomeComponent,
-              },
-            ],
+            loadChildren: () =>
+              import('@app/home/home.module').then(
+                (m) => m.HomeModule
+              ),
           },
           {
             path: 'roles',
@@ -165,6 +166,13 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
             loadChildren: () =>
               import('@app/tutor-portal/tutor-portal.module').then(
                 (m) => m.TutorPortalModule
+              ),
+          },
+          {
+            path: 'student-portal',
+            loadChildren: () =>
+              import('@app/student-portal/student-portal.module').then(
+                (m) => m.StudentPortalModule
               ),
           },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },

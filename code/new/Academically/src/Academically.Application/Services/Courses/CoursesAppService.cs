@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Academically.Services.Courses
 {
-    [AbpAuthorize(PermissionNames.Pages_Courses)]
+    [AbpAuthorize(PermissionNames.Pages_Courses, PermissionNames.Pages_Home_Courses)]
     public class CoursesAppService : AsyncCrudAppService<Course, CourseDto, Guid, PagedCourseResultRequestDto, CreateCourseDto, CourseDto>, ICoursesAppService
     {
         private readonly IDocumentsDomainService _documentsDomainService;
@@ -45,7 +45,7 @@ namespace Academically.Services.Courses
         protected override IQueryable<Course> CreateFilteredQuery(PagedCourseResultRequestDto input)
         {
             return base.CreateFilteredQuery(input)
-                .Where(e => e.CreatorUserId == AbpSession.UserId.Value)
+                .WhereIf(input.UserIdFilter.HasValue, e => e.CreatorUserId == AbpSession.UserId.Value)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.Name.ToLower().Contains(input.SearchFilter.ToLower()))
                 .WhereIf(input.StatusFilter.HasValue, e => e.Status == input.StatusFilter.Value);
         }

@@ -45,6 +45,6 @@ export class AppRouteGuard implements CanActivate, CanActivateChild {
       return '/account/login';
     }
 
-    return '/app/home';
+    return '/app/dashboard';
   }
 }

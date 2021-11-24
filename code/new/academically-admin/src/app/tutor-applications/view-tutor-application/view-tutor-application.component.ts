@@ -111,7 +111,7 @@ export class ViewTutorApplicationComponent extends AppComponentBase implements O
         routeName = 'declaration';
         break;
       default:
-        this._router.navigate(['/app/home']);
+        this._router.navigate(['/app/dashboard']);
         break;
     }
     if (routeName) {

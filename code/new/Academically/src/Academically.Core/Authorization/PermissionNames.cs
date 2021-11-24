@@ -11,6 +11,7 @@
 
         public const string Pages_Dashboard_MyProjects = "Pages.Dashboard.MyProjects";
         public const string Pages_Dashboard_Usage = "Pages.Dashboard.Usage";
+        public const string Pages_Dashboard_Courses = "Pages.Dashboard.Courses";
 
 
         public const string Pages_Profile = "Pages.Profile";
@@ -174,11 +175,17 @@
         public const string Pages_Notifications = "Pages.Notifications";
 
 
-        public const string Pages_Tenants = "Pages.Tenants";
+        public const string Pages_Home = "Pages.Home";
+        public const string Pages_Home_Courses = "Pages.Home.Courses";
 
-        public const string Pages_TutorHome = "Pages.TutorHome";
 
         public const string Pages_Courses = "Pages.Courses";
+
+
+        public const string Pages_StudentPortal = "Pages.StudentPortal";
+
+
+        public const string Pages_Tenants = "Pages.Tenants";
 
     }
 }
