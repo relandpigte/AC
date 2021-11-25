@@ -1,0 +1,30 @@
+.navbar-brand-header,
+.header-title {
+  white-space  : nowrap;
+  overflow     : hidden;
+  text-overflow: ellipsis;
+}
+
+.navbar-brand-header {
+  display        : flex;
+  flex-direction : column;
+  justify-content: center;
+}
+
+.avatar {
+  min-width: 64px;
+}
+
+.list-group {
+  border-radius: 0;
+
+  .list-group-item {
+    border-left : none;
+    border-right: none;
+    padding     : 0;
+
+    a {
+      padding: 20px;
+    }
+  }
+}

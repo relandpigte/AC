@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="StartCourse">Start course</text>
+    <text name="Exit">Exit</text>
     <text name="BuyNow">Buy now</text>
     <text name="StudentPortal">Student portal</text>
     <text name="LastYearComparison">Last year comparison</text>
