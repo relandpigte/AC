@@ -1,5 +1,6 @@
 import { NgModule, } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
@@ -17,6 +18,7 @@ import { CourseNameComponent } from './course-name/course-name.component';
   ],
   imports: [
     CommonModule,
+    RouterModule,
     SharedModule,
     AppSharedModule,
   ],
