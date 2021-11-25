@@ -44,6 +44,8 @@
     <Folder Include="Services\CalendarEvents\Notifications\" />
     <Folder Include="Services\Notifications\" />
     <Folder Include="Services\Notifications\Dto\" />
+    <Folder Include="Services\StudentCourses\" />
+    <Folder Include="Services\StudentCourses\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Services\Projects\" />
@@ -64,5 +66,7 @@
     <None Remove="Services\CalendarEvents\Notifications\" />
     <None Remove="Services\Notifications\" />
     <None Remove="Services\Notifications\Dto\" />
+    <None Remove="Services\StudentCourses\" />
+    <None Remove="Services\StudentCourses\Dto\" />
   </ItemGroup>
 </Project>

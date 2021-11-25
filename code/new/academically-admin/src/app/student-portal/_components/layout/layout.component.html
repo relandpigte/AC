@@ -1,4 +1,4 @@
-<div [@routerTransition]>
+<div [@routerTransition] class="h-100">
   <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light" id="sidebar">
     <div class="container-fluid">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebarCollapse"
@@ -16,18 +16,23 @@
             <h3 class="header-title">{{ model.name }}</h3>
           </div>
         </div>
+        <div class="d-flex align-items-center mt-3">
+          <div class="col-auto p-0">
+            <p class="small mb-0 ml-n3 mr-2">30%</p>
+          </div>
+          <div class="col p-0">
+            <div class="progress progress-sm mr-n3">
+              <div class="progress-bar" role="progressbar" style="width: 30%"></div>
+            </div>
+          </div>
+        </div>
       </a>
 
       <div class="collapse navbar-collapse" id="sidebarCollapse">
         <ul class="navbar-nav list-group">
           <li class="nav-item list-group-item">
-            <a [routerLink]="['overview']" routerLinkActive="active" class="nav-link" role="button">
-              Overview
-            </a>
-          </li>
-          <li class="nav-item list-group-item">
-            <a class="nav-link" role="button">
-              Students
+            <a [routerLink]="['home']" routerLinkActive="active" class="nav-link" role="button">
+              Home
             </a>
           </li>
           <li class="nav-item list-group-item">
@@ -42,7 +47,7 @@
           </li>
           <li class="nav-item list-group-item">
             <a class="nav-link" role="button">
-              Reviews
+              Resources
             </a>
           </li>
         </ul>
@@ -51,12 +56,9 @@
       <div class="mt-auto"></div>
 
       <div class="d-flex justify-content-between align-items-center">
-        <a [routerLink]="['/app/dashboard']" class="text-muted">
+        <a [routerLink]="['/app/home']">
           <i class="fe fe-arrow-left"></i> {{ 'Exit' |localize }}
         </a>
-        <button [routerLink]="['/app/courses', id]" class="btn btn-sm btn-outline-primary">
-          {{ 'EditCourse' | localize }}
-        </button>
       </div>
     </div>
   </nav>
