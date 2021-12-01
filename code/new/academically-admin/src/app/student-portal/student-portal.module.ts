@@ -6,11 +6,15 @@ import { AppSharedModule } from '@app/_shared/app-shared.module';
 
 import { StudentPortalComponent } from './student-portal.component';
 import { LayoutComponent } from './_components/layout/layout.component';
+import { PortalMenuComponent } from './_components/portal-menu/portal-menu.component';
+import { CourseMenuComponent } from './_components/course-menu/course-menu.component';
 
 @NgModule({
   declarations: [
     StudentPortalComponent,
     LayoutComponent,
+    PortalMenuComponent,
+    CourseMenuComponent,
   ],
   imports: [
     CommonModule,

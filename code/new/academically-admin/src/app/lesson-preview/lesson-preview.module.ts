@@ -28,5 +28,8 @@ import { ImageComponentPreviewComponent } from './_components/image-component-pr
     SharedModule,
     QuillModule.forRoot(),
   ],
+  exports: [
+    LessonPreviewComponent,
+  ],
 })
 export class LessonPreviewModule { }

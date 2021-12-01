@@ -42,7 +42,7 @@ export class ContentComponent extends AppComponentBase implements OnInit {
           const sectionContent = Object.assign(new SectionContent(), sectionContentObject);
           sectionContent.components = _.map(sectionContent.components, componentContent => {
             return Object.assign(new ComponentContent(), componentContent);
-          })
+          });
           return sectionContent;
         });
         return pageContent;

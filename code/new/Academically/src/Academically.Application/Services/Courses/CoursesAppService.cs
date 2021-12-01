@@ -1,4 +1,8 @@
-﻿using Abp.Application.Services;
+﻿using System;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
+using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
@@ -11,10 +15,6 @@ using Academically.Domain.Services.Documents;
 using Academically.Services.Courses.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
 
 namespace Academically.Services.Courses
 {

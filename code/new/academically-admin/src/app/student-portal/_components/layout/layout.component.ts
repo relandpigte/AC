@@ -1,8 +1,8 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { ActivatedRoute } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CoursesServiceProxy, CourseDto } from '@shared/service-proxies/service-proxies';
+import { CourseDto, CoursesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -22,6 +22,7 @@ export class LayoutComponent extends AppComponentBase implements OnInit {
   ) {
     super(injector);
     this._route.parent.parent.paramMap.subscribe(paramMap => {
+      console.log(paramMap.has('course-id'));
       if (paramMap.has('course-id')) {
         this.courseId = paramMap.get('course-id');
       }
@@ -39,7 +40,7 @@ export class LayoutComponent extends AppComponentBase implements OnInit {
     return 'assets/themes/dashkit/img/covers/profile-cover-1.jpg';
   }
 
-  private getCoure(): void {
+  protected getCoure(): void {
     this._coursesService.get(this.courseId)
       .pipe(
         takeUntil(this.destroyed$),

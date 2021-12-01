@@ -246,6 +246,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Dashboard_Overview_ProfileSummary,
                 PermissionNames.Pages_Dashboard_MyProjects,
                 PermissionNames.Pages_Dashboard_Usage,
+                PermissionNames.Pages_Dashboard_Courses,
                 PermissionNames.Pages_Profile,
                 PermissionNames.Pages_Profile_Introduction,
                 PermissionNames.Pages_Profile_Introduction_Metrics,

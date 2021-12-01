@@ -6,6 +6,8 @@ import { StudentPortalRouteGuard } from './_guards/student-portal-route.guard';
 
 import { StudentPortalComponent } from './student-portal.component';
 import { LayoutComponent } from './_components/layout/layout.component';
+import { PortalMenuComponent } from './_components/portal-menu/portal-menu.component';
+import { CourseMenuComponent } from './_components/course-menu/course-menu.component';
 
 @NgModule({
   imports: [
@@ -35,10 +37,34 @@ import { LayoutComponent } from './_components/layout/layout.component';
                 canActivate: [StudentPortalRouteGuard],
                 children: [
                   {
+                    path: '',
+                    component: PortalMenuComponent,
+                    outlet: 'menu',
+                  },
+                  {
                     path: 'home',
                     loadChildren: () =>
                       import('@app/student-portal/home/home.module').then(
                         (m) => m.HomeModule,
+                      ),
+                  },
+                ]
+              },
+              {
+                path: '',
+                component: LayoutComponent,
+                canActivate: [StudentPortalRouteGuard],
+                children: [
+                  {
+                    path: '',
+                    component: CourseMenuComponent,
+                    outlet: 'menu',
+                  },
+                  {
+                    path: 'learn',
+                    loadChildren: () =>
+                      import('@app/student-portal/learn/learn.module').then(
+                        (m) => m.LearnModule,
                       ),
                   },
                 ]

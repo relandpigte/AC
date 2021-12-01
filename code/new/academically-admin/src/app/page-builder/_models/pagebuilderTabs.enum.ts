@@ -1,5 +1,5 @@
-export enum PagebuilderTabs{
+export enum PagebuilderTabs {
     Content,
     Details,
-    Settings
+    Settings,
 }

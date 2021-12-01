@@ -8,6 +8,8 @@ import { CoursesComponent } from './courses.component';
 import { CourseTemplateComponent } from './course-template/course-template.component';
 import { CourseWizardComponent } from './course-wizard/course-wizard.component';
 import { CourseNameComponent } from './course-name/course-name.component';
+import { TeachingComponent } from './teaching/teaching.component';
+import { LearningComponent } from './learning/learning.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +17,8 @@ import { CourseNameComponent } from './course-name/course-name.component';
     CourseTemplateComponent,
     CourseWizardComponent,
     CourseNameComponent,
+    TeachingComponent,
+    LearningComponent,
   ],
   imports: [
     CommonModule,

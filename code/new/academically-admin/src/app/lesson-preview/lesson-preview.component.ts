@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComponentContent } from '@app/page-builder/_models/component-content';
 import { Content } from '@app/page-builder/_models/content';
@@ -15,7 +15,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./lesson-preview.component.less']
 })
 export class LessonPreviewComponent extends AppComponentBase implements OnInit {
-  id: string;
+  @Input() id: string;
   contents: Content[] = [];
   currentPage = 0;
 
@@ -28,12 +28,12 @@ export class LessonPreviewComponent extends AppComponentBase implements OnInit {
     this._route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {
         this.id = paramMap.get('id');
-        this.getPages();
       }
     });
   }
 
   ngOnInit(): void {
+    this.getPages();
     document.body.style.backgroundColor = '#FFFFFF';
   }
 
@@ -49,18 +49,20 @@ export class LessonPreviewComponent extends AppComponentBase implements OnInit {
     this._courseSectionPagesService.get(this.id)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
-        const pageContentObjects: any[] = JSON.parse(response.pageContent);
-        this.contents = _.map(pageContentObjects, pageContentObject => {
-          const pageContent: PageContent = Object.assign(new PageContent(), pageContentObject);
-          pageContent.sections = _.map(pageContent.sections, sectionContentObject => {
-            const sectionContent = Object.assign(new SectionContent(), sectionContentObject);
-            sectionContent.components = _.map(sectionContent.components, componentContent => {
-              return Object.assign(new ComponentContent(), componentContent);
-            })
-            return sectionContent;
+        if (response && response.pageContent) {
+          const pageContentObjects: any[] = JSON.parse(response.pageContent);
+          this.contents = _.map(pageContentObjects, pageContentObject => {
+            const pageContent: PageContent = Object.assign(new PageContent(), pageContentObject);
+            pageContent.sections = _.map(pageContent.sections, sectionContentObject => {
+              const sectionContent = Object.assign(new SectionContent(), sectionContentObject);
+              sectionContent.components = _.map(sectionContent.components, componentContent => {
+                return Object.assign(new ComponentContent(), componentContent);
+              });
+              return sectionContent;
+            });
+            return pageContent;
           });
-          return pageContent;
-        });
+        }
       });
   }
 }
