@@ -175,6 +175,11 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
                 (m) => m.StudentPortalModule
               ),
           },
+          {
+            path: 'lesson-preview',
+            loadChildren: () => import('./lesson-preview/lesson-preview.module').then(m => m.LessonPreviewModule),
+            data: { preload: true }
+          },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent },

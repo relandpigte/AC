@@ -21,5 +21,7 @@ namespace Academically.Domain.Entities
         public virtual Course Course { get; set; }
         [ForeignKey("ParentId")]
         public virtual CourseSection Parent { get; set; }
+
+        public virtual ICollection<CourseSection> Children { get; set; }
     }
 }

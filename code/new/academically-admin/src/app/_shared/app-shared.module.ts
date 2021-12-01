@@ -18,13 +18,14 @@ import { DateFormatPipe } from './pipes/date-format.pipe';
 
 import { FixedHeightDirective } from './directives/fixed-height.directive';
 import { BottomScrollerDirective } from './directives/bottom-scroller.directive';
+import { SidebarCollapseDirective } from './directives/sidebar-collapse.directive';
+
 
 import { DocumentUploaderComponent } from './components/document-uploader/document-uploader.component';
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
 import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
 import { ProfilePictureChangerComponent } from './components/profile-picture-changer/profile-picture-changer.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
-
 @NgModule({
   declarations: [
     EnumToArrayPipe,
@@ -36,6 +37,7 @@ import { ColorPickerComponent } from './components/color-picker/color-picker.com
     DateFormatPipe,
     FixedHeightDirective,
     BottomScrollerDirective,
+    SidebarCollapseDirective,
   ],
   imports: [
     CommonModule,
@@ -73,6 +75,7 @@ import { ColorPickerComponent } from './components/color-picker/color-picker.com
     DateFormatPipe,
     FixedHeightDirective,
     BottomScrollerDirective,
+    SidebarCollapseDirective,
     DocumentUploaderComponent,
     ImageCropperComponent,
     ImageGalleryComponent,

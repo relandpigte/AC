@@ -1,0 +1,32 @@
+<div class="d-flex flex-column h-100">
+  <ul class="navbar-nav list-group">
+    <li class="nav-item list-group-item">
+      <a [routerLink]="['home']" routerLinkActive="active" class="nav-link" role="button">
+        {{ 'Home' | localize }}
+      </a>
+    </li>
+    <li class="nav-item list-group-item">
+      <a class="nav-link" role="button">
+        {{ 'Messages' | localize }}
+      </a>
+    </li>
+    <li class="nav-item list-group-item">
+      <a class="nav-link" role="button">
+        {{ 'Assignments' | localize }}
+      </a>
+    </li>
+    <li class="nav-item list-group-item">
+      <a class="nav-link" role="button">
+        {{ 'Resources' | localize }}
+      </a>
+    </li>
+  </ul>
+
+  <div class="mt-auto"></div>
+
+  <div class="d-flex justify-content-between align-items-center mt-5 pb-2">
+    <a [routerLink]="['/app/home']">
+      <i class="fe fe-arrow-left"></i> {{ 'Exit' |localize }}
+    </a>
+  </div>
+</div>

@@ -8,7 +8,7 @@ import { PageBuilderService } from './_services/page-builder.service';
 import { ContentComponent } from './_components/content/content.component';
 import { SettingsComponent } from './_components/settings/settings.component';
 import { DetailsComponent } from './_components/details/details.component';
-import { PagebuilderTabs } from './_models/pagebuilderTabs.enum'
+import { PagebuilderTabs } from './_models/pagebuilderTabs.enum';
 import { AppConsts } from '@shared/AppConsts';
 
 @Component({
@@ -28,7 +28,7 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
   isLoading = false;
   isSaving = false;
   PagebuilderTabs = PagebuilderTabs;
-  currentActiveTab = PagebuilderTabs.Details;
+  currentActiveTab = PagebuilderTabs.Content;
 
   constructor(
     injector: Injector,
@@ -60,8 +60,7 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
   }
 
   onLessonPreviewClick(): void {
-    const url = `${AppConsts.appBaseUrl}/pages/lesson-preview/${this.id}`;
-    console.log(url);
+    const url = `${AppConsts.appBaseUrl}/app/lesson-preview/${this.id}`;
     window.open(url, '_blank');
   }
 
@@ -77,7 +76,6 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
         )
         .subscribe(() => {
           this.notify.success(this.l('SavedSuccessfully'));
-          this._router.navigate(['/app/courses/', this.model.courseId], { fragment: 'curriculum' });
         });
     } else if (this.currentActiveTab === PagebuilderTabs.Details) {
       this._courseSectionsService.update(this.detailComponent.prepareContentsForSaving()).pipe(
@@ -88,10 +86,9 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
       )
         .subscribe(() => {
           this.notify.success(this.l('SavedSuccessfully'));
-          this._router.navigate(['/app/courses/', this.model.courseId], { fragment: 'curriculum' });
         });
 
-      var courseSectionPage = this.detailComponent.prepareContentsForCoursePage()
+      const courseSectionPage = this.detailComponent.prepareContentsForCoursePage();
       this._courseSectionPagesService.saveUpdateDetails(
         this.contentComponent.preparepageContentForSaving(),
         courseSectionPage.description,
@@ -109,7 +106,6 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
         )
         .subscribe(() => {
           this.notify.success(this.l('SavedSuccessfully'));
-          this._router.navigate(['/app/page-builder/', this.id]);
         });
     } else if (this.currentActiveTab === PagebuilderTabs.Settings) {
       this._courseSectionsService.update(this.settingsComponent.prepareContentsForSaving())
@@ -121,7 +117,6 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
         )
         .subscribe(() => {
           this.notify.success(this.l('SavedSuccessfully'));
-          this._router.navigate(['/app/page-builder/', this.id], { fragment: 'Settings' });
         });
     }
   }
@@ -129,14 +124,14 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
   onTabClick(currentTab): void {
     switch (currentTab) {
       case PagebuilderTabs.Content:
-        this.currentActiveTab = PagebuilderTabs.Content
-        break
+        this.currentActiveTab = PagebuilderTabs.Content;
+        break;
       case PagebuilderTabs.Details:
-        this.currentActiveTab = PagebuilderTabs.Details
-        break
+        this.currentActiveTab = PagebuilderTabs.Details;
+        break;
       case PagebuilderTabs.Settings:
-        this.currentActiveTab = PagebuilderTabs.Settings
-        break
+        this.currentActiveTab = PagebuilderTabs.Settings;
+        break;
     }
   }
 
