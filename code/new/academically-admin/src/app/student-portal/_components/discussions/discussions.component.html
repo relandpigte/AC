@@ -6,8 +6,8 @@
         <div class="row">
           <div class="col align-self-center">
             <form autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit(post)" class="mt-1 comment-box">
-              <textarea #post id="message" name="message" (keydown)="onMessageKeydown($event, form)"
-                class="form-control form-control-flush p-0" placeholder="Share a post..."></textarea>
+              <textarea #post id="message" name="message" (keydown)="onMessageKeydown($event, form, post)"
+                class="form-control form-control-flush p-0" placeholder="Share a post..." [maxLength]="500"></textarea>
             </form>
           </div>
         </div>
@@ -15,7 +15,7 @@
       <div class="card-footer">
         <div class="row m-0 w-100">
           <div class="col pl-0 align-self-center">
-            <span class="text-muted text-count">0/500</span>
+            <span class="text-muted text-count">{{ inputLength }}/500</span>
           </div>
           <div class="col-auto pr-0 align-self-center">
             <div class="text-muted">
@@ -190,7 +190,8 @@
               class="mt-1 comment-box">
               <textarea #post id="message" name="message" (keydown)="onMessageKeydown($event, replyForm)"
                 class="form-control form-control-flush p-0" data-toggle="autosize" rows="1"
-                placeholder="Leave a comment..." style="overflow: hidden; overflow-wrap: break-word;"></textarea>
+                placeholder="Leave a comment..." style="overflow: hidden; overflow-wrap: break-word;"
+                [maxLength]="500"></textarea>
             </form>
           </div>
           <div class="col-auto align-self-center">

@@ -25,6 +25,7 @@ export class DiscussionsComponent extends AppComponentBase implements OnInit {
   isPosting = false;
   currentUser: UserLoginInfoDto;
   ReactionType = ConversationReactionType;
+  inputLength = 0;
 
   constructor(
     injector: Injector,
@@ -49,17 +50,19 @@ export class DiscussionsComponent extends AppComponentBase implements OnInit {
     model.studentCourseId = this.studentCourseId;
     model.parentId = parentId;
     model.message = message.value;
-    this._courseConversationsService.create(model)
-      .pipe(
-        takeUntil(this.destroyed$),
-        finalize(() => {
-          this.isPosting = false;
-        })
-      ).subscribe(() => {
-        this.getConversations();
-        message.value = '';
-        this.notify.success(this.l('SuccessfullyPosted'));
-      });
+    if (model.message && model.message.trim()) {
+      this._courseConversationsService.create(model)
+        .pipe(
+          takeUntil(this.destroyed$),
+          finalize(() => {
+            this.isPosting = false;
+          })
+        ).subscribe(() => {
+          this.getConversations();
+          message.value = '';
+          this.notify.success(this.l('SuccessfullyPosted'));
+        });
+    }
   }
 
   onReactClick(type: ConversationReactionType, conversationId: string): void {
@@ -101,9 +104,14 @@ export class DiscussionsComponent extends AppComponentBase implements OnInit {
     return conversationReactions.filter(e => e.type === type).length;
   }
 
-  onMessageKeydown(event: any, form: NgForm): void {
+  onMessageKeydown(event: any, form: NgForm, post?: any): void {
     if (event.keyCode === 13) {
       form.ngSubmit.emit();
+    }
+    if (post) {
+      setTimeout(() => {
+        this.inputLength = post.value.length;
+      });
     }
   }
 
