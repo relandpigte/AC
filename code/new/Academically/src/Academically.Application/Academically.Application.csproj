@@ -48,6 +48,8 @@
     <Folder Include="Services\StudentCourses\Dto\" />
     <Folder Include="Services\StudentCourseSections\" />
     <Folder Include="Services\StudentCourseSections\Dto\" />
+    <Folder Include="Services\StudentCourseConversations\" />
+    <Folder Include="Services\StudentCourseConversations\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Services\Projects\" />
@@ -72,5 +74,7 @@
     <None Remove="Services\StudentCourses\Dto\" />
     <None Remove="Services\StudentCourseSections\" />
     <None Remove="Services\StudentCourseSections\Dto\" />
+    <None Remove="Services\StudentCourseConversations\" />
+    <None Remove="Services\StudentCourseConversations\Dto\" />
   </ItemGroup>
 </Project>

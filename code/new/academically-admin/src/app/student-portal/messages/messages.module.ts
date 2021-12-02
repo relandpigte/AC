@@ -1,24 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LearnRoutingModule } from './learn-routing.module';
+import { MessagesRoutingModule } from './messages-routing.module';
 import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
-import { LessonPreviewModule } from '@app/lesson-preview/lesson-preview.module';
 import { StudentPortalModule } from '../student-portal.module';
 
-import { LearnComponent } from './learn.component';
+import { MessagesComponent } from './messages.component';
 
 @NgModule({
   declarations: [
-    LearnComponent,
+    MessagesComponent,
   ],
   imports: [
     CommonModule,
-    LearnRoutingModule,
+    MessagesRoutingModule,
     SharedModule,
     AppSharedModule,
-    LessonPreviewModule,
     StudentPortalModule,
   ],
 })
-export class LearnModule { }
+export class MessagesModule { }

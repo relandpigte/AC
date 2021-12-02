@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="ReactionRemoved">Reaction removed</text>
+    <text name="SuccessfullyReacted">Successfully reacted</text>
+    <text name="SuccessfullyPosted">Successfully posted</text>
     <text name="Resources">Resources</text>
     <text name="Assignments">Assignments</text>
     <text name="Messages">Messages</text>

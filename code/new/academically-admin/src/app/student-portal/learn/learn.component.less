@@ -1,0 +1,47 @@
+.learn-container {
+  height: 100%;
+
+  .learn-content {
+    height      : 100%;
+    margin-right: 350px;
+    transition  : margin-right .5s;
+  }
+
+  .learn-rightbar {
+    height      : 100%;
+    width       : 350px;
+    position    : fixed;
+    right       : 0;
+    top         : 0;
+    border-width: 0 0 0 1px;
+    border-color: #e3ebf6;
+    border-style: solid;
+    z-index     : 1;
+    transition  : 0.5s;
+    overflow-x  : hidden;
+
+    .btn-rightbar-collapse {
+      position: absolute;
+      top     : 5px;
+      left    : 5px;
+
+      i {
+        position: relative;
+        top     : 1px;
+        right   : 0px;
+      }
+    }
+  }
+
+  .btn-rightbar-show {
+    position: absolute;
+    top     : 5px;
+    right   : 5px;
+
+    i {
+      position: relative;
+      top     : 1px;
+      right   : 0px;
+    }
+  }
+}

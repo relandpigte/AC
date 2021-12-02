@@ -7,14 +7,12 @@
           <h3 class="m-0 py-2">{{ studentCourseSection.courseSection.name }}</h3>
         </a>
       </li>
-
       <ng-container *ngFor="let unit of studentCourseSection.courseSection.children">
         <li class="nav-item list-group-item">
           <a href="javascript:;" class="nav-link" role="button">
             <p class="m-0 small"><b>{{ unit.name }}</b></p>
           </a>
         </li>
-
         <ng-container *ngFor="let lesson of unit.children">
           <li class="nav-item list-group-item">
             <a href="javascript:;" class="nav-link" role="button">
@@ -29,9 +27,7 @@
             </a>
           </li>
         </ng-container>
-
       </ng-container>
-
     </ng-container>
   </ul>
 
