@@ -1,26 +1,37 @@
-import { Directive, ElementRef } from '@angular/core';
+import { Directive, ElementRef, Input, OnInit } from '@angular/core';
 
 @Directive({
   selector: '[sidebarCollapse]'
 })
-export class SidebarCollapseDirective {
+export class SidebarCollapseDirective implements OnInit {
+  @Input() width = '250px';
+  @Input() collapseButtonClass = 'btn-sidebar-collapse';
+  @Input() showButtonClass = 'btn-sidebar-show';
+  @Input() contentClass = 'main-content';
+  @Input() marginAdjustment = 'left';
 
   constructor(
     private el: ElementRef,
   ) {
-    $(document).on('click', '.btn-sidebar-collapse', function (e) {
-      $(el.nativeElement).css({ 'width': '0' });
-      $('.main-content').css('margin-left', '0');
+  }
+
+  ngOnInit(): void {
+    const self = this;
+    $(document).on('click', `.${self.collapseButtonClass}`, function (e) {
+      console.log(self.collapseButtonClass);
+      console.log(self.contentClass);
+      $(self.el.nativeElement).css({ 'width': '0' });
+      $(`.${self.contentClass}`).css(`margin-${self.marginAdjustment}`, '0');
 
       setTimeout(() => {
-        $('.btn-sidebar-show').attr('style', 'display: inline-block !important');
+        $(`.${self.showButtonClass}`).attr('style', 'display: inline-block !important');
       }, 400);
     });
 
-    $(document).on('click', '.btn-sidebar-show', function (e) {
+    $(document).on('click', `.${self.showButtonClass}`, function (e) {
       $(this).hide();
-      $(el.nativeElement).css({ 'width': '250px' });
-      $('.main-content').css('margin-left', '250px');
+      $(self.el.nativeElement).css({ 'width': self.width });
+      $(`.${self.contentClass}`).css(`margin-${self.marginAdjustment}`, self.width);
     });
   }
 

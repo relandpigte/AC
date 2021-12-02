@@ -101,7 +101,7 @@
         aria-labelledby="usage-tab">
         <app-usage *ngIf="permission.isGranted('Pages.Dashboard.Usage')"></app-usage>
       </div>
-      <div *ngIf="permission.isGranted('Pages.Courses')" class="tab-pane fade" id="courses" role="tabpanel"
+      <div *ngIf="permission.isGranted('Pages.Dashboard.Courses')" class="tab-pane fade" id="courses" role="tabpanel"
         aria-labelledby="courses-tab">
         <app-courses *ngIf="permission.isGranted('Pages.Dashboard.Courses')"></app-courses>
       </div>

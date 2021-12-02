@@ -17,10 +17,12 @@ namespace Academically.Domain.Entities
         public virtual User CreatorUser { get; set; }
 
         public virtual ICollection<StudentCourseSection> StudentCourseSections { get; set; }
+        public virtual ICollection<CourseConversation> StudentCourseConversations { get; set; }
 
         public StudentCourse()
         {
             StudentCourseSections = new HashSet<StudentCourseSection>();
+            StudentCourseConversations = new HashSet<CourseConversation>();
         }
     }
 }

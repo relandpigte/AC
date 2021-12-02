@@ -8,6 +8,7 @@ import { StudentPortalComponent } from './student-portal.component';
 import { LayoutComponent } from './_components/layout/layout.component';
 import { PortalMenuComponent } from './_components/portal-menu/portal-menu.component';
 import { CourseMenuComponent } from './_components/course-menu/course-menu.component';
+import { DiscussionsComponent } from './_components/discussions/discussions.component';
 
 @NgModule({
   imports: [
@@ -48,6 +49,13 @@ import { CourseMenuComponent } from './_components/course-menu/course-menu.compo
                         (m) => m.HomeModule,
                       ),
                   },
+                  {
+                    path: 'messages',
+                    loadChildren: () =>
+                      import('@app/student-portal/messages/messages.module').then(
+                        (m) => m.MessagesModule,
+                      ),
+                  },
                 ]
               },
               {
@@ -59,6 +67,11 @@ import { CourseMenuComponent } from './_components/course-menu/course-menu.compo
                     path: '',
                     component: CourseMenuComponent,
                     outlet: 'menu',
+                  },
+                  {
+                    path: '',
+                    component: DiscussionsComponent,
+                    outlet: 'rightbar',
                   },
                   {
                     path: 'learn',

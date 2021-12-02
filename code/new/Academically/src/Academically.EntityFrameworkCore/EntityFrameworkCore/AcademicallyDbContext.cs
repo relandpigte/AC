@@ -72,6 +72,8 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<ProjectInvitation> ProjectInvitations { get; set; }
         public virtual DbSet<StudentCourse> StudentCourses { get; set; }
         public virtual DbSet<StudentCourseSection> StudentCourseSections { get; set; }
+        public virtual DbSet<CourseConversation> CourseConversations { get; set; }
+        public virtual DbSet<CourseConversationReaction> CourseConversationReactions { get; set; }
 
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)

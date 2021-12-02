@@ -22,7 +22,6 @@ export class LayoutComponent extends AppComponentBase implements OnInit {
   ) {
     super(injector);
     this._route.parent.parent.paramMap.subscribe(paramMap => {
-      console.log(paramMap.has('course-id'));
       if (paramMap.has('course-id')) {
         this.courseId = paramMap.get('course-id');
       }

@@ -1,0 +1,71 @@
+<div class="container-fluid">
+
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ course.name }}</h6>
+              <h1 class="header-title">{{ 'Messages' | localize }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-8">
+          <app-discussions [isInCourse]="false"></app-discussions>
+        </div>
+        <div class="col-4">
+          <div class="card">
+            <img *ngIf="!currentUser.coverPictureUrl" src="/assets/themes/dashkit/img/covers/profile-cover-2.jpg"
+              alt="..." class="card-img-top">
+            <img *ngIf="currentUser.coverPictureUrl" [src]="user.coverPictureUrl" alt="..." class="card-img-top">
+            <div class="card-body text-center">
+              <a href="#" [routerLink]="['/app/profile']" class="avatar avatar-xl card-avatar card-avatar-top">
+                <img [src]="getProfilePicture(currentUser.profilePictureUrl)"
+                  class="avatar-img rounded-circle border border-4 border-card" alt="profile">
+              </a>
+              <h2 class="card-title">
+                <a href="#" [routerLink]="['/app/profile']">{{ currentUser.name }} {{ currentUser.surname }}</a>
+              </h2>
+              <p class="small text-muted mb-3">
+                {{ currentUser.currentUniversity }}
+              </p>
+              <p class="card-text">
+                <span class="badge badge-soft-secondary">
+                  {{ userTitle }}
+                </span>
+              </p>
+              <div class="row">
+                <div class="col-md-10 offset-md-1">
+                  <div class="row align-items-center no-gutters">
+                    <div class="col-auto">
+                      <div class="small mr-2">30%</div>
+                    </div>
+                    <div class="col">
+                      <div class="progress progress-sm">
+                        <div class="progress-bar" role="progressbar" [style.width]="'30%'" [attr.aria-valuenow]="30"
+                          aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer card-footer-boxed">
+              <div class="row flex-grow-1 align-items-center justify-content-between">
+                <div class="col-auto">
+                  <small>
+                    <span class="text-success">●</span> Online
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
