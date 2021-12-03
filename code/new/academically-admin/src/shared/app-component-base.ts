@@ -101,11 +101,23 @@ export abstract class AppComponentBase implements OnDestroy {
     return this.getProfilePicture('');
   }
 
-  getCoverPhoto(coverPhotoUrl: string): string {
+  getCoverPhoto(coverPhotoUrl: string, userId?: number): string {
     if (coverPhotoUrl) {
-      return coverPhotoUrl;
+      if (this.isValidUrl(coverPhotoUrl)) {
+        return coverPhotoUrl;
+      } else {
+        return `${this.appSession.application.baseDirectory}/${userId}/`
+          + `${this.appSession.application.coverPhotoFolderName}/${coverPhotoUrl}`;
+      }
     }
     return 'assets/themes/dashkit/img/covers/profile-cover-1.jpg';
+  }
+
+  getCoverPhotoFromDocument(document?: DocumentDto, userId?: number): string {
+    if (document) {
+      return this.getCoverPhoto(document.name, userId);
+    }
+    return this.getCoverPhoto('');
   }
 
   convertToUserDate(date: Date): Date {

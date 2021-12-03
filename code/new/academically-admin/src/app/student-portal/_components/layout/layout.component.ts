@@ -1,9 +1,10 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CourseDto, CoursesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CourseDto, CoursesServiceProxy, StudentCoursesServiceProxy, StudentCourseSectionDto, StudentCourseSectionStatus } from '@shared/service-proxies/service-proxies';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
+import { StudentPortalService } from '@app/student-portal/_services/student-portal.service';
 
 @Component({
   selector: 'app-layout',
@@ -14,16 +15,30 @@ import { takeUntil } from 'rxjs/operators';
 export class LayoutComponent extends AppComponentBase implements OnInit {
   courseId: string;
   model: CourseDto = new CourseDto();
+  percentage: number;
+  studentCourseSections: StudentCourseSectionDto[] = [];
 
   constructor(
     injector: Injector,
     private _route: ActivatedRoute,
+    private _studentPortalService: StudentPortalService,
     private _coursesService: CoursesServiceProxy,
+    private _studentCoursesService: StudentCoursesServiceProxy,
   ) {
     super(injector);
     this._route.parent.parent.paramMap.subscribe(paramMap => {
       if (paramMap.has('course-id')) {
         this.courseId = paramMap.get('course-id');
+        this.getStudentCourseSections();
+      }
+    });
+    this._studentPortalService.percentage$.subscribe(percentage => {
+      this.percentage = percentage;
+    });
+    this._studentPortalService.sectionFinished$.subscribe(id => {
+      if (id && this.studentCourseSections.length) {
+        this.studentCourseSections.find(e => e.id === id).status = StudentCourseSectionStatus.Finished;
+        this.updatePercentage();
       }
     });
   }
@@ -49,4 +64,25 @@ export class LayoutComponent extends AppComponentBase implements OnInit {
       });
   }
 
+
+  private getStudentCourseSections(): void {
+    this._studentCoursesService.get(this.courseId)
+      .pipe(
+        takeUntil(this.destroyed$),
+      )
+      .subscribe(response => {
+        this.studentCourseSections = response.studentCourseSections;
+        this.updatePercentage();
+      });
+  }
+
+  private updatePercentage(): void {
+    let percentage = 0;
+    const finishedCount = this.studentCourseSections.filter(e => e.status === StudentCourseSectionStatus.Finished).length;
+    if (finishedCount > 0) {
+      const totalCount = this.studentCourseSections.length;
+      percentage = Math.floor((finishedCount / totalCount) * 100);
+    }
+    this._studentPortalService.percentage = percentage;
+  }
 }

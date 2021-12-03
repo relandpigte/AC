@@ -18,8 +18,6 @@ export class SidebarCollapseDirective implements OnInit {
   ngOnInit(): void {
     const self = this;
     $(document).on('click', `.${self.collapseButtonClass}`, function (e) {
-      console.log(self.collapseButtonClass);
-      console.log(self.contentClass);
       $(self.el.nativeElement).css({ 'width': '0' });
       $(`.${self.contentClass}`).css(`margin-${self.marginAdjustment}`, '0');
 

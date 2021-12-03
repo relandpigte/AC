@@ -1,8 +1,9 @@
 import { Component, OnInit, Injector } from '@angular/core';
-import { StudentCourseSectionDto, StudentCourseSectionsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { StudentCourseSectionDto, StudentCoursesServiceProxy, StudentCourseSectionStatus } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ActivatedRoute } from '@angular/router';
+import { StudentPortalService } from '@app/student-portal/_services/student-portal.service';
 
 @Component({
   selector: 'app-course-menu',
@@ -12,17 +13,23 @@ import { ActivatedRoute } from '@angular/router';
 export class CourseMenuComponent extends AppComponentBase implements OnInit {
   courseId: string;
   studentCourseSections: StudentCourseSectionDto[] = [];
+  StudentCourseSectionStatus = StudentCourseSectionStatus;
 
   constructor(
     injector: Injector,
     private _route: ActivatedRoute,
-    private _studentCourseSectionsService: StudentCourseSectionsServiceProxy,
+    private _studentPortalService: StudentPortalService,
+    private _studentCoursesService: StudentCoursesServiceProxy,
   ) {
     super(injector);
     this._route.parent.parent.paramMap.subscribe(paramMap => {
-      console.log(paramMap.has('course-id'));
       if (paramMap.has('course-id')) {
         this.courseId = paramMap.get('course-id');
+      }
+    });
+    this._studentPortalService.sectionFinished$.subscribe(id => {
+      if (id && this.studentCourseSections.length) {
+        this.studentCourseSections.find(e => e.id === id).status = StudentCourseSectionStatus.Finished;
       }
     });
   }
@@ -31,20 +38,20 @@ export class CourseMenuComponent extends AppComponentBase implements OnInit {
     this.getStudentCourseSections();
   }
 
-  getCourseImageUrl(courseImageUrl: string): string {
-    if (courseImageUrl) {
-      return courseImageUrl;
+  getLessonImageUrl(lessonImageUrl: string): string {
+    if (lessonImageUrl) {
+      return lessonImageUrl;
     }
-    return 'assets/themes/dashkit/img/covers/profile-cover-1.jpg';
+    return '/assets/themes/dashkit/img/avatars/projects/project-1.jpg';
   }
 
   private getStudentCourseSections(): void {
-    this._studentCourseSectionsService.getAll(this.courseId)
+    this._studentCoursesService.get(this.courseId)
       .pipe(
         takeUntil(this.destroyed$),
       )
-      .subscribe(responses => {
-        this.studentCourseSections = responses;
+      .subscribe(response => {
+        this.studentCourseSections = response.studentCourseSections;
       });
   }
 }

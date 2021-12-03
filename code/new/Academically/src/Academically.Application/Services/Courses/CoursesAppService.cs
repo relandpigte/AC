@@ -36,6 +36,10 @@ namespace Academically.Services.Courses
             var course = await Repository.GetAll()
                 .Where(e => e.Id == input.Id)
                 .Include(e => e.ImageDocument)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.CoverPhotoDocument)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
                 .FirstOrDefaultAsync();
             var output = ObjectMapper.Map<CourseDto>(course);
             output.CourseImageUrl = await _documentsDomainService.GetFileUrlAsync(course.ImageDocument);

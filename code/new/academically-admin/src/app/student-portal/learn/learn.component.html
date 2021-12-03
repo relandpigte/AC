@@ -1,6 +1,6 @@
 <div class="learn-container">
   <div class="learn-content">
-    <app-lesson-preview [id]="id"></app-lesson-preview>
+    <app-lesson-preview [id]="currentCourseSectionId" (nextSection)="onNextSection()"></app-lesson-preview>
   </div>
   <button class="btn btn-sm btn-rounded-circle btn-white btn-rightbar-show">
     <i class="fe fe-chevron-left"></i>

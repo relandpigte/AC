@@ -19,11 +19,11 @@
         </div>
         <div class="d-flex align-items-center mt-3">
           <div class="col-auto p-0">
-            <p class="small mb-0 mr-2">30%</p>
+            <p class="small mb-0 mr-2">{{ percentage }}%</p>
           </div>
           <div class="col p-0">
             <div class="progress progress-sm">
-              <div class="progress-bar" role="progressbar" style="width: 30%"></div>
+              <div class="progress-bar" role="progressbar" [ngStyle]="{ width: percentage + '%' }"></div>
             </div>
           </div>
         </div>

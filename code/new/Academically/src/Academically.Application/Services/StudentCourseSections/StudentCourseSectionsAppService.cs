@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Academically.Domain.Entities;
+using Academically.Domain.Enums;
 using Academically.Services.StudentCourseSections.Dto;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +31,13 @@ namespace Academically.Services.StudentCourseSections
                 .OrderBy(e => e.CourseSection.DisplayOrder)
                 .Select(e => ObjectMapper.Map<StudentCourseSectionDto>(e))
                 .ToListAsync();
+        }
+
+        public async Task UpdateStatus(Guid id, StudentCourseSectionStatus status)
+        {
+            var studentCourseSection = await _studentCourseSectionsRepository.GetAsync(id);
+            studentCourseSection.Status = status;
+            await _studentCourseSectionsRepository.UpdateAsync(studentCourseSection);
         }
     }
 }

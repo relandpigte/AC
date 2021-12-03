@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, Input } from '@angular/core';
+import { Component, Injector, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComponentContent } from '@app/page-builder/_models/component-content';
 import { Content } from '@app/page-builder/_models/content';
@@ -15,7 +15,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./lesson-preview.component.less']
 })
 export class LessonPreviewComponent extends AppComponentBase implements OnInit {
-  @Input() id: string;
+  @Output() nextSection = new EventEmitter();
   contents: Content[] = [];
   currentPage = 0;
 
@@ -27,13 +27,17 @@ export class LessonPreviewComponent extends AppComponentBase implements OnInit {
     super(injector);
     this._route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {
-        this.id = paramMap.get('id');
+        this.getPages(paramMap.get('id'));
       }
     });
   }
 
+  @Input() set id(value: string) {
+    console.log(value);
+    this.getPages(value);
+  }
+
   ngOnInit(): void {
-    this.getPages();
     document.body.style.backgroundColor = '#FFFFFF';
   }
 
@@ -42,11 +46,16 @@ export class LessonPreviewComponent extends AppComponentBase implements OnInit {
   }
 
   onNextClick(): void {
-    this.currentPage++;
+    if (this.currentPage === this.contents.length - 1 || this.contents.length === 0) {
+      this.nextSection.emit();
+    } else {
+      this.currentPage++;
+    }
   }
 
-  private getPages(): void {
-    this._courseSectionPagesService.get(this.id)
+  private getPages(courseSectionId: string): void {
+    this.contents = [];
+    this._courseSectionPagesService.get(courseSectionId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         if (response && response.pageContent) {

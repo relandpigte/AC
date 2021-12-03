@@ -5,13 +5,7 @@
   </div>
   <div class="lesson-preview-toolbar">
     <div>
-      <button *ngIf="currentPage !== 0" (click)="onPreviousClick()" class="btn btn-md btn-primary">
-        <i class="fe fe-chevron-left"></i>
-        {{ 'Previous' | localize }}
-      </button>
-    </div>
-    <div>
-      <button *ngIf="currentPage !== contents.length - 1" (click)="onNextClick()" class="btn btn-md btn-primary">
+      <button (click)="onNextClick()" class="btn btn-md btn-primary">
         {{ 'Continue' | localize }}
         <i class="fe fe-chevron-right"></i>
       </button>

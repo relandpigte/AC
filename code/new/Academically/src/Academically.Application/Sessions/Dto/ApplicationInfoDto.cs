@@ -14,5 +14,7 @@ namespace Academically.Sessions.Dto
         public string BaseDirectory { get; set; }
 
         public string ProfilePicturesFolderName { get; set; }
+
+        public string CoverPhotoFolderName { get; set; }
     }
 }

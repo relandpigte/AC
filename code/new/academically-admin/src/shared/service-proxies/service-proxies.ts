@@ -8999,6 +8999,63 @@ export class StudentCourseSectionsServiceProxy {
         }
         return _observableOf<StudentCourseSectionDto[]>(<any>null);
     }
+
+    /**
+     * @param id (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    updateStatus(id: string | undefined, body: StudentCourseSectionStatus | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/StudentCourseSections/UpdateStatus?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateStatus(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateStatus(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateStatus(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
 }
 
 @Injectable()
@@ -14148,6 +14205,7 @@ export class ApplicationInfoDto implements IApplicationInfoDto {
     features: { [key: string]: boolean; } | undefined;
     baseDirectory: string | undefined;
     profilePicturesFolderName: string | undefined;
+    coverPhotoFolderName: string | undefined;
 
     constructor(data?: IApplicationInfoDto) {
         if (data) {
@@ -14171,6 +14229,7 @@ export class ApplicationInfoDto implements IApplicationInfoDto {
             }
             this.baseDirectory = _data["baseDirectory"];
             this.profilePicturesFolderName = _data["profilePicturesFolderName"];
+            this.coverPhotoFolderName = _data["coverPhotoFolderName"];
         }
     }
 
@@ -14194,6 +14253,7 @@ export class ApplicationInfoDto implements IApplicationInfoDto {
         }
         data["baseDirectory"] = this.baseDirectory;
         data["profilePicturesFolderName"] = this.profilePicturesFolderName;
+        data["coverPhotoFolderName"] = this.coverPhotoFolderName;
         return data; 
     }
 
@@ -14211,6 +14271,7 @@ export interface IApplicationInfoDto {
     features: { [key: string]: boolean; } | undefined;
     baseDirectory: string | undefined;
     profilePicturesFolderName: string | undefined;
+    coverPhotoFolderName: string | undefined;
 }
 
 export class Assembly implements IAssembly {
@@ -21366,6 +21427,7 @@ export class StudentCourseDto implements IStudentCourseDto {
     id: string;
     courseId: string;
     course: CourseDto;
+    studentCourseSections: StudentCourseSectionDto[] | undefined;
 
     constructor(data?: IStudentCourseDto) {
         if (data) {
@@ -21381,6 +21443,11 @@ export class StudentCourseDto implements IStudentCourseDto {
             this.id = _data["id"];
             this.courseId = _data["courseId"];
             this.course = _data["course"] ? CourseDto.fromJS(_data["course"]) : <any>undefined;
+            if (Array.isArray(_data["studentCourseSections"])) {
+                this.studentCourseSections = [] as any;
+                for (let item of _data["studentCourseSections"])
+                    this.studentCourseSections.push(StudentCourseSectionDto.fromJS(item));
+            }
         }
     }
 
@@ -21396,6 +21463,11 @@ export class StudentCourseDto implements IStudentCourseDto {
         data["id"] = this.id;
         data["courseId"] = this.courseId;
         data["course"] = this.course ? this.course.toJSON() : <any>undefined;
+        if (Array.isArray(this.studentCourseSections)) {
+            data["studentCourseSections"] = [];
+            for (let item of this.studentCourseSections)
+                data["studentCourseSections"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -21411,6 +21483,7 @@ export interface IStudentCourseDto {
     id: string;
     courseId: string;
     course: CourseDto;
+    studentCourseSections: StudentCourseSectionDto[] | undefined;
 }
 
 export class StudentCourseDtoPagedResultDto implements IStudentCourseDtoPagedResultDto {
@@ -23871,6 +23944,7 @@ export class UserDto implements IUserDto {
     stripeUserId: string | undefined;
     isPhoneNumberConfirmed: boolean;
     profilePictureDocument: DocumentDto;
+    coverPhotoDocument: DocumentDto;
     coverPhotoUrl: string | undefined;
     profilePictureUrl: string | undefined;
     introVideoUrl: string | undefined;
@@ -23914,6 +23988,7 @@ export class UserDto implements IUserDto {
             this.stripeUserId = _data["stripeUserId"];
             this.isPhoneNumberConfirmed = _data["isPhoneNumberConfirmed"];
             this.profilePictureDocument = _data["profilePictureDocument"] ? DocumentDto.fromJS(_data["profilePictureDocument"]) : <any>undefined;
+            this.coverPhotoDocument = _data["coverPhotoDocument"] ? DocumentDto.fromJS(_data["coverPhotoDocument"]) : <any>undefined;
             this.coverPhotoUrl = _data["coverPhotoUrl"];
             this.profilePictureUrl = _data["profilePictureUrl"];
             this.introVideoUrl = _data["introVideoUrl"];
@@ -23965,6 +24040,7 @@ export class UserDto implements IUserDto {
         data["stripeUserId"] = this.stripeUserId;
         data["isPhoneNumberConfirmed"] = this.isPhoneNumberConfirmed;
         data["profilePictureDocument"] = this.profilePictureDocument ? this.profilePictureDocument.toJSON() : <any>undefined;
+        data["coverPhotoDocument"] = this.coverPhotoDocument ? this.coverPhotoDocument.toJSON() : <any>undefined;
         data["coverPhotoUrl"] = this.coverPhotoUrl;
         data["profilePictureUrl"] = this.profilePictureUrl;
         data["introVideoUrl"] = this.introVideoUrl;
@@ -24016,6 +24092,7 @@ export interface IUserDto {
     stripeUserId: string | undefined;
     isPhoneNumberConfirmed: boolean;
     profilePictureDocument: DocumentDto;
+    coverPhotoDocument: DocumentDto;
     coverPhotoUrl: string | undefined;
     profilePictureUrl: string | undefined;
     introVideoUrl: string | undefined;

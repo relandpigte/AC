@@ -42,6 +42,7 @@ namespace Academically.Sessions
                     Features = new Dictionary<string, bool>(),
                     BaseDirectory = _documentsDomainService.GetBaseDirectory(),
                     ProfilePicturesFolderName = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_ProfilePictures),
+                    CoverPhotoFolderName = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_CoverPhotos),
                 }
             };
 

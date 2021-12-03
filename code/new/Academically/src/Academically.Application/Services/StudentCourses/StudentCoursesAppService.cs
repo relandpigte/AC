@@ -62,6 +62,8 @@ namespace Academically.Services.StudentCourses
         {
             return await _studentCoursesRepository.GetAll()
                 .Where(e => e.CreatorUserId == AbpSession.UserId.Value && e.CourseId == courseId)
+                .Include(e => e.StudentCourseSections)
+                    .ThenInclude(e => e.CourseSection)
                 .Select(e => ObjectMapper.Map<StudentCourseDto>(e))
                 .FirstOrDefaultAsync();
         }
@@ -69,20 +71,44 @@ namespace Academically.Services.StudentCourses
         public async Task Create(Guid courseId)
         {
             var courseSections = await _courseSectionsRepository.GetAll()
-                .Where(e => e.CourseId == courseId)
+                .Where(e => e.CourseId == courseId && e.ParentId == null)
+                .Include(e => e.Children)
+                    .ThenInclude(e => e.Children)
                 .ToListAsync();
 
             var studentCourse = new StudentCourse()
             {
                 CourseId = courseId,
             };
-            foreach (var courseSection in courseSections)
+            foreach (var moduleOrLessonSection in courseSections)
             {
                 studentCourse.StudentCourseSections.Add(new StudentCourseSection()
                 {
                     Status = StudentCourseSectionStatus.NotStarted,
-                    CourseSectionId = courseSection.Id,
+                    CourseSectionId = moduleOrLessonSection.Id,
                 });
+                if (moduleOrLessonSection.Children.Any())
+                {
+                    foreach (var unitOrLessonSection in moduleOrLessonSection.Children)
+                    {
+                        studentCourse.StudentCourseSections.Add(new StudentCourseSection()
+                        {
+                            Status = StudentCourseSectionStatus.NotStarted,
+                            CourseSectionId = unitOrLessonSection.Id,
+                        });
+                        if (unitOrLessonSection.Children.Any())
+                        {
+                            foreach (var lessonSection in unitOrLessonSection.Children)
+                            {
+                                studentCourse.StudentCourseSections.Add(new StudentCourseSection()
+                                {
+                                    Status = StudentCourseSectionStatus.NotStarted,
+                                    CourseSectionId = lessonSection.Id,
+                                });
+                            }
+                        }
+                    }
+                }
             }
             await _studentCoursesRepository.InsertAsync(studentCourse);
         }
