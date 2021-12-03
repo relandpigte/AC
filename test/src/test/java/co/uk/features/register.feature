@@ -17,7 +17,7 @@ Feature: Register
     When user enter username "automatedXXX" and password "Test@12345"
     Then user successfully login
 
-  @UI  @TestRails(14771) 
+  @UI  @TestRails(14771) @Parallel
   Scenario: C14771 - Verify registration with existing email
     Given User is in academically login page
     When user register a student

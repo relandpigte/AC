@@ -1,6 +1,6 @@
 Feature: Create new project
 
-  @UI @TestRails(14773)
+  @UI @TestRails(14773) @Parallel
   Scenario: C14773 - Verify service wizard page is displayed
     Given User is in academically login page
     When user login as "student"
@@ -8,7 +8,7 @@ Feature: Create new project
     When user create a new project
     Then user is in service wizard page
 
-  @UI @TestRails(14774)
+  @UI @TestRails(14774) @Parallel
   Scenario: C14774 - Verify that user can able to select a service
     Given User is in academically login page
     When user login as "student"
@@ -20,7 +20,7 @@ Feature: Create new project
     And user click continue to step2
     Then user is in step 2
 
-  @UI @TestRails(14775) 
+  @UI @TestRails(14775) @Parallel
   Scenario: C14775 - Verify user can able to select a level for the service
     Given User is in academically login page
     When user login as "student"
@@ -35,7 +35,7 @@ Feature: Create new project
     And user click continue to step 3
     Then user in in step 3
 
-  @UI @TestRails(14776)
+  @UI @TestRails(14776) @Parallel
   Scenario: C14776 - Verify the level options are displayed
     Given User is in academically login page
     When user login as "student"
@@ -53,7 +53,7 @@ Feature: Create new project
     And the "Post Graduate" level is displyed
     And the "Doctorate" level is displyed
 
-  @UI @TestRails(14788)
+  @UI @TestRails(14788) @Parallel
   Scenario: C14788 - Verify the service category options are displayed
     Given User is in academically login page
     When user login as "student"
@@ -72,7 +72,7 @@ Feature: Create new project
     And the service "Study Skills" is displayed
     And the service "Visa Application Consultancy" is displayed
 
-  @UI @TestRails(14778)
+  @UI @TestRails(14778) @Parallel
   Scenario: C14778 - Verify page 3 of the wizard be able to navigate and select a single service
     Given User is in academically login page
     When user login as "student"
@@ -90,7 +90,7 @@ Feature: Create new project
     And user click continue to step 4
     Then user is in step 4
 
-  @UI @TestRails(14790)
+  @UI @TestRails(14790) @Parallel
   Scenario: C14790 - Verify single field called Project Name is displayed
     Given User is in academically login page
     When user login as "student"

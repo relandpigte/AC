@@ -1,5 +1,6 @@
 Feature: Tutor calendar
-	@UI  @TestRails(14821)	
+
+  @UI @TestRails(14821) @Parallel
   Scenario: C14821	- Verify tutor viewing own calendar
     Given User is in academically login page
     When user login as "admin"
@@ -17,14 +18,15 @@ Feature: Tutor calendar
     Then user is in academically login page
     When user enter username "automated97XXX" and password "Test@12345"
     Then user successfully login
-		When user proceed to the calendar
-		Then user is on the tutor calendar
-	
-	@??
+    When user proceed to the calendar
+    Then user is on the tutor calendar
+
+  @??
   Scenario: C14726	- Verify blocking out dates and times - draft
-	@UI  @TestRails(14800)	
+
+  @UI @TestRails(14800) @Parallel
   Scenario: C14800	- Verify dropdown showing past sessions and upcoming sessions
-      Given User is in academically login page
+    Given User is in academically login page
     When user login as "admin"
     Then user successfully login
     When user proceed to manage user
@@ -40,13 +42,12 @@ Feature: Tutor calendar
     Then user is in academically login page
     When user enter username "automated98XXX" and password "Test@12345"
     Then user successfully login
-		When user proceed to the calendar
-		Then user is on the student calendar
-		When user click session dropdown on student calendar
-		Then "Past Sessions" and "Upcoming Sessions" are displayed
+    When user proceed to the calendar
+    Then user is on the student calendar
+    When user click session dropdown on student calendar
+    Then "Past Sessions" and "Upcoming Sessions" are displayed
 
   Scenario: C14801	- Verify that user should see a scroll-able list of past sessions
-  
 
   Scenario: C14802	- Verify that user should see a scroll-able list of upcoming sessions
 

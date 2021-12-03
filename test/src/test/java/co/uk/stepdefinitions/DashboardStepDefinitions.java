@@ -23,7 +23,7 @@ public class DashboardStepDefinitions {
 		DashboardStudentAndTutor.verifyDashBoardIsDisplayed();
 	}
 	
-	@Then("^overview, my project and usage tab are displayed$")
+	@Then("^overview, coaching and usage tab are displayed$")
 	public void verifyTabsForStudentAreDisplayed() {
 		DashboardStudentAndTutor.verifyMyProjectTabIsDisplayed();
 		DashboardStudentAndTutor.verifyOverviewTabIsDisplayed();

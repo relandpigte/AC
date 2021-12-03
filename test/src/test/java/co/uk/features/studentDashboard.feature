@@ -1,50 +1,50 @@
 Feature: Dashboard
 
-  @UI @TestRails(14484)
+  @UI @TestRails(14484) @Parallel
   Scenario: C14484 - Verify menu items on the dashboard as student
     Given User is in academically login page
     When user login as "student"
     Then user successfully login
-    And overview, my project and usage tab are displayed
+    And overview, coaching and usage tab are displayed
 
-  @UI @TestRails(14485)
+  @UI @TestRails(14485) @Parallel
   Scenario: C14485 - Verify create new project on the dashboard is displayed
     Given User is in academically login page
     When user login as "student"
     Then user successfully login
     And create new project is displayed on the dashboard
 
-  @UI @TestRails(14486)
+  @UI @TestRails(14486) @Parallel
   Scenario: C14486 - Verify recent project and activity are displayed as student
     Given User is in academically login page
     When user login as "student"
     Then user successfully login
-    And overview, my project and usage tab are displayed
+    And overview, coaching and usage tab are displayed
     When user navigate to overview tab
     Then user should see recent project and recent activity
 
-  @UI @TestRails(14487)
+  @UI @TestRails(14487) @Parallel
   Scenario: C14487 - Verify view all projects on the dashboard
     Given User is in academically login page
     When user login as "student"
     Then user successfully login
-    And overview, my project and usage tab are displayed
+    And overview, coaching and usage tab are displayed
     When user navigate to my projects tab
     Then user should see all projects
 
-  @UI @TestRails(14488)
+  @UI @TestRails(14488) @Parallel
   Scenario: C14488 - Verify usage information is displayed
     Given User is in academically login page
     When user login as "student"
     Then user successfully login
-    And overview, my project and usage tab are displayed
+    And overview, coaching and usage tab are displayed
     When user navigate to usage tab
     Then user is in usage information
     And user should see actual total hours
     And user should see all total projects
     And user should see overview graph
 
-  @UI @TestRails(14490)
+  @UI @TestRails(14490) @Parallel
   Scenario: C14490 - Verify user verification widget is displayed
     Given User is in academically login page
     When user login as "student"
@@ -52,7 +52,7 @@ Feature: Dashboard
     And verification widget is displayed on the dashboard
     And see a list of verification
 
-  @UI @TestRails(14491)
+  @UI @TestRails(14491) @Parallel
   Scenario: C14491- Verify account settings is displayed
     Given User is in academically login page
     When user login as "student"
@@ -66,7 +66,7 @@ Feature: Dashboard
   @??
   Scenario: C14620 - Verify the phone verification code with an invalid code
 
-  @UI @TestRails(14489)
+  @UI @TestRails(14489) @Parallel
   Scenario: C14489 - Verify user profile widget is displayed
     Given User is in academically login page
     When user login as "student"
@@ -74,7 +74,7 @@ Feature: Dashboard
     And user profile widget is displayed on the dashboard
     And "Student" type is displayed
 
-  @?? @Email
+  @?? @Email 
   Scenario: C14849 - Verify that the student can see the next 3 upcoming sessions
     Given User is in academically login page
     When user register a student
@@ -159,7 +159,7 @@ Feature: Dashboard
     Then the user is on the student calendar
     And the "Testing85XXX" session is displayed on the student calendar
 
-  @UI @TestRails(14851)
+  @UI @TestRails(14851) @Parallel
   Scenario: C14851 - Verify that the student sees the last 3 projects on the dashboard
     Given User is in academically login page
     When user login as "admin"
@@ -176,6 +176,7 @@ Feature: Dashboard
     When user logout in academically
     Then user is in academically login page
     When user enter username "automated91XXX" and password "Test@12345"
+  
     Then user successfully login
     When user create a new project
     Then user is in service wizard page
@@ -189,7 +190,13 @@ Feature: Dashboard
     When user select "Academic Tutoring"
     And user click continue to step 4
     Then user is in step 4
-    When user enter project name "Test Project 91XXX-1"
+        When user enter project details
+      | Project name       | Description | Academic level | Qualification | Methodology | Subject area | Subject keywords | Urgency level | Deadline        |
+      | Test Project 91XXX-3 | Lorem Ipsum | Graduate       | BA            | Coding      | Thesis       | Thesis           | High          | Except Weekends |
+    And user sets availability "Weekday Mornings"
+    And user save availability details
+    And  user will save the details to create a new project
+    When user proceed to the dashboard page
     Then user is in dashboard page
     When user create a new project
     Then user is in service wizard page
@@ -203,7 +210,13 @@ Feature: Dashboard
     When user select "Academic Tutoring"
     And user click continue to step 4
     Then user is in step 4
-    When user enter project name "Test Project 91XXX-2"
+      When user enter project details
+      | Project name       | Description | Academic level | Qualification | Methodology | Subject area | Subject keywords | Urgency level | Deadline        |
+      | Test Project 91XXX-2 | Lorem Ipsum | Graduate       | BA            | Coding      | Thesis       | Thesis           | High          | Except Weekends |
+    And user sets availability "Weekday Mornings"
+    And user save availability details
+    And  user will save the details to create a new project
+    When user proceed to the dashboard page
     Then user is in dashboard page
     When user create a new project
     Then user is in service wizard page
@@ -217,7 +230,13 @@ Feature: Dashboard
     When user select "Academic Tutoring"
     And user click continue to step 4
     Then user is in step 4
-    When user enter project name "Test Project 91XXX-3"
+    When user enter project details
+      | Project name       | Description | Academic level | Qualification | Methodology | Subject area | Subject keywords | Urgency level | Deadline        |
+      | Test Project 91XXX-3 | Lorem Ipsum | Graduate       | BA            | Coding      | Thesis       | Thesis           | High          | Except Weekends |
+    And user sets availability "Weekday Mornings"
+    And user save availability details
+    And  user will save the details to create a new project
+    When user proceed to the dashboard page
     Then user is in dashboard page
     When user create a new project
     Then user is in service wizard page
@@ -231,7 +250,13 @@ Feature: Dashboard
     When user select "Academic Tutoring"
     And user click continue to step 4
     Then user is in step 4
-    When user enter project name "Test Project 91XXX-4"
+    When user enter project details
+      | Project name       | Description | Academic level | Qualification | Methodology | Subject area | Subject keywords | Urgency level | Deadline        |
+      | Test Project 91XXX-4 | Lorem Ipsum | Graduate       | BA            | Coding      | Thesis       | Thesis           | High          | Except Weekends |
+    And user sets availability "Weekday Mornings"
+    And user save availability details
+    And  user will save the details to create a new project
+    When user proceed to the dashboard page
     Then user is in dashboard page
     And the last 3 projects are shown under recent projects
       | Project 1            | Project 2            | Project 3            |

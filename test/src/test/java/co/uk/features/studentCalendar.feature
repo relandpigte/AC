@@ -4,7 +4,7 @@ Feature: Student calendar
 
   Scenario: C14700	- Verify selecting a session from the tutors calendar
 
-	@UI  @TestRails(14727)
+  @UI @TestRails(14727) @Parallel
   Scenario: C14727	- Verify student viewing own calendar
     Given User is in academically login page
     When user login as "admin"
@@ -22,10 +22,10 @@ Feature: Student calendar
     Then user is in academically login page
     When user enter username "automated94XXX" and password "Test@12345"
     Then user successfully login
-		When user proceed to the calendar
-		Then user is on the student calendar
-		
-	@UI  @TestRails(14795)	
+    When user proceed to the calendar
+    Then user is on the student calendar
+
+  @UI @TestRails(14795) @Parallel
   Scenario: C14795	- Verify upcoming sessions is default
     Given User is in academically login page
     When user login as "admin"
@@ -43,10 +43,11 @@ Feature: Student calendar
     Then user is in academically login page
     When user enter username "automated95XXX" and password "Test@12345"
     Then user successfully login
-		When user proceed to the calendar
-		Then user is on the student calendar
-		And the default is "Upcoming Sessions" on student calendar
-	@UI  @TestRails(14796)	
+    When user proceed to the calendar
+    Then user is on the student calendar
+    And the default is "Upcoming Sessions" on student calendar
+
+  @UI @TestRails(14796) @Parallel
   Scenario: C14796	- Verify dropdown showing past sessions and upcoming sessions
     Given User is in academically login page
     When user login as "admin"
@@ -59,15 +60,14 @@ Feature: Student calendar
       | Automated96XXX | Test    | automated96XXX | Test@12345 | automated96XXX | Yes    | Yes    |
     And user select a "Student" role
     And user saving user details
-    Then sucessful message is displayed
-    When user logout in academically
+    And user logout in academically
     Then user is in academically login page
     When user enter username "automated96XXX" and password "Test@12345"
     Then user successfully login
-		When user proceed to the calendar
-		Then user is on the student calendar
-		When user click session dropdown on student calendar
-		Then "Past Sessions" and "Upcoming Sessions" are displayed
+    When user proceed to the calendar
+    Then user is on the student calendar
+    When user click session dropdown on student calendar
+    Then "Past Sessions" and "Upcoming Sessions" are displayed
 
   Scenario: C14797	- Verify that user should see a scroll-able list of past sessions
     Given User is in academically login page
@@ -84,10 +84,8 @@ Feature: Student calendar
     Then sucessful message is displayed
     When user logout in academically
     Then user is in academically login page
-    
     When user enter username "automated99XXX" and password "Test@12345"
     Then user successfully login
-
     When user create a new project
     Then user is in service wizard page
     When user click request support
@@ -102,14 +100,11 @@ Feature: Student calendar
     Then user is in step 4
     When user enter project name "Test Project 99XXX"
     Then user is in dashboard page
-    
-    
-		When user proceed to the calendar
-		Then user is on the student calendar
-		When user click session dropdown on student calendar
-		Then "Past Sessions" and "Upcoming Sessions" are displayed
-		
-		
+    When user proceed to the calendar
+    Then user is on the student calendar
+    When user click session dropdown on student calendar
+    Then "Past Sessions" and "Upcoming Sessions" are displayed
+
   Scenario: C14798	- Verify that user should see a scroll-able list of upcoming sessions
 
   Scenario: C14799	- Verify that the user can view the session details in the list
@@ -137,4 +132,3 @@ Feature: Student calendar
   Scenario: C14847	- Verify the current time indicator on the calendar
 
   Scenario: C15000	- Verify that the student can book additional items in the calendar
-  

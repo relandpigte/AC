@@ -1,6 +1,6 @@
 Feature: Student account settings
 
-  @UI @TestRails(14493)
+  @UI @TestRails(14493) @Parallel
   Scenario: C14493 - Verify editing general information
     Given User is in academically login page
     When user login as "admin"
@@ -31,7 +31,7 @@ Feature: Student account settings
       | First name | Last name | Date of birth | Dial code    | Phone number | Email | Timezone                                                     | Country        | Address 1     | Address 2       | City   | Zip code | Province |
       | Brown      | Dog       | 07/05/1986    | TestdialCode | Testnumber   | null  | (UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna | United Kingdom | Londonwriteup | 21 Hanover Road | London | NW10 3DR | Brent    |
 
-  @UI @TestRails(14494)
+  @UI @TestRails(14494) @Parallel
   Scenario: C14494 - Verify changing password using invalid current password
     Given User is in academically login page
     When user login as "admin"
@@ -58,7 +58,7 @@ Feature: Student account settings
     And user update the password
     Then existing password did not match the one on record message is displayed
 
-  @UI @TestRails(14495)
+  @UI @TestRails(14495) @Parallel
   Scenario: C14495 - Verify changing password
     Given User is in academically login page
     When user login as "admin"
@@ -95,7 +95,7 @@ Feature: Student account settings
 
   Scenario: C14498 - Verify enable two factor security using QR code
 
-  @UI @TestRails(14852)
+  @UI @TestRails(14852) @Parallel
   Scenario: C14852 - Verify that the user can delete his / her own account
     Given User is in academically login page
     When user login as "admin"

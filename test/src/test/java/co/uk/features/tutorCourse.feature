@@ -1,6 +1,6 @@
 Feature: Tutor course
 
-  @UI @TestRails(C15195)
+  @UI @TestRails(C15195) @Parallel
   Scenario: C15195	Verify that tutor can see the list of courses
     Given User is in academically login page
     When user login as "admin"
@@ -34,7 +34,7 @@ Feature: Tutor course
     Then user should see "automated100-1XXX" course
     Then user should see "automated100-2XXX" course
 
-  @UI @TestRails(15198)
+  @UI @TestRails(15198) @Parallel
   Scenario: C15198	Verify that tutor can create a course
     Given User is in academically login page
     When user login as "admin"
@@ -58,7 +58,7 @@ Feature: Tutor course
       | Blank    | automated101XXX |
     Then user is in the course details
 
-  @UI @TestRails(15199)
+  @UI @TestRails(15199) @Parallel
   Scenario: C15199	Verify that tutor is able to add course details
     Given User is in academically login page
     When user login as "admin"
@@ -93,7 +93,7 @@ Feature: Tutor course
       | Name              | Subtitle | Description | Categories | Course image | Pricing | Language |
       | automated102XXX-1 | Testing  | Lorem ipsum | null       | null         | null    | null     |
 
-  @UI @TestRails(15193)
+  @UI @TestRails(15193) @Parallel
   Scenario: C15193	Verify that tutor can upload an image for the main thumbnail of his or her course
     Given User is in academically login page
     When user login as "admin"
@@ -129,7 +129,7 @@ Feature: Tutor course
       | Name            | Subtitle | Description | Categories | Course image | Pricing | Currency | Language |
       | automated103XXX | Testing  | Lorem ipsum | null       | Sample1.jpg  | null    | null     | null     |
 
-  @UI @TestRails(15194)
+  @UI @TestRails(15194) @Parallel
   Scenario: C15194	Verify that tutor can set the course price
     Given User is in academically login page
     When user login as "admin"
@@ -164,7 +164,7 @@ Feature: Tutor course
       | Name            | Subtitle | Description | Categories | Course image | Pricing | Currency | Language |
       | automated104XXX | Testing  | Lorem ipsum | null       | null         |      50 | USD      | null     |
 
-  @UI @TestRails(15197)
+  @UI @TestRails(15197) @Parallel
   Scenario: C15197	Verify that tutor can add a language of the course
     Given User is in academically login page
     When user login as "admin"
@@ -199,7 +199,7 @@ Feature: Tutor course
       | Name            | Subtitle | Description | Categories | Course image | Pricing | Currency | Language |
       | automated105XXX | Testing  | Lorem ipsum | null       | null         | null    | null     | English  |
 
-  @UI @TestRails(15200)
+  @UI @TestRails(15200) @Parallel
   Scenario: C15200	Verify that tutor should see a category in detail for the course
     Given User is in academically login page
     When user login as "admin"
@@ -224,7 +224,7 @@ Feature: Tutor course
     Then user is in the course details
     And category field is displayed
 
-  @UI @TestRails(15201)
+  @UI @TestRails(15201) @Parallel
   Scenario: C15201	Verify that tutor can change the course type
     Given User is in academically login page
     When user login as "admin"
@@ -252,7 +252,7 @@ Feature: Tutor course
     And user save the course settings
     Then sucessful message is displayed
 
-  @UI @TestRails(15202)
+  @UI @TestRails(15202) @Parallel
   Scenario: C15202	Verify that tutor should see course progress in course settings
     Given User is in academically login page
     When user login as "admin"
@@ -278,7 +278,7 @@ Feature: Tutor course
     When user proceed to the course settings tab
     Then course progress section is displayed
 
-  @UI @TestRails(15203)
+  @UI @TestRails(15203) @Parallel
   Scenario: C15203	Verify that tutor should see comments section in course settings
     Given User is in academically login page
     When user login as "admin"
@@ -304,7 +304,7 @@ Feature: Tutor course
     When user proceed to the course settings tab
     Then comment section is displayed
 
-  @UI @TestRails(15204)
+  @UI @TestRails(15204) @Parallel
   Scenario: C15204	Verify that tutor should see custom url section in course settings
     Given User is in academically login page
     When user login as "admin"
@@ -330,7 +330,7 @@ Feature: Tutor course
     When user proceed to the course settings tab
     Then custom url section is displayed
 
-  @UI @TestRails(15205)
+  @UI @TestRails(15205) @Parallel
   Scenario: C15205	Verify that tutor should see autoplay section in course settings
     Given User is in academically login page
     When user login as "admin"
@@ -356,7 +356,7 @@ Feature: Tutor course
     When user proceed to the course settings tab
     Then autoplay section is displayed
 
-  @UI @TestRails(15212)
+  @UI @TestRails(15212) @Parallel
   Scenario: C15212	Verify that tutor should see course visibility section in course settings -draft
     Given User is in academically login page
     When user login as "admin"
@@ -382,7 +382,7 @@ Feature: Tutor course
     When user proceed to the course settings tab
     Then course visibility section is displayed
 
-  @UI @TestRails(15214)
+  @UI @TestRails(15214) @Parallel
   Scenario: C15214	Verify that tutor can create the first module
     Given User is in academically login page
     When user login as "admin"
@@ -411,7 +411,7 @@ Feature: Tutor course
     When user create a first module
     Then module name "Module 1" is displayed in curriculum tab
 
-  @UI @TestRails(15213)
+  @UI @TestRails(15213) @Parallel
   Scenario: C15213	Verify that tutor can create the first lesson
     Given User is in academically login page
     When user login as "admin"
@@ -440,7 +440,7 @@ Feature: Tutor course
     When user create a first lesson
     Then lesson name "Lesson 1" is displayed in curriculum tab
 
-  @UI @TestRails(15217)
+  @UI @TestRails(15217) @Parallel
   Scenario: C15217	Verify that tutor should see the entire course on the curriculum tab -draft
     Given User is in academically login page
     When user login as "admin"
@@ -520,23 +520,22 @@ Feature: Tutor course
     Then created lesson "Lesson 2" within "Unit 1" is displayed
 
   ## Then module name "Module 1" is displayed in curriculum tab
-  
   @117
   Scenario: C15219	Verify that tutor should be able to delete the module, lesson and unit -draft
 
-	@118
+  @118
   Scenario: C15220	Verify that tutor should be able to edit the module, lesson and unit -draft
 
-	@119
+  @119
   Scenario: C15221	Verify that tutor should have the option to view the module, lesson and unit -draft
-	
-	@120
+
+  @120
   Scenario: C15222	Verify that tutor should proceed to the page builder if user click on/lesson/unit/module name -draft
 
-	@121
+  @121
   Scenario: C15223	Verify that tutor has the ability to add more sections to the course -draft
 
-	@UI @TestRails(15224)
+  @UI @TestRails(15224) @Parallel
   Scenario: C15224	Verify that tutor can add a lesson within the module -draft
     Given User is in academically login page
     When user login as "admin"
@@ -571,8 +570,8 @@ Feature: Tutor course
     Then user is in curriculum tab
     When user create a new lesson "Lesson 1" within "Module 1"
     Then created lesson "Lesson 1" within "Module 1" is displayed
-    
-       @UI @TestRails(15225)   
+
+  @UI @TestRails(15225) @Parallel
   Scenario: C15225	Verify that tutor can add a unit within the module -draft
     Given User is in academically login page
     When user login as "admin"
@@ -607,9 +606,9 @@ Feature: Tutor course
     Then user is in curriculum tab
     When user create a new unit "Unit 1" within "Module 1"
     Then created unit "Unit 1" within "Module 1" is displayed
-@UI @TestRails(15226)  
+
+  @UI @TestRails(15226) @Parallel
   Scenario: C15226	Verify that tutor can add a lesson within the unit -draft
-  
     Given User is in academically login page
     When user login as "admin"
     Then user successfully login
@@ -642,10 +641,10 @@ Feature: Tutor course
     When user proceed to the curriculum tab
     Then user is in curriculum tab
     When user create a new unit "Unit 1" within "Module 1"
-      And user proceed to the dashboard page
+    And user proceed to the dashboard page
     And user proceed to the course tab
     And user proceed to the course name "automated123XXX"
-   Then user is in the course details
+    Then user is in the course details
     When user proceed to the curriculum tab
     Then user is in curriculum tab
     And created unit "Unit 1" within "Module 1" is displayed

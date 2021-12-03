@@ -1,6 +1,6 @@
 Feature: Student project
 
-  @UI  @TestRails(14812)
+  @UI @TestRails(14812) @Parallel
   Scenario: C14812	Verify student can able to view project details
     Given User is in academically login page
     When user login as "admin"
@@ -39,7 +39,7 @@ Feature: Student project
     And user proceed to project "Test Project XXX"
     Then user is in proposal screen
 
-  @UI  @TestRails(14813)
+  @UI @TestRails(14813) @Parallel
   Scenario: C14813	Verify that student can able to view tutor offer
     Given User is in academically login page
     When user login as "admin"
@@ -69,12 +69,12 @@ Feature: Student project
     When user select "Academic Tutoring"
     And user click continue to step 4
     Then user is in step 4
-     When user enter project details
+    When user enter project details
       | Project name       | Description | Academic level | Qualification | Methodology | Subject area | Subject keywords | Urgency level | Deadline        |
       | Test Project 86XXX | Lorem Ipsum | Graduate       | BA            | Coding      | Thesis       | Thesis           | High          | Except Weekends |
     And user sets availability "Weekday Mornings"
     And user save availability details
-    And  user will save the details to create a new project
+    And user will save the details to create a new project
     Then user is in browse tutor tab
     When user proceed to the dashboard page
     Then user is in dashboard page
@@ -184,24 +184,24 @@ Feature: Student project
   #    When user proceed to the calendar
   #    Then the user is on the tutor calendar
   #    And the "Testing87XXX" session is displayed on the tutor calendar
-  @UI  @TestRails(14988)
+  @UI @TestRails(14988) @Parallel
   Scenario: C14988 Verify that student can delete a project
     Given User is in academically login page
-        When user login as "admin"
-        Then user successfully login
-        When user proceed to manage user
-        Then user is in manage user page
-        When user add a new user
-        And user enter a user details
-          | Name           | Surname | Username       | Password   | Email          | Active | Public |
-          | Automated92XXX | Test    | automated92XXX | Test@12345 | automated92XXX | Yes    | Yes    |
-        And user select a "Student" role
-        And user saving user details
-        Then sucessful message is displayed
-        When user logout in academically
-        Then user is in academically login page
+    When user login as "admin"
+    Then user successfully login
+    When user proceed to manage user
+    Then user is in manage user page
+    When user add a new user
+    And user enter a user details
+      | Name           | Surname | Username       | Password   | Email          | Active | Public |
+      | Automated92XXX | Test    | automated92XXX | Test@12345 | automated92XXX | Yes    | Yes    |
+    And user select a "Student" role
+    And user saving user details
+    Then sucessful message is displayed
+    When user logout in academically
+    Then user is in academically login page
     #When user enter username "automated92192229" and password "Test@12345"
-      When user enter username "automated92XXX" and password "Test@12345"
+    When user enter username "automated92XXX" and password "Test@12345"
     Then user successfully login
     When user create a new project
     Then user is in service wizard page
@@ -220,11 +220,11 @@ Feature: Student project
       | Test Project 92XXX | Lorem Ipsum | Graduate       | BA            | Coding      | Thesis       | Thesis           | High          | Except Weekends |
     And user sets availability "Weekday Mornings"
     And user save availability details
-  #  Then availability details are displayed correctly
-  #    | Monday              | Tuesday             | Wednesday           | Thursday            | Friday              | Saturday | Sunday |
-  #    | 06:00 | 06:00 AM - 11:00 AM | 06:00 AM - 11:00 AM | 06:00 AM - 11:00 AM | 06:00 AM - 11:00 AM | null     | null   |
+    #  Then availability details are displayed correctly
+    #    | Monday              | Tuesday             | Wednesday           | Thursday            | Friday              | Saturday | Sunday |
+    #    | 06:00 | 06:00 AM - 11:00 AM | 06:00 AM - 11:00 AM | 06:00 AM - 11:00 AM | 06:00 AM - 11:00 AM | null     | null   |
     # When user enter project name "Test Project 92XXX"
-   	And  user will save the details to create a new project
+    And user will save the details to create a new project
     Then user is in browse tutor tab
     When user proceed to the dashboard page
     And user navigate to my projects tab

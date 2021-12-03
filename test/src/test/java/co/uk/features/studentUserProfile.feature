@@ -650,7 +650,7 @@ Feature: Student user profile settings
     And "Conversational" "Greek" language is added
     And "Fluent" "Dutch" language is added
 
-  @UI  @TestRails(14777)
+  @UI  @TestRails(14777) @Parallel
   Scenario: C14777 - Verify the available tab in the profile settings as student
     Given User is in academically login page
     When user login as "student"
