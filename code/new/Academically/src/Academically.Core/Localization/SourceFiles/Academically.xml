@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="UploadedBy">Uploaded by</text>
+    <text name="UploadAssignment">Upload assignment</text>
+    <text name="AllowUpload">Allow upload</text>
+    <text name="Past">Past</text>
+    <text name="Current">Current</text>
+    <text name="Progress">Progress</text>
+    <text name="EnrolledOn">Enrolled on</text>
     <text name="ReactionRemoved">Reaction removed</text>
     <text name="SuccessfullyReacted">Successfully reacted</text>
     <text name="SuccessfullyPosted">Successfully posted</text>

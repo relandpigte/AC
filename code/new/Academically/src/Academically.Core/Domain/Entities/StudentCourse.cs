@@ -10,6 +10,7 @@ namespace Academically.Domain.Entities
     public class StudentCourse : CreationAuditedEntity<Guid>
     {
         public Guid CourseId { get; set; }
+        public decimal Progress { get; set; }
 
         [ForeignKey("CourseId")]
         public virtual Course Course { get; set; }

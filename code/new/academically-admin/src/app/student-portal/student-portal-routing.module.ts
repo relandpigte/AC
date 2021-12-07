@@ -56,6 +56,13 @@ import { DiscussionsComponent } from './_components/discussions/discussions.comp
                         (m) => m.MessagesModule,
                       ),
                   },
+                  {
+                    path: 'assignments',
+                    loadChildren: () =>
+                      import('@app/student-portal/assignments/assignments.module').then(
+                        (m) => m.AssignmentsModule,
+                      ),
+                  },
                 ]
               },
               {

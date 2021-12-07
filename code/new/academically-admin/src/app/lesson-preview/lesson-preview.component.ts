@@ -33,7 +33,6 @@ export class LessonPreviewComponent extends AppComponentBase implements OnInit {
   }
 
   @Input() set id(value: string) {
-    console.log(value);
     this.getPages(value);
   }
 

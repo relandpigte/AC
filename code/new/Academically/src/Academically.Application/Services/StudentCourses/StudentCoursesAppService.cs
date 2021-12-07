@@ -58,6 +58,29 @@ namespace Academically.Services.StudentCourses
             };
         }
 
+        public async Task<PagedResultDto<StudentCourseDto>> GetAllStudents(PagedCourseStudentResultRequestDto input)
+        {
+            var query = _studentCoursesRepository.GetAll()
+                .Where(e => e.CourseId == input.CourseIdFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.CreatorUser.Name.ToLower().Contains(input.SearchFilter.ToLower())
+                    || e.CreatorUser.Surname.ToLower().Contains(input.SearchFilter.ToLower())
+                    || e.Progress.ToString().ToLower().Contains(input.SearchFilter.ToLower()))
+                .WhereIf(input.MinimumProgressFilter.HasValue, e => e.Progress < input.MinimumProgressFilter.Value );
+            var totalCount = await query.CountAsync();
+            var courseStudents = await query.OrderBy(input.Sorting)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .PageBy(input)
+                .Select(e => ObjectMapper.Map<StudentCourseDto>(e))
+                .ToListAsync();
+
+            return new PagedResultDto<StudentCourseDto>()
+            {
+                TotalCount = totalCount,
+                Items = courseStudents,
+            };
+        }
+
         public async Task<StudentCourseDto> Get(Guid courseId)
         {
             return await _studentCoursesRepository.GetAll()

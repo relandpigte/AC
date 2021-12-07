@@ -9,6 +9,7 @@ namespace Academically.Services.StudentCourses
     public interface IStudentCoursesAppService : IApplicationService
     {
         Task<PagedResultDto<StudentCourseDto>> GetAll(PagedStudentCourseResultRequestDto input);
+        Task<PagedResultDto<StudentCourseDto>> GetAllStudents(PagedCourseStudentResultRequestDto input);
         Task<StudentCourseDto> Get(Guid courseId);
         Task Create(Guid courseId);
     }
