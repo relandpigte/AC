@@ -20,6 +20,7 @@ namespace Academically.Services.CourseSections.Dto
         public DateTime CreationTime { get; set; }
         public int MyProperty { get; set; }
         public bool IsVisible { get; set; }
+        public bool IsAssignmentEnabled { get; set; }
         public List<CourseSectionDto> Children { get; set; }
         public CourseDto Course { get; set; }
     }

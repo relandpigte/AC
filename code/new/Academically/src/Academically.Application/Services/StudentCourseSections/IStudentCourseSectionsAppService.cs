@@ -10,6 +10,7 @@ namespace Academically.Services.StudentCourseSections
     public interface IStudentCourseSectionsAppService : IApplicationService
     {
         Task<IEnumerable<StudentCourseSectionDto>> GetAll(Guid courseId);
+        Task<IEnumerable<StudentCourseSectionDto>> GetAssignmentsAllowed(Guid courseId);
         Task UpdateStatus(Guid id, StudentCourseSectionStatus status);
     }
 }

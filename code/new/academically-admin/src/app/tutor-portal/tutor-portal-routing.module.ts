@@ -25,6 +25,13 @@ import { TutorPortalComponent } from './tutor-portal.component';
                     (m) => m.OverviewModule,
                   ),
               },
+              {
+                path: 'students',
+                loadChildren: () =>
+                  import('@app/tutor-portal/students/students.module').then(
+                    (m) => m.StudentsModule,
+                  ),
+              },
               { path: '', redirectTo: 'overview' },
             ],
           },

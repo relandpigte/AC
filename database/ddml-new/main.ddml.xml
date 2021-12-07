@@ -87,5 +87,7 @@
 	<include file="ddml-new/ddml.2021-11-17-02-alter-courses-add-status-field.xml"/>
 	<include file="ddml-new/ddml.2021-11-29-01-create-courseconversations-table.xml"/>
 	<include file="ddml-new/ddml.2021-11-29-02-create-courseconversationreactions-table.xml"/>
+	<include file="ddml-new/ddml.2021-12-02-01-alter-studentcourses-add-progress-field.xml"/>
+	<include file="ddml-new/ddml.2021-12-03-01-create-courseassignments-table.xml"/>
 </databaseChangeLog>
 	

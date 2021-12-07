@@ -81,7 +81,7 @@ export class LayoutComponent extends AppComponentBase implements OnInit {
     const finishedCount = this.studentCourseSections.filter(e => e.status === StudentCourseSectionStatus.Finished).length;
     if (finishedCount > 0) {
       const totalCount = this.studentCourseSections.length;
-      percentage = Math.floor((finishedCount / totalCount) * 100);
+      percentage = Math.round((finishedCount / totalCount) * 100);
     }
     this._studentPortalService.percentage = percentage;
   }

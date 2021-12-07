@@ -3,11 +3,13 @@ import { CoursesServiceProxy, CourseDto } from '@shared/service-proxies/service-
 import { AppComponentBase } from '@shared/app-component-base';
 import { takeUntil } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
 
 @Component({
   selector: 'app-messages',
   templateUrl: './messages.component.html',
-  styleUrls: ['./messages.component.less']
+  styleUrls: ['./messages.component.less'],
+  animations: [appModuleAnimation()],
 })
 export class MessagesComponent extends AppComponentBase implements OnInit {
   courseId: string;

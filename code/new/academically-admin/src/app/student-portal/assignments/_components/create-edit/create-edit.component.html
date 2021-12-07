@@ -1,0 +1,23 @@
+<form class="form-horizontal" autocomplete="off" #createEditUserEducationForm="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <abp-modal-header [title]="'UploadAssignment' | localize" (onCloseClick)="onCloseClick()">
+    </abp-modal-header>
+    <div class="card-body">
+      <div class="form-group">
+        <select class="custom-select" select2 [defaultValue]="model.studentCourseSectionId"
+          (select2ValueChange)="model.studentCourseSectionId = $event" [(ngModel)]="model.studentCourseSectionId"
+          id="studentCourseSectionId" name="studentCourseSectionId" #studentCourseSectionIdModel="ngModel"
+          #studentCourseSectionIdEl>
+          <option *ngFor="let studentCourseSection of studentCourseSections" [value]="studentCourseSection.id">
+            {{ studentCourseSection.courseSection.name | localize }}
+          </option>
+        </select>
+      </div>
+      <app-document-uploader #documentUploader>
+      </app-document-uploader>
+    </div>
+    <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading" [saveDisabled]="isLoading"
+      (onCancelClick)="onCloseClick()">
+    </abp-modal-footer>
+  </div>
+</form>

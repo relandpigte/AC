@@ -67,42 +67,43 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
       this.notify.error(`You are allowed to upload only ${sFile} at a time.`);
     }
 
-    if (this.allowedExtensions.includes(`.${fileExtension}`)) {
-      if (this.cropImages && this._imageExtensions.includes(fileExtension)) {
-        this.loadingImageCropper = true;
-        const modalSettings = this.defaultModalSettings;
-        modalSettings.initialState = {
-          image: file,
-        };
-        const modal = this._modalService.show(ImageCropperComponent, modalSettings);
-        const imageCropper: ImageCropperComponent = modal.content;
-        imageCropper.aspectRatioWidth = this.cropperAspectRatioWidth;
-        imageCropper.aspectRationHeight = this.cropperAspectRationHeight;
-        imageCropper.maintainAspectRatio = this.cropperAspectRatioWidth > 1 || this.cropperAspectRationHeight > 1;
-        imageCropper.imageLoaded.subscribe(() => {
-          this.loadingImageCropper = false;
-        });
-        imageCropper.imageCropped.subscribe((croppedFile: File) => {
-          if (this.hasCategory) {
-            this.categories.push('');
-          }
-          if (this.validateFileSize(croppedFile.size)) {
-            this.files.push(croppedFile);
-            this.filesChanged.emit(this.getFileParameterFromFiles());
-          }
-          imageCropper.close();
-        });
-      } else {
+    if (this.allowedExtensions.length && !this.allowedExtensions.includes(`.${fileExtension}`)) {
+      this.notify.error(this.l('InvalidFileExtensionUploadError', fileExtension), this.l('InvalidFileUploadError'));
+      return;
+    }
+
+    if (this.cropImages && this._imageExtensions.includes(fileExtension)) {
+      this.loadingImageCropper = true;
+      const modalSettings = this.defaultModalSettings;
+      modalSettings.initialState = {
+        image: file,
+      };
+      const modal = this._modalService.show(ImageCropperComponent, modalSettings);
+      const imageCropper: ImageCropperComponent = modal.content;
+      imageCropper.aspectRatioWidth = this.cropperAspectRatioWidth;
+      imageCropper.aspectRationHeight = this.cropperAspectRationHeight;
+      imageCropper.maintainAspectRatio = this.cropperAspectRatioWidth > 1 || this.cropperAspectRationHeight > 1;
+      imageCropper.imageLoaded.subscribe(() => {
+        this.loadingImageCropper = false;
+      });
+      imageCropper.imageCropped.subscribe((croppedFile: File) => {
         if (this.hasCategory) {
           this.categories.push('');
         }
-        if (this.validateFileSize(file.size)) {
-          this.files.push(file);
+        if (this.validateFileSize(croppedFile.size)) {
+          this.files.push(croppedFile);
           this.filesChanged.emit(this.getFileParameterFromFiles());
         }
-      }
+        imageCropper.close();
+      });
     } else {
-      this.notify.error(this.l('InvalidFileExtensionUploadError', fileExtension), this.l('InvalidFileUploadError'));
+      if (this.hasCategory) {
+        this.categories.push('');
+      }
+      if (this.validateFileSize(file.size)) {
+        this.files.push(file);
+        this.filesChanged.emit(this.getFileParameterFromFiles());
+      }
     }
 
     this.documentUploaderInput.nativeElement.value = '';

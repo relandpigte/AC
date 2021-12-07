@@ -37,23 +37,25 @@ export class LearnComponent extends AppComponentBase implements OnInit {
   }
 
   onNextSection(): void {
-    if (this.currentSectionIndex < this.studentCourse.studentCourseSections.length - 1) {
+    if (this.currentSectionIndex <= this.studentCourse.studentCourseSections.length - 1) {
       const studentCourseSection = this.studentCourse.studentCourseSections[this.currentSectionIndex];
-      studentCourseSection.status = StudentCourseSectionStatus.Finished;
+      if (studentCourseSection) {
+        studentCourseSection.status = StudentCourseSectionStatus.Finished;
 
-      this._studentCourseSectionsService.updateStatus(
-        studentCourseSection.id,
-        StudentCourseSectionStatus.Finished
-      )
-        .pipe(
-          takeUntil(this.destroyed$),
+        this._studentCourseSectionsService.updateStatus(
+          studentCourseSection.id,
+          StudentCourseSectionStatus.Finished
         )
-        .subscribe(() => {
-          this._studentPortalService.sectionFinished = studentCourseSection.id;
-        });
+          .pipe(
+            takeUntil(this.destroyed$),
+          )
+          .subscribe(() => {
+            this._studentPortalService.sectionFinished = studentCourseSection.id;
+          });
 
-      this.currentSectionIndex++;
-      this.updateCurrentCourseSection();
+        this.currentSectionIndex++;
+        this.updateCurrentCourseSection();
+      }
     }
   }
 
@@ -71,7 +73,10 @@ export class LearnComponent extends AppComponentBase implements OnInit {
   }
 
   private updateCurrentCourseSection(): void {
-    this.currentCourseSectionId = this.studentCourse.studentCourseSections[this.currentSectionIndex].courseSectionId;
-    this.studentCourse.studentCourseSections[this.currentSectionIndex].status = StudentCourseSectionStatus.InProgress;
+    const studentCourseSection = this.studentCourse.studentCourseSections[this.currentSectionIndex];
+    if (studentCourseSection) {
+      this.currentCourseSectionId = studentCourseSection.courseSectionId;
+      studentCourseSection.status = StudentCourseSectionStatus.InProgress;
+    }
   }
 }

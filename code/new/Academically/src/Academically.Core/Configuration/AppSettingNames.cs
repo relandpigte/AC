@@ -19,6 +19,7 @@
         public const string Aws_S3_Folders_Conversations = "Aws.S3.Folders.Conversations";
         public const string Aws_S3_Folders_CourseImages = "Aws.S3.Folders.CourseImages";
         public const string Aws_S3_Folders_CourseSectionPage = "Aws.S3.Folders.CourseSectionPage";
+        public const string Aws_S3_Folders_CourseAssignments = "Aws.S3.Folders.CourseAssignments";
         public const string ITagg_Sms_Username = "ITagg.Sms.Username";
         public const string ITagg_Sms_Password = "ITagg.Sms.Password";
         public const string Email_FromName = "Email.FromName";

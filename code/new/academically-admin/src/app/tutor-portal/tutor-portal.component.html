@@ -22,27 +22,27 @@
         <ul class="navbar-nav list-group">
           <li class="nav-item list-group-item">
             <a [routerLink]="['overview']" routerLinkActive="active" class="nav-link" role="button">
-              Overview
+              {{ 'Overview' | localize }}
+            </a>
+          </li>
+          <li class="nav-item list-group-item">
+            <a [routerLink]="['students']" routerLinkActive="active" class="nav-link" role="button">
+              {{ 'Students' | localize }}
             </a>
           </li>
           <li class="nav-item list-group-item">
             <a class="nav-link" role="button">
-              Students
+              {{ 'Messages' | localize }}
             </a>
           </li>
           <li class="nav-item list-group-item">
             <a class="nav-link" role="button">
-              Messages
+              {{ 'Assignments' | localize }}
             </a>
           </li>
           <li class="nav-item list-group-item">
             <a class="nav-link" role="button">
-              Assignments
-            </a>
-          </li>
-          <li class="nav-item list-group-item">
-            <a class="nav-link" role="button">
-              Reviews
+              {{ 'Reviews' | localize }}
             </a>
           </li>
         </ul>
