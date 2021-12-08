@@ -10,7 +10,8 @@ namespace Academically.Services.StudentCourses
     {
         Task<PagedResultDto<StudentCourseDto>> GetAll(PagedStudentCourseResultRequestDto input);
         Task<PagedResultDto<StudentCourseDto>> GetAllStudents(PagedCourseStudentResultRequestDto input);
-        Task<StudentCourseDto> Get(Guid courseId);
+        Task<StudentCourseDto> Get(Guid id);
+        Task<StudentCourseDto> GetByCourse(Guid courseId);
         Task Create(Guid courseId);
     }
 }

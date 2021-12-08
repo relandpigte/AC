@@ -116,7 +116,7 @@ export class DiscussionsComponent extends AppComponentBase implements OnInit {
   }
 
   private getStudentCourse(): void {
-    this._studentCoursesService.get(this.courseId)
+    this._studentCoursesService.getByCourse(this.courseId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(studentCourse => {
         this.studentCourseId = studentCourse.id;

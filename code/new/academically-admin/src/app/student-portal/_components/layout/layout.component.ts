@@ -66,7 +66,7 @@ export class LayoutComponent extends AppComponentBase implements OnInit {
 
 
   private getStudentCourseSections(): void {
-    this._studentCoursesService.get(this.courseId)
+    this._studentCoursesService.getByCourse(this.courseId)
       .pipe(
         takeUntil(this.destroyed$),
       )

@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="DateUploaded">Date uploaded</text>
+    <text name="CourseProgress">Course progress</text>
+    <text name="Enrolled">Enrolled</text>
     <text name="UploadedBy">Uploaded by</text>
     <text name="UploadAssignment">Upload assignment</text>
     <text name="AllowUpload">Allow upload</text>

@@ -8,6 +8,7 @@ export class Select2Directive implements AfterViewInit {
   @Input() select2options: Options = {};
   @Input() placeholder = 'Select an item';
   @Input() hideSearchBox = false;
+  @Input() bodyContainer = false;
   @Output() select2ValueChange: EventEmitter<any> = new EventEmitter();
 
   private _el: any;
@@ -36,7 +37,11 @@ export class Select2Directive implements AfterViewInit {
     this.select2options.containerCssClass = el.getAttribute('class');
     this.select2options.dropdownAutoWidth = !0;
     this.select2options.dropdownCssClass = el.classList.contains('custom-select-sm') || el.classList.contains('form-control-sm') ? 'dropdown-menu dropdown-menu-sm show' : 'dropdown-menu show';
-    this.select2options.dropdownParent = el.closest('.card-body') || document.body;
+    if (self.bodyContainer) {
+      this.select2options.dropdownParent = $(document.body);
+    } else {
+      this.select2options.dropdownParent = el.closest('.card-body') || document.body;
+    }
     this.select2options.placeholder = this.placeholder;
     self._select2 = $(this._el).select2(self.select2options);
     $(this._el).on('select2:select', function (e) {

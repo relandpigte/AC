@@ -1,25 +1,31 @@
 import { Component, OnInit, Injector } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
-  CoursesServiceProxy,
-  CourseDto,
+  StudentCourseDto,
+  StudentCoursesServiceProxy,
+  UserDto,
   CourseAssignmentDto,
   CourseAssignmentsServiceProxy,
   CourseAssignmentDtoPagedResultDto,
-  DocumentsServiceProxy,
   DocumentDto,
+  DocumentsServiceProxy,
+  StudentCourseSectionDto,
+  StudentCourseSectionsServiceProxy,
   CourseSectionType,
 } from '@shared/service-proxies/service-proxies';
-import { takeUntil, finalize } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+import { takeUntil, finalize, filter } from 'rxjs/operators';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { PagedListingComponentBase, PagedAndSortedRequestDto } from '@shared/paged-listing-component-base';
-import { ModalOptions, BsModalService } from 'ngx-bootstrap/modal';
-import { CreateEditComponent } from './_components/create-edit/create-edit.component';
 import * as FileSaver from 'file-saver';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { Moment } from 'moment';
+import * as moment from 'moment';
 
 class PagedAssignmentRequestDto extends PagedAndSortedRequestDto {
+  studentCourseIdFilter: string;
   searchFilter: string;
-  courseIdFilter: string;
+  courseSectionIdFilter: string;
+  creationTimeFilter: Moment;
 }
 
 @Component({
@@ -29,38 +35,48 @@ class PagedAssignmentRequestDto extends PagedAndSortedRequestDto {
   animations: [appModuleAnimation()],
 })
 export class AssignmentsComponent extends PagedListingComponentBase<CourseAssignmentDto> implements OnInit {
-  courseId: string;
+  id: string;
   searchFilter: string;
+  courseSectionIdFilter: string;
+  creationTimeFilter: Date;
   assignments: CourseAssignmentDto[] = [];
+  studentCourseSections: StudentCourseSectionDto[] = [];
+  datePickerConfig: BsDatepickerConfig;
 
-  course = new CourseDto();
+  model = new StudentCourseDto();
   CourseSectionType = CourseSectionType;
 
   constructor(
     injector: Injector,
     private _route: ActivatedRoute,
-    private _modalService: BsModalService,
-    private _coursesService: CoursesServiceProxy,
+    private _studentCoursesService: StudentCoursesServiceProxy,
     private _courseAssignmentsService: CourseAssignmentsServiceProxy,
     private _documentsService: DocumentsServiceProxy,
+    private _studentCourseSectionsService: StudentCourseSectionsServiceProxy,
   ) {
     super(injector);
+    this.model.creatorUser = new UserDto();
     this.sorting = 'creationTime desc';
+    this.datePickerConfig = new BsDatepickerConfig();
+    this.datePickerConfig.showWeekNumbers = false;
+    this.datePickerConfig.dateInputFormat = 'DD/MM/YYYY';
     this._route.parent.parent.parent.paramMap.subscribe(paramMap => {
-      this.courseId = paramMap.get('course-id');
-      this.getCourse();
+      if (paramMap.has('id')) {
+        this.id = paramMap.get('id');
+        this.getStudentCourse();
+      }
     });
   }
 
-  onUploadClick(): void {
-    const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditComponent>;
-    modalSettings.initialState = {
-      courseId: this.courseId,
-    };
-    const modal = this._modalService.show(CreateEditComponent, modalSettings).content;
-    modal.modalSaved.subscribe(() => {
-      this.refresh();
-    });
+  get minimumProgressFilter(): number {
+    let filterCount = 0;
+    if (this.courseSectionIdFilter) {
+      filterCount++;
+    }
+    if (this.creationTimeFilter) {
+      filterCount++;
+    }
+    return filterCount;
   }
 
   formatBytes(bytes: number, decimals = 2): string {
@@ -92,8 +108,15 @@ export class AssignmentsComponent extends PagedListingComponentBase<CourseAssign
         takeUntil(this.destroyed$),
       )
       .subscribe(url => {
-        FileSaver.saveAs(url, document.name);
+        FileSaver.saveAs(url, document.originalFileName);
       });
+  }
+
+  onClearFiltersClick(): void {
+    this.searchFilter = '';
+    this.courseSectionIdFilter = undefined;
+    this.creationTimeFilter = undefined;
+    this.getDataPage(1);
   }
 
   protected list(
@@ -101,13 +124,19 @@ export class AssignmentsComponent extends PagedListingComponentBase<CourseAssign
     pageNumber: number,
     finishedCallback: Function,
   ): void {
-    request.courseIdFilter = this.courseId;
+    request.studentCourseIdFilter = this.id;
     request.searchFilter = this.searchFilter;
+    request.courseSectionIdFilter = this.courseSectionIdFilter;
+    if (this.creationTimeFilter) {
+      request.creationTimeFilter = moment(this.creationTimeFilter);
+    }
 
     this._courseAssignmentsService
-      .getAllByCourse(
+      .getAll(
+        request.studentCourseIdFilter,
         request.searchFilter,
-        request.courseIdFilter,
+        request.courseSectionIdFilter,
+        request.creationTimeFilter,
         request.sort,
         request.skipCount,
         request.maxResultCount
@@ -123,13 +152,22 @@ export class AssignmentsComponent extends PagedListingComponentBase<CourseAssign
       });
   }
 
-  private getCourse(): void {
-    this._coursesService.get(this.courseId)
+  private getStudentCourse(): void {
+    this._studentCoursesService.get(this.id)
       .pipe(
         takeUntil(this.destroyed$),
       )
-      .subscribe(course => {
-        this.course = course;
+      .subscribe(response => {
+        this.model = response;
+        this.getCourseSections();
+      });
+  }
+
+  private getCourseSections(): void {
+    this._studentCourseSectionsService.getAssignmentsAllowed(this.model.courseId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(responses => {
+        this.studentCourseSections = responses;
       });
   }
 }
