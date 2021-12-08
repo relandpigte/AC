@@ -81,7 +81,48 @@ namespace Academically.Services.StudentCourses
             };
         }
 
-        public async Task<StudentCourseDto> Get(Guid courseId)
+        public async Task<StudentCourseDto> Get(Guid id)
+        {
+            return await _studentCoursesRepository.GetAll()
+                .Where(e => e.Id == id)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.Course)
+                .Select(e => ObjectMapper.Map<StudentCourseDto>(e))
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<StudentCourseDto> GetWithSections(Guid id)
+        {
+            var studentCourse = await _studentCoursesRepository.GetAll()
+                .Where(e => e.Id == id)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.CoverPhotoDocument)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.UserEducations)
+                        .ThenInclude(e => e.University)
+                .Include(e => e.Course)
+                .Include(e => e.StudentCourseSections)
+                    .ThenInclude(e => e.CourseSection)
+                .FirstOrDefaultAsync();
+
+            var output = ObjectMapper.Map<StudentCourseDto>(studentCourse);
+
+            if (studentCourse.CreatorUser.UserEducations != null && studentCourse.CreatorUser.UserEducations.Count > 0)
+            {
+                output.CreatorUser.CurrentUniversity = studentCourse.CreatorUser.UserEducations
+                    .OrderByDescending(e => e.EndYear)
+                        .ThenByDescending(e => e.StartYear)
+                   .FirstOrDefault()
+                   .University.HeProvider;
+            }
+
+            return output;
+        }
+
+        public async Task<StudentCourseDto> GetByCourse(Guid courseId)
         {
             return await _studentCoursesRepository.GetAll()
                 .Where(e => e.CreatorUserId == AbpSession.UserId.Value && e.CourseId == courseId)

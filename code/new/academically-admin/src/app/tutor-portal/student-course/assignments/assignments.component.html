@@ -6,7 +6,7 @@
         <div class="header-body">
           <div class="row align-items-center">
             <div class="col">
-              <h6 class="header-pretitle">{{ course.name }}</h6>
+              <h6 class="header-pretitle">{{ model.creatorUser.fullName }}</h6>
               <h1 class="header-title">{{ 'Assignments' | localize }}</h1>
             </div>
           </div>
@@ -41,7 +41,72 @@
               </form>
             </div>
             <div class="col-auto">
-              <button (click)="onUploadClick()" class="btn btn-sm btn-primary">{{ 'Upload' | localize }}</button>
+              <div class="dropdown" dropdown #filterDropdown="bs-dropdown" [isAnimated]="true" [autoClose]="false">
+                <button class="btn btn-sm btn-white" type="button" dropdownToggle>
+                  <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }}
+                  <span *ngIf="minimumProgressFilter" class="badge badge-primary ml-1">
+                    {{ minimumProgressFilter }}
+                  </span>
+                </button>
+                <form *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-card"
+                  (ngSubmit)="getDataPage(1)">
+                  <div class="card-header">
+                    <h4 class="card-header-title">{{ 'Filters' | localize }}</h4>
+                    <button class="btn btn-sm btn-link text-reset btn-white" type="submit"
+                      (click)="filterDropdown.hide(); onClearFiltersClick()">
+                      <small>{{ 'ClearFilters' | localize }}</small>
+                    </button>
+                  </div>
+                  <div class="card-body">
+                    <div class="list-group list-group-flush mt-n4 mb-4">
+                      <div class="list-group-item">
+                        <div class="row">
+                          <div class="col-auto d-flex align-items-center">
+                            <small>{{ 'Section' | localize }}:</small>
+                          </div>
+                          <div class="col">
+                            <select class="custom-select" select2 [defaultValue]="courseSectionIdFilter"
+                              (select2ValueChange)="courseSectionIdFilter = $event" [bodyContainer]="true"
+                              [(ngModel)]="courseSectionIdFilter" id="studentCourseSectionId"
+                              name="studentCourseSectionId" #studentCourseSectionIdModel="ngModel"
+                              #studentCourseSectionIdEl>
+                              <option *ngFor="let studentCourseSection of studentCourseSections"
+                                [value]="studentCourseSection.courseSection.id">
+                                {{ studentCourseSection.courseSection.name | localize }}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="list-group list-group-flush mt-n4 mb-4">
+                      <div class="list-group-item">
+                        <div class="row">
+                          <div class="col-auto d-flex align-items-center">
+                            <small>{{ 'DateUploaded' | localize }}:</small>
+                          </div>
+                          <div class="col">
+                            <div class="input-group input-group-merge" (click)="dp.show()">
+                              <input [(ngModel)]="creationTimeFilter" class="form-control form-control-appended"
+                                type="text" id="creationTimeFilter" name="creationTimeFilter" required
+                                #dp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" />
+                              <div class="input-group-append">
+                                <div class="input-group-text">
+                                  <span class="fas fa-calendar"></span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <button class="btn btn-block btn-primary" type="submit" (click)="filterDropdown.hide()">
+                      {{ 'ApplyFilter' | localize }}
+                    </button>
+                  </div>
+                  &nbsp;
+                </form>
+              </div>
             </div>
           </div>
         </div>
@@ -98,6 +163,7 @@
           <abp-pagination-controls id="assignments" (pageChange)="getDataPage($event)"> </abp-pagination-controls>
         </div>
       </div>
+
     </div>
 
   </div>

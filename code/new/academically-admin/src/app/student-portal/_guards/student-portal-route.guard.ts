@@ -17,7 +17,7 @@ export class StudentPortalRouteGuard implements CanActivate, CanActivateChild {
     abp.ui.setBusy();
     return new Promise((resolve) => {
       const courseId: string = route.params['course-id'];
-      this._studentCoursesService.get(courseId)
+      this._studentCoursesService.getByCourse(courseId)
         .subscribe(studentCourse => {
           if (state.url.includes('landing-page')) {
             abp.ui.clearBusy();

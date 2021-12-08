@@ -5,8 +5,10 @@ namespace Academically.Services.CourseAssignments.Dto
 {
     public class PagedCourseAssignmentResultRequestDto : PagedAndSortedResultRequestDto
     {
+        public Guid StudentCourseIdFilter { get; set; }
         public string SearchFilter { get; set; }
-        public Guid CourseIdFilter { get; set; }
+        public Guid? CourseSectionIdFilter { get; set; }
+        public DateTime? CreationTimeFilter { get; set; }
     }
 }
 

@@ -35,6 +35,13 @@ import { TutorPortalComponent } from './tutor-portal.component';
               { path: '', redirectTo: 'overview' },
             ],
           },
+          {
+            path: 'student-course',
+            loadChildren: () =>
+              import('@app/tutor-portal/student-course/student-course.module').then(
+                (m) => m.StudentCourseModule,
+              ),
+          },
         ],
       }
     ]),

@@ -15,6 +15,7 @@ namespace Academically.Services.CourseAssignments.Dto
     {
         public Guid StudentCourseSectionId { get; set; }
         public Guid DocumentId { get; set; }
+        public DateTime CreationTime { get; set; }
 
         public StudentCourseSectionDto StudentCourseSection { get; set; }
         public DocumentDto Document { get; set; }

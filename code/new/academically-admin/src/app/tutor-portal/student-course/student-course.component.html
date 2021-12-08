@@ -1,0 +1,63 @@
+<div [@routerTransition] class="h-100">
+  <div class="portal-sidebar navbar-light navbar-vertical">
+    <div class="portal-sidebar-container">
+      <a class="portal-sidebar-top navbar-brand" href="javascript:;">
+        <div class="d-flex" *ngIf="model.creatorUser">
+          <div class="avatar avatar-lg">
+            <img [src]="getProfilePictureFromDocument(model.creatorUser.profilePictureDocument, model.creatorUser.id)"
+              alt="..." class="avatar-img rounded-circle">
+          </div>
+          <div class="portal-sidebar-header" *ngIf="model.creatorUser">
+            <h6 class="header-pretitle">{{ model.course.name }}</h6>
+            <h3 class="header-title">{{ model.creatorUser.fullName }}</h3>
+          </div>
+        </div>
+        <div class="d-flex align-items-center mt-3">
+          <div class="col-auto p-0">
+            <p class="small mb-0 mr-2">{{ model.progress | number: '1.0-0' }}%</p>
+          </div>
+          <div class="col p-0">
+            <div class="progress progress-sm">
+              <div class="progress-bar" role="progressbar" [ngStyle]="{ width: model.progress + '%' }"></div>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <div class="portal-sidebar-content">
+        <div class="d-flex flex-column h-100">
+          <ul class="navbar-nav list-group">
+            <li class="nav-item list-group-item">
+              <a [routerLink]="['progress']" routerLinkActive="active" class="nav-link" role="button">
+                {{ 'Progress' | localize }}
+              </a>
+            </li>
+            <li class="nav-item list-group-item">
+              <a [routerLink]="['messages']" routerLinkActive="active" class="nav-link" role="button">
+                {{ 'Messages' | localize }}
+              </a>
+            </li>
+            <li class="nav-item list-group-item">
+              <a [routerLink]="['assignments']" routerLinkActive="active" class="nav-link" role="button">
+                {{ 'Assignments' | localize }}
+              </a>
+            </li>
+          </ul>
+
+          <div class="mt-auto"></div>
+
+          <div class="d-flex justify-content-between align-items-center mt-5 pb-2">
+            <a [routerLink]="['../../students']">
+              <i class="fe fe-arrow-left"></i> {{ 'Back' |localize }}
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content h-100">
+    <router-outlet></router-outlet>
+  </div>
+</div>

@@ -30,15 +30,41 @@ namespace Academically.Services.CourseAssignments
             _documentsDomainService = documentsDomainService;
         }
 
-        public async Task<PagedResultDto<CourseAssignmentDto>> GetAll(PagedCourseAssignmentResultRequestDto input)
+        public async Task<PagedResultDto<CourseAssignmentDto>> GetAllByCourse(PagedByCourseAssignmentResultRequestDto input)
         {
             var query = _courseAssignmentsRepository.GetAll()
-                .Where(e => e.StudentCourseSection.StudentCourse.CourseId == input.CourseIdFilter)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.Document.Name.ToLower().Contains(input.SearchFilter.ToLower()));
+                .Where(e => e.StudentCourseSection.StudentCourse.CourseId == input.CourseIdFilter && e.CreatorUserId == AbpSession.UserId.Value)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.Document.OriginalFileName.ToLower().Contains(input.SearchFilter.ToLower()));
             var totalCount = await query.CountAsync();
             var courseStudents = await query.OrderBy(input.Sorting)
                 .Include(e => e.Document)
                 .Include(e => e.CreatorUser)
+                .Include(e => e.StudentCourseSection)
+                    .ThenInclude(e => e.CourseSection)
+                .PageBy(input)
+                .Select(e => ObjectMapper.Map<CourseAssignmentDto>(e))
+                .ToListAsync();
+
+            return new PagedResultDto<CourseAssignmentDto>()
+            {
+                TotalCount = totalCount,
+                Items = courseStudents,
+            };
+        }
+
+        public async Task<PagedResultDto<CourseAssignmentDto>> GetAll(PagedCourseAssignmentResultRequestDto input)
+        {
+            var query = _courseAssignmentsRepository.GetAll()
+                .Where(e => e.StudentCourseSection.StudentCourseId == input.StudentCourseIdFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.Document.OriginalFileName.ToLower().Contains(input.SearchFilter.ToLower()))
+                .WhereIf(input.CourseSectionIdFilter.HasValue, e => e.StudentCourseSection.CourseSectionId == input.CourseSectionIdFilter.Value)
+                .WhereIf(input.CreationTimeFilter.HasValue, e => e.CreationTime.Date == input.CreationTimeFilter.Value.Date);
+            var totalCount = await query.CountAsync();
+            var courseStudents = await query.OrderBy(input.Sorting)
+                .Include(e => e.Document)
+                .Include(e => e.CreatorUser)
+                .Include(e => e.StudentCourseSection)
+                    .ThenInclude(e => e.CourseSection)
                 .PageBy(input)
                 .Select(e => ObjectMapper.Map<CourseAssignmentDto>(e))
                 .ToListAsync();

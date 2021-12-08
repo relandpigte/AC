@@ -60,7 +60,7 @@
                       <div class="list-group-item">
                         <div class="row">
                           <div class="col">
-                            <small>{{ 'IsActive' | localize }}</small>
+                            <small>{{ 'Progress' | localize }}</small>
                           </div>
                           <div class="col-auto">
                             <div class="custom-control custom-radio d-inline">
@@ -110,7 +110,7 @@
                 <td>
                   <div class="row align-items-center">
                     <div class="col-auto">
-                      <a href="!#student" (click)="$event.preventDefault();" class="avatar avatar-lg">
+                      <a [routerLink]="['../../../../student-course', studentCourse.id]" class="avatar avatar-lg">
                         <img
                           [src]="getProfilePictureFromDocument(studentCourse.creatorUser.profilePictureDocument, studentCourse.creatorUser.id)"
                           alt="..." class="avatar-img rounded-circle">
@@ -118,13 +118,13 @@
                     </div>
                     <div class="col ml-n2">
                       <h4 class="mb-1">
-                        <a href="!#student" (click)="$event.preventDefault();">
+                        <a [routerLink]="['../../../../student-course', studentCourse.id]">
                           {{ studentCourse.creatorUser.fullName }}
                         </a>
                       </h4>
                       <p class="card-text small text-muted mb-1">
-                        {{ 'EnrolledOn' | localize }}&nbsp;{{ studentCourse.creationTime | dateFormat: 'MMM DD, YYYY'
-                        }}
+                        {{ 'EnrolledOn' | localize }}
+                        {{ studentCourse.creationTime | dateFormat: 'MMM DD, YYYY'}}
                       </p>
                     </div>
                   </div>

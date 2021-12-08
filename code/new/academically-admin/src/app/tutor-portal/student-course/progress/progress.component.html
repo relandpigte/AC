@@ -1,0 +1,142 @@
+<div [@routerTransition] class="container-fluid">
+
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ model.creatorUser.fullName }}</h6>
+              <h1 class="header-title">{{ 'Progress' | localize }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-8">
+          <div class="card">
+            <div class="card-header h-auto">
+              <div class="py-3">
+                <h4 class="card-header-title">
+                  {{ 'CourseProgress' | localize | titlecase }}
+                </h4>
+                <div class="d-flex align-items-center mt-3">
+                  <div class="col-auto p-0">
+                    <h4 class="card-header-title mr-2">
+                      {{ model.progress | number: '1.0-0' }}%
+                    </h4>
+                  </div>
+                  <div class="col p-0">
+                    <div class="progress progress-sm">
+                      <div class="progress-bar" role="progressbar" [ngStyle]="{ width: model.progress + '%' }">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <ul class="list-group list-group-flush">
+                <ng-container *ngFor="let studentCourseSection of model.studentCourseSections"
+                  [ngTemplateOutlet]="sectionTemplate" [ngTemplateOutletContext]="{ section: studentCourseSection }">
+                </ng-container>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card" *ngIf="model && model.creatorUser">
+            <img [src]="getCoverPhotoFromDocument(model.creatorUser.coverPhotoDocument, model.creatorUser.id)" alt="..."
+              class="card-img-top">
+            <div class="card-body text-center">
+              <a href="#!profile" (click)="$event.preventDefault();"
+                class="avatar avatar-xl card-avatar card-avatar-top">
+                <img
+                  [src]="getProfilePictureFromDocument(model.creatorUser.profilePictureDocument, model.creatorUser.id)"
+                  class="avatar-img rounded-circle border border-4 border-card" alt="profile">
+              </a>
+              <h2 class="card-title">
+                <a href="#!profile" (click)="$event.preventDefault();">
+                  {{ model.creatorUser.fullName }}
+                </a>
+              </h2>
+              <p class="small text-muted mb-3">
+                {{ model.creatorUser.currentUniversity }}
+              </p>
+              <p class="card-text">
+                <span class="badge badge-soft-secondary">
+                  {{ 'Student' | localize }}
+                </span>
+              </p>
+              <div class="row">
+                <div class="col-md-10 offset-md-1">
+                  <div class="row align-items-center no-gutters">
+                    <div class="col-auto">
+                      <div class="small mr-2">{{ model.progress | number: '1.0-0' }}%</div>
+                    </div>
+                    <div class="col">
+                      <div class="progress progress-sm">
+                        <div class="progress-bar" role="progressbar" [ngStyle]="{ width: model.progress + '%' }"
+                          aria-valuemin=" 0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer card-footer-boxed">
+              <div class="d-flex align-items-center justify-content-between w-100">
+                <p class="m-0">{{ 'Enrolled' | localize }}</p>
+                <p class="m-0 text-muted">{{ model.creationTime | dateFormat: 'MMM DD, YYYY' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<ng-template #sectionTemplate let-section="section">
+  <ng-container *ngIf="section.courseSection.type === 1" [ngTemplateOutlet]="moduleTemplate"
+    [ngTemplateOutletContext]="{ section: section }"></ng-container>
+  <ng-container *ngIf="section.courseSection.type === 2" [ngTemplateOutlet]="unitTemplate"
+    [ngTemplateOutletContext]="{ section: section }"></ng-container>
+  <ng-container *ngIf="section.courseSection.type === 3" [ngTemplateOutlet]="lessonTemplate"
+    [ngTemplateOutletContext]="{ section: section }"></ng-container>
+</ng-template>
+
+<ng-template #moduleTemplate let-module="section">
+  <li class="list-group-item mx-2">
+    <a href="javascript:;" class="nav-link text-body d-flex justify-content-between" role="button">
+      <p class="m-0"><b>{{ module.courseSection.name }}</b></p>
+      <i *ngIf="module.status === StudentCourseSectionStatus.Finished" class="fa fa-check text-success"></i>
+    </a>
+  </li>
+</ng-template>
+
+<ng-template #unitTemplate let-unit="section">
+  <li class="list-group-item mx-2">
+    <a href="javascript:;" class="nav-link text-body d-flex justify-content-between" role="button">
+      <p class="m-0"><b>{{ unit.courseSection.name }}</b></p>
+      <i *ngIf="unit.status === StudentCourseSectionStatus.Finished" class="fa fa-check text-success"></i>
+    </a>
+  </li>
+</ng-template>
+
+<ng-template #lessonTemplate let-lesson="section">
+  <li class="list-group-item mx-2">
+    <a href="javascript:;" class="nav-link text-body d-flex justify-content-between align-items-center" role="button">
+      <div class="d-flex">
+        <div class="avatar avatar-4by3">
+          <img [src]="getLessonImageUrl(lesson.courseSection.courseImageUrl)" alt="..." class="avatar-img rounded">
+        </div>
+        <div class="d-flex align-items-center ml-3 check-container">
+          <p class="m-0"><b>{{ lesson.courseSection.name }}</b></p>
+        </div>
+      </div>
+      <i *ngIf="lesson.status === StudentCourseSectionStatus.Finished" class="fa fa-check text-success"></i>
+    </a>
+  </li>
+</ng-template>
