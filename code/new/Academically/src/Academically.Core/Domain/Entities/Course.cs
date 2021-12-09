@@ -2,6 +2,7 @@
 using Academically.Authorization.Users;
 using Academically.Domain.Enums;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
@@ -30,5 +31,7 @@ namespace Academically.Domain.Entities
         public virtual Currency Currency { get; set; }
         [ForeignKey("CreatorUserId")]
         public virtual User CreatorUser { get; set; }
+
+        public virtual ICollection<StudentCourse> StudentCourses { get; set; }
     }
 }

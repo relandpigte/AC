@@ -13,6 +13,7 @@ namespace Academically.Services.StudentCourses
         Task<StudentCourseDto> Get(Guid id);
         Task<StudentCourseDto> GetByCourse(Guid courseId);
         Task Create(Guid courseId);
+        Task CreateCourseRatings(CreateCourseRatingDto input);
     }
 }
 

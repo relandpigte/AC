@@ -14,10 +14,21 @@
 </div>
 
 <ng-template #completedTemplate>
-  <div class="d-flex justify-content-center align-items-center h-100">
-    <div class="alert alert-success" role="alert">
-      <h4 class="alert-heading">{{ 'CourseCompletedTitle' | localize }}</h4>
-      <p>{{ 'CourseCompletedSubtitle' | localize }}</p>
+  <div class="d-flex justify-content-center align-items-start h-100">
+    <div class="alert alert-success w-100 mt-4 mx-5" role="alert">
+      <div class="row">
+        <div class="col">
+          <h4 class="alert-heading">{{ 'CourseCompletedTitle' | localize }}</h4>
+          <p class="mb-0">{{ 'CourseCompletedSubtitle' | localize }}</p>
+        </div>
+        <div class="col-auto">
+          <div class="d-flex align-items-center h-100">
+            <button class="btn btn-sm btn-white" (click)="onReviewClick()">
+              {{ 'WriteAReview' | localize }}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>

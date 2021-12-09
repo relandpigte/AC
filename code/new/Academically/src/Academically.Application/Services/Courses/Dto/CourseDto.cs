@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Services.Documents.Dto;
+using Academically.Services.StudentCourses.Dto;
 using Academically.Users.Dto;
 
 namespace Academically.Services.Courses.Dto
@@ -29,5 +31,7 @@ namespace Academically.Services.Courses.Dto
 
         public UserDto CreatorUser { get; set; }
         public DocumentDto ImageDocument { get; set; }
+
+        public IEnumerable<StudentCourseDto> StudentCourses { get; set; }
     }
 }

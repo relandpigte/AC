@@ -7062,6 +7062,128 @@ export class RatingsServiceProxy {
         }
         return _observableOf<TutorRatingDtoPagedResultDto>(<any>null);
     }
+
+    /**
+     * @param courseId (optional) 
+     * @return Success
+     */
+    getCourseRatingSummary(courseId: string | undefined): Observable<CourseRatingSummaryDto> {
+        let url_ = this.baseUrl + "/api/services/app/Ratings/GetCourseRatingSummary?";
+        if (courseId === null)
+            throw new Error("The parameter 'courseId' cannot be null.");
+        else if (courseId !== undefined)
+            url_ += "courseId=" + encodeURIComponent("" + courseId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCourseRatingSummary(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCourseRatingSummary(<any>response_);
+                } catch (e) {
+                    return <Observable<CourseRatingSummaryDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CourseRatingSummaryDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetCourseRatingSummary(response: HttpResponseBase): Observable<CourseRatingSummaryDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CourseRatingSummaryDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CourseRatingSummaryDto>(<any>null);
+    }
+
+    /**
+     * @param courseId (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getCourseRatings(courseId: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CourseRatingDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Ratings/GetCourseRatings?";
+        if (courseId === null)
+            throw new Error("The parameter 'courseId' cannot be null.");
+        else if (courseId !== undefined)
+            url_ += "CourseId=" + encodeURIComponent("" + courseId) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCourseRatings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCourseRatings(<any>response_);
+                } catch (e) {
+                    return <Observable<CourseRatingDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CourseRatingDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetCourseRatings(response: HttpResponseBase): Observable<CourseRatingDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CourseRatingDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CourseRatingDtoPagedResultDto>(<any>null);
+    }
 }
 
 @Injectable()
@@ -9483,6 +9605,58 @@ export class StudentCoursesServiceProxy {
     }
 
     protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createCourseRatings(body: CreateCourseRatingDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/StudentCourses/CreateCourseRatings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateCourseRatings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateCourseRatings(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateCourseRatings(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -16343,6 +16517,7 @@ export class CourseDto implements ICourseDto {
     courseImageUrl: string | undefined;
     creatorUser: UserDto;
     imageDocument: DocumentDto;
+    studentCourses: StudentCourseDto[] | undefined;
 
     constructor(data?: ICourseDto) {
         if (data) {
@@ -16371,6 +16546,11 @@ export class CourseDto implements ICourseDto {
             this.courseImageUrl = _data["courseImageUrl"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.imageDocument = _data["imageDocument"] ? DocumentDto.fromJS(_data["imageDocument"]) : <any>undefined;
+            if (Array.isArray(_data["studentCourses"])) {
+                this.studentCourses = [] as any;
+                for (let item of _data["studentCourses"])
+                    this.studentCourses.push(StudentCourseDto.fromJS(item));
+            }
         }
     }
 
@@ -16399,6 +16579,11 @@ export class CourseDto implements ICourseDto {
         data["courseImageUrl"] = this.courseImageUrl;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["imageDocument"] = this.imageDocument ? this.imageDocument.toJSON() : <any>undefined;
+        if (Array.isArray(this.studentCourses)) {
+            data["studentCourses"] = [];
+            for (let item of this.studentCourses)
+                data["studentCourses"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -16427,6 +16612,7 @@ export interface ICourseDto {
     courseImageUrl: string | undefined;
     creatorUser: UserDto;
     imageDocument: DocumentDto;
+    studentCourses: StudentCourseDto[] | undefined;
 }
 
 export class CourseDtoPagedResultDto implements ICourseDtoPagedResultDto {
@@ -16482,6 +16668,211 @@ export class CourseDtoPagedResultDto implements ICourseDtoPagedResultDto {
 export interface ICourseDtoPagedResultDto {
     items: CourseDto[] | undefined;
     totalCount: number;
+}
+
+export class CourseRatingDto implements ICourseRatingDto {
+    id: string;
+    courseId: string;
+    experienceType: RatingExperienceType;
+    comments: string | undefined;
+    creationTime: moment.Moment;
+    totalRatingPercentage: number;
+    reviewer: UserDto;
+
+    constructor(data?: ICourseRatingDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.courseId = _data["courseId"];
+            this.experienceType = _data["experienceType"];
+            this.comments = _data["comments"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.totalRatingPercentage = _data["totalRatingPercentage"];
+            this.reviewer = _data["reviewer"] ? UserDto.fromJS(_data["reviewer"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CourseRatingDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CourseRatingDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["courseId"] = this.courseId;
+        data["experienceType"] = this.experienceType;
+        data["comments"] = this.comments;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["totalRatingPercentage"] = this.totalRatingPercentage;
+        data["reviewer"] = this.reviewer ? this.reviewer.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): CourseRatingDto {
+        const json = this.toJSON();
+        let result = new CourseRatingDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICourseRatingDto {
+    id: string;
+    courseId: string;
+    experienceType: RatingExperienceType;
+    comments: string | undefined;
+    creationTime: moment.Moment;
+    totalRatingPercentage: number;
+    reviewer: UserDto;
+}
+
+export class CourseRatingDtoPagedResultDto implements ICourseRatingDtoPagedResultDto {
+    items: CourseRatingDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: ICourseRatingDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(CourseRatingDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): CourseRatingDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CourseRatingDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): CourseRatingDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new CourseRatingDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICourseRatingDtoPagedResultDto {
+    items: CourseRatingDto[] | undefined;
+    totalCount: number;
+}
+
+export class CourseRatingSummaryDto implements ICourseRatingSummaryDto {
+    positivePercentage: number;
+    totalReviews: number;
+    totalPositiveReviews: number;
+    totalNeutralReviews: number;
+    totalNegativeReviews: number;
+    totalRatingPercentage: number;
+    totalCommunicationRatings: number;
+    totalValueForMoneyRatings: number;
+    totalPunctualityRatings: number;
+    totalProfessionalismsRating: number;
+    totalKnowledgeRatings: number;
+
+    constructor(data?: ICourseRatingSummaryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.positivePercentage = _data["positivePercentage"];
+            this.totalReviews = _data["totalReviews"];
+            this.totalPositiveReviews = _data["totalPositiveReviews"];
+            this.totalNeutralReviews = _data["totalNeutralReviews"];
+            this.totalNegativeReviews = _data["totalNegativeReviews"];
+            this.totalRatingPercentage = _data["totalRatingPercentage"];
+            this.totalCommunicationRatings = _data["totalCommunicationRatings"];
+            this.totalValueForMoneyRatings = _data["totalValueForMoneyRatings"];
+            this.totalPunctualityRatings = _data["totalPunctualityRatings"];
+            this.totalProfessionalismsRating = _data["totalProfessionalismsRating"];
+            this.totalKnowledgeRatings = _data["totalKnowledgeRatings"];
+        }
+    }
+
+    static fromJS(data: any): CourseRatingSummaryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CourseRatingSummaryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["positivePercentage"] = this.positivePercentage;
+        data["totalReviews"] = this.totalReviews;
+        data["totalPositiveReviews"] = this.totalPositiveReviews;
+        data["totalNeutralReviews"] = this.totalNeutralReviews;
+        data["totalNegativeReviews"] = this.totalNegativeReviews;
+        data["totalRatingPercentage"] = this.totalRatingPercentage;
+        data["totalCommunicationRatings"] = this.totalCommunicationRatings;
+        data["totalValueForMoneyRatings"] = this.totalValueForMoneyRatings;
+        data["totalPunctualityRatings"] = this.totalPunctualityRatings;
+        data["totalProfessionalismsRating"] = this.totalProfessionalismsRating;
+        data["totalKnowledgeRatings"] = this.totalKnowledgeRatings;
+        return data; 
+    }
+
+    clone(): CourseRatingSummaryDto {
+        const json = this.toJSON();
+        let result = new CourseRatingSummaryDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICourseRatingSummaryDto {
+    positivePercentage: number;
+    totalReviews: number;
+    totalPositiveReviews: number;
+    totalNeutralReviews: number;
+    totalNegativeReviews: number;
+    totalRatingPercentage: number;
+    totalCommunicationRatings: number;
+    totalValueForMoneyRatings: number;
+    totalPunctualityRatings: number;
+    totalProfessionalismsRating: number;
+    totalKnowledgeRatings: number;
 }
 
 export class CourseSectionDto implements ICourseSectionDto {
@@ -16724,6 +17115,120 @@ export class CreateCourseDto implements ICreateCourseDto {
 
 export interface ICreateCourseDto {
     name: string | undefined;
+}
+
+export class CreateCourseRatingAreaDto implements ICreateCourseRatingAreaDto {
+    areaType: RatingAreaType;
+    rating: number;
+
+    constructor(data?: ICreateCourseRatingAreaDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.areaType = _data["areaType"];
+            this.rating = _data["rating"];
+        }
+    }
+
+    static fromJS(data: any): CreateCourseRatingAreaDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCourseRatingAreaDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["areaType"] = this.areaType;
+        data["rating"] = this.rating;
+        return data; 
+    }
+
+    clone(): CreateCourseRatingAreaDto {
+        const json = this.toJSON();
+        let result = new CreateCourseRatingAreaDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateCourseRatingAreaDto {
+    areaType: RatingAreaType;
+    rating: number;
+}
+
+export class CreateCourseRatingDto implements ICreateCourseRatingDto {
+    courseId: string;
+    experienceType: RatingExperienceType;
+    comments: string | undefined;
+    creatorUserId: number;
+    courseRatingAreas: CreateCourseRatingAreaDto[] | undefined;
+
+    constructor(data?: ICreateCourseRatingDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.courseId = _data["courseId"];
+            this.experienceType = _data["experienceType"];
+            this.comments = _data["comments"];
+            this.creatorUserId = _data["creatorUserId"];
+            if (Array.isArray(_data["courseRatingAreas"])) {
+                this.courseRatingAreas = [] as any;
+                for (let item of _data["courseRatingAreas"])
+                    this.courseRatingAreas.push(CreateCourseRatingAreaDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateCourseRatingDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCourseRatingDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["courseId"] = this.courseId;
+        data["experienceType"] = this.experienceType;
+        data["comments"] = this.comments;
+        data["creatorUserId"] = this.creatorUserId;
+        if (Array.isArray(this.courseRatingAreas)) {
+            data["courseRatingAreas"] = [];
+            for (let item of this.courseRatingAreas)
+                data["courseRatingAreas"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): CreateCourseRatingDto {
+        const json = this.toJSON();
+        let result = new CreateCourseRatingDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateCourseRatingDto {
+    courseId: string;
+    experienceType: RatingExperienceType;
+    comments: string | undefined;
+    creatorUserId: number;
+    courseRatingAreas: CreateCourseRatingAreaDto[] | undefined;
 }
 
 export class CreateEditUserEducationCourseDto implements ICreateEditUserEducationCourseDto {
@@ -20647,6 +21152,15 @@ export enum PublicationType {
     ConferencePaper = 4,
     Thesis = 5,
     Data = 6,
+}
+
+/** 0 = Communication 1 = ValueForMoney 2 = Punctuality 3 = Professionalism 4 = Knowledge */
+export enum RatingAreaType {
+    Communication = 0,
+    ValueForMoney = 1,
+    Punctuality = 2,
+    Professionalism = 3,
+    Knowledge = 4,
 }
 
 /** 0 = Positive 1 = Neutral 2 = Negative */

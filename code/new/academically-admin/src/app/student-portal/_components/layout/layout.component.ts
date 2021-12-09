@@ -4,6 +4,8 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { CourseDto, CoursesServiceProxy, StudentCoursesServiceProxy, StudentCourseSectionDto, StudentCourseSectionStatus } from '@shared/service-proxies/service-proxies';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { RateAndReviewCourseComponent } from '../rate-and-review-course/rate-and-review-course.component';
 import { StudentPortalService } from '@app/student-portal/_services/student-portal.service';
 
 @Component({
@@ -21,6 +23,7 @@ export class LayoutComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _route: ActivatedRoute,
+    private _modalService: BsModalService,
     private _studentPortalService: StudentPortalService,
     private _coursesService: CoursesServiceProxy,
     private _studentCoursesService: StudentCoursesServiceProxy,
@@ -54,6 +57,15 @@ export class LayoutComponent extends AppComponentBase implements OnInit {
     return 'assets/themes/dashkit/img/covers/profile-cover-1.jpg';
   }
 
+  onReviewClick(): void {
+    const modalSettings = this.defaultModalSettings;
+    modalSettings.class = 'modal-lg';
+    modalSettings.initialState = {
+      course: this.model,
+    };
+    this._modalService.show(RateAndReviewCourseComponent, modalSettings);
+  }
+
   protected getCoure(): void {
     this._coursesService.get(this.courseId)
       .pipe(
@@ -63,7 +75,6 @@ export class LayoutComponent extends AppComponentBase implements OnInit {
         this.model = response;
       });
   }
-
 
   private getStudentCourseSections(): void {
     this._studentCoursesService.getByCourse(this.courseId)

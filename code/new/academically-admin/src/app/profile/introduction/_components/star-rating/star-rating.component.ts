@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-star-rating',
@@ -7,11 +7,21 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class StarRatingComponent implements OnInit {
   @Input() totalRating = 5;
-  @Input()
+  @Input() readonly = true;
+  @Output() ratingUpdated = new EventEmitter<number>();
+
+  ratings = [];
+  fractionRating: number;
+  private _actualRating: number;
+
+  constructor() {
+  }
+
   get actualRating(): number {
     return this._actualRating;
   }
-  set actualRating(value: number) {
+
+  @Input() set actualRating(value: number) {
     this._actualRating = value;
     if (this._actualRating) {
       this.ratings = new Array(Math.floor(this._actualRating));
@@ -26,14 +36,15 @@ export class StarRatingComponent implements OnInit {
       }
     }
   }
-  ratings = [];
-  fractionRating: number;
-  private _actualRating: number;
-
-  constructor() {
-  }
 
   ngOnInit(): void {
+  }
+
+  onStarClick(rating: number) {
+    if (!this.readonly) {
+      // this.actualRating = rating;
+      this.ratingUpdated.emit(rating);
+    }
   }
 
 }

@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Academically.Services.Ratings.Dto;
+using System;
 using System.Threading.Tasks;
 
 namespace Academically.Services.Ratings
@@ -9,7 +10,9 @@ namespace Academically.Services.Ratings
     {
         Task<StudentRatingSummaryDto> GetStudentRatingSummary(long studentId);
         Task<TutorRatingSummaryDto> GetTutorRatingSummary(long tutorId);
+        Task<CourseRatingSummaryDto> GetCourseRatingSummary(Guid courseId);
         Task<PagedResultDto<StudentRatingDto>> GetStudentRatings(PagedStudentRatingRequestDto input);
         Task<PagedResultDto<TutorRatingDto>> GetTutorRatings(PagedTutorRatingRequestDto input);
+        Task<PagedResultDto<CourseRatingDto>> GetCourseRatings(PagedCourseRatingRequestDto input);
     }
 }

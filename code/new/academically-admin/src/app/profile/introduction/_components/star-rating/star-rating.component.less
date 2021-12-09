@@ -18,14 +18,20 @@
 .star-rating-container {
   position: relative;
 
+  &.writeable {
+    .star-container {
+      cursor: pointer;
+    }
+  }
+
   .star-rating {
     position: absolute;
-    left: 0;
-    top: 1px;
-    width: 100%;
+    left    : 0;
+    top     : 1px;
   }
 
   .star-rating-base {
+
     .fa-star {
       color: #e9ecef !important;
     }

@@ -5,6 +5,8 @@ import { StudentCoursesServiceProxy, StudentCourseDto, StudentCourseSectionStatu
 import { StudentPortalService } from '../_services/student-portal.service';
 import { takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { RateAndReviewCourseComponent } from '../_components/rate-and-review-course/rate-and-review-course.component';
 
 @Component({
   selector: 'app-learn',
@@ -17,10 +19,12 @@ export class LearnComponent extends AppComponentBase implements OnInit {
   currentCourseSectionId: string;
   currentSectionIndex = 0;
   percentage = 0;
+  hasBeenProgressed = false;
 
   constructor(
     injector: Injector,
     private _route: ActivatedRoute,
+    private _modalService: BsModalService,
     private _studentPortalService: StudentPortalService,
     private _studentCoursesService: StudentCoursesServiceProxy,
     private _studentCourseSectionsService: StudentCourseSectionsServiceProxy,
@@ -33,6 +37,9 @@ export class LearnComponent extends AppComponentBase implements OnInit {
     });
     this._studentPortalService.percentage$.subscribe(percentage => {
       this.percentage = percentage;
+      if (this.hasBeenProgressed && percentage >= 100) {
+        this.showReviewModal();
+      }
     });
   }
 
@@ -41,6 +48,7 @@ export class LearnComponent extends AppComponentBase implements OnInit {
   }
 
   onNextSection(): void {
+    this.hasBeenProgressed = true;
     if (this.currentSectionIndex <= this.studentCourse.studentCourseSections.length - 1) {
       const studentCourseSection = this.studentCourse.studentCourseSections[this.currentSectionIndex];
       if (studentCourseSection) {
@@ -63,6 +71,10 @@ export class LearnComponent extends AppComponentBase implements OnInit {
     }
   }
 
+  onReviewClick(): void {
+    this.showReviewModal();
+  }
+
   private getStudentCourse(): void {
     this._studentCoursesService.getByCourse(this.courseId)
       .pipe(
@@ -70,6 +82,7 @@ export class LearnComponent extends AppComponentBase implements OnInit {
       )
       .subscribe(studentCourse => {
         this.studentCourse = studentCourse;
+        console.log(this.studentCourse);
         this.currentSectionIndex = this.studentCourse.studentCourseSections
           .findIndex(e => e.status !== StudentCourseSectionStatus.Finished);
         this.updateCurrentCourseSection();
@@ -82,5 +95,14 @@ export class LearnComponent extends AppComponentBase implements OnInit {
       this.currentCourseSectionId = studentCourseSection.courseSectionId;
       studentCourseSection.status = StudentCourseSectionStatus.InProgress;
     }
+  }
+
+  private showReviewModal(): void {
+    const modalSettings = this.defaultModalSettings;
+    modalSettings.class = 'modal-lg';
+    modalSettings.initialState = {
+      course: this.studentCourse.course,
+    };
+    this._modalService.show(RateAndReviewCourseComponent, modalSettings);
   }
 }

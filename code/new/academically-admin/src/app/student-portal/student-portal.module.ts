@@ -6,6 +6,8 @@ import { AppSharedModule } from '@app/_shared/app-shared.module';
 
 import { StudentPortalComponent } from './student-portal.component';
 import { LayoutComponent } from './_components/layout/layout.component';
+import { RateAndReviewCourseComponent } from './_components/rate-and-review-course/rate-and-review-course.component';
+import { IntroductionModule } from '@app/profile/introduction/introduction.module';
 import { PortalMenuComponent } from './_components/portal-menu/portal-menu.component';
 import { CourseMenuComponent } from './_components/course-menu/course-menu.component';
 import { DiscussionsComponent } from './_components/discussions/discussions.component';
@@ -14,6 +16,7 @@ import { DiscussionsComponent } from './_components/discussions/discussions.comp
   declarations: [
     StudentPortalComponent,
     LayoutComponent,
+    RateAndReviewCourseComponent,
     PortalMenuComponent,
     CourseMenuComponent,
     DiscussionsComponent,
@@ -23,6 +26,7 @@ import { DiscussionsComponent } from './_components/discussions/discussions.comp
     StudentPortalRoutingModule,
     SharedModule,
     AppSharedModule,
+    IntroductionModule
   ],
   exports: [
     DiscussionsComponent,

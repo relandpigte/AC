@@ -18,16 +18,22 @@ namespace Academically.Services.Ratings
         private readonly IRepository<StudentRating, Guid> _studentRatingsRepository;
         private readonly IRepository<TutorRating, Guid> _tutorRatingsRepository;
         private readonly IRepository<TutorRatingArea, Guid> _tutorRatingAreasRepository;
+        private readonly IRepository<CourseRating, Guid> _courseRatingsRepository;
+        private readonly IRepository<CourseRatingArea, Guid> _courseRatingAreasRepository;
 
         public RatingsAppService(
             IRepository<StudentRating, Guid> studentRatingsRepository,
             IRepository<TutorRating, Guid> tutorRatingsRepository,
-            IRepository<TutorRatingArea, Guid> tutorRatingAreasRepository
+            IRepository<TutorRatingArea, Guid> tutorRatingAreasRepository,
+            IRepository<CourseRating, Guid> courseRatingsRepository,
+            IRepository<CourseRatingArea, Guid> courseRatingAreasRepository
             )
         {
             _studentRatingsRepository = studentRatingsRepository;
             _tutorRatingsRepository = tutorRatingsRepository;
             _tutorRatingAreasRepository = tutorRatingAreasRepository;
+            _courseRatingsRepository = courseRatingsRepository;
+            _courseRatingAreasRepository = courseRatingAreasRepository;
         }
 
         public async Task<StudentRatingSummaryDto> GetStudentRatingSummary(long studentId)
@@ -168,7 +174,101 @@ namespace Academically.Services.Ratings
             return new PagedResultDto<TutorRatingDto>(totalCount, outputs);
         }
 
+        public async Task<CourseRatingSummaryDto> GetCourseRatingSummary(Guid courseId)
+        {
+            var courseRatingsQuery = _courseRatingsRepository.GetAll()
+                .Where(e => e.CourseId == courseId);
+            var courseRatingSummary = new CourseRatingSummaryDto()
+            {
+                TotalReviews = await courseRatingsQuery.CountAsync(),
+            };
+            if (courseRatingSummary.TotalReviews != 0)
+            {
+                courseRatingSummary.TotalNeutralReviews = await _courseRatingsRepository.CountAsync(e => e.ExperienceType == RatingExperienceType.Neutral);
+                if (courseRatingSummary.TotalReviews != courseRatingSummary.TotalNeutralReviews)
+                {
+                    courseRatingSummary.TotalPositiveReviews = await _courseRatingsRepository.CountAsync(e => e.ExperienceType == RatingExperienceType.Positive);
+                    courseRatingSummary.TotalNegativeReviews = await _courseRatingsRepository.CountAsync(e => e.ExperienceType == RatingExperienceType.Negative);
+
+                    courseRatingSummary.PositivePercentage = courseRatingSummary.TotalPositiveReviews.ToDecimal()
+                        / (courseRatingSummary.TotalPositiveReviews.ToDecimal() + courseRatingSummary.TotalNegativeReviews.ToDecimal());
+                    courseRatingSummary.PositivePercentage = Math.Round(courseRatingSummary.PositivePercentage * 100, 1);
+                }
+            }
+
+            var courseRatingAreasQuery = _courseRatingAreasRepository.GetAll()
+                .Where(e => e.CourseRating.CourseId == courseId);
+            courseRatingSummary.TotalCommunicationRatings = await GetTotalCourseRatingsOnArea(courseRatingAreasQuery, RatingAreaType.Communication);
+            courseRatingSummary.TotalValueForMoneyRatings = await GetTotalCourseRatingsOnArea(courseRatingAreasQuery, RatingAreaType.ValueForMoney);
+            courseRatingSummary.TotalPunctualityRatings = await GetTotalCourseRatingsOnArea(courseRatingAreasQuery, RatingAreaType.Punctuality);
+            courseRatingSummary.TotalProfessionalismsRating = await GetTotalCourseRatingsOnArea(courseRatingAreasQuery, RatingAreaType.Professionalism);
+            courseRatingSummary.TotalKnowledgeRatings = await GetTotalCourseRatingsOnArea(courseRatingAreasQuery, RatingAreaType.Knowledge);
+            courseRatingSummary.TotalRatingPercentage = Math.Round((courseRatingSummary.TotalCommunicationRatings + courseRatingSummary.TotalValueForMoneyRatings
+                + courseRatingSummary.TotalPunctualityRatings + courseRatingSummary.TotalProfessionalismsRating + courseRatingSummary.TotalKnowledgeRatings) / 5, 1);
+
+            return courseRatingSummary;
+        }
+
+        public async Task<PagedResultDto<CourseRatingDto>> GetCourseRatings(PagedCourseRatingRequestDto input)
+        {
+            var courseRatingsQuery = _courseRatingsRepository.GetAll()
+                .Where(e => e.CourseId == input.CourseId);
+
+            var totalCount = await courseRatingsQuery.CountAsync();
+
+            courseRatingsQuery = courseRatingsQuery
+                .Include(e => e.Reviewer)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.Reviewer)
+                    .ThenInclude(e => e.UserEducations)
+                        .ThenInclude(e => e.University)
+                .OrderByDescending(e => e.CreationTime);
+
+            var courseRatings = await courseRatingsQuery
+                .PageBy(input)
+                .Take(input.MaxResultCount)
+                .ToListAsync();
+
+            var outputs = new List<CourseRatingDto>();
+            foreach (var courseRating in courseRatings)
+            {
+                var output = ObjectMapper.Map<CourseRatingDto>(courseRating);
+                output.TotalRatingPercentage = (await _courseRatingAreasRepository.GetAll()
+                    .Where(e => e.CourseRatingId == courseRating.Id)
+                    .SumAsync(e => e.Rating)).ToDecimal() / 5;
+                if (courseRating.Reviewer.UserEducations != null && courseRating.Reviewer.UserEducations.Count > 0)
+                {
+                    output.Reviewer.CurrentUniversity = courseRating.Reviewer.UserEducations
+                        .OrderByDescending(e => e.EndYear)
+                            .ThenByDescending(e => e.StartYear)
+                       .FirstOrDefault()
+                       .University.HeProvider;
+                }
+                outputs.Add(output);
+            }
+
+            return new PagedResultDto<CourseRatingDto>(totalCount, outputs);
+        }
+
         private async Task<decimal> GetTotalTutorRatingsOnArea(IQueryable<TutorRatingArea> query, RatingAreaType areaType)
+        {
+            var sumOfAllRatingsForArea = 0;
+            var sumOfAllRatingsByNRatingForArea = 0;
+            for (int n = 1; n <= 5; n++)
+            {
+                var totalNRating = await query.Where(e => e.Rating == n && e.AreaType == areaType).CountAsync();
+                var productOfStartRatingTotalByN = n * totalNRating;
+                sumOfAllRatingsForArea += totalNRating;
+                sumOfAllRatingsByNRatingForArea += productOfStartRatingTotalByN;
+            }
+            if (sumOfAllRatingsForArea == 0)
+            {
+                return 0;
+            }
+            return Math.Round(sumOfAllRatingsByNRatingForArea.ToDecimal() / sumOfAllRatingsForArea.ToDecimal(), 1);
+        }
+
+        private async Task<decimal> GetTotalCourseRatingsOnArea(IQueryable<CourseRatingArea> query, RatingAreaType areaType)
         {
             var sumOfAllRatingsForArea = 0;
             var sumOfAllRatingsByNRatingForArea = 0;

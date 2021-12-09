@@ -16,6 +16,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class LessonPreviewComponent extends AppComponentBase implements OnInit {
   @Output() nextSection = new EventEmitter();
+  @Output() writeReview = new EventEmitter();
   contents: Content[] = [];
   currentPage = 0;
   isCompleted = false;
@@ -58,6 +59,10 @@ export class LessonPreviewComponent extends AppComponentBase implements OnInit {
     } else {
       this.currentPage++;
     }
+  }
+
+  onReviewClick(): void {
+    this.writeReview.emit();
   }
 
   private getPages(courseSectionId: string): void {

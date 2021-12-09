@@ -40,6 +40,7 @@ namespace Academically.Services.Courses
                     .ThenInclude(e => e.CoverPhotoDocument)
                 .Include(e => e.CreatorUser)
                     .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.StudentCourses)
                 .FirstOrDefaultAsync();
             var output = ObjectMapper.Map<CourseDto>(course);
             output.CourseImageUrl = await _documentsDomainService.GetFileUrlAsync(course.ImageDocument);
@@ -51,7 +52,8 @@ namespace Academically.Services.Courses
             return base.CreateFilteredQuery(input)
                 .WhereIf(input.UserIdFilter.HasValue, e => e.CreatorUserId == AbpSession.UserId.Value)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.Name.ToLower().Contains(input.SearchFilter.ToLower()))
-                .WhereIf(input.StatusFilter.HasValue, e => e.Status == input.StatusFilter.Value);
+                .WhereIf(input.StatusFilter.HasValue, e => e.Status == input.StatusFilter.Value)
+                .Include(e => e.StudentCourses);
         }
 
         public override async Task<PagedResultDto<CourseDto>> GetAllAsync(PagedCourseResultRequestDto input)
