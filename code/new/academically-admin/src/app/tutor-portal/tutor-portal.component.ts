@@ -4,6 +4,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { CoursesServiceProxy, CourseDto } from '@shared/service-proxies/service-proxies';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
+import { CourseService } from '@app/courses/_services/course.service';
 
 @Component({
   selector: 'app-tutor-portal',
@@ -19,6 +20,7 @@ export class TutorPortalComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _route: ActivatedRoute,
+    private _courseService: CourseService,
     private _coursesService: CoursesServiceProxy,
   ) {
     super(injector);
@@ -34,12 +36,7 @@ export class TutorPortalComponent extends AppComponentBase implements OnInit {
     this.getCourse();
   }
 
-  getCourseImageUrl(courseImageUrl: string): string {
-    if (courseImageUrl) {
-      return courseImageUrl;
-    }
-    return 'assets/themes/dashkit/img/covers/profile-cover-1.jpg';
-  }
+
 
   private getCourse(): void {
     this.isLoading = true;
@@ -52,6 +49,7 @@ export class TutorPortalComponent extends AppComponentBase implements OnInit {
       )
       .subscribe(response => {
         this.model = response;
+        this._courseService.course = response;
       });
   }
 }

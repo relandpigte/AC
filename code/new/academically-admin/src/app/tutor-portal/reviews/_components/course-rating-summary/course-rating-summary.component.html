@@ -1,0 +1,203 @@
+<div class="card p-scroll-tag" [loader]="isSummaryLoading">
+
+  <div class="card-header h-auto">
+    <div class="d-inline-block mt-3 mb-3 pt-3">
+      <div class="row align-items-center">
+        <div class="col">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <div class="avatar avatar-4by3 ml-n3">
+                <img [src]="getCourseImageUrl(course.courseImageUrl)" alt="..." class="avatar-img rounded">
+              </div>
+            </div>
+            <div class="col ml-n2">
+              <h4 class="mb-0">
+                <a href="javascript:;">
+                  {{ courseRatingSummary.positivePercentage }}% {{ 'PositiveReviews' | localize}}
+                </a>
+                <i class="fe fe-info text-secondary ml-1 align-bottom cursor-pointer" [popover]="formulaPopoverTemplate"
+                  container="body" placement="right" triggers="mouseenter:mouseleave">
+                </i>
+              </h4>
+              <div class="d-flex">
+                <app-star-rating *ngIf="courseRatingSummary.totalRatingPercentage"
+                  [actualRating]="courseRatingSummary.totalRatingPercentage"></app-star-rating>
+                <span class="text-muted small">{{ courseRatingSummary.totalRatingPercentage }}/5</span>
+              </div>
+              <p class="small text-muted mb-0">{{ courseRatingSummary.totalReviews }} {{ 'Reviews' |
+                localize}}</p>
+            </div>
+            <div class="col-12 mt-4">
+              <div class="row">
+                <div class="col-auto text-center">
+                  <div class="rating-experience">
+                    <span class="rating-experience-positive font-size-sm">
+                      <i class="fas fa-plus"></i>
+                    </span>
+                  </div>
+                  <span class="h5 mb-0 ml-2">{{ courseRatingSummary.totalPositiveReviews }}</span>
+                  <p class="h5 mb-0 mt-2 ml-2">{{ 'Positive' | localize}}</p>
+                </div>
+                <div class="col-auto text-center">
+                  <div class="rating-experience">
+                    <span class="rating-experience-neutral font-size-sm">
+                      <i class="fas fa-circle"></i>
+                    </span>
+                  </div>
+                  <span class="h5 mb-0 ml-2">{{ courseRatingSummary.totalNeutralReviews }}</span>
+                  <p class="h5 mb-0 mt-2 ml-2">{{ 'Neutral' | localize}}</p>
+                </div>
+                <div class="col-auto text-center">
+                  <div class="rating-experience">
+                    <span class="rating-experience-negative font-size-sm">
+                      <i class="fas fa-minus"></i>
+                    </span>
+                  </div>
+                  <span class="h5 mb-0 ml-2">{{ courseRatingSummary.totalNegativeReviews }}</span>
+                  <p class="h5 mb-0 mt-2 ml-2">{{ 'Negative' | localize}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-auto">
+          <table>
+            <tr>
+              <td class="pr-3">{{ courseRatingSummary.totalCommunicationRatings }}/5</td>
+              <td>
+                <app-star-rating [actualRating]="courseRatingSummary.totalCommunicationRatings">
+                </app-star-rating>
+              </td>
+              <td class="text-muted pl-4">{{ 'Communication' | localize}}</td>
+            </tr>
+            <tr>
+              <td class="pr-3">{{ courseRatingSummary.totalValueForMoneyRatings }}/5</td>
+              <td>
+                <app-star-rating [actualRating]="courseRatingSummary.totalValueForMoneyRatings">
+                </app-star-rating>
+              </td>
+              <td class="text-muted pl-4">{{ 'ValueForMoney' | localize}}</td>
+            </tr>
+            <tr>
+              <td class="pr-3">{{ courseRatingSummary.totalPunctualityRatings }}/5</td>
+              <td>
+                <app-star-rating [actualRating]="courseRatingSummary.totalPunctualityRatings">
+                </app-star-rating>
+              </td>
+              <td class="text-muted pl-4">{{ 'Punctuality' | localize}}</td>
+            </tr>
+            <tr>
+              <td class="pr-3">{{ courseRatingSummary.totalProfessionalismsRating }}/5</td>
+              <td>
+                <app-star-rating [actualRating]="courseRatingSummary.totalProfessionalismsRating">
+                </app-star-rating>
+              </td>
+              <td class="text-muted pl-4">{{ 'Professionalism' | localize}}</td>
+            </tr>
+            <tr>
+              <td class="pr-3">{{ courseRatingSummary.totalKnowledgeRatings }}/5</td>
+              <td>
+                <app-star-rating [actualRating]="courseRatingSummary.totalKnowledgeRatings">
+                </app-star-rating>
+              </td>
+              <td class="text-muted pl-4">{{ 'Knowledge' | localize}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-header">
+
+    <!-- Form -->
+    <form class="row align-items-center">
+      <div class="col">
+        <div class="input-group input-group-flush input-group-merge input-group-reverse">
+          <input type="search" class="form-control list-search" placeholder="Search">
+          <div class="input-group-text border-0">
+            <span class="fe fe-search"></span>
+          </div>
+        </div>
+      </div>
+      <div class="col-auto">
+        <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize" (select2ValueChange)="pageSizeChange($event)"
+          name="PageNumber" class="custom-select custom-select-sm form-control-flush" data-toggle="select">
+          <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
+            {{ pageSizeSelection }} {{ 'PerPage' | localize }}
+          </option>
+        </select>
+      </div>
+      <div class="col-auto">
+
+        <button class="btn btn-sm btn-white" type="button">
+          <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card-body pt-0 pb-0" [loader]="isTableLoading">
+    <table class="table card-table">
+      <tr *ngFor="let courseRating of courseRatings
+            | paginate: { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }">
+        <td class="pt-4 pb-4">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <a href="javascript:;" class="avatar avatar-md">
+                <img
+                  [src]="getProfilePictureFromDocument(courseRating?.reviewer?.profilePictureDocument, courseRating?.reviewer?.id)"
+                  alt="..." class="avatar-img rounded-circle">
+              </a>
+            </div>
+            <div class="col ml-n2">
+              <h4 class="mb-0">
+                <a href="javascript:;">{{ courseRating.reviewer.fullName }}</a>
+              </h4>
+              <p class="small text-muted mb-0">
+                {{ courseRating.reviewer.currentUniversity ? courseRating.reviewer.currentUniversity :
+                ('NoFormalEducation' | localize) }}
+              </p>
+            </div>
+            <div class="col-auto">
+              <h5 class="text-muted">{{ courseRating.creationTime | date: 'd MMMM y' }}</h5>
+            </div>
+            <div class="col-12 mt-3">
+              <div class="d-flex">
+                <app-star-rating [actualRating]="courseRating.totalRatingPercentage"></app-star-rating>
+                <span class="text-muted small mr-2">{{ courseRating.totalRatingPercentage }}/5</span>
+                <span *ngIf="courseRating.experienceType === RatingExperienceType.Positive"
+                  class="badge badge-soft-success">
+                  <i class="fas fa-plus"></i>
+                  {{ 'Positive' | localize}}
+                </span>
+                <span *ngIf="courseRating.experienceType === RatingExperienceType.Neutral"
+                  class="badge badge-soft-info">
+                  <i class="fas fa-circle"></i>
+                  {{ 'Neutral' | localize}}
+                </span>
+                <span *ngIf="courseRating.experienceType === RatingExperienceType.Negative"
+                  class="badge badge-soft-danger">
+                  <i class="fas fa-minus"></i>
+                  {{ 'Negative' | localize}}
+                </span>
+              </div>
+
+
+              <div toggableContent [identifier]="courseRating.id" contentClass="ql-container" class="mt-2">
+                <quill-view-html [content]="courseRating.comments" theme="snow"></quill-view-html>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="courseRatings && !courseRatings.length">
+        <p class="text-muted m-4 text-center">{{ 'NoReviewsFound' | localize }}</p>
+      </tr>
+    </table>
+  </div>
+  <abp-pagination-controls *ngIf="courseRatings && courseRatings.length" id="server" (pageChange)="getDataPage($event)">
+  </abp-pagination-controls>
+</div>
+<ng-template #formulaPopoverTemplate>
+  <p class="m-0" [innerHtml]="'PercentageOfPositiveReviewsFormulaDescription' | localize"></p>
+</ng-template>

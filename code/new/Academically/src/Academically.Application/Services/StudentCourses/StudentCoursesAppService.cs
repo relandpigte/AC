@@ -18,16 +18,19 @@ namespace Academically.Services.StudentCourses
     {
         private readonly IRepository<StudentCourse, Guid> _studentCoursesRepository;
         private readonly IRepository<CourseSection, Guid> _courseSectionsRepository;
+        private readonly IRepository<CourseRating, Guid> _courseRatingsRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
 
         public StudentCoursesAppService(
             IRepository<StudentCourse, Guid> studentCoursesRepository,
             IRepository<CourseSection, Guid> courseSectionsRepository,
+            IRepository<CourseRating, Guid> courseRatingsRepository,
             DocumentsDomainService documentsDomainService
             )
         {
             _studentCoursesRepository = studentCoursesRepository;
             _courseSectionsRepository = courseSectionsRepository;
+            _courseRatingsRepository = courseRatingsRepository;
             _documentsDomainService = documentsDomainService;
         }
 
@@ -141,6 +144,7 @@ namespace Academically.Services.StudentCourses
         {
             return await _studentCoursesRepository.GetAll()
                 .Where(e => e.CreatorUserId == AbpSession.UserId.Value && e.CourseId == courseId)
+                .Include(e => e.Course)
                 .Include(e => e.StudentCourseSections)
                     .ThenInclude(e => e.CourseSection)
                 .Select(e => ObjectMapper.Map<StudentCourseDto>(e))
@@ -190,6 +194,18 @@ namespace Academically.Services.StudentCourses
                 }
             }
             await _studentCoursesRepository.InsertAsync(studentCourse);
+        }
+
+        public async Task CreateCourseRatings(CreateCourseRatingDto input)
+        {
+            input.CreatorUserId = input.CreatorUserId == 0 ? AbpSession.UserId.Value : input.CreatorUserId;
+
+            var courseRating = ObjectMapper.Map<CourseRating>(input);
+            courseRating.CourseRatingAreas = input.CourseRatingAreas
+                .Select(a => ObjectMapper.Map<CourseRatingArea>(a))
+                .ToList();
+
+            await _courseRatingsRepository.InsertAsync(courseRating);
         }
     }
 }

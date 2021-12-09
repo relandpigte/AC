@@ -160,6 +160,13 @@ export abstract class AppComponentBase implements OnDestroy {
     return moment(date).fromNow();
   }
 
+  getCourseImageUrl(courseImageUrl: string): string {
+    if (courseImageUrl) {
+      return courseImageUrl;
+    }
+    return 'assets/themes/dashkit/img/covers/profile-cover-1.jpg';
+  }
+
   protected uuidv4(): string {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
       /[xy]/g,

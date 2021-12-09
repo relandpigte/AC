@@ -1,24 +1,24 @@
-<div class="star-rating-container">
+<div class="star-rating-container" [class.writeable]="!readonly">
   <div class="star-rating-base mr-1">
-    <span class="star-container">
+    <span (click)="onStarClick(1)" class="star-container">
       <span class="fas fa-star"></span>
     </span>
-    <span class="star-container">
+    <span (click)="onStarClick(2)" class="star-container">
       <span class="fas fa-star"></span>
     </span>
-    <span class="star-container">
+    <span (click)="onStarClick(3)" class="star-container">
       <span class="fas fa-star"></span>
     </span>
-    <span class="star-container">
+    <span (click)="onStarClick(4)" class="star-container">
       <span class="fas fa-star"></span>
     </span>
-    <span class="star-container">
+    <span (click)="onStarClick(5)" class="star-container">
       <span class="fas fa-star"></span>
     </span>
   </div>
   <div class="star-rating mr-1">
-    <span *ngFor="let rating of ratings" class="star-container">
-      <span class="fas fa-star"></span>
+    <span *ngFor="let rating of ratings; let i = index" class="star-container">
+      <span (click)="onStarClick(i + 1)" class="fas fa-star"></span>
     </span>
     <span *ngIf="fractionRating" class="star-container">
       <span [ngStyle]="{ 'width': fractionRating + '%' }" class="fas fa-star"></span>

@@ -1,8 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="WriteAReview">Write a review</text>
+    <text name="Graduates">Graduates</text>
     <text name="CourseCompletedSubtitle">You have successfully completed this course.</text>
     <text name="CourseCompletedTitle">Well done!</text>
+    <text name="ValueOfMoney">Value of money</text>
+    <text name="RateAndReviewSubmittionAlertMessage">Your ratings and review was successfully submitted</text>
+    <text name="TellUsAboutYourExperienceOf">Tell us about your experience of</text>
+    <text name="WriteAReview_RateOption1">To what extent was the content</text>
+    <text name="WriteAReview_RateOption2">To what extent did you rececive</text>
+    <text name="WriteAReview_RateOption3">To what extent was the course</text>
+    <text name="WriteAReview_RateOption4">Please rate the course based on its</text>
+    <text name="WriteAReview_RateOption5">Please rate the instructors</text>
+    <text name="And">And</text>
+    <text name="YourExperience">Your experience</text>
+    <text name="Accurate">Accurate</text>
+    <text name="Interactive">Interactive</text>
+    <text name="Engaging">Engaging</text>
+    <text name="Design">Design</text>
+    <text name="Structure">Structure</text>
+    <text name="Support">Support</text>
+    <text name="WriteAReview_Message">Overall, how was</text>
+    <text name="WriteAReviewFor">Write a review for</text>
     <text name="DateUploaded">Date uploaded</text>
     <text name="CourseProgress">Course progress</text>
     <text name="Enrolled">Enrolled</text>

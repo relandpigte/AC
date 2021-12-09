@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { AppRouteGuard } from '@shared/auth/auth-route-guard';
 
 import { TutorPortalComponent } from './tutor-portal.component';
+import { CourseResolver } from './_resolvers/course.resolver';
 
 @NgModule({
   imports: [
@@ -13,6 +14,7 @@ import { TutorPortalComponent } from './tutor-portal.component';
         // data: { permission: 'Pages.PageBuilder' },
         canActivate: [AppRouteGuard],
         canActivateChild: [AppRouteGuard],
+        resolve: { user: CourseResolver },
         children: [
           {
             path: '',
@@ -23,6 +25,13 @@ import { TutorPortalComponent } from './tutor-portal.component';
                 loadChildren: () =>
                   import('@app/tutor-portal/overview/overview.module').then(
                     (m) => m.OverviewModule,
+                  ),
+              },
+              {
+                path: 'reviews',
+                loadChildren: () =>
+                  import('@app/tutor-portal/reviews/reviews.module').then(
+                    (m) => m.ReviewsModule
                   ),
               },
               {

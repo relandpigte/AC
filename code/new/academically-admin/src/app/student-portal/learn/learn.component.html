@@ -1,6 +1,7 @@
 <div class="learn-container">
   <div class="learn-content">
-    <app-lesson-preview [id]="currentCourseSectionId" [completed]="percentage >= 100" (nextSection)="onNextSection()">
+    <app-lesson-preview [id]="currentCourseSectionId" [completed]="percentage >= 100" (nextSection)="onNextSection()"
+      (writeReview)="onReviewClick()">
     </app-lesson-preview>
   </div>
   <button class="btn btn-sm btn-rounded-circle btn-white btn-rightbar-show">
