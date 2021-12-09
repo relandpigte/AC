@@ -1,4 +1,4 @@
-<div class="lesson-preview-container">
+<div *ngIf="!isCompleted else completedTemplate" class="lesson-preview-container">
   <div class="lesson-preview">
     <app-content-preview [content]="contents[currentPage]">
     </app-content-preview>
@@ -12,3 +12,12 @@
     </div>
   </div>
 </div>
+
+<ng-template #completedTemplate>
+  <div class="d-flex justify-content-center align-items-center h-100">
+    <div class="alert alert-success" role="alert">
+      <h4 class="alert-heading">{{ 'CourseCompletedTitle' | localize }}</h4>
+      <p>{{ 'CourseCompletedSubtitle' | localize }}</p>
+    </div>
+  </div>
+</ng-template>

@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="CourseCompletedSubtitle">You have successfully completed this course.</text>
+    <text name="CourseCompletedTitle">Well done!</text>
     <text name="DateUploaded">Date uploaded</text>
     <text name="CourseProgress">Course progress</text>
     <text name="Enrolled">Enrolled</text>

@@ -4,8 +4,9 @@ using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Services.StudentCourses.Dto;
+using Academically.Users.Dto;
 
-namespace Academically.Services.StudentCourseConversations.Dto
+namespace Academically.Services.CourseConversations.Dto
 {
     [AutoMap(typeof(CourseConversation))]
     public class CourseConversationDto : EntityDto<Guid>
@@ -15,6 +16,7 @@ namespace Academically.Services.StudentCourseConversations.Dto
         public Guid StudentCourseId { get; set; }
         public Guid? ParentId { get; set; }
         public DateTime CreationTime { get; set; }
+        public UserDto CreatorUser { get; set; }
 
         public StudentCourseDto StudentCourse { get; set; }
         public CourseConversationDto Parent { get; set; }

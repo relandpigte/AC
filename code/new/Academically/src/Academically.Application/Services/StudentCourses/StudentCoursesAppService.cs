@@ -83,13 +83,29 @@ namespace Academically.Services.StudentCourses
 
         public async Task<StudentCourseDto> Get(Guid id)
         {
-            return await _studentCoursesRepository.GetAll()
+            var studentCourse = await _studentCoursesRepository.GetAll()
                 .Where(e => e.Id == id)
                 .Include(e => e.CreatorUser)
                     .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.CoverPhotoDocument)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.UserEducations)
+                        .ThenInclude(e => e.University)
                 .Include(e => e.Course)
-                .Select(e => ObjectMapper.Map<StudentCourseDto>(e))
                 .FirstOrDefaultAsync();
+
+            var output = ObjectMapper.Map<StudentCourseDto>(studentCourse);
+            if (studentCourse.CreatorUser.UserEducations != null && studentCourse.CreatorUser.UserEducations.Count > 0)
+            {
+                output.CreatorUser.CurrentUniversity = studentCourse.CreatorUser.UserEducations
+                    .OrderByDescending(e => e.EndYear)
+                        .ThenByDescending(e => e.StartYear)
+                   .FirstOrDefault()
+                   .University.HeProvider;
+            }
+
+            return output;
         }
 
         public async Task<StudentCourseDto> GetWithSections(Guid id)
@@ -109,7 +125,6 @@ namespace Academically.Services.StudentCourses
                 .FirstOrDefaultAsync();
 
             var output = ObjectMapper.Map<StudentCourseDto>(studentCourse);
-
             if (studentCourse.CreatorUser.UserEducations != null && studentCourse.CreatorUser.UserEducations.Count > 0)
             {
                 output.CreatorUser.CurrentUniversity = studentCourse.CreatorUser.UserEducations

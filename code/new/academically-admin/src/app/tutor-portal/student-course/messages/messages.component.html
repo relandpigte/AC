@@ -1,0 +1,72 @@
+<div [@routerTransition] class="container-fluid">
+
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ model.creatorUser.fullName }}</h6>
+              <h1 class="header-title">{{ 'Messages' | localize }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-8">
+          <app-discussions [isInCourse]="false" [isInTutorPortal]="true" [studentCourseId]="id"></app-discussions>
+        </div>
+        <div class="col-4">
+          <div class="card" *ngIf="model && model.creatorUser">
+            <img [src]="getCoverPhotoFromDocument(model.creatorUser.coverPhotoDocument, model.creatorUser.id)" alt="..."
+              class="card-img-top">
+            <div class="card-body text-center">
+              <a href="#!profile" (click)="$event.preventDefault();"
+                class="avatar avatar-xl card-avatar card-avatar-top">
+                <img
+                  [src]="getProfilePictureFromDocument(model.creatorUser.profilePictureDocument, model.creatorUser.id)"
+                  class="avatar-img rounded-circle border border-4 border-card" alt="profile">
+              </a>
+              <h2 class="card-title">
+                <a href="#!profile" (click)="$event.preventDefault();">
+                  {{ model.creatorUser.fullName }}
+                </a>
+              </h2>
+              <p class="small text-muted mb-3">
+                {{ model.creatorUser.currentUniversity }}
+              </p>
+              <p class="card-text">
+                <span class="badge badge-soft-secondary">
+                  {{ 'Student' | localize }}
+                </span>
+              </p>
+              <div class="row">
+                <div class="col-md-10 offset-md-1">
+                  <div class="row align-items-center no-gutters">
+                    <div class="col-auto">
+                      <div class="small mr-2">{{ model.progress | number: '1.0-0' }}%</div>
+                    </div>
+                    <div class="col">
+                      <div class="progress progress-sm">
+                        <div class="progress-bar" role="progressbar" [ngStyle]="{ width: model.progress + '%' }"
+                          aria-valuemin=" 0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer card-footer-boxed">
+              <div class="d-flex align-items-center justify-content-between w-100">
+                <p class="m-0">{{ 'Enrolled' | localize }}</p>
+                <p class="m-0 text-muted">{{ model.creationTime | dateFormat: 'MMM DD, YYYY' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

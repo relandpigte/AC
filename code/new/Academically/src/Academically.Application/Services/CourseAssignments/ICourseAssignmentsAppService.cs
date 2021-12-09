@@ -8,6 +8,7 @@ namespace Academically.Services.CourseAssignments
 {
     public interface ICourseAssignmentsAppService : IApplicationService
     {
+        Task<PagedResultDto<CourseAssignmentDto>> GetAllByStudent(PagedByStudentAssignmentResultRequestDto input);
         Task<PagedResultDto<CourseAssignmentDto>> GetAllByCourse(PagedByCourseAssignmentResultRequestDto input);
         Task<PagedResultDto<CourseAssignmentDto>> GetAll(PagedCourseAssignmentResultRequestDto input);
         Task CreateAsync([FromForm] CreateCourseAssingmentDto input);

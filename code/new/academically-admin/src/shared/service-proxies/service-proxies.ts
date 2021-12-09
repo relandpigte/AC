@@ -1697,8 +1697,8 @@ export class CourseAssignmentsServiceProxy {
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllByCourse(searchFilter: string | undefined, courseIdFilter: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CourseAssignmentDtoPagedResultDto> {
-        let url_ = this.baseUrl + "/api/services/app/CourseAssignments/GetAllByCourse?";
+    getAllByStudent(searchFilter: string | undefined, courseIdFilter: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CourseAssignmentDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/CourseAssignments/GetAllByStudent?";
         if (searchFilter === null)
             throw new Error("The parameter 'searchFilter' cannot be null.");
         else if (searchFilter !== undefined)
@@ -1707,6 +1707,92 @@ export class CourseAssignmentsServiceProxy {
             throw new Error("The parameter 'courseIdFilter' cannot be null.");
         else if (courseIdFilter !== undefined)
             url_ += "CourseIdFilter=" + encodeURIComponent("" + courseIdFilter) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllByStudent(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllByStudent(<any>response_);
+                } catch (e) {
+                    return <Observable<CourseAssignmentDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CourseAssignmentDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllByStudent(response: HttpResponseBase): Observable<CourseAssignmentDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CourseAssignmentDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CourseAssignmentDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param courseIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param courseSectionIdFilter (optional) 
+     * @param creationTimeFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAllByCourse(courseIdFilter: string | undefined, searchFilter: string | undefined, courseSectionIdFilter: string | undefined, creationTimeFilter: moment.Moment | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CourseAssignmentDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/CourseAssignments/GetAllByCourse?";
+        if (courseIdFilter === null)
+            throw new Error("The parameter 'courseIdFilter' cannot be null.");
+        else if (courseIdFilter !== undefined)
+            url_ += "CourseIdFilter=" + encodeURIComponent("" + courseIdFilter) + "&";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (courseSectionIdFilter === null)
+            throw new Error("The parameter 'courseSectionIdFilter' cannot be null.");
+        else if (courseSectionIdFilter !== undefined)
+            url_ += "CourseSectionIdFilter=" + encodeURIComponent("" + courseSectionIdFilter) + "&";
+        if (creationTimeFilter === null)
+            throw new Error("The parameter 'creationTimeFilter' cannot be null.");
+        else if (creationTimeFilter !== undefined)
+            url_ += "CreationTimeFilter=" + encodeURIComponent(creationTimeFilter ? "" + creationTimeFilter.toJSON() : "") + "&";
         if (sorting === null)
             throw new Error("The parameter 'sorting' cannot be null.");
         else if (sorting !== undefined)
@@ -1984,6 +2070,69 @@ export class CourseConversationsServiceProxy {
             }));
         }
         return _observableOf<CourseConversationDto[]>(<any>null);
+    }
+
+    /**
+     * @param courseId (optional) 
+     * @return Success
+     */
+    getStudents(courseId: string | undefined): Observable<GetStudentsCourseConversationDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/CourseConversations/GetStudents?";
+        if (courseId === null)
+            throw new Error("The parameter 'courseId' cannot be null.");
+        else if (courseId !== undefined)
+            url_ += "courseId=" + encodeURIComponent("" + courseId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetStudents(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetStudents(<any>response_);
+                } catch (e) {
+                    return <Observable<GetStudentsCourseConversationDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetStudentsCourseConversationDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetStudents(response: HttpResponseBase): Observable<GetStudentsCourseConversationDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(GetStudentsCourseConversationDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetStudentsCourseConversationDto[]>(<any>null);
     }
 
     /**
@@ -16026,6 +16175,7 @@ export class CourseConversationDto implements ICourseConversationDto {
     studentCourseId: string;
     parentId: string | undefined;
     creationTime: moment.Moment;
+    creatorUser: UserDto;
     studentCourse: StudentCourseDto;
     parent: CourseConversationDto;
     children: CourseConversationDto[] | undefined;
@@ -16048,6 +16198,7 @@ export class CourseConversationDto implements ICourseConversationDto {
             this.studentCourseId = _data["studentCourseId"];
             this.parentId = _data["parentId"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.studentCourse = _data["studentCourse"] ? StudentCourseDto.fromJS(_data["studentCourse"]) : <any>undefined;
             this.parent = _data["parent"] ? CourseConversationDto.fromJS(_data["parent"]) : <any>undefined;
             if (Array.isArray(_data["children"])) {
@@ -16078,6 +16229,7 @@ export class CourseConversationDto implements ICourseConversationDto {
         data["studentCourseId"] = this.studentCourseId;
         data["parentId"] = this.parentId;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["studentCourse"] = this.studentCourse ? this.studentCourse.toJSON() : <any>undefined;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         if (Array.isArray(this.children)) {
@@ -16108,6 +16260,7 @@ export interface ICourseConversationDto {
     studentCourseId: string;
     parentId: string | undefined;
     creationTime: moment.Moment;
+    creatorUser: UserDto;
     studentCourse: StudentCourseDto;
     parent: CourseConversationDto;
     children: CourseConversationDto[] | undefined;
@@ -18481,6 +18634,57 @@ export interface IGetRoleForEditOutput {
     role: RoleEditDto;
     permissions: GroupedPermissionDto[] | undefined;
     grantedPermissionNames: string[] | undefined;
+}
+
+export class GetStudentsCourseConversationDto implements IGetStudentsCourseConversationDto {
+    studentCourseId: string;
+    user: UserDto;
+    lastCourseConversation: CourseConversationDto;
+
+    constructor(data?: IGetStudentsCourseConversationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.studentCourseId = _data["studentCourseId"];
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
+            this.lastCourseConversation = _data["lastCourseConversation"] ? CourseConversationDto.fromJS(_data["lastCourseConversation"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): GetStudentsCourseConversationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetStudentsCourseConversationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["studentCourseId"] = this.studentCourseId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        data["lastCourseConversation"] = this.lastCourseConversation ? this.lastCourseConversation.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): GetStudentsCourseConversationDto {
+        const json = this.toJSON();
+        let result = new GetStudentsCourseConversationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetStudentsCourseConversationDto {
+    studentCourseId: string;
+    user: UserDto;
+    lastCourseConversation: CourseConversationDto;
 }
 
 export class GroupedPermissionDto implements IGroupedPermissionDto {

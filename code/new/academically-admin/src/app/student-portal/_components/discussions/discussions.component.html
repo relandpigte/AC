@@ -46,13 +46,14 @@
           <div class="row align-items-center">
             <div class="col-auto">
               <a href="#!" class="avatar avatar-xs">
-                <img [src]="getProfilePicture(currentUser.profilePictureUrl, currentUser.id)" alt="..."
-                  class="avatar-img rounded-circle">
+                <img
+                  [src]="getProfilePictureFromDocument(conversation.creatorUser.profilePictureDocument, conversation.creatorUser.id)"
+                  alt="..." class="avatar-img rounded-circle">
               </a>
             </div>
             <div class="col ml-n3">
               <h6 class="mb-1">
-                {{ currentUser.name }} {{ currentUser.surname }}
+                {{ conversation.creatorUser.fullName }}
               </h6>
               <p class="card-text small text-muted">
                 <time>
@@ -97,26 +98,36 @@
               </a>
               <a *ngIf="getReactionCount(conversation.courseConversationReactions, ReactionType.Heart)" href="#!"
                 class="btn btn-sm btn-white mr-1"
+                [class.btn-white]="!isMyReaction(conversation.courseConversationReactions, ReactionType.Heart)"
+                [class.btn-outline-primary]="isMyReaction(conversation.courseConversationReactions, ReactionType.Heart)"
                 (click)="$event.preventDefault(); onUnreactClick(conversation.courseConversationReactions, ReactionType.Heart)">
                 ❤️ {{ getReactionCount(conversation.courseConversationReactions, ReactionType.Heart) }}
               </a>
               <a *ngIf="getReactionCount(conversation.courseConversationReactions, ReactionType.Laugh)" href="#!"
                 class="btn btn-sm btn-white mr-1"
+                [class.btn-white]="!isMyReaction(conversation.courseConversationReactions, ReactionType.Laugh)"
+                [class.btn-outline-primary]="isMyReaction(conversation.courseConversationReactions, ReactionType.Laugh)"
                 (click)="$event.preventDefault(); onUnreactClick(conversation.courseConversationReactions, ReactionType.Laugh)">
                 😄 {{ getReactionCount(conversation.courseConversationReactions, ReactionType.Laugh) }}
               </a>
               <a *ngIf="getReactionCount(conversation.courseConversationReactions, ReactionType.Wow)" href="#!"
                 class="btn btn-sm btn-white mr-1"
+                [class.btn-white]="!isMyReaction(conversation.courseConversationReactions, ReactionType.Wow)"
+                [class.btn-outline-primary]="isMyReaction(conversation.courseConversationReactions, ReactionType.Wow)"
                 (click)="$event.preventDefault(); onUnreactClick(conversation.courseConversationReactions, ReactionType.Wow)">
                 😲 {{ getReactionCount(conversation.courseConversationReactions, ReactionType.Wow) }}
               </a>
               <a *ngIf="getReactionCount(conversation.courseConversationReactions, ReactionType.Sad)" href="#!"
                 class="btn btn-sm btn-white mr-1"
+                [class.btn-white]="!isMyReaction(conversation.courseConversationReactions, ReactionType.Sad)"
+                [class.btn-outline-primary]="isMyReaction(conversation.courseConversationReactions, ReactionType.Sad)"
                 (click)="$event.preventDefault(); onUnreactClick(conversation.courseConversationReactions, ReactionType.Sad)">
                 😢 {{ getReactionCount(conversation.courseConversationReactions, ReactionType.Sad) }}
               </a>
               <a *ngIf="getReactionCount(conversation.courseConversationReactions, ReactionType.Mad)" href="#!"
                 class="btn btn-sm btn-white mr-1"
+                [class.btn-white]="!isMyReaction(conversation.courseConversationReactions, ReactionType.Mad)"
+                [class.btn-outline-primary]="isMyReaction(conversation.courseConversationReactions, ReactionType.Mad)"
                 (click)="$event.preventDefault(); onUnreactClick(conversation.courseConversationReactions, ReactionType.Mad)">
                 😡 {{ getReactionCount(conversation.courseConversationReactions, ReactionType.Mad) }}
               </a>
@@ -151,8 +162,9 @@
             <div class="row">
               <div class="col-auto">
                 <a class="avatar avatar-xs" href="profile-posts.html">
-                  <img [src]="getProfilePicture(currentUser.profilePictureUrl, currentUser.id)" alt="..."
-                    class="avatar-img rounded-circle">
+                  <img
+                    [src]="getProfilePictureFromDocument(childConversation.creatorUser.profilePictureDocument, childConversation.creatorUser.id)"
+                    alt="..." class="avatar-img rounded-circle">
                 </a>
               </div>
               <div class="col ml-n3">
@@ -160,12 +172,12 @@
                   <div class="row">
                     <div class="col">
                       <h6 class="comment-title">
-                        {{ currentUser.name }} {{ currentUser.surname }}
+                        {{ childConversation.creatorUser.fullName }}
                       </h6>
                     </div>
                     <div class="col-auto">
                       <time class="comment-time">
-                        {{ convertMomentToDateAgo(conversation.creationTime) }}
+                        {{ convertMomentToDateAgo(childConversation.creationTime) }}
                       </time>
                     </div>
                   </div>
@@ -181,7 +193,7 @@
         <div class="row">
           <div class="col-auto align-self-center">
             <div class="avatar avatar-xs">
-              <img [src]="getProfilePicture(currentUser.profilePictureUrl, currentUser.id)" alt="..."
+              <img [src]="getProfilePicture(appSession.user.profilePictureUrl, appSession.user.id)" alt="..."
                 class="avatar-img rounded-circle">
             </div>
           </div>

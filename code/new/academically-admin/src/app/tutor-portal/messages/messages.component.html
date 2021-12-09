@@ -1,0 +1,57 @@
+<div [@routerTransition] class="container-fluid">
+
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ model.name }}</h6>
+              <h1 class="header-title">{{ 'Messages' | localize }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body p-0 conversations-container">
+          <div class="row">
+            <div class="col-4 pr-0">
+              <ul class="list-group rounded-0 conversation-students">
+                <li *ngFor="let student of students" class="list-group-item"
+                  [class.active]="student === selectedStudent" (click)="onStudentClick(student)">
+                  <div class="row align-items-center">
+                    <div class="col-auto">
+                      <a class="avatar">
+                        <img [src]="getProfilePictureFromDocument(student.user.profilePictureDocument, student.user.id)"
+                          alt="..." class="avatar-img rounded-circle">
+                      </a>
+                    </div>
+                    <div class="col ml-n2">
+                      <h4 class="mb-1">
+                        <a>
+                          {{ student.user.fullName }}
+                        </a>
+                      </h4>
+                      <p *ngIf="student.lastCourseConversation" class="card-text small text-muted mb-1">
+                        {{ student.lastCourseConversation.message}}
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="col-8 pl-0">
+              <div class="p-3 conversations">
+                <app-discussions *ngIf="selectedStudent" [isInCourse]="false" [isInTutorPortal]="true"
+                  [studentCourseId]="selectedStudent.studentCourseId"></app-discussions>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

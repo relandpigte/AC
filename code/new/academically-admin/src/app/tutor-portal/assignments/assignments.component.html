@@ -1,0 +1,170 @@
+<div [@routerTransition] class="container-fluid">
+
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ model.name }}</h6>
+              <h1 class="header-title">{{ 'Assignments' | localize }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <form>
+                <div class="input-group input-group-flush">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="fe fe-search"></i>
+                    </span>
+                  </div>
+                  <input class="list-search form-control" type="search" name="Search" placeholder="Search"
+                    [(ngModel)]="searchFilter" (keyup)="getDataPage(1)" />
+                </div>
+              </form>
+            </div>
+            <div class="col-auto mr-n3">
+              <form>
+                <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize"
+                  (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
+                  class="custom-select custom-select-sm form-control-flush" data-toggle="select">
+                  <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
+                    {{ pageSizeSelection }} {{ 'PerPage' | localize }}
+                  </option>
+                </select>
+              </form>
+            </div>
+            <div class="col-auto">
+              <div class="dropdown" dropdown #filterDropdown="bs-dropdown" [isAnimated]="true" [autoClose]="false">
+                <button class="btn btn-sm btn-white" type="button" dropdownToggle>
+                  <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }}
+                  <span *ngIf="minimumProgressFilter" class="badge badge-primary ml-1">
+                    {{ minimumProgressFilter }}
+                  </span>
+                </button>
+                <form *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-card"
+                  (ngSubmit)="getDataPage(1)">
+                  <div class="card-header">
+                    <h4 class="card-header-title">{{ 'Filters' | localize }}</h4>
+                    <button class="btn btn-sm btn-link text-reset btn-white" type="submit"
+                      (click)="filterDropdown.hide(); onClearFiltersClick()">
+                      <small>{{ 'ClearFilters' | localize }}</small>
+                    </button>
+                  </div>
+                  <div class="card-body">
+                    <div class="list-group list-group-flush mt-n4 mb-4">
+                      <div class="list-group-item">
+                        <div class="row">
+                          <div class="col-auto d-flex align-items-center">
+                            <small>{{ 'Section' | localize }}:</small>
+                          </div>
+                          <div class="col">
+                            <select class="custom-select" select2 [defaultValue]="courseSectionIdFilter"
+                              (select2ValueChange)="courseSectionIdFilter = $event" [bodyContainer]="true"
+                              [(ngModel)]="courseSectionIdFilter" id="studentCourseSectionId"
+                              name="studentCourseSectionId" #studentCourseSectionIdModel="ngModel"
+                              #studentCourseSectionIdEl>
+                              <option *ngFor="let studentCourseSection of studentCourseSections"
+                                [value]="studentCourseSection.courseSection.id">
+                                {{ studentCourseSection.courseSection.name | localize }}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="list-group list-group-flush mt-n4 mb-4">
+                      <div class="list-group-item">
+                        <div class="row">
+                          <div class="col-auto d-flex align-items-center">
+                            <small>{{ 'DateUploaded' | localize }}:</small>
+                          </div>
+                          <div class="col">
+                            <div class="input-group input-group-merge" (click)="dp.show()">
+                              <input [(ngModel)]="creationTimeFilter" class="form-control form-control-appended"
+                                type="text" id="creationTimeFilter" name="creationTimeFilter" required
+                                #dp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" />
+                              <div class="input-group-append">
+                                <div class="input-group-text">
+                                  <span class="fas fa-calendar"></span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <button class="btn btn-block btn-primary" type="submit" (click)="filterDropdown.hide()">
+                      {{ 'ApplyFilter' | localize }}
+                    </button>
+                  </div>
+                  &nbsp;
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-sm table-hover table-nowrap card-table" [loader]="isTableLoading">
+            <tbody class="list font-size-base">
+              <tr *ngFor="
+                  let assignment of (assignments | paginate: { id: 'assignments', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
+                ">
+                <td>
+                  <div class="row align-items-center">
+                    <div class="col-auto">
+                      <a href="!#student" (click)="$event.preventDefault();"
+                        class="avatar avatar-lg d-flex justify-content-center align-items-center">
+                        <i class="fe fe-folder text-muted"></i>
+                      </a>
+                    </div>
+                    <div class="col ml-n2">
+                      <h4 class="mb-1">
+                        <a href="!#student" (click)="$event.preventDefault();">
+                          {{ getFilename(assignment.document.originalFileName) }}
+                        </a>
+                      </h4>
+                      <p class="card-text small text-muted mb-1">
+                        {{ formatBytes(assignment.document.size) }}
+                        {{ getExtension(assignment.document.name) | uppercase }}
+                      </p>
+                      <p class="card-text small text-muted mb-1">
+                        {{ 'UploadedBy' | localize }}
+                        {{ assignment.creatorUser.fullName }}
+                        on {{ assignment.creationTime | dateFormat: 'MMM DD, YYYY' }}
+                      </p>
+                      <p class="card-text small text-muted">
+                        {{ CourseSectionType[assignment.studentCourseSection.courseSection.type] }}:
+                        {{ assignment.studentCourseSection.courseSection.name }}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td width="1%">
+                  <button class="btn btn-white btn-sm" (click)="onDownloadClick(assignment.document)">
+                    {{ 'Download' | localize }}
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="assignments.length === 0">
+                <td colspan="10">
+                  <p class="text-center m-0 p-0">{{ 'NoRecordsFound' | localize }}</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <abp-pagination-controls id="assignments" (pageChange)="getDataPage($event)"> </abp-pagination-controls>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
