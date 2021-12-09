@@ -19,13 +19,14 @@ import { NgModel, NgForm } from '@angular/forms';
 })
 export class DiscussionsComponent extends AppComponentBase implements OnInit {
   @Input() isInCourse = true;
+  @Input() isInTutorPortal = false;
   courseId: string;
-  studentCourseId: string;
   conversations: CourseConversationDto[] = [];
   isPosting = false;
-  currentUser: UserLoginInfoDto;
   ReactionType = ConversationReactionType;
   inputLength = 0;
+
+  _studentCourseId: string;
 
   constructor(
     injector: Injector,
@@ -35,19 +36,26 @@ export class DiscussionsComponent extends AppComponentBase implements OnInit {
   ) {
     super(injector);
     this._route.parent.parent.parent.paramMap.subscribe(paramMap => {
-      this.courseId = paramMap.get('course-id');
-      this.getStudentCourse();
-      this.currentUser = this.appSession.user;
+      if (paramMap.has('course-id')) {
+        this.courseId = paramMap.get('course-id');
+      }
     });
+  }
+  @Input() set studentCourseId(value: string) {
+    this._studentCourseId = value;
+    this.getConversations();
   }
 
   ngOnInit(): void {
+    if (!this.isInTutorPortal) {
+      this.getStudentCourseByCourse();
+    }
   }
 
   onFormSubmit(message: any, parentId?: string): void {
     this.isPosting = true;
     const model = new CourseConversationDto();
-    model.studentCourseId = this.studentCourseId;
+    model.studentCourseId = this._studentCourseId;
     model.parentId = parentId;
     model.message = message.value;
     if (model.message && model.message.trim()) {
@@ -80,7 +88,7 @@ export class DiscussionsComponent extends AppComponentBase implements OnInit {
   }
 
   onUnreactClick(conversationReactions: CourseConversationReactionDto[], type: ConversationReactionType): void {
-    const conversationReaction = conversationReactions.find(e => e.creatorUserId === this.currentUser.id && e.type === type);
+    const conversationReaction = conversationReactions.find(e => e.creatorUserId === this.appSession.userId && e.type === type);
     if (conversationReaction) {
       this._courseConversationsService.deleteReaction(conversationReaction.id)
         .pipe(
@@ -93,11 +101,11 @@ export class DiscussionsComponent extends AppComponentBase implements OnInit {
   }
 
   hasUserReacted(conversationReactions: CourseConversationReactionDto[]): boolean {
-    return conversationReactions.filter(e => e.creatorUserId === this.currentUser.id).length > 0;
+    return conversationReactions.filter(e => e.creatorUserId === this.appSession.userId).length > 0;
   }
 
   isMyReaction(conversationReactions: CourseConversationReactionDto[], type: ConversationReactionType): boolean {
-    return conversationReactions.filter(e => e.creatorUserId === this.currentUser.id && e.type === type).length > 0;
+    return conversationReactions.filter(e => e.creatorUserId === this.appSession.userId && e.type === type).length > 0;
   }
 
   getReactionCount(conversationReactions: CourseConversationReactionDto[], type: ConversationReactionType): number {
@@ -115,17 +123,25 @@ export class DiscussionsComponent extends AppComponentBase implements OnInit {
     }
   }
 
-  private getStudentCourse(): void {
+  private getStudentCourseByCourse(): void {
     this._studentCoursesService.getByCourse(this.courseId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(studentCourse => {
-        this.studentCourseId = studentCourse.id;
+        this._studentCourseId = studentCourse.id;
+        this.getConversations();
+      });
+  }
+
+  private getStudentCourse(): void {
+    this._studentCoursesService.get(this._studentCourseId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
         this.getConversations();
       });
   }
 
   private getConversations(): void {
-    this._courseConversationsService.getAll(this.studentCourseId)
+    this._courseConversationsService.getAll(this._studentCourseId)
       .pipe(
         takeUntil(this.destroyed$),
       )

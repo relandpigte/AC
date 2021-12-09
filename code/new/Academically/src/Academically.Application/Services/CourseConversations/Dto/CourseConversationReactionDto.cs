@@ -4,7 +4,7 @@ using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 
-namespace Academically.Services.StudentCourseConversations.Dto
+namespace Academically.Services.CourseConversations.Dto
 {
     [AutoMap(typeof(CourseConversationReaction))]
     public class CourseConversationReactionDto : EntityDto<Guid>

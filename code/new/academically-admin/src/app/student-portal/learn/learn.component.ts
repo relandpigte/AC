@@ -16,6 +16,7 @@ export class LearnComponent extends AppComponentBase implements OnInit {
   studentCourse: StudentCourseDto = new StudentCourseDto();
   currentCourseSectionId: string;
   currentSectionIndex = 0;
+  percentage = 0;
 
   constructor(
     injector: Injector,
@@ -29,6 +30,9 @@ export class LearnComponent extends AppComponentBase implements OnInit {
       if (paramMap.has('course-id')) {
         this.courseId = paramMap.get('course-id');
       }
+    });
+    this._studentPortalService.percentage$.subscribe(percentage => {
+      this.percentage = percentage;
     });
   }
 

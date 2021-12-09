@@ -18,6 +18,7 @@ export class LessonPreviewComponent extends AppComponentBase implements OnInit {
   @Output() nextSection = new EventEmitter();
   contents: Content[] = [];
   currentPage = 0;
+  isCompleted = false;
 
   constructor(
     injector: Injector,
@@ -34,6 +35,13 @@ export class LessonPreviewComponent extends AppComponentBase implements OnInit {
 
   @Input() set id(value: string) {
     this.getPages(value);
+  }
+
+  @Input() set completed(value: boolean) {
+    this.isCompleted = value;
+    if (this.isCompleted) {
+      this.contents = [];
+    }
   }
 
   ngOnInit(): void {

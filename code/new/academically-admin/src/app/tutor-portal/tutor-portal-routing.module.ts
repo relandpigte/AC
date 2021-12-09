@@ -32,6 +32,20 @@ import { TutorPortalComponent } from './tutor-portal.component';
                     (m) => m.StudentsModule,
                   ),
               },
+              {
+                path: 'messages',
+                loadChildren: () =>
+                  import('@app/tutor-portal/messages/messages.module').then(
+                    (m) => m.MessagesModule,
+                  ),
+              },
+              {
+                path: 'assignments',
+                loadChildren: () =>
+                  import('@app/tutor-portal/assignments/assignments.module').then(
+                    (m) => m.AssignmentsModule,
+                  ),
+              },
               { path: '', redirectTo: 'overview' },
             ],
           },

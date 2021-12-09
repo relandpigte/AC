@@ -25,6 +25,13 @@ import { StudentCourseComponent } from './student-course.component';
                   ),
               },
               {
+                path: 'messages',
+                loadChildren: () =>
+                  import('@app/tutor-portal/student-course/messages/messages.module').then(
+                    (m) => m.MessagesModule,
+                  ),
+              },
+              {
                 path: 'assignments',
                 loadChildren: () =>
                   import('@app/tutor-portal/student-course/assignments/assignments.module').then(
