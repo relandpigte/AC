@@ -1,0 +1,5 @@
+<ng-container [ngSwitch]="content.type">
+  <app-lesson-editor *ngSwitchCase="'lesson'" [lesson]="content"></app-lesson-editor>
+  <app-page-editor *ngSwitchCase="'page'" [page]="content"></app-page-editor>
+  <app-component-editor *ngSwitchDefault [component]="content"></app-component-editor>
+</ng-container>

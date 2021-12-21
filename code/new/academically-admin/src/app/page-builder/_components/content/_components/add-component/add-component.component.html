@@ -1,0 +1,30 @@
+<div class="modal-card card">
+  <abp-modal-header [title]="'SelectAComponent' | localize" (onCloseClick)="onCloseClick()">
+  </abp-modal-header>
+  <div class="card-body p-0">
+    <ul class="list-group">
+      <li *ngFor="let component of components" class="list-group-item">
+        <a href="#!select-component" (click)="$event.preventDefault(); onComponentSelect(component)">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <a href="!#student" (click)="$event.preventDefault();"
+                class="avatar avatar-lg d-flex justify-content-center align-items-center">
+                <i class="{{ component.icon }} text-muted"></i>
+              </a>
+            </div>
+            <div class="col ml-n2">
+              <h4 class="mb-1">
+                <a href="!#student" (click)="$event.preventDefault();">
+                  {{ component.name }}
+                </a>
+              </h4>
+              <p class="card-text small text-muted mb-1">
+                {{ component.description }}
+              </p>
+            </div>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

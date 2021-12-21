@@ -2885,7 +2885,6 @@ export class CourseSectionPagesServiceProxy {
     }
 
     /**
-     * @param pageContent (optional) 
      * @param description (optional) 
      * @param categoriesTags (optional) 
      * @param duration (optional) 
@@ -2894,15 +2893,11 @@ export class CourseSectionPagesServiceProxy {
      * @param id (optional) 
      * @return Success
      */
-    saveUpdateDetails(pageContent: string | undefined, description: string | undefined, categoriesTags: string | undefined, duration: string | undefined, file: FileParameter | undefined, courseSectionId: string | undefined, id: string | undefined): Observable<void> {
+    saveUpdateDetails(description: string | undefined, categoriesTags: string | undefined, duration: string | undefined, file: FileParameter | undefined, courseSectionId: string | undefined, id: string | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/CourseSectionPages/SaveUpdateDetails";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = new FormData();
-        if (pageContent === null || pageContent === undefined) {
-            // do nothing
-        } else
-            content_.append("PageContent", pageContent.toString());
         if (description === null || description === undefined) {
             // do nothing
         } else

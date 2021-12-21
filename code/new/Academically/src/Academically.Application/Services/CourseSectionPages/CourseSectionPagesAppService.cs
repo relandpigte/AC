@@ -61,10 +61,12 @@ namespace Academically.Services.CourseSectionPages
         {
             CourseSectionPage courseSectionPage;
             var courseSectionImageDocument = new Document();
+            var pageContent = string.Empty;
 
             if (input.Id.HasValue)
             {
                 courseSectionPage = await _courseSectionPagesRepository.GetAll().FirstOrDefaultAsync(e => e.Id == input.Id);
+                pageContent = courseSectionPage.PageContent;
                 ObjectMapper.Map(input, courseSectionPage);
             }
             else
@@ -88,6 +90,7 @@ namespace Academically.Services.CourseSectionPages
 
             }
             courseSectionPage.CreatorUserId = AbpSession.UserId.Value;
+            courseSectionPage.PageContent = pageContent;
             await _courseSectionPagesRepository.InsertOrUpdateAsync(courseSectionPage);
         }
     }

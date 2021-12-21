@@ -1,0 +1,37 @@
+.no-component {
+  &.component-container {
+    .btn-add-component {
+      bottom: -20px;
+    }
+  }
+
+  .card-body {
+    text-align: center;
+
+    img {
+      width: 300px;
+    }
+  }
+}
+
+
+.component-container {
+  text-align: center;
+  position  : relative;
+
+  &:hover {
+    .btn-add-component {
+      visibility: visible;
+      opacity   : 1;
+    }
+  }
+
+  .btn-add-component {
+    z-index   : 2;
+    bottom    : -20px;
+    position  : absolute;
+    visibility: hidden;
+    opacity   : 0;
+    transition: visibility 0s, opacity 0.2s linear;
+  }
+}
