@@ -1,0 +1,29 @@
+.page-contents {
+  padding: 0;
+  margin : 0;
+
+  .page-content {
+    padding      : 5px 10px;
+    border       : 1px solid #e3ebf6;
+    border-radius: 5px;
+    margin-bottom: 10px;
+
+    .drag-handle-container {
+      // font-size: 18px;
+      // position : relative;
+      cursor: move;
+
+      .drag-handle {
+        &::before {
+          content   : "\f142 \f142";
+        }
+      }
+    }
+
+    .col,
+    .col-auto {
+      display    : flex;
+      align-items: center;
+    }
+  }
+}

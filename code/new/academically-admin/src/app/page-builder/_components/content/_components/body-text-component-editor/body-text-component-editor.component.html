@@ -1,0 +1,42 @@
+<div class="card card-sm">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Text' | localize }}
+    </h4>
+  </div>
+  <div class="card-body text-component-content">
+    <quill-editor [(ngModel)]="component.text" id="value" name="value">
+      <div quill-editor-toolbar>
+        <span class="ql-formats">
+          <button class="ql-bold"></button>
+          <button class="ql-italic"></button>
+          <button class="ql-underline"></button>
+          <button class="ql-strike"></button>
+        </span>
+        <span class="ql-formats">
+          <select class="ql-color ql-color-picker" [title]="'Text color'">
+          </select>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-blockquote"></button>
+          <button class="ql-code-block"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-list" value="ordered"></button>
+          <button class="ql-list" value="bullet"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-script" value="sub"></button>
+          <button class="ql-script" value="super"></button>
+        </span>
+        <span class="ql-formats">
+          <select class="ql-align">
+          </select>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-clean"></button>
+        </span>
+      </div>
+    </quill-editor>
+  </div>
+</div>

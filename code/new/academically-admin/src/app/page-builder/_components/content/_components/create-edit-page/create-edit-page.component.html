@@ -1,0 +1,17 @@
+<form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <abp-modal-header [title]="((isEdit ? 'Edit' :  'Create') | localize) + ' ' + ('Page' | localize | lowercase)"
+      (onCloseClick)="onCloseClick()">
+    </abp-modal-header>
+    <div class="card-body">
+      <div class="form-group required">
+        <label class="col-form-label" for="name">{{ 'Name' | localize }}</label>
+        <input type="text" class="form-control" id="name" name="name" [(ngModel)]="content.name" #nameModel="ngModel"
+          #nameEl required />
+        <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+      </div>
+    </div>
+    <abp-modal-footer [saveDisabled]="!form.form.valid" (onCancelClick)="onCloseClick()">
+    </abp-modal-footer>
+  </div>
+</form>

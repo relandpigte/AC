@@ -12,7 +12,6 @@ namespace Academically.Services.CourseSectionPages.Dto
     [AutoMap(typeof(CourseSectionPage))]
     public class UpdateCourseSectionPageDto: EntityDto<Guid?>
     {
-        public string PageContent { get; set; }
         public string Description { get; set; }
         public string CategoriesTags { get; set; }
         public string Duration { get; set; }

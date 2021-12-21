@@ -90,7 +90,6 @@ export class PageBuilderComponent extends AppComponentBase implements OnInit {
 
       const courseSectionPage = this.detailComponent.prepareContentsForCoursePage();
       this._courseSectionPagesService.saveUpdateDetails(
-        this.contentComponent.preparepageContentForSaving(),
         courseSectionPage.description,
         courseSectionPage.categoriesTags,
         courseSectionPage.duration,

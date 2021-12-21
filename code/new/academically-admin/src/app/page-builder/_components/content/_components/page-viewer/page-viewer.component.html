@@ -1,0 +1,23 @@
+<div class="card component-container no-component"
+  *ngIf="(!page || !page.components || !page.components.length) else componentsTemplate">
+  <div class="card-body">
+    <img src="/assets/themes/dashkit/img/illustrations/scale.svg" alt="..." class="img-fluid">
+    <h3 class="title">
+      {{ 'CreateYourLesson' | localize }}
+    </h3>
+    <p class="text-muted">
+      {{ 'CreateYourLessonSubheader' | localize }}
+    </p>
+    <button (click)="onAddClick()" class="btn btn-rounded-circle btn-primary btn-add-component">
+      <i class="fe fe-plus"></i>
+    </button>
+  </div>
+</div>
+<ng-template #componentsTemplate>
+  <div *ngFor="let component of page.components" class="component-container">
+    <app-component-viewer [component]="component"></app-component-viewer>
+    <button (click)="onAddClick(component)" class="btn btn-rounded-circle btn-primary btn-add-component">
+      <i class="fe fe-plus"></i>
+    </button>
+  </div>
+</ng-template>
