@@ -63,7 +63,6 @@ export class CourseRatingSummaryComponent extends PagedListingComponentBase<Cour
       )
       .subscribe(result => {
         this.courseRatings = result.items;
-        console.log(this.courseRatings);
         this.showPaging(result, pageNumber);
       });
   }

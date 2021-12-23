@@ -1,0 +1,35 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Pages' | localize }}
+    </h4>
+  </div>
+  <div class="card-body">
+    <div [dragula]="dragulaGroup" [(dragulaModel)]='lesson.pages' class="page-contents">
+      <div *ngFor="let page of lesson.pages" class="page-content">
+        <div class="row">
+          <div class="col-auto">
+            <div class="drag-handle-container">
+              <i class="fas fa-ellipsis-v drag-handle"></i>
+            </div>
+          </div>
+          <div class="col ml-n3">
+            <p class="m-0">
+              <a href="#!edit-page" (click)="$event.preventDefault(); onPageClick(page);">
+                {{ page.name }}
+              </a>
+            </p>
+          </div>
+          <div class="col-auto">
+            <a href="#!edit-page" (click)="$event.preventDefault(); onEditClick(page)">
+              <i class="fe fe-edit-2"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button (click)="onAddClick()" class="btn btn-md btn-outline-primary w-100">
+      {{ 'NewPage' | localize }}
+    </button>
+  </div>
+</div>

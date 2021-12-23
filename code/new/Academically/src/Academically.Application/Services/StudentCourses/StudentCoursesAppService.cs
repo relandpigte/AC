@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
 using Academically.Services.StudentCourses.Dto;
+using Academically.Users.Dto;
 using Microsoft.EntityFrameworkCore;
 
 namespace Academically.Services.StudentCourses
@@ -151,6 +153,20 @@ namespace Academically.Services.StudentCourses
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<IEnumerable<UserDto>> GetRecentGraduates(Guid courseId)
+        {
+            var graduates = await _courseRatingsRepository.GetAll()
+                .Include(e => e.Reviewer)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .Select(e => e.Reviewer)
+                .Distinct()
+                .Take(5)
+                .Select(e => ObjectMapper.Map<UserDto>(e))
+                .ToListAsync();
+
+            return graduates;
+        }
+
         public async Task Create(Guid courseId)
         {
             var courseSections = await _courseSectionsRepository.GetAll()
@@ -207,6 +223,7 @@ namespace Academically.Services.StudentCourses
 
             await _courseRatingsRepository.InsertAsync(courseRating);
         }
+
     }
 }
 

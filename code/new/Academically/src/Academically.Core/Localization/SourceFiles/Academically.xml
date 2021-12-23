@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="NoRecentGraduate">No recent graduate</text>
     <text name="UploadImage">Upload image</text>
     <text name="SelectAComponent">Select a Component</text>
     <text name="NewComponent">New component</text>

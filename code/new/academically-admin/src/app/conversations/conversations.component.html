@@ -10,7 +10,7 @@
         {{ 'NoConversation' | localize }}
       </p>
       <div *ngFor="let conversationGroup of conversationGroups" class="conversation-groups">
-        <a href="!#" (click)="$event.preventDefault(); onConversationGroupClick(conversationGroup)"
+        <a href="#!" (click)="$event.preventDefault(); onConversationGroupClick(conversationGroup)"
           class="card border-0 text-reset">
           <div class="card-body conversation-group">
             <div class="d-flex align-items-center justify-content-between mb-3">

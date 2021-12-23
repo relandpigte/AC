@@ -82,7 +82,6 @@ export class LearnComponent extends AppComponentBase implements OnInit {
       )
       .subscribe(studentCourse => {
         this.studentCourse = studentCourse;
-        console.log(this.studentCourse);
         this.currentSectionIndex = this.studentCourse.studentCourseSections
           .findIndex(e => e.status !== StudentCourseSectionStatus.Finished);
         this.updateCurrentCourseSection();

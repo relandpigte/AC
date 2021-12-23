@@ -1,0 +1,36 @@
+<div class="card card-sm">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Title' | localize }}
+    </h4>
+  </div>
+  <div class="card-body text-component-content">
+    <quill-editor (onEditorCreated)="onEditorReady($event)" [(ngModel)]="component.text" id="value" name="value">
+      <div quill-editor-toolbar>
+        <span class="ql-formats">
+          <button class="ql-bold"></button>
+          <button class="ql-italic"></button>
+          <button class="ql-underline"></button>
+          <button class="ql-strike"></button>
+        </span>
+        <span class="ql-formats">
+          <select class="ql-color ql-color-picker">
+          </select>
+        </span>
+        <span class="ql-formats">
+          <select class="ql-header">
+            <option value="3">Subtitle 1</option>
+            <option value="4">Subtitle 2</option>
+          </select>
+        </span>
+        <span class="ql-formats">
+          <select class="ql-align">
+          </select>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-clean"></button>
+        </span>
+      </div>
+    </quill-editor>
+  </div>
+</div>

@@ -39,16 +39,20 @@ export class RecentActivityComponent extends AppComponentBase implements OnInit 
   }
 
   jsonFilter(jsonString, inputKey): string {
-    const jsonObj = JSON.parse(jsonString);
-    let result;
-    if (jsonObj['input']) {
-      result = this.findKeyJsonObj(jsonObj['input'], inputKey);
-    } else if (jsonObj['inputs']) {
-      jsonObj['inputs'].forEach(element => {
-        result = this.findKeyJsonObj(element, inputKey);
-      });
+    try {
+      const jsonObj = JSON.parse(jsonString);
+      let result;
+      if (jsonObj['input']) {
+        result = this.findKeyJsonObj(jsonObj['input'], inputKey);
+      } else if (jsonObj['inputs']) {
+        jsonObj['inputs'].forEach(element => {
+          result = this.findKeyJsonObj(element, inputKey);
+        });
+      }
+      return (result ? '"' + result + '"' : '');
+    } catch (error) {
+      console.log('can\'t parse: ' + jsonString);
     }
-    return (result ? '"' + result + '"' : '');
   }
 
   findKeyJsonObj(jsonObj, inputKey): string {

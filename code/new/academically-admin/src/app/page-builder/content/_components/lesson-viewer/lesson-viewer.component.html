@@ -1,0 +1,30 @@
+<div class="card component-container no-component"
+  *ngIf="(!lesson || !lesson.pages || !lesson.pages.length) else pagesTemplate">
+  <div class="card-body">
+    <img src="/assets/themes/dashkit/img/illustrations/scale.svg" alt="..." class="img-fluid">
+    <h3 class="title">
+      {{ 'CreateYourLesson' | localize }}
+    </h3>
+    <p class="text-muted">
+      {{ 'CreateYourLessonForPagesSubheader' | localize }}
+    </p>
+  </div>
+</div>
+
+<ng-template #pagesTemplate>
+  <div class="row">
+    <div class="col-6" *ngFor="let page of lesson.pages; let i = index">
+      <a href="#!edit-page" (click)="$event.preventDefault(); onPageClick(page)">
+        <div class="lesson-page">
+          <img src="/assets/themes/dashkit/img/kanban/kanban-1.jpg" class="img-fluid page-background">
+          <h4 class="page-name">
+            {{ page.name }}
+          </h4>
+          <span class="badge badge-primary sort-order">
+            {{ i + 1 }}
+          </span>
+        </div>
+      </a>
+    </div>
+  </div>
+</ng-template>

@@ -1,171 +1,82 @@
 <div class="container-fluid" [@routerTransition]>
-    <div class="row justify-content-center">
-        <div class="col-12">
-            <div class="header">
-            <div class="header-body">
-                <div class="row align-items-center">
-                <div class="col">
-                    <h6 class="header-pretitle">{{ course.name }}</h6>
-                    <h1 class="header-title">{{ 'Reviews' | localize }}</h1>
-                </div>
-                </div>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ course.name }}</h6>
+              <h1 class="header-title">{{ 'Reviews' | localize }}</h1>
             </div>
-            </div>
-
-            <div class="row">
-            <div class="col-12 col-lg-7 col-xl-8">
-                <app-course-rating-summary></app-course-rating-summary>
-            </div>
-
-            <div class="col-12 col-lg-5 col-xl-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-header-title">
-                            {{ 'Graduates' | localize }}
-                        </h5>
-                        <a href="javascript:;" class="small">
-                            {{ 'ViewAll' | localize }}
-                        </a>
-                    </div>
-                    <div class="card-body">
-
-                        <!-- List group -->
-                        <div class="list-group list-group-flush my-n3">
-                            <div class="list-group-item">
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-
-                                        <!-- Avatar -->
-                                        <a href="javascript:;" class="avatar">
-                                        <img src="../../../assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" alt="..." class="avatar-img rounded-circle">
-                                        </a>
-
-                                    </div>
-                                    <div class="col ms-n2">
-
-                                        <!-- Title -->
-                                        <h4 class="mb-1">
-                                        <a href="javascript:;">Dianna Smiley</a>
-                                        </h4>
-
-                                        <!-- Status -->
-                                        <p class="small mb-0">
-                                        <span class="text-success">●</span> Online
-                                        </p>
-
-                                    </div>
-                                    <div class="col-auto">
-
-                                        <!-- Button -->
-                                        <a href="#!" class="btn btn-sm btn-white">
-                                        Follow
-                                        </a>
-
-                                    </div>
-                                </div> <!-- / .row -->
-                            </div>
-                            <div class="list-group-item">
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-
-                                        <!-- Avatar -->
-                                        <a href="javascript:;" class="avatar">
-                                        <img src="../../../assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..." class="avatar-img rounded-circle">
-                                        </a>
-
-                                    </div>
-                                    <div class="col ms-n2">
-
-                                        <!-- Title -->
-                                        <h4 class="mb-1">
-                                        <a href="javascript:;">Ab Hadley</a>
-                                        </h4>
-
-                                        <!-- Status -->
-                                        <p class="small mb-0">
-                                        <span class="text-success">●</span> Online
-                                        </p>
-
-                                    </div>
-                                    <div class="col-auto">
-
-                                        <!-- Button -->
-                                        <a href="#!" class="btn btn-sm btn-white">
-                                        Follow
-                                        </a>
-
-                                    </div>
-                                </div> <!-- / .row -->
-                            </div>
-                            <div class="list-group-item">
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-
-                                        <!-- Avatar -->
-                                        <a href="javascript:;" class="avatar">
-                                        <img src="../../../assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" alt="..." class="avatar-img rounded-circle">
-                                        </a>
-
-                                    </div>
-                                    <div class="col ms-n2">
-
-                                        <!-- Title -->
-                                        <h4 class="mb-1">
-                                        <a href="javascript:;">Adolfo Hess</a>
-                                        </h4>
-
-                                        <!-- Status -->
-                                        <p class="small mb-0">
-                                        <span class="text-danger">●</span> Offline
-                                        </p>
-
-                                    </div>
-                                    <div class="col-auto">
-
-                                        <!-- Button -->
-                                        <a href="#!" class="btn btn-sm btn-white">
-                                        Follow
-                                        </a>
-                                    </div>
-                                </div> <!-- / .row -->
-                            </div>
-                            <div class="list-group-item">
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-
-                                        <!-- Avatar -->
-                                        <a href="javascript:;" class="avatar">
-                                        <img src="../../../assets/themes/dashkit/img/avatars/profiles/avatar-5.jpg" alt="..." class="avatar-img rounded-circle">
-                                        </a>
-
-                                    </div>
-                                    <div class="col ms-n2">
-
-                                        <!-- Title -->
-                                        <h4 class="mb-1">
-                                        <a href="javascript:;">Daniela Dewitt</a>
-                                        </h4>
-
-                                        <!-- Status -->
-                                        <p class="small mb-0">
-                                        <span class="text-warning">●</span> Busy
-                                        </p>
-
-                                    </div>
-                                    <div class="col-auto">
-
-                                        <!-- Button -->
-                                        <a href="#!" class="btn btn-sm btn-white">
-                                        Follow
-                                        </a>
-                                    </div>
-                                </div> <!-- / .row -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+          </div>
         </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-lg-7 col-xl-8">
+          <app-course-rating-summary></app-course-rating-summary>
+        </div>
+
+        <div class="col-12 col-lg-5 col-xl-4">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-header-title">
+                {{ 'Graduates' | localize }}
+              </h5>
+              <a href="javascript:;" class="small">
+                {{ 'ViewAll' | localize }}
+              </a>
+            </div>
+            <div class="card-body">
+
+              <!-- List group -->
+              <div *ngIf="users && users.length else noRecentGraduateTemplate"
+                class="list-group list-group-flush my-n3">
+                <div *ngFor="let user of users" class="list-group-item">
+                  <div class="row align-items-center">
+                    <div class="col-auto">
+
+                      <!-- Avatar -->
+                      <a href="javascript:;" class="avatar">
+                        <img [src]="getProfilePictureFromDocument(users.profilePictureDocument, user.id)" alt="..."
+                          class="avatar-img rounded-circle">
+                      </a>
+
+                    </div>
+                    <div class="col ms-n2">
+
+                      <!-- Title -->
+                      <h4 class="mb-1">
+                        <a href="javascript:;">{{ user.fullName }}</a>
+                      </h4>
+
+                      <!-- Status -->
+                      <p class="small mb-0">
+                        <span class="text-success">●</span> Online
+                      </p>
+
+                    </div>
+                    <div class="col-auto">
+
+                      <!-- Button -->
+                      <a href="#!" (click)="$event.preventDefault()" class="btn btn-sm btn-white">
+                        Follow
+                      </a>
+
+                    </div>
+                  </div> <!-- / .row -->
+                </div>
+              </div>
+
+              <ng-template #noRecentGraduateTemplate>
+                <p class="m-0 p-0 text-center text-muted">
+                  {{ 'NoRecentGraduate' | localize }}
+                </p>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
-</div>
+  </div>

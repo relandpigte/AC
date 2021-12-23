@@ -5,7 +5,7 @@ import { takeUntil, finalize } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { PageBuilderService } from './_services/page-builder.service';
-import { ContentComponent } from './_components/content/content.component';
+import { ContentComponent } from './content/content.component';
 import { SettingsComponent } from './_components/settings/settings.component';
 import { DetailsComponent } from './_components/details/details.component';
 import { PagebuilderTabs } from './_models/pagebuilderTabs.enum';
