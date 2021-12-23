@@ -1,0 +1,6 @@
+<div *ngIf="component.text" class="text-component-content">
+  <quill-view-html [content]="component.text" theme="snow"></quill-view-html>
+</div>
+<p *ngIf="!component.text" class="p-0 m-0 text-center text-muted font-italic">
+  {{ 'ConfigureComponentInstructions' | localize }}
+</p>

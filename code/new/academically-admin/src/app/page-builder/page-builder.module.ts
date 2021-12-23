@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { PageBuilderRoutingModule } from './page-builder-routing.module';
 import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
-import { ContentModule } from './_components/content/content.module';
+import { ContentModule } from './content/content.module';
 
 import { TagInputModule } from 'ngx-chips';
 import { NgxMaskModule } from 'ngx-mask';
