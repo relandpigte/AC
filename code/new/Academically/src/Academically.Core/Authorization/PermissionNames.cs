@@ -185,6 +185,9 @@
         public const string Pages_StudentPortal = "Pages.StudentPortal";
 
 
+        public const string Pages_Videos = "Pages.Videos";
+
+
         public const string Pages_Tenants = "Pages.Tenants";
 
     }

@@ -229,7 +229,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Courses,
                 PermissionNames.Pages_PageBuilder,
                 PermissionNames.Pages_Notifications,
-                PermissionNames.Pages_StudentPortal
+                PermissionNames.Pages_StudentPortal,
+                PermissionNames.Pages_Videos
             );
 
             #endregion
@@ -372,6 +373,7 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 );
                 _context.SaveChanges();
             }
+
         }
     }
 }

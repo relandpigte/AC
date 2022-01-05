@@ -52,6 +52,8 @@
     <Folder Include="Services\StudentCourseConversations\Dto\" />
     <Folder Include="Services\CourseAssignments\" />
     <Folder Include="Services\CourseAssignments\Dto\" />
+    <Folder Include="Services\Videos\" />
+    <Folder Include="Services\Videos\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Services\Projects\" />
@@ -80,5 +82,7 @@
     <None Remove="Services\StudentCourseConversations\Dto\" />
     <None Remove="Services\CourseAssignments\" />
     <None Remove="Services\CourseAssignments\Dto\" />
+    <None Remove="Services\Videos\" />
+    <None Remove="Services\Videos\Dto\" />
   </ItemGroup>
 </Project>

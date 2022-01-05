@@ -91,5 +91,7 @@
 	<include file="ddml-new/ddml.2021-11-29-02-create-courseconversationreactions-table.xml"/>
 	<include file="ddml-new/ddml.2021-12-02-01-alter-studentcourses-add-progress-field.xml"/>
 	<include file="ddml-new/ddml.2021-12-03-01-create-courseassignments-table.xml"/>
+	<include file="ddml-new/ddml.2021-12-23-01-create-videos-table.xml"/>
+	<include file="ddml-new/ddml.2021-12-23-02-alter-videos-description-field.xml"/>
 </databaseChangeLog>
 	

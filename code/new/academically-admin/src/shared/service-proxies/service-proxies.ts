@@ -14837,6 +14837,204 @@ export class UserSpokenlanguageServiceProxy {
     }
 }
 
+@Injectable()
+export class VideosServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param userIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param stausFilter (optional) 0 = Draft
+    
+    1 = Published
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(userIdFilter: number | undefined, searchFilter: string | undefined, stausFilter: VideoStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<VideoDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Videos/GetAll?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (stausFilter === null)
+            throw new Error("The parameter 'stausFilter' cannot be null.");
+        else if (stausFilter !== undefined)
+            url_ += "StausFilter=" + encodeURIComponent("" + stausFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<VideoDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VideoDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<VideoDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VideoDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VideoDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<VideoDto> {
+        let url_ = this.baseUrl + "/api/services/app/Videos/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<VideoDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VideoDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<VideoDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VideoDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VideoDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: VideoDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Videos/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
 export class AboutYouDto implements IAboutYouDto {
     userId: number | undefined;
     name: string | undefined;
@@ -26962,6 +27160,132 @@ export interface IVerificationStatusDto {
     isEmailConfirmed: boolean;
     isPhoneNumberConfirmed: boolean;
     passportVerificationStatus: PassportVerificationStatus;
+}
+
+export class VideoDto implements IVideoDto {
+    id: string;
+    type: VideoType;
+    name: string | undefined;
+    description: string | undefined;
+    status: VideoStatus;
+
+    constructor(data?: IVideoDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.type = _data["type"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): VideoDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new VideoDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["type"] = this.type;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["status"] = this.status;
+        return data; 
+    }
+
+    clone(): VideoDto {
+        const json = this.toJSON();
+        let result = new VideoDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IVideoDto {
+    id: string;
+    type: VideoType;
+    name: string | undefined;
+    description: string | undefined;
+    status: VideoStatus;
+}
+
+export class VideoDtoPagedResultDto implements IVideoDtoPagedResultDto {
+    items: VideoDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IVideoDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(VideoDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): VideoDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new VideoDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): VideoDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new VideoDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IVideoDtoPagedResultDto {
+    items: VideoDto[] | undefined;
+    totalCount: number;
+}
+
+/** 0 = Draft 1 = Published */
+export enum VideoStatus {
+    Draft = 0,
+    Published = 1,
+}
+
+/** 1 = SingleVideo 2 = VideoSeries */
+export enum VideoType {
+    SingleVideo = 1,
+    VideoSeries = 2,
 }
 
 export interface FileParameter {
