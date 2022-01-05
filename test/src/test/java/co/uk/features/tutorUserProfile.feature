@@ -786,7 +786,28 @@ Feature: Tutor user profile settings
 
   @??
   Scenario: C14779 - Verify tutor can able to upload/play a video on introduction tab
-
+    Given User is in academically login page
+    When user login as "admin"
+    Then user successfully login
+    When user proceed to manage user
+    Then user is in manage user page
+    When user add a new user
+    And user enter a user details
+      | Name            | Surname | Username        | Password   | Email           | Active | Public |
+      | Automated120XXX | Test    | automated120XXX | Test@12345 | automated120XXX | Yes    | Yes    |
+    And user select a "Tutor" role
+    And user saving user details
+    Then sucessful message is displayed
+    When user logout in academically
+    Then user is in academically login page
+    When user enter username "automated120XXX" and password "Test@12345"
+    Then user successfully login
+    When user navigate to profile settings using profile widget
+    Then user is in profile settings
+ #   When user uploads the introductory video
+ #   And  user will save the introductory video
+ #   Then user has successfully added the introductory video to the profile
+    
   @??
   Scenario: C14780 - Verify that the student can play a video in the tutor profile
 
