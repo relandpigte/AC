@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-4">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-header-title">
+          {{ 'UploadVideo' | localize | titlecase }}
+        </h4>
+      </div>
+      <div class="card-body">
+        <app-document-uploader [largeImagePreview]="true" [maxFiles]="1" [allowedExtensions]="allowedExtensions" [placeholderHeight]="'200px'">
+        </app-document-uploader>
+      </div>
+    </div>
+  </div>
+  <div class="col-8">
+    <div class="card no-video">
+      <div class="card-body">
+        <img src="/assets/themes/dashkit/img/illustrations/scale.svg" alt="..." class="img-fluid">
+        <h3 class="title">
+          {{ 'UploadYourVideo' | localize }}
+        </h3>
+        <p class="text-muted">
+          {{ 'UploadYourVideoDescription' | localize }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

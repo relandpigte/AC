@@ -180,6 +180,13 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
             loadChildren: () => import('./lesson-preview/lesson-preview.module').then(m => m.LessonPreviewModule),
             data: { preload: true }
           },
+          {
+            path: 'videos',
+            loadChildren: () =>
+              import('@app/videos/videos.module').then(
+                (m) => m.VideosModule
+              ),
+          },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent },

@@ -1,6 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="UploadYourVideoDescription">Upload a video by adding your file to the left</text>
+    <text name="UploadYourVideo">Upload your video</text>
+    <text name="UploadVideo">Upload video</text>
+    <text name="Saves">Saves</text>
+    <text name="Shares">Shares</text>
+    <text name="Likes">Likes</text>
+    <text name="Views">Views</text>
+    <text name="Video">Video</text>
+    <text name="CreateVideo">Create video</text>
+    <text name="NameYourVideo">Name your video</text>
+    <text name="ChooseATemplate">Choose a template</text>
+    <text name="VideoSeriesDescription">Build a collection of videos</text>
+    <text name="VideoSeries">Video series</text>
+    <text name="SingleVideoDescription">Create a one off video</text>
+    <text name="SingleVideo">Single video</text>
+    <text name="NewVideo">New video</text>
+    <text name="MyLearning">My learning</text>
+    <text name="MyTeaching">My teaching</text>
+    <text name="Videos">Videos</text>
     <text name="NoRecentGraduate">No recent graduate</text>
     <text name="UploadImage">Upload image</text>
     <text name="SelectAComponent">Select a Component</text>

@@ -51,7 +51,7 @@ export class RecentActivityComponent extends AppComponentBase implements OnInit 
       }
       return (result ? '"' + result + '"' : '');
     } catch (error) {
-      console.log('can\'t parse: ' + jsonString);
+      // console.log('can\'t parse: ' + jsonString);
     }
   }
 

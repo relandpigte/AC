@@ -192,6 +192,9 @@ namespace Academically.Authorization
             context.CreatePermission(PermissionNames.Pages_StudentPortal, L("StudentPortal"));
 
 
+            context.CreatePermission(PermissionNames.Pages_Videos, L("Videos"));
+
+
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
 
 

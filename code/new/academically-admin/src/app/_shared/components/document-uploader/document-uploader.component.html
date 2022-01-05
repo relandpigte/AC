@@ -1,5 +1,5 @@
 <div *ngIf="(!maxFiles || (files.length < maxFiles)) && !defaultFile" class="document-uploader"
-  [dragClassUpdater]="'document-uploader-dragover'">
+  [dragClassUpdater]="'document-uploader-dragover'" [style.height]="placeholderHeight">
   <label class="document-input-label m-0 p-0" for="DocumentUploader">
     <span *ngIf="!loadingImageCropper">{{ noFilePlaceholder }}</span>
     <span *ngIf="loadingImageCropper">

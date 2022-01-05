@@ -1,0 +1,45 @@
+<div class="container-fluid" [@routerTransition]>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ 'Videos' | localize }}</h6>
+              <h1 class="header-title">{{ model.name }}</h1>
+            </div>
+            <div class="col-auto">
+
+            </div>
+          </div>
+          <div class="row align-items-center">
+            <div class="col">
+              <ul class="nav nav-tabs nav-overflow header-tabs">
+                <li class="nav-item">
+                  <a [routerLink]="['video']" routerLinkActive="active" class="nav-link">
+                    {{ 'Video' | localize }}
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a [routerLink]="['details']" routerLinkActive="active" class="nav-link">
+                    {{ 'Details' | localize }}
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a [routerLink]="['settings']" routerLinkActive="active" class="nav-link">
+                    {{ 'Settings' | localize }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+  <ng-template #studentVideos>
+    <app-learning></app-learning>
+  </ng-template>
