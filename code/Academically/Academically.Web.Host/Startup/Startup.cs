@@ -20,6 +20,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Abp.Timing;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace Academically.Web.Host.Startup
 {
@@ -120,6 +121,12 @@ namespace Academically.Web.Host.Startup
                     f => f.UseAbpLog4Net().WithConfig("log4net.config")
                 )
             );
+
+            // To allow bigger file sizes during upload
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.Limits.MaxRequestBodySize = 157286400;
+            });
         }
 
         public void Configure(IApplicationBuilder app,  ILoggerFactory loggerFactory)
