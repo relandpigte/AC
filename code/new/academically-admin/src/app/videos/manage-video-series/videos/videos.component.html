@@ -97,10 +97,7 @@
                 </div>
               </div>
               <div class="col d-flex flex-column justify-content-center">
-                <a *ngIf="video.type === VideoType.SingleVideo" [routerLink]="[video.id]">
-                  <h4 class="mb-1">{{ video.name }}</h4>
-                </a>
-                <a *ngIf="video.type === VideoType.VideoSeries" [routerLink]="['video-series', video.id]">
+                <a [routerLink]="['../../../../../', video.id]">
                   <h4 class="mb-1">{{ video.name }}</h4>
                 </a>
                 <p *ngIf="video.description" class="text-muted mb-1">
@@ -113,34 +110,26 @@
                       {{ (video.type === VideoType.SingleVideo ? 'Video' : 'VideoSeries') | localize }}
                     </div>
                     <div class="d-flex align-items-center mx-3">|</div>
-                    <ng-container *ngIf="video.type === VideoType.SingleVideo else videoSeriesTemplate">
-                      <div class="d-flex align-items-center mr-3">
-                        <i class="fe fe-eye mr-2"></i>
-                        0 {{ 'Views' | localize }}
-                      </div>
-                      <div class="d-flex align-items-center mr-3">
-                        <i class="fe fe-thumbs-up mr-2"></i>
-                        0 {{ 'Likes' | localize }}
-                      </div>
-                      <div class="d-flex align-items-center mr-3">
-                        <i class="fe fe-square-message mr-2"></i>
-                        0 {{ 'Comments' | localize }}
-                      </div>
-                      <div class="d-flex align-items-center mr-3">
-                        <i class="fe fe-share-2 mr-2"></i>
-                        0 {{ 'Shares' | localize }}
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <i class="fe fe-star mr-2"></i>
-                        0 {{ 'Saves' | localize }}
-                      </div>
-                    </ng-container>
-                    <ng-template #videoSeriesTemplate>
-                      <div class="d-flex align-items-center">
-                        {{ video.children.length }}
-                        {{ (video.children.length > 1 ?'Videos' : 'Video') | localize }}
-                      </div>
-                    </ng-template>
+                    <div class="d-flex align-items-center mr-3">
+                      <i class="fe fe-eye mr-2"></i>
+                      0 {{ 'Views' | localize }}
+                    </div>
+                    <div class="d-flex align-items-center mr-3">
+                      <i class="fe fe-thumbs-up mr-2"></i>
+                      0 {{ 'Likes' | localize }}
+                    </div>
+                    <div class="d-flex align-items-center mr-3">
+                      <i class="fe fe-square-message mr-2"></i>
+                      0 {{ 'Comments' | localize }}
+                    </div>
+                    <div class="d-flex align-items-center mr-3">
+                      <i class="fe fe-share-2 mr-2"></i>
+                      0 {{ 'Shares' | localize }}
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <i class="fe fe-star mr-2"></i>
+                      0 {{ 'Saves' | localize }}
+                    </div>
                   </div>
                 </div>
               </div>

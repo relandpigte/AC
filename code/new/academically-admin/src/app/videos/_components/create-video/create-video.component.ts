@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { VideoDto } from '@shared/service-proxies/service-proxies';
+import { VideoDto, VideoType } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -12,6 +12,7 @@ export class CreateVideoComponent implements OnInit {
   @Output() createVideo = new EventEmitter<VideoDto>();
   @Output() createCancel = new EventEmitter();
   isLoading = false;
+  VideoType = VideoType;
 
   constructor(
     private _modal: BsModalRef,

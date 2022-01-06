@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1641448457486-1">
+        <addColumn tableName="AcademicallyVideos">
+            <column name="DocumentId" type="CHAR(36 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1641448457486-2">
+        <createIndex indexName="FK_Videos_Documents_DocumentId_idx" tableName="AcademicallyVideos">
+            <column name="DocumentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1641448457486-3">
+        <addForeignKeyConstraint baseColumnNames="DocumentId" baseTableName="AcademicallyVideos" constraintName="FK_Videos_Documents_DocumentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallydocuments" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

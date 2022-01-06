@@ -1,6 +1,8 @@
 <form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
   <div class="modal-card card">
-    <abp-modal-header [title]="'NameYourVideo' | localize" (onCloseClick)="onCloseClick()">
+    <abp-modal-header
+      [title]="(model.type === VideoType.SingleVideo ? 'NameYourVideo' : 'NameYourVideoSeries') | localize"
+      (onCloseClick)="onCloseClick()">
     </abp-modal-header>
     <div class="card-body">
       <div class="col-md-12 form-group mb-0 required">

@@ -27,6 +27,18 @@ import { VideosComponent } from './videos.component';
                 (m) => m.ManageVideoModule
               ),
           },
+          {
+            path: 'video-series',
+            children: [
+              {
+                path: ':parent-id',
+                loadChildren: () =>
+                  import('@app/videos/manage-video-series/manage-video-series.module').then(
+                    (m) => m.ManageVideoSeriesModule
+                  ),
+              }
+            ]
+          },
         ],
       },
     ]),

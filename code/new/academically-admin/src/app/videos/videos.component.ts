@@ -4,10 +4,11 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ChooseVideoTemplateComponent } from './_components/choose-video-template/choose-video-template.component';
 import { ModalOptions, BsModalService } from 'ngx-bootstrap/modal';
 import { CreateVideoComponent } from './_components/create-video/create-video.component';
-import { VideosServiceProxy, VideoDto, VideoStatus } from '@shared/service-proxies/service-proxies';
+import { VideosServiceProxy, VideoDto, VideoStatus, VideoType } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 import { VideoTemplate } from './_models/video-template';
 import { VideoService } from './_services/video.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-videos',
@@ -21,6 +22,7 @@ export class VideosComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     private _modalService: BsModalService,
     private _videoService: VideoService,
+    private _router: Router,
     private _videosService: VideosServiceProxy,
   ) {
     super(injector);
@@ -53,8 +55,14 @@ export class VideosComponent extends AppComponentBase implements OnInit {
       createVideoModal.createVideo.subscribe(video => {
         this._videosService.create(video)
           .pipe(takeUntil(this.destroyed$))
-          .subscribe(() => {
+          .subscribe(response => {
+            this.notify.success(this.l('SavedSuccessfully'));
             this._videoService.videoCreated = video;
+            if (response.type === VideoType.SingleVideo) {
+              this._router.navigate(['/app/videos/', response.id]);
+            } else {
+              this._router.navigate(['/app/videos/video-series/', response.id]);
+            }
           });
       });
     });

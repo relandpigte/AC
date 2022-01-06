@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Services.Documents.Dto;
 
 namespace Academically.Services.Videos.Dto
 {
@@ -13,8 +15,17 @@ namespace Academically.Services.Videos.Dto
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public VideoStatus Status { get; set; }
+		public Guid? ParentId { get; set; }
+		public Guid? DocumentId { get; set; }
 
-		public VideoDto()
+		public string VideoUrl { get; set; }
+
+		public VideoDto Parent { get; set; }
+		public DocumentDto Document { get; set; }
+
+        public IEnumerable<VideoDto> Children { get; set; }
+
+        public VideoDto()
 		{
 		}
 	}
