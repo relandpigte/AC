@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="AddVideo">Add video</text>
+    <text name="NameYourVideoSeries">Name your video series</text>
+    <text name="SuccessfullyRemoved">Successfully removed</text>
+    <text name="SuccessfullyUploaded">Successfully uploaded</text>
+    <text name="InvalidFileDurationUploadError">
+        <![CDATA[
+            The video duration must not exceed <b>{0}</b>.
+        ]]>
+    </text>
     <text name="UploadYourVideoDescription">Upload a video by adding your file to the left</text>
     <text name="UploadYourVideo">Upload your video</text>
     <text name="UploadVideo">Upload video</text>

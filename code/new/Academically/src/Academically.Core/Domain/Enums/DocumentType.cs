@@ -16,5 +16,6 @@
         CourseImage,
         CourseSectionPage,
         CourseAssignment,
+        Video,
     }
 }

@@ -10,7 +10,6 @@ import { ManageVideoComponent } from './manage-video.component';
         path: '',
         component: ManageVideoComponent,
         children: [
-          { path: '', redirectTo: 'video' },
           {
             path: 'video',
             loadChildren: () =>
@@ -18,6 +17,7 @@ import { ManageVideoComponent } from './manage-video.component';
                 (m) => m.VideoModule
               ),
           },
+          { path: '', redirectTo: 'video' },
         ]
       }
     ]),

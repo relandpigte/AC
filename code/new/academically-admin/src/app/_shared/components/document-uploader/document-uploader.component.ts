@@ -8,7 +8,7 @@ import { ImageCropperComponent } from '../image-cropper/image-cropper.component'
 
 export class DefaultFile {
   name: string;
-  url: string;
+  url: string | SafeUrl;
   size: number;
 }
 
@@ -30,6 +30,7 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
   @Input() defaultFile: DefaultFile;
   @Input() noFilePlaceholder = this.l('DropFileOrClickHereToUpload');
   @Input() placeholderHeight = 'initial';
+  @Input() maxFileSize = fileUploadConfiguration.maxFileSize;
   @Output() filesChanged = new EventEmitter<FileParameter[]>();
   @Output() defaultFileRemoved = new EventEmitter();
   @ViewChild('documentUploader') documentUploaderInput: ElementRef;
@@ -121,6 +122,7 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
   onRemoveDefaultFileClick(): void {
     this.defaultFile = undefined;
     this.defaultFileRemoved.emit();
+    this.filesChanged.emit([]);
   }
 
   formatBytes(bytes: number, decimals = 2) {
@@ -133,10 +135,6 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
     const i = Math.floor(Math.log(bytes) / Math.log(k));
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-  }
-
-  getSanitizedFileUrl(file: File): SafeUrl {
-    return this._sanitizer.bypassSecurityTrustUrl(this.getFileUrl(file));
   }
 
   onOpenDocumentClick(file: File): void {
@@ -154,6 +152,10 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
     });
   }
 
+  public getSanitizedFileUrl(file: File): SafeUrl {
+    return this._sanitizer.bypassSecurityTrustUrl(this.getFileUrl(file));
+  }
+
   private getFileExtension(fileName: string): string {
     return fileName.split('.').pop();
   }
@@ -163,10 +165,14 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
   }
 
   private validateFileSize(size: number) {
-    const isValid = size <= fileUploadConfiguration.maxFileSize;
-    if (!isValid) {
-      this.notify.error(this.l('InvalidFileSizeUploadError', '1MB'), this.l('InvalidFileUploadError'));
+    if (this.maxFileSize > 0) {
+      const isValid = size <= this.maxFileSize;
+      if (!isValid) {
+        this.notify.error(this.l('InvalidFileSizeUploadError', '5MB'), this.l('InvalidFileUploadError'));
+      }
+      return isValid;
     }
-    return isValid;
+
+    return true;
   }
 }

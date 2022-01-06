@@ -32,10 +32,8 @@ export class ChooseVideoTemplateComponent implements OnInit {
   }
 
   onTemplateSelect(template: VideoTemplate): void {
-    if (template.type === VideoType.SingleVideo) {
-      this.selectTemplate.emit(template);
-      this._modal.hide();
-    }
+    this.selectTemplate.emit(template);
+    this._modal.hide();
   }
 
   onCloseClick(): void {

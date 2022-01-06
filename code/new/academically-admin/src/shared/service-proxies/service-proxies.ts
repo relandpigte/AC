@@ -14927,6 +14927,84 @@ export class VideosServiceProxy {
     }
 
     /**
+     * @param parentIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param stausFilter (optional) 0 = Draft
+    
+    1 = Published
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAllForSeries(parentIdFilter: string | undefined, searchFilter: string | undefined, stausFilter: VideoStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<VideoDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Videos/GetAllForSeries?";
+        if (parentIdFilter === null)
+            throw new Error("The parameter 'parentIdFilter' cannot be null.");
+        else if (parentIdFilter !== undefined)
+            url_ += "ParentIdFilter=" + encodeURIComponent("" + parentIdFilter) + "&";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (stausFilter === null)
+            throw new Error("The parameter 'stausFilter' cannot be null.");
+        else if (stausFilter !== undefined)
+            url_ += "StausFilter=" + encodeURIComponent("" + stausFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllForSeries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllForSeries(<any>response_);
+                } catch (e) {
+                    return <Observable<VideoDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VideoDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllForSeries(response: HttpResponseBase): Observable<VideoDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VideoDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VideoDtoPagedResultDto>(<any>null);
+    }
+
+    /**
      * @param id (optional) 
      * @return Success
      */
@@ -14986,7 +15064,7 @@ export class VideosServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    create(body: VideoDto | undefined): Observable<void> {
+    create(body: VideoDto | undefined): Observable<VideoDto> {
         let url_ = this.baseUrl + "/api/services/app/Videos/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -14998,6 +15076,7 @@ export class VideosServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
             })
         };
 
@@ -15008,6 +15087,125 @@ export class VideosServiceProxy {
                 try {
                     return this.processCreate(<any>response_);
                 } catch (e) {
+                    return <Observable<VideoDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VideoDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<VideoDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VideoDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VideoDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param file (optional) 
+     * @return Success
+     */
+    updateDocument(id: string | undefined, file: FileParameter | undefined): Observable<VideoDto> {
+        let url_ = this.baseUrl + "/api/services/app/Videos/UpdateDocument";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (id === null || id === undefined) {
+            // do nothing
+        } else
+            content_.append("Id", id.toString());
+        if (file === null || file === undefined) {
+            // do nothing
+        } else
+            content_.append("File", file.data, file.fileName ? file.fileName : "File");
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateDocument(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateDocument(<any>response_);
+                } catch (e) {
+                    return <Observable<VideoDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VideoDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateDocument(response: HttpResponseBase): Observable<VideoDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VideoDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VideoDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    removeDocument(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Videos/RemoveDocument?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRemoveDocument(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRemoveDocument(<any>response_);
+                } catch (e) {
                     return <Observable<void>><any>_observableThrow(e);
                 }
             } else
@@ -15015,7 +15213,7 @@ export class VideosServiceProxy {
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<void> {
+    protected processRemoveDocument(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -18542,7 +18740,7 @@ export interface IDocumentDto {
     size: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -18558,6 +18756,7 @@ export enum DocumentType {
     CourseImage = 11,
     CourseSectionPage = 12,
     CourseAssignment = 13,
+    Video = 14,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {
@@ -27168,6 +27367,12 @@ export class VideoDto implements IVideoDto {
     name: string | undefined;
     description: string | undefined;
     status: VideoStatus;
+    parentId: string | undefined;
+    documentId: string | undefined;
+    videoUrl: string | undefined;
+    parent: VideoDto;
+    document: DocumentDto;
+    children: VideoDto[] | undefined;
 
     constructor(data?: IVideoDto) {
         if (data) {
@@ -27185,6 +27390,16 @@ export class VideoDto implements IVideoDto {
             this.name = _data["name"];
             this.description = _data["description"];
             this.status = _data["status"];
+            this.parentId = _data["parentId"];
+            this.documentId = _data["documentId"];
+            this.videoUrl = _data["videoUrl"];
+            this.parent = _data["parent"] ? VideoDto.fromJS(_data["parent"]) : <any>undefined;
+            this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(VideoDto.fromJS(item));
+            }
         }
     }
 
@@ -27202,6 +27417,16 @@ export class VideoDto implements IVideoDto {
         data["name"] = this.name;
         data["description"] = this.description;
         data["status"] = this.status;
+        data["parentId"] = this.parentId;
+        data["documentId"] = this.documentId;
+        data["videoUrl"] = this.videoUrl;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -27219,6 +27444,12 @@ export interface IVideoDto {
     name: string | undefined;
     description: string | undefined;
     status: VideoStatus;
+    parentId: string | undefined;
+    documentId: string | undefined;
+    videoUrl: string | undefined;
+    parent: VideoDto;
+    document: DocumentDto;
+    children: VideoDto[] | undefined;
 }
 
 export class VideoDtoPagedResultDto implements IVideoDtoPagedResultDto {
