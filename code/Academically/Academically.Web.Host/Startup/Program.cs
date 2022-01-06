@@ -17,6 +17,10 @@ namespace Academically.Web.Host.Startup
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.ConfigureKestrel(serverOptions =>
+                    {
+                        serverOptions.Limits.MaxRequestBodySize = 157286400;
+                    });
                 })
                 .UseCastleWindsor(IocManager.Instance.IocContainer);
     }
