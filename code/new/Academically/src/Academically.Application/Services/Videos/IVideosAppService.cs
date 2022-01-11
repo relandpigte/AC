@@ -13,6 +13,8 @@ namespace Academically.Services.Videos
 		Task<VideoDto> Create(VideoDto input);
 		Task<VideoDto> UpdateDocument(UpdateVideoDto input);
 		Task RemoveDocument(Guid id);
+		Task<VideoDto> UpdateDetails(UpdateVideoDetailsDto input);
+		Task<VideoDto> UpdateSettings(UpdateVideoSettingsDto input);
 	}
 }
 

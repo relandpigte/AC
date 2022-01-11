@@ -6,6 +6,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { takeUntil } from 'rxjs/operators';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CreateVideoComponent } from '../_components/create-video/create-video.component';
+import { VideoService } from '../_services/video.service';
 
 @Component({
   selector: 'app-manage-video-series',
@@ -23,6 +24,7 @@ export class ManageVideoSeriesComponent extends AppComponentBase implements OnIn
     private _modalService: BsModalService,
     private _router: Router,
     private _videosService: VideosServiceProxy,
+    private _videoService: VideoService,
   ) {
     super(injector);
     route.paramMap.subscribe(paramMap => {
@@ -63,6 +65,7 @@ export class ManageVideoSeriesComponent extends AppComponentBase implements OnIn
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         this.model = response;
+        this._videoService.videoCreated = this.model;
       });
   }
 }

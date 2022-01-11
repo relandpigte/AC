@@ -1,0 +1,39 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1641580255266-1">
+        <addColumn tableName="AcademicallyVideos">
+            <column name="ThumbnailDocumentId" type="CHAR(36 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1641580255266-2">
+        <addColumn tableName="AcademicallyVideos">
+            <column defaultValueBoolean="false" name="IsVisible" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1641580255269-3">
+        <addColumn tableName="AcademicallyVideos">
+            <column name="CommentSetting" type="INT(10)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1641580255268-4">
+        <addColumn tableName="AcademicallyVideos">
+            <column defaultValueBoolean="false" name="CommentModeration" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1641580255266-5">
+        <addColumn tableName="AcademicallyVideos">
+            <column name="CustomUrl" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="root (generated)" id="1641580255266-6">
+        <createIndex indexName="FK_Videos_Documents_ThumbnailDocumentId_idx" tableName="AcademicallyVideos">
+            <column name="ThumbnailDocumentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1641580255266-7">
+        <addForeignKeyConstraint baseColumnNames="ThumbnailDocumentId" baseTableName="AcademicallyVideos" constraintName="FK_Videos_Documents_ThumbnailDocumentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallydocuments" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

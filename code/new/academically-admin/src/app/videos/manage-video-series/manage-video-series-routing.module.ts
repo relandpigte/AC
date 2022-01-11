@@ -17,6 +17,18 @@ import { ManageVideoSeriesComponent } from './manage-video-series.component';
                 (m) => m.VideosModule
               ),
           },
+          {
+            path: 'details',
+            loadChildren: () =>
+              import('@app/videos/manage-video-series/details/details.module').then(
+                (m) => m.DetailsModule),
+          },
+          {
+            path: 'settings',
+            loadChildren: () =>
+              import('@app/videos/manage-video-series/settings/settings.module').then(
+                (m) => m.SettingsModule),
+          },
           { path: '', redirectTo: 'videos' },
         ]
       },

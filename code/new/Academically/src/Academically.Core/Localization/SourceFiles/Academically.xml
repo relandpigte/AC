@@ -1,6 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="FreeDescription">Allow access to content free of charge</text>
+    <text name="FixedFee">Fixed fee</text>
+    <text name="FixedFeeDescription">Charge students a one time fee to access content</text>
+    <text name="PaymentPlan">Payment plan</text>
+    <text name="PaymentPlanDescription">Split the total course price over several payments</text>
+    <text name="Subscription">Subscription</text>
+    <text name="SubscriptionDescription">Charge student a reoccurring monthly fee to access content</text>
+    <text name="VideoName">Video name</text>
+    <text name="WriteYourVideoNameHere">Write your video name here</text>
+    <text name="WriteYourSubtitleHere">Write your subtitle here</text>
+    <text name="CategoriesAndTags">Categories and tags</text>
+    <text name="VideoThumbnail">Video thumbnail</text>
+    <text name="VideoCommentHiddenDescription">hides all comments and prevents new ones being posted</text>
+    <text name="VideoCommentLockedDescription">previous comments remain visible but prevents new ones being posted</text>
+    <text name="CustomUrl">Custom URL</text>
+    <text name="VideoVisibility">Video visibility</text>
+    <text name="VideoInvisible">Unavailable on both your profile and in store</text>
+    <text name="VideoVisible">Available on your profile and in the store</text>
     <text name="AddVideo">Add video</text>
     <text name="NameYourVideoSeries">Name your video series</text>
     <text name="SuccessfullyRemoved">Successfully removed</text>
