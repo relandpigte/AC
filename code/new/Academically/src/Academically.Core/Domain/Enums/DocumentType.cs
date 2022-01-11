@@ -17,5 +17,6 @@
         CourseSectionPage,
         CourseAssignment,
         Video,
+        VideoThumbnail,
     }
 }

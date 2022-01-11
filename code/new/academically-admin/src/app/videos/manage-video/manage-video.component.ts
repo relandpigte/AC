@@ -4,6 +4,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { VideosServiceProxy, VideoDto } from '@shared/service-proxies/service-proxies';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
+import { VideoService } from '../_services/video.service';
 
 @Component({
   selector: 'app-manage-video',
@@ -18,6 +19,7 @@ export class ManageVideoComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     route: ActivatedRoute,
+    private _videoService: VideoService,
     private _videosService: VideosServiceProxy,
   ) {
     super(injector);
@@ -37,6 +39,7 @@ export class ManageVideoComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         this.model = response;
+        this._videoService.videoCreated = this.model;
       });
   }
 }

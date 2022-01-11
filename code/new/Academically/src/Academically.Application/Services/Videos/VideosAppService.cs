@@ -74,6 +74,7 @@ namespace Academically.Services.Videos
         {
             var video = await _videosRepository.GetAll()
                 .Include(e => e.Document)
+                .Include(e => e.ThumbnailDocument)
                 .Include(e => e.Parent)
                 .Where(e => e.Id == id)
                 .FirstOrDefaultAsync();
@@ -81,6 +82,11 @@ namespace Academically.Services.Videos
             if (video.Document != null)
             {
                 output.VideoUrl = await _documentsDomainService.GetFileUrlAsync(video.Document);
+            }
+
+            if (video.ThumbnailDocument != null)
+            {
+                output.ThumbnailUrl = await _documentsDomainService.GetFileUrlAsync(video.ThumbnailDocument);
             }
             
             return output;
@@ -123,6 +129,40 @@ namespace Academically.Services.Videos
                 await _videosRepository.UpdateAsync(video);
                 await _documentsDomainService.DeleteAsync(documentId);
             }
+        }
+
+        public async Task<VideoDto> UpdateDetails([FromForm] UpdateVideoDetailsDto input)
+        {
+            var video = await _videosRepository.GetAsync(input.Id);
+            ObjectMapper.Map(input, video);
+
+            if (input.ThumbnailFile != null)
+            {
+                var oldDocumentId = video.ThumbnailDocumentId;
+                var videoThumbnailDocument = await _documentsDomainService.CreateAsync(AbpSession.UserId.Value, input.ThumbnailFile, DocumentType.VideoThumbnail);
+                video.ThumbnailDocumentId = videoThumbnailDocument.Id;
+
+                if (oldDocumentId.HasValue)
+                {
+                    await _documentsDomainService.DeleteAsync(oldDocumentId.Value);
+                }
+            }
+
+            await _videosRepository.UpdateAsync(video);
+            return ObjectMapper.Map<VideoDto>(video);
+        }
+
+        public async Task<VideoDto> UpdateSettings(UpdateVideoSettingsDto input)
+        {
+            var video = await _videosRepository.GetAsync(input.Id);
+
+            video.IsVisible = input.IsVisible;
+            video.CustomUrl = input.CustomUrl;
+            video.CommentSetting = input.CommentSetting;
+            video.CommentModeration = input.CommentModeration;
+
+            await _videosRepository.UpdateAsync(video);
+            return ObjectMapper.Map<VideoDto>(video);
         }
     }
 }

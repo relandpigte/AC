@@ -59,6 +59,7 @@ namespace Academically
             RegisterEmailService();
             RegisterPaymentProvider();
             RegisterLocationsProvider();
+
         }
 
         public override void Initialize()

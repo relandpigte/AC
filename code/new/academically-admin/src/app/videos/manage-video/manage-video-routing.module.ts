@@ -17,6 +17,19 @@ import { ManageVideoComponent } from './manage-video.component';
                 (m) => m.VideoModule
               ),
           },
+          {
+            path: 'details',
+            loadChildren: () =>
+              import('@app/videos/manage-video/video-details/video-details.module').then(
+                (m) => m.VideoDetailsModule),
+          },
+          {
+            path: 'settings',
+            loadChildren: () =>
+              import('@app/videos/manage-video/video-settings/video-settings.module').then(
+                (m) => m.VideoSettingsModule
+              ),
+          },
           { path: '', redirectTo: 'video' },
         ]
       }

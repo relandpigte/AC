@@ -95,5 +95,8 @@
 	<include file="ddml-new/ddml.2021-12-23-02-alter-videos-description-field.xml"/>
 	<include file="ddml-new/ddml.2021-12-23-03-alter-videos-add-documentid-field.xml"/>
 	<include file="ddml-new/ddml.2021-12-23-04-alter-videos-add-parentid-field.xml"/>
+	<include file="ddml-new/ddml.2022-01-08-01-alter-videos-add-settings.xml"/>
+	<include file="ddml-new/ddml.2022-01-08-02-alter-videos-add-pricing-and-language.xml"/>
+	<include file="ddml-new/ddml.2022-01-11-01-alter-videos-add-categories-field.xml"/>
 </databaseChangeLog>
 	

@@ -15231,6 +15231,161 @@ export class VideosServiceProxy {
         }
         return _observableOf<void>(<any>null);
     }
+
+    /**
+     * @param id (optional) 
+     * @param thumbnailFile (optional) 
+     * @param name (optional) 
+     * @param description (optional) 
+     * @param thumbnailDocumentId (optional) 
+     * @param categories (optional) 
+     * @param languageId (optional) 
+     * @param price (optional) 
+     * @param pricingType (optional) 
+     * @return Success
+     */
+    updateDetails(id: string | undefined, thumbnailFile: FileParameter | undefined, name: string | undefined, description: string | undefined, thumbnailDocumentId: string | undefined, categories: string | undefined, languageId: string | undefined, price: number | undefined, pricingType: PricingType | undefined): Observable<VideoDto> {
+        let url_ = this.baseUrl + "/api/services/app/Videos/UpdateDetails";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (id === null || id === undefined) {
+            // do nothing
+        } else
+            content_.append("Id", id.toString());
+        if (thumbnailFile === null || thumbnailFile === undefined) {
+            // do nothing
+        } else
+            content_.append("ThumbnailFile", thumbnailFile.data, thumbnailFile.fileName ? thumbnailFile.fileName : "ThumbnailFile");
+        if (name === null || name === undefined) {
+            // do nothing
+        } else
+            content_.append("Name", name.toString());
+        if (description === null || description === undefined) {
+            // do nothing
+        } else
+            content_.append("Description", description.toString());
+        if (thumbnailDocumentId === null || thumbnailDocumentId === undefined) {
+            // do nothing
+        } else
+            content_.append("ThumbnailDocumentId", thumbnailDocumentId.toString());
+        if (categories === null || categories === undefined) {
+            // do nothing
+        } else
+            content_.append("Categories", categories.toString());
+        if (languageId === null || languageId === undefined) {
+            // do nothing
+        } else
+            content_.append("LanguageId", languageId.toString());
+        if (price === null || price === undefined) {
+            // do nothing
+        } else
+            content_.append("Price", price.toString());
+        if (pricingType === null || pricingType === undefined) {
+            // do nothing
+        } else
+            content_.append("PricingType", pricingType.toString());
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateDetails(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateDetails(<any>response_);
+                } catch (e) {
+                    return <Observable<VideoDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VideoDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateDetails(response: HttpResponseBase): Observable<VideoDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VideoDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VideoDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateSettings(body: UpdateVideoSettingsDto | undefined): Observable<VideoDto> {
+        let url_ = this.baseUrl + "/api/services/app/Videos/UpdateSettings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateSettings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateSettings(<any>response_);
+                } catch (e) {
+                    return <Observable<VideoDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VideoDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateSettings(response: HttpResponseBase): Observable<VideoDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VideoDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VideoDto>(<any>null);
+    }
 }
 
 export class AboutYouDto implements IAboutYouDto {
@@ -16274,6 +16429,13 @@ export class ChangeUserLanguageDto implements IChangeUserLanguageDto {
 
 export interface IChangeUserLanguageDto {
     languageName: string;
+}
+
+/** 0 = Visible 1 = Hidden 2 = Locked */
+export enum CommentSetting {
+    Visible = 0,
+    Hidden = 1,
+    Locked = 2,
 }
 
 export class ConstructorInfo implements IConstructorInfo {
@@ -18677,6 +18839,77 @@ export interface IDisciplineTaxonomyDto {
     children: DisciplineTaxonomyDto[] | undefined;
 }
 
+export class Document implements IDocument {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    name: string | undefined;
+    originalFileName: string | undefined;
+    fileType: string | undefined;
+    documentType: DocumentType;
+    size: number;
+
+    constructor(data?: IDocument) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.name = _data["name"];
+            this.originalFileName = _data["originalFileName"];
+            this.fileType = _data["fileType"];
+            this.documentType = _data["documentType"];
+            this.size = _data["size"];
+        }
+    }
+
+    static fromJS(data: any): Document {
+        data = typeof data === 'object' ? data : {};
+        let result = new Document();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["name"] = this.name;
+        data["originalFileName"] = this.originalFileName;
+        data["fileType"] = this.fileType;
+        data["documentType"] = this.documentType;
+        data["size"] = this.size;
+        return data; 
+    }
+
+    clone(): Document {
+        const json = this.toJSON();
+        let result = new Document();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDocument {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    name: string | undefined;
+    originalFileName: string | undefined;
+    fileType: string | undefined;
+    documentType: DocumentType;
+    size: number;
+}
+
 export class DocumentDto implements IDocumentDto {
     id: string | undefined;
     name: string | undefined;
@@ -18740,7 +18973,7 @@ export interface IDocumentDto {
     size: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -18757,6 +18990,7 @@ export enum DocumentType {
     CourseSectionPage = 12,
     CourseAssignment = 13,
     Video = 14,
+    VideoThumbnail = 15,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {
@@ -21048,6 +21282,14 @@ export enum PhotoIdVerificationStatus {
     Pending = 0,
     Accepted = 1,
     Declined = 2,
+}
+
+/** 0 = Free 1 = FixedPrice 2 = PaymentPlan 3 = Subscription */
+export enum PricingType {
+    Free = 0,
+    FixedPrice = 1,
+    PaymentPlan = 2,
+    Subscription = 3,
 }
 
 export class ProfileMetricDto implements IProfileMetricDto {
@@ -25612,6 +25854,65 @@ export interface IUpdateProjectDto {
     serviceNameLevel3: string | undefined;
 }
 
+export class UpdateVideoSettingsDto implements IUpdateVideoSettingsDto {
+    id: string;
+    isVisible: boolean;
+    commentSetting: CommentSetting;
+    commentModeration: boolean;
+    customUrl: string | undefined;
+
+    constructor(data?: IUpdateVideoSettingsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.isVisible = _data["isVisible"];
+            this.commentSetting = _data["commentSetting"];
+            this.commentModeration = _data["commentModeration"];
+            this.customUrl = _data["customUrl"];
+        }
+    }
+
+    static fromJS(data: any): UpdateVideoSettingsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateVideoSettingsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["isVisible"] = this.isVisible;
+        data["commentSetting"] = this.commentSetting;
+        data["commentModeration"] = this.commentModeration;
+        data["customUrl"] = this.customUrl;
+        return data; 
+    }
+
+    clone(): UpdateVideoSettingsDto {
+        const json = this.toJSON();
+        let result = new UpdateVideoSettingsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateVideoSettingsDto {
+    id: string;
+    isVisible: boolean;
+    commentSetting: CommentSetting;
+    commentModeration: boolean;
+    customUrl: string | undefined;
+}
+
 export class UserAvailabilityDto implements IUserAvailabilityDto {
     id: string | undefined;
     dayOfWeek: DayOfWeek;
@@ -27369,9 +27670,21 @@ export class VideoDto implements IVideoDto {
     status: VideoStatus;
     parentId: string | undefined;
     documentId: string | undefined;
+    thumbnailDocumentId: string | undefined;
+    languageId: string | undefined;
+    isVisible: boolean;
+    commentSetting: CommentSetting;
+    commentModeration: boolean;
+    customUrl: string | undefined;
+    category: string | undefined;
+    categories: string | undefined;
+    price: number;
+    pricingType: PricingType;
     videoUrl: string | undefined;
+    thumbnailUrl: string | undefined;
     parent: VideoDto;
     document: DocumentDto;
+    thumbnailDocument: Document;
     children: VideoDto[] | undefined;
 
     constructor(data?: IVideoDto) {
@@ -27392,9 +27705,21 @@ export class VideoDto implements IVideoDto {
             this.status = _data["status"];
             this.parentId = _data["parentId"];
             this.documentId = _data["documentId"];
+            this.thumbnailDocumentId = _data["thumbnailDocumentId"];
+            this.languageId = _data["languageId"];
+            this.isVisible = _data["isVisible"];
+            this.commentSetting = _data["commentSetting"];
+            this.commentModeration = _data["commentModeration"];
+            this.customUrl = _data["customUrl"];
+            this.category = _data["category"];
+            this.categories = _data["categories"];
+            this.price = _data["price"];
+            this.pricingType = _data["pricingType"];
             this.videoUrl = _data["videoUrl"];
+            this.thumbnailUrl = _data["thumbnailUrl"];
             this.parent = _data["parent"] ? VideoDto.fromJS(_data["parent"]) : <any>undefined;
             this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
+            this.thumbnailDocument = _data["thumbnailDocument"] ? Document.fromJS(_data["thumbnailDocument"]) : <any>undefined;
             if (Array.isArray(_data["children"])) {
                 this.children = [] as any;
                 for (let item of _data["children"])
@@ -27419,9 +27744,21 @@ export class VideoDto implements IVideoDto {
         data["status"] = this.status;
         data["parentId"] = this.parentId;
         data["documentId"] = this.documentId;
+        data["thumbnailDocumentId"] = this.thumbnailDocumentId;
+        data["languageId"] = this.languageId;
+        data["isVisible"] = this.isVisible;
+        data["commentSetting"] = this.commentSetting;
+        data["commentModeration"] = this.commentModeration;
+        data["customUrl"] = this.customUrl;
+        data["category"] = this.category;
+        data["categories"] = this.categories;
+        data["price"] = this.price;
+        data["pricingType"] = this.pricingType;
         data["videoUrl"] = this.videoUrl;
+        data["thumbnailUrl"] = this.thumbnailUrl;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
         if (Array.isArray(this.children)) {
             data["children"] = [];
             for (let item of this.children)
@@ -27446,9 +27783,21 @@ export interface IVideoDto {
     status: VideoStatus;
     parentId: string | undefined;
     documentId: string | undefined;
+    thumbnailDocumentId: string | undefined;
+    languageId: string | undefined;
+    isVisible: boolean;
+    commentSetting: CommentSetting;
+    commentModeration: boolean;
+    customUrl: string | undefined;
+    category: string | undefined;
+    categories: string | undefined;
+    price: number;
+    pricingType: PricingType;
     videoUrl: string | undefined;
+    thumbnailUrl: string | undefined;
     parent: VideoDto;
     document: DocumentDto;
+    thumbnailDocument: Document;
     children: VideoDto[] | undefined;
 }
 
