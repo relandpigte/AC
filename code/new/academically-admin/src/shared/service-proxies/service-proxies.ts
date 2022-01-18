@@ -475,6 +475,363 @@ export class AccountServiceProxy {
 }
 
 @Injectable()
+export class ArticlesServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param userIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param stausFilter (optional) 0 = Draft
+    
+    1 = Published
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(userIdFilter: number | undefined, searchFilter: string | undefined, stausFilter: ArticleStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Articles/GetAll?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (stausFilter === null)
+            throw new Error("The parameter 'stausFilter' cannot be null.");
+        else if (stausFilter !== undefined)
+            url_ += "StausFilter=" + encodeURIComponent("" + stausFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<ArticleDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ArticleDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<ArticleDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ArticleDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ArticleDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<ArticleDto> {
+        let url_ = this.baseUrl + "/api/services/app/Articles/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<ArticleDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ArticleDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<ArticleDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ArticleDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ArticleDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: ArticleDto | undefined): Observable<ArticleDto> {
+        let url_ = this.baseUrl + "/api/services/app/Articles/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<ArticleDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ArticleDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<ArticleDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ArticleDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ArticleDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param thumbnailFile (optional) 
+     * @param name (optional) 
+     * @param description (optional) 
+     * @param thumbnailDocumentId (optional) 
+     * @param categories (optional) 
+     * @param languageId (optional) 
+     * @param price (optional) 
+     * @param pricingType (optional) 
+     * @return Success
+     */
+    updateDetails(id: string | undefined, thumbnailFile: FileParameter | undefined, name: string | undefined, description: string | undefined, thumbnailDocumentId: string | undefined, categories: string | undefined, languageId: string | undefined, price: number | undefined, pricingType: PricingType | undefined): Observable<ArticleDto> {
+        let url_ = this.baseUrl + "/api/services/app/Articles/UpdateDetails";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (id === null || id === undefined) {
+            // do nothing
+        } else
+            content_.append("Id", id.toString());
+        if (thumbnailFile === null || thumbnailFile === undefined) {
+            // do nothing
+        } else
+            content_.append("ThumbnailFile", thumbnailFile.data, thumbnailFile.fileName ? thumbnailFile.fileName : "ThumbnailFile");
+        if (name === null || name === undefined) {
+            // do nothing
+        } else
+            content_.append("Name", name.toString());
+        if (description === null || description === undefined) {
+            // do nothing
+        } else
+            content_.append("Description", description.toString());
+        if (thumbnailDocumentId === null || thumbnailDocumentId === undefined) {
+            // do nothing
+        } else
+            content_.append("ThumbnailDocumentId", thumbnailDocumentId.toString());
+        if (categories === null || categories === undefined) {
+            // do nothing
+        } else
+            content_.append("Categories", categories.toString());
+        if (languageId === null || languageId === undefined) {
+            // do nothing
+        } else
+            content_.append("LanguageId", languageId.toString());
+        if (price === null || price === undefined) {
+            // do nothing
+        } else
+            content_.append("Price", price.toString());
+        if (pricingType === null || pricingType === undefined) {
+            // do nothing
+        } else
+            content_.append("PricingType", pricingType.toString());
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateDetails(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateDetails(<any>response_);
+                } catch (e) {
+                    return <Observable<ArticleDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ArticleDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateDetails(response: HttpResponseBase): Observable<ArticleDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ArticleDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ArticleDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateSettings(body: UpdateArticleSettingsDto | undefined): Observable<ArticleDto> {
+        let url_ = this.baseUrl + "/api/services/app/Articles/UpdateSettings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateSettings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateSettings(<any>response_);
+                } catch (e) {
+                    return <Observable<ArticleDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ArticleDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateSettings(response: HttpResponseBase): Observable<ArticleDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ArticleDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ArticleDto>(<any>null);
+    }
+}
+
+@Injectable()
 export class AuditLogsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -15696,6 +16053,200 @@ export interface IApplicationInfoDto {
     coverPhotoFolderName: string | undefined;
 }
 
+export class ArticleDto implements IArticleDto {
+    id: string;
+    type: ArticleType;
+    name: string | undefined;
+    description: string | undefined;
+    status: ArticleStatus;
+    parentId: string | undefined;
+    thumbnailDocumentId: string | undefined;
+    languageId: string | undefined;
+    isVisible: boolean;
+    commentSetting: CommentSetting;
+    commentModeration: boolean;
+    customUrl: string | undefined;
+    category: string | undefined;
+    categories: string | undefined;
+    price: number;
+    pricingType: PricingType;
+    thumbnailUrl: string | undefined;
+    parent: ArticleDto;
+    thumbnailDocument: Document;
+    children: ArticleDto[] | undefined;
+
+    constructor(data?: IArticleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.type = _data["type"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.status = _data["status"];
+            this.parentId = _data["parentId"];
+            this.thumbnailDocumentId = _data["thumbnailDocumentId"];
+            this.languageId = _data["languageId"];
+            this.isVisible = _data["isVisible"];
+            this.commentSetting = _data["commentSetting"];
+            this.commentModeration = _data["commentModeration"];
+            this.customUrl = _data["customUrl"];
+            this.category = _data["category"];
+            this.categories = _data["categories"];
+            this.price = _data["price"];
+            this.pricingType = _data["pricingType"];
+            this.thumbnailUrl = _data["thumbnailUrl"];
+            this.parent = _data["parent"] ? ArticleDto.fromJS(_data["parent"]) : <any>undefined;
+            this.thumbnailDocument = _data["thumbnailDocument"] ? Document.fromJS(_data["thumbnailDocument"]) : <any>undefined;
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(ArticleDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ArticleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ArticleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["type"] = this.type;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["status"] = this.status;
+        data["parentId"] = this.parentId;
+        data["thumbnailDocumentId"] = this.thumbnailDocumentId;
+        data["languageId"] = this.languageId;
+        data["isVisible"] = this.isVisible;
+        data["commentSetting"] = this.commentSetting;
+        data["commentModeration"] = this.commentModeration;
+        data["customUrl"] = this.customUrl;
+        data["category"] = this.category;
+        data["categories"] = this.categories;
+        data["price"] = this.price;
+        data["pricingType"] = this.pricingType;
+        data["thumbnailUrl"] = this.thumbnailUrl;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): ArticleDto {
+        const json = this.toJSON();
+        let result = new ArticleDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IArticleDto {
+    id: string;
+    type: ArticleType;
+    name: string | undefined;
+    description: string | undefined;
+    status: ArticleStatus;
+    parentId: string | undefined;
+    thumbnailDocumentId: string | undefined;
+    languageId: string | undefined;
+    isVisible: boolean;
+    commentSetting: CommentSetting;
+    commentModeration: boolean;
+    customUrl: string | undefined;
+    category: string | undefined;
+    categories: string | undefined;
+    price: number;
+    pricingType: PricingType;
+    thumbnailUrl: string | undefined;
+    parent: ArticleDto;
+    thumbnailDocument: Document;
+    children: ArticleDto[] | undefined;
+}
+
+export class ArticleDtoPagedResultDto implements IArticleDtoPagedResultDto {
+    items: ArticleDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IArticleDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(ArticleDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): ArticleDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ArticleDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ArticleDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new ArticleDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IArticleDtoPagedResultDto {
+    items: ArticleDto[] | undefined;
+    totalCount: number;
+}
+
+/** 0 = Draft 1 = Published */
+export enum ArticleStatus {
+    Draft = 0,
+    Published = 1,
+}
+
+/** 1 = SingleArticle 2 = ArticleSeries */
+export enum ArticleType {
+    SingleArticle = 1,
+    ArticleSeries = 2,
+}
+
 export class Assembly implements IAssembly {
     readonly definedTypes: TypeInfo[] | undefined;
     readonly exportedTypes: Type[] | undefined;
@@ -18973,7 +19524,7 @@ export interface IDocumentDto {
     size: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -18991,6 +19542,7 @@ export enum DocumentType {
     CourseAssignment = 13,
     Video = 14,
     VideoThumbnail = 15,
+    ArticleThumbnail = 16,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {
@@ -25730,6 +26282,65 @@ export interface IUpdateAddressDto {
     city: string | undefined;
     stateOrProvince: string | undefined;
     zipOrPostCode: string | undefined;
+}
+
+export class UpdateArticleSettingsDto implements IUpdateArticleSettingsDto {
+    id: string;
+    isVisible: boolean;
+    commentSetting: CommentSetting;
+    commentModeration: boolean;
+    customUrl: string | undefined;
+
+    constructor(data?: IUpdateArticleSettingsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.isVisible = _data["isVisible"];
+            this.commentSetting = _data["commentSetting"];
+            this.commentModeration = _data["commentModeration"];
+            this.customUrl = _data["customUrl"];
+        }
+    }
+
+    static fromJS(data: any): UpdateArticleSettingsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateArticleSettingsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["isVisible"] = this.isVisible;
+        data["commentSetting"] = this.commentSetting;
+        data["commentModeration"] = this.commentModeration;
+        data["customUrl"] = this.customUrl;
+        return data; 
+    }
+
+    clone(): UpdateArticleSettingsDto {
+        const json = this.toJSON();
+        let result = new UpdateArticleSettingsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateArticleSettingsDto {
+    id: string;
+    isVisible: boolean;
+    commentSetting: CommentSetting;
+    commentModeration: boolean;
+    customUrl: string | undefined;
 }
 
 export class UpdateCourseSettingsDto implements IUpdateCourseSettingsDto {

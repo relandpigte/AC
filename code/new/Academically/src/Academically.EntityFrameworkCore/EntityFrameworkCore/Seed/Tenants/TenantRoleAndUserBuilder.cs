@@ -230,7 +230,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_PageBuilder,
                 PermissionNames.Pages_Notifications,
                 PermissionNames.Pages_StudentPortal,
-                PermissionNames.Pages_Videos
+                PermissionNames.Pages_Videos,
+                PermissionNames.Pages_Articles
             );
 
             #endregion

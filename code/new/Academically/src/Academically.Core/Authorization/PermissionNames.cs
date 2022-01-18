@@ -188,6 +188,9 @@
         public const string Pages_Videos = "Pages.Videos";
 
 
+        public const string Pages_Articles = "Pages.Articles";
+
+
         public const string Pages_Tenants = "Pages.Tenants";
 
     }

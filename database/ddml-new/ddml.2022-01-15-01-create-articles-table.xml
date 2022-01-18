@@ -1,0 +1,115 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1642483154743-1">
+        <createTable tableName="AcademicallyArticleContents">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="ArticleId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ContentId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642483154743-2">
+        <createTable tableName="AcademicallyArticles">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Type" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Description" type="VARCHAR(250)"/>
+            <column name="Status" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ParentId" type="CHAR(36)"/>
+            <column name="ThumbnailDocumentId" type="CHAR(36)"/>
+            <column defaultValueBoolean="false" name="IsVisible" type="BIT(1)"/>
+            <column name="CommentSetting" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="CommentModeration" type="BIT(1)"/>
+            <column name="CustomUrl" type="VARCHAR(100)"/>
+            <column name="PricingType" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Price" type="DECIMAL(18, 2)"/>
+            <column name="LanguageId" type="VARCHAR(36)"/>
+            <column name="Categories" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642483154743-3">
+        <createTable tableName="AcademicallyContents">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Content" type="LONGTEXT"/>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642483154743-4">
+        <createIndex indexName="FK_ArticleContens_Contens_ContentId_idx" tableName="AcademicallyArticleContents">
+            <column name="ContentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642483154743-5">
+        <createIndex indexName="FK_ArticleContents_Articles_ArticleId_idx" tableName="AcademicallyArticleContents">
+            <column name="ArticleId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642483154743-6">
+        <createIndex indexName="FK_Articles_Articles_ParentId_idx" tableName="AcademicallyArticles">
+            <column name="ParentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642483154743-7">
+        <createIndex indexName="FK_Articles_Documents_ThumbnailDocumentId_idx" tableName="AcademicallyArticles">
+            <column name="ThumbnailDocumentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642483154743-8">
+        <createIndex indexName="FK_Articles_Users_CreatorUserId_idx" tableName="AcademicallyArticles">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642483154743-9">
+        <createIndex indexName="FK_Contents_Users_CreatorUserId_idx" tableName="AcademicallyContents">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642483154743-10">
+        <addForeignKeyConstraint baseColumnNames="ContentId" baseTableName="AcademicallyArticleContents" constraintName="FK_ArticleContens_Contens_ContentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyContents" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642483154743-11">
+        <addForeignKeyConstraint baseColumnNames="ArticleId" baseTableName="AcademicallyArticleContents" constraintName="FK_ArticleContents_Articles_ArticleId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyArticles" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642483154743-12">
+        <addForeignKeyConstraint baseColumnNames="ParentId" baseTableName="AcademicallyArticles" constraintName="FK_Articles_Articles_ParentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyArticles" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642483154743-13">
+        <addForeignKeyConstraint baseColumnNames="ThumbnailDocumentId" baseTableName="AcademicallyArticles" constraintName="FK_Articles_Documents_ThumbnailDocumentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallydocuments" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642483154743-14">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="AcademicallyArticles" constraintName="FK_Articles_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642483154743-15">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="AcademicallyContents" constraintName="FK_Contents_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
