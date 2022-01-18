@@ -21,6 +21,8 @@
         public const string Aws_S3_Folders_CourseSectionPage = "Aws.S3.Folders.CourseSectionPage";
         public const string Aws_S3_Folders_CourseAssignments = "Aws.S3.Folders.CourseAssignments";
         public const string Aws_S3_Folders_Videos = "Aws.S3.Folders.Videos";
+        public const string Aws_S3_Folders_VideoThumbnails = "Aws.S3.Folders.VideoThumbnails";
+        public const string Aws_S3_Folders_ArticleThumbnails = "Aws.S3.Folders.ArticleThumbnails";
         public const string ITagg_Sms_Username = "ITagg.Sms.Username";
         public const string ITagg_Sms_Password = "ITagg.Sms.Password";
         public const string Email_FromName = "Email.FromName";

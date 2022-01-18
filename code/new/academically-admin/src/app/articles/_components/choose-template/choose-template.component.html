@@ -1,0 +1,30 @@
+<div class="modal-card card">
+  <abp-modal-header [title]="'ChooseATemplate' | localize" (onCloseClick)="onCloseClick()">
+  </abp-modal-header>
+  <div class="card-body p-0">
+    <ul class="list-group">
+      <li *ngFor="let template of templates" class="list-group-item">
+        <a href="#!select-template" (click)="$event.preventDefault(); onTemplateSelect(template)">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <a href="#!student" (click)="$event.preventDefault();"
+                class="avatar avatar-lg d-flex justify-content-center align-items-center">
+                <i class="fe fe-file-text text-muted"></i>
+              </a>
+            </div>
+            <div class="col ml-n2">
+              <h4 class="mb-1">
+                <a href="#!student" (click)="$event.preventDefault();">
+                  {{ template.name | localize | titlecase }}
+                </a>
+              </h4>
+              <p class="card-text small text-muted mb-1">
+                {{ template.description | localize }}
+              </p>
+            </div>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="PressEnterToAddMore">Press entet to add more</text>
+    <text name="ArticleName">Article name</text>
+    <text name="WriteYourArticleNameHere">Write your article name here</text>
+    <text name="Article">Article</text>
+    <text name="NewArticle">New article</text>
+    <text name="NameYourArticleSeries">Name your article series</text>
+    <text name="NameYourArticle">Name your article</text>
+    <text name="ArticleSeriesDescription">Build a collection of articles</text>
+    <text name="ArticleSeries">Article series</text>
+    <text name="SingleArticleDescription">Create a one off article</text>
+    <text name="SingleArticle">Single article</text>
+    <text name="Articles">Articles</text>
     <text name="FreeDescription">Allow access to content free of charge</text>
     <text name="FixedFee">Fixed fee</text>
     <text name="FixedFeeDescription">Charge students a one time fee to access content</text>

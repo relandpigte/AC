@@ -138,7 +138,15 @@ namespace Academically.Domain.Services.Documents
                     isSecured = false;
                     break;
                 case DocumentType.Video:
-                    folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_CourseAssignments);
+                    folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_Videos);
+                    isSecured = false;
+                    break;
+                case DocumentType.VideoThumbnail:
+                    folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_VideoThumbnails);
+                    isSecured = false;
+                    break;
+                case DocumentType.ArticleThumbnail:
+                    folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_ArticleThumbnails);
                     isSecured = false;
                     break;
                 default:

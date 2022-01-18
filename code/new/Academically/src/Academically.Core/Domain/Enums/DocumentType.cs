@@ -18,5 +18,6 @@
         CourseAssignment,
         Video,
         VideoThumbnail,
+        ArticleThumbnail,
     }
 }

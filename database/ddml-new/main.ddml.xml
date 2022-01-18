@@ -98,5 +98,6 @@
 	<include file="ddml-new/ddml.2022-01-08-01-alter-videos-add-settings.xml"/>
 	<include file="ddml-new/ddml.2022-01-08-02-alter-videos-add-pricing-and-language.xml"/>
 	<include file="ddml-new/ddml.2022-01-11-01-alter-videos-add-categories-field.xml"/>
+	<include file="ddml-new/ddml.2022-01-15-01-create-articles-table.xml"/>
 </databaseChangeLog>
 	
