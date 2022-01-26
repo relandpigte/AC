@@ -148,13 +148,6 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
               ),
           },
           {
-            path: 'page-builder',
-            loadChildren: () =>
-              import('@app/page-builder/page-builder.module').then(
-                (m) => m.PageBuilderModule
-              ),
-          },
-          {
             path: 'notifications',
             loadChildren: () =>
               import('@app/notifications/notifications.module').then(

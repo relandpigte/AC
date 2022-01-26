@@ -1,7 +1,6 @@
 <div *ngIf="!isCompleted else completedTemplate" class="lesson-preview-container">
   <div class="lesson-preview">
-    <app-content-preview [content]="contents[currentPage]">
-    </app-content-preview>
+    <app-viewer [content]="contents[currentPage]"></app-viewer>
   </div>
   <div class="lesson-preview-toolbar">
     <div>

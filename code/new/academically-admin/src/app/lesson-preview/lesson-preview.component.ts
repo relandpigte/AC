@@ -1,11 +1,11 @@
 import { Component, Injector, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ComponentContent } from '@app/page-builder/_models/component-content';
-import { Content } from '@app/page-builder/_models/content';
-import { PageContent } from '@app/page-builder/_models/page-content';
-import { SectionContent } from '@app/page-builder/_models/section-content';
+import { ComponentContent } from '@app/content-builder/_models/component-content';
+import { LessonContent } from '@app/content-builder/_models/lesson-content';
+import { PageContent } from '@app/content-builder/_models/page-content';
+import { PageBuilderService } from '@app/content-builder/_services/page-builder.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CourseSectionPagesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ContentsServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { takeUntil } from 'rxjs/operators';
 
@@ -17,14 +17,15 @@ import { takeUntil } from 'rxjs/operators';
 export class LessonPreviewComponent extends AppComponentBase implements OnInit {
   @Output() nextSection = new EventEmitter();
   @Output() writeReview = new EventEmitter();
-  contents: Content[] = [];
+  contents: PageContent[] = [];
   currentPage = 0;
   isCompleted = false;
 
   constructor(
     injector: Injector,
     private _route: ActivatedRoute,
-    private _courseSectionPagesService: CourseSectionPagesServiceProxy,
+    private _contentsService: ContentsServiceProxy,
+    private _pageBuilderService: PageBuilderService,
   ) {
     super(injector);
     this._route.paramMap.subscribe(paramMap => {
@@ -47,6 +48,7 @@ export class LessonPreviewComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     document.body.style.backgroundColor = '#FFFFFF';
+    this._pageBuilderService.previewOnly = true;
   }
 
   onPreviousClick(): void {
@@ -67,22 +69,20 @@ export class LessonPreviewComponent extends AppComponentBase implements OnInit {
 
   private getPages(courseSectionId: string): void {
     this.contents = [];
-    this._courseSectionPagesService.get(courseSectionId)
+    this._contentsService.get(courseSectionId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         if (response && response.pageContent) {
-          const pageContentObjects: any[] = JSON.parse(response.pageContent);
-          this.contents = _.map(pageContentObjects, pageContentObject => {
-            const pageContent: PageContent = Object.assign(new PageContent(), pageContentObject);
-            pageContent.sections = _.map(pageContent.sections, sectionContentObject => {
-              const sectionContent = Object.assign(new SectionContent(), sectionContentObject);
-              sectionContent.components = _.map(sectionContent.components, componentContent => {
-                return Object.assign(new ComponentContent(), componentContent);
-              });
-              return sectionContent;
+          const lessonContentObject: LessonContent = JSON.parse(response.pageContent);
+          const lessonContent = Object.assign(new LessonContent(), lessonContentObject);
+          lessonContent.pages = _.map(lessonContent.pages, pageContentObject => {
+            const pageContent = Object.assign(new PageContent(), pageContentObject);
+            pageContent.components = _.map(pageContent.components, componentContentObject => {
+              return Object.assign(new ComponentContent(), componentContentObject);
             });
             return pageContent;
           });
+          this.contents = lessonContent.pages;
         }
       });
   }

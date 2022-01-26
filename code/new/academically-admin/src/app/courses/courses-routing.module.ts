@@ -20,8 +20,15 @@ import { CoursesComponent } from './courses.component';
             path: '',
             component: CoursesComponent,
           },
+          {
+            path: 'course-sections',
+            loadChildren: () =>
+              import('@app/courses/course-sections/course-sections.module').then(
+                (m) => m.CourseSectionsModule
+              ),
+          },
         ],
-      }
+      },
     ]),
   ],
   exports: [

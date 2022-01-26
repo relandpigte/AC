@@ -11,6 +11,11 @@
     <RootNamespace>Academically</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Services\StudentCourseConversations\**" />
+    <EmbeddedResource Remove="Services\StudentCourseConversations\**" />
+    <None Remove="Services\StudentCourseConversations\**" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Academically.Core\Academically.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -48,8 +53,6 @@
     <Folder Include="Services\StudentCourses\Dto\" />
     <Folder Include="Services\StudentCourseSections\" />
     <Folder Include="Services\StudentCourseSections\Dto\" />
-    <Folder Include="Services\StudentCourseConversations\" />
-    <Folder Include="Services\StudentCourseConversations\Dto\" />
     <Folder Include="Services\CourseAssignments\" />
     <Folder Include="Services\CourseAssignments\Dto\" />
     <Folder Include="Services\Videos\" />
@@ -81,7 +84,6 @@
     <None Remove="Services\StudentCourseSections\" />
     <None Remove="Services\StudentCourseSections\Dto\" />
     <None Remove="Services\StudentCourseConversations\" />
-    <None Remove="Services\StudentCourseConversations\Dto\" />
     <None Remove="Services\CourseAssignments\" />
     <None Remove="Services\CourseAssignments\Dto\" />
     <None Remove="Services\Videos\" />

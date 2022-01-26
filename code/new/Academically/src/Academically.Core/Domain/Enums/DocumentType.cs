@@ -19,5 +19,6 @@
         Video,
         VideoThumbnail,
         ArticleThumbnail,
+        CourseSectionImage,
     }
 }

@@ -12,7 +12,7 @@ export class NameComponent extends AppComponentBase implements OnInit {
   @Input() courseId: string;
   @Input() currentcourseSectionType: CourseSectionType;
   @Input() parentId: string;
-  @Input() model: CourseSectionDto;
+  @Input() model = new CourseSectionDto();
   @Output() courseSaved = new EventEmitter();
   @Output() modalClose = new EventEmitter();
   @Output() backClick = new EventEmitter();

@@ -33,7 +33,7 @@
             </div>
             <div [class.ml-n2]="courseSectionModule.type === courseSectionType.Lesson" class="col ml-1">
               <h4 class="mb-0">
-                <a href="#" [routerLink]="['/app/page-builder', courseSectionModule.id]">{{ courseSectionModule.name
+                <a href="#" [routerLink]="['course-sections', courseSectionModule.id]">{{ courseSectionModule.name
                   }}</a>
               </h4>
             </div>
@@ -85,7 +85,7 @@
                   <a href="javascript:;" class="dropdown-item" (click)="onDuplicateClick(courseSectionModule)">
                     {{ 'Duplicate' | localize }}
                   </a>
-                  <a href="#" [routerLink]="['/app/page-builder', courseSectionModule.id]" class="dropdown-item">
+                  <a href="#" [routerLink]="['course-sections', courseSectionModule.id]" class="dropdown-item">
                     {{ 'Edit' | localize }}
                   </a>
                   <a href="javascript:;" class="dropdown-item"
@@ -116,7 +116,7 @@
                   </div>
                   <div class="col ml-1">
                     <h4 class="mb-1">
-                      <a href="#" [routerLink]="['/app/page-builder', courseSectionUnit.id]">{{ courseSectionUnit.name
+                      <a href="#" [routerLink]="['course-sections', courseSectionUnit.id]">{{ courseSectionUnit.name
                         }}</a>
                     </h4>
                   </div>
@@ -168,7 +168,7 @@
                         <a href="javascript:;" class="dropdown-item" (click)="onDuplicateClick(courseSectionUnit)">
                           {{ 'Duplicate' | localize }}
                         </a>
-                        <a href="#" [routerLink]="['/app/page-builder', courseSectionUnit.id]" class="dropdown-item">
+                        <a href="#" [routerLink]="['course-sections', courseSectionUnit.id]" class="dropdown-item">
                           {{ 'Edit' | localize }}
                         </a>
                         <a href="javascript:;" class="dropdown-item"
@@ -199,7 +199,7 @@
                         </div>
                         <div class="col ml-n2">
                           <h4 class="mb-1">
-                            <a href="#" [routerLink]="['/app/page-builder', courseSectionLesson.id]">{{
+                            <a href="#" [routerLink]="['course-sections', courseSectionLesson.id]">{{
                               courseSectionLesson.name }}</a>
                           </h4>
                         </div>
@@ -255,7 +255,7 @@
                                 (click)="onDuplicateClick(courseSectionLesson)">
                                 {{ 'Duplicate' | localize }}
                               </a>
-                              <a href="#" [routerLink]="['/app/page-builder', courseSectionLesson.id]"
+                              <a href="#" [routerLink]="['course-sections', courseSectionLesson.id]"
                                 class="dropdown-item">
                                 {{ 'Edit' | localize }}
                               </a>

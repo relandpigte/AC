@@ -1,55 +1,137 @@
 <form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
   <div class="row">
-    <div class="col-8">
-      <div class="card" [loader]="isLoading">
+
+    <div class="col-8" [loader]="isLoading">
+
+      <div class="card">
         <div class="card-header">
           <h4 class="card-header-title">
-            {{ 'CourseNameDetails' | localize }}
+            {{ 'Name' | localize | titlecase }}
           </h4>
+          <div class="col-auto row">
+            <button *ngIf="!editField || editField !== EditField.Name" (click)="onEditClick(EditField.Name)"
+              type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Name" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
         </div>
         <div class="card-body">
-
-          <div class="form-group required">
-            <label class="col-form-label" for="name">{{ 'Name' | localize}}</label>
+          <div class="form-group required mb-0">
             <input [(ngModel)]="model.name" #nameModel="ngModel" #nameEl class="form-control" type="text" id="name"
-              name="name" required />
+              name="name" required [placeholder]="'WriteYourCourseNameHere' | localize"
+              [disabled]="editField !== EditField.Name" />
             <abp-validation-summary [control]="nameModel" [controlEl]="nameEl">
             </abp-validation-summary>
           </div>
-
-          <div class="form-group">
-            <label class="col-form-label" for="subtitle">{{ 'Subtitle' | localize}}</label>
-            <input [(ngModel)]="model.subtitle" #subtitleModel="ngModel" #subtitleEl class="form-control" type="text"
-              id="subtitle" name="subtitle" />
-            <abp-validation-summary [control]="subtitleModel" [controlEl]="subtitleEl">
-            </abp-validation-summary>
-          </div>
-
-          <div class="form-group">
-            <label class="col-form-label" for="description">{{ 'Description' | localize}}</label>
-            <quill-editor [(ngModel)]="model.description" #descriptionModel="ngModel" #descriptionEl id="description"
-              name="description"></quill-editor>
-            <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl.elementRef.nativeElement">
-            </abp-validation-summary>
-          </div>
-
-          <div class="form-group">
-            <label class="col-form-label" for="categories">{{ 'Categories' | localize}}</label>
-            <input class="form-control" type="text" id="categories" name="categories" />
-          </div>
-
         </div>
       </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Subtitle' | localize | titlecase }}
+          </h4>
+          <div class="col-auto row">
+            <button *ngIf="!editField || editField !== EditField.Subtitle" (click)="onEditClick(EditField.Subtitle)"
+              type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Subtitle" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group mb-0">
+            <input [(ngModel)]="model.subtitle" #subtitleModel="ngModel" #subtitleEl class="form-control" type="text"
+              id="subtitle" name="subtitle" [placeholder]="'WriteYourSubtitleHere' | localize"
+              [disabled]="editField !== EditField.Subtitle" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Description' | localize | titlecase }}
+          </h4>
+          <div class="col-auto row">
+            <button *ngIf="!editField || editField !== EditField.Description"
+              (click)="onEditClick(EditField.Description)" type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Description" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group mb-0">
+            <textarea [rows]="4" [(ngModel)]="model.description" #descriptionModel="ngModel" #descriptionEl
+              class="form-control" id="description" name="description"
+              [placeholder]="'WriteYourDescriptionHere' | localize" [disabled]="editField !== EditField.Description">
+            </textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Categories' | localize | titlecase }}
+          </h4>
+          <div class="col-auto row">
+            <button *ngIf="!editField || editField !== EditField.Categories" (click)="onEditClick(EditField.Categories)"
+              type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Categories" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group required mb-0">
+            <input [(ngModel)]="category" #categoryModel="ngModel" #categoryEl class="form-control" type="text"
+              id="category" name="category" required [disabled]="editField !== EditField.Categories"
+              (keydown)="onCategoryKeyDown($event)" [placeholder]="'PressEnterToAddMore' | localize" />
+            <div class="ac-alerts">
+              <div *ngFor="let category of categories" class="alert alert-info alert-dismissible ac-alert" role="alert">
+                {{ category }}
+                <button [disabled]="editField !== EditField.Categories" (click)="onRemoveCategoryClick(category)"
+                  type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <div class="col-4">
+
       <div class="card" [loader]="isLoading">
         <div class="card-header">
           <h4 class="card-header-title">
-            {{ 'Course Image' | localize }}
+            {{ 'CourseImage' | localize }}
           </h4>
+          <div class="row">
+            <button *ngIf="!editField || editField !== EditField.Image" (click)="onEditClick(EditField.Image)"
+              type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Image" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
         </div>
-        <div class="card-body">
+        <div class="card-body position-relative">
+          <div *ngIf="editField !== EditField.Image" class="disabled-block"></div>
           <app-document-uploader [previewImages]="true" [largeImagePreview]="true" [maxFiles]="1" [cropImages]="true"
             [cropperAspectRatioWidth]="350" [cropperAspectRationHeight]="263"
             [allowedExtensions]="allowedImageExtensions">
@@ -60,52 +142,23 @@
       <div class="card" [loader]="isLoading">
         <div class="card-header">
           <h4 class="card-header-title">
-            {{ 'Pricing' | localize }}
-          </h4>
-        </div>
-        <div class="card-body">
-          <div class="form-check">
-            <input [checked]="currenctPricingState === PricingState.Free" class="form-check-input" type="radio"
-              name="free" id="free" value="free" (click)="onPricingClick(PricingState.Free)">
-            <label class="form-check-label" for="free">
-              {{ 'Free' | localize }}
-              <p class="small text-muted">{{ 'AllowAccessToContentFreeOfCharge' | localize }}</p>
-            </label>
-          </div>
-          <div class="form-check">
-            <input [checked]="currenctPricingState === PricingState.Charged" class="form-check-input" type="radio"
-              name="charged" id="charged" value="charged" (click)="onPricingClick(PricingState.Charged)">
-            <label class="form-check-label mb-1" for="charged">{{ 'ChargeAFee' | localize }}</label>
-            <div class="input-group">
-              <input type="number" [(ngModel)]="model.price" id="price" name="price" class="form-control"
-                [disabled]="currenctPricingState === PricingState.Free"
-                [readonly]="currenctPricingState === PricingState.Free">
-              <div class="input-group-append">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false" [disabled]="currenctPricingState === PricingState.Free">
-                  {{ this.selectedCurrency.code }}
-                </button>
-                <div class="dropdown-menu">
-                  <a *ngFor="let currency of currencies" class="dropdown-item"
-                    (click)="$event.preventDefault(); onCurrencyClick(currency);" href="#">{{ currency.code }}</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" [loader]="isLoading">
-        <div class="card-header">
-          <h4 class="card-header-title">
             {{ 'Language' | localize }}
           </h4>
+          <div class="row">
+            <button *ngIf="!editField || editField !== EditField.Language" (click)="onEditClick(EditField.Language)"
+              type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Language" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
         </div>
         <div class="card-body">
           <div class="form-group mb-0">
             <select class="custom-select" select2 [defaultValue]="model.languageId"
               (select2ValueChange)="model.languageId = $event" [(ngModel)]="model.languageId" id="language"
-              name="language" #languageIdModel="ngModel" #languageIdEl>
+              name="language" #languageIdModel="ngModel" #languageIdEl [disabled]="editField !== EditField.Language">
               <option *ngFor="let langauge of languages" [value]="langauge.id">
                 {{ langauge.name | localize }}
               </option>
@@ -113,14 +166,88 @@
           </div>
         </div>
       </div>
+
+      <div class="card" [loader]="isLoading">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Pricing' | localize }}
+          </h4>
+          <div class="row">
+            <button *ngIf="!editField || editField !== EditField.Pricing" (click)="onEditClick(EditField.Pricing)"
+              type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Pricing" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-auto mr-n4">
+              <div class="custom-control custom-radio">
+                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
+                  id="free" [value]="PricingType.Free" (click)="onPricingClick(PricingType.Free)">
+                <label class="custom-control-label" for="free"></label>
+              </div>
+            </div>
+            <div class="col">
+              <label class="form-check-label" for="free">
+                {{ 'Free' | localize | titlecase }}
+                <p class="small text-muted">{{ 'FreeDescription' | localize }}</p>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-auto mr-n4">
+              <div class="custom-control custom-radio">
+                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
+                  id="fixedFee" [value]="PricingType.FixedPrice" (click)="onPricingClick(PricingType.FixedPrice)">
+                <label class="custom-control-label" for="fixedFee"></label>
+              </div>
+            </div>
+            <div class="col">
+              <label class="form-check-label" for="fixedFee">
+                {{ 'FixedFee' | localize }}
+                <p class="small text-muted">{{ 'FixedFeeDescription' | localize }}</p>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-auto mr-n4">
+              <div class="custom-control custom-radio">
+                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
+                  id="paymentPlan" [value]="PricingType.PaymentPlan" (click)="onPricingClick(PricingType.PaymentPlan)">
+                <label class="custom-control-label" for="paymentPlan"></label>
+              </div>
+            </div>
+            <div class="col">
+              <label class="form-check-label" for="paymentPlan">
+                {{ 'PaymentPlan' | localize | titlecase }}
+                <p class="small text-muted">{{ 'PaymentPlanDescription' | localize }}</p>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-auto mr-n4">
+              <div class="custom-control custom-radio">
+                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
+                  id="subscription" [value]="PricingType.Subscription"
+                  (click)="onPricingClick(PricingType.Subscription)" [disabled]="editField !== EditField.Pricing">
+                <label class="custom-control-label" for="subscription"></label>
+              </div>
+            </div>
+            <div class="col">
+              <label class="form-check-label" for="subscription">
+                {{ 'Subscription' | localize | titlecase }}
+                <p class="small text-muted">{{ 'SubscriptionDescription' | localize }}</p>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <div class="col-12">
-      <div class="d-flex justify-content-end mb-4">
-        <button type="submit" class="btn btn-primary" [disabled]="isLoading || !form.form.valid">
-          {{ 'Save' | localize }}
-        </button>
-      </div>
-    </div>
   </div>
 </form>

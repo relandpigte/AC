@@ -25,6 +25,8 @@ namespace Academically.Services.Courses.Dto
         public Guid? ImageDocumentId { get; set; }
         public Guid? CurrencyId { get; set; }
         public Guid? LanguageId { get; set; }
+        public string Categories { get; set; }
+        public PricingType? PricingType { get; set; }
 
         public DateTime CreationTime { get; set; }
         public string CourseImageUrl { get; set; }

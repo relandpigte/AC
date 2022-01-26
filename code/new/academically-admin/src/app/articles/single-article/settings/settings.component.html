@@ -21,7 +21,7 @@
                 <div class="col">
                   <p>
                     <b>{{ 'Visible' | localize}}: </b>
-                    {{ 'CommentVisible1' | localize }}
+                    {{ 'VisibleCommentDescription' | localize | lowercase }}
                   </p>
                 </div>
                 <div class="col-auto min-w-50px">
@@ -38,7 +38,7 @@
                   <p class="mb-0 pl-5" [class.text-muted]="model.commentSetting !== CommentSetting.Visible">
                     <b>{{ 'CommentModeration' | localize }}: </b>
                     <span class="text-muted">
-                      {{ 'CommentVisible2' | localize }}
+                      {{ 'CommentModerationDescription' | localize | lowercase }}
                     </span>
                   </p>
                 </div>
@@ -61,7 +61,7 @@
                   <p>
                     <b>{{ 'Hidden' | localize }}: </b>
                     <span class="text-muted">
-                      {{ 'ArticleCommentHiddenDescription' | localize }}
+                      {{ 'HiddenCommentDescription' | localize | lowercase }}
                     </span>
                   </p>
                 </div>
@@ -79,7 +79,7 @@
                   <p class="mb-0">
                     <b>{{'Locked' | localize }}: </b>
                     <span class="text-muted">
-                      {{ 'ArticleCommentLockedDescription' | localize }}
+                      {{ 'LockedCommentDescription' | localize | lowercase }}
                     </span>
                   </p>
                 </div>
@@ -151,7 +151,7 @@
                   </h4>
 
                   <p class="card-text small text-muted">
-                    {{ 'ArticleVisible' | localize }}
+                    {{ 'ProfileAndStoreVisibleDescription' | localize }}
                   </p>
                 </div>
                 <div class="col-auto">
@@ -172,7 +172,7 @@
                   </h4>
 
                   <p class="card-text small text-muted">
-                    {{ 'ArticleInvisible' | localize }}
+                    {{ 'ProfileAndStoreInvisibleDescription' | localize }}
                   </p>
                 </div>
                 <div class="col-auto">
