@@ -4,14 +4,15 @@
     </abp-modal-header>
     <div class="card-body">
       <div class="col-md-12 form-group mb-0 required">
-        <input  type="text" class="form-control" name="name" id="name" required [(ngModel)]="model.name"
+        <input type="text" class="form-control" name="name" id="name" required [(ngModel)]="model.name"
           #nameModel="ngModel" #nameEl required />
         <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
       </div>
     </div>
     <abp-modal-footer [isLoading]="isLoading" [saveLabel]=" 'Save' | localize"
       [cancelLabel]="(currentcourseSectionType === CourseSectionType.Lesson && model.id == (null || undefined) ? 'Back' : 'Close') | localize"
-      [cancelDisabled]="isLoading" [saveDisabled]="!form.form.valid || isLoading || (model.name.trim()==='')"
+      [cancelDisabled]="isLoading"
+      [saveDisabled]="!form.form.valid || isLoading || !model || !model.name || !model.name.trim()"
       (onCancelClick)="(currentcourseSectionType === CourseSectionType.Lesson && model.id == (null || undefined) ? onBackClick() : onCloseClick())">
     </abp-modal-footer>
   </div>

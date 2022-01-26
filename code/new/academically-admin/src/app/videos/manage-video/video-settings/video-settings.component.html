@@ -21,7 +21,7 @@
                 <div class="col">
                   <p>
                     <b>{{ 'Visible' | localize}}: </b>
-                    {{ 'CommentVisible1' | localize }}
+                    {{ 'VisibleCommentDescription' | localize | lowercase }}
                   </p>
                 </div>
                 <div class="col-auto min-w-50px">
@@ -36,9 +36,9 @@
               <div class="row align-items-center">
                 <div class="col">
                   <p class="mb-0 pl-5" [class.text-muted]="model.commentSetting !== CommentSetting.Visible">
-                    <b>{{ 'CommentModeration' | localize }}: </b>
+                    <b>{{ 'CommendModeration' | localize }}: </b>
                     <span class="text-muted">
-                      {{ 'CommentVisible2' | localize }}
+                      {{ 'CommentModerationDescription' | localize | lowercase }}
                     </span>
                   </p>
                 </div>

@@ -1827,6 +1827,126 @@ export class ConfigurationServiceProxy {
 }
 
 @Injectable()
+export class ContentsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    get(referenceId: string | undefined): Observable<ContentDto> {
+        let url_ = this.baseUrl + "/api/services/app/Contents/Get?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<ContentDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ContentDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<ContentDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ContentDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ContentDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    save(body: ContentDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Contents/Save";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSave(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSave(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSave(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class ConversationsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -2811,14 +2931,14 @@ export class CoursesServiceProxy {
      * @param name (optional) 
      * @param subtitle (optional) 
      * @param description (optional) 
-     * @param price (optional) 
-     * @param currencyId (optional) 
+     * @param categories (optional) 
      * @param languageId (optional) 
-     * @param file (optional) 
+     * @param pricingType (optional) 
+     * @param imageDocumentFile (optional) 
      * @param id (optional) 
      * @return Success
      */
-    updateDetails(name: string | undefined, subtitle: string | undefined, description: string | undefined, price: number | undefined, currencyId: string | undefined, languageId: string | undefined, file: FileParameter | undefined, id: string | undefined): Observable<CourseDto> {
+    updateDetails(name: string | undefined, subtitle: string | undefined, description: string | undefined, categories: string | undefined, languageId: string | undefined, pricingType: PricingType | undefined, imageDocumentFile: FileParameter | undefined, id: string | undefined): Observable<CourseDto> {
         let url_ = this.baseUrl + "/api/services/app/Courses/UpdateDetails";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2835,22 +2955,22 @@ export class CoursesServiceProxy {
             // do nothing
         } else
             content_.append("Description", description.toString());
-        if (price === null || price === undefined) {
+        if (categories === null || categories === undefined) {
             // do nothing
         } else
-            content_.append("Price", price.toString());
-        if (currencyId === null || currencyId === undefined) {
-            // do nothing
-        } else
-            content_.append("CurrencyId", currencyId.toString());
+            content_.append("Categories", categories.toString());
         if (languageId === null || languageId === undefined) {
             // do nothing
         } else
             content_.append("LanguageId", languageId.toString());
-        if (file === null || file === undefined) {
+        if (pricingType === null || pricingType === undefined) {
             // do nothing
         } else
-            content_.append("File", file.data, file.fileName ? file.fileName : "File");
+            content_.append("PricingType", pricingType.toString());
+        if (imageDocumentFile === null || imageDocumentFile === undefined) {
+            // do nothing
+        } else
+            content_.append("ImageDocumentFile", imageDocumentFile.data, imageDocumentFile.fileName ? imageDocumentFile.fileName : "ImageDocumentFile");
         if (id === null || id === undefined) {
             // do nothing
         } else
@@ -3720,6 +3840,146 @@ export class CourseSectionsServiceProxy {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param name (optional) 
+     * @param description (optional) 
+     * @param categories (optional) 
+     * @param approximateLessonDuration (optional) 
+     * @param imageDocumentFile (optional) 
+     * @param id (optional) 
+     * @return Success
+     */
+    updateDetails(name: string | undefined, description: string | undefined, categories: string | undefined, approximateLessonDuration: string | undefined, imageDocumentFile: FileParameter | undefined, id: string | undefined): Observable<CourseSectionDto> {
+        let url_ = this.baseUrl + "/api/services/app/CourseSections/UpdateDetails";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (name === null || name === undefined) {
+            // do nothing
+        } else
+            content_.append("Name", name.toString());
+        if (description === null || description === undefined) {
+            // do nothing
+        } else
+            content_.append("Description", description.toString());
+        if (categories === null || categories === undefined) {
+            // do nothing
+        } else
+            content_.append("Categories", categories.toString());
+        if (approximateLessonDuration === null || approximateLessonDuration === undefined) {
+            // do nothing
+        } else
+            content_.append("ApproximateLessonDuration", approximateLessonDuration.toString());
+        if (imageDocumentFile === null || imageDocumentFile === undefined) {
+            // do nothing
+        } else
+            content_.append("ImageDocumentFile", imageDocumentFile.data, imageDocumentFile.fileName ? imageDocumentFile.fileName : "ImageDocumentFile");
+        if (id === null || id === undefined) {
+            // do nothing
+        } else
+            content_.append("Id", id.toString());
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateDetails(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateDetails(<any>response_);
+                } catch (e) {
+                    return <Observable<CourseSectionDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CourseSectionDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateDetails(response: HttpResponseBase): Observable<CourseSectionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CourseSectionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CourseSectionDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateSettings(body: UpdateCourseSectionSettingsDto | undefined): Observable<CourseSectionDto> {
+        let url_ = this.baseUrl + "/api/services/app/CourseSections/UpdateSettings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateSettings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateSettings(<any>response_);
+                } catch (e) {
+                    return <Observable<CourseSectionDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CourseSectionDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateSettings(response: HttpResponseBase): Observable<CourseSectionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CourseSectionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CourseSectionDto>(<any>null);
     }
 }
 
@@ -17164,6 +17424,53 @@ export interface IConstructorInfo {
     memberType: MemberTypes;
 }
 
+export class ContentDto implements IContentDto {
+    pageContent: string | undefined;
+    referenceId: string | undefined;
+
+    constructor(data?: IContentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.pageContent = _data["pageContent"];
+            this.referenceId = _data["referenceId"];
+        }
+    }
+
+    static fromJS(data: any): ContentDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ContentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["pageContent"] = this.pageContent;
+        data["referenceId"] = this.referenceId;
+        return data; 
+    }
+
+    clone(): ContentDto {
+        const json = this.toJSON();
+        let result = new ContentDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IContentDto {
+    pageContent: string | undefined;
+    referenceId: string | undefined;
+}
+
 export class ConversationDocumentDto implements IConversationDocumentDto {
     id: string;
     conversationId: string;
@@ -17680,6 +17987,8 @@ export class CourseDto implements ICourseDto {
     imageDocumentId: string | undefined;
     currencyId: string | undefined;
     languageId: string | undefined;
+    categories: string | undefined;
+    pricingType: PricingType;
     creationTime: moment.Moment;
     courseImageUrl: string | undefined;
     creatorUser: UserDto;
@@ -17709,6 +18018,8 @@ export class CourseDto implements ICourseDto {
             this.imageDocumentId = _data["imageDocumentId"];
             this.currencyId = _data["currencyId"];
             this.languageId = _data["languageId"];
+            this.categories = _data["categories"];
+            this.pricingType = _data["pricingType"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.courseImageUrl = _data["courseImageUrl"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
@@ -17742,6 +18053,8 @@ export class CourseDto implements ICourseDto {
         data["imageDocumentId"] = this.imageDocumentId;
         data["currencyId"] = this.currencyId;
         data["languageId"] = this.languageId;
+        data["categories"] = this.categories;
+        data["pricingType"] = this.pricingType;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["courseImageUrl"] = this.courseImageUrl;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
@@ -17775,6 +18088,8 @@ export interface ICourseDto {
     imageDocumentId: string | undefined;
     currencyId: string | undefined;
     languageId: string | undefined;
+    categories: string | undefined;
+    pricingType: PricingType;
     creationTime: moment.Moment;
     courseImageUrl: string | undefined;
     creatorUser: UserDto;
@@ -18042,6 +18357,13 @@ export interface ICourseRatingSummaryDto {
     totalKnowledgeRatings: number;
 }
 
+/** 1 = DaysFromEnrollmentDate 2 = DaysFromCourseStartDate 3 = SpecificDate */
+export enum CourseSectionDripType {
+    DaysFromEnrollmentDate = 1,
+    DaysFromCourseStartDate = 2,
+    SpecificDate = 3,
+}
+
 export class CourseSectionDto implements ICourseSectionDto {
     id: string;
     name: string | undefined;
@@ -18050,12 +18372,27 @@ export class CourseSectionDto implements ICourseSectionDto {
     displayOrder: number;
     courseId: string;
     parentId: string | undefined;
-    creationTime: moment.Moment;
-    myProperty: number;
     isVisible: boolean;
     isAssignmentEnabled: boolean;
-    children: CourseSectionDto[] | undefined;
+    description: string | undefined;
+    categories: string | undefined;
+    imageDocumentId: string | undefined;
+    approximateLessonDuration: string | undefined;
+    dripType: CourseSectionDripType;
+    dripValue: string | undefined;
+    isSendEmailEnabled: boolean | undefined;
+    emailSubject: string | undefined;
+    emailMessage: string | undefined;
+    commentSetting: CommentSetting;
+    isCommentModerationEnabled: boolean | undefined;
+    isStorePreviewEnabled: boolean | undefined;
+    isPrerequsite: boolean;
+    areAllPrerequisite: boolean;
+    creationTime: moment.Moment;
+    imageDocumentUrl: string | undefined;
     course: CourseDto;
+    imageDocument: DocumentDto;
+    children: CourseSectionDto[] | undefined;
 
     constructor(data?: ICourseSectionDto) {
         if (data) {
@@ -18075,16 +18412,31 @@ export class CourseSectionDto implements ICourseSectionDto {
             this.displayOrder = _data["displayOrder"];
             this.courseId = _data["courseId"];
             this.parentId = _data["parentId"];
-            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
-            this.myProperty = _data["myProperty"];
             this.isVisible = _data["isVisible"];
             this.isAssignmentEnabled = _data["isAssignmentEnabled"];
+            this.description = _data["description"];
+            this.categories = _data["categories"];
+            this.imageDocumentId = _data["imageDocumentId"];
+            this.approximateLessonDuration = _data["approximateLessonDuration"];
+            this.dripType = _data["dripType"];
+            this.dripValue = _data["dripValue"];
+            this.isSendEmailEnabled = _data["isSendEmailEnabled"];
+            this.emailSubject = _data["emailSubject"];
+            this.emailMessage = _data["emailMessage"];
+            this.commentSetting = _data["commentSetting"];
+            this.isCommentModerationEnabled = _data["isCommentModerationEnabled"];
+            this.isStorePreviewEnabled = _data["isStorePreviewEnabled"];
+            this.isPrerequsite = _data["isPrerequsite"];
+            this.areAllPrerequisite = _data["areAllPrerequisite"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.imageDocumentUrl = _data["imageDocumentUrl"];
+            this.course = _data["course"] ? CourseDto.fromJS(_data["course"]) : <any>undefined;
+            this.imageDocument = _data["imageDocument"] ? DocumentDto.fromJS(_data["imageDocument"]) : <any>undefined;
             if (Array.isArray(_data["children"])) {
                 this.children = [] as any;
                 for (let item of _data["children"])
                     this.children.push(CourseSectionDto.fromJS(item));
             }
-            this.course = _data["course"] ? CourseDto.fromJS(_data["course"]) : <any>undefined;
         }
     }
 
@@ -18104,16 +18456,31 @@ export class CourseSectionDto implements ICourseSectionDto {
         data["displayOrder"] = this.displayOrder;
         data["courseId"] = this.courseId;
         data["parentId"] = this.parentId;
-        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-        data["myProperty"] = this.myProperty;
         data["isVisible"] = this.isVisible;
         data["isAssignmentEnabled"] = this.isAssignmentEnabled;
+        data["description"] = this.description;
+        data["categories"] = this.categories;
+        data["imageDocumentId"] = this.imageDocumentId;
+        data["approximateLessonDuration"] = this.approximateLessonDuration;
+        data["dripType"] = this.dripType;
+        data["dripValue"] = this.dripValue;
+        data["isSendEmailEnabled"] = this.isSendEmailEnabled;
+        data["emailSubject"] = this.emailSubject;
+        data["emailMessage"] = this.emailMessage;
+        data["commentSetting"] = this.commentSetting;
+        data["isCommentModerationEnabled"] = this.isCommentModerationEnabled;
+        data["isStorePreviewEnabled"] = this.isStorePreviewEnabled;
+        data["isPrerequsite"] = this.isPrerequsite;
+        data["areAllPrerequisite"] = this.areAllPrerequisite;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["imageDocumentUrl"] = this.imageDocumentUrl;
+        data["course"] = this.course ? this.course.toJSON() : <any>undefined;
+        data["imageDocument"] = this.imageDocument ? this.imageDocument.toJSON() : <any>undefined;
         if (Array.isArray(this.children)) {
             data["children"] = [];
             for (let item of this.children)
                 data["children"].push(item.toJSON());
         }
-        data["course"] = this.course ? this.course.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -18133,12 +18500,27 @@ export interface ICourseSectionDto {
     displayOrder: number;
     courseId: string;
     parentId: string | undefined;
-    creationTime: moment.Moment;
-    myProperty: number;
     isVisible: boolean;
     isAssignmentEnabled: boolean;
-    children: CourseSectionDto[] | undefined;
+    description: string | undefined;
+    categories: string | undefined;
+    imageDocumentId: string | undefined;
+    approximateLessonDuration: string | undefined;
+    dripType: CourseSectionDripType;
+    dripValue: string | undefined;
+    isSendEmailEnabled: boolean | undefined;
+    emailSubject: string | undefined;
+    emailMessage: string | undefined;
+    commentSetting: CommentSetting;
+    isCommentModerationEnabled: boolean | undefined;
+    isStorePreviewEnabled: boolean | undefined;
+    isPrerequsite: boolean;
+    areAllPrerequisite: boolean;
+    creationTime: moment.Moment;
+    imageDocumentUrl: string | undefined;
     course: CourseDto;
+    imageDocument: DocumentDto;
+    children: CourseSectionDto[] | undefined;
 }
 
 export class CourseSectionPageDto implements ICourseSectionPageDto {
@@ -19524,7 +19906,7 @@ export interface IDocumentDto {
     size: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail 17 = CourseSectionImage */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -19543,6 +19925,7 @@ export enum DocumentType {
     Video = 14,
     VideoThumbnail = 15,
     ArticleThumbnail = 16,
+    CourseSectionImage = 17,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {
@@ -26341,6 +26724,97 @@ export interface IUpdateArticleSettingsDto {
     commentSetting: CommentSetting;
     commentModeration: boolean;
     customUrl: string | undefined;
+}
+
+export class UpdateCourseSectionSettingsDto implements IUpdateCourseSectionSettingsDto {
+    id: string;
+    dripType: CourseSectionDripType;
+    dripValue: string | undefined;
+    isSendEmailEnabled: boolean | undefined;
+    emailSubject: string | undefined;
+    emailMessage: string | undefined;
+    isVisible: boolean;
+    commentSetting: CommentSetting;
+    isCommentModerationEnabled: boolean | undefined;
+    isStorePreviewEnabled: boolean | undefined;
+    isPrerequsite: boolean;
+    areAllPrerequisite: boolean;
+    isAssignmentEnabled: boolean;
+
+    constructor(data?: IUpdateCourseSectionSettingsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.dripType = _data["dripType"];
+            this.dripValue = _data["dripValue"];
+            this.isSendEmailEnabled = _data["isSendEmailEnabled"];
+            this.emailSubject = _data["emailSubject"];
+            this.emailMessage = _data["emailMessage"];
+            this.isVisible = _data["isVisible"];
+            this.commentSetting = _data["commentSetting"];
+            this.isCommentModerationEnabled = _data["isCommentModerationEnabled"];
+            this.isStorePreviewEnabled = _data["isStorePreviewEnabled"];
+            this.isPrerequsite = _data["isPrerequsite"];
+            this.areAllPrerequisite = _data["areAllPrerequisite"];
+            this.isAssignmentEnabled = _data["isAssignmentEnabled"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCourseSectionSettingsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCourseSectionSettingsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["dripType"] = this.dripType;
+        data["dripValue"] = this.dripValue;
+        data["isSendEmailEnabled"] = this.isSendEmailEnabled;
+        data["emailSubject"] = this.emailSubject;
+        data["emailMessage"] = this.emailMessage;
+        data["isVisible"] = this.isVisible;
+        data["commentSetting"] = this.commentSetting;
+        data["isCommentModerationEnabled"] = this.isCommentModerationEnabled;
+        data["isStorePreviewEnabled"] = this.isStorePreviewEnabled;
+        data["isPrerequsite"] = this.isPrerequsite;
+        data["areAllPrerequisite"] = this.areAllPrerequisite;
+        data["isAssignmentEnabled"] = this.isAssignmentEnabled;
+        return data; 
+    }
+
+    clone(): UpdateCourseSectionSettingsDto {
+        const json = this.toJSON();
+        let result = new UpdateCourseSectionSettingsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateCourseSectionSettingsDto {
+    id: string;
+    dripType: CourseSectionDripType;
+    dripValue: string | undefined;
+    isSendEmailEnabled: boolean | undefined;
+    emailSubject: string | undefined;
+    emailMessage: string | undefined;
+    isVisible: boolean;
+    commentSetting: CommentSetting;
+    isCommentModerationEnabled: boolean | undefined;
+    isStorePreviewEnabled: boolean | undefined;
+    isPrerequsite: boolean;
+    areAllPrerequisite: boolean;
+    isAssignmentEnabled: boolean;
 }
 
 export class UpdateCourseSettingsDto implements IUpdateCourseSettingsDto {

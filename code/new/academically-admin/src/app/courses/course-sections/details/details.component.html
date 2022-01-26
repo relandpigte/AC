@@ -1,0 +1,146 @@
+<form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="row">
+    <div class="col-8" [loader]="isLoading">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Name' | localize | titlecase }}
+          </h4>
+          <div class="col-auto row">
+            <button *ngIf="!editField || editField !== EditField.Name" (click)="onEditClick(EditField.Name)"
+              type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Name" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group required mb-0">
+            <input [(ngModel)]="model.name" #nameModel="ngModel" #nameEl class="form-control" type="text" id="name"
+              name="name" required [placeholder]="'WriteYourCourseSectionNameHere' | localize"
+              [disabled]="editField !== EditField.Name" />
+            <abp-validation-summary [control]="nameModel" [controlEl]="nameEl">
+            </abp-validation-summary>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Description' | localize | titlecase }}
+          </h4>
+          <div class="col-auto row">
+            <button *ngIf="!editField || editField !== EditField.Subtitle" (click)="onEditClick(EditField.Subtitle)"
+              type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Subtitle" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group mb-0 required">
+            <textarea [rows]="4" [(ngModel)]="model.description" #subtitleModel="ngModel" #subtitleEl
+              class="form-control" id="subtitle" name="subtitle" [placeholder]="'WriteYourSubtitleHere' | localize"
+              [disabled]="editField !== EditField.Subtitle">
+            </textarea>
+            <abp-validation-summary [control]="subtitleModel" [controlEl]="subtitleEl">
+            </abp-validation-summary>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'CategoriesAndTags' | localize | titlecase }}
+          </h4>
+          <div class="col-auto row">
+            <button *ngIf="!editField || editField !== EditField.Categories" (click)="onEditClick(EditField.Categories)"
+              type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Categories" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group required mb-0">
+            <input [(ngModel)]="category" #categoryModel="ngModel" #categoryEl class="form-control" type="text"
+              id="category" name="category" required [disabled]="editField !== EditField.Categories"
+              (keydown)="onCategoryKeyDown($event)" [placeholder]="'PressEnterToAddMore' | localize" />
+            <div class="ac-alerts">
+              <div *ngFor="let category of categories" class="alert alert-info alert-dismissible ac-alert" role="alert">
+                {{ category }}
+                <button [disabled]="editField !== EditField.Categories" (click)="onRemoveCategoryClick(category)"
+                  type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-4">
+      <div class="card" [loader]="isLoading">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Image' | localize }}
+          </h4>
+          <div class="row">
+            <button *ngIf="!editField || editField !== EditField.Image" (click)="onEditClick(EditField.Image)"
+              type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Image" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body position-relative">
+          <div *ngIf="editField !== EditField.Image" class="disabled-block"></div>
+          <app-document-uploader [previewImages]="true" [largeImagePreview]="true" [maxFiles]="1" [cropImages]="true"
+            [cropperAspectRatioWidth]="350" [cropperAspectRationHeight]="263"
+            [allowedExtensions]="allowedImageExtensions">
+          </app-document-uploader>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'ApproximateLessonDuration' | localize | titlecase }}
+          </h4>
+          <div class="col-auto row">
+            <button *ngIf="!editField || editField !== EditField.Duration" (click)="onEditClick(EditField.Duration)"
+              type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Duration" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group required mb-0">
+            <input [(ngModel)]="model.approximateLessonDuration" #approximateLessonDurationModel="ngModel"
+              #approximateLessonDurationEl class="form-control" type="text" id="approximateLessonDuration"
+              name="approximateLessonDuration" required [disabled]="editField !== EditField.Duration" mask="00:00"
+              placeholder="__:__" />
+            <abp-validation-summary [control]="approximateLessonDurationModel"
+              [controlEl]="approximateLessonDurationEl">
+            </abp-validation-summary>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

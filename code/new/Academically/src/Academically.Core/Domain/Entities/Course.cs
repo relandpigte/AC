@@ -22,6 +22,8 @@ namespace Academically.Domain.Entities
         public Guid? ImageDocumentId { get; set; }
         public Guid? LanguageId { get; set; }
         public Guid? CurrencyId { get; set; }
+        public string Categories { get; set; }
+        public PricingType? PricingType { get; set; }
 
         [ForeignKey("ImageDocumentId")]
         public virtual Document ImageDocument { get; set; }

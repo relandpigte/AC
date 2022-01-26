@@ -27,8 +27,13 @@
               </li>
               <li class="nav-item">
                 <a [class.active]="currentTab === CourseTab.Settings" class="nav-link" id="settings-tab"
-                  data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">{{
-                  'Settings' | localize }}</a>
+                  data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">
+                  {{ 'Settings' | localize }}</a>
+              </li>
+              <li class="nav-item">
+                <a [class.active]="currentTab === CourseTab.LandingPage" class="nav-link" id="landing-page-tab"
+                  data-toggle="tab" href="#landing-page" role="tab" aria-controls="landing-page" aria-selected="false">
+                  {{ 'LandingPage' | localize | titlecase }}</a>
               </li>
             </ul>
           </div>
@@ -49,6 +54,10 @@
       <div [ngClass]="{ 'show active': currentTab === CourseTab.Settings }" class="tab-pane fade" id="settings"
         role="tabpanel" aria-labelledby="settings-tab">
         <app-settings (backClicked)="detailsNav.click()" (settingsSaved)="curriculumNav.click()"></app-settings>
+      </div>
+      <div [ngClass]="{ 'show active': currentTab === CourseTab.LandingPage }" class="tab-pane fade" id="landing-page"
+        role="tabpanel" aria-labelledby="landing-page-tab">
+        <h1>Coming Soon!</h1>
       </div>
     </div>
   </div>

@@ -99,5 +99,9 @@
 	<include file="ddml-new/ddml.2022-01-08-02-alter-videos-add-pricing-and-language.xml"/>
 	<include file="ddml-new/ddml.2022-01-11-01-alter-videos-add-categories-field.xml"/>
 	<include file="ddml-new/ddml.2022-01-15-01-create-articles-table.xml"/>
+	<include file="ddml-new/ddml.2022-01-18-01-alter-coursesections-table-add-missing-fields.xml"/>
+	<include file="ddml-new/ddml.2022-01-18-02-alter-coursesections-table-alter-prerequisite-fields.xml"/>
+	<include file="ddml-new/ddml.2022-01-25-01-alter-courses-table-add-missing-fields.xml"/>
+	<include file="ddml-new/ddml.2022-01-26-01-alter-contents-add-referenceid-field.xml"/>
 </databaseChangeLog>
 	

@@ -17,7 +17,6 @@ import { NgPipesModule } from 'ngx-pipes';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { TagInputModule } from 'ngx-chips';
-import { NgxMaskModule } from 'ngx-mask';
 
 // Cookie Consent
 import { NgcCookieConsentModule, NgcCookieConsentConfig } from 'ngx-cookieconsent';
@@ -166,9 +165,6 @@ const cookieConfig: NgcCookieConsentConfig = {
     NgcCookieConsentModule.forRoot(cookieConfig),
     NotificationsModule,
     TagInputModule,
-    NgxMaskModule.forRoot({
-      showMaskTyped: true,
-    })
   ],
   entryComponents: [
     // tenants

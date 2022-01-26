@@ -1,0 +1,330 @@
+<form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="row">
+    <div class="col-8">
+
+      <div class="card">
+        <div class="card-header border-bottom-0">
+          <h4 class="card-header-title">
+            {{ 'DelayLesson' | localize | titlecase }}
+          </h4>
+          <div class="col-auto row">
+            <button *ngIf="!editField || editField !== EditField.DripDelay" (click)="onEditClick(EditField.DripDelay)"
+              type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.DripDelay" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body pt-0">
+          <div class="card border mb-0">
+            <div class="card-body">
+              <div class="form-group drip-delay-form mb-3">
+                <div class="custom-control custom-radio mr-3">
+                  <input type="radio" id="DripDaysFromEnrollmentdate" name="DripDays" class="custom-control-input"
+                    [value]="DripType.DaysFromEnrollmentDate" [(ngModel)]="model.dripType"
+                    (change)="onDripTypeChange()">
+                  <label class="custom-control-label" for="DripDaysFromEnrollmentdate"></label>
+                </div>
+                <label for="DripDaysFromEnrollmentdate">
+                  <b>{{ 'FromEnrollmentDate' | localize }}</b> - {{ 'SectionDelayed' | localize }}
+                </label>
+                <input type="number" [(ngModel)]="daysFromEnrollmentDate" id="dfed" name="dfed"
+                  class="form-control form-control-sm inline-form-control mx-3"
+                  [disabled]="model.dripType !== DripType.DaysFromEnrollmentDate || editField !== EditField.DripDelay"
+                  [min]="0" />
+                {{ 'DaysFromEnrollmentDate' | localize | lowercase }}
+              </div>
+
+              <div class="form-group drip-delay-form mb-3">
+                <div class="custom-control custom-radio mr-3">
+                  <input type="radio" id="DripDaysFromCourseStartdate" name="DripDays" class="custom-control-input"
+                    [value]="DripType.DaysFromCourseStartDate" [(ngModel)]="model.dripType"
+                    (change)="onDripTypeChange()">
+                  <label class="custom-control-label" for="DripDaysFromCourseStartdate"></label>
+                </div>
+                <label for="DripDaysFromCourseStartdate">
+                  <b>{{ 'FromCourseStartDate' | localize }}</b> - {{ 'SectionDelayed' | localize }}
+                </label>
+                <input type="number" [(ngModel)]="daysFromCourseStartDate" id="dfcsd" name="dfcsd"
+                  class="form-control form-control-sm inline-form-control mx-3"
+                  [disabled]="model.dripType !== DripType.DaysFromCourseStartDate || editField !== EditField.DripDelay"
+                  [min]="0" />
+                {{ 'DaysFromCourseStartDate' | localize | lowercase }}
+              </div>
+
+              <div class="form-group drip-delay-form">
+                <div class="custom-control custom-radio mr-3">
+                  <input type="radio" id="DripDaysFromSpecificDate" name="DripDays" class="custom-control-input"
+                    [value]="DripType.SpecificDate" [(ngModel)]="model.dripType" (change)="onDripTypeChange()"
+                    [disabled]="editField !== EditField.DripDelay">
+                  <label class="custom-control-label" for="DripDaysFromSpecificDate"></label>
+                </div>
+                <label for="DripDaysFromSpecificDate">
+                  <b>{{ 'FromSpecificDate' | localize }}</b> - {{ 'SectionAvailableOn' | localize }}
+                </label>
+
+                <div class="input-group input-group-merge input-group-sm  inline-form-control x3 mx-3"
+                  (click)="dp.show()">
+                  <input [(ngModel)]="sectionAvailableOn" id="sao" name="sao" type="text"
+                    class="form-control form-control-appended" #dateOfBirthModel="ngModel" #dateOfBirthEl
+                    #dp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" readonly
+                    [disabled]="model.dripType !== DripType.SpecificDate || editField !== EditField.DripDelay" />
+                  <div class="input-group-append">
+                    <div class="input-group-text">
+                      <span class="fas fa-calendar"></span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header border-bottom-0">
+          <h4 class="card-header-title">
+            {{ 'Comments' |localize }}
+          </h4>
+          <div class="col-auto row">
+            <button *ngIf="!editField || editField !== EditField.Comments" (click)="onEditClick(EditField.Comments)"
+              type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Comments" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body pt-0">
+          <div class="card border mb-3">
+            <div class="card-body">
+              <div class="row mb-2">
+                <div class="col">
+                  <b>{{ 'Visible' | localize }}:</b>&nbsp;
+                  <span class="text-muted">{{ 'VisibleCommentDescription' | localize | lowercase }}</span>
+                </div>
+                <div class="col-auto">
+                  <div class="custom-control custom-radio mr-n2">
+                    <input (change)="onCommentSettingChange()" [(ngModel)]="model.commentSetting" type="radio"
+                      id="visibleCommentSetting" name="commentSetting" [value]="CommentSetting.Visible"
+                      class="custom-control-input" />
+                    <label class="custom-control-label" for="visibleCommentSetting"></label>
+                  </div>
+                </div>
+              </div>
+              <div class="row ml-5">
+                <div class="col">
+                  <b>{{ 'CommendModeration' | localize }}:</b>&nbsp;
+                  <span class="text-muted">{{ 'CommentModerationDescription' | localize | lowercase }}</span>
+                </div>
+                <div class="col-auto">
+                  <div class="custom-control custom-switch mr-n2">
+                    <input [(ngModel)]="model.isCommentModerationEnabled" type="checkbox"
+                      id="isCommentModerationEnabled" name="isCommentModerationEnabled" class="custom-control-input"
+                      [disabled]="editField !== EditField.Comments" [checked]="model.isCommentModerationEnabled" />
+                    <label class="custom-control-label" for="isCommentModerationEnabled"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card border mb-0">
+            <div class="card-body">
+              <div class="row mb-2">
+                <div class="col">
+                  <b>{{ 'Hidden' | localize }}:</b>&nbsp;
+                  <span class="text-muted">{{ 'HiddenCommentDescription' | localize | lowercase }}</span>
+                </div>
+                <div class="col-auto">
+                  <div class="custom-control custom-radio mr-n2">
+                    <input (change)="onCommentSettingChange()" [(ngModel)]="model.commentSetting" type="radio"
+                      id="hiddenCommentSetting" name="commentSetting" [value]="CommentSetting.Hidden"
+                      class="custom-control-input" />
+                    <label class="custom-control-label" for="hiddenCommentSetting"></label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <b>{{ 'Locked' | localize }}:</b>&nbsp;
+                  <span class="text-muted">{{ 'LockedCommentDescription' | localize | lowercase }}</span>
+                </div>
+                <div class="col-auto">
+                  <div class="custom-control custom-radio mr-n2">
+                    <input (change)="onCommentSettingChange()" [(ngModel)]="model.commentSetting" type="radio"
+                      id="lockedCommentSetting" name="commentSetting" [value]="CommentSetting.Locked"
+                      [disabled]="editField !== EditField.Comments" class="custom-control-input" />
+                    <label class="custom-control-label" for="lockedCommentSetting"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-4">
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'LessonVisibility' | localize }}
+          </h4>
+          <div class="col-auto row">
+            <button *ngIf="!editField || editField !== EditField.Visibility" (click)="onEditClick(EditField.Visibility)"
+              type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Visibility" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h4>{{ 'Visible' | localize }}</h4>
+              <span class="text-muted">{{ 'ProfileAndStoreVisibleDescription' | localize }}</span>
+            </div>
+            <div class="col-auto d-flex align-items-center">
+              <div class="custom-control custom-radio mr-n2">
+                <input [(ngModel)]="model.isVisible" type="radio" name="isVisible" id="ProfileAndStoreVisible"
+                  [value]="true" class="custom-control-input">
+                <label class="custom-control-label" for="ProfileAndStoreVisible"></label>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col">
+              <h4>{{ 'Invisible' | localize }}</h4>
+              <span class="text-muted">{{ 'ProfileAndStoreInvisibleDescription' | localize }}</span>
+            </div>
+            <div class="col-auto d-flex align-items-center">
+              <div class="custom-control custom-radio mr-n2">
+                <input [(ngModel)]="model.isVisible" type="radio" name="isVisible" id="ProfileAndStoreInvisible"
+                  [value]="false" [disabled]="editField !== EditField.Visibility" class="custom-control-input">
+                <label class="custom-control-label" for="ProfileAndStoreInvisible"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'StorePreview' | localize }}
+          </h4>
+          <div class="col-auto row">
+            <button *ngIf="!editField || editField !== EditField.StorePreview"
+              (click)="onEditClick(EditField.StorePreview)" type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.StorePreview" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-auto">
+              <div class="custom-control custom-switch">
+                <input [(ngModel)]="model.isStorePreviewEnabled" type="checkbox" id="isStorePreviewEnabled"
+                  name="isStorePreviewEnabled" class="custom-control-input"
+                  [disabled]="editField !== EditField.StorePreview" />
+                <label class="custom-control-label" for="isStorePreviewEnabled"></label>
+              </div>
+            </div>
+            <div class="col ml-n3">
+              {{ 'StorePreviewDescription' | localize }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Prerequisite' | localize }}
+          </h4>
+          <div class="col-auto row">
+            <button *ngIf="!editField || editField !== EditField.Prerequisite"
+              (click)="onEditClick(EditField.Prerequisite)" type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Prerequisite" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-auto">
+              <div class="custom-control custom-switch">
+                <input [(ngModel)]="model.isPrerequsite" type="checkbox" id="isPrerequisite" name="isPrerequisite"
+                  class="custom-control-input" [disabled]="editField !== EditField.Prerequisite" />
+                <label class="custom-control-label" for="isPrerequisite"></label>
+              </div>
+            </div>
+            <div class="col ml-n3">
+              {{ 'PrerequisiteThisLesson' | localize }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-auto">
+              <div class="custom-control custom-switch">
+                <input [(ngModel)]="model.areAllPrerequisite" type="checkbox" id="areAllPrerequisite"
+                  name="areAllPrerequisite" class="custom-control-input"
+                  [disabled]="editField !== EditField.Prerequisite" />
+                <label class="custom-control-label" for="areAllPrerequisite"></label>
+              </div>
+            </div>
+            <div class="col ml-n3">
+              {{ 'PrerequisiteAllLessons' | localize }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Assignments' | localize }}
+          </h4>
+          <div class="col-auto row">
+            <button *ngIf="!editField || editField !== EditField.Assignments"
+              (click)="onEditClick(EditField.Assignments)" type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Assignments" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-auto">
+              <div class="custom-control custom-switch">
+                <input [(ngModel)]="model.isAssignmentEnabled" type="checkbox" id="isAssignmentEnabled"
+                  name="isAssignmentEnabled" class="custom-control-input"
+                  [disabled]="editField !== EditField.Assignments" />
+                <label class="custom-control-label" for="isAssignmentEnabled"></label>
+              </div>
+            </div>
+            <div class="col ml-n3">
+              {{ 'AllowUpload' | localize }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</form>
