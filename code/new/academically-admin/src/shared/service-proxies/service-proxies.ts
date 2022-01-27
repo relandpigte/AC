@@ -754,30 +754,20 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param id (optional) 
-     * @param thumbnailFile (optional) 
      * @param name (optional) 
      * @param description (optional) 
-     * @param thumbnailDocumentId (optional) 
      * @param categories (optional) 
      * @param languageId (optional) 
-     * @param price (optional) 
      * @param pricingType (optional) 
+     * @param thumbnailDocumentFile (optional) 
+     * @param id (optional) 
      * @return Success
      */
-    updateDetails(id: string | undefined, thumbnailFile: FileParameter | undefined, name: string | undefined, description: string | undefined, thumbnailDocumentId: string | undefined, categories: string | undefined, languageId: string | undefined, price: number | undefined, pricingType: PricingType | undefined): Observable<ArticleDto> {
+    updateDetails(name: string | undefined, description: string | undefined, categories: string | undefined, languageId: string | undefined, pricingType: PricingType | undefined, thumbnailDocumentFile: FileParameter | undefined, id: string | undefined): Observable<ArticleDto> {
         let url_ = this.baseUrl + "/api/services/app/Articles/UpdateDetails";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = new FormData();
-        if (id === null || id === undefined) {
-            // do nothing
-        } else
-            content_.append("Id", id.toString());
-        if (thumbnailFile === null || thumbnailFile === undefined) {
-            // do nothing
-        } else
-            content_.append("ThumbnailFile", thumbnailFile.data, thumbnailFile.fileName ? thumbnailFile.fileName : "ThumbnailFile");
         if (name === null || name === undefined) {
             // do nothing
         } else
@@ -786,10 +776,6 @@ export class ArticlesServiceProxy {
             // do nothing
         } else
             content_.append("Description", description.toString());
-        if (thumbnailDocumentId === null || thumbnailDocumentId === undefined) {
-            // do nothing
-        } else
-            content_.append("ThumbnailDocumentId", thumbnailDocumentId.toString());
         if (categories === null || categories === undefined) {
             // do nothing
         } else
@@ -798,14 +784,18 @@ export class ArticlesServiceProxy {
             // do nothing
         } else
             content_.append("LanguageId", languageId.toString());
-        if (price === null || price === undefined) {
-            // do nothing
-        } else
-            content_.append("Price", price.toString());
         if (pricingType === null || pricingType === undefined) {
             // do nothing
         } else
             content_.append("PricingType", pricingType.toString());
+        if (thumbnailDocumentFile === null || thumbnailDocumentFile === undefined) {
+            // do nothing
+        } else
+            content_.append("ThumbnailDocumentFile", thumbnailDocumentFile.data, thumbnailDocumentFile.fileName ? thumbnailDocumentFile.fileName : "ThumbnailDocumentFile");
+        if (id === null || id === undefined) {
+            // do nothing
+        } else
+            content_.append("Id", id.toString());
 
         let options_ : any = {
             body: content_,
@@ -906,6 +896,63 @@ export class ArticlesServiceProxy {
             }));
         }
         return _observableOf<ArticleDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    updateStatus(id: string | undefined, body: ArticleStatus | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Articles/UpdateStatus?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateStatus(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateStatus(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateStatus(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -16698,7 +16745,9 @@ export class ArticleDto implements IArticleDto {
     categories: string | undefined;
     price: number;
     pricingType: PricingType;
-    thumbnailUrl: string | undefined;
+    delayType: DelayType;
+    delayValue: string | undefined;
+    thumbnailDocumentUrl: string | undefined;
     parent: ArticleDto;
     thumbnailDocument: Document;
     children: ArticleDto[] | undefined;
@@ -16730,7 +16779,9 @@ export class ArticleDto implements IArticleDto {
             this.categories = _data["categories"];
             this.price = _data["price"];
             this.pricingType = _data["pricingType"];
-            this.thumbnailUrl = _data["thumbnailUrl"];
+            this.delayType = _data["delayType"];
+            this.delayValue = _data["delayValue"];
+            this.thumbnailDocumentUrl = _data["thumbnailDocumentUrl"];
             this.parent = _data["parent"] ? ArticleDto.fromJS(_data["parent"]) : <any>undefined;
             this.thumbnailDocument = _data["thumbnailDocument"] ? Document.fromJS(_data["thumbnailDocument"]) : <any>undefined;
             if (Array.isArray(_data["children"])) {
@@ -16766,7 +16817,9 @@ export class ArticleDto implements IArticleDto {
         data["categories"] = this.categories;
         data["price"] = this.price;
         data["pricingType"] = this.pricingType;
-        data["thumbnailUrl"] = this.thumbnailUrl;
+        data["delayType"] = this.delayType;
+        data["delayValue"] = this.delayValue;
+        data["thumbnailDocumentUrl"] = this.thumbnailDocumentUrl;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
         if (Array.isArray(this.children)) {
@@ -16802,7 +16855,9 @@ export interface IArticleDto {
     categories: string | undefined;
     price: number;
     pricingType: PricingType;
-    thumbnailUrl: string | undefined;
+    delayType: DelayType;
+    delayValue: string | undefined;
+    thumbnailDocumentUrl: string | undefined;
     parent: ArticleDto;
     thumbnailDocument: Document;
     children: ArticleDto[] | undefined;
@@ -17610,11 +17665,11 @@ export interface IChangeUserLanguageDto {
     languageName: string;
 }
 
-/** 0 = Visible 1 = Hidden 2 = Locked */
+/** 1 = Visible 2 = Hidden 3 = Locked */
 export enum CommentSetting {
-    Visible = 0,
-    Hidden = 1,
-    Locked = 2,
+    Visible = 1,
+    Hidden = 2,
+    Locked = 3,
 }
 
 export class ConstructorInfo implements IConstructorInfo {
@@ -20122,6 +20177,12 @@ export class DeclineTutorVerificationStepDto implements IDeclineTutorVerificatio
 export interface IDeclineTutorVerificationStepDto {
     comments: string | undefined;
     tutorVerificationStepId: string;
+}
+
+/** 1 = LastItem 2 = SpecificDate */
+export enum DelayType {
+    LastItem = 1,
+    SpecificDate = 2,
 }
 
 export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
@@ -27096,10 +27157,12 @@ export interface IUpdateAddressDto {
 
 export class UpdateArticleSettingsDto implements IUpdateArticleSettingsDto {
     id: string;
-    isVisible: boolean;
+    delayType: DelayType;
+    delayValue: string | undefined;
     commentSetting: CommentSetting;
     commentModeration: boolean;
     customUrl: string | undefined;
+    isVisible: boolean;
 
     constructor(data?: IUpdateArticleSettingsDto) {
         if (data) {
@@ -27113,10 +27176,12 @@ export class UpdateArticleSettingsDto implements IUpdateArticleSettingsDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.isVisible = _data["isVisible"];
+            this.delayType = _data["delayType"];
+            this.delayValue = _data["delayValue"];
             this.commentSetting = _data["commentSetting"];
             this.commentModeration = _data["commentModeration"];
             this.customUrl = _data["customUrl"];
+            this.isVisible = _data["isVisible"];
         }
     }
 
@@ -27130,10 +27195,12 @@ export class UpdateArticleSettingsDto implements IUpdateArticleSettingsDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["isVisible"] = this.isVisible;
+        data["delayType"] = this.delayType;
+        data["delayValue"] = this.delayValue;
         data["commentSetting"] = this.commentSetting;
         data["commentModeration"] = this.commentModeration;
         data["customUrl"] = this.customUrl;
+        data["isVisible"] = this.isVisible;
         return data; 
     }
 
@@ -27147,10 +27214,12 @@ export class UpdateArticleSettingsDto implements IUpdateArticleSettingsDto {
 
 export interface IUpdateArticleSettingsDto {
     id: string;
-    isVisible: boolean;
+    delayType: DelayType;
+    delayValue: string | undefined;
     commentSetting: CommentSetting;
     commentModeration: boolean;
     customUrl: string | undefined;
+    isVisible: boolean;
 }
 
 export class UpdateCourseSectionSettingsDto implements IUpdateCourseSectionSettingsDto {
@@ -27368,10 +27437,12 @@ export interface IUpdateProjectDto {
 
 export class UpdateVideoSettingsDto implements IUpdateVideoSettingsDto {
     id: string;
-    isVisible: boolean;
+    delayType: DelayType;
+    delayValue: string | undefined;
     commentSetting: CommentSetting;
     commentModeration: boolean;
     customUrl: string | undefined;
+    isVisible: boolean;
 
     constructor(data?: IUpdateVideoSettingsDto) {
         if (data) {
@@ -27385,10 +27456,12 @@ export class UpdateVideoSettingsDto implements IUpdateVideoSettingsDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.isVisible = _data["isVisible"];
+            this.delayType = _data["delayType"];
+            this.delayValue = _data["delayValue"];
             this.commentSetting = _data["commentSetting"];
             this.commentModeration = _data["commentModeration"];
             this.customUrl = _data["customUrl"];
+            this.isVisible = _data["isVisible"];
         }
     }
 
@@ -27402,10 +27475,12 @@ export class UpdateVideoSettingsDto implements IUpdateVideoSettingsDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["isVisible"] = this.isVisible;
+        data["delayType"] = this.delayType;
+        data["delayValue"] = this.delayValue;
         data["commentSetting"] = this.commentSetting;
         data["commentModeration"] = this.commentModeration;
         data["customUrl"] = this.customUrl;
+        data["isVisible"] = this.isVisible;
         return data; 
     }
 
@@ -27419,10 +27494,12 @@ export class UpdateVideoSettingsDto implements IUpdateVideoSettingsDto {
 
 export interface IUpdateVideoSettingsDto {
     id: string;
-    isVisible: boolean;
+    delayType: DelayType;
+    delayValue: string | undefined;
     commentSetting: CommentSetting;
     commentModeration: boolean;
     customUrl: string | undefined;
+    isVisible: boolean;
 }
 
 export class UserAvailabilityDto implements IUserAvailabilityDto {
@@ -29192,6 +29269,8 @@ export class VideoDto implements IVideoDto {
     categories: string | undefined;
     price: number;
     pricingType: PricingType;
+    delayType: DelayType;
+    delayValue: string | undefined;
     videoUrl: string | undefined;
     thumbnailUrl: string | undefined;
     parent: VideoDto;
@@ -29227,6 +29306,8 @@ export class VideoDto implements IVideoDto {
             this.categories = _data["categories"];
             this.price = _data["price"];
             this.pricingType = _data["pricingType"];
+            this.delayType = _data["delayType"];
+            this.delayValue = _data["delayValue"];
             this.videoUrl = _data["videoUrl"];
             this.thumbnailUrl = _data["thumbnailUrl"];
             this.parent = _data["parent"] ? VideoDto.fromJS(_data["parent"]) : <any>undefined;
@@ -29266,6 +29347,8 @@ export class VideoDto implements IVideoDto {
         data["categories"] = this.categories;
         data["price"] = this.price;
         data["pricingType"] = this.pricingType;
+        data["delayType"] = this.delayType;
+        data["delayValue"] = this.delayValue;
         data["videoUrl"] = this.videoUrl;
         data["thumbnailUrl"] = this.thumbnailUrl;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
@@ -29305,6 +29388,8 @@ export interface IVideoDto {
     categories: string | undefined;
     price: number;
     pricingType: PricingType;
+    delayType: DelayType;
+    delayValue: string | undefined;
     videoUrl: string | undefined;
     thumbnailUrl: string | undefined;
     parent: VideoDto;

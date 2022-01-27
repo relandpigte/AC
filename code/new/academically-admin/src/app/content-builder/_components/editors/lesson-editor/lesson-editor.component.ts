@@ -53,12 +53,14 @@ export class LessonEditorComponent extends AppComponentBase implements OnInit, O
     const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditPageComponent>;
     modalSettings.initialState = {
       isEdit: isEdit,
-      content: isEdit ? content : new PageContent(),
+      content: isEdit ? _.cloneDeep(content) : new PageContent(),
     };
     const modal = this._modalService.show(CreateEditPageComponent, modalSettings).content;
     modal.modalSave.subscribe(newContent => {
       if (!isEdit) {
         this.lesson.pages.push(newContent);
+      } else {
+        content.name = newContent.name;
       }
     });
   }

@@ -1,5 +1,5 @@
 <div class="card component-container no-component"
-  *ngIf="(!page || !page.components || !page.components.length) else componentsTemplate">
+  *ngIf="((!page || !page.components || !page.components.length) && !isPreviewOnly) else componentsTemplate">
   <div class="card-body">
     <img src="/assets/themes/dashkit/img/illustrations/scale.svg" alt="..." class="img-fluid">
     <h3 class="title">

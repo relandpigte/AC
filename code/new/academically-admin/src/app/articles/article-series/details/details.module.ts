@@ -1,23 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SettingsRoutingModule } from './settings-routing.module';
+import { DetailsRoutingModule } from './details-routing.module';
 import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
+import * as SingleArticle from '@app/articles/single-article/details/details.module';
 
-import { SettingsComponent } from './settings.component';
+import { DetailsComponent } from './details.component';
 
 @NgModule({
   declarations: [
-    SettingsComponent,
+    DetailsComponent,
   ],
   imports: [
     CommonModule,
-    SettingsRoutingModule,
+    DetailsRoutingModule,
     SharedModule,
     AppSharedModule,
+    SingleArticle.DetailsModule,
   ],
-  exports: [
-    SettingsComponent,
-  ]
 })
-export class SettingsModule { }
+export class DetailsModule { }

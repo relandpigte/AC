@@ -56,7 +56,6 @@ export class SettingsComponent extends AppComponentBase implements OnInit {
             break;
           case this.DripType.SpecificDate:
             if (this.model.dripValue && this.model.dripValue.trim()) {
-              console.log(this.model.dripValue);
               const dateParts = this.model.dripValue.split('/');
               const day = +dateParts[0];
               const month = +dateParts[1] - 1;

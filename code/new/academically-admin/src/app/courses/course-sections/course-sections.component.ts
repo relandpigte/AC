@@ -37,10 +37,6 @@ export class CourseSectionsComponent extends AppComponentBase implements OnInit 
   ngOnInit(): void {
   }
 
-  onSaveClick(): void {
-    this._courseSectionService.courseSectionSave = true;
-  }
-
   onLessonPreviewClick(): void {
     const url = `${AppConsts.appBaseUrl}/app/lesson-preview/${this.id}`;
     window.open(url, '_blank');

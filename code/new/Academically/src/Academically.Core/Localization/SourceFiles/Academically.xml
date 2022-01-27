@@ -1,6 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="VideoAvailableOn">Video available on</text>
+    <text name="DaysFromLastVideo">Days from last video</text>
+    <text name="VideoDelayed">Video delayed</text>
+    <text name="LastVideo">Last video</text>
+    <text name="UnpublishArticleConfirmationMessage">Are you sure you want to unpublish this article? The status will change to Draft.</text>
+    <text name="PublishArticleConfirmationMessage">Are you sure you want to publish this article?</text>
+    <text name="ArticlePreview">Article preview</text>
+    <text name="ArticleAvailableOn">Article available on</text>
+    <text name="SpecificDate">Specific date</text>
+    <text name="DaysFromLastArticle">Days from last article</text>
+    <text name="ArticleDelayed">Article delayed</text>
+    <text name="LastArticle">Last article</text>
+    <text name="ArticleSeriesVisibility">Article series visibility</text>
+    <text name="WriteYourArticleSeriesNameHere">Write your article series name here</text>
+    <text name="ArticleSeriesName">Article series name</text>
+    <text name="ArticleSeriesThumbnail">Article series thumbnail</text>
+    <text name="ArticleThumbnail">Article thumbnail</text>
     <text name="AddArticle">Add article</text>
     <text name="CreateArticle">Create article</text>
     <text name="Layout">Layout</text>

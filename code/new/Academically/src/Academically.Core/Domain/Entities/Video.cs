@@ -18,16 +18,15 @@ namespace Academically.Domain.Entities
         public Guid? DocumentId { get; set; }
         public Guid? ThumbnailDocumentId { get; set; }
         public Guid? LanguageId { get; set; }
-
         public bool IsVisible { get; set; }
         public CommentSetting CommentSetting { get; set; }
         public bool CommentModeration { get; set; }
         public string CustomUrl { get; set; }
         public string Categories { get; set; }
-
-
         public decimal Price { get; set; }
         public PricingType PricingType { get; set; }
+        public DelayType? DelayType { get; set; }
+        public string DelayValue { get; set; }
 
         [ForeignKey("LanguageId")]
         public virtual SpokenLanguage Language { get; set; }

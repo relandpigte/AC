@@ -11,8 +11,16 @@
             </div>
             <div class="col-auto">
               <div class="d-flex align-items-center justify-content-center">
-                <button [disabled]="isLoading" (click)="onSaveClick()" class="btn btn-primary btn-block mt-0 ml-3">
-                  {{ 'Save' | localize }}
+                <button (click)="onLessonPreviewClick()" class="btn btn-outline-primary">
+                  {{ 'ArticlePreview' | localize | titlecase }}
+                </button>
+                <button *ngIf="model.status === ArticleStatus.Draft" (click)="onPublishClick()"
+                  class="btn btn-primary ml-2">
+                  {{ 'Publish' | localize | titlecase }}
+                </button>
+                <button *ngIf="model.status === ArticleStatus.Published" (click)="onUnpublishClick()"
+                  class="btn btn-outline-success ml-2">
+                  {{ 'Draft' | localize | titlecase }}
                 </button>
               </div>
             </div>

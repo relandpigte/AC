@@ -3,9 +3,9 @@ namespace Academically.Domain.Enums
 {
 	public enum CommentSetting
 	{
-		Visible = 0,
-		Hidden = 1,
-		Locked = 2
+		Visible = 1,
+		Hidden = 2,
+		Locked = 3,
 	}
 }
 
