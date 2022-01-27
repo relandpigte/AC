@@ -88,6 +88,7 @@ export class ContentBuilderComponent extends AppComponentBase implements OnInit,
   }
 
   ngOnDestroy(): void {
+    this._pageBuilderService.content = undefined;
     this.autoSaveSub.unsubscribe();
     this.save();
   }

@@ -5,7 +5,7 @@
       <div *ngIf="hasParent" class="card">
         <div class="card-header border-bottom-0">
           <h4 class="card-header-title">
-            {{ 'DelayLesson' | localize | titlecase }}
+            {{ 'Delay' | localize | titlecase }}
           </h4>
           <div class="col-auto row">
             <button *ngIf="!editField || editField !== EditField.Delay" (click)="onEditClick(EditField.Delay)"

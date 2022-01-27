@@ -42,8 +42,13 @@
 
       <div class="form-group required">
         <label class="col-form-label" for="width">{{ 'Width' | localize }}</label>
-        <input type="number" class="form-control" name="width" id="width" required [(ngModel)]="model.width"
-          #widthModel="ngModel" #widthEl required />
+        <div class="input-group">
+          <input type="number" class="form-control" name="width" id="width" required [(ngModel)]="model.width"
+            #widthModel="ngModel" #widthEl required />
+          <div class="input-group-append">
+            <span class="input-group-text">px</span>
+          </div>
+        </div>
         <abp-validation-summary [control]="widthModel" [controlEl]="widthEl"></abp-validation-summary>
       </div>
 

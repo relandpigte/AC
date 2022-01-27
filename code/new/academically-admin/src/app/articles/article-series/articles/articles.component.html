@@ -84,7 +84,7 @@
   </div>
 </div>
 
-<div [loader]="isTableLoading">
+<div *ngIf="articles && articles.length" [loader]="isTableLoading">
   <div
     *ngFor="let article of (articles | paginate: { id: 'articles', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })"
     class="card">
@@ -150,7 +150,7 @@
   </div>
 </div>
 
-<div *ngIf="articles.length === 0" class="card">
+<div *ngIf="articles.length === 0" [loader]="isTableLoading" class="card">
   <p class="text-center text-muted m-0 p-4">{{ 'NoRecordsFound' | localize }}</p>
 </div>
 

@@ -5,7 +5,7 @@
       <div *ngIf="hasParent" class="card">
         <div class="card-header border-bottom-0">
           <h4 class="card-header-title">
-            {{ 'DelayLesson' | localize | titlecase }}
+            {{ 'Delay' | localize | titlecase }}
           </h4>
           <div class="col-auto row">
             <button *ngIf="!editField || editField !== EditField.Delay" (click)="onEditClick(EditField.Delay)"
@@ -32,8 +32,7 @@
                 </label>
                 <input type="number" [(ngModel)]="lastArticleValue" id="lastArticleValue" name="lastArticleValue"
                   class="form-control form-control-sm inline-form-control mx-3"
-                  [disabled]="model.delayType !== DelayType.LastItem || editField !== EditField.Delay"
-                  [min]="0" />
+                  [disabled]="model.delayType !== DelayType.LastItem || editField !== EditField.Delay" [min]="0" />
                 {{ 'DaysFromLastArticle' | localize | lowercase }}
               </div>
 
@@ -92,7 +91,7 @@
                 </div>
                 <div class="col-auto">
                   <div class="custom-control custom-radio mr-n2">
-                    <input (change)="onCommentSettingChange()" [(ngModel)]="model.type" type="radio"
+                    <input (change)="onCommentSettingChange()" [(ngModel)]="model.commentSetting" type="radio"
                       id="visibleCommentSetting" name="commentSetting" [value]="CommentSetting.Visible"
                       class="custom-control-input" />
                     <label class="custom-control-label" for="visibleCommentSetting"></label>
