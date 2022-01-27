@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Layout">Layout</text>
+    <text name="EditCustomLayout">Edit custom layout</text>
+    <text name="CreateCustomLayout">Create custom layout</text>
+    <text name="AddCustomMargin">Add custom margin</text>
     <text name="LandingPage">Landing page</text>
     <text name="WriteYourDescriptionHere">Write your description here</text>
     <text name="WriteYourCourseNameHere">Write your course name here</text>
