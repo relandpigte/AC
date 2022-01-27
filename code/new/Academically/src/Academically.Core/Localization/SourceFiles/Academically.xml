@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="AddArticle">Add article</text>
+    <text name="CreateArticle">Create article</text>
     <text name="Layout">Layout</text>
     <text name="EditCustomLayout">Edit custom layout</text>
     <text name="CreateCustomLayout">Create custom layout</text>

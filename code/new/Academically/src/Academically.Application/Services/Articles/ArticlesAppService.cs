@@ -50,6 +50,26 @@ namespace Academically.Services.Articles
             };
         }
 
+        public async Task<PagedResultDto<ArticleDto>> GetAllForSeries(PagedSeriesArticleResultRequestDto input)
+        {
+            var query = _articlesRepository.GetAll()
+                .Where(e => e.ParentId == input.ParentIdFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.Name.ToLower().Contains(input.SearchFilter.ToLower())
+                    || e.Description.ToLower().Contains(input.SearchFilter.ToLower()))
+                .WhereIf(input.StausFilter.HasValue, e => e.Status == input.StausFilter.Value);
+            var totalCount = await query.CountAsync();
+            var videos = await query.OrderBy(e => e.Name)
+                .PageBy(input)
+                .Select(e => ObjectMapper.Map<ArticleDto>(e))
+                .ToListAsync();
+
+            return new PagedResultDto<ArticleDto>()
+            {
+                TotalCount = totalCount,
+                Items = videos,
+            };
+        }
+
         public async Task<ArticleDto> Get(Guid id)
         {
             var article = await _articlesRepository.GetAll()

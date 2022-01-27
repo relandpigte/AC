@@ -15,6 +15,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 export class SingleArticleComponent extends AppComponentBase implements OnInit {
   id: string;
   model = new ArticleDto();
+  isLoading = false;
 
   constructor(
     injector: Injector,
@@ -32,6 +33,10 @@ export class SingleArticleComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.getArticle();
+  }
+
+  onSaveClick(): void {
+    this._articleService.articleSave = true;
   }
 
   private getArticle(): void {
