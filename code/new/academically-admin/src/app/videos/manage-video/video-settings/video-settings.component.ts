@@ -2,14 +2,17 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { CommentSetting, UpdateVideoSettingsDto, VideosServiceProxy, VideoType } from '@shared/service-proxies/service-proxies';
+import { CommentSetting, DelayType, UpdateVideoSettingsDto, VideosServiceProxy, VideoType } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { VideoService } from '@app/videos/_services/video.service';
+import * as _ from 'lodash';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 enum EditField {
   Comments = 1,
   Url = 2,
   Visibility = 3,
+  Delay = 4,
 }
 
 @Component({
@@ -22,10 +25,16 @@ export class VideoSettingsComponent extends AppComponentBase implements OnInit {
   CommentSetting = CommentSetting;
   isLoading = false;
   allowedVideoExtensions = fileUploadConfiguration.videoExtensions;
-  editField: EditField;
-  videoType: VideoType;
   EditField = EditField;
   VideoType = VideoType;
+  DelayType = DelayType;
+  hasParent = false;
+
+  editField: EditField;
+  videoType: VideoType;
+  lastVideoValue: string;
+  specificDateValue: Date;
+  datePickerConfig: BsDatepickerConfig;
 
   constructor(
     injector: Injector,
@@ -34,10 +43,30 @@ export class VideoSettingsComponent extends AppComponentBase implements OnInit {
     private _videoService: VideoService,
   ) {
     super(injector);
+    this.datePickerConfig = new BsDatepickerConfig();
+    this.datePickerConfig.showWeekNumbers = false;
+    this.datePickerConfig.dateInputFormat = 'DD/MM/YYYY';
+    this.datePickerConfig.minDate = new Date();
     this._videoService.videoCreated$.subscribe(video => {
       if (video) {
         this.model.init(video);
         this.videoType = video.type;
+        this.hasParent = !_.isNil(video.parentId);
+
+        switch (this.model.delayType) {
+          case DelayType.SpecificDate:
+            if (this.model.delayValue && this.model.delayValue.trim()) {
+              const dateParts = this.model.delayValue.split('/');
+              const day = +dateParts[0];
+              const month = +dateParts[1] - 1;
+              const year = +dateParts[2];
+              this.specificDateValue = new Date(year, month, day);
+            }
+            break;
+          default:
+            this.lastVideoValue = this.model.delayValue;
+            break;
+        }
       }
     });
   }
@@ -52,6 +81,22 @@ export class VideoSettingsComponent extends AppComponentBase implements OnInit {
   onFormSubmit(): void {
     this.isLoading = true;
 
+    switch (this.model.delayType) {
+      case DelayType.SpecificDate:
+        if (this.specificDateValue) {
+          const dateParts = [
+            this.specificDateValue.getDate(),
+            this.specificDateValue.getMonth() + 1,
+            this.specificDateValue.getFullYear(),
+          ];
+          this.model.delayValue = dateParts.join('/');
+        }
+        break;
+      default:
+        this.model.delayValue = this.lastVideoValue;
+        break;
+    }
+
     this._videosService.updateSettings(this.model)
       .pipe(
         takeUntil(this.destroyed$),
@@ -59,8 +104,9 @@ export class VideoSettingsComponent extends AppComponentBase implements OnInit {
           this.isLoading = false;
         })
       )
-      .subscribe(() => {
+      .subscribe(response => {
         this.notify.success(this.l('SavedSuccessfully'));
+        this._videoService.videoCreated = response;
         setTimeout(() => {
           this.editField = undefined;
         });
@@ -69,6 +115,11 @@ export class VideoSettingsComponent extends AppComponentBase implements OnInit {
 
   onEditClick(editField: EditField): void {
     this.editField = editField;
+  }
+
+  onDripTypeChange(): void {
+    this.lastVideoValue = undefined;
+    this.specificDateValue = undefined;
   }
 }
 

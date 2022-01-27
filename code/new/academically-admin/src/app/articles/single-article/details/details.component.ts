@@ -1,17 +1,17 @@
-import { Component, OnInit, ViewChild, Injector } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
-import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
-import { FileParameter, ArticleDto, SpokenLanguageDto, PricingType, SpokenLanguagesServiceProxy, ArticlesServiceProxy } from '@shared/service-proxies/service-proxies';
-import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { Router } from '@angular/router';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { ArticleService } from '@app/articles/_services/article.service';
+import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
+import { AppComponentBase } from '@shared/app-component-base';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { FileParameter, SpokenLanguageDto, ArticleDto, PricingType, ArticlesServiceProxy, SpokenLanguagesServiceProxy, ArticleType } from '@shared/service-proxies/service-proxies';
 import { takeUntil, finalize } from 'rxjs/operators';
+
 
 enum EditField {
   Name = 1,
   Subtitle = 2,
   Categories = 3,
-  Thumbnail = 4,
+  Image = 4,
   Language = 5,
   Pricing = 6,
 }
@@ -23,38 +23,31 @@ enum EditField {
 })
 export class DetailsComponent extends AppComponentBase implements OnInit {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
-  articleThumbnail: FileParameter;
-  model: ArticleDto = new ArticleDto();
-  isLoading = false;
 
-  allowedImageExtensions = fileUploadConfiguration.allowedImageExtensions;
-  languages: SpokenLanguageDto[] = [];
-  PricingType = PricingType;
-  defaultFile: DefaultFile;
   editField: EditField;
-  EditField = EditField;
   category: string;
   categories: string[] = [];
+  articleThumbnailDocument: FileParameter;
+  defaultFile: DefaultFile;
+  languages: SpokenLanguageDto[] = [];
+
+  model = new ArticleDto();
+  isLoading = false;
+  EditField = EditField;
+  allowedImageExtensions = fileUploadConfiguration.allowedImageExtensions;
+  PricingType = PricingType;
+  ArticleType = ArticleType;
 
   constructor(
     injector: Injector,
-    private _router: Router,
-    private _spokenLanguagesService: SpokenLanguagesServiceProxy,
+    private _articleService: ArticleService,
     private _articlesService: ArticlesServiceProxy,
-    private _articleService: ArticleService
+    private _spokenLanguagesService: SpokenLanguagesServiceProxy,
   ) {
     super(injector);
-    this.getLanguages();
   }
-
   ngOnInit(): void {
-    this.documentUploader.filesChanged.subscribe((files: FileParameter[]) => {
-      if (files && files.length) {
-        this.articleThumbnail = files[0];
-      } else {
-        this.articleThumbnail = undefined;
-      }
-    });
+    this.getLanguages();
 
     this._articleService.articleCreated$.subscribe(article => {
       if (article) {
@@ -62,7 +55,7 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
         if (this.model.thumbnailDocument) {
           this.defaultFile = new DefaultFile();
           this.defaultFile.name = this.model.thumbnailDocument.originalFileName;
-          this.defaultFile.url = this.model.thumbnailUrl;
+          this.defaultFile.url = this.model.thumbnailDocumentUrl;
           this.defaultFile.size = this.model.thumbnailDocument.size;
           this.documentUploader.defaultFile = this.defaultFile;
         }
@@ -71,16 +64,14 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
         }
       }
     });
-  }
 
-  onBackClick(): void {
-    this._router.navigate(['/app/articles/' + this.model.id + '/article']);
-  }
-
-  onPricingClick(pricingState: PricingType): void {
-    if (this.model.pricingType === PricingType.Free) {
-      this.model.price = 0;
-    }
+    this.documentUploader.filesChanged.subscribe((files: FileParameter[]) => {
+      if (files && files.length) {
+        this.articleThumbnailDocument = files[0];
+      } else {
+        this.articleThumbnailDocument = undefined;
+      }
+    });
   }
 
   onFormSubmit(): void {
@@ -88,15 +79,13 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
     this.model.categories = this.categories.join(',');
 
     this._articlesService.updateDetails(
-      this.model.id,
-      this.articleThumbnail,
       this.model.name,
       this.model.description,
-      this.model.thumbnailDocumentId,
       this.model.categories,
       this.model.languageId,
-      this.model.price,
-      this.model.pricingType
+      this.model.pricingType,
+      this.articleThumbnailDocument,
+      this.model.id,
     ).pipe(
       takeUntil(this.destroyed$),
       finalize(() => {
@@ -133,6 +122,12 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
     }
   }
 
+  onPricingClick(pricingState: PricingType): void {
+    if (this.model.pricingType === PricingType.Free) {
+      this.model.price = 0;
+    }
+  }
+
   private getLanguages(): void {
     this._spokenLanguagesService.getAll()
       .pipe(
@@ -142,5 +137,4 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
         this.languages = languages;
       });
   }
-
 }

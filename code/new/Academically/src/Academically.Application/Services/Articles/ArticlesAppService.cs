@@ -81,7 +81,7 @@ namespace Academically.Services.Articles
 
             if (article.ThumbnailDocument != null)
             {
-                output.ThumbnailUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocument);
+                output.ThumbnailDocumentUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocument);
             }
 
             return output;
@@ -99,10 +99,10 @@ namespace Academically.Services.Articles
             var article = await _articlesRepository.GetAsync(input.Id);
             ObjectMapper.Map(input, article);
 
-            if (input.ThumbnailFile != null)
+            if (input.ThumbnailDocumentFile != null)
             {
                 var oldDocumentId = article.ThumbnailDocumentId;
-                var articleThumbnailDocument = await _documentsDomainService.CreateAsync(AbpSession.UserId.Value, input.ThumbnailFile, DocumentType.ArticleThumbnail);
+                var articleThumbnailDocument = await _documentsDomainService.CreateAsync(AbpSession.UserId.Value, input.ThumbnailDocumentFile, DocumentType.ArticleThumbnail);
                 article.ThumbnailDocumentId = articleThumbnailDocument.Id;
 
                 if (oldDocumentId.HasValue)
@@ -118,14 +118,16 @@ namespace Academically.Services.Articles
         public async Task<ArticleDto> UpdateSettings(UpdateArticleSettingsDto input)
         {
             var article = await _articlesRepository.GetAsync(input.Id);
-
-            article.IsVisible = input.IsVisible;
-            article.CustomUrl = input.CustomUrl;
-            article.CommentSetting = input.CommentSetting;
-            article.CommentModeration = input.CommentModeration;
-
+            ObjectMapper.Map(input, article);
             await _articlesRepository.UpdateAsync(article);
             return ObjectMapper.Map<ArticleDto>(article);
+        }
+
+        public async Task UpdateStatusAsync(Guid id, ArticleStatus status)
+        {
+            var article = await _articlesRepository.GetAsync(id);
+            article.Status = status;
+            await _articlesRepository.UpdateAsync(article);
         }
     }
 }

@@ -17,6 +17,20 @@ import { ArticleSeriesComponent } from './article-series.component';
                 (m) => m.ArticlesModule
               ),
           },
+          {
+            path: 'details',
+            loadChildren: () =>
+              import('@app/articles/article-series/details/details.module').then(
+                (m) => m.DetailsModule
+              ),
+          },
+          {
+            path: 'settings',
+            loadChildren: () =>
+              import('@app/articles/article-series/settings/settings.module').then(
+                (m) => m.SettingsModule
+              ),
+          },
           { path: '', redirectTo: 'articles' },
         ]
       },

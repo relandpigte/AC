@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
+using Academically.Domain.Enums;
 using Academically.Services.Articles.Dto;
 
 namespace Academically.Services.Articles
@@ -13,6 +14,7 @@ namespace Academically.Services.Articles
 		Task<ArticleDto> Create(ArticleDto input);
 		Task<ArticleDto> UpdateDetails(UpdateArticleDetailsDto input);
 		Task<ArticleDto> UpdateSettings(UpdateArticleSettingsDto input);
+		Task UpdateStatusAsync(Guid id, ArticleStatus status);
 	}
 }
 

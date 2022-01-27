@@ -155,12 +155,7 @@ namespace Academically.Services.Videos
         public async Task<VideoDto> UpdateSettings(UpdateVideoSettingsDto input)
         {
             var video = await _videosRepository.GetAsync(input.Id);
-
-            video.IsVisible = input.IsVisible;
-            video.CustomUrl = input.CustomUrl;
-            video.CommentSetting = input.CommentSetting;
-            video.CommentModeration = input.CommentModeration;
-
+            ObjectMapper.Map(input, video);
             await _videosRepository.UpdateAsync(video);
             return ObjectMapper.Map<VideoDto>(video);
         }

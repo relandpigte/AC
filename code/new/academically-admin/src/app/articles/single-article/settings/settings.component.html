@@ -1,9 +1,77 @@
 <form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
   <div class="row">
     <div class="col-8" [loader]="isLoading">
-      <div class="card" *ngIf="articleType && articleType === ArticleType.SingleArticle">
-        <div class="card-header border-0">
-          <label class="col-form-label pb-0" for="name">{{ 'Comments' | localize}}</label>
+
+      <div *ngIf="hasParent" class="card">
+        <div class="card-header border-bottom-0">
+          <h4 class="card-header-title">
+            {{ 'DelayLesson' | localize | titlecase }}
+          </h4>
+          <div class="col-auto row">
+            <button *ngIf="!editField || editField !== EditField.Delay" (click)="onEditClick(EditField.Delay)"
+              type="button" class="btn btn-sm btn-light">
+              {{ 'Edit' | localize }}
+            </button>
+            <button *ngIf="editField === EditField.Delay" type="submit" class="btn btn-sm btn-primary">
+              {{ 'Save' | localize }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body pt-0">
+          <div class="card border mb-0">
+            <div class="card-body">
+
+              <div class="form-group delay-form mb-3">
+                <div class="custom-control custom-radio mr-3">
+                  <input type="radio" id="lastArticle" name="delayType" class="custom-control-input"
+                    [value]="DelayType.LastItem" [(ngModel)]="model.delayType" (change)="onDripTypeChange()">
+                  <label class="custom-control-label" for="lastArticle"></label>
+                </div>
+                <label for="lastArticle">
+                  <b>{{ 'LastArticle' | localize }}</b> - {{ 'ArticleDelayed' | localize }}
+                </label>
+                <input type="number" [(ngModel)]="lastArticleValue" id="lastArticleValue" name="lastArticleValue"
+                  class="form-control form-control-sm inline-form-control mx-3"
+                  [disabled]="model.delayType !== DelayType.LastItem || editField !== EditField.Delay"
+                  [min]="0" />
+                {{ 'DaysFromLastArticle' | localize | lowercase }}
+              </div>
+
+              <div class="form-group delay-form">
+                <div class="custom-control custom-radio mr-3">
+                  <input type="radio" id="specificDate" name="delayType" class="custom-control-input"
+                    [value]="DelayType.SpecificDate" [(ngModel)]="model.delayType" (change)="onDripTypeChange()"
+                    [disabled]="editField !== EditField.Delay">
+                  <label class="custom-control-label" for="specificDate"></label>
+                </div>
+                <label for="specificDate">
+                  <b>{{ 'SpecificDate' | localize }}</b> - {{ 'ArticleAvailableOn' | localize }}
+                </label>
+
+                <div class="input-group input-group-merge input-group-sm  inline-form-control x3 mx-3"
+                  (click)="dp.show()">
+                  <input [(ngModel)]="specificDateValue" id="specificDateValue" name="specificDateValue" type="text"
+                    class="form-control form-control-appended" #dateOfBirthModel="ngModel" #dateOfBirthEl
+                    #dp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" readonly
+                    [disabled]="model.delayType !== DelayType.SpecificDate || editField !== EditField.Delay" />
+                  <div class="input-group-append">
+                    <div class="input-group-text">
+                      <span class="fas fa-calendar"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" *ngIf="articleType === ArticleType.SingleArticle">
+        <div class="card-header border-bottom-0">
+          <h4 class="card-header-title">
+            {{ 'Comments' |localize }}
+          </h4>
           <div class="col-auto row">
             <button *ngIf="!editField || editField !== EditField.Comments" (click)="onEditClick(EditField.Comments)"
               type="button" class="btn btn-sm btn-light">
@@ -15,39 +83,33 @@
           </div>
         </div>
         <div class="card-body pt-0">
-          <div class="card border">
+          <div class="card border mb-3">
             <div class="card-body">
-              <div class="row">
+              <div class="row mb-2">
                 <div class="col">
-                  <p>
-                    <b>{{ 'Visible' | localize}}: </b>
-                    {{ 'VisibleCommentDescription' | localize | lowercase }}
-                  </p>
+                  <b>{{ 'Visible' | localize }}:</b>&nbsp;
+                  <span class="text-muted">{{ 'VisibleCommentDescription' | localize | lowercase }}</span>
                 </div>
-                <div class="col-auto min-w-50px">
-                  <div class="custom-control custom-radio d-inline">
-                    <input type="radio" class="custom-control-input" id="commentVisible" name="comment"
-                      [(ngModel)]="model.commentSetting" [value]="CommentSetting.Visible"
-                      [disabled]="editField !== EditField.Comments" />
-                    <label class="custom-control-label" for="commentVisible"></label>
+                <div class="col-auto">
+                  <div class="custom-control custom-radio mr-n2">
+                    <input (change)="onCommentSettingChange()" [(ngModel)]="model.type" type="radio"
+                      id="visibleCommentSetting" name="commentSetting" [value]="CommentSetting.Visible"
+                      class="custom-control-input" />
+                    <label class="custom-control-label" for="visibleCommentSetting"></label>
                   </div>
                 </div>
               </div>
-              <div class="row align-items-center">
+              <div class="row ml-5">
                 <div class="col">
-                  <p class="mb-0 pl-5" [class.text-muted]="model.commentSetting !== CommentSetting.Visible">
-                    <b>{{ 'CommentModeration' | localize }}: </b>
-                    <span class="text-muted">
-                      {{ 'CommentModerationDescription' | localize | lowercase }}
-                    </span>
-                  </p>
+                  <b>{{ 'CommendModeration' | localize }}:</b>&nbsp;
+                  <span class="text-muted">{{ 'CommentModerationDescription' | localize | lowercase }}</span>
                 </div>
                 <div class="col-auto">
-                  <div class="custom-control custom-switch">
-                    <input [(ngModel)]="model.commentModeration" id="isPublic" name="isPublic" type="checkbox"
-                      class="custom-control-input" [disabled]="model.commentSetting !== CommentSetting.Visible"
-                      [disabled]="editField !== EditField.Comments">
-                    <label class="custom-control-label" for="isPublic"></label>
+                  <div class="custom-control custom-switch mr-n2">
+                    <input [(ngModel)]="model.commentModeration" type="checkbox" id="isCommentModerationEnabled"
+                      name="isCommentModerationEnabled" class="custom-control-input"
+                      [disabled]="editField !== EditField.Comments" [checked]="model.commentModeration" />
+                    <label class="custom-control-label" for="isCommentModerationEnabled"></label>
                   </div>
                 </div>
               </div>
@@ -56,39 +118,31 @@
 
           <div class="card border mb-0">
             <div class="card-body">
-              <div class="row">
+              <div class="row mb-2">
                 <div class="col">
-                  <p>
-                    <b>{{ 'Hidden' | localize }}: </b>
-                    <span class="text-muted">
-                      {{ 'HiddenCommentDescription' | localize | lowercase }}
-                    </span>
-                  </p>
+                  <b>{{ 'Hidden' | localize }}:</b>&nbsp;
+                  <span class="text-muted">{{ 'HiddenCommentDescription' | localize | lowercase }}</span>
                 </div>
-                <div class="col-auto min-w-50px">
-                  <div class="custom-control custom-radio d-inline">
-                    <input type="radio" class="custom-control-input" id="commentHidden" name="comment"
-                      [(ngModel)]="model.commentSetting" [value]="CommentSetting.Hidden"
-                      [disabled]="editField !== EditField.Comments" />
-                    <label class="custom-control-label" for="commentHidden"></label>
+                <div class="col-auto">
+                  <div class="custom-control custom-radio mr-n2">
+                    <input (change)="onCommentSettingChange()" [(ngModel)]="model.commentSetting" type="radio"
+                      id="hiddenCommentSetting" name="commentSetting" [value]="CommentSetting.Hidden"
+                      class="custom-control-input" />
+                    <label class="custom-control-label" for="hiddenCommentSetting"></label>
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col">
-                  <p class="mb-0">
-                    <b>{{'Locked' | localize }}: </b>
-                    <span class="text-muted">
-                      {{ 'LockedCommentDescription' | localize | lowercase }}
-                    </span>
-                  </p>
+                  <b>{{ 'Locked' | localize }}:</b>&nbsp;
+                  <span class="text-muted">{{ 'LockedCommentDescription' | localize | lowercase }}</span>
                 </div>
-                <div class="col-auto min-w-50px">
-                  <div class="custom-control custom-radio d-inline">
-                    <input type="radio" class="custom-control-input" id="commentLocked" name="comment"
-                      [(ngModel)]="model.commentSetting" [value]="CommentSetting.Locked"
-                      [disabled]="editField !== EditField.Comments" />
-                    <label class="custom-control-label" for="commentLocked"></label>
+                <div class="col-auto">
+                  <div class="custom-control custom-radio mr-n2">
+                    <input (change)="onCommentSettingChange()" [(ngModel)]="model.commentSetting" type="radio"
+                      id="lockedCommentSetting" name="commentSetting" [value]="CommentSetting.Locked"
+                      [disabled]="editField !== EditField.Comments" class="custom-control-input" />
+                    <label class="custom-control-label" for="lockedCommentSetting"></label>
                   </div>
                 </div>
               </div>
@@ -125,10 +179,12 @@
     </div>
     <div class="col-4">
 
-      <div class="card" [loader]="isLoading">
+      <div class="card">
         <div class="card-header">
           <h4 class="card-header-title">
-            {{ 'ArticleVisibility' | localize }}
+            {{
+            (articleType === ArticleType.SingleArticle ? 'ArticleVisibility' : 'ArticleSeriesVisibility') | localize
+            }}
           </h4>
           <div class="col-auto row">
             <button *ngIf="!editField || editField !== EditField.Visibility" (click)="onEditClick(EditField.Visibility)"
@@ -141,52 +197,36 @@
           </div>
         </div>
         <div class="card-body">
-
-          <div class="list-group list-group-flush my-n3">
-            <div class="list-group-item">
-              <div class="row align-items-center">
-                <div class="col ms-n2">
-                  <h4 class="mb-1">
-                    <span>{{'Visible' | localize}}</span>
-                  </h4>
-
-                  <p class="card-text small text-muted">
-                    {{ 'ProfileAndStoreVisibleDescription' | localize }}
-                  </p>
-                </div>
-                <div class="col-auto">
-                  <div class="custom-control custom-radio d-inline">
-                    <input type="radio" class="custom-control-input" id="articleVisible" name="articleVisible"
-                      [(ngModel)]="model.isVisible" [value]="true" [disabled]="editField !== EditField.Visibility" />
-                    <label class="custom-control-label" for="articleVisible"></label>
-                  </div>
-                </div>
+          <div class="row">
+            <div class="col">
+              <h4 class="mb-1">{{ 'Visible' | localize }}</h4>
+              <span class="text-muted small">{{ 'ProfileAndStoreVisibleDescription' | localize }}</span>
+            </div>
+            <div class="col-auto d-flex align-items-center">
+              <div class="custom-control custom-radio mr-n2">
+                <input [(ngModel)]="model.isVisible" type="radio" name="isVisible" id="ProfileAndStoreVisible"
+                  [value]="true" class="custom-control-input">
+                <label class="custom-control-label" for="ProfileAndStoreVisible"></label>
               </div>
             </div>
-
-            <div class="list-group-item">
-              <div class="row align-items-center">
-                <div class="col ms-n2">
-                  <h4 class="mb-1">
-                    <span>{{'Invisible' | localize }}</span>
-                  </h4>
-
-                  <p class="card-text small text-muted">
-                    {{ 'ProfileAndStoreInvisibleDescription' | localize }}
-                  </p>
-                </div>
-                <div class="col-auto">
-                  <div class="custom-control custom-radio d-inline">
-                    <input type="radio" class="custom-control-input" id="articleInvisible" name="articleVisible"
-                      [(ngModel)]="model.isVisible" [value]="false" [disabled]="editField !== EditField.Visibility" />
-                    <label class="custom-control-label" for="articleInvisible"></label>
-                  </div>
-                </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col">
+              <h4 class="mb-1">{{ 'Invisible' | localize }}</h4>
+              <span class="text-muted small">{{ 'ProfileAndStoreInvisibleDescription' | localize }}</span>
+            </div>
+            <div class="col-auto d-flex align-items-center">
+              <div class="custom-control custom-radio mr-n2">
+                <input [(ngModel)]="model.isVisible" type="radio" name="isVisible" id="ProfileAndStoreInvisible"
+                  [value]="false" [disabled]="editField !== EditField.Visibility" class="custom-control-input">
+                <label class="custom-control-label" for="ProfileAndStoreInvisible"></label>
               </div>
             </div>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </form>
