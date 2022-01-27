@@ -8,6 +8,7 @@ namespace Academically.Services.Articles
 	public interface IArticlesAppService
 	{
 		Task<PagedResultDto<ArticleDto>> GetAll(PagedArticleResultRequestDto input);
+		Task<PagedResultDto<ArticleDto>> GetAllForSeries(PagedSeriesArticleResultRequestDto input);
 		Task<ArticleDto> Get(Guid id);
 		Task<ArticleDto> Create(ArticleDto input);
 		Task<ArticleDto> UpdateDetails(UpdateArticleDetailsDto input);

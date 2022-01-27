@@ -27,18 +27,18 @@ import { ArticlesComponent } from './articles.component';
                 (m) => m.SingleArticleModule
               ),
           },
-          // {
-          //   path: 'video-series',
-          //   children: [
-          //     {
-          //       path: ':parent-id',
-          //       loadChildren: () =>
-          //         import('@app/videos/manage-video-series/manage-video-series.module').then(
-          //           (m) => m.ManageVideoSeriesModule
-          //         ),
-          //     }
-          //   ]
-          // },
+          {
+            path: 'article-series',
+            children: [
+              {
+                path: ':parent-id',
+                loadChildren: () =>
+                  import('@app/articles/article-series/article-series.module').then(
+                    (m) => m.ArticleSeriesModule
+                  ),
+              }
+            ]
+          },
         ],
       },
     ]),

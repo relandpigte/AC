@@ -1,22 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ContentRoutingModule } from './content-routing.module';
+import { ArticlesRoutingModule } from './articles-routing.module';
 import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
-import { ContentComponent } from './content.component';
-import { ContentBuilderModule } from '@app/content-builder/content-builder.module';
+import { ArticlesComponent } from './articles.component';
 
 @NgModule({
   declarations: [
-    ContentComponent,
+    ArticlesComponent,
   ],
   imports: [
     CommonModule,
-    ContentRoutingModule,
+    ArticlesRoutingModule,
     SharedModule,
     AppSharedModule,
-    ContentBuilderModule,
   ],
 })
-export class ContentModule { }
+export class ArticlesModule { }

@@ -56,14 +56,14 @@
                       </div>
                       <div class="custom-control custom-radio d-inline mx-3">
                         <input type="radio" class="custom-control-input" id="draftStatus" name="statusFilter"
-                          [(ngModel)]="statusFilter" [value]="VideoStatus.Draft" />
+                          [(ngModel)]="statusFilter" [value]="ArticleStatus.Draft" />
                         <label class="custom-control-label" for="draftStatus">
                           {{ 'Draft' | localize }}
                         </label>
                       </div>
                       <div class="custom-control custom-radio d-inline">
                         <input type="radio" class="custom-control-input" id="publishedStatus" name="statusFilter"
-                          [(ngModel)]="statusFilter" [value]="VideoStatus.Published" />
+                          [(ngModel)]="statusFilter" [value]="ArticleStatus.Published" />
                         <label class="custom-control-label" for="publishedStatus">
                           {{ 'Published' | localize }}
                         </label>
@@ -86,30 +86,30 @@
 
 <div [loader]="isTableLoading">
   <div
-    *ngFor="let video of (videos | paginate: { id: 'videos', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })"
+    *ngFor="let article of (articles | paginate: { id: 'articles', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })"
     class="card">
     <div class="row">
       <div class="col-auto mr-n3 d-flex align-items-center">
         <div class="avatar avatar-lg d-flex justify-content-center align-items-center">
-          <i class="fe fe-video text-muted"></i>
+          <i class="fe fe-file-text text-muted"></i>
         </div>
       </div>
       <div class="col d-flex align-items-center">
-        <a [routerLink]="['../../../../../', video.id]">
-          <h4 class="mb-0">{{ video.name }}</h4>
+        <a [routerLink]="['../../../../../', article.id]">
+          <h4 class="mb-0">{{ article.name }}</h4>
         </a>
       </div>
-      <div *ngIf="video.description" class="col d-flex align-items-center">
+      <div *ngIf="article.description" class="col d-flex align-items-center">
         <p class="text-muted text-center m-0">
-          {{ video.description }}
+          {{ article.description }}
         </p>
       </div>
       <div class="col-auto d-flex flex-column justify-content-center">
         <div class="text-muted">
           <div class="d-flex">
             <div class="d-flex align-items-center">
-              <i class="fe fe-video mr-2"></i>
-              {{ (video.type === VideoType.SingleVideo ? 'Video' : 'VideoSeries') | localize }}
+              <i class="fe fe-file-text mr-2"></i>
+              {{ (article.type === ArticleType.SingleArticle ? 'Article' : 'ArticleSeries') | localize }}
             </div>
             <div class="d-flex align-items-center mx-3">|</div>
             <div class="d-flex align-items-center mr-3">
@@ -136,13 +136,13 @@
         </div>
       </div>
       <div class="col-auto d-flex align-items-center ml-4">
-        <span class="badge" [class.badge-info]="video.status === VideoStatus.Draft"
-          [class.badge-primary]="video.status === VideoStatus.Published">
-          {{ VideoStatus[video.status] }}
+        <span class="badge" [class.badge-info]="article.status === ArticleStatus.Draft"
+          [class.badge-primary]="article.status === ArticleStatus.Published">
+          {{ ArticleStatus[article.status] }}
         </span>
       </div>
       <div class="col-auto d-flex align-items-center mr-4 ml-4">
-        <button [routerLink]="['../../../../../', video.id]" class="btn btn-sm btn-white">
+        <button [routerLink]="['../../../../../', article.id]" class="btn btn-sm btn-white">
           {{ 'Edit' | localize }}
         </button>
       </div>
@@ -150,13 +150,13 @@
   </div>
 </div>
 
-<div *ngIf="videos.length === 0" class="card">
+<div *ngIf="articles.length === 0" class="card">
   <p class="text-center text-muted m-0 p-4">{{ 'NoRecordsFound' | localize }}</p>
 </div>
 
 <div class="card">
   <div class="card-body p-0">
-    <abp-pagination-controls id="videos" (pageChange)="getDataPage($event)" [customClass]="'border-0'">
+    <abp-pagination-controls id="articles" (pageChange)="getDataPage($event)" [customClass]="'border-0'">
     </abp-pagination-controls>
   </div>
 </div>
