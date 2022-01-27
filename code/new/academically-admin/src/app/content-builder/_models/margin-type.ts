@@ -1,8 +1,7 @@
 export enum MarginType {
-  None = 1,
-  Normal = 2,
-  Narrow = 3,
-  Moderate = 4,
-  Wide = 5,
-  Custom = 6,
+  Narrow = 'narrow',
+  Normal = 'normal',
+  Moderate = 'moderate',
+  Wide = 'wide',
+  None = 'none',
 }

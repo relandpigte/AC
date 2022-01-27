@@ -25,6 +25,7 @@ import { TitleComponentEditorComponent } from './_components/editors/title-compo
 import { TitleComponentViewerComponent } from './_components/viewers/title-component-viewer/title-component-viewer.component';
 import { SubtitleComponentViewerComponent } from './_components/viewers/subtitle-component-viewer/subtitle-component-viewer.component';
 import { SubtitleComponentEditorComponent } from './_components/editors/subtitle-component-editor/subtitle-component-editor.component';
+import { CreateEditMarginComponent } from './_components/create-edit-margin/create-edit-margin.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { SubtitleComponentEditorComponent } from './_components/editors/subtitle
     TitleComponentViewerComponent,
     SubtitleComponentViewerComponent,
     SubtitleComponentEditorComponent,
+    CreateEditMarginComponent,
   ],
   imports: [
     CommonModule,

@@ -34,30 +34,35 @@
 
     <div class="card card-sm mb-0" *ngIf="!component.disableMargins">
       <div class="card-header">
-        <h4 class="card-header-title">
-          {{ 'Margin' | localize }}
-        </h4>
+        <div class="row">
+          <div class="col d-flex align-items-center">
+            <h4 class="card-header-title">
+              {{ 'Layout' | localize }}
+            </h4>
+          </div>
+          <div class="col-auto">
+            <button (click)="onAddCustomMarginClick()" class="btn btn-sm btn-outline-primary">
+              <i class="fe fe-plus"></i>
+            </button>
+          </div>
+        </div>
       </div>
       <div class="card-body">
         <div class="row">
-          <div class="col-5">
-            <div *ngFor="let marginType of MarginType | enumToArray | keyvalue" class="form-check">
-              <input [(ngModel)]="component.marginType" (change)="onMarginTypeChange()" class="form-check-input"
-                type="radio" name="marginType" id="margin_{{marginType.key}}"
-                [value]="MarginType[MarginType[marginType.key]]">
-              <label class="form-check-label" for="margin_{{marginType.key}}">
-                {{ marginType.value }}
-              </label>
-            </div>
+          <div class="col-5 margins">
+            <ng-container *ngTemplateOutlet="layoutTemplate; context: { id: MarginType.Narrow }"></ng-container>
+            <ng-container *ngTemplateOutlet="layoutTemplate; context: { id: MarginType.Normal }"></ng-container>
+            <ng-container *ngTemplateOutlet="layoutTemplate; context: { id: MarginType.Moderate }"></ng-container>
+            <ng-container *ngTemplateOutlet="layoutTemplate; context: { id: MarginType.Wide }"></ng-container>
+            <ng-container *ngTemplateOutlet="layoutTemplate; context: { id: MarginType.None }"></ng-container>
           </div>
           <div class="col-7">
-            <div class="form-group row">
+            <div class="form-group row mb-2">
               <label class="col-form-label-sm col-form-label col-5" for="top">{{ 'Top' | localize}}</label>
               <div class="col-7">
                 <div class="input-group input-group-sm">
-                  <input [readonly]="component.marginType !== MarginType.Custom" [(ngModel)]="component.marginTop"
-                    #topModel="ngModel" #topEl class="form-control form-control-sm" type="number" id="top" name="top"
-                    [min]="0" />
+                  <input [(ngModel)]="component.marginTop" #topModel="ngModel" #topEl
+                    class="form-control form-control-sm" type="number" id="top" name="top" [min]="0" />
                   <div class="input-group-append">
                     <span class="input-group-text">px</span>
                   </div>
@@ -66,13 +71,12 @@
               <abp-validation-summary [control]="topModel" [controlEl]="topEl">
               </abp-validation-summary>
             </div>
-            <div class="form-group row">
+            <div class="form-group row mb-2">
               <label class="col-form-label-sm col-form-label col-5" for="bottom">{{ 'Bottom' | localize}}</label>
               <div class="col-7">
                 <div class="input-group input-group-sm">
-                  <input [readonly]="component.marginType !== MarginType.Custom" [(ngModel)]="component.marginBottom"
-                    #bottomModel="ngModel" #bottomEl class="form-control form-control-sm" type="number" id="bottom"
-                    name="bottom" [min]="0" />
+                  <input [(ngModel)]="component.marginBottom" #bottomModel="ngModel" #bottomEl
+                    class="form-control form-control-sm" type="number" id="bottom" name="bottom" [min]="0" />
                   <div class="input-group-append">
                     <span class="input-group-text">px</span>
                   </div>
@@ -81,13 +85,12 @@
               <abp-validation-summary [control]="bottomModel" [controlEl]="bottomEl">
               </abp-validation-summary>
             </div>
-            <div class="form-group row">
+            <div class="form-group row mb-2">
               <label class="col-form-label-sm col-form-label col-5" for="width">{{ 'Width' | localize}}</label>
               <div class="col-7">
                 <div class="input-group input-group-sm">
-                  <input [readonly]="component.marginType !== MarginType.Custom" [(ngModel)]="component.width"
-                    #widthModel="ngModel" #widthEl class="form-control form-control-sm" type="number" id="width"
-                    name="width" [min]="0" />
+                  <input [(ngModel)]="component.width" #widthModel="ngModel" #widthEl
+                    class="form-control form-control-sm" type="number" id="width" name="width" [min]="0" />
                   <div class="input-group-append">
                     <span class="input-group-text">px</span>
                   </div>
@@ -97,8 +100,41 @@
               </abp-validation-summary>
             </div>
           </div>
+          <div *ngIf="contentMargins && contentMargins.length" class="col-12 margins">
+            <hr class="my-1">
+            <div class="row mb-1" *ngFor="let contentMargin of contentMargins">
+              <div class="col d-flex align-items-center">
+                <div class="form-check">
+                  <input [(ngModel)]="component.marginType" (change)="onMarginTypeChange(contentMargin)"
+                    class="form-check-input" type="radio" name="marginType" id="margin_{{contentMargin.id}}"
+                    [value]="contentMargin.id">
+                  <label class="form-check-label" for="margin_{{contentMargin.id}}">
+                    {{ contentMargin.name }}
+                  </label>
+                </div>
+              </div>
+              <div class="col-auto">
+                <button class="btn btn-sm btn-outline-success" (click)="onEditCustomMarginClick(contentMargin)">
+                  <i class="fe fe-edit-2"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger ml-1" (click)="onDeleteCustomMarginClick(contentMargin)">
+                  <i class="fe fe-trash-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<ng-template #layoutTemplate let-id="id">
+  <div class="form-check">
+    <input [(ngModel)]="component.marginType" (change)="onMarginTypeChange()" class="form-check-input" type="radio"
+      name="marginType" id="margin_{{id}}" [value]="id">
+    <label class="form-check-label" for="margin_{{id}}">
+      {{ id | titlecase }}
+    </label>
+  </div>
+</ng-template>

@@ -5,7 +5,7 @@ export class ComponentContent extends Content {
   icon: string;
   description: string;
   backgroundColor: string;
-  marginType: number;
+  marginType: string;
   marginTop: number;
   marginBottom: number;
   width: number;
