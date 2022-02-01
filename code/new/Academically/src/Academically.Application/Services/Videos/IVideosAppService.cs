@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
+using Academically.Domain.Enums;
 using Academically.Services.Videos.Dto;
 
 namespace Academically.Services.Videos
@@ -15,6 +16,7 @@ namespace Academically.Services.Videos
         Task RemoveDocument(Guid id);
 		Task<VideoDto> UpdateDetails(UpdateVideoDetailsDto input);
 		Task<VideoDto> UpdateSettings(UpdateVideoSettingsDto input);
+		Task UpdateStatusAsync(Guid id, VideoStatus status);
 	}
 }
 

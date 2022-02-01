@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="UnpublishVideoConfirmationMessage">Are you sure you want to unpublish this video? The status will change to Draft.</text>
+    <text name="PublishVideoConfirmationMessage">Are you sure you want to publish this video?</text>
+    <text name="PreviewVideo">Preview video</text>
     <text name="VideoAvailableOn">Video available on</text>
     <text name="DaysFromLastVideo">Days from last video</text>
     <text name="VideoDelayed">Video delayed</text>
