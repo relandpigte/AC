@@ -1,0 +1,32 @@
+.main-content {
+
+  .navbar-brand-header,
+  .header-title {
+    white-space  : nowrap;
+    overflow     : hidden;
+    text-overflow: ellipsis;
+  }
+
+  .navbar-brand-header {
+    display        : flex;
+    flex-direction : column;
+    justify-content: center;
+  }
+
+  .avatar {
+    min-width: 64px;
+  }
+
+  .video-container {
+    position : absolute;
+    height   : calc(100% - 85px);
+    width    : 100%;
+    overflow : hidden;
+    background: #000000;
+
+    video {
+      min-width : 100%;
+      min-height: 100%;
+    }
+  }
+}

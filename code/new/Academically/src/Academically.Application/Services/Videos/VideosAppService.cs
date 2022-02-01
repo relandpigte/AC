@@ -159,6 +159,13 @@ namespace Academically.Services.Videos
             await _videosRepository.UpdateAsync(video);
             return ObjectMapper.Map<VideoDto>(video);
         }
+
+        public async Task UpdateStatusAsync(Guid id, VideoStatus status)
+        {
+            var video = await _videosRepository.GetAsync(id);
+            video.Status = status;
+            await _videosRepository.UpdateAsync(video);
+        }
     }
 }
 
