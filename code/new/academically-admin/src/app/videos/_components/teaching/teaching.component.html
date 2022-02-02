@@ -97,7 +97,7 @@
                 </div>
               </div>
               <div class="col d-flex flex-column justify-content-center">
-                <a *ngIf="video.type === VideoType.SingleVideo" [routerLink]="[video.id]">
+                <a *ngIf="video.type === VideoType.SingleVideo" [routerLink]="['/app/videos/tutor-portal', video.id]">
                   <h4 class="mb-1">{{ video.name }}</h4>
                 </a>
                 <a *ngIf="video.type === VideoType.VideoSeries" [routerLink]="['video-series', video.id]">
@@ -153,8 +153,13 @@
             </span>
           </td>
           <td class="table-action">
-            <button class="btn btn-sm btn-white">
-              {{ 'Edit' | localize }}
+            <button *ngIf="video.type === VideoType.SingleVideo" [routerLink]="['/app/videos/tutor-portal', video.id]"
+              type="button" class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
+              <span class="fe fe-trending-up"></span>
+            </button>
+            <button [routerLink]="['/app/videos', video.id]" type="button"
+              class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+              <span class="fe fe-edit-2"></span>
             </button>
           </td>
         </tr>

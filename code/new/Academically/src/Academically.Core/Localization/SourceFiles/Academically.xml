@@ -1,6 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+	<text name="PurchasedOffer">Checked offer</text>
+	<text name="CheckedOffer">Checked offer</text>
+	<text name="DownloadedHandout">Downloaded handout</text>
+	<text name="ActivatedPoll">Activated poll</text>
+	<text name="Engagement">Engagement</text>
+	<text name="Conversion">Conversion</text>
+	<text name="PlaysVsVisits">Plays vs visits</text>
+	<text name="Traffic">Traffic</text>
+	<text name="Upsell">Upsell</text>
+	<text name="Plays">Plays</text>
+	<text name="Purchases">Purchases</text>
+	<text name="Visits">Visits</text>
+	<text name="EditVideo">Edit video</text>
     <text name="UnpublishVideoConfirmationMessage">Are you sure you want to unpublish this video? The status will change to Draft.</text>
     <text name="PublishVideoConfirmationMessage">Are you sure you want to publish this video?</text>
     <text name="PreviewVideo">Preview video</text>
