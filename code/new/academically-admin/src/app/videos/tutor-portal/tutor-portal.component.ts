@@ -2,7 +2,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { VideoDto, VideosServiceProxy, VideoType } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 import { TutorPortalService } from './_services/tutor-portal.service';
 
@@ -35,6 +35,10 @@ export class TutorPortalComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  get title(): string {
+    return this.model.type === VideoType.SingleVideo ? 'Video' : 'VideoSeries';
   }
 
   private getVideo(): void {
