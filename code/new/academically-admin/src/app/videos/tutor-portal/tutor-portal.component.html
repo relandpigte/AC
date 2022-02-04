@@ -25,6 +25,16 @@
               {{ 'Overview' | localize }}
             </a>
           </li>
+          <li *ngIf="model.type === VideoType.VideoSeries" class="nav-item list-group-item">
+            <a [routerLink]="['videos']" routerLinkActive="active" class="nav-link" role="button">
+              {{ 'Videos' | localize }}
+            </a>
+          </li>
+          <li class="nav-item list-group-item">
+            <a [routerLink]="['comments']" routerLinkActive="active" class="nav-link" role="button">
+              {{ 'Comments' | localize }}
+            </a>
+          </li>
         </ul>
       </div>
 
@@ -34,7 +44,8 @@
         <a [routerLink]="['/app/videos']" class="text-muted">
           <i class="fe fe-arrow-left"></i> {{ 'Exit' |localize }}
         </a>
-        <button [routerLink]="['/app/videos', id]" class="btn btn-sm btn-outline-primary">
+        <button [routerLink]="[(model.type === VideoType.SingleVideo ? '/app/videos' : '/app/videos/video-series'), id]"
+          class="btn btn-sm btn-outline-primary">
           {{ 'EditVideo' | localize }}
         </button>
       </div>

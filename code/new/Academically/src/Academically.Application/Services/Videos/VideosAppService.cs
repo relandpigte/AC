@@ -92,6 +92,19 @@ namespace Academically.Services.Videos
             return output;
         }
 
+        public async Task<GetDelayStatusDto> GetDelayStatus(Guid id)
+        {
+            var query = _videosRepository.GetAll()
+                .Where(e => e.ParentId == id)
+                .OrderBy(e => e.CreationTime);
+            var firstVideo = await query.FirstOrDefaultAsync();
+            return new GetDelayStatusDto()
+            {
+                IsFirstVideoPublished = firstVideo?.Status == VideoStatus.Published,
+                VideoCount = await query.CountAsync(),
+            };
+        }
+
         public async Task<VideoDto> Create(VideoDto input)
         {
             var video = ObjectMapper.Map<Video>(input);

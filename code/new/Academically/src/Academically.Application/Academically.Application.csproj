@@ -55,8 +55,6 @@
     <Folder Include="Services\StudentCourseSections\Dto\" />
     <Folder Include="Services\CourseAssignments\" />
     <Folder Include="Services\CourseAssignments\Dto\" />
-    <Folder Include="Services\Videos\" />
-    <Folder Include="Services\Videos\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Services\Projects\" />
