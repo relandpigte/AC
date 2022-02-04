@@ -1,0 +1,182 @@
+<div class="container-fluid" [@routerTransition]>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ model.name }}</h6>
+              <h1 class="header-title">{{ 'Videos' | localize }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <form>
+                <div class="input-group input-group-flush">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="fe fe-search"></i>
+                    </span>
+                  </div>
+                  <input class="list-search form-control" type="search" name="Search" placeholder="Search"
+                    [(ngModel)]="searchFilter" (keyup.enter)="getDataPage(1)" />
+                </div>
+              </form>
+            </div>
+            <div class="col-auto mr-n3">
+              <form>
+                <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize"
+                  (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
+                  class="custom-select custom-select-sm form-control-flush" data-toggle="select">
+                  <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
+                    {{ pageSizeSelection }} {{ 'PerPage' | localize }}
+                  </option>
+                </select>
+              </form>
+            </div>
+            <div class="col-auto">
+              <div class="dropdown" dropdown #filterDropdown="bs-dropdown" [isAnimated]="true" [autoClose]="false">
+                <button class="btn btn-sm btn-white" type="button" dropdownToggle>
+                  <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }}
+                  <span *ngIf="statusFilter || statusFilter >= 0" class="badge badge-primary ml-1">1</span>
+                </button>
+                <form *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-card"
+                  (ngSubmit)="getDataPage(1)">
+                  <div class="card-header">
+                    <h4 class="card-header-title">{{ 'Filters' | localize }}</h4>
+                    <button class="btn btn-sm btn-link text-reset btn-white" type="submit"
+                      (click)="filterDropdown.hide(); onClearFiltersClick()">
+                      <small>{{ 'ClearFilters' | localize }}</small>
+                    </button>
+                  </div>
+                  <div class="card-body">
+                    <div class="list-group list-group-flush mt-n4 mb-4">
+                      <div class="list-group-item">
+                        <div class="row">
+                          <div class="col">
+                            <small>{{ 'Status' | localize }}</small>
+                          </div>
+                          <div class="col-auto">
+                            <div class="custom-control custom-radio d-inline">
+                              <input type="radio" class="custom-control-input" id="allStatus" name="statusFilter"
+                                [(ngModel)]="statusFilter" [value]="undefined" checked />
+                              <label class="custom-control-label" for="allStatus">
+                                {{ 'All' | localize }}
+                              </label>
+                            </div>
+                            <div class="custom-control custom-radio d-inline mx-3">
+                              <input type="radio" class="custom-control-input" id="draftStatus" name="statusFilter"
+                                [(ngModel)]="statusFilter" [value]="VideoStatus.Draft" />
+                              <label class="custom-control-label" for="draftStatus">
+                                {{ 'Draft' | localize }}
+                              </label>
+                            </div>
+                            <div class="custom-control custom-radio d-inline">
+                              <input type="radio" class="custom-control-input" id="publishedStatus" name="statusFilter"
+                                [(ngModel)]="statusFilter" [value]="VideoStatus.Published" />
+                              <label class="custom-control-label" for="publishedStatus">
+                                {{ 'Published' | localize }}
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <button class="btn btn-block btn-primary" type="submit" (click)="filterDropdown.hide()">
+                      {{ 'ApplyFilter' | localize }}
+                    </button>
+                  </div>
+                  &nbsp;
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-sm table-hover table-nowrap card-table" [loader]="isTableLoading">
+            <tbody class="list font-size-base">
+              <tr *ngFor="
+                  let video of (videos | paginate: { id: 'videos', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
+                ">
+                <td>
+                  <div class="row">
+                    <div class="col-auto">
+                      <div class="avatar avatar-lg d-flex justify-content-center align-items-center">
+                        <i class="fe fe-video text-muted"></i>
+                      </div>
+                    </div>
+                    <div class="col d-flex flex-column justify-content-center">
+                      <a [routerLink]="['/app/videos/tutor-portal', video.id]">
+                        <h4 class="mb-1">{{ video.name }}</h4>
+                      </a>
+                      <p *ngIf="video.description" class="text-muted mb-1">
+                        {{ video.description }}
+                      </p>
+                      <div class="text-muted mb-1">
+                        <div class="d-flex">
+                          <div class="d-flex align-items-center">
+                            <i class="fe fe-video mr-2"></i>
+                            {{ 'Video' | localize }}
+                          </div>
+                          <div class="d-flex align-items-center mx-3">|</div>
+                          <div class="d-flex align-items-center mr-3">
+                            <i class="fe fe-eye mr-2"></i>
+                            0 {{ 'Views' | localize }}
+                          </div>
+                          <div class="d-flex align-items-center mr-3">
+                            <i class="fe fe-thumbs-up mr-2"></i>
+                            0 {{ 'Likes' | localize }}
+                          </div>
+                          <div class="d-flex align-items-center mr-3">
+                            <i class="fe fe-square-message mr-2"></i>
+                            0 {{ 'Comments' | localize }}
+                          </div>
+                          <div class="d-flex align-items-center mr-3">
+                            <i class="fe fe-share-2 mr-2"></i>
+                            0 {{ 'Shares' | localize }}
+                          </div>
+                          <div class="d-flex align-items-center">
+                            <i class="fe fe-star mr-2"></i>
+                            0 {{ 'Saves' | localize }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge" [class.badge-info]="video.status === VideoStatus.Draft"
+                    [class.badge-primary]="video.status === VideoStatus.Published">
+                    {{ VideoStatus[video.status] }}
+                  </span>
+                </td>
+                <td class="table-action">
+                  <button [routerLink]="['/app/videos/tutor-portal', video.id]" type="button"
+                    class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
+                    <span class="fe fe-trending-up"></span>
+                  </button>
+                  <button [routerLink]="['/app/videos', video.id]" type="button"
+                    class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+                    <span class="fe fe-edit-2"></span>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="videos.length === 0">
+                <td colspan="10">
+                  <p class="text-center m-0 p-0">{{ 'NoRecordsFound' | localize }}</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <abp-pagination-controls id="videos" (pageChange)="getDataPage($event)"> </abp-pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

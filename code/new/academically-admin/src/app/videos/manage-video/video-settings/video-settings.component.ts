@@ -2,7 +2,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { CommentSetting, DelayType, UpdateVideoSettingsDto, VideosServiceProxy, VideoType } from '@shared/service-proxies/service-proxies';
+import { CommentSetting, GetDelayStatusDto, UpdateVideoSettingsDto, VideoDelayType, VideoDto, VideosServiceProxy, VideoStatus, VideoType } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { VideoService } from '@app/videos/_services/video.service';
 import * as _ from 'lodash';
@@ -27,7 +27,7 @@ export class VideoSettingsComponent extends AppComponentBase implements OnInit {
   allowedVideoExtensions = fileUploadConfiguration.videoExtensions;
   EditField = EditField;
   VideoType = VideoType;
-  DelayType = DelayType;
+  DelayType = VideoDelayType;
   hasParent = false;
 
   editField: EditField;
@@ -35,6 +35,8 @@ export class VideoSettingsComponent extends AppComponentBase implements OnInit {
   lastVideoValue: string;
   specificDateValue: Date;
   datePickerConfig: BsDatepickerConfig;
+  parentId: string;
+  delayStatus = new GetDelayStatusDto();
 
   constructor(
     injector: Injector,
@@ -53,22 +55,35 @@ export class VideoSettingsComponent extends AppComponentBase implements OnInit {
         this.videoType = video.type;
         this.hasParent = !_.isNil(video.parentId);
 
-        switch (this.model.delayType) {
-          case DelayType.SpecificDate:
-            if (this.model.delayValue && this.model.delayValue.trim()) {
-              const dateParts = this.model.delayValue.split('/');
-              const day = +dateParts[0];
-              const month = +dateParts[1] - 1;
-              const year = +dateParts[2];
-              this.specificDateValue = new Date(year, month, day);
-            }
-            break;
-          default:
-            this.lastVideoValue = this.model.delayValue;
-            break;
+        if (this.model.delayType) {
+          switch (this.model.delayType) {
+            case VideoDelayType.SpecificDate:
+              if (this.model.delayValue && this.model.delayValue.trim()) {
+                const dateParts = this.model.delayValue.split('/');
+                const day = +dateParts[0];
+                const month = +dateParts[1] - 1;
+                const year = +dateParts[2];
+                this.specificDateValue = new Date(year, month, day);
+              }
+              break;
+            default:
+              this.lastVideoValue = this.model.delayValue;
+              break;
+          }
+        } else {
+          this.model.delayType = VideoDelayType.Immediate;
+        }
+
+        if (this.hasParent) {
+          this.parentId = video.parentId;
+          this.getDelayStatus();
         }
       }
     });
+  }
+
+  get allDelaysVisible(): boolean {
+    return this.delayStatus && this.delayStatus.isFirstVideoPublished && this.delayStatus.videoCount > 1;
   }
 
   ngOnInit(): void {
@@ -82,7 +97,7 @@ export class VideoSettingsComponent extends AppComponentBase implements OnInit {
     this.isLoading = true;
 
     switch (this.model.delayType) {
-      case DelayType.SpecificDate:
+      case VideoDelayType.SpecificDate:
         if (this.specificDateValue) {
           const dateParts = [
             this.specificDateValue.getDate(),
@@ -120,6 +135,16 @@ export class VideoSettingsComponent extends AppComponentBase implements OnInit {
   onDripTypeChange(): void {
     this.lastVideoValue = undefined;
     this.specificDateValue = undefined;
+  }
+
+  private getDelayStatus(): void {
+    this._videosService.getDelayStatus(
+      this.parentId,
+    )
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        this.delayStatus = response;
+      });
   }
 }
 

@@ -15,6 +15,7 @@ import { TutorPortalService } from './_services/tutor-portal.service';
 export class TutorPortalComponent extends AppComponentBase implements OnInit {
   id: string;
   model = new VideoDto();
+  VideoType = VideoType;
 
   constructor(
     injector: Injector,

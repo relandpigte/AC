@@ -21,7 +21,7 @@
           <div class="card border mb-0">
             <div class="card-body">
 
-              <div class="form-group delay-form mb-3">
+              <div *ngIf="allDelaysVisible" class="form-group delay-form mb-3">
                 <div class="custom-control custom-radio mr-3">
                   <input type="radio" id="lastVideo" name="delayType" class="custom-control-input"
                     [value]="DelayType.LastItem" [(ngModel)]="model.delayType" (change)="onDripTypeChange()">
@@ -59,6 +59,17 @@
                     </div>
                   </div>
                 </div>
+              </div>
+
+              <div *ngIf="allDelaysVisible" class="form-group delay-form mt-3">
+                <div class="custom-control custom-radio mr-3">
+                  <input type="radio" id="immediate" name="delayType" class="custom-control-input"
+                    [value]="DelayType.Immediate" [(ngModel)]="model.delayType" (change)="onDripTypeChange()">
+                  <label class="custom-control-label" for="lastVideo"></label>
+                </div>
+                <label for="immediate">
+                  <b>{{ 'Immediate' | localize }}</b> - {{ 'AvailableImmediately' | localize }}
+                </label>
               </div>
 
             </div>
