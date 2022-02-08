@@ -25,9 +25,14 @@
       <div type={{courseSectionModule.type}} *ngFor="let courseSectionModule of courseSections">
         <div class="card-body p-3 card curriculum">
           <div class="row align-items-center">
+            <div class="col-auto mr-n3">
+              <div class="drag-handle-container">
+                <i class="fas fa-ellipsis-v drag-handle"></i>
+              </div>
+            </div>
             <div *ngIf="courseSectionModule.type === courseSectionType.Lesson" class="col-auto">
               <a href="javascript:;" class="avatar avatar-sm avatar-4by3">
-                <img src="/assets/themes/dashkit/img/avatars/projects/project-1.jpg" alt="..."
+                <img [src]="getCourseImageUrl(courseSectionModule.imageDocumentUrl)" alt="..."
                   class="avatar-img rounded">
               </a>
             </div>
@@ -108,9 +113,14 @@
               *ngFor="let courseSectionUnit of courseSectionModule.children">
               <div class="card-body p-3 card curriculum">
                 <div class="row align-items-center">
+                  <div class="col-auto mr-n3">
+                    <div class="drag-handle-container">
+                      <i class="fas fa-ellipsis-v drag-handle"></i>
+                    </div>
+                  </div>
                   <div *ngIf="courseSectionUnit.type === courseSectionType.Lesson" class="col-auto">
                     <a href="javascript:;" class="avatar avatar-sm avatar-4by3">
-                      <img src="/assets/themes/dashkit/img/avatars/projects/project-1.jpg" alt="..."
+                      <img [src]="getCourseImageUrl(courseSectionUnit.imageDocumentUrl)" alt="..."
                         class="avatar-img rounded">
                     </a>
                   </div>
@@ -191,9 +201,14 @@
                     *ngFor="let courseSectionLesson of courseSectionUnit.children">
                     <div class="card-body p-3 card curriculum">
                       <div class="row align-items-center">
+                        <div class="col-auto mr-n3">
+                          <div class="drag-handle-container">
+                            <i class="fas fa-ellipsis-v drag-handle"></i>
+                          </div>
+                        </div>
                         <div *ngIf="courseSectionLesson.type === courseSectionType.Lesson" class="col-auto">
                           <a href="javascript:;" class="avatar avatar-sm avatar-4by3">
-                            <img src="/assets/themes/dashkit/img/avatars/projects/project-1.jpg" alt="..."
+                            <img [src]="getCourseImageUrl(courseSectionLesson.imageDocumentUrl)" alt="..."
                               class="avatar-img rounded">
                           </a>
                         </div>
@@ -275,7 +290,8 @@
                   </div>
                 </div>
               </div>
-              <div class="actions mt-n3 mb-3" *ngIf="courseSectionUnit.type === courseSectionType.Unit">
+              <div class="actions mt-n3 mb-3 add-button-bordered"
+                *ngIf="courseSectionUnit.type === courseSectionType.Unit">
                 <a href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="fe fe-plus"></i>{{ 'Add' | localize }}
                 </a>
@@ -290,7 +306,8 @@
             </div>
           </div>
         </div>
-        <div class="actions mt-n3 ml-2 mb-3" *ngIf="courseSectionModule.type === courseSectionType.Module">
+        <div class="actions mt-n3 ml-2 mb-3 add-button-bordered"
+          *ngIf="courseSectionModule.type === courseSectionType.Module">
           <a href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fe fe-plus"></i>{{ 'Add' | localize }}
           </a>

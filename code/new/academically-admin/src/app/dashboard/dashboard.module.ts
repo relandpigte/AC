@@ -7,7 +7,6 @@ import { VerificationsModule } from '@app/_shared/modules/verifications/verifica
 
 import { DashboardComponent } from './dashboard.component';
 import { OverviewComponent } from './overview/overview.component';
-import { ProjectsComponent } from './projects/projects.component';
 import { MetricsComponent } from './overview/metrics/metrics.component';
 import { UpcomingSessionsComponent } from './overview/upcoming-sessions/upcoming-sessions.component';
 import { RecentProjectsComponent } from './overview/recent-projects/recent-projects.component';
@@ -18,7 +17,6 @@ import { ProfileSummaryComponent } from './overview/profile-summary/profile-summ
   declarations: [
     DashboardComponent,
     OverviewComponent,
-    ProjectsComponent,
     MetricsComponent,
     UpcomingSessionsComponent,
     RecentProjectsComponent,
