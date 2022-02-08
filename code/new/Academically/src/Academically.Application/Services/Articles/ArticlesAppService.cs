@@ -42,23 +42,13 @@ namespace Academically.Services.Articles
                 .PageBy(input)
                 .Include(e => e.ThumbnailDocument)
                 .Include(e => e.Children)
+                .Select(e => ObjectMapper.Map<ArticleDto>(e))
                 .ToListAsync();
-
-            var outputs = new List<ArticleDto>();
-            foreach (var article in articles)
-            {
-                var output = ObjectMapper.Map<ArticleDto>(article);
-                if (article.ThumbnailDocument != null)
-                {
-                    output.ThumbnailDocumentUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocument);
-                }
-                outputs.Add(output);
-            }
 
             return new PagedResultDto<ArticleDto>()
             {
                 TotalCount = totalCount,
-                Items = outputs,
+                Items = articles,
             };
         }
 
@@ -73,23 +63,13 @@ namespace Academically.Services.Articles
             var articles = await query.OrderBy(e => e.Name)
                 .PageBy(input)
                 .Include(e => e.ThumbnailDocument)
+                .Select(e => ObjectMapper.Map<ArticleDto>(e))
                 .ToListAsync();
-
-            var outputs = new List<ArticleDto>();
-            foreach (var article in articles)
-            {
-                var output = ObjectMapper.Map<ArticleDto>(article);
-                if (article.ThumbnailDocument != null)
-                {
-                    output.ThumbnailDocumentUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocument);
-                }
-                outputs.Add(output);
-            }
 
             return new PagedResultDto<ArticleDto>()
             {
                 TotalCount = totalCount,
-                Items = outputs,
+                Items = articles,
             };
         }
 
@@ -99,15 +79,9 @@ namespace Academically.Services.Articles
                 .Include(e => e.ThumbnailDocument)
                 .Include(e => e.Parent)
                 .Where(e => e.Id == id)
+                .Select(e => ObjectMapper.Map<ArticleDto>(e))
                 .FirstOrDefaultAsync();
-            var output = ObjectMapper.Map<ArticleDto>(article);
-
-            if (article.ThumbnailDocument != null)
-            {
-                output.ThumbnailDocumentUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocument);
-            }
-
-            return output;
+            return article;
         }
 
         public async Task<ArticleDto> Create(ArticleDto input)
@@ -117,23 +91,10 @@ namespace Academically.Services.Articles
             return input;
         }
 
-        public async Task<ArticleDto> UpdateDetails([FromForm] UpdateArticleDetailsDto input)
+        public async Task<ArticleDto> UpdateDetails(UpdateArticleDetailsDto input)
         {
             var article = await _articlesRepository.GetAsync(input.Id);
             ObjectMapper.Map(input, article);
-
-            if (input.ThumbnailDocumentFile != null)
-            {
-                var oldDocumentId = article.ThumbnailDocumentId;
-                var articleThumbnailDocument = await _documentsDomainService.CreateAsync(AbpSession.UserId.Value, input.ThumbnailDocumentFile, DocumentType.ArticleThumbnail);
-                article.ThumbnailDocumentId = articleThumbnailDocument.Id;
-
-                if (oldDocumentId.HasValue)
-                {
-                    await _documentsDomainService.DeleteAsync(oldDocumentId.Value);
-                }
-            }
-
             await _articlesRepository.UpdateAsync(article);
             return ObjectMapper.Map<ArticleDto>(article);
         }

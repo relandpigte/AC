@@ -1,9 +1,9 @@
+import { DocumentDto } from '@shared/service-proxies/service-proxies';
 import { ComponentContent } from './component-content';
 
 export class ImageComponentContent extends ComponentContent {
-  base64image: string;
-  imageName: string;
-  imageSize: number;
+  imageDocument: DocumentDto;
+  test: string;
 
   constructor() {
     super();

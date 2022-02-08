@@ -30,9 +30,6 @@ namespace Academically.Services.Videos.Dto
 		public VideoDelayType? DelayType { get; set; }
 		public string DelayValue { get; set; }
 
-		public string VideoUrl { get; set; }
-		public string ThumbnailUrl { get; set; }
-
 		public VideoDto Parent { get; set; }
 		public DocumentDto Document { get; set; }
 		public Document ThumbnailDocument { get; set; }

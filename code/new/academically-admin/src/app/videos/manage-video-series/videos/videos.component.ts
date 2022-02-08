@@ -4,6 +4,8 @@ import { VideoStatus, VideoDto, VideoType, VideosServiceProxy, VideoDtoPagedResu
 import { VideoService } from '@app/videos/_services/video.service';
 import { finalize } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
+import { UploadService } from '@app/_shared/services/upload.service';
+import * as _ from 'lodash';
 
 class PagedVideoRequestDto extends PagedAndSortedRequestDto {
   parentIdFilter: string;
@@ -21,6 +23,7 @@ export class VideosComponent extends PagedListingComponentBase<VideoDto> impleme
   videos: VideoDto[] = [];
   searchFilter?: string;
   statusFilter?: number;
+  thumbnailUrls: string[] = [];
 
   VideoStatus = VideoStatus;
   VideoType = VideoType;
@@ -30,6 +33,7 @@ export class VideosComponent extends PagedListingComponentBase<VideoDto> impleme
     route: ActivatedRoute,
     private _videosService: VideosServiceProxy,
     private _videoService: VideoService,
+    private _uploadService: UploadService,
   ) {
     super(injector);
     this._videoService.videoCreated$.subscribe(video => {
@@ -73,6 +77,9 @@ export class VideosComponent extends PagedListingComponentBase<VideoDto> impleme
       )
       .subscribe((result: VideoDtoPagedResultDto) => {
         this.videos = result.items;
+        _.each(this.videos, video => {
+          this.thumbnailUrls[video.id] = this._uploadService.getFileUrl(video.thumbnailDocument);
+        });
         this.showPaging(result, pageNumber);
       });
   }

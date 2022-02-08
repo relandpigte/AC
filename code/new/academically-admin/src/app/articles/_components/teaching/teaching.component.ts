@@ -3,6 +3,8 @@ import { ArticleDto, ArticleStatus, ArticleType, ArticlesServiceProxy, ArticleDt
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
 import { ArticleService } from '@app/articles/_services/article.service';
 import { finalize } from 'rxjs/operators';
+import { UploadService } from '@app/_shared/services/upload.service';
+import * as _ from 'lodash';
 
 class PagedArticleRequestDto extends PagedAndSortedRequestDto {
   userIdFilter: number;
@@ -19,6 +21,7 @@ export class TeachingComponent extends PagedListingComponentBase<ArticleDto> imp
   articles: ArticleDto[] = [];
   searchFilter?: string;
   statusFilter?: number;
+  thumbnailUrls: string[] = [];
 
   ArticleStatus = ArticleStatus;
   ArticleType = ArticleType;
@@ -27,6 +30,7 @@ export class TeachingComponent extends PagedListingComponentBase<ArticleDto> imp
     injector: Injector,
     private _articlesService: ArticlesServiceProxy,
     private _articleService: ArticleService,
+    private _uploadService: UploadService,
   ) {
     super(injector);
     this._articleService.articleCreated$.subscribe(article => {
@@ -65,6 +69,9 @@ export class TeachingComponent extends PagedListingComponentBase<ArticleDto> imp
       )
       .subscribe((result: ArticleDtoPagedResultDto) => {
         this.articles = result.items;
+        _.each(this.articles, article => {
+          this.thumbnailUrls[article.id] = this._uploadService.getFileUrl(article.thumbnailDocument);
+        });
         this.showPaging(result, pageNumber);
       });
   }

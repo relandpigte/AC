@@ -92,13 +92,13 @@
           <td>
             <div class="row">
               <div class="col-auto d-flex justify-content-center align-items-center">
-                <div *ngIf="!video.thumbnailUrl else withThumbnailTemplate"
+                <div *ngIf="!thumbnailUrls[video.id] else withThumbnailTemplate"
                   class="avatar avatar-4by3 d-flex justify-content-center align-items-center">
                   <i class="fe fe-video text-muted h1 p-0 m-0"></i>
                 </div>
                 <ng-template #withThumbnailTemplate>
                   <div class="avatar avatar-4by3">
-                    <img [src]="getCourseImageUrl(video.thumbnailUrl)" alt="..." class="avatar-img rounded">
+                    <img [src]="getCourseImageUrl(thumbnailUrls[video.id])" alt="..." class="avatar-img rounded">
                   </div>
                 </ng-template>
               </div>

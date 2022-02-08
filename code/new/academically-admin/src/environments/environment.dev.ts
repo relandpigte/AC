@@ -34,6 +34,22 @@ export const environment = {
     stripe: {
       clientId: 'ca_JTqXUdOGoHuPu5xa30NV6ywErQwqkFrO',
       onbloardLink: (clientId: string, host: string) => `https://connect.stripe.com/express/oauth/authorize?response_type=code&scope=read_write&client_id=${clientId}&redirect_uri=${host}/app/dashboard`,
-    }
+    },
+    amazon: {
+      s3: {
+        region: 'eu-west-2',
+        bucket: 'academically-local-assets',
+        securedBucket: 'academically-local-assets-secured',
+        credentials: {
+          accessKey: 'AKIA3CV3YWZBC24YH5U5',
+          secret: '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',
+        },
+        folders: {
+          video: 'videos',
+          videoThumbnail: 'video-thumbnails',
+          articleThumbnail: 'article-thumbnails',
+        },
+      },
+    },
   },
 };

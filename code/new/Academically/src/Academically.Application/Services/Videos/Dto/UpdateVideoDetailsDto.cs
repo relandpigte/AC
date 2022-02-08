@@ -1,16 +1,14 @@
-﻿using System;
-using Abp.AutoMapper;
+﻿using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
-using Microsoft.AspNetCore.Http;
+using System;
 
 namespace Academically.Services.Videos.Dto
 {
-	[AutoMap(typeof(Video))]
+    [AutoMap(typeof(Video))]
 	public class UpdateVideoDetailsDto
 	{
         public Guid Id { get; set; }
-		public IFormFile ThumbnailFile { get; set; }
 
         public string Name { get; set; }
         public string Description { get; set; }
