@@ -4,7 +4,7 @@
       {{ 'UploadImage' | localize }}
     </h4>
   </div>
-  <div class="card-body">
+  <div class="card-body" [loader]="isLoading">
     <app-document-uploader [previewImages]="true" [largeImagePreview]="true" [maxFiles]="1" [cropImages]="true"
       [allowedExtensions]="allowedImageExtensions" [cropperAspectRatioWidth]="cropperAspectRationWidth"
       [cropperAspectRationHeight]="cropperAspectRationHeight">

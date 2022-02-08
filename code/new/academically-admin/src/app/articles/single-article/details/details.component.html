@@ -6,7 +6,7 @@
       <div class="card">
         <div class="card-header">
           <h4 class="card-header-title">
-            {{ (model.type === ArticleType.SingleArticle ? 'ArticleName' : 'ArticleSeriesName') | localize }}
+            {{ (articleType === ArticleType.SingleArticle ? 'ArticleName' : 'ArticleSeriesName') | localize }}
           </h4>
           <div class="col-auto row">
             <button *ngIf="!editField || editField !== EditField.Name" (click)="onEditClick(EditField.Name)"
@@ -22,7 +22,7 @@
           <div class="form-group required mb-0">
             <input [(ngModel)]="model.name" #nameModel="ngModel" #nameEl class="form-control" type="text" id="name"
               name="name" required
-              [placeholder]="(model.type === ArticleType.SingleArticle ? 'WriteYourArticleNameHere' : 'WriteYourArticleSeriesNameHere') | localize"
+              [placeholder]="(articleType === ArticleType.SingleArticle ? 'WriteYourArticleNameHere' : 'WriteYourArticleSeriesNameHere') | localize"
               [disabled]="editField !== EditField.Name" />
             <abp-validation-summary [control]="nameModel" [controlEl]="nameEl">
             </abp-validation-summary>
@@ -95,7 +95,7 @@
       <div class="card" [loader]="isLoading">
         <div class="card-header">
           <h4 class="card-header-title">
-            {{ (model.type === ArticleType.SingleArticle ? 'ArticleThumbnail' : 'ArticleSeriesThumbnail') | localize }}
+            {{ (articleType === ArticleType.SingleArticle ? 'ArticleThumbnail' : 'ArticleSeriesThumbnail') | localize }}
           </h4>
           <div class="row">
             <button *ngIf="!editField || editField !== EditField.Image" (click)="onEditClick(EditField.Image)"
@@ -164,7 +164,7 @@
             <div class="col-auto mr-n4">
               <div class="custom-control custom-radio">
                 <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
-                  id="free" [value]="PricingType.Free" (click)="onPricingClick(PricingType.Free)">
+                  id="free" [value]="PricingType.Free">
                 <label class="custom-control-label" for="free"></label>
               </div>
             </div>
@@ -179,7 +179,7 @@
             <div class="col-auto mr-n4">
               <div class="custom-control custom-radio">
                 <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
-                  id="fixedFee" [value]="PricingType.FixedPrice" (click)="onPricingClick(PricingType.FixedPrice)">
+                  id="fixedFee" [value]="PricingType.FixedPrice">
                 <label class="custom-control-label" for="fixedFee"></label>
               </div>
             </div>
@@ -194,7 +194,7 @@
             <div class="col-auto mr-n4">
               <div class="custom-control custom-radio">
                 <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
-                  id="paymentPlan" [value]="PricingType.PaymentPlan" (click)="onPricingClick(PricingType.PaymentPlan)">
+                  id="paymentPlan" [value]="PricingType.PaymentPlan">
                 <label class="custom-control-label" for="paymentPlan"></label>
               </div>
             </div>
@@ -209,8 +209,7 @@
             <div class="col-auto mr-n4">
               <div class="custom-control custom-radio">
                 <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
-                  id="subscription" [value]="PricingType.Subscription"
-                  (click)="onPricingClick(PricingType.Subscription)" [disabled]="editField !== EditField.Pricing">
+                  id="subscription" [value]="PricingType.Subscription" [disabled]="editField !== EditField.Pricing">
                 <label class="custom-control-label" for="subscription"></label>
               </div>
             </div>

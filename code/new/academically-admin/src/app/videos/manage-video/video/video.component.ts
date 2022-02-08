@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild, Injector } from '@angular/core';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
-import { FileParameter, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { DocumentDto, DocumentType, FileParameter, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil, finalize } from 'rxjs/operators';
+import { UploadService } from '@app/_shared/services/upload.service';
 
 @Component({
   selector: 'app-video',
@@ -14,15 +15,17 @@ import { takeUntil, finalize } from 'rxjs/operators';
 export class VideoComponent extends AppComponentBase implements OnInit {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
   id: string;
-  videoDocumentId: string;
-  allowedExtensions = fileUploadConfiguration.videoExtensions;
   defaultFile: DefaultFile;
+
+  allowedExtensions = fileUploadConfiguration.videoExtensions;
+  document = new DocumentDto();
   isLoading = false;
 
   constructor(
     injector: Injector,
     route: ActivatedRoute,
     private _videosService: VideosServiceProxy,
+    private _uploadService: UploadService,
   ) {
     super(injector);
     route.parent.parent.paramMap.subscribe(paramMap => {
@@ -47,24 +50,18 @@ export class VideoComponent extends AppComponentBase implements OnInit {
             this.documentUploader.files = [];
           } else {
             this.isLoading = true;
-
-            const fileParameter = this.documentUploader.getFileParameterFromFiles()[0];
-            this._videosService.updateDocument(this.id, fileParameter)
+            this._uploadService.upload(file, DocumentType.Video, this.id)
               .pipe(
                 takeUntil(this.destroyed$),
                 finalize(() => {
                   this.isLoading = false;
-                })
+                }),
               )
               .subscribe(response => {
                 this.notify.success(this.l('SuccessfullyUploaded'));
+                this.document = response;
                 this.documentUploader.files = [];
-                this.defaultFile = new DefaultFile();
-                this.defaultFile.name = response.document.originalFileName;
-                this.defaultFile.url = response.videoUrl;
-                this.defaultFile.size = response.document.size;
-                this.documentUploader.defaultFile = this.defaultFile;
-                this.videoDocumentId = response.document.id;
+                this.setDefaultFile();
               });
           }
         };
@@ -72,19 +69,19 @@ export class VideoComponent extends AppComponentBase implements OnInit {
         videoEl.src = URL.createObjectURL(file);
       } else {
         this.defaultFile = undefined;
-        if (this.videoDocumentId) {
+        if (this.document && this.document.id) {
           this.isLoading = true;
-          this._videosService.removeDocument(this.id)
+          this._uploadService.delete(this.document, this.id)
             .pipe(
               takeUntil(this.destroyed$),
               finalize(() => {
                 this.isLoading = false;
-              })
+              }),
             )
             .subscribe(() => {
               this.notify.success(this.l('SuccessfullyRemoved'));
               this.defaultFile = undefined;
-              this.videoDocumentId = undefined;
+              this.document = new DocumentDto();
             });
         }
       }
@@ -102,13 +99,17 @@ export class VideoComponent extends AppComponentBase implements OnInit {
       )
       .subscribe(response => {
         if (response.document) {
-          this.defaultFile = new DefaultFile();
-          this.defaultFile.name = response.document.originalFileName;
-          this.defaultFile.url = response.videoUrl;
-          this.defaultFile.size = response.document.size;
-          this.documentUploader.defaultFile = this.defaultFile;
-          this.videoDocumentId = response.document.id;
+          this.document = response.document;
+          this.setDefaultFile();
         }
       });
+  }
+
+  private setDefaultFile(): void {
+    this.defaultFile = new DefaultFile();
+    this.defaultFile.name = this.document.originalFileName;
+    this.defaultFile.url = this._uploadService.getFileUrl(this.document);
+    this.defaultFile.size = this.document.size;
+    this.documentUploader.defaultFile = this.defaultFile;
   }
 }

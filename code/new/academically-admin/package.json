@@ -25,6 +25,7 @@
     "@angular/platform-browser-dynamic": "^9.1.4",
     "@angular/router": "^9.1.4",
     "@aspnet/signalr": "^1.1.4",
+    "@aws-sdk/client-s3": "^3.49.0",
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@fullcalendar/angular": "^5.7.2",
     "@fullcalendar/bootstrap": "^5.7.2",

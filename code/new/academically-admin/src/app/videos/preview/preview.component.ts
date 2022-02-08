@@ -4,6 +4,7 @@ import { VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-pr
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Location } from '@angular/common';
+import { UploadService } from '@app/_shared/services/upload.service';
 
 @Component({
   selector: 'app-preview',
@@ -12,6 +13,8 @@ import { Location } from '@angular/common';
 })
 export class PreviewComponent extends AppComponentBase implements OnInit {
   id: string;
+  videoUrl: string;
+  thumbnailUrl: string;
 
   model = new VideoDto();
 
@@ -19,6 +22,7 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     route: ActivatedRoute,
     private _location: Location,
+    private _uploadService: UploadService,
     private _videosService: VideosServiceProxy,
   ) {
     super(injector);
@@ -42,6 +46,8 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         this.model = response;
+        this.thumbnailUrl = this._uploadService.getFileUrl(response.thumbnailDocument);
+        this.videoUrl = this._uploadService.getFileUrl(response.document);
       });
   }
 }

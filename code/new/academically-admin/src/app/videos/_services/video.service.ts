@@ -10,7 +10,7 @@ export class VideoService {
   private _videoCreatedSubject: BehaviorSubject<VideoDto>;
 
   constructor() {
-    this._videoCreatedSubject = new BehaviorSubject<VideoDto>(undefined);
+    this._videoCreatedSubject = new BehaviorSubject<VideoDto>(new VideoDto());
     this.videoCreated$ = this._videoCreatedSubject.asObservable();
   }
 

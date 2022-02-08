@@ -15,8 +15,7 @@ namespace Academically.Services.Articles.Dto
         public string Categories { get; set; }
         public Guid? LanguageId { get; set; }
         public PricingType PricingType { get; set; }
-
-        public IFormFile ThumbnailDocumentFile { get; set; }
+        public Guid? ThumbnailDocumentId { get; set; }
     }
 }
 

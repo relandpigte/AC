@@ -30,8 +30,6 @@ namespace Academically.Services.Articles.Dto
 		public DelayType? DelayType { get; set; }
 		public string DelayValue { get; set; }
 
-		public string ThumbnailDocumentUrl { get; set; }
-
 		public ArticleDto Parent { get; set; }
 		public Document ThumbnailDocument { get; set; }
 

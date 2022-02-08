@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { UploadService } from '@app/_shared/services/upload.service';
 import { ImageComponentContent } from '../../../_models/image-component-content';
 
 @Component({
@@ -9,9 +10,14 @@ import { ImageComponentContent } from '../../../_models/image-component-content'
 export class ImageComponentViewerComponent implements OnInit {
   @Input() component: ImageComponentContent;
 
-  constructor() { }
+  constructor(
+    private _uploadService: UploadService,
+  ) { }
 
   ngOnInit(): void {
   }
 
+  getFileUrl(): string {
+    return this._uploadService.getFileUrl(this.component.imageDocument);
+  }
 }
