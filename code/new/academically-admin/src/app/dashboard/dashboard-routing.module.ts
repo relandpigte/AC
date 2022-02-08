@@ -20,6 +20,20 @@ import { DashboardComponent } from './dashboard.component';
             path: '',
             component: DashboardComponent,
           },
+          {
+            path: 'usage',
+            loadChildren: () =>
+              import('@app/dashboard/usage/usage.module').then(
+                (m) => m.UsageModule
+              ),
+          },
+          {
+            path: 'courses',
+            loadChildren: () =>
+              import('@app/dashboard/courses/courses.module').then(
+                (m) => m.CoursesModule
+              ),
+          },
         ],
       }
     ]),

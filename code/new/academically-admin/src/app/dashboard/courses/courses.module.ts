@@ -1,6 +1,6 @@
 import { NgModule, } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { CoursesRoutingModule } from './courses-routing.module';
 import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
@@ -22,15 +22,9 @@ import { LearningComponent } from './learning/learning.component';
   ],
   imports: [
     CommonModule,
-    RouterModule,
+    CoursesRoutingModule,
     SharedModule,
     AppSharedModule,
-  ],
-  exports: [
-    CoursesComponent,
-    CourseTemplateComponent,
-    CourseWizardComponent,
-    CourseNameComponent,
   ],
 })
 export class CoursesModule { }

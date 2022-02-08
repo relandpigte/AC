@@ -1,2 +1,19 @@
-<app-usage-overview></app-usage-overview>
-<app-usage-overview-graph></app-usage-overview-graph>
+<div class="container-fluid" [@routerTransition]>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ 'Dashboard' | localize }}</h6>
+              <h1 class="header-title">{{ 'Usage' | localize }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <app-usage-overview></app-usage-overview>
+      <app-usage-overview-graph></app-usage-overview-graph>
+    </div>
+  </div>
+</div>

@@ -46,15 +46,6 @@
                 <a class="nav-link" id="projects-tab" data-toggle="tab" href="#projects" role="tab"
                   aria-controls="projects" aria-selected="false">{{ 'Coaching' | localize }}</a>
               </li>
-              <li *ngIf="permission.isGranted('Pages.Dashboard.Usage')" class="nav-item">
-                <a class="nav-link" id="usage-tab" data-toggle="tab" href="#usage" role="tab" aria-controls="usage"
-                  aria-selected="false">{{ 'Usage' | localize }}</a>
-              </li>
-              <li *ngIf="permission.isGranted('Pages.Dashboard.Courses')" class="nav-item">
-                <a class="nav-link" id="courses-tab" data-toggle="tab" href="#courses" role="tab"
-                  aria-controls="courses" aria-selected="false">{{ 'Courses' | localize }}</a>
-              </li>
-
             </ul>
           </div>
         </div>
@@ -96,14 +87,6 @@
       <div *ngIf="permission.isGranted('Pages.Dashboard.MyProjects')" class="tab-pane fade" id="projects"
         role="tabpanel" aria-labelledby="projects-tab">
         <app-projects *ngIf="permission.isGranted('Pages.Dashboard.MyProjects')"></app-projects>
-      </div>
-      <div *ngIf="permission.isGranted('Pages.Dashboard.Usage')" class="tab-pane fade" id="usage" role="tabpanel"
-        aria-labelledby="usage-tab">
-        <app-usage *ngIf="permission.isGranted('Pages.Dashboard.Usage')"></app-usage>
-      </div>
-      <div *ngIf="permission.isGranted('Pages.Dashboard.Courses')" class="tab-pane fade" id="courses" role="tabpanel"
-        aria-labelledby="courses-tab">
-        <app-courses *ngIf="permission.isGranted('Pages.Dashboard.Courses')"></app-courses>
       </div>
     </div>
   </div>
