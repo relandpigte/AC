@@ -19,6 +19,23 @@ import { HomeComponent } from './home.component';
           {
             path: '',
             component: HomeComponent,
+            children: [
+              {
+                path: 'home',
+                loadChildren: () =>
+                  import('@app/home/home/home.module').then(
+                    (m) => m.HomeModule
+                  ),
+              },
+              {
+                path: 'courses',
+                loadChildren: () =>
+                  import('@app/home/courses/courses.module').then(
+                    (m) => m.CoursesModule
+                  ),
+              },
+              { path: '', redirectTo: 'home' },
+            ]
           },
         ],
       }

@@ -1,20 +1,20 @@
-import { NgModule } from '@angular/core';
+import { NgModule, } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HomeRoutingModule } from './home-routing.module';
+import { CoursesRoutingModule } from './courses-routing.module';
 import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
-import { HomeComponent } from './home.component';
+import { CoursesComponent } from './courses.component';
 
 @NgModule({
   declarations: [
-    HomeComponent,
+    CoursesComponent,
   ],
   imports: [
     CommonModule,
-    HomeRoutingModule,
+    CoursesRoutingModule,
     SharedModule,
     AppSharedModule,
   ],
 })
-export class HomeModule { }
+export class CoursesModule { }
