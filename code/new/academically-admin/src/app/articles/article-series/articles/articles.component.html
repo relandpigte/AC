@@ -89,10 +89,16 @@
     *ngFor="let article of (articles | paginate: { id: 'articles', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })"
     class="card">
     <div class="row">
-      <div class="col-auto mr-n3 d-flex align-items-center">
-        <div class="avatar avatar-lg d-flex justify-content-center align-items-center">
-          <i class="fe fe-file-text text-muted"></i>
+      <div class="col-auto d-flex justify-content-center align-items-center">
+        <div *ngIf="!article.thumbnailDocumentUrl else withThumbnailTemplate"
+          class="avatar avatar-lg avatar-4by3 d-flex justify-content-center align-items-center p-2">
+          <i class="fe fe-file-text text-muted h1 p-0 m-0"></i>
         </div>
+        <ng-template #withThumbnailTemplate>
+          <div class="avatar avatar-lg avatar-4by3 p-2">
+            <img [src]="getCourseImageUrl(article.thumbnailDocumentUrl)" alt="..." class="avatar-img rounded">
+          </div>
+        </ng-template>
       </div>
       <div class="col d-flex align-items-center">
         <a [routerLink]="['../../../../../', article.id]">

@@ -164,7 +164,7 @@ export abstract class AppComponentBase implements OnDestroy {
     if (courseImageUrl) {
       return courseImageUrl;
     }
-    return 'assets/themes/dashkit/img/covers/profile-cover-1.jpg';
+    return 'assets/themes/dashkit/img/avatars/projects/project-1.jpg';
   }
 
   protected uuidv4(): string {

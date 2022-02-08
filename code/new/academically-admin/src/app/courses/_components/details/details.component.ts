@@ -45,6 +45,10 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
     private _spokenLanguagesService: SpokenLanguagesServiceProxy,
   ) {
     super(injector);
+  }
+  ngOnInit(): void {
+    this.getLanguages();
+
     this._courseService.course$.subscribe(course => {
       if (course) {
         this.model = course;
@@ -60,9 +64,6 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
         }
       }
     });
-  }
-  ngOnInit(): void {
-    this.getLanguages();
 
     this.documentUploader.filesChanged.subscribe((files: FileParameter[]) => {
       if (files && files.length) {

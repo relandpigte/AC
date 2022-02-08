@@ -18,6 +18,8 @@ namespace Academically.Authorization
             dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_MyProjects, L("MyProjects"));
             dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Usage, L("Usage"));
             dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Courses, L("Courses"));
+            dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Coaching, L("Coaching"));
+            dashboardPermission.CreateChildPermission(PermissionNames.Pages_Dashboard_Events, L("Events"));
 
 
             var profilePermission = context.CreatePermission(PermissionNames.Pages_Profile, L("Profile"));

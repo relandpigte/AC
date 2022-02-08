@@ -31,22 +31,27 @@ namespace Academically.Services.CourseSections
         {
             var courseSectionModule = await _courseSectionsRepository.GetAll()
                 .Where(e => e.CourseId == courseId && e.ParentId == null)
+                .Include(e => e.ImageDocument)
                 .OrderBy(e => e.DisplayOrder)
-                .Select(e => ObjectMapper.Map<CourseSectionDto>(e))
                 .ToListAsync();
-            var courseSctions = new List<CourseSectionDto>();
+            var courseSections = new List<CourseSectionDto>();
             foreach (var courseModule in courseSectionModule)
             {
-                courseModule.Children = new List<CourseSectionDto>();
-                courseModule.Children.AddRange(await GetCourseSectionChildren(courseModule.Id));
-                foreach (var courseUnit in courseModule.Children)
+                var moduleOutput = ObjectMapper.Map<CourseSectionDto>(courseModule);
+                moduleOutput.Children = new List<CourseSectionDto>();
+                moduleOutput.Children.AddRange(await GetCourseSectionChildren(courseModule.Id));
+                foreach (var unitOutput in moduleOutput.Children)
                 {
-                    courseUnit.Children = new List<CourseSectionDto>();
-                    courseUnit.Children.AddRange(await GetCourseSectionChildren(courseUnit.Id));
+                    unitOutput.Children = new List<CourseSectionDto>();
+                    unitOutput.Children.AddRange(await GetCourseSectionChildren(unitOutput.Id));
                 }
-                courseSctions.Add(courseModule);
+                if (moduleOutput.Type == CourseSectionType.Lesson)
+                {
+                    moduleOutput.ImageDocumentUrl = await _documentsDomainService.GetFileUrlAsync(courseModule.ImageDocument);
+                }
+                courseSections.Add(moduleOutput);
             }
-            return courseSctions;
+            return courseSections;
         }
 
         public async Task<CourseSectionDto> Get(Guid id)
@@ -140,12 +145,22 @@ namespace Academically.Services.CourseSections
 
         private async Task<IEnumerable<CourseSectionDto>> GetCourseSectionChildren(Guid? parentId)
         {
-            var courseSectionChild = await _courseSectionsRepository.GetAll()
+            var courseSectionChildren = await _courseSectionsRepository.GetAll()
                 .Where(e => e.ParentId == parentId)
+                .Include(e => e.ImageDocument)
                 .OrderBy(e => e.DisplayOrder)
-                .Select(e => ObjectMapper.Map<CourseSectionDto>(e))
                 .ToListAsync();
-            return courseSectionChild;
+            var outputs = new List<CourseSectionDto>();
+            foreach (var courseSection in courseSectionChildren)
+            {
+                var output = ObjectMapper.Map<CourseSectionDto>(courseSection);
+                if (courseSection.ImageDocument != null)
+                {
+                    output.ImageDocumentUrl = await _documentsDomainService.GetFileUrlAsync(courseSection.ImageDocument);
+                }
+                outputs.Add(output);
+            }
+            return outputs;
         }
 
         private static string GetDuplicateName(string name)

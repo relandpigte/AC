@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+	<text name="Events">Events</text>
 	<text name="AvailableImmediately">Available immediately</text>
 	<text name="Immediate">Immediate</text>
 	<text name="NoVideoFound">No video found</text>
@@ -1462,7 +1463,7 @@
     <text name="CategoriesTags">Categories &amp; Tags</text>
     <text name="LessonImage">Lesson Image</text>
     <text name="UploadInstuction">Please use .jpg or .png</text>
-  <text name="RecommendedDimensions">Recommended Dimensions of</text>
+    <text name="RecommendedDimensions">Recommended Dimensions of</text>
     <text name="AllTutors">All Tutors</text>
     <text name="Coaching">Coaching</text>
   </texts>

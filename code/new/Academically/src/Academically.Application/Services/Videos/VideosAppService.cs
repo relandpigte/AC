@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
@@ -39,14 +40,25 @@ namespace Academically.Services.Videos
             var totalCount = await query.CountAsync();
             var videos = await query.OrderBy(e => e.Name)
                 .PageBy(input)
+                .Include(e => e.ThumbnailDocument)
                 .Include(e => e.Children)
-                .Select(e => ObjectMapper.Map<VideoDto>(e))
                 .ToListAsync();
+
+            var outputs = new List<VideoDto>();
+            foreach (var video in videos)
+            {
+                var output = ObjectMapper.Map<VideoDto>(video);
+                if (video.ThumbnailDocument != null)
+                {
+                    output.ThumbnailUrl = await _documentsDomainService.GetFileUrlAsync(video.ThumbnailDocument);
+                }
+                outputs.Add(output);
+            }
 
             return new PagedResultDto<VideoDto>()
             {
                 TotalCount = totalCount,
-                Items = videos,
+                Items = outputs,
             };
         }
 
@@ -60,13 +72,24 @@ namespace Academically.Services.Videos
             var totalCount = await query.CountAsync();
             var videos = await query.OrderBy(e => e.Name)
                 .PageBy(input)
-                .Select(e => ObjectMapper.Map<VideoDto>(e))
+                .Include(e => e.ThumbnailDocument)
                 .ToListAsync();
+
+            var outputs = new List<VideoDto>();
+            foreach (var video in videos)
+            {
+                var output = ObjectMapper.Map<VideoDto>(video);
+                if (video.ThumbnailDocument != null)
+                {
+                    output.ThumbnailUrl = await _documentsDomainService.GetFileUrlAsync(video.ThumbnailDocument);
+                }
+                outputs.Add(output);
+            }
 
             return new PagedResultDto<VideoDto>()
             {
                 TotalCount = totalCount,
-                Items = videos,
+                Items = outputs,
             };
         }
 

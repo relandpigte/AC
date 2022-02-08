@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
@@ -39,14 +40,25 @@ namespace Academically.Services.Articles
             var totalCount = await query.CountAsync();
             var articles = await query.OrderBy(e => e.Name)
                 .PageBy(input)
+                .Include(e => e.ThumbnailDocument)
                 .Include(e => e.Children)
-                .Select(e => ObjectMapper.Map<ArticleDto>(e))
                 .ToListAsync();
+
+            var outputs = new List<ArticleDto>();
+            foreach (var article in articles)
+            {
+                var output = ObjectMapper.Map<ArticleDto>(article);
+                if (article.ThumbnailDocument != null)
+                {
+                    output.ThumbnailDocumentUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocument);
+                }
+                outputs.Add(output);
+            }
 
             return new PagedResultDto<ArticleDto>()
             {
                 TotalCount = totalCount,
-                Items = articles,
+                Items = outputs,
             };
         }
 
@@ -58,15 +70,26 @@ namespace Academically.Services.Articles
                     || e.Description.ToLower().Contains(input.SearchFilter.ToLower()))
                 .WhereIf(input.StausFilter.HasValue, e => e.Status == input.StausFilter.Value);
             var totalCount = await query.CountAsync();
-            var videos = await query.OrderBy(e => e.Name)
+            var articles = await query.OrderBy(e => e.Name)
                 .PageBy(input)
-                .Select(e => ObjectMapper.Map<ArticleDto>(e))
+                .Include(e => e.ThumbnailDocument)
                 .ToListAsync();
+
+            var outputs = new List<ArticleDto>();
+            foreach (var article in articles)
+            {
+                var output = ObjectMapper.Map<ArticleDto>(article);
+                if (article.ThumbnailDocument != null)
+                {
+                    output.ThumbnailDocumentUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocument);
+                }
+                outputs.Add(output);
+            }
 
             return new PagedResultDto<ArticleDto>()
             {
                 TotalCount = totalCount,
-                Items = videos,
+                Items = outputs,
             };
         }
 
