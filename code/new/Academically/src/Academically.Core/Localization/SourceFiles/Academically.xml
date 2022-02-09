@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+	<text name="BlankTemplateDescription">You are starting from scratch</text>
 	<text name="Events">Events</text>
 	<text name="AvailableImmediately">Available immediately</text>
 	<text name="Immediate">Immediate</text>

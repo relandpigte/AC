@@ -120,13 +120,14 @@ export abstract class BaseMenu extends AppComponentBase {
   protected isMenuItemVisible(item: MenuItem): boolean {
     if (item.children && item.children.length > 0) {
       let isGranted = true;
+      let notGrantedCount = 0;
       item.children.forEach(child => {
         isGranted = this.isMenuItemVisible(child);
         if (!isGranted) {
-          return false;
+          notGrantedCount++;
         }
       });
-      return isGranted;
+      return notGrantedCount !== item.children.length;
     } else {
       if (!item.permissionName) {
         return true;

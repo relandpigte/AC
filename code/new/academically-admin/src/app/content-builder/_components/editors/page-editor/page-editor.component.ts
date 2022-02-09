@@ -16,6 +16,7 @@ export class PageEditorComponent extends AppComponentBase implements OnInit, OnD
   @Output() moveUp = new EventEmitter();
   @Input() page: PageContent;
   dragulaGroup = 'COMPONENTS';
+  isSinglePage = false;
 
   constructor(
     injector: Injector,
@@ -30,6 +31,9 @@ export class PageEditorComponent extends AppComponentBase implements OnInit, OnD
   }
 
   ngOnInit(): void {
+    this._pageBuilderService.singlePageOnly$.subscribe(response => {
+      this.isSinglePage = response;
+    });
   }
 
   ngOnDestroy(): void {

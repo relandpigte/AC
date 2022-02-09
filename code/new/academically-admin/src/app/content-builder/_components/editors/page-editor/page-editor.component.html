@@ -6,7 +6,7 @@
           {{ page.name }}
         </h4>
       </div>
-      <div class="col-auto">
+      <div *ngIf="!isSinglePage" class="col-auto">
         <button (click)="onMoveUpClick()" class="btn btn-sm btn-outline-info">
           <i class="fe fe-corner-left-up"></i>
         </button>

@@ -9,7 +9,6 @@ import { AppComponentBase } from '@shared/app-component-base';
 export class TemplateComponent extends AppComponentBase implements OnInit {
   @Output() modalClose = new EventEmitter();
   @Output() selectTemplate = new EventEmitter();
-  isTemplateSelected = false;
 
   constructor(
     injector: Injector,
@@ -21,14 +20,10 @@ export class TemplateComponent extends AppComponentBase implements OnInit {
   }
 
   onTemplateSelected(): void {
-    this.isTemplateSelected = !this.isTemplateSelected;
+    this.selectTemplate.emit();
   }
 
   onCancelClick(): void {
     this.modalClose.emit();
-  }
-
-  onNextClick(): void {
-    this.selectTemplate.emit();
   }
 }

@@ -10,6 +10,7 @@ namespace Academically.Services.Articles
 	{
 		Task<PagedResultDto<ArticleDto>> GetAll(PagedArticleResultRequestDto input);
 		Task<PagedResultDto<ArticleDto>> GetAllForSeries(PagedSeriesArticleResultRequestDto input);
+		Task<PagedResultDto<ArticleDto>> GetAllForHome(PagedResultRequestDto input);
 		Task<ArticleDto> Get(Guid id);
 		Task<ArticleDto> Create(ArticleDto input);
 		Task<ArticleDto> UpdateDetails(UpdateArticleDetailsDto input);

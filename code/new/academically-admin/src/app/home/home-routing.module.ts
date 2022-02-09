@@ -34,6 +34,34 @@ import { HomeComponent } from './home.component';
                     (m) => m.CoursesModule
                   ),
               },
+              {
+                path: 'videos',
+                loadChildren: () =>
+                  import('@app/home/videos/videos.module').then(
+                    (m) => m.VideosModule
+                  ),
+              },
+              {
+                path: 'articles',
+                loadChildren: () =>
+                  import('@app/home/articles/articles.module').then(
+                    (m) => m.ArticlesModule
+                  ),
+              },
+              {
+                path: 'projects',
+                loadChildren: () =>
+                  import('@app/home/projects/projects.module').then(
+                    (m) => m.ProjectsModule
+                  ),
+              },
+              {
+                path: 'events',
+                loadChildren: () =>
+                  import('@app/home/events/events.module').then(
+                    (m) => m.EventsModule
+                  ),
+              },
               { path: '', redirectTo: 'home' },
             ]
           },

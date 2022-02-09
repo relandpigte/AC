@@ -10,11 +10,13 @@ export class PageBuilderService {
   public navigateUp$: Observable<Content>;
   public remove$: Observable<Content>;
   public previewOnly$: Observable<boolean>;
+  public singlePageOnly$: Observable<boolean>;
 
   private contentSubject: BehaviorSubject<Content>;
   private navigateUpSubject: BehaviorSubject<Content>;
   private removeSubject: BehaviorSubject<Content>;
   private previewOnlySubject: BehaviorSubject<boolean>;
+  private singlePageOnlySubject: BehaviorSubject<boolean>;
 
   constructor() {
     this.contentSubject = new BehaviorSubject<Content>(undefined);
@@ -28,6 +30,9 @@ export class PageBuilderService {
 
     this.previewOnlySubject = new BehaviorSubject<boolean>(false);
     this.previewOnly$ = this.previewOnlySubject.asObservable();
+
+    this.singlePageOnlySubject = new BehaviorSubject<boolean>(false);
+    this.singlePageOnly$ = this.singlePageOnlySubject.asObservable();
   }
 
   public set content(value: Content) {
@@ -44,5 +49,9 @@ export class PageBuilderService {
 
   public set previewOnly(value: boolean) {
     this.previewOnlySubject.next(value);
+  }
+
+  public set singlePageOnly(value: boolean) {
+    this.singlePageOnlySubject.next(value);
   }
 }

@@ -1,19 +1,30 @@
 <div class="modal-card card">
   <abp-modal-header [title]="'ChooseACourseTemplate' | localize" (onCloseClick)="onCancelClick()">
   </abp-modal-header>
-  <div class="card-body">
-    <button [class.btn-primary]="isTemplateSelected" [class.btn-white]="!isTemplateSelected" class="btn blank-template"
-      (click)="onTemplateSelected()">
-      <i class="fe fe-file"></i>
-      <p>{{ 'Blank' | localize }}</p>
-    </button>
-  </div>
-  <div class="card-footer justify-content-between">
-    <button type="button" class="btn btn-white" (click)="onCancelClick()">
-      {{ 'Cancel' | localize }}
-    </button>
-    <button type="submit" class="btn btn-primary" [disabled]="!isTemplateSelected" (click)="onNextClick()">
-      {{ 'Next' | localize }}
-    </button>
+  <div class="card-body p-0">
+    <ul class="list-group">
+      <li class="list-group-item">
+        <a href="#!select-component" (click)="$event.preventDefault(); onTemplateSelected()">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <a href="#!student" (click)="$event.preventDefault();"
+                class="avatar avatar-lg d-flex justify-content-center align-items-center">
+                <i class="fe fe-file text-muted"></i>
+              </a>
+            </div>
+            <div class="col ml-n2">
+              <h4 class="mb-1">
+                <a href="#!student" (click)="$event.preventDefault();">
+                  {{ 'Blank' | localize }}
+                </a>
+              </h4>
+              <p class="card-text small text-muted mb-1">
+                {{ 'BlankTemplateDescription' | localize }}
+              </p>
+            </div>
+          </div>
+        </a>
+      </li>
+    </ul>
   </div>
 </div>

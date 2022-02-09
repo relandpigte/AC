@@ -70,6 +70,25 @@ namespace Academically.Services.Videos
             };
         }
 
+        public async Task<PagedResultDto<VideoDto>> GetAllForHome(PagedResultRequestDto input)
+        {
+            var query = _videosRepository.GetAll()
+                .Where(e => e.ParentId == null);
+            var totalCount = await query.CountAsync();
+            var videos = await query.OrderByDescending(e => e.CreationTime)
+                .PageBy(input)
+                .Include(e => e.ThumbnailDocument)
+                .Include(e => e.Children)
+                .Select(e => ObjectMapper.Map<VideoDto>(e))
+                .ToListAsync();
+
+            return new PagedResultDto<VideoDto>()
+            {
+                TotalCount = totalCount,
+                Items = videos,
+            };
+        }
+
         public async Task<VideoDto> Get(Guid id)
         {
             var video = await _videosRepository.GetAll()

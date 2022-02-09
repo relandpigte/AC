@@ -1,0 +1,49 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">Projects</h4>
+  </div>
+  <div class="table-responsive mb-0" [loader]="isTableLoading">
+    <table class="table table-sm table-nowrap card-table">
+      <thead>
+        <tr>
+          <th>{{ 'ProjectName' | localize }}</th>
+          <th class="text-center">{{ 'ServiceType' | localize }}</th>
+          <th class="text-center">{{ 'Sessions' | localize }}</th>
+          <th class="text-center">{{ 'DateCreated' | localize }}</th>
+          <th class="text-center">{{ 'Status' | localize }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container
+          *ngFor="let project of (projects | paginate: { id: 'projects', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })">
+          <tr>
+            <td>
+              {{ project.name }}
+            </td>
+            <td class="text-center">
+              {{ project.serviceNameLevel3 }}
+            </td>
+            <td class="text-center">
+              {{ project.totalSessions }}
+            </td>
+            <td width="10%" class="text-center">
+              {{ project.creationTime | date: 'dd/MM/yyyy' }}
+            </td>
+            <td class="text-center">
+              <div class="badge badge-soft-success">
+                Active
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <tr *ngIf="projects && !projects.length">
+          <td colspan="10">
+            <p class="m-0 text-muted text-center">{{ 'NoRecordsFound' | localize }}</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <abp-pagination-controls id="projects" (pageChange)="getDataPage($event)">
+    </abp-pagination-controls>
+  </div>
+</div>

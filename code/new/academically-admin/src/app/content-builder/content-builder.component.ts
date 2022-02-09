@@ -21,6 +21,7 @@ export class ContentBuilderComponent extends AppComponentBase implements OnInit,
       this.initializeContentManager(value);
     }
   }
+  @Input() isSinglePage = false;
   pageContent = new ContentDto();
   content: Content;
   lessonContent: LessonContent;
@@ -94,6 +95,7 @@ export class ContentBuilderComponent extends AppComponentBase implements OnInit,
   }
 
   private initializeContentManager(referenceId: string): void {
+    this._pageBuilderService.singlePageOnly = this.isSinglePage;
     this._contentsService.get(referenceId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
@@ -116,7 +118,11 @@ export class ContentBuilderComponent extends AppComponentBase implements OnInit,
           if (!this.lessonContent || !this.lessonContent.pages || !this.lessonContent.pages.length) {
             this.setDefaultContents();
           } else {
-            this._pageBuilderService.content = this.lessonContent;
+            if (this.isSinglePage) {
+              this._pageBuilderService.content = this.lessonContent.pages[0];
+            } else {
+              this._pageBuilderService.content = this.lessonContent;
+            }
           }
         }
 
@@ -130,8 +136,16 @@ export class ContentBuilderComponent extends AppComponentBase implements OnInit,
   }
 
   private setDefaultContents(): void {
-    this.lessonContent = new LessonContent();
-    this._pageBuilderService.content = this.lessonContent;
+    if (this.isSinglePage) {
+      this.lessonContent = new LessonContent();
+      const defaultPage = new PageContent();
+      defaultPage.name = 'Components';
+      this.lessonContent.pages.push(defaultPage);
+      this._pageBuilderService.content = defaultPage;
+    } else {
+      this.lessonContent = new LessonContent();
+      this._pageBuilderService.content = this.lessonContent;
+    }
   }
 
   private initAutoSave(): void {

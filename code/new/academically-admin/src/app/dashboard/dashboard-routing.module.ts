@@ -48,6 +48,7 @@ import { DashboardComponent } from './dashboard.component';
                 (m) => m.EventsModule
               ),
           },
+          { path: '', redirectTo: 'overview' },
         ],
       }
     ]),

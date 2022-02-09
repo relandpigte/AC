@@ -110,6 +110,23 @@ namespace Academically.Services.Projects
             return new PagedResultDto<ProjectDto>(totalCount, projects);
         }
 
+        public async Task<PagedResultDto<ProjectDto>> GetAllFormHome(PagedResultRequestDto input)
+        {
+            var query = _projectsRepository.GetAll();
+            var totalCount = await query.CountAsync();
+            var projects = await query.OrderByDescending(e => e.CreationTime)
+                .Include(e => e.CreatorUser)
+                .PageBy(input)
+                .Select(e => ObjectMapper.Map<ProjectDto>(e))
+                .ToListAsync();
+
+            return new PagedResultDto<ProjectDto>()
+            {
+                TotalCount = totalCount,
+                Items = projects,
+            };
+        }
+
         public async Task<IEnumerable<string>> GetAcademicLevels()
         {
             return await Task.FromResult(new List<string>()
