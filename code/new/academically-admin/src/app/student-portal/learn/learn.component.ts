@@ -20,6 +20,7 @@ export class LearnComponent extends AppComponentBase implements OnInit {
   currentSectionIndex = 0;
   percentage = 0;
   hasBeenProgressed = false;
+  isWriteReviewShown = false;
 
   constructor(
     injector: Injector,
@@ -35,12 +36,14 @@ export class LearnComponent extends AppComponentBase implements OnInit {
         this.courseId = paramMap.get('course-id');
       }
     });
-    this._studentPortalService.percentage$.subscribe(percentage => {
-      this.percentage = percentage;
-      if (this.hasBeenProgressed && percentage >= 100) {
-        this.showReviewModal();
-      }
-    });
+    this._studentPortalService.percentage$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(percentage => {
+        this.percentage = percentage;
+        if (this.hasBeenProgressed && !this.isWriteReviewShown && percentage >= 100) {
+          this.showReviewModal();
+        }
+      });
   }
 
   ngOnInit(): void {
@@ -97,6 +100,7 @@ export class LearnComponent extends AppComponentBase implements OnInit {
   }
 
   private showReviewModal(): void {
+    this.isWriteReviewShown = true;
     const modalSettings = this.defaultModalSettings;
     modalSettings.class = 'modal-lg';
     modalSettings.initialState = {

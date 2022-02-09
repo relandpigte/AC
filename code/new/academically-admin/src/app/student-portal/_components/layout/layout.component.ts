@@ -35,9 +35,11 @@ export class LayoutComponent extends AppComponentBase implements OnInit {
         this.getStudentCourseSections();
       }
     });
-    this._studentPortalService.percentage$.subscribe(percentage => {
-      this.percentage = percentage;
-    });
+    this._studentPortalService.percentage$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(percentage => {
+        this.percentage = percentage;
+      });
     this._studentPortalService.sectionFinished$.subscribe(id => {
       if (id && this.studentCourseSections.length) {
         this.studentCourseSections.find(e => e.id === id).status = StudentCourseSectionStatus.Finished;

@@ -1,7 +1,7 @@
 import { Component, OnInit, Injector, Input } from '@angular/core';
 import { PagedListingComponentBase, PagedAndSortedRequestDto } from '@shared/paged-listing-component-base';
 import { VideoDto, VideosServiceProxy, VideoDtoPagedResultDto, VideoStatus, VideoType } from '@shared/service-proxies/service-proxies';
-import { finalize } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { VideoService } from '@app/videos/_services/video.service';
 import * as _ from 'lodash';
 import { UploadService } from '@app/_shared/services/upload.service';
@@ -74,5 +74,22 @@ export class TeachingComponent extends PagedListingComponentBase<VideoDto> imple
         });
         this.showPaging(result, pageNumber);
       });
+  }
+
+  onDeleteClick(id: string): void {
+    this.message.confirm(
+      this.l('DeleteVideoConfirmationMessage'),
+      undefined,
+      (result: boolean) => {
+        if (result) {
+          this._videosService.delete(id)
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe(() => {
+              this.notify.success(this.l('SuccessfullyDeleted'));
+              this.refresh();
+            })
+        }
+      }
+    );
   }
 }

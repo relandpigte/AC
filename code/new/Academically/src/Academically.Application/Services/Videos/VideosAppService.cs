@@ -144,6 +144,18 @@ namespace Academically.Services.Videos
             video.Status = status;
             await _videosRepository.UpdateAsync(video);
         }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var children = await _videosRepository.GetAll()
+                .Where(e => e.ParentId == id)
+                .ToListAsync();
+            foreach (var child in children)
+            {
+                await _videosRepository.DeleteAsync(child.Id);
+            }
+            await _videosRepository.DeleteAsync(id);
+        }
     }
 }
 

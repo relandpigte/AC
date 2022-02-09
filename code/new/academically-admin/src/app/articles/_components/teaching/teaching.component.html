@@ -159,8 +159,17 @@
             </span>
           </td>
           <td class="table-action">
-            <button class="btn btn-sm btn-white">
-              {{ 'Edit' | localize }}
+            <button *ngIf="article.type === ArticleType.SingleArticle" [routerLink]="[article.id]"
+              class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+              <span class="fe fe-edit-2"></span>
+            </button>
+            <button *ngIf="article.type === ArticleType.ArticleSeries" [routerLink]="['article-series', article.id]"
+              class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+              <span class="fe fe-edit-2"></span>
+            </button>
+            <button type="button" class="btn btn-outline-danger btn-sm btn-rounded-circle mr-1"
+              (click)="onDeleteClick(article.id)">
+              <span class="fe fe-trash-2"></span>
             </button>
           </td>
         </tr>

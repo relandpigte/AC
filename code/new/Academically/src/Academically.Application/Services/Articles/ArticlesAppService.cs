@@ -130,6 +130,18 @@ namespace Academically.Services.Articles
             article.Status = status;
             await _articlesRepository.UpdateAsync(article);
         }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var children = await _articlesRepository.GetAll()
+                .Where(e => e.ParentId == id)
+                .ToListAsync();
+            foreach (var child in children)
+            {
+                await _articlesRepository.DeleteAsync(child.Id);
+            }
+            await _articlesRepository.DeleteAsync(id);
+        }
     }
 }
 

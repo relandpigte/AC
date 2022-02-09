@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+	<text name="DeleteArticleConfirmationMessage">Are you sure you want to delete this article?</text>
+	<text name="DeleteVideoConfirmationMessage">Are you sure you want to delete this video?</text>
 	<text name="BlankTemplateDescription">You are starting from scratch</text>
 	<text name="Events">Events</text>
 	<text name="AvailableImmediately">Available immediately</text>

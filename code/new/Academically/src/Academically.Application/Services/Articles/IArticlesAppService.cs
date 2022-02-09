@@ -16,6 +16,7 @@ namespace Academically.Services.Articles
 		Task<ArticleDto> UpdateDetails(UpdateArticleDetailsDto input);
 		Task<ArticleDto> UpdateSettings(UpdateArticleSettingsDto input);
 		Task UpdateStatusAsync(Guid id, ArticleStatus status);
+		Task DeleteAsync(Guid id);
 	}
 }
 

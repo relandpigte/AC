@@ -17,6 +17,7 @@ namespace Academically.Services.Videos
 		Task<VideoDto> UpdateDetails(UpdateVideoDetailsDto input);
 		Task<VideoDto> UpdateSettings(UpdateVideoSettingsDto input);
 		Task UpdateStatusAsync(Guid id, VideoStatus status);
+		Task DeleteAsync(Guid id);
 	}
 }
 
