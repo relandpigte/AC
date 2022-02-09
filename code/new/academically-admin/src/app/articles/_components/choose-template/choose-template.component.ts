@@ -32,10 +32,6 @@ export class ChooseTemplateComponent implements OnInit {
   }
 
   onTemplateSelect(template: ArticleTemplate): void {
-    if (template.type !== ArticleType.SingleArticle) {
-      return;
-    }
-
     this.selectTemplate.emit(template);
     this._modal.hide();
   }

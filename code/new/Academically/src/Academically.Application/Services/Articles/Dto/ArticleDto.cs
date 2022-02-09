@@ -25,11 +25,10 @@ namespace Academically.Services.Articles.Dto
 		public string CustomUrl { get; set; }
 		public string Category { get; set; }
 		public string Categories { get; set; }
-
 		public decimal Price { get; set; } = 0;
 		public PricingType PricingType { get; set; }
-
-		public string ThumbnailUrl { get; set; }
+		public DelayType? DelayType { get; set; }
+		public string DelayValue { get; set; }
 
 		public ArticleDto Parent { get; set; }
 		public Document ThumbnailDocument { get; set; }

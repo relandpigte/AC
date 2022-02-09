@@ -5,6 +5,7 @@ import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
 import { ContentComponent } from './content.component';
+import { ContentBuilderModule } from '@app/content-builder/content-builder.module';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { ContentComponent } from './content.component';
     ContentRoutingModule,
     SharedModule,
     AppSharedModule,
+    ContentBuilderModule,
   ],
 })
 export class ContentModule { }

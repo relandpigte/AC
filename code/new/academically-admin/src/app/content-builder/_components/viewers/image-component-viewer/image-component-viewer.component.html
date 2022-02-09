@@ -1,0 +1,7 @@
+<ng-container *ngTemplateOutlet="imageTemplate; context: { url: getFileUrl(), test: component.test }"></ng-container>
+<ng-template #imageTemplate let-url="url" let-test="test">
+  <img *ngIf="url" class="image-preview" alt="preview" [src]="url" />
+  <p *ngIf="!url" class="py-2 m-0 text-center text-muted font-italic">
+    {{ 'ConfigureComponentInstructions' | localize }}
+  </p>
+</ng-template>

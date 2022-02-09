@@ -1,0 +1,60 @@
+<form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <abp-modal-header [title]="(model.id ? 'EditCustomLayout' : 'CreateCustomLayout') | localize"
+      (onCloseClick)="onCloseClick()">
+    </abp-modal-header>
+    <div class="card-body">
+
+      <div class="form-group required">
+        <label class="col-form-label" for="name">{{ 'Name' | localize }}</label>
+        <input type="text" class="form-control" name="name" id="name" required [(ngModel)]="model.name"
+          #nameModel="ngModel" #nameEl required />
+        <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group col-6 required">
+          <label class="col-form-label" for="top">{{ 'Top' | localize }}</label>
+          <div class="input-group">
+            <input type="number" class="form-control" name="top" id="top" required [(ngModel)]="model.top"
+              #topModel="ngModel" #topEl required />
+            <div class="input-group-append">
+              <span class="input-group-text">px</span>
+            </div>
+          </div>
+          <abp-validation-summary [control]="topModel" [controlEl]="topEl"></abp-validation-summary>
+        </div>
+
+        <div class="form-group col-6 required">
+          <label class="col-form-label" for="bottom">{{ 'Bottom' | localize }}</label>
+          <div class="input-group">
+            <input type="number" class="form-control" name="bottom" id="bottom" required [(ngModel)]="model.bottom"
+              #bottomModel="ngModel" #bottomEl required />
+            <div class="input-group-append">
+              <span class="input-group-text">px</span>
+            </div>
+          </div>
+          <abp-validation-summary [control]="bottomModel" [controlEl]="bottomEl"></abp-validation-summary>
+        </div>
+
+      </div>
+
+      <div class="form-group required">
+        <label class="col-form-label" for="width">{{ 'Width' | localize }}</label>
+        <div class="input-group">
+          <input type="number" class="form-control" name="width" id="width" required [(ngModel)]="model.width"
+            #widthModel="ngModel" #widthEl required />
+          <div class="input-group-append">
+            <span class="input-group-text">px</span>
+          </div>
+        </div>
+        <abp-validation-summary [control]="widthModel" [controlEl]="widthEl"></abp-validation-summary>
+      </div>
+
+    </div>
+    <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading"
+      [saveDisabled]="isLoading || !form.form.valid" (onCancelClick)="onCloseClick()">
+    </abp-modal-footer>
+  </div>
+</form>

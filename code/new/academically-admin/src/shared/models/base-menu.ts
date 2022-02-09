@@ -30,7 +30,14 @@ export abstract class BaseMenu extends AppComponentBase {
     return [
       // new MenuItem(this.l('Dashboard'), '/app/dashboard', 'fe fe-home', 'Pages.Dashboard'),
       new MenuItem(this.l('Home'), '/app/home', 'fe fe-home', 'Pages.Home'),
-      new MenuItem(this.l('Dashboard'), '/app/dashboard', 'fe fe-home'),
+      new MenuItem(this.l('Dashboard'), '', 'fe fe-home', 'Pages.Dashboard', [
+        new MenuItem(this.l('Overview'), '/app/dashboard/overview', 'fe fe-feather', 'Pages.Dashboard.Overview'),
+        new MenuItem(this.l('Coaching'), '/app/dashboard/coaching', 'fe fe-users', 'Pages.Dashboard.Coaching'),
+        new MenuItem(this.l('Courses'), '/app/dashboard/courses', 'fe fe-book', 'Pages.Dashboard.Courses'),
+        new MenuItem(this.l('Videos'), '/app/videos', 'fe fe-video', 'Pages.Videos'),
+        new MenuItem(this.l('Articles'), '/app/articles', 'fe fe-file-text', 'Pages.Articles'),
+        new MenuItem(this.l('Events'), '/app/dashboard/events', 'fe fe-watch', 'Pages.Dashboard.Events'),
+      ]),
       // new MenuItem(this.l('OverseasStudy'), '#', 'fe fe-globe'),
       // new MenuItem(this.l('Blog'), '#', 'fe fe-message-circle'),
       new MenuItem(this.l('AcademicSupport'), '', 'fe fe-book', 'Pages.Dashboard.Navigations.AcademicSupport', [
@@ -51,8 +58,6 @@ export abstract class BaseMenu extends AppComponentBase {
       ]),
       new MenuItem(this.l('SeeAllProjects'), '/app/projects/browse', 'fe fe-briefcase', 'Pages.Projects.Browse'),
       new MenuItem(this.l('Schedule'), '/app/calendar', 'fe fe-calendar'),
-      new MenuItem(this.l('Videos'), '/app/videos', 'fe fe-video', 'Pages.Videos'),
-      new MenuItem(this.l('Articles'), '/app/articles', 'fe fe-file-text', 'Pages.Articles'),
     ];
   }
 

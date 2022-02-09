@@ -1,0 +1,25 @@
+<nav class="navbar navbar-expand-lg navbar-light" id="topnav">
+  <div class="mx-4 w-100 d-flex justify-content-between align-items-center">
+    <a class="navbar-brand text-left pt-0 pb-3" href="javascript:;">
+      <div class="d-flex">
+        <div class="avatar avatar-4by3">
+          <img [src]="getCourseImageUrl(thumbnailUrl)" alt="..." class="avatar-img rounded">
+        </div>
+        <div class="navbar-brand-header ml-3 mr-n3">
+          <h6 class="header-pretitle">{{ 'Video' | localize }}</h6>
+          <h3 class="header-title">{{ model.name }}</h3>
+        </div>
+      </div>
+    </a>
+    <a (click)="$event.preventDefault(); onExitClick()" href="#!exit">
+      <b>{{ 'Exit' | localize }}</b>
+    </a>
+  </div>
+</nav>
+<div class="main-content">
+  <div class="video-container">
+    <video *ngIf="videoUrl" width="100%" height="100%" controls autoplay>
+      <source [src]="videoUrl">
+    </video>
+  </div>
+</div>

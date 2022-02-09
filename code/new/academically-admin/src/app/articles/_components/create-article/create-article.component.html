@@ -12,7 +12,7 @@
         <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
       </div>
     </div>
-    <abp-modal-footer [saveLabel]="'CreateVideo' | localize" [cancelLabel]="'Back' | localize"
+    <abp-modal-footer [saveLabel]="'CreateArticle' | localize" [cancelLabel]="'Close' | localize"
       [cancelDisabled]="isLoading" [saveDisabled]="!form.form.valid || isLoading || (model.name.trim()==='')"
       (onCancelClick)="onCancelClick()">
     </abp-modal-footer>

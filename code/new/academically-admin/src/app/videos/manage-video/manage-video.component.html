@@ -10,7 +10,19 @@
               <h1 class="header-title">{{ model.name }}</h1>
             </div>
             <div class="col-auto">
-
+              <div class="d-flex align-items-center justify-content-center">
+                <button [routerLink]="['/app/videos/preview', id]" class="btn btn-outline-primary">
+                  {{ 'PreviewVideo' | localize | titlecase }}
+                </button>
+                <button *ngIf="model.status === VideoStatus.Draft" (click)="onPublishClick()"
+                  class="btn btn-primary ml-2">
+                  {{ 'Publish' | localize | titlecase }}
+                </button>
+                <button *ngIf="model.status === VideoStatus.Published" (click)="onUnpublishClick()"
+                  class="btn btn-outline-success ml-2">
+                  {{ 'Draft' | localize | titlecase }}
+                </button>
+              </div>
             </div>
           </div>
           <div class="row align-items-center">

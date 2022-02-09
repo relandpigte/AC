@@ -61,6 +61,8 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.CourseAssignmentsServiceProxy,
         ApiServiceProxies.VideosServiceProxy,
         ApiServiceProxies.ArticlesServiceProxy,
+        ApiServiceProxies.ContentsServiceProxy,
+        ApiServiceProxies.ContentMarginsServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

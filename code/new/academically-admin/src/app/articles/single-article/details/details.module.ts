@@ -16,5 +16,8 @@ import { DetailsComponent } from './details.component';
     SharedModule,
     AppSharedModule,
   ],
+  exports: [
+    DetailsComponent,
+  ],
 })
 export class DetailsModule { }

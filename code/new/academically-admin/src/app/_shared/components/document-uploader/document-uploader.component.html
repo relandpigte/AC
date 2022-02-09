@@ -11,7 +11,7 @@
     class="document-input" type="file" name="DocumentUploader" id="DocumentUploader">
 </div>
 <ul *ngIf="(files && files.length > 0) || defaultFile" class="list-group mt-2 document-uploader-preview">
-  <li *ngIf="defaultFile" class="list-group-item">
+  <li *ngIf="defaultFile" class="list-group-item default-file">
     <div class="row align-items-center">
       <div *ngIf="previewImages" [class.col-12]="largeImagePreview" [class.col-auto]="!largeImagePreview"
         class="mr-n2 text-center">

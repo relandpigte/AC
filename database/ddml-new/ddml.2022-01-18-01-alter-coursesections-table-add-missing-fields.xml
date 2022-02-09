@@ -1,0 +1,76 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1642565660634-1">
+        <addColumn tableName="AcademicallyCourseSections">
+            <column name="Description" type="TEXT(65535)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642565660634-2">
+        <addColumn tableName="AcademicallyCourseSections">
+            <column name="Categories" type="TEXT(65535)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642565660634-3">
+        <addColumn tableName="AcademicallyCourseSections">
+            <column name="ImageDocumentId" type="CHAR(36 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642565660634-4">
+        <addColumn tableName="AcademicallyCourseSections">
+            <column name="ApproximateLessonDuration" type="VARCHAR(10 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642565660634-5">
+        <addColumn tableName="AcademicallyCourseSections">
+            <column name="DripType" type="INT(10)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642565660634-6">
+        <addColumn tableName="AcademicallyCourseSections">
+            <column name="DripValue" type="VARCHAR(45 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642565660634-7">
+        <addColumn tableName="AcademicallyCourseSections">
+            <column name="IsSendEmailEnabled" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642565660634-8">
+        <addColumn tableName="AcademicallyCourseSections">
+            <column name="EmailSubject" type="VARCHAR(100 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642565660634-9">
+        <addColumn tableName="AcademicallyCourseSections">
+            <column name="EmailMessage" type="TEXT(65535)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642565660634-10">
+        <addColumn tableName="AcademicallyCourseSections">
+            <column name="CommentSetting" type="INT(10)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642565660634-11">
+        <addColumn tableName="AcademicallyCourseSections">
+            <column name="IsCommentModerationEnabled" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642565660634-12">
+        <addColumn tableName="AcademicallyCourseSections">
+            <column name="IsStorePreviewEnabled" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642565660634-13">
+        <addColumn tableName="AcademicallyCourseSections">
+            <column name="PrerequisiteType" type="INT(10)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642565660634-14">
+        <createIndex indexName="FK_CourseSections_Documents_ImageDocumentId_idx" tableName="AcademicallyCourseSections">
+            <column name="ImageDocumentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1642565660634-15">
+        <addForeignKeyConstraint baseColumnNames="ImageDocumentId" baseTableName="AcademicallyCourseSections" constraintName="FK_CourseSections_Documents_ImageDocumentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallydocuments" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

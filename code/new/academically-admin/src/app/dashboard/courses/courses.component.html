@@ -1,29 +1,46 @@
-<ng-container *ngIf="isTutor else studentDashboardCourses">
-  <div class="row align-items-center mt-n4 mb-4">
-    <div class="col">
-      <ul class="nav nav-tabs nav-tabs-sm  nav-overflow">
-        <li class="nav-item">
-          <a class="nav-link active" id="teaching-tab" data-toggle="tab" href="#teaching" role="tab"
-            aria-controls="teaching" aria-selected="true">{{ 'Teaching' | localize }}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="learning-tab" data-toggle="tab" href="#learning" role="tab" aria-controls="learning"
-            aria-selected="false">{{ 'Learning' | localize }}</a>
-        </li>
-      </ul>
+<div class="container-fluid" [@routerTransition]>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ 'Dashboard' | localize }}</h6>
+              <h1 class="header-title">{{ 'Courses' | localize }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-container *ngIf="isTutor else studentDashboardCourses">
+        <div class="row align-items-center mt-n4 mb-4">
+          <div class="col">
+            <ul class="nav nav-tabs nav-tabs-sm  nav-overflow">
+              <li class="nav-item">
+                <a class="nav-link active" id="teaching-tab" data-toggle="tab" href="#teaching" role="tab"
+                  aria-controls="teaching" aria-selected="true">{{ 'Teaching' | localize }}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="learning-tab" data-toggle="tab" href="#learning" role="tab"
+                  aria-controls="learning" aria-selected="false">{{ 'Learning' | localize }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="teaching" role="tabpanel" aria-labelledby="teaching-tab">
+            <app-teaching></app-teaching>
+          </div>
+          <div class="tab-pane fade" id="learning" role="tabpanel" aria-labelledby="learning-tab">
+            <app-learning></app-learning>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #studentDashboardCourses>
+        <app-learning></app-learning>
+      </ng-template>
     </div>
   </div>
-
-  <div class="tab-content">
-    <div class="tab-pane fade show active" id="teaching" role="tabpanel" aria-labelledby="teaching-tab">
-      <app-teaching></app-teaching>
-    </div>
-    <div class="tab-pane fade" id="learning" role="tabpanel" aria-labelledby="learning-tab">
-      <app-learning></app-learning>
-    </div>
-  </div>
-</ng-container>
-
-<ng-template #studentDashboardCourses>
-  <app-learning></app-learning>
-</ng-template>
+</div>

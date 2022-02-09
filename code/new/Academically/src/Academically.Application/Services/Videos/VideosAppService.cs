@@ -1,16 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
-using Academically.Services.Documents.Dto;
 using Academically.Services.Videos.Dto;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Academically.Services.Videos
 {
@@ -39,6 +37,7 @@ namespace Academically.Services.Videos
             var totalCount = await query.CountAsync();
             var videos = await query.OrderBy(e => e.Name)
                 .PageBy(input)
+                .Include(e => e.ThumbnailDocument)
                 .Include(e => e.Children)
                 .Select(e => ObjectMapper.Map<VideoDto>(e))
                 .ToListAsync();
@@ -60,6 +59,7 @@ namespace Academically.Services.Videos
             var totalCount = await query.CountAsync();
             var videos = await query.OrderBy(e => e.Name)
                 .PageBy(input)
+                .Include(e => e.ThumbnailDocument)
                 .Select(e => ObjectMapper.Map<VideoDto>(e))
                 .ToListAsync();
 
@@ -73,23 +73,27 @@ namespace Academically.Services.Videos
         public async Task<VideoDto> Get(Guid id)
         {
             var video = await _videosRepository.GetAll()
+                .Where(e => e.Id == id)
                 .Include(e => e.Document)
                 .Include(e => e.ThumbnailDocument)
                 .Include(e => e.Parent)
-                .Where(e => e.Id == id)
+                .Select(e => ObjectMapper.Map<VideoDto>(e))
                 .FirstOrDefaultAsync();
-            var output = ObjectMapper.Map<VideoDto>(video);
-            if (video.Document != null)
-            {
-                output.VideoUrl = await _documentsDomainService.GetFileUrlAsync(video.Document);
-            }
 
-            if (video.ThumbnailDocument != null)
+            return video;
+        }
+
+        public async Task<GetDelayStatusDto> GetDelayStatus(Guid id)
+        {
+            var query = _videosRepository.GetAll()
+                .Where(e => e.ParentId == id)
+                .OrderBy(e => e.CreationTime);
+            var firstVideo = await query.FirstOrDefaultAsync();
+            return new GetDelayStatusDto()
             {
-                output.ThumbnailUrl = await _documentsDomainService.GetFileUrlAsync(video.ThumbnailDocument);
-            }
-            
-            return output;
+                IsFirstVideoPublished = firstVideo?.Status == VideoStatus.Published,
+                VideoCount = await query.CountAsync(),
+            };
         }
 
         public async Task<VideoDto> Create(VideoDto input)
@@ -99,55 +103,10 @@ namespace Academically.Services.Videos
             return input;
         }
 
-        public async Task<VideoDto> UpdateDocument([FromForm] UpdateVideoDto input)
-        {
-            long userId = AbpSession.UserId.Value;
-            var video = await _videosRepository.GetAsync(input.Id);
-            var previousVideoDocumentId = video.DocumentId;
-            var videoDocument = await _documentsDomainService.CreateAsync(userId, input.File, DocumentType.Video);
-            video.DocumentId = videoDocument.Id;
-
-            if (previousVideoDocumentId.HasValue)
-            {
-                await _documentsDomainService.DeleteAsync(previousVideoDocumentId.Value);
-            }
-
-            await _videosRepository.UpdateAsync(video);
-            var output = ObjectMapper.Map<VideoDto>(video);
-            output.VideoUrl = await _documentsDomainService.GetFileUrlAsync(videoDocument);
-            output.Document = ObjectMapper.Map<DocumentDto>(videoDocument);
-            return output;
-        }
-
-        public async Task RemoveDocument(Guid id)
-        {
-            var video = await _videosRepository.GetAsync(id);
-            if (video.DocumentId.HasValue)
-            {
-                var documentId = video.DocumentId.Value;
-                video.DocumentId = null;
-                await _videosRepository.UpdateAsync(video);
-                await _documentsDomainService.DeleteAsync(documentId);
-            }
-        }
-
-        public async Task<VideoDto> UpdateDetails([FromForm] UpdateVideoDetailsDto input)
+        public async Task<VideoDto> UpdateDetails(UpdateVideoDetailsDto input)
         {
             var video = await _videosRepository.GetAsync(input.Id);
             ObjectMapper.Map(input, video);
-
-            if (input.ThumbnailFile != null)
-            {
-                var oldDocumentId = video.ThumbnailDocumentId;
-                var videoThumbnailDocument = await _documentsDomainService.CreateAsync(AbpSession.UserId.Value, input.ThumbnailFile, DocumentType.VideoThumbnail);
-                video.ThumbnailDocumentId = videoThumbnailDocument.Id;
-
-                if (oldDocumentId.HasValue)
-                {
-                    await _documentsDomainService.DeleteAsync(oldDocumentId.Value);
-                }
-            }
-
             await _videosRepository.UpdateAsync(video);
             return ObjectMapper.Map<VideoDto>(video);
         }
@@ -155,14 +114,16 @@ namespace Academically.Services.Videos
         public async Task<VideoDto> UpdateSettings(UpdateVideoSettingsDto input)
         {
             var video = await _videosRepository.GetAsync(input.Id);
-
-            video.IsVisible = input.IsVisible;
-            video.CustomUrl = input.CustomUrl;
-            video.CommentSetting = input.CommentSetting;
-            video.CommentModeration = input.CommentModeration;
-
+            ObjectMapper.Map(input, video);
             await _videosRepository.UpdateAsync(video);
             return ObjectMapper.Map<VideoDto>(video);
+        }
+
+        public async Task UpdateStatusAsync(Guid id, VideoStatus status)
+        {
+            var video = await _videosRepository.GetAsync(id);
+            video.Status = status;
+            await _videosRepository.UpdateAsync(video);
         }
     }
 }

@@ -41,6 +41,36 @@ import { VideosComponent } from './videos.component';
           },
         ],
       },
+      {
+        path: 'preview',
+        data: { permission: 'Pages.Videos' },
+        canActivate: [AppRouteGuard],
+        canActivateChild: [AppRouteGuard],
+        children: [
+          {
+            path: ':id',
+            loadChildren: () =>
+              import('@app/videos/preview/preview.module').then(
+                (m) => m.PreviewModule
+              ),
+          },
+        ],
+      },
+      {
+        path: 'tutor-portal',
+        data: { permission: 'Pages.Videos' },
+        canActivate: [AppRouteGuard],
+        canActivateChild: [AppRouteGuard],
+        children: [
+          {
+            path: ':id',
+            loadChildren: () =>
+              import('@app/videos/tutor-portal/tutor-portal.module').then(
+                (m) => m.TutorPortalModule
+              ),
+          },
+        ],
+      },
     ]),
   ],
   exports: [

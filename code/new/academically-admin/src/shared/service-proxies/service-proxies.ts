@@ -564,6 +564,84 @@ export class ArticlesServiceProxy {
     }
 
     /**
+     * @param parentIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param stausFilter (optional) 0 = Draft
+    
+    1 = Published
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAllForSeries(parentIdFilter: string | undefined, searchFilter: string | undefined, stausFilter: ArticleStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Articles/GetAllForSeries?";
+        if (parentIdFilter === null)
+            throw new Error("The parameter 'parentIdFilter' cannot be null.");
+        else if (parentIdFilter !== undefined)
+            url_ += "ParentIdFilter=" + encodeURIComponent("" + parentIdFilter) + "&";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (stausFilter === null)
+            throw new Error("The parameter 'stausFilter' cannot be null.");
+        else if (stausFilter !== undefined)
+            url_ += "StausFilter=" + encodeURIComponent("" + stausFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllForSeries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllForSeries(<any>response_);
+                } catch (e) {
+                    return <Observable<ArticleDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ArticleDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllForSeries(response: HttpResponseBase): Observable<ArticleDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ArticleDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ArticleDtoPagedResultDto>(<any>null);
+    }
+
+    /**
      * @param id (optional) 
      * @return Success
      */
@@ -676,64 +754,21 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param id (optional) 
-     * @param thumbnailFile (optional) 
-     * @param name (optional) 
-     * @param description (optional) 
-     * @param thumbnailDocumentId (optional) 
-     * @param categories (optional) 
-     * @param languageId (optional) 
-     * @param price (optional) 
-     * @param pricingType (optional) 
+     * @param body (optional) 
      * @return Success
      */
-    updateDetails(id: string | undefined, thumbnailFile: FileParameter | undefined, name: string | undefined, description: string | undefined, thumbnailDocumentId: string | undefined, categories: string | undefined, languageId: string | undefined, price: number | undefined, pricingType: PricingType | undefined): Observable<ArticleDto> {
+    updateDetails(body: UpdateArticleDetailsDto | undefined): Observable<ArticleDto> {
         let url_ = this.baseUrl + "/api/services/app/Articles/UpdateDetails";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = new FormData();
-        if (id === null || id === undefined) {
-            // do nothing
-        } else
-            content_.append("Id", id.toString());
-        if (thumbnailFile === null || thumbnailFile === undefined) {
-            // do nothing
-        } else
-            content_.append("ThumbnailFile", thumbnailFile.data, thumbnailFile.fileName ? thumbnailFile.fileName : "ThumbnailFile");
-        if (name === null || name === undefined) {
-            // do nothing
-        } else
-            content_.append("Name", name.toString());
-        if (description === null || description === undefined) {
-            // do nothing
-        } else
-            content_.append("Description", description.toString());
-        if (thumbnailDocumentId === null || thumbnailDocumentId === undefined) {
-            // do nothing
-        } else
-            content_.append("ThumbnailDocumentId", thumbnailDocumentId.toString());
-        if (categories === null || categories === undefined) {
-            // do nothing
-        } else
-            content_.append("Categories", categories.toString());
-        if (languageId === null || languageId === undefined) {
-            // do nothing
-        } else
-            content_.append("LanguageId", languageId.toString());
-        if (price === null || price === undefined) {
-            // do nothing
-        } else
-            content_.append("Price", price.toString());
-        if (pricingType === null || pricingType === undefined) {
-            // do nothing
-        } else
-            content_.append("PricingType", pricingType.toString());
+        const content_ = JSON.stringify(body);
 
         let options_ : any = {
             body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
                 "Accept": "text/plain"
             })
         };
@@ -828,6 +863,63 @@ export class ArticlesServiceProxy {
             }));
         }
         return _observableOf<ArticleDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    updateStatus(id: string | undefined, body: ArticleStatus | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Articles/UpdateStatus?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateStatus(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateStatus(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateStatus(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -1807,6 +1899,416 @@ export class ConfigurationServiceProxy {
     }
 
     protected processChangeNotificationSettings(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
+export class ContentMarginsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    getAll(): Observable<ContentMarginDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/ContentMargins/GetAll";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<ContentMarginDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ContentMarginDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<ContentMarginDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ContentMarginDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ContentMarginDto[]>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<ContentMarginDto> {
+        let url_ = this.baseUrl + "/api/services/app/ContentMargins/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<ContentMarginDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ContentMarginDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<ContentMarginDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ContentMarginDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ContentMarginDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: ContentMarginDto | undefined): Observable<ContentMarginDto> {
+        let url_ = this.baseUrl + "/api/services/app/ContentMargins/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<ContentMarginDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ContentMarginDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<ContentMarginDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ContentMarginDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ContentMarginDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: ContentMarginDto | undefined): Observable<ContentMarginDto> {
+        let url_ = this.baseUrl + "/api/services/app/ContentMargins/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<ContentMarginDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ContentMarginDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<ContentMarginDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ContentMarginDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ContentMarginDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/ContentMargins/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
+export class ContentsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    get(referenceId: string | undefined): Observable<ContentDto> {
+        let url_ = this.baseUrl + "/api/services/app/Contents/Get?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<ContentDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ContentDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<ContentDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ContentDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ContentDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    save(body: ContentDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Contents/Save";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSave(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSave(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSave(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2811,14 +3313,14 @@ export class CoursesServiceProxy {
      * @param name (optional) 
      * @param subtitle (optional) 
      * @param description (optional) 
-     * @param price (optional) 
-     * @param currencyId (optional) 
+     * @param categories (optional) 
      * @param languageId (optional) 
-     * @param file (optional) 
+     * @param pricingType (optional) 
+     * @param imageDocumentFile (optional) 
      * @param id (optional) 
      * @return Success
      */
-    updateDetails(name: string | undefined, subtitle: string | undefined, description: string | undefined, price: number | undefined, currencyId: string | undefined, languageId: string | undefined, file: FileParameter | undefined, id: string | undefined): Observable<CourseDto> {
+    updateDetails(name: string | undefined, subtitle: string | undefined, description: string | undefined, categories: string | undefined, languageId: string | undefined, pricingType: PricingType | undefined, imageDocumentFile: FileParameter | undefined, id: string | undefined): Observable<CourseDto> {
         let url_ = this.baseUrl + "/api/services/app/Courses/UpdateDetails";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2835,22 +3337,22 @@ export class CoursesServiceProxy {
             // do nothing
         } else
             content_.append("Description", description.toString());
-        if (price === null || price === undefined) {
+        if (categories === null || categories === undefined) {
             // do nothing
         } else
-            content_.append("Price", price.toString());
-        if (currencyId === null || currencyId === undefined) {
-            // do nothing
-        } else
-            content_.append("CurrencyId", currencyId.toString());
+            content_.append("Categories", categories.toString());
         if (languageId === null || languageId === undefined) {
             // do nothing
         } else
             content_.append("LanguageId", languageId.toString());
-        if (file === null || file === undefined) {
+        if (pricingType === null || pricingType === undefined) {
             // do nothing
         } else
-            content_.append("File", file.data, file.fileName ? file.fileName : "File");
+            content_.append("PricingType", pricingType.toString());
+        if (imageDocumentFile === null || imageDocumentFile === undefined) {
+            // do nothing
+        } else
+            content_.append("ImageDocumentFile", imageDocumentFile.data, imageDocumentFile.fileName ? imageDocumentFile.fileName : "ImageDocumentFile");
         if (id === null || id === undefined) {
             // do nothing
         } else
@@ -3721,6 +4223,146 @@ export class CourseSectionsServiceProxy {
         }
         return _observableOf<void>(<any>null);
     }
+
+    /**
+     * @param name (optional) 
+     * @param description (optional) 
+     * @param categories (optional) 
+     * @param approximateLessonDuration (optional) 
+     * @param imageDocumentFile (optional) 
+     * @param id (optional) 
+     * @return Success
+     */
+    updateDetails(name: string | undefined, description: string | undefined, categories: string | undefined, approximateLessonDuration: string | undefined, imageDocumentFile: FileParameter | undefined, id: string | undefined): Observable<CourseSectionDto> {
+        let url_ = this.baseUrl + "/api/services/app/CourseSections/UpdateDetails";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (name === null || name === undefined) {
+            // do nothing
+        } else
+            content_.append("Name", name.toString());
+        if (description === null || description === undefined) {
+            // do nothing
+        } else
+            content_.append("Description", description.toString());
+        if (categories === null || categories === undefined) {
+            // do nothing
+        } else
+            content_.append("Categories", categories.toString());
+        if (approximateLessonDuration === null || approximateLessonDuration === undefined) {
+            // do nothing
+        } else
+            content_.append("ApproximateLessonDuration", approximateLessonDuration.toString());
+        if (imageDocumentFile === null || imageDocumentFile === undefined) {
+            // do nothing
+        } else
+            content_.append("ImageDocumentFile", imageDocumentFile.data, imageDocumentFile.fileName ? imageDocumentFile.fileName : "ImageDocumentFile");
+        if (id === null || id === undefined) {
+            // do nothing
+        } else
+            content_.append("Id", id.toString());
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateDetails(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateDetails(<any>response_);
+                } catch (e) {
+                    return <Observable<CourseSectionDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CourseSectionDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateDetails(response: HttpResponseBase): Observable<CourseSectionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CourseSectionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CourseSectionDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateSettings(body: UpdateCourseSectionSettingsDto | undefined): Observable<CourseSectionDto> {
+        let url_ = this.baseUrl + "/api/services/app/CourseSections/UpdateSettings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateSettings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateSettings(<any>response_);
+                } catch (e) {
+                    return <Observable<CourseSectionDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CourseSectionDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateSettings(response: HttpResponseBase): Observable<CourseSectionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CourseSectionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CourseSectionDto>(<any>null);
+    }
 }
 
 @Injectable()
@@ -4381,6 +5023,180 @@ export class DocumentsServiceProxy {
             }));
         }
         return _observableOf<string>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<DocumentDto> {
+        let url_ = this.baseUrl + "/api/services/app/Documents/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<DocumentDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DocumentDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<DocumentDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DocumentDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DocumentDto>(<any>null);
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    create(referenceId: string | undefined, body: DocumentDto | undefined): Observable<DocumentDto> {
+        let url_ = this.baseUrl + "/api/services/app/Documents/Create?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<DocumentDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DocumentDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<DocumentDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DocumentDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DocumentDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined, referenceId: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Documents/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -15418,6 +16234,62 @@ export class VideosServiceProxy {
     }
 
     /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getDelayStatus(id: string | undefined): Observable<GetDelayStatusDto> {
+        let url_ = this.baseUrl + "/api/services/app/Videos/GetDelayStatus?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetDelayStatus(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetDelayStatus(<any>response_);
+                } catch (e) {
+                    return <Observable<GetDelayStatusDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetDelayStatusDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetDelayStatus(response: HttpResponseBase): Observable<GetDelayStatusDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetDelayStatusDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetDelayStatusDto>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -15474,180 +16346,21 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param id (optional) 
-     * @param file (optional) 
+     * @param body (optional) 
      * @return Success
      */
-    updateDocument(id: string | undefined, file: FileParameter | undefined): Observable<VideoDto> {
-        let url_ = this.baseUrl + "/api/services/app/Videos/UpdateDocument";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = new FormData();
-        if (id === null || id === undefined) {
-            // do nothing
-        } else
-            content_.append("Id", id.toString());
-        if (file === null || file === undefined) {
-            // do nothing
-        } else
-            content_.append("File", file.data, file.fileName ? file.fileName : "File");
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUpdateDocument(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUpdateDocument(<any>response_);
-                } catch (e) {
-                    return <Observable<VideoDto>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<VideoDto>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processUpdateDocument(response: HttpResponseBase): Observable<VideoDto> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = VideoDto.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<VideoDto>(<any>null);
-    }
-
-    /**
-     * @param id (optional) 
-     * @return Success
-     */
-    removeDocument(id: string | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/Videos/RemoveDocument?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRemoveDocument(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processRemoveDocument(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processRemoveDocument(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
-
-    /**
-     * @param id (optional) 
-     * @param thumbnailFile (optional) 
-     * @param name (optional) 
-     * @param description (optional) 
-     * @param thumbnailDocumentId (optional) 
-     * @param categories (optional) 
-     * @param languageId (optional) 
-     * @param price (optional) 
-     * @param pricingType (optional) 
-     * @return Success
-     */
-    updateDetails(id: string | undefined, thumbnailFile: FileParameter | undefined, name: string | undefined, description: string | undefined, thumbnailDocumentId: string | undefined, categories: string | undefined, languageId: string | undefined, price: number | undefined, pricingType: PricingType | undefined): Observable<VideoDto> {
+    updateDetails(body: UpdateVideoDetailsDto | undefined): Observable<VideoDto> {
         let url_ = this.baseUrl + "/api/services/app/Videos/UpdateDetails";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = new FormData();
-        if (id === null || id === undefined) {
-            // do nothing
-        } else
-            content_.append("Id", id.toString());
-        if (thumbnailFile === null || thumbnailFile === undefined) {
-            // do nothing
-        } else
-            content_.append("ThumbnailFile", thumbnailFile.data, thumbnailFile.fileName ? thumbnailFile.fileName : "ThumbnailFile");
-        if (name === null || name === undefined) {
-            // do nothing
-        } else
-            content_.append("Name", name.toString());
-        if (description === null || description === undefined) {
-            // do nothing
-        } else
-            content_.append("Description", description.toString());
-        if (thumbnailDocumentId === null || thumbnailDocumentId === undefined) {
-            // do nothing
-        } else
-            content_.append("ThumbnailDocumentId", thumbnailDocumentId.toString());
-        if (categories === null || categories === undefined) {
-            // do nothing
-        } else
-            content_.append("Categories", categories.toString());
-        if (languageId === null || languageId === undefined) {
-            // do nothing
-        } else
-            content_.append("LanguageId", languageId.toString());
-        if (price === null || price === undefined) {
-            // do nothing
-        } else
-            content_.append("Price", price.toString());
-        if (pricingType === null || pricingType === undefined) {
-            // do nothing
-        } else
-            content_.append("PricingType", pricingType.toString());
+        const content_ = JSON.stringify(body);
 
         let options_ : any = {
             body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
                 "Accept": "text/plain"
             })
         };
@@ -15742,6 +16455,63 @@ export class VideosServiceProxy {
             }));
         }
         return _observableOf<VideoDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    updateStatus(id: string | undefined, body: VideoStatus | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Videos/UpdateStatus?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateStatus(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateStatus(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateStatus(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -16070,7 +16840,8 @@ export class ArticleDto implements IArticleDto {
     categories: string | undefined;
     price: number;
     pricingType: PricingType;
-    thumbnailUrl: string | undefined;
+    delayType: DelayType;
+    delayValue: string | undefined;
     parent: ArticleDto;
     thumbnailDocument: Document;
     children: ArticleDto[] | undefined;
@@ -16102,7 +16873,8 @@ export class ArticleDto implements IArticleDto {
             this.categories = _data["categories"];
             this.price = _data["price"];
             this.pricingType = _data["pricingType"];
-            this.thumbnailUrl = _data["thumbnailUrl"];
+            this.delayType = _data["delayType"];
+            this.delayValue = _data["delayValue"];
             this.parent = _data["parent"] ? ArticleDto.fromJS(_data["parent"]) : <any>undefined;
             this.thumbnailDocument = _data["thumbnailDocument"] ? Document.fromJS(_data["thumbnailDocument"]) : <any>undefined;
             if (Array.isArray(_data["children"])) {
@@ -16138,7 +16910,8 @@ export class ArticleDto implements IArticleDto {
         data["categories"] = this.categories;
         data["price"] = this.price;
         data["pricingType"] = this.pricingType;
-        data["thumbnailUrl"] = this.thumbnailUrl;
+        data["delayType"] = this.delayType;
+        data["delayValue"] = this.delayValue;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
         if (Array.isArray(this.children)) {
@@ -16174,7 +16947,8 @@ export interface IArticleDto {
     categories: string | undefined;
     price: number;
     pricingType: PricingType;
-    thumbnailUrl: string | undefined;
+    delayType: DelayType;
+    delayValue: string | undefined;
     parent: ArticleDto;
     thumbnailDocument: Document;
     children: ArticleDto[] | undefined;
@@ -16982,11 +17756,11 @@ export interface IChangeUserLanguageDto {
     languageName: string;
 }
 
-/** 0 = Visible 1 = Hidden 2 = Locked */
+/** 1 = Visible 2 = Hidden 3 = Locked */
 export enum CommentSetting {
-    Visible = 0,
-    Hidden = 1,
-    Locked = 2,
+    Visible = 1,
+    Hidden = 2,
+    Locked = 3,
 }
 
 export class ConstructorInfo implements IConstructorInfo {
@@ -17162,6 +17936,112 @@ export interface IConstructorInfo {
     isSecuritySafeCritical: boolean;
     isSecurityTransparent: boolean;
     memberType: MemberTypes;
+}
+
+export class ContentDto implements IContentDto {
+    pageContent: string | undefined;
+    referenceId: string | undefined;
+
+    constructor(data?: IContentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.pageContent = _data["pageContent"];
+            this.referenceId = _data["referenceId"];
+        }
+    }
+
+    static fromJS(data: any): ContentDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ContentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["pageContent"] = this.pageContent;
+        data["referenceId"] = this.referenceId;
+        return data; 
+    }
+
+    clone(): ContentDto {
+        const json = this.toJSON();
+        let result = new ContentDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IContentDto {
+    pageContent: string | undefined;
+    referenceId: string | undefined;
+}
+
+export class ContentMarginDto implements IContentMarginDto {
+    id: string | undefined;
+    name: string | undefined;
+    top: number;
+    bottom: number;
+    width: number;
+
+    constructor(data?: IContentMarginDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.top = _data["top"];
+            this.bottom = _data["bottom"];
+            this.width = _data["width"];
+        }
+    }
+
+    static fromJS(data: any): ContentMarginDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ContentMarginDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["top"] = this.top;
+        data["bottom"] = this.bottom;
+        data["width"] = this.width;
+        return data; 
+    }
+
+    clone(): ContentMarginDto {
+        const json = this.toJSON();
+        let result = new ContentMarginDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IContentMarginDto {
+    id: string | undefined;
+    name: string | undefined;
+    top: number;
+    bottom: number;
+    width: number;
 }
 
 export class ConversationDocumentDto implements IConversationDocumentDto {
@@ -17680,6 +18560,8 @@ export class CourseDto implements ICourseDto {
     imageDocumentId: string | undefined;
     currencyId: string | undefined;
     languageId: string | undefined;
+    categories: string | undefined;
+    pricingType: PricingType;
     creationTime: moment.Moment;
     courseImageUrl: string | undefined;
     creatorUser: UserDto;
@@ -17709,6 +18591,8 @@ export class CourseDto implements ICourseDto {
             this.imageDocumentId = _data["imageDocumentId"];
             this.currencyId = _data["currencyId"];
             this.languageId = _data["languageId"];
+            this.categories = _data["categories"];
+            this.pricingType = _data["pricingType"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.courseImageUrl = _data["courseImageUrl"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
@@ -17742,6 +18626,8 @@ export class CourseDto implements ICourseDto {
         data["imageDocumentId"] = this.imageDocumentId;
         data["currencyId"] = this.currencyId;
         data["languageId"] = this.languageId;
+        data["categories"] = this.categories;
+        data["pricingType"] = this.pricingType;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["courseImageUrl"] = this.courseImageUrl;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
@@ -17775,6 +18661,8 @@ export interface ICourseDto {
     imageDocumentId: string | undefined;
     currencyId: string | undefined;
     languageId: string | undefined;
+    categories: string | undefined;
+    pricingType: PricingType;
     creationTime: moment.Moment;
     courseImageUrl: string | undefined;
     creatorUser: UserDto;
@@ -18042,6 +18930,13 @@ export interface ICourseRatingSummaryDto {
     totalKnowledgeRatings: number;
 }
 
+/** 1 = DaysFromEnrollmentDate 2 = DaysFromCourseStartDate 3 = SpecificDate */
+export enum CourseSectionDripType {
+    DaysFromEnrollmentDate = 1,
+    DaysFromCourseStartDate = 2,
+    SpecificDate = 3,
+}
+
 export class CourseSectionDto implements ICourseSectionDto {
     id: string;
     name: string | undefined;
@@ -18050,12 +18945,27 @@ export class CourseSectionDto implements ICourseSectionDto {
     displayOrder: number;
     courseId: string;
     parentId: string | undefined;
-    creationTime: moment.Moment;
-    myProperty: number;
     isVisible: boolean;
     isAssignmentEnabled: boolean;
-    children: CourseSectionDto[] | undefined;
+    description: string | undefined;
+    categories: string | undefined;
+    imageDocumentId: string | undefined;
+    approximateLessonDuration: string | undefined;
+    dripType: CourseSectionDripType;
+    dripValue: string | undefined;
+    isSendEmailEnabled: boolean | undefined;
+    emailSubject: string | undefined;
+    emailMessage: string | undefined;
+    commentSetting: CommentSetting;
+    isCommentModerationEnabled: boolean | undefined;
+    isStorePreviewEnabled: boolean | undefined;
+    isPrerequsite: boolean;
+    areAllPrerequisite: boolean;
+    creationTime: moment.Moment;
+    imageDocumentUrl: string | undefined;
     course: CourseDto;
+    imageDocument: DocumentDto;
+    children: CourseSectionDto[] | undefined;
 
     constructor(data?: ICourseSectionDto) {
         if (data) {
@@ -18075,16 +18985,31 @@ export class CourseSectionDto implements ICourseSectionDto {
             this.displayOrder = _data["displayOrder"];
             this.courseId = _data["courseId"];
             this.parentId = _data["parentId"];
-            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
-            this.myProperty = _data["myProperty"];
             this.isVisible = _data["isVisible"];
             this.isAssignmentEnabled = _data["isAssignmentEnabled"];
+            this.description = _data["description"];
+            this.categories = _data["categories"];
+            this.imageDocumentId = _data["imageDocumentId"];
+            this.approximateLessonDuration = _data["approximateLessonDuration"];
+            this.dripType = _data["dripType"];
+            this.dripValue = _data["dripValue"];
+            this.isSendEmailEnabled = _data["isSendEmailEnabled"];
+            this.emailSubject = _data["emailSubject"];
+            this.emailMessage = _data["emailMessage"];
+            this.commentSetting = _data["commentSetting"];
+            this.isCommentModerationEnabled = _data["isCommentModerationEnabled"];
+            this.isStorePreviewEnabled = _data["isStorePreviewEnabled"];
+            this.isPrerequsite = _data["isPrerequsite"];
+            this.areAllPrerequisite = _data["areAllPrerequisite"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.imageDocumentUrl = _data["imageDocumentUrl"];
+            this.course = _data["course"] ? CourseDto.fromJS(_data["course"]) : <any>undefined;
+            this.imageDocument = _data["imageDocument"] ? DocumentDto.fromJS(_data["imageDocument"]) : <any>undefined;
             if (Array.isArray(_data["children"])) {
                 this.children = [] as any;
                 for (let item of _data["children"])
                     this.children.push(CourseSectionDto.fromJS(item));
             }
-            this.course = _data["course"] ? CourseDto.fromJS(_data["course"]) : <any>undefined;
         }
     }
 
@@ -18104,16 +19029,31 @@ export class CourseSectionDto implements ICourseSectionDto {
         data["displayOrder"] = this.displayOrder;
         data["courseId"] = this.courseId;
         data["parentId"] = this.parentId;
-        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-        data["myProperty"] = this.myProperty;
         data["isVisible"] = this.isVisible;
         data["isAssignmentEnabled"] = this.isAssignmentEnabled;
+        data["description"] = this.description;
+        data["categories"] = this.categories;
+        data["imageDocumentId"] = this.imageDocumentId;
+        data["approximateLessonDuration"] = this.approximateLessonDuration;
+        data["dripType"] = this.dripType;
+        data["dripValue"] = this.dripValue;
+        data["isSendEmailEnabled"] = this.isSendEmailEnabled;
+        data["emailSubject"] = this.emailSubject;
+        data["emailMessage"] = this.emailMessage;
+        data["commentSetting"] = this.commentSetting;
+        data["isCommentModerationEnabled"] = this.isCommentModerationEnabled;
+        data["isStorePreviewEnabled"] = this.isStorePreviewEnabled;
+        data["isPrerequsite"] = this.isPrerequsite;
+        data["areAllPrerequisite"] = this.areAllPrerequisite;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["imageDocumentUrl"] = this.imageDocumentUrl;
+        data["course"] = this.course ? this.course.toJSON() : <any>undefined;
+        data["imageDocument"] = this.imageDocument ? this.imageDocument.toJSON() : <any>undefined;
         if (Array.isArray(this.children)) {
             data["children"] = [];
             for (let item of this.children)
                 data["children"].push(item.toJSON());
         }
-        data["course"] = this.course ? this.course.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -18133,12 +19073,27 @@ export interface ICourseSectionDto {
     displayOrder: number;
     courseId: string;
     parentId: string | undefined;
-    creationTime: moment.Moment;
-    myProperty: number;
     isVisible: boolean;
     isAssignmentEnabled: boolean;
-    children: CourseSectionDto[] | undefined;
+    description: string | undefined;
+    categories: string | undefined;
+    imageDocumentId: string | undefined;
+    approximateLessonDuration: string | undefined;
+    dripType: CourseSectionDripType;
+    dripValue: string | undefined;
+    isSendEmailEnabled: boolean | undefined;
+    emailSubject: string | undefined;
+    emailMessage: string | undefined;
+    commentSetting: CommentSetting;
+    isCommentModerationEnabled: boolean | undefined;
+    isStorePreviewEnabled: boolean | undefined;
+    isPrerequsite: boolean;
+    areAllPrerequisite: boolean;
+    creationTime: moment.Moment;
+    imageDocumentUrl: string | undefined;
     course: CourseDto;
+    imageDocument: DocumentDto;
+    children: CourseSectionDto[] | undefined;
 }
 
 export class CourseSectionPageDto implements ICourseSectionPageDto {
@@ -19315,6 +20270,12 @@ export interface IDeclineTutorVerificationStepDto {
     tutorVerificationStepId: string;
 }
 
+/** 1 = LastItem 2 = SpecificDate */
+export enum DelayType {
+    LastItem = 1,
+    SpecificDate = 2,
+}
+
 export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
     id: string;
     name: string | undefined;
@@ -19468,6 +20429,7 @@ export class DocumentDto implements IDocumentDto {
     fileType: string | undefined;
     documentType: DocumentType;
     size: number;
+    creatorUserId: number;
 
     constructor(data?: IDocumentDto) {
         if (data) {
@@ -19486,6 +20448,7 @@ export class DocumentDto implements IDocumentDto {
             this.fileType = _data["fileType"];
             this.documentType = _data["documentType"];
             this.size = _data["size"];
+            this.creatorUserId = _data["creatorUserId"];
         }
     }
 
@@ -19504,6 +20467,7 @@ export class DocumentDto implements IDocumentDto {
         data["fileType"] = this.fileType;
         data["documentType"] = this.documentType;
         data["size"] = this.size;
+        data["creatorUserId"] = this.creatorUserId;
         return data; 
     }
 
@@ -19522,9 +20486,10 @@ export interface IDocumentDto {
     fileType: string | undefined;
     documentType: DocumentType;
     size: number;
+    creatorUserId: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail 17 = CourseSectionImage */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -19543,6 +20508,7 @@ export enum DocumentType {
     Video = 14,
     VideoThumbnail = 15,
     ArticleThumbnail = 16,
+    CourseSectionImage = 17,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {
@@ -20313,6 +21279,53 @@ export interface IGetCurrentLoginInformationsOutput {
     application: ApplicationInfoDto;
     user: UserLoginInfoDto;
     tenant: TenantLoginInfoDto;
+}
+
+export class GetDelayStatusDto implements IGetDelayStatusDto {
+    isFirstVideoPublished: boolean;
+    videoCount: number;
+
+    constructor(data?: IGetDelayStatusDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isFirstVideoPublished = _data["isFirstVideoPublished"];
+            this.videoCount = _data["videoCount"];
+        }
+    }
+
+    static fromJS(data: any): GetDelayStatusDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetDelayStatusDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isFirstVideoPublished"] = this.isFirstVideoPublished;
+        data["videoCount"] = this.videoCount;
+        return data; 
+    }
+
+    clone(): GetDelayStatusDto {
+        const json = this.toJSON();
+        let result = new GetDelayStatusDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetDelayStatusDto {
+    isFirstVideoPublished: boolean;
+    videoCount: number;
 }
 
 export class GetRoleForEditOutput implements IGetRoleForEditOutput {
@@ -26284,12 +27297,81 @@ export interface IUpdateAddressDto {
     zipOrPostCode: string | undefined;
 }
 
+export class UpdateArticleDetailsDto implements IUpdateArticleDetailsDto {
+    id: string;
+    name: string | undefined;
+    description: string | undefined;
+    categories: string | undefined;
+    languageId: string | undefined;
+    pricingType: PricingType;
+    thumbnailDocumentId: string | undefined;
+
+    constructor(data?: IUpdateArticleDetailsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.categories = _data["categories"];
+            this.languageId = _data["languageId"];
+            this.pricingType = _data["pricingType"];
+            this.thumbnailDocumentId = _data["thumbnailDocumentId"];
+        }
+    }
+
+    static fromJS(data: any): UpdateArticleDetailsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateArticleDetailsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["categories"] = this.categories;
+        data["languageId"] = this.languageId;
+        data["pricingType"] = this.pricingType;
+        data["thumbnailDocumentId"] = this.thumbnailDocumentId;
+        return data; 
+    }
+
+    clone(): UpdateArticleDetailsDto {
+        const json = this.toJSON();
+        let result = new UpdateArticleDetailsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateArticleDetailsDto {
+    id: string;
+    name: string | undefined;
+    description: string | undefined;
+    categories: string | undefined;
+    languageId: string | undefined;
+    pricingType: PricingType;
+    thumbnailDocumentId: string | undefined;
+}
+
 export class UpdateArticleSettingsDto implements IUpdateArticleSettingsDto {
     id: string;
-    isVisible: boolean;
+    delayType: DelayType;
+    delayValue: string | undefined;
     commentSetting: CommentSetting;
     commentModeration: boolean;
     customUrl: string | undefined;
+    isVisible: boolean;
 
     constructor(data?: IUpdateArticleSettingsDto) {
         if (data) {
@@ -26303,10 +27385,12 @@ export class UpdateArticleSettingsDto implements IUpdateArticleSettingsDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.isVisible = _data["isVisible"];
+            this.delayType = _data["delayType"];
+            this.delayValue = _data["delayValue"];
             this.commentSetting = _data["commentSetting"];
             this.commentModeration = _data["commentModeration"];
             this.customUrl = _data["customUrl"];
+            this.isVisible = _data["isVisible"];
         }
     }
 
@@ -26320,10 +27404,12 @@ export class UpdateArticleSettingsDto implements IUpdateArticleSettingsDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["isVisible"] = this.isVisible;
+        data["delayType"] = this.delayType;
+        data["delayValue"] = this.delayValue;
         data["commentSetting"] = this.commentSetting;
         data["commentModeration"] = this.commentModeration;
         data["customUrl"] = this.customUrl;
+        data["isVisible"] = this.isVisible;
         return data; 
     }
 
@@ -26337,10 +27423,103 @@ export class UpdateArticleSettingsDto implements IUpdateArticleSettingsDto {
 
 export interface IUpdateArticleSettingsDto {
     id: string;
-    isVisible: boolean;
+    delayType: DelayType;
+    delayValue: string | undefined;
     commentSetting: CommentSetting;
     commentModeration: boolean;
     customUrl: string | undefined;
+    isVisible: boolean;
+}
+
+export class UpdateCourseSectionSettingsDto implements IUpdateCourseSectionSettingsDto {
+    id: string;
+    dripType: CourseSectionDripType;
+    dripValue: string | undefined;
+    isSendEmailEnabled: boolean | undefined;
+    emailSubject: string | undefined;
+    emailMessage: string | undefined;
+    isVisible: boolean;
+    commentSetting: CommentSetting;
+    isCommentModerationEnabled: boolean | undefined;
+    isStorePreviewEnabled: boolean | undefined;
+    isPrerequsite: boolean;
+    areAllPrerequisite: boolean;
+    isAssignmentEnabled: boolean;
+
+    constructor(data?: IUpdateCourseSectionSettingsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.dripType = _data["dripType"];
+            this.dripValue = _data["dripValue"];
+            this.isSendEmailEnabled = _data["isSendEmailEnabled"];
+            this.emailSubject = _data["emailSubject"];
+            this.emailMessage = _data["emailMessage"];
+            this.isVisible = _data["isVisible"];
+            this.commentSetting = _data["commentSetting"];
+            this.isCommentModerationEnabled = _data["isCommentModerationEnabled"];
+            this.isStorePreviewEnabled = _data["isStorePreviewEnabled"];
+            this.isPrerequsite = _data["isPrerequsite"];
+            this.areAllPrerequisite = _data["areAllPrerequisite"];
+            this.isAssignmentEnabled = _data["isAssignmentEnabled"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCourseSectionSettingsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCourseSectionSettingsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["dripType"] = this.dripType;
+        data["dripValue"] = this.dripValue;
+        data["isSendEmailEnabled"] = this.isSendEmailEnabled;
+        data["emailSubject"] = this.emailSubject;
+        data["emailMessage"] = this.emailMessage;
+        data["isVisible"] = this.isVisible;
+        data["commentSetting"] = this.commentSetting;
+        data["isCommentModerationEnabled"] = this.isCommentModerationEnabled;
+        data["isStorePreviewEnabled"] = this.isStorePreviewEnabled;
+        data["isPrerequsite"] = this.isPrerequsite;
+        data["areAllPrerequisite"] = this.areAllPrerequisite;
+        data["isAssignmentEnabled"] = this.isAssignmentEnabled;
+        return data; 
+    }
+
+    clone(): UpdateCourseSectionSettingsDto {
+        const json = this.toJSON();
+        let result = new UpdateCourseSectionSettingsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateCourseSectionSettingsDto {
+    id: string;
+    dripType: CourseSectionDripType;
+    dripValue: string | undefined;
+    isSendEmailEnabled: boolean | undefined;
+    emailSubject: string | undefined;
+    emailMessage: string | undefined;
+    isVisible: boolean;
+    commentSetting: CommentSetting;
+    isCommentModerationEnabled: boolean | undefined;
+    isStorePreviewEnabled: boolean | undefined;
+    isPrerequsite: boolean;
+    areAllPrerequisite: boolean;
+    isAssignmentEnabled: boolean;
 }
 
 export class UpdateCourseSettingsDto implements IUpdateCourseSettingsDto {
@@ -26465,12 +27644,85 @@ export interface IUpdateProjectDto {
     serviceNameLevel3: string | undefined;
 }
 
+export class UpdateVideoDetailsDto implements IUpdateVideoDetailsDto {
+    id: string;
+    name: string | undefined;
+    description: string | undefined;
+    thumbnailDocumentId: string | undefined;
+    categories: string | undefined;
+    languageId: string | undefined;
+    price: number;
+    pricingType: PricingType;
+
+    constructor(data?: IUpdateVideoDetailsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.thumbnailDocumentId = _data["thumbnailDocumentId"];
+            this.categories = _data["categories"];
+            this.languageId = _data["languageId"];
+            this.price = _data["price"];
+            this.pricingType = _data["pricingType"];
+        }
+    }
+
+    static fromJS(data: any): UpdateVideoDetailsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateVideoDetailsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["thumbnailDocumentId"] = this.thumbnailDocumentId;
+        data["categories"] = this.categories;
+        data["languageId"] = this.languageId;
+        data["price"] = this.price;
+        data["pricingType"] = this.pricingType;
+        return data; 
+    }
+
+    clone(): UpdateVideoDetailsDto {
+        const json = this.toJSON();
+        let result = new UpdateVideoDetailsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateVideoDetailsDto {
+    id: string;
+    name: string | undefined;
+    description: string | undefined;
+    thumbnailDocumentId: string | undefined;
+    categories: string | undefined;
+    languageId: string | undefined;
+    price: number;
+    pricingType: PricingType;
+}
+
 export class UpdateVideoSettingsDto implements IUpdateVideoSettingsDto {
     id: string;
-    isVisible: boolean;
+    delayType: VideoDelayType;
+    delayValue: string | undefined;
     commentSetting: CommentSetting;
     commentModeration: boolean;
     customUrl: string | undefined;
+    isVisible: boolean;
 
     constructor(data?: IUpdateVideoSettingsDto) {
         if (data) {
@@ -26484,10 +27736,12 @@ export class UpdateVideoSettingsDto implements IUpdateVideoSettingsDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.isVisible = _data["isVisible"];
+            this.delayType = _data["delayType"];
+            this.delayValue = _data["delayValue"];
             this.commentSetting = _data["commentSetting"];
             this.commentModeration = _data["commentModeration"];
             this.customUrl = _data["customUrl"];
+            this.isVisible = _data["isVisible"];
         }
     }
 
@@ -26501,10 +27755,12 @@ export class UpdateVideoSettingsDto implements IUpdateVideoSettingsDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["isVisible"] = this.isVisible;
+        data["delayType"] = this.delayType;
+        data["delayValue"] = this.delayValue;
         data["commentSetting"] = this.commentSetting;
         data["commentModeration"] = this.commentModeration;
         data["customUrl"] = this.customUrl;
+        data["isVisible"] = this.isVisible;
         return data; 
     }
 
@@ -26518,10 +27774,12 @@ export class UpdateVideoSettingsDto implements IUpdateVideoSettingsDto {
 
 export interface IUpdateVideoSettingsDto {
     id: string;
-    isVisible: boolean;
+    delayType: VideoDelayType;
+    delayValue: string | undefined;
     commentSetting: CommentSetting;
     commentModeration: boolean;
     customUrl: string | undefined;
+    isVisible: boolean;
 }
 
 export class UserAvailabilityDto implements IUserAvailabilityDto {
@@ -28273,6 +29531,13 @@ export interface IVerificationStatusDto {
     passportVerificationStatus: PassportVerificationStatus;
 }
 
+/** 1 = LastItem 2 = SpecificDate 3 = Immediate */
+export enum VideoDelayType {
+    LastItem = 1,
+    SpecificDate = 2,
+    Immediate = 3,
+}
+
 export class VideoDto implements IVideoDto {
     id: string;
     type: VideoType;
@@ -28291,8 +29556,8 @@ export class VideoDto implements IVideoDto {
     categories: string | undefined;
     price: number;
     pricingType: PricingType;
-    videoUrl: string | undefined;
-    thumbnailUrl: string | undefined;
+    delayType: VideoDelayType;
+    delayValue: string | undefined;
     parent: VideoDto;
     document: DocumentDto;
     thumbnailDocument: Document;
@@ -28326,8 +29591,8 @@ export class VideoDto implements IVideoDto {
             this.categories = _data["categories"];
             this.price = _data["price"];
             this.pricingType = _data["pricingType"];
-            this.videoUrl = _data["videoUrl"];
-            this.thumbnailUrl = _data["thumbnailUrl"];
+            this.delayType = _data["delayType"];
+            this.delayValue = _data["delayValue"];
             this.parent = _data["parent"] ? VideoDto.fromJS(_data["parent"]) : <any>undefined;
             this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
             this.thumbnailDocument = _data["thumbnailDocument"] ? Document.fromJS(_data["thumbnailDocument"]) : <any>undefined;
@@ -28365,8 +29630,8 @@ export class VideoDto implements IVideoDto {
         data["categories"] = this.categories;
         data["price"] = this.price;
         data["pricingType"] = this.pricingType;
-        data["videoUrl"] = this.videoUrl;
-        data["thumbnailUrl"] = this.thumbnailUrl;
+        data["delayType"] = this.delayType;
+        data["delayValue"] = this.delayValue;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
         data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
@@ -28404,8 +29669,8 @@ export interface IVideoDto {
     categories: string | undefined;
     price: number;
     pricingType: PricingType;
-    videoUrl: string | undefined;
-    thumbnailUrl: string | undefined;
+    delayType: VideoDelayType;
+    delayValue: string | undefined;
     parent: VideoDto;
     document: DocumentDto;
     thumbnailDocument: Document;

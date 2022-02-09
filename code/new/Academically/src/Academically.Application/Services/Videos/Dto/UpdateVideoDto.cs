@@ -6,7 +6,7 @@ namespace Academically.Services.Videos.Dto
 	public class UpdateVideoDto
 	{
         public Guid Id { get; set; }
-        public IFormFile File { get; set; }
-	}
+        public Guid? DocumentId { get; set; }
+    }
 }
 

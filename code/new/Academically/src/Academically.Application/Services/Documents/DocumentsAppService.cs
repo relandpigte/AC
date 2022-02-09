@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Academically.Domain.Entities;
 using Academically.Domain.Services.Documents;
+using Academically.Services.Documents.Dto;
 
 namespace Academically.Services.Documents
 {
@@ -29,6 +31,26 @@ namespace Academically.Services.Documents
             }
 
             return String.Empty;
+        }
+
+        public async Task<DocumentDto> GetAsync(Guid id)
+        {
+            var document = await _documentsDomainService.GetAsync(id);
+            return ObjectMapper.Map<DocumentDto>(document);
+        }
+
+        public async Task<DocumentDto> CreateAsync(DocumentDto input, Guid? referenceId)
+        {
+            input.CreatorUserId = AbpSession.UserId.Value;
+            var document = ObjectMapper.Map<Document>(input);
+            await _documentsDomainService.CreateAsync(document, referenceId);
+            input.Id = document.Id;
+            return input;
+        }
+
+        public async Task DeleteAsync(Guid id, Guid? referenceId)
+        {
+            await _documentsDomainService.DeleteReferenceAsync(id, referenceId);
         }
     }
 }

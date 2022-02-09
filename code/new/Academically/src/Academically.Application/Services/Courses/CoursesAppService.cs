@@ -74,11 +74,11 @@ namespace Academically.Services.Courses
             var course = await Repository.GetAsync(input.Id);
             ObjectMapper.Map(input, course);
 
-            if (input.File != null)
+            if (input.ImageDocumentFile != null)
             {
                 var oldDocumentId = course.ImageDocumentId;
-                var courseImageDocument = await _documentsDomainService.CreateAsync(AbpSession.UserId.Value, input.File, DocumentType.CourseImage);
-                course.ImageDocumentId = courseImageDocument.Id;
+                var document = await _documentsDomainService.CreateAsync(AbpSession.UserId.Value, input.ImageDocumentFile, DocumentType.CourseImage);
+                course.ImageDocumentId = document.Id;
 
                 if (oldDocumentId.HasValue)
                 {

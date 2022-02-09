@@ -1,7 +1,7 @@
 import { Component, OnInit, Injector } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { VideosServiceProxy, VideoDto } from '@shared/service-proxies/service-proxies';
+import { VideosServiceProxy, VideoDto, VideoStatus } from '@shared/service-proxies/service-proxies';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { VideoService } from '../_services/video.service';
@@ -15,6 +15,7 @@ import { VideoService } from '../_services/video.service';
 export class ManageVideoComponent extends AppComponentBase implements OnInit {
   id: string;
   model = new VideoDto();
+  VideoStatus = VideoStatus;
 
   constructor(
     injector: Injector,
@@ -31,15 +32,45 @@ export class ManageVideoComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+    this._videoService.videoCreated$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        this.model = response;
+      })
     this.getVideo();
+  }
+
+  onPublishClick(): void {
+    this.message.confirm(this.l('PublishVideoConfirmationMessage'), undefined, (result) => {
+      if (result) {
+        this._videosService.updateStatus(this.model.id, VideoStatus.Published)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.model.status = VideoStatus.Published;
+            this.l('SavedSuccessfully');
+          });
+      }
+    });
+  }
+
+  onUnpublishClick(): void {
+    this.message.confirm(this.l('UnpublishVideoConfirmationMessage'), undefined, (result) => {
+      if (result) {
+        this._videosService.updateStatus(this.model.id, VideoStatus.Draft)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.model.status = VideoStatus.Draft;
+            this.l('SavedSuccessfully');
+          });
+      }
+    });
   }
 
   private getVideo(): void {
     this._videosService.get(this.id)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
-        this.model = response;
-        this._videoService.videoCreated = this.model;
+        this._videoService.videoCreated = response;
       });
   }
 }

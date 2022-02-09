@@ -17,8 +17,36 @@ import { DashboardComponent } from './dashboard.component';
         canActivateChild: [AppRouteGuard],
         children: [
           {
-            path: '',
+            path: 'overview',
             component: DashboardComponent,
+          },
+          {
+            path: 'usage',
+            loadChildren: () =>
+              import('@app/dashboard/usage/usage.module').then(
+                (m) => m.UsageModule
+              ),
+          },
+          {
+            path: 'courses',
+            loadChildren: () =>
+              import('@app/dashboard/courses/courses.module').then(
+                (m) => m.CoursesModule
+              ),
+          },
+          {
+            path: 'coaching',
+            loadChildren: () =>
+              import('@app/dashboard/coaching/coaching.module').then(
+                (m) => m.CoachingModule
+              ),
+          },
+          {
+            path: 'events',
+            loadChildren: () =>
+              import('@app/dashboard/events/events.module').then(
+                (m) => m.EventsModule
+              ),
           },
         ],
       }

@@ -1,22 +1,20 @@
 import { Component, OnInit, Injector, ViewChild } from '@angular/core';
-import {
-  CoursesServiceProxy,
-  FileParameter,
-  CourseDto,
-  CurrenciesServiceProxy,
-  CurrencyDto,
-  SpokenLanguagesServiceProxy,
-  SpokenLanguageDto,
-} from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
+import { CourseDto, FileParameter, SpokenLanguageDto, SpokenLanguagesServiceProxy, PricingType, CoursesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { CourseService } from '@app/courses/_services/course.service';
-import { takeUntil, finalize, take } from 'rxjs/operators';
-import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { takeUntil, finalize } from 'rxjs/operators';
 
-enum PricingState {
-  Free,
-  Charged,
+
+enum EditField {
+  Name = 1,
+  Subtitle = 2,
+  Description = 3,
+  Categories = 4,
+  Image = 5,
+  Language = 6,
+  Pricing = 7,
 }
 
 @Component({
@@ -27,109 +25,108 @@ enum PricingState {
 export class DetailsComponent extends AppComponentBase implements OnInit {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
 
-  model = new CourseDto();
-  currencies: CurrencyDto[] = [];
-  languages: SpokenLanguageDto[] = [];
-  selectedCurrency: CurrencyDto = new CurrencyDto();
-  isLoading = false;
-  allowedImageExtensions = fileUploadConfiguration.allowedImageExtensions;
-  courseImage: FileParameter;
+  editField: EditField;
+  category: string;
+  categories: string[] = [];
+  courseImageDocument: FileParameter;
   defaultFile: DefaultFile;
-  PricingState = PricingState;
-  currenctPricingState = PricingState.Free;
+  languages: SpokenLanguageDto[] = [];
+
+  model = new CourseDto();
+  isLoading = false;
+  EditField = EditField;
+  allowedImageExtensions = fileUploadConfiguration.allowedImageExtensions;
+  PricingType = PricingType;
 
   constructor(
     injector: Injector,
     private _courseService: CourseService,
     private _coursesService: CoursesServiceProxy,
-    private _currenciesService: CurrenciesServiceProxy,
-    private _spokenLanguagesService: SpokenLanguagesServiceProxy
+    private _spokenLanguagesService: SpokenLanguagesServiceProxy,
   ) {
     super(injector);
   }
-
   ngOnInit(): void {
-    this._courseService.course$
-      .pipe(
-        takeUntil(this.destroyed$),
-        finalize(() => {
-          this.isLoading = false;
-        }),
-      )
-      .subscribe(course => {
-        this.model = course;
-        this.currenctPricingState = this.model.price > 0 ? PricingState.Charged : PricingState.Free;
-        if (course.imageDocument) {
-          if (!this.courseImage) {
-            this.defaultFile = new DefaultFile();
-            this.defaultFile.name = course.imageDocument.originalFileName;
-            this.defaultFile.url = course.courseImageUrl;
-            this.defaultFile.size = course.imageDocument.size;
-            this.documentUploader.defaultFile = this.defaultFile;
-          }
-        }
-      });
+    this.getLanguages();
 
-    this.documentUploader.filesChanged.subscribe((files: FileParameter[]) => {
-      if (files && files.length) {
-        this.courseImage = files[0];
-      } else {
-        this.courseImage = undefined;
+    this._courseService.course$.subscribe(course => {
+      if (course) {
+        this.model = course;
+        if (this.model.imageDocument) {
+          this.defaultFile = new DefaultFile();
+          this.defaultFile.name = this.model.imageDocument.originalFileName;
+          this.defaultFile.url = this.model.courseImageUrl;
+          this.defaultFile.size = this.model.imageDocument.size;
+          this.documentUploader.defaultFile = this.defaultFile;
+        }
+        if (this.model.categories && this.model.categories.trim()) {
+          this.categories = this.model.categories.split(',');
+        }
       }
     });
 
-    this.getCurrencies();
-    this.getLanguages();
+    this.documentUploader.filesChanged.subscribe((files: FileParameter[]) => {
+      if (files && files.length) {
+        this.courseImageDocument = files[0];
+      } else {
+        this.courseImageDocument = undefined;
+      }
+    });
   }
 
   onFormSubmit(): void {
     this.isLoading = true;
+    this.model.categories = this.categories.join(',');
+
     this._coursesService.updateDetails(
       this.model.name,
       this.model.subtitle,
       this.model.description,
-      this.model.price,
-      this.selectedCurrency.id,
+      this.model.categories,
       this.model.languageId,
-      this.courseImage,
+      this.model.pricingType,
+      this.courseImageDocument,
       this.model.id,
+    ).pipe(
+      takeUntil(this.destroyed$),
+      finalize(() => {
+        this.isLoading = false;
+      })
     )
-      .pipe(
-        takeUntil(this.destroyed$),
-        finalize(() => {
-          this.isLoading = false;
-        }),
-      )
-      .subscribe(course => {
-        this._courseService.course = course;
+      .subscribe(() => {
         this.notify.success(this.l('SavedSuccessfully'));
+        setTimeout(() => {
+          this.editField = undefined;
+        });
       });
   }
 
-  onCurrencyClick(currency: CurrencyDto): void {
-    this.selectedCurrency = currency;
+  onEditClick(editField: EditField): void {
+    this.editField = editField;
   }
 
-  onPricingClick(pricingState: PricingState): void {
-    this.currenctPricingState = pricingState;
-    if (this.currenctPricingState === PricingState.Free) {
-      this.model.price = 0;
+  onCategoryKeyDown(e: KeyboardEvent): void {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const index = this.categories.findIndex(i => i.trim() === this.category.trim());
+      if (index < 0) {
+        this.categories.push(this.category.trim());
+        this.category = undefined;
+      }
     }
   }
 
-  private getCurrencies(): void {
-    this._currenciesService.getAll()
-      .pipe(
-        takeUntil(this.destroyed$),
-      )
-      .subscribe(currencies => {
-        this.currencies = currencies;
-        if (this.model.currencyId) {
-          this.selectedCurrency = this.currencies.find(e => e.id === this.model.currencyId);
-        } else {
-          this.selectedCurrency = this.currencies.find(e => e.code === 'GBP');
-        }
-      });
+  onRemoveCategoryClick(category: string): void {
+    const index = this.categories.findIndex(e => e === category);
+    if (index >= 0) {
+      this.categories.splice(index, 1);
+    }
+  }
+
+  onPricingClick(pricingState: PricingType): void {
+    if (this.model.pricingType === PricingType.Free) {
+      this.model.price = 0;
+    }
   }
 
   private getLanguages(): void {

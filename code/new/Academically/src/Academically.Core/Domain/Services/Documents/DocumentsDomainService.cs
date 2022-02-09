@@ -15,14 +15,20 @@ namespace Academically.Domain.Services.Documents
     public class DocumentsDomainService : AcademicallyDomainServiceBase, IDocumentsDomainService
     {
         private readonly IRepository<Document, Guid> _documentsRepository;
+        private readonly IRepository<Video, Guid> _videosRepository;
+        private readonly IRepository<Article, Guid> _articlesRepository;
         private readonly IFileManagerService _fileManagerService;
 
         public DocumentsDomainService(
             IRepository<Document, Guid> documentsRepository,
+            IRepository<Video, Guid> videosRepository,
+            IRepository<Article, Guid> articlesRepository,
             IFileManagerService fileManagerService
             )
         {
             _documentsRepository = documentsRepository;
+            _videosRepository = videosRepository;
+            _articlesRepository = articlesRepository;
             _fileManagerService = fileManagerService;
         }
 
@@ -48,6 +54,11 @@ namespace Academically.Domain.Services.Documents
             return await GetFileUrlAsync(document);
         }
 
+        public async Task<Document> GetAsync(Guid id)
+        {
+            return await _documentsRepository.GetAsync(id);
+        }
+
         public async Task<Document> CreateAsync(long userId, IFormFile file, DocumentType documentType)
         {
             var (folder, isSecured) = await GetFolderAsync(userId, documentType);
@@ -71,12 +82,65 @@ namespace Academically.Domain.Services.Documents
             return await _documentsRepository.InsertAsync(document);
         }
 
+        public async Task CreateAsync(Document document, Guid? referenceId)
+        {
+            await _documentsRepository.InsertAsync(document);
+            if (referenceId.HasValue)
+            {
+                switch (document.DocumentType)
+                {
+                    case DocumentType.Video:
+                        var videoReference = await _videosRepository.GetAsync(referenceId.Value);
+                        videoReference.DocumentId = document.Id;
+                        await _videosRepository.UpdateAsync(videoReference);
+                        break;
+                    case DocumentType.VideoThumbnail:
+                        var videoThumbnailReference = await _videosRepository.GetAsync(referenceId.Value);
+                        videoThumbnailReference.ThumbnailDocumentId = document.Id;
+                        await _videosRepository.UpdateAsync(videoThumbnailReference);
+                        break;
+                    case DocumentType.ArticleThumbnail:
+                        var articleThumbnailReference = await _articlesRepository.GetAsync(referenceId.Value);
+                        articleThumbnailReference.ThumbnailDocumentId = document.Id;
+                        await _articlesRepository.UpdateAsync(articleThumbnailReference);
+                        break;
+                }
+            }
+        }
+
         public async Task DeleteAsync(Guid id)
         {
             var document = await _documentsRepository.GetAsync(id);
             var (folder, isSecured) = await GetFolderAsync(document.CreatorUserId.Value, document.DocumentType);
             await _fileManagerService.DeleteAsync(folder, document.Name, isSecured);
             await _documentsRepository.DeleteAsync(document);
+        }
+
+        public async Task DeleteReferenceAsync(Guid id, Guid? referenceId)
+        {
+            var document = await _documentsRepository.GetAsync(id);
+            if (referenceId.HasValue)
+            {
+                switch (document.DocumentType)
+                {
+                    case DocumentType.Video:
+                        var videoReference = await _videosRepository.GetAsync(referenceId.Value);
+                        videoReference.DocumentId = null;
+                        await _videosRepository.UpdateAsync(videoReference);
+                        break;
+                    case DocumentType.VideoThumbnail:
+                        var videoThumbnailReference = await _videosRepository.GetAsync(referenceId.Value);
+                        videoThumbnailReference.ThumbnailDocumentId = null;
+                        await _videosRepository.UpdateAsync(videoThumbnailReference);
+                        break;
+                    case DocumentType.ArticleThumbnail:
+                        var articleThumbnailReference = await _articlesRepository.GetAsync(referenceId.Value);
+                        articleThumbnailReference.ThumbnailDocumentId = null;
+                        await _articlesRepository.UpdateAsync(articleThumbnailReference);
+                        break;
+                }
+            }
+            await _documentsRepository.DeleteAsync(id);
         }
 
         private async Task<(string folder, bool isSecured)> GetFolderAsync(long userId, DocumentType documentType)
@@ -147,6 +211,10 @@ namespace Academically.Domain.Services.Documents
                     break;
                 case DocumentType.ArticleThumbnail:
                     folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_ArticleThumbnails);
+                    isSecured = false;
+                    break;
+                case DocumentType.CourseSectionImage:
+                    folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_CourseSectionImages);
                     isSecured = false;
                     break;
                 default:

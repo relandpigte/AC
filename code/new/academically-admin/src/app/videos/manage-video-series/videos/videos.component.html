@@ -1,5 +1,5 @@
 <div class="card">
-  <div class="card-header">
+  <div class="card-header border-0">
     <div class="row align-items-center">
       <div class="col">
         <form>
@@ -82,78 +82,87 @@
       </div>
     </div>
   </div>
+</div>
 
-  <div class="table-responsive">
-    <table class="table table-sm table-hover table-nowrap card-table" [loader]="isTableLoading">
-      <tbody class="list font-size-base">
-        <tr *ngFor="
-            let video of (videos | paginate: { id: 'videos', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
-          ">
-          <td>
-            <div class="row">
-              <div class="col-auto">
-                <div class="avatar avatar-lg d-flex justify-content-center align-items-center">
-                  <i class="fe fe-video text-muted"></i>
-                </div>
-              </div>
-              <div class="col d-flex flex-column justify-content-center">
-                <a [routerLink]="['../../../../../', video.id]">
-                  <h4 class="mb-1">{{ video.name }}</h4>
-                </a>
-                <p *ngIf="video.description" class="text-muted mb-1">
-                  {{ video.description }}
-                </p>
-                <div class="text-muted mb-1">
-                  <div class="d-flex">
-                    <div class="d-flex align-items-center">
-                      <i class="fe fe-video mr-2"></i>
-                      {{ (video.type === VideoType.SingleVideo ? 'Video' : 'VideoSeries') | localize }}
-                    </div>
-                    <div class="d-flex align-items-center mx-3">|</div>
-                    <div class="d-flex align-items-center mr-3">
-                      <i class="fe fe-eye mr-2"></i>
-                      0 {{ 'Views' | localize }}
-                    </div>
-                    <div class="d-flex align-items-center mr-3">
-                      <i class="fe fe-thumbs-up mr-2"></i>
-                      0 {{ 'Likes' | localize }}
-                    </div>
-                    <div class="d-flex align-items-center mr-3">
-                      <i class="fe fe-square-message mr-2"></i>
-                      0 {{ 'Comments' | localize }}
-                    </div>
-                    <div class="d-flex align-items-center mr-3">
-                      <i class="fe fe-share-2 mr-2"></i>
-                      0 {{ 'Shares' | localize }}
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <i class="fe fe-star mr-2"></i>
-                      0 {{ 'Saves' | localize }}
-                    </div>
-                  </div>
-                </div>
-              </div>
+<div *ngIf="videos && videos.length" [loader]="isTableLoading">
+  <div
+    *ngFor="let video of (videos | paginate: { id: 'videos', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })"
+    class="card">
+    <div class="row">
+      <div class="col-auto d-flex justify-content-center align-items-center">
+        <div *ngIf="!thumbnailUrls[video.id] else withThumbnailTemplate"
+          class="avatar avatar-lg avatar-4by3 d-flex justify-content-center align-items-center p-2">
+          <i class="fe fe-video text-muted h1 p-0 m-0"></i>
+        </div>
+        <ng-template #withThumbnailTemplate>
+          <div class="avatar avatar-lg avatar-4by3 p-2">
+            <img [src]="getCourseImageUrl(thumbnailUrls[video.id])" alt="..." class="avatar-img rounded">
+          </div>
+        </ng-template>
+      </div>
+      <div class="col d-flex align-items-center">
+        <a [routerLink]="['../../../../../', video.id]">
+          <h4 class="mb-0">{{ video.name }}</h4>
+        </a>
+      </div>
+      <div *ngIf="video.description" class="col d-flex align-items-center">
+        <p class="text-muted text-center m-0">
+          {{ video.description }}
+        </p>
+      </div>
+      <div class="col-auto d-flex flex-column justify-content-center">
+        <div class="text-muted">
+          <div class="d-flex">
+            <div class="d-flex align-items-center">
+              <i class="fe fe-video mr-2"></i>
+              {{ (video.type === VideoType.SingleVideo ? 'Video' : 'VideoSeries') | localize }}
             </div>
-          </td>
-          <td>
-            <span class="badge" [class.badge-info]="video.status === VideoStatus.Draft"
-              [class.badge-primary]="video.status === VideoStatus.Published">
-              {{ VideoStatus[video.status] }}
-            </span>
-          </td>
-          <td class="table-action">
-            <button class="btn btn-sm btn-white">
-              {{ 'Edit' | localize }}
-            </button>
-          </td>
-        </tr>
-        <tr *ngIf="videos.length === 0">
-          <td colspan="10">
-            <p class="text-center m-0 p-0">{{ 'NoRecordsFound' | localize }}</p>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <abp-pagination-controls id="videos" (pageChange)="getDataPage($event)"> </abp-pagination-controls>
+            <div class="d-flex align-items-center mx-3">|</div>
+            <div class="d-flex align-items-center mr-3">
+              <i class="fe fe-eye mr-2"></i>
+              0 {{ 'Views' | localize }}
+            </div>
+            <div class="d-flex align-items-center mr-3">
+              <i class="fe fe-thumbs-up mr-2"></i>
+              0 {{ 'Likes' | localize }}
+            </div>
+            <div class="d-flex align-items-center mr-3">
+              <i class="fe fe-square-message mr-2"></i>
+              0 {{ 'Comments' | localize }}
+            </div>
+            <div class="d-flex align-items-center mr-3">
+              <i class="fe fe-share-2 mr-2"></i>
+              0 {{ 'Shares' | localize }}
+            </div>
+            <div class="d-flex align-items-center">
+              <i class="fe fe-star mr-2"></i>
+              0 {{ 'Saves' | localize }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-auto d-flex align-items-center ml-4">
+        <span class="badge" [class.badge-info]="video.status === VideoStatus.Draft"
+          [class.badge-primary]="video.status === VideoStatus.Published">
+          {{ VideoStatus[video.status] }}
+        </span>
+      </div>
+      <div class="col-auto d-flex align-items-center mr-4 ml-4">
+        <button [routerLink]="['../../../../../', video.id]" class="btn btn-sm btn-white">
+          {{ 'Edit' | localize }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="videos.length === 0" [loader]="isTableLoading" class="card">
+  <p class="text-center text-muted m-0 p-4">{{ 'NoRecordsFound' | localize }}</p>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <abp-pagination-controls id="videos" (pageChange)="getDataPage($event)" [customClass]="'border-0'">
+    </abp-pagination-controls>
   </div>
 </div>

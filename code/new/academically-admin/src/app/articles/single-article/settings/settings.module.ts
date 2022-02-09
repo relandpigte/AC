@@ -16,5 +16,8 @@ import { SettingsComponent } from './settings.component';
     SharedModule,
     AppSharedModule,
   ],
+  exports: [
+    SettingsComponent,
+  ]
 })
 export class SettingsModule { }

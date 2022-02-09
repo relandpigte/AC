@@ -14,5 +14,6 @@ namespace Academically.Services.Documents.Dto
         public string FileType { get; set; }
         public DocumentType DocumentType { get; set; }
         public long Size { get; set; }
+        public long CreatorUserId { get; set; }
     }
 }

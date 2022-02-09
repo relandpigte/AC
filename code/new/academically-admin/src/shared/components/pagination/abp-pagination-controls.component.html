@@ -1,5 +1,5 @@
 <pagination-template #p="paginationApi" [id]="id" [maxSize]="maxSize" (pageChange)="pageChange.emit($event)">
-  <div *ngIf="!(autoHide && p.pages.length <= 1)" class="card-footer d-flex justify-content-between">
+  <div *ngIf="!(autoHide && p.pages.length <= 1)" class="card-footer d-flex justify-content-between {{customClass}}">
     <ul class="list-pagination-prev pagination pagination-tabs card-pagination">
       <li *ngIf="directionLinks" class="page-item" [class.disabled]="p.isFirstPage()">
         <a *ngIf="!p.isFirstPage()" class="page-link pl-0 pr-4 border-right" href="javascript:;" (click)="p.previous()">

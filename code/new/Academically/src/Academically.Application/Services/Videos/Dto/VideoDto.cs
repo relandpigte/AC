@@ -19,19 +19,16 @@ namespace Academically.Services.Videos.Dto
 		public Guid? DocumentId { get; set; }
 		public Guid? ThumbnailDocumentId { get; set; }
 		public Guid? LanguageId { get; set; }
-
 		public bool IsVisible { get; set; }
 		public CommentSetting CommentSetting { get; set; }
 		public bool CommentModeration { get; set; }
 		public string CustomUrl { get; set; }
 		public string Category { get; set; }
 		public string Categories { get; set; }
-
 		public decimal Price { get; set; } = 0;
 		public PricingType PricingType { get; set; }
-
-		public string VideoUrl { get; set; }
-		public string ThumbnailUrl { get; set; }
+		public VideoDelayType? DelayType { get; set; }
+		public string DelayValue { get; set; }
 
 		public VideoDto Parent { get; set; }
 		public DocumentDto Document { get; set; }

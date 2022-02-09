@@ -10,6 +10,7 @@ enum CourseTab {
   Details = 'details',
   Curriculum = 'curriculum',
   Settings = 'settings',
+  LandingPage = 'landing-page',
 }
 
 @Component({

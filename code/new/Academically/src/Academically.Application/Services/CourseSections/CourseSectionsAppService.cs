@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Domain.Services.Documents;
 using Academically.Services.CourseSections.Dto;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Academically.Services.CourseSections
@@ -14,41 +16,59 @@ namespace Academically.Services.CourseSections
     public class CourseSectionsAppService : AcademicallyAppServiceBase, ICourseSectionsAppService
     {
         private readonly IRepository<CourseSection, Guid> _courseSectionsRepository;
+        private readonly IDocumentsDomainService _documentsDomainService;
 
-        public CourseSectionsAppService(IRepository<CourseSection, Guid> courseSectionsRepository)
+        public CourseSectionsAppService(
+            IRepository<CourseSection, Guid> courseSectionsRepository,
+            IDocumentsDomainService documentsDomainService
+            )
         {
             _courseSectionsRepository = courseSectionsRepository;
+            _documentsDomainService = documentsDomainService;
         }
 
         public async Task<IEnumerable<CourseSectionDto>> GetAll(Guid courseId)
         {
             var courseSectionModule = await _courseSectionsRepository.GetAll()
                 .Where(e => e.CourseId == courseId && e.ParentId == null)
+                .Include(e => e.ImageDocument)
                 .OrderBy(e => e.DisplayOrder)
-                .Select(e => ObjectMapper.Map<CourseSectionDto>(e))
                 .ToListAsync();
-            var courseSctions = new List<CourseSectionDto>();
+            var courseSections = new List<CourseSectionDto>();
             foreach (var courseModule in courseSectionModule)
             {
-                courseModule.Children = new List<CourseSectionDto>();
-                courseModule.Children.AddRange(await GetCourseSectionChildren(courseModule.Id));
-                foreach (var courseUnit in courseModule.Children)
+                var moduleOutput = ObjectMapper.Map<CourseSectionDto>(courseModule);
+                moduleOutput.Children = new List<CourseSectionDto>();
+                moduleOutput.Children.AddRange(await GetCourseSectionChildren(courseModule.Id));
+                foreach (var unitOutput in moduleOutput.Children)
                 {
-                    courseUnit.Children = new List<CourseSectionDto>();
-                    courseUnit.Children.AddRange(await GetCourseSectionChildren(courseUnit.Id));
+                    unitOutput.Children = new List<CourseSectionDto>();
+                    unitOutput.Children.AddRange(await GetCourseSectionChildren(unitOutput.Id));
                 }
-                courseSctions.Add(courseModule);
+                if (moduleOutput.Type == CourseSectionType.Lesson)
+                {
+                    moduleOutput.ImageDocumentUrl = await _documentsDomainService.GetFileUrlAsync(courseModule.ImageDocument);
+                }
+                courseSections.Add(moduleOutput);
             }
-            return courseSctions;
+            return courseSections;
         }
 
         public async Task<CourseSectionDto> Get(Guid id)
         {
-            return await _courseSectionsRepository.GetAll()
+            var courseSection = await _courseSectionsRepository.GetAll()
                 .Include(e => e.Course)
+                .Include(e => e.ImageDocument)
                 .Where(e => e.Id == id)
-                .Select(e => ObjectMapper.Map<CourseSectionDto>(e))
                 .FirstOrDefaultAsync();
+            var output = ObjectMapper.Map<CourseSectionDto>(courseSection);
+
+            if (courseSection.ImageDocument != null)
+            {
+                output.ImageDocumentUrl = await _documentsDomainService.GetFileUrlAsync(courseSection.ImageDocument);
+            }
+
+            return output;
         }
 
         public async Task Create(CourseSectionDto input)
@@ -125,12 +145,22 @@ namespace Academically.Services.CourseSections
 
         private async Task<IEnumerable<CourseSectionDto>> GetCourseSectionChildren(Guid? parentId)
         {
-            var courseSectionChild = await _courseSectionsRepository.GetAll()
+            var courseSectionChildren = await _courseSectionsRepository.GetAll()
                 .Where(e => e.ParentId == parentId)
+                .Include(e => e.ImageDocument)
                 .OrderBy(e => e.DisplayOrder)
-                .Select(e => ObjectMapper.Map<CourseSectionDto>(e))
                 .ToListAsync();
-            return courseSectionChild;
+            var outputs = new List<CourseSectionDto>();
+            foreach (var courseSection in courseSectionChildren)
+            {
+                var output = ObjectMapper.Map<CourseSectionDto>(courseSection);
+                if (courseSection.ImageDocument != null)
+                {
+                    output.ImageDocumentUrl = await _documentsDomainService.GetFileUrlAsync(courseSection.ImageDocument);
+                }
+                outputs.Add(output);
+            }
+            return outputs;
         }
 
         private static string GetDuplicateName(string name)
@@ -147,6 +177,35 @@ namespace Academically.Services.CourseSections
             }
 
             return $"{name} (1)";
+        }
+
+        public async Task<CourseSectionDto> UpdateDetails([FromForm] UpdateCourseSectionDetailsDto input)
+        {
+            var courseSection = await _courseSectionsRepository.GetAsync(input.Id);
+            ObjectMapper.Map(input, courseSection);
+
+            if (input.ImageDocumentFile != null)
+            {
+                var oldDocumentId = courseSection.ImageDocumentId;
+                var document = await _documentsDomainService.CreateAsync(AbpSession.UserId.Value, input.ImageDocumentFile, DocumentType.CourseSectionImage);
+                courseSection.ImageDocumentId = document.Id;
+
+                if (oldDocumentId.HasValue)
+                {
+                    await _documentsDomainService.DeleteAsync(oldDocumentId.Value);
+                }
+            }
+
+            await _courseSectionsRepository.UpdateAsync(courseSection);
+            return ObjectMapper.Map<CourseSectionDto>(courseSection);
+        }
+
+        public async Task<CourseSectionDto> UpdateSettings(UpdateCourseSectionSettingsDto input)
+        {
+            var courseSection = await _courseSectionsRepository.GetAsync(input.Id);
+            ObjectMapper.Map(input, courseSection);
+            await _courseSectionsRepository.UpdateAsync(courseSection);
+            return ObjectMapper.Map<CourseSectionDto>(courseSection);
         }
     }
 }

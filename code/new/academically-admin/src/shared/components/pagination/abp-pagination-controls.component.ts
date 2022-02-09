@@ -14,6 +14,7 @@ export class AbpPaginationControlsComponent {
   @Input() screenReaderPaginationLabel = 'Pagination';
   @Input() screenReaderPageLabel = 'page';
   @Input() screenReaderCurrentLabel = `You're on page`;
+  @Input() customClass = '';
   @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
 
   private _directionLinks = true;

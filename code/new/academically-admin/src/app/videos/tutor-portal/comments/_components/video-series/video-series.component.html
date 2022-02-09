@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-4">
+    <div class="card">
+      <ng-container *ngIf="!videos || !videos.length else videosMenuTemplate">
+        <div class="card-body comments">
+          <div class="no-comments-container">
+            <p class="text-muted p-0 m-0 text-center">
+              {{ 'NoVideoFound' | localize }}
+            </p>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #videosMenuTemplate>
+        <div class="list-group">
+          <a *ngFor="let video of videos" href="#!video" [class.active]="selectedVideo.id === video.id"
+            class="list-group-item list-group-item-action" (click)="$event.preventDefault(); onVideoClick(video)">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <div class="avatar avatar-4by3">
+                  <img [src]="getCourseImageUrl(model.thumbnailUrl)" alt="..." class="avatar-img rounded">
+                </div>
+              </div>
+              <div class="col ms-n2">
+                <h4 class="text-body text-focus mb-1 name">
+                  {{ video.name }}
+                </h4>
+              </div>
+            </div>
+          </a>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <div class="col-8">
+    <div class="card">
+      <div class="card-body comments">
+        <div class="no-comments-container">
+          <p class="text-muted p-0 m-0 text-center">
+            {{ 'NoCommentsFound' | localize }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -15,6 +15,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
 
 import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
 import { DateFormatPipe } from './pipes/date-format.pipe';
+import { NgxMaskModule } from 'ngx-mask';
 
 import { FixedHeightDirective } from './directives/fixed-height.directive';
 import { BottomScrollerDirective } from './directives/bottom-scroller.directive';
@@ -56,6 +57,7 @@ import { ColorPickerComponent } from './components/color-picker/color-picker.com
     ModalModule.forRoot(),
     DragulaModule.forRoot(),
     ColorPickerModule,
+    NgxMaskModule.forRoot(),
   ],
   exports: [
     SharedModule,
@@ -71,6 +73,7 @@ import { ColorPickerComponent } from './components/color-picker/color-picker.com
     ModalModule,
     DragulaModule,
     ColorPickerModule,
+    NgxMaskModule,
     EnumToArrayPipe,
     DateFormatPipe,
     FixedHeightDirective,

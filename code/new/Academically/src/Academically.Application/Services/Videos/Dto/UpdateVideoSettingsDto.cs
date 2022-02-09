@@ -1,22 +1,20 @@
-﻿using System;
+﻿using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
-using Microsoft.AspNetCore.Http;
+using System;
 
 namespace Academically.Services.Videos.Dto
 {
-    public class UpdateVideoSettingsDto
-	{
-        public Guid Id { get; set; }
-
-        public bool IsVisible { get; set; }
-
+    [AutoMapTo(typeof(Video))]
+    public class UpdateVideoSettingsDto : EntityDto<Guid>
+    {
+        public VideoDelayType? DelayType { get; set; }
+        public string DelayValue { get; set; }
         public CommentSetting CommentSetting { get; set; }
-
         public bool CommentModeration { get; set; }
-
         public string CustomUrl { get; set; }
+        public bool IsVisible { get; set; }
     }
 }
 
