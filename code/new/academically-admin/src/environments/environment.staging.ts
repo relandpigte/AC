@@ -43,6 +43,7 @@ export const environment = {
           video: 'videos',
           videoThumbnail: 'video-thumbnails',
           articleThumbnail: 'article-thumbnails',
+          courseSectionImage: 'course-section-images',
         },
       },
     },
