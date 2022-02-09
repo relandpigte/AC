@@ -268,7 +268,7 @@ build_backend:
 
 build_frontend:
   stage: build
-  image: node:10.16.0
+  image: node:latest
   before_script:
     - echo "pre script (build_frontend)"
     - echo "Install Pre-requistes"
