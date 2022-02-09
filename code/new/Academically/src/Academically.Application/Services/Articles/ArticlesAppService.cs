@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
 using Academically.Services.Articles.Dto;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Academically.Services.Articles
 {
-	public class ArticlesAppService : AcademicallyAppServiceBase, IArticlesAppService
+    public class ArticlesAppService : AcademicallyAppServiceBase, IArticlesAppService
 	{
         private readonly IRepository<Article, Guid> _articlesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
@@ -63,6 +61,25 @@ namespace Academically.Services.Articles
             var articles = await query.OrderBy(e => e.Name)
                 .PageBy(input)
                 .Include(e => e.ThumbnailDocument)
+                .Select(e => ObjectMapper.Map<ArticleDto>(e))
+                .ToListAsync();
+
+            return new PagedResultDto<ArticleDto>()
+            {
+                TotalCount = totalCount,
+                Items = articles,
+            };
+        }
+
+        public async Task<PagedResultDto<ArticleDto>> GetAllForHome(PagedResultRequestDto input)
+        {
+            var query = _articlesRepository.GetAll()
+                .Where(e => e.ParentId == null);
+            var totalCount = await query.CountAsync();
+            var articles = await query.OrderByDescending(e => e.CreationTime)
+                .PageBy(input)
+                .Include(e => e.ThumbnailDocument)
+                .Include(e => e.Children)
                 .Select(e => ObjectMapper.Map<ArticleDto>(e))
                 .ToListAsync();
 

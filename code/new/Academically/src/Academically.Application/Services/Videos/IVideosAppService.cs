@@ -10,6 +10,7 @@ namespace Academically.Services.Videos
 	{
 		Task<PagedResultDto<VideoDto>> GetAll(PagedVideoResultRequestDto input);
 		Task<PagedResultDto<VideoDto>> GetAllForSeries(PagedSeriesVideoResultRequestDto input);
+		Task<PagedResultDto<VideoDto>> GetAllForHome(PagedResultRequestDto input);
 		Task<VideoDto> Get(Guid id);
 		Task<GetDelayStatusDto> GetDelayStatus(Guid id);
 		Task<VideoDto> Create(VideoDto input);

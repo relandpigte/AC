@@ -21,8 +21,28 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a [routerLink]="['projects']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Coaching' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
                 <a [routerLink]="['courses']" routerLinkActive="active" class="nav-link" role="button">
                   {{ 'Courses' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['videos']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Videos' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['articles']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Articles' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['events']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Events' | localize }}
                 </a>
               </li>
             </ul>
