@@ -1,0 +1,182 @@
+<div class="comments-container" [class.sidebar]="isSidebar" [loader]="isLoading">
+  <div *ngIf="comments && comments.length; else noCommentsContainer" class="comments comments-small parent-comments">
+    <div *ngFor="let comment of comments" class="comment mb-3">
+      <div class="row">
+        <div class="col-auto comment-profile">
+          <a class="avatar avatar-xs" href="#!profile" (click)="$event.preventDefault();">
+            <img
+              [src]=" getProfilePictureFromDocument(comment.creatorUser.profilePictureDocument, comment.creatorUserId)"
+              alt="..." class="avatar-img rounded-circle">
+          </a>
+        </div>
+        <div class="col comment-container">
+          <div class="comment-body">
+            <div class="row">
+              <div class="col-12">
+                <h5 class="comment-title mb-0">
+                  {{ comment.creatorUser.fullName }}
+                </h5>
+              </div>
+              <div class="col-12">
+                <time class="comment-time">
+                  {{ convertMomentToDateAgo(comment.creationTime) }}
+                </time>
+              </div>
+            </div>
+            <p class="comment-text">
+              {{ comment.body }}
+            </p>
+          </div>
+
+          <div class="comment-interactions">
+            <ng-container
+              *ngTemplateOutlet="checkIfReacted(comment) ? hasReactedTemplate : hasNotReactedTemplate; context: { comment: comment }">
+            </ng-container>
+            <span class="text-muted">
+              |
+            </span>
+            <a href="#!reply" (click)="$event.preventDefault(); onToggleReply(comment.id)">
+              {{ 'Reply' | localize }}
+            </a>
+            <span class="text-muted">
+              &bull;
+            </span>
+            <span class="text-muted">
+              <span class="reply-count">{{ comment.replyCount }}</span>
+              {{ 'Replies' | localize }}
+            </span>
+          </div>
+
+
+          <div class="comment-replies">
+            <div *ngIf="comment.children && comment.children.length" class="comments ml-n3">
+              <div *ngFor="let reply of comment.children" class="comment mb-3">
+                <div class="row">
+                  <div class="col-auto comment-profile">
+                    <a class="avatar avatar-xs" href="#!profile" (click)="$event.preventDefault();">
+                      <img
+                        [src]=" getProfilePictureFromDocument(reply.creatorUser.profilePictureDocument, reply.creatorUserId)"
+                        alt="..." class="avatar-img rounded-circle">
+                    </a>
+                  </div>
+                  <div class="col comment-container">
+                    <div class="comment-body">
+                      <div class="row">
+                        <div class="col-12">
+                          <h5 class="comment-title mb-0">
+                            {{ reply.creatorUser.fullName }}
+                          </h5>
+                        </div>
+                        <div class="col-12">
+                          <time class="comment-time">
+                            {{ convertMomentToDateAgo(reply.creationTime) }}
+                          </time>
+                        </div>
+                      </div>
+                      <p class="comment-text">
+                        {{ reply.body }}
+                      </p>
+                    </div>
+
+                    <div class="comment-interactions">
+                      <ng-container
+                        *ngTemplateOutlet="checkIfReacted(reply) ? hasReactedTemplate : hasNotReactedTemplate; context: { comment: reply }">
+                      </ng-container>
+                      <span class="text-muted">
+                        |
+                      </span>
+                      <a href="#!reply" (click)="$event.preventDefault(); onToggleReply(comment.id)">
+                        {{ 'Reply' | localize }}
+                      </a>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <a *ngIf="loadedReplyCount[comment.id] !== comment.replyCount" href="#!load-more" class="d-block text-muted"
+              (click)="$event.preventDefault(); onLoadMoreRepliesClick(comment);">
+              {{ 'LoadMoreReplies' | localize }}...
+            </a>
+          </div>
+
+          <form *ngIf="isReplying[comment.id]" autocomplete="off" #form="ngForm" (ngSubmit)="onReplyFormSubmit(comment)"
+            class="write-comment-container reply bg-white">
+            <div class="write-comment row">
+              <div class="col-auto profile-container">
+                <div class="avatar avatar-xs">
+                  <img [src]="getProfilePicture(appSession.user.profilePictureUrl, appSession.user.id)" alt="..."
+                    class="avatar-img rounded-circle">
+                </div>
+              </div>
+              <div class="col text-container">
+                <label class="sr-only">{{ 'WriteYourReply' | localize }}...</label>
+                <textarea [(ngModel)]="newReply.body" id="body" name="body" class="form-control form-control-flush"
+                  data-toggle="autosize" rows="1" placeholder="{{ 'WriteYourReply' | localize }}..."
+                  style="overflow: hidden; overflow-wrap: break-word; height: 40px;"
+                  (keydown)="onReplyBodyKeydown($event, comment)"></textarea>
+              </div>
+              <div class="col-auto actions-container">
+                <div class="text-muted ">
+                  <a class="text-reset" type="submit" href="#!send"
+                    (click)="$event.preventDefault(); onReplyFormSubmit(comment)">
+                    <i class="fe fe-send"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noCommentsContainer>
+    <div *ngIf="!isLoading" class="no-comments-container">
+      <p class="text-muted p-0 m-0 text-center">
+        {{ 'NoCommentsFound' | localize }}
+      </p>
+    </div>
+  </ng-template>
+
+  <form autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()" class="write-comment-container bg-white">
+    <div class="write-comment row">
+      <div class="col-auto profile-container">
+        <div class="avatar avatar-xs">
+          <img [src]="getProfilePicture(appSession.user.profilePictureUrl, appSession.user.id)" alt="..."
+            class="avatar-img rounded-circle">
+        </div>
+      </div>
+      <div class="col text-container">
+        <label class="sr-only">{{ 'WriteYourComment' | localize }}...</label>
+        <textarea [(ngModel)]="newComment.body" id="body" name="body" class="form-control form-control-flush"
+          data-toggle="autosize" rows="1" placeholder="{{ 'WriteYourReply' | localize }}..."
+          style="overflow: hidden; overflow-wrap: break-word; height: 40px;"
+          (keydown)="onBodyKeydown($event)"></textarea>
+      </div>
+      <div class="col-auto actions-container">
+        <div class="text-muted ">
+          <a class="text-reset" type="submit" href="#!send" (click)="$event.preventDefault(); onFormSubmit()">
+            <i class="fe fe-send"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+<ng-template #hasNotReactedTemplate let-comment="comment">
+  <a href="#!like" (click)="$event.preventDefault(); onLikeClick(comment);">
+    <i class="fe fe-thumbs-up"></i>&nbsp;
+    <span class="like-count">{{ comment.commentReactions.length }}</span>
+  </a>
+</ng-template>
+
+<ng-template #hasReactedTemplate let-comment="comment">
+  <a href="#!unlike" (click)="$event.preventDefault(); onUnlikeClick(comment);">
+    <i class="fe fe-thumbs-up text-success"></i>&nbsp;
+    <span class="like-count text-success">{{ comment.commentReactions.length }}</span>
+  </a>
+</ng-template>

@@ -106,5 +106,6 @@
 	<include file="ddml-new/ddml.2022-01-26-02-create-contentmargins-table.xml"/>
 	<include file="ddml-new/ddml.2022-01-27-01-alter-articles-add-delay-fields.xml"/>
 	<include file="ddml-new/ddml.2022-01-27-02-alter-videos-add-delay-fields.xml"/>
+	<include file="ddml-new/ddml.2022-02-24-01-create-comments-tables.xml"/>
 </databaseChangeLog>
 	
