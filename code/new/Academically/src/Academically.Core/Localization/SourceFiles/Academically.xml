@@ -1,10 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+	<text name="SuccessfullySubmitted">Successfully submitted!</text>
+	<text name="WriteYourReply">Write your reply</text>
+	<text name="WriteYourComment">Write your comment</text>
+	<text name="LoadMoreReplies">Load more replies</text>
 	<text name="DeleteArticleConfirmationMessage">Are you sure you want to delete this article?</text>
 	<text name="DeleteVideoConfirmationMessage">Are you sure you want to delete this video?</text>
 	<text name="BlankTemplateDescription">You are starting from scratch</text>
 	<text name="Events">Events</text>
+	<text name="Replies">Replies</text>
+	<text name="Reply">Reply</text>
 	<text name="AvailableImmediately">Available immediately</text>
 	<text name="Immediate">Immediate</text>
 	<text name="NoVideoFound">No video found</text>

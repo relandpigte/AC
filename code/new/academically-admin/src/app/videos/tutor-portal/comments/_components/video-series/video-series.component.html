@@ -33,12 +33,9 @@
   </div>
   <div class="col-8">
     <div class="card">
-      <div class="card-body comments">
-        <div class="no-comments-container">
-          <p class="text-muted p-0 m-0 text-center">
-            {{ 'NoCommentsFound' | localize }}
-          </p>
-        </div>
+      <div class="card-body p-3">
+        <app-tutor-portal-comments [referenceId]="selectedVideo.id" [isSidebar]="false">
+        </app-tutor-portal-comments>
       </div>
     </div>
   </div>
