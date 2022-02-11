@@ -51,6 +51,11 @@ export class ViewProjectComponent extends AppComponentBase implements OnInit {
     modalSettings.initialState = {
       project: this.project
     };
-    this._modalService.show(SubmitOfferComponent, modalSettings);
+    const modal = this._modalService.show(SubmitOfferComponent, modalSettings).content;
+    modal.modalclosed.subscribe((result: boolean) => {
+      if (result) {
+        this.ngOnInit();
+      }
+    });
   }
 }

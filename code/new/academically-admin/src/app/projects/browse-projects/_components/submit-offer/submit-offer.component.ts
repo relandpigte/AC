@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { CreateProjectOfferDto, ProjectDto, ProjectOffersServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -11,6 +11,7 @@ import { finalize } from 'rxjs/operators';
 })
 export class SubmitOfferComponent extends AppComponentBase implements OnInit {
   @Input() project: ProjectDto = new ProjectDto();
+  @Output() modalClosed = new EventEmitter<boolean>();
   projectOffer: CreateProjectOfferDto = new CreateProjectOfferDto();
 
   isLoading = false;
@@ -44,8 +45,10 @@ export class SubmitOfferComponent extends AppComponentBase implements OnInit {
       .pipe(finalize(() => this.isLoading = false))
       .subscribe(response => {
         this.isLoading = false;
+        this.project.canSubmitOffer = false;
         this.notify.success(this.l('OfferSentSuccessfully'));
         this._modal.hide();
+        this.modalClosed.emit(true);
       });
   }
 
