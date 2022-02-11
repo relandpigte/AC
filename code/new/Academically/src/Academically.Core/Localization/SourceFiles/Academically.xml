@@ -1009,6 +1009,7 @@
     <text name="NewResearchMethodRequestSent">New Research Method request sent.</text>
     <text name="RequestNewResearchMethod">Request New Research Method</text>
     <text name="Comments">Comments</text>
+	<text name="Interaction">Interaction</text>
     <text name="NoTutorFound">No Tutor found</text>
     <text name="AddressNotDefinedErrorMessage">Please set your address on Edit Profile page first.</text>
     <text name="LocationNotFoundErrorMessage">City or Post Code you entered does not exist.</text>
