@@ -284,6 +284,7 @@ namespace Academically.Services.Projects
                 .Where(e => e.Roles.Any(e => e.RoleId == tutorRole.Id))
                 .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.Name.ToLower().Contains(input.SearchFilter)
                     || e.Surname.ToLower().Contains(input.SearchFilter)
+                    || e.About.ToLower().Contains(input.SearchFilter)
                     || e.UserServices.Any(e => e.UserServiceSubjects.Any(e => e.Subject.Name.ToLower().Contains(input.SearchFilter)))
                     || e.UserServices.Any(e => e.UserServiceDisciplineTaxonomies.Any(e => e.DisciplineTaxonomy.Name.ToLower().Contains(input.SearchFilter))));
 
