@@ -18,7 +18,6 @@ export class TutorPortalComponent extends AppComponentBase implements OnInit {
   thumbnailUrl: string;
   model = new VideoDto();
   VideoType = VideoType;
-  isSidebarHidden = false;
 
   constructor(
     injector: Injector,

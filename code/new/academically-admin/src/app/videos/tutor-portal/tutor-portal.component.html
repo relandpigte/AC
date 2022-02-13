@@ -51,9 +51,7 @@
       </div>
     </div>
   </nav>
-  <div [class.sidebar-hidden]="isSidebarHidden" class="main-content h-100">
+  <div class="main-content h-100">
     <router-outlet></router-outlet>
   </div>
-
-  <app-sidebar (menuHidden)="isSidebarHidden = $event"></app-sidebar>
 </div>

@@ -5,7 +5,7 @@ import { VideoDto, VideoType } from '@shared/service-proxies/service-proxies';
 import { TutorPortalService } from '../_services/tutor-portal.service';
 
 @Component({
-  selector: 'app-comments',
+  selector: 'app-tutor-portal-comments',
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.less'],
   animations: [appModuleAnimation()],

@@ -1,15 +1,17 @@
 import { Component, OnInit, Injector } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { VideoDto, VideosServiceProxy, VideoType } from '@shared/service-proxies/service-proxies';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { UploadService } from '@app/_shared/services/upload.service';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
 
 @Component({
   selector: 'app-preview',
   templateUrl: './preview.component.html',
-  styleUrls: ['./preview.component.less']
+  styleUrls: ['./preview.component.less'],
+  animations: [appModuleAnimation()],
 })
 export class PreviewComponent extends AppComponentBase implements OnInit {
   id: string;
@@ -17,6 +19,8 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
   thumbnailUrl: string;
 
   model = new VideoDto();
+  VideoType = VideoType;
+  isSidebarHidden = false;
 
   constructor(
     injector: Injector,

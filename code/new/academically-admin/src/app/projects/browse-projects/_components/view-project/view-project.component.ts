@@ -52,7 +52,7 @@ export class ViewProjectComponent extends AppComponentBase implements OnInit {
       project: this.project
     };
     const modal = this._modalService.show(SubmitOfferComponent, modalSettings).content;
-    modal.modalclosed.subscribe((result: boolean) => {
+    modal.modalClosed.subscribe((result: boolean) => {
       if (result) {
         this.ngOnInit();
       }

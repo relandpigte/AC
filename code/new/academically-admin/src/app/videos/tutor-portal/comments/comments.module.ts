@@ -7,7 +7,7 @@ import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { CommentsComponent } from './comments.component';
 import { VideoSeriesComponent } from './_components/video-series/video-series.component';
 import { SingleVideoComponent } from './_components/single-video/single-video.component';
-import { TutorPortalModule } from '../tutor-portal.module';
+import { CommentsModule as SharedCommentsModule } from '@app/_shared/modules/comments/comments.module';
 
 @NgModule({
   declarations: [
@@ -20,7 +20,7 @@ import { TutorPortalModule } from '../tutor-portal.module';
     CommentsRoutingModule,
     SharedModule,
     AppSharedModule,
-    TutorPortalModule,
+    SharedCommentsModule,
   ],
 })
 export class CommentsModule { }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 class MenuItem {
@@ -17,12 +17,12 @@ class MenuItem {
   styleUrls: ['./sidebar.component.less']
 })
 export class SidebarComponent implements OnInit {
+  @Input() hidden = false;
+
   videoId: string;
-  @Output() menuHidden = new EventEmitter<boolean>();
   MenuItem = MenuItem;
   menuItems: MenuItem[] = [];
   activeMenuItem: MenuItem;
-  isMenuHidden = false;
 
   constructor(
     route: ActivatedRoute,
@@ -44,10 +44,6 @@ export class SidebarComponent implements OnInit {
   }
 
   onMenuItemClick(menuItem: MenuItem): void {
-    if (menuItem === this.activeMenuItem || this.isMenuHidden) {
-      this.isMenuHidden = !this.isMenuHidden;
-      this.menuHidden.emit(this.isMenuHidden);
-    }
     this.activeMenuItem = menuItem;
   }
 }

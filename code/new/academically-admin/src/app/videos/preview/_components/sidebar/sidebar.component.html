@@ -1,4 +1,4 @@
-<div [class.content-hidden]="isMenuHidden" class="sidebar bg-white">
+<div [class.content-hidden]="hidden" class="sidebar bg-white">
   <ul class="sidebar-menu">
     <ng-container *ngFor="let item of menuItems">
       <li *ngIf="item.name !== 'Separator' else separatorTemplate" [class.active]="activeMenuItem === item">
@@ -9,7 +9,7 @@
     </ng-container>
   </ul>
 
-  <div *ngIf="!isMenuHidden" class="sidebar-contents" [ngSwitch]="activeMenuItem.name">
+  <div *ngIf="!hidden" class="sidebar-contents" [ngSwitch]="activeMenuItem.name">
     <div class="sidebar-title">
       <h4 class="text-muted">
         {{ activeMenuItem.name }}
@@ -18,7 +18,7 @@
 
     <div class="sidebar-content">
       <app-home *ngSwitchCase="'Home'"></app-home>
-      <app-tutor-portal-comments *ngSwitchCase="'Comments'" [referenceId]="videoId"></app-tutor-portal-comments>
+      <app-sidebar-comments *ngSwitchCase="'Comments'" [referenceId]="videoId"></app-sidebar-comments>
       <app-downloads *ngSwitchCase="'Downloads'"></app-downloads>
     </div>
   </div>

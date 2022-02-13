@@ -1,13 +1,12 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CommentDto, CommentReactionDto, CommentReactionType, CommentsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CommentDto, CommentsServiceProxy, CommentReactionDto, CommentReactionType } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
-import { finalize, takeUntil } from 'rxjs/operators';
-import { TutorPortalService } from '../../_services/tutor-portal.service';
+import { takeUntil, finalize } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-tutor-portal-comments',
+  selector: 'app-comments',
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.less']
 })
@@ -24,6 +23,7 @@ export class CommentsComponent extends AppComponentBase implements OnInit {
 
   comments: CommentDto[];
   isLoading = false;
+  isCommentsLoading = false;
   newComment = new CommentDto();
   newReply = new CommentDto();
   isReplying: boolean[] = [];
@@ -37,21 +37,12 @@ export class CommentsComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     route: ActivatedRoute,
     private _commentsService: CommentsServiceProxy,
-    private _tutorPortalService: TutorPortalService,
   ) {
     super(injector);
   }
 
   ngOnInit(): void {
-    this._tutorPortalService.commentsUpdated$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
-        if (response && response !== this && response.referenceId === this.referenceId) {
-          this.comments = response.comments;
-          this.skipCount = response.skipCount;
-          this.loadedReplyCount = response.loadedReplyCount;
-        }
-      });
+
   }
 
   onFormSubmit(): void {
@@ -94,7 +85,6 @@ export class CommentsComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         comment.commentReactions.push(response);
-        this._tutorPortalService.commentsUpdated = this;
       });
   }
 
@@ -105,7 +95,6 @@ export class CommentsComponent extends AppComponentBase implements OnInit {
         .pipe(takeUntil(this.destroyed$))
         .subscribe(() => {
           comment.commentReactions.splice(index, 1);
-          this._tutorPortalService.commentsUpdated = this;
         });
     }
   }
@@ -133,7 +122,6 @@ export class CommentsComponent extends AppComponentBase implements OnInit {
           response.replyCount = 0;
           this.comments.unshift(response);
           this.loadedReplyCount[response.id] = 0;
-          this._tutorPortalService.commentsUpdated = this;
         });
     }
   }
@@ -160,13 +148,12 @@ export class CommentsComponent extends AppComponentBase implements OnInit {
           this.loadedReplyCount[parent.id]++;
           this.skipCount[parent.id]++;
           this.isReplying = [];
-          this._tutorPortalService.commentsUpdated = this;
         });
     }
   }
 
   private getComments(): void {
-    this.isLoading = true;
+    this.isCommentsLoading = true;
     this.comments = [];
     this.skipCount = [];
     this.loadedReplyCount = []
@@ -175,7 +162,7 @@ export class CommentsComponent extends AppComponentBase implements OnInit {
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
-          this.isLoading = false;
+          this.isCommentsLoading = false;
         })
       )
       .subscribe(responses => {
