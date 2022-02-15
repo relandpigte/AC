@@ -1,6 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { VideoService } from '@app/videos/_services/video.service';
 import { UploadService } from '@app/_shared/services/upload.service';
+import { TableHeaderSortData } from '@shared/components/table-header-sort/table-header-sort.component';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
 import { VideoDto, VideoStatus, VideoType, VideosServiceProxy, VideoDtoPagedResultDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
@@ -19,6 +20,10 @@ export class VideosComponent extends PagedListingComponentBase<VideoDto> impleme
 
   VideoStatus = VideoStatus;
   VideoType = VideoType;
+
+  headers: TableHeaderSortData[] = [
+    { title: 'Name', sortColumn: 'name' }
+  ];
 
   constructor(
     injector: Injector,

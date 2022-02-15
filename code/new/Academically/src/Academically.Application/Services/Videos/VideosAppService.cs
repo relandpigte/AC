@@ -76,6 +76,7 @@ namespace Academically.Services.Videos
                 .Where(e => e.ParentId == null);
             var totalCount = await query.CountAsync();
             var videos = await query.OrderByDescending(e => e.CreationTime)
+                .Where(e => e.Status == VideoStatus.Published)
                 .PageBy(input)
                 .Include(e => e.ThumbnailDocument)
                 .Include(e => e.Children)
