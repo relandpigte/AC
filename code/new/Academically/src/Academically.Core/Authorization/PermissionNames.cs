@@ -193,6 +193,9 @@
         public const string Pages_Articles = "Pages.Articles";
 
 
+        public const string Pages_Events = "Pages.Events";
+
+
         public const string Pages_Tenants = "Pages.Tenants";
 
     }

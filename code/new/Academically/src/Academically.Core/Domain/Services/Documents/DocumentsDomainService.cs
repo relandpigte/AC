@@ -17,18 +17,21 @@ namespace Academically.Domain.Services.Documents
         private readonly IRepository<Document, Guid> _documentsRepository;
         private readonly IRepository<Video, Guid> _videosRepository;
         private readonly IRepository<Article, Guid> _articlesRepository;
+        private readonly IRepository<Event, Guid> _eventsRepository;
         private readonly IFileManagerService _fileManagerService;
 
         public DocumentsDomainService(
             IRepository<Document, Guid> documentsRepository,
             IRepository<Video, Guid> videosRepository,
             IRepository<Article, Guid> articlesRepository,
+            IRepository<Event, Guid> eventsRepository,
             IFileManagerService fileManagerService
             )
         {
             _documentsRepository = documentsRepository;
             _videosRepository = videosRepository;
             _articlesRepository = articlesRepository;
+            _eventsRepository = eventsRepository;
             _fileManagerService = fileManagerService;
         }
 
@@ -104,6 +107,11 @@ namespace Academically.Domain.Services.Documents
                         articleThumbnailReference.ThumbnailDocumentId = document.Id;
                         await _articlesRepository.UpdateAsync(articleThumbnailReference);
                         break;
+                    case DocumentType.EventThumbnail:
+                        var eventThumbnailReference = await _eventsRepository.GetAsync(referenceId.Value);
+                        eventThumbnailReference.ThumbnailDocumentId = document.Id;
+                        await _eventsRepository.UpdateAsync(eventThumbnailReference);
+                        break;
                 }
             }
         }
@@ -137,6 +145,11 @@ namespace Academically.Domain.Services.Documents
                         var articleThumbnailReference = await _articlesRepository.GetAsync(referenceId.Value);
                         articleThumbnailReference.ThumbnailDocumentId = null;
                         await _articlesRepository.UpdateAsync(articleThumbnailReference);
+                        break;
+                    case DocumentType.EventThumbnail:
+                        var eventThumbnailReference = await _eventsRepository.GetAsync(referenceId.Value);
+                        eventThumbnailReference.ThumbnailDocumentId = null;
+                        await _eventsRepository.UpdateAsync(eventThumbnailReference);
                         break;
                 }
             }
@@ -215,6 +228,10 @@ namespace Academically.Domain.Services.Documents
                     break;
                 case DocumentType.CourseSectionImage:
                     folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_CourseSectionImages);
+                    isSecured = false;
+                    break;
+                case DocumentType.EventThumbnail:
+                    folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_EventThumbnails);
                     isSecured = false;
                     break;
                 default:

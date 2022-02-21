@@ -1,0 +1,140 @@
+<div class="card-header">
+  <div class="row align-items-center">
+    <div class="col">
+    </div>
+    <div class="col-auto mr-n3">
+      <form>
+        <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize" (select2ValueChange)="pageSizeChange($event)"
+          name="PageNumber" class="custom-select custom-select-sm form-control-flush" data-toggle="select">
+          <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
+            {{ pageSizeSelection }} {{ 'PerPage' | localize }}
+          </option>
+        </select>
+      </form>
+    </div>
+    <div class="col-auto">
+      <div class="dropdown" dropdown #filterDropdown="bs-dropdown" [isAnimated]="true" [autoClose]="false">
+        <button class="btn btn-sm btn-white" type="button" dropdownToggle>
+          <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }}
+          <span *ngIf="scheduleFilter || scheduleFilter >= 0" class="badge badge-primary ml-1">1</span>
+        </button>
+        <form *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-card" (ngSubmit)="getDataPage(1)">
+          <div class="card-header">
+            <h4 class="card-header-title">{{ 'Filters' | localize }}</h4>
+            <button class="btn btn-sm btn-link text-reset btn-white" type="submit"
+              (click)="filterDropdown.hide(); onClearFiltersClick()">
+              <small>{{ 'ClearFilters' | localize }}</small>
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="list-group list-group-flush mt-n4 mb-4">
+              <div class="list-group-item">
+                <div class="row">
+                  <div class="col">
+                    <small>{{ 'Status' | localize }}</small>
+                  </div>
+                  <div class="col-auto">
+                    <div class="custom-control custom-radio d-inline">
+                      <input type="radio" class="custom-control-input" id="allSchedule" name="scheduleFilter"
+                        [(ngModel)]="scheduleFilter" [value]="undefined" checked />
+                      <label class="custom-control-label" for="allSchedule">
+                        {{ 'All' | localize }}
+                      </label>
+                    </div>
+                    <div class="custom-control custom-radio d-inline mx-3">
+                      <input type="radio" class="custom-control-input" id="upcomingSchedule" name="scheduleFilter"
+                        [(ngModel)]="scheduleFilter" [value]="EventScheduleFilter.Upcoming" />
+                      <label class="custom-control-label" for="upcomingSchedule">
+                        {{ 'Upcoming' | localize }}
+                      </label>
+                    </div>
+                    <div class="custom-control custom-radio d-inline">
+                      <input type="radio" class="custom-control-input" id="pastSchedule" name="scheduleFilter"
+                        [(ngModel)]="scheduleFilter" [value]="EventScheduleFilter.Past" />
+                      <label class="custom-control-label" for="pastSchedule">
+                        {{ 'Past' | localize }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-block btn-primary" type="submit" (click)="filterDropdown.hide()">
+              {{ 'ApplyFilter' | localize }}
+            </button>
+          </div>
+          &nbsp;
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-sm table-hover table-nowrap card-table" [loader]="isTableLoading">
+    <tbody class="list font-size-base">
+      <tr *ngFor="
+              let event of (events | paginate: { id: 'schedules', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
+            ">
+        <td>
+          <div class="row">
+            <div class="col-auto d-flex justify-content-center align-items-center">
+              <div *ngIf="!thumbnailUrls[event.id] else withThumbnailTemplate"
+                class="avatar avatar-4by3 d-flex justify-content-center align-items-center">
+                <i class="fe fe-cast text-muted h1 p-0 m-0"></i>
+              </div>
+              <ng-template #withThumbnailTemplate>
+                <div class="avatar avatar-4by3">
+                  <img [src]="getCourseImageUrl(thumbnailUrls[event.id])" alt="..." class="avatar-img rounded">
+                </div>
+              </ng-template>
+            </div>
+            <div class="col d-flex flex-column justify-content-center">
+              <a [routerLink]="[event.id]">
+                <h4 class="mb-1">{{ event.name }}</h4>
+              </a>
+              <p *ngIf="event.description" class="text-muted mb-1">
+                {{ event.description }}
+              </p>
+              <div class="text-muted mb-1">
+                <div class="d-flex">
+                  <div class="d-flex align-items-center">
+                    <i class="fe fe-cast mr-2"></i>
+                    {{ 'Event' | localize }}
+                  </div>
+                  <div class="d-flex align-items-center mx-3">|</div>
+                  <div class="d-flex align-items-center mr-3">
+                    <i class="fe fe-users mr-2"></i>
+                    0 {{ 'Attendees' | localize }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col d-flex flex-column justify-content-center">
+              {{ event.eventDateTime | dateFormat: 'MMM DD, YYYY' }}
+              {{ 'At' | localize | lowercase }}
+              {{ event.eventDateTime | dateFormat: 'hh:mm A' }}
+            </div>
+            <div class="col d-flex flex-column justify-content-center">
+              {{ convertMomentToDateAgo(event.eventDateTime) }}
+            </div>
+          </div>
+        </td>
+        <td class="table-action">
+          <button [routerLink]="[event.id]" class="btn btn-outline-primary btn-sm mr-2">
+            {{ 'Edit' | localize }}
+          </button>
+          <button type="button" class="btn btn-primary btn-sm">
+            {{ 'Join' | localize }}
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="events.length === 0">
+        <td colspan="10">
+          <p class="text-center m-0 p-0">{{ 'NoRecordsFound' | localize }}</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <abp-pagination-controls id="schedules" (pageChange)="getDataPage($event)"> </abp-pagination-controls>
+</div>

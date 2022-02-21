@@ -187,6 +187,13 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
                 (m) => m.ArticlesModule
               ),
           },
+          {
+            path: 'events',
+            loadChildren: () =>
+              import('@app/events/events.module').then(
+                (m) => m.EventsModule
+              ),
+          },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent },

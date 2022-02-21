@@ -61,7 +61,7 @@ export class ArticlesComponent extends AppComponentBase implements OnInit {
             if (response.type === ArticleType.SingleArticle) {
               this._router.navigate(['/app/articles/', response.id]);
             } else {
-              // this._router.navigate(['/app/articles/article-series/', response.id]);
+              this._router.navigate(['/app/articles/article-series/', response.id]);
             }
           });
       });

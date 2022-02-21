@@ -36,7 +36,7 @@ export abstract class BaseMenu extends AppComponentBase {
         new MenuItem(this.l('Courses'), '/app/dashboard/courses', 'fe fe-book', 'Pages.Dashboard.Courses'),
         new MenuItem(this.l('Videos'), '/app/videos', 'fe fe-video', 'Pages.Videos'),
         new MenuItem(this.l('Articles'), '/app/articles', 'fe fe-file-text', 'Pages.Articles'),
-        new MenuItem(this.l('Events'), '/app/dashboard/events', 'fe fe-watch', 'Pages.Dashboard.Events'),
+        new MenuItem(this.l('Events'), '/app/events', 'fe fe-cast', 'Pages.Events'),
       ]),
       // new MenuItem(this.l('OverseasStudy'), '#', 'fe fe-globe'),
       // new MenuItem(this.l('Blog'), '#', 'fe fe-message-circle'),

@@ -16,11 +16,6 @@ import { PageBuilderService } from './_services/page-builder.service';
   styleUrls: ['./content-builder.component.less']
 })
 export class ContentBuilderComponent extends AppComponentBase implements OnInit, OnDestroy {
-  @Input() set referenceId(value: string) {
-    if (value) {
-      this.initializeContentManager(value);
-    }
-  }
   @Input() isSinglePage = false;
   pageContent = new ContentDto();
   content: Content;
@@ -83,6 +78,12 @@ export class ContentBuilderComponent extends AppComponentBase implements OnInit,
         this._pageBuilderService.remove = undefined;
       }
     });
+  }
+
+  @Input() set referenceId(value: string) {
+    if (value) {
+      this.initializeContentManager(value);
+    }
   }
 
   ngOnInit(): void {

@@ -41,13 +41,6 @@ import { DashboardComponent } from './dashboard.component';
                 (m) => m.CoachingModule
               ),
           },
-          {
-            path: 'events',
-            loadChildren: () =>
-              import('@app/dashboard/events/events.module').then(
-                (m) => m.EventsModule
-              ),
-          },
           { path: '', redirectTo: 'overview' },
         ],
       }

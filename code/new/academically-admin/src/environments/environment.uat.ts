@@ -40,12 +40,6 @@ export const environment = {
           accessKey: 'AKIA3CV3YWZBN7ZGDVHT',
           secret: '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',
         },
-        folders: {
-          video: 'videos',
-          videoThumbnail: 'video-thumbnails',
-          articleThumbnail: 'article-thumbnails',
-          courseSectionImage: 'course-section-images',
-        },
       },
     },
   },

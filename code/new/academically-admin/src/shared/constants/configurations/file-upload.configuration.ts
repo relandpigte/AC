@@ -44,4 +44,11 @@ export const fileUploadConfiguration = {
     '.mkv',
   ],
   maxFileSize: 5242880,
+  folders: {
+    video: 'videos',
+    videoThumbnail: 'video-thumbnails',
+    articleThumbnail: 'article-thumbnails',
+    courseSectionImage: 'course-section-images',
+    eventThumbnail: 'event-thumbnails',
+  },
 };

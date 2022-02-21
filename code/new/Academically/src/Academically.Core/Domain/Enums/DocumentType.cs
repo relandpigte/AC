@@ -20,5 +20,6 @@
         VideoThumbnail,
         ArticleThumbnail,
         CourseSectionImage,
+        EventThumbnail,
     }
 }

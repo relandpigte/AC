@@ -83,6 +83,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<ContentMargin> ContentMargins { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<CommentReaction> CommentReactions { get; set; }
+        public virtual DbSet<Event> Events { get; set; }
 
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)

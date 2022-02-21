@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { DocumentDto, DocumentsServiceProxy, DocumentType } from '@shared/service-proxies/service-proxies';
 import { AppSessionService } from '@shared/session/app-session.service';
 import { environment } from 'environments/environment';
@@ -84,7 +85,7 @@ export class UploadService {
   }
 
   private getFolder(type: DocumentType): string {
-    const folders = this._configuration.folders;
+    const folders = fileUploadConfiguration.folders;
     let folder;
     switch (type) {
       case DocumentType.Video:
@@ -98,6 +99,9 @@ export class UploadService {
         break;
       case DocumentType.CourseSectionImage:
         folder = folders.courseSectionImage;
+        break;
+      case DocumentType.EventThumbnail:
+        folder = folders.eventThumbnail;
         break;
     }
     return folder;

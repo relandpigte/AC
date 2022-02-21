@@ -200,6 +200,9 @@ namespace Academically.Authorization
             context.CreatePermission(PermissionNames.Pages_Articles, L("Articles"));
 
 
+            context.CreatePermission(PermissionNames.Pages_Events, L("Events"));
+
+
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
 
 

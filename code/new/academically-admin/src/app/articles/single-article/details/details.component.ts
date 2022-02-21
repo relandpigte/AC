@@ -4,9 +4,18 @@ import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/
 import { UploadService } from '@app/_shared/services/upload.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { FileParameter, SpokenLanguageDto, DocumentType, PricingType, ArticlesServiceProxy, SpokenLanguagesServiceProxy, ArticleType, DocumentDto, UpdateArticleDetailsDto } from '@shared/service-proxies/service-proxies';
+import {
+  FileParameter,
+  SpokenLanguageDto,
+  DocumentType,
+  PricingType,
+  ArticlesServiceProxy,
+  SpokenLanguagesServiceProxy,
+  ArticleType,
+  DocumentDto,
+  UpdateArticleDetailsDto,
+} from '@shared/service-proxies/service-proxies';
 import { takeUntil, finalize } from 'rxjs/operators';
-
 
 enum EditField {
   Name = 1,

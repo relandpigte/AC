@@ -12,6 +12,7 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { DragulaModule } from 'ng2-dragula';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { CalendarModule } from 'primeng/calendar';
 
 import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
 import { DateFormatPipe } from './pipes/date-format.pipe';
@@ -58,6 +59,7 @@ import { ColorPickerComponent } from './components/color-picker/color-picker.com
     DragulaModule.forRoot(),
     ColorPickerModule,
     NgxMaskModule.forRoot(),
+    CalendarModule,
   ],
   exports: [
     SharedModule,
@@ -84,6 +86,7 @@ import { ColorPickerComponent } from './components/color-picker/color-picker.com
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
     ColorPickerComponent,
+    CalendarModule,
   ],
 })
 export class AppSharedModule { }

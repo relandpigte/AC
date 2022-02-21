@@ -24,6 +24,7 @@
         public const string Aws_S3_Folders_VideoThumbnails = "Aws.S3.Folders.VideoThumbnails";
         public const string Aws_S3_Folders_ArticleThumbnails = "Aws.S3.Folders.ArticleThumbnails";
         public const string Aws_S3_Folders_CourseSectionImages = "Aws.S3.Folders.CourseSectionImages";
+        public const string Aws_S3_Folders_EventThumbnails = "Aws.S3.Folders.EventThumbnails";
         public const string ITagg_Sms_Username = "ITagg.Sms.Username";
         public const string ITagg_Sms_Password = "ITagg.Sms.Password";
         public const string Email_FromName = "Email.FromName";
