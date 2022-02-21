@@ -7,6 +7,7 @@
 
   <div class="table-responsive">
     <table class="table table-sm table-hover table-nowrap card-table" [loader]="isTableLoading">
+      <thead table-header-sort [headers]="headers" (sortChange)="sortChange($event)"></thead>
       <tbody class="list font-size-base">
         <tr *ngFor="
             let video of (videos | paginate: { id: 'videos', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
