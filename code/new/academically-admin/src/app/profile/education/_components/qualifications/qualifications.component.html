@@ -18,7 +18,7 @@
       <tbody>
         <ng-container *ngFor="let qualification of userQualifications">
           <tr>
-            <td rowspan="2" width="1%">
+            <td  width="1%">
               <div class="avatar avatar-sm">
                 <div class="avatar-title font-size-lg bg-primary-soft rounded-circle text-primary">
                   <i class="fe fe-book-open"></i>
@@ -44,7 +44,7 @@
             <td width="10%">
               {{ qualification.gradeAttained }}
             </td>
-            <td *ngIf="!isViewOnly" rowspan="2" width="1%" class="align-middle">
+            <td *ngIf="!isViewOnly"  width="1%" class="align-middle">
               <button [disabled]="deleteLoaders[qualification.id]" (click)="onViewDocumentsClick(qualification)"
                 type="button" class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
                 <span class="fe fe-folder"></span>
@@ -63,8 +63,9 @@
               </button>
             </td>
           </tr>
-          <tr class="no-border">
-            <td colspan="5">
+          <tr class="no-border" >
+            <td style="width: 1%;"></td>
+            <td>
               <div class="ml-n2 mt-n3">
                 <div toggableContent [identifier]="qualification.id" contentClass="ql-container">
                   <quill-view-html [content]="qualification.summary" theme="snow"></quill-view-html>
