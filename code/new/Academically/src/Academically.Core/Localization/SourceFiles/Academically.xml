@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Like">Like</text>
     <text name="NoArticleFound">No article found</text>
     <text name="Questions">Questions</text>
     <text name="Purchase">Purchase</text>

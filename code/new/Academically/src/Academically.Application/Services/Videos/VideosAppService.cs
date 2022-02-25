@@ -1,31 +1,30 @@
-﻿using Abp.Application.Services.Dto;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
 using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
-using Academically.Domain.Services.Documents;
 using Academically.Services.Videos.Dto;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Academically.Services.Videos
 {
     public class VideosAppService : AcademicallyAppServiceBase, IVideosAppService
     {
         private readonly IRepository<Video, Guid> _videosRepository;
-        private readonly IDocumentsDomainService _documentsDomainService;
+        private readonly IRepository<Reaction, Guid> _reactionsRepository;
 
         public VideosAppService(
             IRepository<Video, Guid> videosRepository,
-            IDocumentsDomainService documentsDomainService
+            IRepository<Reaction, Guid> reactionsRepository
             )
         {
             _videosRepository = videosRepository;
-            _documentsDomainService = documentsDomainService;
+            _reactionsRepository = reactionsRepository;
         }
 
         public async Task<PagedResultDto<VideoDto>> GetAll(PagedVideoResultRequestDto input)
@@ -43,6 +42,12 @@ namespace Academically.Services.Videos
                 .Include(e => e.Children)
                 .Select(e => ObjectMapper.Map<VideoDto>(e))
                 .ToListAsync();
+
+            foreach (var video in videos)
+            {
+                video.LikeCount = await _reactionsRepository.CountAsync(e => e.ReferenceId == video.Id.ToString()
+                    && e.Type == ReactionType.Like);
+            }
 
             return new PagedResultDto<VideoDto>()
             {
@@ -63,6 +68,12 @@ namespace Academically.Services.Videos
                 .Include(e => e.ThumbnailDocument)
                 .Select(e => ObjectMapper.Map<VideoDto>(e))
                 .ToListAsync();
+
+            foreach (var video in videos)
+            {
+                video.LikeCount = await _reactionsRepository.CountAsync(e => e.ReferenceId == video.Id.ToString()
+                    && e.Type == ReactionType.Like);
+            }
 
             return new PagedResultDto<VideoDto>()
             {

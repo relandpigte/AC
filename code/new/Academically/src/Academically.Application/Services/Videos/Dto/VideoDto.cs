@@ -38,6 +38,8 @@ namespace Academically.Services.Videos.Dto
 
         public IEnumerable<VideoDto> Children { get; set; }
 
+        public int LikeCount { get; set; }
+
         public VideoDto()
 		{
 		}

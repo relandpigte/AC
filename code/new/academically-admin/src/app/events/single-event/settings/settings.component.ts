@@ -1,6 +1,4 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { EventService } from '@app/events/_services/event.service';
 import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
 import {
   EventFrequencyType,
@@ -10,7 +8,8 @@ import {
   UpdateEventSettingsDto,
 } from '@shared/service-proxies/service-proxies';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
+import { EventService } from '@app/events/_services/event.service';
 
 @Component({
   selector: 'app-settings',
@@ -30,25 +29,24 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
-    route: ActivatedRoute,
+    private _eventService: EventService,
     private _eventsService: EventsServiceProxy,
   ) {
     super(injector);
     this.datePickerConfig = new BsDatepickerConfig();
     this.datePickerConfig.showWeekNumbers = false;
     this.datePickerConfig.dateInputFormat = 'DD/MM/YYYY';
-
-    route.parent.parent.paramMap
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(paramMap => {
-        if (paramMap.has('id')) {
-          this.id = paramMap.get('id');
-          this.getEvent();
-        }
-      });
   }
 
   ngOnInit(): void {
+    this._eventService.eventCreated$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        if (response && response.id && !this.id && this.id !== response.id) {
+          this.id = response.id;
+          this.getEvent();
+        }
+      });
   }
 
   onEventDateTimeChange(): void {

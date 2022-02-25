@@ -131,7 +131,7 @@
                           </div>
                           <div class="d-flex align-items-center mr-3">
                             <i class="fe fe-thumbs-up mr-2"></i>
-                            0 {{ 'Likes' | localize }}
+                            {{ video.likeCount }} {{ (video.likeCount == 1 ? 'Like' : 'Likes') | localize }}
                           </div>
                           <div class="d-flex align-items-center mr-3">
                             <i class="fe fe-square-message mr-2"></i>

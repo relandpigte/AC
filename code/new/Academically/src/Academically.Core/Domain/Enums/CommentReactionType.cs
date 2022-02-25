@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Academically.Domain.Enums
 {
-    public enum CommentReactionType
+    public enum ReactionType
     {
         Like = 1,
         Heart = 2,

@@ -36,6 +36,13 @@ export class EventSeriesComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+    this._eventService.eventCreated$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        if (response && response.id) {
+          this.model = response;
+        }
+      });
   }
 
   onAddEventClick(): void {
@@ -63,8 +70,7 @@ export class EventSeriesComponent extends AppComponentBase implements OnInit {
     this._eventsService.get(this.parentId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
-        this.model = response;
-        this._eventService.eventCreated = this.model;
+        this._eventService.eventCreated = response;
       });
   }
 }
