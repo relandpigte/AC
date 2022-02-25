@@ -47,10 +47,22 @@ export class HomeComponent extends AppComponentBase implements OnInit {
   }
 
   onSaveClick(): void {
-    this._studentVideosService.create(this.model.id)
+    const newStudentVideo = new StudentVideoDto();
+    newStudentVideo.videoId = this.model.id;
+    newStudentVideo.saveOnly = true;
+    this._studentVideosService.create(newStudentVideo)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(() => {
         this.notify.success(this.l('SavedSuccessfully'));
+        this.getStudentVideo();
+      });
+  }
+
+  onUnsaveClick(): void {
+    this._studentVideosService.delete(this.studentVideo.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(() => {
+        this.notify.success(this.l('UnsavedSuccessfully'));
         this.getStudentVideo();
       });
   }

@@ -36,6 +36,7 @@ export class SidebarComponent implements OnInit {
     route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {
         this.videoId = paramMap.get('id');
+        console.log(this.videoId);
       }
     });
   }

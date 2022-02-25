@@ -19,9 +19,7 @@
     </p>
   </div>
   <div *ngIf="model.pricingType !== PricingType.Free" class="col-auto d-flex flex-column justify-content-center ">
-    <button *ngIf="purchasedVideo[model.id] else purchaseButtonTemplate" class="btn btn-sm btn-outline-primary mb-2">
-      <i class="fe fe-check"></i>
-    </button>
+    <i *ngIf="purchasedVideo[model.id] else purchaseButtonTemplate" class="fe fe-check mr-2"></i>
   </div>
 </div>
 <p *ngIf="!models.length" class="m-0 p-0 text-muted text-center small">

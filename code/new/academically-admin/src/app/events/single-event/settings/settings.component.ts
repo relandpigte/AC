@@ -10,6 +10,7 @@ import {
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { takeUntil } from 'rxjs/operators';
 import { EventService } from '@app/events/_services/event.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-settings',
@@ -56,6 +57,9 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
   }
 
   private saveEvent(): void {
+    if (!_.isNumber(this.model.duration)) {
+      return;
+    }
     this._eventsService.updateSettings(this.model)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {

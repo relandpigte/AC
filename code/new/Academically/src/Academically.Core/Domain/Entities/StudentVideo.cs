@@ -9,6 +9,7 @@ namespace Academically.Domain.Entities
     public class StudentVideo : CreationAuditedEntity<Guid>
     {
         public Guid VideoId { get; set; }
+        public bool SaveOnly { get; set; }
 
         [ForeignKey("VideoId")]
         public virtual Video Video { get; set; }

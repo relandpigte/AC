@@ -1,7 +1,7 @@
 import { Component, OnInit, Injector } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StudentVideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { StudentVideosServiceProxy, StudentVideoDto } from '@shared/service-proxies/service-proxies';
 import { takeUntil, finalize } from 'rxjs/operators';
 
 @Component({
@@ -31,8 +31,10 @@ export class LandingPageComponent extends AppComponentBase implements OnInit {
   }
 
   onBuyNowClick(): void {
-    this.isLoading = true;
-    this._studentVideosService.create(this.id)
+    const studentVideo = new StudentVideoDto();
+    studentVideo.videoId = this.id;
+    studentVideo.saveOnly = false;
+    this._studentVideosService.create(studentVideo)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {

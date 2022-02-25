@@ -7,9 +7,10 @@ namespace Academically.Services.StudentVideos
 {
 	public interface IStudentVideosAppService
 	{
-		Task<PagedResultDto<StudentVideoDto>> GetAll(GetAllStudentVideoDto input);
-		Task<StudentVideoDto> GetByVideo(Guid videoId);
-		Task Create(Guid videoId);
+		Task<PagedResultDto<StudentVideoDto>> GetAllAsync(GetAllStudentVideoDto input);
+		Task<StudentVideoDto> GetByVideoAsync(Guid videoId);
+		Task CreateAsync(StudentVideoDto input);
+		Task DeleteAsync(Guid id);
 	}
 }
 

@@ -10,6 +10,7 @@ namespace Academically.Services.StudentVideos.Dto
     public class StudentVideoDto : EntityDto<Guid>
     {
         public Guid VideoId { get; set; }
+        public bool SaveOnly { get; set; }
 
         public VideoDto Video { get; set; }
     }

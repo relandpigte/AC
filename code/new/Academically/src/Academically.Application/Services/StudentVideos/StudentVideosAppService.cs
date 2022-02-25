@@ -22,12 +22,12 @@ namespace Academically.Services.StudentVideos
             _studentVideosRepository = studentVideosRepository;
         }
 
-        public async Task<PagedResultDto<StudentVideoDto>> GetAll(GetAllStudentVideoDto input)
+        public async Task<PagedResultDto<StudentVideoDto>> GetAllAsync(GetAllStudentVideoDto input)
         {
             var query = _studentVideosRepository.GetAll()
                 .Where(e => e.CreatorUserId == AbpSession.UserId)
-                .WhereIf(input.IsSavedFilter, e => e.Video.PricingType == PricingType.Free)
-                .WhereIf(!input.IsSavedFilter, e => e.Video.PricingType != PricingType.Free);
+                .WhereIf(input.IsSavedFilter, e => e.SaveOnly)
+                .WhereIf(!input.IsSavedFilter, e => !e.SaveOnly);
             var totalCount = await query.CountAsync();
             var studentVideos = await query.PageBy(input)
                 .OrderBy(e => e.Video.Name)
@@ -40,20 +40,24 @@ namespace Academically.Services.StudentVideos
             return new PagedResultDto<StudentVideoDto>(totalCount, studentVideos);
         }
 
-        public async Task<StudentVideoDto> GetByVideo(Guid videoId)
+        public async Task<StudentVideoDto> GetByVideoAsync(Guid videoId)
         {
             return await _studentVideosRepository.GetAll()
                 .Where(e => e.VideoId == videoId && e.CreatorUserId == AbpSession.UserId)
+                .OrderByDescending(e => e.CreationTime)
                 .Select(e => ObjectMapper.Map<StudentVideoDto>(e))
                 .FirstOrDefaultAsync();
         }
 
-        public async Task Create(Guid videoId)
+        public async Task CreateAsync(StudentVideoDto input)
         {
-            await _studentVideosRepository.InsertAsync(new StudentVideo()
-            {
-                VideoId = videoId,
-            });
+            var studentVideo = ObjectMapper.Map<StudentVideo>(input);
+            await _studentVideosRepository.InsertAsync(studentVideo);
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            await _studentVideosRepository.DeleteAsync(id);
         }
     }
 }

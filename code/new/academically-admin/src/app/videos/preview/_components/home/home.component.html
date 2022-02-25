@@ -44,21 +44,27 @@
   </div>
   <p *ngIf="model.description" class="pt-1 m-0 small">{{ model.description }}</p>
   <div class="row small text-muted text-center mx-2 mt-2">
-    <div class="col no-wrap">
+    <div class="col p-0 no-wrap">
       <a [class.text-success]="isLiked" href="#!like" (click)="$event.preventDefault(); onLikeClick()">
         <i class="fe fe-thumbs-up"></i> {{ likeCount }}
       </a>
     </div>
-    <div class="col">|</div>
-    <div class="col no-wrap">
+    <div class="col-auto p-0 ">|</div>
+    <div class="col p-0 no-wrap">
       <i class="fe fe-share-2"></i> {{ 'Share' }}
     </div>
-    <ng-container *ngIf="!preview && model.id">
-      <div class="col">|</div>
-      <div class="col no-wrap">
-        <a href="#!save" (click)="$event.preventDefault(); onSaveClick()">
+    <ng-container *ngIf="!preview && (!studentVideo.id || (studentVideo && studentVideo.saveOnly))">
+      <div class="col-auto p-0 ">|</div>
+      <div class="col p-0 no-wrap">
+        <a *ngIf="!studentVideo || !studentVideo.id else unsaveVideoTemplate" href="#!save"
+          (click)="$event.preventDefault(); onSaveClick()">
           <i class="fe fe-bookmark"></i> {{ 'Save' }}
         </a>
+        <ng-template #unsaveVideoTemplate>
+          <a href="#!save" (click)="$event.preventDefault(); onUnsaveClick()" class="text-success">
+            <i class="fe fe-bookmark"></i> {{ 'Unsave' }}
+          </a>
+        </ng-template>
       </div>
     </ng-container>
   </div>
