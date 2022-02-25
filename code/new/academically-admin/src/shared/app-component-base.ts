@@ -15,6 +15,7 @@ import { Moment } from 'moment';
 import { DocumentDto, UserDto } from './service-proxies/service-proxies';
 import { ReplaySubject } from 'rxjs';
 import * as moment from 'moment';
+import { UploadService } from '@app/_shared/services/upload.service';
 
 @Injectable()
 export abstract class AppComponentBase implements OnDestroy {
@@ -32,6 +33,7 @@ export abstract class AppComponentBase implements OnDestroy {
   multiTenancy: AbpMultiTenancyService;
   appSession: AppSessionService;
   elementRef: ElementRef;
+  uploadService: UploadService;
 
   defaultModalSettings: any;
 
@@ -47,6 +49,7 @@ export abstract class AppComponentBase implements OnDestroy {
     this.multiTenancy = injector.get(AbpMultiTenancyService);
     this.appSession = injector.get(AppSessionService);
     this.elementRef = injector.get(ElementRef);
+    this.uploadService = injector.get(UploadService);
 
     this.defaultModalSettings = {
       backdrop: 'static',
@@ -111,6 +114,22 @@ export abstract class AppComponentBase implements OnDestroy {
       }
     }
     return 'assets/themes/dashkit/img/covers/profile-cover-1.jpg';
+  }
+
+  getServiceImageUrl(document: DocumentDto): string {
+    const imageUrl = this.uploadService.getFileUrl(document);
+    if (imageUrl) {
+      return imageUrl;
+    }
+    return '/assets/themes/dashkit/img/avatars/projects/project-1.jpg';
+  }
+
+  getProfilePictureUrl(document: DocumentDto): string {
+    const imageUrl = this.uploadService.getFileUrl(document);
+    if (imageUrl) {
+      return imageUrl;
+    }
+    return 'assets/img/anonymous.png';
   }
 
   getCoverPhotoFromDocument(document?: DocumentDto, userId?: number): string {

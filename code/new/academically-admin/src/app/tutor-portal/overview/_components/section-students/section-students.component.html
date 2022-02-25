@@ -1,0 +1,14 @@
+<a href="#!show-all" (click)="$event.preventDefault(); onClick()">
+  <div class="avatar-group">
+    <div *ngFor="let model of models" class="avatar avatar-sm" [tooltip]="model.creatorUser.fullName"
+      [container]="'body'">
+      <img [src]="getProfilePictureUrl(model.creatorUser.profilePictureDocument)" alt="..."
+        class="avatar-img rounded-circle">
+    </div>
+    <div *ngIf="limitDiff > 0" class="avatar avatar-sm">
+      <span class="avatar-title rounded-circle">
+        +{{ limitDiff }}
+      </span>
+    </div>
+  </div>
+</a>

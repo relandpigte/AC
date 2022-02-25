@@ -103,6 +103,9 @@ export class UploadService {
       case DocumentType.EventThumbnail:
         folder = folders.eventThumbnail;
         break;
+      case DocumentType.ProfilePicture:
+        folder = folders.profilePicture;
+        break;
     }
     return folder;
   }

@@ -50,5 +50,6 @@ export const fileUploadConfiguration = {
     articleThumbnail: 'article-thumbnails',
     courseSectionImage: 'course-section-images',
     eventThumbnail: 'event-thumbnails',
+    profilePicture: 'profile-pictures',
   },
 };

@@ -1,6 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Purchase">Purchase</text>
+    <text name="MoreInSeries">More in series</text>
+    <text name="PreviewSeries">Preview series</text>
+    <text name="NoRelatedVideo">No related video</text>
+    <text name="Related">Related</text>
+    <text name="Follow">Follow</text>
+    <text name="Share">Share</text>
+    <text name="Purchased">Purchased</text>
+    <text name="Saved">Saved</text>
+    <text name="StudentProgress">Student progress</text>
     <text name="At">At</text>
     <text name="ClosedEventAccessDescription">Enrollment closed, no longer accepting attendees</text>
     <text name="OpenEventAccessDescription">Enrollment open and accepting attendees</text>

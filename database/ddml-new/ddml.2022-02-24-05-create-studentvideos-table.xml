@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1645673629236-1">
+        <createTable tableName="AcademicallyStudentVideos">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="VideoId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1645673629236-2">
+        <createIndex indexName="FK_StudentVideos_Users_CreatorUserId_idx" tableName="AcademicallyStudentVideos">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1645673629236-3">
+        <createIndex indexName="FK_StudentVideos_Videos_VideoId_idx" tableName="AcademicallyStudentVideos">
+            <column name="VideoId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1645673629236-4">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="AcademicallyStudentVideos" constraintName="FK_StudentVideos_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1645673629236-5">
+        <addForeignKeyConstraint baseColumnNames="VideoId" baseTableName="AcademicallyStudentVideos" constraintName="FK_StudentVideos_Videos_VideoId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyVideos" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

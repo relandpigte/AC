@@ -5,6 +5,7 @@ using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Services.Documents.Dto;
+using Academically.Users.Dto;
 
 namespace Academically.Services.Videos.Dto
 {
@@ -33,8 +34,9 @@ namespace Academically.Services.Videos.Dto
 		public VideoDto Parent { get; set; }
 		public DocumentDto Document { get; set; }
 		public Document ThumbnailDocument { get; set; }
+        public UserDto CreatorUser { get; set; }
 
-		public IEnumerable<VideoDto> Children { get; set; }
+        public IEnumerable<VideoDto> Children { get; set; }
 
         public VideoDto()
 		{

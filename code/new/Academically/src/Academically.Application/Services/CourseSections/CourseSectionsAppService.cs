@@ -45,10 +45,6 @@ namespace Academically.Services.CourseSections
                     unitOutput.Children = new List<CourseSectionDto>();
                     unitOutput.Children.AddRange(await GetCourseSectionChildren(unitOutput.Id));
                 }
-                if (moduleOutput.Type == CourseSectionType.Lesson)
-                {
-                    moduleOutput.ImageDocumentUrl = await _documentsDomainService.GetFileUrlAsync(courseModule.ImageDocument);
-                }
                 courseSections.Add(moduleOutput);
             }
             return courseSections;
@@ -62,11 +58,6 @@ namespace Academically.Services.CourseSections
                 .Where(e => e.Id == id)
                 .FirstOrDefaultAsync();
             var output = ObjectMapper.Map<CourseSectionDto>(courseSection);
-
-            if (courseSection.ImageDocument != null)
-            {
-                output.ImageDocumentUrl = await _documentsDomainService.GetFileUrlAsync(courseSection.ImageDocument);
-            }
 
             return output;
         }
@@ -145,22 +136,12 @@ namespace Academically.Services.CourseSections
 
         private async Task<IEnumerable<CourseSectionDto>> GetCourseSectionChildren(Guid? parentId)
         {
-            var courseSectionChildren = await _courseSectionsRepository.GetAll()
+            return await _courseSectionsRepository.GetAll()
                 .Where(e => e.ParentId == parentId)
                 .Include(e => e.ImageDocument)
                 .OrderBy(e => e.DisplayOrder)
+                .Select(e => ObjectMapper.Map<CourseSectionDto>(e))
                 .ToListAsync();
-            var outputs = new List<CourseSectionDto>();
-            foreach (var courseSection in courseSectionChildren)
-            {
-                var output = ObjectMapper.Map<CourseSectionDto>(courseSection);
-                if (courseSection.ImageDocument != null)
-                {
-                    output.ImageDocumentUrl = await _documentsDomainService.GetFileUrlAsync(courseSection.ImageDocument);
-                }
-                outputs.Add(output);
-            }
-            return outputs;
         }
 
         private static string GetDuplicateName(string name)
@@ -179,23 +160,10 @@ namespace Academically.Services.CourseSections
             return $"{name} (1)";
         }
 
-        public async Task<CourseSectionDto> UpdateDetails([FromForm] UpdateCourseSectionDetailsDto input)
+        public async Task<CourseSectionDto> UpdateDetails(UpdateCourseSectionDetailsDto input)
         {
             var courseSection = await _courseSectionsRepository.GetAsync(input.Id);
             ObjectMapper.Map(input, courseSection);
-
-            if (input.ImageDocumentFile != null)
-            {
-                var oldDocumentId = courseSection.ImageDocumentId;
-                var document = await _documentsDomainService.CreateAsync(AbpSession.UserId.Value, input.ImageDocumentFile, DocumentType.CourseSectionImage);
-                courseSection.ImageDocumentId = document.Id;
-
-                if (oldDocumentId.HasValue)
-                {
-                    await _documentsDomainService.DeleteAsync(oldDocumentId.Value);
-                }
-            }
-
             await _courseSectionsRepository.UpdateAsync(courseSection);
             return ObjectMapper.Map<CourseSectionDto>(courseSection);
         }

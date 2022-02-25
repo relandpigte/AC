@@ -95,7 +95,17 @@ export class LearnComponent extends AppComponentBase implements OnInit {
     const studentCourseSection = this.studentCourse.studentCourseSections[this.currentSectionIndex];
     if (studentCourseSection) {
       this.currentCourseSectionId = studentCourseSection.courseSectionId;
-      studentCourseSection.status = StudentCourseSectionStatus.InProgress;
+
+      this._studentCourseSectionsService.updateStatus(
+        studentCourseSection.id,
+        StudentCourseSectionStatus.InProgress
+      )
+        .pipe(
+          takeUntil(this.destroyed$),
+        )
+        .subscribe(() => {
+          studentCourseSection.status = StudentCourseSectionStatus.InProgress;
+        });
     }
   }
 

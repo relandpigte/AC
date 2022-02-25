@@ -152,41 +152,65 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="form-check">
-            <input [checked]="model.pricingType === PricingType.Free" class="form-check-input" type="radio"
-              name="pricing" id="free" value="free" (click)="onPricingClick(PricingType.Free)"
-              [disabled]="editField !== EditField.Pricing">
-            <label class="form-check-label" for="free">
-              {{ 'Free' | localize | titlecase }}
-              <p class="small text-muted">{{ 'FreeDescription' | localize }}</p>
-            </label>
+          <div class="row">
+            <div class="col-auto mr-n4">
+              <div class="custom-control custom-radio">
+                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
+                  id="free" [value]="PricingType.Free">
+                <label class="custom-control-label" for="free"></label>
+              </div>
+            </div>
+            <div class="col">
+              <label class="form-check-label" for="free">
+                {{ 'Free' | localize | titlecase }}
+                <p class="small text-muted">{{ 'FreeDescription' | localize }}</p>
+              </label>
+            </div>
           </div>
-          <div class="form-check">
-            <input [checked]="model.pricingType === PricingType.FixedPrice" class="form-check-input" type="radio"
-              name="pricing" id="fixedFee" value="free" (click)="onPricingClick(PricingType.FixedPrice)"
-              [disabled]="editField !== EditField.Pricing">
-            <label class="form-check-label" for="fixedFee">
-              {{ 'FixedFee' | localize }}
-              <p class="small text-muted">{{ 'FixedFeeDescription' | localize }}</p>
-            </label>
+          <div class="row">
+            <div class="col-auto mr-n4">
+              <div class="custom-control custom-radio">
+                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
+                  id="fixedFee" [value]="PricingType.FixedPrice">
+                <label class="custom-control-label" for="fixedFee"></label>
+              </div>
+            </div>
+            <div class="col">
+              <label class="form-check-label" for="fixedFee">
+                {{ 'FixedFee' | localize }}
+                <p class="small text-muted">{{ 'FixedFeeDescription' | localize }}</p>
+              </label>
+            </div>
           </div>
-          <div class="form-check">
-            <input [checked]="model.pricingType === PricingType.PaymentPlan" class="form-check-input" type="radio"
-              name="pricing" id="paymentPlan" value="paymentPlan" (click)="onPricingClick(PricingType.PaymentPlan)"
-              [disabled]="editField !== EditField.Pricing">
-            <label class="form-check-label" for="paymentPlan">
-              {{ 'PaymentPlan' | localize | titlecase }}
-              <p class="small text-muted">{{ 'PaymentPlanDescription' | localize }}</p>
-            </label>
+          <div class="row">
+            <div class="col-auto mr-n4">
+              <div class="custom-control custom-radio">
+                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
+                  id="paymentPlan" [value]="PricingType.PaymentPlan">
+                <label class="custom-control-label" for="paymentPlan"></label>
+              </div>
+            </div>
+            <div class="col">
+              <label class="form-check-label" for="paymentPlan">
+                {{ 'PaymentPlan' | localize | titlecase }}
+                <p class="small text-muted">{{ 'PaymentPlanDescription' | localize }}</p>
+              </label>
+            </div>
           </div>
-          <div class="form-check">
-            <input [checked]="model.pricingType === PricingType.Subscription" class="form-check-input" type="radio"
-              name="pricing" id="subscription" value="free" (click)="onPricingClick(PricingType.Subscription)"
-              [disabled]="editField !== EditField.Pricing">
-            <label class="form-check-label" for="subscription">
-              {{ 'Subscription' | localize | titlecase }}
-              <p class="small text-muted">{{ 'SubscriptionDescription' | localize }}</p>
-            </label>
+          <div class="row">
+            <div class="col-auto mr-n4">
+              <div class="custom-control custom-radio">
+                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
+                  id="subscription" [value]="PricingType.Subscription" [disabled]="editField !== EditField.Pricing">
+                <label class="custom-control-label" for="subscription"></label>
+              </div>
+            </div>
+            <div class="col">
+              <label class="form-check-label" for="subscription">
+                {{ 'Subscription' | localize | titlecase }}
+                <p class="small text-muted">{{ 'SubscriptionDescription' | localize }}</p>
+              </label>
+            </div>
           </div>
         </div>
       </div>

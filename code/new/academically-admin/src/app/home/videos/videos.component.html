@@ -26,10 +26,10 @@
                 </ng-template>
               </div>
               <div class="col d-flex flex-column justify-content-center">
-                <a [routerLink]="['/app/videos/preview', video.id]">
+                <a [routerLink]="['/app/videos/student-portal', video.id]">
                   <h4 class="mb-1">{{ video.name }}</h4>
                 </a>
-                <p *ngIf="video.description" class="text-muted mb-1">
+                <p *ngIf="video.description" class="text-muted mb-1 break-spaces">
                   {{ video.description }}
                 </p>
                 <div class="text-muted mb-1">
@@ -50,14 +50,8 @@
               </div>
             </div>
           </td>
-          <td>
-            <span class="badge" [class.badge-info]="video.status === VideoStatus.Draft"
-              [class.badge-primary]="video.status === VideoStatus.Published">
-              {{ VideoStatus[video.status] }}
-            </span>
-          </td>
           <td class="table-action">
-            <button [routerLink]="['/app/videos/preview', video.id]" type="button"
+            <button [routerLink]="['/app/videos/student-portal', video.id]" type="button"
               class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
               <span class="fe fe-layout"></span>
             </button>

@@ -32,8 +32,7 @@
             </div>
             <div *ngIf="courseSectionModule.type === courseSectionType.Lesson" class="col-auto">
               <a href="javascript:;" class="avatar avatar-sm avatar-4by3">
-                <img [src]="getCourseImageUrl(courseSectionModule.imageDocumentUrl)" alt="..."
-                  class="avatar-img rounded">
+                <img [src]="getServiceImageUrl(courseSectionModule.imageDocument)" alt="..." class="avatar-img rounded">
               </a>
             </div>
             <div [class.ml-n2]="courseSectionModule.type === courseSectionType.Lesson" class="col ml-1">
@@ -120,7 +119,7 @@
                   </div>
                   <div *ngIf="courseSectionUnit.type === courseSectionType.Lesson" class="col-auto">
                     <a href="javascript:;" class="avatar avatar-sm avatar-4by3">
-                      <img [src]="getCourseImageUrl(courseSectionUnit.imageDocumentUrl)" alt="..."
+                      <img [src]="getServiceImageUrl(courseSectionUnit.imageDocument)" alt="..."
                         class="avatar-img rounded">
                     </a>
                   </div>
@@ -208,7 +207,7 @@
                         </div>
                         <div *ngIf="courseSectionLesson.type === courseSectionType.Lesson" class="col-auto">
                           <a href="javascript:;" class="avatar avatar-sm avatar-4by3">
-                            <img [src]="getCourseImageUrl(courseSectionLesson.imageDocumentUrl)" alt="..."
+                            <img [src]="getServiceImageUrl(courseSectionLesson.imageDocument)" alt="..."
                               class="avatar-img rounded">
                           </a>
                         </div>

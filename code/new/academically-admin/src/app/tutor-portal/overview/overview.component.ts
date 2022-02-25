@@ -2,7 +2,7 @@ import { Component, Injector, ChangeDetectorRef } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ActivatedRoute } from '@angular/router';
-import { CourseDto, CoursesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CourseDto, CoursesServiceProxy, CourseSectionsServiceProxy, CourseSectionDto } from '@shared/service-proxies/service-proxies';
 import { takeUntil, finalize } from 'rxjs/operators';
 import * as moment from 'moment';
 
@@ -34,6 +34,7 @@ export class OverviewComponent extends AppComponentBase {
   currentDataType = DataType.Revenue;
   currentYAxis = 'y';
   shouldShowLastYear = false;
+  courseSections: CourseSectionDto[] = [];
 
   RangeType = RangeType;
   DataType = DataType;
@@ -42,6 +43,7 @@ export class OverviewComponent extends AppComponentBase {
     injector: Injector,
     private _route: ActivatedRoute,
     private _coursesService: CoursesServiceProxy,
+    private _courseSectionsService: CourseSectionsServiceProxy,
     private _cd: ChangeDetectorRef,
   ) {
     super(injector);
@@ -78,6 +80,7 @@ export class OverviewComponent extends AppComponentBase {
       )
       .subscribe(response => {
         this.model = response;
+        this.getCourseSections();
       });
   }
 
@@ -184,5 +187,13 @@ export class OverviewComponent extends AppComponentBase {
       });
     }
     this.chartDataset = dataSet;
+  }
+
+  private getCourseSections(): void {
+    this._courseSectionsService.getAll(this.model.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(responses => {
+        this.courseSections = responses;
+      });
   }
 }

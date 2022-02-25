@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Academically.Domain.Enums;
@@ -10,7 +11,9 @@ namespace Academically.Services.Videos
 	{
 		Task<PagedResultDto<VideoDto>> GetAll(PagedVideoResultRequestDto input);
 		Task<PagedResultDto<VideoDto>> GetAllForSeries(PagedSeriesVideoResultRequestDto input);
+		Task<IEnumerable<VideoDto>> GetOtherVideosForSeries(Guid id);
 		Task<PagedResultDto<VideoDto>> GetAllForHome(PagedResultRequestDto input);
+		Task<IEnumerable<VideoDto>> GetAllRelated (Guid id);
 		Task<VideoDto> Get(Guid id);
 		Task<GetDelayStatusDto> GetDelayStatus(Guid id);
 		Task<VideoDto> Create(VideoDto input);

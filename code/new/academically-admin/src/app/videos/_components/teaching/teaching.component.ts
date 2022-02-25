@@ -45,6 +45,23 @@ export class TeachingComponent extends PagedListingComponentBase<VideoDto> imple
     this.statusFilter = undefined;
   }
 
+  onDeleteClick(id: string): void {
+    this.message.confirm(
+      this.l('DeleteVideoConfirmationMessage'),
+      undefined,
+      (result: boolean) => {
+        if (result) {
+          this._videosService.delete(id)
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe(() => {
+              this.notify.success(this.l('SuccessfullyDeleted'));
+              this.refresh();
+            });
+        }
+      }
+    );
+  }
+
   protected list(
     request: PagedVideoRequestDto,
     pageNumber: number,
@@ -74,22 +91,5 @@ export class TeachingComponent extends PagedListingComponentBase<VideoDto> imple
         });
         this.showPaging(result, pageNumber);
       });
-  }
-
-  onDeleteClick(id: string): void {
-    this.message.confirm(
-      this.l('DeleteVideoConfirmationMessage'),
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._videosService.delete(id)
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe(() => {
-              this.notify.success(this.l('SuccessfullyDeleted'));
-              this.refresh();
-            })
-        }
-      }
-    );
   }
 }

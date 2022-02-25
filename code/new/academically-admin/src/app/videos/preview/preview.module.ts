@@ -10,6 +10,8 @@ import { SidebarComponent } from './_components/sidebar/sidebar.component';
 import { HomeComponent } from './_components/home/home.component';
 import { DownloadsComponent } from './_components/downloads/downloads.component';
 import { CommentsComponent } from './_components/comments/comments.component';
+import { RelatedComponent } from './_components/home/related/related.component';
+import { SeriesVideosComponent } from './_components/home/series-videos/series-videos.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,8 @@ import { CommentsComponent } from './_components/comments/comments.component';
     HomeComponent,
     DownloadsComponent,
     CommentsComponent,
+    RelatedComponent,
+    SeriesVideosComponent,
   ],
   imports: [
     CommonModule,
@@ -25,6 +29,9 @@ import { CommentsComponent } from './_components/comments/comments.component';
     SharedModule,
     AppSharedModule,
     SharedCommentsModule,
+  ],
+  exports: [
+    PreviewComponent,
   ],
 })
 export class PreviewModule { }

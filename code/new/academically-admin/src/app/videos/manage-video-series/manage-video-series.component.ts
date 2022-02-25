@@ -18,6 +18,8 @@ export class ManageVideoSeriesComponent extends AppComponentBase implements OnIn
   parentId: string;
   model = new VideoDto();
 
+  VideoStatus = VideoStatus;
+
   constructor(
     injector: Injector,
     route: ActivatedRoute,
@@ -57,6 +59,32 @@ export class ManageVideoSeriesComponent extends AppComponentBase implements OnIn
           this.notify.success(this.l('SavedSuccessfully'));
           this._router.navigate(['app/videos/video-series', response.parentId, response.id]);
         });
+    });
+  }
+
+  onPublishClick(): void {
+    this.message.confirm(this.l('PublishVideoConfirmationMessage'), undefined, (result) => {
+      if (result) {
+        this._videosService.updateStatus(this.model.id, VideoStatus.Published)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.model.status = VideoStatus.Published;
+            this.l('SavedSuccessfully');
+          });
+      }
+    });
+  }
+
+  onUnpublishClick(): void {
+    this.message.confirm(this.l('UnpublishVideoConfirmationMessage'), undefined, (result) => {
+      if (result) {
+        this._videosService.updateStatus(this.model.id, VideoStatus.Draft)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.model.status = VideoStatus.Draft;
+            this.l('SavedSuccessfully');
+          });
+      }
     });
   }
 

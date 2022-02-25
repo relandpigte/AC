@@ -1,0 +1,53 @@
+<div class="modal-card card">
+  <abp-modal-header [title]="'StudentProgress' | localize" (onCloseClick)="onCloseClick()">
+  </abp-modal-header>
+  <div class="table-responsive">
+    <table class="table table-sm table-hover table-nowrap card-table" [loader]="isTableLoading">
+      <tbody class="list font-size-base">
+        <tr *ngFor="
+            let model of (models | paginate: { id: 'students', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
+          ">
+          <td>
+            <div class="row">
+              <div class="col-6">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <a href="#!" class="avatar">
+                      <img [src]="getProfilePictureUrl(model.creatorUser.profilePictureDocument)" alt="..."
+                        class="avatar-img rounded-circle">
+                    </a>
+                  </div>
+                  <div class="col ml-n2">
+                    <h4 class="mb-1">
+                      {{ model.creatorUser.fullName }}
+                    </h4>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="d-flex align-items-center mt-3">
+                  <div class="col-auto p-0">
+                    <p class="small mb-0 mr-2">{{ model.studentCourse.progress }}%</p>
+                  </div>
+                  <div class="col p-0">
+                    <div class="progress progress-sm">
+                      <div class="progress-bar" role="progressbar"
+                        [ngStyle]="{ width: model.studentCourse.progress + '%' }"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <abp-pagination-controls *ngIf="totalItems > models.length" id="students" (pageChange)="getDataPage($event)">
+    </abp-pagination-controls>
+  </div>
+  <div class="card-footer justify-content-end">
+    <button class="btn btn-white" (click)="onCloseClick()">
+      {{ 'Close' | localize }}
+    </button>
+  </div>
+</div>
