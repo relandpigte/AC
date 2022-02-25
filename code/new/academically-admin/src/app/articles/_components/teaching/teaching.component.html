@@ -103,10 +103,12 @@
                 </ng-template>
               </div>
               <div class="col d-flex flex-column justify-content-center">
-                <a *ngIf="article.type === ArticleType.SingleArticle" [routerLink]="[article.id]">
+                <a *ngIf="article.type === ArticleType.SingleArticle"
+                  [routerLink]="['/app/articles/tutor-portal', article.id]">
                   <h4 class="mb-1">{{ article.name }}</h4>
                 </a>
-                <a *ngIf="article.type === ArticleType.ArticleSeries" [routerLink]="['article-series', article.id]">
+                <a *ngIf="article.type === ArticleType.ArticleSeries"
+                  [routerLink]="['/app/articles/tutor-portal', article.id]">
                   <h4 class="mb-1">{{ article.name }}</h4>
                 </a>
                 <p *ngIf="article.description" class="text-muted mb-1">
@@ -159,6 +161,10 @@
             </span>
           </td>
           <td class="table-action">
+            <button [routerLink]="['/app/articles/tutor-portal', article.id]" type="button"
+              class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
+              <span class="fe fe-trending-up"></span>
+            </button>
             <button *ngIf="article.type === ArticleType.SingleArticle" [routerLink]="[article.id]"
               class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
               <span class="fe fe-edit-2"></span>

@@ -41,6 +41,21 @@ import { ArticlesComponent } from './articles.component';
           },
         ],
       },
+      {
+        path: 'tutor-portal',
+        data: { permission: 'Pages.Videos' },
+        canActivate: [AppRouteGuard],
+        canActivateChild: [AppRouteGuard],
+        children: [
+          {
+            path: ':id',
+            loadChildren: () =>
+              import('@app/articles/tutor-portal/tutor-portal.module').then(
+                (m) => m.TutorPortalModule
+              ),
+          },
+        ],
+      },
     ]),
   ],
   exports: [

@@ -1,0 +1,176 @@
+<div class="container-fluid" [@routerTransition]>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ model.name }}</h6>
+              <h1 class="header-title">{{ 'Overview' | localize }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row overview">
+
+        <div class="col-12 col-lg-2">
+          <div class="card">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h6 class="text-uppercase text-muted mb-2">{{ 'Revenue' | localize }}</h6>
+                  <span class="h2 mb-0 align-middle">&#163;763</span>
+                </div>
+                <div class="col-auto">
+                  <span class="card-fas fas fa-pound-sign text-muted mb-0"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-2">
+          <div class="card">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h6 class="text-uppercase text-muted mb-2">{{ 'Visits' | localize }}</h6>
+                  <span class="h2 mb-0 align-middle">763</span>
+                </div>
+                <div class="col-auto">
+                  <span class="h2 fe fe-eye text-muted mb-0"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-2">
+          <div class="card">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h6 class="text-uppercase text-muted mb-2">{{ 'Likes' | localize }}</h6>
+                  <span class="h2 mb-0 align-middle">137</span>
+                </div>
+                <div class="col-auto">
+                  <span class="h2 fe fe-thumbs-up text-muted mb-0"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-2">
+          <div class="card">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h6 class="text-uppercase text-muted mb-2">{{ 'Purchases' | localize }}</h6>
+                  <span class="h2 mb-0 align-middle">52</span>
+                </div>
+                <div class="col-auto">
+                  <span class="h2 fe fe-credit-card text-muted mb-0"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-2">
+          <div class="card">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h6 class="text-uppercase text-muted mb-2">{{ 'Plays' | localize }}</h6>
+                  <span class="h2 mb-0 align-middle">17</span>
+                </div>
+                <div class="col-auto">
+                  <span class="h2 fe fe-article text-muted mb-0"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-6 col-xl">
+          <div class="card">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h6 class="text-uppercase text-muted mb-2">{{ 'PositiveReviews' | localize }}</h6>
+                  <span class="h2 mb-0 align-middle">0%</span>
+                  <span class="badge badge-soft-success ml-2">
+                    154
+                  </span>
+                </div>
+                <div class="col-auto">
+                  <span class="h2 fe fe-star text-muted mb-0"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <app-revenue-graph></app-revenue-graph>
+
+      <div class="row">
+
+        <div class="col-12 col-lg-8">
+          <app-traffic-graph></app-traffic-graph>
+        </div>
+
+        <div class="col-12 col-lg-4">
+          <app-conversion-graph></app-conversion-graph>
+        </div>
+
+      </div>
+
+      <div *ngIf="model.type === ArticleType.SingleArticle" class="row">
+
+        <div class="col-12 col-lg-4">
+          <ng-container *ngTemplateOutlet="progress; context: { title: 'ActivatedPoll' }"></ng-container>
+          <ng-container *ngTemplateOutlet="progress; context: { title: 'DownloadedHandout' }"></ng-container>
+          <ng-container *ngTemplateOutlet="progress; context: { title: 'CheckedOffer' }"></ng-container>
+          <ng-container *ngTemplateOutlet="progress; context: { title: 'PurchasedOffer' }"></ng-container>
+        </div>
+
+        <div class="col-12 col-lg-8">
+          <app-engagement-graph></app-engagement-graph>
+        </div>
+
+        <ng-template #progress let-title="title">
+          <div class="card">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h6 class="text-uppercase text-muted mb-2">
+                    {{ title | localize }}
+                  </h6>
+                  <div class="row align-items-center no-gutters">
+                    <div class="col-auto">
+                      <span class="h2 mr-2 mb-0">
+                        84.5%
+                      </span>
+                    </div>
+                    <div class="col">
+                      <div class="progress progress-sm">
+                        <div class="progress-bar" role="progressbar" style="width: 85%" aria-valuenow="85"
+                          aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+
+      </div>
+
+    </div>
+  </div>
+</div>

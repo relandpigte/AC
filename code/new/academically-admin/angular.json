@@ -261,5 +261,8 @@
       "prefix": "app",
       "style": "less"
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
