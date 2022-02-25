@@ -22,7 +22,8 @@ export class VideosComponent extends PagedListingComponentBase<VideoDto> impleme
   VideoType = VideoType;
 
   headers: TableHeaderSortData[] = [
-    { title: 'Name', sortColumn: 'name' }
+    { title: 'Name', sortColumn: 'name' },
+    { title: '' },
   ];
 
   constructor(

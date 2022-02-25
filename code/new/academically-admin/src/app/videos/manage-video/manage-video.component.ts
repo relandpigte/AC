@@ -36,7 +36,7 @@ export class ManageVideoComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         this.model = response;
-      })
+      });
     this.getVideo();
   }
 

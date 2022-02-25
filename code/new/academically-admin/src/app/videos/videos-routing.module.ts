@@ -71,6 +71,14 @@ import { VideosComponent } from './videos.component';
           },
         ],
       },
+      {
+        path: 'student-portal',
+        data: { permission: 'Pages.Videos.StudentPortal' },
+        loadChildren: () =>
+          import('@app/videos/student-portal/student-portal.module').then(
+            (m) => m.StudentPortalModule
+          ),
+      },
     ]),
   ],
   exports: [

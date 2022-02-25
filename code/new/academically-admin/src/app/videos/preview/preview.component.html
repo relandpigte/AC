@@ -8,14 +8,21 @@
               <img [src]="getCourseImageUrl(thumbnailUrl)" alt="..." class="avatar-img rounded">
             </div>
             <div class="navbar-brand-header ml-3 mr-n3">
-              <h6 class="header-pretitle">{{ 'Video' | localize }}</h6>
+              <h6 class="header-pretitle">
+                <ng-container *ngIf="model.parent && model.parent.id else singleVideoPretitle">
+                  {{ model.parent.name }}
+                </ng-container>
+                <ng-template #singleVideoPretitle>
+                  {{ 'Video' | localize }}
+                </ng-template>
+              </h6>
               <h3 class="header-title">{{ model.name }}</h3>
             </div>
           </div>
         </a>
         <div class="row">
           <div class="col d-flex align-items-center">
-            <button class="btn btn-sm btn-outline-primary" (click)="$event.preventDefault(); onExitClick()">
+            <button class="btn btn-sm btn-outline-primary" (click)="onExitClick()">
               <b>{{ 'Exit' | localize }}</b>
             </button>
           </div>

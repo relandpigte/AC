@@ -1,11 +1,22 @@
 import { Component, OnInit, ViewChild, Injector } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
-import { FileParameter, CourseSectionDto, SpokenLanguageDto, PricingType, SpokenLanguagesServiceProxy, CourseSectionsServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  FileParameter,
+  CourseSectionDto,
+  SpokenLanguageDto,
+  PricingType,
+  SpokenLanguagesServiceProxy,
+  CourseSectionsServiceProxy,
+  DocumentType,
+  DocumentDto,
+  UpdateCourseSectionDetailsDto,
+} from '@shared/service-proxies/service-proxies';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { Router } from '@angular/router';
 import { CourseSectionService } from '@app/courses/course-sections/_services/course-section.service';
 import { takeUntil, finalize } from 'rxjs/operators';
+import { UploadService } from '@app/_shared/services/upload.service';
 
 enum EditField {
   Name = 1,
@@ -23,24 +34,26 @@ enum EditField {
 export class DetailsComponent extends AppComponentBase implements OnInit {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
   courseSectionImageDocument: FileParameter;
-  model: CourseSectionDto = new CourseSectionDto();
+  model = new UpdateCourseSectionDetailsDto();
   isLoading = false;
-
   allowedImageExtensions = fileUploadConfiguration.allowedImageExtensions;
   languages: SpokenLanguageDto[] = [];
-  PricingType = PricingType;
   defaultFile: DefaultFile;
   editField: EditField;
-  EditField = EditField;
   category: string;
   categories: string[] = [];
+  imageDocument = new DocumentDto();
+
+  PricingType = PricingType;
+  EditField = EditField;
 
   constructor(
     injector: Injector,
     private _router: Router,
+    private _uploadService: UploadService,
     private _spokenLanguagesService: SpokenLanguagesServiceProxy,
     private _courseSectionsService: CourseSectionsServiceProxy,
-    private _courseSectionService: CourseSectionService
+    private _courseSectionService: CourseSectionService,
   ) {
     super(injector);
     this.getLanguages();
@@ -57,13 +70,10 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
 
     this._courseSectionService.courseSectionCreated$.subscribe(courseSection => {
       if (courseSection) {
-        this.model = courseSection;
-        if (this.model.imageDocument) {
-          this.defaultFile = new DefaultFile();
-          this.defaultFile.name = this.model.imageDocument.originalFileName;
-          this.defaultFile.url = this.model.imageDocumentUrl;
-          this.defaultFile.size = this.model.imageDocument.size;
-          this.documentUploader.defaultFile = this.defaultFile;
+        this.model.init(courseSection);
+        if (courseSection.imageDocument) {
+          this.imageDocument = courseSection.imageDocument;
+          this.setDefaultFile();
         }
         if (this.model.categories && this.model.categories.trim()) {
           this.categories = this.model.categories.split(',');
@@ -79,26 +89,16 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
   onFormSubmit(): void {
     this.isLoading = true;
     this.model.categories = this.categories.join(',');
-
-    this._courseSectionsService.updateDetails(
-      this.model.name,
-      this.model.description,
-      this.model.categories,
-      this.model.approximateLessonDuration,
-      this.courseSectionImageDocument,
-      this.model.id,
-    ).pipe(
-      takeUntil(this.destroyed$),
-      finalize(() => {
-        this.isLoading = false;
-      })
-    )
-      .subscribe(() => {
-        this.notify.success(this.l('SavedSuccessfully'));
-        setTimeout(() => {
-          this.editField = undefined;
+    if (this.imageDocument.id && !this.model.imageDocumentId) {
+      this._uploadService.delete(this.imageDocument, this.model.id)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(() => {
+          this.imageDocument = new DocumentDto();
+          this.uploadAndUpdateDetails();
         });
-      });
+    } else {
+      this.uploadAndUpdateDetails();
+    }
   }
 
   onEditClick(editField: EditField): void {
@@ -131,6 +131,54 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
       .subscribe(languages => {
         this.languages = languages;
       });
+  }
+
+  private uploadAndUpdateDetails(): void {
+    if (this.courseSectionImageDocument) {
+      this._uploadService.upload(this.courseSectionImageDocument.data, DocumentType.CourseSectionImage, this.model.id)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(response => {
+          this.model.imageDocumentId = response.id;
+          this.imageDocument = response;
+          this.documentUploader.files = [];
+          this.setDefaultFile();
+          this.updateDetails();
+        });
+    } else {
+      this.updateDetails();
+    }
+  }
+
+  private updateDetails(): void {
+    this._courseSectionsService.updateDetails(this.model).pipe(
+      takeUntil(this.destroyed$),
+      finalize(() => {
+        this.isLoading = false;
+      })
+    )
+      .subscribe(() => {
+        this.notify.success(this.l('SavedSuccessfully'));
+        setTimeout(() => {
+          this.editField = undefined;
+          this.getCourseSection();
+        });
+      });
+  }
+
+  private getCourseSection(): void {
+    this._courseSectionsService.get(this.model.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        this._courseSectionService.courseSectionCreated = response;
+      });
+  }
+
+  private setDefaultFile(): void {
+    this.defaultFile = new DefaultFile();
+    this.defaultFile.name = this.imageDocument.originalFileName;
+    this.defaultFile.url = this._uploadService.getFileUrl(this.imageDocument);
+    this.defaultFile.size = this.imageDocument.size;
+    this.documentUploader.defaultFile = this.defaultFile;
   }
 
 }

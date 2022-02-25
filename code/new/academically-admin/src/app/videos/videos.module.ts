@@ -9,6 +9,8 @@ import { TeachingComponent } from './_components/teaching/teaching.component';
 import { LearningComponent } from './_components/learning/learning.component';
 import { ChooseVideoTemplateComponent } from './_components/choose-video-template/choose-video-template.component';
 import { CreateVideoComponent } from './_components/create-video/create-video.component';
+import { SavedComponent } from './_components/learning/saved/saved.component';
+import { PurchasedComponent } from './_components/learning/purchased/purchased.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +19,8 @@ import { CreateVideoComponent } from './_components/create-video/create-video.co
     LearningComponent,
     ChooseVideoTemplateComponent,
     CreateVideoComponent,
+    SavedComponent,
+    PurchasedComponent,
   ],
   imports: [
     CommonModule,

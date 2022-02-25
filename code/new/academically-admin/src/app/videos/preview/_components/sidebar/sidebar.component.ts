@@ -27,11 +27,11 @@ export class SidebarComponent implements OnInit {
   constructor(
     route: ActivatedRoute,
   ) {
-    this.menuItems.push(new MenuItem('Home', 'fe-home'));
+    this.menuItems.push(new MenuItem('Overview', 'fe-home'));
     this.menuItems.push(new MenuItem('Separator'));
     this.menuItems.push(new MenuItem('Comments', 'fe-message-circle'));
     this.menuItems.push(new MenuItem('Downloads', 'fe-download'));
-    this.activeMenuItem = this.menuItems[2];
+    this.activeMenuItem = this.menuItems[0];
 
     route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {

@@ -110,5 +110,6 @@
 	<include file="ddml-new/ddml.2022-02-24-02-create-events-table.xml"/>
 	<include file="ddml-new/ddml.2022-02-24-03-alter-events-add-settings-fields.xml"/>
 	<include file="ddml-new/ddml.2022-02-24-04-alter-events-alter-settings-fields.xml"/>
+	<include file="ddml-new/ddml.2022-02-24-05-create-studentvideos-table.xml"/>
 </databaseChangeLog>
 	

@@ -36,7 +36,6 @@ namespace Academically.Services.CourseSections.Dto
         public bool AreAllPrerequisite { get; set; }
 
         public DateTime CreationTime { get; set; }
-        public string ImageDocumentUrl { get; set; }
 
         public CourseDto Course { get; set; }
         public DocumentDto ImageDocument { get; set; }

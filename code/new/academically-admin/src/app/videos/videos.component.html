@@ -15,7 +15,7 @@
               </a>
             </div>
           </div>
-          <ng-container *ngIf="isTutor else studentVideos">
+          <ng-container *ngIf="isTutor">
             <div class="row align-items-center">
               <div class="col">
                 <ul class="nav nav-tabs nav-overflow header-tabs">
@@ -34,14 +34,16 @@
         </div>
       </div>
 
-      <div class="tab-content">
-        <div class="tab-pane fade show active" id="teaching" role="tabpanel" aria-labelledby="teaching-tab">
-          <app-teaching></app-teaching>
+      <ng-container *ngIf="isTutor else studentVideos">
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="teaching" role="tabpanel" aria-labelledby="teaching-tab">
+            <app-teaching></app-teaching>
+          </div>
+          <div class="tab-pane fade" id="learning" role="tabpanel" aria-labelledby="learning-tab">
+            <app-learning></app-learning>
+          </div>
         </div>
-        <div class="tab-pane fade" id="learning" role="tabpanel" aria-labelledby="learning-tab">
-          <app-learning></app-learning>
-        </div>
-      </div>
+      </ng-container>
     </div>
   </div>
 

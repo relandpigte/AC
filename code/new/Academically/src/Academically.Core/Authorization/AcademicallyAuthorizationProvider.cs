@@ -194,7 +194,9 @@ namespace Academically.Authorization
             context.CreatePermission(PermissionNames.Pages_StudentPortal, L("StudentPortal"));
 
 
-            context.CreatePermission(PermissionNames.Pages_Videos, L("Videos"));
+            var videosPermission = context.CreatePermission(PermissionNames.Pages_Videos, L("Videos"));
+            videosPermission.CreateChildPermission(PermissionNames.Pages_Videos_TutorPortal, L("TutorPortal"));
+            videosPermission.CreateChildPermission(PermissionNames.Pages_Videos_StudentPortal, L("StudentPortal"));
 
 
             context.CreatePermission(PermissionNames.Pages_Articles, L("Articles"));

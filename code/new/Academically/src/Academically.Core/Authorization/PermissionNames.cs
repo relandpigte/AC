@@ -188,6 +188,8 @@
 
 
         public const string Pages_Videos = "Pages.Videos";
+        public const string Pages_Videos_StudentPortal = "Pages.Videos.StudentPortal";
+        public const string Pages_Videos_TutorPortal = "Pages.Videos.TutorPortal";
 
 
         public const string Pages_Articles = "Pages.Articles";

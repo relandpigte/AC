@@ -36,7 +36,8 @@
               <div class="row align-items-center">
                 <div class="col">
                   <h6 class="text-uppercase text-muted mb-2">{{ 'Students' | localize }}</h6>
-                  <span *ngIf="model && model.studentCourses" class="h2 mb-0 align-middle">{{ model.studentCourses.length }}</span>
+                  <span *ngIf="model && model.studentCourses" class="h2 mb-0 align-middle">{{
+                    model.studentCourses.length }}</span>
                 </div>
                 <div class="col-auto">
                   <span class="h2 fe fe-user text-muted mb-0"></span>
@@ -145,6 +146,122 @@
           </div>
         </div>
       </div>
+
+      <div class="row">
+
+        <div class="col-12 col-lg-4">
+          <ng-container *ngTemplateOutlet="progress; context: { title: 'ActivatedPoll' }"></ng-container>
+          <ng-container *ngTemplateOutlet="progress; context: { title: 'DownloadedHandout' }"></ng-container>
+          <ng-container *ngTemplateOutlet="progress; context: { title: 'CheckedOffer' }"></ng-container>
+          <ng-container *ngTemplateOutlet="progress; context: { title: 'PurchasedOffer' }"></ng-container>
+        </div>
+
+        <div class="col-12 col-lg-8">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-header-title">
+                {{ 'StudentProgress' | localize }}
+              </h4>
+            </div>
+            <div class="card-body py-0">
+              <ul class="navbar-nav list-group list-group-flush">
+                <ng-container *ngFor="let courseSection of courseSections" [ngTemplateOutlet]="sectionTemplate"
+                  [ngTemplateOutletContext]="{ section: courseSection }">
+                </ng-container>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
     </div>
   </div>
 </div>
+
+<ng-template #progress let-title="title">
+  <div class="card">
+    <div class="card-body">
+      <div class="row align-items-center">
+        <div class="col">
+          <h6 class="text-uppercase text-muted mb-2">
+            {{ title | localize }}
+          </h6>
+          <div class="row align-items-center no-gutters">
+            <div class="col-auto">
+              <span class="h2 mr-2 mb-0">
+                84.5%
+              </span>
+            </div>
+            <div class="col">
+              <div class="progress progress-sm">
+                <div class="progress-bar" role="progressbar" style="width: 85%" aria-valuenow="85" aria-valuemin="0"
+                  aria-valuemax="100"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #sectionTemplate let-section="section">
+  <ng-container *ngIf="section.type === 1" [ngTemplateOutlet]="moduleTemplate"
+    [ngTemplateOutletContext]="{ section: section }"></ng-container>
+  <ng-container *ngIf="section.type === 2" [ngTemplateOutlet]="unitTemplate"
+    [ngTemplateOutletContext]="{ section: section }"></ng-container>
+  <ng-container *ngIf="section.type === 3" [ngTemplateOutlet]="lessonTemplate"
+    [ngTemplateOutletContext]="{ section: section }"></ng-container>
+</ng-template>
+
+<ng-template #moduleTemplate let-module="section">
+  <li class="nav-item list-group-item">
+    <div class="row">
+      <div class="col d-flex align-items-center" role="button">
+        <h3 class="m-0 py-2">{{ module.name }}</h3>
+      </div>
+      <div class="col-auto">
+        <app-section-students [courseSectionId]="module.id"></app-section-students>
+      </div>
+    </div>
+  </li>
+  <ng-container *ngFor="let section of module.children" [ngTemplateOutlet]="sectionTemplate"
+    [ngTemplateOutletContext]="{ section: section }">
+  </ng-container>
+</ng-template>
+
+<ng-template #unitTemplate let-unit="section">
+  <li class="nav-item list-group-item">
+    <div class="row">
+      <div class="col d-flex align-items-center" role="button">
+        <p class="m-0"><b>{{ unit.name }}</b></p>
+      </div>
+      <div class="col-auto">
+        <app-section-students [courseSectionId]="unit.id"></app-section-students>
+      </div>
+    </div>
+  </li>
+  <ng-container *ngFor="let section of unit.children" [ngTemplateOutlet]="sectionTemplate"
+    [ngTemplateOutletContext]="{ section: section }">
+  </ng-container>
+</ng-template>
+
+<ng-template #lessonTemplate let-lesson="section">
+  <li class="nav-item list-group-item">
+    <div class="row">
+      <div class="col-auto">
+        <div class="avatar avatar-4by3 img-section">
+          <img [src]="getServiceImageUrl(lesson.imageDocument)" alt="..." class="avatar-img rounded">
+        </div>
+      </div>
+      <div class="col d-flex align-items-center pl-0">
+        <p class="m-0 small"><b>{{ lesson.name }}</b></p>
+      </div>
+      <div class="col-auto">
+        <app-section-students [courseSectionId]="lesson.id"></app-section-students>
+      </div>
+    </div>
+  </li>
+</ng-template>

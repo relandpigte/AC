@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
+using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
@@ -7,6 +8,7 @@ using Academically.Domain.Services.Documents;
 using Academically.Services.Videos.Dto;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -57,8 +59,7 @@ namespace Academically.Services.Videos
                     || e.Description.ToLower().Contains(input.SearchFilter.ToLower()))
                 .WhereIf(input.StausFilter.HasValue, e => e.Status == input.StausFilter.Value);
             var totalCount = await query.CountAsync();
-            var videos = await query.OrderBy(e => e.Name)
-                .PageBy(input)
+            var videos = await query.PageBy(input)
                 .Include(e => e.ThumbnailDocument)
                 .Select(e => ObjectMapper.Map<VideoDto>(e))
                 .ToListAsync();
@@ -70,13 +71,24 @@ namespace Academically.Services.Videos
             };
         }
 
+        public async Task<IEnumerable<VideoDto>> GetOtherVideosForSeries(Guid id)
+        {
+            var video = await _videosRepository.GetAsync(id);
+            return await _videosRepository.GetAll()
+                .Where(e => e.ParentId == video.ParentId && e.Id != video.Id)
+                .Include(e => e.ThumbnailDocument)
+                .OrderBy(e => e.Name)
+                .Select(e => ObjectMapper.Map<VideoDto>(e))
+                .ToListAsync();
+        }
+
         public async Task<PagedResultDto<VideoDto>> GetAllForHome(PagedResultRequestDto input)
         {
             var query = _videosRepository.GetAll()
-                .Where(e => e.ParentId == null);
+                .Where(e => e.ParentId == null)
+                .Where(e => e.Status == VideoStatus.Published);
             var totalCount = await query.CountAsync();
             var videos = await query.OrderByDescending(e => e.CreationTime)
-                .Where(e => e.Status == VideoStatus.Published)
                 .PageBy(input)
                 .Include(e => e.ThumbnailDocument)
                 .Include(e => e.Children)
@@ -90,6 +102,30 @@ namespace Academically.Services.Videos
             };
         }
 
+        public async Task<IEnumerable<VideoDto>> GetAllRelated(Guid id)
+        {
+            var video = await _videosRepository.GetAsync(id);
+            if (!string.IsNullOrWhiteSpace(video.Categories))
+            {
+                var tags = video.Categories.Split(",").ToList();
+                var tagsPredicate = PredicateBuilder.New<Video>();
+                foreach (var tag in tags)
+                {
+                    tagsPredicate = tagsPredicate.Or(e => e.Categories.Contains(tag));
+                }
+
+                var relatedVideos = await _videosRepository.GetAll()
+                    .Where(e => e.Id != video.Id)
+                    .Where(tagsPredicate)
+                    .Include(e => e.ThumbnailDocument)
+                    .OrderBy(e => e.Name)
+                    .Select(e => ObjectMapper.Map<VideoDto>(e))
+                    .ToListAsync();
+                return relatedVideos;
+            }
+            return new List<VideoDto>();
+        }
+
         public async Task<VideoDto> Get(Guid id)
         {
             var video = await _videosRepository.GetAll()
@@ -97,6 +133,9 @@ namespace Academically.Services.Videos
                 .Include(e => e.Document)
                 .Include(e => e.ThumbnailDocument)
                 .Include(e => e.Parent)
+                .Include(e => e.Children)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
                 .Select(e => ObjectMapper.Map<VideoDto>(e))
                 .FirstOrDefaultAsync();
 

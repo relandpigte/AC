@@ -13,8 +13,7 @@ namespace Academically.Services.CourseSections.Dto
 		public string Description { get; set; }
 		public string Categories { get; set; }
 		public string ApproximateLessonDuration { get; set; }
-
-		public IFormFile ImageDocumentFile { get; set; }
+		public Guid? ImageDocumentId { get; set; }
 	}
 }
 

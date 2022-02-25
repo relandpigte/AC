@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Services.StudentCourseSections.Dto;
@@ -34,6 +36,24 @@ namespace Academically.Services.StudentCourseSections
                 .OrderBy(e => e.CourseSection.DisplayOrder)
                 .Select(e => ObjectMapper.Map<StudentCourseSectionDto>(e))
                 .ToListAsync();
+        }
+
+        public async Task<PagedResultDto<StudentCourseSectionDto>> GetAllInProgress(GetAllInProgressStudentCourseSection input)
+        {
+            var query = _studentCourseSectionsRepository.GetAll()
+                .Where(e => e.Status == StudentCourseSectionStatus.InProgress)
+                .Where(e => e.CourseSectionId == input.CourseSectionIdFilter);
+
+            var totalCount = await query.CountAsync();
+            var studentCourseSections = await query.PageBy(input)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.StudentCourse)
+                .OrderBy(e => e.CreatorUser.Name)
+                    .ThenBy(e => e.CreatorUser.Surname)
+                .Select(e => ObjectMapper.Map<StudentCourseSectionDto>(e))
+                .ToListAsync();
+            return new PagedResultDto<StudentCourseSectionDto>(totalCount, studentCourseSections);
         }
 
         public async Task<IEnumerable<StudentCourseSectionDto>> GetAssignmentsAllowed(Guid courseId)
