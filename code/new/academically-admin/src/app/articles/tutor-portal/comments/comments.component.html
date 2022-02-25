@@ -1,0 +1,23 @@
+<div class="container-fluid" [@routerTransition]>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ model.name }}</h6>
+              <h1 class="header-title">{{ 'Interaction' | localize }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-container *ngIf="model.type === ArticleType.SingleArticle else articleSeriesTemplate">
+        <app-single-article></app-single-article>
+      </ng-container>
+      <ng-template #articleSeriesTemplate>
+        <app-article-series></app-article-series>
+      </ng-template>
+    </div>
+  </div>
+</div>

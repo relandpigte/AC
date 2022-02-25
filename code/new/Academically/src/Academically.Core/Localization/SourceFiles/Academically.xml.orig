@@ -1,8 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+<<<<<<< HEAD
     <text name="NoArticleFound">No article found</text>
     <text name="Questions">Questions</text>
+=======
+>>>>>>> develop
     <text name="Purchase">Purchase</text>
     <text name="MoreInSeries">More in series</text>
     <text name="PreviewSeries">Preview series</text>
