@@ -9307,6 +9307,217 @@ export class RatingsServiceProxy {
 }
 
 @Injectable()
+export class ReactionsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @param type (optional) 1 = Like
+    
+    2 = Heart
+    
+    3 = Laugh
+    
+    4 = Wow
+    
+    5 = Sad
+    
+    6 = Mad
+     * @return Success
+     */
+    get(referenceId: string | undefined, type: ReactionType | undefined): Observable<ReactionDto> {
+        let url_ = this.baseUrl + "/api/services/app/Reactions/Get?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        if (type === null)
+            throw new Error("The parameter 'type' cannot be null.");
+        else if (type !== undefined)
+            url_ += "type=" + encodeURIComponent("" + type) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<ReactionDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ReactionDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<ReactionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ReactionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ReactionDto>(<any>null);
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @param type (optional) 1 = Like
+    
+    2 = Heart
+    
+    3 = Laugh
+    
+    4 = Wow
+    
+    5 = Sad
+    
+    6 = Mad
+     * @return Success
+     */
+    getCount(referenceId: string | undefined, type: ReactionType | undefined): Observable<number> {
+        let url_ = this.baseUrl + "/api/services/app/Reactions/GetCount?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        if (type === null)
+            throw new Error("The parameter 'type' cannot be null.");
+        else if (type !== undefined)
+            url_ += "type=" + encodeURIComponent("" + type) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCount(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCount(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetCount(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    save(referenceId: string | undefined, body: ReactionType | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Reactions/Save?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSave(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSave(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSave(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class ReferencesServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -19351,7 +19562,7 @@ export interface ICommentDtoPagedResultDto {
 
 export class CommentReactionDto implements ICommentReactionDto {
     id: string | undefined;
-    type: CommentReactionType;
+    type: ReactionType;
     commentId: string;
     creatorUserId: number;
 
@@ -19399,19 +19610,9 @@ export class CommentReactionDto implements ICommentReactionDto {
 
 export interface ICommentReactionDto {
     id: string | undefined;
-    type: CommentReactionType;
+    type: ReactionType;
     commentId: string;
     creatorUserId: number;
-}
-
-/** 1 = Like 2 = Heart 3 = Laugh 4 = Wow 5 = Sad 6 = Mad */
-export enum CommentReactionType {
-    Like = 1,
-    Heart = 2,
-    Laugh = 3,
-    Wow = 4,
-    Sad = 5,
-    Mad = 6,
 }
 
 /** 1 = Visible 2 = Hidden 3 = Locked */
@@ -25402,6 +25603,67 @@ export enum RatingExperienceType {
     Positive = 0,
     Neutral = 1,
     Negative = 2,
+}
+
+export class ReactionDto implements IReactionDto {
+    id: string;
+    type: ReactionType;
+    referenceId: string | undefined;
+
+    constructor(data?: IReactionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.type = _data["type"];
+            this.referenceId = _data["referenceId"];
+        }
+    }
+
+    static fromJS(data: any): ReactionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ReactionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["type"] = this.type;
+        data["referenceId"] = this.referenceId;
+        return data; 
+    }
+
+    clone(): ReactionDto {
+        const json = this.toJSON();
+        let result = new ReactionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IReactionDto {
+    id: string;
+    type: ReactionType;
+    referenceId: string | undefined;
+}
+
+/** 1 = Like 2 = Heart 3 = Laugh 4 = Wow 5 = Sad 6 = Mad */
+export enum ReactionType {
+    Like = 1,
+    Heart = 2,
+    Laugh = 3,
+    Wow = 4,
+    Sad = 5,
+    Mad = 6,
 }
 
 export class ReferenceDto implements IReferenceDto {
@@ -31945,6 +32207,7 @@ export class VideoDto implements IVideoDto {
     thumbnailDocument: Document;
     creatorUser: UserDto;
     children: VideoDto[] | undefined;
+    likeCount: number;
 
     constructor(data?: IVideoDto) {
         if (data) {
@@ -31985,6 +32248,7 @@ export class VideoDto implements IVideoDto {
                 for (let item of _data["children"])
                     this.children.push(VideoDto.fromJS(item));
             }
+            this.likeCount = _data["likeCount"];
         }
     }
 
@@ -32025,6 +32289,7 @@ export class VideoDto implements IVideoDto {
             for (let item of this.children)
                 data["children"].push(item.toJSON());
         }
+        data["likeCount"] = this.likeCount;
         return data; 
     }
 
@@ -32061,6 +32326,7 @@ export interface IVideoDto {
     thumbnailDocument: Document;
     creatorUser: UserDto;
     children: VideoDto[] | undefined;
+    likeCount: number;
 }
 
 export class VideoDtoPagedResultDto implements IVideoDtoPagedResultDto {

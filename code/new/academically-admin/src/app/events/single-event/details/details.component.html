@@ -1,4 +1,4 @@
-<form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+<form class="form-horizontal" autocomplete="off" #form="ngForm">
   <div class="row">
 
     <div class="col-8" [loader]="isLoading">
@@ -8,22 +8,12 @@
           <h4 class="card-header-title">
             {{ (eventType === EventType.SingleEvent ? 'EventName' : 'EventSeriesName') | localize }}
           </h4>
-          <div class="col-auto row">
-            <button *ngIf="!editField || editField !== EditField.Name" (click)="onEditClick(EditField.Name)"
-              type="button" class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Name" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
-          </div>
         </div>
         <div class="card-body">
           <div class="form-group required mb-0">
             <input [(ngModel)]="model.name" #nameModel="ngModel" #nameEl class="form-control" type="text" id="name"
               name="name" required
-              [placeholder]="(eventType === EventType.SingleEvent ? 'WriteYourEventNameHere' : 'WriteYourEventSeriesNameHere') | localize"
-              [disabled]="editField !== EditField.Name" />
+              [placeholder]="(eventType === EventType.SingleEvent ? 'WriteYourEventNameHere' : 'WriteYourEventSeriesNameHere') | localize" />
             <abp-validation-summary [control]="nameModel" [controlEl]="nameEl">
             </abp-validation-summary>
           </div>
@@ -35,21 +25,12 @@
           <h4 class="card-header-title">
             {{ 'Subtitle' | localize | titlecase }}
           </h4>
-          <div class="col-auto row">
-            <button *ngIf="!editField || editField !== EditField.Subtitle" (click)="onEditClick(EditField.Subtitle)"
-              type="button" class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Subtitle" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
-          </div>
         </div>
         <div class="card-body">
           <div class="form-group mb-0">
             <textarea [rows]="4" [(ngModel)]="model.description" #descriptionModel="ngModel" #descriptionEl
               class="form-control" id="description" name="description"
-              [placeholder]="'WriteYourSubtitleHere' | localize" [disabled]="editField !== EditField.Subtitle">
+              [placeholder]="'WriteYourSubtitleHere' | localize">
             </textarea>
           </div>
         </div>
@@ -60,26 +41,17 @@
           <h4 class="card-header-title">
             {{ 'Categories' | localize | titlecase }}
           </h4>
-          <div class="col-auto row">
-            <button *ngIf="!editField || editField !== EditField.Categories" (click)="onEditClick(EditField.Categories)"
-              type="button" class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Categories" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
-          </div>
         </div>
         <div class="card-body">
           <div class="form-group required mb-0">
             <input [(ngModel)]="category" #categoryModel="ngModel" #categoryEl class="form-control" type="text"
-              id="category" name="category" required [disabled]="editField !== EditField.Categories"
-              (keydown)="onCategoryKeyDown($event)" [placeholder]="'PressEnterToAddMore' | localize" />
+              id="category" name="category" required (keydown)="onCategoryKeyDown($event)"
+              [placeholder]="'PressEnterToAddMore' | localize" />
             <div class="ac-alerts">
               <div *ngFor="let category of categories" class="alert alert-info alert-dismissible ac-alert" role="alert">
                 {{ category }}
-                <button [disabled]="editField !== EditField.Categories" (click)="onRemoveCategoryClick(category)"
-                  type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <button (click)="onRemoveCategoryClick(category)" type="button" class="close" data-dismiss="alert"
+                  aria-label="Close">
                   <span aria-hidden="true">×</span>
                 </button>
               </div>
@@ -92,23 +64,13 @@
 
     <div class="col-4">
 
-      <div class="card" [loader]="isLoading">
+      <div class="card" [loader]="isLoading || isUploadingImage">
         <div class="card-header">
           <h4 class="card-header-title">
             {{ (eventType === EventType.SingleEvent ? 'EventThumbnail' : 'EventSeriesThumbnail') | localize }}
           </h4>
-          <div class="row">
-            <button *ngIf="!editField || editField !== EditField.Image" (click)="onEditClick(EditField.Image)"
-              type="button" class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Image" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
-          </div>
         </div>
         <div class="card-body position-relative">
-          <div *ngIf="editField !== EditField.Image" class="disabled-block"></div>
           <app-document-uploader [previewImages]="true" [largeImagePreview]="true" [maxFiles]="1" [cropImages]="true"
             [cropperAspectRatioWidth]="350" [cropperAspectRationHeight]="263"
             [allowedExtensions]="allowedImageExtensions">
@@ -121,21 +83,12 @@
           <h4 class="card-header-title">
             {{ 'Language' | localize }}
           </h4>
-          <div class="row">
-            <button *ngIf="!editField || editField !== EditField.Language" (click)="onEditClick(EditField.Language)"
-              type="button" class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Language" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
-          </div>
         </div>
         <div class="card-body">
           <div class="form-group mb-0">
             <select class="custom-select" select2 [defaultValue]="model.languageId"
               (select2ValueChange)="model.languageId = $event" [(ngModel)]="model.languageId" id="language"
-              name="language" #languageIdModel="ngModel" #languageIdEl [disabled]="editField !== EditField.Language">
+              name="language" #languageIdModel="ngModel" #languageIdEl>
               <option *ngFor="let langauge of languages" [value]="langauge.id">
                 {{ langauge.name | localize }}
               </option>
@@ -149,15 +102,6 @@
           <h4 class="card-header-title">
             {{ 'Pricing' | localize }}
           </h4>
-          <div class="row">
-            <button *ngIf="!editField || editField !== EditField.Pricing" (click)="onEditClick(EditField.Pricing)"
-              type="button" class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Pricing" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
-          </div>
         </div>
         <div class="card-body">
           <div class="row">
@@ -209,7 +153,7 @@
             <div class="col-auto mr-n4">
               <div class="custom-control custom-radio">
                 <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
-                  id="subscription" [value]="PricingType.Subscription" [disabled]="editField !== EditField.Pricing">
+                  id="subscription" [value]="PricingType.Subscription">
                 <label class="custom-control-label" for="subscription"></label>
               </div>
             </div>

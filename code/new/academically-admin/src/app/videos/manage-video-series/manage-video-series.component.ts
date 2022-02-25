@@ -38,6 +38,11 @@ export class ManageVideoSeriesComponent extends AppComponentBase implements OnIn
   }
 
   ngOnInit(): void {
+    this._videoService.videoCreated$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        this.model = response;
+      });
   }
 
   onAddVideoClick(): void {
@@ -92,8 +97,7 @@ export class ManageVideoSeriesComponent extends AppComponentBase implements OnIn
     this._videosService.get(this.parentId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
-        this.model = response;
-        this._videoService.videoCreated = this.model;
+        this._videoService.videoCreated = response;
       });
   }
 }

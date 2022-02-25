@@ -36,6 +36,13 @@ export class ArticleSeriesComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+    this._articleService.articleCreated$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        if (response) {
+          this.model = response;
+        }
+      });
   }
 
   onAddArticleClick(): void {
@@ -64,8 +71,7 @@ export class ArticleSeriesComponent extends AppComponentBase implements OnInit {
     this._articlesService.get(this.parentId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
-        this.model = response;
-        this._articleService.articleCreated = this.model;
+        this._articleService.articleCreated = response;
       });
   }
 }

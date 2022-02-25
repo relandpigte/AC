@@ -35,6 +35,13 @@ export class SingleEventComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.getEvent();
+    this._eventService.eventCreated$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        if (response && response.id) {
+          this.model = response;
+        }
+      });
   }
 
   onLessonPreviewClick(): void {
@@ -72,8 +79,7 @@ export class SingleEventComponent extends AppComponentBase implements OnInit {
     this._eventsService.get(this.id)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
-        this.model = response;
-        this._eventService.eventCreated = this.model;
+        this._eventService.eventCreated = response;
       });
   }
 }

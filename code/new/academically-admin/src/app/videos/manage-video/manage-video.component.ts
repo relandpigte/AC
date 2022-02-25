@@ -27,6 +27,7 @@ export class ManageVideoComponent extends AppComponentBase implements OnInit {
     route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {
         this.id = paramMap.get('id');
+        this.getVideo();
       }
     });
   }
@@ -35,9 +36,10 @@ export class ManageVideoComponent extends AppComponentBase implements OnInit {
     this._videoService.videoCreated$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
-        this.model = response;
+        if (response) {
+          this.model = response;
+        }
       });
-    this.getVideo();
   }
 
   onPublishClick(): void {

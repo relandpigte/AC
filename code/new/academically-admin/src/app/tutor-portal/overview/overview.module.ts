@@ -7,12 +7,20 @@ import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { OverviewComponent } from './overview.component';
 import { SectionStudentsComponent } from './_components/section-students/section-students.component';
 import { SectionStudentsFullComponent } from './_components/section-students-full/section-students-full.component';
+import { RevenueGraphComponent } from './_components/revenue-graph/revenue-graph.component';
+import { TrafficGraphComponent } from './_components/traffic-graph/traffic-graph.component';
+import { ConversionGraphComponent } from './_components/conversion-graph/conversion-graph.component';
+import { EngagementGraphComponent } from './_components/engagement-graph/engagement-graph.component';
 
 @NgModule({
   declarations: [
     OverviewComponent,
     SectionStudentsComponent,
     SectionStudentsFullComponent,
+    RevenueGraphComponent,
+    TrafficGraphComponent,
+    ConversionGraphComponent,
+    EngagementGraphComponent,
   ],
   imports: [
     CommonModule,

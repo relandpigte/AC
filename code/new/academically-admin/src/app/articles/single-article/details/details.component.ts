@@ -2,7 +2,6 @@ import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { ArticleService } from '@app/articles/_services/article.service';
 import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { UploadService } from '@app/_shared/services/upload.service';
-import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import {
   FileParameter,
@@ -16,25 +15,17 @@ import {
   UpdateArticleDetailsDto,
 } from '@shared/service-proxies/service-proxies';
 import { takeUntil, finalize } from 'rxjs/operators';
-
-enum EditField {
-  Name = 1,
-  Subtitle = 2,
-  Categories = 3,
-  Image = 4,
-  Language = 5,
-  Pricing = 6,
-}
+import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
 
 @Component({
   selector: 'app-details',
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.less']
 })
-export class DetailsComponent extends AppComponentBase implements OnInit {
+export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
 
-  editField: EditField;
+  id: string;
   category: string;
   categories: string[] = [];
   articleThumbnailDocument: FileParameter;
@@ -43,7 +34,7 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
 
   model = new UpdateArticleDetailsDto();
   isLoading = false;
-  EditField = EditField;
+  isUploadingImage = false;
   allowedImageExtensions = fileUploadConfiguration.allowedImageExtensions;
   PricingType = PricingType;
   ArticleType = ArticleType;
@@ -61,54 +52,31 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+    this._articleService.articleCreated$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        if (response && response.id && this.id !== response.id) {
+          this.id = response.id;
+          this.getArticle();
+        }
+      });
     this.getLanguages();
 
     this.documentUploader.filesChanged.subscribe((files: FileParameter[]) => {
       if (files && files.length) {
         this.articleThumbnailDocument = files[0];
+        this.uploadThumbnail();
       } else {
         this.articleThumbnailDocument = undefined;
-        this.model.thumbnailDocumentId = undefined;
+        if (!this.defaultFile || !this.defaultFile.name) {
+          this.deleteThumbnail();
+        }
       }
     });
 
     this.documentUploader.defaultFileRemoved.subscribe(() => {
-      this.model.thumbnailDocumentId = undefined;
+      this.deleteThumbnail();
     });
-
-    this._articleService.articleCreated$.subscribe(article => {
-      if (article) {
-        this.articleType = article.type;
-        this.model.init(article);
-        if (article.thumbnailDocument) {
-          this.thumbnailDocument = article.thumbnailDocument;
-          this.setDefaultFile();
-        }
-
-        if (this.model.categories && this.model.categories.trim()) {
-          this.categories = this.model.categories.split(',');
-        }
-      }
-    });
-  }
-
-  onFormSubmit(): void {
-    this.isLoading = true;
-    this.model.categories = this.categories.join(',');
-    if (this.thumbnailDocument.id && !this.model.thumbnailDocumentId) {
-      this._uploadService.delete(this.thumbnailDocument, this.model.id)
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe(() => {
-          this.thumbnailDocument = new DocumentDto();
-          this.uploadAndUpdateDetails();
-        });
-    } else {
-      this.uploadAndUpdateDetails();
-    }
-  }
-
-  onEditClick(editField: EditField): void {
-    this.editField = editField;
   }
 
   onCategoryKeyDown(e: KeyboardEvent): void {
@@ -120,6 +88,7 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
         this.category = undefined;
       }
     }
+    this.updateCategories();
   }
 
   onRemoveCategoryClick(category: string): void {
@@ -127,6 +96,7 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
     if (index >= 0) {
       this.categories.splice(index, 1);
     }
+    this.updateCategories();
   }
 
   private getLanguages(): void {
@@ -139,43 +109,71 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
       });
   }
 
-  private uploadAndUpdateDetails(): void {
-    if (this.articleThumbnailDocument) {
-      this._uploadService.upload(this.articleThumbnailDocument.data, DocumentType.ArticleThumbnail, this.model.id)
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe(response => {
-          this.model.thumbnailDocumentId = response.id;
-          this.thumbnailDocument = response;
-          this.documentUploader.files = [];
-          this.setDefaultFile();
-          this.updateDetails();
+  private uploadThumbnail(): void {
+    this.isUploadingImage = true;
+    this._uploadService.upload(this.articleThumbnailDocument.data, DocumentType.ArticleThumbnail, this.model.id)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isUploadingImage = false;
+        })
+      )
+      .subscribe(response => {
+        this.model.thumbnailDocumentId = response.id;
+        this.thumbnailDocument = response;
+        this.documentUploader.files = [];
+        this.setDefaultFile();
+      });
+  }
+
+  private deleteThumbnail(): void {
+    this.isUploadingImage = true;
+    if (this.thumbnailDocument && this.thumbnailDocument.id && this.model.thumbnailDocumentId) {
+      this._uploadService.delete(this.thumbnailDocument, this.model.id)
+        .pipe(
+          takeUntil(this.destroyed$),
+          finalize(() => {
+            this.isUploadingImage = false;
+          })
+        )
+        .subscribe(() => {
+          this.thumbnailDocument = new DocumentDto();
+          this.model.thumbnailDocumentId = undefined;
         });
-    } else {
-      this.updateDetails();
     }
   }
 
   private updateDetails(): void {
-    this._articlesService.updateDetails(this.model).pipe(
-      takeUntil(this.destroyed$),
-      finalize(() => {
-        this.isLoading = false;
-      })
-    )
-      .subscribe(() => {
-        this.notify.success(this.l('SavedSuccessfully'));
-        setTimeout(() => {
-          this.editField = undefined;
-          this.getVideo();
-        });
-      });
-  }
-
-  private getVideo(): void {
-    this._articlesService.get(this.model.id)
+    this._articlesService.updateDetails(this.model)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         this._articleService.articleCreated = response;
+      });
+  }
+
+  private getArticle(): void {
+    this.isLoading = true;
+    this._articlesService.get(this.id)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe(response => {
+        this.model.init(response);
+        this.articleType = response.type;
+        this.model.init(response);
+        if (response.thumbnailDocument) {
+          this.thumbnailDocument = response.thumbnailDocument;
+          this.setDefaultFile();
+        }
+
+        if (this.model.categories && this.model.categories.trim()) {
+          this.categories = this.model.categories.split(',');
+        }
+        this.modelToSave = this.model;
+        this.initAutoSave(this.updateDetails);
       });
   }
 
@@ -185,5 +183,9 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
     this.defaultFile.url = this._uploadService.getFileUrl(this.thumbnailDocument);
     this.defaultFile.size = this.thumbnailDocument.size;
     this.documentUploader.defaultFile = this.defaultFile;
+  }
+
+  private updateCategories(): void {
+    this.model.categories = this.categories.join(',');
   }
 }

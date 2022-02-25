@@ -12,15 +12,15 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-12 col-lg-6 col-xl">
+      <div class="row overview">
+
+        <div class="col-12 col-lg-2">
           <div class="card">
             <div class="card-body">
               <div class="row align-items-center">
                 <div class="col">
                   <h6 class="text-uppercase text-muted mb-2">{{ 'Revenue' | localize }}</h6>
-                  <span class="h2 mb-0 align-middle"> &#163;24, 500</span>
-                  <span class="badge badge-soft-success ml-2">+3.5%</span>
+                  <span class="h2 mb-0 align-middle">&#163;763</span>
                 </div>
                 <div class="col-auto">
                   <span class="card-fas fas fa-pound-sign text-muted mb-0"></span>
@@ -30,33 +30,64 @@
           </div>
         </div>
 
-        <div class="col-12 col-lg-6 col-xl">
+        <div class="col-12 col-lg-2">
           <div class="card">
             <div class="card-body">
               <div class="row align-items-center">
                 <div class="col">
-                  <h6 class="text-uppercase text-muted mb-2">{{ 'Students' | localize }}</h6>
-                  <span *ngIf="model && model.studentCourses" class="h2 mb-0 align-middle">{{
-                    model.studentCourses.length }}</span>
+                  <h6 class="text-uppercase text-muted mb-2">{{ 'Visits' | localize }}</h6>
+                  <span class="h2 mb-0 align-middle">763</span>
                 </div>
                 <div class="col-auto">
-                  <span class="h2 fe fe-user text-muted mb-0"></span>
+                  <span class="h2 fe fe-eye text-muted mb-0"></span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="col-12 col-lg-6 col-xl">
+        <div class="col-12 col-lg-2">
           <div class="card">
             <div class="card-body">
               <div class="row align-items-center">
                 <div class="col">
-                  <h6 class="text-uppercase text-muted mb-2">{{ 'Completion' | localize }}</h6>
-                  <span class="h2 mb-0 align-middle">35</span>
+                  <h6 class="text-uppercase text-muted mb-2">{{ 'Likes' | localize }}</h6>
+                  <span class="h2 mb-0 align-middle">137</span>
                 </div>
                 <div class="col-auto">
-                  <span class="h2 fe fe-award text-muted mb-0"></span>
+                  <span class="h2 fe fe-thumbs-up text-muted mb-0"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-2">
+          <div class="card">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h6 class="text-uppercase text-muted mb-2">{{ 'Purchases' | localize }}</h6>
+                  <span class="h2 mb-0 align-middle">52</span>
+                </div>
+                <div class="col-auto">
+                  <span class="h2 fe fe-credit-card text-muted mb-0"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-2">
+          <div class="card">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h6 class="text-uppercase text-muted mb-2">{{ 'Plays' | localize }}</h6>
+                  <span class="h2 mb-0 align-middle">17</span>
+                </div>
+                <div class="col-auto">
+                  <span class="h2 fe fe-video text-muted mb-0"></span>
                 </div>
               </div>
             </div>
@@ -71,7 +102,7 @@
                   <h6 class="text-uppercase text-muted mb-2">{{ 'PositiveReviews' | localize }}</h6>
                   <span class="h2 mb-0 align-middle">0%</span>
                   <span class="badge badge-soft-success ml-2">
-                    0 {{ 'Reviews' | localize }}
+                    154
                   </span>
                 </div>
                 <div class="col-auto">
@@ -81,70 +112,21 @@
             </div>
           </div>
         </div>
+
       </div>
 
-      <div class="card">
-        <div class="card-header">
-          <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
-            <li class="nav-item">
-              <a (click)="onRangeTypeChange(RangeType.Week)" class="nav-link active" href="#" data-toggle="tab">
-                {{ 'ThisWeek' | localize }}
-              </a>
-            </li>
-            <li class="nav-item">
-              <a (click)="onRangeTypeChange(RangeType.Month)" class="nav-link" href="#" data-toggle="tab">
-                {{ 'ThisMonth' | localize }}
-              </a>
-            </li>
-            <li class="nav-item">
-              <a (click)="onRangeTypeChange(RangeType.Year)" class="nav-link" href="#" data-toggle="tab">
-                {{ 'ThisYear' | localize }}
-              </a>
-            </li>
-          </ul>
-          <span class="text-muted mr-3">
-            {{ 'LastYearComparison' | localize }}:
-          </span>
-          <div class="custom-control custom-switch">
-            <input [(ngModel)]="shouldShowLastYear" (change)="onShowLastYearChange()" type="checkbox"
-              class="custom-control-input" id="lastYearCheck">
-            <label class="custom-control-label" for="lastYearCheck"></label>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="position-relative">
-            <canvas class="chart-canvas overview-chart" chart [chartSettings]="chartSettings"
-              [chartDataset]="chartDataset">
-            </canvas>
-          </div>
+      <app-revenue-graph></app-revenue-graph>
 
-          <div class="d-flex justify-content-center align-items-center mt-3">
-            <div class="custom-control custom-checkbox mx-5">
-              <input [(ngModel)]="currentDataType" (change)="onDataTypeChange()" class="custom-control-input"
-                name="dataTypeCheck" id="revenueCheck" type="radio" [value]="DataType.Revenue" />
-              <label class="custom-control-label" for="revenueCheck"></label>
-              <label class="custom-control-caption m-0" for="revenueCheck">
-                {{ 'Revenue' | localize }}
-              </label>
-            </div>
-            <div class="custom-control custom-checkbox mx-5">
-              <input [(ngModel)]="currentDataType" (change)="onDataTypeChange()" class="custom-control-input"
-                name="dataTypeCheck" id="studentsCheck" type="radio" [value]="DataType.Students" />
-              <label class="custom-control-label" for="studentsCheck"></label>
-              <label class="custom-control-caption m-0" for="studentsCheck">
-                {{ 'Students' | localize }}
-              </label>
-            </div>
-            <div class="custom-control custom-checkbox mx-5">
-              <input [(ngModel)]="currentDataType" (change)="onDataTypeChange()" class="custom-control-input"
-                name="dataTypeCheck" id="completedCheck" type="radio" [value]="DataType.Completed" />
-              <label class="custom-control-label" for="completedCheck"></label>
-              <label class="custom-control-caption m-0" for="completedCheck">
-                {{ 'Completed' | localize }}
-              </label>
-            </div>
-          </div>
+      <div class="row">
+
+        <div class="col-12 col-lg-8">
+          <app-traffic-graph></app-traffic-graph>
         </div>
+
+        <div class="col-12 col-lg-4">
+          <app-conversion-graph></app-conversion-graph>
+        </div>
+
       </div>
 
       <div class="row">

@@ -1,4 +1,4 @@
-<form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+<form class="form-horizontal" autocomplete="off" #form="ngForm">
   <div class="row">
     <div class="col-8" [loader]="isLoading">
 
@@ -7,15 +7,6 @@
           <h4 class="card-header-title">
             {{ 'Delay' | localize | titlecase }}
           </h4>
-          <div class="col-auto row">
-            <button *ngIf="!editField || editField !== EditField.Delay" (click)="onEditClick(EditField.Delay)"
-              type="button" class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Delay" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
-          </div>
         </div>
         <div class="card-body pt-0">
           <div class="card border mb-0">
@@ -32,15 +23,14 @@
                 </label>
                 <input type="number" [(ngModel)]="lastVideoValue" id="lastVideoValue" name="lastVideoValue"
                   class="form-control form-control-sm inline-form-control mx-3"
-                  [disabled]="model.delayType !== DelayType.LastItem || editField !== EditField.Delay" [min]="0" />
+                  [disabled]="model.delayType !== DelayType.LastItem" [min]="0" />
                 {{ 'DaysFromLastVideo' | localize | lowercase }}
               </div>
 
               <div class="form-group delay-form">
                 <div class="custom-control custom-radio mr-3">
                   <input type="radio" id="specificDate" name="delayType" class="custom-control-input"
-                    [value]="DelayType.SpecificDate" [(ngModel)]="model.delayType" (change)="onDripTypeChange()"
-                    [disabled]="editField !== EditField.Delay">
+                    [value]="DelayType.SpecificDate" [(ngModel)]="model.delayType" (change)="onDripTypeChange()">
                   <label class="custom-control-label" for="specificDate"></label>
                 </div>
                 <label for="specificDate">
@@ -52,7 +42,7 @@
                   <input [(ngModel)]="specificDateValue" id="specificDateValue" name="specificDateValue" type="text"
                     class="form-control form-control-appended" #dateOfBirthModel="ngModel" #dateOfBirthEl
                     #dp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" readonly
-                    [disabled]="model.delayType !== DelayType.SpecificDate || editField !== EditField.Delay" />
+                    [disabled]="model.delayType !== DelayType.SpecificDate" />
                   <div class="input-group-append">
                     <div class="input-group-text">
                       <span class="fas fa-calendar"></span>
@@ -80,15 +70,6 @@
       <div class="card" *ngIf="videoType && videoType === VideoType.SingleVideo">
         <div class="card-header border-0">
           <label class="col-form-label pb-0" for="name">{{ 'Comments' | localize}}</label>
-          <div class="col-auto row">
-            <button *ngIf="!editField || editField !== EditField.Comments" (click)="onEditClick(EditField.Comments)"
-              type="button" class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Comments" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
-          </div>
         </div>
         <div class="card-body pt-0">
           <div class="card border">
@@ -103,8 +84,7 @@
                 <div class="col-auto min-w-50px">
                   <div class="custom-control custom-radio d-inline">
                     <input type="radio" class="custom-control-input" id="commentVisible" name="comment"
-                      [(ngModel)]="model.commentSetting" [value]="CommentSetting.Visible"
-                      [disabled]="editField !== EditField.Comments" />
+                      [(ngModel)]="model.commentSetting" [value]="CommentSetting.Visible" />
                     <label class="custom-control-label" for="commentVisible"></label>
                   </div>
                 </div>
@@ -121,8 +101,7 @@
                 <div class="col-auto">
                   <div class="custom-control custom-switch">
                     <input [(ngModel)]="model.commentModeration" id="isPublic" name="isPublic" type="checkbox"
-                      class="custom-control-input" [disabled]="model.commentSetting !== CommentSetting.Visible"
-                      [disabled]="editField !== EditField.Comments">
+                      class="custom-control-input" [disabled]="model.commentSetting !== CommentSetting.Visible">
                     <label class="custom-control-label" for="isPublic"></label>
                   </div>
                 </div>
@@ -144,8 +123,7 @@
                 <div class="col-auto min-w-50px">
                   <div class="custom-control custom-radio d-inline">
                     <input type="radio" class="custom-control-input" id="commentHidden" name="comment"
-                      [(ngModel)]="model.commentSetting" [value]="CommentSetting.Hidden"
-                      [disabled]="editField !== EditField.Comments" />
+                      [(ngModel)]="model.commentSetting" [value]="CommentSetting.Hidden" />
                     <label class="custom-control-label" for="commentHidden"></label>
                   </div>
                 </div>
@@ -162,8 +140,7 @@
                 <div class="col-auto min-w-50px">
                   <div class="custom-control custom-radio d-inline">
                     <input type="radio" class="custom-control-input" id="commentLocked" name="comment"
-                      [(ngModel)]="model.commentSetting" [value]="CommentSetting.Locked"
-                      [disabled]="editField !== EditField.Comments" />
+                      [(ngModel)]="model.commentSetting" [value]="CommentSetting.Locked" />
                     <label class="custom-control-label" for="commentLocked"></label>
                   </div>
                 </div>
@@ -176,24 +153,14 @@
       <div class="card">
         <div class="card-header border-0">
           <label class="col-form-label pb-0" for="name">{{ 'CustomUrl' | localize}}</label>
-          <div class="col-auto row">
-            <button *ngIf="!editField || editField !== EditField.Url" (click)="onEditClick(EditField.Url)" type="button"
-              class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Url" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
-          </div>
         </div>
         <div class="card-body pt-0">
           <div class="form-group required mb-0 d-flex align-items-center">
             <a href="javascript:;">
-              www.scholarpro.com/<span *ngIf="editField !== EditField.Url">{{ model.customUrl }}</span>
+              www.scholarpro.com/
             </a>
-            <input *ngIf=" editField===EditField.Url" [(ngModel)]="model.customUrl" #nameModel="ngModel" #nameEl
-              class="form-control" type="text" id="name" name="name"
-              [placeholder]="'CustomUrl' | localize | lowercase" />
+            <input [(ngModel)]="model.customUrl" #nameModel="ngModel" #nameEl class="form-control" type="text" id="name"
+              name="name" [placeholder]="'CustomUrl' | localize | lowercase" />
           </div>
         </div>
       </div>
@@ -206,15 +173,6 @@
           <h4 class="card-header-title">
             {{ 'VideoVisibility' | localize }}
           </h4>
-          <div class="col-auto row">
-            <button *ngIf="!editField || editField !== EditField.Visibility" (click)="onEditClick(EditField.Visibility)"
-              type="button" class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Visibility" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
-          </div>
         </div>
         <div class="card-body">
 
@@ -233,7 +191,7 @@
                 <div class="col-auto">
                   <div class="custom-control custom-radio d-inline">
                     <input type="radio" class="custom-control-input" id="videoVisible" name="videoVisible"
-                      [(ngModel)]="model.isVisible" [value]="true" [disabled]="editField !== EditField.Visibility" />
+                      [(ngModel)]="model.isVisible" [value]="true" />
                     <label class="custom-control-label" for="videoVisible"></label>
                   </div>
                 </div>
@@ -254,7 +212,7 @@
                 <div class="col-auto">
                   <div class="custom-control custom-radio d-inline">
                     <input type="radio" class="custom-control-input" id="videoInvisible" name="videoVisible"
-                      [(ngModel)]="model.isVisible" [value]="false" [disabled]="editField !== EditField.Visibility" />
+                      [(ngModel)]="model.isVisible" [value]="false" />
                     <label class="custom-control-label" for="videoInvisible"></label>
                   </div>
                 </div>

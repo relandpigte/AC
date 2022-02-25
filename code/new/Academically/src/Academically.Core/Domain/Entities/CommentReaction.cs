@@ -11,7 +11,7 @@ namespace Academically.Domain.Entities
     [Table("AcademicallyCommentReactions")]
     public class CommentReaction : CreationAuditedEntity<Guid>
     {
-        public CommentReactionType Type { get; set; }
+        public ReactionType Type { get; set; }
         public Guid CommentId { get; set; }
 
         [ForeignKey("CommentId")]

@@ -45,7 +45,9 @@
   <p *ngIf="model.description" class="pt-1 m-0 small">{{ model.description }}</p>
   <div class="row small text-muted text-center mx-2 mt-2">
     <div class="col no-wrap">
-      <i class="fe fe-thumbs-up"></i> 0
+      <a [class.text-success]="isLiked" href="#!like" (click)="$event.preventDefault(); onLikeClick()">
+        <i class="fe fe-thumbs-up"></i> {{ likeCount }}
+      </a>
     </div>
     <div class="col">|</div>
     <div class="col no-wrap">

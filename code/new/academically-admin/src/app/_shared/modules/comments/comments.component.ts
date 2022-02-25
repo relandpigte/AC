@@ -1,7 +1,7 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CommentDto, CommentsServiceProxy, CommentReactionDto, CommentReactionType } from '@shared/service-proxies/service-proxies';
+import { CommentDto, CommentsServiceProxy, CommentReactionDto, ReactionType } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { takeUntil, finalize } from 'rxjs/operators';
 
@@ -11,15 +11,7 @@ import { takeUntil, finalize } from 'rxjs/operators';
   styleUrls: ['./comments.component.less']
 })
 export class CommentsComponent extends AppComponentBase implements OnInit {
-  @Input() set referenceId(value: string) {
-    this._referenceId = value;
-    this.getComments();
-  }
   @Input() isSidebar = true;
-
-  get referenceId() {
-    return this._referenceId
-  }
 
   comments: CommentDto[];
   isLoading = false;
@@ -39,6 +31,15 @@ export class CommentsComponent extends AppComponentBase implements OnInit {
     private _commentsService: CommentsServiceProxy,
   ) {
     super(injector);
+  }
+
+  get referenceId() {
+    return this._referenceId;
+  }
+
+  @Input() set referenceId(value: string) {
+    this._referenceId = value;
+    this.getComments();
   }
 
   ngOnInit(): void {
@@ -80,7 +81,7 @@ export class CommentsComponent extends AppComponentBase implements OnInit {
   onLikeClick(comment: CommentDto): void {
     const reaction = new CommentReactionDto();
     reaction.commentId = comment.id;
-    reaction.type = CommentReactionType.Like;
+    reaction.type = ReactionType.Like;
     this._commentsService.createReaction(reaction)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
@@ -156,7 +157,7 @@ export class CommentsComponent extends AppComponentBase implements OnInit {
     this.isCommentsLoading = true;
     this.comments = [];
     this.skipCount = [];
-    this.loadedReplyCount = []
+    this.loadedReplyCount = [];
     this.isReplying = [];
     this._commentsService.getAll(this._referenceId)
       .pipe(
@@ -171,7 +172,7 @@ export class CommentsComponent extends AppComponentBase implements OnInit {
           this.loadedReplyCount[comment.id] = 0;
           this.getReplies(comment);
         });
-      })
+      });
   }
 
   private getReplies(comment: CommentDto): void {

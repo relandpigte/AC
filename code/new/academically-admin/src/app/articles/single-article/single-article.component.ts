@@ -29,12 +29,19 @@ export class SingleArticleComponent extends AppComponentBase implements OnInit {
     route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {
         this.id = paramMap.get('id');
+        this.getArticle();
       }
     });
   }
 
   ngOnInit(): void {
-    this.getArticle();
+    this._articleService.articleCreated$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        if (response) {
+          this.model = response;
+        }
+      });
   }
 
   onLessonPreviewClick(): void {
@@ -72,8 +79,7 @@ export class SingleArticleComponent extends AppComponentBase implements OnInit {
     this._articlesService.get(this.id)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
-        this.model = response;
-        this._articleService.articleCreated = this.model;
+        this._articleService.articleCreated = response;
       });
   }
 }
