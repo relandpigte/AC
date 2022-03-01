@@ -1,7 +1,7 @@
 import { Component, OnInit, Injector, Input } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { VideoDto, VideosServiceProxy, VideoType } from '@shared/service-proxies/service-proxies';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { UploadService } from '@app/_shared/services/upload.service';
@@ -28,7 +28,6 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     route: ActivatedRoute,
-    private _router: Router,
     private _location: Location,
     private _uploadService: UploadService,
     private _videosService: VideosServiceProxy,
@@ -53,11 +52,7 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
   }
 
   onExitClick(): void {
-    if (this.isPreview) {
-      this._location.back();
-    } else {
-      this._router.navigate(['/app/home/videos']);
-    }
+    this._location.back();
   }
 
   private getVideo(): void {
