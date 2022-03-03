@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Offers">Offers</text>
+    <text name="Handouts">Handouts</text>
     <text name="UnsavedSuccessfully">Unsaved successfully</text>
     <text name="Reads">Reads</text>
     <text name="Unsave">Unsave</text>
