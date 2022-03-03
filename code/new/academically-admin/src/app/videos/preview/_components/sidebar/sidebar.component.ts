@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 class MenuItem {
@@ -30,9 +30,11 @@ export class SidebarComponent implements OnInit {
     this.menuItems.push(new MenuItem('Overview', 'fe-home'));
     this.menuItems.push(new MenuItem('Separator'));
     this.menuItems.push(new MenuItem('Comments', 'fe-message-circle'));
-    this.menuItems.push(new MenuItem('Downloads', 'fe-download'));
+    this.menuItems.push(new MenuItem('Questions', 'fe-help-circle'));
+    this.menuItems.push(new MenuItem('Handouts', 'fe-folder'));
+    this.menuItems.push(new MenuItem('Offers', 'fe-shopping-bag'));
+    this.menuItems.push(new MenuItem('Reviews', 'fe-star'));
     this.activeMenuItem = this.menuItems[0];
-
     route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {
         this.videoId = paramMap.get('id');

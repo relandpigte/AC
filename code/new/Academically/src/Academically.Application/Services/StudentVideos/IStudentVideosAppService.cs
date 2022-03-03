@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Academically.Services.StudentVideos.Dto;
 
 namespace Academically.Services.StudentVideos
 {
-	public interface IStudentVideosAppService
+	public interface IStudentVideosAppService : IApplicationService
 	{
 		Task<PagedResultDto<StudentVideoDto>> GetAllAsync(GetAllStudentVideoDto input);
 		Task<StudentVideoDto> GetByVideoAsync(Guid videoId);

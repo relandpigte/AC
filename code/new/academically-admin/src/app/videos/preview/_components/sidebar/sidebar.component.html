@@ -12,14 +12,13 @@
   <div *ngIf="!hidden" class="sidebar-contents" [ngSwitch]="activeMenuItem.name">
     <div class="sidebar-title">
       <h4 class="text-muted">
-        {{ activeMenuItem.name }}
+        {{ activeMenuItem.name | localize }}
       </h4>
     </div>
 
     <div class="sidebar-content">
       <app-home *ngSwitchCase="'Overview'"></app-home>
       <app-sidebar-comments *ngSwitchCase="'Comments'"></app-sidebar-comments>
-      <app-downloads *ngSwitchCase="'Downloads'"></app-downloads>
     </div>
   </div>
 </div>
