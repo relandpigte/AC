@@ -86,6 +86,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<StudentVideo> StudentVideos { get; set; }
         public virtual DbSet<Reaction> Reactions { get; set; }
+        public virtual DbSet<UserFollower> UserFollowers { get; set; }
 
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)

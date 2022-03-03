@@ -1,6 +1,16 @@
 import { Component, OnInit, Injector } from '@angular/core';
 import { PreviewService } from '../../_services/preview.service';
-import { VideoDto, StudentVideosServiceProxy, StudentVideoDto, VideoType, ReactionsServiceProxy, ReactionType } from '@shared/service-proxies/service-proxies';
+import {
+  VideoDto,
+  StudentVideosServiceProxy,
+  StudentVideoDto,
+  VideoType,
+  ReactionsServiceProxy,
+  ReactionType,
+  UserFollowerDto,
+  UserFollowersServiceProxy,
+  GetStudentVideoDto,
+} from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/app-component-base';
 import * as _ from 'lodash';
@@ -12,10 +22,11 @@ import * as _ from 'lodash';
 })
 export class HomeComponent extends AppComponentBase implements OnInit {
   model = new VideoDto();
-  studentVideo = new StudentVideoDto();
+  studentVideo = new GetStudentVideoDto();
   preview = true;
   likeCount = 0;
   isLiked = false;
+  userFollower: UserFollowerDto;
 
   VideoType = VideoType;
 
@@ -24,6 +35,7 @@ export class HomeComponent extends AppComponentBase implements OnInit {
     private _previewService: PreviewService,
     private _studentVideosService: StudentVideosServiceProxy,
     private _reactionsService: ReactionsServiceProxy,
+    private _userFollowersService: UserFollowersServiceProxy,
   ) {
     super(injector);
   }
@@ -80,11 +92,32 @@ export class HomeComponent extends AppComponentBase implements OnInit {
       });
   }
 
+  onFollowClick(): void {
+    this._userFollowersService.create(this.model.creatorUser.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        this.userFollower = response;
+        this.notify.success(this.l('YouAreNowFollowingThisUser'));
+      });
+  }
+
+  onUnfollowClick(): void {
+    this._userFollowersService.delete(this.userFollower.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(() => {
+        this.userFollower = undefined;
+        this.notify.success(this.l('YouUnfollowedThisUser'));
+      });
+  }
+
   private getStudentVideo(): void {
     this._studentVideosService.getByVideo(this.model.id)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         this.studentVideo = response;
+        if (this.studentVideo && this.studentVideo.id) {
+          this.getUserFollower();
+        }
       });
   }
 
@@ -99,6 +132,14 @@ export class HomeComponent extends AppComponentBase implements OnInit {
     this._reactionsService.getCount(this.model.id, ReactionType.Like)
       .subscribe(response => {
         this.likeCount = response;
+      });
+  }
+
+  private getUserFollower(): void {
+    this._userFollowersService.get(this.model.creatorUser.id, this.studentVideo.creatorUserId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        this.userFollower = response;
       });
   }
 }

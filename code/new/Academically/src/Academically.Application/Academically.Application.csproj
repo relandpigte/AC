@@ -18,6 +18,8 @@
     <None Remove="Services\StudentVideos\Dto\" />
     <None Remove="Services\Reactions\" />
     <None Remove="Services\Reactions\Dto\" />
+    <None Remove="Services\UserFollowers\" />
+    <None Remove="Services\UserFollowers\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Academically.Core\Academically.Core.csproj" />
@@ -63,6 +65,8 @@
     <Folder Include="Services\StudentVideos\Dto\" />
     <Folder Include="Services\Reactions\" />
     <Folder Include="Services\Reactions\Dto\" />
+    <Folder Include="Services\UserFollowers\" />
+    <Folder Include="Services\UserFollowers\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Services\Projects\" />
