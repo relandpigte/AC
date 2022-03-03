@@ -27,10 +27,16 @@
     <div class="col ml-n2">
       <h4 class="m-0 p-0">{{ model.creatorUser.fullName }}</h4>
     </div>
-    <div class="col-auto">
-      <button class="btn btn-sm btn-outline-primary">
+    <div *ngIf="studentVideo && studentVideo.id && studentVideo.creatorUserId !== model.creatorUser.id" class="col-auto">
+      <button *ngIf="!userFollower || !userFollower.id else unfollowTemplate" class="btn btn-sm btn-outline-primary"
+        (click)="onFollowClick()">
         {{ 'Follow' | localize }}
       </button>
+      <ng-template #unfollowTemplate>
+        <button class="btn btn-sm btn-outline-success" (click)="onUnfollowClick()">
+          {{ 'Unfollow' | localize }}
+        </button>
+      </ng-template>
     </div>
   </div>
 </div>

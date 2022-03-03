@@ -12412,7 +12412,7 @@ export class StudentVideosServiceProxy {
      * @param videoId (optional) 
      * @return Success
      */
-    getByVideo(videoId: string | undefined): Observable<StudentVideoDto> {
+    getByVideo(videoId: string | undefined): Observable<GetStudentVideoDto> {
         let url_ = this.baseUrl + "/api/services/app/StudentVideos/GetByVideo?";
         if (videoId === null)
             throw new Error("The parameter 'videoId' cannot be null.");
@@ -12435,14 +12435,14 @@ export class StudentVideosServiceProxy {
                 try {
                     return this.processGetByVideo(<any>response_);
                 } catch (e) {
-                    return <Observable<StudentVideoDto>><any>_observableThrow(e);
+                    return <Observable<GetStudentVideoDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<StudentVideoDto>><any>_observableThrow(response_);
+                return <Observable<GetStudentVideoDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetByVideo(response: HttpResponseBase): Observable<StudentVideoDto> {
+    protected processGetByVideo(response: HttpResponseBase): Observable<GetStudentVideoDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -12453,7 +12453,7 @@ export class StudentVideosServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = StudentVideoDto.fromJS(resultData200);
+            result200 = GetStudentVideoDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -12461,7 +12461,7 @@ export class StudentVideosServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<StudentVideoDto>(<any>null);
+        return _observableOf<GetStudentVideoDto>(<any>null);
     }
 
     /**
@@ -15827,6 +15827,187 @@ export class UserEducationsServiceProxy {
     }
 
     protected processDeleteDocument(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
+export class UserFollowersServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param userId (optional) 
+     * @param followerUserId (optional) 
+     * @return Success
+     */
+    get(userId: number | undefined, followerUserId: number | undefined): Observable<UserFollowerDto> {
+        let url_ = this.baseUrl + "/api/services/app/UserFollowers/Get?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (followerUserId === null)
+            throw new Error("The parameter 'followerUserId' cannot be null.");
+        else if (followerUserId !== undefined)
+            url_ += "followerUserId=" + encodeURIComponent("" + followerUserId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<UserFollowerDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserFollowerDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<UserFollowerDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserFollowerDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserFollowerDto>(<any>null);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @return Success
+     */
+    create(userId: number | undefined): Observable<UserFollowerDto> {
+        let url_ = this.baseUrl + "/api/services/app/UserFollowers/Create?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<UserFollowerDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserFollowerDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<UserFollowerDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserFollowerDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserFollowerDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserFollowers/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -23665,6 +23846,61 @@ export interface IGetStudentsCourseConversationDto {
     lastCourseConversation: CourseConversationDto;
 }
 
+export class GetStudentVideoDto implements IGetStudentVideoDto {
+    id: string;
+    videoId: string;
+    saveOnly: boolean;
+    creatorUserId: number;
+
+    constructor(data?: IGetStudentVideoDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.videoId = _data["videoId"];
+            this.saveOnly = _data["saveOnly"];
+            this.creatorUserId = _data["creatorUserId"];
+        }
+    }
+
+    static fromJS(data: any): GetStudentVideoDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetStudentVideoDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["videoId"] = this.videoId;
+        data["saveOnly"] = this.saveOnly;
+        data["creatorUserId"] = this.creatorUserId;
+        return data; 
+    }
+
+    clone(): GetStudentVideoDto {
+        const json = this.toJSON();
+        let result = new GetStudentVideoDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetStudentVideoDto {
+    id: string;
+    videoId: string;
+    saveOnly: boolean;
+    creatorUserId: number;
+}
+
 export class GroupedPermissionDto implements IGroupedPermissionDto {
     id: number;
     name: string | undefined;
@@ -31049,6 +31285,53 @@ export interface IUserEducationDto {
     universityCountryCode: string | undefined;
     userEducationCourses: UserEducationCourseDto[] | undefined;
     userEducationDocuments: UserEducationDocumentDto[] | undefined;
+}
+
+export class UserFollowerDto implements IUserFollowerDto {
+    id: string;
+    userId: number;
+
+    constructor(data?: IUserFollowerDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userId = _data["userId"];
+        }
+    }
+
+    static fromJS(data: any): UserFollowerDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserFollowerDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userId"] = this.userId;
+        return data; 
+    }
+
+    clone(): UserFollowerDto {
+        const json = this.toJSON();
+        let result = new UserFollowerDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserFollowerDto {
+    id: string;
+    userId: number;
 }
 
 export class UserLoginInfoDto implements IUserLoginInfoDto {

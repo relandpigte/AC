@@ -5,7 +5,6 @@ using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
-using Academically.Domain.Enums;
 using Academically.Services.StudentVideos.Dto;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,12 +39,12 @@ namespace Academically.Services.StudentVideos
             return new PagedResultDto<StudentVideoDto>(totalCount, studentVideos);
         }
 
-        public async Task<StudentVideoDto> GetByVideoAsync(Guid videoId)
+        public async Task<GetStudentVideoDto> GetByVideoAsync(Guid videoId)
         {
             return await _studentVideosRepository.GetAll()
                 .Where(e => e.VideoId == videoId && e.CreatorUserId == AbpSession.UserId)
                 .OrderByDescending(e => e.CreationTime)
-                .Select(e => ObjectMapper.Map<StudentVideoDto>(e))
+                .Select(e => ObjectMapper.Map<GetStudentVideoDto>(e))
                 .FirstOrDefaultAsync();
         }
 
