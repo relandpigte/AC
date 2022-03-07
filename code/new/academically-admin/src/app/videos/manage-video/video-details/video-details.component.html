@@ -123,36 +123,9 @@
                 {{ 'FixedFee' | localize }}
                 <p class="small text-muted">{{ 'FixedFeeDescription' | localize }}</p>
               </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-auto mr-n4">
-              <div class="custom-control custom-radio">
-                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
-                  id="paymentPlan" [value]="PricingType.PaymentPlan">
-                <label class="custom-control-label" for="paymentPlan"></label>
+              <div *ngIf="model.pricingType === PricingType.FixedPrice">
+                <input [(ngModel)]="model.price" class=" form-control" type="number" id="price" name="price" required />
               </div>
-            </div>
-            <div class="col">
-              <label class="form-check-label" for="paymentPlan">
-                {{ 'PaymentPlan' | localize | titlecase }}
-                <p class="small text-muted">{{ 'PaymentPlanDescription' | localize }}</p>
-              </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-auto mr-n4">
-              <div class="custom-control custom-radio">
-                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
-                  id="subscription" [value]="PricingType.Subscription">
-                <label class="custom-control-label" for="subscription"></label>
-              </div>
-            </div>
-            <div class="col">
-              <label class="form-check-label" for="subscription">
-                {{ 'Subscription' | localize | titlecase }}
-                <p class="small text-muted">{{ 'SubscriptionDescription' | localize }}</p>
-              </label>
             </div>
           </div>
         </div>

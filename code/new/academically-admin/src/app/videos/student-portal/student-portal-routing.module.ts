@@ -24,7 +24,6 @@ import { StudentPortalComponent } from './student-portal.component';
             component: StudentPortalComponent,
             canActivate: [StudentPortalRouteGuard],
             children: [
-              { path: '', redirectTo: 'landing-page' },
               {
                 path: 'landing-page',
                 loadChildren: () =>
@@ -39,63 +38,7 @@ import { StudentPortalComponent } from './student-portal.component';
                     (m) => m.PortalModule,
                   ),
               },
-              // {
-              //   path: '',
-              //   component: LayoutComponent,
-              //   canActivate: [StudentPortalRouteGuard],
-              //   children: [
-              //     {
-              //       path: '',
-              //       component: PortalMenuComponent,
-              //       outlet: 'menu',
-              //     },
-              //     {
-              //       path: 'home',
-              //       loadChildren: () =>
-              //         import('@app/student-portal/home/home.module').then(
-              //           (m) => m.HomeModule,
-              //         ),
-              //     },
-              //     {
-              //       path: 'messages',
-              //       loadChildren: () =>
-              //         import('@app/student-portal/messages/messages.module').then(
-              //           (m) => m.MessagesModule,
-              //         ),
-              //     },
-              //     {
-              //       path: 'assignments',
-              //       loadChildren: () =>
-              //         import('@app/student-portal/assignments/assignments.module').then(
-              //           (m) => m.AssignmentsModule,
-              //         ),
-              //     },
-              //   ]
-              // },
-              // {
-              //   path: '',
-              //   component: LayoutComponent,
-              //   canActivate: [StudentPortalRouteGuard],
-              //   children: [
-              //     {
-              //       path: '',
-              //       component: CourseMenuComponent,
-              //       outlet: 'menu',
-              //     },
-              //     {
-              //       path: '',
-              //       component: DiscussionsComponent,
-              //       outlet: 'rightbar',
-              //     },
-              //     {
-              //       path: 'learn',
-              //       loadChildren: () =>
-              //         import('@app/student-portal/learn/learn.module').then(
-              //           (m) => m.LearnModule,
-              //         ),
-              //     },
-              //   ]
-              // },
+              { path: '', redirectTo: 'portal' },
             ],
           },
         ],

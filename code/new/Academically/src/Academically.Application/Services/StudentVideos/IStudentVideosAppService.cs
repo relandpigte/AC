@@ -10,7 +10,7 @@ namespace Academically.Services.StudentVideos
 	{
 		Task<PagedResultDto<StudentVideoDto>> GetAllAsync(GetAllStudentVideoDto input);
 		Task<GetStudentVideoDto> GetByVideoAsync(Guid videoId);
-		Task CreateAsync(StudentVideoDto input);
+		Task<GetStudentVideoDto> CreateAsync(StudentVideoDto input);
 		Task DeleteAsync(Guid id);
 	}
 }

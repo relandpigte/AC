@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { VideoService } from '@app/videos/_services/video.service';
 import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { UploadService } from '@app/_shared/services/upload.service';
-import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import {
   DocumentDto,
@@ -17,6 +16,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-video-details',
@@ -152,6 +152,9 @@ export class VideoDetailsComponent extends AutoSaveComponentBase implements OnIn
   }
 
   private updateDetails(): void {
+    if (!_.isNumber(this.model.price)) {
+      return;
+    }
     this._videosService.updateDetails(this.model)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {

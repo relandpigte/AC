@@ -1,12 +1,13 @@
 import { Component, OnInit, Injector, Input } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { VideoDto, VideosServiceProxy, VideoType } from '@shared/service-proxies/service-proxies';
-import { ActivatedRoute } from '@angular/router';
+import { VideoDto, VideosServiceProxy, VideoType, GetStudentVideoDto, StudentVideosServiceProxy, PricingType } from '@shared/service-proxies/service-proxies';
+import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { UploadService } from '@app/_shared/services/upload.service';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { PreviewService } from './_services/preview.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-preview',
@@ -15,23 +16,25 @@ import { PreviewService } from './_services/preview.service';
   animations: [appModuleAnimation()],
 })
 export class PreviewComponent extends AppComponentBase implements OnInit {
-  videoUrl: string;
   thumbnailUrl: string;
 
   model = new VideoDto();
   VideoType = VideoType;
   isSidebarHidden = false;
   isPreview = false;
+  studentVideo = new GetStudentVideoDto();
 
   private _id: string;
 
   constructor(
     injector: Injector,
     route: ActivatedRoute,
+    private _router: Router,
     private _location: Location,
     private _uploadService: UploadService,
     private _videosService: VideosServiceProxy,
     private _previewService: PreviewService,
+    private _studentVideosService: StudentVideosServiceProxy,
   ) {
     super(injector);
     route.paramMap.subscribe(paramMap => {
@@ -40,6 +43,13 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
         this.id = paramMap.get('id');
       }
     });
+    this._previewService.studentVideo$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        if (response) {
+          this.studentVideo = response;
+        }
+      });
   }
 
   @Input() set id(value: string) {
@@ -48,11 +58,23 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
     this.getVideo();
   }
 
+  get shouldShowVideo(): boolean {
+    return this.isPreview || this.model.pricingType === PricingType.Free || (!this.isPreview && !_.isEmpty(this.studentVideo));
+  }
+
+  get videoUrl(): string {
+    return this._uploadService.getFileUrl(this.model.document);
+  }
+
   ngOnInit(): void {
   }
 
   onExitClick(): void {
-    this._location.back();
+    if (this.isPreview) {
+      this._location.back();
+    } else {
+      this._router.navigate(['/app/home/videos']);
+    }
   }
 
   private getVideo(): void {
@@ -61,8 +83,18 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
       .subscribe(response => {
         this.model = response;
         this.thumbnailUrl = this._uploadService.getFileUrl(response.thumbnailDocument);
-        this.videoUrl = this._uploadService.getFileUrl(response.document);
         this._previewService.video = response;
+        if (!this.isPreview) {
+          this.getStudentVideo();
+        }
+      });
+  }
+
+  private getStudentVideo(): void {
+    this._studentVideosService.getByVideo(this.model.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        this.studentVideo = response;
       });
   }
 }
