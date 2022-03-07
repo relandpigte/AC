@@ -10,8 +10,9 @@ import {
   UserFollowerDto,
   UserFollowersServiceProxy,
   GetStudentVideoDto,
+  PricingType,
 } from '@shared/service-proxies/service-proxies';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/app-component-base';
 import * as _ from 'lodash';
 
@@ -23,12 +24,14 @@ import * as _ from 'lodash';
 export class HomeComponent extends AppComponentBase implements OnInit {
   model = new VideoDto();
   studentVideo = new GetStudentVideoDto();
+  parentStudentVideo = new GetStudentVideoDto();
   preview = true;
   likeCount = 0;
   isLiked = false;
   userFollower: UserFollowerDto;
 
   VideoType = VideoType;
+  PricingType = PricingType;
 
   constructor(
     injector: Injector,
@@ -46,7 +49,9 @@ export class HomeComponent extends AppComponentBase implements OnInit {
       .subscribe(response => {
         if (response && response.id) {
           this.model = response;
+          this.getUserFollower();
           this.getStudentVideo();
+          this.getParentStudentVideo();
           this.getLike();
           this.getLikeCount();
         }
@@ -110,14 +115,46 @@ export class HomeComponent extends AppComponentBase implements OnInit {
       });
   }
 
+  onPurchaseClick(video: VideoDto): void {
+    const confirmationMessageLocale = video.type === VideoType.SingleVideo ? 'PurchaseVideoConfirmationMessage' : 'PurchaseVideoSeriesConfirmationMessage';
+    this.message.confirm(this.l(confirmationMessageLocale), undefined,
+      (result => {
+        if (result) {
+          const studentVideo = new StudentVideoDto();
+          studentVideo.videoId = video.id;
+          studentVideo.saveOnly = false;
+          this._studentVideosService.create(studentVideo)
+            .pipe(
+              takeUntil(this.destroyed$),
+            )
+            .subscribe(response => {
+              this._previewService.studentVideo = response;
+              if (response.videoId === this.model.id) {
+                this.studentVideo = response;
+              } else {
+                this.parentStudentVideo = response;
+                this.getStudentVideo();
+              }
+              const messageLocale = video.type === VideoType.SingleVideo ? 'VideoPurchaseSuccessMessage' : 'VideoSeriesPurchaseSuccessMessage';
+              this.notify.success(this.l(messageLocale));
+            });
+        }
+      }));
+  }
+
   private getStudentVideo(): void {
     this._studentVideosService.getByVideo(this.model.id)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         this.studentVideo = response;
-        if (this.studentVideo && this.studentVideo.id) {
-          this.getUserFollower();
-        }
+      });
+  }
+
+  private getParentStudentVideo(): void {
+    this._studentVideosService.getByVideo(this.model.parent.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        this.parentStudentVideo = response;
       });
   }
 
@@ -136,7 +173,7 @@ export class HomeComponent extends AppComponentBase implements OnInit {
   }
 
   private getUserFollower(): void {
-    this._userFollowersService.get(this.model.creatorUser.id, this.studentVideo.creatorUserId)
+    this._userFollowersService.get(this.model.creatorUser.id, this.appSession.userId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         this.userFollower = response;

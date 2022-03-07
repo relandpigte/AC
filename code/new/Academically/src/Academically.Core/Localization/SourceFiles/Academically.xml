@@ -1,6 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="PurchaseVideoSeriesConfirmationMessage">Are you sure you want to purchase this video series?</text>
+    <text name="PurchaseVideoConfirmationMessage">Are you sure you want to purchase this video?</text>
+    <text name="VideoSeriesPurchaseSuccessMessage">The video series was successfully purchased.</text>
+    <text name="VideoPurchaseSuccessMessage">The video was successfully purchased.</text>
+    <text name="BuyThisVideoWarningMessage">Please buy this video first in order to view it.</text>
+    <text name="BuyThisVideo">Buy this Video</text>
     <text name="YouUnfollowedThisUser">You unfollowed this user.</text>
     <text name="YouAreNowFollowingThisUser">You are now following this user.</text>
     <text name="Unfollow">Unfollow</text>

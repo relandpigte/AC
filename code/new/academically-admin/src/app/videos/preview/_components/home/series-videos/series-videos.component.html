@@ -21,13 +21,12 @@
   <div *ngIf="model.pricingType !== PricingType.Free" class="col-auto d-flex flex-column justify-content-center">
     <i *ngIf="purchasedVideo[model.id] else purchaseButtonTemplate" class="fe fe-check mr-2"></i>
   </div>
+  <ng-template #purchaseButtonTemplate let-price="price">
+    <button class="btn btn-sm btn-primary mb-2" (click)="onPurchaseClick(model)">
+      &#163;{{ model.price }}
+    </button>
+  </ng-template>
 </div>
 <p *ngIf="!models.length" class="m-0 p-0 text-muted text-center small">
   {{ 'NoVideoFound' | localize }}
 </p>
-
-<ng-template #purchaseButtonTemplate>
-  <button class="btn btn-sm btn-primary mb-2">
-    &#163;2
-  </button>
-</ng-template>
