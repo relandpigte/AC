@@ -193,6 +193,8 @@
 
 
         public const string Pages_Articles = "Pages.Articles";
+        public const string Pages_Articles_StudentPortal = "Pages.Articles.StudentPortal";
+        public const string Pages_Articles_TutorPortal = "Pages.Articles.TutorPortal";
 
 
         public const string Pages_Events = "Pages.Events";

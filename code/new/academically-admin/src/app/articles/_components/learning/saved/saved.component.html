@@ -2,37 +2,37 @@
   <table class="table table-sm table-hover table-nowrap card-table" [loader]="isTableLoading">
     <tbody class="list font-size-base">
       <tr *ngFor="
-            let studentVideo of (models | paginate: { id: 'purchased-videos', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
+            let studentArticle of (models | paginate: { id: 'saved-articles', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
           ">
         <td>
           <div class="row">
             <div class="col-auto d-flex justify-content-center align-items-center">
-              <div *ngIf="!studentVideo.video.thumbnailDocument else withThumbnailTemplate"
+              <div *ngIf="!studentArticle.article.thumbnailDocumentId"
                 class="avatar avatar-4by3 d-flex justify-content-center align-items-center">
-                <i class="fe fe-video text-muted h1 p-0 m-0"></i>
+                <i class="fe fe-article text-muted h1 p-0 m-0"></i>
               </div>
               <ng-template #withThumbnailTemplate>
                 <div class="avatar avatar-4by3">
-                  <img [src]="getServiceImageUrl(studentVideo.video.thumbnailDocument)" alt="..."
+                  <img [src]="getServiceImageUrl(studentArticle.article.thumbnailDocument)" alt="..."
                     class="avatar-img rounded">
                 </div>
               </ng-template>
             </div>
             <div class="col d-flex flex-column justify-content-center">
-              <a [routerLink]="['/app/videos/student-portal', studentVideo.video.id]">
-                <h4 class="mb-1">{{ studentVideo.video.name }}</h4>
+              <a [routerLink]="['/app/articles/student-portal', studentArticle.article.id]">
+                <h4 class="mb-1">{{ studentArticle.article.name }}</h4>
               </a>
-              <p *ngIf="studentVideo.video.description" class="text-muted mb-1 break-spaces">
-                {{ studentVideo.video.description }}
+              <p *ngIf="studentArticle.article.description" class="text-muted mb-1 break-spaces">
+                {{ studentArticle.article.description }}
               </p>
               <div class="text-muted mb-1">
                 <div class="d-flex">
                   <div class="d-flex align-items-center">
-                    <i class="fe fe-video mr-2"></i>
-                    {{ (studentVideo.video.type === VideoType.SingleVideo ? 'Video' : 'VideoSeries') | localize }}
+                    <i class="fe fe-article mr-2"></i>
+                    {{ (studentArticle.article.type === ArticleType.SingleArticle ? 'Article' : 'ArticleSeries') | localize }}
                   </div>
                   <div class="d-flex align-items-center mx-3">|</div>
-                  <ng-container *ngIf="studentVideo.video.type === VideoType.SingleVideo else videoSeriesTemplate">
+                  <ng-container *ngIf="studentArticle.article.type === ArticleType.SingleArticle else articleSeriesTemplate">
                     <div class="d-flex align-items-center mr-3">
                       <i class="fe fe-eye mr-2"></i>
                       0 {{ 'Views' | localize }}
@@ -54,10 +54,10 @@
                       0 {{ 'Saves' | localize }}
                     </div>
                   </ng-container>
-                  <ng-template #videoSeriesTemplate>
+                  <ng-template #articleSeriesTemplate>
                     <div class="d-flex align-items-center">
-                      {{ studentVideo.video.children.length }}
-                      {{ (studentVideo.video.children.length > 1 ?'Videos' : 'Video') | localize }}
+                      {{ studentArticle.article.children.length }}
+                      {{ (studentArticle.article.children.length > 1 ?'Articles' : 'Article') | localize }}
                     </div>
                   </ng-template>
                 </div>
@@ -73,6 +73,6 @@
       </tr>
     </tbody>
   </table>
-  <abp-pagination-controls *ngIf="totalItems > models.length" id="purchased-videos" (pageChange)="getDataPage($event)">
+  <abp-pagination-controls *ngIf="totalItems > models.length" id="saved-videos" (pageChange)="getDataPage($event)">
   </abp-pagination-controls>
 </div>

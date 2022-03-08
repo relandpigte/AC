@@ -8,7 +8,7 @@ namespace Academically.Services.Articles.Dto
     {
         public long? UserIdFilter { get; set; }
         public string SearchFilter { get; set; }
-        public ArticleStatus? StausFilter { get; set; }
+        public ArticleStatus? StatusFilter { get; set; }
     }
 }
 

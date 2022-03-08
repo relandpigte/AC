@@ -15,7 +15,6 @@ export class ArticlesComponent extends PagedListingComponentBase<ArticleDto> imp
   articles: ArticleDto[] = [];
   searchFilter?: string;
   statusFilter?: number;
-  thumbnailUrls: string[] = [];
 
   ArticleStatus = ArticleStatus;
   ArticleType = ArticleType;
@@ -57,9 +56,6 @@ export class ArticlesComponent extends PagedListingComponentBase<ArticleDto> imp
       )
       .subscribe((result: ArticleDtoPagedResultDto) => {
         this.articles = result.items;
-        _.each(this.articles, article => {
-          this.thumbnailUrls[article.id] = this._uploadService.getFileUrl(article.thumbnailDocument);
-        });
         this.showPaging(result, pageNumber);
       });
   }
