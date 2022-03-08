@@ -15,7 +15,7 @@
               </a>
             </div>
           </div>
-          <ng-container *ngIf="isTutor else studentArticles">
+          <ng-container *ngIf="isTutor">
             <div class="row align-items-center">
               <div class="col">
                 <ul class="nav nav-tabs nav-overflow header-tabs">
@@ -34,7 +34,7 @@
         </div>
       </div>
 
-      <div class="tab-content">
+      <div class="tab-content" *ngIf="isTutor else studentArticles">
         <div class="tab-pane fade show active" id="teaching" role="tabpanel" aria-labelledby="teaching-tab">
           <app-teaching></app-teaching>
         </div>

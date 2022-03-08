@@ -13,6 +13,14 @@
                 (click)="$event.preventDefault(); onAddArticleClick()" *ngIf="isTutor">
                 {{ 'AddArticle' | localize | titlecase }}
               </a>
+              <button *ngIf="model.status === ArticleStatus.Draft" (click)="onPublishClick()"
+                class="btn btn-primary ml-2">
+                {{ 'Publish' | localize | titlecase }}
+              </button>
+              <button *ngIf="model.status === ArticleStatus.Published" (click)="onUnpublishClick()"
+                class="btn btn-outline-success ml-2">
+                {{ 'Draft' | localize | titlecase }}
+              </button>
             </div>
           </div>
           <div class="row align-items-center">

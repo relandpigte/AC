@@ -114,5 +114,6 @@
 	<include file="ddml-new/ddml.2022-02-25-01-create-reactions-table.xml"/>
 	<include file="ddml-new/ddml.2022-02-25-02-alter-studentvideos-add-saveonly-field.xml"/>
 	<include file="ddml-new/ddml.2022-03-03-01-create-userfollowers-table.xml"/>
+	<include file="ddml-new/ddml.2022-03-02-01-create-studentarticles-table.xml"/>
 </databaseChangeLog>
 	

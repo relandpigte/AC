@@ -1,0 +1,38 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <changeSet author="ramil (generated)" id="1646265735548-1">
+        <createTable tableName="academicallystudentarticles">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="ArticleId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SaveOnly" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1646265735548-2">
+        <createIndex indexName="FK_StudenArticles_Users_CreatorUserId_idx" tableName="academicallystudentarticles">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1646265735548-3">
+        <createIndex indexName="FK_StudentArticles_Articles_ArticleId_idx" tableName="academicallystudentarticles">
+            <column name="ArticleId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1646265735548-4">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallystudentarticles" constraintName="FK_StudenArticles_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1646265735548-5">
+        <addForeignKeyConstraint baseColumnNames="ArticleId" baseTableName="academicallystudentarticles" constraintName="FK_StudentArticles_Articles_ArticleId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyarticles" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

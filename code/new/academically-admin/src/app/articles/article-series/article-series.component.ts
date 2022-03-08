@@ -18,6 +18,8 @@ export class ArticleSeriesComponent extends AppComponentBase implements OnInit {
   parentId: string;
   model = new ArticleDto();
 
+  ArticleStatus = ArticleStatus;
+
   constructor(
     injector: Injector,
     route: ActivatedRoute,
@@ -64,6 +66,32 @@ export class ArticleSeriesComponent extends AppComponentBase implements OnInit {
           this.notify.success(this.l('SavedSuccessfully'));
           this._router.navigate(['app/articles/article-series', response.parentId, response.id]);
         });
+    });
+  }
+
+  onPublishClick(): void {
+    this.message.confirm(this.l('PublishArticleConfirmationMessage'), undefined, (result) => {
+      if (result) {
+        this._articlesService.updateStatus(this.model.id, ArticleStatus.Published)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.model.status = ArticleStatus.Published;
+            this.l('SavedSuccessfully');
+          });
+      }
+    });
+  }
+
+  onUnpublishClick(): void {
+    this.message.confirm(this.l('UnpublishArticleConfirmationMessage'), undefined, (result) => {
+      if (result) {
+        this._articlesService.updateStatus(this.model.id, ArticleStatus.Draft)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.model.status = ArticleStatus.Draft;
+            this.l('SavedSuccessfully');
+          });
+      }
     });
   }
 

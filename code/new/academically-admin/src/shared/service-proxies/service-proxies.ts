@@ -488,14 +488,14 @@ export class ArticlesServiceProxy {
     /**
      * @param userIdFilter (optional) 
      * @param searchFilter (optional) 
-     * @param stausFilter (optional) 0 = Draft
+     * @param statusFilter (optional) 0 = Draft
     
     1 = Published
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(userIdFilter: number | undefined, searchFilter: string | undefined, stausFilter: ArticleStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
+    getAll(userIdFilter: number | undefined, searchFilter: string | undefined, statusFilter: ArticleStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Articles/GetAll?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
@@ -505,10 +505,10 @@ export class ArticlesServiceProxy {
             throw new Error("The parameter 'searchFilter' cannot be null.");
         else if (searchFilter !== undefined)
             url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
-        if (stausFilter === null)
-            throw new Error("The parameter 'stausFilter' cannot be null.");
-        else if (stausFilter !== undefined)
-            url_ += "StausFilter=" + encodeURIComponent("" + stausFilter) + "&";
+        if (statusFilter === null)
+            throw new Error("The parameter 'statusFilter' cannot be null.");
+        else if (statusFilter !== undefined)
+            url_ += "StatusFilter=" + encodeURIComponent("" + statusFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -11568,6 +11568,244 @@ export class SpokenLanguagesServiceProxy {
             }));
         }
         return _observableOf<SpokenLanguageDto[]>(<any>null);
+    }
+}
+
+@Injectable()
+export class StudentArticlesServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: StudentArticleDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/StudentArticles/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/StudentArticles/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param isSavedFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(isSavedFilter: boolean | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<StudentArticleDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/StudentArticles/GetAll?";
+        if (isSavedFilter === null)
+            throw new Error("The parameter 'isSavedFilter' cannot be null.");
+        else if (isSavedFilter !== undefined)
+            url_ += "IsSavedFilter=" + encodeURIComponent("" + isSavedFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<StudentArticleDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<StudentArticleDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<StudentArticleDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StudentArticleDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<StudentArticleDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param articleId (optional) 
+     * @return Success
+     */
+    getByArticle(articleId: string | undefined): Observable<GetStudentArticleDto> {
+        let url_ = this.baseUrl + "/api/services/app/StudentArticles/GetByArticle?";
+        if (articleId === null)
+            throw new Error("The parameter 'articleId' cannot be null.");
+        else if (articleId !== undefined)
+            url_ += "articleId=" + encodeURIComponent("" + articleId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByArticle(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByArticle(<any>response_);
+                } catch (e) {
+                    return <Observable<GetStudentArticleDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetStudentArticleDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByArticle(response: HttpResponseBase): Observable<GetStudentArticleDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetStudentArticleDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetStudentArticleDto>(<any>null);
     }
 }
 
@@ -23799,6 +24037,61 @@ export interface IGetRoleForEditOutput {
     grantedPermissionNames: string[] | undefined;
 }
 
+export class GetStudentArticleDto implements IGetStudentArticleDto {
+    id: string;
+    articleId: string;
+    saveOnly: boolean;
+    creatorUserId: number;
+
+    constructor(data?: IGetStudentArticleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.articleId = _data["articleId"];
+            this.saveOnly = _data["saveOnly"];
+            this.creatorUserId = _data["creatorUserId"];
+        }
+    }
+
+    static fromJS(data: any): GetStudentArticleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetStudentArticleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["articleId"] = this.articleId;
+        data["saveOnly"] = this.saveOnly;
+        data["creatorUserId"] = this.creatorUserId;
+        return data; 
+    }
+
+    clone(): GetStudentArticleDto {
+        const json = this.toJSON();
+        let result = new GetStudentArticleDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetStudentArticleDto {
+    id: string;
+    articleId: string;
+    saveOnly: boolean;
+    creatorUserId: number;
+}
+
 export class GetStudentsCourseConversationDto implements IGetStudentsCourseConversationDto {
     studentCourseId: string;
     user: UserDto;
@@ -27544,6 +27837,116 @@ export class StructLayoutAttribute implements IStructLayoutAttribute {
 export interface IStructLayoutAttribute {
     typeId: any | undefined;
     value: LayoutKind;
+}
+
+export class StudentArticleDto implements IStudentArticleDto {
+    id: string;
+    articleId: string;
+    saveOnly: boolean;
+    article: ArticleDto;
+
+    constructor(data?: IStudentArticleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.articleId = _data["articleId"];
+            this.saveOnly = _data["saveOnly"];
+            this.article = _data["article"] ? ArticleDto.fromJS(_data["article"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): StudentArticleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StudentArticleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["articleId"] = this.articleId;
+        data["saveOnly"] = this.saveOnly;
+        data["article"] = this.article ? this.article.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): StudentArticleDto {
+        const json = this.toJSON();
+        let result = new StudentArticleDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IStudentArticleDto {
+    id: string;
+    articleId: string;
+    saveOnly: boolean;
+    article: ArticleDto;
+}
+
+export class StudentArticleDtoPagedResultDto implements IStudentArticleDtoPagedResultDto {
+    items: StudentArticleDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IStudentArticleDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(StudentArticleDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): StudentArticleDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StudentArticleDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): StudentArticleDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new StudentArticleDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IStudentArticleDtoPagedResultDto {
+    items: StudentArticleDto[] | undefined;
+    totalCount: number;
 }
 
 export class StudentCourseDto implements IStudentCourseDto {
