@@ -24,6 +24,20 @@ import { SingleEventComponent } from './single-event.component';
                 (m) => m.SettingsModule
               ),
           },
+          {
+            path: 'studios',
+            loadChildren: () =>
+              import('@app/events/single-event/studio/studio.module').then(
+                (m) => m.StudioModule
+              ),
+          },
+          {
+            path: 'permissions',
+            loadChildren: () =>
+              import('@app/events/single-event/permissions/permissions.module').then(
+                (m) => m.PermissionsModule
+              ),
+          },
           { path: '', redirectTo: 'details' },
         ]
       }

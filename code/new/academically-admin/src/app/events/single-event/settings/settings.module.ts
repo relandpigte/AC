@@ -5,7 +5,6 @@ import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
 import { SettingsComponent } from './settings.component';
-
 @NgModule({
   declarations: [
     SettingsComponent,

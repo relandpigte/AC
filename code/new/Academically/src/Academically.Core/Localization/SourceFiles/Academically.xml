@@ -690,6 +690,7 @@
     <text name="University">University</text>
     <text name="StudyingAt">Studying at</text>
     <text name="StudiedAt">Studied at</text>
+    <text name="Studio">Studio</text>
     <text name="NoServiceSelected">No Service Selected</text>
     <text name="NoServicesFound">No Services Found</text>
     <text name="Subject">Subject</text>
