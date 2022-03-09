@@ -14,18 +14,18 @@
           <td>
             <div class="row">
               <div class="col-auto d-flex justify-content-center align-items-center">
-                <div *ngIf="!thumbnailUrls[article.id] else withThumbnailTemplate"
+                <div *ngIf="!article.thumbnailDocument else withThumbnailTemplate"
                   class="avatar avatar-4by3 d-flex justify-content-center align-items-center">
                   <i class="fe fe-file-text text-muted h1 p-0 m-0"></i>
                 </div>
                 <ng-template #withThumbnailTemplate>
                   <div class="avatar avatar-4by3">
-                    <img [src]="getCourseImageUrl(thumbnailUrls[article.id])" alt="..." class="avatar-img rounded">
+                    <img [src]="getServiceImageUrl(article.thumbnailDocument)" alt="..." class="avatar-img rounded">
                   </div>
                 </ng-template>
               </div>
               <div class="col d-flex flex-column justify-content-center">
-                <a [routerLink]="['/app/lesson-preview', article.id]">
+                <a [routerLink]="['/app/articles/student-portal', article.id]">
                   <h4 class="mb-1">{{ article.name }}</h4>
                 </a>
                 <p *ngIf="article.description" class="text-muted mb-1">
@@ -48,12 +48,6 @@
                 </div>
               </div>
             </div>
-          </td>
-          <td>
-            <span class="badge" [class.badge-info]="article.status === ArticleStatus.Draft"
-              [class.badge-primary]="article.status === ArticleStatus.Published">
-              {{ ArticleStatus[article.status] }}
-            </span>
           </td>
           <td class="table-action">
             <button [routerLink]="['/app/lesson-preview', article.id]" type="button"

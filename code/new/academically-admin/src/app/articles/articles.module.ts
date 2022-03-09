@@ -9,6 +9,8 @@ import { ChooseTemplateComponent } from './_components/choose-template/choose-te
 import { TeachingComponent } from './_components/teaching/teaching.component';
 import { LearningComponent } from './_components/learning/learning.component';
 import { CreateArticleComponent } from './_components/create-article/create-article.component';
+import { SavedComponent } from './_components/learning/saved/saved.component';
+import { PurchasedComponent } from './_components/learning/purchased/purchased.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +18,8 @@ import { CreateArticleComponent } from './_components/create-article/create-arti
     ChooseTemplateComponent,
     TeachingComponent,
     LearningComponent,
+    PurchasedComponent,
+    SavedComponent,
     CreateArticleComponent,
   ],
   imports: [

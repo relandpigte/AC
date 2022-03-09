@@ -236,6 +236,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Videos_TutorPortal,
                 PermissionNames.Pages_Videos_StudentPortal,
                 PermissionNames.Pages_Articles,
+                PermissionNames.Pages_Articles_TutorPortal,
+                PermissionNames.Pages_Articles_StudentPortal,
                 PermissionNames.Pages_Events
             );
 
@@ -331,7 +333,9 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Home_Courses,
                 PermissionNames.Pages_StudentPortal,
                 PermissionNames.Pages_Videos,
-                PermissionNames.Pages_Videos_StudentPortal
+                PermissionNames.Pages_Videos_StudentPortal,
+                PermissionNames.Pages_Articles,
+                PermissionNames.Pages_Articles_StudentPortal
             );
 
             #endregion

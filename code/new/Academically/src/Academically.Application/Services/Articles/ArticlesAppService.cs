@@ -34,7 +34,7 @@ namespace Academically.Services.Articles
                 .WhereIf(input.UserIdFilter.HasValue, e => e.CreatorUserId == input.UserIdFilter.Value)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.Name.ToLower().Contains(input.SearchFilter.ToLower())
                     || e.Description.ToLower().Contains(input.SearchFilter.ToLower()))
-                .WhereIf(input.StausFilter.HasValue, e => e.Status == input.StausFilter.Value);
+                .WhereIf(input.StatusFilter.HasValue, e => e.Status == input.StatusFilter.Value);
             var totalCount = await query.CountAsync();
             var articles = await query.OrderBy(e => e.Name)
                 .PageBy(input)
@@ -74,7 +74,7 @@ namespace Academically.Services.Articles
         public async Task<PagedResultDto<ArticleDto>> GetAllForHome(PagedResultRequestDto input)
         {
             var query = _articlesRepository.GetAll()
-                .Where(e => e.ParentId == null);
+                .Where(e => e.ParentId == null && e.Status == ArticleStatus.Published);
             var totalCount = await query.CountAsync();
             var articles = await query.OrderByDescending(e => e.CreationTime)
                 .PageBy(input)

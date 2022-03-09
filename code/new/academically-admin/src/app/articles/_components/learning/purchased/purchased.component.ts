@@ -1,10 +1,10 @@
 import { Component, OnInit, Injector } from '@angular/core';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
-import { StudentVideoDto, VideoType, VideoStatus, StudentVideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { StudentArticleDto, ArticleType, ArticleStatus, StudentArticlesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { takeUntil, finalize } from 'rxjs/operators';
 import * as _ from 'lodash';
 
-class PagedStudentVideoRequestDto extends PagedAndSortedRequestDto {
+class PagedStudentArticleRequestDto extends PagedAndSortedRequestDto {
   isSavedFilter: boolean;
 }
 
@@ -13,28 +13,28 @@ class PagedStudentVideoRequestDto extends PagedAndSortedRequestDto {
   templateUrl: './purchased.component.html',
   styleUrls: ['./purchased.component.less']
 })
-export class PurchasedComponent extends PagedListingComponentBase<StudentVideoDto> implements OnInit {
+export class PurchasedComponent extends PagedListingComponentBase<StudentArticleDto> implements OnInit {
   thumbnailUrls: string[] = [];
-  models: StudentVideoDto[] = [];
+  models: StudentArticleDto[] = [];
 
-  VideoType = VideoType;
-  VideoStatus = VideoStatus;
+  ArticleType = ArticleType;
+  ArticleStatus = ArticleStatus;
 
   constructor(
     injector: Injector,
-    private _studentVideosService: StudentVideosServiceProxy,
+    private _studentArticlesService: StudentArticlesServiceProxy,
   ) {
     super(injector);
   }
 
   protected list(
-    request: PagedStudentVideoRequestDto,
+    request: PagedStudentArticleRequestDto,
     pageNumber: number,
     finishedCallback: Function,
   ): void {
     request.isSavedFilter = false;
 
-    this._studentVideosService
+    this._studentArticlesService
       .getAll(
         request.isSavedFilter,
         request.skipCount,
@@ -48,7 +48,6 @@ export class PurchasedComponent extends PagedListingComponentBase<StudentVideoDt
       )
       .subscribe(result => {
         this.models = result.items;
-        console.log(this.models);
         this.showPaging(result, pageNumber);
       });
   }
