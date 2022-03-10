@@ -5661,6 +5661,622 @@ export class EducationLevelsServiceProxy {
 }
 
 @Injectable()
+export class EventPollsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param eventIdFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(eventIdFilter: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventPollDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventPolls/GetAll?";
+        if (eventIdFilter === null)
+            throw new Error("The parameter 'eventIdFilter' cannot be null.");
+        else if (eventIdFilter !== undefined)
+            url_ += "EventIdFilter=" + encodeURIComponent("" + eventIdFilter) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<EventPollDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventPollDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<EventPollDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventPollDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventPollDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<EventPollDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventPolls/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<EventPollDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventPollDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<EventPollDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventPollDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventPollDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateEventPollDto | undefined): Observable<EventPollDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventPolls/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<EventPollDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventPollDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<EventPollDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventPollDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventPollDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: CreateEventPollDto | undefined): Observable<EventPollDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventPolls/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<EventPollDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventPollDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<EventPollDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventPollDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventPollDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/EventPolls/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
+export class EventResourcesServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<EventResourceDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventResources/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<EventResourceDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventResourceDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<EventResourceDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventResourceDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventResourceDto>(<any>null);
+    }
+
+    /**
+     * @param eventIdFilter (optional) 
+     * @param presentationMaterialsOnlyFilter (optional) 
+     * @param handoutsOnlyFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(eventIdFilter: string | undefined, presentationMaterialsOnlyFilter: boolean | undefined, handoutsOnlyFilter: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventResourceDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventResources/GetAll?";
+        if (eventIdFilter === null)
+            throw new Error("The parameter 'eventIdFilter' cannot be null.");
+        else if (eventIdFilter !== undefined)
+            url_ += "EventIdFilter=" + encodeURIComponent("" + eventIdFilter) + "&";
+        if (presentationMaterialsOnlyFilter === null)
+            throw new Error("The parameter 'presentationMaterialsOnlyFilter' cannot be null.");
+        else if (presentationMaterialsOnlyFilter !== undefined)
+            url_ += "PresentationMaterialsOnlyFilter=" + encodeURIComponent("" + presentationMaterialsOnlyFilter) + "&";
+        if (handoutsOnlyFilter === null)
+            throw new Error("The parameter 'handoutsOnlyFilter' cannot be null.");
+        else if (handoutsOnlyFilter !== undefined)
+            url_ += "HandoutsOnlyFilter=" + encodeURIComponent("" + handoutsOnlyFilter) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<EventResourceDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventResourceDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<EventResourceDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventResourceDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventResourceDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateEventResourceDto | undefined): Observable<EventResourceDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventResources/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<EventResourceDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventResourceDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<EventResourceDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventResourceDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventResourceDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: CreateEventResourceDto | undefined): Observable<EventResourceDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventResources/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<EventResourceDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventResourceDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<EventResourceDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventResourceDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventResourceDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/EventResources/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class EventsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -21872,6 +22488,124 @@ export interface ICreateEventDto {
     parentId: string | undefined;
 }
 
+export class CreateEventPollDto implements ICreateEventPollDto {
+    id: string;
+    name: string | undefined;
+    eventId: string;
+    eventPollQuestions: EventPollQuestionDto[] | undefined;
+
+    constructor(data?: ICreateEventPollDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.eventId = _data["eventId"];
+            if (Array.isArray(_data["eventPollQuestions"])) {
+                this.eventPollQuestions = [] as any;
+                for (let item of _data["eventPollQuestions"])
+                    this.eventPollQuestions.push(EventPollQuestionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateEventPollDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateEventPollDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["eventId"] = this.eventId;
+        if (Array.isArray(this.eventPollQuestions)) {
+            data["eventPollQuestions"] = [];
+            for (let item of this.eventPollQuestions)
+                data["eventPollQuestions"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): CreateEventPollDto {
+        const json = this.toJSON();
+        let result = new CreateEventPollDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateEventPollDto {
+    id: string;
+    name: string | undefined;
+    eventId: string;
+    eventPollQuestions: EventPollQuestionDto[] | undefined;
+}
+
+export class CreateEventResourceDto implements ICreateEventResourceDto {
+    id: string;
+    name: string | undefined;
+    type: EventResourceType;
+    eventId: string;
+
+    constructor(data?: ICreateEventResourceDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.type = _data["type"];
+            this.eventId = _data["eventId"];
+        }
+    }
+
+    static fromJS(data: any): CreateEventResourceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateEventResourceDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["type"] = this.type;
+        data["eventId"] = this.eventId;
+        return data; 
+    }
+
+    clone(): CreateEventResourceDto {
+        const json = this.toJSON();
+        let result = new CreateEventResourceDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateEventResourceDto {
+    id: string;
+    name: string | undefined;
+    type: EventResourceType;
+    eventId: string;
+}
+
 export class CreateProjectDto implements ICreateProjectDto {
     name: string | undefined;
     description: string | undefined;
@@ -22870,7 +23604,7 @@ export interface IDocumentDto {
     creatorUserId: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail 17 = CourseSectionImage 18 = EventThumbnail */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail 17 = CourseSectionImage 18 = EventThumbnail 19 = EventResource */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -22891,6 +23625,7 @@ export enum DocumentType {
     ArticleThumbnail = 16,
     CourseSectionImage = 17,
     EventThumbnail = 18,
+    EventResource = 19,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {
@@ -23399,10 +24134,393 @@ export interface IEventInfo {
     eventHandlerType: Type;
 }
 
+export class EventPollDto implements IEventPollDto {
+    id: string;
+    name: string | undefined;
+    creationTime: moment.Moment;
+    eventPollQuestions: EventPollQuestionDto[] | undefined;
+
+    constructor(data?: IEventPollDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            if (Array.isArray(_data["eventPollQuestions"])) {
+                this.eventPollQuestions = [] as any;
+                for (let item of _data["eventPollQuestions"])
+                    this.eventPollQuestions.push(EventPollQuestionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): EventPollDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventPollDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        if (Array.isArray(this.eventPollQuestions)) {
+            data["eventPollQuestions"] = [];
+            for (let item of this.eventPollQuestions)
+                data["eventPollQuestions"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): EventPollDto {
+        const json = this.toJSON();
+        let result = new EventPollDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEventPollDto {
+    id: string;
+    name: string | undefined;
+    creationTime: moment.Moment;
+    eventPollQuestions: EventPollQuestionDto[] | undefined;
+}
+
+export class EventPollDtoPagedResultDto implements IEventPollDtoPagedResultDto {
+    items: EventPollDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IEventPollDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(EventPollDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): EventPollDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventPollDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): EventPollDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new EventPollDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEventPollDtoPagedResultDto {
+    items: EventPollDto[] | undefined;
+    totalCount: number;
+}
+
+export class EventPollQuestionDto implements IEventPollQuestionDto {
+    id: string;
+    text: string | undefined;
+    type: EventPollQuestionType;
+    minimumResponse: number | undefined;
+    maximumResponse: number | undefined;
+    shareResults: boolean;
+    eventPollId: string;
+    eventPollQuestionOptions: EventPollQuestionOptionDto[] | undefined;
+
+    constructor(data?: IEventPollQuestionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.text = _data["text"];
+            this.type = _data["type"];
+            this.minimumResponse = _data["minimumResponse"];
+            this.maximumResponse = _data["maximumResponse"];
+            this.shareResults = _data["shareResults"];
+            this.eventPollId = _data["eventPollId"];
+            if (Array.isArray(_data["eventPollQuestionOptions"])) {
+                this.eventPollQuestionOptions = [] as any;
+                for (let item of _data["eventPollQuestionOptions"])
+                    this.eventPollQuestionOptions.push(EventPollQuestionOptionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): EventPollQuestionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventPollQuestionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["text"] = this.text;
+        data["type"] = this.type;
+        data["minimumResponse"] = this.minimumResponse;
+        data["maximumResponse"] = this.maximumResponse;
+        data["shareResults"] = this.shareResults;
+        data["eventPollId"] = this.eventPollId;
+        if (Array.isArray(this.eventPollQuestionOptions)) {
+            data["eventPollQuestionOptions"] = [];
+            for (let item of this.eventPollQuestionOptions)
+                data["eventPollQuestionOptions"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): EventPollQuestionDto {
+        const json = this.toJSON();
+        let result = new EventPollQuestionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEventPollQuestionDto {
+    id: string;
+    text: string | undefined;
+    type: EventPollQuestionType;
+    minimumResponse: number | undefined;
+    maximumResponse: number | undefined;
+    shareResults: boolean;
+    eventPollId: string;
+    eventPollQuestionOptions: EventPollQuestionOptionDto[] | undefined;
+}
+
+export class EventPollQuestionOptionDto implements IEventPollQuestionOptionDto {
+    id: string;
+    text: string | undefined;
+    eventPollQuestionId: string;
+
+    constructor(data?: IEventPollQuestionOptionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.text = _data["text"];
+            this.eventPollQuestionId = _data["eventPollQuestionId"];
+        }
+    }
+
+    static fromJS(data: any): EventPollQuestionOptionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventPollQuestionOptionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["text"] = this.text;
+        data["eventPollQuestionId"] = this.eventPollQuestionId;
+        return data; 
+    }
+
+    clone(): EventPollQuestionOptionDto {
+        const json = this.toJSON();
+        let result = new EventPollQuestionOptionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEventPollQuestionOptionDto {
+    id: string;
+    text: string | undefined;
+    eventPollQuestionId: string;
+}
+
+/** 0 = MultipleChoice 1 = MultipleResponse */
+export enum EventPollQuestionType {
+    MultipleChoice = 0,
+    MultipleResponse = 1,
+}
+
 /** 1 = Record 2 = DontRecord */
 export enum EventReplayType {
     Record = 1,
     DontRecord = 2,
+}
+
+export class EventResourceDto implements IEventResourceDto {
+    id: string;
+    name: string | undefined;
+    type: EventResourceType;
+    eventId: string;
+    documentId: string | undefined;
+    creationTime: moment.Moment;
+    document: Document;
+
+    constructor(data?: IEventResourceDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.type = _data["type"];
+            this.eventId = _data["eventId"];
+            this.documentId = _data["documentId"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.document = _data["document"] ? Document.fromJS(_data["document"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): EventResourceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventResourceDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["type"] = this.type;
+        data["eventId"] = this.eventId;
+        data["documentId"] = this.documentId;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): EventResourceDto {
+        const json = this.toJSON();
+        let result = new EventResourceDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEventResourceDto {
+    id: string;
+    name: string | undefined;
+    type: EventResourceType;
+    eventId: string;
+    documentId: string | undefined;
+    creationTime: moment.Moment;
+    document: Document;
+}
+
+export class EventResourceDtoPagedResultDto implements IEventResourceDtoPagedResultDto {
+    items: EventResourceDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IEventResourceDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(EventResourceDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): EventResourceDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventResourceDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): EventResourceDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new EventResourceDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEventResourceDtoPagedResultDto {
+    items: EventResourceDto[] | undefined;
+    totalCount: number;
+}
+
+/** 0 = Slides 1 = Video 2 = Handout */
+export enum EventResourceType {
+    Slides = 0,
+    Video = 1,
+    Handout = 2,
 }
 
 /** 1 = Upcoming 2 = Past */

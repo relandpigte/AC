@@ -1,0 +1,58 @@
+<div class="modal-card card" [loader]="isLoading">
+  <abp-modal-header [title]="this.model.type === undefined
+    ? ('WhatWouldYouLikeToUpload' | localize)
+    : ('Upload' + (EventResourceType[this.model.type] | titlecase) | localize)" (onCloseClick)="onCloseClick()">
+  </abp-modal-header>
+  <div *ngIf="this.model.type === undefined else uploadFileTemplate" class="card-body p-0">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item px-3">
+        <a href="#!select-material" (click)="$event.preventDefault(); onTypeClick(EventResourceType.Slides);">
+          <div class="row">
+            <div class="col-auto d-flex justify-content-center align-items-center">
+              <div class="avatar avatar-4by3 d-flex justify-content-center align-items-center">
+                <i class="fe fe-monitor text-muted h1 p-0 m-0"></i>
+              </div>
+            </div>
+            <div class="col d-flex flex-column justify-content-center">
+              <h4 class="mb-1">{{ 'Slides' | localize }}</h4>
+              <small class="text-muted m-0">{{ 'UploadSlidesPresentationMaterialDescription' | localize }}</small>
+            </div>
+          </div>
+        </a>
+      </li>
+      <li class="list-group-item px-3">
+        <a href="#!select-material" (click)="$event.preventDefault(); onTypeClick(EventResourceType.Video);">
+          <div class="row">
+            <div class="col-auto d-flex justify-content-center align-items-center">
+              <div class="avatar avatar-4by3 d-flex justify-content-center align-items-center">
+                <i class="fe fe-youtube text-muted h1 p-0 m-0"></i>
+              </div>
+            </div>
+            <div class="col d-flex flex-column justify-content-center">
+              <h4 class="m-0">{{ 'Video' | localize }}</h4>
+              <small class="text-muted m-0">{{ 'UploadVideoPresentationMaterialDescription' | localize }}</small>
+            </div>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+<ng-template #uploadFileTemplate>
+  <form autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+    <div class="card-body">
+      <div class="form-group">
+        <label class="col-form-label" for="name">{{ 'Name' | localize }}</label>
+        <input [(ngModel)]="model.name" type="text" class="form-control" name="name" id="name" required
+          #nameModel="ngModel" #nameEl />
+        <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+      </div>
+      <app-document-uploader [maxFiles]="1" [allowedExtensions]="allowedPresentationMaterialExtension"
+        [showUploadHint]="true" (filesChanged)="onFilesChange($event)">
+      </app-document-uploader>
+    </div>
+    <abp-modal-footer [saveLabel]="'Upload' | localize" [cancelLabel]="'Back' | localize" [cancelDisabled]="isLoading"
+      [saveDisabled]="isLoading || !document || !form.form.valid" (onCancelClick)="onBackClick()">
+    </abp-modal-footer>
+  </form>
+</ng-template>

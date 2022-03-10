@@ -186,6 +186,26 @@ export abstract class AppComponentBase implements OnDestroy {
     return 'assets/themes/dashkit/img/avatars/projects/project-1.jpg';
   }
 
+  formatBytes(bytes: number, decimals = 2) {
+    if (bytes === 0) { return '0 Bytes'; }
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + sizes[i].toLowerCase();
+  }
+
+  getFileExtension(fileName: string): string {
+    return fileName.split('.').pop();
+  }
+
+  createRange(number: number): number[] {
+    return new Array(number);
+  }
+
   protected uuidv4(): string {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
       /[xy]/g,

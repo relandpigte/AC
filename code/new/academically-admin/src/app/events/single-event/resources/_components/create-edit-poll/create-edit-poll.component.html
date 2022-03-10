@@ -1,0 +1,122 @@
+<form autocomplete="off" #form="ngForm">
+  <div class="modal-card card" [loader]="isLoading">
+    <abp-modal-header [title]="'Poll' | localize" (onCloseClick)="onCloseClick()">
+    </abp-modal-header>
+    <div class="card-body p-0">
+      <div class="row m-0">
+        <div class="col-5 p-4 border-right">
+          <div class="form-group">
+            <label class="col-form-label" for="name">{{ 'NameYourPoll' | localize }}</label>
+            <input [(ngModel)]="model.name" type="text" class="form-control" name="name" id="name" required
+              #nameModel="ngModel" #nameEl />
+            <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+          </div>
+          <div class="form-group">
+            <label class="col-form-label">{{ 'Questions' | localize }}</label>
+            <div class="question-list">
+              <div *ngFor="let question of model.eventPollQuestions" class="question border rounded p-2">
+                <div class="row">
+                  <div class="col-auto d-flex align-items-center">
+                    <div class="drag-handle-container">
+                      <i class="fas fa-ellipsis-v drag-handle"></i>
+                    </div>
+                  </div>
+                  <div class="col d-flex align-items-center">
+                    <p class="m-0 ml-n2">
+                      {{ EventPollQuestionType[question.type] | localize }}
+                    </p>
+                  </div>
+                  <div class="col-auto d-flex align-items-center">
+                    <a href="#!edit" (click)="$event.preventDefault(); onEditQuestionClick(question)">
+                      <i class="fe fe-edit-2"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-md btn-outline-primary w-100" (click)="onAddQuestionClick()">
+                {{ 'AddQuestion' | localize }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-7 p-4">
+          <ng-container *ngIf="currentQuestion">
+            <label class="col-form-label">
+              <b>{{ 'MultipleResponse' | localize }}</b>
+            </label>
+            <div class="form-group">
+              <label class="col-form-label" for="question">{{ 'Question' | localize }}</label>
+              <input [(ngModel)]="currentQuestion.text" type="text" class="form-control" name="question" id="question"
+                required #questionModel="ngModel" #questionEl />
+              <abp-validation-summary [control]="questionModel" [controlEl]="questionEl"></abp-validation-summary>
+            </div>
+            <div *ngFor="let option of currentQuestion.eventPollQuestionOptions; let i = index" class="form-group">
+              <label class="col-form-label" for="option_{{ i }}">{{ 'Option' | localize }} {{ i + 1 }}</label>
+              <input [(ngModel)]="option.text" type="text" class="form-control" name="option_{{ i }}"
+                id="option_{{ i }}" required #optionModel="ngModel" #optionEl />
+              <abp-validation-summary [control]="optionModel" [controlEl]="optionEl"></abp-validation-summary>
+            </div>
+            <a href="#!add-option" class="text-primary" (click)="$event.preventDefault(); onAddOptionClick()">
+              <b>
+                <i class="fe fe-plus"></i>
+                {{ 'AddOption' | localize | uppercase }}
+              </b>
+            </a>
+            <div *ngIf="currentQuestion.type === EventPollQuestionType.MultipleResponse" class="form-group mt-4 mb-0">
+              <label class="col-form-label">{{ 'NumberOfResponses' | localize }}</label>
+              <div class="row">
+                <div class="col-6">
+                  <select [(ngModel)]="currentQuestion.minimumResponse" select2
+                    [defaultValue]="currentQuestion.minimumResponse"
+                    (select2ValueChange)="currentQuestion.minimumResponse = $event" id="minimum" name="minimum"
+                    [placeholder]="'SelectMinimum' | localize" class="custom-select" data-toggle="select" required
+                    #minimumModel="ngModel" #minimumEl>
+                    <option [value]="undefined">{{ 'SelectMinimum' | localize }}</option>
+                    <option
+                      *ngFor="let item of createRange(currentQuestion.eventPollQuestionOptions.length); let i = index">
+                      {{ i + 1 }}
+                    </option>
+                  </select>
+                  <abp-validation-summary [control]="minimumModel" [controlEl]="minimumEl"></abp-validation-summary>
+                </div>
+                <div class="col-6">
+                  <select [(ngModel)]="currentQuestion.maximumResponse" select2
+                    [defaultValue]="currentQuestion.maximumResponse"
+                    (select2ValueChange)="currentQuestion.maximumResponse = $event" id="maximum" name="maximum"
+                    [placeholder]="'SelectMaximum' | localize" class="custom-select" data-toggle="select" required
+                    #maximumModel="ngModel" #maximumEl>
+                    <option [value]="undefined">{{ 'SelectMaximum' | localize }}</option>
+                    <option
+                      *ngFor="let item of createRange(currentQuestion.eventPollQuestionOptions.length); let i = index">
+                      {{ i + 1 }}
+                    </option>
+                  </select>
+                  <abp-validation-summary [control]="maximumModel" [controlEl]="maximumEl"></abp-validation-summary>
+                </div>
+              </div>
+            </div>
+            <div class="form-group mb-0 mt-4">
+              <div class="custom-control custom-checkbox">
+                <input [(ngModel)]="currentQuestion.shareResults" class="custom-control-input" id="shareResults"
+                  name="shareResults" type="checkbox" />
+                <label class="custom-control-label" for="shareResults">
+                  {{ 'ShareResultsWithAttendees' | localize }}
+                </label>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+      <button [disabled]="isLoading" type="button" class="btn btn-white" (click)="onCloseClick()">
+        {{ 'Cancel' | localize }}
+      </button>
+      <button
+        [disabled]="isLoading || !form.form.valid || !model.eventPollQuestions || !model.eventPollQuestions.length"
+        type="button" class="btn btn-primary" (click)="onFormSubmit()">
+        {{ 'Save' | localize }}
+      </button>
+    </div>
+  </div>
+</form>

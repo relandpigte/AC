@@ -94,87 +94,6 @@
       <div class="card">
         <div class="card-header">
           <h4 class="card-header-title">
-            {{ 'Interaction' | localize }}
-          </h4>
-        </div>
-        <div class="card-body">
-          <div class="card border">
-            <div class="card-body">
-              <div class="row mb-3">
-                <div class="col">
-                  <b>{{ 'EnableQuestionsTab' | localize }}</b>
-                </div>
-                <div class="col-auto">
-                  <div class="custom-control custom-switch mr-n2">
-                    <input [(ngModel)]="model.questionsEnabled" type="checkbox" id="questionsEnabled"
-                      name="questionsEnabled" class="custom-control-input" [checked]="model.questionsEnabled" />
-                    <label class="custom-control-label" for="questionsEnabled"></label>
-                  </div>
-                </div>
-              </div>
-              <div class="mb-2">
-                <div class="custom-control custom-radio">
-                  <input [(ngModel)]="model.questionType" type="radio" id="privateQuestionType" name="questionType"
-                    [value]="QuestionType.Private" class="custom-control-input" />
-                  <label class="custom-control-label" for="privateQuestionType"></label>
-                  <label class="custom-control-caption" for="privateQuestionType">
-                    {{ 'PrivateQuestions' | localize }}
-                  </label>
-                </div>
-                <div class="custom-control custom-radio">
-                  <input [(ngModel)]="model.questionType" [disabled]="!model.questionsEnabled" type="radio"
-                    id="publicQuestionType" name="questionType" [value]="QuestionType.Public"
-                    class="custom-control-input" />
-                  <label class="custom-control-label" for="publicQuestionType"></label>
-                  <label class="custom-control-caption" for="publicQuestionType">
-                    {{ 'PublicQuestions' | localize }}
-                  </label>
-                </div>
-              </div>
-              <div class="ml-5">
-                <div class="custom-control custom-checkbox">
-                  <input [(ngModel)]="model.attendeesCanUpvote" [checked]="model.attendeesCanUpvote"
-                    [disabled]="!model.questionsEnabled || model.questionType !== QuestionType.Public" type="checkbox"
-                    id="attendeesCanUpvote" name="attendeesCanUpvote" class="custom-control-input" />
-                  <label class="custom-control-label" for="attendeesCanUpvote"></label>
-                  <label class="custom-control-caption" for="attendeesCanUpvote">
-                    {{ 'AttendeesCanUpvote' | localize }}
-                  </label>
-                </div>
-                <div class="custom-control custom-checkbox">
-                  <input [(ngModel)]="model.attendeesCanRespond" [checked]="model.attendeesCanRespond"
-                    [disabled]="!model.questionsEnabled || model.questionType !== QuestionType.Public" type="checkbox"
-                    id="attendeesCanRespond" name="attendeesCanRespond" class="custom-control-input" />
-                  <label class="custom-control-label" for="attendeesCanRespond"></label>
-                  <label class="custom-control-caption mb-0" for="attendeesCanRespond">
-                    {{ 'AttendeesCanRespond' | localize }}
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card border mb-0">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <b>{{ 'EnableChatTab' | localize }}</b>
-                </div>
-                <div class="col-auto">
-                  <div class="custom-control custom-switch mr-n2">
-                    <input [(ngModel)]="model.chatEnabled" type="checkbox" id="chatEnabled" name="chatEnabled"
-                      class="custom-control-input" [checked]="model.chatEnabled" />
-                    <label class="custom-control-label" for="chatEnabled"></label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <h4 class="card-header-title">
             {{ 'CustomWebinarUrl' | localize }}
           </h4>
         </div>
@@ -325,7 +244,7 @@
         <div class="card-body">
           <div class="row">
             <div class="col">
-              <h4 class="mb-1">{{ 'Visible' | localize }}</h4>
+              <h4 class="mb-1">{{ 'Open' | localize }}</h4>
               <span class="text-muted small">{{ 'OpenEventAccessDescription' | localize }}</span>
             </div>
             <div class="col-auto d-flex align-items-center">
@@ -339,7 +258,7 @@
           <hr>
           <div class="row">
             <div class="col">
-              <h4 class="mb-1">{{ 'Invisible' | localize }}</h4>
+              <h4 class="mb-1">{{ 'Closed' | localize }}</h4>
               <span class="text-muted small">{{ 'ClosedEventAccessDescription' | localize }}</span>
             </div>
             <div class="col-auto d-flex align-items-center">
