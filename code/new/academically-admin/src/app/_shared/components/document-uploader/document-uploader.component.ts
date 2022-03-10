@@ -31,6 +31,7 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
   @Input() noFilePlaceholder = this.l('DropFileOrClickHereToUpload');
   @Input() placeholderHeight = 'initial';
   @Input() maxFileSize = fileUploadConfiguration.maxFileSize;
+  @Input() showUploadHint = false;
   @Output() filesChanged = new EventEmitter<FileParameter[]>();
   @Output() defaultFileRemoved = new EventEmitter();
   @ViewChild('documentUploader') documentUploaderInput: ElementRef;
@@ -55,6 +56,10 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
     private _sanitizer: DomSanitizer,
   ) {
     super(injector);
+  }
+
+  get uploadHintText(): string {
+    return this.l('DocumentUploaderHint', this.allowedExtensions.join(', '));
   }
 
   ngOnInit(): void {
@@ -125,18 +130,6 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
     this.filesChanged.emit([]);
   }
 
-  formatBytes(bytes: number, decimals = 2) {
-    if (bytes === 0) { return '0 Bytes'; }
-
-    const k = 1024;
-    const dm = decimals < 0 ? 0 : decimals;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-  }
-
   onOpenDocumentClick(file: File): void {
     const fileUrl = URL.createObjectURL(file);
     window.open(fileUrl, '_blank');
@@ -154,10 +147,6 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
 
   public getSanitizedFileUrl(file: File): SafeUrl {
     return this._sanitizer.bypassSecurityTrustUrl(this.getFileUrl(file));
-  }
-
-  private getFileExtension(fileName: string): string {
-    return fileName.split('.').pop();
   }
 
   private getFileUrl(file: File): string {

@@ -20,6 +20,10 @@
     <None Remove="Services\Reactions\Dto\" />
     <None Remove="Services\UserFollowers\" />
     <None Remove="Services\UserFollowers\Dto\" />
+    <None Remove="Services\EventResources\" />
+    <None Remove="Services\EventResources\Dto\" />
+    <None Remove="Services\EventPolls\" />
+    <None Remove="Services\EventPolls\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Academically.Core\Academically.Core.csproj" />
@@ -67,6 +71,10 @@
     <Folder Include="Services\Reactions\Dto\" />
     <Folder Include="Services\UserFollowers\" />
     <Folder Include="Services\UserFollowers\Dto\" />
+    <Folder Include="Services\EventResources\" />
+    <Folder Include="Services\EventResources\Dto\" />
+    <Folder Include="Services\EventPolls\" />
+    <Folder Include="Services\EventPolls\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Services\Projects\" />

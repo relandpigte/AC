@@ -106,6 +106,9 @@ export class UploadService {
       case DocumentType.ProfilePicture:
         folder = folders.profilePicture;
         break;
+      case DocumentType.EventResource:
+        folder = folders.eventResource;
+        break;
     }
     return folder;
   }

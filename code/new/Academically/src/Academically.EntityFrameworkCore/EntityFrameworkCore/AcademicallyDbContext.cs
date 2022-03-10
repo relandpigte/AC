@@ -88,6 +88,10 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<Reaction> Reactions { get; set; }
         public virtual DbSet<UserFollower> UserFollowers { get; set; }
         public virtual DbSet<StudentArticle> StudentArticles { get; set; }
+        public virtual DbSet<EventResource> EventResources { get; set; }
+        public virtual DbSet<EventPoll> EventPolls { get; set; }
+        public virtual DbSet<EventPollQuestion> EventPollQuestions { get; set; }
+        public virtual DbSet<EventPollQuestionOption> EventPollQuestionOptions { get; set; }
 
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)

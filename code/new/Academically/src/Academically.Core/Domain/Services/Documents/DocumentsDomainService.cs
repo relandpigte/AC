@@ -19,6 +19,7 @@ namespace Academically.Domain.Services.Documents
         private readonly IRepository<Article, Guid> _articlesRepository;
         private readonly IRepository<Event, Guid> _eventsRepository;
         private readonly IRepository<CourseSection, Guid> _courseSectionsRepository;
+        private readonly IRepository<EventResource, Guid> _eventResourcesRepository;
         private readonly IFileManagerService _fileManagerService;
 
         public DocumentsDomainService(
@@ -27,6 +28,7 @@ namespace Academically.Domain.Services.Documents
             IRepository<Article, Guid> articlesRepository,
             IRepository<Event, Guid> eventsRepository,
             IRepository<CourseSection, Guid> courseSectionsRepository,
+            IRepository<EventResource, Guid> eventResourcesRepository,
             IFileManagerService fileManagerService
             )
         {
@@ -35,6 +37,7 @@ namespace Academically.Domain.Services.Documents
             _articlesRepository = articlesRepository;
             _eventsRepository = eventsRepository;
             _courseSectionsRepository = courseSectionsRepository;
+            _eventResourcesRepository = eventResourcesRepository;
             _fileManagerService = fileManagerService;
         }
 
@@ -120,6 +123,11 @@ namespace Academically.Domain.Services.Documents
                         courseSectionImageReference.ImageDocumentId = document.Id;
                         await _courseSectionsRepository.UpdateAsync(courseSectionImageReference);
                         break;
+                    case DocumentType.EventResource:
+                        var eventResrouceReference = await _eventResourcesRepository.GetAsync(referenceId.Value);
+                        eventResrouceReference.DocumentId = document.Id;
+                        await _eventResourcesRepository.UpdateAsync(eventResrouceReference);
+                        break;
                 }
             }
         }
@@ -163,6 +171,11 @@ namespace Academically.Domain.Services.Documents
                         var courseSectionImageReference = await _courseSectionsRepository.GetAsync(referenceId.Value);
                         courseSectionImageReference.ImageDocumentId = null;
                         await _courseSectionsRepository.UpdateAsync(courseSectionImageReference);
+                        break;
+                    case DocumentType.EventResource:
+                        var eventResourceReference = await _eventResourcesRepository.GetAsync(referenceId.Value);
+                        eventResourceReference.DocumentId = null;
+                        await _eventResourcesRepository.UpdateAsync(eventResourceReference);
                         break;
                 }
             }

@@ -21,5 +21,6 @@
         ArticleThumbnail,
         CourseSectionImage,
         EventThumbnail,
+        EventResource,
     }
 }
