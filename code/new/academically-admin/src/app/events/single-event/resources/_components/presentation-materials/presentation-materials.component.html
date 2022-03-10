@@ -1,0 +1,58 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="card-header-title">
+          {{ 'PresentationMaterials' | localize }}
+        </h4>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-sm btn-white" (click)="onAddClick()">
+          {{ 'Add' | localize }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body py-0" [loader]="isLoading">
+    <ul *ngIf="eventResources.length else noEventResourcesTemplate" class="list-group list-group-flush">
+      <li
+        *ngFor="let eventResource of (eventResources | paginate: { id: 'event-resources', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })"
+        class="list-group-item py-4">
+        <div class="row">
+          <div class="col-auto d-flex justify-content-center align-items-center">
+            <div class="avatar avatar-4by3 d-flex justify-content-center align-items-center">
+              <i *ngIf="eventResource.type === EventResourceType.Slides"
+                class="fe fe-monitor text-muted h1 p-0 m-0"></i>
+              <i *ngIf="eventResource.type === EventResourceType.Video" class="fe fe-youtube text-muted h1 p-0 m-0"></i>
+            </div>
+          </div>
+          <div class="col d-flex flex-column justify-content-center">
+            <h4 class="m-0">{{ eventResource.name }}</h4>
+            <small class="text-muted mb-2">
+              {{ formatBytes(eventResource.document.size) }}
+              {{ getFileExtension(eventResource.document.originalFileName) | uppercase }}
+            </small>
+            <small class="text-muted m-0">
+              {{ 'UploadedOn' | localize }}
+              {{ eventResource.creationTime | dateFormat: 'MMM D, YYYY' }}
+            </small>
+          </div>
+          <div class="col-auto d-flex align-items-center">
+            <button class="btn btn-sm btn-rounded-circle btn-outline-danger" (click)="onDeleteClick(eventResource)">
+              <i class="fe fe-trash-2"></i>
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <abp-pagination-controls *ngIf="totalItems > eventResources.length" id="event-resources"
+    (pageChange)="getDataPage($event)">
+  </abp-pagination-controls>
+</div>
+
+<ng-template #noEventResourcesTemplate>
+  <p class="m-0 p-5 text-muted text-center">
+    {{ 'NoItemsFound' | localize }}
+  </p>
+</ng-template>

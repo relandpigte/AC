@@ -1007,6 +1007,16 @@ app-methodologies .badge {
   color: #95aac9
 }
 
+.drag-handle-container {
+  cursor: move;
+
+  .drag-handle {
+    &::before {
+      content: "\f142 \f142";
+    }
+  }
+}
+
 @media (min-width: 576px) {
   .nav-user-menu .user-image {
     float      : none;

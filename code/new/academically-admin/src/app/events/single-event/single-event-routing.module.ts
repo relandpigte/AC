@@ -38,6 +38,13 @@ import { SingleEventComponent } from './single-event.component';
                 (m) => m.PermissionsModule
               ),
           },
+          {
+            path: 'resources',
+            loadChildren: () =>
+              import('@app/events/single-event/resources/resources.module').then(
+                (m) => m.ResourcesModule
+              ),
+          },
           { path: '', redirectTo: 'details' },
         ]
       }

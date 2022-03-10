@@ -1,0 +1,42 @@
+<form autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card" [loader]="isLoading">
+    <abp-modal-header [title]="'ChooseAQuestion' | localize" (onCloseClick)="onCloseClick()">
+    </abp-modal-header>
+    <div class="card-body p-0">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item px-3">
+          <a href="#!select-question"
+            (click)="$event.preventDefault(); onTypeClick(EventPollQuestionType.MultipleChoice);">
+            <div class="row">
+              <div class="col-auto d-flex justify-content-center align-items-center">
+                <div class="avatar avatar-4by3 d-flex justify-content-center align-items-center">
+                  <i class="fe fe-pie-chart text-muted h1 p-0 m-0"></i>
+                </div>
+              </div>
+              <div class="col d-flex flex-column justify-content-center">
+                <h4 class="mb-1">{{ 'MultipleChoice' | localize }}</h4>
+                <small class="text-muted m-0">{{ 'MultipleChoiceDescription' | localize }}</small>
+              </div>
+            </div>
+          </a>
+        </li>
+        <li class="list-group-item px-3">
+          <a href="#!select-question"
+            (click)="$event.preventDefault(); onTypeClick(EventPollQuestionType.MultipleResponse);">
+            <div class="row">
+              <div class="col-auto d-flex justify-content-center align-items-center">
+                <div class="avatar avatar-4by3 d-flex justify-content-center align-items-center">
+                  <i class="fe fe-pie-chart text-muted h1 p-0 m-0"></i>
+                </div>
+              </div>
+              <div class="col d-flex flex-column justify-content-center">
+                <h4 class="m-0">{{ 'MultipleResponse' | localize }}</h4>
+                <small class="text-muted m-0">{{ 'MultipleResponseDescription' | localize }}</small>
+              </div>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</form>

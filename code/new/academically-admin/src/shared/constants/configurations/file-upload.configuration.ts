@@ -11,6 +11,13 @@ export const fileUploadConfiguration = {
     '.pdf',
     '.doc',
     '.docx',
+    '.ppt',
+    '.pptx',
+    '.odt',
+    '.xls',
+    '.xlsx',
+    '.ods',
+    '.txt',
   ],
   allowedQualificationExtensions: [
     '.jpg',
@@ -43,6 +50,10 @@ export const fileUploadConfiguration = {
     '.avi',
     '.mkv',
   ],
+  powerPointExtensions: [
+    '.ppt',
+    '.pptx',
+  ],
   maxFileSize: 5242880,
   folders: {
     video: 'videos',
@@ -51,5 +62,6 @@ export const fileUploadConfiguration = {
     courseSectionImage: 'course-section-images',
     eventThumbnail: 'event-thumbnails',
     profilePicture: 'profile-pictures',
+    eventResource: 'event-resources',
   },
 };

@@ -69,7 +69,9 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.ReactionsServiceProxy,
         ApiServiceProxies.UserFollowersServiceProxy,
         ApiServiceProxies.StudentArticlesServiceProxy,
+        ApiServiceProxies.EventResourcesServiceProxy,
+        ApiServiceProxies.EventPollsServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })
-export class ServiceProxyModule  { }
+export class ServiceProxyModule { }

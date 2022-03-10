@@ -1,0 +1,102 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1646907338136-1">
+        <createTable tableName="AcademicallyEventPollQuestionOptions">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Text" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EventPollQuestionId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1646907338136-2">
+        <createTable tableName="AcademicallyEventPollQuestions">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Text" type="CHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Type" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MinimumResponse" type="INT"/>
+            <column name="MaximumResponse" type="INT"/>
+            <column name="ShareResults" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EventPollId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1646907338136-3">
+        <createTable tableName="AcademicallyEventPolls">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Name" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EventId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1646907338136-4">
+        <createIndex indexName="FK_EPQOs_EPQs_EventPollQuestionId_idx" tableName="AcademicallyEventPollQuestionOptions">
+            <column name="EventPollQuestionId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1646907338136-5">
+        <createIndex indexName="FK_EPQs_EventPolls_EventPollId_idx" tableName="AcademicallyEventPollQuestions">
+            <column name="EventPollId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1646907338136-6">
+        <createIndex indexName="FK_EPQs_Users_CreatorUserId_idx" tableName="AcademicallyEventPollQuestions">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1646907338136-7">
+        <createIndex indexName="FK_EventPolls_Events_EventId_idx" tableName="AcademicallyEventPolls">
+            <column name="EventId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1646907338136-8">
+        <createIndex indexName="FK_EventPolls_Users_CreatorUserId_idx" tableName="AcademicallyEventPolls">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1646907338136-9">
+        <addForeignKeyConstraint baseColumnNames="EventPollQuestionId" baseTableName="AcademicallyEventPollQuestionOptions" constraintName="FK_EPQOs_EPQs_EventPollQuestionId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyEventPollQuestions" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1646907338136-10">
+        <addForeignKeyConstraint baseColumnNames="EventPollId" baseTableName="AcademicallyEventPollQuestions" constraintName="FK_EPQs_EventPolls_EventPollId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyEventPolls" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1646907338136-11">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="AcademicallyEventPollQuestions" constraintName="FK_EPQs_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1646907338136-12">
+        <addForeignKeyConstraint baseColumnNames="EventId" baseTableName="AcademicallyEventPolls" constraintName="FK_EventPolls_Events_EventId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyevents" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1646907338136-13">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="AcademicallyEventPolls" constraintName="FK_EventPolls_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
