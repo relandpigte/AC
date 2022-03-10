@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
+import { AppComponentBase } from '@shared/app-component-base';
 
 @Component({
   selector: 'app-studio',
   templateUrl: './studio.component.html',
   styleUrls: ['./studio.component.less']
 })
-export class StudioComponent implements OnInit {
+export class StudioComponent extends AppComponentBase implements OnInit {
 
   activeTab = 1;
   presenters: Array<any> = [];
-  constructor() { }
+  constructor(injector: Injector,
+    ) {
+    super(injector);
+
+  }
 
   ngOnInit(): void {
     this.presenters = [{

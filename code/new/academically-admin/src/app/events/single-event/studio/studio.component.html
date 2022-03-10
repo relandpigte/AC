@@ -1,137 +1,131 @@
 <div class="row">
-    <div class="col-8">
-        <div class="card">
-            <div class="card-header">
-
-                <h4 class="card-header-title mr-auto">
-                  Presenters
+  <div class="col-8">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-header-title mr-auto">
+          {{ 'Presenters' | localize }}
+        </h4>
+        <div class="col-auto">
+          <a class="btn btn-primary">
+            {{ 'Invite' | localize }}
+          </a>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush list my-n3">
+          <li class="list-group-item" *ngFor="let presenter of presenters">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <a class="avatar">
+                  <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
+                </a>
+              </div>
+              <div class="col ml-n2">
+                <h4 class="mb-1 name">
+                  <a>{{presenter.name}}</a>
                 </h4>
-
-                <div class="col-auto">
-
-                    <a  class="btn btn-primary">
-                      Invite
-                    </a>
-
-                  </div>
-
               </div>
-              <div class="card-body">
-                <ul class="list-group list-group-flush list my-n3">
-                    <li class="list-group-item" *ngFor="let presenter of presenters">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <a  class="avatar">
-                          <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
-                        </a>
-                      </div>
-                      <div class="col ml-n2">
-                        <h4 class="mb-1 name">
-                          <a >{{presenter.name}}</a>
-                        </h4>
-                      </div>
-                      <div class="col-auto">
-                        <div class="dropdown">
-                            <a  class="btn btn-sm btn-white d-none d-md-inline-block" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Co-Host<i class="fe fe-chevron-down"></i>
-                              </a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                              <a  class="dropdown-item">
-                                Co-Host
-                              </a>
-                              <a  class="dropdown-item">
-                                Guest
-                              </a>
-
-                            </div>
-                          </div>
-
-                      </div>
-                      <div class="col-auto">
-
-                        <a  class="dropdown-ellipses dropdown-toggle" role="button">
-                            <i class="fe fe-more-vertical"></i>
-                          </a>
-
-                      </div>
-                    </div> <!-- / .row -->
-                  </li>
-                </ul>
-
-              </div>
-          </div>
-    </div>
-    <div class="col-4">
-        <div class="card">
-            <div class="card-body">
-              <div class="row align-items-center">
-                <div class="col-auto">
-
-                  <!-- Avatar -->
-                  <a  class="avatar avatar-lg">
-                    <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
+              <div class="col-auto">
+                <div class="dropdown">
+                  <a class="btn btn-sm btn-white d-none d-md-inline-block" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    {{ 'Co-Host' | localize }}<i class="fe fe-chevron-down"></i>
                   </a>
-
-                </div>
-                <div class="col ml-n2">
-
-                  <!-- Title -->
-                  <h6 class="header-pretitle">
-                    YOUR DEFAULT ROLE
-                  </h6>
-                  <h2 class="header-title">
-                    Host
-                    </h2>
-
-
-                </div>
-                <div class="col-auto">
-                    <div class="dropdown">
-                        <a  class="btn btn-sm btn-white d-none d-md-inline-block" role="button" >
-                            Change
-                          </a>
-                      </div>
-
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item">
+                      {{ 'Co-Host' | localize }}
+                    </a>
+                    <a class="dropdown-item">
+                      {{ 'Guest' | localize }}
+                    </a>
                   </div>
-              </div>
-            </div>
-          </div>
-    </div>
-    <div class="col-8">
-        <div class="card">
-            <div class="card-header">
-              <h4 class="card-header-title">
-                Permissions
-              </h4>
+                </div>
 
+              </div>
               <div class="col-auto">
 
-                <ul class="nav nav-tabs nav-tabs-sm card-header-tabs cursor">
-                  <li class="nav-item" (click)="changeActiveTab(1)">
-                    <a  class="nav-link text-center " [ngClass]="{'active' : activeTab === 1}">
-                      Audience
-                    </a>
-                  </li>
-                  <li class="nav-item" (click)="changeActiveTab(2)">
-                    <a  class="nav-link text-center" [ngClass]="{'active' : activeTab === 2}">
-                      Guest
-                    </a>
-                  </li>
-                  <li class="nav-item" (click)="changeActiveTab(3)">
-                    <a  class="nav-link text-center" [ngClass]="{'active' : activeTab === 3}">
-                      Co-hosts
-                    </a>
-                  </li>
-                </ul>
+                <a class="dropdown-ellipses dropdown-toggle" role="button">
+                  <i class="fe fe-more-vertical"></i>
+                </a>
 
               </div>
+            </div> <!-- / .row -->
+          </li>
+        </ul>
 
-            </div>
-            <app-audience *ngIf="activeTab === 1"></app-audience>
-            <app-guests *ngIf="activeTab === 2"></app-guests>
-            <app-co-host *ngIf="activeTab === 3"></app-co-host>
-          </div>
+      </div>
     </div>
+  </div>
+  <div class="col-4">
+    <div class="card">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-auto">
+
+            <!-- Avatar -->
+            <a class="avatar avatar-lg">
+              <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
+            </a>
+
+          </div>
+          <div class="col ml-n2">
+
+            <!-- Title -->
+            <h6 class="header-pretitle">
+              {{ 'DefaultRole' | localize }}
+            </h6>
+            <h2 class="header-title">
+              {{ 'Host' | localize}}
+            </h2>
+
+
+          </div>
+          <div class="col-auto">
+            <div class="dropdown">
+              <a class="btn btn-sm btn-white d-none d-md-inline-block" role="button">
+                {{ 'Change' | localize }}
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-8">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-header-title">
+          {{ 'Permissions' | localize }}
+        </h4>
+
+        <div class="col-auto">
+
+          <ul class="nav nav-tabs nav-tabs-sm card-header-tabs cursor">
+            <li class="nav-item" (click)="changeActiveTab(1)">
+              <a class="nav-link text-center " [ngClass]="{'active' : activeTab === 1}">
+                {{ 'Audience' | localize }}
+              </a>
+            </li>
+            <li class="nav-item" (click)="changeActiveTab(2)">
+              <a class="nav-link text-center" [ngClass]="{'active' : activeTab === 2}">
+                {{ 'Guest' | localize }}
+              </a>
+            </li>
+            <li class="nav-item" (click)="changeActiveTab(3)">
+              <a class="nav-link text-center" [ngClass]="{'active' : activeTab === 3}">
+                {{ 'Co-hosts' | localize }}
+              </a>
+            </li>
+          </ul>
+
+        </div>
+
+      </div>
+      <app-audience *ngIf="activeTab === 1"></app-audience>
+      <app-guests *ngIf="activeTab === 2"></app-guests>
+      <app-co-host *ngIf="activeTab === 3"></app-co-host>
+    </div>
+  </div>
 
 </div>
-

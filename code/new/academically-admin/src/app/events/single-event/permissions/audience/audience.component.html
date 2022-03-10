@@ -2,7 +2,7 @@
     <table class="table table-sm table-nowrap card-table">
       <thead>
         <tr>
-          <th>INTERACTIVE TOOLS</th>
+          <th>{{ 'InteractiveTools' | localize }}</th>
         </tr>
       </thead>
       <tbody class="font-size-base">
@@ -11,7 +11,7 @@
                 <div class="row align-items-center mb-3">
                   <div class="col">
                     <span class="font-weight-base ">
-                      Enable Microphone
+                      {{ 'EnableMicrophone' | localize }}
                     </span>
                   </div>
                   <div class="col-auto">
@@ -24,7 +24,7 @@
                 <div class="row align-items-center mb-3">
                   <div class="col">
                     <span class="font-weight-base ">
-                      Enable Webcam
+                      {{ 'EnableWebcam' | localize }}
                     </span>
                   </div>
                   <div class="col-auto">
@@ -40,7 +40,7 @@
 
                     <!-- Heading -->
                     <span class="font-weight-base ">
-                      Enable Presentation tools
+                      {{ 'EnablePresentationTools' | localize }}
                     </span>
                   </div>
                   <div class="col-auto">
@@ -58,7 +58,7 @@
 
                       <!-- Heading -->
                       <span class="font-weight-base ">
-                        Enable Speak requests
+                        {{ 'EnableSpeakRequests' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -79,7 +79,7 @@
     <table class="table table-sm table-nowrap card-table">
         <thead>
           <tr>
-            <th>ATTENDEES</th>
+            <th>{{ 'Attendees' | localize | uppercase }}</th>
           </tr>
         </thead>
         <tbody class="font-size-base">
@@ -88,7 +88,7 @@
                   <div class="row align-items-center">
                     <div class="col">
                       <span class="font-weight-base ">
-                       View Audience
+                       {{ 'ViewAudience' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -107,7 +107,7 @@
     <table class="table table-sm table-nowrap card-table">
         <thead>
           <tr>
-            <th>CHAT</th>
+            <th>{{ 'Chat' | localize | uppercase }}</th>
 
 
           </tr>
@@ -118,7 +118,7 @@
                   <div class="row align-items-center mb-3">
                     <div class="col">
                       <span class="font-weight-base ">
-                        Chat publicily
+                        {{ 'ChatPublicily' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -131,7 +131,7 @@
                   <div class="row align-items-center mb-3">
                     <div class="col">
                       <span class="font-weight-base pd-3">
-                        Tag members
+                        {{ 'TagMembers' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -147,7 +147,7 @@
 
                       <!-- Heading -->
                       <span class="font-weight-base ">
-                        Chat privately
+                        {{ 'ChatPrivately' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -167,7 +167,7 @@
                                class="custom-control-input" />
                             <label class="custom-control-label" for="anyoneChatType"></label>
                             <label class="custom-control-caption" for="anyoneChatType">
-                                With anyone
+                                {{ 'WithAnyone' | localize }}
                             </label>
                           </div>
                           </div>
@@ -180,7 +180,7 @@
                                    class="custom-control-input" />
                                 <label class="custom-control-label" for="adminChatType"></label>
                                 <label class="custom-control-caption" for="adminChatType">
-                                    With admin only
+                                    {{ 'WithAdminOnly' | localize }}
                                 </label>
                               </div>
                               </div>
@@ -194,7 +194,7 @@
       <table class="table table-sm table-nowrap card-table">
         <thead>
           <tr>
-            <th>Questions</th>
+            <th>{{'Questions' | localize}}</th>
 
 
           </tr>
@@ -205,7 +205,7 @@
                   <div class="row align-items-center mb-3">
                     <div class="col">
                       <span class="font-weight-base ">
-                        Ask questions
+                        {{ 'AskQuestions' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -216,24 +216,13 @@
                     </div>
                   </div>
                   <div class="row align-items-center">
-                    <!-- <div class="col">
-                        <div class="checklist pd-3">
-                            <div class="custom-control custom-checkbox checklist-control">
-                                <input class="custom-control-input" id="publicQuestion" type="checkbox" />
-                                <label class="custom-control-label" for="publicQuestion"></label>
-                                <span >
-                                  Public questions
-                                </span>
-                              </div>
-                              </div>
-                    </div> -->
                     <div class="col">
                     <div class="custom-control custom-radio pd-7">
                         <input type="radio" id="publicQuestionType" name="questionType"
                            class="custom-control-input" />
                         <label class="custom-control-label" for="publicQuestionType"></label>
                         <label class="custom-control-caption" for="publicQuestionType">
-                            Public questions
+                            {{ 'PublicQuestions' | localize }}
                         </label>
                       </div>
                     </div>
@@ -243,7 +232,7 @@
 
                       <!-- Heading -->
                       <span class="font-weight-base pd-12">
-                        Allow audience to upvote
+                        {{ 'AllowAudienceToUpvote' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -261,7 +250,7 @@
 
                         <!-- Heading -->
                         <span class="font-weight-base pd-12">
-                          Allow audience to respond
+                          {{ 'AllowAudienceToRespond' | localize }}
                         </span>
                       </div>
                       <div class="col-auto">
@@ -275,24 +264,13 @@
                       </div>
                     </div>
                     <div class="row align-items-center">
-                        <!-- <div class="col">
-                            <div class="checklist pd-3">
-                                <div class="custom-control custom-checkbox checklist-control">
-                                    <input class="custom-control-input" id="privateQuestion" type="checkbox" />
-                                    <label class="custom-control-label" for="privateQuestion"></label>
-                                    <span >
-                                      Private questions with admin
-                                    </span>
-                                  </div>
-                                  </div>
-                        </div> -->
                         <div class="col">
                         <div class="custom-control custom-radio pd-7">
                             <input type="radio" id="privateQuestionType" name="questionType"
                                class="custom-control-input" />
                             <label class="custom-control-label" for="privateQuestionType"></label>
                             <label class="custom-control-caption" for="privateQuestionType">
-                                Private questions with admin
+                                {{ 'PrivateQuestionsWithAdmin' | localize }}
                             </label>
                           </div>
                           </div>
@@ -302,7 +280,7 @@
 
                           <!-- Heading -->
                           <span class="font-weight-base pd-12">
-                            Allow follow up response
+                            {{ 'AllowFollowUpResponse' | localize }}
                           </span>
                         </div>
                         <div class="col-auto">
@@ -323,9 +301,7 @@
       <table class="table table-sm table-nowrap card-table">
         <thead>
           <tr>
-            <th>POLLS</th>
-
-
+            <th>{{ 'Polls' | localize | uppercase }}</th>
           </tr>
         </thead>
         <tbody class="font-size-base">
@@ -334,7 +310,7 @@
                   <div class="row align-items-center">
                     <div class="col">
                       <span class="font-weight-base ">
-                        Enable polls tab
+                        {{ 'EnablePollsTab' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -353,7 +329,7 @@
       <table class="table table-sm table-nowrap card-table">
         <thead>
           <tr>
-            <th>OFFERS</th>
+            <th>{{ 'Offers' | localize | uppercase }}</th>
           </tr>
         </thead>
         <tbody class="font-size-base">
@@ -375,7 +351,7 @@
                   <div class="row align-items-center">
                     <div class="col">
                       <span class="font-weight-base pd-3">
-                       Display number of purchases
+                       {{ 'DisplayNumberOfPurchases' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -395,7 +371,7 @@
       <table class="table table-sm table-nowrap card-table">
         <thead>
           <tr>
-            <th>HANDOUTS</th>
+            <th>{{ 'Handouts' | localize | uppercase }}</th>
           </tr>
         </thead>
         <tbody class="font-size-base">
@@ -404,7 +380,7 @@
                   <div class="row align-items-center ">
                     <div class="col">
                       <span class="font-weight-base ">
-                        Enable handouts tabs
+                        {{ 'EnableHandoutsTabs' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">

@@ -1,85 +1,85 @@
 <div class="table-responsive">
-    <table class="table table-sm table-nowrap card-table">
-      <thead>
-        <tr>
-          <th>INTERACTIVE TOOLS</th>
-        </tr>
-      </thead>
-      <tbody class="font-size-base">
-          <div class="card-body">
-          <div class="list-group list-group-flush my-n3">
-                <div class="row align-items-center mb-3">
-                  <div class="col">
-                    <span class="font-weight-base ">
-                      Enable Microphone
-                    </span>
-                  </div>
-                  <div class="col-auto">
-                    <div class="custom-control custom-switch">
-                      <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchOne">
-                      <label class="custom-control-label" for="subscriptionsSwitchOne"></label>
-                    </div>
+  <table class="table table-sm table-nowrap card-table">
+    <thead>
+      <tr>
+        <th>{{ 'InteractiveTools' | localize }}</th>
+      </tr>
+    </thead>
+    <tbody class="font-size-base">
+        <div class="card-body">
+        <div class="list-group list-group-flush my-n3">
+              <div class="row align-items-center mb-3">
+                <div class="col">
+                  <span class="font-weight-base ">
+                    {{ 'EnableMicrophone' | localize }}
+                  </span>
+                </div>
+                <div class="col-auto">
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchOne">
+                    <label class="custom-control-label" for="subscriptionsSwitchOne"></label>
                   </div>
                 </div>
-                <div class="row align-items-center mb-3">
-                  <div class="col">
-                    <span class="font-weight-base ">
-                      Enable Webcam
-                    </span>
+              </div>
+              <div class="row align-items-center mb-3">
+                <div class="col">
+                  <span class="font-weight-base ">
+                    {{ 'EnableWebcam' | localize }}
+                  </span>
+                </div>
+                <div class="col-auto">
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchTwo" checked="true">
+                    <label class="custom-control-label" for="subscriptionsSwitchTwo"></label>
                   </div>
-                  <div class="col-auto">
-                    <div class="custom-control custom-switch">
-                      <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchTwo" checked="true">
-                      <label class="custom-control-label" for="subscriptionsSwitchTwo"></label>
-                    </div>
 
-                  </div>
                 </div>
-                <div class="row align-items-center mb-3 brd-pad">
+              </div>
+              <div class="row align-items-center mb-3 brd-pad" >
+                <div class="col">
+
+                  <!-- Heading -->
+                  <span class="font-weight-base ">
+                    {{ 'EnablePresentationTools' | localize }}
+                  </span>
+                </div>
+                <div class="col-auto">
+
+                  <!-- Switch -->
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchThree" >
+                    <label class="custom-control-label" for="subscriptionsSwitchThree"></label>
+                  </div>
+
+                </div>
+              </div>
+              <div class="row align-items-center">
                   <div class="col">
 
                     <!-- Heading -->
                     <span class="font-weight-base ">
-                      Enable Presentation tools
+                      {{ 'EnableSpeakRequests' | localize }}
                     </span>
                   </div>
                   <div class="col-auto">
 
                     <!-- Switch -->
                     <div class="custom-control custom-switch">
-                      <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchThree" >
-                      <label class="custom-control-label" for="subscriptionsSwitchThree"></label>
+                      <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchfour" >
+                      <label class="custom-control-label" for="subscriptionsSwitchfour"></label>
                     </div>
 
                   </div>
                 </div>
-                <div class="row align-items-center">
-                    <div class="col">
-
-                      <!-- Heading -->
-                      <span class="font-weight-base ">
-                        Enable Speak requests
-                      </span>
-                    </div>
-                    <div class="col-auto">
-
-                      <!-- Switch -->
-                      <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchfour" >
-                        <label class="custom-control-label" for="subscriptionsSwitchfour"></label>
-                      </div>
-
-                    </div>
-                  </div>
-            </div>
           </div>
+        </div>
 
-      </tbody>
-    </table>
+    </tbody>
+  </table>
     <table class="table table-sm table-nowrap card-table">
         <thead>
           <tr>
-            <th>ATTENDEES</th>
+            <th>{{ 'Attendees' | localize | uppercase }}</th>
           </tr>
         </thead>
         <tbody class="font-size-base">
@@ -88,7 +88,7 @@
                   <div class="row align-items-center mb-3">
                     <div class="col">
                       <span class="font-weight-base ">
-                       View registrants
+                       {{ 'ViewRegistrants' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -101,7 +101,7 @@
                   <div class="row align-items-center mb-3">
                     <div class="col">
                       <span class="font-weight-base ">
-                       Manage guests
+                       {{ 'ManageGuests' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -114,7 +114,7 @@
                   <div class="row align-items-center mb-3">
                     <div class="col">
                       <span class="font-weight-base ">
-                       Manage guest settings
+                       {{ 'ManageGuestSettings' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -127,7 +127,7 @@
                   <div class="row align-items-center mb-3">
                     <div class="col">
                       <span class="font-weight-base ">
-                       Manage audience
+                       {{ 'ManageAudience' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -140,7 +140,7 @@
                   <div class="row align-items-center">
                     <div class="col">
                       <span class="font-weight-base ">
-                       Manage audience settings
+                       {{ 'ManageAudienceSettings' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -159,7 +159,7 @@
       <table class="table table-sm table-nowrap card-table">
         <thead>
           <tr>
-            <th>CHAT</th>
+            <th>{{ 'Chat' | localize | uppercase }}</th>
 
 
           </tr>
@@ -170,7 +170,7 @@
                   <div class="row align-items-center mb-3">
                     <div class="col">
                       <span class="font-weight-base ">
-                        Chat publicily
+                        {{ 'ChatPublicily' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -183,7 +183,7 @@
                   <div class="row align-items-center mb-3">
                     <div class="col">
                       <span class="font-weight-base pd-3">
-                        Tag members
+                        {{ 'TagMembers' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -199,7 +199,7 @@
 
                       <!-- Heading -->
                       <span class="font-weight-base ">
-                        Chat privately
+                        {{ 'ChatPrivately' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -219,7 +219,7 @@
                                class="custom-control-input" />
                             <label class="custom-control-label" for="anyoneChatType"></label>
                             <label class="custom-control-caption" for="anyoneChatType">
-                                With anyone
+                                {{ 'WithAnyone' | localize }}
                             </label>
                           </div>
                           </div>
@@ -232,7 +232,7 @@
                                    class="custom-control-input" />
                                 <label class="custom-control-label" for="adminChatType"></label>
                                 <label class="custom-control-caption" for="adminChatType">
-                                    With admin only
+                                    {{ 'WithAdminOnly' | localize }}
                                 </label>
                               </div>
                               </div>
@@ -246,7 +246,7 @@
       <table class="table table-sm table-nowrap card-table">
         <thead>
           <tr>
-            <th>Questions</th>
+            <th>{{'Questions' | localize}}</th>
 
 
           </tr>
@@ -257,7 +257,7 @@
                   <div class="row align-items-center mb-3">
                     <div class="col">
                       <span class="font-weight-base ">
-                        Allow co-hosts to upvote
+                        {{ 'AllowCoHostsToUpvote' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -270,7 +270,7 @@
                   <div class="row align-items-center">
                     <div class="col">
                       <span class="font-weight-base ">
-                        Allow co-hosts to respond
+                        {{ 'AllowCoHostsToRespond' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -289,9 +289,7 @@
       <table class="table table-sm table-nowrap card-table">
         <thead>
           <tr>
-            <th>POLLS</th>
-
-
+            <th>{{ 'Polls' | localize }}</th>
           </tr>
         </thead>
         <tbody class="font-size-base">
@@ -300,7 +298,7 @@
                   <div class="row align-items-center">
                     <div class="col">
                       <span class="font-weight-base ">
-                       Create poll
+                       {{ 'CreatePoll' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -319,7 +317,7 @@
       <table class="table table-sm table-nowrap card-table">
         <thead>
           <tr>
-            <th>OFFERS</th>
+            <th>{{ 'Offers' | localize | uppercase }}</th>
           </tr>
         </thead>
         <tbody class="font-size-base">
@@ -328,7 +326,7 @@
                   <div class="row align-items-center">
                     <div class="col">
                       <span class="font-weight-base ">
-                        Create offers
+                        {{ 'CreateOffers' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
@@ -349,7 +347,7 @@
       <table class="table table-sm table-nowrap card-table">
         <thead>
           <tr>
-            <th>HANDOUTS</th>
+            <th>{{ 'Handouts' | localize | uppercase }}</th>
           </tr>
         </thead>
         <tbody class="font-size-base">
@@ -358,7 +356,7 @@
                   <div class="row align-items-center">
                     <div class="col">
                       <span class="font-weight-base ">
-                        Upload handouts
+                        {{ 'UploadHandouts' | localize }}
                       </span>
                     </div>
                     <div class="col-auto">
