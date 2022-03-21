@@ -70,6 +70,19 @@ namespace Academically.Services.Events
             return new PagedResultDto<EventDto>(totalCount, events);
         }
 
+        public async Task<GetEventDelayStatusDto> GetDelayStatus(Guid id)
+        {
+            var query = Repository.GetAll()
+                .Where(e => e.ParentId == id)
+                .OrderBy(e => e.CreationTime);
+            var firstVideo = await query.FirstOrDefaultAsync();
+            return new GetEventDelayStatusDto()
+            {
+                IsFirstVideoPublished = firstVideo?.Status == EventStatus.Published,
+                VideoCount = await query.CountAsync(),
+            };
+        }
+
         public async Task UpdateStatusAsync(Guid id, EventStatus status)
         {
             var @event = await Repository.GetAsync(id);

@@ -10,6 +10,7 @@ namespace Academically.Services.Events
     public interface IEventsAppService : IAsyncCrudAppService<EventDto, Guid, PagedEventResultRequestDto, CreateEventDto, UpdateEventDto>
     {
         Task<PagedResultDto<EventDto>> GetEventSchedules(PagedEventScheduleResultRequestDto input);
+        Task<GetEventDelayStatusDto> GetDelayStatus(Guid id);
         Task UpdateStatusAsync(Guid id, EventStatus status);
         Task<EventDto> UpdateSettingsAsync(UpdateEventSettingsDto input);
     }

@@ -28,7 +28,7 @@ namespace Academically.Services.Videos.Dto
 		public string Categories { get; set; }
 		public decimal Price { get; set; } = 0;
 		public PricingType PricingType { get; set; }
-		public VideoDelayType? DelayType { get; set; }
+		public ServiceDelayType? DelayType { get; set; }
 		public string DelayValue { get; set; }
 
 		public VideoDto Parent { get; set; }

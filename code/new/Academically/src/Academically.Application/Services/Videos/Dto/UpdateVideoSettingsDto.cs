@@ -9,7 +9,7 @@ namespace Academically.Services.Videos.Dto
     [AutoMapTo(typeof(Video))]
     public class UpdateVideoSettingsDto : EntityDto<Guid>
     {
-        public VideoDelayType? DelayType { get; set; }
+        public ServiceDelayType? DelayType { get; set; }
         public string DelayValue { get; set; }
         public CommentSetting CommentSetting { get; set; }
         public bool CommentModeration { get; set; }
