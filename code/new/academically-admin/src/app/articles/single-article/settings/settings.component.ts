@@ -65,6 +65,17 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
     this.specificDateValue = undefined;
   }
 
+  onSpecificDateChange(): void {
+    if (this.specificDateValue) {
+      const dateParts = [
+        this.specificDateValue.getDate(),
+        this.specificDateValue.getMonth() + 1,
+        this.specificDateValue.getFullYear(),
+      ];
+      this.model.delayValue = dateParts.join('/');
+    }
+  }
+
   private updateSettings(): void {
     switch (this.model.delayType) {
       case DelayType.SpecificDate:

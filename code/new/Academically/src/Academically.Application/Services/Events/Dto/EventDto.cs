@@ -39,6 +39,8 @@ namespace Academically.Services.Events.Dto
         public bool? ReplayFollowUpNotification { get; set; }
         public bool? Visible { get; set; }
         public bool? Opened { get; set; }
+        public ServiceDelayType? DelayType { get; set; }
+        public string DelayValue { get; set; }
 
         public EventDto Parent { get; set; }
         public DocumentDto ThumbnailDocument { get; set; }

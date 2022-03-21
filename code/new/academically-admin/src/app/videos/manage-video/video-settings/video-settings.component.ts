@@ -6,7 +6,7 @@ import {
   CommentSetting,
   GetDelayStatusDto,
   UpdateVideoSettingsDto,
-  VideoDelayType,
+  ServiceDelayType,
   VideoDto,
   VideosServiceProxy,
   VideoStatus,
@@ -30,7 +30,7 @@ export class VideoSettingsComponent extends AutoSaveComponentBase implements OnI
   isLoading = false;
   allowedVideoExtensions = fileUploadConfiguration.videoExtensions;
   VideoType = VideoType;
-  DelayType = VideoDelayType;
+  DelayType = ServiceDelayType;
   hasParent = false;
 
   videoType: VideoType;
@@ -77,9 +77,20 @@ export class VideoSettingsComponent extends AutoSaveComponentBase implements OnI
     this.specificDateValue = undefined;
   }
 
+  onSpecificDateChange(): void {
+    if (this.specificDateValue) {
+      const dateParts = [
+        this.specificDateValue.getDate(),
+        this.specificDateValue.getMonth() + 1,
+        this.specificDateValue.getFullYear(),
+      ];
+      this.model.delayValue = dateParts.join('/');
+    }
+  }
+
   private updateSettings(): void {
     switch (this.model.delayType) {
-      case VideoDelayType.SpecificDate:
+      case ServiceDelayType.SpecificDate:
         if (this.specificDateValue) {
           const dateParts = [
             this.specificDateValue.getDate(),
@@ -117,7 +128,7 @@ export class VideoSettingsComponent extends AutoSaveComponentBase implements OnI
 
         if (this.model.delayType) {
           switch (this.model.delayType) {
-            case VideoDelayType.SpecificDate:
+            case ServiceDelayType.SpecificDate:
               if (this.model.delayValue && this.model.delayValue.trim()) {
                 const dateParts = this.model.delayValue.split('/');
                 const day = +dateParts[0];
@@ -131,7 +142,7 @@ export class VideoSettingsComponent extends AutoSaveComponentBase implements OnI
               break;
           }
         } else {
-          this.model.delayType = VideoDelayType.Immediate;
+          this.model.delayType = ServiceDelayType.Immediate;
         }
 
         if (this.hasParent) {

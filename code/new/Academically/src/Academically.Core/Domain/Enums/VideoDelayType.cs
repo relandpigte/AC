@@ -1,6 +1,6 @@
 ﻿namespace Academically.Domain.Enums
 {
-    public enum VideoDelayType
+    public enum ServiceDelayType
     {
         LastItem = 1,
         SpecificDate = 2,

@@ -6362,6 +6362,62 @@ export class EventsServiceProxy {
 
     /**
      * @param id (optional) 
+     * @return Success
+     */
+    getDelayStatus(id: string | undefined): Observable<GetEventDelayStatusDto> {
+        let url_ = this.baseUrl + "/api/services/app/Events/GetDelayStatus?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetDelayStatus(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetDelayStatus(<any>response_);
+                } catch (e) {
+                    return <Observable<GetEventDelayStatusDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetEventDelayStatusDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetDelayStatus(response: HttpResponseBase): Observable<GetEventDelayStatusDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetEventDelayStatusDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetEventDelayStatusDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
      * @param body (optional) 
      * @return Success
      */
@@ -24124,6 +24180,8 @@ export class EventDto implements IEventDto {
     replayFollowUpNotification: boolean | undefined;
     visible: boolean | undefined;
     opened: boolean | undefined;
+    delayType: ServiceDelayType;
+    delayValue: string | undefined;
     parent: EventDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;
@@ -24168,6 +24226,8 @@ export class EventDto implements IEventDto {
             this.replayFollowUpNotification = _data["replayFollowUpNotification"];
             this.visible = _data["visible"];
             this.opened = _data["opened"];
+            this.delayType = _data["delayType"];
+            this.delayValue = _data["delayValue"];
             this.parent = _data["parent"] ? EventDto.fromJS(_data["parent"]) : <any>undefined;
             this.thumbnailDocument = _data["thumbnailDocument"] ? DocumentDto.fromJS(_data["thumbnailDocument"]) : <any>undefined;
             this.language = _data["language"] ? SpokenLanguageDto.fromJS(_data["language"]) : <any>undefined;
@@ -24216,6 +24276,8 @@ export class EventDto implements IEventDto {
         data["replayFollowUpNotification"] = this.replayFollowUpNotification;
         data["visible"] = this.visible;
         data["opened"] = this.opened;
+        data["delayType"] = this.delayType;
+        data["delayValue"] = this.delayValue;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
         data["language"] = this.language ? this.language.toJSON() : <any>undefined;
@@ -24264,6 +24326,8 @@ export interface IEventDto {
     replayFollowUpNotification: boolean | undefined;
     visible: boolean | undefined;
     opened: boolean | undefined;
+    delayType: ServiceDelayType;
+    delayValue: string | undefined;
     parent: EventDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;
@@ -25389,6 +25453,53 @@ export class GetDelayStatusDto implements IGetDelayStatusDto {
 }
 
 export interface IGetDelayStatusDto {
+    isFirstVideoPublished: boolean;
+    videoCount: number;
+}
+
+export class GetEventDelayStatusDto implements IGetEventDelayStatusDto {
+    isFirstVideoPublished: boolean;
+    videoCount: number;
+
+    constructor(data?: IGetEventDelayStatusDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isFirstVideoPublished = _data["isFirstVideoPublished"];
+            this.videoCount = _data["videoCount"];
+        }
+    }
+
+    static fromJS(data: any): GetEventDelayStatusDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetEventDelayStatusDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isFirstVideoPublished"] = this.isFirstVideoPublished;
+        data["videoCount"] = this.videoCount;
+        return data; 
+    }
+
+    clone(): GetEventDelayStatusDto {
+        const json = this.toJSON();
+        let result = new GetEventDelayStatusDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetEventDelayStatusDto {
     isFirstVideoPublished: boolean;
     videoCount: number;
 }
@@ -29032,6 +29143,13 @@ export interface IService2Dto {
     description: string | undefined;
 }
 
+/** 1 = LastItem 2 = SpecificDate 3 = Immediate */
+export enum ServiceDelayType {
+    LastItem = 1,
+    SpecificDate = 2,
+    Immediate = 3,
+}
+
 export class ServiceDisciplineTaxonomyDto implements IServiceDisciplineTaxonomyDto {
     id: string;
     name: string | undefined;
@@ -32452,6 +32570,8 @@ export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
     replayFollowUpNotification: boolean | undefined;
     visible: boolean | undefined;
     opened: boolean | undefined;
+    delayType: ServiceDelayType;
+    delayValue: string | undefined;
 
     constructor(data?: IUpdateEventSettingsDto) {
         if (data) {
@@ -32482,6 +32602,8 @@ export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
             this.replayFollowUpNotification = _data["replayFollowUpNotification"];
             this.visible = _data["visible"];
             this.opened = _data["opened"];
+            this.delayType = _data["delayType"];
+            this.delayValue = _data["delayValue"];
         }
     }
 
@@ -32512,6 +32634,8 @@ export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
         data["replayFollowUpNotification"] = this.replayFollowUpNotification;
         data["visible"] = this.visible;
         data["opened"] = this.opened;
+        data["delayType"] = this.delayType;
+        data["delayValue"] = this.delayValue;
         return data; 
     }
 
@@ -32542,6 +32666,8 @@ export interface IUpdateEventSettingsDto {
     replayFollowUpNotification: boolean | undefined;
     visible: boolean | undefined;
     opened: boolean | undefined;
+    delayType: ServiceDelayType;
+    delayValue: string | undefined;
 }
 
 export class UpdateProjectDto implements IUpdateProjectDto {
@@ -32688,7 +32814,7 @@ export interface IUpdateVideoDetailsDto {
 
 export class UpdateVideoSettingsDto implements IUpdateVideoSettingsDto {
     id: string;
-    delayType: VideoDelayType;
+    delayType: ServiceDelayType;
     delayValue: string | undefined;
     commentSetting: CommentSetting;
     commentModeration: boolean;
@@ -32745,7 +32871,7 @@ export class UpdateVideoSettingsDto implements IUpdateVideoSettingsDto {
 
 export interface IUpdateVideoSettingsDto {
     id: string;
-    delayType: VideoDelayType;
+    delayType: ServiceDelayType;
     delayValue: string | undefined;
     commentSetting: CommentSetting;
     commentModeration: boolean;
@@ -34549,13 +34675,6 @@ export interface IVerificationStatusDto {
     passportVerificationStatus: PassportVerificationStatus;
 }
 
-/** 1 = LastItem 2 = SpecificDate 3 = Immediate */
-export enum VideoDelayType {
-    LastItem = 1,
-    SpecificDate = 2,
-    Immediate = 3,
-}
-
 export class VideoDto implements IVideoDto {
     id: string;
     type: VideoType;
@@ -34574,7 +34693,7 @@ export class VideoDto implements IVideoDto {
     categories: string | undefined;
     price: number;
     pricingType: PricingType;
-    delayType: VideoDelayType;
+    delayType: ServiceDelayType;
     delayValue: string | undefined;
     parent: VideoDto;
     document: DocumentDto;
@@ -34693,7 +34812,7 @@ export interface IVideoDto {
     categories: string | undefined;
     price: number;
     pricingType: PricingType;
-    delayType: VideoDelayType;
+    delayType: ServiceDelayType;
     delayValue: string | undefined;
     parent: VideoDto;
     document: DocumentDto;

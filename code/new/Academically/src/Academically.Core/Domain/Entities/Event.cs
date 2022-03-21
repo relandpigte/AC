@@ -36,6 +36,8 @@ namespace Academically.Domain.Entities
         public bool? ReplayFollowUpNotification { get; set; }
         public bool? Visible { get; set; }
         public bool? Opened { get; set; }
+        public ServiceDelayType? DelayType { get; set; }
+        public string DelayValue { get; set; }
 
         [ForeignKey("ParentId")]
         public virtual Event Parent { get; set; }

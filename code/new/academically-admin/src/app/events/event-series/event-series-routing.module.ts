@@ -24,13 +24,13 @@ import { EventSeriesComponent } from './event-series.component';
                 (m) => m.DetailsModule
               ),
           },
-          // {
-          //   path: 'settings',
-          //   loadChildren: () =>
-          //     import('@app/articles/article-series/settings/settings.module').then(
-          //       (m) => m.SettingsModule
-          //     ),
-          // },
+          {
+            path: 'settings',
+            loadChildren: () =>
+              import('@app/events/event-series/settings/settings.module').then(
+                (m) => m.SettingsModule
+              ),
+          },
           { path: '', redirectTo: 'events' },
         ]
       },

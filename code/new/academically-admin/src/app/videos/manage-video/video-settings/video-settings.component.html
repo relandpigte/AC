@@ -42,7 +42,7 @@
                   <input [(ngModel)]="specificDateValue" id="specificDateValue" name="specificDateValue" type="text"
                     class="form-control form-control-appended" #dateOfBirthModel="ngModel" #dateOfBirthEl
                     #dp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" readonly
-                    [disabled]="model.delayType !== DelayType.SpecificDate" />
+                    [disabled]="model.delayType !== DelayType.SpecificDate" (bsValueChange)="onSpecificDateChange()" />
                   <div class="input-group-append">
                     <div class="input-group-text">
                       <span class="fas fa-calendar"></span>

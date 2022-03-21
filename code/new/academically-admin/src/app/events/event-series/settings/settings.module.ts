@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SettingsRoutingModule } from './settings-routing.module';
-import { SharedModule } from '@shared/shared.module';
-import { AppSharedModule } from '@app/_shared/app-shared.module';
+import * as SingleEvent from '@app/events/single-event/settings/settings.module';
+
 import { SettingsComponent } from './settings.component';
 
 @NgModule({
@@ -12,11 +12,7 @@ import { SettingsComponent } from './settings.component';
   imports: [
     CommonModule,
     SettingsRoutingModule,
-    SharedModule,
-    AppSharedModule,
-  ],
-  exports: [
-    SettingsComponent,
+    SingleEvent.SettingsModule,
   ],
 })
 export class SettingsModule { }
