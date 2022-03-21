@@ -42,7 +42,7 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="!landing-page" (click)="$event.preventDefault()" routerLinkActive="active" class="nav-link">
+                  <a [routerLink]="['landing-page']" routerLinkActive="active" class="nav-link">
                     {{ 'LandingPage' | localize }}
                   </a>
                 </li>

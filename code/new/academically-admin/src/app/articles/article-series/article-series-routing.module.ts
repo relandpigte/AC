@@ -31,6 +31,13 @@ import { ArticleSeriesComponent } from './article-series.component';
                 (m) => m.SettingsModule
               ),
           },
+          {
+            path: 'landing-page',
+            loadChildren: () =>
+              import('@app/articles/article-series/landing-page/landing-page.module').then(
+                (m) => m.LandingPageModule
+              ),
+          },
           { path: '', redirectTo: 'articles' },
         ]
       },

@@ -75,4 +75,4 @@ import * as ApiServiceProxies from './service-proxies';
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })
-export class ServiceProxyModule { }
+export class ServiceProxyModule  { }
