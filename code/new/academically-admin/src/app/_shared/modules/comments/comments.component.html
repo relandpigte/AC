@@ -5,7 +5,7 @@
         <div class="col-auto comment-profile">
           <a class="avatar avatar-xs" href="#!profile" (click)="$event.preventDefault();">
             <img
-              [src]=" getProfilePictureFromDocument(comment.creatorUser.profilePictureDocument, comment.creatorUserId)"
+              [src]=" getProfilePictureFromDocument(comment.creatorUser.profilePictureDocument, comment.creatorUser.id)"
               alt="..." class="avatar-img rounded-circle">
           </a>
         </div>
@@ -55,7 +55,7 @@
                   <div class="col-auto comment-profile">
                     <a class="avatar avatar-xs" href="#!profile" (click)="$event.preventDefault();">
                       <img
-                        [src]=" getProfilePictureFromDocument(reply.creatorUser.profilePictureDocument, reply.creatorUserId)"
+                        [src]=" getProfilePictureFromDocument(reply.creatorUser.profilePictureDocument, reply.creatorUser.id)"
                         alt="..." class="avatar-img rounded-circle">
                     </a>
                   </div>

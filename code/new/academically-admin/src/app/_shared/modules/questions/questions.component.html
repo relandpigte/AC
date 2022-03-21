@@ -1,0 +1,187 @@
+<div class="comments-container" [class.sidebar]="isSidebar">
+  <div *ngIf="questions && questions.length; else noQuestionsContainer;"
+    class="comments comments-small parent-comments">
+    <div *ngFor="let question of questions; let i = index;" class="comment mb-3 comment-main-body">
+      <div class="row">
+        <div class="col-2">
+          <div class="col-auto comment-profile">
+            <a class="avatar avatar-xs" href="#!profile" (click)="$event.preventDefault();">
+              <img
+                [src]=" getProfilePictureFromDocument(question.creatorUser.profilePictureDocument, question.creatorUser.id)"
+                alt="..." class="avatar-img rounded-circle">
+            </a>
+          </div>
+        </div>
+        <div class="col-8">
+          <h5 class="comment-title mb-0">
+            {{ question.creatorUser.fullName }}
+            <time class="comment-time">
+              {{ convertMomentToDateAgo(question.creationTime) }}
+            </time>
+          </h5>
+        </div>
+        <div class="col-2">
+          <div class="col-auto">
+            <div class="dropdown mt-n2">
+              <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fe fe-more-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item">
+                  {{ 'Delete' | localize }}
+                </a>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 comment-child-body">
+          <p class="comment-text">
+            {{ question.body }}
+          </p>
+        </div>
+      </div>
+
+      <hr class="my-3">
+
+      <div class="comment-interactions">
+        <div class="row text-muted">
+          <div class="col-6">
+            <ng-container
+              *ngTemplateOutlet="checkIfReacted(question) ? hasReactedTemplate : hasNotReactedTemplate; context: { question: question }">
+            </ng-container>
+          </div>
+          <div class="col-6 comment-response d-flex justify-content-end align-items-center">
+            <span class="text-body">
+              {{ question.replyCount }}
+              {{ (question.replyCount === 1 ? 'Response' : 'Responses') | localize | lowercase }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="comment-replies">
+        <div *ngIf="question.children && question.children.length" class="reply">
+
+          <hr class="my-3">
+
+          <div *ngFor="let reply of question.children" class="comment mb-3">
+            <div class="row">
+              <div class="col-auto comment-profile">
+                <a class="avatar avatar-xs" href="#!profile" (click)="$event.preventDefault();">
+                  <img
+                    [src]=" getProfilePictureFromDocument(reply.creatorUser.profilePictureDocument, reply.creatorUser.id)"
+                    alt="..." class="avatar-img rounded-circle">
+                </a>
+              </div>
+              <div class="col">
+                <div class="comment-body ml-n3">
+                  <div class="row">
+                    <div class="col-12">
+                      <h5 class="comment-title mb-0">
+                        {{ reply.creatorUser.fullName }}
+                      </h5>
+                    </div>
+                    <div class="col-12">
+                      <time class="comment-time">
+                        {{ convertMomentToDateAgo(reply.time) }}
+                      </time>
+                    </div>
+                  </div>
+                  <p class="comment-text">
+                    {{ reply.body }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <a *ngIf="loadedReplyCount[question.id] !== question.replyCount" href="#!load-more" class="d-block text-muted"
+            (click)="$event.preventDefault(); onLoadMoreRepliesClick(question);">
+            <small>{{ 'LoadMoreReplies' | localize }}...</small>
+          </a>
+        </div>
+      </div>
+
+      <hr class="mt-3 mb-1">
+
+      <form autocomplete="off" #form="ngForm" (ngSubmit)="onReplyFormSubmit(question, i)">
+        <div class="row">
+          <div class="col-auto d-flex align-items-center justify-content-end">
+            <div class="avatar avatar-xs">
+              <img [src]="getProfilePicture(appSession.user.profilePictureUrl, appSession.user.id)" alt="..."
+                class="avatar-img rounded-circle">
+            </div>
+          </div>
+          <div class="col d-flex align-items-center">
+            <label class=" sr-only">{{ 'AddResponse' | localize }}...</label>
+            <textarea [(ngModel)]="newReply[i].body" id="body" name="body" class="form-control form-control-flush"
+              data-toggle="autosize" rows="1" placeholder="{{ 'AddResponse' | localize }}..."
+              style="overflow: hidden; overflow-wrap: break-word; height: 40px;"
+              (keydown)="onReplyBodyKeydown($event, question, i)"></textarea>
+          </div>
+          <div class="col-auto d-flex align-items-center">
+            <div class="text-muted comment-fnt">
+              <a class="text-reset" type="submit" href="#!send"
+                (click)="$event.preventDefault(); onReplyFormSubmit(question, i)">
+                <i class="fe fe-send"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+  <form autocomplete="off" #form="ngForm" class="write-comment-container bg-white" (ngSubmit)="onFormSubmit()">
+    <div class="write-comment row">
+      <div class="col-auto profile-container">
+        <div class="avatar avatar-xs">
+          <img [src]="getProfilePicture(appSession.user.profilePictureUrl, appSession.user.id)" alt="..."
+            class="avatar-img rounded-circle">
+        </div>
+      </div>
+      <div class="col text-container">
+        <label class="sr-only">{{ 'AskQuestion' | localize }}...</label>
+        <textarea [(ngModel)]="newQuestion.body" id="body" name="body" class="form-control form-control-flush"
+          data-toggle="autosize" rows="1" placeholder="{{ 'AskQuestion' | localize }}..."
+          style="overflow: hidden; overflow-wrap: break-word; height: 40px;"
+          (keydown)="onBodyKeydown($event)"></textarea>
+      </div>
+      <div class="col-auto actions-container">
+        <div class="text-muted ">
+          <a class="text-reset" type="submit" href="#!send" (click)="$event.preventDefault(); onFormSubmit()">
+            <i class="fe fe-send"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+<ng-template #noQuestionsContainer>
+  <div *ngIf="!isCommentsLoading" class="no-comments-container">
+    <p class="text-muted p-0 m-0 text-center">
+      {{ 'NoQuestionsFound' | localize }}
+    </p>
+  </div>
+</ng-template>
+
+<ng-template #hasNotReactedTemplate let-question="question">
+  <a class="btn btn-sm btn-white" href="#!like" (click)="$event.preventDefault(); onLikeClick(question);">
+    <span class="fe fe-arrow-up-circle"></span>
+    {{ question.questionReactions.length }}
+  </a>
+</ng-template>
+
+<ng-template #hasReactedTemplate let-question="question">
+  <a class="btn btn-sm btn-white text-success" href="#!unlike"
+    (click)="$event.preventDefault(); onUnlikeClick(question);">
+    <span class="fe fe-arrow-up-circle text-success"></span>
+    {{ question.questionReactions.length }}
+  </a>
+</ng-template>

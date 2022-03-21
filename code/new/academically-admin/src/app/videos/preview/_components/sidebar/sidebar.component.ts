@@ -34,7 +34,7 @@ export class SidebarComponent implements OnInit {
     this.menuItems.push(new MenuItem('Handouts', 'fe-folder'));
     this.menuItems.push(new MenuItem('Offers', 'fe-shopping-bag'));
     this.menuItems.push(new MenuItem('Reviews', 'fe-star'));
-    this.activeMenuItem = this.menuItems[0];
+    this.activeMenuItem = this.menuItems[3];
     route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {
         this.videoId = paramMap.get('id');
