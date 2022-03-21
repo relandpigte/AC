@@ -9545,6 +9545,311 @@ export class ProjectsServiceProxy {
 }
 
 @Injectable()
+export class QuestionsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    getAll(referenceId: string | undefined): Observable<QuestionDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Questions/GetAll?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<QuestionDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<QuestionDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<QuestionDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(QuestionDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<QuestionDto[]>(<any>null);
+    }
+
+    /**
+     * @param parentIdFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAllReplies(parentIdFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<QuestionDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Questions/GetAllReplies?";
+        if (parentIdFilter === null)
+            throw new Error("The parameter 'parentIdFilter' cannot be null.");
+        else if (parentIdFilter !== undefined)
+            url_ += "ParentIdFilter=" + encodeURIComponent("" + parentIdFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllReplies(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllReplies(<any>response_);
+                } catch (e) {
+                    return <Observable<QuestionDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<QuestionDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllReplies(response: HttpResponseBase): Observable<QuestionDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = QuestionDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<QuestionDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: QuestionDto | undefined): Observable<QuestionDto> {
+        let url_ = this.baseUrl + "/api/services/app/Questions/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<QuestionDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<QuestionDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<QuestionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = QuestionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<QuestionDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createReaction(body: QuestionReactionDto | undefined): Observable<QuestionReactionDto> {
+        let url_ = this.baseUrl + "/api/services/app/Questions/CreateReaction";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateReaction(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateReaction(<any>response_);
+                } catch (e) {
+                    return <Observable<QuestionReactionDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<QuestionReactionDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateReaction(response: HttpResponseBase): Observable<QuestionReactionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = QuestionReactionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<QuestionReactionDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    deleteReaction(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Questions/DeleteReaction?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteReaction(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteReaction(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeleteReaction(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class RatingsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -27284,6 +27589,211 @@ export enum PublicationType {
     ConferencePaper = 4,
     Thesis = 5,
     Data = 6,
+}
+
+export class QuestionDto implements IQuestionDto {
+    id: string;
+    body: string | undefined;
+    parentId: string | undefined;
+    referenceId: string | undefined;
+    creationTime: moment.Moment;
+    replyCount: number;
+    parent: QuestionDto;
+    creatorUser: UserDto;
+    children: QuestionDto[] | undefined;
+    questionReactions: QuestionReactionDto[] | undefined;
+
+    constructor(data?: IQuestionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.body = _data["body"];
+            this.parentId = _data["parentId"];
+            this.referenceId = _data["referenceId"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.replyCount = _data["replyCount"];
+            this.parent = _data["parent"] ? QuestionDto.fromJS(_data["parent"]) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(QuestionDto.fromJS(item));
+            }
+            if (Array.isArray(_data["questionReactions"])) {
+                this.questionReactions = [] as any;
+                for (let item of _data["questionReactions"])
+                    this.questionReactions.push(QuestionReactionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): QuestionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new QuestionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["body"] = this.body;
+        data["parentId"] = this.parentId;
+        data["referenceId"] = this.referenceId;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["replyCount"] = this.replyCount;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
+        if (Array.isArray(this.questionReactions)) {
+            data["questionReactions"] = [];
+            for (let item of this.questionReactions)
+                data["questionReactions"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): QuestionDto {
+        const json = this.toJSON();
+        let result = new QuestionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IQuestionDto {
+    id: string;
+    body: string | undefined;
+    parentId: string | undefined;
+    referenceId: string | undefined;
+    creationTime: moment.Moment;
+    replyCount: number;
+    parent: QuestionDto;
+    creatorUser: UserDto;
+    children: QuestionDto[] | undefined;
+    questionReactions: QuestionReactionDto[] | undefined;
+}
+
+export class QuestionDtoPagedResultDto implements IQuestionDtoPagedResultDto {
+    items: QuestionDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IQuestionDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(QuestionDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): QuestionDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new QuestionDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): QuestionDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new QuestionDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IQuestionDtoPagedResultDto {
+    items: QuestionDto[] | undefined;
+    totalCount: number;
+}
+
+export class QuestionReactionDto implements IQuestionReactionDto {
+    id: string | undefined;
+    type: ReactionType;
+    questionId: string;
+    creatorUserId: number;
+
+    constructor(data?: IQuestionReactionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.type = _data["type"];
+            this.questionId = _data["questionId"];
+            this.creatorUserId = _data["creatorUserId"];
+        }
+    }
+
+    static fromJS(data: any): QuestionReactionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new QuestionReactionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["type"] = this.type;
+        data["questionId"] = this.questionId;
+        data["creatorUserId"] = this.creatorUserId;
+        return data; 
+    }
+
+    clone(): QuestionReactionDto {
+        const json = this.toJSON();
+        let result = new QuestionReactionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IQuestionReactionDto {
+    id: string | undefined;
+    type: ReactionType;
+    questionId: string;
+    creatorUserId: number;
 }
 
 /** 1 = Private 2 = Public */

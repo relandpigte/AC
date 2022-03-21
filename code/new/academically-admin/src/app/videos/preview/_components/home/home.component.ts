@@ -51,9 +51,11 @@ export class HomeComponent extends AppComponentBase implements OnInit {
           this.model = response;
           this.getUserFollower();
           this.getStudentVideo();
-          this.getParentStudentVideo();
           this.getLike();
           this.getLikeCount();
+          if (this.model && this.model.parentId) {
+            this.getParentStudentVideo();
+          }
         }
       });
     this._previewService.preview$
@@ -151,7 +153,7 @@ export class HomeComponent extends AppComponentBase implements OnInit {
   }
 
   private getParentStudentVideo(): void {
-    this._studentVideosService.getByVideo(this.model.parent.id)
+    this._studentVideosService.getByVideo(this.model.parentId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         this.parentStudentVideo = response;

@@ -39,8 +39,8 @@ import { ColorPickerComponent } from './components/color-picker/color-picker.com
     DateFormatPipe,
     FixedHeightDirective,
     BottomScrollerDirective,
-    SidebarCollapseDirective,
-  ],
+    SidebarCollapseDirective
+    ],
   imports: [
     CommonModule,
     SharedModule,
