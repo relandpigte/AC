@@ -24,6 +24,10 @@
     <None Remove="Services\EventResources\Dto\" />
     <None Remove="Services\EventPolls\" />
     <None Remove="Services\EventPolls\Dto\" />
+    <None Remove="Services\Forums\" />
+    <None Remove="Services\Forums\Dto\" />
+    <None Remove="Services\Topics\" />
+    <None Remove="Services\Topics\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Academically.Core\Academically.Core.csproj" />
@@ -75,6 +79,10 @@
     <Folder Include="Services\EventResources\Dto\" />
     <Folder Include="Services\EventPolls\" />
     <Folder Include="Services\EventPolls\Dto\" />
+    <Folder Include="Services\Forums\" />
+    <Folder Include="Services\Forums\Dto\" />
+    <Folder Include="Services\Topics\" />
+    <Folder Include="Services\Topics\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Services\Projects\" />

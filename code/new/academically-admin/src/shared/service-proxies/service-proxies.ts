@@ -6834,6 +6834,355 @@ export class EventsServiceProxy {
 }
 
 @Injectable()
+export class ForumsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Forums/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createReply(body: CreateForumReplyDto | undefined): Observable<ForumReplyDto> {
+        let url_ = this.baseUrl + "/api/services/app/Forums/CreateReply";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateReply(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateReply(<any>response_);
+                } catch (e) {
+                    return <Observable<ForumReplyDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ForumReplyDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateReply(response: HttpResponseBase): Observable<ForumReplyDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ForumReplyDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ForumReplyDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<ForumDto> {
+        let url_ = this.baseUrl + "/api/services/app/Forums/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<ForumDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ForumDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<ForumDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ForumDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ForumDto>(<any>null);
+    }
+
+    /**
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(skipCount: number | undefined, maxResultCount: number | undefined): Observable<ForumDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Forums/GetAll?";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<ForumDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ForumDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<ForumDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ForumDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ForumDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateForumDto | undefined): Observable<ForumDto> {
+        let url_ = this.baseUrl + "/api/services/app/Forums/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<ForumDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ForumDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<ForumDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ForumDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ForumDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: UpdateForumDto | undefined): Observable<ForumDto> {
+        let url_ = this.baseUrl + "/api/services/app/Forums/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<ForumDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ForumDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<ForumDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ForumDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ForumDto>(<any>null);
+    }
+}
+
+@Injectable()
 export class NotificationsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -10292,6 +10641,69 @@ export class ReactionsServiceProxy {
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    getAll(referenceId: string | undefined): Observable<ReactionDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Reactions/GetAll?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<ReactionDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ReactionDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<ReactionDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ReactionDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ReactionDto[]>(<any>null);
     }
 
     /**
@@ -14842,6 +15254,362 @@ export class TokenAuthServiceProxy {
             }));
         }
         return _observableOf<ExternalAuthenticateResultModel>(<any>null);
+    }
+}
+
+@Injectable()
+export class TopicsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    getUsage(): Observable<TopicUsageDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Topics/GetUsage";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUsage(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUsage(<any>response_);
+                } catch (e) {
+                    return <Observable<TopicUsageDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TopicUsageDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetUsage(response: HttpResponseBase): Observable<TopicUsageDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(TopicUsageDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TopicUsageDto[]>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<TopicDto> {
+        let url_ = this.baseUrl + "/api/services/app/Topics/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<TopicDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TopicDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<TopicDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TopicDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TopicDto>(<any>null);
+    }
+
+    /**
+     * @param searchFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<TopicDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Topics/GetAll?";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<TopicDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TopicDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<TopicDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TopicDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TopicDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateTopicDto | undefined): Observable<TopicDto> {
+        let url_ = this.baseUrl + "/api/services/app/Topics/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<TopicDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TopicDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<TopicDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TopicDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TopicDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: UpdateTopicDto | undefined): Observable<TopicDto> {
+        let url_ = this.baseUrl + "/api/services/app/Topics/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<TopicDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TopicDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<TopicDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TopicDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TopicDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Topics/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -22967,6 +23735,155 @@ export interface ICreateEventResourceDto {
     eventId: string;
 }
 
+export class CreateForumDto implements ICreateForumDto {
+    message: string | undefined;
+    topics: CreateForumTopicDto[] | undefined;
+
+    constructor(data?: ICreateForumDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.message = _data["message"];
+            if (Array.isArray(_data["topics"])) {
+                this.topics = [] as any;
+                for (let item of _data["topics"])
+                    this.topics.push(CreateForumTopicDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateForumDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateForumDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["message"] = this.message;
+        if (Array.isArray(this.topics)) {
+            data["topics"] = [];
+            for (let item of this.topics)
+                data["topics"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): CreateForumDto {
+        const json = this.toJSON();
+        let result = new CreateForumDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateForumDto {
+    message: string | undefined;
+    topics: CreateForumTopicDto[] | undefined;
+}
+
+export class CreateForumReplyDto implements ICreateForumReplyDto {
+    message: string | undefined;
+    forumId: string;
+
+    constructor(data?: ICreateForumReplyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.message = _data["message"];
+            this.forumId = _data["forumId"];
+        }
+    }
+
+    static fromJS(data: any): CreateForumReplyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateForumReplyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["message"] = this.message;
+        data["forumId"] = this.forumId;
+        return data; 
+    }
+
+    clone(): CreateForumReplyDto {
+        const json = this.toJSON();
+        let result = new CreateForumReplyDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateForumReplyDto {
+    message: string | undefined;
+    forumId: string;
+}
+
+export class CreateForumTopicDto implements ICreateForumTopicDto {
+    topicId: string | undefined;
+    topicName: string | undefined;
+
+    constructor(data?: ICreateForumTopicDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.topicId = _data["topicId"];
+            this.topicName = _data["topicName"];
+        }
+    }
+
+    static fromJS(data: any): CreateForumTopicDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateForumTopicDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["topicId"] = this.topicId;
+        data["topicName"] = this.topicName;
+        return data; 
+    }
+
+    clone(): CreateForumTopicDto {
+        const json = this.toJSON();
+        let result = new CreateForumTopicDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateForumTopicDto {
+    topicId: string | undefined;
+    topicName: string | undefined;
+}
+
 export class CreateProjectDto implements ICreateProjectDto {
     name: string | undefined;
     description: string | undefined;
@@ -23261,6 +24178,49 @@ export interface ICreateTenantDto {
     adminEmailAddress: string;
     connectionString: string | undefined;
     isActive: boolean;
+}
+
+export class CreateTopicDto implements ICreateTopicDto {
+    name: string | undefined;
+
+    constructor(data?: ICreateTopicDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): CreateTopicDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateTopicDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        return data; 
+    }
+
+    clone(): CreateTopicDto {
+        const json = this.toJSON();
+        let result = new CreateTopicDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateTopicDto {
+    name: string | undefined;
 }
 
 export class CreateUserDto implements ICreateUserDto {
@@ -25235,6 +26195,246 @@ export interface IFieldInfo {
     isSecuritySafeCritical: boolean;
     isSecurityTransparent: boolean;
     fieldHandle: RuntimeFieldHandle;
+}
+
+export class ForumDto implements IForumDto {
+    id: string;
+    message: string | undefined;
+    creationTime: moment.Moment;
+    creatorUser: UserDto;
+    forumReplies: ForumReplyDto[] | undefined;
+    forumTopics: ForumTopicDto[] | undefined;
+
+    constructor(data?: IForumDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.message = _data["message"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            if (Array.isArray(_data["forumReplies"])) {
+                this.forumReplies = [] as any;
+                for (let item of _data["forumReplies"])
+                    this.forumReplies.push(ForumReplyDto.fromJS(item));
+            }
+            if (Array.isArray(_data["forumTopics"])) {
+                this.forumTopics = [] as any;
+                for (let item of _data["forumTopics"])
+                    this.forumTopics.push(ForumTopicDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ForumDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ForumDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["message"] = this.message;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        if (Array.isArray(this.forumReplies)) {
+            data["forumReplies"] = [];
+            for (let item of this.forumReplies)
+                data["forumReplies"].push(item.toJSON());
+        }
+        if (Array.isArray(this.forumTopics)) {
+            data["forumTopics"] = [];
+            for (let item of this.forumTopics)
+                data["forumTopics"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): ForumDto {
+        const json = this.toJSON();
+        let result = new ForumDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IForumDto {
+    id: string;
+    message: string | undefined;
+    creationTime: moment.Moment;
+    creatorUser: UserDto;
+    forumReplies: ForumReplyDto[] | undefined;
+    forumTopics: ForumTopicDto[] | undefined;
+}
+
+export class ForumDtoPagedResultDto implements IForumDtoPagedResultDto {
+    items: ForumDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IForumDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(ForumDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): ForumDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ForumDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ForumDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new ForumDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IForumDtoPagedResultDto {
+    items: ForumDto[] | undefined;
+    totalCount: number;
+}
+
+export class ForumReplyDto implements IForumReplyDto {
+    id: string;
+    message: string | undefined;
+    creationTime: moment.Moment;
+    creatorUser: UserDto;
+
+    constructor(data?: IForumReplyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.message = _data["message"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ForumReplyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ForumReplyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["message"] = this.message;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): ForumReplyDto {
+        const json = this.toJSON();
+        let result = new ForumReplyDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IForumReplyDto {
+    id: string;
+    message: string | undefined;
+    creationTime: moment.Moment;
+    creatorUser: UserDto;
+}
+
+export class ForumTopicDto implements IForumTopicDto {
+    forumId: string;
+    topicId: string;
+    topic: TopicDto;
+
+    constructor(data?: IForumTopicDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.forumId = _data["forumId"];
+            this.topicId = _data["topicId"];
+            this.topic = _data["topic"] ? TopicDto.fromJS(_data["topic"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ForumTopicDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ForumTopicDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["forumId"] = this.forumId;
+        data["topicId"] = this.topicId;
+        data["topic"] = this.topic ? this.topic.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): ForumTopicDto {
+        const json = this.toJSON();
+        let result = new ForumTopicDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IForumTopicDto {
+    forumId: string;
+    topicId: string;
+    topic: TopicDto;
 }
 
 /** 0 = None 1 = Covariant 2 = Contravariant 3 = VarianceMask 4 = ReferenceTypeConstraint 8 = NotNullableValueTypeConstraint 16 = DefaultConstructorConstraint 28 = SpecialConstraintMask */
@@ -27933,6 +29133,7 @@ export class ReactionDto implements IReactionDto {
     id: string;
     type: ReactionType;
     referenceId: string | undefined;
+    creatorUserId: number;
 
     constructor(data?: IReactionDto) {
         if (data) {
@@ -27948,6 +29149,7 @@ export class ReactionDto implements IReactionDto {
             this.id = _data["id"];
             this.type = _data["type"];
             this.referenceId = _data["referenceId"];
+            this.creatorUserId = _data["creatorUserId"];
         }
     }
 
@@ -27963,6 +29165,7 @@ export class ReactionDto implements IReactionDto {
         data["id"] = this.id;
         data["type"] = this.type;
         data["referenceId"] = this.referenceId;
+        data["creatorUserId"] = this.creatorUserId;
         return data; 
     }
 
@@ -27978,6 +29181,7 @@ export interface IReactionDto {
     id: string;
     type: ReactionType;
     referenceId: string | undefined;
+    creatorUserId: number;
 }
 
 /** 1 = Like 2 = Heart 3 = Laugh 4 = Wow 5 = Sad 6 = Mad */
@@ -30735,6 +31939,155 @@ export interface ITimeZoneDto {
     ianaName: string | undefined;
 }
 
+export class TopicDto implements ITopicDto {
+    id: string;
+    name: string | undefined;
+
+    constructor(data?: ITopicDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): TopicDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TopicDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+
+    clone(): TopicDto {
+        const json = this.toJSON();
+        let result = new TopicDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITopicDto {
+    id: string;
+    name: string | undefined;
+}
+
+export class TopicDtoPagedResultDto implements ITopicDtoPagedResultDto {
+    items: TopicDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: ITopicDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(TopicDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): TopicDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TopicDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): TopicDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new TopicDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITopicDtoPagedResultDto {
+    items: TopicDto[] | undefined;
+    totalCount: number;
+}
+
+export class TopicUsageDto implements ITopicUsageDto {
+    name: string | undefined;
+    totalUsage: number;
+
+    constructor(data?: ITopicUsageDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.totalUsage = _data["totalUsage"];
+        }
+    }
+
+    static fromJS(data: any): TopicUsageDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TopicUsageDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["totalUsage"] = this.totalUsage;
+        return data; 
+    }
+
+    clone(): TopicUsageDto {
+        const json = this.toJSON();
+        let result = new TopicUsageDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITopicUsageDto {
+    name: string | undefined;
+    totalUsage: number;
+}
+
 export class TurnServerConfigDto implements ITurnServerConfigDto {
     username: string | undefined;
     password: string | undefined;
@@ -32670,6 +34023,53 @@ export interface IUpdateEventSettingsDto {
     delayValue: string | undefined;
 }
 
+export class UpdateForumDto implements IUpdateForumDto {
+    id: string;
+    message: string | undefined;
+
+    constructor(data?: IUpdateForumDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.message = _data["message"];
+        }
+    }
+
+    static fromJS(data: any): UpdateForumDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateForumDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["message"] = this.message;
+        return data; 
+    }
+
+    clone(): UpdateForumDto {
+        const json = this.toJSON();
+        let result = new UpdateForumDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateForumDto {
+    id: string;
+    message: string | undefined;
+}
+
 export class UpdateProjectDto implements IUpdateProjectDto {
     id: string;
     name: string | undefined;
@@ -32739,6 +34139,53 @@ export interface IUpdateProjectDto {
     serviceNameLevel2: string | undefined;
     serviceLevel3: string | undefined;
     serviceNameLevel3: string | undefined;
+}
+
+export class UpdateTopicDto implements IUpdateTopicDto {
+    id: string;
+    name: string | undefined;
+
+    constructor(data?: IUpdateTopicDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): UpdateTopicDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateTopicDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+
+    clone(): UpdateTopicDto {
+        const json = this.toJSON();
+        let result = new UpdateTopicDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateTopicDto {
+    id: string;
+    name: string | undefined;
 }
 
 export class UpdateVideoDetailsDto implements IUpdateVideoDetailsDto {

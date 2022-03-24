@@ -1,0 +1,78 @@
+<form autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+
+  <div class="card">
+    <div class="card-body">
+      <div class="form-group">
+        <div class="form-group">
+          <quill-editor [(ngModel)]="model.message" #messageModel="ngModel" #messageEl id="message" name="message"
+            required>
+            <div quill-editor-toolbar>
+              <span class="ql-formats">
+                <select class="ql-size">
+                  <option value="small"></option>
+                  <option selected></option>
+                  <option value="large"></option>
+                  <option value="huge"></option>
+                </select>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-bold"></button>
+                <button class="ql-italic"></button>
+                <button class="ql-underline"></button>
+                <button class="ql-strike"></button>
+              </span>
+              <span class="ql-formats">
+                <select class="ql-color"></select>
+                <select class="ql-background"></select>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-list" value="ordered"></button>
+                <button class="ql-list" value="bullet"></button>
+                <select class="ql-align">
+                  <option selected></option>
+                  <option value="center"></option>
+                  <option value="right"></option>
+                  <option value="justify"></option>
+                </select>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-link"></button>
+                <button class="ql-image"></button>
+              </span>
+            </div>
+          </quill-editor>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label" for="topics">{{ 'Topics' | localize}}</label>
+        <input [(ngModel)]="topicName" class="form-control" type="text" id="topics" name="topics"
+          typeaheadOptionField="name" [typeahead]="topics$" [typeaheadAsync]="true" [typeaheadOptionsLimit]="10"
+          (typeaheadOnSelect)="onTopicSelect($event.item)" container="body"
+          (keydown)="onTopicKeydown($event)" />
+        <div class="ac-alerts">
+          <div *ngFor="let forumTopic of model.topics" class="alert alert-info alert-dismissible ac-alert" role="alert">
+            {{ forumTopic.topicName | titlecase }}
+            <button (click)="onRemoveForumTopicClick(forumTopic)" type="button" class="close" data-dismiss="alert"
+              aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row align-items-end">
+        <div class="col">
+          <small class="text-muted">
+            {{ model.message ? model.message.length : 0 }}/1000
+          </small>
+        </div>
+        <div class="col-auto">
+          <button [disabled]="!form.form.valid" class="btn btn-primary btn-md" type="submit">
+            {{ 'Post' | localize }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

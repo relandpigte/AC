@@ -1,0 +1,178 @@
+<div class="container-fluid">
+  <div class="row mt-4 mt-md-5">
+    <div class="col-12">
+      <app-create-edit-forum (modelSaved)="refresh()"></app-create-edit-forum>
+
+      <div class="card" *ngFor="let forum of forums">
+        <div class="card-body">
+          <div class="mb-3">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <a href="#!" class="avatar">
+                  <img [src]="getProfilePictureUrl(forum.creatorUser.profilePictureDocument)" alt="..."
+                    class="avatar-img rounded-circle">
+                </a>
+              </div>
+              <div class="col ml-n2">
+                <h4 class="mb-1">
+                  {{ forum.creatorUser.fullName }}
+                </h4>
+                <p class="card-text small text-muted">
+                  <span class="fe fe-clock mr-1"></span>
+                  <time>{{ convertMomentToDateAgo(forum.creationTime) }}</time>
+                </p>
+              </div>
+              <div class="col-auto align-self-start">
+                <div class="dropdown">
+                  <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <i class="fe fe-more-vertical"></i>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <a href="#!" class="dropdown-item" (click)="$event.preventDefault(); onDeleteClick(forum)">
+                      {{ 'Delete' | localize }}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="forum-message">
+            <quill-view-html [content]="forum.message" theme="snow"></quill-view-html>
+          </div>
+          <div class="mb-3 mt-3">
+            <div class="row">
+              <div class="col reactions">
+                <ng-container
+                  *ngTemplateOutlet="emojiReactionTemlate; context: { type: ReactionType.Like, emoji: '👍', forum: forum }">
+                </ng-container>
+                <ng-container
+                  *ngTemplateOutlet="emojiReactionTemlate; context: { type: ReactionType.Heart, emoji: '❤️', forum: forum }">
+                </ng-container>
+                <ng-container
+                  *ngTemplateOutlet="emojiReactionTemlate; context: { type: ReactionType.Laugh, emoji: '😄', forum: forum }">
+                </ng-container>
+                <ng-container
+                  *ngTemplateOutlet="emojiReactionTemlate; context: { type: ReactionType.Wow, emoji: '😲', forum: forum }">
+                </ng-container>
+                <ng-container
+                  *ngTemplateOutlet="emojiReactionTemlate; context: { type: ReactionType.Sad, emoji: '😢', forum: forum }">
+                </ng-container>
+                <ng-container
+                  *ngTemplateOutlet="emojiReactionTemlate; context: { type: ReactionType.Mad, emoji: '😡', forum: forum }">
+                </ng-container>
+                <div class="dropup">
+                  <a href="#" class="btn btn-sm btn-white" role="button" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    {{ 'AddReaction' | localize }}
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-right reactions">
+                    <li href="#!" class="dropdown-item">
+                      <ng-container
+                        *ngTemplateOutlet="emojiReactTemplate; context: { type: ReactionType.Like, emoji: '👍', forum: forum }">
+                      </ng-container>
+                      <ng-container
+                        *ngTemplateOutlet="emojiReactTemplate; context: { type: ReactionType.Heart, emoji: '❤️', forum: forum }">
+                      </ng-container>
+                      <ng-container
+                        *ngTemplateOutlet="emojiReactTemplate; context: { type: ReactionType.Laugh, emoji: '😄', forum: forum }">
+                      </ng-container>
+                      <ng-container
+                        *ngTemplateOutlet="emojiReactTemplate; context: { type: ReactionType.Wow, emoji: '😲', forum: forum }">
+                      </ng-container>
+                      <ng-container
+                        *ngTemplateOutlet="emojiReactTemplate; context: { type: ReactionType.Sad, emoji: '😢', forum: forum }">
+                      </ng-container>
+                      <ng-container
+                        *ngTemplateOutlet="emojiReactTemplate; context: { type: ReactionType.Mad, emoji: '😡', forum: forum }">
+                      </ng-container>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-auto">
+                <div class="topics">
+                  <span *ngFor="let forumTopic of forum.forumTopics" class="badge badge-soft-primary mr-2">
+                    {{ forumTopic.topic.name | titlecase }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <ng-container *ngIf="forum.forumReplies && forum.forumReplies.length">
+            <div *ngFor="let reply of forum.forumReplies" class="comment mb-3">
+              <div class="row">
+                <div class="col-auto">
+                  <a class="avatar avatar-sm" href="profile-posts.html">
+                    <img [src]="getProfilePictureUrl(reply.creatorUser.profilePictureDocument)" alt="..."
+                      class="avatar-img rounded-circle">
+                  </a>
+                </div>
+                <div class="col ml-n2">
+                  <div class="comment-body">
+                    <div class="row">
+                      <div class="col">
+                        <h5 class="comment-title">
+                          {{ reply.creatorUser.fullName }}
+                        </h5>
+                      </div>
+                      <div class="col-auto">
+                        <time class="comment-time">
+                          {{ convertMomentToDateAgo(reply.creationTime) }}
+                        </time>
+                      </div>
+                    </div>
+                    <p class="comment-text">
+                      {{ reply.message }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr>
+          </ng-container>
+          <form class="mt-1" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit(forum)">
+            <div class="row">
+              <div class="col-auto">
+                <div class="avatar avatar-sm">
+                  <img [src]="getProfilePicture(appSession.user.profilePictureUrl, appSession.userId)" alt="..."
+                    class="avatar-img rounded-circle">
+                </div>
+              </div>
+              <div class="col ml-n2">
+                <label class="sr-only">Leave a comment...</label>
+                <textarea [(ngModel)]="replies[forum.id].message" id="message_{{forum.id}}" name="message_{{forum.id}}"
+                  class="form-control form-control-flush" data-toggle="autosize" rows="1" placeholder="Leave a comment"
+                  style="overflow: hidden; overflow-wrap: break-word; height: 41px;" required
+                  (keyup.enter)="$event.preventDefault(); oonFormSubmit(forum)"></textarea>
+              </div>
+              <div class="col-auto align-self-end">
+                <div class="text-muted mb-2">
+                  <a [class.disabled]="!form.form.valid" class="text-reset" href="#!send-reply" data-toggle="tooltip"
+                    title="" data-original-title="Send" (click)="$event.preventDefault(); onFormSubmit(forum);">
+                    <i class="fe fe-send"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<ng-template #emojiReactTemplate let-type="type" let-emoji="emoji" let-forum="forum">
+  <a (click)="$event.preventDefault(); onReactClick(forum, type)" class="mx-2" href="#!react">{{ emoji }}</a>
+</ng-template>
+
+<ng-template #emojiReactionTemlate let-type="type" let-emoji="emoji" let-forum="forum">
+  <ng-container *ngIf="{ count: getReactionCount(forum, type) } as reactionCount">
+    <a *ngIf="reactionCount.count > 0" href="#!" class="btn btn-sm btn-white mr-1"
+      [class.text-info]="hasReacted(forum, type)" (click)="$event.preventDefault(); onReactClick(forum, type)">
+      {{ emoji }} {{ reactionCount.count }}
+    </a>
+  </ng-container>
+</ng-template>

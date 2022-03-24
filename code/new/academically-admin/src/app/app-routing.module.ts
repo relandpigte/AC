@@ -120,6 +120,13 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
               ),
           },
           {
+            path: 'forums',
+            loadChildren: () =>
+              import('@app/forums/forums.module').then(
+                (m) => m.ForumsModule
+              ),
+          },
+          {
             path: 'tutor-applications',
             loadChildren: () =>
               import('@app/tutor-applications/tutor-applications.module').then(
@@ -186,6 +193,18 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
               import('@app/events/events.module').then(
                 (m) => m.EventsModule
               ),
+          },
+          {
+            path: 'topics',
+            children: [
+              {
+                path: 'usage',
+                loadChildren: () =>
+                  import('@app/topics/usage/usage.module').then(
+                    (m) => m.UsageModule
+                  ),
+              }
+            ]
           },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },

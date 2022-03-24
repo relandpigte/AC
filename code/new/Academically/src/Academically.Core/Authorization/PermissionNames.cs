@@ -200,6 +200,16 @@
         public const string Pages_Events = "Pages.Events";
 
 
+        public const string Pages_Forums = "Pages.Forums";
+        public const string Pages_Forums_Create = "Pages.Forums.Create";
+        public const string Pages_Forums_Update = "Pages.Forums.Update";
+        public const string Pages_Forums_Delete = "Pages.Forums.Delete";
+
+
+        public const string Pages_Topics = "Pages.Topics";
+        public const string Pages_Topics_Usage = "Pages.Topics.Usage";
+
+
         public const string Pages_Tenants = "Pages.Tenants";
 
     }

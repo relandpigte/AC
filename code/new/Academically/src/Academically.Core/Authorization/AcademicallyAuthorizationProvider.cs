@@ -207,6 +207,16 @@ namespace Academically.Authorization
             context.CreatePermission(PermissionNames.Pages_Events, L("Events"));
 
 
+            var forumsPermission = context.CreatePermission(PermissionNames.Pages_Forums, L("Forums"));
+            forumsPermission.CreateChildPermission(PermissionNames.Pages_Forums_Create, L("Create"));
+            forumsPermission.CreateChildPermission(PermissionNames.Pages_Forums_Update, L("Update"));
+            forumsPermission.CreateChildPermission(PermissionNames.Pages_Forums_Delete, L("Delete"));
+
+
+            var topicsPermission = context.CreatePermission(PermissionNames.Pages_Topics, L("Topics"));
+            topicsPermission.CreateChildPermission(PermissionNames.Pages_Topics_Usage, L("Usage"));
+
+
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
 
 

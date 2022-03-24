@@ -1,0 +1,30 @@
+<div [@routerTransition]>
+  <div class="header">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-end">
+          <div class="col mb-md-0 mb-3">
+            <h6 class="header-pretitle">
+              {{ 'Topics' | localize }}
+            </h6>
+            <h1 class="header-title">
+              {{ 'Usage' | localize }}
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div *ngIf="topics && topics.length else noTopicsTemplate" class="position-relative">
+      <canvas class="chart-canvas overview-chart" chart [chartSettings]="chartSettings" [chartDataset]="chartDataset">
+      </canvas>
+    </div>
+  </div>
+</div>
+
+<ng-template #noTopicsTemplate>
+  <p class="m-0 text-muted text-center">
+    {{ 'NoItemsFound' | localize }}
+  </p>
+</ng-template>
