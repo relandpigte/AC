@@ -83,7 +83,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_TutorWizard_DbsCheck,
                 PermissionNames.Pages_TutorWizard_TermsOfUse,
                 PermissionNames.Pages_TutorWizard_PrivacyPolicy,
-                PermissionNames.Pages_TutorWizard_Declaration
+                PermissionNames.Pages_TutorWizard_Declaration,
+                PermissionNames.Pages_Topics_Usage
             );
 
             #endregion
@@ -139,7 +140,8 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_TutorWizard_DbsCheck,
                 PermissionNames.Pages_TutorWizard_TermsOfUse,
                 PermissionNames.Pages_TutorWizard_PrivacyPolicy,
-                PermissionNames.Pages_TutorWizard_Declaration
+                PermissionNames.Pages_TutorWizard_Declaration,
+                PermissionNames.Pages_Topics_Usage
             );
 
             var adminUser = _context.Users.IgnoreQueryFilters().FirstOrDefault(u => u.TenantId == _tenantId && u.UserName == AbpUserBase.AdminUserName);
@@ -238,7 +240,11 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Articles,
                 PermissionNames.Pages_Articles_TutorPortal,
                 PermissionNames.Pages_Articles_StudentPortal,
-                PermissionNames.Pages_Events
+                PermissionNames.Pages_Events,
+                PermissionNames.Pages_Forums,
+                PermissionNames.Pages_Forums_Create,
+                PermissionNames.Pages_Forums_Update,
+                PermissionNames.Pages_Forums_Delete
             );
 
             #endregion
@@ -335,7 +341,11 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Videos,
                 PermissionNames.Pages_Videos_StudentPortal,
                 PermissionNames.Pages_Articles,
-                PermissionNames.Pages_Articles_StudentPortal
+                PermissionNames.Pages_Articles_StudentPortal,
+                PermissionNames.Pages_Forums,
+                PermissionNames.Pages_Forums_Create,
+                PermissionNames.Pages_Forums_Update,
+                PermissionNames.Pages_Forums_Delete
             );
 
             #endregion

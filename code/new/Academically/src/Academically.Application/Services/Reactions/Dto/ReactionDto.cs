@@ -11,6 +11,8 @@ namespace Academically.Services.Reactions.Dto
     {
         public ReactionType Type { get; set; }
         public string ReferenceId { get; set; }
+        public long CreatorUserId { get; set; }
     }
 }
+
 

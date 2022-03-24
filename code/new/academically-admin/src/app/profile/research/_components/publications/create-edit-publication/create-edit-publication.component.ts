@@ -76,7 +76,7 @@ export class CreateEditPublicationComponent extends AppComponentBase implements 
   }
 
   onRemovePublicationTagClick(tag: string): void {
-    const index = this.userPublication.tags.findIndex(e => e == tag);
+    const index = this.userPublication.tags.findIndex(e => e === tag);
     if (index > -1) {
       this.userPublication.tags.splice(index, 1);
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
@@ -18,6 +19,14 @@ namespace Academically.Services.Reactions
             )
 		{
             _reactionsRepository = reactionsRepository;
+        }
+
+        public async Task<IEnumerable<ReactionDto>> GetAllAsync(string referenceId)
+        {
+            return await _reactionsRepository.GetAll()
+                .Where(e => e.ReferenceId == referenceId)
+                .Select(e => ObjectMapper.Map<ReactionDto>(e))
+                .ToListAsync();
         }
 
         public async Task<ReactionDto> GetAsync(string referenceId, ReactionType type)

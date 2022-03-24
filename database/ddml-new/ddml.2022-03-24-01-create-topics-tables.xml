@@ -1,0 +1,42 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1648051860769-1">
+        <createTable tableName="AcademicallyForumTopics">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="ForumId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TopicId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648051860769-2">
+        <createTable tableName="AcademicallyTopics">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Name" type="VARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648051860769-3">
+        <createIndex indexName="FK_ForumTopics_Forums_ForumId_idx" tableName="AcademicallyForumTopics">
+            <column name="ForumId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648051860769-4">
+        <createIndex indexName="FK_ForumTopics_Topics_TopicId_idx" tableName="AcademicallyForumTopics">
+            <column name="TopicId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648051860769-5">
+        <addForeignKeyConstraint baseColumnNames="ForumId" baseTableName="AcademicallyForumTopics" constraintName="FK_ForumTopics_Forums_ForumId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyForums" validate="true"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648051860769-6">
+        <addForeignKeyConstraint baseColumnNames="TopicId" baseTableName="AcademicallyForumTopics" constraintName="FK_ForumTopics_Topics_TopicId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyTopics" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

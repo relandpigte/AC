@@ -1017,6 +1017,24 @@ app-methodologies .badge {
   }
 }
 
+.input-group-merge.input-group-reverse {
+  display       : flex;
+  flex-direction: row-reverse;
+}
+
+.flush-quill-editor {
+
+  .ql-container,
+  .ql-toolbar {
+    border: none;
+  }
+}
+
+a.disabled {
+  pointer-events: none;
+  opacity       : .5;
+}
+
 @media (min-width: 576px) {
   .nav-user-menu .user-image {
     float      : none;
@@ -1056,9 +1074,4 @@ app-methodologies .badge {
     padding-left : 2.25rem !important;
     padding-right: 2.25rem !important;
   }
-}
-
-.input-group-merge.input-group-reverse {
-  display       : flex;
-  flex-direction: row-reverse;
 }
