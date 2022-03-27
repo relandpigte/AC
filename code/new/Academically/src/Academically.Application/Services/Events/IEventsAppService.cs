@@ -13,5 +13,7 @@ namespace Academically.Services.Events
         Task<GetEventDelayStatusDto> GetDelayStatus(Guid id);
         Task UpdateStatusAsync(Guid id, EventStatus status);
         Task<EventDto> UpdateSettingsAsync(UpdateEventSettingsDto input);
+        Task PurchaseAsync(CreateStudentEventDto input);
+        Task<StudentEventDto> GetPurchasedAsync(Guid id);
     }
 }

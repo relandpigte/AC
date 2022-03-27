@@ -16,8 +16,14 @@ namespace Academically.Services.Events
 {
     public class EventsAppService : AsyncCrudAppService<Event, EventDto, Guid, PagedEventResultRequestDto, CreateEventDto, UpdateEventDto>, IEventsAppService
     {
-        public EventsAppService(IRepository<Event, Guid> repository) : base(repository)
+        private readonly IRepository<StudentEvent, Guid> _studentEventsRepository;
+
+        public EventsAppService(
+            IRepository<StudentEvent, Guid> studentEventsRepository,
+            IRepository<Event, Guid> repository
+            ) : base(repository)
         {
+            _studentEventsRepository = studentEventsRepository;
         }
 
         protected override IQueryable<Event> CreateFilteredQuery(PagedEventResultRequestDto input)
@@ -27,7 +33,7 @@ namespace Academically.Services.Events
                 .WhereIf(input.UserIdFilter.HasValue, e => e.CreatorUserId == input.UserIdFilter.Value)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.Name.ToLower().Contains(input.SearchFilter.ToLower())
                     || e.Description.ToLower().Contains(input.SearchFilter.ToLower()))
-                .WhereIf(input.StausFilter.HasValue, e => e.Status == input.StausFilter.Value);
+                .WhereIf(input.StatusFilter.HasValue, e => e.Status == input.StatusFilter.Value);
         }
 
         protected override IQueryable<Event> ApplyPaging(IQueryable<Event> query, PagedEventResultRequestDto input)
@@ -96,6 +102,21 @@ namespace Academically.Services.Events
             ObjectMapper.Map(input, @event);
             await Repository.UpdateAsync(@event);
             return ObjectMapper.Map<EventDto>(@event);
+        }
+
+        public async Task PurchaseAsync(CreateStudentEventDto input)
+        {
+            var studentEvent = ObjectMapper.Map<StudentEvent>(input);
+            studentEvent.CreatorUserId = AbpSession.UserId.Value;
+            await _studentEventsRepository.InsertAsync(studentEvent);
+        }
+
+        public async Task<StudentEventDto> GetPurchasedAsync(Guid id)
+        {
+            return await _studentEventsRepository.GetAll()
+                .Where(e => !e.SaveOnly && e.CreatorUserId == AbpSession.UserId.Value && e.EventId == id)
+                .Select(e => ObjectMapper.Map<StudentEventDto>(e))
+                .FirstOrDefaultAsync();
         }
     }
 }
