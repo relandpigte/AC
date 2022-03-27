@@ -2,7 +2,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CreateEventDto, EventDto, EventsServiceProxy, EventType } from '@shared/service-proxies/service-proxies';
+import { CreateEventDto, EventDto, EventsServiceProxy, EventType, EventStatus } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
 import { CreateEventComponent } from '../_components/create-event/create-event.component';
@@ -17,6 +17,8 @@ import { EventService } from '../_services/event.service';
 export class EventSeriesComponent extends AppComponentBase implements OnInit {
   parentId: string;
   model = new EventDto();
+
+  EventStatus = EventStatus;
 
   constructor(
     injector: Injector,
@@ -63,6 +65,32 @@ export class EventSeriesComponent extends AppComponentBase implements OnInit {
           this.notify.success(this.l('SavedSuccessfully'));
           this._router.navigate(['app/events/event-series', response.parentId, response.id]);
         });
+    });
+  }
+
+  onPublishClick(): void {
+    this.message.confirm(this.l('PublishEventConfirmationMessage'), undefined, (result) => {
+      if (result) {
+        this._eventsService.updateStatus(this.model.id, EventStatus.Published)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.model.status = EventStatus.Published;
+            this.l('SavedSuccessfully');
+          });
+      }
+    });
+  }
+
+  onUnpublishClick(): void {
+    this.message.confirm(this.l('UnpublishEventConfirmationMessage'), undefined, (result) => {
+      if (result) {
+        this._eventsService.updateStatus(this.model.id, EventStatus.Draft)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.model.status = EventStatus.Draft;
+            this.l('SavedSuccessfully');
+          });
+      }
     });
   }
 

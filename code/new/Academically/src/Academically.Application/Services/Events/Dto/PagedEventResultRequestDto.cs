@@ -9,6 +9,6 @@ namespace Academically.Services.Events.Dto
         public Guid? ParentIdFilter { get; set; }
         public long? UserIdFilter { get; set; }
         public string SearchFilter { get; set; }
-        public EventStatus? StausFilter { get; set; }
+        public EventStatus? StatusFilter { get; set; }
     }
 }
