@@ -8,6 +8,7 @@ import { PortalComponent } from './portal.component';
 import { DeviceSettingsComponent } from './_components/device-settings/device-settings.component';
 import { SidebarComponent } from './_components/sidebar/sidebar.component';
 import { OverviewComponent } from './_components/overview/overview.component';
+import { EventStartingComponent } from './_components/event-starting/event-starting.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { OverviewComponent } from './_components/overview/overview.component';
     DeviceSettingsComponent,
     SidebarComponent,
     OverviewComponent,
+    EventStartingComponent,
   ],
   imports: [
     CommonModule,

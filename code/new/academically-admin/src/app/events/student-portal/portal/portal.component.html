@@ -49,7 +49,7 @@
       </div>
     </nav>
     <div class="article-container">
-      <div class="presentation-feed">
+      <div *ngIf="eventStarted else eventNotStartedTemplate" class="presentation-feed">
         <div class="attendees">
           <div class="attendee">
             <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" />
@@ -72,7 +72,7 @@
         <button class="btn btn-sm btn-outline-primary mx-2">
           <i class="fe fe-camera"></i>
         </button>
-        <button class="btn btn-sm btn-primary mx-2">
+        <button class="btn btn-sm btn-primary mx-2" (click)="onGoLiveClick()">
           Go Live
         </button>
         <button class="btn btn-sm btn-outline-primary mx-2">
@@ -88,3 +88,10 @@
 
   <app-sidebar [hidden]="!showSidebar"></app-sidebar>
 </div>
+
+<ng-template #eventNotStartedTemplate>
+  <div class="event-not-started-container">
+    <h1>Welcome to the Lobby</h1>
+    <h4>Waiting for the host to start the event.</h4>
+  </div>
+</ng-template>
