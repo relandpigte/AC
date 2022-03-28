@@ -1,0 +1,85 @@
+.main-content {
+  margin-right: 350px;
+  transition  : 0.5s;
+  position    : relative;
+
+  .navbar-brand-header,
+  .header-title {
+    white-space  : nowrap;
+    overflow     : hidden;
+    text-overflow: ellipsis;
+  }
+
+  .navbar-brand-header {
+    display        : flex;
+    flex-direction : column;
+    justify-content: center;
+  }
+
+  .avatar {
+    min-width: 64px;
+  }
+
+  .article-container {
+
+    .presentation-feed {
+      width   : 100%;
+      overflow: hidden;
+      padding : 20px;
+      display : flex;
+
+      .attendees {
+        .attendee {
+          padding: 20px;
+
+          img {
+            border-radius  : 10px;
+            width          : 200px;
+            height         : auto;
+            object-fit     : cover;
+            object-position: center;
+          }
+        }
+      }
+
+      .presenter {
+        width   : 100%;
+        overflow: hidden;
+        padding : 10px;
+
+        img {
+          height         : calc(100vh - 200px);
+          width          : 100%;
+          object-fit     : cover;
+          object-position: center;
+          border-radius  : 10px;
+        }
+      }
+    }
+
+    .presentation-controls {
+      position       : absolute;
+      bottom         : 0;
+      width          : 100%;
+      padding        : 20px;
+      display        : flex;
+      justify-content: center;
+      align-items    : center;
+    }
+  }
+
+  &.sidebar-hidden {
+    margin-right: 57px;
+  }
+
+  .collapse-toggle {
+    a {
+      padding: 10px;
+    }
+  }
+
+  .separator {
+    height     : 100%;
+    border-left: 1px solid #e3ebf6;
+  }
+}
