@@ -25,6 +25,20 @@ import { SingleEventComponent } from './single-event.component';
               ),
           },
           {
+            path: 'studios',
+            loadChildren: () =>
+              import('@app/events/single-event/studio/studio.module').then(
+                (m) => m.StudioModule
+              ),
+          },
+          {
+            path: 'permissions',
+            loadChildren: () =>
+              import('@app/events/single-event/permissions/permissions.module').then(
+                (m) => m.PermissionsModule
+              ),
+          },
+          {
             path: 'resources',
             loadChildren: () =>
               import('@app/events/single-event/resources/resources.module').then(
