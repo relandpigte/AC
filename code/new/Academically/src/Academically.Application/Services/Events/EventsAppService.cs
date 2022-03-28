@@ -76,6 +76,32 @@ namespace Academically.Services.Events
             return new PagedResultDto<EventDto>(totalCount, events);
         }
 
+        public async Task<PagedResultDto<StudentEventDto>> GetAllPurchasedAsync(PagedStudentEventResultRequestDto input)
+        {
+            var query = _studentEventsRepository.GetAll()
+                .Where(e => e.CreatorUserId == AbpSession.UserId)
+                .WhereIf(input.SaveOnlyFilter, e => e.SaveOnly)
+                .WhereIf(!input.SaveOnlyFilter, e => !e.SaveOnly);
+            var totalCount = await query.CountAsync();
+            var studentVideos = await query.PageBy(input)
+                .OrderBy(e => e.Event.Name)
+                .Include(e => e.Event)
+                    .ThenInclude(e => e.ThumbnailDocument)
+                .Include(e => e.Event)
+                    .ThenInclude(e => e.Children)
+                .Select(e => ObjectMapper.Map<StudentEventDto>(e))
+                .ToListAsync();
+            return new PagedResultDto<StudentEventDto>(totalCount, studentVideos);
+        }
+
+        public async Task<StudentEventDto> GetPurchasedAsync(Guid id)
+        {
+            return await _studentEventsRepository.GetAll()
+                .Where(e => !e.SaveOnly && e.CreatorUserId == AbpSession.UserId.Value && e.EventId == id)
+                .Select(e => ObjectMapper.Map<StudentEventDto>(e))
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<GetEventDelayStatusDto> GetDelayStatus(Guid id)
         {
             var query = Repository.GetAll()
@@ -109,14 +135,6 @@ namespace Academically.Services.Events
             var studentEvent = ObjectMapper.Map<StudentEvent>(input);
             studentEvent.CreatorUserId = AbpSession.UserId.Value;
             await _studentEventsRepository.InsertAsync(studentEvent);
-        }
-
-        public async Task<StudentEventDto> GetPurchasedAsync(Guid id)
-        {
-            return await _studentEventsRepository.GetAll()
-                .Where(e => !e.SaveOnly && e.CreatorUserId == AbpSession.UserId.Value && e.EventId == id)
-                .Select(e => ObjectMapper.Map<StudentEventDto>(e))
-                .FirstOrDefaultAsync();
         }
     }
 }

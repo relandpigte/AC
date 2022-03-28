@@ -9,13 +9,13 @@
               <h1 class="header-title">{{ 'Events' | localize }}</h1>
             </div>
             <div class="col-auto">
-              <a href="#!new-event" class="btn btn-primary ml-2"
-                (click)="$event.preventDefault(); onNewEventClick()" *ngIf="isTutor">
+              <a href="#!new-event" class="btn btn-primary ml-2" (click)="$event.preventDefault(); onNewEventClick()"
+                *ngIf="isTutor">
                 {{ 'NewEvent' | localize | titlecase }}
               </a>
             </div>
           </div>
-          <ng-container *ngIf="isTutor else studentArticles">
+          <ng-container *ngIf="isTutor">
             <div class="row align-items-center">
               <div class="col">
                 <ul class="nav nav-tabs nav-overflow header-tabs">
@@ -34,7 +34,7 @@
         </div>
       </div>
 
-      <div class="tab-content">
+      <div class="tab-content" *ngIf="isTutor else studentEvents">
         <div class="tab-pane fade show active" id="teaching" role="tabpanel" aria-labelledby="teaching-tab">
           <app-teaching></app-teaching>
         </div>
@@ -45,6 +45,6 @@
     </div>
   </div>
 
-  <ng-template #studentArticles>
+  <ng-template #studentEvents>
     <app-learning></app-learning>
   </ng-template>

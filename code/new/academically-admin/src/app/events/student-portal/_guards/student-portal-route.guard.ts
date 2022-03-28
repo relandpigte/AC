@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, CanActivateChild, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { PricingType, EventsServiceProxy, EventType } from '@shared/service-proxies/service-proxies';
+import { AppSessionService } from '@shared/session/app-session.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,7 @@ export class StudentPortalRouteGuard implements CanActivate, CanActivateChild {
   constructor(
     private _eventsService: EventsServiceProxy,
     private _router: Router,
+    private _appSession: AppSessionService,
   ) {
   }
 
@@ -23,6 +25,10 @@ export class StudentPortalRouteGuard implements CanActivate, CanActivateChild {
             if (seriesFirstEventId !== eventId) {
               this._router.navigate([`/app/events/student-portal/${seriesFirstEventId}/landing-page`]);
             }
+          }
+          if (this._appSession.userId === response.creatorUserId) {
+            abp.ui.clearBusy();
+            return resolve(true);
           }
           if (response.pricingType !== PricingType.Free) {
             this._eventsService.getPurchased(eventId)

@@ -6361,6 +6361,128 @@ export class EventsServiceProxy {
     }
 
     /**
+     * @param saveOnlyFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAllPurchased(saveOnlyFilter: boolean | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<StudentEventDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Events/GetAllPurchased?";
+        if (saveOnlyFilter === null)
+            throw new Error("The parameter 'saveOnlyFilter' cannot be null.");
+        else if (saveOnlyFilter !== undefined)
+            url_ += "SaveOnlyFilter=" + encodeURIComponent("" + saveOnlyFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllPurchased(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllPurchased(<any>response_);
+                } catch (e) {
+                    return <Observable<StudentEventDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<StudentEventDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllPurchased(response: HttpResponseBase): Observable<StudentEventDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StudentEventDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<StudentEventDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getPurchased(id: string | undefined): Observable<StudentEventDto> {
+        let url_ = this.baseUrl + "/api/services/app/Events/GetPurchased?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPurchased(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPurchased(<any>response_);
+                } catch (e) {
+                    return <Observable<StudentEventDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<StudentEventDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPurchased(response: HttpResponseBase): Observable<StudentEventDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StudentEventDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<StudentEventDto>(<any>null);
+    }
+
+    /**
      * @param id (optional) 
      * @return Success
      */
@@ -6579,62 +6701,6 @@ export class EventsServiceProxy {
             }));
         }
         return _observableOf<void>(<any>null);
-    }
-
-    /**
-     * @param id (optional) 
-     * @return Success
-     */
-    getPurchased(id: string | undefined): Observable<StudentEventDto> {
-        let url_ = this.baseUrl + "/api/services/app/Events/GetPurchased?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetPurchased(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetPurchased(<any>response_);
-                } catch (e) {
-                    return <Observable<StudentEventDto>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<StudentEventDto>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetPurchased(response: HttpResponseBase): Observable<StudentEventDto> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = StudentEventDto.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<StudentEventDto>(<any>null);
     }
 
     /**
@@ -25297,6 +25363,7 @@ export class EventDto implements IEventDto {
     opened: boolean | undefined;
     delayType: ServiceDelayType;
     delayValue: string | undefined;
+    creatorUserId: number;
     parent: EventDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;
@@ -25343,6 +25410,7 @@ export class EventDto implements IEventDto {
             this.opened = _data["opened"];
             this.delayType = _data["delayType"];
             this.delayValue = _data["delayValue"];
+            this.creatorUserId = _data["creatorUserId"];
             this.parent = _data["parent"] ? EventDto.fromJS(_data["parent"]) : <any>undefined;
             this.thumbnailDocument = _data["thumbnailDocument"] ? DocumentDto.fromJS(_data["thumbnailDocument"]) : <any>undefined;
             this.language = _data["language"] ? SpokenLanguageDto.fromJS(_data["language"]) : <any>undefined;
@@ -25393,6 +25461,7 @@ export class EventDto implements IEventDto {
         data["opened"] = this.opened;
         data["delayType"] = this.delayType;
         data["delayValue"] = this.delayValue;
+        data["creatorUserId"] = this.creatorUserId;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
         data["language"] = this.language ? this.language.toJSON() : <any>undefined;
@@ -25443,6 +25512,7 @@ export interface IEventDto {
     opened: boolean | undefined;
     delayType: ServiceDelayType;
     delayValue: string | undefined;
+    creatorUserId: number;
     parent: EventDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;
@@ -31317,6 +31387,7 @@ export class StudentEventDto implements IStudentEventDto {
     id: string;
     eventId: string;
     saveOnly: boolean;
+    event: EventDto;
 
     constructor(data?: IStudentEventDto) {
         if (data) {
@@ -31332,6 +31403,7 @@ export class StudentEventDto implements IStudentEventDto {
             this.id = _data["id"];
             this.eventId = _data["eventId"];
             this.saveOnly = _data["saveOnly"];
+            this.event = _data["event"] ? EventDto.fromJS(_data["event"]) : <any>undefined;
         }
     }
 
@@ -31347,6 +31419,7 @@ export class StudentEventDto implements IStudentEventDto {
         data["id"] = this.id;
         data["eventId"] = this.eventId;
         data["saveOnly"] = this.saveOnly;
+        data["event"] = this.event ? this.event.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -31362,6 +31435,62 @@ export interface IStudentEventDto {
     id: string;
     eventId: string;
     saveOnly: boolean;
+    event: EventDto;
+}
+
+export class StudentEventDtoPagedResultDto implements IStudentEventDtoPagedResultDto {
+    items: StudentEventDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IStudentEventDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(StudentEventDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): StudentEventDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StudentEventDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): StudentEventDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new StudentEventDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IStudentEventDtoPagedResultDto {
+    items: StudentEventDto[] | undefined;
+    totalCount: number;
 }
 
 export class StudentRatingDto implements IStudentRatingDto {
