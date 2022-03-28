@@ -26,7 +26,7 @@ export class EventsComponent extends PagedListingComponentBase<EventDto> impleme
   }
 
   onViewEvent(event: EventDto): void {
-    this._router.navigate(['/app/events/student-portal', event.id]);
+    this._router.navigate(['/app/events/student-portal', event.id, 'portal']);
   }
 
   protected list(

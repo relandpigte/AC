@@ -1,0 +1,109 @@
+<div class="device-settings-component bg-light">
+  <div class="row justify-content-center align-items-center h-100">
+    <div class="col-lg-4 col-md-4 col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title text-center">
+            Welcome, {{ appSession.user.name }}!
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-center">
+            <div class="avatar avatar-xxl avatar-4by3">
+              <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" alt="..." class="avatar-img rounded">
+            </div>
+          </div>
+          <div class="settings mt-4">
+            <div class="input-group input-group-merge mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fe fe-video mr-1"></i>
+                  Video
+                </span>
+              </div>
+              <select class="form-control form-control-prepended form-control-appended">
+                <option *ngFor="let device of videoDevices">
+                  {{ device.name }}
+                </option>
+              </select>
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="device1">
+                    <label class="custom-control-label" for="device1"></label>
+                  </div>
+                </span>
+              </div>
+            </div>
+            <div class="input-group input-group-merge mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fe fe-mic mr-1"></i>
+                  Audio
+                </span>
+              </div>
+              <select class="form-control form-control-prepended form-control-appended">
+                <option *ngFor="let device of audioDevices">
+                  {{ device.name }}
+                </option>
+              </select>
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="device2">
+                    <label class="custom-control-label" for="device2"></label>
+                  </div>
+                </span>
+              </div>
+            </div>
+            <div class="input-group input-group-merge mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fe fe-volume-2 mr-1"></i>
+                  Output
+                </span>
+              </div>
+              <select class="form-control form-control-prepended form-control-appended">
+                <option *ngFor="let device of outputDevices">
+                  {{ device.name }}
+                </option>
+              </select>
+              <div class="input-group-append">
+                <span class="input-group-text p-0 px-2">
+                  <button class="btn btn-sm btn-outline-primary">
+                    <i class="fe fe-play mr-1"></i>
+                    Play
+                  </button>
+                </span>
+              </div>
+            </div>
+            <div class="input-group input-group-merge mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fe fe-wifi mr-1"></i>
+                  Connectivity
+                </span>
+              </div>
+              <input type="text" class="form-control form-control-prepended form-control-appended" readonly>
+              <div class="input-group-append">
+                <span class="input-group-text p-0 px-2">
+                  <button class="btn btn-sm btn-outline-primary">
+                    <i class="fe fe-radio mr-1"></i>
+                    Test
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <button class="btn btn-primary w-100" (click)="onJoinRoomClick()">
+            JOIN ROOM
+          </button>
+          <button [routerLink]="['/app/events']" class="btn btn-white w-100 mt-2">
+            EXIT
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

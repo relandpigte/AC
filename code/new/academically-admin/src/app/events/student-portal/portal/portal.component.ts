@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./portal.component.less']
 })
 export class PortalComponent implements OnInit {
+  showDeviceSettings = true;
 
   constructor() { }
 

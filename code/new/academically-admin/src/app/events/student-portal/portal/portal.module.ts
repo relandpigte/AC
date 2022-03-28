@@ -5,10 +5,12 @@ import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
 import { PortalComponent } from './portal.component';
+import { DeviceSettingsComponent } from './_components/device-settings/device-settings.component';
 
 @NgModule({
   declarations: [
     PortalComponent,
+    DeviceSettingsComponent,
   ],
   imports: [
     CommonModule,
