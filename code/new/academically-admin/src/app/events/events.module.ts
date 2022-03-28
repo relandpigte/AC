@@ -11,6 +11,8 @@ import { ChooseTemplateComponent } from './_components/choose-template/choose-te
 import { CreateEventComponent } from './_components/create-event/create-event.component';
 import { EventListComponent } from './_components/teaching/event-list/event-list.component';
 import { ScheduleListComponent } from './_components/teaching/schedule-list/schedule-list.component';
+import { PurchasedComponent } from './_components/learning/purchased/purchased.component';
+import { SavedComponent } from './_components/learning/saved/saved.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { ScheduleListComponent } from './_components/teaching/schedule-list/sche
     CreateEventComponent,
     EventListComponent,
     ScheduleListComponent,
+    PurchasedComponent,
+    SavedComponent,
   ],
   imports: [
     CommonModule,

@@ -10,6 +10,8 @@ namespace Academically.Services.Events.Dto
     {
         public Guid EventId { get; set; }
         public bool SaveOnly { get; set; }
+
+        public EventDto Event { get; set; }
     }
 }
 
