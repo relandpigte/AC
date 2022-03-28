@@ -57,6 +57,7 @@ namespace Academically.Services.Events
                 .Where(e => e.Id == id)
                 .Include(e => e.Parent)
                 .Include(e => e.ThumbnailDocument)
+                .Include(e => e.CreatorUser)
                 .FirstOrDefaultAsync();
         }
 
