@@ -1,0 +1,100 @@
+<div class="p-3" *ngIf="model.creatorUser">
+  <div class="avatar-group">
+    <div class="avatar-xs">
+      <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" alt="..." class="avatar-img rounded-circle">
+    </div>
+    <div class="avatar-xs">
+      <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..." class="avatar-img rounded-circle">
+    </div>
+    <div class="avatar-xs">
+      <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" alt="..." class="avatar-img rounded-circle">
+    </div>
+    <div class="avatar-xs">
+      <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-4.jpg" alt="..." class="avatar-img rounded-circle">
+    </div>
+  </div>
+</div>
+<hr class="m-0 p-0">
+<div class="p-3">
+  <div class="d-flex align-items-center justify-content-between">
+    <h4 class="p-0">{{ model.name }}</h4>
+  </div>
+  <p *ngIf="model.description" class="pt-1 m-0 small">{{ model.description }}</p>
+  <div class="row small text-muted text-center mx-2 mt-2">
+    <div class="col p-0 no-wrap">
+      <a href="#!like" (click)="$event.preventDefault();">
+        <i class="fe fe-thumbs-up"></i> {{ likeCount }}
+      </a>
+    </div>
+    <div class="col-auto p-0 ">|</div>
+    <div class="col p-0 no-wrap">
+      <i class="fe fe-share-2"></i> {{ 'Share' }}
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="!preview && model.id">
+  <hr class="m-0 p-0">
+  <ul class="nav nav-tabs nav-tabs-sm px-3">
+    <li class="nav-item">
+      <a href="#" class="nav-link active" id="more-tab" data-toggle="tab" href="#more-container" role="tab"
+        aria-controls="more-container" aria-selected="true">
+        {{ 'Upcoming' | localize }}
+      </a>
+    </li>
+  </ul>
+  <div class="p-3">
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="more-container" role="tabpanel" aria-labelledby="more-tab">
+        <div class="row mb-3">
+          <div class="col-auto d-flex justify-content-center align-items-center">
+            <div class="avatar avatar-sm avatar-4by3">
+              <img [src]="getServiceImageUrl(model.thumbnailDocument)" alt="..." class="avatar-img rounded">
+            </div>
+          </div>
+          <div class="col d-flex flex-column justify-content-center ml-n2">
+            <a [routerLink]="['/app/videos/student-portal', model.id]">
+              <h4 class="mb-2 small">Event </h4>
+            </a>
+            <p class="text-muted m-0 p-0 break-spaces small">
+              {{ model.creationTime | dateFormat: 'MMMM DD, YYYY' }}
+            </p>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-auto d-flex justify-content-center align-items-center">
+            <div class="avatar avatar-sm avatar-4by3">
+              <img [src]="getServiceImageUrl(model.thumbnailDocument)" alt="..." class="avatar-img rounded">
+            </div>
+          </div>
+          <div class="col d-flex flex-column justify-content-center ml-n2">
+            <a [routerLink]="['/app/videos/student-portal', model.id]">
+              <h4 class="mb-2 small">Event </h4>
+            </a>
+            <p class="text-muted m-0 p-0 break-spaces small">
+              {{ model.creationTime | dateFormat: 'MMMM DD, YYYY' }}
+            </p>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-auto d-flex justify-content-center align-items-center">
+            <div class="avatar avatar-sm avatar-4by3">
+              <img [src]="getServiceImageUrl(model.thumbnailDocument)" alt="..." class="avatar-img rounded">
+            </div>
+          </div>
+          <div class="col d-flex flex-column justify-content-center ml-n2">
+            <a [routerLink]="['/app/videos/student-portal', model.id]">
+              <h4 class="mb-2 small">Event </h4>
+            </a>
+            <p class="text-muted m-0 p-0 break-spaces small">
+              {{ model.creationTime | dateFormat: 'MMMM DD, YYYY' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #checkTemplate>
+  <i class="fe fe-check p-2"></i>
+</ng-template>

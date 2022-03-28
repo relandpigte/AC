@@ -1,0 +1,38 @@
+<div [class.content-hidden]="hidden" class="sidebar bg-white">
+  <ul class="sidebar-menu">
+    <ng-container *ngFor="let item of menuItems">
+      <li *ngIf="item.name !== 'Separator' else separatorTemplate" [class.active]="activeMenuItem === item">
+        <a href="#!menu" (click)="$event.preventDefault(); onMenuItemClick(item)">
+          <i class="fe {{item.icon}}"></i>
+        </a>
+      </li>
+    </ng-container>
+  </ul>
+
+  <div *ngIf="!hidden" class="sidebar-contents" [ngSwitch]="activeMenuItem.name">
+    <div class="sidebar-title">
+      <h4 class="text-muted">
+        {{ activeMenuItem.name | localize }}
+      </h4>
+    </div>
+
+    <div class="sidebar-content">
+      <app-overview *ngSwitchCase="'Overview'"></app-overview>
+      <!-- <app-sidebar-comments *ngSwitchCase="'Comments'"></app-sidebar-comments> -->
+      <!-- <app-sidebar-questions *ngSwitchCase="'Questions'"></app-sidebar-questions> -->
+    </div>
+  </div>
+</div>
+
+<ng-template #menuItemTemplate let-item="item" let-icon="icon">
+  <li [class.active]="activeMenuItem === item">
+    <a href="#!menu" (click)="$event.preventDefault(); onMenuItemClick(item)">
+      <i class="fe {{icon}}"></i>
+    </a>
+  </li>
+</ng-template>
+<ng-template #separatorTemplate>
+  <li class="separator">
+    <hr>
+  </li>
+</ng-template>

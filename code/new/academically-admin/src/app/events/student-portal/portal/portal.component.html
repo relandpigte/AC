@@ -1,5 +1,97 @@
-<div class="d-flex h-100 justify-content-center align-items-center flex-column">
-  <h1>Events - Student Portal</h1>
-  <h4>Coming Soon!</h4>
-  <button class="btn btn-outline-primary ml-1" [routerLink]="['/app/home/events']">{{ 'Exit' | localize }}</button>
+<app-device-settings *ngIf="showDeviceSettings" (joinRoom)="showDeviceSettings = false"></app-device-settings>
+
+<div class="h-100" [@routerTransition]>
+  <div [class.sidebar-hidden]="!showSidebar" class="main-content h-100">
+    <nav class="navbar navbar-expand-lg navbar-light" id="topnav">
+      <div class="mx-3 w-100 d-flex justify-content-between align-items-center">
+        <a class="navbar-brand text-left pt-0" href="javascript:;">
+          <div class="d-flex">
+            <div class="avatar avatar-4by3">
+              <img [src]="getServiceImageUrl(model.thumbnailDocument)" alt="..." class="avatar-img rounded">
+            </div>
+            <div class="navbar-brand-header ml-3 mr-n3">
+              <h6 class="header-pretitle">
+                <ng-container *ngIf="model.parent && model.parent.id else singleVideoPretitle">
+                  {{ model.parent.name }}
+                </ng-container>
+                <ng-template #singleVideoPretitle>
+                  {{ 'Event' | localize }}
+                </ng-template>
+              </h6>
+              <h3 class="header-title">{{ model.name }}</h3>
+            </div>
+          </div>
+        </a>
+        <div class="row">
+          <div class="col d-flex align-items-center">
+            <button class="btn btn-sm btn-outline-primary" (click)="onExitClick()">
+              <b>{{ 'Exit' | localize }}</b>
+            </button>
+          </div>
+          <div class="col d-flex align-items-center pr-0">
+            <div class="separator"></div>
+          </div>
+          <div class="col pl-1 d-flex collapse-toggle">
+            <a *ngIf="showSidebar" href="#!collapse-sidebar"
+              class="d-flex align-items-center justify-content-center text-muted"
+              (click)="$event.preventDefault(); showSidebar = false">
+              <i class="fe fe-arrow-right"></i>
+              <i class="icon icon-straight"></i>
+            </a>
+            <a *ngIf="!showSidebar" href="#!expand-sidebar"
+              class="d-flex align-items-center justify-content-center text-muted mr-n3 ml-2"
+              (click)="$event.preventDefault(); showSidebar = true">
+              <i class="icon icon-straight"></i>
+              <i class="fe fe-arrow-left"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="article-container">
+      <div *ngIf="eventStarted else eventNotStartedTemplate" class="presentation-feed">
+        <div class="attendees">
+          <div class="attendee">
+            <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" />
+          </div>
+          <div class="attendee">
+            <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" />
+          </div>
+          <div class="attendee">
+            <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" />
+          </div>
+        </div>
+        <div class="presenter">
+          <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-4.jpg" />
+        </div>
+      </div>
+      <div class="presentation-controls bg-white">
+        <button class="btn btn-sm btn-outline-primary mx-2">
+          <i class="fe fe-mic"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-primary mx-2">
+          <i class="fe fe-camera"></i>
+        </button>
+        <button class="btn btn-sm btn-primary mx-2" (click)="onGoLiveClick()">
+          Go Live
+        </button>
+        <button class="btn btn-sm btn-outline-primary mx-2">
+          <i class="fe fe-monitor"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-primary mx-2">
+          <i class="fe fe-layout"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <app-sidebar [hidden]="!showSidebar"></app-sidebar>
 </div>
+
+<ng-template #eventNotStartedTemplate>
+  <div class="event-not-started-container">
+    <h1>Welcome to the Lobby</h1>
+    <h4>Waiting for the host to start the event.</h4>
+  </div>
+</ng-template>
