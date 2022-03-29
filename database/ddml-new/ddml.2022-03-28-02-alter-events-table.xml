@@ -1,0 +1,268 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <changeSet author="ramil (generated)" id="1648455768659-1">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsEnableMicrophone" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-2">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsEnableWebCam" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-3">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsEnablePresentationTools" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-4">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsEnableSpeakRequests" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-5">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsViewRegistrants" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-6">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsManageGuests" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-7">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsManageGuestSettings" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-8">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsManageAudience" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-9">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsManageAudienceSettings" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-10">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsChatPublicly" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-11">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsChatPubliclyTagMembers" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-12">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsChatPrivately" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-13">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsChatPrivatelySelected" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-14">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsAllowCohostsToUpvote" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-15">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsAllowCohostsToRespond" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-16">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsCreatePolls" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-17">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsCreateOffers" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-18">
+        <addColumn tableName="academicallyevents">
+            <column name="CohostsUploadHandouts" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-19">
+        <addColumn tableName="academicallyevents">
+            <column name="GuestsEnableMicrophone" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-20">
+        <addColumn tableName="academicallyevents">
+            <column name="GuestsEnableWebCam" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-21">
+        <addColumn tableName="academicallyevents">
+            <column name="GuestsEnablePresentationTools" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-22">
+        <addColumn tableName="academicallyevents">
+            <column name="GuestsEnableSpeakRequests" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-23">
+        <addColumn tableName="academicallyevents">
+            <column name="GuestsViewRegistrants" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-24">
+        <addColumn tableName="academicallyevents">
+            <column name="GuestsManageAudience" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-25">
+        <addColumn tableName="academicallyevents">
+            <column name="GuestsManageAudienceSettings" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-26">
+        <addColumn tableName="academicallyevents">
+            <column name="GuestsChatPublicly" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-27">
+        <addColumn tableName="academicallyevents">
+            <column name="GuestsChatPubliclyTagMembers" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-28">
+        <addColumn tableName="academicallyevents">
+            <column name="GuestsChatPrivately" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-29">
+        <addColumn tableName="academicallyevents">
+            <column name="GuestsChatPrivatelySelected" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-30">
+        <addColumn tableName="academicallyevents">
+            <column name="GuestsAllowGuestsToUpvote" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-31">
+        <addColumn tableName="academicallyevents">
+            <column name="GuestsAllowGuestsToRespond" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-32">
+        <addColumn tableName="academicallyevents">
+            <column name="GuestsCreatePolls" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-33">
+        <addColumn tableName="academicallyevents">
+            <column name="GuestsCreateOffers" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-34">
+        <addColumn tableName="academicallyevents">
+            <column name="GuestsCreateHandouts" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-35">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceEnableMicrophone" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-36">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceEnableWebCam" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-37">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceEnablePresentationTools" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-38">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceEnableSpeakRequests" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-39">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceViewAudience" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-40">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceChatPublicly" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-41">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceChatPubliclyTagMembers" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-42">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceChatPrivately" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-43">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceChatPrivatelySelected" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-44">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceAskQuestions" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-45">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceAskPublicQuestionsAllowAudienceToUpvote" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-46">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceAskPublicQuestionsAllowAudienceToRespond" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-47">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceAskPrivateQuestionsWithAdmins" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-48">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceAskPrivateQuestionsAllowFollowUpResponse" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-49">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceEnablePollsTab" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-50">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceEnableOffersTab" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-51">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceEnableOffersTabDisplayNoOfPurchases" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-52">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceEnableHandoutsTab" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ramil (generated)" id="1648455768659-53">
+        <addColumn tableName="academicallyevents">
+            <column name="AudienceAskPublicQuestions" type="BIT(1)"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

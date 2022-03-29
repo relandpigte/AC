@@ -16,7 +16,7 @@
                 </div>
                 <div class="col-auto">
                   <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchOne">
+                    <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchOne" [checked]="model.cohostsEnableMicrophone"  [(ngModel)]="model.cohostsEnableMicrophone" (change)="onSettingChange()">
                     <label class="custom-control-label" for="subscriptionsSwitchOne"></label>
                   </div>
                 </div>
@@ -29,7 +29,7 @@
                 </div>
                 <div class="col-auto">
                   <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchTwo" checked="true">
+                    <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchTwo" [checked]="model.cohostsEnableWebCam"  [(ngModel)]="model.cohostsEnableWebCam" (change)="onSettingChange()">
                     <label class="custom-control-label" for="subscriptionsSwitchTwo"></label>
                   </div>
 
@@ -47,7 +47,7 @@
 
                   <!-- Switch -->
                   <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchThree" >
+                    <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchThree" [checked]="model.cohostsEnablePresentationTools"  [(ngModel)]="model.cohostsEnablePresentationTools" (change)="onSettingChange()">
                     <label class="custom-control-label" for="subscriptionsSwitchThree"></label>
                   </div>
 
@@ -65,7 +65,7 @@
 
                     <!-- Switch -->
                     <div class="custom-control custom-switch">
-                      <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchfour" >
+                      <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchfour" [checked]="model.cohostsEnableSpeakRequests"  [(ngModel)]="model.cohostsEnableSpeakRequests" (change)="onSettingChange()" >
                       <label class="custom-control-label" for="subscriptionsSwitchfour"></label>
                     </div>
 
@@ -93,7 +93,7 @@
                     </div>
                     <div class="col-auto">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="registrant" checked="">
+                        <input type="checkbox" class="custom-control-input" id="registrant" [checked]="model.cohostsViewRegistrants"  [(ngModel)]="model.cohostsViewRegistrants" (change)="onSettingChange()">
                         <label class="custom-control-label" for="registrant"></label>
                       </div>
                     </div>
@@ -106,7 +106,7 @@
                     </div>
                     <div class="col-auto">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="manageGuest" checked="">
+                        <input type="checkbox" class="custom-control-input" id="manageGuest" [checked]="model.cohostsManageGuests"  [(ngModel)]="model.cohostsManageGuests" (change)="onSettingChange()">
                         <label class="custom-control-label" for="manageGuest"></label>
                       </div>
                     </div>
@@ -119,7 +119,7 @@
                     </div>
                     <div class="col-auto">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="guestSettings" checked="">
+                        <input type="checkbox" class="custom-control-input" id="guestSettings" [checked]="model.cohostsManageGuestSettings"  [(ngModel)]="model.cohostsManageGuestSettings" (change)="onSettingChange()">
                         <label class="custom-control-label" for="guestSettings"></label>
                       </div>
                     </div>
@@ -132,7 +132,7 @@
                     </div>
                     <div class="col-auto">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="manageAudience" checked="">
+                        <input type="checkbox" class="custom-control-input" id="manageAudience" [checked]="model.cohostsManageAudience"  [(ngModel)]="model.cohostsManageAudience" (change)="onSettingChange()">
                         <label class="custom-control-label" for="manageAudience"></label>
                       </div>
                     </div>
@@ -145,7 +145,7 @@
                     </div>
                     <div class="col-auto">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="audienceSettings" checked="">
+                        <input type="checkbox" class="custom-control-input" id="audienceSettings" [checked]="model.cohostsManageAudienceSettings"  [(ngModel)]="model.cohostsManageAudienceSettings" (change)="onSettingChange()">
                         <label class="custom-control-label" for="audienceSettings"></label>
                       </div>
                     </div>
@@ -175,7 +175,7 @@
                     </div>
                     <div class="col-auto">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="publicChat" checked="">
+                        <input type="checkbox" class="custom-control-input" id="publicChat" [checked]="model.cohostsChatPublicly"  [(ngModel)]="model.cohostsChatPublicly" (change)="onSettingChange()">
                         <label class="custom-control-label" for="publicChat"></label>
                       </div>
                     </div>
@@ -188,7 +188,7 @@
                     </div>
                     <div class="col-auto">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="member" checked="true">
+                        <input type="checkbox" class="custom-control-input" id="member" [checked]="model.cohostsChatPubliclyTagMembers"  [(ngModel)]="model.cohostsChatPubliclyTagMembers" (change)="onSettingChange()">
                         <label class="custom-control-label" for="member"></label>
                       </div>
 
@@ -206,7 +206,7 @@
 
                       <!-- Switch -->
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="privateChat" checked="">
+                        <input type="checkbox" class="custom-control-input" id="privateChat" [checked]="model.cohostsChatPrivately"  [(ngModel)]="model.cohostsChatPrivately" (change)="onSettingChange()">
                         <label class="custom-control-label" for="privateChat"></label>
                       </div>
 
@@ -215,7 +215,7 @@
                   <div class="row align-items-center">
                       <div class="col">
                         <div class="custom-control custom-radio pd-7">
-                            <input type="radio" id="anyoneChatType" name="chatType"
+                            <input type="radio" id="anyoneChatType" name="chatType" [value]="true" [(ngModel)]="model.cohostsChatPrivatelySelected" (change)="onSettingChange()"
                                class="custom-control-input" />
                             <label class="custom-control-label" for="anyoneChatType"></label>
                             <label class="custom-control-caption" for="anyoneChatType">
@@ -228,7 +228,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <div class="custom-control custom-radio pd-7">
-                                <input type="radio" id="adminChatType" name="chatType"
+                                <input type="radio" id="adminChatType" name="chatType" [value]="false" [(ngModel)]="model.cohostsChatPrivatelySelected" (change)="onSettingChange()"
                                    class="custom-control-input" />
                                 <label class="custom-control-label" for="adminChatType"></label>
                                 <label class="custom-control-caption" for="adminChatType">
@@ -262,7 +262,7 @@
                     </div>
                     <div class="col-auto">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="coHostUpvote" checked="">
+                        <input type="checkbox" class="custom-control-input" id="coHostUpvote" [checked]="model.cohostsAllowCohostsToUpvote" [(ngModel)]="model.cohostsAllowCohostsToUpvote" (change)="onSettingChange()">
                         <label class="custom-control-label" for="coHostUpvote"></label>
                       </div>
                     </div>
@@ -275,7 +275,7 @@
                     </div>
                     <div class="col-auto">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="coHostRepond" checked="">
+                        <input type="checkbox" class="custom-control-input" id="coHostRepond" [checked]="model.cohostsAllowCohostsToRespond"  [(ngModel)]="model.cohostsAllowCohostsToRespond" (change)="onSettingChange()">
                         <label class="custom-control-label" for="coHostRepond"></label>
                       </div>
                     </div>
@@ -303,7 +303,7 @@
                     </div>
                     <div class="col-auto">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="createPoll" checked="">
+                        <input type="checkbox" class="custom-control-input" id="createPoll" [checked]="model.cohostsCreatePolls"  [(ngModel)]="model.cohostsCreatePolls" (change)="onSettingChange()">
                         <label class="custom-control-label" for="createPoll"></label>
                       </div>
                     </div>
@@ -331,7 +331,7 @@
                     </div>
                     <div class="col-auto">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="createOffers" checked="">
+                        <input type="checkbox" class="custom-control-input" id="createOffers" [checked]="model.cohostsCreateOffers"  [(ngModel)]="model.cohostsCreateOffers" (change)="onSettingChange()">
                         <label class="custom-control-label" for="createOffers"></label>
                       </div>
                     </div>
@@ -361,7 +361,7 @@
                     </div>
                     <div class="col-auto">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="uploadHandout" checked="">
+                        <input type="checkbox" class="custom-control-input" id="uploadHandout" [checked]="model.cohostsUploadHandouts"  [(ngModel)]="model.cohostsUploadHandouts" (change)="onSettingChange()">
                         <label class="custom-control-label" for="uploadHandout"></label>
                       </div>
                     </div>

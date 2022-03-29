@@ -125,5 +125,6 @@
 	<include file="ddml-new/ddml.2022-03-24-02-alter-forumreplies-forums-fk-constraint.xml"/>
 	<include file="ddml-new/ddml.2022-03-24-03-alter-forumreplies-forums-fk-constraint.xml"/>
 	<include file="ddml-new/ddml.2022-03-28-01-create-studentevents-table.xml"/>
+	<include file="ddml-new/ddml.2022-03-28-02-alter-events-table.xml" />
 </databaseChangeLog>
 	
