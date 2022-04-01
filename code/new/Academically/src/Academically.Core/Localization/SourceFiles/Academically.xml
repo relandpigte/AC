@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+	<text name="InteractiveTools">Interactive tools</text>
 	<text name="MessageAll">Message all</text>
 	<text name="NotJoined">Not joined</text>
 	<text name="WaitingRoom">Waiting room</text>

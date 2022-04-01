@@ -1066,9 +1066,16 @@ a.disabled {
   }
 
   &.table-stripeless {
+
     tr:not(:first-child) {
       td {
         border-top: none;
+      }
+    }
+
+    tr.striped {
+      td {
+        border-top: 1px solid #edf2f9;
       }
     }
   }
@@ -1095,6 +1102,10 @@ a.disabled {
 
 .text-transform-none {
   text-transform: none;
+}
+
+.custom-control-label.label-center {
+  line-height: 22px;
 }
 
 @media (min-width: 576px) {

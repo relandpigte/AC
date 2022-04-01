@@ -15,6 +15,10 @@ import { RegistrantsComponent } from './_components/attendees/_components/regist
 import { SpeakRequestsComponent } from './_components/attendees/_components/speak-requests/speak-requests.component';
 import { UpcomingComponent } from './_components/overview/upcoming/upcoming.component';
 import { RelatedComponent } from './_components/overview/related/related.component';
+import { SettingsComponent } from './_components/settings/settings.component';
+import { AudienceComponent } from './_components/settings/_components/audience/audience.component';
+import { GuestsComponent } from './_components/settings/_components/guests/guests.component';
+import { CoHostsComponent } from './_components/settings/_components/co-hosts/co-hosts.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +33,10 @@ import { RelatedComponent } from './_components/overview/related/related.compone
     SpeakRequestsComponent,
     UpcomingComponent,
     RelatedComponent,
+    SettingsComponent,
+    AudienceComponent,
+    GuestsComponent,
+    CoHostsComponent,
   ],
   imports: [
     CommonModule,
