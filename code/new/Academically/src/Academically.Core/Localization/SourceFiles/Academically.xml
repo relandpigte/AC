@@ -1,6 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+	<text name="MessageAll">Message all</text>
+	<text name="NotJoined">Not joined</text>
+	<text name="WaitingRoom">Waiting room</text>
+	<text name="Audience">Audience</text>
+	<text name="DisableAllPresenting">Disable all presenting</text>
+	<text name="DisableAllCamera">Disable all camera</text>
+	<text name="DisableAllMic">Disable all mic</text>
+	<text name="DisablePresenting">Disable presenting</text>
+	<text name="DisableCamera">Disable camera</text>
+	<text name="DisableMic">Disable mic</text>
+	<text name="Guests">Guests</text>
+	<text name="StopAllPresenting">Stop all presenting</text>
+	<text name="TurnOffAllCameras">Turn off all cameras</text>
+	<text name="Mute">Mute</text>
+	<text name="CoHosts">Co-hosts</text>
+	<text name="BandAttendee">Band attendee</text>
+	<text name="StopPresenting">Stop presenting</text>
+	<text name="TurnOffCamera">Turn off camera</text>
+	<text name="MuteAll">Mute all</text>
+	<text name="Me">Me</text>
+	<text name="AdmitAll">Admit all</text>
+	<text name="Hosts">Hosts</text>
+	<text name="SpeakRequests">Speak requests</text>
+	<text name="Registrants">Registrants</text>
+	<text name="Live">Live</text>
 	<text name="NoEventsFound">No Events found</text>
 	<text name="Visit">Visit</text>
     <text name="Topics">Topics</text>

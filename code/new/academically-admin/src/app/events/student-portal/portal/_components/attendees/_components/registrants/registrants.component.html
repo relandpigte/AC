@@ -1,0 +1,117 @@
+<table class="table table-sm table-sm-custom mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-horizontal-center">
+            {{ 'WaitingRoom' | localize }}
+          </div>
+          <div class="col-auto flex-horizontal-center actions">
+            <div class="dropdown">
+              <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fe fe-more-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'AdmitAll' | localize }}</small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row">
+          <div class="col flex-horizontal-center">
+            <div class="avatar avatar-sm d-inline-block me-2">
+              <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-4.jpg" alt="..."
+                class="avatar-img rounded-circle">
+            </div>
+            <p class="m-0 ml-3">
+              <b>Diana Smiley</b>
+            </p>
+          </div>
+          <div class="col-auto flex-horizontal-center">
+            <button class="btn btn-sm btn-primary">
+              {{ 'Admit' | localize }}
+            </button>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm table-sm-custom mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-horizontal-center">
+            {{ 'NotJoined' | localize }}
+          </div>
+          <div class="col-auto flex-horizontal-center actions">
+            <div class="dropdown">
+              <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fe fe-more-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'MessageAll' | localize }}</small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row">
+          <div class="col flex-horizontal-center">
+            <div class="avatar avatar-sm d-inline-block me-2">
+              <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..."
+                class="avatar-img rounded-circle">
+            </div>
+            <p class="m-0 ml-3">
+              <b>Chris Baker</b>
+            </p>
+          </div>
+          <div class="col-auto flex-horizontal-center">
+            <button class="btn btn-sm btn-outline-primary">
+              {{ 'Message' | localize }}
+            </button>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="row">
+          <div class="col flex-horizontal-center">
+            <div class="avatar avatar-sm d-inline-block me-2">
+              <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" alt="..."
+                class="avatar-img rounded-circle">
+            </div>
+            <p class="m-0 ml-3">
+              <b>Ab Hailey</b>
+            </p>
+          </div>
+          <div class="col-auto flex-horizontal-center">
+            <button class="btn btn-sm btn-outline-primary">
+              {{ 'Message' | localize }}
+            </button>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
