@@ -1,5 +1,5 @@
 import { Component, OnInit, Injector } from '@angular/core';
-import { ForumsServiceProxy, ForumDto, ForumReplyDto, CreateForumReplyDto, ReactionDto, ReactionsServiceProxy, ReactionType } from '@shared/service-proxies/service-proxies';
+import { ForumsServiceProxy, ForumDto, ForumReplyDto, CreateForumReplyDto, ReactionDto, ReactionsServiceProxy, ReactionType, UserLoginInfoDto } from '@shared/service-proxies/service-proxies';
 import { PagedListingComponentBase, PagedAndSortedRequestDto } from '@shared/paged-listing-component-base';
 import { finalize, takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash';
@@ -16,7 +16,8 @@ export class ForumsComponent extends PagedListingComponentBase<ForumDto> impleme
   forums: ForumDto[] = [];
   replies: CreateForumReplyDto[] = [];
   reactions: ReactionDto[][] = [];
-
+  greetings: string;
+  user: UserLoginInfoDto = new UserLoginInfoDto();
   ReactionType = ReactionType;
 
   constructor(
@@ -25,6 +26,25 @@ export class ForumsComponent extends PagedListingComponentBase<ForumDto> impleme
     private _reactionsService: ReactionsServiceProxy,
   ) {
     super(injector);
+    this.user = this.appSession.user;
+  }
+
+  ngOnInit(): void {
+    this.greetings = this.getGreetings();
+  }
+
+  getGreetings(): string {
+    const currentTime = new Date();
+    const currentHours = currentTime.getHours();
+    const currentMin = currentTime.getMinutes();
+
+    if (currentHours >= 5 && currentHours <= 11 && currentMin <= 59) {
+      return this.l('GoodMorning');
+    } else if (currentHours >= 12 && currentHours <= 16 && currentMin <= 59) {
+      return this.l('GoodAfternoon');
+    } else if (currentHours >= 17 || (currentHours >= 0 && currentHours <= 4) && currentMin <= 59) {
+      return this.l('GoodEvening');
+    }
   }
 
   onDeleteClick(forum: ForumDto): void {
