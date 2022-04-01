@@ -32,12 +32,15 @@ export class SidebarComponent extends AppComponentBase implements OnInit {
     super(injector);
     this.menuItems.push(new MenuItem('Overview', 'fe-home'));
     this.menuItems.push(new MenuItem('Separator'));
+    this.menuItems.push(new MenuItem('Attendees', 'fe-users'));
     this.menuItems.push(new MenuItem('Comments', 'fe-message-circle'));
     this.menuItems.push(new MenuItem('Questions', 'fe-help-circle'));
     this.menuItems.push(new MenuItem('Handouts', 'fe-folder'));
     this.menuItems.push(new MenuItem('Offers', 'fe-shopping-bag'));
     this.menuItems.push(new MenuItem('Reviews', 'fe-star'));
-    this.activeMenuItem = this.menuItems[0];
+    this.menuItems.push(new MenuItem('Separator'));
+    this.menuItems.push(new MenuItem('Settings', 'fe-settings'));
+    this.activeMenuItem = this.menuItems[9];
     route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {
         this.eventId = paramMap.get('id');
@@ -46,6 +49,10 @@ export class SidebarComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  onMenuItemClick(menuItem: MenuItem): void {
+    this.activeMenuItem = menuItem;
   }
 
 }

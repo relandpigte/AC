@@ -1,0 +1,377 @@
+<table class="table table-sm table-sm-custom mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-horizontal-center">
+            {{ 'Hosts' | localize }}
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row">
+          <div class="col flex-horizontal-center">
+            <div class="avatar avatar-sm d-inline-block me-2">
+              <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" alt="..."
+                class="avatar-img rounded-circle">
+            </div>
+            <p class="m-0 ml-3">
+              <b>Ab Hailey</b>
+            </p>
+            <span class="badge badge-soft-primary ml-2">
+              {{ 'Me' | localize }}
+            </span>
+          </div>
+          <div class="col-auto flex-horizontal-center actions">
+            <a href="#!mic" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'Mute' | localize">
+              <i class="fe fe-mic"></i>
+            </a>
+            <a href="#!camera" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'TurnOffCamera' | localize">
+              <i class="fe fe-camera"></i>
+            </a>
+            <a href="#!present" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'StopPresenting' | localize">
+              <i class="fe fe-monitor"></i>
+            </a>
+            <div class="dropdown">
+              <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fe fe-more-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'Message' | localize }}</small>
+                </a>
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'BandAttendee' | localize }}</small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm table-sm-custom mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-horizontal-center">
+            {{ 'CoHosts' | localize }}
+          </div>
+          <div class="col-auto flex-horizontal-center actions">
+            <a href="#!mic" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'MuteAll' | localize">
+              <i class="fe fe-mic"></i>
+            </a>
+            <a href="#!camera" (click)="$event.preventDefault()" class="mr-2"
+              [tooltip]="'TurnOffAllCameras' | localize">
+              <i class="fe fe-camera"></i>
+            </a>
+            <a href="#!present" (click)="$event.preventDefault()" class="mr-2"
+              [tooltip]="'StopAllPresenting' | localize">
+              <i class="fe fe-monitor"></i>
+            </a>
+            <div class="dropdown">
+              <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fe fe-more-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'AdmitAll' | localize }}</small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row">
+          <div class="col flex-horizontal-center">
+            <div class="avatar avatar-sm d-inline-block me-2">
+              <span class="avatar-title rounded-circle">JS</span>
+            </div>
+            <p class="m-0 ml-3">
+              <b>John Spencer</b>
+            </p>
+          </div>
+          <div class="col-auto flex-horizontal-center actions">
+            <a href="#!mic" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'Mute' | localize">
+              <i class="fe fe-mic"></i>
+            </a>
+            <a href="#!camera" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'TurnOffCamera' | localize">
+              <i class="fe fe-camera"></i>
+            </a>
+            <a href="#!present" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'StopPresenting' | localize">
+              <i class="fe fe-monitor"></i>
+            </a>
+            <div class="dropdown">
+              <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fe fe-more-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'Message' | localize }}</small>
+                </a>
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'BandAttendee' | localize }}</small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm table-sm-custom table-stripeless mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-horizontal-center">
+            {{ 'Guests' | localize }}
+          </div>
+          <div class="col-auto flex-horizontal-center actions">
+            <a href="#!mic" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'DisableAllMic' | localize">
+              <i class="fe fe-mic text-muted"></i>
+            </a>
+            <a href="#!camera" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'DisableAllCamera' | localize">
+              <i class="fe fe-camera text-muted"></i>
+            </a>
+            <a href="#!present" (click)="$event.preventDefault()" class="mr-2"
+              [tooltip]="'DisableAllPresenting' | localize">
+              <i class="fe fe-monitor text-muted"></i>
+            </a>
+            <div class="dropdown">
+              <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fe fe-more-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'AdmitAll' | localize }}</small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row">
+          <div class="col flex-horizontal-center">
+            <div class="avatar avatar-sm d-inline-block me-2">
+              <span class="avatar-title rounded-circle">DJ</span>
+            </div>
+            <p class="m-0 ml-3">
+              <b>Chris Baker</b>
+            </p>
+          </div>
+          <div class="col-auto flex-horizontal-center actions">
+            <a href="#!mic" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'DisableMic' | localize">
+              <i class="fe fe-mic text-muted"></i>
+            </a>
+            <a href="#!camera" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'DisableCamera' | localize">
+              <i class="fe fe-camera text-muted"></i>
+            </a>
+            <a href="#!present" (click)="$event.preventDefault()" class="mr-2"
+              [tooltip]="'DisablePresenting' | localize">
+              <i class="fe fe-monitor text-muted"></i>
+            </a>
+            <div class="dropdown">
+              <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fe fe-more-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'Message' | localize }}</small>
+                </a>
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'BandAttendee' | localize }}</small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="row">
+          <div class="col flex-horizontal-center">
+            <div class="avatar avatar-sm d-inline-block me-2">
+              <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..."
+                class="avatar-img rounded-circle">
+            </div>
+            <p class="m-0 ml-3">
+              <b>Dean Jones</b>
+            </p>
+          </div>
+          <div class="col-auto flex-horizontal-center actions">
+            <a href="#!mic" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'DisableMic' | localize">
+              <i class="fe fe-mic text-muted"></i>
+            </a>
+            <a href="#!camera" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'DisableCamera' | localize">
+              <i class="fe fe-camera text-muted"></i>
+            </a>
+            <a href="#!present" (click)="$event.preventDefault()" class="mr-2"
+              [tooltip]="'DisablePresenting' | localize">
+              <i class="fe fe-monitor text-muted"></i>
+            </a>
+            <div class="dropdown">
+              <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fe fe-more-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'Message' | localize }}</small>
+                </a>
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'BandAttendee' | localize }}</small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm table-sm-custom table-stripeless mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-horizontal-center">
+            {{ 'Audience' | localize }}
+          </div>
+          <div class="col-auto flex-horizontal-center actions">
+            <a href="#!mic" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'DisableAllMic' | localize">
+              <i class="fe fe-mic-off text-disabled"></i>
+            </a>
+            <a href="#!camera" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'DisableAllCamera' | localize">
+              <i class="fe fe-camera-off text-disabled"></i>
+            </a>
+            <a href="#!present" (click)="$event.preventDefault()" class="mr-2"
+              [tooltip]="'DisableAllPresenting' | localize">
+              <i class="fe fe-monitor fe-slash-append text-disabled"></i>
+            </a>
+            <div class="dropdown">
+              <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fe fe-more-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'AdmitAll' | localize }}</small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row">
+          <div class="col flex-horizontal-center">
+            <div class="avatar avatar-sm d-inline-block me-2">
+              <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-4.jpg" alt="..."
+                class="avatar-img rounded-circle">
+            </div>
+            <p class="m-0 ml-3">
+              <b>Dianna Smiley</b>
+            </p>
+          </div>
+          <div class="col-auto flex-horizontal-center actions">
+            <a href="#!mic" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'DisableMic' | localize">
+              <i class="fe fe-mic-off text-disabled"></i>
+            </a>
+            <a href="#!camera" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'DisableCamera' | localize">
+              <i class="fe fe-camera-off text-disabled"></i>
+            </a>
+            <a href="#!present" (click)="$event.preventDefault()" class="mr-2"
+              [tooltip]="'DisablePresenting' | localize">
+              <i class="fe fe-monitor fe-slash-append text-disabled"></i>
+            </a>
+            <div class="dropdown">
+              <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fe fe-more-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'Message' | localize }}</small>
+                </a>
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'BandAttendee' | localize }}</small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="row">
+          <div class="col flex-horizontal-center">
+            <div class="avatar avatar-sm d-inline-block me-2">
+              <span class="avatar-title rounded-circle">AS</span>
+            </div>
+            <p class="m-0 ml-3">
+              <b>Andrew Smith</b>
+            </p>
+          </div>
+          <div class="col-auto flex-horizontal-center actions">
+            <a href="#!mic" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'DisableMic' | localize">
+              <i class="fe fe-mic-off text-disabled"></i>
+            </a>
+            <a href="#!camera" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'DisableCamera' | localize">
+              <i class="fe fe-camera-off text-disabled"></i>
+            </a>
+            <a href="#!present" (click)="$event.preventDefault()" class="mr-2"
+              [tooltip]="'DisablePresenting' | localize">
+              <i class="fe fe-monitor fe-slash-append text-disabled"></i>
+            </a>
+            <div class="dropdown">
+              <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fe fe-more-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'Message' | localize }}</small>
+                </a>
+                <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
+                  <small>{{ 'BandAttendee' | localize }}</small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

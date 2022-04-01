@@ -1,0 +1,59 @@
+<ul class="nav nav-tabs nav-tabs-sm px-3">
+  <li class="nav-item">
+    <a href="#" class="nav-link active" id="upcoming-tab" data-toggle="tab" href="#upcoming-container" role="tab"
+      aria-controls="upcoming-container" aria-selected="true">
+      {{ 'Upcoming' | localize }}
+    </a>
+  </li>
+</ul>
+<div class="p-3">
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="upcoming-container" role="tabpanel" aria-labelledby="upcoming-tab">
+      <div class="row mb-3">
+        <div class="col-auto d-flex justify-content-center align-items-center">
+          <div class="avatar avatar-sm avatar-4by3">
+            <img [src]="getServiceImageUrl(undefined)" alt="..." class="avatar-img rounded">
+          </div>
+        </div>
+        <div class="col d-flex flex-column justify-content-center ml-n2">
+          <a href="#">
+            <h4 class="mb-2 small">Event </h4>
+          </a>
+          <p class="text-muted m-0 p-0 break-spaces small">
+            January 1, 2021
+          </p>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-auto d-flex justify-content-center align-items-center">
+          <div class="avatar avatar-sm avatar-4by3">
+            <img [src]="getServiceImageUrl(undefined)" alt="..." class="avatar-img rounded">
+          </div>
+        </div>
+        <div class="col d-flex flex-column justify-content-center ml-n2">
+          <a href="#">
+            <h4 class="mb-2 small">Event </h4>
+          </a>
+          <p class="text-muted m-0 p-0 break-spaces small">
+            January 1, 2021
+          </p>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-auto d-flex justify-content-center align-items-center">
+          <div class="avatar avatar-sm avatar-4by3">
+            <img [src]="getServiceImageUrl(undefined)" alt="..." class="avatar-img rounded">
+          </div>
+        </div>
+        <div class="col d-flex flex-column justify-content-center ml-n2">
+          <a href="#">
+            <h4 class="mb-2 small">Event </h4>
+          </a>
+          <p class="text-muted m-0 p-0 break-spaces small">
+            January 1, 2021
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
