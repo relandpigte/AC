@@ -13,6 +13,8 @@ import { AttendeesComponent } from './_components/attendees/attendees.component'
 import { LiveComponent } from './_components/attendees/_components/live/live.component';
 import { RegistrantsComponent } from './_components/attendees/_components/registrants/registrants.component';
 import { SpeakRequestsComponent } from './_components/attendees/_components/speak-requests/speak-requests.component';
+import { UpcomingComponent } from './_components/overview/upcoming/upcoming.component';
+import { RelatedComponent } from './_components/overview/related/related.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,8 @@ import { SpeakRequestsComponent } from './_components/attendees/_components/spea
     LiveComponent,
     RegistrantsComponent,
     SpeakRequestsComponent,
+    UpcomingComponent,
+    RelatedComponent,
   ],
   imports: [
     CommonModule,
