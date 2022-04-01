@@ -1,0 +1,162 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1648807278378-1">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceAskPrivateQuestionsAllowFollowUpResponse" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-2">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceAskPrivateQuestionsWithAdmins" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-3">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceAskPublicQuestions" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-4">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceAskPublicQuestionsAllowAudienceToRespond" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-5">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceAskPublicQuestionsAllowAudienceToUpvote" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-6">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceAskQuestions" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-7">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceChatPrivately" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-8">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceChatPrivatelySelected" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-9">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceChatPublicly" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-10">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceChatPubliclyTagMembers" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-11">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceEnableHandoutsTab" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-12">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceEnableMicrophone" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-13">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceEnableOffersTab" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-14">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceEnableOffersTabDisplayNoOfPurchases" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-15">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceEnablePollsTab" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-16">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceEnablePresentationTools" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-17">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceEnableSpeakRequests" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-18">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceEnableWebCam" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-19">
+        <addDefaultValue columnDataType="boolean" columnName="AudienceViewAudience" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-20">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsAllowCohostsToRespond" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-21">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsAllowCohostsToUpvote" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-22">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsChatPrivately" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-23">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsChatPrivatelySelected" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-24">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsChatPublicly" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-25">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsChatPubliclyTagMembers" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-26">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsCreateOffers" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-27">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsCreatePolls" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-28">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsEnableMicrophone" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-29">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsEnablePresentationTools" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-30">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsEnableSpeakRequests" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-31">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsEnableWebCam" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-32">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsManageAudience" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-33">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsManageAudienceSettings" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-34">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsManageGuestSettings" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-35">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsManageGuests" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-36">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsUploadHandouts" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-37">
+        <addDefaultValue columnDataType="boolean" columnName="CohostsViewRegistrants" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-38">
+        <addDefaultValue columnDataType="boolean" columnName="GuestsAllowGuestsToRespond" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-39">
+        <addDefaultValue columnDataType="boolean" columnName="GuestsAllowGuestsToUpvote" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-40">
+        <addDefaultValue columnDataType="boolean" columnName="GuestsChatPrivately" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-41">
+        <addDefaultValue columnDataType="boolean" columnName="GuestsChatPrivatelySelected" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-42">
+        <addDefaultValue columnDataType="boolean" columnName="GuestsChatPublicly" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-43">
+        <addDefaultValue columnDataType="boolean" columnName="GuestsChatPubliclyTagMembers" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-44">
+        <addDefaultValue columnDataType="boolean" columnName="GuestsCreateHandouts" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-45">
+        <addDefaultValue columnDataType="boolean" columnName="GuestsCreateOffers" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-46">
+        <addDefaultValue columnDataType="boolean" columnName="GuestsCreatePolls" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-47">
+        <addDefaultValue columnDataType="boolean" columnName="GuestsEnableMicrophone" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-48">
+        <addDefaultValue columnDataType="boolean" columnName="GuestsEnablePresentationTools" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-49">
+        <addDefaultValue columnDataType="boolean" columnName="GuestsEnableSpeakRequests" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-50">
+        <addDefaultValue columnDataType="boolean" columnName="GuestsEnableWebCam" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-51">
+        <addDefaultValue columnDataType="boolean" columnName="GuestsManageAudience" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-52">
+        <addDefaultValue columnDataType="boolean" columnName="GuestsManageAudienceSettings" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1648807278378-53">
+        <addDefaultValue columnDataType="boolean" columnName="GuestsViewRegistrants" defaultValueBoolean="false" tableName="academicallyevents"/>
+    </changeSet>
+</databaseChangeLog>
