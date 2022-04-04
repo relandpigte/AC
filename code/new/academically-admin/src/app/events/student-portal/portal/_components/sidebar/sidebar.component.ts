@@ -40,7 +40,7 @@ export class SidebarComponent extends AppComponentBase implements OnInit {
     this.menuItems.push(new MenuItem('Reviews', 'fe-star'));
     this.menuItems.push(new MenuItem('Separator'));
     this.menuItems.push(new MenuItem('Settings', 'fe-settings'));
-    this.activeMenuItem = this.menuItems[9];
+    this.activeMenuItem = this.menuItems[0];
     route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {
         this.eventId = paramMap.get('id');

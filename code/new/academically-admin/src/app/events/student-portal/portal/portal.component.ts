@@ -19,7 +19,7 @@ export class PortalComponent extends AppComponentBase implements OnInit {
   eventId: string;
   preview = false;
   showSidebar = true;
-  showDeviceSettings = false;
+  showDeviceSettings = true;
   eventStarted = false;
 
   constructor(
