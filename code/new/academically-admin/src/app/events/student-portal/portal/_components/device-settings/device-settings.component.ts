@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Injector } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import * as _ from 'lodash';
 
 class MachineDevice {
   name: string;
@@ -28,17 +29,28 @@ export class DeviceSettingsComponent extends AppComponentBase implements OnInit 
   }
 
   ngOnInit(): void {
-    this.videoDevices.push(new MachineDevice('Video Device 1'));
-    this.videoDevices.push(new MachineDevice('Video Device 2'));
-    this.videoDevices.push(new MachineDevice('Video Device 3'));
-
-    this.audioDevices.push(new MachineDevice('Audio Device 1'));
-    this.audioDevices.push(new MachineDevice('Audio Device 2'));
-    this.audioDevices.push(new MachineDevice('Audio Device 3'));
-
-    this.outputDevices.push(new MachineDevice('Output Device 1'));
-    this.outputDevices.push(new MachineDevice('Output Device 2'));
-    this.outputDevices.push(new MachineDevice('Output Device 3'));
+    navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    })
+      .then(() => {
+        navigator.mediaDevices.enumerateDevices()
+          .then(devices => {
+            _.each(devices, device => {
+              switch (device.kind) {
+                case 'audioinput':
+                  this.audioDevices.push(new MachineDevice(device.label));
+                  break;
+                case 'videoinput':
+                  this.videoDevices.push(new MachineDevice(device.label));
+                  break;
+                case 'audiooutput':
+                  this.outputDevices.push(new MachineDevice(device.label));
+                  break;
+              }
+            });
+          });
+      });
   }
 
   onJoinRoomClick(): void {

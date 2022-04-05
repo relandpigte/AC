@@ -5,10 +5,12 @@ import { PermissionsModule } from '../permissions/permissions.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { SharedModule } from '@shared/shared.module';
 import { StudioComponent } from './studio.component';
+import { InvitePresenterComponent } from './_components/invite-presenter/invite-presenter.component';
 
 @NgModule({
   declarations: [
     StudioComponent,
+    InvitePresenterComponent,
   ],
   imports: [
     CommonModule,

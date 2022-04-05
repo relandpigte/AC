@@ -62,7 +62,7 @@
           </div>
         </div>
         <div class="presenter">
-          <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-4.jpg" />
+          <video class="presenter-video" #presenterVideoEl autoplay playsinline></video>
         </div>
       </div>
       <div class="presentation-controls bg-white">
@@ -72,8 +72,11 @@
         <button class="btn btn-sm btn-outline-primary mx-2">
           <i class="fe fe-camera"></i>
         </button>
-        <button class="btn btn-sm btn-primary mx-2" (click)="onGoLiveClick()">
-          Go Live
+        <button *ngIf="isTutor" class="btn btn-sm btn-primary mx-2" (click)="onGoLiveClick()">
+          {{ 'GoLive' | localize | titlecase }}
+        </button>
+        <button *ngIf="!isTutor" class="btn btn-sm btn-primary mx-2" (click)="onJoinClick()">
+          {{ 'Join' | localize }}
         </button>
         <button class="btn btn-sm btn-outline-primary mx-2">
           <i class="fe fe-monitor"></i>

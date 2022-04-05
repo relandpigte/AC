@@ -16,6 +16,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-details',
@@ -143,6 +144,9 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   }
 
   private updateDetails(): void {
+    if (!_.isNumber(this.model.price)) {
+      return;
+    }
     this._eventsService.update(this.model)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {

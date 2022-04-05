@@ -2,54 +2,76 @@
   <div class="col-8">
     <div class="card">
       <div class="card-header">
-        <h4 class="card-header-title mr-auto">
-          {{ 'Presenters' | localize }}
-        </h4>
-        <div class="col-auto">
-          <a class="btn btn-primary">
-            {{ 'Invite' | localize }}
-          </a>
+        <div class="row">
+          <div class="col flex-y-center">
+            <h4 class="card-header-title">
+              {{ 'Presenters' | localize }}
+            </h4>
+          </div>
+          <div class="col-auto">
+            <a class="btn btn-primary btn-sm" (click)="onInviteClick()">
+              {{ 'Invite' | localize }}
+            </a>
+          </div>
         </div>
       </div>
-      <div class="card-body">
-        <ul class="list-group list-group-flush list my-n3">
+      <div class="card-body py-0" [loader]="loading">
+        <ul *ngIf="presenters && presenters.length else noPresentersTemplate" class="list-group list-group-flush">
           <li class="list-group-item" *ngFor="let presenter of presenters">
             <div class="row align-items-center">
               <div class="col-auto">
                 <a class="avatar">
-                  <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
+                  <img [src]="getProfilePictureUrl(presenter.user.profilePictureDocument)" alt="..."
+                    class="avatar-img rounded-circle">
                 </a>
               </div>
               <div class="col ml-n2">
                 <h4 class="mb-1 name">
-                  <a>{{presenter.name}}</a>
+                  <a>{{ presenter.user.fullName }}</a>
                 </h4>
               </div>
               <div class="col-auto">
                 <div class="dropdown">
-                  <a class="btn btn-sm btn-white d-none d-md-inline-block" role="button" data-toggle="dropdown"
+                  <a class="btn btn-sm btn-outline-primary dropdown-toggle" role=" button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
-                    {{ 'Co-Host' | localize }}<i class="fe fe-chevron-down"></i>
+                    {{ EventPresenterType[presenter.type] }} <span class="caret"></span>
                   </a>
-                  <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item">
-                      {{ 'Co-Host' | localize }}
-                    </a>
-                    <a class="dropdown-item">
-                      {{ 'Guest' | localize }}
-                    </a>
-                  </div>
+                  <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="button-basic">
+                    <li role="menuitem">
+                      <a class="dropdown-item" href="#"
+                        (click)="$event.preventDefault(); onPresenterTypeChange(EventPresenterType.CoHost, presenter)">
+                        {{ EventPresenterType[EventPresenterType.CoHost] | localize }}
+                      </a>
+                    </li>
+                    <li role="menuitem">
+                      <a class="dropdown-item" href="#"
+                        (click)="$event.preventDefault(); onPresenterTypeChange(EventPresenterType.Guest, presenter)">
+                        {{ EventPresenterType[EventPresenterType.Guest] | localize }}
+                      </a>
+                    </li>
+                  </ul>
                 </div>
-
               </div>
               <div class="col-auto">
-
                 <a class="dropdown-ellipses dropdown-toggle" role="button">
-                  <i class="fe fe-more-vertical"></i>
-                </a>
 
+                </a>
+                <div class="dropdown">
+                  <a class="dropdown-ellipses dropdown-toggle" href="#" role=" button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <i class="fe fe-more-vertical"></i>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="button-basic">
+                    <li role="menuitem">
+                      <a class="dropdown-item" href="#"
+                        (click)="$event.preventDefault(); onRemovePresenterClick(presenter)">
+                        {{ 'Remove' | localize }}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </div> <!-- / .row -->
+            </div>
           </li>
         </ul>
 
@@ -129,3 +151,9 @@
   </div>
 
 </div>
+
+<ng-template #noPresentersTemplate>
+  <p class="text-muted text-center m-0 p-4">
+    {{ 'NoPresenterFound' | localize }}
+  </p>
+</ng-template>
