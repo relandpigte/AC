@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { EventDto, EventsServiceProxy, TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -7,6 +7,12 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { takeUntil } from 'rxjs/operators';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { EventStartingComponent } from './_components/event-starting/event-starting.component';
+import { environment } from 'environments/environment';
+
+enum StreamTrackType {
+  Audio = 'audio',
+  Video = 'video',
+}
 
 @Component({
   selector: 'app-portal',
@@ -14,13 +20,19 @@ import { EventStartingComponent } from './_components/event-starting/event-start
   styleUrls: ['./portal.component.less'],
   animations: [appModuleAnimation()],
 })
-export class PortalComponent extends AppComponentBase implements OnInit {
+export class PortalComponent extends AppComponentBase implements OnInit, AfterViewInit {
+  @ViewChild('presenterVideoEl') presenterVideoEl: ElementRef;
+  presenterVideo: HTMLVideoElement;
+  presenterStream: MediaStream;
+
+  peerConnection: RTCPeerConnection;
+
   model = new EventDto;
   eventId: string;
   preview = false;
   showSidebar = true;
-  showDeviceSettings = true;
-  eventStarted = false;
+  showDeviceSettings = false;
+  eventStarted = true;
 
   constructor(
     injector: Injector,
@@ -39,7 +51,13 @@ export class PortalComponent extends AppComponentBase implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    this.presenterVideo = this.presenterVideoEl.nativeElement;
+  }
+
+  async ngOnInit(): Promise<void> {
+    await this.initializeWebRTC();
+    await this.initializeSessionsHub();
   }
 
   onExitClick(): void {
@@ -59,11 +77,74 @@ export class PortalComponent extends AppComponentBase implements OnInit {
       });
   }
 
+  onJoinClick(): void {
+    this.eventStarted = true;
+  }
+
   private getEvent(): void {
     this._eventsService.get(this.eventId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         this.model = response;
       });
+  }
+
+  private async initializeWebRTC(): Promise<void> {
+    this.peerConnection = new RTCPeerConnection({
+      iceServers: [
+        {
+          urls: environment.webRtc.stun.servers,
+        },
+        {
+          urls: environment.webRtc.turn.servers,
+          username: environment.webRtc.turn.username,
+          credential: environment.webRtc.turn.password,
+        },
+      ],
+      iceTransportPolicy: 'all',
+      iceCandidatePoolSize: 10,
+    });
+  }
+
+  private async initializeDevice(): Promise<void> {
+    this.presenterStream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        width: {
+          exact: 1280
+        },
+        height: {
+          exact: 720
+        },
+      },
+      audio: {
+        echoCancellation: {
+          exact: true,
+        },
+        // @ts-ignore
+        googEchoCancellation: { exact: true },
+        googAutoGainControl: { exact: true },
+        googNoiseSuppression: { exact: true },
+      },
+    });
+
+    this.presenterStream.getTracks().forEach(track => {
+      switch (track.kind) {
+        case StreamTrackType.Audio:
+          this.peerConnection.addTrack(track, this.presenterStream);
+          break;
+        case StreamTrackType.Video:
+          break;
+      }
+    });
+
+    this.presenterVideo.srcObject = this.presenterStream;
+    this.presenterVideo.volume = 0;
+    // this.remoteVideo.srcObject = this.remoteStream;
+
+    // this.sessionState = SessionState.Initiated;
+  }
+
+  private async initializeSessionsHub(): Promise<void> {
+    await this.initializeDevice();
   }
 }

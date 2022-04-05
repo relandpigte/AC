@@ -1,29 +1,42 @@
-﻿using Abp.Application.Services;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Timing;
+using Academically.Authorization.Roles;
+using Academically.Authorization.Users;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Services.Events.Dto;
 using Academically.Services.Events.Enums;
+using Academically.Users.Dto;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Academically.Services.Events
 {
     public class EventsAppService : AsyncCrudAppService<Event, EventDto, Guid, PagedEventResultRequestDto, CreateEventDto, UpdateEventDto>, IEventsAppService
     {
+        private readonly RoleManager _roleManager;
         private readonly IRepository<StudentEvent, Guid> _studentEventsRepository;
+        private readonly IRepository<User, long> _usersRepository;
+        private readonly IRepository<EventPresenter, Guid> _eventPresentersRepository;
 
         public EventsAppService(
+            RoleManager roleManager,
             IRepository<StudentEvent, Guid> studentEventsRepository,
+            IRepository<User, long> usersRepository,
+            IRepository<EventPresenter, Guid> eventPresentersRepository,
             IRepository<Event, Guid> repository
             ) : base(repository)
         {
+            _roleManager = roleManager;
             _studentEventsRepository = studentEventsRepository;
+            _eventPresentersRepository = eventPresentersRepository;
+            _usersRepository = usersRepository;
         }
 
         protected override IQueryable<Event> CreateFilteredQuery(PagedEventResultRequestDto input)
@@ -58,6 +71,7 @@ namespace Academically.Services.Events
                 .Include(e => e.Parent)
                 .Include(e => e.ThumbnailDocument)
                 .Include(e => e.CreatorUser)
+                .Include(e => e.Children)
                 .FirstOrDefaultAsync();
         }
 
@@ -93,6 +107,39 @@ namespace Academically.Services.Events
                 .Select(e => ObjectMapper.Map<StudentEventDto>(e))
                 .ToListAsync();
             return new PagedResultDto<StudentEventDto>(totalCount, studentVideos);
+        }
+
+        public async Task<PagedResultDto<UserDto>> GetPresentersForInvite(PagedPresentersForInviteResultRequestDto input)
+        {
+            input.SearchFilter = input.SearchFilter?.ToLower();
+            var eventPresenterIds = _eventPresentersRepository.GetAll()
+                .Select(e => e.UserId);
+            var tutorRole = await _roleManager.GetRoleByNameAsync(StaticRoleNames.Tenants.Tutor);
+            var query = _usersRepository.GetAll()
+                .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.Name.ToLower().Contains(input.SearchFilter)
+                     || e.Surname.ToLower().Contains(input.SearchFilter))
+                .Where(e => e.Roles.Any(r => r.RoleId == tutorRole.Id))
+                .Where(e => !eventPresenterIds.Any(id => id == e.Id));
+            var totalCount = await query.CountAsync();
+            var tutors = await query.PageBy(input)
+                .OrderBy(e => e.Name)
+                    .ThenBy(e => e.Surname)
+                .Include(e => e.ProfilePictureDocument)
+                .Select(e => ObjectMapper.Map<UserDto>(e))
+                .ToListAsync();
+            return new PagedResultDto<UserDto>(totalCount, tutors);
+        }
+
+        public async Task<IEnumerable<EventPresenterDto>> GetAllPresenters(Guid id)
+        {
+            return await _eventPresentersRepository.GetAll()
+                .Where(e => e.EventId == id)
+                .OrderBy(e => e.User.Name)
+                    .ThenBy(e => e.User.Surname)
+                .Include(e => e.User)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .Select(e => ObjectMapper.Map<EventPresenterDto>(e))
+                .ToListAsync();
         }
 
         public async Task<StudentEventDto> GetPurchasedAsync(Guid id)
@@ -136,6 +183,24 @@ namespace Academically.Services.Events
             var studentEvent = ObjectMapper.Map<StudentEvent>(input);
             studentEvent.CreatorUserId = AbpSession.UserId.Value;
             await _studentEventsRepository.InsertAsync(studentEvent);
+        }
+
+        public async Task InvitePresenterAsync(CreateEventPresenterDto input)
+        {
+            var eventPresenter = ObjectMapper.Map<EventPresenter>(input);
+            await _eventPresentersRepository.InsertAsync(eventPresenter);
+        }
+
+        public async Task UpdatePresenterTypeAsync(UpdatePresenterTypeDto input)
+        {
+            var eventPresenter = await _eventPresentersRepository.GetAsync(input.Id);
+            eventPresenter.Type = input.NewType;
+            await _eventPresentersRepository.UpdateAsync(eventPresenter);
+        }
+
+        public async Task RemovePresenterAsync(Guid eventPresenterId)
+        {
+            await _eventPresentersRepository.DeleteAsync(eventPresenterId);
         }
     }
 }

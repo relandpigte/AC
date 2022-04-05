@@ -1,9 +1,11 @@
-﻿using Abp.Application.Services;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Academically.Domain.Enums;
 using Academically.Services.Events.Dto;
-using System;
-using System.Threading.Tasks;
+using Academically.Users.Dto;
 
 namespace Academically.Services.Events
 {
@@ -11,9 +13,14 @@ namespace Academically.Services.Events
     {
         Task<PagedResultDto<EventDto>> GetEventSchedules(PagedEventScheduleResultRequestDto input);
         Task<PagedResultDto<StudentEventDto>> GetAllPurchasedAsync(PagedStudentEventResultRequestDto input);
+        Task<PagedResultDto<UserDto>> GetPresentersForInvite(PagedPresentersForInviteResultRequestDto input);
+        Task<IEnumerable<EventPresenterDto>> GetAllPresenters(Guid id);
         Task<StudentEventDto> GetPurchasedAsync(Guid id);
         Task UpdateStatusAsync(Guid id, EventStatus status);
         Task<EventDto> UpdateSettingsAsync(UpdateEventSettingsDto input);
         Task PurchaseAsync(CreateStudentEventDto input);
+        Task InvitePresenterAsync(CreateEventPresenterDto input);
+        Task UpdatePresenterTypeAsync(UpdatePresenterTypeDto input);
+        Task RemovePresenterAsync(Guid eventPresenterId);
     }
 }

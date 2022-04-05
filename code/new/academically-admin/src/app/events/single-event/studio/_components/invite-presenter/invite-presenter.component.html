@@ -1,0 +1,55 @@
+<abp-modal-header [title]="'EditTenant' | localize" (onCloseClick)="onCloseClick()"></abp-modal-header>
+<div class="modal-header py-1">
+  <form class="w-100">
+    <div class="input-group input-group-flush">
+      <div class="input-group-prepend">
+        <span class="input-group-text">
+          <i class="fe fe-search"></i>
+        </span>
+      </div>
+      <input class="list-search form-control" type="search" name="Search" placeholder="Search"
+        [(ngModel)]="searchFilter" (keyup.enter)="getDataPage(1)" />
+    </div>
+  </form>
+</div>
+<div class="table-responsive">
+  <table class="table table-sm table-hover table-nowrap card-table" [loader]="isTableLoading">
+    <thead>
+      <tr>
+        <th colspan="2">
+          {{ 'Name' | localize }}
+        </th>
+      </tr>
+    </thead>
+    <tbody class="list font-size-base">
+      <tr
+        *ngFor="let user of (users | paginate: { id: 'presenters', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })">
+        <td>
+
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <a class="avatar">
+                <img [src]="getProfilePictureUrl(user.profilePictureDocument)" alt="..."
+                  class="avatar-img rounded-circle">
+              </a>
+            </div>
+            <div class="col">
+              {{ user.fullName }}
+            </div>
+          </div>
+        </td>
+        <td width="1%">
+          <button class="btn btn-sm btn-outline-primary" (click)="onInviteClick(user.id)">
+            {{ 'Invite' | localize }}
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="users.length === 0">
+        <td colspan="10">
+          <p class="text-center m-0 p-0">{{ 'NoUsersFound' | localize }}</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <abp-pagination-controls id="presenters" (pageChange)="getDataPage($event)"> </abp-pagination-controls>
+</div>

@@ -1,3 +1,23 @@
+<ng-container *ngIf="model.parent && model.parent.id">
+  <div class="p-3">
+    <div class="row align-items-center">
+      <div class="col">
+        <h6 class="header-pretitle">{{ 'EventSeries' | localize }}</h6>
+        <h3 class="header-title">
+          {{ model.parent.name }}
+        </h3>
+      </div>
+      <div *ngIf="model.parent.pricingType !== PricingType.Free" class="col-auto">
+        <button
+          *ngIf="(!parentStudentEvent || !parentStudentEvent.id) && model.creatorUser.id !== appSession.userId else checkTemplate"
+          [disabled]="preview" class="btn btn-sm btn-primary" (click)="onPurchaseClick(model.parent)">
+          &#163;{{ model.parent.price }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <hr class="m-0 p-0">
+</ng-container>
 <div class="p-3" *ngIf="isTutor">
   <div class="avatar-group">
     <div class="avatar-sm">

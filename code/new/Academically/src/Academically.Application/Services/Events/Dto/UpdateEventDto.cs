@@ -15,5 +15,6 @@ namespace Academically.Services.Events.Dto
         public Guid? ThumbnailDocumentId { get; set; }
         public Guid? LanguageId { get; set; }
         public PricingType? PricingType { get; set; }
+        public decimal? Price { get; set; }
     }
 }

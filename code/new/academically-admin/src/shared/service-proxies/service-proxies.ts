@@ -6427,6 +6427,135 @@ export class EventsServiceProxy {
     }
 
     /**
+     * @param searchFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getPresentersForInvite(searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Events/GetPresentersForInvite?";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPresentersForInvite(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPresentersForInvite(<any>response_);
+                } catch (e) {
+                    return <Observable<UserDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPresentersForInvite(response: HttpResponseBase): Observable<UserDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getAllPresenters(id: string | undefined): Observable<EventPresenterDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Events/GetAllPresenters?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllPresenters(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllPresenters(<any>response_);
+                } catch (e) {
+                    return <Observable<EventPresenterDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventPresenterDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllPresenters(response: HttpResponseBase): Observable<EventPresenterDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(EventPresenterDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventPresenterDto[]>(<any>null);
+    }
+
+    /**
      * @param id (optional) 
      * @return Success
      */
@@ -6685,6 +6814,162 @@ export class EventsServiceProxy {
     }
 
     protected processPurchase(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    invitePresenter(body: CreateEventPresenterDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Events/InvitePresenter";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processInvitePresenter(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processInvitePresenter(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processInvitePresenter(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updatePresenterType(body: UpdatePresenterTypeDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Events/UpdatePresenterType";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdatePresenterType(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdatePresenterType(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdatePresenterType(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param eventPresenterId (optional) 
+     * @return Success
+     */
+    removePresenter(eventPresenterId: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Events/RemovePresenter?";
+        if (eventPresenterId === null)
+            throw new Error("The parameter 'eventPresenterId' cannot be null.");
+        else if (eventPresenterId !== undefined)
+            url_ += "eventPresenterId=" + encodeURIComponent("" + eventPresenterId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRemovePresenter(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRemovePresenter(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRemovePresenter(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -23854,6 +24139,57 @@ export interface ICreateEventPollDto {
     eventPollQuestions: EventPollQuestionDto[] | undefined;
 }
 
+export class CreateEventPresenterDto implements ICreateEventPresenterDto {
+    type: EventPresenterType;
+    eventId: string;
+    userId: number;
+
+    constructor(data?: ICreateEventPresenterDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.type = _data["type"];
+            this.eventId = _data["eventId"];
+            this.userId = _data["userId"];
+        }
+    }
+
+    static fromJS(data: any): CreateEventPresenterDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateEventPresenterDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["type"] = this.type;
+        data["eventId"] = this.eventId;
+        data["userId"] = this.userId;
+        return data; 
+    }
+
+    clone(): CreateEventPresenterDto {
+        const json = this.toJSON();
+        let result = new CreateEventPresenterDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateEventPresenterDto {
+    type: EventPresenterType;
+    eventId: string;
+    userId: number;
+}
+
 export class CreateEventResourceDto implements ICreateEventResourceDto {
     id: string;
     name: string | undefined;
@@ -25344,6 +25680,7 @@ export class EventDto implements IEventDto {
     thumbnailDocumentId: string | undefined;
     languageId: string | undefined;
     pricingType: PricingType;
+    price: number | undefined;
     frequencyType: EventFrequencyType;
     eventDateTime: moment.Moment | undefined;
     duration: number;
@@ -25375,7 +25712,7 @@ export class EventDto implements IEventDto {
     cohostsChatPublicly: boolean;
     cohostsChatPubliclyTagMembers: boolean;
     cohostsChatPrivately: boolean;
-    cohostsChatPrivatelySelected: string | undefined;
+    cohostsChatPrivatelySelected: boolean;
     cohostsAllowCohostsToUpvote: boolean;
     cohostsAllowCohostsToRespond: boolean;
     cohostsCreatePolls: boolean;
@@ -25391,7 +25728,7 @@ export class EventDto implements IEventDto {
     guestsChatPublicly: boolean;
     guestsChatPubliclyTagMembers: boolean;
     guestsChatPrivately: boolean;
-    guestsChatPrivatelySelected: string | undefined;
+    guestsChatPrivatelySelected: boolean;
     guestsAllowGuestsToUpvote: boolean;
     guestsAllowGuestsToRespond: boolean;
     guestsCreatePolls: boolean;
@@ -25405,7 +25742,7 @@ export class EventDto implements IEventDto {
     audienceChatPublicly: boolean;
     audienceChatPubliclyTagMembers: boolean;
     audienceChatPrivately: boolean;
-    audienceChatPrivatelySelected: string | undefined;
+    audienceChatPrivatelySelected: boolean;
     audienceAskQuestions: boolean;
     audienceAskPublicQuestions: boolean;
     audienceAskPublicQuestionsAllowAudienceToUpvote: boolean;
@@ -25444,6 +25781,7 @@ export class EventDto implements IEventDto {
             this.thumbnailDocumentId = _data["thumbnailDocumentId"];
             this.languageId = _data["languageId"];
             this.pricingType = _data["pricingType"];
+            this.price = _data["price"];
             this.frequencyType = _data["frequencyType"];
             this.eventDateTime = _data["eventDateTime"] ? moment(_data["eventDateTime"].toString()) : <any>undefined;
             this.duration = _data["duration"];
@@ -25548,6 +25886,7 @@ export class EventDto implements IEventDto {
         data["thumbnailDocumentId"] = this.thumbnailDocumentId;
         data["languageId"] = this.languageId;
         data["pricingType"] = this.pricingType;
+        data["price"] = this.price;
         data["frequencyType"] = this.frequencyType;
         data["eventDateTime"] = this.eventDateTime ? this.eventDateTime.toISOString() : <any>undefined;
         data["duration"] = this.duration;
@@ -25652,6 +25991,7 @@ export interface IEventDto {
     thumbnailDocumentId: string | undefined;
     languageId: string | undefined;
     pricingType: PricingType;
+    price: number | undefined;
     frequencyType: EventFrequencyType;
     eventDateTime: moment.Moment | undefined;
     duration: number;
@@ -25683,7 +26023,7 @@ export interface IEventDto {
     cohostsChatPublicly: boolean;
     cohostsChatPubliclyTagMembers: boolean;
     cohostsChatPrivately: boolean;
-    cohostsChatPrivatelySelected: string | undefined;
+    cohostsChatPrivatelySelected: boolean;
     cohostsAllowCohostsToUpvote: boolean;
     cohostsAllowCohostsToRespond: boolean;
     cohostsCreatePolls: boolean;
@@ -25699,7 +26039,7 @@ export interface IEventDto {
     guestsChatPublicly: boolean;
     guestsChatPubliclyTagMembers: boolean;
     guestsChatPrivately: boolean;
-    guestsChatPrivatelySelected: string | undefined;
+    guestsChatPrivatelySelected: boolean;
     guestsAllowGuestsToUpvote: boolean;
     guestsAllowGuestsToRespond: boolean;
     guestsCreatePolls: boolean;
@@ -25713,7 +26053,7 @@ export interface IEventDto {
     audienceChatPublicly: boolean;
     audienceChatPubliclyTagMembers: boolean;
     audienceChatPrivately: boolean;
-    audienceChatPrivatelySelected: string | undefined;
+    audienceChatPrivatelySelected: boolean;
     audienceAskQuestions: boolean;
     audienceAskPublicQuestions: boolean;
     audienceAskPublicQuestionsAllowAudienceToUpvote: boolean;
@@ -26152,6 +26492,72 @@ export interface IEventPollQuestionOptionDto {
 export enum EventPollQuestionType {
     MultipleChoice = 0,
     MultipleResponse = 1,
+}
+
+export class EventPresenterDto implements IEventPresenterDto {
+    id: string;
+    type: EventPresenterType;
+    eventId: string;
+    userId: number;
+    user: UserDto;
+
+    constructor(data?: IEventPresenterDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.type = _data["type"];
+            this.eventId = _data["eventId"];
+            this.userId = _data["userId"];
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): EventPresenterDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventPresenterDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["type"] = this.type;
+        data["eventId"] = this.eventId;
+        data["userId"] = this.userId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): EventPresenterDto {
+        const json = this.toJSON();
+        let result = new EventPresenterDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEventPresenterDto {
+    id: string;
+    type: EventPresenterType;
+    eventId: string;
+    userId: number;
+    user: UserDto;
+}
+
+/** 0 = Host 1 = CoHost 2 = Guest */
+export enum EventPresenterType {
+    Host = 0,
+    CoHost = 1,
+    Guest = 2,
 }
 
 /** 1 = Record 2 = DontRecord */
@@ -34392,6 +34798,7 @@ export class UpdateEventDto implements IUpdateEventDto {
     thumbnailDocumentId: string | undefined;
     languageId: string | undefined;
     pricingType: PricingType;
+    price: number | undefined;
 
     constructor(data?: IUpdateEventDto) {
         if (data) {
@@ -34411,6 +34818,7 @@ export class UpdateEventDto implements IUpdateEventDto {
             this.thumbnailDocumentId = _data["thumbnailDocumentId"];
             this.languageId = _data["languageId"];
             this.pricingType = _data["pricingType"];
+            this.price = _data["price"];
         }
     }
 
@@ -34430,6 +34838,7 @@ export class UpdateEventDto implements IUpdateEventDto {
         data["thumbnailDocumentId"] = this.thumbnailDocumentId;
         data["languageId"] = this.languageId;
         data["pricingType"] = this.pricingType;
+        data["price"] = this.price;
         return data; 
     }
 
@@ -34449,6 +34858,7 @@ export interface IUpdateEventDto {
     thumbnailDocumentId: string | undefined;
     languageId: string | undefined;
     pricingType: PricingType;
+    price: number | undefined;
 }
 
 export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
@@ -34484,7 +34894,7 @@ export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
     cohostsChatPublicly: boolean;
     cohostsChatPubliclyTagMembers: boolean;
     cohostsChatPrivately: boolean;
-    cohostsChatPrivatelySelected: string | undefined;
+    cohostsChatPrivatelySelected: boolean;
     cohostsAllowCohostsToUpvote: boolean;
     cohostsAllowCohostsToRespond: boolean;
     cohostsCreatePolls: boolean;
@@ -34500,7 +34910,7 @@ export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
     guestsChatPublicly: boolean;
     guestsChatPubliclyTagMembers: boolean;
     guestsChatPrivately: boolean;
-    guestsChatPrivatelySelected: string | undefined;
+    guestsChatPrivatelySelected: boolean;
     guestsAllowGuestsToUpvote: boolean;
     guestsAllowGuestsToRespond: boolean;
     guestsCreatePolls: boolean;
@@ -34514,7 +34924,7 @@ export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
     audienceChatPublicly: boolean;
     audienceChatPubliclyTagMembers: boolean;
     audienceChatPrivately: boolean;
-    audienceChatPrivatelySelected: string | undefined;
+    audienceChatPrivatelySelected: boolean;
     audienceAskQuestions: boolean;
     audienceAskPublicQuestions: boolean;
     audienceAskPublicQuestionsAllowAudienceToUpvote: boolean;
@@ -34739,7 +35149,7 @@ export interface IUpdateEventSettingsDto {
     cohostsChatPublicly: boolean;
     cohostsChatPubliclyTagMembers: boolean;
     cohostsChatPrivately: boolean;
-    cohostsChatPrivatelySelected: string | undefined;
+    cohostsChatPrivatelySelected: boolean;
     cohostsAllowCohostsToUpvote: boolean;
     cohostsAllowCohostsToRespond: boolean;
     cohostsCreatePolls: boolean;
@@ -34755,7 +35165,7 @@ export interface IUpdateEventSettingsDto {
     guestsChatPublicly: boolean;
     guestsChatPubliclyTagMembers: boolean;
     guestsChatPrivately: boolean;
-    guestsChatPrivatelySelected: string | undefined;
+    guestsChatPrivatelySelected: boolean;
     guestsAllowGuestsToUpvote: boolean;
     guestsAllowGuestsToRespond: boolean;
     guestsCreatePolls: boolean;
@@ -34769,7 +35179,7 @@ export interface IUpdateEventSettingsDto {
     audienceChatPublicly: boolean;
     audienceChatPubliclyTagMembers: boolean;
     audienceChatPrivately: boolean;
-    audienceChatPrivatelySelected: string | undefined;
+    audienceChatPrivatelySelected: boolean;
     audienceAskQuestions: boolean;
     audienceAskPublicQuestions: boolean;
     audienceAskPublicQuestionsAllowAudienceToUpvote: boolean;
@@ -34827,6 +35237,53 @@ export class UpdateForumDto implements IUpdateForumDto {
 export interface IUpdateForumDto {
     id: string;
     message: string | undefined;
+}
+
+export class UpdatePresenterTypeDto implements IUpdatePresenterTypeDto {
+    id: string;
+    newType: EventPresenterType;
+
+    constructor(data?: IUpdatePresenterTypeDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.newType = _data["newType"];
+        }
+    }
+
+    static fromJS(data: any): UpdatePresenterTypeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdatePresenterTypeDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["newType"] = this.newType;
+        return data; 
+    }
+
+    clone(): UpdatePresenterTypeDto {
+        const json = this.toJSON();
+        let result = new UpdatePresenterTypeDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdatePresenterTypeDto {
+    id: string;
+    newType: EventPresenterType;
 }
 
 export class UpdateProjectDto implements IUpdateProjectDto {

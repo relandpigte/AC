@@ -1,10 +1,10 @@
 <div class="device-settings-component bg-light">
   <div class="row justify-content-center align-items-center h-100">
-    <div class="col-lg-4 col-md-4 col-sm-12">
+    <div class="col-lg-6 col-md-6 col-sm-12">
       <div class="card">
         <div class="card-header">
           <h4 class="card-header-title text-center">
-            Welcome, {{ appSession.user.name }}!
+            {{ 'Welcome' | localize }}, {{ appSession.user.name }}!
           </h4>
         </div>
         <div class="card-body">
@@ -18,7 +18,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text">
                   <i class="fe fe-video mr-1"></i>
-                  Video
+                  {{ 'Video' | localize }}
                 </span>
               </div>
               <select class="form-control form-control-prepended form-control-appended">
@@ -39,7 +39,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text">
                   <i class="fe fe-mic mr-1"></i>
-                  Audio
+                  {{ 'Audio' | localize }}
                 </span>
               </div>
               <select class="form-control form-control-prepended form-control-appended">
@@ -60,7 +60,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text">
                   <i class="fe fe-volume-2 mr-1"></i>
-                  Output
+                  {{ 'Output' | localize }}
                 </span>
               </div>
               <select class="form-control form-control-prepended form-control-appended">
@@ -72,7 +72,7 @@
                 <span class="input-group-text p-0 px-2">
                   <button class="btn btn-sm btn-outline-primary">
                     <i class="fe fe-play mr-1"></i>
-                    Play
+                    {{ 'Play' | localize }}
                   </button>
                 </span>
               </div>
@@ -81,7 +81,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text">
                   <i class="fe fe-wifi mr-1"></i>
-                  Connectivity
+                  {{ 'Connectivity' | localize }}
                 </span>
               </div>
               <input type="text" class="form-control form-control-prepended form-control-appended" readonly>
@@ -89,7 +89,7 @@
                 <span class="input-group-text p-0 px-2">
                   <button class="btn btn-sm btn-outline-primary">
                     <i class="fe fe-radio mr-1"></i>
-                    Test
+                    {{ 'Test' | localize }}
                   </button>
                 </span>
               </div>
@@ -97,10 +97,10 @@
           </div>
           <hr>
           <button class="btn btn-primary w-100" (click)="onJoinRoomClick()">
-            JOIN ROOM
+            {{ 'JoinRoom' | localize | uppercase }}
           </button>
           <button [routerLink]="['/app/events']" class="btn btn-white w-100 mt-2">
-            EXIT
+            {{ 'Exit' | localize | uppercase }}
           </button>
         </div>
       </div>
