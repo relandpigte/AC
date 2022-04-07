@@ -101,7 +101,7 @@
               </ng-template>
             </div>
             <div class="col d-flex flex-column justify-content-center">
-              <a *ngIf="event.type === EventType.SingleEvent" [routerLink]="[event.id]">
+              <a *ngIf="event.type === EventType.SingleEvent" [routerLink]="['/app/events/tutor-portal', event.id]">
                 <h4 class="mb-1">{{ event.name }}</h4>
               </a>
               <a *ngIf="event.type === EventType.EventSeries" [routerLink]="['event-series', event.id]">

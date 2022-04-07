@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { WrapperComponent } from '@app/layout/wrapper/wrapper.component';
+import { AppRouteGuard } from '@shared/auth/auth-route-guard';
 
 import { EventsComponent } from './events.component';
 
@@ -34,6 +35,21 @@ import { EventsComponent } from './events.component';
                   ),
               }
             ]
+          },
+        ],
+      },
+      {
+        path: 'tutor-portal',
+        data: { permission: 'Pages.Events' },
+        canActivate: [AppRouteGuard],
+        canActivateChild: [AppRouteGuard],
+        children: [
+          {
+            path: ':id',
+            loadChildren: () =>
+              import('@app/events/tutor-portal/tutor-portal.module').then(
+                (m) => m.TutorPortalModule
+              ),
           },
         ],
       },

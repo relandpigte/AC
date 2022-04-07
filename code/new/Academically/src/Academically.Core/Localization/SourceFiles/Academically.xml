@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="EditEvent">Edit event</text>
     <text name="PurchaseEventConfirmationMessage">Are you sure you want to purchase this event?</text>
     <text name="NoRelatedEvent">No related event</text>
     <text name="GoLive">Go live</text>
@@ -1608,6 +1609,8 @@
     <text name="Free15MinuteInterviewMessage">Offer a free 15 minute interview to allow students to ask questions and help them decide if you meet their requirements.</text>
     <text name="OfferSentSuccessfully">Offer sent successfully</text>
     <text name="ProjectOfferEmailSubject">Academically - Project Offer</text>
+    <text name="ChatHistory">Chat history</text>
+    <text name="PollResults">Poll results</text>
     <text name="ProjectOfferEmailMessage">
       <![CDATA[
           <p>Hi {0},</p>
