@@ -15,6 +15,8 @@ namespace Academically.Services.Events
         Task<PagedResultDto<StudentEventDto>> GetAllPurchasedAsync(PagedStudentEventResultRequestDto input);
         Task<PagedResultDto<UserDto>> GetPresentersForInvite(PagedPresentersForInviteResultRequestDto input);
         Task<IEnumerable<EventPresenterDto>> GetAllPresenters(Guid id);
+        Task<IEnumerable<StudentEventDto>> GetAllAudiences(Guid id);
+        Task<IEnumerable<EventDto>> GetAllRelated(Guid id);
         Task<StudentEventDto> GetPurchasedAsync(Guid id);
         Task UpdateStatusAsync(Guid id, EventStatus status);
         Task<EventDto> UpdateSettingsAsync(UpdateEventSettingsDto input);
@@ -22,5 +24,6 @@ namespace Academically.Services.Events
         Task InvitePresenterAsync(CreateEventPresenterDto input);
         Task UpdatePresenterTypeAsync(UpdatePresenterTypeDto input);
         Task RemovePresenterAsync(Guid eventPresenterId);
+        Task UnsaveAsync(Guid studentEventId);
     }
 }

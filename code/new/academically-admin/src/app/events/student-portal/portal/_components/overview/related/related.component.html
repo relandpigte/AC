@@ -1,59 +1,27 @@
-<ul class="nav nav-tabs nav-tabs-sm px-3">
-  <li class="nav-item">
-    <a href="#" class="nav-link active" id="related-tab" data-toggle="tab" href="#related-container" role="tab"
-      aria-controls="related-container" aria-selected="true">
-      {{ 'Related' | localize }}
-    </a>
-  </li>
-</ul>
-<div class="p-3">
-  <div class="tab-content">
-    <div class="tab-pane fade show active" id="related-container" role="tabpanel" aria-labelledby="related-tab">
-      <div class="row mb-3">
-        <div class="col-auto d-flex justify-content-center align-items-center">
-          <div class="avatar avatar-sm avatar-4by3">
-            <img [src]="getServiceImageUrl(undefined)" alt="..." class="avatar-img rounded">
-          </div>
-        </div>
-        <div class="col d-flex flex-column justify-content-center ml-n2">
-          <a href="#">
-            <h4 class="mb-2 small">Event </h4>
-          </a>
-          <p class="text-muted m-0 p-0 break-spaces small">
-            January 1, 2021
-          </p>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-auto d-flex justify-content-center align-items-center">
-          <div class="avatar avatar-sm avatar-4by3">
-            <img [src]="getServiceImageUrl(undefined)" alt="..." class="avatar-img rounded">
-          </div>
-        </div>
-        <div class="col d-flex flex-column justify-content-center ml-n2">
-          <a href="#">
-            <h4 class="mb-2 small">Event </h4>
-          </a>
-          <p class="text-muted m-0 p-0 break-spaces small">
-            January 1, 2021
-          </p>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-auto d-flex justify-content-center align-items-center">
-          <div class="avatar avatar-sm avatar-4by3">
-            <img [src]="getServiceImageUrl(undefined)" alt="..." class="avatar-img rounded">
-          </div>
-        </div>
-        <div class="col d-flex flex-column justify-content-center ml-n2">
-          <a href="#">
-            <h4 class="mb-2 small">Event </h4>
-          </a>
-          <p class="text-muted m-0 p-0 break-spaces small">
-            January 1, 2021
-          </p>
-        </div>
-      </div>
+<div class="row mb-3" *ngFor="let relatedEvent of relatedEvents">
+  <div class="col-auto d-flex justify-content-center align-items-center">
+    <div class="avatar avatar-sm avatar-4by3">
+      <img [src]="getServiceImageUrl(relatedEvent.thumbnailDocument)" alt="..." class="avatar-img rounded">
     </div>
   </div>
+  <div class="col d-flex flex-column justify-content-center ml-n2">
+    <a [routerLink]="['/app/articles/student-portal', relatedEvent.id]">
+      <h4 class="mb-2 small">{{ relatedEvent.name }}</h4>
+    </a>
+    <p class="text-muted m-0 p-0 break-spaces small">
+      {{ relatedEvent.creationTime | dateFormat: 'MMMM DD, YYYY' }}
+    </p>
+  </div>
+  <div *ngIf="relatedEvent.pricingType !== PricingType.Free"
+    class="col-auto d-flex flex-column justify-content-center ">
+    <i *ngIf="purchasedEvents[relatedEvent.id] else purchaseButtonTemplate" class="fe fe-check mr-2"></i>
+    <ng-template #purchaseButtonTemplate>
+      <button class="btn btn-sm btn-primary mb-2" (click)="onPurchaseClick(relatedEvent)">
+        &#163;{{ zeroIfNull(relatedEvent.price) }}
+      </button>
+    </ng-template>
+  </div>
 </div>
+<p *ngIf="!relatedEvents.length" class="m-0 p-0 text-muted text-center small">
+  {{ 'NoRelatedEvent' | localize }}
+</p>

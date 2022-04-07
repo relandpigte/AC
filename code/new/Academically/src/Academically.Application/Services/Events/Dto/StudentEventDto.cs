@@ -2,6 +2,7 @@
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Domain.Entities;
+using Academically.Users.Dto;
 
 namespace Academically.Services.Events.Dto
 {
@@ -12,6 +13,7 @@ namespace Academically.Services.Events.Dto
         public bool SaveOnly { get; set; }
 
         public EventDto Event { get; set; }
+        public UserDto CreatorUser { get; set; }
     }
 }
 

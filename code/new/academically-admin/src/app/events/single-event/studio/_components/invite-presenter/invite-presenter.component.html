@@ -51,5 +51,6 @@
       </tr>
     </tbody>
   </table>
-  <abp-pagination-controls id="presenters" (pageChange)="getDataPage($event)"> </abp-pagination-controls>
+  <abp-pagination-controls *ngIf="users && users.length && totalItems > users.length" id="presenters"
+    (pageChange)="getDataPage($event)"></abp-pagination-controls>
 </div>

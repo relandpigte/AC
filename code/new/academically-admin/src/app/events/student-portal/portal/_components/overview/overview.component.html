@@ -66,7 +66,7 @@
   <p *ngIf="model.description" class="pt-1 m-0 small">{{ model.description }}</p>
   <div class="row small text-muted text-center mx-2 mt-2">
     <div class="col p-0 no-wrap">
-      <a href="#!like" (click)="$event.preventDefault();">
+      <a [class.text-success]="isLiked" href="#!like" (click)="$event.preventDefault(); onLikeClick()">
         <i class="fe fe-thumbs-up"></i> {{ likeCount }}
       </a>
     </div>
@@ -74,10 +74,49 @@
     <div class="col p-0 no-wrap">
       <i class="fe fe-share-2"></i> {{ 'Share' }}
     </div>
+    <ng-container *ngIf="!preview && ((!studentEvent || !studentEvent.id) || (studentEvent && studentEvent.saveOnly))">
+      <div class="col-auto p-0 ">|</div>
+      <div class="col p-0 no-wrap">
+        <a *ngIf="!studentEvent || !studentEvent.id else unsaveEventTemplate" href="#!save"
+          (click)="$event.preventDefault(); onSaveClick()">
+          <i class="fe fe-bookmark"></i> {{ 'Save' }}
+        </a>
+        <ng-template #unsaveEventTemplate>
+          <a href="#!save" (click)="$event.preventDefault(); onUnsaveClick()" class="text-success">
+            <i class="fe fe-bookmark"></i> {{ 'Unsave' }}
+          </a>
+        </ng-template>
+      </div>
+    </ng-container>
   </div>
 </div>
+
 <ng-container *ngIf="!preview && model.id">
   <hr class="m-0 p-0">
-  <app-upcoming *ngIf="isTutor"></app-upcoming>
-  <app-related *ngIf="!isTutor"></app-related>
+  <ul class="nav nav-tabs nav-tabs-sm px-3">
+    <li *ngIf="isTutor" class="nav-item">
+      <a href="#" class="nav-link active" id="upcoming-tab" data-toggle="tab" href="#upcoming-container" role="tab"
+        aria-controls="upcoming-container" aria-selected="true">
+        {{ 'MoreInSeries' | localize }}
+      </a>
+    </li>
+    <li *ngIf="!isTutor" class="nav-item">
+      <a href="#" class="nav-link active" id="related-tab" data-toggle="tab" href="#related-container" role="tab"
+        aria-controls="related-container" aria-selected="true">
+        {{ 'Related' | localize }}
+      </a>
+    </li>
+  </ul>
+  <div class="p-3">
+    <div class="tab-content">
+      <div *ngIf="isTutor" class="tab-pane fade show active" id="more-container" role="tabpanel"
+        aria-labelledby="more-tab">
+        <app-upcoming></app-upcoming>
+      </div>
+      <div *ngIf="!isTutor" class="tab-pane fade show active" id="related-container" role="tabpanel"
+        aria-labelledby="related-tab">
+        <app-related></app-related>
+      </div>
+    </div>
+  </div>
 </ng-container>

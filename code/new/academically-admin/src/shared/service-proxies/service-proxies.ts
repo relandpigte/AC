@@ -6427,13 +6427,18 @@ export class EventsServiceProxy {
     }
 
     /**
+     * @param eventIdFilter (optional) 
      * @param searchFilter (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getPresentersForInvite(searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserDtoPagedResultDto> {
+    getPresentersForInvite(eventIdFilter: string | undefined, searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Events/GetPresentersForInvite?";
+        if (eventIdFilter === null)
+            throw new Error("The parameter 'eventIdFilter' cannot be null.");
+        else if (eventIdFilter !== undefined)
+            url_ += "EventIdFilter=" + encodeURIComponent("" + eventIdFilter) + "&";
         if (searchFilter === null)
             throw new Error("The parameter 'searchFilter' cannot be null.");
         else if (searchFilter !== undefined)
@@ -6553,6 +6558,132 @@ export class EventsServiceProxy {
             }));
         }
         return _observableOf<EventPresenterDto[]>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getAllAudiences(id: string | undefined): Observable<StudentEventDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Events/GetAllAudiences?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllAudiences(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllAudiences(<any>response_);
+                } catch (e) {
+                    return <Observable<StudentEventDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<StudentEventDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllAudiences(response: HttpResponseBase): Observable<StudentEventDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(StudentEventDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<StudentEventDto[]>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getAllRelated(id: string | undefined): Observable<EventDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Events/GetAllRelated?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllRelated(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllRelated(<any>response_);
+                } catch (e) {
+                    return <Observable<EventDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllRelated(response: HttpResponseBase): Observable<EventDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(EventDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventDto[]>(<any>null);
     }
 
     /**
@@ -6970,6 +7101,58 @@ export class EventsServiceProxy {
     }
 
     protected processRemovePresenter(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param studentEventId (optional) 
+     * @return Success
+     */
+    unsave(studentEventId: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Events/Unsave?";
+        if (studentEventId === null)
+            throw new Error("The parameter 'studentEventId' cannot be null.");
+        else if (studentEventId !== undefined)
+            url_ += "studentEventId=" + encodeURIComponent("" + studentEventId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUnsave(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUnsave(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUnsave(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -32006,6 +32189,7 @@ export class StudentEventDto implements IStudentEventDto {
     eventId: string;
     saveOnly: boolean;
     event: EventDto;
+    creatorUser: UserDto;
 
     constructor(data?: IStudentEventDto) {
         if (data) {
@@ -32022,6 +32206,7 @@ export class StudentEventDto implements IStudentEventDto {
             this.eventId = _data["eventId"];
             this.saveOnly = _data["saveOnly"];
             this.event = _data["event"] ? EventDto.fromJS(_data["event"]) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
         }
     }
 
@@ -32038,6 +32223,7 @@ export class StudentEventDto implements IStudentEventDto {
         data["eventId"] = this.eventId;
         data["saveOnly"] = this.saveOnly;
         data["event"] = this.event ? this.event.toJSON() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -32054,6 +32240,7 @@ export interface IStudentEventDto {
     eventId: string;
     saveOnly: boolean;
     event: EventDto;
+    creatorUser: UserDto;
 }
 
 export class StudentEventDtoPagedResultDto implements IStudentEventDtoPagedResultDto {
