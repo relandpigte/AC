@@ -3,23 +3,15 @@ import { CommonModule } from '@angular/common';
 import { ArticlesRoutingModule } from './articles-routing.module';
 import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
-
+import { TeachingModule } from '@app/articles/_components/teaching/teaching.module';
 import { ArticlesComponent } from './articles.component';
 import { ChooseTemplateComponent } from './_components/choose-template/choose-template.component';
-import { TeachingComponent } from './_components/teaching/teaching.component';
-import { LearningComponent } from './_components/learning/learning.component';
 import { CreateArticleComponent } from './_components/create-article/create-article.component';
-import { SavedComponent } from './_components/learning/saved/saved.component';
-import { PurchasedComponent } from './_components/learning/purchased/purchased.component';
-
+import { LearningModule } from './_components/learning/learning.module';
 @NgModule({
   declarations: [
     ArticlesComponent,
     ChooseTemplateComponent,
-    TeachingComponent,
-    LearningComponent,
-    PurchasedComponent,
-    SavedComponent,
     CreateArticleComponent,
   ],
   imports: [
@@ -27,6 +19,8 @@ import { PurchasedComponent } from './_components/learning/purchased/purchased.c
     ArticlesRoutingModule,
     SharedModule,
     AppSharedModule,
+    TeachingModule,
+    LearningModule,
   ],
 })
 export class ArticlesModule { }

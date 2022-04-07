@@ -1,0 +1,23 @@
+<div class="row listAlias">
+    <div *ngFor="let studentVideo of models" class="col-12 col-md-6 col-xl-4">
+      <div class="card">
+        <a href="#!visit" (click)="$event.preventDefault();">
+          <img [src]="getServiceImageUrl(studentVideo.video.thumbnailDocument)" alt="..." class="card-img-top">
+        </a>
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h4 class="mb-2 name">
+                <a href="#!visit" (click)="$event.preventDefault(); navToUrl('/app/videos/student-portal' ,studentVideo.video.id )">
+                  {{ studentVideo.video.name }}
+                </a>
+              </h4>
+              <p class="card-text small text-muted">
+                {{ 'Created' | localize }} {{ convertMomentToDateAgo(studentVideo.video.creationTime) }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

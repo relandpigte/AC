@@ -1,4 +1,5 @@
 import { Component, Injector, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ArticleService } from '@app/articles/_services/article.service';
 import { UploadService } from '@app/_shared/services/upload.service';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
@@ -24,6 +25,7 @@ export class ArticlesComponent extends PagedListingComponentBase<ArticleDto> imp
     private _articlesService: ArticlesServiceProxy,
     private _articleService: ArticleService,
     private _uploadService: UploadService,
+    private _router: Router
   ) {
     super(injector);
     this._articleService.articleCreated$.subscribe(article => {
@@ -36,6 +38,11 @@ export class ArticlesComponent extends PagedListingComponentBase<ArticleDto> imp
   onClearFiltersClick(): void {
     this.searchFilter = undefined;
     this.statusFilter = undefined;
+  }
+
+
+  onViewArticle(article: ArticleDto) {
+    this._router.navigate(['/app/articles/student-portal', article.id]);
   }
 
   protected list(
@@ -59,4 +66,6 @@ export class ArticlesComponent extends PagedListingComponentBase<ArticleDto> imp
         this.showPaging(result, pageNumber);
       });
   }
+
+
 }

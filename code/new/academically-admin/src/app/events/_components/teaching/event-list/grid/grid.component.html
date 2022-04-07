@@ -1,0 +1,42 @@
+<div class="row listAlias ml-2">
+    <div *ngFor="let event of events" class="col-12 col-md-6 col-xl-4">
+      <div class="card">
+        <a href="#!visit" (click)="$event.preventDefault();">
+          <img [src]="getServiceImageUrl(event.thumbnailDocument)" alt="..." class="card-img-top">
+        </a>
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h4 class="mb-2 name">
+                <a href="#!visit" [routerLink]="[event.id]" (click)="$event.preventDefault();">
+                  {{ event.name }}
+                </a>
+              </h4>
+              <p class="card-text small text-muted">
+                {{ 'Created' | localize }} {{ convertMomentToDateAgo(event.eventDateTime) }}
+              </p>
+            </div>
+            <div class="col-auto">
+              <div class="dropdown">
+                <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="fe fe-more-vertical"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <a href="#!visit" *ngIf="event.type === EventType.SingleEvent"   class="dropdown-item" (click)="$event.preventDefault();navToUrl('app/events' , event.id)">
+                    {{ 'Edit' | localize }}
+                  </a>
+                  <a href="#!visit" *ngIf="event.type === EventType.EventSeries"  class="dropdown-item" (click)="$event.preventDefault();navToUrl('app/events/event-series' , event.id)">
+                    {{ 'Edit' | localize }}
+                  </a>
+                  <a href="#!visit" class="dropdown-item" (click)="onDeleteClick(event.id)" [routerLink]="['/app/events/student-portal', event.id, 'portal']" (click)="$event.preventDefault(); ">
+                    {{ 'Delete' | localize }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

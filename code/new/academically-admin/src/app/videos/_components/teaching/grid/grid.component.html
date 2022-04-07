@@ -1,0 +1,61 @@
+<div class="row listAlias">
+    <div *ngFor="let video of videos" class="col-12 col-md-6 col-xl-4">
+      <div class="card">
+        <a href="#!visit" (click)="$event.preventDefault(); onVisitVideoClick(video)">
+          <img [src]="getServiceImageUrl(video.thumbnailDocument)" alt="..." class="card-img-top">
+        </a>
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h4 class="mb-2 name">
+                <a href="#!visit" (click)="$event.preventDefault(); onVisitVideoClick(video)">
+                  {{ video.name }}
+                </a>
+              </h4>
+              <p class="card-text small text-muted">
+                {{ 'Created' | localize }} {{ convertMomentToDateAgo(video.creationTime) }}
+              </p>
+            </div>
+            <div class="col-auto">
+              <div class="dropdown">
+                <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="fe fe-more-vertical"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <a href="#!visit" class="dropdown-item" (click)="$event.preventDefault(); navToUrl('/app/videos/tutor-portal' , video.id)">
+                    {{ 'OverView' | localize }}
+                  </a>
+                  <a href="#!visit" class="dropdown-item" *ngIf="video.type === VideoType.SingleVideo" (click)="$event.preventDefault(); navToUrl('/app/videos' , video.id)">
+                    {{ 'Edit' | localize }}
+                  </a>
+                  <a href="#!visit" class="dropdown-item" *ngIf="video.type === VideoType.VideoSeries" (click)="$event.preventDefault(); navToUrl('/app/videos/video-series' , video.id)">
+                    {{ 'Edit' | localize }}
+                  </a>
+                  <a href="#!visit" class="dropdown-item" (click)="$event.preventDefault(); onDeleteClick(video.id)">
+                    {{ 'Delete' | localize }}
+                  </a>
+                  <!-- <button [routerLink]="['/app/videos/tutor-portal', video.id]" type="button"
+                  class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
+                  <span class="fe fe-trending-up"></span>
+                </button>
+                <button *ngIf="video.type === VideoType.SingleVideo" [routerLink]="['/app/videos', video.id]" type="button"
+                  class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+                  <span class="fe fe-edit-2"></span>
+                </button>
+                <button *ngIf="video.type === VideoType.VideoSeries" [routerLink]="['/app/videos/video-series', video.id]"
+                  type="button" class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+                  <span class="fe fe-edit-2"></span>
+                </button>
+                <button type="button" class="btn btn-outline-danger btn-sm btn-rounded-circle mr-1"
+                  (click)="onDeleteClick(video.id)">
+                  <span class="fe fe-trash-2"></span>
+                </button> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

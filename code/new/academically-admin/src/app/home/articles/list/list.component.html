@@ -1,0 +1,41 @@
+<div class="row list">
+    <div *ngFor="let article of articles" class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <a href="#!visit" class="avatar avatar-lg avatar-4by3"
+                (click)="$event.preventDefault(); onVisitArticleClick(article)">
+                <img [src]="getServiceImageUrl(article.thumbnailDocument)" alt="..." class="avatar-img rounded">
+              </a>
+            </div>
+            <div class="col ml-n2">
+              <h4 class="mb-1 name">
+                <a href="#!visit" (click)="$event.preventDefault(); onVisitArticleClick(article)">
+                  {{ article.name }}
+                </a>
+              </h4>
+              <p class="card-text small text-muted mb-0">
+                <time datetime="2018-06-21">
+                  {{ 'Created' | localize }} {{ convertMomentToDateAgo(article.creationTime) }}
+                </time>
+              </p>
+            </div>
+            <div class="col-auto">
+              <div class="dropdown">
+                <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="fe fe-more-vertical"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <a href="#!visit" class="dropdown-item" (click)="$event.preventDefault(); onVisitArticleClick(article)">
+                    {{ 'Visit' | localize }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

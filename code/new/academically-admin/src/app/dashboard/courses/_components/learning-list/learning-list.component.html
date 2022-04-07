@@ -1,0 +1,34 @@
+<div class="row list">
+    <div *ngFor="let course of studentCourses" class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <a href="#!visit" class="avatar avatar-lg avatar-4by3"
+                (click)="$event.preventDefault(); onVisitCourseClick(course)">
+                <img [src]="getCourseImageUrl(studentCourse.course.courseImageUrl)" alt="..." class="avatar-img rounded">
+              </a>
+            </div>
+            <div class="col ml-n2">
+              <h4 class="mb-1 name">
+                <a href="#!visit" (click)="$event.preventDefault(); onVisitCourseClick(course)">
+                    {{ studentCourse.course.name }}}
+                </a>
+              </h4>
+              <p class="card-text small text-muted mb-0">
+                <time datetime="2018-06-21">
+                  {{ 'Created' | localize }} {{ convertMomentToDateAgo(studentCourse.course.creationTime) }}
+                </time>
+              </p>
+            </div>
+            <div class="col-auto">
+              <button [routerLink]="['/app/student-portal', studentCourse.course.id]" type="button"
+              class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
+              <span class="fe fe-layout"></span>
+            </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

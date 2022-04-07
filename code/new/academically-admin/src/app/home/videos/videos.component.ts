@@ -1,4 +1,5 @@
 import { Component, Injector, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { VideoService } from '@app/videos/_services/video.service';
 import { UploadService } from '@app/_shared/services/upload.service';
 import { TableHeaderSortData } from '@shared/components/table-header-sort/table-header-sort.component';
@@ -31,6 +32,7 @@ export class VideosComponent extends PagedListingComponentBase<VideoDto> impleme
     private _videosService: VideosServiceProxy,
     private _videoService: VideoService,
     private _uploadService: UploadService,
+    private router: Router,
   ) {
     super(injector);
     this._videoService.videoCreated$.subscribe(video => {
@@ -43,6 +45,10 @@ export class VideosComponent extends PagedListingComponentBase<VideoDto> impleme
   onClearFiltersClick(): void {
     this.searchFilter = undefined;
     this.statusFilter = undefined;
+  }
+
+  onViewVideos(event: VideoDto) {
+    this.router.navigate(['app/videos/student-portal' , event.id]);
   }
 
   protected list(

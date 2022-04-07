@@ -1,0 +1,23 @@
+<div class="row listAlias ml-2">
+    <div *ngFor="let studentArticle of models" class="col-12 col-md-6 col-xl-4">
+      <div class="card">
+        <a href="#!visit"  (click)="$event.preventDefault();">
+          <img [src]="getServiceImageUrl(studentArticle.article.thumbnailDocument)" alt="..." class="card-img-top">
+        </a>
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h4 class="mb-2 name">
+                <a href="#!visit" [routerLink]="['/app/articles/student-portal', studentArticle.article.id]" (click)="$event.preventDefault();">
+                    {{ studentArticle.article.name }}
+                                </a>
+              </h4>
+              <p class="card-text small text-muted">
+                {{ 'Created' | localize }} {{ convertMomentToDateAgo(studentArticle.article.creationTime) }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,83 @@
+<div class="row list">
+    <div *ngFor="let video of videos" class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <a href="#!visit" class="avatar avatar-lg avatar-4by3"
+                (click)="$event.preventDefault(); onVisitVideoClick(video)">
+                <img [src]="getServiceImageUrl(video.thumbnailDocument)" alt="..." class="avatar-img rounded">
+              </a>
+            </div>
+            <div class="col ml-n2">
+              <h4 class="mb-1 name">
+                <a href="#!visit" (click)="$event.preventDefault(); onVisitVideoClick(video)">
+                  {{ video.name }}
+                </a>
+              </h4>
+              <p class="card-text small text-muted mb-0">
+                <time datetime="2018-06-21">
+                  {{ 'Created' | localize }} {{ convertMomentToDateAgo(video.creationTime) }}
+                </time>
+              </p>
+              <div class="text-muted mb-1">
+                <div class="d-flex">
+                  <div class="d-flex align-items-center">
+                    <i class="fe fe-video mr-2"></i>
+                    {{ (video.type === VideoType.SingleVideo ? 'Video' : 'VideoSeries') | localize }}
+                  </div>
+                  <div class="d-flex align-items-center mx-3">|</div>
+                  <ng-container *ngIf="video.type === VideoType.SingleVideo else videoSeriesTemplate">
+                    <div class="d-flex align-items-center mr-3">
+                      <i class="fe fe-eye mr-2"></i>
+                      0 {{ 'Views' | localize }}
+                    </div>
+                    <div class="d-flex align-items-center mr-3">
+                      <i class="fe fe-thumbs-up mr-2"></i>
+                      {{ video.likeCount }} {{ (video.likeCount == 1 ? 'Like' : 'Likes') | localize }}
+                    </div>
+                    <div class="d-flex align-items-center mr-3">
+                      <i class="fe fe-square-message mr-2"></i>
+                      0 {{ 'Comments' | localize }}
+                    </div>
+                    <div class="d-flex align-items-center mr-3">
+                      <i class="fe fe-share-2 mr-2"></i>
+                      0 {{ 'Shares' | localize }}
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <i class="fe fe-star mr-2"></i>
+                      0 {{ 'Saves' | localize }}
+                    </div>
+                  </ng-container>
+                  <ng-template #videoSeriesTemplate>
+                    <div class="d-flex align-items-center">
+                      {{ video.children.length }}
+                      {{ (video.children.length > 1 ?'Videos' : 'Video') | localize }}
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+            <div class="col-auto">
+              <button (click)="navToUrl('/app/videos/tutor-portal' , video.id)"  type="button"
+              class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
+              <span class="fe fe-trending-up"></span>
+            </button>
+            <button  (click)="navToUrl('/app/videos' , video.id)" *ngIf="video.type === VideoType.SingleVideo"  type="button"
+              class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+              <span class="fe fe-edit-2"></span>
+            </button>
+            <button  (click)="navToUrl('/app/videos/video-series' , video.id)" *ngIf="video.type === VideoType.VideoSeries"
+              type="button" class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+              <span class="fe fe-edit-2"></span>
+            </button>
+            <button type="button" class="btn btn-outline-danger btn-sm btn-rounded-circle mr-1"
+              (click)="onDeleteClick(video.id)">
+              <span class="fe fe-trash-2"></span>
+            </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

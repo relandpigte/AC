@@ -5,6 +5,7 @@ import { TableHeaderSortData } from '@shared/components/table-header-sort/table-
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CourseWizardComponent } from '@app/dashboard/courses/course-wizard/course-wizard.component';
 import { takeUntil, finalize } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-courses',
@@ -25,6 +26,7 @@ export class CoursesComponent extends PagedListingComponentBase<CourseDto> imple
     injector: Injector,
     private _modalService: BsModalService,
     private _coursesService: CoursesServiceProxy,
+    private _router: Router,
   ) {
     super(injector);
     this.sorting = 'creationTime desc';
@@ -47,6 +49,10 @@ export class CoursesComponent extends PagedListingComponentBase<CourseDto> imple
 
   onClearFiltersClick(): void {
     this.getDataPage(1);
+  }
+
+  onViewCourse(course: CourseDto) {
+    this._router.navigate(['app/student-portal' , course.id]);
   }
 
   onDeleteClick(id: string): void {
