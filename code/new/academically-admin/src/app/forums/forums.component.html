@@ -7,7 +7,7 @@
             <div class="col">
               <h6 class="header-pretitle">{{ 'Forum' | localize }}</h6>
               <h1 class="header-title">
-                {{ greetings }}, {{ user.name }}
+                {{ greetings }}
               </h1>
             </div>
           </div>
@@ -17,7 +17,7 @@
   </div>
 </div>
 <div class="container-fluid">
-  <div class="row mt-4 mt-md-5">
+  <div class="row">
     <div class="col-12">
       <app-create-edit-forum (modelSaved)="refresh()"></app-create-edit-forum>
 
