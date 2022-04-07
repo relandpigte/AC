@@ -1,4 +1,4 @@
-<div class="table-responsive">
+<!-- <div class="table-responsive">
   <table class="table table-sm table-hover table-nowrap card-table" [loader]="isTableLoading">
     <tbody class="list font-size-base">
       <tr *ngFor="
@@ -82,4 +82,40 @@
   </table>
   <abp-pagination-controls *ngIf="totalItems > models.length" id="purchased-events" (pageChange)="getDataPage($event)">
   </abp-pagination-controls>
+</div> -->
+
+<div class="row mt-3 ml-2">
+  <div class="col-10">
+  </div>
+    <div class="col-2">
+      <div class="col-auto">
+        <div class="nav btn-group" role="tablist">
+          <button class="btn btn-lg btn-white active" data-toggle="tab" data-target="#purchase-grid-tab" role="tab"
+            aria-controls="purchase-grid-tab" aria-selected="true">
+            <span class="fe fe-grid"></span>
+          </button>
+          <button class="btn btn-lg btn-white" data-toggle="tab" data-target="#purchase-list-tab" role="tab" aria-controls="purchase-list-tab"
+            aria-selected="false">
+            <span class="fe fe-list"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
 </div>
+
+<div *ngIf="models && models.length else noEventsTemplate" class="tab-content" [loader]="isTableLoading">
+  <div class="tab-pane fade active show" id="purchase-grid-tab" role="tabpanel">
+    <app-grid  [models]="models"></app-grid>
+  </div>
+  <div class="tab-pane fade" id="purchase-list-tab" role="tabpanel">
+    <app-list  [models]="models"></app-list>
+  </div>
+</div>
+
+
+<ng-template #noEventsTemplate>
+  <p class="m-0 p-5 text-muted text-center">
+    {{ 'NoRecordsFound' | localize }}
+  </p>
+</ng-template>

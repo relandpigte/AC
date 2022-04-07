@@ -1,4 +1,5 @@
 import { Component, Injector, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { EventService } from '@app/events/_services/event.service';
 import { UploadService } from '@app/_shared/services/upload.service';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
@@ -28,6 +29,7 @@ export class ScheduleListComponent extends PagedListingComponentBase<EventDto> i
     private _eventsService: EventsServiceProxy,
     private _eventService: EventService,
     private _uploadService: UploadService,
+    private router: Router
   ) {
     super(injector);
     this._eventService.eventCreated$.subscribe(event => {
@@ -40,6 +42,7 @@ export class ScheduleListComponent extends PagedListingComponentBase<EventDto> i
   onClearFiltersClick(): void {
     this.scheduleFilter = undefined;
   }
+
 
   onDeleteClick(id: string): void {
     this.message.confirm(

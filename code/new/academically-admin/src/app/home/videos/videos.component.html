@@ -1,4 +1,4 @@
-<div class="card">
+<!-- <div class="card">
   <div class="card-header">
     <h4 class="card-header-title">
       {{ 'Videos' | localize }}
@@ -66,4 +66,47 @@
     </table>
     <abp-pagination-controls id="videos" (pageChange)="getDataPage($event)"> </abp-pagination-controls>
   </div>
+</div> -->
+
+<div class="row mb-4">
+  <div class="col">
+    <form>
+      <div class="input-group input-group-lg input-group-merge">
+        <input type="text" class="form-control form-control-prepended list-search" placeholder="Search">
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+            <span class="fe fe-search"></span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-auto">
+    <div class="nav btn-group" role="tablist">
+      <button class="btn btn-lg btn-white active" data-toggle="tab" data-target="#grid-tab" role="tab"
+        aria-controls="grid-tab" aria-selected="true">
+        <span class="fe fe-grid"></span>
+      </button>
+      <button class="btn btn-lg btn-white" data-toggle="tab" data-target="#list-tab" role="tab" aria-controls="list-tab"
+        aria-selected="false">
+        <span class="fe fe-list"></span>
+      </button>
+    </div>
+  </div>
 </div>
+
+<div *ngIf="videos && videos.length else noVideosTemplate" class="tab-content" [loader]="loading">
+  <div class="tab-pane fade active show" id="grid-tab" role="tabpanel">
+    <app-grid [videos]="videos" (visitVideos)="onViewVideos($event)"></app-grid>
+  </div>
+  <div class="tab-pane fade" id="list-tab" role="tabpanel">
+    <app-list [videos]="videos" (visitVideos)="onViewVideos($event)"></app-list>
+  </div>
+</div>
+
+
+<ng-template #noVideosTemplate>
+  <p class="m-0 p-5 text-muted text-center">
+    {{ 'NoRecordsFound' | localize }}
+  </p>
+</ng-template>

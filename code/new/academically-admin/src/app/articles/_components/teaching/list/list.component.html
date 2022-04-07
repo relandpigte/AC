@@ -1,0 +1,87 @@
+<div class="row list">
+    <div *ngFor="let article of articles" class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <a href="#!visit" [routerLink]="['/app/articles/tutor-portal', article.id]" class="avatar avatar-lg avatar-4by3"
+                (click)="$event.preventDefault(); ">
+                <img [src]="getServiceImageUrl(article.thumbnailDocument)" alt="..." class="avatar-img rounded">
+              </a>
+            </div>
+            <div class="col ml-n2">
+              <h4 class="mb-1 name">
+                <a href="#!visit" [routerLink]="['/app/articles/tutor-portal', article.id]" (click)="$event.preventDefault(); ">
+                  {{ article.name }}
+                </a>
+              </h4>
+              <p class="card-text small text-muted mb-0">
+                <time datetime="2018-06-21">
+                  {{ 'Created' | localize }} {{ convertMomentToDateAgo(article.creationTime) }}
+                </time>
+              </p>
+              <div class="text-muted mb-1">
+                <div class="d-flex">
+                  <div class="d-flex align-items-center">
+                    <i class="fe fe-file-text mr-2"></i>
+                    {{ (article.type === ArticleType.SingleArticle ? 'Article' : 'ArticleSeries') | localize }}
+                  </div>
+                  <div class="d-flex align-items-center mx-3">|</div>
+                  <ng-container *ngIf="article.type === ArticleType.SingleArticle else articleSeriesTemplate">
+                    <div class="d-flex align-items-center mr-3">
+                      <i class="fe fe-eye mr-2"></i>
+                      0 {{ 'Views' | localize }}
+                    </div>
+                    <div class="d-flex align-items-center mr-3">
+                      <i class="fe fe-thumbs-up mr-2"></i>
+                      0 {{ 'Likes' | localize }}
+                    </div>
+                    <div class="d-flex align-items-center mr-3">
+                      <i class="fe fe-square-message mr-2"></i>
+                      0 {{ 'Comments' | localize }}
+                    </div>
+                    <div class="d-flex align-items-center mr-3">
+                      <i class="fe fe-share-2 mr-2"></i>
+                      0 {{ 'Shares' | localize }}
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <i class="fe fe-star mr-2"></i>
+                      0 {{ 'Saves' | localize }}
+                    </div>
+                  </ng-container>
+                  <ng-template #articleSeriesTemplate>
+                    <div class="d-flex align-items-center">
+                      {{ article.children.length }}
+                      {{ (article.children.length > 1 ?'Articles' : 'Article') | localize }}
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-auto">
+                <button [routerLink]="['/app/articles/tutor-portal', article.id]"
+                type="button"
+               class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
+               <span class="fe fe-trending-up"></span>
+             </button>
+             <button *ngIf="article.type === ArticleType.SingleArticle"
+             [routerLink]="['/app/articles/', article.id]"
+               class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+               <span class="fe fe-edit-2"></span>
+             </button>
+             <button *ngIf="article.type === ArticleType.ArticleSeries"
+             [routerLink]="['/app/articles/article-series', article.id]"
+               class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+               <span class="fe fe-edit-2"></span>
+             </button>
+             <button type="button" class="btn btn-outline-danger btn-sm btn-rounded-circle mr-1"
+               (click)="onDeleteClick(article.id)">
+               <span class="fe fe-trash-2"></span>
+             </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

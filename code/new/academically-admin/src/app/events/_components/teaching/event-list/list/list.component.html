@@ -1,0 +1,42 @@
+<div class="row lis ml-2">
+    <div *ngFor="let event of events" class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <a href="#!visit" class="avatar avatar-lg avatar-4by3"
+                (click)="$event.preventDefault();">
+                <img [src]="getServiceImageUrl(event.thumbnailDocument)" alt="..." class="card-img-top">
+              </a>
+            </div>
+            <div class="col ml-n2">
+              <h4 class="mb-1 name">
+                <a href="#!visit" (click)="$event.preventDefault();">
+                  {{ event.name }}
+                </a>
+              </h4>
+              <p class="card-text small text-muted mb-0">
+                <time datetime="2018-06-21">
+                  {{ 'Created' | localize }} {{ convertMomentToDateAgo(event.eventDateTime) }}
+                </time>
+              </p>
+            </div>
+            <div class="col-auto">
+                <button *ngIf="event.type === EventType.SingleEvent" (click)="navToUrl('app/events' , event.id)"
+                class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+                <span class="fe fe-edit-2"></span>
+              </button>
+              <button *ngIf="event.type === EventType.EventSeries" (click)="navToUrl('app/events/event-series' , event.id)"
+                class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
+                <span class="fe fe-edit-2"></span>
+              </button>
+              <button type="button" class="btn btn-outline-danger btn-sm btn-rounded-circle mr-1"
+                (click)="onDeleteClick(event.id)">
+                <span class="fe fe-trash-2"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

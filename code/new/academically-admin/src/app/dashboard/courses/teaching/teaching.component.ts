@@ -83,6 +83,10 @@ export class TeachingComponent extends PagedListingComponentBase<CourseDto> impl
     );
   }
 
+  onViewCourse(course: CourseDto) {
+
+  }
+
   protected list(
     request: PagedCourseRequestDto,
     pageNumber: number,

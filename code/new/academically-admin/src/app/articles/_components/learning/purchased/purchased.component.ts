@@ -15,7 +15,7 @@ class PagedStudentArticleRequestDto extends PagedAndSortedRequestDto {
 })
 export class PurchasedComponent extends PagedListingComponentBase<StudentArticleDto> implements OnInit {
   thumbnailUrls: string[] = [];
-  models: StudentArticleDto[] = [];
+  models: any[] = [];
 
   ArticleType = ArticleType;
   ArticleStatus = ArticleStatus;
@@ -47,7 +47,35 @@ export class PurchasedComponent extends PagedListingComponentBase<StudentArticle
         })
       )
       .subscribe(result => {
-        this.models = result.items;
+        // this.models = result.items;
+        this.models = [{
+          id: '93498324023049',
+          articleId: '3432423',
+          saveOnly: true,
+          article : [{
+            id: '23213',
+            type: 1,
+            name:  '23432432',
+            description: '3423432',
+            status: 0,
+            parentId: '3434',
+            thumbnailDocumentId: '334324',
+            languageId: '3423423',
+            isVisible: true,
+            commentSetting: 1,
+            commentModeration: true,
+            customUrl: '3244',
+            category: '34242',
+            categories: '3432423',
+            price: 1,
+            pricingType: 1,
+            delayType: 1,
+            delayValue: '2323',
+            parent: 0,
+            thumbnailDocument: null,
+            children: [],
+          }]
+        }];
         this.showPaging(result, pageNumber);
       });
   }

@@ -5,6 +5,7 @@ import { ArticleService } from '@app/articles/_services/article.service';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { UploadService } from '@app/_shared/services/upload.service';
 import * as _ from 'lodash';
+import { Router } from '@angular/router';
 
 class PagedArticleRequestDto extends PagedAndSortedRequestDto {
   userIdFilter: number;
@@ -31,6 +32,7 @@ export class TeachingComponent extends PagedListingComponentBase<ArticleDto> imp
     private _articlesService: ArticlesServiceProxy,
     private _articleService: ArticleService,
     private _uploadService: UploadService,
+    private router: Router,
   ) {
     super(injector);
     this._articleService.articleCreated$.subscribe(article => {
@@ -39,6 +41,13 @@ export class TeachingComponent extends PagedListingComponentBase<ArticleDto> imp
       }
     });
   }
+
+
+  nav(url, id) {
+    this.router.navigate([url , id]);
+  }
+
+
 
   onClearFiltersClick(): void {
     this.searchFilter = undefined;

@@ -1,4 +1,4 @@
-<div class="card">
+<!-- <div class="card">
   <div class="card-header">
     <div class="row align-items-center">
       <div class="col">
@@ -183,4 +183,126 @@
     </table>
     <abp-pagination-controls id="videos" (pageChange)="getDataPage($event)"> </abp-pagination-controls>
   </div>
+</div> -->
+
+<div class="row mb-4">
+  <div class="col-10">
+    <div class="card">
+      <div class="card-header height-pad border-0">
+        <div class="row align-items-center">
+          <div class="col">
+            <form>
+              <div class="input-group input-group-flush">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fe fe-search"></i>
+                  </span>
+                </div>
+                <input class="list-search form-control" type="search" name="Search" placeholder="Search"
+                  [(ngModel)]="searchFilter" (keyup.enter)="getDataPage(1)" />
+              </div>
+            </form>
+          </div>
+          <div class="col-auto mr-n3">
+            <form>
+              <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize"
+                (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
+                class="custom-select custom-select-sm form-control-flush" data-toggle="select">
+                <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
+                  {{ pageSizeSelection }} {{ 'PerPage' | localize }}
+                </option>
+              </select>
+            </form>
+          </div>
+          <div class="col-auto">
+            <div class="dropdown" dropdown #filterDropdown="bs-dropdown" [isAnimated]="true" [autoClose]="false">
+              <button class="btn btn-sm btn-white" type="button" dropdownToggle>
+                <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }}
+                <span *ngIf="statusFilter || statusFilter >= 0" class="badge badge-primary ml-1">1</span>
+              </button>
+              <form *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-card" (ngSubmit)="getDataPage(1)">
+                <div class="card-header">
+                  <h4 class="card-header-title">{{ 'Filters' | localize }}</h4>
+                  <button class="btn btn-sm btn-link text-reset btn-white" type="submit"
+                    (click)="filterDropdown.hide(); onClearFiltersClick()">
+                    <small>{{ 'ClearFilters' | localize }}</small>
+                  </button>
+                </div>
+                <div class="card-body">
+                  <div class="list-group list-group-flush mt-n4 mb-4">
+                    <div class="list-group-item">
+                      <div class="row">
+                        <div class="col">
+                          <small>{{ 'Status' | localize }}</small>
+                        </div>
+                        <div class="col-auto">
+                          <div class="custom-control custom-radio d-inline">
+                            <input type="radio" class="custom-control-input" id="allStatus" name="statusFilter"
+                              [(ngModel)]="statusFilter" [value]="undefined" checked />
+                            <label class="custom-control-label" for="allStatus">
+                              {{ 'All' | localize }}
+                            </label>
+                          </div>
+                          <div class="custom-control custom-radio d-inline mx-3">
+                            <input type="radio" class="custom-control-input" id="draftStatus" name="statusFilter"
+                              [(ngModel)]="statusFilter" [value]="VideoStatus.Draft" />
+                            <label class="custom-control-label" for="draftStatus">
+                              {{ 'Draft' | localize }}
+                            </label>
+                          </div>
+                          <div class="custom-control custom-radio d-inline">
+                            <input type="radio" class="custom-control-input" id="publishedStatus" name="statusFilter"
+                              [(ngModel)]="statusFilter" [value]="VideoStatus.Published" />
+                            <label class="custom-control-label" for="publishedStatus">
+                              {{ 'Published' | localize }}
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <button class="btn btn-block btn-primary" type="submit" (click)="filterDropdown.hide()">
+                    {{ 'ApplyFilter' | localize }}
+                  </button>
+                </div>
+                &nbsp;
+              </form>
+            </div>
+          </div>
+      </div>
+
+      </div>
+    </div>
+  </div>
+    <div class="col-2">
+      <div class="col-auto">
+        <div class="nav btn-group" role="tablist">
+          <button class="btn btn-lg btn-white active" data-toggle="tab" data-target="#teaching-grid-tab" role="tab"
+            aria-controls="teaching-grid-tab" aria-selected="true">
+            <span class="fe fe-grid"></span>
+          </button>
+          <button class="btn btn-lg btn-white" data-toggle="tab" data-target="#teaching-list-tab" role="tab" aria-controls="teaching-list-tab"
+            aria-selected="false">
+            <span class="fe fe-list"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
 </div>
+
+<div *ngIf="videos && videos.length else noVideosTemplate" class="tab-content ml-2" [loader]="loading">
+  <div class="tab-pane fade active show" id="teaching-grid-tab" role="tabpanel">
+    <app-teaching-video-grid [videos]="videos" (deleteVideo)="onDeleteClick($event)"></app-teaching-video-grid>
+  </div>
+  <div class="tab-pane fade" id="teaching-list-tab" role="tabpanel">
+    <app-list [videos]="videos" (deleteVideo)="onDeleteClick($event)"></app-list>
+  </div>
+</div>
+
+
+<ng-template #noVideosTemplate>
+  <p class="m-0 p-5 text-muted text-center">
+    {{ 'NoRecordsFound' | localize }}
+  </p>
+</ng-template>
