@@ -24,7 +24,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                   <a href="#!visit" [routerLink]="['/app/articles/tutor-portal', article.id]" class="dropdown-item" (click)="$event.preventDefault(); ">
-                    {{ 'OverView' | localize }}
+                    {{ 'Overview' | localize }}
                   </a>
                   <a  *ngIf="article.type === ArticleType.SingleArticle" [routerLink]="['/app/articles/', article.id]" href="#!visit" class="dropdown-item" (click)="$event.preventDefault();" >
                     {{ 'Edit' | localize }}

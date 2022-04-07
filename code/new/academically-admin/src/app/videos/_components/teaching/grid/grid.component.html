@@ -24,7 +24,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                   <a href="#!visit" class="dropdown-item" (click)="$event.preventDefault(); navToUrl('/app/videos/tutor-portal' , video.id)">
-                    {{ 'OverView' | localize }}
+                    {{ 'Overview' | localize }}
                   </a>
                   <a href="#!visit" class="dropdown-item" *ngIf="video.type === VideoType.SingleVideo" (click)="$event.preventDefault(); navToUrl('/app/videos' , video.id)">
                     {{ 'Edit' | localize }}
