@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
+using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
 using Abp.Timing;
 using Academically.Authorization.Roles;
@@ -71,6 +72,7 @@ namespace Academically.Services.Events
                 .Include(e => e.Parent)
                 .Include(e => e.ThumbnailDocument)
                 .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
                 .Include(e => e.Children)
                 .FirstOrDefaultAsync();
         }
@@ -113,9 +115,11 @@ namespace Academically.Services.Events
         {
             input.SearchFilter = input.SearchFilter?.ToLower();
             var eventPresenterIds = _eventPresentersRepository.GetAll()
+                .Where(e => e.EventId == input.EventIdFilter)
                 .Select(e => e.UserId);
             var tutorRole = await _roleManager.GetRoleByNameAsync(StaticRoleNames.Tenants.Tutor);
             var query = _usersRepository.GetAll()
+                .Where(e => e.Id != AbpSession.UserId.Value)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.Name.ToLower().Contains(input.SearchFilter)
                      || e.Surname.ToLower().Contains(input.SearchFilter))
                 .Where(e => e.Roles.Any(r => r.RoleId == tutorRole.Id))
@@ -142,10 +146,48 @@ namespace Academically.Services.Events
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<StudentEventDto>> GetAllAudiences(Guid id)
+        {
+            return await _studentEventsRepository.GetAll()
+                .Where(e => e.EventId == id)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .OrderBy(e => e.CreatorUser.Name)
+                    .ThenBy(e => e.CreatorUser.Surname)
+                .Select(e => ObjectMapper.Map<StudentEventDto>(e))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<EventDto>> GetAllRelated(Guid id)
+        {
+            var ev = await Repository.GetAsync(id);
+            if (!string.IsNullOrWhiteSpace(ev.Categories))
+            {
+                var tags = ev.Categories.Split(",").ToList();
+                var tagsPredicate = PredicateBuilder.New<Event>();
+                foreach (var tag in tags)
+                {
+                    tagsPredicate = tagsPredicate.Or(e => e.Categories.Contains(tag));
+                }
+
+                var relatedVideos = await Repository.GetAll()
+                    .Where(e => e.Id != ev.Id)
+                    .Where(tagsPredicate)
+                    .Include(e => e.ThumbnailDocument)
+                    .OrderBy(e => e.Name)
+                    .Select(e => ObjectMapper.Map<EventDto>(e))
+                    .ToListAsync();
+                return relatedVideos;
+            }
+            return new List<EventDto>();
+        }
+
         public async Task<StudentEventDto> GetPurchasedAsync(Guid id)
         {
             return await _studentEventsRepository.GetAll()
-                .Where(e => !e.SaveOnly && e.CreatorUserId == AbpSession.UserId.Value && e.EventId == id)
+                .Where(e => e.CreatorUserId == AbpSession.UserId.Value && e.EventId == id)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
                 .Select(e => ObjectMapper.Map<StudentEventDto>(e))
                 .FirstOrDefaultAsync();
         }
@@ -201,6 +243,11 @@ namespace Academically.Services.Events
         public async Task RemovePresenterAsync(Guid eventPresenterId)
         {
             await _eventPresentersRepository.DeleteAsync(eventPresenterId);
+        }
+
+        public async Task UnsaveAsync(Guid studentEventId)
+        {
+            await _studentEventsRepository.DeleteAsync(studentEventId);
         }
     }
 }

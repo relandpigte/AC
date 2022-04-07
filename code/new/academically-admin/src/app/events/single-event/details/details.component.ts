@@ -144,7 +144,7 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   }
 
   private updateDetails(): void {
-    if (!_.isNumber(this.model.price)) {
+    if (!_.isNil(this.model.price) && !_.isNumber(this.model.price)) {
       return;
     }
     this._eventsService.update(this.model)

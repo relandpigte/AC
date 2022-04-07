@@ -1,6 +1,6 @@
 import { Component, OnInit, Injector, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { EventDto, EventsServiceProxy, TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
+import { EventDto, EventsServiceProxy, StudentVideoDto, StudentEventDto } from '@shared/service-proxies/service-proxies';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
@@ -8,6 +8,8 @@ import { takeUntil } from 'rxjs/operators';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { EventStartingComponent } from './_components/event-starting/event-starting.component';
 import { environment } from 'environments/environment';
+import { HubService } from '@app/_shared/services/hub.service';
+import { PortalService } from './_services/portal.service';
 
 enum StreamTrackType {
   Audio = 'audio',
@@ -25,14 +27,17 @@ export class PortalComponent extends AppComponentBase implements OnInit, AfterVi
   presenterVideo: HTMLVideoElement;
   presenterStream: MediaStream;
 
+  eventSessionsHub: any;
   peerConnection: RTCPeerConnection;
 
   model = new EventDto;
   eventId: string;
   preview = false;
   showSidebar = true;
-  showDeviceSettings = false;
-  eventStarted = true;
+  showDeviceSettings = true;
+  eventStarted = false;
+  eventJoined = false;
+  studentEvent = new StudentEventDto();
 
   constructor(
     injector: Injector,
@@ -40,7 +45,9 @@ export class PortalComponent extends AppComponentBase implements OnInit, AfterVi
     private _location: Location,
     private _router: Router,
     private _modalService: BsModalService,
+    private _hubService: HubService,
     private _eventsService: EventsServiceProxy,
+    private _portalService: PortalService,
   ) {
     super(injector);
     route.parent.parent.paramMap.subscribe(paramMap => {
@@ -69,16 +76,23 @@ export class PortalComponent extends AppComponentBase implements OnInit, AfterVi
   }
 
   onGoLiveClick(): void {
-    const modalSettings = this.defaultModalSettings as ModalOptions<EventStartingComponent>;
-    const modal = this._modalService.show(EventStartingComponent, modalSettings).content;
-    modal.eventStarted.pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
-        this.eventStarted = response;
-      });
+    // const modalSettings = this.defaultModalSettings as ModalOptions<EventStartingComponent>;
+    // const modal = this._modalService.show(EventStartingComponent, modalSettings).content;
+    // modal.eventStarted.pipe(takeUntil(this.destroyed$))
+    //   .subscribe(response => {
+    //     this.eventStarted = response;
+    //     this.eventJoined = response;
+    //     this.eventSessionsHub.invoke('startEvent', [4]);
+    //   });
+
+    this.eventStarted = true;
+    this.eventJoined = true;
+    this.eventSessionsHub.invoke('startEvent', [4]);
   }
 
   onJoinClick(): void {
-    this.eventStarted = true;
+    this.eventJoined = true;
+    this.eventSessionsHub.invoke('joinAsAudience', this.model.creatorUserId, this.studentEvent);
   }
 
   private getEvent(): void {
@@ -86,6 +100,16 @@ export class PortalComponent extends AppComponentBase implements OnInit, AfterVi
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         this.model = response;
+        this._portalService.event = this.model;
+        this.getStudentVideoDto();
+      });
+  }
+
+  private getStudentVideoDto(): void {
+    this._eventsService.getPurchased(this.model.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        this.studentEvent = response;
       });
   }
 
@@ -139,12 +163,21 @@ export class PortalComponent extends AppComponentBase implements OnInit, AfterVi
 
     this.presenterVideo.srcObject = this.presenterStream;
     this.presenterVideo.volume = 0;
-    // this.remoteVideo.srcObject = this.remoteStream;
-
-    // this.sessionState = SessionState.Initiated;
   }
 
   private async initializeSessionsHub(): Promise<void> {
+    this.eventSessionsHub = await this._hubService.getEventSessionsHub();
+
     await this.initializeDevice();
+
+    this.eventSessionsHub.on('eventStarted', async () => {
+      console.log('eventStarted');
+      this.eventStarted = true;
+    });
+
+    this.eventSessionsHub.on('audienceJoined', async (audienceStudentEvent: StudentEventDto) => {
+      console.log('audienceJoined');
+      this._portalService.audience = audienceStudentEvent;
+    });
   }
 }

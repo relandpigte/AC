@@ -1,4 +1,4 @@
-<table class="table table-sm table-sm-custom mb-0">
+<!-- <table class="table table-sm table-sm-custom mb-0">
   <thead>
     <tr>
       <th>
@@ -45,7 +45,7 @@
       </td>
     </tr>
   </tbody>
-</table>
+</table> -->
 
 <table class="table table-sm table-sm-custom mb-0">
   <thead>
@@ -73,36 +73,16 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
+    <tr *ngFor="let audience of audiences">
       <td>
         <div class="row">
           <div class="col flex-y-center">
             <div class="avatar avatar-sm d-inline-block me-2">
-              <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..."
+              <img [src]="getProfilePictureUrl(audience.creatorUser.profilePictureDocument)" alt="..."
                 class="avatar-img rounded-circle">
             </div>
             <p class="m-0 ml-3">
-              <b>Chris Baker</b>
-            </p>
-          </div>
-          <div class="col-auto flex-y-center">
-            <button class="btn btn-sm btn-outline-primary">
-              {{ 'Message' | localize }}
-            </button>
-          </div>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div class="row">
-          <div class="col flex-y-center">
-            <div class="avatar avatar-sm d-inline-block me-2">
-              <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" alt="..."
-                class="avatar-img rounded-circle">
-            </div>
-            <p class="m-0 ml-3">
-              <b>Ab Hailey</b>
+              <b>{{ audience.creatorUser.fullName }}</b>
             </p>
           </div>
           <div class="col-auto flex-y-center">

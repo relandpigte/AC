@@ -10,6 +10,7 @@ import { PagedListingComponentBase, PagedAndSortedRequestDto } from '@shared/pag
 import { finalize, takeUntil } from 'rxjs/operators';
 
 class PagedUserRequestDto extends PagedAndSortedRequestDto {
+  eventIdFilter: string;
   searchFilter?: string;
 }
 
@@ -62,13 +63,16 @@ export class InvitePresenterComponent extends PagedListingComponentBase<UserDto>
     pageNumber: number,
     finishedCallback: Function,
   ): void {
+    request.eventIdFilter = this.eventId;
     request.searchFilter = this.searchFilter;
+    console.log(request);
 
     this._eventsService
       .getPresentersForInvite(
+        request.eventIdFilter,
         request.searchFilter,
         request.skipCount,
-        request.maxResultCount
+        request.maxResultCount,
       )
       .pipe(
         takeUntil(this.destroyed$),

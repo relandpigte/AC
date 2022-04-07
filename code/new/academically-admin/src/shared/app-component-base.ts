@@ -206,6 +206,14 @@ export abstract class AppComponentBase implements OnDestroy {
     return new Array(number);
   }
 
+  zeroIfNull(num: number): number {
+    return num ?? 0;
+  }
+
+  getNameInitials(user: UserDto): string {
+    return `${user.name.charAt(0)}${user.surname.charAt(0)}`;
+  }
+
   protected uuidv4(): string {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
       /[xy]/g,

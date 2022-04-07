@@ -7,20 +7,20 @@ using Academically.Services.Videos.Dto;
 
 namespace Academically.Services.Videos
 {
-	public interface IVideosAppService
-	{
-		Task<PagedResultDto<VideoDto>> GetAll(PagedVideoResultRequestDto input);
-		Task<PagedResultDto<VideoDto>> GetAllForSeries(PagedSeriesVideoResultRequestDto input);
-		Task<IEnumerable<VideoDto>> GetOtherVideosForSeries(Guid id);
-		Task<PagedResultDto<VideoDto>> GetAllForHome(PagedResultRequestDto input);
-		Task<IEnumerable<VideoDto>> GetAllRelated (Guid id);
-		Task<VideoDto> Get(Guid id);
-		Task<GetDelayStatusDto> GetDelayStatus(Guid id);
-		Task<VideoDto> Create(VideoDto input);
-		Task<VideoDto> UpdateDetails(UpdateVideoDetailsDto input);
-		Task<VideoDto> UpdateSettings(UpdateVideoSettingsDto input);
-		Task UpdateStatusAsync(Guid id, VideoStatus status);
-		Task DeleteAsync(Guid id);
-	}
+    public interface IVideosAppService
+    {
+        Task<PagedResultDto<VideoDto>> GetAll(PagedVideoResultRequestDto input);
+        Task<PagedResultDto<VideoDto>> GetAllForSeries(PagedSeriesVideoResultRequestDto input);
+        Task<IEnumerable<VideoDto>> GetOtherVideosForSeries(Guid id);
+        Task<PagedResultDto<VideoDto>> GetAllForHome(PagedResultRequestDto input);
+        Task<IEnumerable<VideoDto>> GetAllRelated(Guid id);
+        Task<VideoDto> Get(Guid id);
+        Task<GetDelayStatusDto> GetDelayStatus(Guid id);
+        Task<VideoDto> Create(VideoDto input);
+        Task<VideoDto> UpdateDetails(UpdateVideoDetailsDto input);
+        Task<VideoDto> UpdateSettings(UpdateVideoSettingsDto input);
+        Task UpdateStatusAsync(Guid id, VideoStatus status);
+        Task DeleteAsync(Guid id);
+    }
 }
 

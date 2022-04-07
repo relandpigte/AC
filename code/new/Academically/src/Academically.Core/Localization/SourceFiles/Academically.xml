@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="PurchaseEventConfirmationMessage">Are you sure you want to purchase this event?</text>
+    <text name="NoRelatedEvent">No related event</text>
     <text name="GoLive">Go live</text>
     <text name="Join">Join</text>
     <text name="Welcome">Welcome</text>
@@ -13,7 +15,7 @@
     <text name="Remove">Remove</text>
     <text name="NoPresenterFound">No presenter found</text>
     <text name="NoUsersFound">No users found</text>
-    <text name="EnableOffersTab">Enable offers tab</text>
+    <text name="EnableOffersTab">Enable offers tab</text>""n
 	<text name="InteractiveTools">Interactive tools</text>
 	<text name="MessageAll">Message all</text>
 	<text name="NotJoined">Not joined</text>
