@@ -169,6 +169,13 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
               ),
           },
           {
+            path: 'student-portal',
+            loadChildren: () =>
+              import('@app/student-portal/student-portal.module').then(
+                (m) => m.StudentPortalModule
+              ),
+          },
+          {
             path: 'lesson-preview',
             loadChildren: () => import('./lesson-preview/lesson-preview.module').then(m => m.LessonPreviewModule),
             data: { preload: true }
