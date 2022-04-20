@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, Input } from '@angular/core';
+import { Component, OnInit, Injector, Input, ViewChild, ElementRef } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { VideoDto, VideosServiceProxy, VideoType, GetStudentVideoDto, StudentVideosServiceProxy, PricingType } from '@shared/service-proxies/service-proxies';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,6 +16,8 @@ import * as _ from 'lodash';
   animations: [appModuleAnimation()],
 })
 export class PreviewComponent extends AppComponentBase implements OnInit {
+  @ViewChild('videoEl') videoEl: ElementRef;
+
   thumbnailUrl: string;
 
   model = new VideoDto();
@@ -62,10 +64,6 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
     return this.isPreview || this.model.pricingType === PricingType.Free || (!this.isPreview && !_.isEmpty(this.studentVideo));
   }
 
-  get videoUrl(): string {
-    return this._uploadService.getFileUrl(this.model.document);
-  }
-
   ngOnInit(): void {
   }
 
@@ -87,6 +85,12 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
         if (!this.isPreview) {
           this.getStudentVideo();
         }
+        setTimeout(() => {
+          const video = (this.videoEl.nativeElement as HTMLVideoElement);
+          video.src = this._uploadService.getFileUrl(this.model.document);
+          video.load();
+          video.play();
+        });
       });
   }
 

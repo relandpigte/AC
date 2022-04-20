@@ -51,8 +51,7 @@
         <h1 class="text-info">{{ 'BuyThisVideo' | localize }}</h1>
         <p class="text-info">{{ 'BuyThisVideoWarningMessage' | localize }}</p>
       </div>
-      <video *ngIf="shouldShowVideo" width="100%" height="100%" controls autoplay>
-        <source [src]="videoUrl">
+      <video #videoEl *ngIf="shouldShowVideo" width="100%" height="100%" controls autoplay playsinline>
       </video>
     </div>
   </div>
