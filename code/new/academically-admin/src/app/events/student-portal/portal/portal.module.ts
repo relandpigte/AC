@@ -19,6 +19,7 @@ import { SettingsComponent } from './_components/settings/settings.component';
 import { AudienceComponent } from './_components/settings/_components/audience/audience.component';
 import { GuestsComponent } from './_components/settings/_components/guests/guests.component';
 import { CoHostsComponent } from './_components/settings/_components/co-hosts/co-hosts.component';
+import { ShareVideosComponent } from './_components/share-videos/share-videos.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { CoHostsComponent } from './_components/settings/_components/co-hosts/co
     AudienceComponent,
     GuestsComponent,
     CoHostsComponent,
+    ShareVideosComponent,
   ],
   imports: [
     CommonModule,

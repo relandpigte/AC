@@ -18,18 +18,44 @@ namespace Academically.Web.Host.Hubs
             }
         }
 
-        public async Task StartEvent(IEnumerable<long> userIds)
+        public async Task StartEvent(IEnumerable<long> userIds, string session)
         {
             foreach (var userId in userIds)
             {
-                await Clients.User(userId.ToString()).SendAsync("eventStarted");
+                await Clients.User(userId.ToString()).SendAsync("eventStarted", session);
             }
         }
 
-        public async Task JoinAsAudience(long hostUserId, StudentEventDto studentEvent)
+        public async Task EnterAsAudience(long hostUserId, StudentEventDto studentEvent)
         {
-            await Clients.User(studentEvent.CreatorUser.Id.ToString()).SendAsync("audienceJoined", studentEvent);
-            await Clients.User(hostUserId.ToString()).SendAsync("audienceJoined", studentEvent);
+            await Clients.User(hostUserId.ToString()).SendAsync("audienceEntered", studentEvent);
+        }
+
+        public async Task JoinAsAudience(long hostUserId, StudentEventDto studentEvent, string session)
+        {
+            await Clients.User(studentEvent.CreatorUser.Id.ToString()).SendAsync("audienceJoined", studentEvent, session);
+            await Clients.User(hostUserId.ToString()).SendAsync("audienceJoined", studentEvent, session);
+        }
+
+        public async Task AddIceCandidate(long userId, string iceCandidate)
+        {
+            await Clients.User(userId.ToString()).SendAsync("iceCandidatedAdded", iceCandidate);
+        }
+
+        public async Task StreamVideo(IEnumerable<long> userIds, string session)
+        {
+            foreach (var userId in userIds)
+            {
+                await Clients.User(userId.ToString()).SendAsync("videoStreamed", session);
+            }
+        }
+
+        public async Task StopVideoStream(IEnumerable<long> userIds, string session)
+        {
+            foreach (var userId in userIds)
+            {
+                await Clients.User(userId.ToString()).SendAsync("videoStreamStopped", session);
+            }
         }
     }
 }

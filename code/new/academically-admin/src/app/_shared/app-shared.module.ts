@@ -28,6 +28,7 @@ import { ImageCropperComponent } from './components/image-cropper/image-cropper.
 import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
 import { ProfilePictureChangerComponent } from './components/profile-picture-changer/profile-picture-changer.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
+import { PopoverModule } from 'ngx-bootstrap/popover';
 @NgModule({
   declarations: [
     EnumToArrayPipe,
@@ -40,7 +41,7 @@ import { ColorPickerComponent } from './components/color-picker/color-picker.com
     FixedHeightDirective,
     BottomScrollerDirective,
     SidebarCollapseDirective
-    ],
+  ],
   imports: [
     CommonModule,
     SharedModule,
@@ -60,6 +61,7 @@ import { ColorPickerComponent } from './components/color-picker/color-picker.com
     ColorPickerModule,
     NgxMaskModule.forRoot(),
     CalendarModule,
+    PopoverModule.forRoot(),
   ],
   exports: [
     SharedModule,
@@ -87,6 +89,7 @@ import { ColorPickerComponent } from './components/color-picker/color-picker.com
     ProfilePictureChangerComponent,
     ColorPickerComponent,
     CalendarModule,
+    PopoverModule,
   ],
 })
 export class AppSharedModule { }

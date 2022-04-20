@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="KeepPlaying">Keep playing</text>
+    <text name="StopVideo">Stop video</text>
+    <text name="UnshareVideo">Unshare video</text>
+    <text name="UnshareVideoWarningMessage">Stop the video and come back to live event?</text>
+    <text name="Whiteboard">Whiteboard</text>
+    <text name="ShareVideo">Share video</text>
+    <text name="ShareSlides">Share slides</text>
+    <text name="ShareScreen">Share screen</text>
     <text name="EditEvent">Edit event</text>
     <text name="PurchaseEventConfirmationMessage">Are you sure you want to purchase this event?</text>
     <text name="NoRelatedEvent">No related event</text>

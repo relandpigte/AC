@@ -1,0 +1,34 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="root (generated)" id="1649903890423-1">
+        <createTable tableName="AcademicallyConferenceSessionCandidates">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Value" type="MEDIUMTEXT"/>
+            <column name="Type" type="INT"/>
+            <column name="ConferenceSessionId" type="CHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1649903890423-2">
+        <createTable tableName="AcademicallyConferenceSessions">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Offer" type="MEDIUMTEXT"/>
+            <column name="Answer" type="MEDIUMTEXT"/>
+            <column name="ReferenceId" type="VARCHAR(100)"/>
+            <column defaultValueNumeric="0" name="Status" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="root (generated)" id="1649903890423-3">
+        <createIndex indexName="FK_CSC_ConferenceSessions_ConferenceSessionId_idx" tableName="AcademicallyConferenceSessionCandidates">
+            <column name="ConferenceSessionId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="root (generated)" id="1649903890423-4">
+        <addForeignKeyConstraint baseColumnNames="ConferenceSessionId" baseTableName="AcademicallyConferenceSessionCandidates" constraintName="FK_CSC_ConferenceSessions_ConferenceSessionId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyConferenceSessions" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

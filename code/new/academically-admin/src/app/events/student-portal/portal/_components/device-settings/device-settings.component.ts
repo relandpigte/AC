@@ -3,11 +3,19 @@ import { AppComponentBase } from '@shared/app-component-base';
 import * as _ from 'lodash';
 
 class MachineDevice {
+  id: string;
   name: string;
 
-  constructor(name: string) {
+  constructor(id: string, name: string) {
+    this.id = id;
     this.name = name;
   }
+}
+
+export class SelectedMachineDevice {
+  videoDevice: MachineDevice;
+  audioDevice: MachineDevice;
+  outputDevice: MachineDevice;
 }
 
 @Component({
@@ -16,11 +24,13 @@ class MachineDevice {
   styleUrls: ['./device-settings.component.less']
 })
 export class DeviceSettingsComponent extends AppComponentBase implements OnInit {
-  @Output() joinRoom = new EventEmitter();
+  @Output() joinRoom = new EventEmitter<SelectedMachineDevice>();
 
   videoDevices: MachineDevice[] = [];
   audioDevices: MachineDevice[] = [];
   outputDevices: MachineDevice[] = [];
+  selectedMediaDevice = new SelectedMachineDevice();
+  devicesLoaded = false;
 
   constructor(
     injector: Injector,
@@ -39,21 +49,26 @@ export class DeviceSettingsComponent extends AppComponentBase implements OnInit 
             _.each(devices, device => {
               switch (device.kind) {
                 case 'audioinput':
-                  this.audioDevices.push(new MachineDevice(device.label));
+                  this.audioDevices.push(new MachineDevice(device.deviceId, device.label));
                   break;
                 case 'videoinput':
-                  this.videoDevices.push(new MachineDevice(device.label));
+                  this.videoDevices.push(new MachineDevice(device.deviceId, device.label));
                   break;
                 case 'audiooutput':
-                  this.outputDevices.push(new MachineDevice(device.label));
+                  this.outputDevices.push(new MachineDevice(device.deviceId, device.label));
                   break;
               }
             });
+
+            this.selectedMediaDevice.videoDevice = this.videoDevices[0];
+            this.selectedMediaDevice.audioDevice = this.audioDevices[0];
+            this.selectedMediaDevice.outputDevice = this.outputDevices[0];
+            this.devicesLoaded = true;
           });
       });
   }
 
   onJoinRoomClick(): void {
-    this.joinRoom.emit();
+    this.joinRoom.emit(this.selectedMediaDevice);
   }
 }

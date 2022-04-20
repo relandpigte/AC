@@ -33,7 +33,7 @@ export class LiveComponent extends AppComponentBase implements OnInit {
           this.getPresenters();
         }
       });
-    this._portalService.audience$
+    this._portalService.audienceJoined$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         if (response) {

@@ -129,5 +129,6 @@
 	<include file="ddml-new/ddml.2022-04--1-01-alter-events-set-default-values.xml" />
 	<include file="ddml-new/ddml.2022-04-03-01-create-eventpresenters-table.xml" />
 	<include file="ddml-new/ddml.2022-04-03-02-alter-events-add-price-field.xml" />
+	<include file="ddml-new/ddml.2022-04-06-01-create-conferencesessions-tables.xml" />
 </databaseChangeLog>
 	

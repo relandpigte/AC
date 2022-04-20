@@ -1,6 +1,10 @@
-import { Component, OnInit, Injector, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Injector, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { EventDto, EventsServiceProxy, StudentVideoDto, StudentEventDto } from '@shared/service-proxies/service-proxies';
+import {
+  EventDto,
+  EventsServiceProxy,
+  StudentEventDto,
+} from '@shared/service-proxies/service-proxies';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
@@ -10,10 +14,27 @@ import { EventStartingComponent } from './_components/event-starting/event-start
 import { environment } from 'environments/environment';
 import { HubService } from '@app/_shared/services/hub.service';
 import { PortalService } from './_services/portal.service';
+import { SelectedMachineDevice } from './_components/device-settings/device-settings.component';
+import * as _ from 'lodash';
+import { HubConnection } from '@aspnet/signalr';
+import { ShareVideosComponent } from './_components/share-videos/share-videos.component';
 
 enum StreamTrackType {
   Audio = 'audio',
   Video = 'video',
+}
+
+enum SessionStatus {
+  Initializing,
+  GoLiveReady,
+  Started,
+}
+
+class Session {
+  status = SessionStatus.Initializing;
+  offer: string;
+  answer: string;
+  offerIceCandidates: string[] = [];
 }
 
 @Component({
@@ -22,22 +43,36 @@ enum StreamTrackType {
   styleUrls: ['./portal.component.less'],
   animations: [appModuleAnimation()],
 })
-export class PortalComponent extends AppComponentBase implements OnInit, AfterViewInit {
+export class PortalComponent extends AppComponentBase implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild(ShareVideosComponent) shareVideosComponent: ShareVideosComponent;
+
   @ViewChild('presenterVideoEl') presenterVideoEl: ElementRef;
   presenterVideo: HTMLVideoElement;
   presenterStream: MediaStream;
 
-  eventSessionsHub: any;
+  @ViewChild('attendeeVideoEl') attendeeVideoEl: ElementRef;
+  attendeeVideo: HTMLVideoElement;
+  attendeeStream: MediaStream;
+
+  eventSessionsHub: HubConnection;
   peerConnection: RTCPeerConnection;
 
   model = new EventDto;
+  studentEvent = new StudentEventDto();
+  selectedMachineDevice = new SelectedMachineDevice();
+  audiences: StudentEventDto[] = [];
   eventId: string;
+  sessionId: string;
   preview = false;
   showSidebar = true;
   showDeviceSettings = true;
   eventStarted = false;
   eventJoined = false;
-  studentEvent = new StudentEventDto();
+  audienceJoined = false;
+  hubConnected = false;
+  testMode = false;
+
+  session = new Session();
 
   constructor(
     injector: Injector,
@@ -54,17 +89,30 @@ export class PortalComponent extends AppComponentBase implements OnInit, AfterVi
       if (paramMap.has('event-id')) {
         this.eventId = paramMap.get('event-id');
         this.getEvent();
+        this.getAllAudiences();
       }
     });
+    this._portalService.audiences$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(responses => {
+        this.audiences = responses;
+      });
+  }
+
+  get isHost(): boolean {
+    return this.model.creatorUserId === this.appSession.userId;
   }
 
   ngAfterViewInit(): void {
-    this.presenterVideo = this.presenterVideoEl.nativeElement;
   }
 
-  async ngOnInit(): Promise<void> {
-    await this.initializeWebRTC();
-    await this.initializeSessionsHub();
+  ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    console.log('exit event');
+    this.disconnectTrack(this.presenterStream);
+    this.disconnectTrack(this.attendeeStream);
   }
 
   onExitClick(): void {
@@ -75,24 +123,88 @@ export class PortalComponent extends AppComponentBase implements OnInit, AfterVi
     }
   }
 
-  onGoLiveClick(): void {
-    // const modalSettings = this.defaultModalSettings as ModalOptions<EventStartingComponent>;
-    // const modal = this._modalService.show(EventStartingComponent, modalSettings).content;
-    // modal.eventStarted.pipe(takeUntil(this.destroyed$))
-    //   .subscribe(response => {
-    //     this.eventStarted = response;
-    //     this.eventJoined = response;
-    //     this.eventSessionsHub.invoke('startEvent', [4]);
-    //   });
-
-    this.eventStarted = true;
-    this.eventJoined = true;
-    this.eventSessionsHub.invoke('startEvent', [4]);
+  async onGoLiveClick(): Promise<void> {
+    const audienceIds = this.audiences.map(e => e.creatorUser.id);
+    if (this.testMode) {
+      this.eventStarted = true;
+      this.eventJoined = true;
+      await this.eventSessionsHub.invoke('startEvent', audienceIds, JSON.stringify(this.session));
+    } else {
+      const modalSettings = this.defaultModalSettings as ModalOptions<EventStartingComponent>;
+      const modal = this._modalService.show(EventStartingComponent, modalSettings).content;
+      modal.eventStarted.pipe(takeUntil(this.destroyed$))
+        .subscribe(async response => {
+          this.eventStarted = response;
+          this.eventJoined = response;
+          await this.eventSessionsHub.invoke('startEvent', audienceIds, JSON.stringify(this.session));
+        });
+    }
   }
 
-  onJoinClick(): void {
+  onShareVideoClick(): void {
+    this.shareVideosComponent.uploadFiles();
+  }
+
+  async onShareVideo(file: File): Promise<void> {
+    this.presenterVideo.srcObject = undefined;
+    this.presenterVideo.src = URL.createObjectURL(file);
+    this.presenterVideo.pause();
+    this.presenterVideo.controls = true;
+    this.presenterVideo.volume = 1;
+    this.presenterVideo.muted = false;
+    setTimeout(async () => {
+      await this.initializeWebRTC();
+      this.session = new Session();
+      this.presenterStream = (this.presenterVideo as any).captureStream();
+      this.presenterStream.getTracks().forEach(track => {
+        this.peerConnection.addTrack(track, this.presenterStream);
+      });
+
+      this.peerConnection.ontrack = (event) => {
+        event.streams[0].getTracks().forEach(track => {
+          this.attendeeStream.addTrack(track);
+        });
+      };
+      await this.createOffers();
+      const userIds = this.audiences.map(e => e.creatorUser.id);
+      setTimeout(async () => {
+        console.log('invoke - streamVideo');
+        console.log(this.session);
+        await this.eventSessionsHub.invoke('streamVideo', userIds, JSON.stringify(this.session));
+        await this.presenterVideo.play();
+      }, 3000);
+    }, 500);
+  }
+
+  async onUnshareVideo(): Promise<void> {
+    this.presenterVideo.controls = false;
+    await this.initializeWebRTC();
+    await this.initializeHostDevice();
+    await this.createOffers();
+    const userIds = this.audiences.map(e => e.creatorUser.id);
+    await this.eventSessionsHub.invoke('stopVideoStream', userIds, JSON.stringify(this.session));
+  }
+
+  async onRoomJoined(selectedMachineDevice: SelectedMachineDevice): Promise<void> {
+    this.selectedMachineDevice = selectedMachineDevice;
+    await this.initializeWebRTC();
+    await this.initializeSessionsHub();
+    if (this.isHost) {
+      this.presenterVideo = this.presenterVideoEl.nativeElement;
+      this.attendeeVideo = this.attendeeVideoEl.nativeElement;
+      await this.initializeHostDevice();
+      await this.createOffers();
+    } else {
+      this.audienceJoined = true;
+      this.attendeeVideo = this.attendeeVideoEl.nativeElement;
+      this.presenterVideo = this.presenterVideoEl.nativeElement;
+      await this.initializeAttendeeDevice();
+    }
+  }
+
+  async onJoinClick(): Promise<void> {
     this.eventJoined = true;
-    this.eventSessionsHub.invoke('joinAsAudience', this.model.creatorUserId, this.studentEvent);
+    await this.createAnswers();
   }
 
   private getEvent(): void {
@@ -101,11 +213,11 @@ export class PortalComponent extends AppComponentBase implements OnInit, AfterVi
       .subscribe(response => {
         this.model = response;
         this._portalService.event = this.model;
-        this.getStudentVideoDto();
+        this.getStudentEventDto();
       });
   }
 
-  private getStudentVideoDto(): void {
+  private getStudentEventDto(): void {
     this._eventsService.getPurchased(this.model.id)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
@@ -130,17 +242,13 @@ export class PortalComponent extends AppComponentBase implements OnInit, AfterVi
     });
   }
 
-  private async initializeDevice(): Promise<void> {
+  private async initializeHostDevice(): Promise<void> {
     this.presenterStream = await navigator.mediaDevices.getUserMedia({
       video: {
-        width: {
-          exact: 1280
-        },
-        height: {
-          exact: 720
-        },
+        deviceId: this.selectedMachineDevice.videoDevice.id,
       },
       audio: {
+        deviceId: this.selectedMachineDevice.audioDevice.id,
         echoCancellation: {
           exact: true,
         },
@@ -150,34 +258,210 @@ export class PortalComponent extends AppComponentBase implements OnInit, AfterVi
         googNoiseSuppression: { exact: true },
       },
     });
-
     this.presenterStream.getTracks().forEach(track => {
       switch (track.kind) {
         case StreamTrackType.Audio:
           this.peerConnection.addTrack(track, this.presenterStream);
           break;
         case StreamTrackType.Video:
+          this.peerConnection.addTrack(track, this.presenterStream);
           break;
       }
     });
-
     this.presenterVideo.srcObject = this.presenterStream;
     this.presenterVideo.volume = 0;
+    this.presenterVideo.muted = true;
+
+    this.attendeeStream = new MediaStream();
+    this.peerConnection.ontrack = (event) => {
+      event.streams[0].getTracks().forEach(track => {
+        this.attendeeStream.addTrack(track);
+      });
+    };
+    this.attendeeVideo.srcObject = this.attendeeStream;
+  }
+
+  private async initializeAttendeeDevice(): Promise<void> {
+    this.attendeeStream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        deviceId: this.selectedMachineDevice.videoDevice.id,
+      },
+      audio: {
+        deviceId: this.selectedMachineDevice.audioDevice.id,
+        echoCancellation: {
+          exact: true,
+        },
+        // @ts-ignore
+        googEchoCancellation: { exact: true },
+        googAutoGainControl: { exact: true },
+        googNoiseSuppression: { exact: true },
+      },
+    });
+    this.attendeeStream.getTracks().forEach(track => {
+      switch (track.kind) {
+        case StreamTrackType.Audio:
+          this.peerConnection.addTrack(track, this.attendeeStream);
+          break;
+        case StreamTrackType.Video:
+          this.peerConnection.addTrack(track, this.attendeeStream);
+          break;
+      }
+    });
+    this.attendeeVideo.srcObject = this.attendeeStream;
+    this.attendeeVideo.volume = 0;
+    this.attendeeVideo.muted = true;
+
+    this.presenterStream = new MediaStream();
+    this.peerConnection.ontrack = (event) => {
+      event.streams[0].getTracks().forEach(track => {
+        this.presenterStream.addTrack(track);
+      });
+    };
+    this.presenterVideo.srcObject = this.presenterStream;
+  }
+
+  private async createOffers(): Promise<void> {
+    this.peerConnection.onicecandidate = async (event) => {
+      console.log(event.candidate);
+      if (event && event.candidate) {
+        this.session.offerIceCandidates.push(JSON.stringify(event.candidate.toJSON()));
+      }
+    };
+
+    const offerDescription = await this.peerConnection.createOffer();
+    await this.peerConnection.setLocalDescription(offerDescription);
+    this.session.offer = JSON.stringify(offerDescription);
+  }
+
+  private async createAnswers(): Promise<void> {
+    this.peerConnection.onicecandidate = async (event) => {
+      console.log(event.candidate);
+      if (event && event.candidate) {
+        await this.eventSessionsHub.invoke('addIceCandidate', this.model.creatorUserId, JSON.stringify(event.candidate.toJSON()));
+      }
+    };
+
+    const offer = JSON.parse(this.session.offer);
+    await this.peerConnection.setRemoteDescription(offer);
+
+    const answerDescription = await this.peerConnection.createAnswer();
+    await this.peerConnection.setLocalDescription(answerDescription);
+    this.session.answer = JSON.stringify(answerDescription);
+
+    await this.eventSessionsHub.invoke('joinAsAudience', this.model.creatorUserId, this.studentEvent, JSON.stringify(this.session));
+  }
+
+  private async admitAttendee(): Promise<void> {
+    if (this.isHost) {
+      const answerDescription = JSON.parse(this.session.answer);
+      await this.peerConnection.setRemoteDescription(answerDescription);
+      console.warn(this.peerConnection.remoteDescription);
+    } else {
+      if (this.session.offerIceCandidates && this.session.offerIceCandidates.length) {
+        _.forEach(this.session.offerIceCandidates, async offerIceCandidate => {
+          console.log('offer ice candidate added');
+          const iceCandidate = JSON.parse(offerIceCandidate);
+          await this.peerConnection.addIceCandidate(iceCandidate);
+        });
+      }
+    }
+  }
+
+  private getAllAudiences(): void {
+    this._eventsService.getAllAudiences(this.eventId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(responses => {
+        this._portalService.audiences = responses;
+      });
   }
 
   private async initializeSessionsHub(): Promise<void> {
-    this.eventSessionsHub = await this._hubService.getEventSessionsHub();
+    this.eventSessionsHub = await this._hubService.getEventSessionsHub(async () => {
+      this.hubConnected = true;
+      if (!this.isHost) {
+        await this.eventSessionsHub.invoke('enterAsAudience', this.model.creatorUserId, this.studentEvent);
+      }
+    });
 
-    await this.initializeDevice();
-
-    this.eventSessionsHub.on('eventStarted', async () => {
+    this.eventSessionsHub.on('eventStarted', async (sessionStr: string) => {
       console.log('eventStarted');
+      const session: Session = JSON.parse(sessionStr);
+      this.session.offer = session.offer;
+      this.session.offerIceCandidates = session.offerIceCandidates;
+      console.log(this.session);
       this.eventStarted = true;
     });
 
-    this.eventSessionsHub.on('audienceJoined', async (audienceStudentEvent: StudentEventDto) => {
-      console.log('audienceJoined');
-      this._portalService.audience = audienceStudentEvent;
+    this.eventSessionsHub.on('audienceEntered', async (audienceStudentEvent: StudentEventDto) => {
+      if (this.eventStarted) {
+        console.log('audienceEntered');
+        await this.eventSessionsHub.invoke('startEvent', [audienceStudentEvent.creatorUser.id], JSON.stringify(this.session));
+      }
+    });
+
+    this.eventSessionsHub.on('audienceJoined', async (audienceStudentEvent: StudentEventDto, sessionStr: string) => {
+      if (this.eventJoined) {
+        console.log('audienceJoined');
+        const session: Session = JSON.parse(sessionStr);
+        this.session.answer = session.answer;
+        console.log(this.session);
+        this.audienceJoined = true;
+        this._portalService.audienceJoined = audienceStudentEvent;
+        await this.admitAttendee();
+      }
+    });
+
+    this.eventSessionsHub.on('iceCandidatedAdded', async (iceCandidateStr: string) => {
+      console.log('iceCandidatedAdded');
+      const iceCandidate = JSON.parse(iceCandidateStr);
+      console.log('answer ice candidate added');
+      await this.peerConnection.addIceCandidate(iceCandidate);
+    });
+
+    this.eventSessionsHub.on('videoStreamed', async (sessionStr: string) => {
+      if (this.eventJoined) {
+        console.log('videoStreamed');
+        const session: Session = JSON.parse(sessionStr);
+        this.session = new Session();
+        this.session.offer = session.offer;
+        this.session.offerIceCandidates = session.offerIceCandidates;
+        console.log(this.session);
+        await this.initializeWebRTC();
+        await this.initializeAttendeeDevice();
+        await this.createAnswers();
+      }
+    });
+
+    this.eventSessionsHub.on('videoStreamStopped', async (sessionStr: string) => {
+      if (this.eventJoined) {
+        console.log('videoStreamStopped');
+        const session: Session = JSON.parse(sessionStr);
+        this.session = new Session();
+        this.session.offer = session.offer;
+        this.session.offerIceCandidates = session.offerIceCandidates;
+        await this.initializeWebRTC();
+        await this.initializeAttendeeDevice();
+        await this.createAnswers();
+      }
+    });
+  }
+
+  private disconnectTrack(stream: MediaStream): void {
+    stream.getAudioTracks().forEach(track => {
+      track.enabled = false;
+      track.stop();
+      setTimeout(() => {
+        stream.removeTrack(track);
+        console.log('audo track removed');
+      }, 500);
+    });
+    stream.getVideoTracks().forEach(track => {
+      track.enabled = false;
+      track.stop();
+      setTimeout(() => {
+        stream.removeTrack(track);
+        console.log('video track removed');
+      }, 500);
     });
   }
 }

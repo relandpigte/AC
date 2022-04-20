@@ -16,15 +16,19 @@ export class HubService {
     return this.getHub('conversations');
   }
 
-  public getEventSessionsHub(): Promise<any> {
-    return this.getHub('eventSessions');
+  public getEventSessionsHub(callback: () => void): Promise<any> {
+    return this.getHub('eventSessions', callback);
   }
 
-  private getHub(hubName: string): Promise<any> {
+  private getHub(hubName: string, callback?: () => void): Promise<any> {
     const promise = new Promise((resolve, reject) => {
       jQuery.getScript(AppConsts.appBaseUrl + '/assets/abp/abp.signalr-client.js', async () => {
         await abp.signalr.startConnection(abp.appPath + `signalr-${hubName}Hub`, (connection: any) => {
           resolve(connection);
+        }).then(connection => {
+          if (callback) {
+            callback();
+          }
         });
       });
     });

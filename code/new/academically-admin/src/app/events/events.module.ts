@@ -8,6 +8,7 @@ import { LearningModule } from './_components/learning/learning.module';
 import { EventsComponent } from './events.component';
 import { ChooseTemplateComponent } from './_components/choose-template/choose-template.component';
 import { CreateEventComponent } from './_components/create-event/create-event.component';
+
 @NgModule({
   declarations: [
     EventsComponent,
