@@ -15,7 +15,6 @@ import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { VerificationsModule } from './_shared/modules/verifications/verifications.module';
 import { NgPipesModule } from 'ngx-pipes';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
-import { PopoverModule } from 'ngx-bootstrap/popover';
 import { TagInputModule } from 'ngx-chips';
 
 // Cookie Consent
@@ -161,7 +160,6 @@ const cookieConfig: NgcCookieConsentConfig = {
     NgxPaginationModule,
     NgPipesModule,
     TypeaheadModule.forRoot(),
-    PopoverModule.forRoot(),
     NgcCookieConsentModule.forRoot(cookieConfig),
     NotificationsModule,
     TagInputModule,

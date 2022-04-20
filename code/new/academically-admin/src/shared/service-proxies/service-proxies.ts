@@ -2221,6 +2221,298 @@ export class CommentsServiceProxy {
 }
 
 @Injectable()
+export class ConferenceSessionsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    get(referenceId: string | undefined): Observable<ConferenceSessionDto> {
+        let url_ = this.baseUrl + "/api/services/app/ConferenceSessions/Get?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<ConferenceSessionDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ConferenceSessionDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<ConferenceSessionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ConferenceSessionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ConferenceSessionDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createCandidate(body: ConferenceSessionCandidateDto | undefined): Observable<ConferenceSessionCandidateDto> {
+        let url_ = this.baseUrl + "/api/services/app/ConferenceSessions/CreateCandidate";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateCandidate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateCandidate(<any>response_);
+                } catch (e) {
+                    return <Observable<ConferenceSessionCandidateDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ConferenceSessionCandidateDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateCandidate(response: HttpResponseBase): Observable<ConferenceSessionCandidateDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ConferenceSessionCandidateDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ConferenceSessionCandidateDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: ConferenceSessionDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/ConferenceSessions/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    updateStatus(id: string | undefined, body: ConferenceSessionStatus | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/ConferenceSessions/UpdateStatus?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateStatus(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateStatus(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateStatus(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param type (optional) 1 = Offer
+    
+    2 = Answer
+     * @return Success
+     */
+    deleteCandidates(id: string | undefined, type: SessionCandidateType | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/ConferenceSessions/DeleteCandidates?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (type === null)
+            throw new Error("The parameter 'type' cannot be null.");
+        else if (type !== undefined)
+            url_ += "type=" + encodeURIComponent("" + type) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteCandidates(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteCandidates(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeleteCandidates(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class ConfigurationServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -22482,6 +22774,140 @@ export enum CommentSetting {
     Visible = 1,
     Hidden = 2,
     Locked = 3,
+}
+
+export class ConferenceSessionCandidateDto implements IConferenceSessionCandidateDto {
+    id: string;
+    value: string | undefined;
+    type: SessionCandidateType;
+    conferenceSessionId: string;
+
+    constructor(data?: IConferenceSessionCandidateDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.value = _data["value"];
+            this.type = _data["type"];
+            this.conferenceSessionId = _data["conferenceSessionId"];
+        }
+    }
+
+    static fromJS(data: any): ConferenceSessionCandidateDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ConferenceSessionCandidateDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["value"] = this.value;
+        data["type"] = this.type;
+        data["conferenceSessionId"] = this.conferenceSessionId;
+        return data; 
+    }
+
+    clone(): ConferenceSessionCandidateDto {
+        const json = this.toJSON();
+        let result = new ConferenceSessionCandidateDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IConferenceSessionCandidateDto {
+    id: string;
+    value: string | undefined;
+    type: SessionCandidateType;
+    conferenceSessionId: string;
+}
+
+export class ConferenceSessionDto implements IConferenceSessionDto {
+    id: string;
+    offer: string | undefined;
+    answer: string | undefined;
+    referenceId: string | undefined;
+    status: ConferenceSessionStatus;
+    conferenceSessionCandidates: ConferenceSessionCandidateDto[] | undefined;
+
+    constructor(data?: IConferenceSessionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.offer = _data["offer"];
+            this.answer = _data["answer"];
+            this.referenceId = _data["referenceId"];
+            this.status = _data["status"];
+            if (Array.isArray(_data["conferenceSessionCandidates"])) {
+                this.conferenceSessionCandidates = [] as any;
+                for (let item of _data["conferenceSessionCandidates"])
+                    this.conferenceSessionCandidates.push(ConferenceSessionCandidateDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ConferenceSessionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ConferenceSessionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["offer"] = this.offer;
+        data["answer"] = this.answer;
+        data["referenceId"] = this.referenceId;
+        data["status"] = this.status;
+        if (Array.isArray(this.conferenceSessionCandidates)) {
+            data["conferenceSessionCandidates"] = [];
+            for (let item of this.conferenceSessionCandidates)
+                data["conferenceSessionCandidates"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): ConferenceSessionDto {
+        const json = this.toJSON();
+        let result = new ConferenceSessionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IConferenceSessionDto {
+    id: string;
+    offer: string | undefined;
+    answer: string | undefined;
+    referenceId: string | undefined;
+    status: ConferenceSessionStatus;
+    conferenceSessionCandidates: ConferenceSessionCandidateDto[] | undefined;
+}
+
+/** 0 = Waiting 1 = Started 2 = InProgress 3 = Ended */
+export enum ConferenceSessionStatus {
+    Waiting = 0,
+    Started = 1,
+    InProgress = 2,
+    Ended = 3,
 }
 
 export class ConstructorInfo implements IConstructorInfo {

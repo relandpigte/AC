@@ -1,4 +1,5 @@
-<app-device-settings *ngIf="showDeviceSettings" (joinRoom)="showDeviceSettings = false"></app-device-settings>
+<app-device-settings *ngIf="showDeviceSettings" (joinRoom)="showDeviceSettings = false; onRoomJoined($event)">
+</app-device-settings>
 
 <div class="h-100" [@routerTransition]>
   <div [class.sidebar-hidden]="!showSidebar" class="main-content h-100">
@@ -49,25 +50,20 @@
       </div>
     </nav>
     <div class="article-container">
-      <div [hidden]="!eventStarted || !eventJoined" class="presentation-feed">
-        <div class="attendees">
-          <div class="attendee">
-            <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" />
-          </div>
-          <div class="attendee">
-            <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" />
-          </div>
-          <div class="attendee">
-            <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" />
+      <div class="presentation-feed">
+        <div class="attendees my-2">
+          <div [hidden]="isHost && !audienceJoined" class="attendee">
+            <video class="attendee-video" #attendeeVideoEl autoplay playsinline></video>
           </div>
         </div>
         <div class="presenter">
+          <div *ngIf="(!eventStarted || !eventJoined) && !isHost" class="event-not-started-container border">
+            <h1>Welcome to the Lobby</h1>
+            <h4>Waiting for the host to start the event.</h4>
+          </div>
           <video class="presenter-video" #presenterVideoEl autoplay playsinline></video>
         </div>
-      </div>
-      <div *ngIf="!eventStarted || !eventJoined" class="event-not-started-container">
-        <h1>Welcome to the Lobby</h1>
-        <h4>Waiting for the host to start the event.</h4>
+        <app-share-videos (shareVideo)="onShareVideo($event)" (unshareVideo)="onUnshareVideo()"></app-share-videos>
       </div>
       <div class="presentation-controls bg-white">
         <button class="btn btn-sm btn-outline-primary mx-2">
@@ -76,19 +72,37 @@
         <button class="btn btn-sm btn-outline-primary mx-2">
           <i class="fe fe-camera"></i>
         </button>
-        <button *ngIf="isTutor && !eventJoined" class="btn btn-sm btn-primary mx-2" (click)="onGoLiveClick()">
+        <button *ngIf="isHost && !eventStarted" [disabled]="!hubConnected" class="btn btn-sm btn-primary mx-2"
+          (click)="onGoLiveClick()">
           {{ 'GoLive' | localize | titlecase }}
         </button>
-        <button *ngIf="!isTutor && !eventJoined" [disabled]="!eventStarted" class="btn btn-sm btn-primary mx-2"
+        <button *ngIf="!isHost && !eventJoined" [disabled]="!eventStarted" class="btn btn-sm btn-primary mx-2"
           (click)="onJoinClick()">
           {{ 'Join' | localize }}
         </button>
         <button class="btn btn-sm btn-outline-primary mx-2">
           <i class="fe fe-monitor"></i>
         </button>
-        <button class="btn btn-sm btn-outline-primary mx-2">
-          <i class="fe fe-layout"></i>
-        </button>
+        <div class="dropup">
+          <button [disabled]="!isHost || !hubConnected || !eventStarted" type="button"
+            class="btn btn-sm btn-outline-primary mx-2" data-toggle="dropdown" aria-expanded="false">
+            <i class="fe fe-layout"></i>
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#!share-screen" (click)="$event.preventDefault();">
+              {{ 'ShareScreen' | localize }}
+            </a>
+            <a class="dropdown-item" href="#!shared-slide" (click)="$event.preventDefault();">
+              {{ 'ShareSlides' | localize }}
+            </a>
+            <a class="dropdown-item" href="#!share-video" (click)="$event.preventDefault(); onShareVideoClick()">
+              {{ 'ShareVideo' | localize }}
+            </a>
+            <a class="dropdown-item" href="#!whiteboard" (click)="$event.preventDefault();">
+              {{ 'Whiteboard' | localize }}
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>

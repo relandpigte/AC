@@ -21,8 +21,9 @@
                   {{ 'Video' | localize }}
                 </span>
               </div>
-              <select class="form-control form-control-prepended form-control-appended">
-                <option *ngFor="let device of videoDevices">
+              <select [(ngModel)]="selectedMediaDevice.videoDevice"
+                class="form-control form-control-prepended form-control-appended">
+                <option *ngFor="let device of videoDevices" [ngValue]="device">
                   {{ device.name }}
                 </option>
               </select>
@@ -42,8 +43,9 @@
                   {{ 'Audio' | localize }}
                 </span>
               </div>
-              <select class="form-control form-control-prepended form-control-appended">
-                <option *ngFor="let device of audioDevices">
+              <select [(ngModel)]="selectedMediaDevice.audioDevice"
+                class="form-control form-control-prepended form-control-appended">
+                <option *ngFor="let device of audioDevices" [ngValue]="device">
                   {{ device.name }}
                 </option>
               </select>
@@ -63,8 +65,9 @@
                   {{ 'Output' | localize }}
                 </span>
               </div>
-              <select class="form-control form-control-prepended form-control-appended">
-                <option *ngFor="let device of outputDevices">
+              <select [(ngModel)]="selectedMediaDevice.outputDevice"
+                class="form-control form-control-prepended form-control-appended">
+                <option *ngFor="let device of outputDevices" [ngValue]="device">
                   {{ device.name }}
                 </option>
               </select>
@@ -96,7 +99,7 @@
             </div>
           </div>
           <hr>
-          <button class="btn btn-primary w-100" (click)="onJoinRoomClick()">
+          <button [disabled]="!devicesLoaded" class="btn btn-primary w-100" (click)="onJoinRoomClick()">
             {{ 'JoinRoom' | localize | uppercase }}
           </button>
           <button [routerLink]="['/app/events']" class="btn btn-white w-100 mt-2">

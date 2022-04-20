@@ -15,19 +15,24 @@ export const environment = {
   webRtc: {
     stun: {
       servers: [
-        'stun:74.125.247.128:3478',
-        'stun:[2001:4860:4864:4:8000::]:3478',
+        'stun:openrelay.metered.ca:80',
       ]
     },
     turn: {
       servers: [
-        'turn:74.125.247.128:3478?transport=udp',
-        'turn:[2001:4860:4864:4:8000::]:3478?transport=udp',
-        'turn:74.125.247.128:3478?transport=tcp',
-        'turn:[2001:4860:4864:4:8000::]:3478?transport=tcp',
+        'turn:openrelay.metered.ca:80',
+        'turn:openrelay.metered.ca:443',
+        'turn:openrelay.metered.ca:80?transport=tcp	',
+        'turn:openrelay.metered.ca:443?transport=tcp',
+        'turns:openrelay.metered.ca:443',
+        'turn:staticauth.openrelay.metered.ca:80',
+        'turn:staticauth.openrelay.metered.ca:443',
+        'turn:staticauth.openrelay.metered.ca:80?transport=tcp',
+        'turn:staticauth.openrelay.metered.ca:443?transport=tcp',
+        'turns:staticauth.openrelay.metered.ca:443',
       ],
-      username: 'CJL8kokGEgZ9eARpCUwYqvGggqMKIICjBTAK',
-      password: 'DyyYyerG+RbPOlWQg3El0vJTaCY=',
+      username: 'openrelayproject',
+      password: 'openrelayproject',
     }
   },
   providers: {
