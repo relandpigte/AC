@@ -8,6 +8,7 @@ using Abp.Domain.Repositories;
 using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
 using Abp.Timing;
+using Abp.UI;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 using Academically.Domain.Entities;
@@ -34,6 +35,8 @@ namespace Academically.Services.Events
             IRepository<Event, Guid> repository
             ) : base(repository)
         {
+            LocalizationSourceName = AcademicallyConsts.LocalizationSourceName;
+
             _roleManager = roleManager;
             _studentEventsRepository = studentEventsRepository;
             _eventPresentersRepository = eventPresentersRepository;
@@ -230,6 +233,7 @@ namespace Academically.Services.Events
         public async Task InvitePresenterAsync(CreateEventPresenterDto input)
         {
             var eventPresenter = ObjectMapper.Map<EventPresenter>(input);
+            eventPresenter.Status = EventPresenterStatus.Invited;
             await _eventPresentersRepository.InsertAsync(eventPresenter);
         }
 
@@ -237,6 +241,25 @@ namespace Academically.Services.Events
         {
             var eventPresenter = await _eventPresentersRepository.GetAsync(input.Id);
             eventPresenter.Type = input.NewType;
+            await _eventPresentersRepository.UpdateAsync(eventPresenter);
+        }
+
+        public async Task UpdatePresenterStatusAsync(UpdateEventPresenterStatusDto input)
+        {
+            var eventPresenter = await _eventPresentersRepository.GetAll()
+                .FirstOrDefaultAsync(e => e.Id == input.Id);
+            if (eventPresenter == null)
+            {
+                throw new UserFriendlyException(101, L("InvitationNotFoundErrorMessage"));
+            }
+            switch (eventPresenter.Status)
+            {
+                case EventPresenterStatus.Accepted:
+                    throw new UserFriendlyException(102, L("InvitationAlreadyAcceptedErrorMessage"));
+                case EventPresenterStatus.Rejected:
+                    throw new UserFriendlyException(103, L("InvitationAlreadyRejectedErrorMessage"));
+            }
+            eventPresenter.Status = input.Status;
             await _eventPresentersRepository.UpdateAsync(eventPresenter);
         }
 

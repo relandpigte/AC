@@ -447,21 +447,23 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   private disconnectTrack(stream: MediaStream): void {
-    stream.getAudioTracks().forEach(track => {
-      track.enabled = false;
-      track.stop();
-      setTimeout(() => {
-        stream.removeTrack(track);
-        console.log('audo track removed');
-      }, 500);
-    });
-    stream.getVideoTracks().forEach(track => {
-      track.enabled = false;
-      track.stop();
-      setTimeout(() => {
-        stream.removeTrack(track);
-        console.log('video track removed');
-      }, 500);
-    });
+    if (stream) {
+      stream.getAudioTracks().forEach(track => {
+        track.enabled = false;
+        track.stop();
+        setTimeout(() => {
+          stream.removeTrack(track);
+          console.log('audo track removed');
+        }, 500);
+      });
+      stream.getVideoTracks().forEach(track => {
+        track.enabled = false;
+        track.stop();
+        setTimeout(() => {
+          stream.removeTrack(track);
+          console.log('video track removed');
+        }, 500);
+      });
+    }
   }
 }

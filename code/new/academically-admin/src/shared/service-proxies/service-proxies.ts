@@ -7360,6 +7360,58 @@ export class EventsServiceProxy {
     }
 
     /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updatePresenterStatus(body: UpdateEventPresenterStatusDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Events/UpdatePresenterStatus";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdatePresenterStatus(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdatePresenterStatus(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdatePresenterStatus(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
      * @param eventPresenterId (optional) 
      * @return Success
      */
@@ -27106,6 +27158,7 @@ export enum EventPollQuestionType {
 export class EventPresenterDto implements IEventPresenterDto {
     id: string;
     type: EventPresenterType;
+    status: EventPresenterStatus;
     eventId: string;
     userId: number;
     user: UserDto;
@@ -27123,6 +27176,7 @@ export class EventPresenterDto implements IEventPresenterDto {
         if (_data) {
             this.id = _data["id"];
             this.type = _data["type"];
+            this.status = _data["status"];
             this.eventId = _data["eventId"];
             this.userId = _data["userId"];
             this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
@@ -27140,6 +27194,7 @@ export class EventPresenterDto implements IEventPresenterDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["type"] = this.type;
+        data["status"] = this.status;
         data["eventId"] = this.eventId;
         data["userId"] = this.userId;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
@@ -27157,9 +27212,17 @@ export class EventPresenterDto implements IEventPresenterDto {
 export interface IEventPresenterDto {
     id: string;
     type: EventPresenterType;
+    status: EventPresenterStatus;
     eventId: string;
     userId: number;
     user: UserDto;
+}
+
+/** 0 = Invited 1 = Accepted 2 = Rejected */
+export enum EventPresenterStatus {
+    Invited = 0,
+    Accepted = 1,
+    Rejected = 2,
 }
 
 /** 0 = Host 1 = CoHost 2 = Guest */
@@ -35472,6 +35535,53 @@ export interface IUpdateEventDto {
     languageId: string | undefined;
     pricingType: PricingType;
     price: number | undefined;
+}
+
+export class UpdateEventPresenterStatusDto implements IUpdateEventPresenterStatusDto {
+    id: string;
+    status: EventPresenterStatus;
+
+    constructor(data?: IUpdateEventPresenterStatusDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): UpdateEventPresenterStatusDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateEventPresenterStatusDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["status"] = this.status;
+        return data; 
+    }
+
+    clone(): UpdateEventPresenterStatusDto {
+        const json = this.toJSON();
+        let result = new UpdateEventPresenterStatusDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateEventPresenterStatusDto {
+    id: string;
+    status: EventPresenterStatus;
 }
 
 export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {

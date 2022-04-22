@@ -13,6 +13,11 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
         children: [
           { path: '404', component: NotFoundComponent },
           { path: '403', component: UnauthorizedComponent },
+          {
+            path: 'invitations',
+            loadChildren: () => import('./invitations/invitations.module')
+              .then(m => m.InvitationsModule),
+          },
         ]
       },
     ])

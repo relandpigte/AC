@@ -1,0 +1,30 @@
+<div *ngIf="loading else messageTemplate" class="spinner-border text-primary" role="status">
+  <span class="sr-only">Loading...</span>
+</div>
+
+<ng-template #messageTemplate>
+  <ng-container *ngIf="success else unsuccessfulTemplate">
+    <div class="swal2-icon swal2-success swal2-icon-show" style="display: flex;">
+      <div class="swal2-success-circular-line-left" style="background-color: rgb(255, 255, 255);"></div>
+      <span class="swal2-success-line-tip"></span> <span class="swal2-success-line-long"></span>
+      <div class="swal2-success-ring"></div>
+      <div class="swal2-success-fix" style="background-color: rgb(255, 255, 255);"></div>
+      <div class="swal2-success-circular-line-right" style="background-color: rgb(255, 255, 255);"></div>
+    </div>
+    <ng-container *ngIf="status === EventPresenterStatus.Accepted else rejectedTemplate">
+      <h1 class="display-4 mb-3">{{ 'EventInvitationAcceptedSuccessMessage' | localize }}</h1>
+      <p class="text-muted mb-4">{{ 'EventInvitationAcceptedSuccessMessageInfo' | localize }}</p>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #rejectedTemplate>
+  <h1 class="display-4 mb-0">{{ 'EventInvitationRejectedSuccessMessage' | localize }}</h1>
+</ng-template>
+
+<ng-template #unsuccessfulTemplate>
+  <div class="swal2-icon swal2-warning swal2-icon-show" style="display: flex;">
+    <div class="swal2-icon-content">!</div>
+  </div>
+  <h1 class="display-4 mb-0">{{ 'EventNotAvailableErrorMessage' | localize }}</h1>
+</ng-template>

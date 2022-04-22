@@ -20,6 +20,7 @@
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.3.1" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Domain\Services\NewFolder\" />
     <Folder Include="Domain\Services\Registrations\" />
     <Folder Include="Domain\Services\PhoneVerifications\" />
     <Folder Include="Domain\Services\Documents\" />

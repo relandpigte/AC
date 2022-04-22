@@ -120,41 +120,12 @@
                 <td>
                   {{ notification.creationTime | dateFormat: 'MMMM DD, YYYY hh:mm A' }}
                 </td>
-                <td>
+                <td width="1%">
                   <button (click)="onViewClick(notification)"
                     class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
                     <span class="fe fe-eye"></span>
                   </button>
                 </td>
-                <!-- <td>
-                  <div class="custom-control custom-checkbox ml-4">
-                    <input type="checkbox" class="custom-control-input" disabled [checked]="user.isActive" />
-                    <label class="custom-control-label"></label>
-                  </div>
-                </td>
-                <td class="table-action">
-                  <div *ngIf="!this.testRatingsGeneratorLoader[user.id]" dropdown class="dropdown" container="body">
-                    <a dropdownToggle class="dropdown-ellipses dropdown-toggle" href="javascript:;" role="button">
-                      <i class="fe fe-more-vertical"></i>
-                    </a>
-                    <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
-                      <a href="javascript:;" class="dropdown-item" (click)="onEditClick(user)"
-                        *ngIf="permission.isGranted('Pages.Users.Update')">
-                        <i class="fe fe-edit"></i> {{ 'Edit' | localize }}
-                      </a>
-                      <a href="javascript:;" class="dropdown-item" (click)="onDeleteClick(user)"
-                        *ngIf="permission.isGranted('Pages.Users.Delete')">
-                        <i class="fe fe-trash"></i> {{ 'Delete' | localize }}
-                      </a>
-                      <a href="#" class="dropdown-item" (click)="$event.preventDefault(); onGenerateRatingsClick(user)">
-                        <i class="fe fe-sunrise"></i>
-                        Generate Ratings
-                      </a>
-                    </div>
-                  </div>
-                  <span *ngIf="this.testRatingsGeneratorLoader[user.id]"
-                    class="spinner-border spinner-border-sm text-muted" role="status" aria-hidden="true"></span>
-                </td> -->
               </tr>
             </tbody>
           </table>

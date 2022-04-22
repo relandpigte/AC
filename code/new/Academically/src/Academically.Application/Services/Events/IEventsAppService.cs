@@ -23,6 +23,7 @@ namespace Academically.Services.Events
         Task PurchaseAsync(CreateStudentEventDto input);
         Task InvitePresenterAsync(CreateEventPresenterDto input);
         Task UpdatePresenterTypeAsync(UpdatePresenterTypeDto input);
+        Task UpdatePresenterStatusAsync(UpdateEventPresenterStatusDto input);
         Task RemovePresenterAsync(Guid eventPresenterId);
         Task UnsaveAsync(Guid studentEventId);
     }

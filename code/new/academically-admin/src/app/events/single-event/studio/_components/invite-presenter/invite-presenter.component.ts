@@ -65,7 +65,6 @@ export class InvitePresenterComponent extends PagedListingComponentBase<UserDto>
   ): void {
     request.eventIdFilter = this.eventId;
     request.searchFilter = this.searchFilter;
-    console.log(request);
 
     this._eventsService
       .getPresentersForInvite(
