@@ -6,5 +6,7 @@ namespace Academically.Notifications
         public const string Notifications_CalendarEvents_NewBooking = "Notifications.CalendarEvents.NewBooking";
         public const string Notifications_CalendarEvents_BookingRescheduled = "Notifications.CalendarEvents.BookingRescheduled";
         public const string Notifications_Projects_Invitation = "Notifications.Projects.Invitation";
+        public const string Notifications_Events_Invitation = "Notifications.Events.Invitation";
+        public const string Notifications_Events_Invitation_Accepted = "Notifications.Events.Invitation.Accepted";
     }
 }

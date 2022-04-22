@@ -11,6 +11,7 @@ namespace Academically.Services.Events.Dto
 	public class EventPresenterDto : EntityDto<Guid>
     {
         public EventPresenterType Type { get; set; }
+        public EventPresenterStatus Status { get; set; }
         public Guid EventId { get; set; }
         public long UserId { get; set; }
 

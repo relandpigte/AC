@@ -26,10 +26,14 @@ export class AppComponent extends AppComponentBase implements OnInit {
 
     abp.event.on('abp.notifications.received', (userNotification) => {
       abp.notifications.showUiNotifyForUserNotification(userNotification, { timer: 10000 });
+      console.log(userNotification);
+
+      const message = this.l(userNotification.notification.data.properties.Message.name,
+        ...Object.values(userNotification.notification.data.properties));
 
       // Desktop notification
       Push.create('AbpZeroTemplate', {
-        body: userNotification.notification.data.message,
+        body: message.replace(/<[^>]*>?/gm, ''),
         icon: '/assets/img/ac-logo-light.png',
         timeout: 10000,
         onClick: function () {

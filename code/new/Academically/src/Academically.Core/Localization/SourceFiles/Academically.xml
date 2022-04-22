@@ -1,6 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="EventNotAvailableErrorMessage">Your event is not available at the moment.</text>
+    <text name="EventInvitationRejectedSuccessMessage">You have rejected our invitation to join the event.</text>
+    <text name="EventInvitationAcceptedSuccessMessageInfo">We sent you a secondary email containing a link to the event. Check your spam/junk folder if the email is not found.</text>
+    <text name="EventInvitationAcceptedSuccessMessage">Thank you for accepting the event!</text>
+    <text name="EventInvitatonRejectedNotificationMessage">
+      <![CDATA[
+        <b>{0}</b> rejected your invitation to join the <b>{1}</b> event.
+      ]]>
+    </text>
+    <text name="EventInvitatonAcceptedNotificationMessage">
+      <![CDATA[
+        <b>{0}</b> accepted your invitation to join the <b>{1}</b> event.
+      ]]>
+    </text>
+    <text name="EventInvitationAcceptedEmailSuject">Event invitation accepted.</text>
+    <text name="InvitationAlreadyRejectedErrorMessage">You've already rejected this invitation.  Please contact the event host to invite you to the event.</text>
+    <text name="InvitationAlreadyAcceptedErrorMessage">You've already accepted this invitation. Please check your email for the invitation link. Check your spam/junk folder if the email is not found.</text>
+    <text name="InvitationNotFoundErrorMessage">It looks like your invitation has expired. Please contact the event host for more information.</text>
+    <text name="EventInvitationNotificationMessage">
+      <![CDATA[
+        <b>{0}</b> invited you to join the <b>{1}</b> event.
+      ]]>
+    </text>
+    <text name="EventInvitationEmailSuject">You are invited to an event!</text>
     <text name="KeepPlaying">Keep playing</text>
     <text name="StopVideo">Stop video</text>
     <text name="UnshareVideo">Unshare video</text>
