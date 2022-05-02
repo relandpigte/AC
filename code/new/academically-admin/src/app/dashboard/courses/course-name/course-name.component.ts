@@ -17,7 +17,7 @@ export class CourseNameComponent extends AppComponentBase implements OnInit {
 
   model: CourseDto = new CourseDto();
   isLoading = false;
-
+  isValid: boolean;
   constructor(
     injector: Injector,
     private _router: Router,
@@ -52,5 +52,13 @@ export class CourseNameComponent extends AppComponentBase implements OnInit {
         this.modalClose.emit();
         this._router.navigate(['/app/courses', response.id]);
       });
+  }
+
+  getCourseName(event) {
+    if (event.target.value.trim().length > 0) {
+      this.isValid = true;
+    } else {
+      this.isValid = false;
+    }
   }
 }
