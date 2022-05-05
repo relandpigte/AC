@@ -13,7 +13,7 @@ export class CreateArticleComponent implements OnInit {
   @Output() createCancel = new EventEmitter();
   isLoading = false;
   ArticleType = ArticleType;
-
+  isValid: boolean;
   constructor(
     private _modal: BsModalRef,
   ) { }
@@ -33,5 +33,13 @@ export class CreateArticleComponent implements OnInit {
 
   onCloseClick(): void {
     this._modal.hide();
+  }
+
+  getModelName(event) {
+    if (event.target.value.trim().length > 0) {
+      this.isValid = true;
+    } else {
+      this.isValid = false;
+    }
   }
 }

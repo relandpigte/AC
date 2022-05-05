@@ -18,7 +18,6 @@ export class CourseWizardComponent extends AppComponentBase implements OnInit {
 
   currentWizardState = CourseWizardState.Template;
   isTemplateSelected = false;
-
   constructor(
     injector: Injector,
     private _modalRef: BsModalRef,
@@ -40,4 +39,5 @@ export class CourseWizardComponent extends AppComponentBase implements OnInit {
   onCourseSaved(): void {
     this.courseSaved.emit();
   }
+
 }

@@ -51,8 +51,8 @@
                   </ng-container>
                   <ng-template #articleSeriesTemplate>
                     <div class="d-flex align-items-center">
-                      {{ studentArticle.article.children.length }}
-                      {{ (studentArticle.article.children.length > 1 ?'Articles' : 'Article') | localize }}
+                      {{ studentArticle.article.children?.length }}
+                      {{ (studentArticle.article.children?.length > 1 ?'Articles' : 'Article') | localize }}
                     </div>
                   </ng-template>
                 </div>

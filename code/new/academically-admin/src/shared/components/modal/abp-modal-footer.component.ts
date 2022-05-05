@@ -25,5 +25,6 @@ export class AbpModalFooterComponent extends AppComponentBase {
 
   constructor(injector: Injector) {
     super(injector);
+    console.log('save' , this.saveDisabled);
   }
 }
