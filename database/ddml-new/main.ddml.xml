@@ -131,5 +131,7 @@
 	<include file="ddml-new/ddml.2022-04-03-02-alter-events-add-price-field.xml" />
 	<include file="ddml-new/ddml.2022-04-06-01-create-conferencesessions-tables.xml" />
 	<include file="ddml-new/ddml.2022-04-20-01-alter-eventpresenters-add-status-field.xml" />
+	<include file="ddml-new/ddml.2022-04-25-01-alter-eventpresenters-add-email-field.xml" />
+	<include file="ddml-new/ddml.2022-04-26-01-alter-events-add-schedule-fields.xml" />
 </databaseChangeLog>
 	

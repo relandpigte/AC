@@ -8,6 +8,8 @@ import {
   QuestionType,
   UpdateEventSettingsDto,
   ServiceDelayType,
+  EventRecursionType,
+  DayOfWeek,
 } from '@shared/service-proxies/service-proxies';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { takeUntil } from 'rxjs/operators';
@@ -24,17 +26,26 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
   model = new UpdateEventSettingsDto();
   isLoading = false;
   datePickerConfig: BsDatepickerConfig;
-  eventDateTime: Date;
   eventType = EventType.SingleEvent;
+  minTimesPerDay = 1;
+  maxTimesPerDay = 5;
 
   EventFrequencyType = EventFrequencyType;
   EventReplayType = EventReplayType;
   QuestionType = QuestionType;
   EventType = EventType;
   DelayType = ServiceDelayType;
+  EventRecursionType = EventRecursionType;
+  DayOfWeek = DayOfWeek;
 
+  eventDateTime: Date;
+  endDate: Date;
   lastEventValue: string;
   specificDateValue: Date;
+  scheduleTimeValues: string[] = [];
+  scheduleWeekValues: DayOfWeek[] = [];
+  scheduleMonthsValues: Date[];
+  test: string;
 
   constructor(
     injector: Injector,
@@ -58,9 +69,19 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
       });
   }
 
+  checkScheduleWeekInclusion(dow: DayOfWeek): boolean {
+    return this.scheduleWeekValues.includes(dow);
+  }
+
   onEventDateTimeChange(): void {
     if (this.eventDateTime) {
       this.model.eventDateTime = this.convertDateToMoment(this.eventDateTime);
+    }
+  }
+
+  onEventEndDateChange(): void {
+    if (this.endDate) {
+      this.model.endDate = this.convertDateToMoment(this.endDate);
     }
   }
 
@@ -77,6 +98,59 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
         this.specificDateValue.getFullYear(),
       ];
       this.model.delayValue = dateParts.join('/');
+    }
+  }
+
+  onTimesPerDayChange(): void {
+    if (!_.isNumber(this.model.timesPerDay)) {
+      this.model.timesPerDay = 1;
+    } else {
+      if (this.model.timesPerDay < this.minTimesPerDay) {
+        this.model.timesPerDay = 1;
+      } else if (this.model.timesPerDay > this.maxTimesPerDay) {
+        this.model.timesPerDay = 5;
+      }
+    }
+
+    this.generateSessionTimes();
+  }
+
+  onSessionTimeChange(): void {
+    this.convertSessionTimes();
+  }
+
+  onDayOfWeekSelectionChange(dow: DayOfWeek): void {
+    if (this.scheduleWeekValues.includes(dow)) {
+      const index = this.scheduleWeekValues.findIndex(e => e === dow);
+      if (index >= 0) {
+        this.scheduleWeekValues.splice(dow);
+      }
+    } else {
+      this.scheduleWeekValues.push(dow);
+    }
+    this.convertSessionWeeks();
+  }
+
+  onDaysOfMonthSelectionChange(): void {
+    this.convertSessionForMonth();
+  }
+
+  onRecursionTypeChange(): void {
+    switch (this.model.recursionType) {
+      case EventRecursionType.Daily:
+        this.scheduleWeekValues = undefined;
+        this.scheduleMonthsValues = undefined;
+        this.convertSessionWeeks();
+        this.convertSessionForMonth();
+        break;
+      case EventRecursionType.Weekly:
+        this.scheduleMonthsValues = undefined;
+        this.convertSessionForMonth();
+        break;
+      case EventRecursionType.Monthly:
+        this.scheduleWeekValues = undefined;
+        this.convertSessionWeeks();
+        break;
     }
   }
 
@@ -118,6 +192,9 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
         if (response.eventDateTime) {
           this.eventDateTime = this.convertMomentToDate(response.eventDateTime);
         }
+        if (response.endDate) {
+          this.endDate = this.convertMomentToDate(response.endDate);
+        }
         if (this.model.delayType) {
           switch (this.model.delayType) {
             case ServiceDelayType.SpecificDate:
@@ -136,8 +213,62 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
         } else {
           this.model.delayType = ServiceDelayType.Immediate;
         }
-        this.modelToSave = this.model;
-        this.initAutoSave(this.saveEvent);
+
+        if (this.model.sessionTimes) {
+          this.scheduleTimeValues = JSON.parse(this.model.sessionTimes);
+        }
+
+        if (this.model.sessionDaysOfWeek) {
+          this.scheduleWeekValues = JSON.parse(this.model.sessionDaysOfWeek);
+        }
+
+        if (this.model.sessionDaysOfMonth) {
+          const date = new Date();
+          const month = date.getMonth() + 1;
+          const year = date.getFullYear();
+          const daysOfMonth = JSON.parse(this.model.sessionDaysOfMonth) as string[];
+          this.scheduleMonthsValues = daysOfMonth.map(monthValue => {
+            return new Date(`${month}/${monthValue}/${year}`);
+          });
+        }
+
+        setTimeout(() => {
+          this.modelToSave = this.model;
+          this.initAutoSave(this.saveEvent);
+        });
       });
+  }
+
+  private generateSessionTimes(): void {
+    const tempScheduleTimeValues = this.scheduleTimeValues;
+    this.scheduleTimeValues = [];
+    for (let index = 0; index < this.model.timesPerDay; index++) {
+      if (tempScheduleTimeValues[index]) {
+        this.scheduleTimeValues.push(tempScheduleTimeValues[index]);
+      } else {
+        this.scheduleTimeValues.push('10:00 AM');
+      }
+    }
+
+    this.convertSessionTimes();
+  }
+
+  private convertSessionTimes(): void {
+    this.model.sessionTimes = JSON.stringify(this.scheduleTimeValues);
+  }
+
+  private convertSessionWeeks(): void {
+    this.model.sessionDaysOfWeek = JSON.stringify(this.scheduleWeekValues);
+  }
+
+  private convertSessionForMonth(): void {
+    if (this.scheduleMonthsValues && this.scheduleMonthsValues.length) {
+      const daysOfMonth = this.scheduleMonthsValues.map(date => {
+        return date.getDate();
+      });
+      this.model.sessionDaysOfMonth = JSON.stringify(daysOfMonth);
+    } else {
+      this.model.sessionDaysOfMonth = undefined;
+    }
   }
 }

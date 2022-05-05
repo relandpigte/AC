@@ -11,9 +11,6 @@ import { StudentPortalComponent } from './student-portal.component';
     RouterModule.forChild([
       {
         path: ':event-id',
-        // data: { permission: 'Pages.StudentPortal' },
-        canActivate: [AppRouteGuard],
-        canActivateChild: [AppRouteGuard],
         children: [
           {
             path: '',

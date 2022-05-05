@@ -11,6 +11,7 @@ namespace Academically.Services.Events.Dto
     {
         public EventFrequencyType? FrequencyType { get; set; }
         public DateTime? EventDateTime { get; set; }
+        public DateTime? EndDate { get; set; }
         public int Duration { get; set; }
         public EventReplayType? ReplayType { get; set; }
         public bool? QuestionsEnabled { get; set; }
@@ -28,6 +29,11 @@ namespace Academically.Services.Events.Dto
         public bool? Opened { get; set; }
         public ServiceDelayType? DelayType { get; set; }
         public string DelayValue { get; set; }
+        public EventRecursionType RecursionType { get; set; }
+        public int? TimesPerDay { get; set; }
+        public string SessionTimes { get; set; }
+        public string SessionDaysOfWeek { get; set; }
+        public string SessionDaysOfMonth { get; set; }
         public bool CohostsEnableMicrophone { get; set; }
         public bool CohostsEnableWebCam { get; set; }
         public bool CohostsEnablePresentationTools { get; set; }

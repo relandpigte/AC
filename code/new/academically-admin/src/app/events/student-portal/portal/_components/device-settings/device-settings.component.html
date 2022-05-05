@@ -3,8 +3,11 @@
     <div class="col-lg-6 col-md-6 col-sm-12">
       <div class="card">
         <div class="card-header">
-          <h4 class="card-header-title text-center">
+          <h4 *ngIf="appSession && appSession.user" class="card-header-title text-center">
             {{ 'Welcome' | localize }}, {{ appSession.user.name }}!
+          </h4>
+          <h4 *ngIf="!appSession || appSession.user" class="card-header-title text-center">
+            {{ 'Welcome' | localize }}!
           </h4>
         </div>
         <div class="card-body">

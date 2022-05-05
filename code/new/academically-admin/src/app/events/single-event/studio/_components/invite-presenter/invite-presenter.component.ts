@@ -38,12 +38,12 @@ export class InvitePresenterComponent extends PagedListingComponentBase<UserDto>
     this._modal.hide();
   }
 
-  onInviteClick(userId: number): void {
+  onInviteClick(user: UserDto): void {
     this.isTableLoading = true;
     this._eventsService.invitePresenter(new CreateEventPresenterDto({
       type: EventPresenterType.Guest,
       eventId: this.eventId,
-      userId: userId,
+      email: user.emailAddress,
     }))
       .pipe(
         takeUntil(this.destroyed$),

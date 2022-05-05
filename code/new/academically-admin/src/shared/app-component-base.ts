@@ -124,10 +124,12 @@ export abstract class AppComponentBase implements OnDestroy {
     return '/assets/themes/dashkit/img/avatars/projects/project-1.jpg';
   }
 
-  getProfilePictureUrl(document: DocumentDto): string {
-    const imageUrl = this.uploadService.getFileUrl(document);
-    if (imageUrl) {
-      return imageUrl;
+  getProfilePictureUrl(document?: DocumentDto): string {
+    if (document) {
+      const imageUrl = this.uploadService.getFileUrl(document);
+      if (imageUrl) {
+        return imageUrl;
+      }
     }
     return 'assets/img/anonymous.png';
   }

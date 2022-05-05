@@ -43,23 +43,23 @@
             </div>
           </div>
           <div class="form-group row required">
-            <label class="col-md-3 col-form-label" for="userName">
-              {{ 'UserName' | localize }}
+            <label class="col-md-3 col-form-label" for="emailAddress">
+              {{ 'EmailAddress' | localize }}
             </label>
             <div class="col-md-9">
               <input
-                type="text"
+                type="email"
                 class="form-control"
-                name="userName"
-                id="userName"
+                name="emailAddress"
+                id="emailAddress"
                 required
-                minlength="2"
-                maxlength="32"
-                [(ngModel)]="user.userName"
-                #userNameModel="ngModel"
-                #userNameEl
+                maxlength="256"
+                pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$"
+                [(ngModel)]="user.emailAddress"
+                #emailAddressModel="ngModel"
+                #emailAddressEl
               />
-              <abp-validation-summary [control]="userNameModel" [controlEl]="userNameEl"></abp-validation-summary>
+              <abp-validation-summary [control]="emailAddressModel" [controlEl]="emailAddressEl"> </abp-validation-summary>
             </div>
           </div>
           <div class="form-group row required">
@@ -113,26 +113,6 @@
               ></abp-validation-summary>
             </div>
           </div>
-          <div class="form-group row required">
-            <label class="col-md-3 col-form-label" for="emailAddress">
-              {{ 'EmailAddress' | localize }}
-            </label>
-            <div class="col-md-9">
-              <input
-                type="email"
-                class="form-control"
-                name="emailAddress"
-                id="emailAddress"
-                required
-                maxlength="256"
-                pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$"
-                [(ngModel)]="user.emailAddress"
-                #emailAddressModel="ngModel"
-                #emailAddressEl
-              />
-              <abp-validation-summary [control]="emailAddressModel" [controlEl]="emailAddressEl"> </abp-validation-summary>
-            </div>
-          </div>
           <div class="form-group row mb-0">
             <label class="col-md-3 col-form-label">
               {{ 'IsActive' | localize }}
@@ -180,7 +160,7 @@
     </div>
     <abp-modal-footer
       [cancelDisabled]="saving"
-      [saveDisabled]="!createUserModal.form.valid || saving"
+      [saveDisabled]="!createUserModal.form.valid || !this.user.roleNames || !this.user.roleNames.length || saving"
       (onCancelClick)="bsModalRef.hide()"
     ></abp-modal-footer>
   </div>

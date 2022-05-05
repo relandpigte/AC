@@ -52,7 +52,20 @@ namespace Academically.Domain.Events.Handlers
         public async Task HandleEventAsync(EntityCreatedEventData<EventPresenter> eventData)
         {
             var eventPresenter = eventData.Entity;
-            var recipient = await _usersRepository.GetAsync(eventPresenter.UserId);
+            string recipientName;
+            string recipientEmail;
+            User recipient = null;
+            if (eventPresenter.UserId.HasValue)
+            {
+                recipient = await _usersRepository.GetAsync(eventPresenter.UserId.Value);
+                recipientName = recipient.Name;
+                recipientEmail = recipient.EmailAddress;
+            }
+            else
+            {
+                recipientName = eventPresenter.Email;
+                recipientEmail = eventPresenter.Email;
+            }
             var host = await _usersRepository.GetAsync(eventPresenter.CreatorUserId.Value);
             var @event = await _eventsRepository.GetAsync(eventPresenter.EventId);
 
@@ -62,13 +75,13 @@ namespace Academically.Domain.Events.Handlers
 
             string emailBody = await _emailTemplateHelper.GetTemplate("event-invitation.html", new List<KeyValuePair<string, string>>
             {
-                new KeyValuePair<string, string>("recipientName", recipient.Name),
+                new KeyValuePair<string, string>("recipientName", recipientName),
                 new KeyValuePair<string, string>("eventName", @event.Name),
                 new KeyValuePair<string, string>("hostName", host.FullName),
                 new KeyValuePair<string, string>("acceptInvitationLink", acceptInvitationLink),
                 new KeyValuePair<string, string>("rejectInvitationLink", rejectInvitationLink),
             });
-            await _emailService.SendAsync(recipient.Name, recipient.EmailAddress, L("EventInvitationEmailSuject"), emailBody);
+            await _emailService.SendAsync(recipientName, recipientEmail, L("EventInvitationEmailSuject"), emailBody);
 
             var notificationData = new LocalizableMessageNotificationData(new LocalizableString("EventInvitationNotificationMessage", AcademicallyConsts.LocalizationSourceName));
             notificationData["0"] = host.FullName;
@@ -76,17 +89,32 @@ namespace Academically.Domain.Events.Handlers
             notificationData.Properties.Add("Link", acceptInvitationLink);
             notificationData.Properties.Add("CreatorUserId", host.Id);
 
-            await _notificationPublisher.PublishAsync(
-                NotificationNames.Notifications_Events_Invitation,
-                notificationData,
-                userIds: new[] { new UserIdentifier(recipient.TenantId, recipient.Id) }
-            );
+            if (recipient != null)
+            {
+                await _notificationPublisher.PublishAsync(
+                    NotificationNames.Notifications_Events_Invitation,
+                    notificationData,
+                    userIds: new[] { new UserIdentifier(recipient.TenantId, recipient.Id) }
+                );
+            }
         }
 
         public async Task HandleEventAsync(EntityUpdatedEventData<EventPresenter> eventData)
         {
             var eventPresenter = eventData.Entity;
-            var recipient = await _usersRepository.GetAsync(eventPresenter.UserId);
+            string recipientName;
+            string recipientEmail;
+            if (eventPresenter.UserId.HasValue)
+            {
+                var recipient = await _usersRepository.GetAsync(eventPresenter.UserId.Value);
+                recipientName = recipient.Name;
+                recipientEmail = recipient.EmailAddress;
+            }
+            else
+            {
+                recipientName = eventPresenter.Email;
+                recipientEmail = eventPresenter.Email;
+            }
             var host = await _usersRepository.GetAsync(eventPresenter.CreatorUserId.Value);
             var @event = await _eventsRepository.GetAsync(eventPresenter.EventId);
 
@@ -95,27 +123,27 @@ namespace Academically.Domain.Events.Handlers
                 case EventPresenterStatus.Accepted:
 
                     string clientRootAddress = (await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress)).Trim('/');
-                    string joinEventLink = $"{clientRootAddress}/app/events/student-portal/{@event.Id}/portal";
+                    string joinEventLink = $"{clientRootAddress}/app/events/student-portal/{@event.Id}/portal/{eventPresenter.Id}";
 
                     string inviteeEmailBody = await _emailTemplateHelper.GetTemplate("event-invitation-accepted-invitee.html", new List<KeyValuePair<string, string>>
                     {
                         new KeyValuePair<string, string>("eventName", @event.Name),
-                        new KeyValuePair<string, string>("recipientName", recipient.Name),
+                        new KeyValuePair<string, string>("recipientName", recipientName),
                         new KeyValuePair<string, string>("joinEventLink", joinEventLink),
                     });
 
                     string hostEmailBody = await _emailTemplateHelper.GetTemplate("event-invitation-accepted-host.html", new List<KeyValuePair<string, string>>
                     {
                         new KeyValuePair<string, string>("hostName", host.FullName),
-                        new KeyValuePair<string, string>("recipientName", recipient.Name),
+                        new KeyValuePair<string, string>("recipientName", recipientName),
                         new KeyValuePair<string, string>("eventName", @event.Name),
                     });
 
-                    await _emailService.SendAsync(recipient.Name, recipient.EmailAddress, L("EventInvitationAcceptedEmailSuject"), inviteeEmailBody);
+                    await _emailService.SendAsync(recipientName, recipientEmail, L("EventInvitationAcceptedEmailSuject"), inviteeEmailBody);
                     await _emailService.SendAsync(host.Name, host.EmailAddress, L("EventInvitationAcceptedEmailSuject"), hostEmailBody);
 
                     var eventAcceptedNotificationData = new LocalizableMessageNotificationData(new LocalizableString("EventInvitatonAcceptedNotificationMessage", AcademicallyConsts.LocalizationSourceName));
-                    eventAcceptedNotificationData["0"] = host.FullName;
+                    eventAcceptedNotificationData["0"] = recipientName;
                     eventAcceptedNotificationData["1"] = @event.Name;
                     eventAcceptedNotificationData.Properties.Add("CreatorUserId", host.Id);
 
@@ -127,7 +155,7 @@ namespace Academically.Domain.Events.Handlers
                     break;
                 case EventPresenterStatus.Rejected:
                     var eventRejectedNotificationData = new LocalizableMessageNotificationData(new LocalizableString("EventInvitatonRejectedNotificationMessage", AcademicallyConsts.LocalizationSourceName));
-                    eventRejectedNotificationData["0"] = host.FullName;
+                    eventRejectedNotificationData["0"] = recipientName;
                     eventRejectedNotificationData["1"] = @event.Name;
                     eventRejectedNotificationData.Properties.Add("CreatorUserId", host.Id);
 

@@ -1,56 +1,85 @@
-<abp-modal-header [title]="'EditTenant' | localize" (onCloseClick)="onCloseClick()"></abp-modal-header>
-<div class="modal-header py-1">
-  <form class="w-100">
-    <div class="input-group input-group-flush">
-      <div class="input-group-prepend">
-        <span class="input-group-text">
-          <i class="fe fe-search"></i>
-        </span>
-      </div>
-      <input class="list-search form-control" type="search" name="Search" placeholder="Search"
-        [(ngModel)]="searchFilter" (keyup)="getDataPage(1)" />
-    </div>
-  </form>
+<div class="card-header">
+  <h4 class="card-header-title">
+    {{ 'InvitePresenter' | localize }}
+  </h4>
+  <ul class="mr-4 nav nav-tabs nav-tabs-sm card-header-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" id="users-tab" data-toggle="tab" href="#users" role="tab" aria-controls="users"
+        aria-selected="true">{{ 'InviteUsers' | localize}}</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="by-email-tab" data-toggle="tab" href="#by-email" role="tab" aria-controls="by-email"
+        aria-selected="true">{{ 'InviteByEmail' | localize}}</a>
+    </li>
+  </ul>
+  <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
+    <span aria-hidden="true">×</span>
+  </button>
 </div>
-<div class="table-responsive">
-  <table class="table table-sm table-hover table-nowrap card-table" [loader]="isTableLoading">
-    <thead>
-      <tr>
-        <th colspan="2">
-          {{ 'Name' | localize }}
-        </th>
-      </tr>
-    </thead>
-    <tbody class="list font-size-base">
-      <tr
-        *ngFor="let user of (users | paginate: { id: 'presenters', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })">
-        <td>
 
-          <div class="row align-items-center">
-            <div class="col-auto">
-              <a class="avatar">
-                <img [src]="getProfilePictureUrl(user.profilePictureDocument)" alt="..."
-                  class="avatar-img rounded-circle">
-              </a>
-            </div>
-            <div class="col">
-              {{ user.fullName }}
-            </div>
+<div class="tab-content">
+
+  <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">
+    <div class="modal-header py-1">
+      <form class="w-100">
+        <div class="input-group input-group-flush">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fe fe-search"></i>
+            </span>
           </div>
-        </td>
-        <td width="1%">
-          <button class="btn btn-sm btn-outline-primary" (click)="onInviteClick(user.id)">
-            {{ 'Invite' | localize }}
-          </button>
-        </td>
-      </tr>
-      <tr *ngIf="users.length === 0">
-        <td colspan="10">
-          <p class="text-center m-0 p-0">{{ 'NoUsersFound' | localize }}</p>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <abp-pagination-controls *ngIf="users && users.length && totalItems > users.length" id="presenters"
-    (pageChange)="getDataPage($event)"></abp-pagination-controls>
+          <input class="list-search form-control" type="search" name="Search" placeholder="Search"
+            [(ngModel)]="searchFilter" (keyup)="getDataPage(1)" />
+        </div>
+      </form>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover table-nowrap card-table" [loader]="isTableLoading">
+        <thead>
+          <tr>
+            <th colspan="2">
+              {{ 'Name' | localize }}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="list font-size-base">
+          <tr
+            *ngFor="let user of (users | paginate: { id: 'presenters', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })">
+            <td>
+
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <a class="avatar">
+                    <img [src]="getProfilePictureUrl(user.profilePictureDocument)" alt="..."
+                      class="avatar-img rounded-circle">
+                  </a>
+                </div>
+                <div class="col">
+                  {{ user.fullName }}
+                </div>
+              </div>
+            </td>
+            <td width="1%">
+              <button class="btn btn-sm btn-outline-primary" (click)="onInviteClick(user)">
+                {{ 'Invite' | localize }}
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="users.length === 0">
+            <td colspan="10">
+              <p class="text-center m-0 p-0">{{ 'NoUsersFound' | localize }}</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <abp-pagination-controls *ngIf="users && users.length && totalItems > users.length" id="presenters"
+        (pageChange)="getDataPage($event)"></abp-pagination-controls>
+    </div>
+  </div>
+
+  <div class="tab-pane fade" id="by-email" role="tabpanel" aria-labelledby="by-email-tab">
+    <app-invite-presenter-by-email [eventId]="eventId" (presenterInvited)="presenterInvited.emit()">
+    </app-invite-presenter-by-email>
+  </div>
+
 </div>

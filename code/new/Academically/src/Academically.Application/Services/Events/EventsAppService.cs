@@ -233,6 +233,14 @@ namespace Academically.Services.Events
         public async Task InvitePresenterAsync(CreateEventPresenterDto input)
         {
             var eventPresenter = ObjectMapper.Map<EventPresenter>(input);
+
+            var user = await _usersRepository.GetAll()
+                .FirstOrDefaultAsync(e => e.EmailAddress.ToLower() == input.Email.ToLower());
+            if (user != null)
+            {
+                eventPresenter.UserId = user.Id;
+            }
+
             eventPresenter.Status = EventPresenterStatus.Invited;
             await _eventPresentersRepository.InsertAsync(eventPresenter);
         }

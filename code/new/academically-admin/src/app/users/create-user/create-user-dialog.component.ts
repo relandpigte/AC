@@ -75,6 +75,7 @@ export class CreateUserDialogComponent extends AppComponentBase
 
   onRoleChange(role: RoleDto, $event) {
     this.checkedRolesMap[role.normalizedName] = $event.target.checked;
+    this.user.roleNames = this.getCheckedRoles();
   }
 
   getCheckedRoles(): string[] {
@@ -90,7 +91,7 @@ export class CreateUserDialogComponent extends AppComponentBase
   save(): void {
     this.saving = true;
 
-    this.user.roleNames = this.getCheckedRoles();
+    this.user.userName = this.user.emailAddress;
 
     this._userService
       .create(this.user)
