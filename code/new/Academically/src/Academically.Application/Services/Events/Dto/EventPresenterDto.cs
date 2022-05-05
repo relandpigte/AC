@@ -13,7 +13,8 @@ namespace Academically.Services.Events.Dto
         public EventPresenterType Type { get; set; }
         public EventPresenterStatus Status { get; set; }
         public Guid EventId { get; set; }
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
+        public string Email { get; set; }
 
         public UserDto User { get; set; }
     }

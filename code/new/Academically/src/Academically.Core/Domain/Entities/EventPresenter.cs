@@ -11,7 +11,8 @@ namespace Academically.Domain.Entities
 	{
         public EventPresenterType Type { get; set; }
         public Guid EventId { get; set; }
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
+        public string Email { get; set; }
         public EventPresenterStatus Status { get; set; }
 
         [ForeignKey("CreatorUserId")]

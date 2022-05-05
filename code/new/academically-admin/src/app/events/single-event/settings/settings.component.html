@@ -101,32 +101,248 @@
               </div>
             </div>
           </div>
-          <div class="form-row">
-            <div class="form-group col-4 mb-0">
-              <label class="col-form-label" for="startTime">{{ 'EventDate' | localize}}</label>
-              <div class="input-group input-group-merge" (click)="eventDateDp.show()">
-                <input [(ngModel)]="eventDateTime" [bsConfig]="datePickerConfig" bsDatepicker
-                  class="form-control form-control-appended" type="text" id="eventDate" name="eventDate"
-                  #eventDateDp="bsDatepicker" (bsValueChange)="onEventDateTimeChange()" />
-                <div class="input-group-append">
-                  <div class="input-group-text">
-                    <span class="fas fa-calendar"></span>
+          <ng-container *ngIf="model.frequencyType === EventFrequencyType.Single; else recurringEventTemplate">
+            <div class="form-row">
+              <div class="form-group col-4 mb-0">
+                <label class="col-form-label" for="startTime">{{ 'EventDate' | localize}}</label>
+                <div class="input-group input-group-merge" (click)="eventDateDp.show()">
+                  <input [(ngModel)]="eventDateTime" [bsConfig]="datePickerConfig" bsDatepicker
+                    class="form-control form-control-appended" type="text" id="eventDate" name="eventDate"
+                    #eventDateDp="bsDatepicker" (bsValueChange)="onEventDateTimeChange()" />
+                  <div class="input-group-append">
+                    <div class="input-group-text">
+                      <span class="fas fa-calendar"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-4 mb-0">
+                <label class="col-form-label" for="eventTime">{{ 'EventTime' | localize}}</label>
+                <p-calendar [(ngModel)]="eventDateTime" [timeOnly]="true" [hourFormat]="12" [styleClass]="'w-100'"
+                  [inputStyleClass]="'form-control'" id="eventTime" name="eventTime"
+                  (onSelect)="onEventDateTimeChange()">
+                </p-calendar>
+              </div>
+              <div class="form-group col-4 mb-0">
+                <label class="col-form-label" for="duration">{{ 'DurationInMinutesQuote' | localize}}</label>
+                <input [(ngModel)]="model.duration" class="form-control" type="number" id="duration" name="duration"
+                  step="30" />
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #recurringEventTemplate>
+
+            <div class="form-row form-row-sm">
+              <div class="form-group col-4 d-flex align-items-center">
+                <label for=" recursionType" class="col-form-label font-weight-bold p-0">
+                  {{ 'RepeatEvery' | localize }}
+                </label>
+              </div>
+              <div class="form-group col-4">
+                <select [(ngModel)]="model.recursionType" name="recursionType" id="recursionType"
+                  class="form-control recursion-type" (change)="onRecursionTypeChange()">
+                  <option [ngValue]="EventRecursionType.Daily">
+                    {{ 'Daily' | localize }}
+                  </option>
+                  <option [ngValue]="EventRecursionType.Weekly">
+                    {{ 'Weekly' | localize }}
+                  </option>
+                  <option [ngValue]="EventRecursionType.Monthly">
+                    {{ 'Monthly' | localize }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div *ngIf="model.recursionType === EventRecursionType.Weekly" class="form-row form-row-sm">
+              <div class="form-group col-4 d-flex align-items-center">
+                <label class="col-form-label font-weight-bold p-0">
+                  {{ 'On' | localize }}
+                </label>
+              </div>
+              <div class="form-group col-8 d-flex align-items-center">
+                <div class="row">
+                  <div class="col">
+                    <div class="custom-control custom-checkbox">
+                      <input [checked]="checkScheduleWeekInclusion(DayOfWeek.Sunday)" class="custom-control-input"
+                        id="sunday" name="sunday" type="checkbox"
+                        (change)="onDayOfWeekSelectionChange(DayOfWeek.Sunday)" />
+                      <label class="custom-control-label" for="sunday"></label>
+                      <span class="custom-control-caption">Su</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="custom-control custom-checkbox">
+                      <input [checked]="checkScheduleWeekInclusion(DayOfWeek.Monday)" class="custom-control-input"
+                        id="monday" name="monday" type="checkbox"
+                        (change)="onDayOfWeekSelectionChange(DayOfWeek.Monday)" />
+                      <label class="custom-control-label" for="monday"></label>
+                      <span class="custom-control-caption">Mo</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="custom-control custom-checkbox">
+                      <input [checked]="checkScheduleWeekInclusion(DayOfWeek.Tuesday)" class="custom-control-input"
+                        id="tuesday" name="tuesday" type="checkbox"
+                        (change)="onDayOfWeekSelectionChange(DayOfWeek.Tuesday)" />
+                      <label class="custom-control-label" for="tuesday"></label>
+                      <span class="custom-control-caption">Tu</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="custom-control custom-checkbox">
+                      <input [checked]="checkScheduleWeekInclusion(DayOfWeek.Wednesday)" class="custom-control-input"
+                        id="wednesday" name="wednesday" type="checkbox"
+                        (change)="onDayOfWeekSelectionChange(DayOfWeek.Wednesday)" />
+                      <label class="custom-control-label" for="wednesday"></label>
+                      <span class="custom-control-caption">We</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="custom-control custom-checkbox">
+                      <input [checked]="checkScheduleWeekInclusion(DayOfWeek.Thursday)" class="custom-control-input"
+                        id="thursday" name="thursday" type="checkbox"
+                        (change)="onDayOfWeekSelectionChange(DayOfWeek.Thursday)" />
+                      <label class="custom-control-label" for="thursday"></label>
+                      <span class="custom-control-caption">Th</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="custom-control custom-checkbox">
+                      <input [checked]="checkScheduleWeekInclusion(DayOfWeek.Friday)" class="custom-control-input"
+                        id="friday" name="friday" type="checkbox"
+                        (change)="onDayOfWeekSelectionChange(DayOfWeek.Friday)" />
+                      <label class="custom-control-label" for="friday"></label>
+                      <span class="custom-control-caption">Fr</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="custom-control custom-checkbox">
+                      <input [checked]="checkScheduleWeekInclusion(DayOfWeek.Saturday)" class="custom-control-input"
+                        id="saturday" name="saturday" type="checkbox"
+                        (change)="onDayOfWeekSelectionChange(DayOfWeek.Saturday)" />
+                      <label class="custom-control-label" for="saturday"></label>
+                      <span class="custom-control-caption">Sa</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="form-group col-4 mb-0">
-              <label class="col-form-label" for="eventTime">{{ 'EventTime' | localize}}</label>
-              <p-calendar [(ngModel)]="eventDateTime" [timeOnly]="true" [hourFormat]="12" [styleClass]="'w-100'"
-                [inputStyleClass]="'form-control'" id="eventTime" name="eventTime" (onSelect)="onEventDateTimeChange()">
-              </p-calendar>
+
+            <div *ngIf="model.recursionType === EventRecursionType.Monthly" class=" form-row form-row-sm">
+              <div class="form-group col-4 d-flex align-items-center">
+                <label class="col-form-label font-weight-bold p-0">
+                  {{ 'On' | localize }}
+                </label>
+              </div>
+              <div class="form-group col-8 d-flex align-items-center">
+                <div class="session-days">
+                  <p-calendar [(ngModel)]="scheduleMonthsValues" id="scheduleMonthsValues" name="scheduleMonthsValues"
+                    [inline]="true" [showWeek]="false" [selectionMode]="'multiple'" [showOtherMonths]="false"
+                    [selectOtherMonths]="false" (onSelect)="onDaysOfMonthSelectionChange()"
+                    (click)="onDaysOfMonthSelectionChange()">
+                  </p-calendar>
+                </div>
+              </div>
             </div>
-            <div class="form-group col-4 mb-0">
-              <label class="col-form-label" for="duration">{{ 'DurationInMinutesQuote' | localize}}</label>
-              <input [(ngModel)]="model.duration" class="form-control" type="number" id="duration" name="duration"
-                step="30" />
+
+            <div class="form-row form-row-sm">
+              <div class="form-group col-8 offset-4 d-flex align-items-center">
+                <input [(ngModel)]="model.timesPerDay" class="form-control times-per-day mr-2" type="number"
+                  name="timesPerDay" id="timesPerDay" [min]="minTimesPerDay" [max]="maxTimesPerDay"
+                  (change)="onTimesPerDayChange()">
+                <label for="timesPerDay" class="col-form-label m-0 p-0">
+                  {{ 'TimesPerDay' | localize | lowercase }}
+                </label>
+              </div>
             </div>
-          </div>
+
+            <div class="sessions">
+              <div *ngFor="let scheduleTime of scheduleTimeValues; let i = index" class="form-row form-row-sm">
+                <div *ngIf="(i + 1) <= maxTimesPerDay" class="form-group col-6 offset-4">
+                  <label for="time_{{i}}" class="col-form-label p-0 mr-5 align-items-center session-time-label">
+                    {{ 'Session' | localize }} {{ i + 1 }}
+                  </label>
+                  <div class="session-time">
+                    <div class="input-group input-group-merge">
+                      <p-calendar [(ngModel)]="scheduleTimeValues[i]" id="time_{{i}}" name="time_{{i}}"
+                        [timeOnly]="true" [hourFormat]="12" [class]="'form-control form-control-appended'"
+                        [dataType]="'string'" (onSelect)="onSessionTimeChange()">
+                      </p-calendar>
+                      <div class="input-group-append">
+                        <span class="input-group-text">
+                          <i class="fe fe-clock"></i>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="mt-0">
+
+            <div class="form-row form-row-sm">
+              <div class="form-group col-4 d-flex align-items-center">
+                <label class="col-form-label font-weight-bold p-0">
+                  {{ 'Start' | localize }}
+                </label>
+              </div>
+              <div class="form-group col-8">
+                <div class="session-date">
+                  <div class="input-group input-group-merge" (click)="eventDateDp.show()">
+                    <input [(ngModel)]="eventDateTime" [bsConfig]="datePickerConfig" bsDatepicker
+                      class="form-control form-control-appended" type="text" id="eventDate" name="eventDate"
+                      #eventDateDp="bsDatepicker" (bsValueChange)="onEventDateTimeChange()" />
+                    <div class="input-group-append">
+                      <div class="input-group-text">
+                        <i class="fe fe-calendar"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="mt-0">
+
+            <div class="form-row form-row-sm">
+              <div class="form-group col-4 d-flex align-items-center">
+                <label class="col-form-label font-weight-bold p-0">
+                  {{ 'End' | localize }}
+                </label>
+              </div>
+              <div class="form-group col-8">
+                <div class="session-date">
+                  <div class="input-group input-group-merge" (click)="endDateDp.show()">
+                    <input [(ngModel)]="endDate" [bsConfig]="datePickerConfig" bsDatepicker
+                      class="form-control form-control-appended" type="text" id="endDate" name="endDate"
+                      #endDateDp="bsDatepicker" (bsValueChange)="onEventEndDateChange()" />
+                    <div class="input-group-append">
+                      <div class="input-group-text">
+                        <i class="fe fe-calendar"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="mt-0">
+
+            <div class="form-row form-row-sm">
+              <div class="form-group mb-0 col-4 d-flex align-items-center">
+                <label class="col-form-label font-weight-bold p-0">
+                  {{ 'DurationInMinutesQuote' | localize }}
+                </label>
+              </div>
+              <div class="form-group mb-0 col-8">
+                <input [(ngModel)]="model.duration" name="duration" id="duration" type="number"
+                  class="form-control duration">
+              </div>
+            </div>
+          </ng-template>
         </div>
       </div>
 

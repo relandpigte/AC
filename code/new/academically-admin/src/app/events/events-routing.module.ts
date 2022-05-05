@@ -55,7 +55,6 @@ import { EventsComponent } from './events.component';
       },
       {
         path: 'student-portal',
-        // data: { permission: 'Pages.Articles.StudentPortal' },
         loadChildren: () =>
           import('@app/events/student-portal/student-portal.module').then(
             (m) => m.StudentPortalModule

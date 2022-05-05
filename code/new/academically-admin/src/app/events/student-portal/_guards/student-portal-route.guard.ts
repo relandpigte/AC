@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, CanActivateChild, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { PricingType, EventsServiceProxy, EventType } from '@shared/service-proxies/service-proxies';
 import { AppSessionService } from '@shared/session/app-session.service';
+import * as _ from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,12 @@ export class StudentPortalRouteGuard implements CanActivate, CanActivateChild {
     abp.ui.setBusy();
     return new Promise((resolve) => {
       const eventId: string = route.params['event-id'];
+      let eventPresenterId: string;
+      _.each(route.children, childRoute => {
+        _.each(childRoute.children, grandChildRoute => {
+          eventPresenterId = grandChildRoute.params['invitation-id'];
+        });
+      });
       this._eventsService.get(eventId)
         .subscribe(response => {
           if (response.type === EventType.EventSeries && response.children && response.children.length) {
@@ -34,7 +41,7 @@ export class StudentPortalRouteGuard implements CanActivate, CanActivateChild {
             abp.ui.clearBusy();
             return resolve(true);
           }
-          if (response.pricingType !== PricingType.Free) {
+          if (response.pricingType !== PricingType.Free && !eventPresenterId) {
             this._eventsService.getPurchased(eventId)
               .subscribe(studentEvent => {
                 if (state.url.includes('landing-page')) {

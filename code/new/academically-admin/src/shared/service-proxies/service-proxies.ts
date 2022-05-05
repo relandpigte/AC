@@ -24803,7 +24803,7 @@ export interface ICreateEventPollDto {
 export class CreateEventPresenterDto implements ICreateEventPresenterDto {
     type: EventPresenterType;
     eventId: string;
-    userId: number;
+    email: string | undefined;
 
     constructor(data?: ICreateEventPresenterDto) {
         if (data) {
@@ -24818,7 +24818,7 @@ export class CreateEventPresenterDto implements ICreateEventPresenterDto {
         if (_data) {
             this.type = _data["type"];
             this.eventId = _data["eventId"];
-            this.userId = _data["userId"];
+            this.email = _data["email"];
         }
     }
 
@@ -24833,7 +24833,7 @@ export class CreateEventPresenterDto implements ICreateEventPresenterDto {
         data = typeof data === 'object' ? data : {};
         data["type"] = this.type;
         data["eventId"] = this.eventId;
-        data["userId"] = this.userId;
+        data["email"] = this.email;
         return data; 
     }
 
@@ -24848,7 +24848,7 @@ export class CreateEventPresenterDto implements ICreateEventPresenterDto {
 export interface ICreateEventPresenterDto {
     type: EventPresenterType;
     eventId: string;
-    userId: number;
+    email: string | undefined;
 }
 
 export class CreateEventResourceDto implements ICreateEventResourceDto {
@@ -26344,6 +26344,7 @@ export class EventDto implements IEventDto {
     price: number | undefined;
     frequencyType: EventFrequencyType;
     eventDateTime: moment.Moment | undefined;
+    endDate: moment.Moment | undefined;
     duration: number;
     replayType: EventReplayType;
     questionsEnabled: boolean | undefined;
@@ -26361,6 +26362,11 @@ export class EventDto implements IEventDto {
     opened: boolean | undefined;
     delayType: ServiceDelayType;
     delayValue: string | undefined;
+    recursionType: EventRecursionType;
+    timesPerDay: number | undefined;
+    sessionTimes: string | undefined;
+    sessionDaysOfWeek: string | undefined;
+    sessionDaysOfMonth: string | undefined;
     cohostsEnableMicrophone: boolean;
     cohostsEnableWebCam: boolean;
     cohostsEnablePresentationTools: boolean;
@@ -26445,6 +26451,7 @@ export class EventDto implements IEventDto {
             this.price = _data["price"];
             this.frequencyType = _data["frequencyType"];
             this.eventDateTime = _data["eventDateTime"] ? moment(_data["eventDateTime"].toString()) : <any>undefined;
+            this.endDate = _data["endDate"] ? moment(_data["endDate"].toString()) : <any>undefined;
             this.duration = _data["duration"];
             this.replayType = _data["replayType"];
             this.questionsEnabled = _data["questionsEnabled"];
@@ -26462,6 +26469,11 @@ export class EventDto implements IEventDto {
             this.opened = _data["opened"];
             this.delayType = _data["delayType"];
             this.delayValue = _data["delayValue"];
+            this.recursionType = _data["recursionType"];
+            this.timesPerDay = _data["timesPerDay"];
+            this.sessionTimes = _data["sessionTimes"];
+            this.sessionDaysOfWeek = _data["sessionDaysOfWeek"];
+            this.sessionDaysOfMonth = _data["sessionDaysOfMonth"];
             this.cohostsEnableMicrophone = _data["cohostsEnableMicrophone"];
             this.cohostsEnableWebCam = _data["cohostsEnableWebCam"];
             this.cohostsEnablePresentationTools = _data["cohostsEnablePresentationTools"];
@@ -26550,6 +26562,7 @@ export class EventDto implements IEventDto {
         data["price"] = this.price;
         data["frequencyType"] = this.frequencyType;
         data["eventDateTime"] = this.eventDateTime ? this.eventDateTime.toISOString() : <any>undefined;
+        data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
         data["duration"] = this.duration;
         data["replayType"] = this.replayType;
         data["questionsEnabled"] = this.questionsEnabled;
@@ -26567,6 +26580,11 @@ export class EventDto implements IEventDto {
         data["opened"] = this.opened;
         data["delayType"] = this.delayType;
         data["delayValue"] = this.delayValue;
+        data["recursionType"] = this.recursionType;
+        data["timesPerDay"] = this.timesPerDay;
+        data["sessionTimes"] = this.sessionTimes;
+        data["sessionDaysOfWeek"] = this.sessionDaysOfWeek;
+        data["sessionDaysOfMonth"] = this.sessionDaysOfMonth;
         data["cohostsEnableMicrophone"] = this.cohostsEnableMicrophone;
         data["cohostsEnableWebCam"] = this.cohostsEnableWebCam;
         data["cohostsEnablePresentationTools"] = this.cohostsEnablePresentationTools;
@@ -26655,6 +26673,7 @@ export interface IEventDto {
     price: number | undefined;
     frequencyType: EventFrequencyType;
     eventDateTime: moment.Moment | undefined;
+    endDate: moment.Moment | undefined;
     duration: number;
     replayType: EventReplayType;
     questionsEnabled: boolean | undefined;
@@ -26672,6 +26691,11 @@ export interface IEventDto {
     opened: boolean | undefined;
     delayType: ServiceDelayType;
     delayValue: string | undefined;
+    recursionType: EventRecursionType;
+    timesPerDay: number | undefined;
+    sessionTimes: string | undefined;
+    sessionDaysOfWeek: string | undefined;
+    sessionDaysOfMonth: string | undefined;
     cohostsEnableMicrophone: boolean;
     cohostsEnableWebCam: boolean;
     cohostsEnablePresentationTools: boolean;
@@ -27160,7 +27184,8 @@ export class EventPresenterDto implements IEventPresenterDto {
     type: EventPresenterType;
     status: EventPresenterStatus;
     eventId: string;
-    userId: number;
+    userId: number | undefined;
+    email: string | undefined;
     user: UserDto;
 
     constructor(data?: IEventPresenterDto) {
@@ -27179,6 +27204,7 @@ export class EventPresenterDto implements IEventPresenterDto {
             this.status = _data["status"];
             this.eventId = _data["eventId"];
             this.userId = _data["userId"];
+            this.email = _data["email"];
             this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
         }
     }
@@ -27197,6 +27223,7 @@ export class EventPresenterDto implements IEventPresenterDto {
         data["status"] = this.status;
         data["eventId"] = this.eventId;
         data["userId"] = this.userId;
+        data["email"] = this.email;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         return data; 
     }
@@ -27214,7 +27241,8 @@ export interface IEventPresenterDto {
     type: EventPresenterType;
     status: EventPresenterStatus;
     eventId: string;
-    userId: number;
+    userId: number | undefined;
+    email: string | undefined;
     user: UserDto;
 }
 
@@ -27230,6 +27258,13 @@ export enum EventPresenterType {
     Host = 0,
     CoHost = 1,
     Guest = 2,
+}
+
+/** 0 = Daily 1 = Weekly 2 = Monthly */
+export enum EventRecursionType {
+    Daily = 0,
+    Weekly = 1,
+    Monthly = 2,
 }
 
 /** 1 = Record 2 = DontRecord */
@@ -35588,6 +35623,7 @@ export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
     id: string;
     frequencyType: EventFrequencyType;
     eventDateTime: moment.Moment | undefined;
+    endDate: moment.Moment | undefined;
     duration: number;
     replayType: EventReplayType;
     questionsEnabled: boolean | undefined;
@@ -35605,6 +35641,11 @@ export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
     opened: boolean | undefined;
     delayType: ServiceDelayType;
     delayValue: string | undefined;
+    recursionType: EventRecursionType;
+    timesPerDay: number | undefined;
+    sessionTimes: string | undefined;
+    sessionDaysOfWeek: string | undefined;
+    sessionDaysOfMonth: string | undefined;
     cohostsEnableMicrophone: boolean;
     cohostsEnableWebCam: boolean;
     cohostsEnablePresentationTools: boolean;
@@ -35673,6 +35714,7 @@ export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
             this.id = _data["id"];
             this.frequencyType = _data["frequencyType"];
             this.eventDateTime = _data["eventDateTime"] ? moment(_data["eventDateTime"].toString()) : <any>undefined;
+            this.endDate = _data["endDate"] ? moment(_data["endDate"].toString()) : <any>undefined;
             this.duration = _data["duration"];
             this.replayType = _data["replayType"];
             this.questionsEnabled = _data["questionsEnabled"];
@@ -35690,6 +35732,11 @@ export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
             this.opened = _data["opened"];
             this.delayType = _data["delayType"];
             this.delayValue = _data["delayValue"];
+            this.recursionType = _data["recursionType"];
+            this.timesPerDay = _data["timesPerDay"];
+            this.sessionTimes = _data["sessionTimes"];
+            this.sessionDaysOfWeek = _data["sessionDaysOfWeek"];
+            this.sessionDaysOfMonth = _data["sessionDaysOfMonth"];
             this.cohostsEnableMicrophone = _data["cohostsEnableMicrophone"];
             this.cohostsEnableWebCam = _data["cohostsEnableWebCam"];
             this.cohostsEnablePresentationTools = _data["cohostsEnablePresentationTools"];
@@ -35758,6 +35805,7 @@ export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
         data["id"] = this.id;
         data["frequencyType"] = this.frequencyType;
         data["eventDateTime"] = this.eventDateTime ? this.eventDateTime.toISOString() : <any>undefined;
+        data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
         data["duration"] = this.duration;
         data["replayType"] = this.replayType;
         data["questionsEnabled"] = this.questionsEnabled;
@@ -35775,6 +35823,11 @@ export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
         data["opened"] = this.opened;
         data["delayType"] = this.delayType;
         data["delayValue"] = this.delayValue;
+        data["recursionType"] = this.recursionType;
+        data["timesPerDay"] = this.timesPerDay;
+        data["sessionTimes"] = this.sessionTimes;
+        data["sessionDaysOfWeek"] = this.sessionDaysOfWeek;
+        data["sessionDaysOfMonth"] = this.sessionDaysOfMonth;
         data["cohostsEnableMicrophone"] = this.cohostsEnableMicrophone;
         data["cohostsEnableWebCam"] = this.cohostsEnableWebCam;
         data["cohostsEnablePresentationTools"] = this.cohostsEnablePresentationTools;
@@ -35843,6 +35896,7 @@ export interface IUpdateEventSettingsDto {
     id: string;
     frequencyType: EventFrequencyType;
     eventDateTime: moment.Moment | undefined;
+    endDate: moment.Moment | undefined;
     duration: number;
     replayType: EventReplayType;
     questionsEnabled: boolean | undefined;
@@ -35860,6 +35914,11 @@ export interface IUpdateEventSettingsDto {
     opened: boolean | undefined;
     delayType: ServiceDelayType;
     delayValue: string | undefined;
+    recursionType: EventRecursionType;
+    timesPerDay: number | undefined;
+    sessionTimes: string | undefined;
+    sessionDaysOfWeek: string | undefined;
+    sessionDaysOfMonth: string | undefined;
     cohostsEnableMicrophone: boolean;
     cohostsEnableWebCam: boolean;
     cohostsEnablePresentationTools: boolean;

@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="TimesPerDay">Time(s) per day</text>
+    <text name="RepeatEvery">Repeat every</text>
+    <text name="InviteByEmail">Invite by Email</text>
+    <text name="InviteUsers">Invite users</text>
+    <text name="InvitePresenter">Invite presenter</text>
     <text name="EventNotAvailableErrorMessage">Your event is not available at the moment.</text>
     <text name="EventInvitationRejectedSuccessMessage">You have rejected our invitation to join the event.</text>
     <text name="EventInvitationAcceptedSuccessMessageInfo">We sent you a secondary email containing a link to the event. Check your spam/junk folder if the email is not found.</text>
@@ -1235,8 +1240,8 @@
     <text name="UrgencyLevel1">Urgent</text>
     <text name="UrgencyLevel2">Average</text>
     <text name="UrgencyLevel3">Not Urgent</text>
-    <text name="Sessions">SESSIONS</text>
-    <text name="Session">SESSION</text>
+    <text name="Sessions">Sessions</text>
+    <text name="Session">Session</text>
     <text name="YourProposal">Your Proposal</text>
     <text name="Revise">Revise</text>
     <text name="FreeConsulation">15 MIN CONSULTATION</text>

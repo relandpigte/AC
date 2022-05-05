@@ -21,17 +21,20 @@
             <div class="row align-items-center">
               <div class="col-auto">
                 <a class="avatar">
-                  <img [src]="getProfilePictureUrl(presenter.user.profilePictureDocument)" alt="..."
+                  <img *ngIf="presenter.user" [src]="getProfilePictureUrl(presenter.user.profilePictureDocument)"
+                    alt="..." class="avatar-img rounded-circle">
+                  <img *ngIf="!presenter.user" [src]="getProfilePictureUrl()" alt="..."
                     class="avatar-img rounded-circle">
                 </a>
               </div>
               <div class="col ml-n2">
                 <h4 class="mb-1 name">
-                  <a>{{ presenter.user.fullName }}</a>
+                  <a *ngIf="presenter.user">{{ presenter.user.fullName }}</a>
+                  <a *ngIf="!presenter.user">{{ presenter.email }}</a>
                 </h4>
               </div>
               <div class="col-auto">
-                <div class="dropdown">
+                <div *ngIf="presenter.user" class="dropdown">
                   <a class="btn btn-sm btn-outline-primary dropdown-toggle" role=" button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     {{ EventPresenterType[presenter.type] }} <span class="caret"></span>
@@ -51,6 +54,9 @@
                     </li>
                   </ul>
                 </div>
+                <span *ngIf="!presenter.user" class="badge badge-soft-primary">
+                  {{ EventPresenterType[EventPresenterType.Guest] | localize }}
+                </span>
               </div>
               <div class="col-auto">
                 <a class="dropdown-ellipses dropdown-toggle" role="button">

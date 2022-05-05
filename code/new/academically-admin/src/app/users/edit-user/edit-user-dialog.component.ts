@@ -43,6 +43,7 @@ export class EditUserDialogComponent extends AppComponentBase implements OnInit 
 
   onRoleChange(role: RoleDto, $event) {
     this.checkedRolesMap[role.normalizedName] = $event.target.checked;
+    this.user.roleNames = this.getCheckedRoles();
   }
 
   getCheckedRoles(): string[] {
@@ -58,7 +59,7 @@ export class EditUserDialogComponent extends AppComponentBase implements OnInit 
   save(): void {
     this.saving = true;
 
-    this.user.roleNames = this.getCheckedRoles();
+    this.user.userName = this.user.emailAddress;
 
     this._userService
       .update(this.user)
