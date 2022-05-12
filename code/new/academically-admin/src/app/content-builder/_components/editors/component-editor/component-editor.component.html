@@ -17,6 +17,7 @@
     </div>
   </div>
   <div class="card-body">
+    <input type="text" name="name" id="name" [(ngModel)]="component.name" class="form-control mb-2">
     <app-color-picker [(color)]="component.backgroundColor"></app-color-picker>
     <ng-container [ngSwitch]="component.type">
       <app-body-text-component-editor *ngSwitchCase="'body-text'" [component]="component">
