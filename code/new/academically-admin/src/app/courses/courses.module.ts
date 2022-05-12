@@ -12,6 +12,7 @@ import { LessonWizardComponent } from './_components/lesson-wizard/lesson-wizard
 import { TemplateComponent } from './_components/lesson-wizard/template/template.component';
 import { NameComponent } from './_components/lesson-wizard/name/name.component';
 import { DragulaModule } from 'ng2-dragula';
+import { CourseSectionComponent } from './_components/course-section/course-section.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { DragulaModule } from 'ng2-dragula';
     LessonWizardComponent,
     TemplateComponent,
     NameComponent,
+    CourseSectionComponent,
   ],
   imports: [
     CommonModule,

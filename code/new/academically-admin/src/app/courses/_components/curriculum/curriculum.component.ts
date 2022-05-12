@@ -28,28 +28,28 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
     private dragulaService: DragulaService
   ) {
     super(injector);
-    this.dragulaService.createGroup("Course", {
+    this.dragulaService.createGroup('Course', {
       revertOnSpill: true,
     });
 
-    this.dragulaService.dropModel("Course").subscribe(args => {
-      var parentId = args.target.id;
+    this.dragulaService.dropModel('Course').subscribe(args => {
+      const parentId = args.target.id;
       const _index = [].slice.call(args.el.parentNode.children).findIndex((x) => args.el === x);
       if (args.item.id === parentId
         && args.item.type === args.target['type']
-        || (args.item.type === CourseSectionType.Module && (args.target["type"] === CourseSectionType.Unit || CourseSectionType.Lesson))
-        || (args.item.type === CourseSectionType.Unit && parentId === "" && (args.target["type"] === undefined || CourseSectionType.Unit || CourseSectionType.Lesson))) {
+        || (args.item.type === CourseSectionType.Module && (args.target['type'] === CourseSectionType.Unit || CourseSectionType.Lesson))
+        || (args.item.type === CourseSectionType.Unit && parentId === '' &&
+        (args.target['type'] === undefined || CourseSectionType.Unit || CourseSectionType.Lesson))) {
 
-        if (parentId === "" && args.item.type === CourseSectionType.Module) {
-          this.updateCourseSectionParent(args.item.id, _index + 1, parentId)
-        }
-        else {
+        if (parentId === '' && args.item.type === CourseSectionType.Module) {
+          this.updateCourseSectionParent(args.item.id, _index + 1, parentId);
+        } else {
           this.dragulaService.find('Course').drake.cancel(true);
 
           args.sourceModel.splice(args.sourceIndex, 0, ...args.targetModel.splice(args.targetIndex, 1));
         }
       } else {
-        this.updateCourseSectionParent(args.item.id, _index + 1, parentId)
+        this.updateCourseSectionParent(args.item.id, _index + 1, parentId);
       }
     });
   }
@@ -59,12 +59,21 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
   }
 
   ngOnDestroy(): void {
-    this.dragulaService.destroy("Course");
+    this.dragulaService.destroy('Course');
   }
 
-  onAddEditCourseSectionClick(courseSectionType: CourseSectionType, courseSection?: CourseSectionDto, courseEllipseState?: CourseEllipseState): void {
+  editSection(courseSection) {
+    this.onAddEditCourseSectionClick(courseSection.type, courseSection, CourseEllipseState.Rename);
+  }
+
+  addSection(courseSection) {
+    this.onAddEditCourseSectionClick(this.courseSectionType.Lesson, courseSection);
+  }
+
+  onAddEditCourseSectionClick(courseSectionType: CourseSectionType, courseSection?:
+    CourseSectionDto, courseEllipseState?: CourseEllipseState): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<LessonWizardComponent>;
-    var model = new CourseSectionDto();
+    let model = new CourseSectionDto();
     if (courseSection) {
       if (courseSection.type === courseSectionType) {
         model = courseSection;
@@ -100,6 +109,7 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
       }
     );
   }
+
 
   onDuplicateClick(courseSection): void {
     this.isLoading = true;
