@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Minutes">Minutes</text>
+    <text name="Registered">Registered</text>
     <text name="TimesPerDay">Time(s) per day</text>
     <text name="RepeatEvery">Repeat every</text>
     <text name="InviteByEmail">Invite by Email</text>
@@ -43,6 +45,8 @@
     <text name="NoRelatedEvent">No related event</text>
     <text name="GoLive">Go live</text>
     <text name="Join">Join</text>
+    <text name="ViewRecording">View recording</text>
+    <text name="Upcoming">Upcoming</text>
     <text name="Welcome">Welcome</text>
     <text name="JoinRoom">Join room</text>
     <text name="Test">Test</text>
