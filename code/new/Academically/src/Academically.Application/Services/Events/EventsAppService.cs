@@ -17,6 +17,7 @@ using Academically.Services.Events.Dto;
 using Academically.Services.Events.Enums;
 using Academically.Users.Dto;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Academically.Services.Events
 {
@@ -189,6 +190,117 @@ namespace Academically.Services.Events
                 return relatedVideos;
             }
             return new List<EventDto>();
+        }
+
+        public async Task<PagedResultDto<EventInstanceDto>> GetAllEventInstances(PagedEventInstanceResultRequestDto input)
+        {
+            var @event = await Repository.GetAsync(input.EventIdFilter);
+            var eventInstances = new List<EventInstanceDto>();
+            if (@event.EventDateTime.HasValue && @event.EndDate.HasValue)
+            {
+                if (@event.FrequencyType.HasValue)
+                {
+                    if (@event.FrequencyType.Value == EventFrequencyType.Recurring && @event.TimesPerDay.HasValue && @event.TimesPerDay.Value > 0
+                        && !string.IsNullOrWhiteSpace(@event.SessionTimes))
+                    {
+                        var tempDate = @event.EventDateTime.Value;
+                        var sessionTimes = JsonConvert.DeserializeObject<string[]>(@event.SessionTimes);
+                        if (sessionTimes != null && sessionTimes.Any())
+                        {
+                            switch (@event.RecursionType)
+                            {
+                                case EventRecursionType.Daily:
+                                    while (tempDate < @event.EndDate.Value)
+                                    {
+                                        foreach (var sessionTime in sessionTimes)
+                                        {
+                                            eventInstances.Add(new EventInstanceDto()
+                                            {
+                                                Date = tempDate,
+                                                Duration = @event.Duration ?? 0,
+                                                Id = @event.Id,
+                                                Registrants = 0,
+                                                Time = sessionTime,
+                                            });
+                                        }
+
+                                        tempDate = tempDate.AddDays(1);
+                                    }
+                                    break;
+                                case EventRecursionType.Weekly:
+                                    if (!string.IsNullOrWhiteSpace(@event.SessionDaysOfWeek))
+                                    {
+                                        var sessionDaysOfWeek = JsonConvert.DeserializeObject<DayOfWeek[]>(@event.SessionDaysOfWeek);
+                                        if (sessionDaysOfWeek != null && sessionDaysOfWeek.Any())
+                                        {
+                                            while (tempDate < @event.EndDate.Value)
+                                            {
+                                                if (sessionDaysOfWeek.Contains(tempDate.DayOfWeek))
+                                                {
+                                                    foreach (var sessionTime in sessionTimes)
+                                                    {
+                                                        eventInstances.Add(new EventInstanceDto()
+                                                        {
+                                                            Date = tempDate,
+                                                            Duration = @event.Duration ?? 0,
+                                                            Id = @event.Id,
+                                                            Registrants = 0,
+                                                            Time = sessionTime,
+                                                        });
+                                                    }
+                                                }
+
+                                                tempDate = tempDate.AddDays(1);
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case EventRecursionType.Monthly:
+                                    if (!string.IsNullOrWhiteSpace(@event.SessionDaysOfMonth))
+                                    {
+                                        var sessionDaysOfMonth = JsonConvert.DeserializeObject<int[]>(@event.SessionDaysOfMonth);
+                                        if (sessionDaysOfMonth != null && sessionDaysOfMonth.Any())
+                                        {
+                                            while (tempDate < @event.EndDate.Value)
+                                            {
+                                                if (sessionDaysOfMonth.Contains(tempDate.Day))
+                                                {
+                                                    foreach (var sessionTime in sessionTimes)
+                                                    {
+                                                        eventInstances.Add(new EventInstanceDto()
+                                                        {
+                                                            Date = tempDate,
+                                                            Duration = @event.Duration ?? 0,
+                                                            Id = @event.Id,
+                                                            Registrants = 0,
+                                                            Time = sessionTime,
+                                                        });
+                                                    }
+                                                }
+
+                                                tempDate = tempDate.AddDays(1);
+                                            }
+                                        }
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            var query = eventInstances.AsQueryable()
+                .WhereIf(input.PastFilter, e => e.Date < DateTime.UtcNow)
+                .WhereIf(!input.PastFilter, e => e.Date >= DateTime.UtcNow);
+
+            var totalCount = query.Count();
+            var instances = query
+                .PageBy(input)
+                .OrderBy(e => e.Date)
+                    .ThenBy(e => e.Time)
+                .ToList();
+            return new PagedResultDto<EventInstanceDto>(totalCount, instances);
+
         }
 
         public async Task<StudentEventDto> GetPurchasedAsync(Guid id)

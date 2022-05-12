@@ -17,6 +17,13 @@ import { TutorPortalComponent } from './tutor-portal.component';
                 (m) => m.OverviewModule,
               ),
           },
+          {
+            path: 'schedule',
+            loadChildren: () =>
+              import('@app/events/tutor-portal/schedule/schedule.module').then(
+                (m) => m.ScheduleModule,
+              ),
+          },
           { path: '', redirectTo: 'overview' },
         ],
       }

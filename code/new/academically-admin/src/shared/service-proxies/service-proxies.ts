@@ -6979,6 +6979,77 @@ export class EventsServiceProxy {
     }
 
     /**
+     * @param eventIdFilter (optional) 
+     * @param pastFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAllEventInstances(eventIdFilter: string | undefined, pastFilter: boolean | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventInstanceDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Events/GetAllEventInstances?";
+        if (eventIdFilter === null)
+            throw new Error("The parameter 'eventIdFilter' cannot be null.");
+        else if (eventIdFilter !== undefined)
+            url_ += "EventIdFilter=" + encodeURIComponent("" + eventIdFilter) + "&";
+        if (pastFilter === null)
+            throw new Error("The parameter 'pastFilter' cannot be null.");
+        else if (pastFilter !== undefined)
+            url_ += "PastFilter=" + encodeURIComponent("" + pastFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllEventInstances(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllEventInstances(<any>response_);
+                } catch (e) {
+                    return <Observable<EventInstanceDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventInstanceDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllEventInstances(response: HttpResponseBase): Observable<EventInstanceDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventInstanceDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventInstanceDtoPagedResultDto>(<any>null);
+    }
+
+    /**
      * @param id (optional) 
      * @return Success
      */
@@ -26923,6 +26994,120 @@ export interface IEventInfo {
     raiseMethod: MethodInfo;
     isMulticast: boolean;
     eventHandlerType: Type;
+}
+
+export class EventInstanceDto implements IEventInstanceDto {
+    id: string;
+    date: moment.Moment;
+    time: string | undefined;
+    registrants: number;
+    duration: number;
+
+    constructor(data?: IEventInstanceDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.date = _data["date"] ? moment(_data["date"].toString()) : <any>undefined;
+            this.time = _data["time"];
+            this.registrants = _data["registrants"];
+            this.duration = _data["duration"];
+        }
+    }
+
+    static fromJS(data: any): EventInstanceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventInstanceDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["time"] = this.time;
+        data["registrants"] = this.registrants;
+        data["duration"] = this.duration;
+        return data; 
+    }
+
+    clone(): EventInstanceDto {
+        const json = this.toJSON();
+        let result = new EventInstanceDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEventInstanceDto {
+    id: string;
+    date: moment.Moment;
+    time: string | undefined;
+    registrants: number;
+    duration: number;
+}
+
+export class EventInstanceDtoPagedResultDto implements IEventInstanceDtoPagedResultDto {
+    items: EventInstanceDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IEventInstanceDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(EventInstanceDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): EventInstanceDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventInstanceDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): EventInstanceDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new EventInstanceDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEventInstanceDtoPagedResultDto {
+    items: EventInstanceDto[] | undefined;
+    totalCount: number;
 }
 
 export class EventPollDto implements IEventPollDto {
