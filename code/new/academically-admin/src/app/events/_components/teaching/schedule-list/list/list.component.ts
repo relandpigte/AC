@@ -9,8 +9,8 @@ import { EventDto } from '@shared/service-proxies/service-proxies';
   styleUrls: ['./list.component.less']
 })
 export class ListComponent extends AppComponentBase implements OnInit {
-
   @Input() events: EventDto[] = [];
+
   constructor(injector: Injector, private router: Router) {
     super(injector);
   }
@@ -18,9 +18,7 @@ export class ListComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
   }
 
-
-  navToUrl(url , id?) {
-    this.router.navigate([url , id]);
- }
-
+  navToUrl(url: string, id?: string) {
+    this.router.navigate([url, id]);
+  }
 }

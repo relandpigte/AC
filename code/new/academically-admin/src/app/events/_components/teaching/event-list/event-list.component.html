@@ -1,284 +1,47 @@
-<!-- <div class="card-header">
-  <div class="row align-items-center">
-    <div class="col">
-      <form>
-        <div class="input-group input-group-flush">
-          <div class="input-group-prepend">
-            <span class="input-group-text">
-              <i class="fe fe-search"></i>
-            </span>
-          </div>
-          <input class="list-search form-control" type="search" name="Search" placeholder="Search"
-            [(ngModel)]="searchFilter" (keyup.enter)="getDataPage(1)" />
-        </div>
-      </form>
-    </div>
-    <div class="col-auto mr-n3">
-      <form>
-        <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize" (select2ValueChange)="pageSizeChange($event)"
-          name="PageNumber" class="custom-select custom-select-sm form-control-flush" data-toggle="select">
-          <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
-            {{ pageSizeSelection }} {{ 'PerPage' | localize }}
-          </option>
-        </select>
-      </form>
-    </div>
-    <div class="col-auto">
-      <div class="dropdown" dropdown #filterDropdown="bs-dropdown" [isAnimated]="true" [autoClose]="false">
-        <button class="btn btn-sm btn-white" type="button" dropdownToggle>
-          <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }}
-          <span *ngIf="statusFilter || statusFilter >= 0" class="badge badge-primary ml-1">1</span>
-        </button>
-        <form *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-card" (ngSubmit)="getDataPage(1)">
-          <div class="card-header">
-            <h4 class="card-header-title">{{ 'Filters' | localize }}</h4>
-            <button class="btn btn-sm btn-link text-reset btn-white" type="submit"
-              (click)="filterDropdown.hide(); onClearFiltersClick()">
-              <small>{{ 'ClearFilters' | localize }}</small>
-            </button>
-          </div>
-          <div class="card-body">
-            <div class="list-group list-group-flush mt-n4 mb-4">
-              <div class="list-group-item">
-                <div class="row">
-                  <div class="col">
-                    <small>{{ 'Status' | localize }}</small>
-                  </div>
-                  <div class="col-auto">
-                    <div class="custom-control custom-radio d-inline">
-                      <input type="radio" class="custom-control-input" id="allStatus" name="statusFilter"
-                        [(ngModel)]="statusFilter" [value]="undefined" checked />
-                      <label class="custom-control-label" for="allStatus">
-                        {{ 'All' | localize }}
-                      </label>
-                    </div>
-                    <div class="custom-control custom-radio d-inline mx-3">
-                      <input type="radio" class="custom-control-input" id="draftStatus" name="statusFilter"
-                        [(ngModel)]="statusFilter" [value]="EventStatus.Draft" />
-                      <label class="custom-control-label" for="draftStatus">
-                        {{ 'Draft' | localize }}
-                      </label>
-                    </div>
-                    <div class="custom-control custom-radio d-inline">
-                      <input type="radio" class="custom-control-input" id="publishedStatus" name="statusFilter"
-                        [(ngModel)]="statusFilter" [value]="EventStatus.Published" />
-                      <label class="custom-control-label" for="publishedStatus">
-                        {{ 'Published' | localize }}
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <button class="btn btn-block btn-primary" type="submit" (click)="filterDropdown.hide()">
-              {{ 'ApplyFilter' | localize }}
-            </button>
-          </div>
-          &nbsp;
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="table-responsive">
-  <table class="table table-sm table-hover table-nowrap card-table" [loader]="isTableLoading">
-    <tbody class="list font-size-base">
-      <tr *ngFor="
-              let event of (events | paginate: { id: 'events', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })
-            ">
-        <td>
-          <div class="row">
-            <div class="col-auto d-flex justify-content-center align-items-center">
-              <div *ngIf="!thumbnailUrls[event.id] else withThumbnailTemplate"
-                class="avatar avatar-4by3 d-flex justify-content-center align-items-center">
-                <i class="fe fe-cast text-muted h1 p-0 m-0"></i>
-              </div>
-              <ng-template #withThumbnailTemplate>
-                <div class="avatar avatar-4by3">
-                  <img [src]="getCourseImageUrl(thumbnailUrls[event.id])" alt="..." class="avatar-img rounded">
-                </div>
-              </ng-template>
-            </div>
-            <div class="col d-flex flex-column justify-content-center">
-              <a *ngIf="event.type === EventType.SingleEvent" [routerLink]="['/app/events/tutor-portal', event.id]">
-                <h4 class="mb-1">{{ event.name }}</h4>
-              </a>
-              <a *ngIf="event.type === EventType.EventSeries" [routerLink]="['event-series', event.id]">
-                <h4 class="mb-1">{{ event.name }}</h4>
-              </a>
-              <p *ngIf="event.description" class="text-muted mb-1">
-                {{ event.description }}
-              </p>
-              <div class="text-muted mb-1">
-                <div class="d-flex">
-                  <div class="d-flex align-items-center">
-                    <i class="fe fe-cast mr-2"></i>
-                    {{ (event.type === EventType.SingleEvent ? 'Event' : 'EventSeries') | localize }}
-                  </div>
-                  <div class="d-flex align-items-center mx-3">|</div>
-                  <ng-container *ngIf="event.type === EventType.SingleEvent else eventSeriesTemplate">
-                    <div class="d-flex align-items-center mr-3">
-                      <i class="fe fe-users mr-2"></i>
-                      0 {{ 'Attendees' | localize }}
-                    </div>
-                    <div class="d-flex align-items-center mr-3">
-                      <i class="fe fe-clock mr-2"></i>
-                      {{ 'StartsIn' | localize }}&nbsp;
-                      <span class="font-weight-bold text-danger">0 {{ 'Days' | localize | lowercase }}</span>
-                    </div>
-                  </ng-container>
-                  <ng-template #eventSeriesTemplate>
-                    <div class="d-flex align-items-center mr-3">
-                      {{ event.children.length }}
-                      {{ (event.children.length > 1 ? 'Events' : 'Event') | localize }}
-                    </div>
-                    <div class="d-flex align-items-center mr-3">
-                      <i class="fe fe-clock mr-2"></i>
-                      {{ 'NextEventIn' | localize }}&nbsp;
-                      <span class="font-weight-bold text-danger">0 {{ 'Days' | localize | lowercase }}</span>
-                    </div>
-                  </ng-template>
-                </div>
-              </div>
-            </div>
-          </div>
-        </td>
-        <td>
-          <span class="badge" [class.badge-info]="event.status === EventStatus.Draft"
-            [class.badge-primary]="event.status === EventStatus.Published">
-            {{ EventStatus[event.status] }}
-          </span>
-        </td>
-        <td class="table-action">
-          <button *ngIf="event.type === EventType.SingleEvent" [routerLink]="[event.id]"
-            class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
-            <span class="fe fe-edit-2"></span>
-          </button>
-          <button *ngIf="event.type === EventType.EventSeries" [routerLink]="['event-series', event.id]"
-            class="btn btn-outline-primary btn-sm btn-rounded-circle mr-1">
-            <span class="fe fe-edit-2"></span>
-          </button>
-          <button type="button" class="btn btn-outline-danger btn-sm btn-rounded-circle mr-1"
-            (click)="onDeleteClick(event.id)">
-            <span class="fe fe-trash-2"></span>
-          </button>
-        </td>
-      </tr>
-      <tr *ngIf="events.length === 0">
-        <td colspan="10">
-          <p class="text-center m-0 p-0">{{ 'NoRecordsFound' | localize }}</p>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <abp-pagination-controls id="events" (pageChange)="getDataPage($event)"> </abp-pagination-controls>
-</div> -->
-
-<div class="row mt-3 ml-2">
-  <div class="col-10">
-    <div class="card">
-      <div class="card-header  height-pad border-0">
+<div class="row mb-3">
+  <div class="col">
+    <div class="card mb-0">
+      <div class="card-header height-pad border-0">
         <div class="row align-items-center">
           <div class="col">
           </div>
           <div class="col-auto mr-n3">
             <form>
-              <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize" (select2ValueChange)="pageSizeChange($event)"
-                name="PageNumber" class="custom-select custom-select-sm form-control-flush" data-toggle="select">
+              <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize"
+                (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
+                class="custom-select custom-select-sm form-control-flush" data-toggle="select">
                 <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
                   {{ pageSizeSelection }} {{ 'PerPage' | localize }}
                 </option>
               </select>
             </form>
           </div>
-          <div class="col-auto">
-            <div class="dropdown" dropdown #filterDropdown="bs-dropdown" [isAnimated]="true" [autoClose]="false">
-              <button class="btn btn-sm btn-white" type="button" dropdownToggle>
-                <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }}
-                <span *ngIf="statusFilter || statusFilter >= 0" class="badge badge-primary ml-1">1</span>
-              </button>
-              <form *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-card" (ngSubmit)="getDataPage(1)">
-                <div class="card-header">
-                  <h4 class="card-header-title">{{ 'Filters' | localize }}</h4>
-                  <button class="btn btn-sm btn-link text-reset btn-white" type="submit"
-                    (click)="filterDropdown.hide(); onClearFiltersClick()">
-                    <small>{{ 'ClearFilters' | localize }}</small>
-                  </button>
-                </div>
-                <div class="card-body">
-                  <div class="list-group list-group-flush mt-n4 mb-4">
-                    <div class="list-group-item">
-                      <div class="row">
-                        <div class="col">
-                          <small>{{ 'Status' | localize }}</small>
-                        </div>
-                        <div class="col-auto">
-                          <div class="custom-control custom-radio d-inline">
-                            <input type="radio" class="custom-control-input" id="allSchedule" name="scheduleFilter"
-                              [(ngModel)]="scheduleFilter" [value]="undefined" checked />
-                            <label class="custom-control-label" for="allSchedule">
-                              {{ 'All' | localize }}
-                            </label>
-                          </div>
-                          <div class="custom-control custom-radio d-inline mx-3">
-                            <input type="radio" class="custom-control-input" id="upcomingSchedule" name="scheduleFilter"
-                              [(ngModel)]="scheduleFilter" [value]="EventScheduleFilter.Upcoming" />
-                            <label class="custom-control-label" for="upcomingSchedule">
-                              {{ 'Upcoming' | localize }}
-                            </label>
-                          </div>
-                          <div class="custom-control custom-radio d-inline">
-                            <input type="radio" class="custom-control-input" id="pastSchedule" name="scheduleFilter"
-                              [(ngModel)]="scheduleFilter" [value]="EventScheduleFilter.Past" />
-                            <label class="custom-control-label" for="pastSchedule">
-                              {{ 'Past' | localize }}
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <button class="btn btn-block btn-primary" type="submit" (click)="filterDropdown.hide()">
-                    {{ 'ApplyFilter' | localize }}
-                  </button>
-                </div>
-                &nbsp;
-              </form>
-            </div>
-          </div>
-      </div>
-
-      </div>
-    </div>
-  </div>
-    <div class="col-2">
-      <div class="col-auto">
-        <div class="nav btn-group" role="tablist">
-          <button class="btn btn-lg btn-white active" data-toggle="tab" data-target="#event-grid-tab" role="tab"
-            aria-controls="event-grid-tab" aria-selected="true">
-            <span class="fe fe-grid"></span>
-          </button>
-          <button class="btn btn-lg btn-white" data-toggle="tab" data-target="#event-list-tab" role="tab" aria-controls="list-tab"
-            aria-selected="false">
-            <span class="fe fe-list"></span>
-          </button>
         </div>
       </div>
     </div>
-
+  </div>
+  <div class="col-auto">
+    <div class="nav btn-group h-100" role="tablist">
+      <button class="btn btn-lg btn-white active" data-toggle="tab" data-target="#event-grid-tab" role="tab"
+        aria-controls="event-grid-tab" aria-selected="true">
+        <span class="fe fe-grid"></span>
+      </button>
+      <button class="btn btn-lg btn-white" data-toggle="tab" data-target="#event-list-tab" role="tab"
+        aria-controls="list-tab" aria-selected="false">
+        <span class="fe fe-list"></span>
+      </button>
+    </div>
+  </div>
 </div>
 
-<div *ngIf="events && events.length else noCoursesTemplate" class="tab-content mar-21" [loader]="isTableLoading">
+<div *ngIf="events && events.length else noCoursesTemplate" class="tab-content" [loader]="isTableLoading">
   <div class="tab-pane fade active show" id="event-grid-tab" role="tabpanel">
     <app-grid [events]="events" (deleteEvent)="onDeleteClick($event)"></app-grid>
   </div>
   <div class="tab-pane fade" id="event-list-tab" role="tabpanel">
     <app-list [events]="events" (deleteEvent)="onDeleteClick($event)"></app-list>
-
   </div>
 </div>
-
 
 <ng-template #noCoursesTemplate>
   <p class="m-0 p-5 text-muted text-center">

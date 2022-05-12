@@ -87,7 +87,13 @@ namespace Academically.Services.Events
                 .WhereIf(input.UserIdFilter.HasValue, e => e.CreatorUserId == input.UserIdFilter.Value)
                 .WhereIf(input.EventScheduleFilter.HasValue && input.EventScheduleFilter.Value == EventScheduleFilter.Upcoming, e => e.EventDateTime >= Clock.Now)
                 .WhereIf(input.EventScheduleFilter.HasValue && input.EventScheduleFilter.Value == EventScheduleFilter.Past, e => e.EventDateTime < Clock.Now)
-                .OrderByDescending(e => e.EventDateTime);
+                .OrderByDescending(e => e.EventDateTime)
+                .Concat(
+                    _eventPresentersRepository.GetAll()
+                    .Where(e => e.UserId == AbpSession.UserId.Value)
+                    .Select(e => e.Event)
+                );
+
             var totalCount = await query.CountAsync();
             var events = await query
                 .PageBy(input)

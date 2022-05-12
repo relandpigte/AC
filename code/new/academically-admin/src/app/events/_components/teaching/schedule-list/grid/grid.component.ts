@@ -9,18 +9,16 @@ import { EventDto } from '@shared/service-proxies/service-proxies';
   styleUrls: ['./grid.component.less']
 })
 export class GridComponent extends AppComponentBase implements OnInit {
-
   @Input() events: EventDto[] = [];
+
   constructor(injector: Injector, private router: Router) {
     super(injector);
-   }
+  }
 
   ngOnInit(): void {
   }
 
-
-  navToUrl(url , id?) {
-    this.router.navigate([url , id]);
- }
-
+  navToUrl(url: string, id?: string) {
+    this.router.navigate([url, id]);
+  }
 }

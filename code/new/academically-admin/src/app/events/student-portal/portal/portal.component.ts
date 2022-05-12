@@ -128,6 +128,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     if (this.testMode) {
       this.eventStarted = true;
       this.eventJoined = true;
+      console.log(audienceIds);
       await this.eventSessionsHub.invoke('startEvent', audienceIds, JSON.stringify(this.session));
     } else {
       const modalSettings = this.defaultModalSettings as ModalOptions<EventStartingComponent>;

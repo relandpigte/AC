@@ -1,11 +1,11 @@
-<div class="row lis ml-2">
+<div class="row">
   <div *ngFor="let event of events" class="col-12">
     <div class="card">
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col-auto">
             <a href="#!visit" class="avatar avatar-lg avatar-4by3" (click)="$event.preventDefault();">
-              <img [src]="getServiceImageUrl(event.thumbnailDocument)" alt="..." class="card-img-top">
+              <img [src]="getServiceImageUrl(event.thumbnailDocument)" alt="..." class="avatar-img rounded">
             </a>
           </div>
           <div class="col ml-n2">
