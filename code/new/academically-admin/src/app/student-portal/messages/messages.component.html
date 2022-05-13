@@ -21,13 +21,13 @@
             <img [src]="getCoverPhotoFromDocument(course.creatorUser.coverPhotoDocument, course.creatorUser.id)"
               alt="..." class="card-img-top">
             <div class="card-body text-center">
-              <a href="#" [routerLink]="['/app/profile']" class="avatar avatar-xl card-avatar card-avatar-top">
+              <a href="#" [routerLink]="['/app/profile' , course.creatorUser.id]" class="avatar avatar-xl card-avatar card-avatar-top">
                 <img
                   [src]="getProfilePictureFromDocument(course.creatorUser.profilePictureDocument, course.creatorUser.id)"
                   class="avatar-img rounded-circle border border-4 border-card" alt="profile">
               </a>
               <h2 class="card-title">
-                <a href="#" [routerLink]="['/app/profile']">
+                <a href="#" [routerLink]="['/app/profile' , course.creatorUser.id]">
                   {{ course.creatorUser.name }} {{ course.creatorUser.surname }}
                 </a>
               </h2>
