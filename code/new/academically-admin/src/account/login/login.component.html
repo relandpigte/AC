@@ -58,12 +58,12 @@
             [disabled]="!loginForm.form.valid || submitting">
             {{ 'SignIn' | localize }}
           </button>
-          <div class="text-center" *ngIf="isSelfRegistrationAllowed">
+          <!-- <div class="text-center" *ngIf="isSelfRegistrationAllowed">
             <small class="text-muted text-center">
               {{ 'DontHaveAnAccountYet' | localize }} <a href="#" [routerLink]="['/account/register']">{{ 'Register' |
                 localize }}</a>.
             </small>
-          </div>
+          </div> -->
         </ng-template>
       </form>
     </div>

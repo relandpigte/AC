@@ -16,8 +16,8 @@ import { CompleteResetPasswordComponent } from './reset-password/complete-reset-
         component: AccountComponent,
         children: [
           { path: 'login', component: LoginComponent },
-          { path: 'register', component: RegisterComponent },
-          { path: 'complete-registration/:id', component: CompleteRegistrationComponent },
+          // { path: 'register', component: RegisterComponent },
+          // { path: 'complete-registration/:id', component: CompleteRegistrationComponent },
           { path: 'terms-and-conditions', component: TermsAndConditionsComponent },
           { path: 'reset-password', component: ResetPasswordComponent },
           { path: 'complete-reset-password/:id', component: CompleteResetPasswordComponent },
