@@ -2,8 +2,11 @@ import { Component, OnInit, Injector, ViewChild, ElementRef, AfterViewInit, OnDe
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   EventDto,
+  EventPresenterDto,
   EventsServiceProxy,
+  ProfilesServiceProxy,
   StudentEventDto,
+  UpdateProfileDto,
 } from '@shared/service-proxies/service-proxies';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -59,10 +62,14 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
 
   model = new EventDto;
   studentEvent = new StudentEventDto();
+  eventPresenter = new EventPresenterDto();
   selectedMachineDevice = new SelectedMachineDevice();
   audiences: StudentEventDto[] = [];
+  eventPresenters: EventPresenterDto[] = [];
   eventId: string;
   sessionId: string;
+  invitationId: string;
+
   preview = false;
   showSidebar = true;
   showDeviceSettings = true;
@@ -70,7 +77,8 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   eventJoined = false;
   audienceJoined = false;
   hubConnected = false;
-  testMode = false;
+  waiting = false;
+  testMode = true;
 
   session = new Session();
 
@@ -83,19 +91,42 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     private _hubService: HubService,
     private _eventsService: EventsServiceProxy,
     private _portalService: PortalService,
+    private _profilesService: ProfilesServiceProxy,
   ) {
     super(injector);
+    route.paramMap.subscribe(paramMap => {
+      if (paramMap.has('invitation-id')) {
+        this.invitationId = paramMap.get('invitation-id');
+        this.getEventPresenter();
+      }
+    });
     route.parent.parent.paramMap.subscribe(paramMap => {
       if (paramMap.has('event-id')) {
         this.eventId = paramMap.get('event-id');
         this.getEvent();
         this.getAllAudiences();
+        this.getAllPresenters();
       }
     });
     this._portalService.audiences$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(responses => {
         this.audiences = responses;
+      });
+    this._portalService.presenters$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(responses => {
+        this.eventPresenters = responses;
+      });
+    this._portalService.admitGuest$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        if (response) {
+          this.eventSessionsHub.invoke('admitGuest', this.model.creatorUserId, response, JSON.stringify(this.session))
+            .then(() => {
+              // do nothing
+            });
+        }
       });
   }
 
@@ -125,11 +156,13 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
 
   async onGoLiveClick(): Promise<void> {
     const audienceIds = this.audiences.map(e => e.creatorUser.id);
+    const presenterIds = this.eventPresenters.map(e => e.userId);
+    const attendeeIds = [...audienceIds, ...presenterIds];
     if (this.testMode) {
       this.eventStarted = true;
       this.eventJoined = true;
-      console.log(audienceIds);
-      await this.eventSessionsHub.invoke('startEvent', audienceIds, JSON.stringify(this.session));
+      console.log(attendeeIds);
+      await this.eventSessionsHub.invoke('startEvent', attendeeIds, JSON.stringify(this.session));
     } else {
       const modalSettings = this.defaultModalSettings as ModalOptions<EventStartingComponent>;
       const modal = this._modalService.show(EventStartingComponent, modalSettings).content;
@@ -137,7 +170,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
         .subscribe(async response => {
           this.eventStarted = response;
           this.eventJoined = response;
-          await this.eventSessionsHub.invoke('startEvent', audienceIds, JSON.stringify(this.session));
+          await this.eventSessionsHub.invoke('startEvent', attendeeIds, JSON.stringify(this.session));
         });
     }
   }
@@ -167,11 +200,13 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
         });
       };
       await this.createOffers();
-      const userIds = this.audiences.map(e => e.creatorUser.id);
+      const audienceIds = this.audiences.map(e => e.creatorUser.id);
+      const presenterIds = this.eventPresenters.map(e => e.userId);
+      const attendeeIds = [...audienceIds, ...presenterIds];
       setTimeout(async () => {
         console.log('invoke - streamVideo');
         console.log(this.session);
-        await this.eventSessionsHub.invoke('streamVideo', userIds, JSON.stringify(this.session));
+        await this.eventSessionsHub.invoke('streamVideo', attendeeIds, JSON.stringify(this.session));
         await this.presenterVideo.play();
       }, 3000);
     }, 500);
@@ -182,11 +217,26 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     await this.initializeWebRTC();
     await this.initializeHostDevice();
     await this.createOffers();
-    const userIds = this.audiences.map(e => e.creatorUser.id);
-    await this.eventSessionsHub.invoke('stopVideoStream', userIds, JSON.stringify(this.session));
+    const audienceIds = this.audiences.map(e => e.creatorUser.id);
+    const presenterIds = this.eventPresenters.map(e => e.userId);
+    const attendeeIds = [...audienceIds, ...presenterIds];
+    await this.eventSessionsHub.invoke('stopVideoStream', attendeeIds, JSON.stringify(this.session));
   }
 
   async onRoomJoined(selectedMachineDevice: SelectedMachineDevice): Promise<void> {
+    if (selectedMachineDevice.firstName && selectedMachineDevice.lastName) {
+      this._profilesService.updateProfile(new UpdateProfileDto({
+        firstName: selectedMachineDevice.firstName,
+        lastName: selectedMachineDevice.lastName,
+      }))
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(() => {
+          this.appSession.user.name = selectedMachineDevice.firstName;
+          this.appSession.user.surname = selectedMachineDevice.lastName;
+          this.getEventPresenter();
+          this.getAllPresenters();
+        });
+    }
     this.selectedMachineDevice = selectedMachineDevice;
     await this.initializeWebRTC();
     await this.initializeSessionsHub();
@@ -204,8 +254,13 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   async onJoinClick(): Promise<void> {
-    this.eventJoined = true;
-    await this.createAnswers();
+    if (this.eventPresenter.id) {
+      this.waiting = true;
+      await this.eventSessionsHub.invoke('waitAsGuest', this.model.creatorUserId, this.eventPresenter);
+    } else {
+      this.eventJoined = true;
+      await this.createAnswers();
+    }
   }
 
   private getEvent(): void {
@@ -214,15 +269,27 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
       .subscribe(response => {
         this.model = response;
         this._portalService.event = this.model;
-        this.getStudentEventDto();
+        if (this.appSession.user) {
+          this.getStudentEvent();
+        } if (this.invitationId) {
+          console.warn('has invitation!');
+        }
       });
   }
 
-  private getStudentEventDto(): void {
+  private getStudentEvent(): void {
     this._eventsService.getPurchased(this.model.id)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         this.studentEvent = response;
+      });
+  }
+
+  private getEventPresenter(): void {
+    this._eventsService.getPresenter(this.invitationId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        this.eventPresenter = response;
       });
   }
 
@@ -349,7 +416,11 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     await this.peerConnection.setLocalDescription(answerDescription);
     this.session.answer = JSON.stringify(answerDescription);
 
-    await this.eventSessionsHub.invoke('joinAsAudience', this.model.creatorUserId, this.studentEvent, JSON.stringify(this.session));
+    if (!this.eventPresenter.id) {
+      await this.eventSessionsHub.invoke('joinAsAudience', this.model.creatorUserId, this.studentEvent, JSON.stringify(this.session));
+    } else {
+      await this.eventSessionsHub.invoke('joinAsGuest', this.model.creatorUserId, this.eventPresenter, JSON.stringify(this.session));
+    }
   }
 
   private async admitAttendee(): Promise<void> {
@@ -376,11 +447,24 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
       });
   }
 
+  private getAllPresenters(): void {
+    this._eventsService.getAllPresenters(this.eventId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(responses => {
+        this._portalService.presenters = responses;
+      });
+  }
+
   private async initializeSessionsHub(): Promise<void> {
     this.eventSessionsHub = await this._hubService.getEventSessionsHub(async () => {
       this.hubConnected = true;
       if (!this.isHost) {
-        await this.eventSessionsHub.invoke('enterAsAudience', this.model.creatorUserId, this.studentEvent);
+        if (!this.eventPresenter.id) {
+          await this.eventSessionsHub.invoke('enterAsAudience', this.model.creatorUserId, this.studentEvent);
+        } else {
+          console.log(this.eventPresenter);
+          await this.eventSessionsHub.invoke('enterAsGuest', this.model.creatorUserId, this.eventPresenter);
+        }
       }
     });
 
@@ -410,6 +494,35 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
         this._portalService.audienceJoined = audienceStudentEvent;
         await this.admitAttendee();
       }
+    });
+
+    this.eventSessionsHub.on('guestEntered', async (guestEventPresenter: EventPresenterDto) => {
+      if (this.eventStarted) {
+        console.log('guestEntered');
+        await this.eventSessionsHub.invoke('startEvent', [guestEventPresenter.creatorUserId], JSON.stringify(this.session));
+      }
+    });
+
+    this.eventSessionsHub.on('guestJoined', async (guestEventPresenter: EventPresenterDto, sessionStr: string) => {
+      if (this.eventJoined) {
+        console.log('guestJoined');
+        const session: Session = JSON.parse(sessionStr);
+        this.session.answer = session.answer;
+        console.log(this.session);
+        this.audienceJoined = true;
+        await this.admitAttendee();
+      }
+    });
+
+    this.eventSessionsHub.on('guestWaiting', async (guestEventPresenter: EventPresenterDto) => {
+      console.log('guestWaiting');
+      this._portalService.guestJoined = guestEventPresenter;
+    });
+
+    this.eventSessionsHub.on('guestAdmitted', async (guestEventPresenter: EventPresenterDto, sessionStr: string) => {
+      console.log('guestAdmitted');
+      this.eventJoined = true;
+      await this.createAnswers();
     });
 
     this.eventSessionsHub.on('iceCandidatedAdded', async (iceCandidateStr: string) => {

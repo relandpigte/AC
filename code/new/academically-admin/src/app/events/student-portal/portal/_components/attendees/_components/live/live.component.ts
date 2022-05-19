@@ -1,7 +1,7 @@
 import { Component, OnInit, Injector } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PortalService } from '@app/events/student-portal/portal/_services/portal.service';
-import { EventDto, StudentEventDto, EventsServiceProxy, EventPresenterDto, EventPresenterType } from '@shared/service-proxies/service-proxies';
+import { EventDto, StudentEventDto, EventPresenterDto, EventPresenterType } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash';
 
@@ -19,7 +19,6 @@ export class LiveComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _portalService: PortalService,
-    private _eventsService: EventsServiceProxy,
   ) {
     super(injector);
   }
@@ -30,24 +29,22 @@ export class LiveComponent extends AppComponentBase implements OnInit {
       .subscribe(response => {
         if (response) {
           this.model = response;
-          this.getPresenters();
         }
       });
-    this._portalService.audienceJoined$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
-        if (response) {
-          this.audiences.push(response);
-        }
-      });
-  }
-
-  private getPresenters(): void {
-    this._eventsService.getAllPresenters(this.model.id)
+    this._portalService.audiences$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(responses => {
-        this.coHosts = _.filter(responses, response => response.type === EventPresenterType.CoHost);
-        this.guests = _.filter(responses, response => response.type === EventPresenterType.Guest);
+        if (responses) {
+          this.audiences = responses;
+        }
+      });
+    this._portalService.presenters$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(responses => {
+        if (responses) {
+          this.coHosts = _.filter(responses, response => response.type === EventPresenterType.CoHost);
+          this.guests = _.filter(responses, response => response.type === EventPresenterType.Guest);
+        }
       });
   }
 }

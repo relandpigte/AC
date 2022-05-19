@@ -55,6 +55,9 @@ import { EventsComponent } from './events.component';
       },
       {
         path: 'student-portal',
+        canActivate: [AppRouteGuard],
+        canActivateChild: [AppRouteGuard],
+        data: { permission: 'Pages.Events.StudentPortal' },
         loadChildren: () =>
           import('@app/events/student-portal/student-portal.module').then(
             (m) => m.StudentPortalModule

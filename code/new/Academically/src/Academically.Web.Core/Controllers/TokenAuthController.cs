@@ -17,6 +17,11 @@ using Academically.Authorization;
 using Academically.Authorization.Users;
 using Academically.Models.TokenAuth;
 using Academically.MultiTenancy;
+using Abp.Domain.Repositories;
+using Academically.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Abp.Configuration;
+using Academically.Configuration;
 
 namespace Academically.Controllers
 {
@@ -30,6 +35,9 @@ namespace Academically.Controllers
         private readonly IExternalAuthConfiguration _externalAuthConfiguration;
         private readonly IExternalAuthManager _externalAuthManager;
         private readonly UserRegistrationManager _userRegistrationManager;
+        private readonly IRepository<EventPresenter, Guid> _eventPresentersRepository;
+        private readonly IRepository<User, long> _usersRepository;
+        private readonly ISettingManager _settingManager;
 
         public TokenAuthController(
             LogInManager logInManager,
@@ -38,7 +46,10 @@ namespace Academically.Controllers
             TokenAuthConfiguration configuration,
             IExternalAuthConfiguration externalAuthConfiguration,
             IExternalAuthManager externalAuthManager,
-            UserRegistrationManager userRegistrationManager)
+            UserRegistrationManager userRegistrationManager,
+            IRepository<EventPresenter, Guid> eventPresentersRepository,
+            IRepository<User, long> usersRepository,
+            ISettingManager settingManager)
         {
             _logInManager = logInManager;
             _tenantCache = tenantCache;
@@ -47,6 +58,9 @@ namespace Academically.Controllers
             _externalAuthConfiguration = externalAuthConfiguration;
             _externalAuthManager = externalAuthManager;
             _userRegistrationManager = userRegistrationManager;
+            _eventPresentersRepository = eventPresentersRepository;
+            _usersRepository = usersRepository;
+            _settingManager = settingManager;
         }
 
         [HttpPost]
@@ -67,6 +81,44 @@ namespace Academically.Controllers
                 ExpireInSeconds = (int)_configuration.Expiration.TotalSeconds,
                 UserId = loginResult.User.Id,
                 IsTwoFactorEnabled = loginResult.User.IsTwoFactorEnabled,
+            };
+        }
+
+        [HttpPost]
+        public async Task<AuthenticateResultModel> AutoAuthenticate([FromBody] AutoAuthenticateModel model)
+        {
+            var eventPresenter = await _eventPresentersRepository.GetAsync(model.ReferenceId);
+            if (eventPresenter == null)
+            {
+                throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(AbpLoginResultType.UserIsNotActive, string.Empty, string.Empty);
+            }
+
+            var user = await _usersRepository.GetAll()
+                .FirstOrDefaultAsync(e => e.EmailAddress.ToLower() == eventPresenter.Email.ToLower());
+
+            if (user == null)
+            {
+                throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(AbpLoginResultType.InvalidPassword, string.Empty, string.Empty);
+            }
+
+            var password = await _settingManager.GetSettingValueAsync(AppSettingNames.StaticPasswords_Event);
+
+            var loginResult = await GetLoginResultAsync(
+                user.EmailAddress,
+                password,
+                GetTenancyNameOrNull()
+            );
+
+            var accessToken = CreateAccessToken(CreateJwtClaims(loginResult.Identity));
+
+            return new AuthenticateResultModel
+            {
+                AccessToken = accessToken,
+                EncryptedAccessToken = GetEncryptedAccessToken(accessToken),
+                ExpireInSeconds = (int)_configuration.Expiration.TotalSeconds,
+                UserId = loginResult.User.Id,
+                IsTwoFactorEnabled = loginResult.User.IsTwoFactorEnabled,
+                ReferenceId = eventPresenter.EventId.ToString(),
             };
         }
 

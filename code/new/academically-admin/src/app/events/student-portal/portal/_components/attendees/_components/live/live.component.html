@@ -144,6 +144,13 @@
         </div>
       </td>
     </tr>
+    <tr *ngIf="!coHosts || !coHosts.length">
+      <td colspan="10">
+        <p class="m-0 p-2 text-muted text-center">
+          {{ 'NoOneFound' | localize }}
+        </p>
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -234,6 +241,13 @@
         </div>
       </td>
     </tr>
+    <tr *ngIf="!guests || !guests.length">
+      <td colspan="10">
+        <p class="m-0 p-2 text-muted text-center">
+          {{ 'NoOneFound' | localize }}
+        </p>
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -315,6 +329,13 @@
             </div>
           </div>
         </div>
+      </td>
+    </tr>
+    <tr *ngIf="!audiences || !audiences.length">
+      <td colspan="10">
+        <p class="m-0 p-2 text-muted text-center">
+          {{ 'NoOneFound' | localize }}
+        </p>
       </td>
     </tr>
   </tbody>

@@ -13,6 +13,8 @@ class MachineDevice {
 }
 
 export class SelectedMachineDevice {
+  firstName: string;
+  lastName: string;
   videoDevice: MachineDevice;
   audioDevice: MachineDevice;
   outputDevice: MachineDevice;
@@ -31,6 +33,7 @@ export class DeviceSettingsComponent extends AppComponentBase implements OnInit 
   outputDevices: MachineDevice[] = [];
   selectedMediaDevice = new SelectedMachineDevice();
   devicesLoaded = false;
+  loading = false;
 
   constructor(
     injector: Injector,
@@ -69,6 +72,7 @@ export class DeviceSettingsComponent extends AppComponentBase implements OnInit 
   }
 
   onJoinRoomClick(): void {
+    this.loading = true;
     this.joinRoom.emit(this.selectedMediaDevice);
   }
 }

@@ -58,8 +58,9 @@
         </div>
         <div class="presenter">
           <div *ngIf="(!eventStarted || !eventJoined) && !isHost" class="event-not-started-container border">
-            <h1>Welcome to the Lobby</h1>
-            <h4>Waiting for the host to start the event.</h4>
+            <h1>{{ 'WelcomeToTheLobby' | localize }}</h1>
+            <h4 *ngIf="!waiting">{{ 'WaitingForHostToStartEvent' | localize }}</h4>
+            <h4 *ngIf="waiting">{{ 'WaitingForHostToAdmitEvent' | localize }}</h4>
           </div>
           <video class="presenter-video" #presenterVideoEl autoplay playsinline></video>
         </div>

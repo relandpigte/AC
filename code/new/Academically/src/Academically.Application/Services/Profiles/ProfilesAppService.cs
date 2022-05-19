@@ -214,6 +214,16 @@ namespace Academically.Services.Profiles
             }
         }
 
+        [AbpAllowAnonymous]
+        public async Task UpdateProfileAsync(UpdateProfileDto input)
+        {
+            var userId = AbpSession.UserId.Value;
+            var existingUser = await _usersRepository.GetAsync(AbpSession.UserId.Value);
+            existingUser.Name = input.FirstName;
+            existingUser.Surname = input.LastName;
+            await _usersRepository.UpdateAsync(existingUser);
+        }
+
         public async Task UpdateWebsiteUrl(string websiteUrl)
         {
             var user = await _usersRepository.GetAsync(AbpSession.UserId.Value);

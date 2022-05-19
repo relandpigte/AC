@@ -123,11 +123,7 @@ namespace Academically.Domain.Events.Handlers
                 case EventPresenterStatus.Accepted:
 
                     string clientRootAddress = (await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress)).Trim('/');
-                    string joinEventLink = $"{clientRootAddress}/app/events/student-portal/{@event.Id}";
-                    if (!eventPresenter.UserId.HasValue)
-                    {
-                        joinEventLink = $"{joinEventLink}/portal/{eventPresenter.Id}";
-                    }
+                    string joinEventLink = $"{clientRootAddress}/account/login?auto=1&type=0&referenceId={eventPresenter.Id}";
 
                     string inviteeEmailBody = await _emailTemplateHelper.GetTemplate("event-invitation-accepted-invitee.html", new List<KeyValuePair<string, string>>
                     {

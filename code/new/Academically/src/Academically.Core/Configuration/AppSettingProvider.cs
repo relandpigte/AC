@@ -47,6 +47,7 @@ namespace Academically.Configuration
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.Email_FromEmail),
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.Providers_TurnServer_Username),
                 CreateSettingDefinitionFromAppSetting(AppSettingNames.Providers_TurnServer_Password),
+                CreateSettingDefinitionFromAppSetting(AppSettingNames.StaticPasswords_Event),
             };
         }
 

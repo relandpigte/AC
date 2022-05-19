@@ -1,115 +1,144 @@
-<div class="device-settings-component bg-light">
-  <div class="row justify-content-center align-items-center h-100">
-    <div class="col-lg-6 col-md-6 col-sm-12">
-      <div class="card">
-        <div class="card-header">
-          <h4 *ngIf="appSession && appSession.user" class="card-header-title text-center">
-            {{ 'Welcome' | localize }}, {{ appSession.user.name }}!
-          </h4>
-          <h4 *ngIf="!appSession || appSession.user" class="card-header-title text-center">
-            {{ 'Welcome' | localize }}!
-          </h4>
-        </div>
-        <div class="card-body">
-          <div class="d-flex justify-content-center">
-            <div class="avatar avatar-xxl avatar-4by3">
-              <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" alt="..." class="avatar-img rounded">
-            </div>
+<form autocomplete="off" #form="ngForm">
+  <div class="device-settings-component bg-light">
+    <div class="row justify-content-center align-items-center h-100">
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 *ngIf="appSession.user.name" class="card-header-title text-center">
+              {{ 'Welcome' | localize }}, {{ appSession.user.name }}!
+            </h4>
+            <h4 *ngIf="!appSession.user.name" class="card-header-title text-center">
+              {{ 'Welcome' | localize }}!
+            </h4>
           </div>
-          <div class="settings mt-4">
-            <div class="input-group input-group-merge mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="fe fe-video mr-1"></i>
-                  {{ 'Video' | localize }}
-                </span>
+          <div class="card-body">
+            <div class="d-flex justify-content-center">
+              <div class="avatar avatar-xxl avatar-4by3">
+                <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" alt="..."
+                  class="avatar-img rounded">
               </div>
-              <select [(ngModel)]="selectedMediaDevice.videoDevice"
-                class="form-control form-control-prepended form-control-appended">
-                <option *ngFor="let device of videoDevices" [ngValue]="device">
-                  {{ device.name }}
-                </option>
-              </select>
-              <div class="input-group-append">
-                <span class="input-group-text">
-                  <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="device1">
-                    <label class="custom-control-label" for="device1"></label>
+            </div>
+            <div class="settings mt-4">
+              <div *ngIf="!appSession.user.name" class="form-row">
+                <div class="form-group col-6 mb-0">
+                  <div class="input-group input-group-merge mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        {{ 'FirstName' | localize }}
+                      </span>
+                    </div>
+                    <input [(ngModel)]="selectedMediaDevice.firstName" type="text" name="firstName" id="firstName"
+                      class="form-control form-control-prepended" required>
                   </div>
-                </span>
-              </div>
-            </div>
-            <div class="input-group input-group-merge mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="fe fe-mic mr-1"></i>
-                  {{ 'Audio' | localize }}
-                </span>
-              </div>
-              <select [(ngModel)]="selectedMediaDevice.audioDevice"
-                class="form-control form-control-prepended form-control-appended">
-                <option *ngFor="let device of audioDevices" [ngValue]="device">
-                  {{ device.name }}
-                </option>
-              </select>
-              <div class="input-group-append">
-                <span class="input-group-text">
-                  <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="device2">
-                    <label class="custom-control-label" for="device2"></label>
+                </div>
+                <div class="form-group col-6 mb-0">
+                  <div class="input-group input-group-merge mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        {{ 'LastName' | localize }}
+                      </span>
+                    </div>
+                    <input [(ngModel)]="selectedMediaDevice.lastName" type="text" name="lastName" id="lastName"
+                      class="form-control form-control-prepended" required>
                   </div>
-                </span>
+                </div>
+              </div>
+              <div class="input-group input-group-merge mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fe fe-video mr-1"></i>
+                    {{ 'Video' | localize }}
+                  </span>
+                </div>
+                <select [(ngModel)]="selectedMediaDevice.videoDevice"
+                  class="form-control form-control-prepended form-control-appended" id="videoDevice" name="videoDevice">
+                  <option *ngFor="let device of videoDevices" [ngValue]="device">
+                    {{ device.name }}
+                  </option>
+                </select>
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="device1">
+                      <label class="custom-control-label" for="device1"></label>
+                    </div>
+                  </span>
+                </div>
+              </div>
+              <div class="input-group input-group-merge mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fe fe-mic mr-1"></i>
+                    {{ 'Audio' | localize }}
+                  </span>
+                </div>
+                <select [(ngModel)]="selectedMediaDevice.audioDevice"
+                  class="form-control form-control-prepended form-control-appended" id="audioDevice" name="audioDevice">
+                  <option *ngFor="let device of audioDevices" [ngValue]="device">
+                    {{ device.name }}
+                  </option>
+                </select>
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="device2">
+                      <label class="custom-control-label" for="device2"></label>
+                    </div>
+                  </span>
+                </div>
+              </div>
+              <div class="input-group input-group-merge mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fe fe-volume-2 mr-1"></i>
+                    {{ 'Output' | localize }}
+                  </span>
+                </div>
+                <select [(ngModel)]="selectedMediaDevice.outputDevice"
+                  class="form-control form-control-prepended form-control-appended" id="outputDevice"
+                  name="outputDevice">
+                  <option *ngFor="let device of outputDevices" [ngValue]="device">
+                    {{ device.name }}
+                  </option>
+                </select>
+                <div class="input-group-append">
+                  <span class="input-group-text p-0 px-2">
+                    <button class="btn btn-sm btn-outline-primary">
+                      <i class="fe fe-play mr-1"></i>
+                      {{ 'Play' | localize }}
+                    </button>
+                  </span>
+                </div>
+              </div>
+              <div class="input-group input-group-merge mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fe fe-wifi mr-1"></i>
+                    {{ 'Connectivity' | localize }}
+                  </span>
+                </div>
+                <input type="text" class="form-control form-control-prepended form-control-appended" readonly>
+                <div class="input-group-append">
+                  <span class="input-group-text p-0 px-2">
+                    <button class="btn btn-sm btn-outline-primary">
+                      <i class="fe fe-radio mr-1"></i>
+                      {{ 'Test' | localize }}
+                    </button>
+                  </span>
+                </div>
               </div>
             </div>
-            <div class="input-group input-group-merge mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="fe fe-volume-2 mr-1"></i>
-                  {{ 'Output' | localize }}
-                </span>
-              </div>
-              <select [(ngModel)]="selectedMediaDevice.outputDevice"
-                class="form-control form-control-prepended form-control-appended">
-                <option *ngFor="let device of outputDevices" [ngValue]="device">
-                  {{ device.name }}
-                </option>
-              </select>
-              <div class="input-group-append">
-                <span class="input-group-text p-0 px-2">
-                  <button class="btn btn-sm btn-outline-primary">
-                    <i class="fe fe-play mr-1"></i>
-                    {{ 'Play' | localize }}
-                  </button>
-                </span>
-              </div>
-            </div>
-            <div class="input-group input-group-merge mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="fe fe-wifi mr-1"></i>
-                  {{ 'Connectivity' | localize }}
-                </span>
-              </div>
-              <input type="text" class="form-control form-control-prepended form-control-appended" readonly>
-              <div class="input-group-append">
-                <span class="input-group-text p-0 px-2">
-                  <button class="btn btn-sm btn-outline-primary">
-                    <i class="fe fe-radio mr-1"></i>
-                    {{ 'Test' | localize }}
-                  </button>
-                </span>
-              </div>
-            </div>
+            <hr>
+            <button [disabled]="!devicesLoaded || !form.form.valid || loading" class="btn btn-primary w-100"
+              (click)="onJoinRoomClick()">
+              {{ 'JoinRoom' | localize | uppercase }}
+            </button>
+            <button [routerLink]="['/app/events']" class="btn btn-white w-100 mt-2">
+              {{ 'Exit' | localize | uppercase }}
+            </button>
           </div>
-          <hr>
-          <button [disabled]="!devicesLoaded" class="btn btn-primary w-100" (click)="onJoinRoomClick()">
-            {{ 'JoinRoom' | localize | uppercase }}
-          </button>
-          <button [routerLink]="['/app/events']" class="btn btn-white w-100 mt-2">
-            {{ 'Exit' | localize | uppercase }}
-          </button>
         </div>
       </div>
     </div>
   </div>
-</div>
+</form>

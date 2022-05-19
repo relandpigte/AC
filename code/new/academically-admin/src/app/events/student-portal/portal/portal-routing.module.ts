@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Route, RouterModule } from '@angular/router';
 
 import { PortalComponent } from './portal.component';
 import { PortalTempComponent } from './_components/portal-temp/portal-temp.component';
@@ -7,14 +7,12 @@ import { PortalTempComponent } from './_components/portal-temp/portal-temp.compo
 @NgModule({
   imports: [
     RouterModule.forChild([
-      {
-        path: '',
-        component: PortalComponent,
-      },
-      {
-        path: ':invitation-id',
-        component: PortalTempComponent,
-      },
+      ...['', ':invitation-id'].map(path => (
+        {
+          path,
+          component: PortalComponent,
+        } as Route
+      )),
     ]),
   ],
   exports: [

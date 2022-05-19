@@ -1,4 +1,6 @@
-﻿namespace Academically.Models.TokenAuth
+﻿using System;
+
+namespace Academically.Models.TokenAuth
 {
     public class AuthenticateResultModel
     {
@@ -11,5 +13,7 @@
         public long UserId { get; set; }
 
         public bool IsTwoFactorEnabled { get; set; }
+
+        public string ReferenceId { get; set; }
     }
 }

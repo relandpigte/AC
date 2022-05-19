@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
@@ -11,6 +12,7 @@ using Abp.Timing;
 using Abp.UI;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
+using Academically.Configuration;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Services.Events.Dto;
@@ -24,24 +26,30 @@ namespace Academically.Services.Events
     public class EventsAppService : AsyncCrudAppService<Event, EventDto, Guid, PagedEventResultRequestDto, CreateEventDto, UpdateEventDto>, IEventsAppService
     {
         private readonly RoleManager _roleManager;
+        private readonly UserRegistrationManager _userRegistrationManager;
         private readonly IRepository<StudentEvent, Guid> _studentEventsRepository;
         private readonly IRepository<User, long> _usersRepository;
         private readonly IRepository<EventPresenter, Guid> _eventPresentersRepository;
+        private readonly ISettingManager _settingManager;
 
         public EventsAppService(
             RoleManager roleManager,
+            UserRegistrationManager userRegistrationManager,
             IRepository<StudentEvent, Guid> studentEventsRepository,
             IRepository<User, long> usersRepository,
             IRepository<EventPresenter, Guid> eventPresentersRepository,
+            ISettingManager settingManager,
             IRepository<Event, Guid> repository
             ) : base(repository)
         {
             LocalizationSourceName = AcademicallyConsts.LocalizationSourceName;
 
             _roleManager = roleManager;
+            _userRegistrationManager = userRegistrationManager;
             _studentEventsRepository = studentEventsRepository;
             _eventPresentersRepository = eventPresentersRepository;
             _usersRepository = usersRepository;
+            _settingManager = settingManager;
         }
 
         protected override IQueryable<Event> CreateFilteredQuery(PagedEventResultRequestDto input)
@@ -313,6 +321,16 @@ namespace Academically.Services.Events
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<EventPresenterDto> GetPresenterAsync(Guid id)
+        {
+            return await _eventPresentersRepository.GetAll()
+                .Where(e => e.Id == id)
+                .Include(e => e.User)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .Select(e => ObjectMapper.Map<EventPresenterDto>(e))
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<GetEventDelayStatusDto> GetDelayStatus(Guid id)
         {
             var query = Repository.GetAll()
@@ -386,7 +404,25 @@ namespace Academically.Services.Events
                     throw new UserFriendlyException(103, L("InvitationAlreadyRejectedErrorMessage"));
             }
             eventPresenter.Status = input.Status;
-            await _eventPresentersRepository.UpdateAsync(eventPresenter);
+            if (eventPresenter.Status == EventPresenterStatus.Accepted && !eventPresenter.UserId.HasValue)
+            {
+                var password = await _settingManager.GetSettingValueAsync(AppSettingNames.StaticPasswords_Event);
+                var user = await _userRegistrationManager.RegisterAsync(
+                    string.Empty,
+                    string.Empty,
+                    eventPresenter.Email,
+                    eventPresenter.Email,
+                    password,
+                    DateTime.Now,
+                    StaticRoleNames.Tenants.EventAttendee
+                );
+                eventPresenter.UserId = user.Id;
+                await _eventPresentersRepository.UpdateAsync(eventPresenter);
+            }
+            else
+            {
+                await _eventPresentersRepository.UpdateAsync(eventPresenter);
+            }
         }
 
         public async Task RemovePresenterAsync(Guid eventPresenterId)

@@ -13,6 +13,7 @@ namespace Academically.Authorization.Roles
             public const string Admin = "Admin";
             public const string Tutor = "Tutor";
             public const string Student = "Student";
+            public const string EventAttendee = "Event Attendee";
         }
     }
 }

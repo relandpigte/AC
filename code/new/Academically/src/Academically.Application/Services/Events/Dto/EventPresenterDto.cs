@@ -15,6 +15,7 @@ namespace Academically.Services.Events.Dto
         public Guid EventId { get; set; }
         public long? UserId { get; set; }
         public string Email { get; set; }
+        public long CreatorUserId { get; set; }
 
         public UserDto User { get; set; }
     }

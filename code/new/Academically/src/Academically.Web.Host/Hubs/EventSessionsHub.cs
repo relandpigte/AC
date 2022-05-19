@@ -37,6 +37,27 @@ namespace Academically.Web.Host.Hubs
             await Clients.User(hostUserId.ToString()).SendAsync("audienceJoined", studentEvent, session);
         }
 
+        public async Task EnterAsGuest(long hostUserId, EventPresenterDto eventPresenter)
+        {
+            await Clients.User(hostUserId.ToString()).SendAsync("guestEntered", eventPresenter);
+        }
+
+        public async Task JoinAsGuest(long hostUserId, EventPresenterDto eventPresenter, string session)
+        {
+            await Clients.User(eventPresenter.UserId.Value.ToString()).SendAsync("guestJoined", eventPresenter, session);
+            await Clients.User(hostUserId.ToString()).SendAsync("guestJoined", eventPresenter, session);
+        }
+
+        public async Task WaitAsGuest(long hostUserId, EventPresenterDto eventPresenter)
+        {
+            await Clients.User(hostUserId.ToString()).SendAsync("guestWaiting", eventPresenter);
+        }
+
+        public async Task AdmitGuest(long hostUserId, EventPresenterDto eventPresenter, string session)
+        {
+            await Clients.User(eventPresenter.UserId.Value.ToString()).SendAsync("guestAdmitted", eventPresenter, session);
+        }
+
         public async Task AddIceCandidate(long userId, string iceCandidate)
         {
             await Clients.User(userId.ToString()).SendAsync("iceCandidatedAdded", iceCandidate);

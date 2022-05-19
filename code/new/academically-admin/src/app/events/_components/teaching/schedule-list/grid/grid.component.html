@@ -31,8 +31,7 @@
                   (click)="$event.preventDefault();navToUrl('app/events' , event.id)">
                   {{ 'Edit' | localize }}
                 </a>
-                <a href="#!visit" class="dropdown-item"
-                  (click)="$event.preventDefault();navToUrl('app/events/student-portal' , event.id)">
+                <a [routerLink]="['/app/events/student-portal', event.id, 'portal']" class="dropdown-item">
                   {{ 'Join' | localize }}
                 </a>
               </div>

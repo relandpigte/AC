@@ -353,6 +353,16 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
             );
 
             #endregion
+
+            #region Student
+
+            var eventAttendeeRole = CreateRoleIfNotExisting(StaticRoleNames.Tenants.EventAttendee);
+            GrantPermissions(
+                eventAttendeeRole,
+                PermissionNames.Pages_Events_StudentPortal
+            );
+
+            #endregion
         }
 
         private void RunDataSeeders()

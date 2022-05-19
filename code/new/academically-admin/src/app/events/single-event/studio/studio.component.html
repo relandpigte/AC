@@ -29,8 +29,12 @@
               </div>
               <div class="col ml-n2">
                 <h4 class="mb-1 name">
-                  <a *ngIf="presenter.user">{{ presenter.user.fullName }}</a>
-                  <a *ngIf="!presenter.user">{{ presenter.email }}</a>
+                  <a *ngIf="presenter.user && presenter.user.name; else noNameTemplate">
+                    {{ presenter.user.fullName }}
+                  </a>
+                  <ng-template #noNameTemplate>
+                    <a>{{ presenter.email }}</a>
+                  </ng-template>
                 </h4>
               </div>
               <div class="col-auto">
