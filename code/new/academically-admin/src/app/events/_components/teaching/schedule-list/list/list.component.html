@@ -29,7 +29,7 @@
               class="btn btn-outline-primary btn-sm mr-2">
               {{ 'Edit' | localize }}
             </button>
-            <button (click)="navToUrl('app/events/student-portal' , event.id)" type="button"
+            <button [routerLink]="['/app/events/student-portal', event.id, 'portal']" type="button"
               class="btn btn-primary btn-sm">
               {{ 'Join' | localize }}
             </button>

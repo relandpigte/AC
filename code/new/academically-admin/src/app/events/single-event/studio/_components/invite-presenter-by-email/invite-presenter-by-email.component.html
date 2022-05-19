@@ -4,7 +4,7 @@
     <div class="form-group required mb-0">
       <label class="col-form-label" for="email">{{ 'Email' | localize }}</label>
       <input class="form-control" type="email" [(ngModel)]="email" id="email" name="email" #emailModel="ngModel"
-        #emailEl required />
+        #emailEl required email />
       <abp-validation-summary [control]="emailModel" [controlEl]="emailEl">
       </abp-validation-summary>
     </div>

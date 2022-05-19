@@ -3,6 +3,8 @@ import { AbpSessionService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/app-component-base';
 import { accountModuleAnimation } from '@shared/animations/routerTransition';
 import { AppAuthService } from '@shared/auth/app-auth.service';
+import { ActivatedRoute } from '@angular/router';
+import { AutoAuthenticateModel } from '@shared/service-proxies/service-proxies';
 
 @Component({
   templateUrl: './login.component.html',
@@ -10,14 +12,27 @@ import { AppAuthService } from '@shared/auth/app-auth.service';
 })
 export class LoginComponent extends AppComponentBase {
   submitting = false;
-  hide: boolean = true;
+  hide = true;
 
   constructor(
     injector: Injector,
+    route: ActivatedRoute,
     public authService: AppAuthService,
     private _sessionService: AbpSessionService
   ) {
     super(injector);
+    route.queryParams.subscribe(paramMap => {
+      if (paramMap.auto && paramMap.referenceId && paramMap.type) {
+        this.submitting = true;
+        this.authService.autoAuthenticate(
+          new AutoAuthenticateModel({
+            type: paramMap.type,
+            referenceId: paramMap.referenceId,
+          }),
+          () => (this.submitting = false),
+        );
+      }
+    });
   }
 
   get multiTenancySideIsTeanant(): boolean {

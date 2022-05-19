@@ -24,24 +24,31 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
+    <tr *ngFor="let presenter of waitingPresenters">
       <td>
         <div class="row">
           <div class="col flex-y-center">
             <div class="avatar avatar-sm d-inline-block me-2">
-              <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-4.jpg" alt="..."
+              <img [src]="getProfilePictureUrl(presenter.user.profilePictureDocument)" alt="..."
                 class="avatar-img rounded-circle">
             </div>
             <p class="m-0 ml-3">
-              <b>Diana Smiley</b>
+              <b>{{ presenter.user.fullName }}</b>
             </p>
           </div>
           <div class="col-auto flex-y-center">
-            <button class="btn btn-sm btn-primary">
+            <button (click)="onAdmitClick(presenter)" class=" btn btn-sm btn-primary">
               {{ 'Admit' | localize }}
             </button>
           </div>
         </div>
+      </td>
+    </tr>
+    <tr *ngIf="!waitingPresenters || !waitingPresenters.length">
+      <td colspan="10">
+        <p class="m-0 p-2 text-muted text-center">
+          {{ 'NoOneFound' | localize }}
+        </p>
       </td>
     </tr>
   </tbody>
@@ -91,6 +98,33 @@
             </button>
           </div>
         </div>
+      </td>
+    </tr>
+    <tr *ngFor="let presenter of presenters">
+      <td>
+        <div class="row">
+          <div class="col flex-y-center">
+            <div class="avatar avatar-sm d-inline-block me-2">
+              <img [src]="getProfilePictureUrl(presenter.user.profilePictureDocument)" alt="..."
+                class="avatar-img rounded-circle">
+            </div>
+            <p class="m-0 ml-3">
+              <b>{{ presenter.user.fullName }}</b>
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <button class="btn btn-sm btn-outline-primary">
+              {{ 'Message' | localize }}
+            </button>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr *ngIf="(!audiences || !audiences.length) && (!presenters || !presenters.length)">
+      <td colspan="10">
+        <p class="m-0 p-2 text-muted text-center">
+          {{ 'NoOneFound' | localize }}
+        </p>
       </td>
     </tr>
   </tbody>

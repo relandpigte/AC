@@ -7109,6 +7109,62 @@ export class EventsServiceProxy {
      * @param id (optional) 
      * @return Success
      */
+    getPresenter(id: string | undefined): Observable<EventPresenterDto> {
+        let url_ = this.baseUrl + "/api/services/app/Events/GetPresenter?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPresenter(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPresenter(<any>response_);
+                } catch (e) {
+                    return <Observable<EventPresenterDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventPresenterDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPresenter(response: HttpResponseBase): Observable<EventPresenterDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventPresenterDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventPresenterDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
     getDelayStatus(id: string | undefined): Observable<GetEventDelayStatusDto> {
         let url_ = this.baseUrl + "/api/services/app/Events/GetDelayStatus?";
         if (id === null)
@@ -9359,6 +9415,58 @@ export class ProfilesServiceProxy {
     }
 
     protected processUpdate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateProfile(body: UpdateProfileDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Profiles/UpdateProfile";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateProfile(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateProfile(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateProfile(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -16200,6 +16308,62 @@ export class TokenAuthServiceProxy {
     }
 
     /**
+     * @param body (optional) 
+     * @return Success
+     */
+    autoAuthenticate(body: AutoAuthenticateModel | undefined): Observable<AuthenticateResultModel> {
+        let url_ = this.baseUrl + "/api/TokenAuth/AutoAuthenticate";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAutoAuthenticate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAutoAuthenticate(<any>response_);
+                } catch (e) {
+                    return <Observable<AuthenticateResultModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuthenticateResultModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAutoAuthenticate(response: HttpResponseBase): Observable<AuthenticateResultModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuthenticateResultModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuthenticateResultModel>(<any>null);
+    }
+
+    /**
      * @return Success
      */
     getExternalAuthenticationProviders(): Observable<ExternalLoginProviderInfoModel[]> {
@@ -22241,6 +22405,7 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
     expireInSeconds: number;
     userId: number;
     isTwoFactorEnabled: boolean;
+    referenceId: string | undefined;
 
     constructor(data?: IAuthenticateResultModel) {
         if (data) {
@@ -22258,6 +22423,7 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
             this.expireInSeconds = _data["expireInSeconds"];
             this.userId = _data["userId"];
             this.isTwoFactorEnabled = _data["isTwoFactorEnabled"];
+            this.referenceId = _data["referenceId"];
         }
     }
 
@@ -22275,6 +22441,7 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
         data["expireInSeconds"] = this.expireInSeconds;
         data["userId"] = this.userId;
         data["isTwoFactorEnabled"] = this.isTwoFactorEnabled;
+        data["referenceId"] = this.referenceId;
         return data; 
     }
 
@@ -22292,6 +22459,7 @@ export interface IAuthenticateResultModel {
     expireInSeconds: number;
     userId: number;
     isTwoFactorEnabled: boolean;
+    referenceId: string | undefined;
 }
 
 export class AuthenticatorDto implements IAuthenticatorDto {
@@ -22343,6 +22511,58 @@ export interface IAuthenticatorDto {
     isEnabled: boolean;
     sharedKey: string | undefined;
     qrCodeUrl: string | undefined;
+}
+
+export class AutoAuthenticateModel implements IAutoAuthenticateModel {
+    type: AutoAuthenticateType;
+    referenceId: string;
+
+    constructor(data?: IAutoAuthenticateModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.type = _data["type"];
+            this.referenceId = _data["referenceId"];
+        }
+    }
+
+    static fromJS(data: any): AutoAuthenticateModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AutoAuthenticateModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["type"] = this.type;
+        data["referenceId"] = this.referenceId;
+        return data; 
+    }
+
+    clone(): AutoAuthenticateModel {
+        const json = this.toJSON();
+        let result = new AutoAuthenticateModel();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAutoAuthenticateModel {
+    type: AutoAuthenticateType;
+    referenceId: string;
+}
+
+/** 0 = Event */
+export enum AutoAuthenticateType {
+    Event = 0,
 }
 
 /** 0 = AboutYou 1 = Education 2 = Research 3 = Languages 4 = ServicesOffered 5 = ProfilePicture 6 = PhotoId 7 = Address 8 = ContactNumber 9 = References 10 = DbsCheck 11 = TermsOfUse 12 = PrivacyPolicy 13 = Declaration 14 = CompleteApplication */
@@ -27371,6 +27591,7 @@ export class EventPresenterDto implements IEventPresenterDto {
     eventId: string;
     userId: number | undefined;
     email: string | undefined;
+    creatorUserId: number;
     user: UserDto;
 
     constructor(data?: IEventPresenterDto) {
@@ -27390,6 +27611,7 @@ export class EventPresenterDto implements IEventPresenterDto {
             this.eventId = _data["eventId"];
             this.userId = _data["userId"];
             this.email = _data["email"];
+            this.creatorUserId = _data["creatorUserId"];
             this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
         }
     }
@@ -27409,6 +27631,7 @@ export class EventPresenterDto implements IEventPresenterDto {
         data["eventId"] = this.eventId;
         data["userId"] = this.userId;
         data["email"] = this.email;
+        data["creatorUserId"] = this.creatorUserId;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         return data; 
     }
@@ -27428,6 +27651,7 @@ export interface IEventPresenterDto {
     eventId: string;
     userId: number | undefined;
     email: string | undefined;
+    creatorUserId: number;
     user: UserDto;
 }
 
@@ -36251,6 +36475,53 @@ export class UpdatePresenterTypeDto implements IUpdatePresenterTypeDto {
 export interface IUpdatePresenterTypeDto {
     id: string;
     newType: EventPresenterType;
+}
+
+export class UpdateProfileDto implements IUpdateProfileDto {
+    firstName: string | undefined;
+    lastName: string | undefined;
+
+    constructor(data?: IUpdateProfileDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+        }
+    }
+
+    static fromJS(data: any): UpdateProfileDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateProfileDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        return data; 
+    }
+
+    clone(): UpdateProfileDto {
+        const json = this.toJSON();
+        let result = new UpdateProfileDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateProfileDto {
+    firstName: string | undefined;
+    lastName: string | undefined;
 }
 
 export class UpdateProjectDto implements IUpdateProjectDto {

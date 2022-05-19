@@ -8,6 +8,8 @@ import {
   AccountServiceProxy,
   AuthenticateModel,
   AuthenticateResultModel,
+  AutoAuthenticateModel,
+  AutoAuthenticateType,
   TokenAuthServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 
@@ -55,7 +57,30 @@ export class AppAuthService {
       .subscribe((result: AuthenticateResultModel) => {
         this.authenticateResult = result;
         if (!result.isTwoFactorEnabled) {
-          this.processAuthenticateResult()
+          this.processAuthenticateResult();
+        }
+      });
+  }
+
+  autoAuthenticate(autoAuthModel: AutoAuthenticateModel, finallyCallback?: () => void): void {
+    finallyCallback = finallyCallback || (() => { });
+
+    this._tokenAuthService
+      .autoAuthenticate(autoAuthModel)
+      .pipe(
+        finalize(() => {
+          finallyCallback();
+        })
+      )
+      .subscribe((result: AuthenticateResultModel) => {
+        this.authenticateResult = result;
+        if (!result.isTwoFactorEnabled) {
+          let redirectUrl = '';
+          if (+autoAuthModel.type === AutoAuthenticateType.Event) {
+            redirectUrl = `/app/events/student-portal/${result.referenceId}/portal/${autoAuthModel.referenceId}`;
+          }
+          console.log(redirectUrl);
+          this.processAuthenticateResult(redirectUrl);
         }
       });
   }
@@ -75,14 +100,15 @@ export class AppAuthService {
       });
   }
 
-  private processAuthenticateResult() {
+  private processAuthenticateResult(redirectUrl = '') {
     if (this.authenticateResult.accessToken) {
       // Successfully logged in
       this.login(
         this.authenticateResult.accessToken,
         this.authenticateResult.encryptedAccessToken,
         this.authenticateResult.expireInSeconds,
-        this.rememberMe
+        this.rememberMe,
+        redirectUrl,
       );
     } else {
       // Unexpected result!
@@ -96,7 +122,8 @@ export class AppAuthService {
     accessToken: string,
     encryptedAccessToken: string,
     expireInSeconds: number,
-    rememberMe?: boolean
+    rememberMe?: boolean,
+    redirectUrl = '',
   ): void {
     const tokenExpireDate = rememberMe
       ? new Date(new Date().getTime() + 1000 * expireInSeconds)
@@ -110,6 +137,11 @@ export class AppAuthService {
       tokenExpireDate,
       abp.appPath
     );
+
+    if (redirectUrl) {
+      location.href = redirectUrl;
+      return;
+    }
 
     let initialUrl = UrlHelper.initialUrl;
     if (initialUrl.indexOf('/login') > 0 || initialUrl.indexOf('/complete-registration')) {

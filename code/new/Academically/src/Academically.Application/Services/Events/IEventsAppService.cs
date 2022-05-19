@@ -19,6 +19,7 @@ namespace Academically.Services.Events
         Task<IEnumerable<EventDto>> GetAllRelated(Guid id);
         Task<PagedResultDto<EventInstanceDto>> GetAllEventInstances(PagedEventInstanceResultRequestDto input);
         Task<StudentEventDto> GetPurchasedAsync(Guid id);
+        Task<EventPresenterDto> GetPresenterAsync(Guid id);
         Task UpdateStatusAsync(Guid id, EventStatus status);
         Task<EventDto> UpdateSettingsAsync(UpdateEventSettingsDto input);
         Task PurchaseAsync(CreateStudentEventDto input);

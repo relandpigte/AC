@@ -15,6 +15,7 @@ namespace Academically.Services.Profiles
         Task<IEnumerable<LocationSuggestion>> GetLocationSuggestions(string keyword);
         Task<LocationDetail> GetLocation(string id);
         Task Update(UserDto input);
+        Task UpdateProfileAsync(UpdateProfileDto input);
         Task UpdateWebsiteUrl(string websiteUrl);
         Task UpdateAbout(string about);
         Task<string> UpdateCoverPhoto(UpdateCoverPhotoRequestDto input);
