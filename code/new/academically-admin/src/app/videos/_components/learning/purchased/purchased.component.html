@@ -78,11 +78,11 @@
 </div> -->
 
 
-<div class="row mb-4 mt-2">
-  <div class="col-10">
+<div class="d-flex flex-column flex-sm-row flex-nowrap justify-content-center align-content-center align-items-center px-3 px-sm-4 mt-3 mb-4" style="gap: 10px;">
+  <div class="flex-grow-1 w100p w-sm-auto">
   </div>
-  <div class="col-2">
-    <div class="nav btn-group" role="tablist">
+  <div class="w100p w-sm-auto">
+    <div class="nav btn-group" role="tablist" style="min-width: 200px;">
       <button class="btn btn-lg btn-white active" data-toggle="tab" data-target="#purchase-grid-tab" role="tab"
         aria-controls="purchase-grid-tab" aria-selected="true">
         <span class="fe fe-grid"></span>
@@ -95,7 +95,7 @@
   </div>
 </div>
 
-<div *ngIf="models && models.length else noVideosTemplate" class="tab-content ml-2" [loader]="loading">
+<div *ngIf="models && models.length else noVideosTemplate" class="tab-content px-3 px-sm-4" [loader]="loading">
   <div class="tab-pane fade active show" id="purchase-grid-tab" role="tabpanel">
     <app-grid [models]="models" ></app-grid>
   </div>
