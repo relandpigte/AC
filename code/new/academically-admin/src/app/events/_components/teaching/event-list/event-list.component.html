@@ -1,6 +1,6 @@
-<div class="row mb-3">
-  <div class="col">
-    <div class="card mb-0">
+<div class="d-flex flex-column flex-sm-row flex-nowrap justify-content-center align-content-center align-items-center px-3 px-sm-4 mt-3 mb-4" style="gap: 10px;">
+  <div class="flex-grow-1 w100p w-sm-auto">
+    <div class="card m-0">
       <div class="card-header height-pad border-0">
         <div class="row align-items-center">
           <div class="col">
@@ -20,8 +20,8 @@
       </div>
     </div>
   </div>
-  <div class="col-auto">
-    <div class="nav btn-group h-100" role="tablist">
+  <div class="w100p w-sm-auto">
+    <div class="nav btn-group h-100" role="tablist" style="min-width: 200px;">
       <button class="btn btn-lg btn-white active" data-toggle="tab" data-target="#event-grid-tab" role="tab"
         aria-controls="event-grid-tab" aria-selected="true">
         <span class="fe fe-grid"></span>
@@ -34,7 +34,7 @@
   </div>
 </div>
 
-<div *ngIf="events && events.length else noCoursesTemplate" class="tab-content" [loader]="isTableLoading">
+<div *ngIf="events && events.length else noCoursesTemplate" class="tab-content px-3 px-sm-4" [loader]="isTableLoading">
   <div class="tab-pane fade active show" id="event-grid-tab" role="tabpanel">
     <app-grid [events]="events" (deleteEvent)="onDeleteClick($event)"></app-grid>
   </div>

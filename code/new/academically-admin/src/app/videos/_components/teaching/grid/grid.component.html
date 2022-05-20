@@ -1,5 +1,5 @@
-<div class="row listAlias">
-    <div *ngFor="let video of videos" class="col-12 col-md-6 col-xl-4">
+<div class="row listAlias m-0" style="gap: 20px;">
+    <div *ngFor="let video of videos" class="col-12 col-md-6 col-xl-4 p-0">
       <div class="card">
         <a href="#!visit" (click)="$event.preventDefault(); onVisitVideoClick(video)">
           <img [src]="getServiceImageUrl(video.thumbnailDocument)" alt="..." class="card-img-top">

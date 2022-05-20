@@ -77,12 +77,12 @@
   </abp-pagination-controls>
 </div> -->
 
-<div class="row mb-4 mt-3">
-  <div class="col-10">
+<div class="d-flex flex-column flex-sm-row flex-nowrap justify-content-center align-content-center align-items-center px-3 px-sm-4 mt-3 mb-4" style="gap: 10px;">
+  <div class="flex-grow-1 w100p w-sm-auto">
   </div>
-  <div class="col-2">
-    <div class="col-auto">
-      <div class="nav btn-group" role="tablist">
+  <div class="w100p w-sm-auto">
+    <div class="col-auto p-0">
+      <div class="nav btn-group" role="tablist" style="min-width: 200px;">
         <button class="btn btn-lg btn-white active" data-toggle="tab" data-target="#saved-grid-tab" role="tab"
           aria-controls="saved-grid-tab" aria-selected="true">
           <span class="fe fe-grid"></span>
@@ -98,7 +98,7 @@
 
 </div>
 
-<div *ngIf="models && models.length else noArticlesTemplate" class="tab-content" [loader]="isTableLoading">
+<div *ngIf="models && models.length else noArticlesTemplate" class="tab-content px-3 px-sm-4" [loader]="isTableLoading">
   <div class="tab-pane fade active show" id="saved-grid-tab" role="tabpanel">
     <app-saved-grid [models]="models"></app-saved-grid>
   </div>

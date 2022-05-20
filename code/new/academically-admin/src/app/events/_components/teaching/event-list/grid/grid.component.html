@@ -1,5 +1,5 @@
-<div class="row">
-  <div *ngFor="let event of events" class="col-12 col-md-6 col-xl-4">
+<div class="row m-0" style="gap:20px;">
+  <div *ngFor="let event of events" class="col-12 col-md-6 col-xl-4 p-0">
     <div class="card">
       <a href="#!visit" (click)="$event.preventDefault();">
         <img [src]="getServiceImageUrl(event.thumbnailDocument)" alt="..." class="card-img-top">
