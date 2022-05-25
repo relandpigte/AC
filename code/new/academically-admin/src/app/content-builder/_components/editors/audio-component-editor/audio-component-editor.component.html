@@ -1,0 +1,11 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'UploadAudio' | localize }}
+    </h4>
+  </div>
+  <div class="card-body" [loader]="isLoading">
+    <app-document-uploader [maxFiles]="1" [allowedExtensions]="audioExtensions">
+    </app-document-uploader>
+  </div>
+</div>

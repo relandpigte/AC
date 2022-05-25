@@ -1,26 +1,23 @@
 import { Component, OnInit, Input, ViewChild, Injector } from '@angular/core';
+import { AppComponentBase } from '@shared/app-component-base';
 import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { UploadService } from '@app/_shared/services/upload.service';
-import { AppComponentBase } from '@shared/app-component-base';
-import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { DocumentType, FileParameter } from '@shared/service-proxies/service-proxies';
-import { finalize, takeUntil } from 'rxjs/operators';
-import { ImageComponentContent } from '../../../_models/image-component-content';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { PdfComponentContent } from '@app/content-builder/_models/pdf-component-content';
 
 @Component({
-  selector: 'app-image-component-editor',
-  templateUrl: './image-component-editor.component.html',
-  styleUrls: ['./image-component-editor.component.less']
+  selector: 'app-pdf-component-editor',
+  templateUrl: './pdf-component-editor.component.html',
+  styleUrls: ['./pdf-component-editor.component.less']
 })
-export class ImageComponentEditorComponent extends AppComponentBase implements OnInit {
-  @Input() cropperAspectRationWidth = 1;
-  @Input() cropperAspectRationHeight = 1;
+export class PdfComponentEditorComponent extends AppComponentBase implements OnInit {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
   isLoading = false;
 
-  allowedImageExtensions = fileUploadConfiguration.allowedImageExtensions;
+  pdfExtensions = ['.pdf'];
   defaultFile: DefaultFile;
-  imageComponentContent: ImageComponentContent = new ImageComponentContent();
+  pdfComponentContent: PdfComponentContent = new PdfComponentContent();
 
   constructor(
     injector: Injector,
@@ -29,11 +26,11 @@ export class ImageComponentEditorComponent extends AppComponentBase implements O
     super(injector);
   }
 
-  @Input() set component(value: ImageComponentContent) {
+  @Input() set component(value: PdfComponentContent) {
     this.documentUploader.files = [];
     this.documentUploader.defaultFile = undefined;
-    this.imageComponentContent = value;
-    if (this.imageComponentContent.imageDocument) {
+    this.pdfComponentContent = value;
+    if (this.pdfComponentContent.pdfDocument) {
       this.setDefaultFile();
     }
   }
@@ -51,19 +48,19 @@ export class ImageComponentEditorComponent extends AppComponentBase implements O
             }),
           )
           .subscribe(response => {
-            this.imageComponentContent.imageDocument = response;
+            this.pdfComponentContent.pdfDocument = response;
             this.documentUploader.files = [];
             this.setDefaultFile();
           });
       } else {
-        this.imageComponentContent.imageDocument = undefined;
+        this.pdfComponentContent.pdfDocument = undefined;
       }
     });
 
     this.documentUploader.defaultFileRemoved.subscribe(() => {
-      if (this.imageComponentContent.imageDocument) {
+      if (this.pdfComponentContent.pdfDocument) {
         this.isLoading = true;
-        this._uploadService.delete(this.imageComponentContent.imageDocument)
+        this._uploadService.delete(this.pdfComponentContent.pdfDocument)
           .pipe(
             takeUntil(this.destroyed$),
             finalize(() => {
@@ -71,7 +68,7 @@ export class ImageComponentEditorComponent extends AppComponentBase implements O
             }),
           )
           .subscribe(() => {
-            this.imageComponentContent.imageDocument = undefined;
+            this.pdfComponentContent.pdfDocument = undefined;
           });
       }
     });
@@ -79,9 +76,9 @@ export class ImageComponentEditorComponent extends AppComponentBase implements O
 
   private setDefaultFile(): void {
     this.defaultFile = new DefaultFile();
-    this.defaultFile.name = this.imageComponentContent.imageDocument.originalFileName;
-    this.defaultFile.url = this._uploadService.getFileUrl(this.imageComponentContent.imageDocument);
-    this.defaultFile.size = this.imageComponentContent.imageDocument.size;
+    this.defaultFile.name = this.pdfComponentContent.pdfDocument.originalFileName;
+    this.defaultFile.url = this._uploadService.getFileUrl(this.pdfComponentContent.pdfDocument);
+    this.defaultFile.size = this.pdfComponentContent.pdfDocument.size;
     this.documentUploader.defaultFile = this.defaultFile;
   }
 }

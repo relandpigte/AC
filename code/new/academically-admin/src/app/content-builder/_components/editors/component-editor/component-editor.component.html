@@ -17,8 +17,14 @@
     </div>
   </div>
   <div class="card-body">
-    <input type="text" name="name" id="name" [(ngModel)]="component.name" class="form-control mb-2">
-    <app-color-picker [(color)]="component.backgroundColor"></app-color-picker>
+    <div class="form-group">
+      <label class="col-form-label pt-0" for="name">{{ 'Name' | localize }}</label>
+      <input type="text" name="name" id="name" [(ngModel)]="component.name" class="form-control">
+    </div>
+    <div class="form-group">
+      <label class="col-form-label pt-0" for="backgroundColor">{{ 'BackgroundColor' | localize }}</label>
+      <app-color-picker [(color)]="component.backgroundColor"></app-color-picker>
+    </div>
     <ng-container [ngSwitch]="component.type">
       <app-body-text-component-editor *ngSwitchCase="'body-text'" [component]="component">
       </app-body-text-component-editor>
@@ -28,6 +34,18 @@
       </app-subtitle-component-editor>
       <app-image-component-editor *ngSwitchCase="'image'" [component]="component">
       </app-image-component-editor>
+      <app-video-component-editor *ngSwitchCase="'video'" [component]="component">
+      </app-video-component-editor>
+      <app-office-component-editor *ngSwitchCase="'office'" [component]="component">
+      </app-office-component-editor>
+      <app-pdf-component-editor *ngSwitchCase="'pdf'" [component]="component">
+      </app-pdf-component-editor>
+      <app-audio-component-editor *ngSwitchCase="'audio'" [component]="component">
+      </app-audio-component-editor>
+      <app-download-component-editor *ngSwitchCase="'download'" [component]="component">
+      </app-download-component-editor>
+      <app-link-component-editor *ngSwitchCase="'link'" [component]="component">
+      </app-link-component-editor>
       <app-image-component-editor *ngSwitchCase="'banner-image'" [component]="component"
         [cropperAspectRationWidth]="1440" [cropperAspectRationHeight]="380">
       </app-image-component-editor>

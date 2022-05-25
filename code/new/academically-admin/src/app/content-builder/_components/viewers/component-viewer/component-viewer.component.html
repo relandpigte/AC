@@ -20,6 +20,18 @@
         </app-title-component-viewer>
         <app-subtitle-component-viewer *ngSwitchCase="'subtitle'" [component]="component">
         </app-subtitle-component-viewer>
+        <app-video-component-viewer *ngSwitchCase="'video'" [component]="component">
+        </app-video-component-viewer>
+        <app-office-component-viewer *ngSwitchCase="'office'" [component]="component">
+        </app-office-component-viewer>
+        <app-pdf-component-viewer *ngSwitchCase="'pdf'" [component]="component">
+        </app-pdf-component-viewer>
+        <app-audio-component-viewer *ngSwitchCase="'audio'" [component]="component">
+        </app-audio-component-viewer>
+        <app-download-component-viewer *ngSwitchCase="'download'" [component]="component">
+        </app-download-component-viewer>
+        <app-link-component-viewer *ngSwitchCase="'link'" [component]="component">
+        </app-link-component-viewer>
         <app-image-component-viewer *ngSwitchDefault [component]="component">
         </app-image-component-viewer>
       </ng-container>

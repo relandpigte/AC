@@ -16,6 +16,7 @@ import { CalendarModule } from 'primeng/calendar';
 
 import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
 import { DateFormatPipe } from './pipes/date-format.pipe';
+import { SafePipe } from './pipes/safe.pipe';
 import { NgxMaskModule } from 'ngx-mask';
 
 import { FixedHeightDirective } from './directives/fixed-height.directive';
@@ -29,6 +30,7 @@ import { ImageGalleryComponent } from './components/image-gallery/image-gallery.
 import { ProfilePictureChangerComponent } from './components/profile-picture-changer/profile-picture-changer.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { PopoverModule } from 'ngx-bootstrap/popover';
+
 @NgModule({
   declarations: [
     EnumToArrayPipe,
@@ -38,9 +40,10 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
     ProfilePictureChangerComponent,
     ColorPickerComponent,
     DateFormatPipe,
+    SafePipe,
     FixedHeightDirective,
     BottomScrollerDirective,
-    SidebarCollapseDirective
+    SidebarCollapseDirective,
   ],
   imports: [
     CommonModule,
@@ -80,6 +83,7 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
     NgxMaskModule,
     EnumToArrayPipe,
     DateFormatPipe,
+    SafePipe,
     FixedHeightDirective,
     BottomScrollerDirective,
     SidebarCollapseDirective,

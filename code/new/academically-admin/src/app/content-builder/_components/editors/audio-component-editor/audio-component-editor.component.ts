@@ -1,26 +1,24 @@
 import { Component, OnInit, Input, ViewChild, Injector } from '@angular/core';
-import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
-import { UploadService } from '@app/_shared/services/upload.service';
 import { AppComponentBase } from '@shared/app-component-base';
+import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { UploadService } from '@app/_shared/services/upload.service';
 import { DocumentType, FileParameter } from '@shared/service-proxies/service-proxies';
-import { finalize, takeUntil } from 'rxjs/operators';
-import { ImageComponentContent } from '../../../_models/image-component-content';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { AudioComponentContent } from '@app/content-builder/_models/audio-component-content';
 
 @Component({
-  selector: 'app-image-component-editor',
-  templateUrl: './image-component-editor.component.html',
-  styleUrls: ['./image-component-editor.component.less']
+  selector: 'app-audio-component-editor',
+  templateUrl: './audio-component-editor.component.html',
+  styleUrls: ['./audio-component-editor.component.less']
 })
-export class ImageComponentEditorComponent extends AppComponentBase implements OnInit {
-  @Input() cropperAspectRationWidth = 1;
-  @Input() cropperAspectRationHeight = 1;
+export class AudioComponentEditorComponent extends AppComponentBase implements OnInit {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
   isLoading = false;
 
-  allowedImageExtensions = fileUploadConfiguration.allowedImageExtensions;
+  audioExtensions = fileUploadConfiguration.audioExtensions;
   defaultFile: DefaultFile;
-  imageComponentContent: ImageComponentContent = new ImageComponentContent();
+  audioComponentContent: AudioComponentContent = new AudioComponentContent();
 
   constructor(
     injector: Injector,
@@ -29,11 +27,11 @@ export class ImageComponentEditorComponent extends AppComponentBase implements O
     super(injector);
   }
 
-  @Input() set component(value: ImageComponentContent) {
+  @Input() set component(value: AudioComponentContent) {
     this.documentUploader.files = [];
     this.documentUploader.defaultFile = undefined;
-    this.imageComponentContent = value;
-    if (this.imageComponentContent.imageDocument) {
+    this.audioComponentContent = value;
+    if (this.audioComponentContent.audioDocument) {
       this.setDefaultFile();
     }
   }
@@ -51,19 +49,19 @@ export class ImageComponentEditorComponent extends AppComponentBase implements O
             }),
           )
           .subscribe(response => {
-            this.imageComponentContent.imageDocument = response;
+            this.audioComponentContent.audioDocument = response;
             this.documentUploader.files = [];
             this.setDefaultFile();
           });
       } else {
-        this.imageComponentContent.imageDocument = undefined;
+        this.audioComponentContent.audioDocument = undefined;
       }
     });
 
     this.documentUploader.defaultFileRemoved.subscribe(() => {
-      if (this.imageComponentContent.imageDocument) {
+      if (this.audioComponentContent.audioDocument) {
         this.isLoading = true;
-        this._uploadService.delete(this.imageComponentContent.imageDocument)
+        this._uploadService.delete(this.audioComponentContent.audioDocument)
           .pipe(
             takeUntil(this.destroyed$),
             finalize(() => {
@@ -71,7 +69,7 @@ export class ImageComponentEditorComponent extends AppComponentBase implements O
             }),
           )
           .subscribe(() => {
-            this.imageComponentContent.imageDocument = undefined;
+            this.audioComponentContent.audioDocument = undefined;
           });
       }
     });
@@ -79,9 +77,9 @@ export class ImageComponentEditorComponent extends AppComponentBase implements O
 
   private setDefaultFile(): void {
     this.defaultFile = new DefaultFile();
-    this.defaultFile.name = this.imageComponentContent.imageDocument.originalFileName;
-    this.defaultFile.url = this._uploadService.getFileUrl(this.imageComponentContent.imageDocument);
-    this.defaultFile.size = this.imageComponentContent.imageDocument.size;
+    this.defaultFile.name = this.audioComponentContent.audioDocument.originalFileName;
+    this.defaultFile.url = this._uploadService.getFileUrl(this.audioComponentContent.audioDocument);
+    this.defaultFile.size = this.audioComponentContent.audioDocument.size;
     this.documentUploader.defaultFile = this.defaultFile;
   }
 }

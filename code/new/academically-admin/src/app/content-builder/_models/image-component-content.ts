@@ -3,7 +3,6 @@ import { ComponentContent } from './component-content';
 
 export class ImageComponentContent extends ComponentContent {
   imageDocument: DocumentDto;
-  test: string;
 
   constructor() {
     super();

@@ -1,0 +1,6 @@
+<a *ngIf="component.url && component.text" [href]="component.url" target="_blank" (click)="$event.stopPropagation();">
+  {{ component.text }}
+</a>
+<p *ngIf="!component.url || !component.text" class="p-0 m-0 text-center text-muted font-italic">
+  {{ 'ConfigureComponentInstructions' | localize }}
+</p>

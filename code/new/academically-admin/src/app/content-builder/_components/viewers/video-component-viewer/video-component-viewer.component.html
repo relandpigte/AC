@@ -1,0 +1,10 @@
+<ng-container *ngTemplateOutlet="imageTemplate; context: { url: getFileUrl() }"></ng-container>
+<ng-template #imageTemplate let-url="url">
+  <video *ngIf="!component.isUrl && url" [src]="url" autoplay controls class="video-preview">
+  </video>
+  <iframe *ngIf="component.isUrl && component.videoUrl" class="iframe-preview" [src]="component.videoUrl | safe">
+  </iframe>
+  <p *ngIf="!url && !component.videoUrl" class="py-2 m-0 text-center text-muted font-italic">
+    {{ 'ConfigureComponentInstructions' | localize }}
+  </p>
+</ng-template>
