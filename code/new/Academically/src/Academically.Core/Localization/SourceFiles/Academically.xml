@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="UploadAudio">Upload audio</text>
+    <text name="UploadDocument">Upload document</text>
+    <text name="Url">URL</text>
+    <text name="UseUrl">Use URL</text>
+    <text name="BackgroundColor">Background color</text>
     <text name="WaitingForHostToAdmitEvent">Waiting for the host to admit you to the event.</text>
     <text name="WaitingForHostToStartEvent">Waiting for the host to start the event.</text>
     <text name="WelcomeToTheLobby">Welcome to the Lobby</text>

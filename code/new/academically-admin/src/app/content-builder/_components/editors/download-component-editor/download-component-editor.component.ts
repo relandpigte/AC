@@ -1,26 +1,24 @@
 import { Component, OnInit, Input, ViewChild, Injector } from '@angular/core';
-import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
-import { UploadService } from '@app/_shared/services/upload.service';
 import { AppComponentBase } from '@shared/app-component-base';
+import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { UploadService } from '@app/_shared/services/upload.service';
 import { DocumentType, FileParameter } from '@shared/service-proxies/service-proxies';
-import { finalize, takeUntil } from 'rxjs/operators';
-import { ImageComponentContent } from '../../../_models/image-component-content';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { DownloadComponentContent } from '@app/content-builder/_models/download-component-content';
 
 @Component({
-  selector: 'app-image-component-editor',
-  templateUrl: './image-component-editor.component.html',
-  styleUrls: ['./image-component-editor.component.less']
+  selector: 'app-download-component-editor',
+  templateUrl: './download-component-editor.component.html',
+  styleUrls: ['./download-component-editor.component.less']
 })
-export class ImageComponentEditorComponent extends AppComponentBase implements OnInit {
-  @Input() cropperAspectRationWidth = 1;
-  @Input() cropperAspectRationHeight = 1;
+export class DownloadComponentEditorComponent extends AppComponentBase implements OnInit {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
   isLoading = false;
 
-  allowedImageExtensions = fileUploadConfiguration.allowedImageExtensions;
+  fileExtensions = fileUploadConfiguration.allowedFileExtensions;
   defaultFile: DefaultFile;
-  imageComponentContent: ImageComponentContent = new ImageComponentContent();
+  imageComponentContent: DownloadComponentContent = new DownloadComponentContent();
 
   constructor(
     injector: Injector,
@@ -29,11 +27,11 @@ export class ImageComponentEditorComponent extends AppComponentBase implements O
     super(injector);
   }
 
-  @Input() set component(value: ImageComponentContent) {
+  @Input() set component(value: DownloadComponentContent) {
     this.documentUploader.files = [];
     this.documentUploader.defaultFile = undefined;
     this.imageComponentContent = value;
-    if (this.imageComponentContent.imageDocument) {
+    if (this.imageComponentContent.downloadDocument) {
       this.setDefaultFile();
     }
   }
@@ -51,19 +49,19 @@ export class ImageComponentEditorComponent extends AppComponentBase implements O
             }),
           )
           .subscribe(response => {
-            this.imageComponentContent.imageDocument = response;
+            this.imageComponentContent.downloadDocument = response;
             this.documentUploader.files = [];
             this.setDefaultFile();
           });
       } else {
-        this.imageComponentContent.imageDocument = undefined;
+        this.imageComponentContent.downloadDocument = undefined;
       }
     });
 
     this.documentUploader.defaultFileRemoved.subscribe(() => {
-      if (this.imageComponentContent.imageDocument) {
+      if (this.imageComponentContent.downloadDocument) {
         this.isLoading = true;
-        this._uploadService.delete(this.imageComponentContent.imageDocument)
+        this._uploadService.delete(this.imageComponentContent.downloadDocument)
           .pipe(
             takeUntil(this.destroyed$),
             finalize(() => {
@@ -71,7 +69,7 @@ export class ImageComponentEditorComponent extends AppComponentBase implements O
             }),
           )
           .subscribe(() => {
-            this.imageComponentContent.imageDocument = undefined;
+            this.imageComponentContent.downloadDocument = undefined;
           });
       }
     });
@@ -79,9 +77,9 @@ export class ImageComponentEditorComponent extends AppComponentBase implements O
 
   private setDefaultFile(): void {
     this.defaultFile = new DefaultFile();
-    this.defaultFile.name = this.imageComponentContent.imageDocument.originalFileName;
-    this.defaultFile.url = this._uploadService.getFileUrl(this.imageComponentContent.imageDocument);
-    this.defaultFile.size = this.imageComponentContent.imageDocument.size;
+    this.defaultFile.name = this.imageComponentContent.downloadDocument.originalFileName;
+    this.defaultFile.url = this._uploadService.getFileUrl(this.imageComponentContent.downloadDocument);
+    this.defaultFile.size = this.imageComponentContent.downloadDocument.size;
     this.documentUploader.defaultFile = this.defaultFile;
   }
 }

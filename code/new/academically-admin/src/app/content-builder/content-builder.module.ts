@@ -26,6 +26,18 @@ import { TitleComponentViewerComponent } from './_components/viewers/title-compo
 import { SubtitleComponentViewerComponent } from './_components/viewers/subtitle-component-viewer/subtitle-component-viewer.component';
 import { SubtitleComponentEditorComponent } from './_components/editors/subtitle-component-editor/subtitle-component-editor.component';
 import { CreateEditMarginComponent } from './_components/create-edit-margin/create-edit-margin.component';
+import { VideoComponentEditorComponent } from './_components/editors/video-component-editor/video-component-editor.component';
+import { VideoComponentViewerComponent } from './_components/viewers/video-component-viewer/video-component-viewer.component';
+import { OfficeComponentEditorComponent } from './_components/editors/office-component-editor/office-component-editor.component';
+import { OfficeComponentViewerComponent } from './_components/viewers/office-component-viewer/office-component-viewer.component';
+import { PdfComponentEditorComponent } from './_components/editors/pdf-component-editor/pdf-component-editor.component';
+import { PdfComponentViewerComponent } from './_components/viewers/pdf-component-viewer/pdf-component-viewer.component';
+import { AudioComponentEditorComponent } from './_components/editors/audio-component-editor/audio-component-editor.component';
+import { AudioComponentViewerComponent } from './_components/viewers/audio-component-viewer/audio-component-viewer.component';
+import { DownloadComponentEditorComponent } from './_components/editors/download-component-editor/download-component-editor.component';
+import { DownloadComponentViewerComponent } from './_components/viewers/download-component-viewer/download-component-viewer.component';
+import { LinkComponentEditorComponent } from './_components/editors/link-component-editor/link-component-editor.component';
+import { LinkComponentViewerComponent } from './_components/viewers/link-component-viewer/link-component-viewer.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +63,18 @@ import { CreateEditMarginComponent } from './_components/create-edit-margin/crea
     SubtitleComponentViewerComponent,
     SubtitleComponentEditorComponent,
     CreateEditMarginComponent,
+    VideoComponentEditorComponent,
+    VideoComponentViewerComponent,
+    OfficeComponentEditorComponent,
+    OfficeComponentViewerComponent,
+    PdfComponentEditorComponent,
+    PdfComponentViewerComponent,
+    AudioComponentEditorComponent,
+    AudioComponentViewerComponent,
+    DownloadComponentEditorComponent,
+    DownloadComponentViewerComponent,
+    LinkComponentEditorComponent,
+    LinkComponentViewerComponent,
   ],
   imports: [
     CommonModule,

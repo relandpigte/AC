@@ -1,0 +1,29 @@
+<div class="form-group">
+  <div class="custom-control custom-checkbox">
+    <input [(ngModel)]="videoComponentContent.isUrl" class="custom-control-input" id="isUrl" type="checkbox"
+      (change)="onIsUrlToggle()" />
+    <label class="custom-control-label" for="isUrl"></label>
+    <span class="custom-control-caption">
+      {{ 'UseUrl' | localize }}
+    </span>
+  </div>
+</div>
+
+<ng-container *ngIf="videoComponentContent.isUrl">
+  <div class="form-group">
+    <label class="col-form-label pt-0" for="videoUrl">{{ 'Url' | localize }}</label>
+    <input type="text" name="videoUrl" id="videoUrl" [(ngModel)]="videoComponentContent.videoUrl" class="form-control">
+  </div>
+</ng-container>
+
+<div *ngIf="!videoComponentContent.isUrl" class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'UploadVideo' | localize }}
+    </h4>
+  </div>
+  <div class="card-body" [loader]="isLoading">
+    <app-document-uploader [maxFiles]="1" [allowedExtensions]="videoExtensions">
+    </app-document-uploader>
+  </div>
+</div>

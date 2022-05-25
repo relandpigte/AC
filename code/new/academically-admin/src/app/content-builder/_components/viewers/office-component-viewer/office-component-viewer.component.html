@@ -1,6 +1,6 @@
 <ng-container *ngTemplateOutlet="imageTemplate; context: { url: getFileUrl() }"></ng-container>
 <ng-template #imageTemplate let-url="url">
-  <img *ngIf="url" class="image-preview" alt="preview" [src]="url" />
+  <iframe *ngIf="url" width="100%" height="500px" frameborder='0' [src]="url | safe"></iframe>
   <p *ngIf="!url" class="py-2 m-0 text-center text-muted font-italic">
     {{ 'ConfigureComponentInstructions' | localize }}
   </p>
