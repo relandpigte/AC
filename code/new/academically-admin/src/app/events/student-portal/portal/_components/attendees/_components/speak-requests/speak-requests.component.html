@@ -1,45 +1,22 @@
 <table class="table table-sm table-sm-custom mb-0">
   <tbody>
-    <tr>
+    <tr *ngFor="let speakRequester of speakRequesters">
       <td>
         <div class="row">
           <div class="col flex-y-center">
             <div class="avatar avatar-sm d-inline-block me-2">
-              <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-4.jpg" alt="..."
+              <img [src]="getProfilePictureUrl(speakRequester.creatorUser.profilePictureDocument)" alt="..."
                 class="avatar-img rounded-circle">
             </div>
             <p class="m-0 ml-3">
-              <b>Diana Smiley</b>
+              <b>{{ speakRequester.creatorUser.fullName }}</b>
             </p>
           </div>
           <div class="col-auto flex-y-center">
-            <button class="btn btn-sm btn-outline-success mr-1">
+            <button (click)="onGrantClick(speakRequester)" class="btn btn-sm btn-outline-success mr-1">
               <i class="fe fe-check"></i>
             </button>
-            <button class="btn btn-sm btn-outline-danger">
-              <i class="fe fe-x"></i>
-            </button>
-          </div>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div class="row">
-          <div class="col flex-y-center">
-            <div class="avatar avatar-sm d-inline-block me-2">
-              <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..."
-                class="avatar-img rounded-circle">
-            </div>
-            <p class="m-0 ml-3">
-              <b>Chris Baker</b>
-            </p>
-          </div>
-          <div class="col-auto flex-y-center">
-            <button class="btn btn-sm btn-outline-success mr-1">
-              <i class="fe fe-check"></i>
-            </button>
-            <button class="btn btn-sm btn-outline-danger">
+            <button (click)="onDeclineClick(speakRequester)" class="btn btn-sm btn-outline-danger">
               <i class="fe fe-x"></i>
             </button>
           </div>

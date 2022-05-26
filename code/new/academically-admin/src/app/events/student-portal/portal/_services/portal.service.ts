@@ -12,6 +12,10 @@ export class PortalService {
   public audienceJoined$: Observable<StudentEventDto>;
   public guestJoined$: Observable<EventPresenterDto>;
   public admitGuest$: Observable<EventPresenterDto>;
+  public speakRequest$: Observable<StudentEventDto>;
+  public grantRequestToSpeak$: Observable<StudentEventDto>;
+  public declineRequestToSpeak$: Observable<StudentEventDto>;
+  public grantedRequestToSpeak$: Observable<boolean>;
 
   private _eventSubject: BehaviorSubject<EventDto>;
   private _audiencesSubject: BehaviorSubject<StudentEventDto[]>;
@@ -19,6 +23,10 @@ export class PortalService {
   private _audienceJoinedSubject: BehaviorSubject<StudentEventDto>;
   private _guestJoinedSubject: BehaviorSubject<EventPresenterDto>;
   private _admitGuestSubject: BehaviorSubject<EventPresenterDto>;
+  private _speakRequestSubject: BehaviorSubject<StudentEventDto>;
+  private _grantRequestToSpeakSubject: BehaviorSubject<StudentEventDto>;
+  private _declineRequestToSpeakSubject: BehaviorSubject<StudentEventDto>;
+  private _grantedRequestToSpeakSubject: BehaviorSubject<boolean>;
 
   constructor() {
     this._eventSubject = new BehaviorSubject<EventDto>(undefined);
@@ -38,6 +46,18 @@ export class PortalService {
 
     this._admitGuestSubject = new BehaviorSubject<EventPresenterDto>(undefined);
     this.admitGuest$ = this._admitGuestSubject.asObservable();
+
+    this._speakRequestSubject = new BehaviorSubject<StudentEventDto>(undefined);
+    this.speakRequest$ = this._speakRequestSubject.asObservable();
+
+    this._grantRequestToSpeakSubject = new BehaviorSubject<StudentEventDto>(undefined);
+    this.grantRequestToSpeak$ = this._grantRequestToSpeakSubject.asObservable();
+
+    this._declineRequestToSpeakSubject = new BehaviorSubject<StudentEventDto>(undefined);
+    this.declineRequestToSpeak$ = this._declineRequestToSpeakSubject.asObservable();
+
+    this._grantedRequestToSpeakSubject = new BehaviorSubject<boolean>(undefined);
+    this.grantedRequestToSpeak$ = this._grantedRequestToSpeakSubject.asObservable();
   }
 
   public set event(value: EventDto) {
@@ -62,5 +82,21 @@ export class PortalService {
 
   public set admitGuest(value: EventPresenterDto) {
     this._admitGuestSubject.next(value);
+  }
+
+  public set speakRequest(value: StudentEventDto) {
+    this._speakRequestSubject.next(value);
+  }
+
+  public set grantRequestToSpeak(value: StudentEventDto) {
+    this._grantRequestToSpeakSubject.next(value);
+  }
+
+  public set declineRequestToSpeak(value: StudentEventDto) {
+    this._declineRequestToSpeakSubject.next(value);
+  }
+
+  public set grantedRequestToSpeak(value: boolean) {
+    this._grantedRequestToSpeakSubject.next(value);
   }
 }

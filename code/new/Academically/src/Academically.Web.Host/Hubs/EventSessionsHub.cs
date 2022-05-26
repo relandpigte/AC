@@ -78,6 +78,21 @@ namespace Academically.Web.Host.Hubs
                 await Clients.User(userId.ToString()).SendAsync("videoStreamStopped", session);
             }
         }
+
+        public async Task RequestToSpeak(long hostUserId, StudentEventDto studentEvent)
+        {
+            await Clients.User(hostUserId.ToString()).SendAsync("requestedToSpeak", studentEvent);
+        }
+
+        public async Task GrantRequestToSpeak(long userId)
+        {
+            await Clients.User(userId.ToString()).SendAsync("requestToSpeakGranted");
+        }
+
+        public async Task DeclineRequestToSpeak(long userId)
+        {
+            await Clients.User(userId.ToString()).SendAsync("requestToSpeakDeclined");
+        }
     }
 }
 

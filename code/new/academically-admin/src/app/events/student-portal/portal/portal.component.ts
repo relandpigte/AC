@@ -79,6 +79,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   hubConnected = false;
   waiting = false;
   testMode = true;
+  requestToSpeakDisabled = false;
 
   session = new Session();
 
@@ -123,6 +124,26 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
       .subscribe(response => {
         if (response) {
           this.eventSessionsHub.invoke('admitGuest', this.model.creatorUserId, response, JSON.stringify(this.session))
+            .then(() => {
+              // do nothing
+            });
+        }
+      });
+    this._portalService.grantRequestToSpeak$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        if (response) {
+          this.eventSessionsHub.invoke('grantRequestToSpeak', response.creatorUser.id)
+            .then(() => {
+              // do nothing
+            });
+        }
+      });
+    this._portalService.declineRequestToSpeak$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        if (response) {
+          this.eventSessionsHub.invoke('declineRequestToSpeak', response.creatorUser.id)
             .then(() => {
               // do nothing
             });
@@ -261,6 +282,11 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
       this.eventJoined = true;
       await this.createAnswers();
     }
+  }
+
+  async onRequestToSpeakClick(): Promise<void> {
+    this.requestToSpeakDisabled = true;
+    await this.eventSessionsHub.invoke('requestToSpeak', this.model.creatorUserId, this.studentEvent);
   }
 
   private getEvent(): void {
@@ -557,6 +583,24 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
         await this.initializeAttendeeDevice();
         await this.createAnswers();
       }
+    });
+
+    this.eventSessionsHub.on('requestedToSpeak', async (studentEvent: StudentEventDto) => {
+      console.log('requestedToSpeak');
+      this.notify.info(this.l('AUserHasRequestedToSpeak'));
+      this._portalService.speakRequest = studentEvent;
+    });
+
+    this.eventSessionsHub.on('requestToSpeakGranted', async (studentEvent: StudentEventDto) => {
+      console.log('requestToSpeakGranted');
+      this.notify.info(this.l('RequestToSpeakGranted'));
+      this._portalService.grantedRequestToSpeak = true;
+    });
+
+    this.eventSessionsHub.on('requestToSpeakDeclined', async (studentEvent: StudentEventDto) => {
+      console.log('requestToSpeakDeclined');
+      this.notify.info(this.l('RequestToSpeakDeclined'));
+      this.requestToSpeakDisabled = false;
     });
   }
 

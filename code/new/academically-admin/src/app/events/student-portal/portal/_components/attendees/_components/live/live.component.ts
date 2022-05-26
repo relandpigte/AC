@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, Input } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PortalService } from '@app/events/student-portal/portal/_services/portal.service';
 import { EventDto, StudentEventDto, EventPresenterDto, EventPresenterType } from '@shared/service-proxies/service-proxies';
@@ -11,6 +11,8 @@ import * as _ from 'lodash';
   styleUrls: ['./live.component.less']
 })
 export class LiveComponent extends AppComponentBase implements OnInit {
+  @Input() isHost = true;
+  @Input() controlsEnabled = false;
   model = new EventDto();
   audiences: StudentEventDto[] = [];
   coHosts: EventPresenterDto[] = [];
@@ -35,7 +37,7 @@ export class LiveComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(responses => {
         if (responses) {
-          this.audiences = responses;
+          this.audiences = [...responses];
         }
       });
     this._portalService.presenters$
@@ -44,6 +46,13 @@ export class LiveComponent extends AppComponentBase implements OnInit {
         if (responses) {
           this.coHosts = _.filter(responses, response => response.type === EventPresenterType.CoHost);
           this.guests = _.filter(responses, response => response.type === EventPresenterType.Guest);
+        }
+      });
+    this._portalService.grantedRequestToSpeak$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        if (response) {
+          this.controlsEnabled = true;
         }
       });
   }
