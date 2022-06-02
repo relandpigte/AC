@@ -226,9 +226,71 @@ body.swal2-height-auto {
   }
 }
 
+.pill {
+  font-size: 12px;
+  line-height: 10px;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  background-color: #00d97e;
+  color: #333;
+  &.red {
+    background-color: #e63757 !important;
+    color: white !important;
+  }
+}
+
 .card {
   .card-footer {
     display: flex;
+  }
+
+  &-ribbon {
+    position: absolute;
+    width: 60px;
+    height: 120px;
+    z-index: 999;
+    left: 30px;
+    font-size: 35px;
+    background-color: #00d97e;
+    color: #333;
+
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+    -o-filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+    -ms-filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+    -moz-filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+    -webkit-filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+
+    &.right {
+      right: 35px;
+      left: unset;
+    }
+
+    &.red {
+      background-color: #e63757 !important;
+      color: white !important;
+
+      &::before {
+        border-top-color: #e63757 !important;
+        border-right-color: #e63757 !important;
+        border-left-color: #e63757 !important;
+      }
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: -30px;
+      z-index: 998;
+      border: 30px solid #00d97e;
+      border-bottom-color: transparent;
+    }
+
+    &-text {
+      font-size: 10px;
+      margin-top: 4px;
+    }
   }
 }
 
@@ -1138,6 +1200,22 @@ a.disabled {
     line-height: 10px;
     margin-top : -8px;
   }
+
+  &.card-ribbon {
+    width: 64px;
+    height: 130px;
+    font-size: 32px;
+
+    &::before {
+      bottom: -34px;
+      border-width: 32px;
+    }
+
+    &-text {
+      font-size: 11px;
+      margin-top: 6px;
+    }
+  }
 }
 
 @media (min-width: 768px) {
@@ -1147,6 +1225,22 @@ a.disabled {
 
   sidebar-small:not([style*='display: none'])~.main-content {
     margin-left: 66px;
+  }
+
+  &.card-ribbon {
+    width: 80px;
+    height: 150px;
+    font-size: 35px;
+
+    &::before {
+      bottom: -40px;
+      border-width: 40px;
+    }
+
+    &-text {
+      font-size: 12px;
+      margin-top: 8px;
+    }
   }
 }
 

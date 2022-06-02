@@ -9,7 +9,12 @@
             </a>
           </div>
           <div class="col ml-n2">
-            <h4 class="mb-1 name">
+            <div class="pill-container d-flex">
+              <div class="pill" [class.red]="isOwner(event)">
+                <div class="pill-text">{{ (isOwner(event) ? 'Teaching' : 'Learning') | localize | uppercase }}</div>
+              </div>
+            </div>
+            <h4 class="name mb-0">
               <a *ngIf="event.creatorUserId === appSession.userId" href="#!visit"
                 (click)="$event.preventDefault(); navToUrl('app/events' , event.id)">
                 {{ event.name }}

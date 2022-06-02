@@ -13,11 +13,11 @@ class PagedEventRequestDto extends PagedAndSortedRequestDto {
 }
 
 @Component({
-  selector: 'app-schedule-list',
-  templateUrl: './schedule-list.component.html',
-  styleUrls: ['./schedule-list.component.less']
+  selector: 'app-schedule',
+  templateUrl: './schedule.component.html',
+  styleUrls: ['./schedule.component.less']
 })
-export class ScheduleListComponent extends PagedListingComponentBase<EventDto> implements OnInit {
+export class ScheduleComponent extends PagedListingComponentBase<EventDto> implements OnInit {
   events: EventDto[] = [];
   scheduleFilter?: EventScheduleFilter;
   thumbnailUrls: string[] = [];
