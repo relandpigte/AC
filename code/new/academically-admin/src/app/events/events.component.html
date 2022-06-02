@@ -15,36 +15,39 @@
               </a>
             </div>
           </div>
-          <ng-container *ngIf="isTutor">
-            <div class="row align-items-center">
-              <div class="col">
-                <ul class="nav nav-tabs nav-overflow header-tabs">
-                  <li class="nav-item">
-                    <a class="nav-link active" id="teaching-tab" data-toggle="tab" href="#teaching" role="tab"
-                      aria-controls="teaching" aria-selected="true">{{ 'MyTeaching' | localize | titlecase }}</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="learning-tab" data-toggle="tab" href="#learning" role="tab"
-                      aria-controls="learning" aria-selected="false">{{ 'MyLearning' | localize | titlecase }}</a>
-                  </li>
-                </ul>
-              </div>
+
+          <div class="row align-items-center">
+            <div class="col">
+              <ul class="nav nav-tabs nav-overflow header-tabs">
+                <li *ngIf="isTutor" class="nav-item">
+                  <a class="nav-link" [ngClass]="[isTutor ? 'active' : '']" id="teaching-tab" data-toggle="tab" href="#teaching" role="tab"
+                    aria-controls="teaching" aria-selected="true">{{ 'MyTeaching' | localize | titlecase }}</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" [ngClass]="[!isTutor ? 'active' : '']" id="learning-tab" data-toggle="tab" href="#learning" role="tab"
+                    aria-controls="learning" aria-selected="false">{{ 'MyLearning' | localize | titlecase }}</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="schedule-tab" data-toggle="tab" href="#schedule" role="tab"
+                    aria-controls="schedule" aria-selected="false">{{ 'Schedule' | localize | titlecase }}</a>
+                </li>
+              </ul>
             </div>
-          </ng-container>
+          </div>
         </div>
       </div>
 
-      <div class="tab-content" *ngIf="isTutor else studentEvents">
-        <div class="tab-pane fade show active" id="teaching" role="tabpanel" aria-labelledby="teaching-tab">
+      <div class="tab-content">
+        <div class="tab-pane fade" [ngClass]="[isTutor ? 'show active' : '']" id="teaching" role="tabpanel" aria-labelledby="teaching-tab">
           <app-teaching></app-teaching>
         </div>
-        <div class="tab-pane fade" id="learning" role="tabpanel" aria-labelledby="learning-tab">
+        <div class="tab-pane fade" [ngClass]="[!isTutor ? 'show active' : '']" id="learning" role="tabpanel" aria-labelledby="learning-tab">
           <app-learning></app-learning>
+        </div>
+        <div class="tab-pane fade" id="schedule" role="tabpanel" aria-labelledby="schedule-tab">
+          <app-schedule></app-schedule>
         </div>
       </div>
     </div>
   </div>
 
-  <ng-template #studentEvents>
-    <app-learning></app-learning>
-  </ng-template>

@@ -18,6 +18,10 @@ export class GridComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
   }
 
+  isOwner(event: EventDto): boolean {
+    return this.appSession.userId === event.creatorUserId;
+  }
+
   navToUrl(url: string, id?: string) {
     this.router.navigate([url, id]);
   }
