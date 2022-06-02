@@ -13,6 +13,16 @@ namespace Academically.Services.Projects.Dto
     public class ProjectDto : EntityDto<Guid>
     {
         public string Name { get; set; }
+        public string Description { get; set; }
+        public string AcademicLevel { get; set; }
+        public string Qualification { get; set; }
+        public string Methodology { get; set; }
+        public string SubjectArea { get; set; }
+        public string SubjectKeyWords { get; set; }
+        public string UrgencyLevel { get; set; }
+        public DateTime Deadline { get; set; }
+        public bool IsPrivateRequest { get; set; }
+
         public Guid? ServiceLevel1 { get; set; }
         public string ServiceNameLevel1 { get; set; }
 
@@ -35,5 +45,8 @@ namespace Academically.Services.Projects.Dto
 
         public IEnumerable<ProjectOfferDto> Offers { get; set; }
         public IEnumerable<CalendarEventDto> CalendarEvents { get; set; }
+        public IEnumerable<ProjectDocumentDto> ProjectDocuments { get; set; }
+        public IEnumerable<ProjectAvailabilityDto> ProjectAvailabilities { get; set; }
+
     }
 }

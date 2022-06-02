@@ -1,12 +1,15 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CreateProjectDto, ProjectsServiceProxy, Service2Dto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { CreateProjectDto, FileParameter, ProjectAvailabilityDto, ProjectsServiceProxy, Service2Dto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 import { ServiceWizardService } from '../_services/service-wizard.service';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import * as moment from 'moment';
+import { DocumentUploaderComponent } from '@app/_shared/components/document-uploader/document-uploader.component';
+import { AvailabilitySettingComponent } from './_components/availability-setting/availability-setting.component';
 
 @Component({
   selector: 'app-service-level',
@@ -15,6 +18,9 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
   animations: [appModuleAnimation()],
 })
 export class CreateProjectComponent extends AppComponentBase implements OnInit {
+  @ViewChild('documentUploader') documentUploaderComponent: DocumentUploaderComponent;
+  @ViewChild('availabilitySetting') availabilitySettingComponent: AvailabilitySettingComponent;
+
   serviceCategories: Service2Dto[] = [];
   selectedServiceCategories: Service2Dto[] = [];
   model: CreateProjectDto = new CreateProjectDto();
@@ -70,6 +76,10 @@ export class CreateProjectComponent extends AppComponentBase implements OnInit {
     this.getMethodologies();
     this.getSubjectAreas();
     this.getUrgencyLevels();
+
+    if (this.documentUploaderComponent) {
+      this.documentUploaderComponent.files = [];
+    }
   }
 
   getSelected(id: string): Service2Dto {
@@ -87,16 +97,36 @@ export class CreateProjectComponent extends AppComponentBase implements OnInit {
 
   onFormSubmit(): void {
     this.isLoading = true;
+    this.model.deadline = moment(this.deadline).startOf('day');
+
+    const documents = this.documentUploaderComponent.files.map(file => {
+      const fileParameter: FileParameter = {
+        fileName: file.name,
+        data: file,
+      };
+      return fileParameter;
+    });
+
+    this.model.projectAvailabilities = this.availabilitySettingComponent.availabilities?.reduce((arr, curr) =>
+    [...arr, ...curr.times.map(t => {
+      const availability: ProjectAvailabilityDto = new ProjectAvailabilityDto();
+      availability.dayOfWeek = curr.dayOfWeek;
+      availability.startTime = moment(t.startTime).format('HH:mm');
+      availability.endTime = moment(t.endTime).format('HH:mm');
+      return availability;
+    })], []) ?? [];
+
     this._projectsService.create(this.model)
       .pipe(
+        switchMap((id) => this._projectsService.uploadProjectDocuments(id, documents)),
         takeUntil(this.destroyed$),
         finalize(() => {
           this.isLoading = false;
         }),
       )
-      .subscribe((id) => {
+      .subscribe((project) => {
         this.notify.success(this.l('SavedSuccessfully'));
-        this._router.navigate([`/app/projects/${id}/browse-tutors`]);
+        this._router.navigate([`/app/projects/${project.id}/browse-tutors`]);
         this._serviceWizardService.clear();
       });
   }

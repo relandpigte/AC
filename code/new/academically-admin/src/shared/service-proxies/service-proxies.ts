@@ -10878,6 +10878,70 @@ export class ProjectsServiceProxy {
     }
 
     /**
+     * @param projectId (optional) 
+     * @param documents (optional) 
+     * @return Success
+     */
+    uploadProjectDocuments(projectId: string | undefined, documents: FileParameter[] | undefined): Observable<ProjectDto> {
+        let url_ = this.baseUrl + "/api/services/app/Projects/UploadProjectDocuments";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (projectId === null || projectId === undefined) {
+            // do nothing
+        } else
+            content_.append("ProjectId", projectId.toString());
+        if (documents === null || documents === undefined) {
+            // do nothing
+        } else
+            documents.forEach(item_ => content_.append("Documents", item_.data, item_.fileName ? item_.fileName : "Documents") );
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUploadProjectDocuments(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUploadProjectDocuments(<any>response_);
+                } catch (e) {
+                    return <Observable<ProjectDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ProjectDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUploadProjectDocuments(response: HttpResponseBase): Observable<ProjectDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ProjectDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ProjectDto>(<any>null);
+    }
+
+    /**
      * @param id (optional) 
      * @param tutorId (optional) 
      * @return Success
@@ -25355,14 +25419,16 @@ export class CreateProjectDto implements ICreateProjectDto {
     subjectArea: string | undefined;
     subjectKeyWords: string | undefined;
     urgencyLevel: string | undefined;
-    deadline: moment.Moment;
-    isPrivateRequest: boolean;
+    deadline: moment.Moment | undefined;
+    isPrivateRequest: boolean | undefined;
+    hasFiles: boolean | undefined;
     serviceLevel1: string | undefined;
     serviceNameLevel1: string | undefined;
     serviceLevel2: string | undefined;
     serviceNameLevel2: string | undefined;
     serviceLevel3: string | undefined;
     serviceNameLevel3: string | undefined;
+    projectAvailabilities: ProjectAvailabilityDto[] | undefined;
 
     constructor(data?: ICreateProjectDto) {
         if (data) {
@@ -25385,12 +25451,18 @@ export class CreateProjectDto implements ICreateProjectDto {
             this.urgencyLevel = _data["urgencyLevel"];
             this.deadline = _data["deadline"] ? moment(_data["deadline"].toString()) : <any>undefined;
             this.isPrivateRequest = _data["isPrivateRequest"];
+            this.hasFiles = _data["hasFiles"];
             this.serviceLevel1 = _data["serviceLevel1"];
             this.serviceNameLevel1 = _data["serviceNameLevel1"];
             this.serviceLevel2 = _data["serviceLevel2"];
             this.serviceNameLevel2 = _data["serviceNameLevel2"];
             this.serviceLevel3 = _data["serviceLevel3"];
             this.serviceNameLevel3 = _data["serviceNameLevel3"];
+            if (Array.isArray(_data["projectAvailabilities"])) {
+                this.projectAvailabilities = [] as any;
+                for (let item of _data["projectAvailabilities"])
+                    this.projectAvailabilities.push(ProjectAvailabilityDto.fromJS(item));
+            }
         }
     }
 
@@ -25413,12 +25485,18 @@ export class CreateProjectDto implements ICreateProjectDto {
         data["urgencyLevel"] = this.urgencyLevel;
         data["deadline"] = this.deadline ? this.deadline.toISOString() : <any>undefined;
         data["isPrivateRequest"] = this.isPrivateRequest;
+        data["hasFiles"] = this.hasFiles;
         data["serviceLevel1"] = this.serviceLevel1;
         data["serviceNameLevel1"] = this.serviceNameLevel1;
         data["serviceLevel2"] = this.serviceLevel2;
         data["serviceNameLevel2"] = this.serviceNameLevel2;
         data["serviceLevel3"] = this.serviceLevel3;
         data["serviceNameLevel3"] = this.serviceNameLevel3;
+        if (Array.isArray(this.projectAvailabilities)) {
+            data["projectAvailabilities"] = [];
+            for (let item of this.projectAvailabilities)
+                data["projectAvailabilities"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -25439,14 +25517,16 @@ export interface ICreateProjectDto {
     subjectArea: string | undefined;
     subjectKeyWords: string | undefined;
     urgencyLevel: string | undefined;
-    deadline: moment.Moment;
-    isPrivateRequest: boolean;
+    deadline: moment.Moment | undefined;
+    isPrivateRequest: boolean | undefined;
+    hasFiles: boolean | undefined;
     serviceLevel1: string | undefined;
     serviceNameLevel1: string | undefined;
     serviceLevel2: string | undefined;
     serviceNameLevel2: string | undefined;
     serviceLevel3: string | undefined;
     serviceNameLevel3: string | undefined;
+    projectAvailabilities: ProjectAvailabilityDto[] | undefined;
 }
 
 export class CreateProjectOfferDto implements ICreateProjectOfferDto {
@@ -26434,7 +26514,7 @@ export interface IDocumentDto {
     creatorUserId: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail 17 = CourseSectionImage 18 = EventThumbnail 19 = EventResource */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail 17 = CourseSectionImage 18 = EventThumbnail 19 = EventResource 20 = Project */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -26456,6 +26536,7 @@ export enum DocumentType {
     CourseSectionImage = 17,
     EventThumbnail = 18,
     EventResource = 19,
+    Project = 20,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {
@@ -30365,9 +30446,144 @@ export interface IProfileMetricDto {
     totalReviews: number;
 }
 
+export class ProjectAvailabilityDto implements IProjectAvailabilityDto {
+    id: string;
+    projectId: string;
+    dayOfWeek: DayOfWeek;
+    startTime: string | undefined;
+    endTime: string | undefined;
+    project: ProjectDto;
+
+    constructor(data?: IProjectAvailabilityDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.projectId = _data["projectId"];
+            this.dayOfWeek = _data["dayOfWeek"];
+            this.startTime = _data["startTime"];
+            this.endTime = _data["endTime"];
+            this.project = _data["project"] ? ProjectDto.fromJS(_data["project"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ProjectAvailabilityDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProjectAvailabilityDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["projectId"] = this.projectId;
+        data["dayOfWeek"] = this.dayOfWeek;
+        data["startTime"] = this.startTime;
+        data["endTime"] = this.endTime;
+        data["project"] = this.project ? this.project.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): ProjectAvailabilityDto {
+        const json = this.toJSON();
+        let result = new ProjectAvailabilityDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IProjectAvailabilityDto {
+    id: string;
+    projectId: string;
+    dayOfWeek: DayOfWeek;
+    startTime: string | undefined;
+    endTime: string | undefined;
+    project: ProjectDto;
+}
+
+export class ProjectDocumentDto implements IProjectDocumentDto {
+    id: string;
+    projectId: string;
+    documentId: string;
+    documentUrl: string | undefined;
+    project: ProjectDto;
+    document: DocumentDto;
+
+    constructor(data?: IProjectDocumentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.projectId = _data["projectId"];
+            this.documentId = _data["documentId"];
+            this.documentUrl = _data["documentUrl"];
+            this.project = _data["project"] ? ProjectDto.fromJS(_data["project"]) : <any>undefined;
+            this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ProjectDocumentDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProjectDocumentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["projectId"] = this.projectId;
+        data["documentId"] = this.documentId;
+        data["documentUrl"] = this.documentUrl;
+        data["project"] = this.project ? this.project.toJSON() : <any>undefined;
+        data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): ProjectDocumentDto {
+        const json = this.toJSON();
+        let result = new ProjectDocumentDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IProjectDocumentDto {
+    id: string;
+    projectId: string;
+    documentId: string;
+    documentUrl: string | undefined;
+    project: ProjectDto;
+    document: DocumentDto;
+}
+
 export class ProjectDto implements IProjectDto {
     id: string;
     name: string | undefined;
+    description: string | undefined;
+    academicLevel: string | undefined;
+    qualification: string | undefined;
+    methodology: string | undefined;
+    subjectArea: string | undefined;
+    subjectKeyWords: string | undefined;
+    urgencyLevel: string | undefined;
+    deadline: moment.Moment;
+    isPrivateRequest: boolean;
     serviceLevel1: string | undefined;
     serviceNameLevel1: string | undefined;
     serviceLevel2: string | undefined;
@@ -30382,6 +30598,8 @@ export class ProjectDto implements IProjectDto {
     creatorUserId: number;
     offers: ProjectOfferDto[] | undefined;
     calendarEvents: CalendarEventDto[] | undefined;
+    projectDocuments: ProjectDocumentDto[] | undefined;
+    projectAvailabilities: ProjectAvailabilityDto[] | undefined;
 
     constructor(data?: IProjectDto) {
         if (data) {
@@ -30396,6 +30614,15 @@ export class ProjectDto implements IProjectDto {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
+            this.description = _data["description"];
+            this.academicLevel = _data["academicLevel"];
+            this.qualification = _data["qualification"];
+            this.methodology = _data["methodology"];
+            this.subjectArea = _data["subjectArea"];
+            this.subjectKeyWords = _data["subjectKeyWords"];
+            this.urgencyLevel = _data["urgencyLevel"];
+            this.deadline = _data["deadline"] ? moment(_data["deadline"].toString()) : <any>undefined;
+            this.isPrivateRequest = _data["isPrivateRequest"];
             this.serviceLevel1 = _data["serviceLevel1"];
             this.serviceNameLevel1 = _data["serviceNameLevel1"];
             this.serviceLevel2 = _data["serviceLevel2"];
@@ -30418,6 +30645,16 @@ export class ProjectDto implements IProjectDto {
                 for (let item of _data["calendarEvents"])
                     this.calendarEvents.push(CalendarEventDto.fromJS(item));
             }
+            if (Array.isArray(_data["projectDocuments"])) {
+                this.projectDocuments = [] as any;
+                for (let item of _data["projectDocuments"])
+                    this.projectDocuments.push(ProjectDocumentDto.fromJS(item));
+            }
+            if (Array.isArray(_data["projectAvailabilities"])) {
+                this.projectAvailabilities = [] as any;
+                for (let item of _data["projectAvailabilities"])
+                    this.projectAvailabilities.push(ProjectAvailabilityDto.fromJS(item));
+            }
         }
     }
 
@@ -30432,6 +30669,15 @@ export class ProjectDto implements IProjectDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
+        data["description"] = this.description;
+        data["academicLevel"] = this.academicLevel;
+        data["qualification"] = this.qualification;
+        data["methodology"] = this.methodology;
+        data["subjectArea"] = this.subjectArea;
+        data["subjectKeyWords"] = this.subjectKeyWords;
+        data["urgencyLevel"] = this.urgencyLevel;
+        data["deadline"] = this.deadline ? this.deadline.toISOString() : <any>undefined;
+        data["isPrivateRequest"] = this.isPrivateRequest;
         data["serviceLevel1"] = this.serviceLevel1;
         data["serviceNameLevel1"] = this.serviceNameLevel1;
         data["serviceLevel2"] = this.serviceLevel2;
@@ -30454,6 +30700,16 @@ export class ProjectDto implements IProjectDto {
             for (let item of this.calendarEvents)
                 data["calendarEvents"].push(item.toJSON());
         }
+        if (Array.isArray(this.projectDocuments)) {
+            data["projectDocuments"] = [];
+            for (let item of this.projectDocuments)
+                data["projectDocuments"].push(item.toJSON());
+        }
+        if (Array.isArray(this.projectAvailabilities)) {
+            data["projectAvailabilities"] = [];
+            for (let item of this.projectAvailabilities)
+                data["projectAvailabilities"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -30468,6 +30724,15 @@ export class ProjectDto implements IProjectDto {
 export interface IProjectDto {
     id: string;
     name: string | undefined;
+    description: string | undefined;
+    academicLevel: string | undefined;
+    qualification: string | undefined;
+    methodology: string | undefined;
+    subjectArea: string | undefined;
+    subjectKeyWords: string | undefined;
+    urgencyLevel: string | undefined;
+    deadline: moment.Moment;
+    isPrivateRequest: boolean;
     serviceLevel1: string | undefined;
     serviceNameLevel1: string | undefined;
     serviceLevel2: string | undefined;
@@ -30482,6 +30747,8 @@ export interface IProjectDto {
     creatorUserId: number;
     offers: ProjectOfferDto[] | undefined;
     calendarEvents: CalendarEventDto[] | undefined;
+    projectDocuments: ProjectDocumentDto[] | undefined;
+    projectAvailabilities: ProjectAvailabilityDto[] | undefined;
 }
 
 export class ProjectDtoPagedResultDto implements IProjectDtoPagedResultDto {
@@ -36527,12 +36794,23 @@ export interface IUpdateProfileDto {
 export class UpdateProjectDto implements IUpdateProjectDto {
     id: string;
     name: string | undefined;
+    description: string | undefined;
+    academicLevel: string | undefined;
+    qualification: string | undefined;
+    methodology: string | undefined;
+    subjectArea: string | undefined;
+    subjectKeyWords: string | undefined;
+    urgencyLevel: string | undefined;
+    deadline: moment.Moment | undefined;
+    isPrivateRequest: boolean | undefined;
+    hasFiles: boolean | undefined;
     serviceLevel1: string | undefined;
     serviceNameLevel1: string | undefined;
     serviceLevel2: string | undefined;
     serviceNameLevel2: string | undefined;
     serviceLevel3: string | undefined;
     serviceNameLevel3: string | undefined;
+    projectAvailabilities: ProjectAvailabilityDto[] | undefined;
 
     constructor(data?: IUpdateProjectDto) {
         if (data) {
@@ -36547,12 +36825,27 @@ export class UpdateProjectDto implements IUpdateProjectDto {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
+            this.description = _data["description"];
+            this.academicLevel = _data["academicLevel"];
+            this.qualification = _data["qualification"];
+            this.methodology = _data["methodology"];
+            this.subjectArea = _data["subjectArea"];
+            this.subjectKeyWords = _data["subjectKeyWords"];
+            this.urgencyLevel = _data["urgencyLevel"];
+            this.deadline = _data["deadline"] ? moment(_data["deadline"].toString()) : <any>undefined;
+            this.isPrivateRequest = _data["isPrivateRequest"];
+            this.hasFiles = _data["hasFiles"];
             this.serviceLevel1 = _data["serviceLevel1"];
             this.serviceNameLevel1 = _data["serviceNameLevel1"];
             this.serviceLevel2 = _data["serviceLevel2"];
             this.serviceNameLevel2 = _data["serviceNameLevel2"];
             this.serviceLevel3 = _data["serviceLevel3"];
             this.serviceNameLevel3 = _data["serviceNameLevel3"];
+            if (Array.isArray(_data["projectAvailabilities"])) {
+                this.projectAvailabilities = [] as any;
+                for (let item of _data["projectAvailabilities"])
+                    this.projectAvailabilities.push(ProjectAvailabilityDto.fromJS(item));
+            }
         }
     }
 
@@ -36567,12 +36860,27 @@ export class UpdateProjectDto implements IUpdateProjectDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
+        data["description"] = this.description;
+        data["academicLevel"] = this.academicLevel;
+        data["qualification"] = this.qualification;
+        data["methodology"] = this.methodology;
+        data["subjectArea"] = this.subjectArea;
+        data["subjectKeyWords"] = this.subjectKeyWords;
+        data["urgencyLevel"] = this.urgencyLevel;
+        data["deadline"] = this.deadline ? this.deadline.toISOString() : <any>undefined;
+        data["isPrivateRequest"] = this.isPrivateRequest;
+        data["hasFiles"] = this.hasFiles;
         data["serviceLevel1"] = this.serviceLevel1;
         data["serviceNameLevel1"] = this.serviceNameLevel1;
         data["serviceLevel2"] = this.serviceLevel2;
         data["serviceNameLevel2"] = this.serviceNameLevel2;
         data["serviceLevel3"] = this.serviceLevel3;
         data["serviceNameLevel3"] = this.serviceNameLevel3;
+        if (Array.isArray(this.projectAvailabilities)) {
+            data["projectAvailabilities"] = [];
+            for (let item of this.projectAvailabilities)
+                data["projectAvailabilities"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -36587,12 +36895,23 @@ export class UpdateProjectDto implements IUpdateProjectDto {
 export interface IUpdateProjectDto {
     id: string;
     name: string | undefined;
+    description: string | undefined;
+    academicLevel: string | undefined;
+    qualification: string | undefined;
+    methodology: string | undefined;
+    subjectArea: string | undefined;
+    subjectKeyWords: string | undefined;
+    urgencyLevel: string | undefined;
+    deadline: moment.Moment | undefined;
+    isPrivateRequest: boolean | undefined;
+    hasFiles: boolean | undefined;
     serviceLevel1: string | undefined;
     serviceNameLevel1: string | undefined;
     serviceLevel2: string | undefined;
     serviceNameLevel2: string | undefined;
     serviceLevel3: string | undefined;
     serviceNameLevel3: string | undefined;
+    projectAvailabilities: ProjectAvailabilityDto[] | undefined;
 }
 
 export class UpdateTopicDto implements IUpdateTopicDto {

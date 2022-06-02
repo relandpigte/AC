@@ -102,6 +102,8 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<EventPresenter> EventPresenters { get; set; }
         public virtual DbSet<ConferenceSession> ConferenceSessions { get; set; }
         public virtual DbSet<ConferenceSessionCandidate> ConferenceSessionCandidates { get; set; }
+        public virtual DbSet<ProjectDocument> ProjectDocuments { get; set; }
+        public virtual DbSet<ProjectAvailability> ProjectAvailabilities { get; set; }
 
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)

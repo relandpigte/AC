@@ -1,38 +1,36 @@
 <div class="container-fluid" [@routerTransition]>
-  <div class="row mt-5 pt-5 text-center">
-    <div class="col-md-12">
-      <p class="text-muted">
-        <ng-container *ngTemplateOutlet="stepInfo"></ng-container>
-      </p>
-    </div>
-    <div class="col-md-12 header mt-md-5">
-      <div class="header-body">
-        <h1 class="header-title mb-4">
-          {{ model.serviceNameLevel3 }}
-        </h1>
-      </div>
-    </div>
-  </div>
   <div class="row">
-    <div class="col-md-12 header" [loader]="isLoading">
+    <div class="col-md-12 header" [loader]="showLoader">
       <div class="header-body">
         <div class="row justify-content-center">
           <div class="col-md-7 header">
-            <form class="row" autocomplete="off" #modelForm="ngForm" (ngSubmit)="onFormSubmit()">
+            <form class="row" autocomplete="off" [formGroup]="projectForm">
               <div class="col-md-12">
+                <div *ngIf="!isEditing" class="d-flex justify-content-end mb-4">
+                  <button type="button"
+                    (click)="toggleEditProject(true)" class="btn btn-primary">
+                    {{ 'Edit' | localize }}
+                  </button>
+                </div>
+
+                <div *ngIf="isEditing" class="d-flex justify-content-end mb-4">
+                  <button type="button"
+                    (click)="toggleEditProject(false)" class="btn btn-primary">
+                    {{ 'Done' | localize }}
+                  </button>
+                </div>
+
                 <div class="form-group required">
                   <label class="col-form-label" for="ProjectName">{{ 'ProjectName' | localize }}</label>
-                  <input [(ngModel)]="model.name" id="ProjectName" name="ProjectName" type="text" class="form-control"
-                    #projectNameModel="ngModel" #projectNameEl required />
-                  <abp-validation-summary [control]="projectNameModel" [controlEl]="projectNameEl">
-                  </abp-validation-summary>
+                  <input formControlName="name" id="ProjectName" name="ProjectName" type="text" class="form-control" #projectNameEl required/>
+                  <abp-validation-summary [control]="name" [controlEl]="projectNameEl"></abp-validation-summary>
                 </div>
 
                 <div class="form-group required">
                   <label class="col-form-label" for="Description">{{ 'Description' | localize }}</label>
-                  <textarea [(ngModel)]="model.description" id="Description" name="Description" class="form-control"
-                    #descriptionModel="ngModel" #descriptionEl required rows="4"></textarea>
-                  <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl">
+                  <textarea formControlName="description" id="Description" name="Description" class="form-control"
+                    #descriptionEl required rows="4"></textarea>
+                  <abp-validation-summary [control]="description" [controlEl]="descriptionEl">
                   </abp-validation-summary>
                 </div>
 
@@ -41,10 +39,10 @@
                 <div class="form-row">
                   <div [class.mb-0]="!showMethodology" class="form-group col-6 required">
                     <label class="col-form-label" for="AcademicLevel">{{ 'AcademicLevel' | localize}}</label>
-                    <select [(ngModel)]="model.academicLevel" select2 [defaultValue]="model.academicLevel"
+                    <select [(ngModel)]="academicLevelValue" select2 [defaultValue]="academicLevel.value"
                       (select2ValueChange)="onAcademicLevelSelect($event)" name="AcademicLevel" id="AcademicLevel"
                       class="custom-select" data-toggle="select" #academicLevelModel="ngModel" #academicLevelEl
-                      required>
+                      required [disabled]="isEditing ? null : ''" [ngModelOptions]="{standalone: true}">
                       <option *ngFor="let academicLevel of academicLevels" [value]="academicLevel">
                         {{ academicLevel }}
                       </option>
@@ -55,10 +53,10 @@
 
                   <div [class.mb-0]="!showMethodology" class="form-group col-6 required">
                     <label class="col-form-label" for="Qualification">{{ 'Qualification' | localize}}</label>
-                    <select [(ngModel)]="model.qualification" select2 [defaultValue]="model.qualification"
-                      (select2ValueChange)="model.qualification = $event" name="Qualification" id="Qualification"
+                    <select [(ngModel)]="qualificationValue" select2 [defaultValue]="qualification.value"
+                      (select2ValueChange)="onQualificationSelect($event)" name="Qualification" id="Qualification"
                       class="custom-select" data-toggle="select" #qualificationModel="ngModel" #qualificationEl
-                      required>
+                      required [disabled]="isEditing ? null : ''" [ngModelOptions]="{standalone: true}">
                       <option *ngFor="let qualification of academicLevelQualifications" [value]="qualification">
                         {{ qualification }}
                       </option>
@@ -70,9 +68,10 @@
 
                 <div *ngIf="showMethodology" class="form-group">
                   <label class="col-form-label" for="Methodology">{{ 'Methodology' | localize}}</label>
-                  <select [(ngModel)]="model.methodology" select2 [defaultValue]="model.methodology"
-                    (select2ValueChange)="model.methodology = $event" name="Methodology" id="Methodology"
-                    class="custom-select" data-toggle="select" #methodologyModel="ngModel" #methodologyEl>
+                  <select [(ngModel)]="methodologyValue" select2 [defaultValue]="methodology.value"
+                    (select2ValueChange)="onMethodologySelect($event)" name="Methodology" id="Methodology"
+                    class="custom-select" data-toggle="select" #methodologyModel="ngModel" #methodologyEl
+                    [disabled]="isEditing ? null : ''" [ngModelOptions]="{standalone: true}">
                     <option *ngFor="let methodology of methodologies" [value]="methodology">
                       {{ methodology }}
                     </option>
@@ -85,9 +84,10 @@
 
                 <div class="form-group required">
                   <label class="col-form-label" for="SubjectArea">{{ 'SubjectArea' | localize}}</label>
-                  <select [(ngModel)]="model.subjectArea" select2 [defaultValue]="model.subjectArea"
-                    (select2ValueChange)="model.subjectArea = $event" name="SubjectArea" id="SubjectArea"
-                    class="custom-select" data-toggle="select" #subjectAreaModel="ngModel" #subjectAreaEl required>
+                  <select [(ngModel)]="subjectAreaValue" select2 [defaultValue]="subjectArea.value"
+                    (select2ValueChange)="onSubjectAreaSelect($event)" name="SubjectArea" id="SubjectArea"
+                    class="custom-select" data-toggle="select" #subjectAreaModel="ngModel" #subjectAreaEl required
+                    [disabled]="isEditing ? null : ''" [ngModelOptions]="{standalone: true}">
                     <option *ngFor="let methodology of methodologies" [value]="methodology">
                       {{ methodology }}
                     </option>
@@ -101,14 +101,15 @@
                   <small class="form-text text-muted">
                     {{ 'SubjectKeywordsInfo' | localize }}
                   </small>
-                  <input [(ngModel)]="subjectKeyword" #subjectKeywowrdsModel="ngModel" #subjectKeywowrdsEl
+                  <input [(ngModel)]="subjectKeyWordValue" #subjectKeywowrdsModel="ngModel" #subjectKeywowrdsEl
                     class="form-control" type="text" id="SubjectKeywords" name="SubjectKeywords"
-                    (keydown)="onSearchKeywordKeyDown($event)" (blur)="onSearchKeywordBlur()" />
+                    (keydown)="onSearchKeyWordKeyDown($event)" (blur)="onSearchKeyWordBlur()"
+                    [ngModelOptions]="{standalone: true}" [disabled]="isEditing ? null : ''"/>
                   <div class="ac-alerts">
-                    <div *ngFor="let subjectKeyword of subjectKeywords"
+                    <div *ngFor="let subjectKeyWord of subjectKeyWordsList" [class.disabled-events]="!isEditing"
                       class="alert alert-info alert-dismissible ac-alert" role="alert">
-                      {{ subjectKeyword }}
-                      <button (click)="onRemoveSubjectKeywordClick(subjectKeyword)" type="button" class="close"
+                      {{ subjectKeyWord }}
+                      <button (click)="onRemoveSubjectKeyWordClick(subjectKeyWord)" type="button" class="close"
                         data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">×</span>
                       </button>
@@ -125,7 +126,7 @@
                   </small>
                   <div class="card">
                     <div class="card-body">
-                      <app-document-uploader #documentUploader [allowedExtensions]="allowedFileExtensions">
+                      <app-document-uploader #documentUploader [readonly]="!isEditing" [allowedExtensions]="allowedFileExtensions">
                       </app-document-uploader>
                     </div>
                   </div>
@@ -134,9 +135,10 @@
                 <div class="form-row">
                   <div class="form-group col-6 mb-0 required">
                     <label class="col-form-label" for="UrgencyLevel">{{ 'UrgencyLevel' | localize}}</label>
-                    <select [(ngModel)]="model.urgencyLevel" select2 [defaultValue]="model.urgencyLevel"
-                      (select2ValueChange)="model.urgencyLevel = $event" name="UrgencyLevel" id="urgencyLevel"
-                      class="custom-select" data-toggle="select" #urgencyLevelModel="ngModel" #urgencyLevelEl required>
+                    <select [(ngModel)]="urgencyLevelValue" select2 [defaultValue]="urgencyLevel.value"
+                      (select2ValueChange)="onUrgencyLevelSelect($event)" name="UrgencyLevel" id="urgencyLevel"
+                      class="custom-select" data-toggle="select" #urgencyLevelModel="ngModel" #urgencyLevelEl required
+                      [disabled]="isEditing ? null : ''" [ngModelOptions]="{standalone: true}">
                       <option *ngFor="let urgencyLevel of urgencyLevels" [value]="urgencyLevel">
                         {{ urgencyLevel }}
                       </option>
@@ -148,16 +150,16 @@
                   <div class="form-group col-6 mb-0">
                     <label class="col-form-label" for="Deadline">{{ 'Deadline' | localize }}</label>
                     <div class="input-group input-group-merge" (click)="dp.show()">
-                      <input [(ngModel)]="deadline" id="Deadline" name="Deadline" type="text"
-                        class="form-control form-control-appended" #deadlineModel="ngModel" #deadlineEl
-                        #dp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" />
+                      <input formControlName="deadline" id="Deadline" name="Deadline" type="text"
+                        class="form-control form-control-appended" #deadlineEl #dp="bsDatepicker" bsDatepicker
+                        [bsConfig]="datePickerConfig"/>
                       <div class="input-group-append">
                         <div class="input-group-text">
                           <span class="fas fa-calendar"></span>
                         </div>
                       </div>
                     </div>
-                    <abp-validation-summary [control]="deadlineModel" [controlEl]="deadlineEl">
+                    <abp-validation-summary [control]="deadline" [controlEl]="deadlineEl">
                     </abp-validation-summary>
                   </div>
                 </div>
@@ -175,7 +177,7 @@
                     <div class="row">
                       <div class="col-auto">
                         <div class="custom-control custom-switch">
-                          <input [(ngModel)]="model.isPrivateRequest" id="IsPrivateRequest" name="IsPrivateRequest"
+                          <input formControlName="isPrivateRequest" id="IsPrivateRequest" name="IsPrivateRequest"
                             type="checkbox" class="custom-control-input">
                           <label class="custom-control-label" for="IsPrivateRequest"></label>
                         </div>
@@ -200,7 +202,20 @@
 
                 <hr class="my-4" />
 
-                <app-availability-setting #availabilitySetting></app-availability-setting>
+                <div *ngIf="!isEditing" class="d-flex justify-content-end mb-4">
+                  <button type="button"
+                    (click)="toggleEditProject(true)" class="btn btn-primary">
+                    {{ 'Edit' | localize }}
+                  </button>
+                </div>
+
+                <div *ngIf="isEditing" class="d-flex justify-content-end mb-4">
+                  <button type="button"
+                    (click)="toggleEditProject(false)" class="btn btn-primary">
+                    {{ 'Done' | localize }}
+                  </button>
+                </div>
+
               </div>
             </form>
           </div>
@@ -208,17 +223,4 @@
       </div>
     </div>
   </div>
-  <div class="d-flex justify-content-between mb-4">
-    <button (click)="onBackClick()" type="button" class="btn btn-white">
-      {{ 'Back' | localize }}
-    </button>
-    <p class="text-muted m-0 align-self-center">
-      <ng-container *ngTemplateOutlet="stepInfo"></ng-container>
-    </p>
-    <button [disabled]="!modelForm.form.valid || !subjectKeywords || !subjectKeywords.length" type="button"
-      (click)="onFormSubmit()" class="btn btn-primary">
-      {{ 'Create' | localize }}
-    </button>
-  </div>
 </div>
-<ng-template #stepInfo>{{ 'step' | localize | titlecase }} 4 {{ 'of' | localize | titlecase }} 4</ng-template>

@@ -1,4 +1,4 @@
-<div *ngIf="(!maxFiles || (files.length < maxFiles)) && !defaultFile" class="document-uploader"
+<div *ngIf="!readonly && (!maxFiles || (files.length < maxFiles)) && !defaultFile" class="document-uploader"
   [dragClassUpdater]="'document-uploader-dragover'" [style.height]="placeholderHeight">
   <label class="document-input-label m-0 p-0" for="DocumentUploader">
     <span *ngIf="!loadingImageCropper">{{ noFilePlaceholder }}</span>
@@ -65,7 +65,7 @@
           class="btn btn-outline-success btn-sm btn-rounded-circle mr-1">
           <span class="fe fe-eye"></span>
         </button>
-        <button (click)="onRemoveFileClick(i)" type="button" class="btn btn-outline-danger btn-sm btn-rounded-circle">
+        <button *ngIf="!readonly" (click)="onRemoveFileClick(i)" type="button" class="btn btn-outline-danger btn-sm btn-rounded-circle">
           <span class="fe fe-trash-2"></span>
         </button>
       </div>
