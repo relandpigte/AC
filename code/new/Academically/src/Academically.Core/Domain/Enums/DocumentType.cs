@@ -22,5 +22,6 @@
         CourseSectionImage,
         EventThumbnail,
         EventResource,
+        Project
     }
 }

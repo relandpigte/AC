@@ -1,0 +1,34 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="j.cezar" id="1">
+        <createTable tableName="academicallyprojectavailabilities">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="ProjectId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DayOfWeek" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="StartTime" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EndTime" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="2">
+        <createIndex indexName="FK_ProjectAvailabilities_Projects_idx" tableName="academicallyprojectavailabilities">
+            <column name="ProjectId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="3">
+        <addForeignKeyConstraint baseColumnNames="ProjectId" baseTableName="academicallyprojectavailabilities" constraintName="FK_ProjectAvailabilities_Projects_ProjectId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyprojects" validate="true"/>
+    </changeSet>
+    
+</databaseChangeLog>

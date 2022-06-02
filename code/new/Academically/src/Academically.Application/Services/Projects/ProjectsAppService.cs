@@ -10,12 +10,15 @@ using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 using Academically.Configuration;
 using Academically.Domain.Entities;
+using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
 using Academically.Notifications;
+using Academically.Services.Documents.Dto;
 using Academically.Services.ProjectOffers.Dto;
 using Academically.Services.Projects.Dto;
 using Academically.Services.UserServices.Dto;
 using Academically.Users.Dto;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SourceCloud.Core.Services;
 using System;
@@ -40,6 +43,8 @@ namespace Academically.Services.Projects
         private readonly INotificationPublisher _notificationPublisher;
         private readonly ISettingManager _settingManager;
         private readonly IRepository<ProjectInvitation, Guid> _projectInvitationsRepository;
+        private readonly IRepository<ProjectDocument, Guid> _projectDocumentsRepository;
+        private readonly IRepository<ProjectAvailability, Guid> _projectAvailabilitiesRepository;
 
         public ProjectsAppService(
             RoleManager roleManager,
@@ -54,7 +59,9 @@ namespace Academically.Services.Projects
             IEmailService emailService,
             INotificationPublisher notificationPublisher,
             ISettingManager settingManager,
-            IRepository<ProjectInvitation, Guid> projectInvitationsRepository
+            IRepository<ProjectInvitation, Guid> projectInvitationsRepository,
+            IRepository<ProjectDocument, Guid> projectDocumentsRepository,
+            IRepository<ProjectAvailability, Guid> projectAvailabilitiesRepository
             )
         {
             _roleManager = roleManager;
@@ -70,6 +77,8 @@ namespace Academically.Services.Projects
             _notificationPublisher = notificationPublisher;
             _settingManager = settingManager;
             _projectInvitationsRepository = projectInvitationsRepository;
+            _projectDocumentsRepository = projectDocumentsRepository;
+            _projectAvailabilitiesRepository = projectAvailabilitiesRepository;
         }
 
         public async Task<PagedResultDto<ProjectDto>> GetAllAsync(PagedProjectRequestDto input)
@@ -235,6 +244,9 @@ namespace Academically.Services.Projects
                 .Include(p => p.CreatorUser.ProfilePictureDocument)
                 .Include(p => p.Offers)
                 .Include(p => p.CreatorUser.CoverPhotoDocument)
+                .Include(p => p.ProjectDocuments)
+                    .ThenInclude(e => e.Document)
+                .Include(p => p.ProjectAvailabilities)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (project == null)
@@ -250,6 +262,8 @@ namespace Academically.Services.Projects
 
             if (project.CreatorUser.CoverPhotoDocumentId.HasValue)
                 projectDto.CreatorUser.CoverPhotoUrl = await _documentsDomainService.GetFileUrlAsync(project.CreatorUser.CoverPhotoDocumentId.Value);
+
+            foreach (var doc in projectDto.ProjectDocuments) doc.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(doc.DocumentId);
 
             return projectDto;
         }
@@ -306,6 +320,49 @@ namespace Academically.Services.Projects
             return await _projectsRepository.InsertAndGetIdAsync(project);
         }
 
+        public async Task<ProjectDto> UploadProjectDocuments([FromForm] UploadProjectDocumentsDto input)
+        {
+            var project = await _projectsRepository.GetAll()
+                            .Include(p => p.ProjectDocuments)
+                            .FirstOrDefaultAsync(p => p.Id == input.ProjectId);
+            if (project == null)
+                return null;
+
+            var documentIds = project.ProjectDocuments.Select(p => p.DocumentId).ToList();
+            await this._projectDocumentsRepository.DeleteAsync(d => d.ProjectId == project.Id);
+            documentIds.ForEach(async id => await this._documentsDomainService.DeleteAsync(id));
+            project.HasFiles = false;
+
+            var documents = new List<ProjectDocumentDto>();
+            if (input.Documents != null && input.Documents.Any())
+            {
+                foreach (var doc in input.Documents)
+                {
+                    var document = await _documentsDomainService.CreateAsync(project.CreatorUserId.Value, doc, DocumentType.Project);
+                    await _projectDocumentsRepository.InsertAsync(new ProjectDocument()
+                    {
+                        ProjectId = project.Id,
+                        DocumentId = document.Id,
+                    });
+                    await CurrentUnitOfWork.SaveChangesAsync();
+                    documents.Add(new ProjectDocumentDto()
+                    {
+                        ProjectId = project.Id,
+                        DocumentId = document.Id,
+                        DocumentUrl = await _documentsDomainService.GetFileUrlAsync(document.Id),
+                        Project = ObjectMapper.Map<ProjectDto>(project),
+                        Document = ObjectMapper.Map<DocumentDto>(document),
+                    });
+                }
+                project.HasFiles = true;
+            }
+
+            var projectDto = ObjectMapper.Map<ProjectDto>(await _projectsRepository.UpdateAsync(project));
+            projectDto.ProjectDocuments = documents;
+
+            return projectDto;
+        }
+
         public async Task SendProjectInvitation(Guid id, long tutorId)
         {
             var project = await _projectsRepository.GetAsync(id);
@@ -352,6 +409,7 @@ namespace Academically.Services.Projects
 
             ObjectMapper.Map(input, project);
 
+            await _projectAvailabilitiesRepository.DeleteAsync(a => a.ProjectId == input.Id);
             await _projectsRepository.UpdateAsync(project);
 
             return ObjectMapper.Map<ProjectDto>(project);

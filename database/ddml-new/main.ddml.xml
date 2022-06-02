@@ -133,5 +133,8 @@
 	<include file="ddml-new/ddml.2022-04-20-01-alter-eventpresenters-add-status-field.xml" />
 	<include file="ddml-new/ddml.2022-04-25-01-alter-eventpresenters-add-email-field.xml" />
 	<include file="ddml-new/ddml.2022-04-26-01-alter-events-add-schedule-fields.xml" />
+	<include file="ddml-new/ddml.2022-05-31-01-alter-projects-add-fields.xml" />
+	<include file="ddml-new/ddml.2022-06-01-01-create-projectdocuments-table.xml" />
+	<include file="ddml-new/ddml.2022-06-01-02-create-projectavailabilities-table.xml" />
 </databaseChangeLog>
 	

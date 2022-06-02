@@ -54,6 +54,13 @@ import { ProjectDetailsHeaderComponent } from './_components/project-details-hea
             outlet: 'header',
           },
           {
+            path: 'details',
+            loadChildren: () =>
+              import('@app/projects/details/details.module').then(
+                (m) => m.DetailsModule,
+              ),
+          },
+          {
             path: 'proposals',
             loadChildren: () =>
               import('@app/projects/project-proposals/project-proposals.module').then(
