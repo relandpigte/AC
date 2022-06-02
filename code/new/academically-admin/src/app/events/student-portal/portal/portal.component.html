@@ -25,6 +25,10 @@
         </a>
         <div class="row">
           <div class="col d-flex align-items-center">
+            <button *ngIf="!isHost" class="btn btn-sm btn-outline-info mr-2 no-wrap" [disabled]="requestToSpeakDisabled"
+              (click)="onRequestToSpeakClick()">
+              <b>{{ 'RequestToSpeak' | localize }}</b>
+            </button>
             <button class="btn btn-sm btn-outline-primary" (click)="onExitClick()">
               <b>{{ 'Exit' | localize }}</b>
             </button>

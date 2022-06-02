@@ -26,7 +26,7 @@
               {{ 'Me' | localize }}
             </span>
           </div>
-          <div class="col-auto flex-y-center actions">
+          <div *ngIf="isHost" class="col-auto flex-y-center actions">
             <a href="#!mic" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'Mute' | localize">
               <i class="fe fe-mic"></i>
             </a>
@@ -65,7 +65,7 @@
           <div class="col flex-y-center">
             {{ 'CoHosts' | localize }}
           </div>
-          <div class="col-auto flex-y-center actions">
+          <div *ngIf="isHost" class="col-auto flex-y-center actions">
             <a href="#!mic" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'MuteAll' | localize">
               <i class="fe fe-mic"></i>
             </a>
@@ -116,7 +116,7 @@
               {{ 'Me' | localize }}
             </span>
           </div>
-          <div class="col-auto flex-y-center actions">
+          <div *ngIf="isHost" class="col-auto flex-y-center actions">
             <a href="#!mic" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'Mute' | localize">
               <i class="fe fe-mic"></i>
             </a>
@@ -162,7 +162,7 @@
           <div class="col flex-y-center">
             {{ 'Guests' | localize }}
           </div>
-          <div class="col-auto flex-y-center actions">
+          <div *ngIf="isHost" class="col-auto flex-y-center actions">
             <a href="#!mic" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'DisableAllMic' | localize">
               <i class="fe fe-mic text-muted"></i>
             </a>
@@ -212,7 +212,7 @@
               {{ 'Me' | localize }}
             </span>
           </div>
-          <div class="col-auto flex-y-center actions">
+          <div *ngIf="isHost" class="col-auto flex-y-center actions">
             <a href="#!mic" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'DisableMic' | localize">
               <i class="fe fe-mic text-muted"></i>
             </a>
@@ -259,7 +259,7 @@
           <div class="col flex-y-center">
             {{ 'Audience' | localize }}
           </div>
-          <div class="col-auto flex-y-center actions">
+          <div *ngIf="isHost" class="col-auto flex-y-center actions">
             <a href="#!mic" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'DisableAllMic' | localize">
               <i class="fe fe-mic-off text-disabled"></i>
             </a>
@@ -302,7 +302,7 @@
               {{ 'Me' | localize }}
             </span>
           </div>
-          <div class="col-auto flex-y-center actions">
+          <div *ngIf="isHost || controlsEnabled" class="col-auto flex-y-center actions">
             <a href="#!mic" (click)="$event.preventDefault()" class="mr-2" [tooltip]="'DisableMic' | localize">
               <i class="fe fe-mic-off text-disabled"></i>
             </a>

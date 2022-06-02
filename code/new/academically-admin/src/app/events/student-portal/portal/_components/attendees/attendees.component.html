@@ -1,4 +1,4 @@
-<ul *ngIf="isTutor" class="nav nav-tabs nav-tabs-sm px-3">
+<ul *ngIf="isHost" class="nav nav-tabs nav-tabs-sm px-3">
   <li class="nav-item">
     <a href="#" class="nav-link active" id="live-tab" data-toggle="tab" href="#live-container" role="tab"
       aria-controls="live-container" aria-selected="true">
@@ -18,9 +18,9 @@
     </a>
   </li>
 </ul>
-<div *ngIf="isTutor" class="tab-content">
+<div *ngIf="isHost" class="tab-content">
   <div class="tab-pane fade show active" id="live-container" role="tabpanel" aria-labelledby="live-tab">
-    <app-live></app-live>
+    <app-live [isHost]="isHost" [controlsEnabled]="isHost"></app-live>
   </div>
   <div class="tab-pane fade" id="registants-container" role="tabpanel" aria-labelledby="registants-tab">
     <app-registrants></app-registrants>
@@ -31,4 +31,4 @@
 </div>
 
 
-<app-live *ngIf="!isTutor"></app-live>
+<app-live *ngIf="!isHost" [isHost]="isHost" [controlsEnabled]="isHost"></app-live>
