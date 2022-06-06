@@ -58,10 +58,10 @@ import { ProfileComponent } from './profile.component';
                     ),
                 },
                 {
-                  path: 'industry-experience',
+                  path: 'experience',
                   loadChildren: () =>
-                    import('@app/profile/industry-experience/industry-experience.module').then(
-                      (m) => m.IndustryExperienceModule,
+                    import('@app/profile/experience/experience.module').then(
+                      (m) => m.ExperienceModule,
                     ),
                 },
                 {

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IndustryExperienceComponent } from './industry-experience.component';
+import { AddExperienceComponent } from './add-experience.component';
 
-describe('IndustryExperienceComponent', () => {
-  let component: IndustryExperienceComponent;
-  let fixture: ComponentFixture<IndustryExperienceComponent>;
+describe('AddExperienceComponent', () => {
+  let component: AddExperienceComponent;
+  let fixture: ComponentFixture<AddExperienceComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IndustryExperienceComponent ]
+      declarations: [ AddExperienceComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(IndustryExperienceComponent);
+    fixture = TestBed.createComponent(AddExperienceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

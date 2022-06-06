@@ -3,14 +3,14 @@ import { RouterModule } from '@angular/router';
 
 import { AppRouteGuard } from '@shared/auth/auth-route-guard';
 
-import { IndustryExperienceComponent } from './industry-experience.component';
+import { ExperienceComponent } from './experience.component';
 
 @NgModule({
   imports: [
     RouterModule.forChild([
       {
         path: '',
-        component: IndustryExperienceComponent,
+        component: ExperienceComponent,
         data: { permission: 'Pages.Profile.IndustryExperience' },
         canActivate: [AppRouteGuard],
         canActivateChild: [AppRouteGuard],
@@ -21,4 +21,4 @@ import { IndustryExperienceComponent } from './industry-experience.component';
     RouterModule
   ],
 })
-export class IndustryExperienceRoutingModule { }
+export class ExperienceRoutingModule { }

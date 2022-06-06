@@ -1,0 +1,45 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    
+    <changeSet author="j.cezar" id="1">
+        <createTable tableName="academicallyworkhistories">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="JobTitle" type="VARCHAR(250)"/>
+            <column name="Company" type="VARCHAR(250)"/>
+            <column name="StartYear" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EndYear" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Country" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="City" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Summary" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="2">
+        <createIndex indexName="FK_WorkHistories_Users_CreatorUserId_idx" tableName="academicallyworkhistories">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="3">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallyworkhistories" constraintName="FK_WorkHistories_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    
+</databaseChangeLog>

@@ -1,0 +1,74 @@
+<form class="form-horizontal" #createExperienceForm="ngForm" autocomplete="off"  (ngSubmit)="onFormSubmit()">
+    <div class="modal-card card">
+        <div class="card-header">
+            <h4 class="card-header-title">
+                {{ 'AddExperience' | localize }}
+            </h4>
+            <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="card-body">
+
+            <div class="form-group required">
+                <label class="col-form-label" for="jobTitle">{{ 'JobTitle' | localize }}</label>
+                <input class="form-control" type="text" id="jobTitle" name="jobTitle" [(ngModel)]="model.jobTitle"
+                    #jobTitleModel="ngModel" #jobTitleEl required />
+                <abp-validation-summary [control]="jobTitleModel" [controlEl]="jobTitleEl"></abp-validation-summary>
+            </div>
+
+            <div class="form-group required">
+                <label class="col-form-label" for="company">{{ 'Company' | localize }}</label>
+                <input class="form-control" type="text" id="company" name="company" [(ngModel)]="model.company"
+                    #companyModel="ngModel" #companyEl required />
+                <abp-validation-summary [control]="companyModel" [controlEl]="companyEl"></abp-validation-summary>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6 required">
+                    <label class="col-form-label" for="StartYear">{{ 'StartYear' | localize }}</label>
+                    <select placeholder="Select Year" id="StartYear" name="StartYear" [(ngModel)]="model.startYear"
+                        type="number" class="custom-select" #startYearModel="ngModel" #startYearEl required>
+                        <option *ngFor="let year of years" [value]="year.value">{{ year.label }}</option>
+                    </select>
+                    <abp-validation-summary [control]="startYearModel" [controlEl]="startYearEl"></abp-validation-summary>
+                </div>
+                <div class="form-group col-md-6 required">
+                    <label class="col-form-label" for="EndYear">{{ 'EndYear' | localize }}</label>
+                    <select placeholder="Select Year" id="EndYear" name="EndYear" type="number" [(ngModel)]="model.endYear"
+                        class="custom-select" #endYearModel="ngModel" #endYearEl required>
+                        <option *ngFor="let year of years" [value]="year.value">{{ year.label }}</option>
+                    </select>
+                    <abp-validation-summary [control]="endYearModel" [controlEl]="endYearEl"></abp-validation-summary>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6 required">
+                    <label class="col-form-label" for="CountryCode">{{ 'Country' | localize }}</label>
+                    <select placeholder="Select Country" id="CountryCode" name="CountryCode" [(ngModel)]="model.country"
+                        type="text" class="custom-select" #countryCodeModel="ngModel" #countryCodeEl required>
+                        <option [ngValue]="null">{{ 'SelectCountry' | localize }}</option>
+                        <option *ngFor="let country of countries" [value]="country.name">{{ country.name }}</option>
+                    </select>
+                    <abp-validation-summary [control]="countryCodeModel" [controlEl]="countryCodeEl"></abp-validation-summary>
+                </div>
+                <div class="form-group col-md-6 required">
+                    <label class="col-form-label" for="city">{{ 'City' | localize }}</label>
+                    <input class="form-control" type="text" id="city" name="city" [(ngModel)]="model.city" #cityModel="ngModel" #cityEl required />
+                    <abp-validation-summary [control]="cityModel" [controlEl]="cityEl"></abp-validation-summary>
+                </div>
+            </div>
+
+            <div class="form-group required">
+                <label class="col-form-label" for="Summary">{{ 'Summary' | localize}}</label>
+                <quill-editor #summaryModel="ngModel" #summaryEl [(ngModel)]="model.summary"
+                  id="Summary" name="Summary" required></quill-editor>
+                <abp-validation-summary [control]="summaryModel" [controlEl]="summaryEl"></abp-validation-summary>
+            </div>
+
+        </div>
+        <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading" [saveDisabled]="!createExperienceForm.form.valid || isLoading" (onCancelClick)="onCloseClick()">
+        </abp-modal-footer>
+    </div>
+</form>
