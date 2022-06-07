@@ -26,6 +26,14 @@ namespace Academically.Web.Host.Hubs
             }
         }
 
+        public async Task EndEvent(IEnumerable<long> userIds, string session)
+        {
+            foreach (var userId in userIds)
+            {
+                await Clients.User(userId.ToString()).SendAsync("eventEnded", session);
+            }
+        }
+
         public async Task EnterAsAudience(long hostUserId, StudentEventDto studentEvent)
         {
             await Clients.User(hostUserId.ToString()).SendAsync("audienceEntered", studentEvent);

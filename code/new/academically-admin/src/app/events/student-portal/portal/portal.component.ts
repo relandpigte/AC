@@ -155,6 +155,12 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     return this.model.creatorUserId === this.appSession.userId;
   }
 
+  get attendeeIds(): string[] {
+    const audienceIds = this.audiences.map(e => e.creatorUser.id).filter(x => x);
+    const presenterIds = this.eventPresenters.map(e => e.userId).filter(x => x);
+    return [].concat(audienceIds).concat(presenterIds);
+  }
+
   ngAfterViewInit(): void {
   }
 
@@ -175,15 +181,11 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     }
   }
 
-  async onGoLiveClick(): Promise<void> {
-    const audienceIds = this.audiences.map(e => e.creatorUser.id);
-    const presenterIds = this.eventPresenters.map(e => e.userId);
-    const attendeeIds = [...audienceIds, ...presenterIds];
+  async onStartEventClick(): Promise<void> {
     if (this.testMode) {
       this.eventStarted = true;
       this.eventJoined = true;
-      console.log(attendeeIds);
-      await this.eventSessionsHub.invoke('startEvent', attendeeIds, JSON.stringify(this.session));
+      await this.eventSessionsHub.invoke('startEvent', this.attendeeIds, JSON.stringify(this.session));
     } else {
       const modalSettings = this.defaultModalSettings as ModalOptions<EventStartingComponent>;
       const modal = this._modalService.show(EventStartingComponent, modalSettings).content;
@@ -191,9 +193,23 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
         .subscribe(async response => {
           this.eventStarted = response;
           this.eventJoined = response;
-          await this.eventSessionsHub.invoke('startEvent', attendeeIds, JSON.stringify(this.session));
+          await this.eventSessionsHub.invoke('startEvent', this.attendeeIds, JSON.stringify(this.session));
         });
     }
+  }
+
+  async onEndEventClick(): Promise<void> {
+    this.message.confirm(
+      this.l('EndEventConfirmation'),
+      undefined,
+      async (result: boolean) => {
+        if (result) {
+          this.eventStarted = false;
+          this.eventJoined = false;
+          await this.eventSessionsHub.invoke('endEvent', this.attendeeIds, JSON.stringify(this.session));
+        }
+      }
+    );
   }
 
   onShareVideoClick(): void {
@@ -221,13 +237,10 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
         });
       };
       await this.createOffers();
-      const audienceIds = this.audiences.map(e => e.creatorUser.id);
-      const presenterIds = this.eventPresenters.map(e => e.userId);
-      const attendeeIds = [...audienceIds, ...presenterIds];
       setTimeout(async () => {
         console.log('invoke - streamVideo');
         console.log(this.session);
-        await this.eventSessionsHub.invoke('streamVideo', attendeeIds, JSON.stringify(this.session));
+        await this.eventSessionsHub.invoke('streamVideo', this.attendeeIds, JSON.stringify(this.session));
         await this.presenterVideo.play();
       }, 3000);
     }, 500);
@@ -238,10 +251,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     await this.initializeWebRTC();
     await this.initializeHostDevice();
     await this.createOffers();
-    const audienceIds = this.audiences.map(e => e.creatorUser.id);
-    const presenterIds = this.eventPresenters.map(e => e.userId);
-    const attendeeIds = [...audienceIds, ...presenterIds];
-    await this.eventSessionsHub.invoke('stopVideoStream', attendeeIds, JSON.stringify(this.session));
+    await this.eventSessionsHub.invoke('stopVideoStream', this.attendeeIds, JSON.stringify(this.session));
   }
 
   async onRoomJoined(selectedMachineDevice: SelectedMachineDevice): Promise<void> {
@@ -501,6 +511,18 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
       this.session.offerIceCandidates = session.offerIceCandidates;
       console.log(this.session);
       this.eventStarted = true;
+    });
+
+    this.eventSessionsHub.on('eventEnded', async (sessionStr: string) => {
+      const session: Session = JSON.parse(sessionStr);
+      this.session.offer = session.offer;
+      this.session.offerIceCandidates = session.offerIceCandidates;
+
+      this.eventStarted = false;
+      this.eventJoined = false;
+
+      this.presenterVideo.srcObject = null;
+      this.presenterVideo.load();
     });
 
     this.eventSessionsHub.on('audienceEntered', async (audienceStudentEvent: StudentEventDto) => {
