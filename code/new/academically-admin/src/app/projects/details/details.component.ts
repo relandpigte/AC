@@ -1,16 +1,19 @@
 import { AfterViewInit, Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Availability } from '@app/project-wizard/create-project/_models/availability';
+import { DocumentUploaderComponent } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { FileParameter, ProjectDto, ProjectsServiceProxy, Service2Dto, ServicesServiceProxy, UpdateProjectDto } from '@shared/service-proxies/service-proxies';
+import { FileParameter, ProjectAvailabilityDto, ProjectDto, ProjectsServiceProxy, Service2Dto, ServicesServiceProxy, UpdateProjectDto } from '@shared/service-proxies/service-proxies';
+import * as moment from 'moment';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { forkJoin, of } from 'rxjs';
-import { bufferTime, debounceTime, distinctUntilChanged, finalize, mergeAll, switchMap, takeUntil } from 'rxjs/operators';
-import * as moment from 'moment';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, finalize, switchMap, takeUntil } from 'rxjs/operators';
 import { ProjectService } from '../_services/project.service';
-import { DocumentUploaderComponent } from '@app/_shared/components/document-uploader/document-uploader.component';
+import { DateTimeHelper } from '@shared/helpers/DateTimeHelper';
+import { AvailabilitySettingComponent } from './_components/availability-setting/availability-setting.component';
 
 @Component({
   selector: 'app-details',
@@ -21,6 +24,7 @@ import { DocumentUploaderComponent } from '@app/_shared/components/document-uplo
 export class DetailsComponent extends AppComponentBase implements OnInit, AfterViewInit {
   @ViewChild("projectNameEl") projectNameInput: ElementRef;
   @ViewChild('documentUploader') documentUploaderComponent: DocumentUploaderComponent;
+  @ViewChild('availabilitySetting') availabilitySettingComponent: AvailabilitySettingComponent;
 
   projectId: string;
   project: ProjectDto;
@@ -110,19 +114,20 @@ export class DetailsComponent extends AppComponentBase implements OnInit, AfterV
     const formSubmission = () => this.isEditing && !this.projectForm.pristine && this.projectForm.valid && this.onFormSubmit();
 
     this.projectForm.valueChanges
-    .pipe(
-      debounceTime(2000),
-      distinctUntilChanged(),
-      takeUntil(this.destroyed$)
-    ).subscribe(() => formSubmission());
+    .pipe(debounceTime(2000), distinctUntilChanged(), takeUntil(this.destroyed$))
+    .subscribe(() => formSubmission());
 
     this.documentUploaderComponent.filesChanged
-    .pipe(
-      debounceTime(2000),
-      distinctUntilChanged(),
-      takeUntil(this.destroyed$)
-    ).subscribe(() => {
+    .pipe(debounceTime(2000), distinctUntilChanged(), takeUntil(this.destroyed$))
+    .subscribe(() => {
       this.hasFilesToUpload = true;
+      this.projectForm.markAsDirty();
+      formSubmission();
+    });
+
+    this.availabilitySettingComponent.availabilityChanged
+    .pipe(debounceTime(2000), distinctUntilChanged(), takeUntil(this.destroyed$))
+    .subscribe(() => {
       this.projectForm.markAsDirty();
       formSubmission();
     });
@@ -152,6 +157,7 @@ export class DetailsComponent extends AppComponentBase implements OnInit, AfterV
       this.academicLevelQualifications = res[5];
       this.initForm();
       this.initDocuments();
+      this.initAvailabilities();
     });
   }
 
@@ -180,6 +186,31 @@ export class DetailsComponent extends AppComponentBase implements OnInit, AfterV
       this.documentUploaderComponent.files.push(file);
     });
     this.isFetchingFiles = false;
+  }
+
+  private initAvailabilities(): void {
+    const availablilities: Availability[] = [];
+    this.project.projectAvailabilities.forEach(a => {
+      const idx = availablilities.findIndex(i => i.dayOfWeek === a.dayOfWeek);
+      if (idx > -1) {
+        availablilities[idx].times = [
+          ...(availablilities[idx].times ?? []),
+          {
+            startTime: DateTimeHelper.convertFromHhMmStr(a.startTime),
+            endTime: DateTimeHelper.convertFromHhMmStr(a.endTime)
+          }
+        ];
+      } else {
+        availablilities.push({
+          dayOfWeek: a.dayOfWeek,
+          times: [{
+              startTime: DateTimeHelper.convertFromHhMmStr(a.startTime),
+              endTime: DateTimeHelper.convertFromHhMmStr(a.endTime)
+          }]
+        });
+      }
+    });
+    this.availabilitySettingComponent.availabilities = availablilities;
   }
 
   private initStaticServices(services: Service2Dto[]): void {
@@ -218,6 +249,15 @@ export class DetailsComponent extends AppComponentBase implements OnInit, AfterV
       };
       return fileParameter;
     });
+
+    existing.projectAvailabilities = this.availabilitySettingComponent.availabilities?.reduce((arr, curr) =>
+    [...arr, ...curr.times.map(t => {
+      const availability: ProjectAvailabilityDto = new ProjectAvailabilityDto();
+      availability.dayOfWeek = curr.dayOfWeek;
+      availability.startTime = DateTimeHelper.convertToHhMmStr(t.startTime);
+      availability.endTime = DateTimeHelper.convertToHhMmStr(t.endTime);
+      return availability;
+    })], []) ?? [];
 
     this._projectsService.update(existing)
       .pipe(
@@ -318,6 +358,7 @@ export class DetailsComponent extends AppComponentBase implements OnInit, AfterV
     } else {
       this.initForm();
       this.initDocuments();
+      this.initAvailabilities();
     }
 
     for (var control in this.projectForm.controls) {

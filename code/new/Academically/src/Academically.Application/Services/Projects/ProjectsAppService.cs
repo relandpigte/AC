@@ -324,6 +324,7 @@ namespace Academically.Services.Projects
         {
             var project = await _projectsRepository.GetAll()
                             .Include(p => p.ProjectDocuments)
+                            .Include(p => p.ProjectAvailabilities)
                             .FirstOrDefaultAsync(p => p.Id == input.ProjectId);
             if (project == null)
                 return null;
@@ -407,10 +408,12 @@ namespace Academically.Services.Projects
             if (project == null)
                 return null;
 
-            ObjectMapper.Map(input, project);
-
             await _projectAvailabilitiesRepository.DeleteAsync(a => a.ProjectId == input.Id);
-            await _projectsRepository.UpdateAsync(project);
+            await CurrentUnitOfWork.SaveChangesAsync();
+
+            project = await _projectsRepository.GetAsync(input.Id);
+            ObjectMapper.Map(input, project);
+            project = await _projectsRepository.UpdateAsync(project);
 
             return ObjectMapper.Map<ProjectDto>(project);
         }
