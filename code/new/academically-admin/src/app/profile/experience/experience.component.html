@@ -1,0 +1,58 @@
+<div class="card">
+    <div class="card-header">
+      <div class="row align-items-center">
+        <div class="col">
+          <h4 class="card-header-title">{{ 'Experience' | localize}}</h4>
+        </div>
+        <div class="col-auto">
+          <button (click)="onAddClick()" type="button" class="btn btn-sm btn-light">
+            <i class="fe fe-edit-2"></i>{{ 'Add' | localize }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive" [loader]="isLoading">
+      <table class="table table-nowrap card-table">
+        <tbody>
+          <ng-container *ngFor="let workHistory of workHistories">
+              <tr>
+                <td>
+                  <div class="row align-items-center">
+                    <div class="col-auto">
+                      <h4 class="mb-1">{{ workHistory.jobTitle }}</h4>
+                      <p class="card-text small text-muted">
+                        {{ workHistory.company }}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td width="10%">
+                  {{ workHistory.country }}
+                </td>
+                <td width="10%">
+                  {{ workHistory.city }}
+                </td>
+                <td width="10%">
+                  {{ workHistory.startYear }} - {{ workHistory.endYear }}
+                </td>
+                <td *ngIf="!isReadOnly" width="1%" class="align-middle">
+                  <button *ngIf="permission.isGranted('Pages.Profile.Education.Delete')"
+                    (click)="onDeleteClick(workHistory)" type="button"
+                    class="btn btn-outline-danger btn-sm btn-rounded-circle">
+                    <span class="fe fe-trash-2"></span>
+                  </button>
+                </td>
+              </tr>
+              <tr class="no-border">
+                <td colspan="5" [innerHTML]="workHistory.summary"></td>
+              </tr>
+          </ng-container>
+          <tr *ngIf="workHistories.length === 0">
+            <td colspan="10">
+              <p class="text-center m-0 p-0">{{ 'NoRecordsFound' | localize }}</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

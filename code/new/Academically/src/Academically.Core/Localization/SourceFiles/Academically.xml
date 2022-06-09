@@ -1294,6 +1294,8 @@
     <text name="ResearchFields">Research fields</text>
     <text name="ResearhFieldsNotSavedWarning">The research fields you selected has not been saved yet. If you leave, your changes will be lost.</text>
     <text name="ViewTutor">View Tutor</text>
+    <text name="JobTitle">Job Title</text>
+    <text name="AddExperience">Add Experience</text>
     <text name="Experience">Experience</text>
     <text name="Reviews">Reviews</text>
     <text name="CreateNewProject">Create New Project</text>
