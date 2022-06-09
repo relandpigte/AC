@@ -4,7 +4,7 @@
       <div class="col">
         <h4 class="card-header-title">Availability</h4>
       </div>
-      <div class="col-auto">
+      <div *ngIf="!readonly" class="col-auto">
         <a (click)="$event.preventDefault(); onAddClick()" href="#" class="btn btn-sm btn-light">
           <i class="fe fe-plus"></i>
           {{ 'Add' | localize }}

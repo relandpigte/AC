@@ -1,14 +1,15 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { DocumentUploaderComponent } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { DateTimeHelper } from '@shared/helpers/DateTimeHelper';
 import { CreateProjectDto, FileParameter, ProjectAvailabilityDto, ProjectsServiceProxy, Service2Dto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
+import * as moment from 'moment';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 import { ServiceWizardService } from '../_services/service-wizard.service';
-import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import * as moment from 'moment';
-import { DocumentUploaderComponent } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { AvailabilitySettingComponent } from './_components/availability-setting/availability-setting.component';
 
 @Component({
@@ -111,8 +112,8 @@ export class CreateProjectComponent extends AppComponentBase implements OnInit {
     [...arr, ...curr.times.map(t => {
       const availability: ProjectAvailabilityDto = new ProjectAvailabilityDto();
       availability.dayOfWeek = curr.dayOfWeek;
-      availability.startTime = moment(t.startTime).format('HH:mm');
-      availability.endTime = moment(t.endTime).format('HH:mm');
+      availability.startTime = DateTimeHelper.convertToHhMmStr(t.startTime);
+      availability.endTime = DateTimeHelper.convertToHhMmStr(t.endTime);
       return availability;
     })], []) ?? [];
 

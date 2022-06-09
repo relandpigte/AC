@@ -202,6 +202,10 @@
 
                 <hr class="my-4" />
 
+                <app-availability-setting #availabilitySetting [readonly]="!isEditing"></app-availability-setting>
+
+                <hr class="my-4" />
+
                 <div *ngIf="!isEditing" class="d-flex justify-content-end mb-4">
                   <button type="button"
                     (click)="toggleEditProject(true)" class="btn btn-primary">
