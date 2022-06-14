@@ -9,8 +9,7 @@
         </div>
         <div class="card-body">
           <div class="form-check">
-            <input [checked]="true" class="form-check-input" type="radio" name="standard" id="standard" value="standard"
-              [readonly]="true">
+            <input [(ngModel)]="model.type" class="form-check-input" type="radio" name="standard" id="standard" [value]="CourseType.Standard">
             <label class="form-check-label" for="standard">
               Standard
               <p class="small text-muted">Available immidiately, students study at their own pace</p>
@@ -18,40 +17,83 @@
           </div>
 
           <div class="form-check">
-            <input [checked]="false" class="form-check-input" type="radio" name="cohort" id="cohort" value="cohort"
-              [readonly]="true" [disabled]="true">
+            <input [(ngModel)]="model.type" class="form-check-input" type="radio" name="cohort" id="cohort" [value]="CourseType.Cohort">
             <label class="form-check-label" for="cohort">
               Cohort
               <p class="small text-muted">Available from a specific date, students study concurrently</p>
             </label>
           </div>
 
-          <div class="form-group">
-            <label class="col-form-label">Number of places</label>
-            <input class="form-control" type="text" />
-          </div>
-
-          <div class="form-row">
-            <div class="form-group col-6">
-              <label class="col-form-label">Start Date</label>
-              <input class="form-control" type="text" />
+          <div class="cohort-details" [class.disabled-container]="!IsCohort">
+            <div class="form-group">
+              <label class="col-form-label">Number of places</label>
+              <input [(ngModel)]="model.numberOfPlaces" class="form-control" name="numberOfPlaces" type="number" [disabled]="!IsCohort"/>
             </div>
 
-            <div class="form-group col-6">
-              <label class="col-form-label">Start Time</label>
-              <input class="form-control" type="text" />
-            </div>
-          </div>
+            <div class="form-row">
+              <div class="form-group col-6">
+                <label class="col-form-label">Start Date</label>
+                <div class="input-group input-group-merge" (click)="cohortStartDateDp.show()">
+                  <input [(ngModel)]="cohortStartDate" [bsConfig]="datePickerConfig" bsDatepicker
+                    class="form-control form-control-appended" type="text" id="cohortStartDate" name="cohortStartDate"
+                    #cohortStartDateDp="bsDatepicker" (bsValueChange)="onCohortStartDateTimeChange()" />
+                  <div class="input-group-append">
+                    <div class="input-group-text">
+                      <i class="fe fe-calendar"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-          <div class="form-row">
-            <div class="form-group col-6 mb-0">
-              <label class="col-form-label">End Date</label>
-              <input class="form-control" type="text" />
+              <div class="form-group col-6">
+                <label class="col-form-label">Start Time</label>
+                <div class="session-time">
+                  <div class="input-group input-group-merge">
+                    <p-calendar [(ngModel)]="model.startTime" id="cohortStartTime" name="cohortStartTime"
+                      [timeOnly]="true" [hourFormat]="12" [class]="'form-control form-control-appended'"
+                      [dataType]="'string'">
+                    </p-calendar>
+                    <div class="input-group-append">
+                      <span class="input-group-text">
+                        <i class="fe fe-clock"></i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="form-group col-6 mb-0">
-              <label class="col-form-label">End Time</label>
-              <input class="form-control" type="text" />
+            <div class="form-row">
+              <div class="form-group col-6 mb-0">
+                <label class="col-form-label">End Date</label>
+                <div class="input-group input-group-merge" (click)="cohortEndDateDp.show()">
+                  <input [(ngModel)]="cohortEndDate" [bsConfig]="datePickerConfig" bsDatepicker
+                    class="form-control form-control-appended" type="text" id="cohortEndDate" name="cohortEndDate"
+                    #cohortEndDateDp="bsDatepicker" (bsValueChange)="onCohortEndDateTimeChange()" />
+                  <div class="input-group-append">
+                    <div class="input-group-text">
+                      <i class="fe fe-calendar"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group col-6 mb-0">
+                <label class="col-form-label">End Time</label>
+                <div class="session-time">
+                  <div class="input-group input-group-merge">
+                    <p-calendar [(ngModel)]="model.endTime" id="cohortEndTime" name="cohortEndTime"
+                      [timeOnly]="true" [hourFormat]="12" [class]="'form-control form-control-appended'"
+                      [dataType]="'string'">
+                    </p-calendar>
+                    <div class="input-group-append">
+                      <span class="input-group-text">
+                        <i class="fe fe-clock"></i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -123,15 +165,15 @@
                   Visible:
                   <span class="small text-muted">all comments are visible and new ones can be posted</span>
                 </div>
-                <input class="mr-3" type="radio" [checked]="true">
+                <input [(ngModel)]="model.commentsVisibility" name="commentsVisible" class="mr-3" type="radio" [value]="CommentSetting.Visible">
               </div>
-              <div class="d-flex justify-content-between align-items-center">
+              <div class="d-flex justify-content-between align-items-center" [class.disabled-container]="!IsCommentsVisible">
                 <div class="ml-5">
                   Visible:
                   <span class="small text-muted">comments need approving by administrator</span>
                 </div>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" [checked]="true" class="custom-control-input" id="c1">
+                  <input [(ngModel)]="model.commentsNeedAdminApproval" name="commentsNeedApproval" type="checkbox" class="custom-control-input" id="c1" [value]="true" [disabled]="!IsCommentsVisible">
                   <label class="custom-control-label" for="c1"></label>
                 </div>
               </div>
@@ -142,14 +184,14 @@
                   Hidden:
                   <span class="small text-muted">hides all comments and prevents from being posted</span>
                 </div>
-                <input class="mr-3" type="radio" [checked]="true">
+                <input [(ngModel)]="model.commentsVisibility" name="commentsHidden" class="mr-3" type="radio" [value]="CommentSetting.Hidden">
               </div>
               <div class="d-flex justify-content-between align-items-center">
                 <div>
                   Locked:
                   <span class="small text-muted">previous comments remain visible but prevents from being posted</span>
                 </div>
-                <input class="mr-3" type="radio" [checked]="false">
+                <input [(ngModel)]="model.commentsVisibility" name="commentsLocked" class="mr-3" type="radio" [value]="CommentSetting.Locked">
               </div>
             </li>
           </ul>
