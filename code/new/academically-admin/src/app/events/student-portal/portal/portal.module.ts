@@ -13,6 +13,12 @@ import { AttendeesComponent } from './_components/attendees/attendees.component'
 import { LiveComponent } from './_components/attendees/_components/live/live.component';
 import { RegistrantsComponent } from './_components/attendees/_components/registrants/registrants.component';
 import { SpeakRequestsComponent } from './_components/attendees/_components/speak-requests/speak-requests.component';
+import { OffersComponent } from './_components/offers/offers.component';
+import { OfferCardComponent } from './_components/offers/_components/offer-card/offer-card.component';
+import { ClosedComponent } from './_components/offers/_components/closed/closed.component';
+import { InfoBannerComponent } from './_components/offers/_components/info-banner/info-banner.component';
+import { OpenComponent } from './_components/offers/_components/open/open.component';
+import { QueueComponent } from './_components/offers/_components/queue/queue.component';
 import { UpcomingComponent } from './_components/overview/upcoming/upcoming.component';
 import { RelatedComponent } from './_components/overview/related/related.component';
 import { SettingsComponent } from './_components/settings/settings.component';
@@ -33,6 +39,12 @@ import { PortalTempComponent } from './_components/portal-temp/portal-temp.compo
     LiveComponent,
     RegistrantsComponent,
     SpeakRequestsComponent,
+    OffersComponent,
+    OfferCardComponent,
+    ClosedComponent,
+    InfoBannerComponent,
+    OpenComponent,
+    QueueComponent,
     UpcomingComponent,
     RelatedComponent,
     SettingsComponent,

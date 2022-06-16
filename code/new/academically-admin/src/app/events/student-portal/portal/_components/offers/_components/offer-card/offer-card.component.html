@@ -1,0 +1,27 @@
+<div class="card mb-3">
+  <a href="#!visit" (click)="$event.preventDefault();">
+    <img [src]="ThumbnailSrc" alt="..." class="card-img-top">
+  </a>
+  <div class="card-body">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="mb-2 name">
+          <a href="#!visit" (click)="$event.preventDefault();">
+            {{ Name }}
+          </a>
+        </h4>
+        <p class="card-text small text-muted mb-0">
+          {{ OfferSize | number }}{{ OfferSizeUnit }} {{ OfferType | uppercase }}
+        </p>
+        <p class="card-text small text-muted mb-0">
+          {{ 'Shared at' }} {{ SharedAt }}
+        </p>
+      </div>
+      <div *ngIf="selection" class="col-auto">
+        <button class="btn btn-outline-primary btn-sm mr-2">
+          {{ 'Select' | localize }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
