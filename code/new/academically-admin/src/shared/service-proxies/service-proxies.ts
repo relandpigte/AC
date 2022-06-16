@@ -24299,6 +24299,13 @@ export class CourseDto implements ICourseDto {
     languageId: string | undefined;
     categories: string | undefined;
     pricingType: PricingType;
+    numberOfPlaces: number | undefined;
+    startDate: moment.Moment | undefined;
+    startTime: string | undefined;
+    endDate: moment.Moment | undefined;
+    endTime: string | undefined;
+    commentsVisibility: CommentSetting;
+    commentsNeedAdminApproval: boolean | undefined;
     creationTime: moment.Moment;
     courseImageUrl: string | undefined;
     creatorUser: UserDto;
@@ -24330,6 +24337,13 @@ export class CourseDto implements ICourseDto {
             this.languageId = _data["languageId"];
             this.categories = _data["categories"];
             this.pricingType = _data["pricingType"];
+            this.numberOfPlaces = _data["numberOfPlaces"];
+            this.startDate = _data["startDate"] ? moment(_data["startDate"].toString()) : <any>undefined;
+            this.startTime = _data["startTime"];
+            this.endDate = _data["endDate"] ? moment(_data["endDate"].toString()) : <any>undefined;
+            this.endTime = _data["endTime"];
+            this.commentsVisibility = _data["commentsVisibility"];
+            this.commentsNeedAdminApproval = _data["commentsNeedAdminApproval"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.courseImageUrl = _data["courseImageUrl"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
@@ -24365,6 +24379,13 @@ export class CourseDto implements ICourseDto {
         data["languageId"] = this.languageId;
         data["categories"] = this.categories;
         data["pricingType"] = this.pricingType;
+        data["numberOfPlaces"] = this.numberOfPlaces;
+        data["startDate"] = this.startDate ? this.startDate.toISOString() : <any>undefined;
+        data["startTime"] = this.startTime;
+        data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
+        data["endTime"] = this.endTime;
+        data["commentsVisibility"] = this.commentsVisibility;
+        data["commentsNeedAdminApproval"] = this.commentsNeedAdminApproval;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["courseImageUrl"] = this.courseImageUrl;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
@@ -24400,6 +24421,13 @@ export interface ICourseDto {
     languageId: string | undefined;
     categories: string | undefined;
     pricingType: PricingType;
+    numberOfPlaces: number | undefined;
+    startDate: moment.Moment | undefined;
+    startTime: string | undefined;
+    endDate: moment.Moment | undefined;
+    endTime: string | undefined;
+    commentsVisibility: CommentSetting;
+    commentsNeedAdminApproval: boolean | undefined;
     creationTime: moment.Moment;
     courseImageUrl: string | undefined;
     creatorUser: UserDto;
@@ -36313,6 +36341,14 @@ export class UpdateCourseSettingsDto implements IUpdateCourseSettingsDto {
     id: string;
     isVisible: boolean;
     isOpen: boolean;
+    type: CourseType;
+    numberOfPlaces: number | undefined;
+    startDate: moment.Moment | undefined;
+    startTime: string | undefined;
+    endDate: moment.Moment | undefined;
+    endTime: string | undefined;
+    commentsVisibility: CommentSetting;
+    commentsNeedAdminApproval: boolean | undefined;
 
     constructor(data?: IUpdateCourseSettingsDto) {
         if (data) {
@@ -36328,6 +36364,14 @@ export class UpdateCourseSettingsDto implements IUpdateCourseSettingsDto {
             this.id = _data["id"];
             this.isVisible = _data["isVisible"];
             this.isOpen = _data["isOpen"];
+            this.type = _data["type"];
+            this.numberOfPlaces = _data["numberOfPlaces"];
+            this.startDate = _data["startDate"] ? moment(_data["startDate"].toString()) : <any>undefined;
+            this.startTime = _data["startTime"];
+            this.endDate = _data["endDate"] ? moment(_data["endDate"].toString()) : <any>undefined;
+            this.endTime = _data["endTime"];
+            this.commentsVisibility = _data["commentsVisibility"];
+            this.commentsNeedAdminApproval = _data["commentsNeedAdminApproval"];
         }
     }
 
@@ -36343,6 +36387,14 @@ export class UpdateCourseSettingsDto implements IUpdateCourseSettingsDto {
         data["id"] = this.id;
         data["isVisible"] = this.isVisible;
         data["isOpen"] = this.isOpen;
+        data["type"] = this.type;
+        data["numberOfPlaces"] = this.numberOfPlaces;
+        data["startDate"] = this.startDate ? this.startDate.toISOString() : <any>undefined;
+        data["startTime"] = this.startTime;
+        data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
+        data["endTime"] = this.endTime;
+        data["commentsVisibility"] = this.commentsVisibility;
+        data["commentsNeedAdminApproval"] = this.commentsNeedAdminApproval;
         return data; 
     }
 
@@ -36358,6 +36410,14 @@ export interface IUpdateCourseSettingsDto {
     id: string;
     isVisible: boolean;
     isOpen: boolean;
+    type: CourseType;
+    numberOfPlaces: number | undefined;
+    startDate: moment.Moment | undefined;
+    startTime: string | undefined;
+    endDate: moment.Moment | undefined;
+    endTime: string | undefined;
+    commentsVisibility: CommentSetting;
+    commentsNeedAdminApproval: boolean | undefined;
 }
 
 export class UpdateEventDto implements IUpdateEventDto {

@@ -94,9 +94,7 @@ namespace Academically.Services.Courses
         {
             var course = await Repository.GetAsync(input.Id);
             ObjectMapper.Map(input, course);
-            course.Type = CourseType.Standard;
-            await Repository.UpdateAsync(course);
-            return ObjectMapper.Map<CourseDto>(course);
+            return ObjectMapper.Map<CourseDto>(await Repository.UpdateAsync(course));
         }
     }
 }
