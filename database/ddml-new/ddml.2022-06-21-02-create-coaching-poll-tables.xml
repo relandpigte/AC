@@ -1,0 +1,116 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    
+    <changeSet author="j.cezar" id="1">
+        <createTable tableName="AcademicallyCoachingPollQuestionOptions">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Text" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CoachingPollQuestionId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="2">
+        <createTable tableName="AcademicallyCoachingPollQuestions">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Text" type="CHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Type" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MinimumResponse" type="INT"/>
+            <column name="MaximumResponse" type="INT"/>
+            <column name="ShareResults" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CoachingPollId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="3">
+        <createTable tableName="AcademicallyCoachingPolls">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Name" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CoachingId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="4">
+        <createIndex indexName="FK_CPQOs_CPQs_CoachingPollQuestionId_idx" tableName="AcademicallyCoachingPollQuestionOptions">
+            <column name="CoachingPollQuestionId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="5">
+        <createIndex indexName="FK_CPQs_CoachingPolls_CoachingPollId_idx" tableName="AcademicallyCoachingPollQuestions">
+            <column name="CoachingPollId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="6">
+        <createIndex indexName="FK_CPQs_Users_CreatorUserId_idx" tableName="AcademicallyCoachingPollQuestions">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="7">
+        <createIndex indexName="FK_CoachingPolls_Coachings_CoachingId_idx" tableName="AcademicallyCoachingPolls">
+            <column name="CoachingId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="8">
+        <createIndex indexName="FK_CoachingPolls_Users_CreatorUserId_idx" tableName="AcademicallyCoachingPolls">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="9">
+        <addForeignKeyConstraint baseColumnNames="CoachingPollQuestionId" baseTableName="AcademicallyCoachingPollQuestionOptions" constraintName="FK_CPQOs_CPQs_CoachingPollQuestionId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyCoachingPollQuestions" validate="true"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="10">
+        <addForeignKeyConstraint baseColumnNames="CoachingPollId" baseTableName="AcademicallyCoachingPollQuestions" constraintName="FK_CPQs_CoachingPolls_CoachingPollId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyCoachingPolls" validate="true"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="11">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="AcademicallyCoachingPollQuestions" constraintName="FK_CPQs_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="12">
+        <addForeignKeyConstraint baseColumnNames="CoachingId" baseTableName="AcademicallyCoachingPolls" constraintName="FK_CoachingPolls_Coachings_CoachingId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallycoachings" validate="true"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="13">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="AcademicallyCoachingPolls" constraintName="FK_CoachingPolls_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    
+</databaseChangeLog>

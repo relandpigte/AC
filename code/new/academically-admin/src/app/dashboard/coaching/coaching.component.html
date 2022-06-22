@@ -8,6 +8,12 @@
               <h6 class="header-pretitle">{{ 'Dashboard' | localize }}</h6>
               <h1 class="header-title">{{ 'Coaching' | localize }}</h1>
             </div>
+            <div class="col-auto">
+              <a href="#!new-coaching" class="btn btn-primary ml-2" (click)="$event.preventDefault(); onNewCoachingClick()"
+                *ngIf="isTutor">
+                {{ 'NewCoaching' | localize | titlecase }}
+              </a>
+            </div>
           </div>
         </div>
       </div>

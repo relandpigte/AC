@@ -1,0 +1,146 @@
+<form class="form-horizontal" autocomplete="off" #form="ngForm">
+  <div class="row">
+
+    <div class="col-8" [loader]="isLoading">
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ (coachingType === CoachingType.Single ? 'CoachingName' : 'CoachingSeriesName') | localize }}
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="form-group required mb-0">
+            <input [(ngModel)]="model.name" #nameModel="ngModel" #nameEl class="form-control" type="text" id="name"
+              name="name" required
+              [placeholder]="(coachingType === CoachingType.Single ? 'WriteYourCoachingNameHere' : 'WriteYourCoachingSeriesNameHere') | localize" />
+            <abp-validation-summary [control]="nameModel" [controlEl]="nameEl">
+            </abp-validation-summary>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Subtitle' | localize | titlecase }}
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="form-group mb-0">
+            <textarea [rows]="4" [(ngModel)]="model.description" #descriptionModel="ngModel" #descriptionEl
+              class="form-control" id="description" name="description"
+              [placeholder]="'WriteYourSubtitleHere' | localize">
+            </textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Categories' | localize | titlecase }}
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="form-group required mb-0">
+            <input [(ngModel)]="category" #categoryModel="ngModel" #categoryEl class="form-control" type="text"
+              id="category" name="category" required (keydown)="onCategoryKeyDown($event)"
+              [placeholder]="'PressEnterToAddMore' | localize" />
+            <div class="ac-alerts">
+              <div *ngFor="let category of categories" class="alert alert-info alert-dismissible ac-alert" role="alert">
+                {{ category }}
+                <button (click)="onRemoveCategoryClick(category)" type="button" class="close" data-dismiss="alert"
+                  aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-4">
+
+      <div class="card" [loader]="isLoading || isUploadingImage">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ (coachingType === CoachingType.Single ? 'CoachingThumbnail' : 'CoachingSeriesThumbnail') | localize }}
+          </h4>
+        </div>
+        <div class="card-body position-relative">
+          <app-document-uploader [previewImages]="true" [largeImagePreview]="true" [maxFiles]="1" [cropImages]="true"
+            [cropperAspectRatioWidth]="350" [cropperAspectRationHeight]="263"
+            [allowedExtensions]="allowedImageExtensions">
+          </app-document-uploader>
+        </div>
+      </div>
+
+      <div class="card" [loader]="isLoading">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Language' | localize }}
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="form-group mb-0">
+            <select class="custom-select" select2 [defaultValue]="model.languageId"
+              (select2ValueChange)="model.languageId = $event" [(ngModel)]="model.languageId" id="language"
+              name="language" #languageIdModel="ngModel" #languageIdEl>
+              <option *ngFor="let langauge of languages" [value]="langauge.id">
+                {{ langauge.name | localize }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" [loader]="isLoading">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Pricing' | localize }}
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-auto mr-n4">
+              <div class="custom-control custom-radio">
+                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
+                  id="free" [value]="PricingType.Free">
+                <label class="custom-control-label" for="free"></label>
+              </div>
+            </div>
+            <div class="col">
+              <label class="form-check-label" for="free">
+                {{ 'Free' | localize | titlecase }}
+                <p class="small text-muted">{{ 'FreeDescription' | localize }}</p>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-auto mr-n4">
+              <div class="custom-control custom-radio">
+                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
+                  id="fixedFee" [value]="PricingType.FixedPrice">
+                <label class="custom-control-label" for="fixedFee"></label>
+              </div>
+            </div>
+            <div class="col">
+              <label class="form-check-label" for="fixedFee">
+                {{ 'FixedFee' | localize }}
+                <p class="small text-muted">{{ 'FixedFeeDescription' | localize }}</p>
+              </label>
+              <div *ngIf="model.pricingType === PricingType.FixedPrice">
+                <input [(ngModel)]="model.price" class=" form-control" type="number" id="price" name="price" required />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</form>

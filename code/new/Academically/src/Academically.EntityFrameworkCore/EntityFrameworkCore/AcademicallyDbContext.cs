@@ -105,6 +105,12 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<ProjectDocument> ProjectDocuments { get; set; }
         public virtual DbSet<ProjectAvailability> ProjectAvailabilities { get; set; }
         public virtual DbSet<WorkHistory> WorkHistories { get; set; }
+        public virtual DbSet<Coaching> Coachings { get; set; }
+        public virtual DbSet<CoachingPresenter> CoachingPresenters { get; set; }
+        public virtual DbSet<CoachingResource> CoachingResources { get; set; }
+        public virtual DbSet<CoachingPoll> CoachingPolls { get; set; }
+        public virtual DbSet<CoachingPollQuestion> CoachingPollQuestions { get; set; }
+        public virtual DbSet<CoachingPollQuestionOption> CoachingPollQuestionOptions { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

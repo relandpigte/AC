@@ -1916,6 +1916,1335 @@ export class CalendarEventsServiceProxy {
 }
 
 @Injectable()
+export class CoachingPollsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param coachingIdFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(coachingIdFilter: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CoachingPollDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/CoachingPolls/GetAll?";
+        if (coachingIdFilter === null)
+            throw new Error("The parameter 'coachingIdFilter' cannot be null.");
+        else if (coachingIdFilter !== undefined)
+            url_ += "CoachingIdFilter=" + encodeURIComponent("" + coachingIdFilter) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<CoachingPollDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CoachingPollDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<CoachingPollDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CoachingPollDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CoachingPollDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<CoachingPollDto> {
+        let url_ = this.baseUrl + "/api/services/app/CoachingPolls/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<CoachingPollDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CoachingPollDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<CoachingPollDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CoachingPollDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CoachingPollDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateCoachingPollDto | undefined): Observable<CoachingPollDto> {
+        let url_ = this.baseUrl + "/api/services/app/CoachingPolls/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<CoachingPollDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CoachingPollDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<CoachingPollDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CoachingPollDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CoachingPollDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: CreateCoachingPollDto | undefined): Observable<CoachingPollDto> {
+        let url_ = this.baseUrl + "/api/services/app/CoachingPolls/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<CoachingPollDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CoachingPollDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<CoachingPollDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CoachingPollDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CoachingPollDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/CoachingPolls/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
+export class CoachingResourcesServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<CoachingResourceDto> {
+        let url_ = this.baseUrl + "/api/services/app/CoachingResources/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<CoachingResourceDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CoachingResourceDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<CoachingResourceDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CoachingResourceDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CoachingResourceDto>(<any>null);
+    }
+
+    /**
+     * @param coachingIdFilter (optional) 
+     * @param presentationMaterialsOnlyFilter (optional) 
+     * @param handoutsOnlyFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(coachingIdFilter: string | undefined, presentationMaterialsOnlyFilter: boolean | undefined, handoutsOnlyFilter: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CoachingResourceDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/CoachingResources/GetAll?";
+        if (coachingIdFilter === null)
+            throw new Error("The parameter 'coachingIdFilter' cannot be null.");
+        else if (coachingIdFilter !== undefined)
+            url_ += "CoachingIdFilter=" + encodeURIComponent("" + coachingIdFilter) + "&";
+        if (presentationMaterialsOnlyFilter === null)
+            throw new Error("The parameter 'presentationMaterialsOnlyFilter' cannot be null.");
+        else if (presentationMaterialsOnlyFilter !== undefined)
+            url_ += "PresentationMaterialsOnlyFilter=" + encodeURIComponent("" + presentationMaterialsOnlyFilter) + "&";
+        if (handoutsOnlyFilter === null)
+            throw new Error("The parameter 'handoutsOnlyFilter' cannot be null.");
+        else if (handoutsOnlyFilter !== undefined)
+            url_ += "HandoutsOnlyFilter=" + encodeURIComponent("" + handoutsOnlyFilter) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<CoachingResourceDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CoachingResourceDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<CoachingResourceDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CoachingResourceDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CoachingResourceDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateCoachingResourceDto | undefined): Observable<CoachingResourceDto> {
+        let url_ = this.baseUrl + "/api/services/app/CoachingResources/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<CoachingResourceDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CoachingResourceDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<CoachingResourceDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CoachingResourceDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CoachingResourceDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: CreateCoachingResourceDto | undefined): Observable<CoachingResourceDto> {
+        let url_ = this.baseUrl + "/api/services/app/CoachingResources/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<CoachingResourceDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CoachingResourceDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<CoachingResourceDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CoachingResourceDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CoachingResourceDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/CoachingResources/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
+export class CoachingsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param id (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    updateStatus(id: string | undefined, body: CoachingStatus | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/UpdateStatus?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateStatus(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateStatus(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateStatus(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updatePresenterType(body: UpdateCoachingPresenterTypeDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/UpdatePresenterType";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdatePresenterType(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdatePresenterType(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdatePresenterType(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param coachingPresenterId (optional) 
+     * @return Success
+     */
+    removePresenter(coachingPresenterId: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/RemovePresenter?";
+        if (coachingPresenterId === null)
+            throw new Error("The parameter 'coachingPresenterId' cannot be null.");
+        else if (coachingPresenterId !== undefined)
+            url_ += "coachingPresenterId=" + encodeURIComponent("" + coachingPresenterId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRemovePresenter(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRemovePresenter(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRemovePresenter(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    invitePresenter(body: CreateCoachingPresenterDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/InvitePresenter";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processInvitePresenter(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processInvitePresenter(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processInvitePresenter(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param coachingIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getPresentersForInvite(coachingIdFilter: string | undefined, searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/GetPresentersForInvite?";
+        if (coachingIdFilter === null)
+            throw new Error("The parameter 'coachingIdFilter' cannot be null.");
+        else if (coachingIdFilter !== undefined)
+            url_ += "CoachingIdFilter=" + encodeURIComponent("" + coachingIdFilter) + "&";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPresentersForInvite(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPresentersForInvite(<any>response_);
+                } catch (e) {
+                    return <Observable<UserDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPresentersForInvite(response: HttpResponseBase): Observable<UserDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getAllPresenters(id: string | undefined): Observable<CoachingPresenterDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/GetAllPresenters?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllPresenters(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllPresenters(<any>response_);
+                } catch (e) {
+                    return <Observable<CoachingPresenterDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CoachingPresenterDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllPresenters(response: HttpResponseBase): Observable<CoachingPresenterDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(CoachingPresenterDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CoachingPresenterDto[]>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateSettings(body: UpdateCoachingSettingsDto | undefined): Observable<CoachingDto> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/UpdateSettings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateSettings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateSettings(<any>response_);
+                } catch (e) {
+                    return <Observable<CoachingDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CoachingDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateSettings(response: HttpResponseBase): Observable<CoachingDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CoachingDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CoachingDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<CoachingDto> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<CoachingDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CoachingDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<CoachingDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CoachingDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CoachingDto>(<any>null);
+    }
+
+    /**
+     * @param userIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param statusFilter (optional) 0 = Draft
+    
+    1 = Published
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(userIdFilter: number | undefined, searchFilter: string | undefined, statusFilter: CoachingStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CoachingDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/GetAll?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (statusFilter === null)
+            throw new Error("The parameter 'statusFilter' cannot be null.");
+        else if (statusFilter !== undefined)
+            url_ += "StatusFilter=" + encodeURIComponent("" + statusFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<CoachingDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CoachingDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<CoachingDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CoachingDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CoachingDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateCoachingDto | undefined): Observable<CoachingDto> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<CoachingDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CoachingDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<CoachingDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CoachingDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CoachingDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: UpdateCoachingDto | undefined): Observable<CoachingDto> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<CoachingDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CoachingDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<CoachingDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CoachingDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CoachingDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class CommentsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -23154,6 +24483,910 @@ export interface IChangeUserLanguageDto {
     languageName: string;
 }
 
+export class CoachingDto implements ICoachingDto {
+    id: string;
+    type: CoachingType;
+    status: CoachingStatus;
+    name: string | undefined;
+    description: string | undefined;
+    categories: string | undefined;
+    thumbnailDocumentId: string | undefined;
+    languageId: string | undefined;
+    pricingType: PricingType;
+    price: number | undefined;
+    replayType: CoachingReplayType;
+    questionsEnabled: boolean | undefined;
+    questionType: QuestionType;
+    attendeesCanUpvote: boolean | undefined;
+    attendeesCanRespond: boolean | undefined;
+    chatEnabled: boolean | undefined;
+    customWebinarUrl: string | undefined;
+    registrationEmailNotification: boolean | undefined;
+    twentyFourHourReminderNotification: boolean | undefined;
+    oneHourReminderNotification: boolean | undefined;
+    fifteenMinuteReminderNotification: boolean | undefined;
+    replayFollowUpNotification: boolean | undefined;
+    visible: boolean | undefined;
+    opened: boolean | undefined;
+    cohostsEnableMicrophone: boolean;
+    cohostsEnableWebCam: boolean;
+    cohostsEnablePresentationTools: boolean;
+    cohostsEnableSpeakRequests: boolean;
+    cohostsViewRegistrants: boolean;
+    cohostsManageGuests: boolean;
+    cohostsManageGuestSettings: boolean;
+    cohostsManageAudience: boolean;
+    cohostsManageAudienceSettings: boolean;
+    cohostsChatPublicly: boolean;
+    cohostsChatPubliclyTagMembers: boolean;
+    cohostsChatPrivately: boolean;
+    cohostsChatPrivatelySelected: boolean;
+    cohostsAllowCohostsToUpvote: boolean;
+    cohostsAllowCohostsToRespond: boolean;
+    cohostsCreatePolls: boolean;
+    cohostsCreateOffers: boolean;
+    cohostsUploadHandouts: boolean;
+    guestsEnableMicrophone: boolean;
+    guestsEnableWebCam: boolean;
+    guestsEnablePresentationTools: boolean;
+    guestsEnableSpeakRequests: boolean;
+    guestsViewRegistrants: boolean;
+    guestsManageAudience: boolean;
+    guestsManageAudienceSettings: boolean;
+    guestsChatPublicly: boolean;
+    guestsChatPubliclyTagMembers: boolean;
+    guestsChatPrivately: boolean;
+    guestsChatPrivatelySelected: boolean;
+    guestsAllowGuestsToUpvote: boolean;
+    guestsAllowGuestsToRespond: boolean;
+    guestsCreatePolls: boolean;
+    guestsCreateOffers: boolean;
+    guestsCreateHandouts: boolean;
+    audienceEnableMicrophone: boolean;
+    audienceEnableWebCam: boolean;
+    audienceEnablePresentationTools: boolean;
+    audienceEnableSpeakRequests: boolean;
+    audienceViewAudience: boolean;
+    audienceChatPublicly: boolean;
+    audienceChatPubliclyTagMembers: boolean;
+    audienceChatPrivately: boolean;
+    audienceChatPrivatelySelected: boolean;
+    audienceAskQuestions: boolean;
+    audienceAskPublicQuestions: boolean;
+    audienceAskPublicQuestionsAllowAudienceToUpvote: boolean;
+    audienceAskPublicQuestionsAllowAudienceToRespond: boolean;
+    audienceAskPrivateQuestionsWithAdmins: boolean;
+    audienceAskPrivateQuestionsAllowFollowUpResponse: boolean;
+    audienceEnablePollsTab: boolean;
+    audienceEnableOffersTab: boolean;
+    audienceEnableOffersTabDisplayNoOfPurchases: boolean;
+    audienceEnableHandoutsTab: boolean;
+    creatorUserId: number;
+    thumbnailDocument: DocumentDto;
+    language: SpokenLanguageDto;
+    creatorUser: UserDto;
+
+    constructor(data?: ICoachingDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.type = _data["type"];
+            this.status = _data["status"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.categories = _data["categories"];
+            this.thumbnailDocumentId = _data["thumbnailDocumentId"];
+            this.languageId = _data["languageId"];
+            this.pricingType = _data["pricingType"];
+            this.price = _data["price"];
+            this.replayType = _data["replayType"];
+            this.questionsEnabled = _data["questionsEnabled"];
+            this.questionType = _data["questionType"];
+            this.attendeesCanUpvote = _data["attendeesCanUpvote"];
+            this.attendeesCanRespond = _data["attendeesCanRespond"];
+            this.chatEnabled = _data["chatEnabled"];
+            this.customWebinarUrl = _data["customWebinarUrl"];
+            this.registrationEmailNotification = _data["registrationEmailNotification"];
+            this.twentyFourHourReminderNotification = _data["twentyFourHourReminderNotification"];
+            this.oneHourReminderNotification = _data["oneHourReminderNotification"];
+            this.fifteenMinuteReminderNotification = _data["fifteenMinuteReminderNotification"];
+            this.replayFollowUpNotification = _data["replayFollowUpNotification"];
+            this.visible = _data["visible"];
+            this.opened = _data["opened"];
+            this.cohostsEnableMicrophone = _data["cohostsEnableMicrophone"];
+            this.cohostsEnableWebCam = _data["cohostsEnableWebCam"];
+            this.cohostsEnablePresentationTools = _data["cohostsEnablePresentationTools"];
+            this.cohostsEnableSpeakRequests = _data["cohostsEnableSpeakRequests"];
+            this.cohostsViewRegistrants = _data["cohostsViewRegistrants"];
+            this.cohostsManageGuests = _data["cohostsManageGuests"];
+            this.cohostsManageGuestSettings = _data["cohostsManageGuestSettings"];
+            this.cohostsManageAudience = _data["cohostsManageAudience"];
+            this.cohostsManageAudienceSettings = _data["cohostsManageAudienceSettings"];
+            this.cohostsChatPublicly = _data["cohostsChatPublicly"];
+            this.cohostsChatPubliclyTagMembers = _data["cohostsChatPubliclyTagMembers"];
+            this.cohostsChatPrivately = _data["cohostsChatPrivately"];
+            this.cohostsChatPrivatelySelected = _data["cohostsChatPrivatelySelected"];
+            this.cohostsAllowCohostsToUpvote = _data["cohostsAllowCohostsToUpvote"];
+            this.cohostsAllowCohostsToRespond = _data["cohostsAllowCohostsToRespond"];
+            this.cohostsCreatePolls = _data["cohostsCreatePolls"];
+            this.cohostsCreateOffers = _data["cohostsCreateOffers"];
+            this.cohostsUploadHandouts = _data["cohostsUploadHandouts"];
+            this.guestsEnableMicrophone = _data["guestsEnableMicrophone"];
+            this.guestsEnableWebCam = _data["guestsEnableWebCam"];
+            this.guestsEnablePresentationTools = _data["guestsEnablePresentationTools"];
+            this.guestsEnableSpeakRequests = _data["guestsEnableSpeakRequests"];
+            this.guestsViewRegistrants = _data["guestsViewRegistrants"];
+            this.guestsManageAudience = _data["guestsManageAudience"];
+            this.guestsManageAudienceSettings = _data["guestsManageAudienceSettings"];
+            this.guestsChatPublicly = _data["guestsChatPublicly"];
+            this.guestsChatPubliclyTagMembers = _data["guestsChatPubliclyTagMembers"];
+            this.guestsChatPrivately = _data["guestsChatPrivately"];
+            this.guestsChatPrivatelySelected = _data["guestsChatPrivatelySelected"];
+            this.guestsAllowGuestsToUpvote = _data["guestsAllowGuestsToUpvote"];
+            this.guestsAllowGuestsToRespond = _data["guestsAllowGuestsToRespond"];
+            this.guestsCreatePolls = _data["guestsCreatePolls"];
+            this.guestsCreateOffers = _data["guestsCreateOffers"];
+            this.guestsCreateHandouts = _data["guestsCreateHandouts"];
+            this.audienceEnableMicrophone = _data["audienceEnableMicrophone"];
+            this.audienceEnableWebCam = _data["audienceEnableWebCam"];
+            this.audienceEnablePresentationTools = _data["audienceEnablePresentationTools"];
+            this.audienceEnableSpeakRequests = _data["audienceEnableSpeakRequests"];
+            this.audienceViewAudience = _data["audienceViewAudience"];
+            this.audienceChatPublicly = _data["audienceChatPublicly"];
+            this.audienceChatPubliclyTagMembers = _data["audienceChatPubliclyTagMembers"];
+            this.audienceChatPrivately = _data["audienceChatPrivately"];
+            this.audienceChatPrivatelySelected = _data["audienceChatPrivatelySelected"];
+            this.audienceAskQuestions = _data["audienceAskQuestions"];
+            this.audienceAskPublicQuestions = _data["audienceAskPublicQuestions"];
+            this.audienceAskPublicQuestionsAllowAudienceToUpvote = _data["audienceAskPublicQuestionsAllowAudienceToUpvote"];
+            this.audienceAskPublicQuestionsAllowAudienceToRespond = _data["audienceAskPublicQuestionsAllowAudienceToRespond"];
+            this.audienceAskPrivateQuestionsWithAdmins = _data["audienceAskPrivateQuestionsWithAdmins"];
+            this.audienceAskPrivateQuestionsAllowFollowUpResponse = _data["audienceAskPrivateQuestionsAllowFollowUpResponse"];
+            this.audienceEnablePollsTab = _data["audienceEnablePollsTab"];
+            this.audienceEnableOffersTab = _data["audienceEnableOffersTab"];
+            this.audienceEnableOffersTabDisplayNoOfPurchases = _data["audienceEnableOffersTabDisplayNoOfPurchases"];
+            this.audienceEnableHandoutsTab = _data["audienceEnableHandoutsTab"];
+            this.creatorUserId = _data["creatorUserId"];
+            this.thumbnailDocument = _data["thumbnailDocument"] ? DocumentDto.fromJS(_data["thumbnailDocument"]) : <any>undefined;
+            this.language = _data["language"] ? SpokenLanguageDto.fromJS(_data["language"]) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CoachingDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CoachingDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["type"] = this.type;
+        data["status"] = this.status;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["categories"] = this.categories;
+        data["thumbnailDocumentId"] = this.thumbnailDocumentId;
+        data["languageId"] = this.languageId;
+        data["pricingType"] = this.pricingType;
+        data["price"] = this.price;
+        data["replayType"] = this.replayType;
+        data["questionsEnabled"] = this.questionsEnabled;
+        data["questionType"] = this.questionType;
+        data["attendeesCanUpvote"] = this.attendeesCanUpvote;
+        data["attendeesCanRespond"] = this.attendeesCanRespond;
+        data["chatEnabled"] = this.chatEnabled;
+        data["customWebinarUrl"] = this.customWebinarUrl;
+        data["registrationEmailNotification"] = this.registrationEmailNotification;
+        data["twentyFourHourReminderNotification"] = this.twentyFourHourReminderNotification;
+        data["oneHourReminderNotification"] = this.oneHourReminderNotification;
+        data["fifteenMinuteReminderNotification"] = this.fifteenMinuteReminderNotification;
+        data["replayFollowUpNotification"] = this.replayFollowUpNotification;
+        data["visible"] = this.visible;
+        data["opened"] = this.opened;
+        data["cohostsEnableMicrophone"] = this.cohostsEnableMicrophone;
+        data["cohostsEnableWebCam"] = this.cohostsEnableWebCam;
+        data["cohostsEnablePresentationTools"] = this.cohostsEnablePresentationTools;
+        data["cohostsEnableSpeakRequests"] = this.cohostsEnableSpeakRequests;
+        data["cohostsViewRegistrants"] = this.cohostsViewRegistrants;
+        data["cohostsManageGuests"] = this.cohostsManageGuests;
+        data["cohostsManageGuestSettings"] = this.cohostsManageGuestSettings;
+        data["cohostsManageAudience"] = this.cohostsManageAudience;
+        data["cohostsManageAudienceSettings"] = this.cohostsManageAudienceSettings;
+        data["cohostsChatPublicly"] = this.cohostsChatPublicly;
+        data["cohostsChatPubliclyTagMembers"] = this.cohostsChatPubliclyTagMembers;
+        data["cohostsChatPrivately"] = this.cohostsChatPrivately;
+        data["cohostsChatPrivatelySelected"] = this.cohostsChatPrivatelySelected;
+        data["cohostsAllowCohostsToUpvote"] = this.cohostsAllowCohostsToUpvote;
+        data["cohostsAllowCohostsToRespond"] = this.cohostsAllowCohostsToRespond;
+        data["cohostsCreatePolls"] = this.cohostsCreatePolls;
+        data["cohostsCreateOffers"] = this.cohostsCreateOffers;
+        data["cohostsUploadHandouts"] = this.cohostsUploadHandouts;
+        data["guestsEnableMicrophone"] = this.guestsEnableMicrophone;
+        data["guestsEnableWebCam"] = this.guestsEnableWebCam;
+        data["guestsEnablePresentationTools"] = this.guestsEnablePresentationTools;
+        data["guestsEnableSpeakRequests"] = this.guestsEnableSpeakRequests;
+        data["guestsViewRegistrants"] = this.guestsViewRegistrants;
+        data["guestsManageAudience"] = this.guestsManageAudience;
+        data["guestsManageAudienceSettings"] = this.guestsManageAudienceSettings;
+        data["guestsChatPublicly"] = this.guestsChatPublicly;
+        data["guestsChatPubliclyTagMembers"] = this.guestsChatPubliclyTagMembers;
+        data["guestsChatPrivately"] = this.guestsChatPrivately;
+        data["guestsChatPrivatelySelected"] = this.guestsChatPrivatelySelected;
+        data["guestsAllowGuestsToUpvote"] = this.guestsAllowGuestsToUpvote;
+        data["guestsAllowGuestsToRespond"] = this.guestsAllowGuestsToRespond;
+        data["guestsCreatePolls"] = this.guestsCreatePolls;
+        data["guestsCreateOffers"] = this.guestsCreateOffers;
+        data["guestsCreateHandouts"] = this.guestsCreateHandouts;
+        data["audienceEnableMicrophone"] = this.audienceEnableMicrophone;
+        data["audienceEnableWebCam"] = this.audienceEnableWebCam;
+        data["audienceEnablePresentationTools"] = this.audienceEnablePresentationTools;
+        data["audienceEnableSpeakRequests"] = this.audienceEnableSpeakRequests;
+        data["audienceViewAudience"] = this.audienceViewAudience;
+        data["audienceChatPublicly"] = this.audienceChatPublicly;
+        data["audienceChatPubliclyTagMembers"] = this.audienceChatPubliclyTagMembers;
+        data["audienceChatPrivately"] = this.audienceChatPrivately;
+        data["audienceChatPrivatelySelected"] = this.audienceChatPrivatelySelected;
+        data["audienceAskQuestions"] = this.audienceAskQuestions;
+        data["audienceAskPublicQuestions"] = this.audienceAskPublicQuestions;
+        data["audienceAskPublicQuestionsAllowAudienceToUpvote"] = this.audienceAskPublicQuestionsAllowAudienceToUpvote;
+        data["audienceAskPublicQuestionsAllowAudienceToRespond"] = this.audienceAskPublicQuestionsAllowAudienceToRespond;
+        data["audienceAskPrivateQuestionsWithAdmins"] = this.audienceAskPrivateQuestionsWithAdmins;
+        data["audienceAskPrivateQuestionsAllowFollowUpResponse"] = this.audienceAskPrivateQuestionsAllowFollowUpResponse;
+        data["audienceEnablePollsTab"] = this.audienceEnablePollsTab;
+        data["audienceEnableOffersTab"] = this.audienceEnableOffersTab;
+        data["audienceEnableOffersTabDisplayNoOfPurchases"] = this.audienceEnableOffersTabDisplayNoOfPurchases;
+        data["audienceEnableHandoutsTab"] = this.audienceEnableHandoutsTab;
+        data["creatorUserId"] = this.creatorUserId;
+        data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
+        data["language"] = this.language ? this.language.toJSON() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): CoachingDto {
+        const json = this.toJSON();
+        let result = new CoachingDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICoachingDto {
+    id: string;
+    type: CoachingType;
+    status: CoachingStatus;
+    name: string | undefined;
+    description: string | undefined;
+    categories: string | undefined;
+    thumbnailDocumentId: string | undefined;
+    languageId: string | undefined;
+    pricingType: PricingType;
+    price: number | undefined;
+    replayType: CoachingReplayType;
+    questionsEnabled: boolean | undefined;
+    questionType: QuestionType;
+    attendeesCanUpvote: boolean | undefined;
+    attendeesCanRespond: boolean | undefined;
+    chatEnabled: boolean | undefined;
+    customWebinarUrl: string | undefined;
+    registrationEmailNotification: boolean | undefined;
+    twentyFourHourReminderNotification: boolean | undefined;
+    oneHourReminderNotification: boolean | undefined;
+    fifteenMinuteReminderNotification: boolean | undefined;
+    replayFollowUpNotification: boolean | undefined;
+    visible: boolean | undefined;
+    opened: boolean | undefined;
+    cohostsEnableMicrophone: boolean;
+    cohostsEnableWebCam: boolean;
+    cohostsEnablePresentationTools: boolean;
+    cohostsEnableSpeakRequests: boolean;
+    cohostsViewRegistrants: boolean;
+    cohostsManageGuests: boolean;
+    cohostsManageGuestSettings: boolean;
+    cohostsManageAudience: boolean;
+    cohostsManageAudienceSettings: boolean;
+    cohostsChatPublicly: boolean;
+    cohostsChatPubliclyTagMembers: boolean;
+    cohostsChatPrivately: boolean;
+    cohostsChatPrivatelySelected: boolean;
+    cohostsAllowCohostsToUpvote: boolean;
+    cohostsAllowCohostsToRespond: boolean;
+    cohostsCreatePolls: boolean;
+    cohostsCreateOffers: boolean;
+    cohostsUploadHandouts: boolean;
+    guestsEnableMicrophone: boolean;
+    guestsEnableWebCam: boolean;
+    guestsEnablePresentationTools: boolean;
+    guestsEnableSpeakRequests: boolean;
+    guestsViewRegistrants: boolean;
+    guestsManageAudience: boolean;
+    guestsManageAudienceSettings: boolean;
+    guestsChatPublicly: boolean;
+    guestsChatPubliclyTagMembers: boolean;
+    guestsChatPrivately: boolean;
+    guestsChatPrivatelySelected: boolean;
+    guestsAllowGuestsToUpvote: boolean;
+    guestsAllowGuestsToRespond: boolean;
+    guestsCreatePolls: boolean;
+    guestsCreateOffers: boolean;
+    guestsCreateHandouts: boolean;
+    audienceEnableMicrophone: boolean;
+    audienceEnableWebCam: boolean;
+    audienceEnablePresentationTools: boolean;
+    audienceEnableSpeakRequests: boolean;
+    audienceViewAudience: boolean;
+    audienceChatPublicly: boolean;
+    audienceChatPubliclyTagMembers: boolean;
+    audienceChatPrivately: boolean;
+    audienceChatPrivatelySelected: boolean;
+    audienceAskQuestions: boolean;
+    audienceAskPublicQuestions: boolean;
+    audienceAskPublicQuestionsAllowAudienceToUpvote: boolean;
+    audienceAskPublicQuestionsAllowAudienceToRespond: boolean;
+    audienceAskPrivateQuestionsWithAdmins: boolean;
+    audienceAskPrivateQuestionsAllowFollowUpResponse: boolean;
+    audienceEnablePollsTab: boolean;
+    audienceEnableOffersTab: boolean;
+    audienceEnableOffersTabDisplayNoOfPurchases: boolean;
+    audienceEnableHandoutsTab: boolean;
+    creatorUserId: number;
+    thumbnailDocument: DocumentDto;
+    language: SpokenLanguageDto;
+    creatorUser: UserDto;
+}
+
+export class CoachingDtoPagedResultDto implements ICoachingDtoPagedResultDto {
+    items: CoachingDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: ICoachingDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(CoachingDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): CoachingDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CoachingDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): CoachingDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new CoachingDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICoachingDtoPagedResultDto {
+    items: CoachingDto[] | undefined;
+    totalCount: number;
+}
+
+export class CoachingPollDto implements ICoachingPollDto {
+    id: string;
+    name: string | undefined;
+    creationTime: moment.Moment;
+    coachingPollQuestions: CoachingPollQuestionDto[] | undefined;
+
+    constructor(data?: ICoachingPollDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            if (Array.isArray(_data["coachingPollQuestions"])) {
+                this.coachingPollQuestions = [] as any;
+                for (let item of _data["coachingPollQuestions"])
+                    this.coachingPollQuestions.push(CoachingPollQuestionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CoachingPollDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CoachingPollDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        if (Array.isArray(this.coachingPollQuestions)) {
+            data["coachingPollQuestions"] = [];
+            for (let item of this.coachingPollQuestions)
+                data["coachingPollQuestions"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): CoachingPollDto {
+        const json = this.toJSON();
+        let result = new CoachingPollDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICoachingPollDto {
+    id: string;
+    name: string | undefined;
+    creationTime: moment.Moment;
+    coachingPollQuestions: CoachingPollQuestionDto[] | undefined;
+}
+
+export class CoachingPollDtoPagedResultDto implements ICoachingPollDtoPagedResultDto {
+    items: CoachingPollDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: ICoachingPollDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(CoachingPollDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): CoachingPollDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CoachingPollDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): CoachingPollDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new CoachingPollDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICoachingPollDtoPagedResultDto {
+    items: CoachingPollDto[] | undefined;
+    totalCount: number;
+}
+
+export class CoachingPollQuestionDto implements ICoachingPollQuestionDto {
+    id: string;
+    text: string | undefined;
+    type: CoachingPollQuestionType;
+    minimumResponse: number | undefined;
+    maximumResponse: number | undefined;
+    shareResults: boolean;
+    coachingPollId: string;
+    coachingPollQuestionOptions: CoachingPollQuestionOptionDto[] | undefined;
+
+    constructor(data?: ICoachingPollQuestionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.text = _data["text"];
+            this.type = _data["type"];
+            this.minimumResponse = _data["minimumResponse"];
+            this.maximumResponse = _data["maximumResponse"];
+            this.shareResults = _data["shareResults"];
+            this.coachingPollId = _data["coachingPollId"];
+            if (Array.isArray(_data["coachingPollQuestionOptions"])) {
+                this.coachingPollQuestionOptions = [] as any;
+                for (let item of _data["coachingPollQuestionOptions"])
+                    this.coachingPollQuestionOptions.push(CoachingPollQuestionOptionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CoachingPollQuestionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CoachingPollQuestionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["text"] = this.text;
+        data["type"] = this.type;
+        data["minimumResponse"] = this.minimumResponse;
+        data["maximumResponse"] = this.maximumResponse;
+        data["shareResults"] = this.shareResults;
+        data["coachingPollId"] = this.coachingPollId;
+        if (Array.isArray(this.coachingPollQuestionOptions)) {
+            data["coachingPollQuestionOptions"] = [];
+            for (let item of this.coachingPollQuestionOptions)
+                data["coachingPollQuestionOptions"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): CoachingPollQuestionDto {
+        const json = this.toJSON();
+        let result = new CoachingPollQuestionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICoachingPollQuestionDto {
+    id: string;
+    text: string | undefined;
+    type: CoachingPollQuestionType;
+    minimumResponse: number | undefined;
+    maximumResponse: number | undefined;
+    shareResults: boolean;
+    coachingPollId: string;
+    coachingPollQuestionOptions: CoachingPollQuestionOptionDto[] | undefined;
+}
+
+export class CoachingPollQuestionOptionDto implements ICoachingPollQuestionOptionDto {
+    id: string;
+    text: string | undefined;
+    coachingPollQuestionId: string;
+
+    constructor(data?: ICoachingPollQuestionOptionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.text = _data["text"];
+            this.coachingPollQuestionId = _data["coachingPollQuestionId"];
+        }
+    }
+
+    static fromJS(data: any): CoachingPollQuestionOptionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CoachingPollQuestionOptionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["text"] = this.text;
+        data["coachingPollQuestionId"] = this.coachingPollQuestionId;
+        return data; 
+    }
+
+    clone(): CoachingPollQuestionOptionDto {
+        const json = this.toJSON();
+        let result = new CoachingPollQuestionOptionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICoachingPollQuestionOptionDto {
+    id: string;
+    text: string | undefined;
+    coachingPollQuestionId: string;
+}
+
+/** 0 = MultipleChoice 1 = MultipleResponse */
+export enum CoachingPollQuestionType {
+    MultipleChoice = 0,
+    MultipleResponse = 1,
+}
+
+export class CoachingPresenterDto implements ICoachingPresenterDto {
+    id: string;
+    type: CoachingPresenterType;
+    status: CoachingPresenterStatus;
+    coachingId: string;
+    userId: number | undefined;
+    email: string | undefined;
+    creatorUserId: number;
+    user: UserDto;
+
+    constructor(data?: ICoachingPresenterDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.type = _data["type"];
+            this.status = _data["status"];
+            this.coachingId = _data["coachingId"];
+            this.userId = _data["userId"];
+            this.email = _data["email"];
+            this.creatorUserId = _data["creatorUserId"];
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CoachingPresenterDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CoachingPresenterDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["type"] = this.type;
+        data["status"] = this.status;
+        data["coachingId"] = this.coachingId;
+        data["userId"] = this.userId;
+        data["email"] = this.email;
+        data["creatorUserId"] = this.creatorUserId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): CoachingPresenterDto {
+        const json = this.toJSON();
+        let result = new CoachingPresenterDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICoachingPresenterDto {
+    id: string;
+    type: CoachingPresenterType;
+    status: CoachingPresenterStatus;
+    coachingId: string;
+    userId: number | undefined;
+    email: string | undefined;
+    creatorUserId: number;
+    user: UserDto;
+}
+
+/** 0 = Invited 1 = Accepted 2 = Rejected */
+export enum CoachingPresenterStatus {
+    Invited = 0,
+    Accepted = 1,
+    Rejected = 2,
+}
+
+/** 0 = Host 1 = CoHost 2 = Guest */
+export enum CoachingPresenterType {
+    Host = 0,
+    CoHost = 1,
+    Guest = 2,
+}
+
+/** 1 = Record 2 = DontRecord */
+export enum CoachingReplayType {
+    Record = 1,
+    DontRecord = 2,
+}
+
+export class CoachingResourceDto implements ICoachingResourceDto {
+    id: string;
+    name: string | undefined;
+    type: CoachingResourceType;
+    coachingId: string;
+    documentId: string | undefined;
+    creationTime: moment.Moment;
+    document: Document;
+
+    constructor(data?: ICoachingResourceDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.type = _data["type"];
+            this.coachingId = _data["coachingId"];
+            this.documentId = _data["documentId"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.document = _data["document"] ? Document.fromJS(_data["document"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CoachingResourceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CoachingResourceDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["type"] = this.type;
+        data["coachingId"] = this.coachingId;
+        data["documentId"] = this.documentId;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): CoachingResourceDto {
+        const json = this.toJSON();
+        let result = new CoachingResourceDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICoachingResourceDto {
+    id: string;
+    name: string | undefined;
+    type: CoachingResourceType;
+    coachingId: string;
+    documentId: string | undefined;
+    creationTime: moment.Moment;
+    document: Document;
+}
+
+export class CoachingResourceDtoPagedResultDto implements ICoachingResourceDtoPagedResultDto {
+    items: CoachingResourceDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: ICoachingResourceDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(CoachingResourceDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): CoachingResourceDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CoachingResourceDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): CoachingResourceDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new CoachingResourceDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICoachingResourceDtoPagedResultDto {
+    items: CoachingResourceDto[] | undefined;
+    totalCount: number;
+}
+
+/** 0 = Slides 1 = Video 2 = Handout */
+export enum CoachingResourceType {
+    Slides = 0,
+    Video = 1,
+    Handout = 2,
+}
+
+/** 0 = Draft 1 = Published */
+export enum CoachingStatus {
+    Draft = 0,
+    Published = 1,
+}
+
+/** 0 = Single 1 = Series */
+export enum CoachingType {
+    Single = 0,
+    Series = 1,
+}
+
 export class CommentDto implements ICommentDto {
     id: string;
     body: string | undefined;
@@ -24957,6 +27190,222 @@ export enum CourseType {
     Cohort = 2,
 }
 
+export class CreateCoachingDto implements ICreateCoachingDto {
+    name: string | undefined;
+    type: CoachingType;
+
+    constructor(data?: ICreateCoachingDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.type = _data["type"];
+        }
+    }
+
+    static fromJS(data: any): CreateCoachingDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCoachingDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["type"] = this.type;
+        return data; 
+    }
+
+    clone(): CreateCoachingDto {
+        const json = this.toJSON();
+        let result = new CreateCoachingDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateCoachingDto {
+    name: string | undefined;
+    type: CoachingType;
+}
+
+export class CreateCoachingPollDto implements ICreateCoachingPollDto {
+    id: string;
+    name: string | undefined;
+    coachingId: string;
+    coachingPollQuestions: CoachingPollQuestionDto[] | undefined;
+
+    constructor(data?: ICreateCoachingPollDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.coachingId = _data["coachingId"];
+            if (Array.isArray(_data["coachingPollQuestions"])) {
+                this.coachingPollQuestions = [] as any;
+                for (let item of _data["coachingPollQuestions"])
+                    this.coachingPollQuestions.push(CoachingPollQuestionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateCoachingPollDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCoachingPollDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["coachingId"] = this.coachingId;
+        if (Array.isArray(this.coachingPollQuestions)) {
+            data["coachingPollQuestions"] = [];
+            for (let item of this.coachingPollQuestions)
+                data["coachingPollQuestions"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): CreateCoachingPollDto {
+        const json = this.toJSON();
+        let result = new CreateCoachingPollDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateCoachingPollDto {
+    id: string;
+    name: string | undefined;
+    coachingId: string;
+    coachingPollQuestions: CoachingPollQuestionDto[] | undefined;
+}
+
+export class CreateCoachingPresenterDto implements ICreateCoachingPresenterDto {
+    type: CoachingPresenterType;
+    coachingId: string;
+    email: string | undefined;
+
+    constructor(data?: ICreateCoachingPresenterDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.type = _data["type"];
+            this.coachingId = _data["coachingId"];
+            this.email = _data["email"];
+        }
+    }
+
+    static fromJS(data: any): CreateCoachingPresenterDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCoachingPresenterDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["type"] = this.type;
+        data["coachingId"] = this.coachingId;
+        data["email"] = this.email;
+        return data; 
+    }
+
+    clone(): CreateCoachingPresenterDto {
+        const json = this.toJSON();
+        let result = new CreateCoachingPresenterDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateCoachingPresenterDto {
+    type: CoachingPresenterType;
+    coachingId: string;
+    email: string | undefined;
+}
+
+export class CreateCoachingResourceDto implements ICreateCoachingResourceDto {
+    id: string;
+    name: string | undefined;
+    type: CoachingResourceType;
+    coachingId: string;
+
+    constructor(data?: ICreateCoachingResourceDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.type = _data["type"];
+            this.coachingId = _data["coachingId"];
+        }
+    }
+
+    static fromJS(data: any): CreateCoachingResourceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCoachingResourceDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["type"] = this.type;
+        data["coachingId"] = this.coachingId;
+        return data; 
+    }
+
+    clone(): CreateCoachingResourceDto {
+        const json = this.toJSON();
+        let result = new CreateCoachingResourceDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateCoachingResourceDto {
+    id: string;
+    name: string | undefined;
+    type: CoachingResourceType;
+    coachingId: string;
+}
+
 export class CreateCourseDto implements ICreateCourseDto {
     name: string | undefined;
 
@@ -26725,7 +29174,7 @@ export interface IDocumentDto {
     creatorUserId: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail 17 = CourseSectionImage 18 = EventThumbnail 19 = EventResource 20 = Project */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail 17 = CourseSectionImage 18 = EventThumbnail 19 = EventResource 20 = Project 21 = CoachingThumbnail 22 = CoachingResource */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -26748,6 +29197,8 @@ export enum DocumentType {
     EventThumbnail = 18,
     EventResource = 19,
     Project = 20,
+    CoachingThumbnail = 21,
+    CoachingResource = 22,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {
@@ -36181,6 +38632,435 @@ export interface IUpdateArticleSettingsDto {
     commentModeration: boolean;
     customUrl: string | undefined;
     isVisible: boolean;
+}
+
+export class UpdateCoachingDto implements IUpdateCoachingDto {
+    id: string;
+    name: string | undefined;
+    description: string | undefined;
+    categories: string | undefined;
+    thumbnailDocumentId: string | undefined;
+    languageId: string | undefined;
+    pricingType: PricingType;
+    price: number | undefined;
+
+    constructor(data?: IUpdateCoachingDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.categories = _data["categories"];
+            this.thumbnailDocumentId = _data["thumbnailDocumentId"];
+            this.languageId = _data["languageId"];
+            this.pricingType = _data["pricingType"];
+            this.price = _data["price"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCoachingDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCoachingDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["categories"] = this.categories;
+        data["thumbnailDocumentId"] = this.thumbnailDocumentId;
+        data["languageId"] = this.languageId;
+        data["pricingType"] = this.pricingType;
+        data["price"] = this.price;
+        return data; 
+    }
+
+    clone(): UpdateCoachingDto {
+        const json = this.toJSON();
+        let result = new UpdateCoachingDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateCoachingDto {
+    id: string;
+    name: string | undefined;
+    description: string | undefined;
+    categories: string | undefined;
+    thumbnailDocumentId: string | undefined;
+    languageId: string | undefined;
+    pricingType: PricingType;
+    price: number | undefined;
+}
+
+export class UpdateCoachingPresenterTypeDto implements IUpdateCoachingPresenterTypeDto {
+    id: string;
+    newType: CoachingPresenterType;
+
+    constructor(data?: IUpdateCoachingPresenterTypeDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.newType = _data["newType"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCoachingPresenterTypeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCoachingPresenterTypeDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["newType"] = this.newType;
+        return data; 
+    }
+
+    clone(): UpdateCoachingPresenterTypeDto {
+        const json = this.toJSON();
+        let result = new UpdateCoachingPresenterTypeDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateCoachingPresenterTypeDto {
+    id: string;
+    newType: CoachingPresenterType;
+}
+
+export class UpdateCoachingSettingsDto implements IUpdateCoachingSettingsDto {
+    id: string;
+    replayType: CoachingReplayType;
+    questionsEnabled: boolean | undefined;
+    questionType: QuestionType;
+    attendeesCanUpvote: boolean | undefined;
+    attendeesCanRespond: boolean | undefined;
+    chatEnabled: boolean | undefined;
+    customWebinarUrl: string | undefined;
+    registrationEmailNotification: boolean | undefined;
+    twentyFourHourReminderNotification: boolean | undefined;
+    oneHourReminderNotification: boolean | undefined;
+    fifteenMinuteReminderNotification: boolean | undefined;
+    replayFollowUpNotification: boolean | undefined;
+    visible: boolean | undefined;
+    opened: boolean | undefined;
+    cohostsEnableMicrophone: boolean;
+    cohostsEnableWebCam: boolean;
+    cohostsEnablePresentationTools: boolean;
+    cohostsEnableSpeakRequests: boolean;
+    cohostsViewRegistrants: boolean;
+    cohostsManageGuests: boolean;
+    cohostsManageGuestSettings: boolean;
+    cohostsManageAudience: boolean;
+    cohostsManageAudienceSettings: boolean;
+    cohostsChatPublicly: boolean;
+    cohostsChatPubliclyTagMembers: boolean;
+    cohostsChatPrivately: boolean;
+    cohostsChatPrivatelySelected: boolean;
+    cohostsAllowCohostsToUpvote: boolean;
+    cohostsAllowCohostsToRespond: boolean;
+    cohostsCreatePolls: boolean;
+    cohostsCreateOffers: boolean;
+    cohostsUploadHandouts: boolean;
+    guestsEnableMicrophone: boolean;
+    guestsEnableWebCam: boolean;
+    guestsEnablePresentationTools: boolean;
+    guestsEnableSpeakRequests: boolean;
+    guestsViewRegistrants: boolean;
+    guestsManageAudience: boolean;
+    guestsManageAudienceSettings: boolean;
+    guestsChatPublicly: boolean;
+    guestsChatPubliclyTagMembers: boolean;
+    guestsChatPrivately: boolean;
+    guestsChatPrivatelySelected: boolean;
+    guestsAllowGuestsToUpvote: boolean;
+    guestsAllowGuestsToRespond: boolean;
+    guestsCreatePolls: boolean;
+    guestsCreateOffers: boolean;
+    guestsCreateHandouts: boolean;
+    audienceEnableMicrophone: boolean;
+    audienceEnableWebCam: boolean;
+    audienceEnablePresentationTools: boolean;
+    audienceEnableSpeakRequests: boolean;
+    audienceViewAudience: boolean;
+    audienceChatPublicly: boolean;
+    audienceChatPubliclyTagMembers: boolean;
+    audienceChatPrivately: boolean;
+    audienceChatPrivatelySelected: boolean;
+    audienceAskQuestions: boolean;
+    audienceAskPublicQuestions: boolean;
+    audienceAskPublicQuestionsAllowAudienceToUpvote: boolean;
+    audienceAskPublicQuestionsAllowAudienceToRespond: boolean;
+    audienceAskPrivateQuestionsWithAdmins: boolean;
+    audienceAskPrivateQuestionsAllowFollowUpResponse: boolean;
+    audienceEnablePollsTab: boolean;
+    audienceEnableOffersTab: boolean;
+    audienceEnableOffersTabDisplayNoOfPurchases: boolean;
+    audienceEnableHandoutsTab: boolean;
+
+    constructor(data?: IUpdateCoachingSettingsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.replayType = _data["replayType"];
+            this.questionsEnabled = _data["questionsEnabled"];
+            this.questionType = _data["questionType"];
+            this.attendeesCanUpvote = _data["attendeesCanUpvote"];
+            this.attendeesCanRespond = _data["attendeesCanRespond"];
+            this.chatEnabled = _data["chatEnabled"];
+            this.customWebinarUrl = _data["customWebinarUrl"];
+            this.registrationEmailNotification = _data["registrationEmailNotification"];
+            this.twentyFourHourReminderNotification = _data["twentyFourHourReminderNotification"];
+            this.oneHourReminderNotification = _data["oneHourReminderNotification"];
+            this.fifteenMinuteReminderNotification = _data["fifteenMinuteReminderNotification"];
+            this.replayFollowUpNotification = _data["replayFollowUpNotification"];
+            this.visible = _data["visible"];
+            this.opened = _data["opened"];
+            this.cohostsEnableMicrophone = _data["cohostsEnableMicrophone"];
+            this.cohostsEnableWebCam = _data["cohostsEnableWebCam"];
+            this.cohostsEnablePresentationTools = _data["cohostsEnablePresentationTools"];
+            this.cohostsEnableSpeakRequests = _data["cohostsEnableSpeakRequests"];
+            this.cohostsViewRegistrants = _data["cohostsViewRegistrants"];
+            this.cohostsManageGuests = _data["cohostsManageGuests"];
+            this.cohostsManageGuestSettings = _data["cohostsManageGuestSettings"];
+            this.cohostsManageAudience = _data["cohostsManageAudience"];
+            this.cohostsManageAudienceSettings = _data["cohostsManageAudienceSettings"];
+            this.cohostsChatPublicly = _data["cohostsChatPublicly"];
+            this.cohostsChatPubliclyTagMembers = _data["cohostsChatPubliclyTagMembers"];
+            this.cohostsChatPrivately = _data["cohostsChatPrivately"];
+            this.cohostsChatPrivatelySelected = _data["cohostsChatPrivatelySelected"];
+            this.cohostsAllowCohostsToUpvote = _data["cohostsAllowCohostsToUpvote"];
+            this.cohostsAllowCohostsToRespond = _data["cohostsAllowCohostsToRespond"];
+            this.cohostsCreatePolls = _data["cohostsCreatePolls"];
+            this.cohostsCreateOffers = _data["cohostsCreateOffers"];
+            this.cohostsUploadHandouts = _data["cohostsUploadHandouts"];
+            this.guestsEnableMicrophone = _data["guestsEnableMicrophone"];
+            this.guestsEnableWebCam = _data["guestsEnableWebCam"];
+            this.guestsEnablePresentationTools = _data["guestsEnablePresentationTools"];
+            this.guestsEnableSpeakRequests = _data["guestsEnableSpeakRequests"];
+            this.guestsViewRegistrants = _data["guestsViewRegistrants"];
+            this.guestsManageAudience = _data["guestsManageAudience"];
+            this.guestsManageAudienceSettings = _data["guestsManageAudienceSettings"];
+            this.guestsChatPublicly = _data["guestsChatPublicly"];
+            this.guestsChatPubliclyTagMembers = _data["guestsChatPubliclyTagMembers"];
+            this.guestsChatPrivately = _data["guestsChatPrivately"];
+            this.guestsChatPrivatelySelected = _data["guestsChatPrivatelySelected"];
+            this.guestsAllowGuestsToUpvote = _data["guestsAllowGuestsToUpvote"];
+            this.guestsAllowGuestsToRespond = _data["guestsAllowGuestsToRespond"];
+            this.guestsCreatePolls = _data["guestsCreatePolls"];
+            this.guestsCreateOffers = _data["guestsCreateOffers"];
+            this.guestsCreateHandouts = _data["guestsCreateHandouts"];
+            this.audienceEnableMicrophone = _data["audienceEnableMicrophone"];
+            this.audienceEnableWebCam = _data["audienceEnableWebCam"];
+            this.audienceEnablePresentationTools = _data["audienceEnablePresentationTools"];
+            this.audienceEnableSpeakRequests = _data["audienceEnableSpeakRequests"];
+            this.audienceViewAudience = _data["audienceViewAudience"];
+            this.audienceChatPublicly = _data["audienceChatPublicly"];
+            this.audienceChatPubliclyTagMembers = _data["audienceChatPubliclyTagMembers"];
+            this.audienceChatPrivately = _data["audienceChatPrivately"];
+            this.audienceChatPrivatelySelected = _data["audienceChatPrivatelySelected"];
+            this.audienceAskQuestions = _data["audienceAskQuestions"];
+            this.audienceAskPublicQuestions = _data["audienceAskPublicQuestions"];
+            this.audienceAskPublicQuestionsAllowAudienceToUpvote = _data["audienceAskPublicQuestionsAllowAudienceToUpvote"];
+            this.audienceAskPublicQuestionsAllowAudienceToRespond = _data["audienceAskPublicQuestionsAllowAudienceToRespond"];
+            this.audienceAskPrivateQuestionsWithAdmins = _data["audienceAskPrivateQuestionsWithAdmins"];
+            this.audienceAskPrivateQuestionsAllowFollowUpResponse = _data["audienceAskPrivateQuestionsAllowFollowUpResponse"];
+            this.audienceEnablePollsTab = _data["audienceEnablePollsTab"];
+            this.audienceEnableOffersTab = _data["audienceEnableOffersTab"];
+            this.audienceEnableOffersTabDisplayNoOfPurchases = _data["audienceEnableOffersTabDisplayNoOfPurchases"];
+            this.audienceEnableHandoutsTab = _data["audienceEnableHandoutsTab"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCoachingSettingsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCoachingSettingsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["replayType"] = this.replayType;
+        data["questionsEnabled"] = this.questionsEnabled;
+        data["questionType"] = this.questionType;
+        data["attendeesCanUpvote"] = this.attendeesCanUpvote;
+        data["attendeesCanRespond"] = this.attendeesCanRespond;
+        data["chatEnabled"] = this.chatEnabled;
+        data["customWebinarUrl"] = this.customWebinarUrl;
+        data["registrationEmailNotification"] = this.registrationEmailNotification;
+        data["twentyFourHourReminderNotification"] = this.twentyFourHourReminderNotification;
+        data["oneHourReminderNotification"] = this.oneHourReminderNotification;
+        data["fifteenMinuteReminderNotification"] = this.fifteenMinuteReminderNotification;
+        data["replayFollowUpNotification"] = this.replayFollowUpNotification;
+        data["visible"] = this.visible;
+        data["opened"] = this.opened;
+        data["cohostsEnableMicrophone"] = this.cohostsEnableMicrophone;
+        data["cohostsEnableWebCam"] = this.cohostsEnableWebCam;
+        data["cohostsEnablePresentationTools"] = this.cohostsEnablePresentationTools;
+        data["cohostsEnableSpeakRequests"] = this.cohostsEnableSpeakRequests;
+        data["cohostsViewRegistrants"] = this.cohostsViewRegistrants;
+        data["cohostsManageGuests"] = this.cohostsManageGuests;
+        data["cohostsManageGuestSettings"] = this.cohostsManageGuestSettings;
+        data["cohostsManageAudience"] = this.cohostsManageAudience;
+        data["cohostsManageAudienceSettings"] = this.cohostsManageAudienceSettings;
+        data["cohostsChatPublicly"] = this.cohostsChatPublicly;
+        data["cohostsChatPubliclyTagMembers"] = this.cohostsChatPubliclyTagMembers;
+        data["cohostsChatPrivately"] = this.cohostsChatPrivately;
+        data["cohostsChatPrivatelySelected"] = this.cohostsChatPrivatelySelected;
+        data["cohostsAllowCohostsToUpvote"] = this.cohostsAllowCohostsToUpvote;
+        data["cohostsAllowCohostsToRespond"] = this.cohostsAllowCohostsToRespond;
+        data["cohostsCreatePolls"] = this.cohostsCreatePolls;
+        data["cohostsCreateOffers"] = this.cohostsCreateOffers;
+        data["cohostsUploadHandouts"] = this.cohostsUploadHandouts;
+        data["guestsEnableMicrophone"] = this.guestsEnableMicrophone;
+        data["guestsEnableWebCam"] = this.guestsEnableWebCam;
+        data["guestsEnablePresentationTools"] = this.guestsEnablePresentationTools;
+        data["guestsEnableSpeakRequests"] = this.guestsEnableSpeakRequests;
+        data["guestsViewRegistrants"] = this.guestsViewRegistrants;
+        data["guestsManageAudience"] = this.guestsManageAudience;
+        data["guestsManageAudienceSettings"] = this.guestsManageAudienceSettings;
+        data["guestsChatPublicly"] = this.guestsChatPublicly;
+        data["guestsChatPubliclyTagMembers"] = this.guestsChatPubliclyTagMembers;
+        data["guestsChatPrivately"] = this.guestsChatPrivately;
+        data["guestsChatPrivatelySelected"] = this.guestsChatPrivatelySelected;
+        data["guestsAllowGuestsToUpvote"] = this.guestsAllowGuestsToUpvote;
+        data["guestsAllowGuestsToRespond"] = this.guestsAllowGuestsToRespond;
+        data["guestsCreatePolls"] = this.guestsCreatePolls;
+        data["guestsCreateOffers"] = this.guestsCreateOffers;
+        data["guestsCreateHandouts"] = this.guestsCreateHandouts;
+        data["audienceEnableMicrophone"] = this.audienceEnableMicrophone;
+        data["audienceEnableWebCam"] = this.audienceEnableWebCam;
+        data["audienceEnablePresentationTools"] = this.audienceEnablePresentationTools;
+        data["audienceEnableSpeakRequests"] = this.audienceEnableSpeakRequests;
+        data["audienceViewAudience"] = this.audienceViewAudience;
+        data["audienceChatPublicly"] = this.audienceChatPublicly;
+        data["audienceChatPubliclyTagMembers"] = this.audienceChatPubliclyTagMembers;
+        data["audienceChatPrivately"] = this.audienceChatPrivately;
+        data["audienceChatPrivatelySelected"] = this.audienceChatPrivatelySelected;
+        data["audienceAskQuestions"] = this.audienceAskQuestions;
+        data["audienceAskPublicQuestions"] = this.audienceAskPublicQuestions;
+        data["audienceAskPublicQuestionsAllowAudienceToUpvote"] = this.audienceAskPublicQuestionsAllowAudienceToUpvote;
+        data["audienceAskPublicQuestionsAllowAudienceToRespond"] = this.audienceAskPublicQuestionsAllowAudienceToRespond;
+        data["audienceAskPrivateQuestionsWithAdmins"] = this.audienceAskPrivateQuestionsWithAdmins;
+        data["audienceAskPrivateQuestionsAllowFollowUpResponse"] = this.audienceAskPrivateQuestionsAllowFollowUpResponse;
+        data["audienceEnablePollsTab"] = this.audienceEnablePollsTab;
+        data["audienceEnableOffersTab"] = this.audienceEnableOffersTab;
+        data["audienceEnableOffersTabDisplayNoOfPurchases"] = this.audienceEnableOffersTabDisplayNoOfPurchases;
+        data["audienceEnableHandoutsTab"] = this.audienceEnableHandoutsTab;
+        return data; 
+    }
+
+    clone(): UpdateCoachingSettingsDto {
+        const json = this.toJSON();
+        let result = new UpdateCoachingSettingsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateCoachingSettingsDto {
+    id: string;
+    replayType: CoachingReplayType;
+    questionsEnabled: boolean | undefined;
+    questionType: QuestionType;
+    attendeesCanUpvote: boolean | undefined;
+    attendeesCanRespond: boolean | undefined;
+    chatEnabled: boolean | undefined;
+    customWebinarUrl: string | undefined;
+    registrationEmailNotification: boolean | undefined;
+    twentyFourHourReminderNotification: boolean | undefined;
+    oneHourReminderNotification: boolean | undefined;
+    fifteenMinuteReminderNotification: boolean | undefined;
+    replayFollowUpNotification: boolean | undefined;
+    visible: boolean | undefined;
+    opened: boolean | undefined;
+    cohostsEnableMicrophone: boolean;
+    cohostsEnableWebCam: boolean;
+    cohostsEnablePresentationTools: boolean;
+    cohostsEnableSpeakRequests: boolean;
+    cohostsViewRegistrants: boolean;
+    cohostsManageGuests: boolean;
+    cohostsManageGuestSettings: boolean;
+    cohostsManageAudience: boolean;
+    cohostsManageAudienceSettings: boolean;
+    cohostsChatPublicly: boolean;
+    cohostsChatPubliclyTagMembers: boolean;
+    cohostsChatPrivately: boolean;
+    cohostsChatPrivatelySelected: boolean;
+    cohostsAllowCohostsToUpvote: boolean;
+    cohostsAllowCohostsToRespond: boolean;
+    cohostsCreatePolls: boolean;
+    cohostsCreateOffers: boolean;
+    cohostsUploadHandouts: boolean;
+    guestsEnableMicrophone: boolean;
+    guestsEnableWebCam: boolean;
+    guestsEnablePresentationTools: boolean;
+    guestsEnableSpeakRequests: boolean;
+    guestsViewRegistrants: boolean;
+    guestsManageAudience: boolean;
+    guestsManageAudienceSettings: boolean;
+    guestsChatPublicly: boolean;
+    guestsChatPubliclyTagMembers: boolean;
+    guestsChatPrivately: boolean;
+    guestsChatPrivatelySelected: boolean;
+    guestsAllowGuestsToUpvote: boolean;
+    guestsAllowGuestsToRespond: boolean;
+    guestsCreatePolls: boolean;
+    guestsCreateOffers: boolean;
+    guestsCreateHandouts: boolean;
+    audienceEnableMicrophone: boolean;
+    audienceEnableWebCam: boolean;
+    audienceEnablePresentationTools: boolean;
+    audienceEnableSpeakRequests: boolean;
+    audienceViewAudience: boolean;
+    audienceChatPublicly: boolean;
+    audienceChatPubliclyTagMembers: boolean;
+    audienceChatPrivately: boolean;
+    audienceChatPrivatelySelected: boolean;
+    audienceAskQuestions: boolean;
+    audienceAskPublicQuestions: boolean;
+    audienceAskPublicQuestionsAllowAudienceToUpvote: boolean;
+    audienceAskPublicQuestionsAllowAudienceToRespond: boolean;
+    audienceAskPrivateQuestionsWithAdmins: boolean;
+    audienceAskPrivateQuestionsAllowFollowUpResponse: boolean;
+    audienceEnablePollsTab: boolean;
+    audienceEnableOffersTab: boolean;
+    audienceEnableOffersTabDisplayNoOfPurchases: boolean;
+    audienceEnableHandoutsTab: boolean;
 }
 
 export class UpdateCourseSectionDetailsDto implements IUpdateCourseSectionDetailsDto {

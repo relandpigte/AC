@@ -20,6 +20,9 @@ namespace Academically.Domain.Services.Documents
         private readonly IRepository<Event, Guid> _eventsRepository;
         private readonly IRepository<CourseSection, Guid> _courseSectionsRepository;
         private readonly IRepository<EventResource, Guid> _eventResourcesRepository;
+        private readonly IRepository<Project, Guid> _projectsRepository;
+        private readonly IRepository<Coaching, Guid> _coachingsRepository;
+        private readonly IRepository<CoachingResource, Guid> _coachingResourcesRepository;
         private readonly IFileManagerService _fileManagerService;
 
         public DocumentsDomainService(
@@ -29,6 +32,9 @@ namespace Academically.Domain.Services.Documents
             IRepository<Event, Guid> eventsRepository,
             IRepository<CourseSection, Guid> courseSectionsRepository,
             IRepository<EventResource, Guid> eventResourcesRepository,
+            IRepository<Project, Guid> projectsRepository,
+            IRepository<Coaching, Guid> coachingsRepository,
+            IRepository<CoachingResource, Guid> coachingResourcesRepository,
             IFileManagerService fileManagerService
             )
         {
@@ -38,6 +44,9 @@ namespace Academically.Domain.Services.Documents
             _eventsRepository = eventsRepository;
             _courseSectionsRepository = courseSectionsRepository;
             _eventResourcesRepository = eventResourcesRepository;
+            _projectsRepository = projectsRepository;
+            _coachingsRepository = coachingsRepository;
+            _coachingResourcesRepository = coachingResourcesRepository;
             _fileManagerService = fileManagerService;
         }
 
@@ -128,6 +137,16 @@ namespace Academically.Domain.Services.Documents
                         eventResrouceReference.DocumentId = document.Id;
                         await _eventResourcesRepository.UpdateAsync(eventResrouceReference);
                         break;
+                    case DocumentType.CoachingThumbnail:
+                        var coachingThumbnailReference = await _coachingsRepository.GetAsync(referenceId.Value);
+                        coachingThumbnailReference.ThumbnailDocumentId = document.Id;
+                        await _coachingsRepository.UpdateAsync(coachingThumbnailReference);
+                        break;
+                    case DocumentType.CoachingResource:
+                        var coachingResourceReference = await _coachingResourcesRepository.GetAsync(referenceId.Value);
+                        coachingResourceReference.DocumentId = document.Id;
+                        await _coachingResourcesRepository.UpdateAsync(coachingResourceReference);
+                        break;
                 }
             }
         }
@@ -176,6 +195,16 @@ namespace Academically.Domain.Services.Documents
                         var eventResourceReference = await _eventResourcesRepository.GetAsync(referenceId.Value);
                         eventResourceReference.DocumentId = null;
                         await _eventResourcesRepository.UpdateAsync(eventResourceReference);
+                        break;
+                    case DocumentType.CoachingThumbnail:
+                        var coachingThumbnailReference = await _coachingsRepository.GetAsync(referenceId.Value);
+                        coachingThumbnailReference.ThumbnailDocumentId = null;
+                        await _coachingsRepository.UpdateAsync(coachingThumbnailReference);
+                        break;
+                    case DocumentType.CoachingResource:
+                        var coachingResourceReference = await _coachingResourcesRepository.GetAsync(referenceId.Value);
+                        coachingResourceReference.DocumentId = null;
+                        await _coachingResourcesRepository.UpdateAsync(coachingResourceReference);
                         break;
                 }
             }

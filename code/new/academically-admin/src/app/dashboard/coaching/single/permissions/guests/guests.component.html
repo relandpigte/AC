@@ -1,0 +1,376 @@
+<div class="table-responsive">
+  <table class="table table-sm table-nowrap card-table">
+    <thead>
+      <tr>
+        <th>{{ 'InteractiveTools' | localize }}</th>
+      </tr>
+    </thead>
+    <tbody class="font-size-base">
+      <div class="card-body">
+        <div class="list-group list-group-flush my-n3">
+          <div class="row align-items-center mb-3">
+            <div class="col">
+              <span class="font-weight-base ">
+                {{ 'EnableMicrophone' | localize }}
+              </span>
+            </div>
+            <div class="col-auto">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchOne"
+                  [checked]="model.guestsEnableMicrophone" [(ngModel)]="model.guestsEnableMicrophone"
+                  (change)="onSettingChange()">
+                <label class="custom-control-label" for="subscriptionsSwitchOne"></label>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center mb-3">
+            <div class="col">
+              <span class="font-weight-base ">
+                {{ 'EnableWebcam' | localize }}
+              </span>
+            </div>
+            <div class="col-auto">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchTwo"
+                  [checked]="model.guestsEnableWebCam" [(ngModel)]="model.guestsEnableWebCam"
+                  (change)="onSettingChange()">
+                <label class="custom-control-label" for="subscriptionsSwitchTwo"></label>
+              </div>
+
+            </div>
+          </div>
+          <div class="row align-items-center mb-3 brd-pad">
+            <div class="col">
+
+              <!-- Heading -->
+              <span class="font-weight-base ">
+                {{ 'EnablePresentationTools' | localize }}
+              </span>
+            </div>
+            <div class="col-auto">
+
+              <!-- Switch -->
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchThree"
+                  [checked]="model.guestsEnablePresentationTools" [(ngModel)]="model.guestsEnablePresentationTools"
+                  (change)="onSettingChange()">
+                <label class="custom-control-label" for="subscriptionsSwitchThree"></label>
+              </div>
+
+            </div>
+          </div>
+          <div class="row align-items-center">
+            <div class="col">
+
+              <!-- Heading -->
+              <span class="font-weight-base ">
+                {{ 'EnableSpeakRequests' | localize }}
+              </span>
+            </div>
+            <div class="col-auto">
+
+              <!-- Switch -->
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="subscriptionsSwitchfour"
+                  [checked]="model.guestsEnableSpeakRequests" [(ngModel)]="model.guestsEnableSpeakRequests"
+                  (change)="onSettingChange()">
+                <label class="custom-control-label" for="subscriptionsSwitchfour"></label>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </tbody>
+  </table>
+  <table class="table table-sm table-nowrap card-table">
+    <thead>
+      <tr>
+        <th>{{ 'Attendees' | localize | uppercase }}</th>
+      </tr>
+    </thead>
+    <tbody class="font-size-base">
+      <div class="card-body">
+        <div class="list-group list-group-flush my-n3">
+          <div class="row align-items-center mb-3">
+            <div class="col">
+              <span class="font-weight-base ">
+                {{ 'ViewRegistrants' | localize }}
+              </span>
+            </div>
+            <div class="col-auto">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="registrant"
+                  [checked]="model.guestsViewRegistrants" [(ngModel)]="model.guestsViewRegistrants"
+                  (change)="onSettingChange()">
+                <label class="custom-control-label" for="registrant"></label>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center mb-3">
+            <div class="col">
+              <span class="font-weight-base ">
+                {{ 'ManageAudience' | localize }}
+              </span>
+            </div>
+            <div class="col-auto">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="manageAudience"
+                  [checked]="model.guestsManageAudience" [(ngModel)]="model.guestsManageAudience"
+                  (change)="onSettingChange()">
+                <label class="custom-control-label" for="manageAudience"></label>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center">
+            <div class="col">
+              <span class="font-weight-base ">
+                {{ 'ManageAudienceSettings' | localize }}
+              </span>
+            </div>
+            <div class="col-auto">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="audienceSettings"
+                  [checked]="model.guestsManageAudienceSettings" [(ngModel)]="model.guestsManageAudienceSettings"
+                  (change)="onSettingChange()">
+                <label class="custom-control-label" for="audienceSettings"></label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </tbody>
+  </table>
+  <table class="table table-sm table-nowrap card-table">
+    <thead>
+      <tr>
+        <th>{{ 'Chat' | localize | uppercase }}</th>
+
+
+      </tr>
+    </thead>
+    <tbody class="font-size-base">
+      <div class="card-body">
+        <div class="list-group list-group-flush my-n3">
+          <div class="row align-items-center mb-3">
+            <div class="col">
+              <span class="font-weight-base ">
+                {{ 'ChatPublicly' | localize }}
+              </span>
+            </div>
+            <div class="col-auto">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="publicChat" [checked]="model.guestsChatPublicly"
+                  [(ngModel)]="model.guestsChatPublicly" (change)="onSettingChange()">
+                <label class="custom-control-label" for="publicChat"></label>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center mb-3">
+            <div class="col">
+              <span class="font-weight-base pd-3">
+                {{ 'TagMembers' | localize }}
+              </span>
+            </div>
+            <div class="col-auto">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="member"
+                  [checked]="model.guestsChatPubliclyTagMembers" [(ngModel)]="model.guestsChatPubliclyTagMembers"
+                  (change)="onSettingChange()">
+                <label class="custom-control-label" for="member"></label>
+              </div>
+
+            </div>
+          </div>
+          <div class="row align-items-center mb-3">
+            <div class="col">
+
+              <!-- Heading -->
+              <span class="font-weight-base ">
+                {{ 'ChatPrivately' | localize }}
+              </span>
+            </div>
+            <div class="col-auto">
+
+              <!-- Switch -->
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="privateChat"
+                  [checked]="model.guestsChatPrivately" [(ngModel)]="model.guestsChatPrivately"
+                  (change)="onSettingChange()">
+                <label class="custom-control-label" for="privateChat"></label>
+              </div>
+
+            </div>
+          </div>
+          <div class="row align-items-center">
+            <div class="col">
+              <div class="custom-control custom-radio pd-7">
+                <input type="radio" id="anyoneChatType" name="chatType" [value]="true"
+                  [(ngModel)]="model.guestsChatPrivatelySelected" (change)="onSettingChange()"
+                  class="custom-control-input" />
+                <label class="custom-control-label" for="anyoneChatType"></label>
+                <label class="custom-control-caption" for="anyoneChatType">
+                  {{ 'WithAnyone' | localize }}
+                </label>
+              </div>
+            </div>
+
+          </div>
+          <div class="row align-items-center">
+            <div class="col">
+              <div class="custom-control custom-radio pd-7">
+                <input type="radio" id="adminChatType" name="chatType" [value]="false"
+                  [(ngModel)]="model.guestsChatPrivatelySelected" (change)="onSettingChange()"
+                  class="custom-control-input" />
+                <label class="custom-control-label" for="adminChatType"></label>
+                <label class="custom-control-caption" for="adminChatType">
+                  {{ 'WithAdminOnly' | localize }}
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </tbody>
+  </table>
+  <table class="table table-sm table-nowrap card-table">
+    <thead>
+      <tr>
+        <th>{{'Questions' | localize}}</th>
+
+
+      </tr>
+    </thead>
+    <tbody class="font-size-base">
+      <div class="card-body">
+        <div class="list-group list-group-flush my-n3">
+          <div class="row align-items-center mb-3">
+            <div class="col">
+              <span class="font-weight-base ">
+                {{ 'AllowGuestsToUpvote' | localize }}
+              </span>
+            </div>
+            <div class="col-auto">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="coHostUpvote"
+                  [checked]="model.guestsAllowGuestsToUpvote" [(ngModel)]="model.guestsAllowGuestsToUpvote"
+                  (change)="onSettingChange()">
+                <label class="custom-control-label" for="coHostUpvote"></label>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center">
+            <div class="col">
+              <span class="font-weight-base ">
+                {{ 'AllowGuestsToRespond' | localize }}
+              </span>
+            </div>
+            <div class="col-auto">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="coHostRepond"
+                  [checked]="model.guestsAllowGuestsToRespond" [(ngModel)]="model.guestsAllowGuestsToRespond"
+                  (change)="onSettingChange()">
+                <label class="custom-control-label" for="coHostRepond"></label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </tbody>
+  </table>
+  <table class="table table-sm table-nowrap card-table">
+    <thead>
+      <tr>
+        <th>{{ 'Polls' | localize }}</th>
+      </tr>
+    </thead>
+    <tbody class="font-size-base">
+      <div class="card-body">
+        <div class="list-group list-group-flush my-n3">
+          <div class="row align-items-center">
+            <div class="col">
+              <span class="font-weight-base ">
+                {{ 'CreatePolls' | localize }}
+              </span>
+            </div>
+            <div class="col-auto">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="createPoll" [checked]="model.guestsCreatePolls"
+                  [(ngModel)]="model.guestsCreatePolls" (change)="onSettingChange()">
+                <label class="custom-control-label" for="createPoll"></label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </tbody>
+  </table>
+  <table class="table table-sm table-nowrap card-table">
+    <thead>
+      <tr>
+        <th>{{ 'Offers' | localize | uppercase }}</th>
+      </tr>
+    </thead>
+    <tbody class="font-size-base">
+      <div class="card-body">
+        <div class="list-group list-group-flush my-n3">
+          <div class="row align-items-center">
+            <div class="col">
+              <span class="font-weight-base ">
+                {{ 'CreateOffers' | localize }}
+              </span>
+            </div>
+            <div class="col-auto">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="createOffers"
+                  [checked]="model.guestsCreateOffers" [(ngModel)]="model.guestsCreateOffers"
+                  (change)="onSettingChange()">
+                <label class="custom-control-label" for="createOffers"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </tbody>
+  </table>
+  <table class="table table-sm table-nowrap card-table">
+    <thead>
+      <tr>
+        <th>{{ 'Handouts' | localize | uppercase }}</th>
+      </tr>
+    </thead>
+    <tbody class="font-size-base">
+      <div class="card-body">
+        <div class="list-group list-group-flush my-n3">
+          <div class="row align-items-center">
+            <div class="col">
+              <span class="font-weight-base ">
+                {{ 'UploadHandouts' | localize }}
+              </span>
+            </div>
+            <div class="col-auto">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="uploadHandout"
+                  [checked]="model.guestsCreateHandouts" [(ngModel)]="model.guestsCreateHandouts"
+                  (change)="onSettingChange()">
+                <label class="custom-control-label" for="uploadHandout"></label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </tbody>
+  </table>
+</div>

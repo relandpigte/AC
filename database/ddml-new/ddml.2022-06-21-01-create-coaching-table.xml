@@ -1,0 +1,270 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    
+    <changeSet author="j.cezar" id="1">
+        <createTable tableName="academicallycoachings">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Type" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Status" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Description" type="VARCHAR(250)"/>
+            <column name="Categories" type="TEXT"/>
+            <column name="ThumbnailDocumentId" type="CHAR(36)"/>
+            <column name="LanguageId" type="VARCHAR(36)"/>
+            <column name="PricingType" type="INT"/>
+            <column name="Price" type="DECIMAL(18, 2)"/>
+
+            <column name="ReplayType" type="INT(10)"/>
+            <column name="QuestionsEnabled" type="BIT(1)"/>
+            <column name="QuestionType" type="INT(10)"/>
+            <column name="AttendeesCanUpvote" type="BIT(1)"/>
+            <column name="AttendeesCanRespond" type="BIT(1)"/>
+            <column name="ChatEnabled" type="BIT(1)"/>
+            <column name="CustomWebinarUrl" type="VARCHAR(250 BYTE)"/>
+            <column name="RegistrationEmailNotification" type="BIT(1)"/>
+            <column name="TwentyFourHourReminderNotification" type="BIT(1)"/>
+            <column name="OneHourReminderNotification" type="BIT(1)"/>
+            <column name="FifteenMinuteReminderNotification" type="BIT(1)"/>
+            <column name="ReplayFollowUpNotification" type="BIT(1)"/>
+            <column name="Visible" type="BIT(1)"/>
+            <column name="Opened" type="BIT(1)"/>
+
+            <column name="CohostsEnableMicrophone" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsEnableWebCam" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsEnablePresentationTools" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsEnableSpeakRequests" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsViewRegistrants" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsManageGuests" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsManageGuestSettings" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsManageAudience" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsManageAudienceSettings" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsChatPublicly" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsChatPubliclyTagMembers" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsChatPrivately" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsChatPrivatelySelected" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsAllowCohostsToUpvote" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsAllowCohostsToRespond" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsCreatePolls" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsCreateOffers" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsUploadHandouts" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsEnableMicrophone" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsEnableWebCam" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsEnablePresentationTools" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsEnableSpeakRequests" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsViewRegistrants" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsManageAudience" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsManageAudienceSettings" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsChatPublicly" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsChatPubliclyTagMembers" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsChatPrivately" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsChatPrivatelySelected" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsAllowGuestsToUpvote" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsAllowGuestsToRespond" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsCreatePolls" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsCreateOffers" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsCreateHandouts" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceEnableMicrophone" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceEnableWebCam" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceEnablePresentationTools" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceEnableSpeakRequests" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceViewAudience" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceChatPublicly" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceChatPubliclyTagMembers" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceChatPrivately" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceChatPrivatelySelected" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceAskQuestions" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceAskPublicQuestionsAllowAudienceToUpvote" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceAskPublicQuestionsAllowAudienceToRespond" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceAskPrivateQuestionsWithAdmins" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceAskPrivateQuestionsAllowFollowUpResponse" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceEnablePollsTab" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceEnableOffersTab" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceEnableOffersTabDisplayNoOfPurchases" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceEnableHandoutsTab" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceAskPublicQuestions" type="BIT(1)" defaultValueBoolean="false"/>
+
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet author="j.cezar" id="2">
+        <createIndex indexName="FK_Coachings_Documents_ThumbnailDocumentId_idx" tableName="academicallycoachings">
+            <column name="ThumbnailDocumentId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="3">
+        <createIndex indexName="FK_Coachings_SpokenLanguages_LanguageId_idx" tableName="academicallycoachings">
+            <column name="LanguageId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="4">
+        <createIndex indexName="FK_Coachings_Users_CreatorUserId_idx" tableName="academicallycoachings">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="5">
+        <addForeignKeyConstraint baseColumnNames="ThumbnailDocumentId" baseTableName="academicallycoachings" constraintName="FK_Coachings_Documents_ThumbnailDocumentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallydocuments" validate="true"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="6">
+        <addForeignKeyConstraint baseColumnNames="LanguageId" baseTableName="academicallycoachings" constraintName="FK_Coachings_SpokenLanguages_LanguageId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyspokenlanguages" validate="true"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="7">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallycoachings" constraintName="FK_Coachings_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+
+
+    <changeSet author="j.cezar" id="8">
+        <createTable tableName="academicallycoachingresources">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Name" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Type" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CoachingId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DocumentId" type="CHAR(36)"/>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="j.cezar" id="9">
+        <createIndex indexName="FK_CoachingResources_Documents_DocumentId_idx" tableName="academicallycoachingresources">
+            <column name="DocumentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="10">
+        <createIndex indexName="FK_CoachingResources_Coachings_CoachingId_idx" tableName="academicallycoachingresources">
+            <column name="CoachingId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="11">
+        <createIndex indexName="FK_CoachingResources_Users_CreatorUserId_idx" tableName="academicallycoachingresources">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="12">
+        <addForeignKeyConstraint baseColumnNames="DocumentId" baseTableName="academicallycoachingresources" constraintName="FK_CoachingResources_Documents_DocumentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallydocuments" validate="true"/>
+    </changeSet>
+    <changeSet author="j.cezar" id="13">
+        <addForeignKeyConstraint baseColumnNames="CoachingId" baseTableName="academicallycoachingresources" constraintName="FK_CoachingResources_Coachings_CoachingId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallycoachings" validate="true"/>
+    </changeSet>
+    <changeSet author="j.cezar" id="14">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallycoachingresources" constraintName="FK_CoachingResources_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+
+
+    <changeSet author="j.cezar" id="15">
+        <createTable tableName="academicallystudentcoachings">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CoachingId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SaveOnly" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="j.cezar" id="16">
+        <createIndex indexName="FK_StudentCoachings_Coachings_CoachingId_idx" tableName="academicallystudentcoachings">
+            <column name="CoachingId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="17">
+        <createIndex indexName="FK_StudentCoachings_Users_CreatorUserId_idx" tableName="academicallystudentcoachings">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="18">
+        <addForeignKeyConstraint baseColumnNames="CoachingId" baseTableName="academicallystudentcoachings" constraintName="FK_StudentCoachings_Coachings_CoachingId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallycoachings" validate="true"/>
+    </changeSet>
+    <changeSet author="j.cezar" id="19">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallystudentcoachings" constraintName="FK_StudentCoachings_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+
+
+    <changeSet author="j.cezar" id="20">
+        <createTable tableName="academicallycoachingpresenters">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Type" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CoachingId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UserId" type="BIGINT"/>
+            <column name="Email" type="VARCHAR(250 BYTE)"/>
+            <column defaultValueNumeric="0" name="Status" type="INT(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="j.cezar" id="21">
+        <createIndex indexName="FK_CoachingPresenters_Coachings_CoachingId_idx" tableName="academicallycoachingpresenters">
+            <column name="CoachingId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="22">
+        <createIndex indexName="FK_CoachingPresenters_Users_CreatorUserId_idx" tableName="academicallycoachingpresenters">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="23">
+        <createIndex indexName="FK_CoachingPresenters_Users_UserId_idx" tableName="academicallycoachingpresenters">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="24">
+        <addForeignKeyConstraint baseColumnNames="CoachingId" baseTableName="academicallycoachingpresenters" constraintName="FK_CoachingPresenters_Coachings_CoachingId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallycoachings" validate="true"/>
+    </changeSet>
+    <changeSet author="j.cezar" id="25">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallycoachingpresenters" constraintName="FK_CoachingPresenters_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    <changeSet author="j.cezar" id="26">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="academicallycoachingpresenters" constraintName="FK_CoachingPresenters_Users_UserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    
+</databaseChangeLog>

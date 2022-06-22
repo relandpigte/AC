@@ -1748,6 +1748,28 @@
     <text name="AllTutors">All Tutors</text>
     <text name="Coaching">Coaching</text>
 	<text name="EndEventConfirmation">Are you sure you want to end this event?</text>
-
+	<!-- Coaching -->
+	<text name="NewCoaching">New Coaching</text>
+	<text name="CreateCoaching">Create Coaching</text>
+    <text name="CoachingName">Coaching name</text>
+    <text name="CoachingSeriesName">Coaching series name</text>
+	<text name="NameYourCoaching">Name your coaching</text>
+	<text name="NameYourCoachingSeries">Name your coaching series</text>
+    <text name="WriteYourCoachingNameHere">Write your coaching name here</text>
+    <text name="WriteYourCoachingSeriesNameHere">Write your coaching series name here</text>
+	<text name="CoachingPreview">Coaching preview</text>
+	<text name="CoachingThumbnail">Coaching thumbnail</text>
+	<text name="CoachingSeriesThumbnail">Coaching series thumbnail</text>
+	<text name="DeleteCoachingResourceConfirmationMessage">Are you sure you want to delete this resource?</text>
+	<text name="DeleteCoachinPollConfirmationMessage">Are you sure you want to delete this poll?</text>
+	<text name="CoachingReplay">Coaching replay</text>
+	<text name="RecordCoachingDescription">Record coaching and make replay available in store</text>
+	<text name="DontRecordCoachingDescription">Don't record coaching</text>
+	<text name="CoachingVisibility">Coaching visibility</text>
+	<text name="CoachingAccess">Coaching access</text>
+	<text name="OpenCoachingAccessDescription">Enrollment open and accepting attendees</text>
+	<text name="ClosedCoachingAccessDescription">Enrollment closed, no longer accepting attendees</text>
+	<text name="PublishCoachingConfirmationMessage">Are you sure you want to publish this coaching?</text>
+	<text name="UnpublishCoachingConfirmationMessage">Are you sure you want to unpublish this coaching? The status will change to Draft.</text>
   </texts>
 </localizationDictionary>

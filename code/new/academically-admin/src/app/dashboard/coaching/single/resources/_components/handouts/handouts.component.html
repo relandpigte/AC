@@ -1,0 +1,56 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="card-header-title">
+          {{ 'Handouts' | localize }}
+        </h4>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-sm btn-white" (click)="onAddClick()">
+          {{ 'Add' | localize }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body py-0" [loader]="isLoading">
+    <ul *ngIf="coachingResources.length else noCoachingResourcesTemplate" class="list-group list-group-flush">
+      <li
+        *ngFor="let coachingResource of (coachingResources | paginate: { id: 'coaching-handouts', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })"
+        class="list-group-item py-4">
+        <div class="row">
+          <div class="col-auto d-flex justify-content-center align-items-center">
+            <div class="avatar avatar-4by3 d-flex justify-content-center align-items-center">
+              <i class="fe fe-folder text-muted h1 p-0 m-0"></i>
+            </div>
+          </div>
+          <div class="col d-flex flex-column justify-content-center">
+            <h4 class="m-0">{{ coachingResource.name }}</h4>
+            <small class="text-muted mb-2">
+              {{ formatBytes(coachingResource?.document?.size) }}
+              {{ getFileExtension(coachingResource?.document?.originalFileName) | uppercase }}
+            </small>
+            <small class="text-muted m-0">
+              {{ 'UploadedOn' | localize }}
+              {{ coachingResource.creationTime | dateFormat: 'MMM D, YYYY' }}
+            </small>
+          </div>
+          <div class="col-auto d-flex align-items-center">
+            <button class="btn btn-sm btn-rounded-circle btn-outline-danger" (click)="onDeleteClick(coachingResource)">
+              <i class="fe fe-trash-2"></i>
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <abp-pagination-controls *ngIf="totalItems > coachingResources.length" id="coaching-handouts"
+    (pageChange)="getDataPage($event)">
+  </abp-pagination-controls>
+</div>
+
+<ng-template #noCoachingResourcesTemplate>
+  <p class="m-0 p-5 text-muted text-center">
+    {{ 'NoItemsFound' | localize }}
+  </p>
+</ng-template>

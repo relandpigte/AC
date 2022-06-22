@@ -138,5 +138,7 @@
 	<include file="ddml-new/ddml.2022-06-01-02-create-projectavailabilities-table.xml" />
 	<include file="ddml-new/ddml.2022-06-03-01-create-workhistories-table.xml" />
 	<include file="ddml-new/ddml.2022-06-14-01-alter-courses-table.xml" />
+	<include file="ddml-new/ddml.2022-06-21-01-create-coaching-table.xml" />
+	<include file="ddml-new/ddml.2022-06-21-02-create-coaching-poll-tables.xml" />
 </databaseChangeLog>
 	

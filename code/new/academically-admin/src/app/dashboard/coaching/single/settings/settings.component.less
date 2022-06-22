@@ -1,0 +1,82 @@
+.min-w-50px {
+  min-width: 50px;
+}
+
+.inline-form-control {
+  width: 50px;
+
+  &.x3 {
+    width: 150px;
+  }
+}
+
+.delay-form {
+  display      : flex;
+  align-items  : center;
+  margin-bottom: 0;
+
+  label {
+    margin-bottom: 0;
+    cursor       : pointer;
+  }
+}
+
+.times-per-day {
+  width: 50px;
+}
+
+.session-time,
+.recursion-type {
+  width  : 150px;
+  display: inline-block;
+}
+
+.session-time-label {
+  width: 80px;
+}
+
+.session-date,
+.duration {
+  width: 200px;
+}
+
+.transparent-today {
+  background-color: transparent;
+}
+
+:host ::ng-deep {
+  .session-time {
+    p-calendar {
+      input {
+        padding : 0;
+        border  : 0;
+        top     : -1px;
+        position: relative;
+
+        &:focus {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+
+  .session-days {
+    p-calendar {
+      .p-datepicker-today {
+        span {
+          background: transparent;
+        }
+      }
+
+      .p-datepicker-header {
+        display: none;
+      }
+
+      .p-datepicker-calendar {
+        thead {
+          display: none;
+        }
+      }
+    }
+  }
+}
