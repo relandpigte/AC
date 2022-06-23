@@ -14,6 +14,7 @@
         public const string Pages_Dashboard_Courses = "Pages.Dashboard.Courses";
         public const string Pages_Dashboard_Coaching = "Pages.Dashboard.Coaching";
         public const string Pages_Dashboard_Events = "Pages.Dashboard.Events";
+        public const string Pages_Dashboard_Workshop = "Pages.Dashboard.Workshop";
 
 
         public const string Pages_Profile = "Pages.Profile";

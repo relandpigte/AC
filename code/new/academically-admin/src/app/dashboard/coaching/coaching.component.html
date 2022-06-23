@@ -14,12 +14,6 @@
                 {{ 'NewCoaching' | localize | titlecase }}
               </a>
             </div>
-            <div class="col-auto">
-              <a href="#!new-workshop" class="btn btn-primary ml-2" (click)="$event.preventDefault(); onNewWorkshopClick()"
-                *ngIf="isTutor">
-                {{ 'NewWorkshop' | localize | titlecase }}
-              </a>
-            </div>
           </div>
         </div>
       </div>
@@ -47,7 +41,7 @@
         <div class="tab-pane fade" [ngClass]="[isTutor ? 'show active' : '']" id="teaching" role="tabpanel" aria-labelledby="teaching-tab">
           <app-teaching></app-teaching>
         </div>
-        <div class="tab-pane fade show active" [ngClass]="[!isTutor ? 'show active' : '']" id="learning" role="tabpanel" aria-labelledby="learning-tab">
+        <div class="tab-pane fade" [ngClass]="[!isTutor ? 'show active' : '']" id="learning" role="tabpanel" aria-labelledby="learning-tab">
           <app-learning></app-learning>
         </div>
         <div class="tab-pane fade" id="schedule" role="tabpanel" aria-labelledby="schedule-tab">

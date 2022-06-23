@@ -61,7 +61,7 @@ namespace Academically
             RegisterLocationsProvider();
 
             // Send all exception to client side
-            Configuration.Modules.AbpWebCommon().SendAllExceptionsToClients = true;
+            // Configuration.Modules.AbpWebCommon().SendAllExceptionsToClients = true;
         }
 
         public override void Initialize()

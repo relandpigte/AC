@@ -17,6 +17,37 @@
           </div>
         </div>
       </div>
+
+      <div class="row align-items-center mt-n4 mb-4">
+        <div class="col">
+          <ul class="nav nav-tabs nav-tabs-sm nav-overflow">
+            <li *ngIf="isTutor" class="nav-item">
+              <a class="nav-link" [class.active]="isTutor" id="teaching-tab" data-toggle="tab" href="#teaching" role="tab"
+                aria-controls="teaching" aria-selected="true">{{ 'MyTeaching' | localize | titlecase }}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="!isTutor" id="learning-tab" data-toggle="tab" href="#learning" role="tab"
+                aria-controls="learning" aria-selected="false">{{ 'MyLearning' | localize | titlecase }}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="schedule-tab" data-toggle="tab" href="#schedule" role="tab"
+                aria-controls="schedule" aria-selected="false">{{ 'Schedule' | localize | titlecase }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tab-content">
+        <div class="tab-pane fade" [ngClass]="[isTutor ? 'show active' : '']" id="teaching" role="tabpanel" aria-labelledby="teaching-tab">
+          <app-teaching></app-teaching>
+        </div>
+        <div class="tab-pane fade" [ngClass]="[!isTutor ? 'show active' : '']" id="learning" role="tabpanel" aria-labelledby="learning-tab">
+          <app-learning></app-learning>
+        </div>
+        <div class="tab-pane fade" id="schedule" role="tabpanel" aria-labelledby="schedule-tab">
+          <app-schedule></app-schedule>
+        </div>
+      </div>
     </div>
   </div>
 </div>
