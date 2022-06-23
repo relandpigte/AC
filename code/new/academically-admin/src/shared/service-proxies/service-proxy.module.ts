@@ -80,6 +80,9 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.CoachingsServiceProxy,
         ApiServiceProxies.CoachingPollsServiceProxy,
         ApiServiceProxies.CoachingResourcesServiceProxy,
+        ApiServiceProxies.WorkshopsServiceProxy,
+        ApiServiceProxies.WorkshopPollsServiceProxy,
+        ApiServiceProxies.WorkshopResourcesServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

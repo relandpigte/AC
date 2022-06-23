@@ -1,11 +1,12 @@
 import { Component, Injector } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CoachingsServiceProxy, CreateCoachingDto, CoachingType } from '@shared/service-proxies/service-proxies';
+import { CoachingsServiceProxy, CreateCoachingDto, CoachingType, CreateWorkshopDto, WorkshopType, WorkshopsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CreateCoachingComponent } from './_components/create-coaching/create-coaching.component';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { CreateWorkshopComponent } from '../workshop/_components/create-workshop/create-workshop.component';
 
 @Component({
   selector: 'app-coaching',
@@ -18,7 +19,8 @@ export class CoachingComponent extends AppComponentBase  {
     injector: Injector,
     private _router: Router,
     private _modalService: BsModalService,
-    private _coachingService: CoachingsServiceProxy
+    private _coachingService: CoachingsServiceProxy,
+    private _workshopService: WorkshopsServiceProxy
   ) {
     super(injector);
   }
@@ -37,6 +39,24 @@ export class CoachingComponent extends AppComponentBase  {
         .subscribe(response => {
           this.notify.success(this.l('SavedSuccessfully'));
           this._router.navigate(['/app/dashboard/coaching/', response.id]);
+        });
+    });
+  }
+
+  onNewWorkshopClick(): void {
+    const model = new CreateWorkshopDto();
+    model.name = '';
+    model.type = WorkshopType.Single;
+
+    const createWorkshopModalSettings = this.defaultModalSettings as ModalOptions<CreateWorkshopComponent>;
+    createWorkshopModalSettings.initialState = { model: model };
+    const createWorkshopModal = this._modalService.show(CreateWorkshopComponent, createWorkshopModalSettings).content;
+    createWorkshopModal.createWorkshop.subscribe(workshop => {
+      this._workshopService.create(workshop)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(response => {
+          this.notify.success(this.l('SavedSuccessfully'));
+          this._router.navigate(['/app/dashboard/workshop/', response.id]);
         });
     });
   }

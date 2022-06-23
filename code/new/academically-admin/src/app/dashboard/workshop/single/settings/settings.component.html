@@ -1,0 +1,214 @@
+<form class="form-horizontal" autocomplete="off" #form="ngForm">
+  <div class="row">
+    <div class="col-8" [loader]="isLoading">
+
+      <div class="card" *ngIf="workshopType === WorkshopType.Single">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'WorkshopReplay' | localize }}
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="custom-control custom-radio">
+            <input [(ngModel)]="model.replayType" type="radio" id="recordReplayType" name="replayType"
+              [value]="WorkshopReplayType.Record" class="custom-control-input" />
+            <label class="custom-control-label" for="recordReplayType"></label>
+            <label class="custom-control-caption" for="recordReplayType">
+              {{ 'RecordWorkshopDescription' | localize }}
+            </label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input [(ngModel)]="model.replayType" type="radio" id="dontRecordReplayType" name="replayType"
+              [value]="WorkshopReplayType.DontRecord" class="custom-control-input" />
+            <label class="custom-control-label" for="dontRecordReplayType"></label>
+            <label class="custom-control-caption mb-0" for="dontRecordReplayType">
+              {{ 'DontRecordWorkshopDescription' | localize }}
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'CustomWebinarUrl' | localize }}
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="form-group required mb-0 d-flex align-items-center">
+            <a href="javascript:;">
+              www.scholarpro.com/
+            </a>
+            <input [(ngModel)]="model.customWebinarUrl" class="form-control" type="text" id="customWebinarUrl"
+              name="customWebinarUrl" [placeholder]="'CustomUrl' | localize" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'Notifications' | localize }}
+          </h4>
+        </div>
+        <div class="card-body py-0">
+          <ul class="list-group list-group-flush">
+            <div class="list-group-item">
+              <div class="row">
+                <div class="col">
+                  {{ 'RegistrationEmail' | localize }}
+                </div>
+                <div class="col-auto">
+                  <div class="custom-control custom-switch mr-n2">
+                    <input [(ngModel)]="model.registrationEmailNotification" type="checkbox"
+                      id="registrationEmailNotification" name="registrationEmailNotification"
+                      class="custom-control-input" [checked]="model.registrationEmailNotification" />
+                    <label class="custom-control-label" for="registrationEmailNotification"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="list-group-item">
+              <div class="row">
+                <div class="col">
+                  {{ 'TwentyFourHourReminder' | localize }}
+                </div>
+                <div class="col-auto">
+                  <div class="custom-control custom-switch mr-n2">
+                    <input [(ngModel)]="model.twentyFourHourReminderNotification" type="checkbox"
+                      id="twentyFourHourReminderNotification" name="twentyFourHourReminderNotification"
+                      class="custom-control-input" [checked]="model.twentyFourHourReminderNotification" />
+                    <label class="custom-control-label" for="twentyFourHourReminderNotification"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="list-group-item">
+              <div class="row">
+                <div class="col">
+                  {{ 'OneHourReminder' | localize }}
+                </div>
+                <div class="col-auto">
+                  <div class="custom-control custom-switch mr-n2">
+                    <input [(ngModel)]="model.oneHourReminderNotification" type="checkbox"
+                      id="oneHourReminderNotification" name="oneHourReminderNotification" class="custom-control-input"
+                      [checked]="model.oneHourReminderNotification" />
+                    <label class="custom-control-label" for="oneHourReminderNotification"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="list-group-item">
+              <div class="row">
+                <div class="col">
+                  {{ 'FifteenMinuteReminder' | localize }}
+                </div>
+                <div class="col-auto">
+                  <div class="custom-control custom-switch mr-n2">
+                    <input [(ngModel)]="model.fifteenMinuteReminderNotification" type="checkbox"
+                      id="fifteenMinuteReminderNotification" name="fifteenMinuteReminderNotification"
+                      class="custom-control-input" [checked]="model.fifteenMinuteReminderNotification" />
+                    <label class="custom-control-label" for="fifteenMinuteReminderNotification"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="list-group-item">
+              <div class="row">
+                <div class="col">
+                  {{ 'ReplayFollowUp' | localize }}
+                </div>
+                <div class="col-auto">
+                  <div class="custom-control custom-switch mr-n2">
+                    <input [(ngModel)]="model.replayFollowUpNotification" type="checkbox"
+                      id="replayFollowUpNotification" name="replayFollowUpNotification" class="custom-control-input"
+                      [checked]="model.replayFollowUpNotification" />
+                    <label class="custom-control-label" for="replayFollowUpNotification"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-4">
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'WorkshopVisibility' | localize }}
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h4 class="mb-1">{{ 'Visible' | localize }}</h4>
+              <span class="text-muted small">{{ 'ProfileAndStoreVisibleDescription' | localize }}</span>
+            </div>
+            <div class="col-auto d-flex align-items-center">
+              <div class="custom-control custom-radio mr-n2">
+                <input [(ngModel)]="model.visible" type="radio" name="visible" id="ProfileAndStoreVisible"
+                  [value]="true" class="custom-control-input">
+                <label class="custom-control-label" for="ProfileAndStoreVisible"></label>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col">
+              <h4 class="mb-1">{{ 'Invisible' | localize }}</h4>
+              <span class="text-muted small">{{ 'ProfileAndStoreInvisibleDescription' | localize }}</span>
+            </div>
+            <div class="col-auto d-flex align-items-center">
+              <div class="custom-control custom-radio mr-n2">
+                <input [(ngModel)]="model.visible" type="radio" name="visible" id="ProfileAndStoreInvisible"
+                  [value]="false" class="custom-control-input">
+                <label class="custom-control-label" for="ProfileAndStoreInvisible"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'WorkshopAccess' | localize }}
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h4 class="mb-1">{{ 'Open' | localize }}</h4>
+              <span class="text-muted small">{{ 'OpenWorkshopAccessDescription' | localize }}</span>
+            </div>
+            <div class="col-auto d-flex align-items-center">
+              <div class="custom-control custom-radio mr-n2">
+                <input [(ngModel)]="model.opened" type="radio" name="opened" id="openWorkshop" [value]="true"
+                  class="custom-control-input">
+                <label class="custom-control-label" for="openWorkshop"></label>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col">
+              <h4 class="mb-1">{{ 'Closed' | localize }}</h4>
+              <span class="text-muted small">{{ 'ClosedWorkshopAccessDescription' | localize }}</span>
+            </div>
+            <div class="col-auto d-flex align-items-center">
+              <div class="custom-control custom-radio mr-n2">
+                <input [(ngModel)]="model.opened" type="radio" name="opened" id="closedWorkshop" [value]="false"
+                  class="custom-control-input">
+                <label class="custom-control-label" for="closedWorkshop"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</form>

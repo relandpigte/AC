@@ -41,6 +41,13 @@ import { DashboardComponent } from './dashboard.component';
                 (m) => m.CoachingModule
               ),
           },
+          {
+            path: 'workshop',
+            loadChildren: () =>
+              import('@app/dashboard/workshop/workshop.module').then(
+                (m) => m.WorkshopModule
+              ),
+          },
           { path: '', redirectTo: 'overview' },
         ],
       }

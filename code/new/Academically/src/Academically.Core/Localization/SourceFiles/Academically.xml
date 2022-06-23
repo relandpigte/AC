@@ -1761,7 +1761,7 @@
 	<text name="CoachingThumbnail">Coaching thumbnail</text>
 	<text name="CoachingSeriesThumbnail">Coaching series thumbnail</text>
 	<text name="DeleteCoachingResourceConfirmationMessage">Are you sure you want to delete this resource?</text>
-	<text name="DeleteCoachinPollConfirmationMessage">Are you sure you want to delete this poll?</text>
+	<text name="DeleteCoachingPollConfirmationMessage">Are you sure you want to delete this poll?</text>
 	<text name="CoachingReplay">Coaching replay</text>
 	<text name="RecordCoachingDescription">Record coaching and make replay available in store</text>
 	<text name="DontRecordCoachingDescription">Don't record coaching</text>
@@ -1771,5 +1771,28 @@
 	<text name="ClosedCoachingAccessDescription">Enrollment closed, no longer accepting attendees</text>
 	<text name="PublishCoachingConfirmationMessage">Are you sure you want to publish this coaching?</text>
 	<text name="UnpublishCoachingConfirmationMessage">Are you sure you want to unpublish this coaching? The status will change to Draft.</text>
+	<!-- Workshop -->
+	<text name="NewWorkshop">New Workshop</text>
+	<text name="CreateWorkshop">Create Workshop</text>
+	<text name="WorkshopName">Workshop name</text>
+	<text name="WorkshopSeriesName">Workshop series name</text>
+	<text name="NameYourWorkshop">Name your workshop</text>
+	<text name="NameYourWorkshopSeries">Name your workshop series</text>
+	<text name="WriteYourWorkshopNameHere">Write your workshop name here</text>
+	<text name="WriteYourWorkshopSeriesNameHere">Write your workshop series name here</text>
+	<text name="WorkshopPreview">Workshop preview</text>
+	<text name="WorkshopThumbnail">Workshop thumbnail</text>
+	<text name="WorkshopSeriesThumbnail">Workshop series thumbnail</text>
+	<text name="DeleteWorkshopResourceConfirmationMessage">Are you sure you want to delete this resource?</text>
+	<text name="DeleteWorkshopPollConfirmationMessage">Are you sure you want to delete this poll?</text>
+	<text name="WorkshopReplay">Workshop replay</text>
+	<text name="RecordWorkshopDescription">Record workshop and make replay available in store</text>
+	<text name="DontRecordWorkshopDescription">Don't record workshop</text>
+	<text name="WorkshopVisibility">Workshop visibility</text>
+	<text name="WorkshopAccess">Workshop access</text>
+	<text name="OpenWorkshopAccessDescription">Enrollment open and accepting attendees</text>
+	<text name="ClosedWorkshopAccessDescription">Enrollment closed, no longer accepting attendees</text>
+	<text name="PublishWorkshopConfirmationMessage">Are you sure you want to publish this workshop?</text>
+	<text name="UnpublishWorkshopConfirmationMessage">Are you sure you want to unpublish this workshop? The status will change to Draft.</text>
   </texts>
 </localizationDictionary>

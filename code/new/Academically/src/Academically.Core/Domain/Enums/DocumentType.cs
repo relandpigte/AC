@@ -24,6 +24,8 @@
         EventResource,
         Project,
         CoachingThumbnail,
-        CoachingResource
+        CoachingResource,
+        WorkshopThumbnail,
+        WorkshopResource
     }
 }

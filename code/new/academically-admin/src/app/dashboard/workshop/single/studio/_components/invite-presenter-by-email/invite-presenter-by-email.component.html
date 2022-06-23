@@ -1,0 +1,16 @@
+<form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="card-body">
+
+    <div class="form-group required mb-0">
+      <label class="col-form-label" for="email">{{ 'Email' | localize }}</label>
+      <input class="form-control" type="email" [(ngModel)]="email" id="email" name="email" #emailModel="ngModel"
+        #emailEl required email />
+      <abp-validation-summary [control]="emailModel" [controlEl]="emailEl">
+      </abp-validation-summary>
+    </div>
+
+  </div>
+  <abp-modal-footer [isLoading]="loading" [cancelDisabled]="loading" [saveDisabled]="!form.form.valid || loading"
+    [saveLabel]="'Send' | localize" (onCancelClick)="onCloseClick()">
+  </abp-modal-footer>
+</form>

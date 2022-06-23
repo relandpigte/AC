@@ -1,0 +1,396 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    
+    <changeSet author="j.cezar" id="1">
+        <createTable tableName="academicallyworkshops">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Type" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Status" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Description" type="VARCHAR(250)"/>
+            <column name="Categories" type="TEXT"/>
+            <column name="ThumbnailDocumentId" type="CHAR(36)"/>
+            <column name="LanguageId" type="VARCHAR(36)"/>
+            <column name="PricingType" type="INT"/>
+            <column name="Price" type="DECIMAL(18, 2)"/>
+
+            <column name="FrequencyType" type="INT(10)"/>
+            <column name="EventDateTime" type="DATETIME"/>
+            <column name="Duration" type="INT(10)"/>
+            <column name="DelayType" type="INT(10)"/>
+            <column name="DelayValue" type="VARCHAR(45 BYTE)"/>
+            <column name="EndDate" type="DATETIME"/>
+            <column defaultValueNumeric="0" name="RecursionType" type="INT(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TimesPerDay" type="INT(10)"/>
+            <column name="SessionTimes" type="VARCHAR(250 BYTE)"/>
+            <column name="SessionDaysOfWeek" type="VARCHAR(250 BYTE)"/>
+            <column name="SessionDaysOfMonth" type="VARCHAR(250 BYTE)"/>
+
+            <column name="ReplayType" type="INT(10)"/>
+            <column name="QuestionsEnabled" type="BIT(1)"/>
+            <column name="QuestionType" type="INT(10)"/>
+            <column name="AttendeesCanUpvote" type="BIT(1)"/>
+            <column name="AttendeesCanRespond" type="BIT(1)"/>
+            <column name="ChatEnabled" type="BIT(1)"/>
+            <column name="CustomWebinarUrl" type="VARCHAR(250 BYTE)"/>
+            <column name="RegistrationEmailNotification" type="BIT(1)"/>
+            <column name="TwentyFourHourReminderNotification" type="BIT(1)"/>
+            <column name="OneHourReminderNotification" type="BIT(1)"/>
+            <column name="FifteenMinuteReminderNotification" type="BIT(1)"/>
+            <column name="ReplayFollowUpNotification" type="BIT(1)"/>
+            <column name="Visible" type="BIT(1)"/>
+            <column name="Opened" type="BIT(1)"/>
+
+            <column name="CohostsEnableMicrophone" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsEnableWebCam" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsEnablePresentationTools" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsEnableSpeakRequests" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsViewRegistrants" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsManageGuests" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsManageGuestSettings" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsManageAudience" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsManageAudienceSettings" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsChatPublicly" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsChatPubliclyTagMembers" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsChatPrivately" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsChatPrivatelySelected" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsAllowCohostsToUpvote" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsAllowCohostsToRespond" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsCreatePolls" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsCreateOffers" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="CohostsUploadHandouts" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsEnableMicrophone" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsEnableWebCam" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsEnablePresentationTools" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsEnableSpeakRequests" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsViewRegistrants" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsManageAudience" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsManageAudienceSettings" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsChatPublicly" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsChatPubliclyTagMembers" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsChatPrivately" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsChatPrivatelySelected" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsAllowGuestsToUpvote" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsAllowGuestsToRespond" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsCreatePolls" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsCreateOffers" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="GuestsCreateHandouts" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceEnableMicrophone" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceEnableWebCam" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceEnablePresentationTools" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceEnableSpeakRequests" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceViewAudience" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceChatPublicly" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceChatPubliclyTagMembers" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceChatPrivately" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceChatPrivatelySelected" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceAskQuestions" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceAskPublicQuestionsAllowAudienceToUpvote" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceAskPublicQuestionsAllowAudienceToRespond" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceAskPrivateQuestionsWithAdmins" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceAskPrivateQuestionsAllowFollowUpResponse" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceEnablePollsTab" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceEnableOffersTab" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceEnableOffersTabDisplayNoOfPurchases" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceEnableHandoutsTab" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="AudienceAskPublicQuestions" type="BIT(1)" defaultValueBoolean="false"/>
+
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet author="j.cezar" id="2">
+        <createIndex indexName="FK_Workshops_Documents_ThumbnailDocumentId_idx" tableName="academicallyworkshops">
+            <column name="ThumbnailDocumentId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="3">
+        <createIndex indexName="FK_Workshops_SpokenLanguages_LanguageId_idx" tableName="academicallyworkshops">
+            <column name="LanguageId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="4">
+        <createIndex indexName="FK_Workshops_Users_CreatorUserId_idx" tableName="academicallyworkshops">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="5">
+        <addForeignKeyConstraint baseColumnNames="ThumbnailDocumentId" baseTableName="academicallyworkshops" constraintName="FK_Workshops_Documents_ThumbnailDocumentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallydocuments" validate="true"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="6">
+        <addForeignKeyConstraint baseColumnNames="LanguageId" baseTableName="academicallyworkshops" constraintName="FK_Workshops_SpokenLanguages_LanguageId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyspokenlanguages" validate="true"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="7">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallyworkshops" constraintName="FK_Workshops_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+
+
+    <changeSet author="j.cezar" id="8">
+        <createTable tableName="academicallyworkshopresources">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Name" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Type" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="WorkshopId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DocumentId" type="CHAR(36)"/>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="j.cezar" id="9">
+        <createIndex indexName="FK_WorkshopResources_Documents_DocumentId_idx" tableName="academicallyworkshopresources">
+            <column name="DocumentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="10">
+        <createIndex indexName="FK_WorkshopResources_Workshops_WorkshopId_idx" tableName="academicallyworkshopresources">
+            <column name="WorkshopId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="11">
+        <createIndex indexName="FK_WorkshopResources_Users_CreatorUserId_idx" tableName="academicallyworkshopresources">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="12">
+        <addForeignKeyConstraint baseColumnNames="DocumentId" baseTableName="academicallyworkshopresources" constraintName="FK_WorkshopResources_Documents_DocumentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallydocuments" validate="true"/>
+    </changeSet>
+    <changeSet author="j.cezar" id="13">
+        <addForeignKeyConstraint baseColumnNames="WorkshopId" baseTableName="academicallyworkshopresources" constraintName="FK_WorkshopResources_Workshops_WorkshopId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyworkshops" validate="true"/>
+    </changeSet>
+    <changeSet author="j.cezar" id="14">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallyworkshopresources" constraintName="FK_WorkshopResources_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+
+
+    <changeSet author="j.cezar" id="15">
+        <createTable tableName="academicallystudentworkshops">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="WorkshopId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SaveOnly" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="j.cezar" id="16">
+        <createIndex indexName="FK_StudentWorkshops_Workshops_WorkshopId_idx" tableName="academicallystudentworkshops">
+            <column name="WorkshopId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="17">
+        <createIndex indexName="FK_StudentWorkshops_Users_CreatorUserId_idx" tableName="academicallystudentworkshops">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="18">
+        <addForeignKeyConstraint baseColumnNames="WorkshopId" baseTableName="academicallystudentworkshops" constraintName="FK_StudentWorkshops_Workshops_WorkshopId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyworkshops" validate="true"/>
+    </changeSet>
+    <changeSet author="j.cezar" id="19">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallystudentworkshops" constraintName="FK_StudentWorkshops_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+
+
+    <changeSet author="j.cezar" id="20">
+        <createTable tableName="academicallyworkshoppresenters">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Type" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="WorkshopId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UserId" type="BIGINT"/>
+            <column name="Email" type="VARCHAR(250 BYTE)"/>
+            <column defaultValueNumeric="0" name="Status" type="INT(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="j.cezar" id="21">
+        <createIndex indexName="FK_WorkshopPresenters_Workshops_WorkshopId_idx" tableName="academicallyworkshoppresenters">
+            <column name="WorkshopId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="22">
+        <createIndex indexName="FK_WorkshopPresenters_Users_CreatorUserId_idx" tableName="academicallyworkshoppresenters">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="23">
+        <createIndex indexName="FK_WorkshopPresenters_Users_UserId_idx" tableName="academicallyworkshoppresenters">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="24">
+        <addForeignKeyConstraint baseColumnNames="WorkshopId" baseTableName="academicallyworkshoppresenters" constraintName="FK_WorkshopPresenters_Workshops_WorkshopId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyworkshops" validate="true"/>
+    </changeSet>
+    <changeSet author="j.cezar" id="25">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallyworkshoppresenters" constraintName="FK_WorkshopPresenters_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    <changeSet author="j.cezar" id="26">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="academicallyworkshoppresenters" constraintName="FK_WorkshopPresenters_Users_UserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="27">
+        <createTable tableName="AcademicallyWorkshopPollQuestionOptions">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Text" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="WorkshopPollQuestionId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="28">
+        <createTable tableName="AcademicallyWorkshopPollQuestions">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Text" type="CHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Type" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MinimumResponse" type="INT"/>
+            <column name="MaximumResponse" type="INT"/>
+            <column name="ShareResults" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="WorkshopPollId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="29">
+        <createTable tableName="AcademicallyWorkshopPolls">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Name" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="WorkshopId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="30">
+        <createIndex indexName="FK_WPCOs_WPCs_WorkshopPollQuestionId_idx" tableName="AcademicallyWorkshopPollQuestionOptions">
+            <column name="WorkshopPollQuestionId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="31">
+        <createIndex indexName="FK_WPCs_WorkshopPolls_WorkshopPollId_idx" tableName="AcademicallyWorkshopPollQuestions">
+            <column name="WorkshopPollId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="32">
+        <createIndex indexName="FK_WPCs_Users_CreatorUserId_idx" tableName="AcademicallyWorkshopPollQuestions">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="33">
+        <createIndex indexName="FK_WorkshopPolls_Workshops_WorkshopId_idx" tableName="AcademicallyWorkshopPolls">
+            <column name="WorkshopId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="34">
+        <createIndex indexName="FK_WorkshopPolls_Users_CreatorUserId_idx" tableName="AcademicallyWorkshopPolls">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="35">
+        <addForeignKeyConstraint baseColumnNames="WorkshopPollQuestionId" baseTableName="AcademicallyWorkshopPollQuestionOptions" constraintName="FK_WPCOs_WPCs_WorkshopPollQuestionId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyWorkshopPollQuestions" validate="true"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="36">
+        <addForeignKeyConstraint baseColumnNames="WorkshopPollId" baseTableName="AcademicallyWorkshopPollQuestions" constraintName="FK_WPCs_WorkshopPolls_WorkshopPollId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyWorkshopPolls" validate="true"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="37">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="AcademicallyWorkshopPollQuestions" constraintName="FK_WPCs_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="38">
+        <addForeignKeyConstraint baseColumnNames="WorkshopId" baseTableName="AcademicallyWorkshopPolls" constraintName="FK_WorkshopPolls_Workshops_WorkshopId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyworkshops" validate="true"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="39">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="AcademicallyWorkshopPolls" constraintName="FK_WorkshopPolls_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    
+</databaseChangeLog>
