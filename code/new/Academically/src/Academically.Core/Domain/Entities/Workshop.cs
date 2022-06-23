@@ -19,6 +19,18 @@ namespace Academically.Domain.Entities
         public Guid? LanguageId { get; set; }
         public PricingType? PricingType { get; set; }
         public decimal? Price { get; set; }
+        public WorkshopFrequencyType? FrequencyType { get; set; }
+        public DateTime? WorkshopDateTime { get; set; }
+        public DateTime? EndDate { get; set; }
+        public int? Duration { get; set; }
+        public ServiceDelayType? DelayType { get; set; }
+        public string DelayValue { get; set; }
+        public WorkshopRecursionType RecursionType { get; set; }
+        public int? TimesPerDay { get; set; }
+        public string SessionTimes { get; set; }
+        public string SessionDaysOfWeek { get; set; }
+        public string SessionDaysOfMonth { get; set; }
+        public int? NumberOfAttendees { get; set; }
         public WorkshopReplayType? ReplayType { get; set; }
         public bool? QuestionsEnabled { get; set; }
         public QuestionType? QuestionType { get; set; }

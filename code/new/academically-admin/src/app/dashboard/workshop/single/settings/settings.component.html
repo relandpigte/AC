@@ -2,6 +2,369 @@
   <div class="row">
     <div class="col-8" [loader]="isLoading">
 
+      <div *ngIf="workshopType === WorkshopType.Series" class="card">
+        <div class="card-header border-bottom-0">
+          <h4 class="card-header-title">
+            {{ 'Delay' | localize | titlecase }}
+          </h4>
+        </div>
+        <div class="card-body pt-0">
+          <div class="card border mb-0">
+            <div class="card-body">
+
+              <div class="form-group delay-form mb-3">
+                <div class="custom-control custom-radio mr-3">
+                  <input type="radio" id="lastWorkshop" name="delayType" class="custom-control-input"
+                    [value]="DelayType.LastItem" [(ngModel)]="model.delayType" (change)="onDripTypeChange()">
+                  <label class="custom-control-label" for="lastWorkshop"></label>
+                </div>
+                <label for="lastWorkshop">
+                  <b>{{ 'LastWorkshop' | localize }}</b> - {{ 'WorkshopDelayed' | localize }}
+                </label>
+                <input type="number" [(ngModel)]="lastWorkshopValue" id="lastWorkshopValue" name="lastWorkshopValue"
+                  class="form-control form-control-sm inline-form-control mx-3"
+                  [disabled]="model.delayType !== DelayType.LastItem" [min]="0" />
+                {{ 'DaysFromLastWorkshop' | localize | lowercase }}
+              </div>
+
+              <div class="form-group delay-form">
+                <div class="custom-control custom-radio mr-3">
+                  <input type="radio" id="specificDate" name="delayType" class="custom-control-input"
+                    [value]="DelayType.SpecificDate" [(ngModel)]="model.delayType" (change)="onDripTypeChange()">
+                  <label class="custom-control-label" for="specificDate"></label>
+                </div>
+                <label for="specificDate">
+                  <b>{{ 'SpecificDate' | localize }}</b> - {{ 'WorkshopAvailableOn' | localize }}
+                </label>
+
+                <div class="input-group input-group-merge input-group-sm  inline-form-control x3 mx-3"
+                  (click)="dp.show()">
+                  <input [(ngModel)]="specificDateValue" id="specificDateValue" name="specificDateValue" type="text"
+                    class="form-control form-control-appended" #dateOfBirthModel="ngModel" #dateOfBirthEl
+                    #dp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" readonly
+                    [disabled]="model.delayType !== DelayType.SpecificDate" (bsValueChange)="onSpecificDateChange()" />
+                  <div class="input-group-append">
+                    <div class="input-group-text">
+                      <span class="fas fa-calendar"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group delay-form mt-3">
+                <div class="custom-control custom-radio mr-3">
+                  <input type="radio" id="immediate" name="delayType" class="custom-control-input"
+                    [value]="DelayType.Immediate" [(ngModel)]="model.delayType" (change)="onDripTypeChange()">
+                  <label class="custom-control-label" for="lastWorkshop"></label>
+                </div>
+                <label for="immediate">
+                  <b>{{ 'Immediate' | localize }}</b> - {{ 'AvailableImmediately' | localize }}
+                </label>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" *ngIf="workshopType === WorkshopType.Single">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            {{ 'DateAndTime' | localize }}
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group col-4">
+              <label class="col-form-label font-weight-bold" for="EmailAddress">
+                {{ 'Frequency' | localize }}
+              </label>
+            </div>
+            <div class="form-group col-4">
+              <div class="custom-control custom-radio">
+                <input [(ngModel)]="model.frequencyType" type="radio" id="singleFrequencyType" name="frequencyType"
+                  [value]="WorkshopFrequencyType.Single" class="custom-control-input" />
+                <label class="custom-control-label" for="singleFrequencyType"></label>
+                <label class="custom-control-caption mb-0" for="singleFrequencyType">
+                  {{ 'SingleDateAndTime' | localize }}
+                </label>
+              </div>
+            </div>
+            <div class="form-group col-4">
+              <div class="custom-control custom-radio">
+                <input [(ngModel)]="model.frequencyType" type="radio" id="recurringFrequencyType" name="frequencyType"
+                  [value]="WorkshopFrequencyType.Recurring" class="custom-control-input" />
+                <label class="custom-control-label" for="recurringFrequencyType"></label>
+                <label class="custom-control-caption mb-0" for="recurringFrequencyType">
+                  {{ 'RecurringTimes' | localize }}
+                </label>
+              </div>
+            </div>
+          </div>
+          <ng-container *ngIf="model.frequencyType === WorkshopFrequencyType.Single; else recurringWorkshopTemplate">
+            <div class="form-row">
+              <div class="form-group col-3 mb-0">
+                <label class="col-form-label" for="startTime">{{ 'WorkshopDate' | localize}}</label>
+                <div class="input-group input-group-merge" (click)="workshopDateDp.show()">
+                  <input [(ngModel)]="workshopDateTime" [bsConfig]="datePickerConfig" bsDatepicker
+                    class="form-control form-control-appended" type="text" id="workshopDate" name="workshopDate"
+                    #workshopDateDp="bsDatepicker" (bsValueChange)="onWorkshopDateTimeChange()" />
+                  <div class="input-group-append">
+                    <div class="input-group-text">
+                      <span class="fas fa-calendar"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-3 mb-0">
+                <label class="col-form-label" for="workshopTime">{{ 'WorkshopTime' | localize}}</label>
+                <p-calendar [(ngModel)]="workshopDateTime" [timeOnly]="true" [hourFormat]="12" [styleClass]="'w-100'"
+                  [inputStyleClass]="'form-control'" id="workshopTime" name="workshopTime"
+                  (onSelect)="onWorkshopDateTimeChange()">
+                </p-calendar>
+              </div>
+              <div class="form-group col-3 mb-0">
+                <label class="col-form-label" for="duration">{{ 'DurationInMinutesQuote' | localize}}</label>
+                <input [(ngModel)]="model.duration" class="form-control" type="number" id="duration" name="duration"
+                  step="30" />
+              </div>
+              <div class="form-group col-3 mb-0">
+                <label class="col-form-label" for="numberOfAttendees">{{ 'NumberOfAttendees' | localize}}</label>
+                <input [(ngModel)]="model.numberOfAttendees" class="form-control" type="number" id="numberOfAttendees" name="numberOfAttendees"
+                  step="30" />
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #recurringWorkshopTemplate>
+
+            <div class="form-row form-row-sm">
+              <div class="form-group col-4 d-flex align-items-center">
+                <label for=" recursionType" class="col-form-label font-weight-bold p-0">
+                  {{ 'RepeatEvery' | localize }}
+                </label>
+              </div>
+              <div class="form-group col-4">
+                <select [(ngModel)]="model.recursionType" name="recursionType" id="recursionType"
+                  class="form-control recursion-type" (change)="onRecursionTypeChange()">
+                  <option [ngValue]="WorkshopRecursionType.Daily">
+                    {{ 'Daily' | localize }}
+                  </option>
+                  <option [ngValue]="WorkshopRecursionType.Weekly">
+                    {{ 'Weekly' | localize }}
+                  </option>
+                  <option [ngValue]="WorkshopRecursionType.Monthly">
+                    {{ 'Monthly' | localize }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div *ngIf="model.recursionType === WorkshopRecursionType.Weekly" class="form-row form-row-sm">
+              <div class="form-group col-4 d-flex align-items-center">
+                <label class="col-form-label font-weight-bold p-0">
+                  {{ 'On' | localize }}
+                </label>
+              </div>
+              <div class="form-group col-8 d-flex align-items-center">
+                <div class="row">
+                  <div class="col">
+                    <div class="custom-control custom-checkbox">
+                      <input [checked]="checkScheduleWeekInclusion(DayOfWeek.Sunday)" class="custom-control-input"
+                        id="sunday" name="sunday" type="checkbox"
+                        (change)="onDayOfWeekSelectionChange(DayOfWeek.Sunday)" />
+                      <label class="custom-control-label" for="sunday"></label>
+                      <span class="custom-control-caption">Su</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="custom-control custom-checkbox">
+                      <input [checked]="checkScheduleWeekInclusion(DayOfWeek.Monday)" class="custom-control-input"
+                        id="monday" name="monday" type="checkbox"
+                        (change)="onDayOfWeekSelectionChange(DayOfWeek.Monday)" />
+                      <label class="custom-control-label" for="monday"></label>
+                      <span class="custom-control-caption">Mo</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="custom-control custom-checkbox">
+                      <input [checked]="checkScheduleWeekInclusion(DayOfWeek.Tuesday)" class="custom-control-input"
+                        id="tuesday" name="tuesday" type="checkbox"
+                        (change)="onDayOfWeekSelectionChange(DayOfWeek.Tuesday)" />
+                      <label class="custom-control-label" for="tuesday"></label>
+                      <span class="custom-control-caption">Tu</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="custom-control custom-checkbox">
+                      <input [checked]="checkScheduleWeekInclusion(DayOfWeek.Wednesday)" class="custom-control-input"
+                        id="wednesday" name="wednesday" type="checkbox"
+                        (change)="onDayOfWeekSelectionChange(DayOfWeek.Wednesday)" />
+                      <label class="custom-control-label" for="wednesday"></label>
+                      <span class="custom-control-caption">We</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="custom-control custom-checkbox">
+                      <input [checked]="checkScheduleWeekInclusion(DayOfWeek.Thursday)" class="custom-control-input"
+                        id="thursday" name="thursday" type="checkbox"
+                        (change)="onDayOfWeekSelectionChange(DayOfWeek.Thursday)" />
+                      <label class="custom-control-label" for="thursday"></label>
+                      <span class="custom-control-caption">Th</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="custom-control custom-checkbox">
+                      <input [checked]="checkScheduleWeekInclusion(DayOfWeek.Friday)" class="custom-control-input"
+                        id="friday" name="friday" type="checkbox"
+                        (change)="onDayOfWeekSelectionChange(DayOfWeek.Friday)" />
+                      <label class="custom-control-label" for="friday"></label>
+                      <span class="custom-control-caption">Fr</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="custom-control custom-checkbox">
+                      <input [checked]="checkScheduleWeekInclusion(DayOfWeek.Saturday)" class="custom-control-input"
+                        id="saturday" name="saturday" type="checkbox"
+                        (change)="onDayOfWeekSelectionChange(DayOfWeek.Saturday)" />
+                      <label class="custom-control-label" for="saturday"></label>
+                      <span class="custom-control-caption">Sa</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="model.recursionType === WorkshopRecursionType.Monthly" class=" form-row form-row-sm">
+              <div class="form-group col-4 d-flex align-items-center">
+                <label class="col-form-label font-weight-bold p-0">
+                  {{ 'On' | localize }}
+                </label>
+              </div>
+              <div class="form-group col-8 d-flex align-items-center">
+                <div class="session-days">
+                  <p-calendar [(ngModel)]="scheduleMonthsValues" id="scheduleMonthsValues" name="scheduleMonthsValues"
+                    [inline]="true" [showWeek]="false" [selectionMode]="'multiple'" [showOtherMonths]="false"
+                    [selectOtherMonths]="false" (onSelect)="onDaysOfMonthSelectionChange()"
+                    (click)="onDaysOfMonthSelectionChange()">
+                  </p-calendar>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row form-row-sm">
+              <div class="form-group col-8 offset-4 d-flex align-items-center">
+                <input [(ngModel)]="model.timesPerDay" class="form-control times-per-day mr-2" type="number"
+                  name="timesPerDay" id="timesPerDay" [min]="minTimesPerDay" [max]="maxTimesPerDay"
+                  (change)="onTimesPerDayChange()">
+                <label for="timesPerDay" class="col-form-label m-0 p-0">
+                  {{ 'TimesPerDay' | localize | lowercase }}
+                </label>
+              </div>
+            </div>
+
+            <div class="sessions">
+              <div *ngFor="let scheduleTime of scheduleTimeValues; let i = index" class="form-row form-row-sm">
+                <div *ngIf="(i + 1) <= maxTimesPerDay" class="form-group col-6 offset-4">
+                  <label for="time_{{i}}" class="col-form-label p-0 mr-5 align-items-center session-time-label">
+                    {{ 'Session' | localize }} {{ i + 1 }}
+                  </label>
+                  <div class="session-time">
+                    <div class="input-group input-group-merge">
+                      <p-calendar [(ngModel)]="scheduleTimeValues[i]" id="time_{{i}}" name="time_{{i}}"
+                        [timeOnly]="true" [hourFormat]="12" [class]="'form-control form-control-appended'"
+                        [dataType]="'string'" (onSelect)="onSessionTimeChange()">
+                      </p-calendar>
+                      <div class="input-group-append">
+                        <span class="input-group-text">
+                          <i class="fe fe-clock"></i>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="mt-0">
+
+            <div class="form-row form-row-sm">
+              <div class="form-group col-4 d-flex align-items-center">
+                <label class="col-form-label font-weight-bold p-0">
+                  {{ 'Start' | localize }}
+                </label>
+              </div>
+              <div class="form-group col-8">
+                <div class="session-date">
+                  <div class="input-group input-group-merge" (click)="workshopDateDp.show()">
+                    <input [(ngModel)]="workshopDateTime" [bsConfig]="datePickerConfig" bsDatepicker
+                      class="form-control form-control-appended" type="text" id="workshopDate" name="workshopDate"
+                      #workshopDateDp="bsDatepicker" (bsValueChange)="onWorkshopDateTimeChange()" />
+                    <div class="input-group-append">
+                      <div class="input-group-text">
+                        <i class="fe fe-calendar"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="mt-0">
+
+            <div class="form-row form-row-sm">
+              <div class="form-group col-4 d-flex align-items-center">
+                <label class="col-form-label font-weight-bold p-0">
+                  {{ 'End' | localize }}
+                </label>
+              </div>
+              <div class="form-group col-8">
+                <div class="session-date">
+                  <div class="input-group input-group-merge" (click)="endDateDp.show()">
+                    <input [(ngModel)]="endDate" [bsConfig]="datePickerConfig" bsDatepicker
+                      class="form-control form-control-appended" type="text" id="endDate" name="endDate"
+                      #endDateDp="bsDatepicker" (bsValueChange)="onWorkshopEndDateChange()" />
+                    <div class="input-group-append">
+                      <div class="input-group-text">
+                        <i class="fe fe-calendar"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="mt-0">
+
+            <div class="form-row form-row-sm">
+              <div class="form-group col-4 d-flex align-items-center">
+                <label class="col-form-label font-weight-bold p-0">
+                  {{ 'DurationInMinutesQuote' | localize }}
+                </label>
+              </div>
+              <div class="form-group col-8">
+                <input [(ngModel)]="model.duration" name="duration" id="duration" type="number"
+                  class="form-control duration">
+              </div>
+            </div>
+
+            <hr class="mt-0">
+
+            <div class="form-row form-row-sm">
+              <div class="form-group mb-0 col-4 d-flex align-items-center">
+                <label class="col-form-label font-weight-bold p-0">
+                  {{ 'NumberOfAttendees' | localize }}
+                </label>
+              </div>
+              <div class="form-group mb-0 col-8">
+                <input [(ngModel)]="model.numberOfAttendees" name="numberOfAttendees" id="numberOfAttendees" type="number"
+                  class="form-control number-of-attendees">
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
       <div class="card" *ngIf="workshopType === WorkshopType.Single">
         <div class="card-header">
           <h4 class="card-header-title">

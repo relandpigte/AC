@@ -41889,6 +41889,18 @@ export interface IUpdateWorkshopPresenterTypeDto {
 
 export class UpdateWorkshopSettingsDto implements IUpdateWorkshopSettingsDto {
     id: string;
+    frequencyType: WorkshopFrequencyType;
+    workshopDateTime: moment.Moment | undefined;
+    endDate: moment.Moment | undefined;
+    duration: number | undefined;
+    delayType: ServiceDelayType;
+    delayValue: string | undefined;
+    recursionType: WorkshopRecursionType;
+    timesPerDay: number | undefined;
+    sessionTimes: string | undefined;
+    sessionDaysOfWeek: string | undefined;
+    sessionDaysOfMonth: string | undefined;
+    numberOfAttendees: number | undefined;
     replayType: WorkshopReplayType;
     questionsEnabled: boolean | undefined;
     questionType: QuestionType;
@@ -41969,6 +41981,18 @@ export class UpdateWorkshopSettingsDto implements IUpdateWorkshopSettingsDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.frequencyType = _data["frequencyType"];
+            this.workshopDateTime = _data["workshopDateTime"] ? moment(_data["workshopDateTime"].toString()) : <any>undefined;
+            this.endDate = _data["endDate"] ? moment(_data["endDate"].toString()) : <any>undefined;
+            this.duration = _data["duration"];
+            this.delayType = _data["delayType"];
+            this.delayValue = _data["delayValue"];
+            this.recursionType = _data["recursionType"];
+            this.timesPerDay = _data["timesPerDay"];
+            this.sessionTimes = _data["sessionTimes"];
+            this.sessionDaysOfWeek = _data["sessionDaysOfWeek"];
+            this.sessionDaysOfMonth = _data["sessionDaysOfMonth"];
+            this.numberOfAttendees = _data["numberOfAttendees"];
             this.replayType = _data["replayType"];
             this.questionsEnabled = _data["questionsEnabled"];
             this.questionType = _data["questionType"];
@@ -42049,6 +42073,18 @@ export class UpdateWorkshopSettingsDto implements IUpdateWorkshopSettingsDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["frequencyType"] = this.frequencyType;
+        data["workshopDateTime"] = this.workshopDateTime ? this.workshopDateTime.toISOString() : <any>undefined;
+        data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
+        data["duration"] = this.duration;
+        data["delayType"] = this.delayType;
+        data["delayValue"] = this.delayValue;
+        data["recursionType"] = this.recursionType;
+        data["timesPerDay"] = this.timesPerDay;
+        data["sessionTimes"] = this.sessionTimes;
+        data["sessionDaysOfWeek"] = this.sessionDaysOfWeek;
+        data["sessionDaysOfMonth"] = this.sessionDaysOfMonth;
+        data["numberOfAttendees"] = this.numberOfAttendees;
         data["replayType"] = this.replayType;
         data["questionsEnabled"] = this.questionsEnabled;
         data["questionType"] = this.questionType;
@@ -42129,6 +42165,18 @@ export class UpdateWorkshopSettingsDto implements IUpdateWorkshopSettingsDto {
 
 export interface IUpdateWorkshopSettingsDto {
     id: string;
+    frequencyType: WorkshopFrequencyType;
+    workshopDateTime: moment.Moment | undefined;
+    endDate: moment.Moment | undefined;
+    duration: number | undefined;
+    delayType: ServiceDelayType;
+    delayValue: string | undefined;
+    recursionType: WorkshopRecursionType;
+    timesPerDay: number | undefined;
+    sessionTimes: string | undefined;
+    sessionDaysOfWeek: string | undefined;
+    sessionDaysOfMonth: string | undefined;
+    numberOfAttendees: number | undefined;
     replayType: WorkshopReplayType;
     questionsEnabled: boolean | undefined;
     questionType: QuestionType;
@@ -44290,6 +44338,18 @@ export class WorkshopDto implements IWorkshopDto {
     languageId: string | undefined;
     pricingType: PricingType;
     price: number | undefined;
+    frequencyType: WorkshopFrequencyType;
+    workshopDateTime: moment.Moment | undefined;
+    endDate: moment.Moment | undefined;
+    duration: number | undefined;
+    delayType: ServiceDelayType;
+    delayValue: string | undefined;
+    recursionType: WorkshopRecursionType;
+    timesPerDay: number | undefined;
+    sessionTimes: string | undefined;
+    sessionDaysOfWeek: string | undefined;
+    sessionDaysOfMonth: string | undefined;
+    numberOfAttendees: number | undefined;
     replayType: WorkshopReplayType;
     questionsEnabled: boolean | undefined;
     questionType: QuestionType;
@@ -44383,6 +44443,18 @@ export class WorkshopDto implements IWorkshopDto {
             this.languageId = _data["languageId"];
             this.pricingType = _data["pricingType"];
             this.price = _data["price"];
+            this.frequencyType = _data["frequencyType"];
+            this.workshopDateTime = _data["workshopDateTime"] ? moment(_data["workshopDateTime"].toString()) : <any>undefined;
+            this.endDate = _data["endDate"] ? moment(_data["endDate"].toString()) : <any>undefined;
+            this.duration = _data["duration"];
+            this.delayType = _data["delayType"];
+            this.delayValue = _data["delayValue"];
+            this.recursionType = _data["recursionType"];
+            this.timesPerDay = _data["timesPerDay"];
+            this.sessionTimes = _data["sessionTimes"];
+            this.sessionDaysOfWeek = _data["sessionDaysOfWeek"];
+            this.sessionDaysOfMonth = _data["sessionDaysOfMonth"];
+            this.numberOfAttendees = _data["numberOfAttendees"];
             this.replayType = _data["replayType"];
             this.questionsEnabled = _data["questionsEnabled"];
             this.questionType = _data["questionType"];
@@ -44476,6 +44548,18 @@ export class WorkshopDto implements IWorkshopDto {
         data["languageId"] = this.languageId;
         data["pricingType"] = this.pricingType;
         data["price"] = this.price;
+        data["frequencyType"] = this.frequencyType;
+        data["workshopDateTime"] = this.workshopDateTime ? this.workshopDateTime.toISOString() : <any>undefined;
+        data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
+        data["duration"] = this.duration;
+        data["delayType"] = this.delayType;
+        data["delayValue"] = this.delayValue;
+        data["recursionType"] = this.recursionType;
+        data["timesPerDay"] = this.timesPerDay;
+        data["sessionTimes"] = this.sessionTimes;
+        data["sessionDaysOfWeek"] = this.sessionDaysOfWeek;
+        data["sessionDaysOfMonth"] = this.sessionDaysOfMonth;
+        data["numberOfAttendees"] = this.numberOfAttendees;
         data["replayType"] = this.replayType;
         data["questionsEnabled"] = this.questionsEnabled;
         data["questionType"] = this.questionType;
@@ -44569,6 +44653,18 @@ export interface IWorkshopDto {
     languageId: string | undefined;
     pricingType: PricingType;
     price: number | undefined;
+    frequencyType: WorkshopFrequencyType;
+    workshopDateTime: moment.Moment | undefined;
+    endDate: moment.Moment | undefined;
+    duration: number | undefined;
+    delayType: ServiceDelayType;
+    delayValue: string | undefined;
+    recursionType: WorkshopRecursionType;
+    timesPerDay: number | undefined;
+    sessionTimes: string | undefined;
+    sessionDaysOfWeek: string | undefined;
+    sessionDaysOfMonth: string | undefined;
+    numberOfAttendees: number | undefined;
     replayType: WorkshopReplayType;
     questionsEnabled: boolean | undefined;
     questionType: QuestionType;
@@ -44695,6 +44791,12 @@ export class WorkshopDtoPagedResultDto implements IWorkshopDtoPagedResultDto {
 export interface IWorkshopDtoPagedResultDto {
     items: WorkshopDto[] | undefined;
     totalCount: number;
+}
+
+/** 1 = Single 2 = Recurring */
+export enum WorkshopFrequencyType {
+    Single = 1,
+    Recurring = 2,
 }
 
 export class WorkshopPollDto implements IWorkshopPollDto {
@@ -45034,6 +45136,13 @@ export enum WorkshopPresenterType {
     Host = 0,
     CoHost = 1,
     Guest = 2,
+}
+
+/** 0 = Daily 1 = Weekly 2 = Monthly */
+export enum WorkshopRecursionType {
+    Daily = 0,
+    Weekly = 1,
+    Monthly = 2,
 }
 
 /** 1 = Record 2 = DontRecord */

@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    
+    <changeSet author="j.cezar" id="1">
+        <dropColumn columnName="EventDateTime" tableName="academicallyworkshops"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="2">
+        <addColumn tableName="academicallyworkshops">
+            <column name="WorkshopDateTime" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="3">
+        <addColumn tableName="academicallyworkshops">
+            <column name="NumberOfAttendees" type="INT">
+                <constraints nullable="true"/>
+			</column>
+        </addColumn>
+    </changeSet>
+    
+</databaseChangeLog>

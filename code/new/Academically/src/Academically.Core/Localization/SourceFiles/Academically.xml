@@ -1794,5 +1794,13 @@
 	<text name="ClosedWorkshopAccessDescription">Enrollment closed, no longer accepting attendees</text>
 	<text name="PublishWorkshopConfirmationMessage">Are you sure you want to publish this workshop?</text>
 	<text name="UnpublishWorkshopConfirmationMessage">Are you sure you want to unpublish this workshop? The status will change to Draft.</text>
+	<text name="LastWorkshop">Last Workshop</text>
+	<text name="WorkshopDelayed">Workshop Delayed</text>
+	<text name="DaysFromLastWorkshop">Days from last workshop</text>
+	<text name="WorkshopAvailableOn">Workshop available on</text>
+    <text name="WorkshopDate">Workshop date</text>
+	<text name="WorkshopTime">Workshop time</text>
+    <text name="NumberOfAttendees">Number of attendees</text>
+	  
   </texts>
 </localizationDictionary>
