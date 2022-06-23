@@ -1,0 +1,157 @@
+<div class="card">
+  <div class="card-header border-0">
+    <div class="row align-items-center">
+      <div class="col">
+        <form>
+          <div class="input-group input-group-flush">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fe fe-search"></i>
+              </span>
+            </div>
+            <input class="list-search form-control" type="search" name="Search" placeholder="Search"
+              [(ngModel)]="searchFilter" (keyup.enter)="getDataPage(1)" />
+          </div>
+        </form>
+      </div>
+      <div class="col-auto mr-n3">
+        <form>
+          <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize"
+            (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
+            class="custom-select custom-select-sm form-control-flush" data-toggle="select">
+            <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
+              {{ pageSizeSelection }} {{ 'PerPage' | localize }}
+            </option>
+          </select>
+        </form>
+      </div>
+      <div class="col-auto">
+        <div class="dropdown" dropdown #filterDropdown="bs-dropdown" [isAnimated]="true" [autoClose]="false">
+          <button class="btn btn-sm btn-white" type="button" dropdownToggle>
+            <i class="fe fe-sliders mr-1"></i> {{ 'Filters' | localize }}
+            <span *ngIf="statusFilter || statusFilter >= 0" class="badge badge-primary ml-1">1</span>
+          </button>
+          <form *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-card" (ngSubmit)="getDataPage(1)">
+            <div class="card-header">
+              <h4 class="card-header-title">{{ 'Filters' | localize }}</h4>
+              <button class="btn btn-sm btn-link text-reset btn-white" type="submit"
+                (click)="filterDropdown.hide(); onClearFiltersClick()">
+                <small>{{ 'ClearFilters' | localize }}</small>
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="list-group list-group-flush mt-n4 mb-4">
+                <div class="list-group-item">
+                  <div class="row">
+                    <div class="col">
+                      <small>{{ 'Status' | localize }}</small>
+                    </div>
+                    <div class="col-auto">
+                      <div class="custom-control custom-radio d-inline">
+                        <input type="radio" class="custom-control-input" id="allStatus" name="statusFilter"
+                          [(ngModel)]="statusFilter" [value]="undefined" checked />
+                        <label class="custom-control-label" for="allStatus">
+                          {{ 'All' | localize }}
+                        </label>
+                      </div>
+                      <div class="custom-control custom-radio d-inline mx-3">
+                        <input type="radio" class="custom-control-input" id="draftStatus" name="statusFilter"
+                          [(ngModel)]="statusFilter" [value]="CoachingStatus.Draft" />
+                        <label class="custom-control-label" for="draftStatus">
+                          {{ 'Draft' | localize }}
+                        </label>
+                      </div>
+                      <div class="custom-control custom-radio d-inline">
+                        <input type="radio" class="custom-control-input" id="publishedStatus" name="statusFilter"
+                          [(ngModel)]="statusFilter" [value]="CoachingStatus.Published" />
+                        <label class="custom-control-label" for="publishedStatus">
+                          {{ 'Published' | localize }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-block btn-primary" type="submit" (click)="filterDropdown.hide()">
+                {{ 'ApplyFilter' | localize }}
+              </button>
+            </div>
+            &nbsp;
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="coachings && coachings.length" [loader]="isTableLoading">
+  <div
+    *ngFor="let coaching of (coachings | paginate: { id: 'coachings', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })"
+    class="card">
+    <div class="row">
+      <div class="col-auto d-flex justify-content-center align-items-center">
+        <div *ngIf="!thumbnailUrls[coaching.id] else withThumbnailTemplate"
+          class="avatar avatar-lg avatar-4by3 d-flex justify-content-center align-items-center p-2">
+          <i class="fe fe-file-text text-muted h1 p-0 m-0"></i>
+        </div>
+        <ng-template #withThumbnailTemplate>
+          <div class="avatar avatar-lg avatar-4by3 p-2">
+            <img [src]="getCourseImageUrl(thumbnailUrls[coaching.id])" alt="..." class="avatar-img rounded">
+          </div>
+        </ng-template>
+      </div>
+      <div class="col d-flex align-items-center">
+        <a [routerLink]="['../../../../../', coaching.id]">
+          <h4 class="mb-0">{{ coaching.name }}</h4>
+        </a>
+      </div>
+      <div *ngIf="coaching.description" class="col d-flex align-items-center">
+        <p class="text-muted text-center m-0">
+          {{ coaching.description }}
+        </p>
+      </div>
+      <div class="col-auto d-flex flex-column justify-content-center">
+        <div class="text-muted">
+          <div class="d-flex">
+            <div class="d-flex align-items-center">
+              <i class="fe fe-file-text mr-2"></i>
+              {{ (coaching.type === CoachingType.Single ? 'Coaching' : 'CoachingSeries') | localize }}
+            </div>
+            <div class="d-flex align-items-center mx-3">|</div>
+            <div class="d-flex align-items-center mr-3">
+              <i class="fe fe-users mr-2"></i>
+              0 {{ 'Attendees' | localize }}
+            </div>
+            <div class="d-flex align-items-center mr-3">
+              <i class="fe fe-clock mr-2"></i>
+              {{ 'StartsIn' | localize }}&nbsp;
+              <span class="font-weight-bold text-danger">0 {{ 'Days' | localize | lowercase }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-auto d-flex align-items-center ml-4">
+        <span class="badge" [class.badge-info]="coaching.status === CoachingStatus.Draft"
+          [class.badge-primary]="coaching.status === CoachingStatus.Published">
+          {{ CoachingStatus[coaching.status] }}
+        </span>
+      </div>
+      <div class="col-auto d-flex align-items-center mr-4 ml-4">
+        <button [routerLink]="['../../../../../', coaching.id]" class="btn btn-sm btn-white">
+          {{ 'Edit' | localize }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="coachings.length === 0" [loader]="isTableLoading" class="card">
+  <p class="text-center text-muted m-0 p-4">{{ 'NoRecordsFound' | localize }}</p>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <abp-pagination-controls id="coachings" (pageChange)="getDataPage($event)" [customClass]="'border-0'">
+    </abp-pagination-controls>
+  </div>
+</div>

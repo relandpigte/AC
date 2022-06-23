@@ -18,7 +18,19 @@ import { CoachingComponent } from './coaching.component';
           import('@app/dashboard/coaching/single/single.module').then(
             (m) => m.SingleModule,
           ),
-      }
+      },
+      {
+        path: 'series',
+        children: [
+          {
+            path: ':parent-id',
+            loadChildren: () =>
+              import('@app/dashboard/coaching/series/series.module').then(
+                (m) => m.SeriesModule
+              ),
+          }
+        ]
+      },
     ]),
   ],
   exports: [

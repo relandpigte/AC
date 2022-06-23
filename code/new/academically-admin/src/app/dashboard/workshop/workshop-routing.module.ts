@@ -18,7 +18,19 @@ import { WorkshopComponent } from './workshop.component';
           import('@app/dashboard/workshop/single/single.module').then(
             (m) => m.SingleModule,
           ),
-      }
+      },
+      {
+        path: 'series',
+        children: [
+          {
+            path: ':parent-id',
+            loadChildren: () =>
+              import('@app/dashboard/workshop/series/series.module').then(
+                (m) => m.SeriesModule
+              ),
+          }
+        ]
+      },
     ]),
   ],
   exports: [

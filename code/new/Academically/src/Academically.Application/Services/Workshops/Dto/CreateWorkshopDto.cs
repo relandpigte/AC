@@ -10,5 +10,6 @@ namespace Academically.Services.Workshops.Dto
     {
         public string Name { get; set; }
         public WorkshopType Type { get; set; }
+        public Guid? ParentId { get; set; }
     }
 }

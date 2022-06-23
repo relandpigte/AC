@@ -6,6 +6,7 @@ using Academically.Services.Documents.Dto;
 using Academically.Services.SpokenLanugages.Dto;
 using Academically.Users.Dto;
 using System;
+using System.Collections.Generic;
 
 namespace Academically.Services.Coachings.Dto
 {
@@ -14,6 +15,7 @@ namespace Academically.Services.Coachings.Dto
     {
         public CoachingType Type { get; set; }
         public CoachingStatus Status { get; set; }
+        public Guid? ParentId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Categories { get; set; }
@@ -91,8 +93,11 @@ namespace Academically.Services.Coachings.Dto
 
         public long CreatorUserId { get; set; }
 
+        public CoachingDto Parent { get; set; }
         public DocumentDto ThumbnailDocument { get; set; }
         public SpokenLanguageDto Language { get; set; }
         public UserDto CreatorUser { get; set; }
+
+        public IEnumerable<CoachingDto> Children { get; set; }
     }
 }

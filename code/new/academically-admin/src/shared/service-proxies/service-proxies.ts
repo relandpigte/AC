@@ -3002,6 +3002,7 @@ export class CoachingsServiceProxy {
     }
 
     /**
+     * @param parentIdFilter (optional) 
      * @param userIdFilter (optional) 
      * @param searchFilter (optional) 
      * @param statusFilter (optional) 0 = Draft
@@ -3011,8 +3012,12 @@ export class CoachingsServiceProxy {
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(userIdFilter: number | undefined, searchFilter: string | undefined, statusFilter: CoachingStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CoachingDtoPagedResultDto> {
+    getAll(parentIdFilter: string | undefined, userIdFilter: number | undefined, searchFilter: string | undefined, statusFilter: CoachingStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CoachingDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Coachings/GetAll?";
+        if (parentIdFilter === null)
+            throw new Error("The parameter 'parentIdFilter' cannot be null.");
+        else if (parentIdFilter !== undefined)
+            url_ += "ParentIdFilter=" + encodeURIComponent("" + parentIdFilter) + "&";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
         else if (userIdFilter !== undefined)
@@ -24273,6 +24278,7 @@ export class WorkshopsServiceProxy {
     }
 
     /**
+     * @param parentIdFilter (optional) 
      * @param userIdFilter (optional) 
      * @param searchFilter (optional) 
      * @param statusFilter (optional) 0 = Draft
@@ -24282,8 +24288,12 @@ export class WorkshopsServiceProxy {
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(userIdFilter: number | undefined, searchFilter: string | undefined, statusFilter: WorkshopStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<WorkshopDtoPagedResultDto> {
+    getAll(parentIdFilter: string | undefined, userIdFilter: number | undefined, searchFilter: string | undefined, statusFilter: WorkshopStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<WorkshopDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Workshops/GetAll?";
+        if (parentIdFilter === null)
+            throw new Error("The parameter 'parentIdFilter' cannot be null.");
+        else if (parentIdFilter !== undefined)
+            url_ += "ParentIdFilter=" + encodeURIComponent("" + parentIdFilter) + "&";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
         else if (userIdFilter !== undefined)
@@ -25816,6 +25826,7 @@ export class CoachingDto implements ICoachingDto {
     id: string;
     type: CoachingType;
     status: CoachingStatus;
+    parentId: string | undefined;
     name: string | undefined;
     description: string | undefined;
     categories: string | undefined;
@@ -25891,9 +25902,11 @@ export class CoachingDto implements ICoachingDto {
     audienceEnableOffersTabDisplayNoOfPurchases: boolean;
     audienceEnableHandoutsTab: boolean;
     creatorUserId: number;
+    parent: CoachingDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;
     creatorUser: UserDto;
+    children: CoachingDto[] | undefined;
 
     constructor(data?: ICoachingDto) {
         if (data) {
@@ -25909,6 +25922,7 @@ export class CoachingDto implements ICoachingDto {
             this.id = _data["id"];
             this.type = _data["type"];
             this.status = _data["status"];
+            this.parentId = _data["parentId"];
             this.name = _data["name"];
             this.description = _data["description"];
             this.categories = _data["categories"];
@@ -25984,9 +25998,15 @@ export class CoachingDto implements ICoachingDto {
             this.audienceEnableOffersTabDisplayNoOfPurchases = _data["audienceEnableOffersTabDisplayNoOfPurchases"];
             this.audienceEnableHandoutsTab = _data["audienceEnableHandoutsTab"];
             this.creatorUserId = _data["creatorUserId"];
+            this.parent = _data["parent"] ? CoachingDto.fromJS(_data["parent"]) : <any>undefined;
             this.thumbnailDocument = _data["thumbnailDocument"] ? DocumentDto.fromJS(_data["thumbnailDocument"]) : <any>undefined;
             this.language = _data["language"] ? SpokenLanguageDto.fromJS(_data["language"]) : <any>undefined;
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(CoachingDto.fromJS(item));
+            }
         }
     }
 
@@ -26002,6 +26022,7 @@ export class CoachingDto implements ICoachingDto {
         data["id"] = this.id;
         data["type"] = this.type;
         data["status"] = this.status;
+        data["parentId"] = this.parentId;
         data["name"] = this.name;
         data["description"] = this.description;
         data["categories"] = this.categories;
@@ -26077,9 +26098,15 @@ export class CoachingDto implements ICoachingDto {
         data["audienceEnableOffersTabDisplayNoOfPurchases"] = this.audienceEnableOffersTabDisplayNoOfPurchases;
         data["audienceEnableHandoutsTab"] = this.audienceEnableHandoutsTab;
         data["creatorUserId"] = this.creatorUserId;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
         data["language"] = this.language ? this.language.toJSON() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -26095,6 +26122,7 @@ export interface ICoachingDto {
     id: string;
     type: CoachingType;
     status: CoachingStatus;
+    parentId: string | undefined;
     name: string | undefined;
     description: string | undefined;
     categories: string | undefined;
@@ -26170,9 +26198,11 @@ export interface ICoachingDto {
     audienceEnableOffersTabDisplayNoOfPurchases: boolean;
     audienceEnableHandoutsTab: boolean;
     creatorUserId: number;
+    parent: CoachingDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;
     creatorUser: UserDto;
+    children: CoachingDto[] | undefined;
 }
 
 export class CoachingDtoPagedResultDto implements ICoachingDtoPagedResultDto {
@@ -28522,6 +28552,7 @@ export enum CourseType {
 export class CreateCoachingDto implements ICreateCoachingDto {
     name: string | undefined;
     type: CoachingType;
+    parentId: string | undefined;
 
     constructor(data?: ICreateCoachingDto) {
         if (data) {
@@ -28536,6 +28567,7 @@ export class CreateCoachingDto implements ICreateCoachingDto {
         if (_data) {
             this.name = _data["name"];
             this.type = _data["type"];
+            this.parentId = _data["parentId"];
         }
     }
 
@@ -28550,6 +28582,7 @@ export class CreateCoachingDto implements ICreateCoachingDto {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["type"] = this.type;
+        data["parentId"] = this.parentId;
         return data; 
     }
 
@@ -28564,6 +28597,7 @@ export class CreateCoachingDto implements ICreateCoachingDto {
 export interface ICreateCoachingDto {
     name: string | undefined;
     type: CoachingType;
+    parentId: string | undefined;
 }
 
 export class CreateCoachingPollDto implements ICreateCoachingPollDto {
@@ -29883,6 +29917,7 @@ export interface ICreateUserDto {
 export class CreateWorkshopDto implements ICreateWorkshopDto {
     name: string | undefined;
     type: WorkshopType;
+    parentId: string | undefined;
 
     constructor(data?: ICreateWorkshopDto) {
         if (data) {
@@ -29897,6 +29932,7 @@ export class CreateWorkshopDto implements ICreateWorkshopDto {
         if (_data) {
             this.name = _data["name"];
             this.type = _data["type"];
+            this.parentId = _data["parentId"];
         }
     }
 
@@ -29911,6 +29947,7 @@ export class CreateWorkshopDto implements ICreateWorkshopDto {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["type"] = this.type;
+        data["parentId"] = this.parentId;
         return data; 
     }
 
@@ -29925,6 +29962,7 @@ export class CreateWorkshopDto implements ICreateWorkshopDto {
 export interface ICreateWorkshopDto {
     name: string | undefined;
     type: WorkshopType;
+    parentId: string | undefined;
 }
 
 export class CreateWorkshopPollDto implements ICreateWorkshopPollDto {
@@ -44331,6 +44369,7 @@ export class WorkshopDto implements IWorkshopDto {
     id: string;
     type: WorkshopType;
     status: WorkshopStatus;
+    parentId: string | undefined;
     name: string | undefined;
     description: string | undefined;
     categories: string | undefined;
@@ -44418,9 +44457,11 @@ export class WorkshopDto implements IWorkshopDto {
     audienceEnableOffersTabDisplayNoOfPurchases: boolean;
     audienceEnableHandoutsTab: boolean;
     creatorUserId: number;
+    parent: WorkshopDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;
     creatorUser: UserDto;
+    children: WorkshopDto[] | undefined;
 
     constructor(data?: IWorkshopDto) {
         if (data) {
@@ -44436,6 +44477,7 @@ export class WorkshopDto implements IWorkshopDto {
             this.id = _data["id"];
             this.type = _data["type"];
             this.status = _data["status"];
+            this.parentId = _data["parentId"];
             this.name = _data["name"];
             this.description = _data["description"];
             this.categories = _data["categories"];
@@ -44523,9 +44565,15 @@ export class WorkshopDto implements IWorkshopDto {
             this.audienceEnableOffersTabDisplayNoOfPurchases = _data["audienceEnableOffersTabDisplayNoOfPurchases"];
             this.audienceEnableHandoutsTab = _data["audienceEnableHandoutsTab"];
             this.creatorUserId = _data["creatorUserId"];
+            this.parent = _data["parent"] ? WorkshopDto.fromJS(_data["parent"]) : <any>undefined;
             this.thumbnailDocument = _data["thumbnailDocument"] ? DocumentDto.fromJS(_data["thumbnailDocument"]) : <any>undefined;
             this.language = _data["language"] ? SpokenLanguageDto.fromJS(_data["language"]) : <any>undefined;
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(WorkshopDto.fromJS(item));
+            }
         }
     }
 
@@ -44541,6 +44589,7 @@ export class WorkshopDto implements IWorkshopDto {
         data["id"] = this.id;
         data["type"] = this.type;
         data["status"] = this.status;
+        data["parentId"] = this.parentId;
         data["name"] = this.name;
         data["description"] = this.description;
         data["categories"] = this.categories;
@@ -44628,9 +44677,15 @@ export class WorkshopDto implements IWorkshopDto {
         data["audienceEnableOffersTabDisplayNoOfPurchases"] = this.audienceEnableOffersTabDisplayNoOfPurchases;
         data["audienceEnableHandoutsTab"] = this.audienceEnableHandoutsTab;
         data["creatorUserId"] = this.creatorUserId;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
         data["language"] = this.language ? this.language.toJSON() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -44646,6 +44701,7 @@ export interface IWorkshopDto {
     id: string;
     type: WorkshopType;
     status: WorkshopStatus;
+    parentId: string | undefined;
     name: string | undefined;
     description: string | undefined;
     categories: string | undefined;
@@ -44733,9 +44789,11 @@ export interface IWorkshopDto {
     audienceEnableOffersTabDisplayNoOfPurchases: boolean;
     audienceEnableHandoutsTab: boolean;
     creatorUserId: number;
+    parent: WorkshopDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;
     creatorUser: UserDto;
+    children: WorkshopDto[] | undefined;
 }
 
 export class WorkshopDtoPagedResultDto implements IWorkshopDtoPagedResultDto {

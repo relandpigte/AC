@@ -1751,7 +1751,10 @@
 	<!-- Coaching -->
 	<text name="NewCoaching">New Coaching</text>
 	<text name="CreateCoaching">Create Coaching</text>
-    <text name="CoachingName">Coaching name</text>
+    <text name="SingleCoaching">Single Coaching</text>
+    <text name="CoachingSeries">Coaching Series</text>
+	<text name="AddCoaching">Add Coaching</text>
+	<text name="CoachingName">Coaching name</text>
     <text name="CoachingSeriesName">Coaching series name</text>
 	<text name="NameYourCoaching">Name your coaching</text>
 	<text name="NameYourCoachingSeries">Name your coaching series</text>
@@ -1774,6 +1777,9 @@
 	<!-- Workshop -->
 	<text name="NewWorkshop">New Workshop</text>
 	<text name="CreateWorkshop">Create Workshop</text>
+	<text name="SingleWorkshop">Single Workshop</text>
+	<text name="WorkshopSeries">Workshop Series</text>
+	<text name="AddWorkshop">Add Workshop</text>
 	<text name="WorkshopName">Workshop name</text>
 	<text name="WorkshopSeriesName">Workshop series name</text>
 	<text name="NameYourWorkshop">Name your workshop</text>

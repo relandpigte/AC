@@ -4,6 +4,7 @@ import { CoachingRoutingModule } from './coaching-routing.module';
 import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { CreateCoachingComponent } from './_components/create-coaching/create-coaching.component';
+import { ChooseTemplateComponent } from './_components/choose-template/choose-template.component';
 import { LearningComponent } from './learning/learning.component';
 import { TeachingComponent } from './teaching/teaching.component';
 import { ScheduleComponent } from './schedule/schedule.component';
@@ -15,7 +16,8 @@ import { CoachingComponent } from './coaching.component';
     LearningComponent,
     TeachingComponent,
     ScheduleComponent,
-    CreateCoachingComponent
+    CreateCoachingComponent,
+    ChooseTemplateComponent
   ],
   imports: [
     CommonModule,

@@ -12,6 +12,7 @@ namespace Academically.Domain.Entities
     {
         public WorkshopType Type { get; set; }
         public WorkshopStatus Status { get; set; }
+        public Guid? ParentId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Categories { get; set; }
@@ -99,6 +100,8 @@ namespace Academically.Domain.Entities
         public bool AudienceEnableOffersTabDisplayNoOfPurchases { get; set; }
         public bool AudienceEnableHandoutsTab { get; set; }
 
+        [ForeignKey("ParentId")]
+        public virtual Workshop Parent { get; set; }
 
         [ForeignKey("ThumbnailDocumentId")]
         public virtual Document ThumbnailDocument { get; set; }
@@ -109,9 +112,12 @@ namespace Academically.Domain.Entities
         [ForeignKey("CreatorUserId")]
         public virtual User CreatorUser { get; set; }
 
+        public virtual ICollection<Workshop> Children { get; set; }
+
         public Workshop()
         {
             Status = WorkshopStatus.Draft;
+            Children = new HashSet<Workshop>();
         }
     }
 }

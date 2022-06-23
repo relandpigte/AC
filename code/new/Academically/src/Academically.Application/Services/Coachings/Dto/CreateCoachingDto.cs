@@ -10,5 +10,6 @@ namespace Academically.Services.Coachings.Dto
     {
         public string Name { get; set; }
         public CoachingType Type { get; set; }
+        public Guid? ParentId { get; set; }
     }
 }
