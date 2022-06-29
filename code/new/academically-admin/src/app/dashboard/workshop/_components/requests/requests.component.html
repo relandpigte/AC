@@ -1,0 +1,67 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">{{ 'WorkshopRequests' | localize }}</h4>
+  </div>
+  <div class="table-responsive mb-0" [loader]="isTableLoading">
+    <table class="table table-sm table-nowrap card-table">
+      <thead>
+        <tr>
+          <th>{{ 'Name' | localize }}</th>
+          <th class="text-center">{{ 'Tutor' | localize }}</th>
+          <th class="text-center">{{ 'ServiceType' | localize }}</th>
+          <th class="text-center">{{ 'Sessions' | localize }}</th>
+          <th class="text-center">{{ 'DateCreated' | localize }}</th>
+          <th class="text-center">{{ 'Status' | localize }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="false">
+          <ng-container
+            *ngFor="let project of (projects | paginate: { id: 'projects', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })">
+            <tr>
+              <td>
+                <ng-container
+                  *ngIf="permission.isGranted('Pages.Profile.Education.Qualifications.Update'); else unlinkedTemplate">
+                  <a [routerLink]="['/app/projects/' + project.id + '/proposals']">{{ project.name }}</a>
+                </ng-container>
+                <ng-template #unlinkedTemplate>
+                  {{ project.name }}
+                </ng-template>
+              </td>
+              <td class="text-center">
+                <span *ngIf="project.acceptedOffer">{{ project.acceptedOffer.creatorUser.fullName }}</span>
+              </td>
+              <td class="text-center">
+                {{ project.serviceNameLevel3 }}
+              </td>
+              <td class="text-center">
+                {{ project.totalSessions }}
+              </td>
+              <td width="10%" class="text-center">
+                {{ project.creationTime | date: 'dd/MM/yyyy' }}
+              </td>
+              <td class="text-center">
+                <div class="badge badge-soft-success">
+                  Active
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+          <tr *ngIf="projects && !projects.length">
+            <td colspan="10">
+              <p class="m-0 text-muted text-center">{{ 'NoRecordsFound' | localize }}</p>
+            </td>
+          </tr>
+        </ng-container>
+        <tr>
+          <td colspan="10">
+            <p class="m-0 text-muted text-center">{{ 'NoRecordsFound' | localize }}</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <abp-pagination-controls *ngIf="projects && projects.length && totalItems > projects.length" id="projects"
+      (pageChange)="getDataPage($event)">
+    </abp-pagination-controls>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+<div class="d-flex flex-column flex-sm-row flex-nowrap justify-content-center align-content-center align-items-center mt-3 mb-4" style="gap: 10px;">
+  <div class="flex-grow-1 w100p w-sm-auto">
+    <div class="card m-0">
+      <div class="card-header height-pad border-0">
+        <div class="row align-items-center">
+          <div class="col">
+            <h4 class="m-0">{{ 'CoachingPrograms' | localize }}</h4>
+          </div>
+          <div class="col-auto mr-n3">
+            <form>
+              <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize"
+                (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
+                class="custom-select custom-select-sm form-control-flush" data-toggle="select">
+                <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
+                  {{ pageSizeSelection }} {{ 'PerPage' | localize }}
+                </option>
+              </select>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w100p w-sm-auto">
+    <div class="nav btn-group h-100" role="tablist" style="min-width: 200px;">
+      <button class="btn btn-lg btn-white active" data-toggle="tab" [attr.data-target]="'#event-grid-tab-' + nonce" role="tab"
+        [attr.aria-controls]="'event-grid-tab-' + nonce" aria-selected="true">
+        <span class="fe fe-grid"></span>
+      </button>
+      <button class="btn btn-lg btn-white" data-toggle="tab" [attr.data-target]="'#event-list-tab-' + nonce" role="tab"
+        [attr.aria-controls]="'list-tab-' + nonce" aria-selected="false">
+        <span class="fe fe-list"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="events && events.length else noCoursesTemplate" class="tab-content" [loader]="isTableLoading">
+  <div class="tab-pane fade active show" [attr.id]="'event-grid-tab-' + nonce" role="tabpanel">
+    <app-grid [events]="events" (deleteEvent)="onDeleteClick($event)"></app-grid>
+  </div>
+  <div class="tab-pane fade" [attr.id]="'event-list-tab-' + nonce" role="tabpanel">
+    <app-list [events]="events" (deleteEvent)="onDeleteClick($event)"></app-list>
+  </div>
+</div>
+
+<ng-template #noCoursesTemplate>
+  <p class="m-0 p-5 text-muted text-center">
+    {{ 'NoRecordsFound' | localize }}
+  </p>
+</ng-template>

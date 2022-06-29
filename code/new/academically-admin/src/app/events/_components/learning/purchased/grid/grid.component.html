@@ -1,6 +1,6 @@
-<div class="row listAlias m-0" style="gap:20px;">
+<div class="row listAlias m-0">
     <div *ngFor="let studentEvent of models" class="col-12 col-md-6 col-xl-4 p-0">
-      <div class="card">
+      <div class="card mx-0 m-md-1">
         <a href="#!visit" (click)="$event.preventDefault();">
           <img [src]="getServiceImageUrl(studentEvent.event.thumbnailDocument)" alt="..." class="card-img-top">
         </a>

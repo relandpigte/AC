@@ -1774,6 +1774,8 @@
 	<text name="ClosedCoachingAccessDescription">Enrollment closed, no longer accepting attendees</text>
 	<text name="PublishCoachingConfirmationMessage">Are you sure you want to publish this coaching?</text>
 	<text name="UnpublishCoachingConfirmationMessage">Are you sure you want to unpublish this coaching? The status will change to Draft.</text>
+	<text name="CoachingRequests">Coaching Requests</text>
+	<text name="CoachingPrograms">Coaching Programs</text>
 	<!-- Workshop -->
 	<text name="NewWorkshop">New Workshop</text>
 	<text name="CreateWorkshop">Create Workshop</text>
@@ -1807,6 +1809,8 @@
     <text name="WorkshopDate">Workshop date</text>
 	<text name="WorkshopTime">Workshop time</text>
     <text name="NumberOfAttendees">Number of attendees</text>
+	<text name="WorkshopRequests">Workshop Requests</text>
+	<text name="WorkshopPrograms">Workshop Programs</text>
 	  
   </texts>
 </localizationDictionary>

@@ -5,6 +5,8 @@ import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { CreateWorkshopComponent } from './_components/create-workshop/create-workshop.component';
 import { ChooseTemplateComponent } from './_components/choose-template/choose-template.component';
+import { RequestsComponent } from './_components/requests/requests.component';
+import { ProgramsModule } from './_components/programs/programs.module';
 import { WorkshopComponent } from './workshop.component';
 import { LearningComponent } from './learning/learning.component';
 import { TeachingComponent } from './teaching/teaching.component';
@@ -17,13 +19,15 @@ import { ScheduleComponent } from './schedule/schedule.component';
     TeachingComponent,
     ScheduleComponent,
     CreateWorkshopComponent,
-    ChooseTemplateComponent
+    ChooseTemplateComponent,
+    RequestsComponent
   ],
   imports: [
     CommonModule,
     WorkshopRoutingModule,
     SharedModule,
     AppSharedModule,
+    ProgramsModule
   ],
 })
 export class WorkshopModule { }
