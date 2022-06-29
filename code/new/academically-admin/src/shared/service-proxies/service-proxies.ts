@@ -12525,14 +12525,24 @@ export class QuestionsServiceProxy {
 
     /**
      * @param referenceId (optional) 
+     * @param answered (optional) 
+     * @param creatorId (optional) 
      * @return Success
      */
-    getAll(referenceId: string | undefined): Observable<QuestionDto[]> {
+    getAll(referenceId: string | undefined, answered: boolean | undefined, creatorId: number | undefined): Observable<QuestionDto[]> {
         let url_ = this.baseUrl + "/api/services/app/Questions/GetAll?";
         if (referenceId === null)
             throw new Error("The parameter 'referenceId' cannot be null.");
         else if (referenceId !== undefined)
-            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+            url_ += "ReferenceId=" + encodeURIComponent("" + referenceId) + "&";
+        if (answered === null)
+            throw new Error("The parameter 'answered' cannot be null.");
+        else if (answered !== undefined)
+            url_ += "Answered=" + encodeURIComponent("" + answered) + "&";
+        if (creatorId === null)
+            throw new Error("The parameter 'creatorId' cannot be null.");
+        else if (creatorId !== undefined)
+            url_ += "CreatorId=" + encodeURIComponent("" + creatorId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

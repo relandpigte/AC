@@ -1,16 +1,19 @@
-import { Component, Injector, Input, OnInit } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
-import * as _ from 'lodash';
-import { QuestionDto, QuestionsServiceProxy, QuestionReactionDto, ReactionType } from '@shared/service-proxies/service-proxies';
+import { AfterViewInit, Component, Injector, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { takeUntil, finalize } from 'rxjs/operators';
+import { AppComponentBase } from '@shared/app-component-base';
+import { QuestionDto, QuestionReactionDto, QuestionsServiceProxy, ReactionType } from '@shared/service-proxies/service-proxies';
+import * as _ from 'lodash';
+import { finalize, takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-questions',
   templateUrl: './questions.component.html',
   styleUrls: ['./questions.component.less']
 })
-export class QuestionsComponent extends AppComponentBase implements OnInit {
+export class QuestionsComponent extends AppComponentBase implements AfterViewInit {
   @Input() isSidebar = true;
+  @Input() referenceId: string;
+  @Input() answered: boolean;
+  @Input() creatorId: number;
 
   questions: QuestionDto[];
   isLoading = false;
@@ -21,7 +24,6 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
   skipCount: number[] = [];
   loadedReplyCount: number[] = [];
 
-  private _referenceId: string;
   private _maxRepliesToLoad = 3;
 
   constructor(
@@ -32,17 +34,8 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
-  get referenceId() {
-    return this._referenceId;
-  }
-
-  @Input() set referenceId(value: string) {
-    this._referenceId = value;
+  ngAfterViewInit(): void {
     this.getQuestions();
-  }
-
-  ngOnInit(): void {
-
   }
 
   onFormSubmit(): void {
@@ -100,7 +93,7 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
   private createQuestion(): void {
     if (this.newQuestion && this.newQuestion.body && this.newQuestion.body.trim() && !this.isLoading) {
       this.isLoading = true;
-      this.newQuestion.referenceId = this._referenceId;
+      this.newQuestion.referenceId = this.referenceId;
       this._questionsService.create(this.newQuestion)
         .pipe(
           takeUntil(this.destroyed$),
@@ -124,7 +117,7 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
     const reply = this.newReply[replyIndex];
     if (reply && reply.body && reply.body.trim() && !this.isLoading) {
       this.isLoading = true;
-      reply.referenceId = this._referenceId;
+      reply.referenceId = this.referenceId;
       reply.parentId = parent.id;
       this._questionsService.create(reply)
         .pipe(
@@ -153,7 +146,8 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
     this.skipCount = [];
     this.loadedReplyCount = [];
     this.isReplying = [];
-    this._questionsService.getAll(this._referenceId)
+
+    this._questionsService.getAll(this.referenceId, this.answered, this.creatorId)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {

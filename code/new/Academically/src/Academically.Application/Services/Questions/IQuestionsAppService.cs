@@ -10,7 +10,7 @@ namespace Academically.Services.Questions
 {
     public interface IQuestionsAppService : IApplicationService
     {
-        Task<IEnumerable<QuestionDto>> GetAllAsync(string referenceId);
+        Task<IEnumerable<QuestionDto>> GetAllAsync(GetQuestionsRequestDto input);
         Task<PagedResultDto<QuestionDto>> GetAllRepliesAsync(PagedQuestionResultRequestDto input);
         Task<QuestionDto> CreateAsync(QuestionDto input);
         Task<QuestionReactionDto> CreateReactionAsync(QuestionReactionDto input);

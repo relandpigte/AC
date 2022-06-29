@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { PortalRoutingModule } from './portal-routing.module';
 import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
+import { QuestionsModule as SharedQuestionsModule } from '@app/_shared/modules/questions/questions.module';
 
 import { PortalComponent } from './portal.component';
 import { DeviceSettingsComponent } from './_components/device-settings/device-settings.component';
@@ -27,6 +28,7 @@ import { GuestsComponent } from './_components/settings/_components/guests/guest
 import { CoHostsComponent } from './_components/settings/_components/co-hosts/co-hosts.component';
 import { ShareVideosComponent } from './_components/share-videos/share-videos.component';
 import { PortalTempComponent } from './_components/portal-temp/portal-temp.component';
+import { QuestionsComponent } from './_components/questions/questions.component';
 
 @NgModule({
   declarations: [
@@ -53,12 +55,14 @@ import { PortalTempComponent } from './_components/portal-temp/portal-temp.compo
     CoHostsComponent,
     ShareVideosComponent,
     PortalTempComponent,
+    QuestionsComponent
   ],
   imports: [
     CommonModule,
     PortalRoutingModule,
     SharedModule,
     AppSharedModule,
+    SharedQuestionsModule
   ],
 })
 export class PortalModule { }
