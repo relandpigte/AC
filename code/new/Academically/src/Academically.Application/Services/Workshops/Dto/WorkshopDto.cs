@@ -104,6 +104,7 @@ namespace Academically.Services.Workshops.Dto
         public bool AudienceEnableHandoutsTab { get; set; }
 
         public long CreatorUserId { get; set; }
+        public DateTime CreationTime { get; set; }
 
         public WorkshopDto Parent { get; set; }
         public DocumentDto ThumbnailDocument { get; set; }

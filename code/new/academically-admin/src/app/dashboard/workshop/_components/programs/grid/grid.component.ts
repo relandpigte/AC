@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { EventDto, EventType } from '@shared/service-proxies/service-proxies';
+import { WorkshopDto, WorkshopType } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-grid',
@@ -10,9 +10,9 @@ import { EventDto, EventType } from '@shared/service-proxies/service-proxies';
 })
 export class GridComponent extends AppComponentBase implements OnInit {
 
-  @Input() events: EventDto[] = [];
-  @Output() deleteEvent = new EventEmitter();
-  EventType = EventType;
+  @Input() workshops: WorkshopDto[] = [];
+  @Output() deleteWorkshop = new EventEmitter();
+  WorkshopType = WorkshopType;
   constructor(injector: Injector, private router: Router) {
     super(injector);
    }
@@ -20,7 +20,7 @@ export class GridComponent extends AppComponentBase implements OnInit {
   }
 
   onDeleteClick(id: string) {
-    this.deleteEvent.emit(id);
+    this.deleteWorkshop.emit(id);
   }
 
   navToUrl(url , id) {

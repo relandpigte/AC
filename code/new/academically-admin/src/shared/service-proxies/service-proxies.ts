@@ -25902,6 +25902,7 @@ export class CoachingDto implements ICoachingDto {
     audienceEnableOffersTabDisplayNoOfPurchases: boolean;
     audienceEnableHandoutsTab: boolean;
     creatorUserId: number;
+    creationTime: moment.Moment;
     parent: CoachingDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;
@@ -25998,6 +25999,7 @@ export class CoachingDto implements ICoachingDto {
             this.audienceEnableOffersTabDisplayNoOfPurchases = _data["audienceEnableOffersTabDisplayNoOfPurchases"];
             this.audienceEnableHandoutsTab = _data["audienceEnableHandoutsTab"];
             this.creatorUserId = _data["creatorUserId"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.parent = _data["parent"] ? CoachingDto.fromJS(_data["parent"]) : <any>undefined;
             this.thumbnailDocument = _data["thumbnailDocument"] ? DocumentDto.fromJS(_data["thumbnailDocument"]) : <any>undefined;
             this.language = _data["language"] ? SpokenLanguageDto.fromJS(_data["language"]) : <any>undefined;
@@ -26098,6 +26100,7 @@ export class CoachingDto implements ICoachingDto {
         data["audienceEnableOffersTabDisplayNoOfPurchases"] = this.audienceEnableOffersTabDisplayNoOfPurchases;
         data["audienceEnableHandoutsTab"] = this.audienceEnableHandoutsTab;
         data["creatorUserId"] = this.creatorUserId;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
         data["language"] = this.language ? this.language.toJSON() : <any>undefined;
@@ -26198,6 +26201,7 @@ export interface ICoachingDto {
     audienceEnableOffersTabDisplayNoOfPurchases: boolean;
     audienceEnableHandoutsTab: boolean;
     creatorUserId: number;
+    creationTime: moment.Moment;
     parent: CoachingDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;
@@ -44457,6 +44461,7 @@ export class WorkshopDto implements IWorkshopDto {
     audienceEnableOffersTabDisplayNoOfPurchases: boolean;
     audienceEnableHandoutsTab: boolean;
     creatorUserId: number;
+    creationTime: moment.Moment;
     parent: WorkshopDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;
@@ -44565,6 +44570,7 @@ export class WorkshopDto implements IWorkshopDto {
             this.audienceEnableOffersTabDisplayNoOfPurchases = _data["audienceEnableOffersTabDisplayNoOfPurchases"];
             this.audienceEnableHandoutsTab = _data["audienceEnableHandoutsTab"];
             this.creatorUserId = _data["creatorUserId"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.parent = _data["parent"] ? WorkshopDto.fromJS(_data["parent"]) : <any>undefined;
             this.thumbnailDocument = _data["thumbnailDocument"] ? DocumentDto.fromJS(_data["thumbnailDocument"]) : <any>undefined;
             this.language = _data["language"] ? SpokenLanguageDto.fromJS(_data["language"]) : <any>undefined;
@@ -44677,6 +44683,7 @@ export class WorkshopDto implements IWorkshopDto {
         data["audienceEnableOffersTabDisplayNoOfPurchases"] = this.audienceEnableOffersTabDisplayNoOfPurchases;
         data["audienceEnableHandoutsTab"] = this.audienceEnableHandoutsTab;
         data["creatorUserId"] = this.creatorUserId;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
         data["language"] = this.language ? this.language.toJSON() : <any>undefined;
@@ -44789,6 +44796,7 @@ export interface IWorkshopDto {
     audienceEnableOffersTabDisplayNoOfPurchases: boolean;
     audienceEnableHandoutsTab: boolean;
     creatorUserId: number;
+    creationTime: moment.Moment;
     parent: WorkshopDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;

@@ -1776,6 +1776,7 @@
 	<text name="UnpublishCoachingConfirmationMessage">Are you sure you want to unpublish this coaching? The status will change to Draft.</text>
 	<text name="CoachingRequests">Coaching Requests</text>
 	<text name="CoachingPrograms">Coaching Programs</text>
+	<text name="DeleteCoachingConfirmationMessage">Are you sure you want to delete this coaching?</text>
 	<!-- Workshop -->
 	<text name="NewWorkshop">New Workshop</text>
 	<text name="CreateWorkshop">Create Workshop</text>
@@ -1811,6 +1812,7 @@
     <text name="NumberOfAttendees">Number of attendees</text>
 	<text name="WorkshopRequests">Workshop Requests</text>
 	<text name="WorkshopPrograms">Workshop Programs</text>
-	  
+	<text name="DeleteWorkshopConfirmationMessage">Are you sure you want to delete this workshop?</text>
+
   </texts>
 </localizationDictionary>

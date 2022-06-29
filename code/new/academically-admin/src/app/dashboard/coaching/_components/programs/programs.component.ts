@@ -1,15 +1,15 @@
-import { Component, Injector, OnInit } from '@angular/core';
-import { EventService } from '@app/events/_services/event.service';
+import { Component, Injector, Input, OnInit } from '@angular/core';
+import { CoachingService } from '@app/dashboard/coaching/_services/coaching.service';
 import { UploadService } from '@app/_shared/services/upload.service';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
-import { EventStatus, EventDto, EventType, EventsServiceProxy, EventDtoPagedResultDto } from '@shared/service-proxies/service-proxies';
+import { CoachingDto, CoachingDtoPagedResultDto, CoachingsServiceProxy, CoachingStatus, CoachingType } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
-import { takeUntil, finalize } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 
-class PagedEventRequestDto extends PagedAndSortedRequestDto {
+class PagedCoachingRequestDto extends PagedAndSortedRequestDto {
   userIdFilter: number;
   searchFilter?: string;
-  statusFilter?: EventStatus;
+  statusFilter?: CoachingStatus;
 }
 
 @Component({
@@ -17,26 +17,28 @@ class PagedEventRequestDto extends PagedAndSortedRequestDto {
   templateUrl: './programs.component.html',
   styleUrls: ['./programs.component.less']
 })
-export class ProgramsComponent extends PagedListingComponentBase<EventDto> implements OnInit {
+export class ProgramsComponent extends PagedListingComponentBase<CoachingDto> implements OnInit {
+  @Input() userId: number;
+
   nonce: number = Math.floor(Math.random() * 100) + 1;
 
-  events: EventDto[] = [];
+  coachings: CoachingDto[] = [];
   searchFilter?: string;
   statusFilter?: number;
   thumbnailUrls: string[] = [];
 
-  EventStatus = EventStatus;
-  EventType = EventType;
+  CoachingStatus = CoachingStatus;
+  CoachingType = CoachingType;
 
   constructor(
     injector: Injector,
-    private _eventsService: EventsServiceProxy,
-    private _eventService: EventService,
+    private _coachingsService: CoachingsServiceProxy,
+    private _coachingService: CoachingService,
     private _uploadService: UploadService,
   ) {
     super(injector);
-    this._eventService.eventCreated$.subscribe(event => {
-      if (event) {
+    this._coachingService.coachingCreated$.subscribe(coaching => {
+      if (coaching) {
         this.refresh();
       }
     });
@@ -49,11 +51,11 @@ export class ProgramsComponent extends PagedListingComponentBase<EventDto> imple
 
   onDeleteClick(id: string): void {
     this.message.confirm(
-      this.l('DeleteEventConfirmationMessage'),
+      this.l('DeleteCoachingConfirmationMessage'),
       undefined,
       (result: boolean) => {
         if (result) {
-          this._eventsService.delete(id)
+          this._coachingsService.delete(id)
             .pipe(takeUntil(this.destroyed$))
             .subscribe(() => {
               this.notify.success(this.l('SuccessfullyDeleted'));
@@ -65,15 +67,15 @@ export class ProgramsComponent extends PagedListingComponentBase<EventDto> imple
   }
 
   protected list(
-    request: PagedEventRequestDto,
+    request: PagedCoachingRequestDto,
     pageNumber: number,
     finishedCallback: Function,
   ): void {
-    request.userIdFilter = this.appSession.userId;
+    request.userIdFilter = this.userId ?? this.appSession.userId;
     request.searchFilter = this.searchFilter;
     request.statusFilter = this.statusFilter;
 
-    this._eventsService
+    this._coachingsService
       .getAll(
         undefined,
         request.userIdFilter,
@@ -87,10 +89,10 @@ export class ProgramsComponent extends PagedListingComponentBase<EventDto> imple
           finishedCallback();
         })
       )
-      .subscribe((result: EventDtoPagedResultDto) => {
-        this.events = result.items;
-        _.each(this.events, event => {
-          this.thumbnailUrls[event.id] = this._uploadService.getFileUrl(event.thumbnailDocument);
+      .subscribe((result: CoachingDtoPagedResultDto) => {
+        this.coachings = result.items;
+        _.each(this.coachings, coaching => {
+          this.thumbnailUrls[coaching.id] = this._uploadService.getFileUrl(coaching.thumbnailDocument);
         });
         this.showPaging(result, pageNumber);
       });

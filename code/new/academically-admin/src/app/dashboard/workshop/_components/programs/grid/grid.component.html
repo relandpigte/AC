@@ -1,19 +1,19 @@
 <div class="row m-0">
-  <div *ngFor="let event of events" class="col-12 col-md-6 col-xl-4 p-0">
+  <div *ngFor="let workshop of workshops" class="col-12 col-md-6 col-xl-4 p-0">
     <div class="card mx-0 m-md-1">
       <a href="#!visit" (click)="$event.preventDefault();">
-        <img [src]="getServiceImageUrl(event.thumbnailDocument)" alt="..." class="card-img-top">
+        <img [src]="getServiceImageUrl(workshop.thumbnailDocument)" alt="..." class="card-img-top">
       </a>
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col">
             <h4 class="mb-2 name">
-              <a href="#!visit" [routerLink]="[event.id]" (click)="$event.preventDefault();">
-                {{ event.name }}
+              <a href="#!visit" [routerLink]="[workshop.id]" (click)="$event.preventDefault();">
+                {{ workshop.name }}
               </a>
             </h4>
             <p class="card-text small text-muted">
-              {{ 'Created' | localize }} {{ convertMomentToDateAgo(event.eventDateTime) }}
+              {{ 'Created' | localize }} {{ convertMomentToDateAgo(workshop.creationTime) }}
             </p>
           </div>
           <div class="col-auto">
@@ -23,20 +23,15 @@
                 <i class="fe fe-more-vertical"></i>
               </a>
               <div class="dropdown-menu dropdown-menu-right">
-                <a href="#!visit" class="dropdown-item"
-                  (click)="$event.preventDefault();navToUrl('app/events/tutor-portal' , event.id)">
-                  {{ 'Overview' | localize }}
-                </a>
-                <a href="#!visit" *ngIf="event.type === EventType.SingleEvent" class="dropdown-item"
-                  (click)="$event.preventDefault();navToUrl('app/events' , event.id)">
+                <a href="#!visit" *ngIf="workshop.type === WorkshopType.Single" class="dropdown-item"
+                  (click)="$event.preventDefault();navToUrl('app/dashboard/workshop' , workshop.id)">
                   {{ 'Edit' | localize }}
                 </a>
-                <a href="#!visit" *ngIf="event.type === EventType.EventSeries" class="dropdown-item"
-                  (click)="$event.preventDefault();navToUrl('app/events/event-series' , event.id)">
+                <a href="#!visit" *ngIf="workshop.type === WorkshopType.Series" class="dropdown-item"
+                  (click)="$event.preventDefault();navToUrl('app/dashboard/workshop/series' , workshop.id)">
                   {{ 'Edit' | localize }}
                 </a>
-                <a href="#!visit" class="dropdown-item" (click)="onDeleteClick(event.id)"
-                  [routerLink]="['/app/events/student-portal', event.id, 'portal']" (click)="$event.preventDefault(); ">
+                <a href="#!visit" class="dropdown-item" (click)="onDeleteClick(workshop.id)" (click)="$event.preventDefault(); ">
                   {{ 'Delete' | localize }}
                 </a>
               </div>

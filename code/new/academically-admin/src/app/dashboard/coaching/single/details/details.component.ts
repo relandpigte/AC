@@ -13,6 +13,7 @@ import {
   SpokenLanguagesServiceProxy,
   UpdateCoachingDto,
   DocumentType,
+  CoachingDto,
 } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
@@ -25,6 +26,8 @@ import * as _ from 'lodash';
 })
 export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
+
+  coaching: CoachingDto;
 
   id: string;
   category: string;
@@ -40,7 +43,8 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   PricingType = PricingType;
   CoachingType = CoachingType;
   thumbnailDocument = new DocumentDto();
-  coachingType: CoachingType;
+
+  get coachingType(): CoachingType { return this.coaching.type ?? CoachingType.Single; }
 
   constructor(
     injector: Injector,
@@ -164,6 +168,7 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
         })
       )
       .subscribe(response => {
+        this.coaching = response;
         this.model.init(response);
         if (this.model.categories) {
           this.categories = this.model.categories.split(',');

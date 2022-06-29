@@ -1,15 +1,15 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { EventService } from '@app/events/_services/event.service';
+import { WorkshopService } from '@app/dashboard/workshop/_services/workshop.service';
 import { UploadService } from '@app/_shared/services/upload.service';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
-import { EventStatus, EventDto, EventType, EventsServiceProxy, EventDtoPagedResultDto } from '@shared/service-proxies/service-proxies';
+import { WorkshopStatus, WorkshopDto, WorkshopType, WorkshopsServiceProxy, WorkshopDtoPagedResultDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { takeUntil, finalize } from 'rxjs/operators';
 
-class PagedEventRequestDto extends PagedAndSortedRequestDto {
+class PagedWorkshopRequestDto extends PagedAndSortedRequestDto {
   userIdFilter: number;
   searchFilter?: string;
-  statusFilter?: EventStatus;
+  statusFilter?: WorkshopStatus;
 }
 
 @Component({
@@ -17,26 +17,26 @@ class PagedEventRequestDto extends PagedAndSortedRequestDto {
   templateUrl: './programs.component.html',
   styleUrls: ['./programs.component.less']
 })
-export class ProgramsComponent extends PagedListingComponentBase<EventDto> implements OnInit {
+export class ProgramsComponent extends PagedListingComponentBase<WorkshopDto> implements OnInit {
   nonce: number = Math.floor(Math.random() * 100) + 1;
 
-  events: EventDto[] = [];
+  workshops: WorkshopDto[] = [];
   searchFilter?: string;
   statusFilter?: number;
   thumbnailUrls: string[] = [];
 
-  EventStatus = EventStatus;
-  EventType = EventType;
+  Status = WorkshopStatus;
+  WorkshopType = WorkshopType;
 
   constructor(
     injector: Injector,
-    private _eventsService: EventsServiceProxy,
-    private _eventService: EventService,
+    private _workshopsService: WorkshopsServiceProxy,
+    private _workshopService: WorkshopService,
     private _uploadService: UploadService,
   ) {
     super(injector);
-    this._eventService.eventCreated$.subscribe(event => {
-      if (event) {
+    this._workshopService.workshopCreated$.subscribe(workshop => {
+      if (workshop) {
         this.refresh();
       }
     });
@@ -49,11 +49,11 @@ export class ProgramsComponent extends PagedListingComponentBase<EventDto> imple
 
   onDeleteClick(id: string): void {
     this.message.confirm(
-      this.l('DeleteEventConfirmationMessage'),
+      this.l('DeleteWorkshopConfirmationMessage'),
       undefined,
       (result: boolean) => {
         if (result) {
-          this._eventsService.delete(id)
+          this._workshopsService.delete(id)
             .pipe(takeUntil(this.destroyed$))
             .subscribe(() => {
               this.notify.success(this.l('SuccessfullyDeleted'));
@@ -65,7 +65,7 @@ export class ProgramsComponent extends PagedListingComponentBase<EventDto> imple
   }
 
   protected list(
-    request: PagedEventRequestDto,
+    request: PagedWorkshopRequestDto,
     pageNumber: number,
     finishedCallback: Function,
   ): void {
@@ -73,7 +73,7 @@ export class ProgramsComponent extends PagedListingComponentBase<EventDto> imple
     request.searchFilter = this.searchFilter;
     request.statusFilter = this.statusFilter;
 
-    this._eventsService
+    this._workshopsService
       .getAll(
         undefined,
         request.userIdFilter,
@@ -87,10 +87,10 @@ export class ProgramsComponent extends PagedListingComponentBase<EventDto> imple
           finishedCallback();
         })
       )
-      .subscribe((result: EventDtoPagedResultDto) => {
-        this.events = result.items;
-        _.each(this.events, event => {
-          this.thumbnailUrls[event.id] = this._uploadService.getFileUrl(event.thumbnailDocument);
+      .subscribe((result: WorkshopDtoPagedResultDto) => {
+        this.workshops = result.items;
+        _.each(this.workshops, workshop => {
+          this.thumbnailUrls[workshop.id] = this._uploadService.getFileUrl(workshop.thumbnailDocument);
         });
         this.showPaging(result, pageNumber);
       });

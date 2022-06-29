@@ -13,6 +13,7 @@ import {
   SpokenLanguagesServiceProxy,
   UpdateWorkshopDto,
   DocumentType,
+  WorkshopDto,
 } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
@@ -25,6 +26,8 @@ import * as _ from 'lodash';
 })
 export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
+
+  workshop: WorkshopDto;
 
   id: string;
   category: string;
@@ -40,7 +43,8 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   PricingType = PricingType;
   WorkshopType = WorkshopType;
   thumbnailDocument = new DocumentDto();
-  workshopType: WorkshopType;
+
+  get workshopType(): WorkshopType { return this.workshop?.type ?? WorkshopType.Single; }
 
   constructor(
     injector: Injector,
@@ -164,6 +168,7 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
         })
       )
       .subscribe(response => {
+        this.workshop = response;
         this.model.init(response);
         if (this.model.categories) {
           this.categories = this.model.categories.split(',');

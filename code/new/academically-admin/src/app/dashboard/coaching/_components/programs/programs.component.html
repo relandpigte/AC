@@ -23,24 +23,24 @@
   </div>
   <div class="w100p w-sm-auto">
     <div class="nav btn-group h-100" role="tablist" style="min-width: 200px;">
-      <button class="btn btn-lg btn-white active" data-toggle="tab" [attr.data-target]="'#event-grid-tab-' + nonce" role="tab"
-        [attr.aria-controls]="'event-grid-tab-' + nonce" aria-selected="true">
+      <button class="btn btn-lg btn-white active" data-toggle="tab" [attr.data-target]="'#coaching-grid-tab-' + nonce" role="tab"
+        [attr.aria-controls]="'coaching-grid-tab-' + nonce" aria-selected="true">
         <span class="fe fe-grid"></span>
       </button>
-      <button class="btn btn-lg btn-white" data-toggle="tab" [attr.data-target]="'#event-list-tab-' + nonce" role="tab"
-        [attr.aria-controls]="'list-tab-' + nonce" aria-selected="false">
+      <button class="btn btn-lg btn-white" data-toggle="tab" [attr.data-target]="'#coaching-list-tab-' + nonce" role="tab"
+        [attr.aria-controls]="'coaching-list-tab-' + nonce" aria-selected="false">
         <span class="fe fe-list"></span>
       </button>
     </div>
   </div>
 </div>
 
-<div *ngIf="events && events.length else noCoursesTemplate" class="tab-content" [loader]="isTableLoading">
-  <div class="tab-pane fade active show" [attr.id]="'event-grid-tab-' + nonce" role="tabpanel">
-    <app-grid [events]="events" (deleteEvent)="onDeleteClick($event)"></app-grid>
+<div *ngIf="coachings && coachings.length else noCoursesTemplate" class="tab-content" [loader]="isTableLoading">
+  <div class="tab-pane fade active show" [attr.id]="'coaching-grid-tab-' + nonce" role="tabpanel">
+    <app-grid [coachings]="coachings" (deleteCoaching)="onDeleteClick($event)"></app-grid>
   </div>
-  <div class="tab-pane fade" [attr.id]="'event-list-tab-' + nonce" role="tabpanel">
-    <app-list [events]="events" (deleteEvent)="onDeleteClick($event)"></app-list>
+  <div class="tab-pane fade" [attr.id]="'coaching-list-tab-' + nonce" role="tabpanel">
+    <app-list [coachings]="coachings" (deleteCoaching)="onDeleteClick($event)"></app-list>
   </div>
 </div>
 
