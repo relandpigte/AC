@@ -14,7 +14,9 @@
         </div>
         <div class="col-8">
           <h5 class="comment-title mb-0">
-            {{ question.creatorUser.fullName }}
+            <div class="d-flex flex-row align-items-center">
+              {{ question.creatorUser.fullName }} <span *ngIf="showHostBadge && question.creatorUser.id === hostId" class="host-pill btn btn-primary">{{ 'Host' | localize }}</span>
+            </div>
             <time class="comment-time">
               {{ convertMomentToDateAgo(question.creationTime) }}
             </time>
@@ -55,7 +57,12 @@
             </ng-container>
           </div>
           <div class="col-6 comment-response d-flex justify-content-end align-items-center">
-            <span class="text-body">
+            <ng-container *ngIf="customActions">
+              <a *ngFor="let action of customActions" class="btn btn-sm" [ngClass]="[action.class ? action.class: '']" (click)="action.action?.call(this, question);">
+                {{ action.label | localize }}
+              </a>
+            </ng-container>
+            <span *ngIf="!customActions" class="text-body">
               {{ question.replyCount }}
               {{ (question.replyCount === 1 ? 'Response' : 'Responses') | localize | lowercase }}
             </span>
@@ -82,12 +89,14 @@
                   <div class="row">
                     <div class="col-12">
                       <h5 class="comment-title mb-0">
-                        {{ reply.creatorUser.fullName }}
+                        <div class="d-flex flex-row align-items-center">
+                          {{ reply.creatorUser.fullName }} <span *ngIf="showHostBadge && reply.creatorUser.id === hostId" class="host-pill btn btn-primary">{{ 'Host' | localize }}</span>
+                        </div>
                       </h5>
                     </div>
                     <div class="col-12">
                       <time class="comment-time">
-                        {{ convertMomentToDateAgo(reply.time) }}
+                        {{ convertMomentToDateAgo(reply.creationTime) }}
                       </time>
                     </div>
                   </div>
@@ -172,16 +181,26 @@
 </ng-template>
 
 <ng-template #hasNotReactedTemplate let-question="question">
-  <a class="btn btn-sm btn-white" href="#!like" (click)="$event.preventDefault(); onLikeClick(question);">
-    <span class="fe fe-arrow-up-circle"></span>
-    {{ question.questionReactions.length }}
-  </a>
+  <div class="d-flex flex-row align-items-center">
+    <a class="btn btn-sm btn-white" href="#!like" (click)="$event.preventDefault(); onLikeClick(question);">
+      <span class="fe fe-arrow-up-circle"></span>
+      {{ question.questionReactions.length }}
+    </a>
+    <a *ngFor="let action of customReactionActions" class="btn btn-sm ml-1" [ngClass]="[action.class ? action.class: '']" (click)="action.action?.call(this, question);">
+      {{ action.label | localize }}
+    </a>
+  </div>
 </ng-template>
 
 <ng-template #hasReactedTemplate let-question="question">
-  <a class="btn btn-sm btn-white text-success" href="#!unlike"
-    (click)="$event.preventDefault(); onUnlikeClick(question);">
-    <span class="fe fe-arrow-up-circle text-success"></span>
-    {{ question.questionReactions.length }}
-  </a>
+  <div class="d-flex flex-row align-items-center">
+    <a class="btn btn-sm btn-white text-success" href="#!unlike"
+      (click)="$event.preventDefault(); onUnlikeClick(question);">
+      <span class="fe fe-arrow-up-circle text-success"></span>
+      {{ question.questionReactions.length }}
+    </a>
+    <a *ngFor="let action of customReactionActions" class="btn btn-sm ml-1" [ngClass]="[action.class ? action.class: '']" (click)="action.action?.call(this, question);">
+      {{ action.label | localize }}
+    </a>
+  </div>
 </ng-template>

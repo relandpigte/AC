@@ -17,12 +17,26 @@
 
         <div class="tab-content flex-grow-1">
             <div class="tab-pane h-100 fade show active" id="open-container" role="tabpanel" aria-labelledby="open-tab">
-                <app-questions [referenceId]="referenceId" [isSidebar]="false" [answered]="false"></app-questions>
+                <app-questions
+                    [referenceId]="referenceId"
+                    [isSidebar]="false"
+                    [answered]="false"
+                    [hostId]="hostId"
+                    [customReactionActions]="customReactionActions"
+                    [customActions]="customActions"
+                ></app-questions>
             </div>
             <div class="tab-pane h-100 fade" id="answered-container" role="tabpanel" aria-labelledby="answered-tab">
-                <app-questions [referenceId]="referenceId" [isSidebar]="false" [answered]="true"></app-questions>
+                <app-questions
+                    [referenceId]="referenceId"
+                    [isSidebar]="false"
+                    [answered]="true"
+                    [hostId]="hostId"
+                    [customReactionActions]="customReactionActions"
+                    [customActions]="customActions"
+                ></app-questions>
             </div>
         </div>
     </div>
-    <app-questions *ngSwitchDefault [referenceId]="referenceId" [isSidebar]="false" [creatorId]="userId"></app-questions>
+    <app-questions *ngSwitchDefault [referenceId]="referenceId" [isSidebar]="false" [creatorId]="userId" [hostId]="hostId"></app-questions>
 </ng-container>

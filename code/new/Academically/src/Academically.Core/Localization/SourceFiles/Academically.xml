@@ -1748,6 +1748,7 @@
     <text name="AllTutors">All Tutors</text>
     <text name="Coaching">Coaching</text>
 	<text name="EndEventConfirmation">Are you sure you want to end this event?</text>
+	<text name="AnswerLive">Answer Live</text>
 	<!-- Coaching -->
 	<text name="NewCoaching">New Coaching</text>
 	<text name="CreateCoaching">Create Coaching</text>

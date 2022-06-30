@@ -4,6 +4,13 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { QuestionDto, QuestionReactionDto, QuestionsServiceProxy, ReactionType } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { finalize, takeUntil } from 'rxjs/operators';
+
+export interface CustomAction {
+  label: string;
+  class?: string;
+  action: (question: QuestionDto) => void;
+}
+
 @Component({
   selector: 'app-questions',
   templateUrl: './questions.component.html',
@@ -14,6 +21,10 @@ export class QuestionsComponent extends AppComponentBase implements AfterViewIni
   @Input() referenceId: string;
   @Input() answered: boolean;
   @Input() creatorId: number;
+  @Input() hostId: number;
+  @Input() showHostBadge: boolean = true;
+  @Input() customReactionActions: CustomAction[] = [];
+  @Input() customActions: CustomAction[] = [];
 
   questions: QuestionDto[];
   isLoading = false;
