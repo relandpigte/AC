@@ -143,7 +143,9 @@ namespace Academically.Web.Host.Startup
 
             app.UseAbpRequestLocalization();
 
-          
+            app.UseWebSockets();
+
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<AbpCommonHub>("/signalr");

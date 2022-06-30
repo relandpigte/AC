@@ -4,7 +4,8 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { InvitePresenterComponent } from './_components/invite-presenter/invite-presenter.component';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil, finalize } from 'rxjs/operators';
-import { EventPresenterDto, EventsServiceProxy, EventPresenterType, UpdatePresenterTypeDto } from '@shared/service-proxies/service-proxies';
+import { EventPresenterDto, EventsServiceProxy, EventPresenterType, UpdatePresenterTypeDto, EventDto } from '@shared/service-proxies/service-proxies';
+import { EventService } from '@app/events/_services/event.service';
 
 @Component({
   selector: 'app-studio',
@@ -12,6 +13,7 @@ import { EventPresenterDto, EventsServiceProxy, EventPresenterType, UpdatePresen
   styleUrls: ['./studio.component.less']
 })
 export class StudioComponent extends AppComponentBase implements OnInit {
+  event = new EventDto();
   presenters: EventPresenterDto[] = [];
   eventId: string;
   activeTab = 1;
@@ -23,6 +25,7 @@ export class StudioComponent extends AppComponentBase implements OnInit {
     route: ActivatedRoute,
     private _modalService: BsModalService,
     private _eventsService: EventsServiceProxy,
+    private _eventService: EventService,
   ) {
     super(injector);
     route.parent.parent.paramMap
@@ -33,6 +36,12 @@ export class StudioComponent extends AppComponentBase implements OnInit {
           this.getPresenters();
         }
       });
+
+    this.pipeDestroy(this._eventService.eventCreated$, (response) => {
+      if (response) {
+        this.event = response;
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -85,6 +94,13 @@ export class StudioComponent extends AppComponentBase implements OnInit {
       .subscribe(() => {
         this.notify.success(this.l('SavedRemoved'));
         this.getPresenters();
+      });
+  }
+
+  onAutoAdmitChange(): void {
+    this.pipeDestroy(this._eventsService.updateAutoAdmit(this.eventId,
+      this.event.autoAdmitAttendees), () => {
+        this.notify.success(this.l('SavedSuccessfully'));
       });
   }
 

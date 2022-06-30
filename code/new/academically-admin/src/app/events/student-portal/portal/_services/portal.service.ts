@@ -1,59 +1,59 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { EventDto, EventPresenterDto, StudentEventDto } from '@shared/service-proxies/service-proxies';
+import { EventDto, EventPresenterDto, StudentEventDto, EventUserDto } from '@shared/service-proxies/service-proxies';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PortalService {
   public event$: Observable<EventDto>;
-  public audiences$: Observable<StudentEventDto[]>;
-  public presenters$: Observable<EventPresenterDto[]>;
-  public audienceJoined$: Observable<StudentEventDto>;
-  public guestJoined$: Observable<EventPresenterDto>;
-  public admitGuest$: Observable<EventPresenterDto>;
-  public speakRequest$: Observable<StudentEventDto>;
-  public grantRequestToSpeak$: Observable<StudentEventDto>;
-  public declineRequestToSpeak$: Observable<StudentEventDto>;
+  public attendees$: Observable<EventUserDto[]>;
+  public attendeeJoined$: Observable<EventUserDto>;
+  public guestJoined$: Observable<EventUserDto>;
+  public lobbyUser$: Observable<EventUserDto>;
+  public admitGuest$: Observable<EventUserDto>;
+  public speakRequest$: Observable<EventUserDto>;
+  public grantRequestToSpeak$: Observable<EventUserDto>;
+  public declineRequestToSpeak$: Observable<EventUserDto>;
   public grantedRequestToSpeak$: Observable<boolean>;
 
   private _eventSubject: BehaviorSubject<EventDto>;
-  private _audiencesSubject: BehaviorSubject<StudentEventDto[]>;
-  private _presentersSubject: BehaviorSubject<EventPresenterDto[]>;
-  private _audienceJoinedSubject: BehaviorSubject<StudentEventDto>;
-  private _guestJoinedSubject: BehaviorSubject<EventPresenterDto>;
-  private _admitGuestSubject: BehaviorSubject<EventPresenterDto>;
-  private _speakRequestSubject: BehaviorSubject<StudentEventDto>;
-  private _grantRequestToSpeakSubject: BehaviorSubject<StudentEventDto>;
-  private _declineRequestToSpeakSubject: BehaviorSubject<StudentEventDto>;
+  private _attendeesSubject: BehaviorSubject<EventUserDto[]>;
+  private _lobbyUserSubject: BehaviorSubject<EventUserDto>;
+  private _attendeeJoinedSubject: BehaviorSubject<EventUserDto>;
+  private _guestJoinedSubject: BehaviorSubject<EventUserDto>;
+  private _admitGuestSubject: BehaviorSubject<EventUserDto>;
+  private _speakRequestSubject: BehaviorSubject<EventUserDto>;
+  private _grantRequestToSpeakSubject: BehaviorSubject<EventUserDto>;
+  private _declineRequestToSpeakSubject: BehaviorSubject<EventUserDto>;
   private _grantedRequestToSpeakSubject: BehaviorSubject<boolean>;
 
   constructor() {
     this._eventSubject = new BehaviorSubject<EventDto>(undefined);
     this.event$ = this._eventSubject.asObservable();
 
-    this._audienceJoinedSubject = new BehaviorSubject<StudentEventDto>(undefined);
-    this.audienceJoined$ = this._audienceJoinedSubject.asObservable();
+    this._attendeeJoinedSubject = new BehaviorSubject<EventUserDto>(undefined);
+    this.attendeeJoined$ = this._attendeeJoinedSubject.asObservable();
 
-    this._audiencesSubject = new BehaviorSubject<StudentEventDto[]>([]);
-    this.audiences$ = this._audiencesSubject.asObservable();
+    this._attendeesSubject = new BehaviorSubject<EventUserDto[]>([]);
+    this.attendees$ = this._attendeesSubject.asObservable();
 
-    this._presentersSubject = new BehaviorSubject<EventPresenterDto[]>([]);
-    this.presenters$ = this._presentersSubject.asObservable();
-
-    this._guestJoinedSubject = new BehaviorSubject<EventPresenterDto>(undefined);
+    this._guestJoinedSubject = new BehaviorSubject<EventUserDto>(undefined);
     this.guestJoined$ = this._guestJoinedSubject.asObservable();
 
-    this._admitGuestSubject = new BehaviorSubject<EventPresenterDto>(undefined);
+    this._lobbyUserSubject = new BehaviorSubject<EventUserDto>(undefined);
+    this.lobbyUser$ = this._lobbyUserSubject.asObservable();
+
+    this._admitGuestSubject = new BehaviorSubject<EventUserDto>(undefined);
     this.admitGuest$ = this._admitGuestSubject.asObservable();
 
-    this._speakRequestSubject = new BehaviorSubject<StudentEventDto>(undefined);
+    this._speakRequestSubject = new BehaviorSubject<EventUserDto>(undefined);
     this.speakRequest$ = this._speakRequestSubject.asObservable();
 
-    this._grantRequestToSpeakSubject = new BehaviorSubject<StudentEventDto>(undefined);
+    this._grantRequestToSpeakSubject = new BehaviorSubject<EventUserDto>(undefined);
     this.grantRequestToSpeak$ = this._grantRequestToSpeakSubject.asObservable();
 
-    this._declineRequestToSpeakSubject = new BehaviorSubject<StudentEventDto>(undefined);
+    this._declineRequestToSpeakSubject = new BehaviorSubject<EventUserDto>(undefined);
     this.declineRequestToSpeak$ = this._declineRequestToSpeakSubject.asObservable();
 
     this._grantedRequestToSpeakSubject = new BehaviorSubject<boolean>(undefined);
@@ -64,35 +64,35 @@ export class PortalService {
     this._eventSubject.next(value);
   }
 
-  public set audiences(value: StudentEventDto[]) {
-    this._audiencesSubject.next(value);
+  public set attendees(value: EventUserDto[]) {
+    this._attendeesSubject.next(value);
   }
 
-  public set presenters(value: EventPresenterDto[]) {
-    this._presentersSubject.next(value);
+  public set attendeeJoined(value: EventUserDto) {
+    this._attendeeJoinedSubject.next(value);
   }
 
-  public set audienceJoined(value: StudentEventDto) {
-    this._audienceJoinedSubject.next(value);
-  }
-
-  public set guestJoined(value: EventPresenterDto) {
+  public set guestJoined(value: EventUserDto) {
     this._guestJoinedSubject.next(value);
   }
 
-  public set admitGuest(value: EventPresenterDto) {
+  public set lobbyUser(value: EventUserDto) {
+    this._lobbyUserSubject.next(value);
+  }
+
+  public set admitGuest(value: EventUserDto) {
     this._admitGuestSubject.next(value);
   }
 
-  public set speakRequest(value: StudentEventDto) {
+  public set speakRequest(value: EventUserDto) {
     this._speakRequestSubject.next(value);
   }
 
-  public set grantRequestToSpeak(value: StudentEventDto) {
+  public set grantRequestToSpeak(value: EventUserDto) {
     this._grantRequestToSpeakSubject.next(value);
   }
 
-  public set declineRequestToSpeak(value: StudentEventDto) {
+  public set declineRequestToSpeak(value: EventUserDto) {
     this._declineRequestToSpeakSubject.next(value);
   }
 

@@ -63,6 +63,16 @@ import { EventsComponent } from './events.component';
             (m) => m.StudentPortalModule
           ),
       },
+      {
+        path: 'event-session',
+        canActivate: [AppRouteGuard],
+        canActivateChild: [AppRouteGuard],
+        data: { permission: 'Pages.Events.StudentPortal' },
+        loadChildren: () =>
+          import('@app/events/event-session/event-session.module').then(
+            (m) => m.EventSessionModule
+          ),
+      },
     ]),
   ],
   exports: [

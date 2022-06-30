@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { PortalRoutingModule } from './portal-routing.module';
 import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
+import { CanvasWhiteboardModule } from 'ng2-canvas-whiteboard';
 import { QuestionsModule as SharedQuestionsModule } from '@app/_shared/modules/questions/questions.module';
 
 import { PortalComponent } from './portal.component';
@@ -62,6 +63,7 @@ import { QuestionsComponent } from './_components/questions/questions.component'
     PortalRoutingModule,
     SharedModule,
     AppSharedModule,
+    CanvasWhiteboardModule,
     SharedQuestionsModule
   ],
 })

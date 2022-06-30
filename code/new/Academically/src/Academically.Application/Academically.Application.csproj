@@ -30,6 +30,8 @@
     <None Remove="Services\Topics\Dto\" />
     <None Remove="Services\ConferenceSessions\" />
     <None Remove="Services\ConferenceSessions\Dto\" />
+    <None Remove="Services\EventSessions\" />
+    <None Remove="Services\EventSessions\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Academically.Core\Academically.Core.csproj" />
@@ -89,6 +91,8 @@
     <Folder Include="Services\Topics\Dto\" />
     <Folder Include="Services\ConferenceSessions\" />
     <Folder Include="Services\ConferenceSessions\Dto\" />
+    <Folder Include="Services\EventSessions\" />
+    <Folder Include="Services\EventSessions\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Services\Projects\" />

@@ -24,27 +24,42 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let presenter of waitingPresenters">
+    <tr *ngFor="let waitingUser of waitingUsers">
       <td>
         <div class="row">
           <div class="col flex-y-center">
             <div class="avatar avatar-sm d-inline-block me-2">
-              <img [src]="getProfilePictureUrl(presenter.user.profilePictureDocument)" alt="..."
+              <img [src]="getProfilePictureUrl(waitingUser.user.profilePictureDocument)" alt="..."
                 class="avatar-img rounded-circle">
             </div>
             <p class="m-0 ml-3">
-              <b>{{ presenter.user.fullName }}</b>
+              <b>{{ waitingUser.user.fullName }}</b>
             </p>
           </div>
           <div class="col-auto flex-y-center">
-            <button (click)="onAdmitClick(presenter)" class=" btn btn-sm btn-primary">
+            <button (click)="onAdmitClick(waitingUser)" class=" btn btn-sm btn-primary">
               {{ 'Admit' | localize }}
             </button>
           </div>
         </div>
       </td>
     </tr>
-    <tr *ngIf="!waitingPresenters || !waitingPresenters.length">
+    <tr *ngFor="let lobbyUser of lobbyUsers">
+      <td>
+        <div class="row">
+          <div class="col flex-y-center">
+            <div class="avatar avatar-sm d-inline-block me-2">
+              <img [src]="getProfilePictureUrl(lobbyUser.user.profilePictureDocument)" alt="..."
+                class="avatar-img rounded-circle">
+            </div>
+            <p class="m-0 ml-3">
+              <b>{{ lobbyUser.user.fullName }}</b>
+            </p>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr *ngIf="(!waitingUsers || !waitingUsers.length) && (!lobbyUsers || !lobbyUsers.length)">
       <td colspan="10">
         <p class="m-0 p-2 text-muted text-center">
           {{ 'NoOneFound' | localize }}
@@ -80,16 +95,16 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let audience of audiences">
+    <tr *ngFor="let attendee of attendees">
       <td>
         <div class="row">
           <div class="col flex-y-center">
             <div class="avatar avatar-sm d-inline-block me-2">
-              <img [src]="getProfilePictureUrl(audience.creatorUser.profilePictureDocument)" alt="..."
+              <img [src]="getProfilePictureUrl(attendee.user.profilePictureDocument)" alt="..."
                 class="avatar-img rounded-circle">
             </div>
             <p class="m-0 ml-3">
-              <b>{{ audience.creatorUser.fullName }}</b>
+              <b>{{ attendee.user.fullName }}</b>
             </p>
           </div>
           <div class="col-auto flex-y-center">
@@ -100,27 +115,7 @@
         </div>
       </td>
     </tr>
-    <tr *ngFor="let presenter of presenters">
-      <td>
-        <div class="row">
-          <div class="col flex-y-center">
-            <div class="avatar avatar-sm d-inline-block me-2">
-              <img [src]="getProfilePictureUrl(presenter.user.profilePictureDocument)" alt="..."
-                class="avatar-img rounded-circle">
-            </div>
-            <p class="m-0 ml-3">
-              <b>{{ presenter.user.fullName }}</b>
-            </p>
-          </div>
-          <div class="col-auto flex-y-center">
-            <button class="btn btn-sm btn-outline-primary">
-              {{ 'Message' | localize }}
-            </button>
-          </div>
-        </div>
-      </td>
-    </tr>
-    <tr *ngIf="(!audiences || !audiences.length) && (!presenters || !presenters.length)">
+    <tr *ngIf="!attendees || !attendees.length">
       <td colspan="10">
         <p class="m-0 p-2 text-muted text-center">
           {{ 'NoOneFound' | localize }}
