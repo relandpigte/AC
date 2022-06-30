@@ -1,5 +1,5 @@
 import { Component, OnInit, Injector } from '@angular/core';
-import { StudentEventDto } from '@shared/service-proxies/service-proxies';
+import { EventUserDto } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PortalService } from '@app/events/student-portal/portal/_services/portal.service';
 import { takeUntil } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./speak-requests.component.less']
 })
 export class SpeakRequestsComponent extends AppComponentBase implements OnInit {
-  speakRequesters: StudentEventDto[] = [];
+  speakRequesters: EventUserDto[] = [];
 
   constructor(
     injector: Injector,
@@ -30,15 +30,15 @@ export class SpeakRequestsComponent extends AppComponentBase implements OnInit {
 
   }
 
-  onGrantClick(speakRequester: StudentEventDto): void {
+  onGrantClick(speakRequester: EventUserDto): void {
     this._portalService.grantRequestToSpeak = speakRequester;
-    const index = this.speakRequesters.findIndex(e => e.id === speakRequester.id);
+    const index = this.speakRequesters.findIndex(e => e.user.id === speakRequester.user.id);
     this.speakRequesters.splice(index, 1);
   }
 
-  onDeclineClick(speakRequester: StudentEventDto): void {
+  onDeclineClick(speakRequester: EventUserDto): void {
     this._portalService.declineRequestToSpeak = speakRequester;
-    const index = this.speakRequesters.findIndex(e => e.id === speakRequester.id);
+    const index = this.speakRequesters.findIndex(e => e.user.id === speakRequester.user.id);
     this.speakRequesters.splice(index, 1);
   }
 }

@@ -1,4 +1,4 @@
-<app-device-settings *ngIf="showDeviceSettings" (joinRoom)="showDeviceSettings = false; onRoomJoined($event)">
+<app-device-settings *ngIf="showDeviceSettings" (joinRoom)="showDeviceSettings = false; onLobbyEntered($event)">
 </app-device-settings>
 
 <div class="h-100" [@routerTransition]>
@@ -29,6 +29,15 @@
               (click)="onRequestToSpeakClick()">
               <b>{{ 'RequestToSpeak' | localize }}</b>
             </button>
+            <ng-container *ngIf="isHost">
+              <div class="custom-control custom-switch no-wrap mr-4">
+                <input [(ngModel)]="model.autoAdmitAttendees" id="autoAdmitAttendees" name="autoAdmitAttendees"
+                  type="checkbox" class="custom-control-input" (change)="onAutoAdmitChange()">
+                <label class="custom-control-label" for="autoAdmitAttendees">
+                  {{ 'AutoAdmit' | localize }}
+                </label>
+              </div>
+            </ng-container>
             <button class="btn btn-sm btn-outline-primary" (click)="onExitClick()">
               <b>{{ 'Exit' | localize }}</b>
             </button>
@@ -56,8 +65,8 @@
     <div class="article-container">
       <div class="presentation-feed">
         <div class="attendees my-2">
-          <div [hidden]="isHost && !audienceJoined" class="attendee">
-            <video class="attendee-video" #attendeeVideoEl autoplay playsinline></video>
+          <div *ngFor="let attendee of attendees" class="attendee">
+            <video [attr.id]="attendee.user.id" class="attendee-video" #attendeeVideos autoplay playsinline></video>
           </div>
         </div>
         <div class="presenter">
@@ -66,7 +75,14 @@
             <h4 *ngIf="!waiting">{{ 'WaitingForHostToStartEvent' | localize }}</h4>
             <h4 *ngIf="waiting">{{ 'WaitingForHostToAdmitEvent' | localize }}</h4>
           </div>
-          <video class="presenter-video" #presenterVideoEl autoplay playsinline></video>
+          <video *ngIf="!sharingWhiteboard" class="presenter-video" #presenterVideoEl autoplay playsinline></video>
+          <canvas-whiteboard *ngIf="sharingWhiteboard" #canvasWhiteboard [drawButtonClass]="'drawButtonClass'"
+            [drawButtonText]="'Draw'" [clearButtonClass]="'clearButtonClass'" [clearButtonText]="'Clear'"
+            [undoButtonText]="'Undo'" [undoButtonEnabled]="true" [redoButtonText]="'Redo'" [redoButtonEnabled]="true"
+            [colorPickerEnabled]="true" [fillColorPickerText]="'Fill'" [strokeColorPickerText]="'Stroke'"
+            [saveDataButtonEnabled]="true" [saveDataButtonText]="'Save'" [lineWidth]="5" [strokeColor]="'rgb(0,0,0)'"
+            [shouldDownloadDrawing]="true">
+          </canvas-whiteboard>
         </div>
         <app-share-videos (shareVideo)="onShareVideo($event)" (unshareVideo)="onUnshareVideo()"></app-share-videos>
       </div>
@@ -79,8 +95,8 @@
           <i class="fe fe-camera"></i>
         </button>
 
-        <button *ngIf="isHost && !eventStarted" [disabled]="!hubConnected" class="btn btn-sm btn-primary mx-2"
-          (click)="onStartEventClick()">
+        <button *ngIf="isHost && !eventStarted" [disabled]="!hubConnected || eventStarting"
+          class="btn btn-sm btn-primary mx-2" (click)="onStartEventClick()">
           {{ 'StartEvent' | localize | titlecase }}
         </button>
 
@@ -89,19 +105,15 @@
           {{ 'EndEvent' | localize | titlecase }}
         </button>
 
-        <button *ngIf="!isHost && !eventJoined" [disabled]="!eventStarted" class="btn btn-sm btn-primary mx-2"
-          (click)="onJoinClick()">
+        <button *ngIf="!isHost && !eventJoined" [disabled]="!eventStarted || waiting"
+          class="btn btn-sm btn-primary mx-2" (click)="onJoinClick()">
           {{ 'Join' | localize }}
-        </button>
-
-        <button class="btn btn-sm btn-outline-primary mx-2">
-          <i class="fe fe-monitor"></i>
         </button>
 
         <div class="dropup">
           <button [disabled]="!isHost || !hubConnected || !eventStarted" type="button"
             class="btn btn-sm btn-outline-primary mx-2" data-toggle="dropdown" aria-expanded="false">
-            <i class="fe fe-layout"></i>
+            <i class="fe fe-monitor"></i>
           </button>
           <div class="dropdown-menu">
             <a class="dropdown-item" href="#!share-screen" (click)="$event.preventDefault();">
@@ -113,11 +125,15 @@
             <a class="dropdown-item" href="#!share-video" (click)="$event.preventDefault(); onShareVideoClick()">
               {{ 'ShareVideo' | localize }}
             </a>
-            <a class="dropdown-item" href="#!whiteboard" (click)="$event.preventDefault();">
+            <a class="dropdown-item" href="#!whiteboard" (click)="$event.preventDefault(); onShareWhiteboardClick()">
               {{ 'Whiteboard' | localize }}
             </a>
           </div>
         </div>
+
+        <button class="btn btn-sm btn-outline-primary mx-2">
+          <i class="fe fe-layout"></i>
+        </button>
 
       </div>
     </div>

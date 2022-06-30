@@ -2,7 +2,7 @@ import { Component, OnInit, Injector } from '@angular/core';
 import { PortalService } from '@app/events/student-portal/portal/_services/portal.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { takeUntil } from 'rxjs/operators';
-import { StudentEventDto, EventDto, EventsServiceProxy, EventPresenterDto } from '@shared/service-proxies/service-proxies';
+import { EventPresenterDto, EventUserDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-registrants',
@@ -10,9 +10,9 @@ import { StudentEventDto, EventDto, EventsServiceProxy, EventPresenterDto } from
   styleUrls: ['./registrants.component.less']
 })
 export class RegistrantsComponent extends AppComponentBase implements OnInit {
-  audiences: StudentEventDto[] = [];
-  presenters: EventPresenterDto[] = [];
-  waitingPresenters: EventPresenterDto[] = [];
+  attendees: EventUserDto[] = [];
+  lobbyUsers: EventUserDto[] = [];
+  waitingUsers: EventUserDto[] = [];
 
   constructor(
     injector: Injector,
@@ -22,38 +22,50 @@ export class RegistrantsComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    this._portalService.audiences$
+    this._portalService.attendees$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(responses => {
-        this.audiences = responses;
+        console.log('registrants - attendees');
+        this.attendees = responses;
       });
-    this._portalService.presenters$
+    this._portalService.lobbyUser$
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(responses => {
-        this.presenters = responses;
+      .subscribe(response => {
+        if (response) {
+          console.log('registrants - lobbyUser');
+          const index = this.attendees.findIndex(e => e.user.id === response.user.id);
+          this.attendees.splice(index, 1);
+          this.lobbyUsers.push(response);
+        }
       });
     this._portalService.guestJoined$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         if (response) {
-          const index = this.presenters.findIndex(e => e.id === response.id);
-          this.presenters.splice(index, 1);
-          this.waitingPresenters.push(response);
+          console.log('registrants - guestJoined');
+          const index = this.lobbyUsers.findIndex(e => e.user.id === response.user.id);
+          if (index >= 0) {
+            this.lobbyUsers.splice(index, 1);
+          }
+          this.waitingUsers.push(response);
         }
       });
-    this._portalService.audienceJoined$
+    this._portalService.attendeeJoined$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         if (response) {
-          const index = this.audiences.findIndex(e => e.id === response.id);
-          this.audiences.splice(index, 1);
+          console.log('registrants - attendeeJoined');
+          const index = this.attendees.findIndex(e => e.user.id === response.user.id);
+          if (index >= 0) {
+            this.attendees.splice(index, 1);
+          }
         }
       });
   }
 
-  onAdmitClick(presenter: EventPresenterDto): void {
-    this._portalService.admitGuest = presenter;
-    const index = this.waitingPresenters.findIndex(e => e.id === presenter.id);
-    this.waitingPresenters.splice(index, 1);
+  onAdmitClick(eventUser: EventUserDto): void {
+    this._portalService.admitGuest = eventUser;
+    const index = this.waitingUsers.findIndex(e => e.user.id === eventUser.user.id);
+    this.waitingUsers.splice(index, 1);
   }
 }

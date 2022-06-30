@@ -14,22 +14,22 @@ export class AudienceComponent extends AutoSaveComponentBase implements OnInit {
   model = new EventDto();
   constructor(
     injector: Injector,
-     private _eventService: EventService,
-     private _eventServiceProxy: EventsServiceProxy
-    ) {
-      super(injector);
-     }
+    private _eventService: EventService,
+    private _eventServiceProxy: EventsServiceProxy
+  ) {
+    super(injector);
+  }
   ngOnInit(): void {
     this._eventService.eventCreated$
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe(response => {
-      if (response && response.id && !this.id && this.id !== response.id) {
-        this.model = response;
-      }
-    });
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        if (response && response.id && !this.id && this.id !== response.id) {
+          this.model = response;
+        }
+      });
   }
 
-  onSettingChange(): void{
+  onSettingChange(): void {
     this._eventServiceProxy.updateSettings(this.model).subscribe((res) => {
     });
   }

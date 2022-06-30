@@ -98,6 +98,7 @@ namespace Academically.Domain.Entities
         public bool AudienceEnableOffersTab { get; set; }
         public bool AudienceEnableOffersTabDisplayNoOfPurchases { get; set; }
         public bool AudienceEnableHandoutsTab { get; set; }
+        public bool AutoAdmitAttendees { get; set; }
 
 
         [ForeignKey("ParentId")]
@@ -110,6 +111,8 @@ namespace Academically.Domain.Entities
         public virtual User CreatorUser { get; set; }
 
         public virtual ICollection<Event> Children { get; set; }
+        public virtual ICollection<StudentEvent> StudentEvents { get; set; }
+        public virtual ICollection<EventPresenter> EventPresenters { get; set; }
 
         public Event()
         {

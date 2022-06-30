@@ -63,6 +63,7 @@ import { CreateProjectComponent } from './create-project/create-project.componen
 import { ProjectsComponent } from './projects/projects.component';
 import { TutorHomeComponent } from './tutor-home/tutor-home.component';
 import { NotificationsModule } from './notifications/notifications.module';
+import { WhiteboardComponent } from './shared/_components/whiteboard/whiteboard.component';
 // Settings is subject to change
 //
 const cookieConfig: NgcCookieConsentConfig = {
@@ -140,6 +141,7 @@ const cookieConfig: NgcCookieConsentConfig = {
     CreateProjectComponent,
     ProjectsComponent,
     TutorHomeComponent,
+    WhiteboardComponent,
   ],
   imports: [
     CommonModule,

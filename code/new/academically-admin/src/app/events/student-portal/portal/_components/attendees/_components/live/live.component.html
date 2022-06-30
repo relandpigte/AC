@@ -292,13 +292,13 @@
         <div class="row">
           <div class="col flex-y-center">
             <div class="avatar avatar-sm d-inline-block me-2">
-              <img [src]="getProfilePictureUrl(audience.creatorUser.profilePictureDocument)" alt="..."
+              <img [src]="getProfilePictureUrl(audience.user.profilePictureDocument)" alt="..."
                 class="avatar-img rounded-circle">
             </div>
             <p class="m-0 ml-3">
-              <b>{{ audience.creatorUser.fullName }}</b>
+              <b>{{ audience.user.fullName }}</b>
             </p>
-            <span *ngIf="audience.creatorUser.id === appSession.userId" class="badge badge-soft-primary ml-2">
+            <span *ngIf="audience.user.id === appSession.userId" class="badge badge-soft-primary ml-2">
               {{ 'Me' | localize }}
             </span>
           </div>
