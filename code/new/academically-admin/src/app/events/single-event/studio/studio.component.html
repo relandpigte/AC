@@ -87,6 +87,40 @@
 
       </div>
     </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-header-title">
+          {{ 'Permissions' | localize }}
+        </h4>
+
+        <div class="col-auto">
+
+          <ul class="nav nav-tabs nav-tabs-sm card-header-tabs cursor">
+            <li class="nav-item" (click)="changeActiveTab(1)">
+              <a class="nav-link text-center " [ngClass]="{'active' : activeTab === 1}">
+                {{ 'Audience' | localize }}
+              </a>
+            </li>
+            <li class="nav-item" (click)="changeActiveTab(2)">
+              <a class="nav-link text-center" [ngClass]="{'active' : activeTab === 2}">
+                {{ 'Guest' | localize }}
+              </a>
+            </li>
+            <li class="nav-item" (click)="changeActiveTab(3)">
+              <a class="nav-link text-center" [ngClass]="{'active' : activeTab === 3}">
+                {{ 'Co-hosts' | localize }}
+              </a>
+            </li>
+          </ul>
+
+        </div>
+
+      </div>
+      <app-audience *ngIf="activeTab === 1"></app-audience>
+      <app-guests *ngIf="activeTab === 2"></app-guests>
+      <app-co-host *ngIf="activeTab === 3"></app-co-host>
+    </div>
   </div>
   <div class="col-4">
     <div class="card">
@@ -123,41 +157,31 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="col-8">
+
     <div class="card">
       <div class="card-header">
         <h4 class="card-header-title">
-          {{ 'Permissions' | localize }}
+          {{ 'AttendeeAdmissionSettings' | localize }}
         </h4>
-
-        <div class="col-auto">
-
-          <ul class="nav nav-tabs nav-tabs-sm card-header-tabs cursor">
-            <li class="nav-item" (click)="changeActiveTab(1)">
-              <a class="nav-link text-center " [ngClass]="{'active' : activeTab === 1}">
-                {{ 'Audience' | localize }}
-              </a>
-            </li>
-            <li class="nav-item" (click)="changeActiveTab(2)">
-              <a class="nav-link text-center" [ngClass]="{'active' : activeTab === 2}">
-                {{ 'Guest' | localize }}
-              </a>
-            </li>
-            <li class="nav-item" (click)="changeActiveTab(3)">
-              <a class="nav-link text-center" [ngClass]="{'active' : activeTab === 3}">
-                {{ 'Co-hosts' | localize }}
-              </a>
-            </li>
-          </ul>
-
-        </div>
-
       </div>
-      <app-audience *ngIf="activeTab === 1"></app-audience>
-      <app-guests *ngIf="activeTab === 2"></app-guests>
-      <app-co-host *ngIf="activeTab === 3"></app-co-host>
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <label class="col-form-label p-0" for="autoAdmitAttendees">
+              {{ 'AutoAdmit' | localize }}
+            </label>
+          </div>
+          <div class="col-auto">
+            <div class="custom-control custom-switch mr-n2">
+              <input [(ngModel)]="event.autoAdmitAttendees" id="autoAdmitAttendees" name="autoAdmitAttendees"
+                type="checkbox" class="custom-control-input" (change)="onAutoAdmitChange()">
+              <label class="custom-control-label" for="autoAdmitAttendees"></label>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
   </div>
 
 </div>

@@ -13,9 +13,10 @@ import {
 import { AppSessionService } from '@shared/session/app-session.service';
 import { Moment } from 'moment';
 import { DocumentDto, UserDto } from './service-proxies/service-proxies';
-import { ReplaySubject } from 'rxjs';
+import { ReplaySubject, Observable } from 'rxjs';
 import * as moment from 'moment';
 import { UploadService } from '@app/_shared/services/upload.service';
+import { takeUntil, finalize } from 'rxjs/operators';
 
 @Injectable()
 export abstract class AppComponentBase implements OnDestroy {
@@ -264,6 +265,25 @@ export abstract class AppComponentBase implements OnDestroy {
 
   protected strPadLeft(value: number, length: number, paddingText = '0') {
     return (new Array(length + 1).join(paddingText) + value).slice(-length);
+  }
+
+  protected pipeDestroy<TObject>(
+    o: Observable<TObject>,
+    callback?: (response?: TObject) => void,
+    finalizeCallback?: () => void,
+  ): void {
+    o.pipe(
+      takeUntil(this.destroyed$),
+      finalize(() => {
+        if (finalizeCallback) {
+          finalizeCallback();
+        }
+      }),
+    ).subscribe((response?: TObject) => {
+      if (callback) {
+        callback(response);
+      }
+    });
   }
 
   private isValidUrl(url: string): boolean {

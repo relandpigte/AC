@@ -29,6 +29,7 @@ import { ImageCropperComponent } from './components/image-cropper/image-cropper.
 import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
 import { ProfilePictureChangerComponent } from './components/profile-picture-changer/profile-picture-changer.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
+import { WhiteboardComponent } from './components/whiteboard/whiteboard.component';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 
 @NgModule({
@@ -39,6 +40,7 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
     ColorPickerComponent,
+    WhiteboardComponent,
     DateFormatPipe,
     SafePipe,
     FixedHeightDirective,
@@ -92,6 +94,7 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
     ColorPickerComponent,
+    WhiteboardComponent,
     CalendarModule,
     PopoverModule,
   ],

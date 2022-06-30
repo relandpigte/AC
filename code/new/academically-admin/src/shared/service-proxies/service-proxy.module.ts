@@ -77,6 +77,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.ConferenceSessionsServiceProxy,
         ApiServiceProxies.TopicsServiceProxy,
         ApiServiceProxies.WorkHistoriesServiceProxy,
+        ApiServiceProxies.EventSessionsServiceProxy,
         ApiServiceProxies.CoachingsServiceProxy,
         ApiServiceProxies.CoachingPollsServiceProxy,
         ApiServiceProxies.CoachingResourcesServiceProxy,

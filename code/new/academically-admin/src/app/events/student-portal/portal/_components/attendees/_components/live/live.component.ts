@@ -1,7 +1,7 @@
 import { Component, OnInit, Injector, Input } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PortalService } from '@app/events/student-portal/portal/_services/portal.service';
-import { EventDto, StudentEventDto, EventPresenterDto, EventPresenterType } from '@shared/service-proxies/service-proxies';
+import { EventDto, StudentEventDto, EventPresenterDto, EventPresenterType, EventUserDto, EventUserType } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash';
 
@@ -14,9 +14,9 @@ export class LiveComponent extends AppComponentBase implements OnInit {
   @Input() isHost = true;
   @Input() controlsEnabled = false;
   model = new EventDto();
-  audiences: StudentEventDto[] = [];
-  coHosts: EventPresenterDto[] = [];
-  guests: EventPresenterDto[] = [];
+  audiences: EventUserDto[] = [];
+  coHosts: EventUserDto[] = [];
+  guests: EventUserDto[] = [];
 
   constructor(
     injector: Injector,
@@ -33,19 +33,21 @@ export class LiveComponent extends AppComponentBase implements OnInit {
           this.model = response;
         }
       });
-    this._portalService.audiences$
+    this._portalService.attendeeJoined$
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(responses => {
-        if (responses) {
-          this.audiences = [...responses];
-        }
-      });
-    this._portalService.presenters$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(responses => {
-        if (responses) {
-          this.coHosts = _.filter(responses, response => response.type === EventPresenterType.CoHost);
-          this.guests = _.filter(responses, response => response.type === EventPresenterType.Guest);
+      .subscribe(response => {
+        if (response) {
+          switch (response.type) {
+            case EventUserType.Audience:
+              this.audiences.push(response);
+              break;
+            case EventUserType.CoHost:
+              this.coHosts.push(response);
+              break;
+            case EventUserType.Guest:
+              this.guests.push(response);
+              break;
+          }
         }
       });
     this._portalService.grantedRequestToSpeak$

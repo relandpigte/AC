@@ -434,5 +434,12 @@ namespace Academically.Services.Events
         {
             await _studentEventsRepository.DeleteAsync(studentEventId);
         }
+
+        public async Task UpdateAutoAdmit(Guid id, bool autoAdmitAttendees)
+        {
+            var @event = await Repository.GetAsync(id);
+            @event.AutoAdmitAttendees = autoAdmitAttendees;
+            await Repository.UpdateAsync(@event);
+        }
     }
 }
