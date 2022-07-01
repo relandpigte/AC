@@ -20,6 +20,10 @@ export class HubService {
     return this.getHub('eventSessions', callback);
   }
 
+  public getQuestionsHub(callback: (connection?: any) => void): Promise<any> {
+    return this.getHub('questions', callback);
+  }
+
   private getHub(hubName: string, callback?: (connection?: any) => void): Promise<any> {
     const promise = new Promise((resolve, reject) => {
       jQuery.getScript(AppConsts.appBaseUrl + '/assets/abp/abp.signalr-client.js', async () => {

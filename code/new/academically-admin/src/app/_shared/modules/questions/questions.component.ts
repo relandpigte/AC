@@ -1,27 +1,24 @@
-import { AfterViewInit, Component, Injector, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { AfterViewInit, Component, Injector, Input, OnInit } from '@angular/core';
+import { HubService } from '@app/_shared/services/hub.service';
+import { HubConnection } from '@aspnet/signalr';
 import { AppComponentBase } from '@shared/app-component-base';
 import { QuestionDto, QuestionReactionDto, QuestionsServiceProxy, ReactionType } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { finalize, takeUntil } from 'rxjs/operators';
-
-export interface CustomAction {
-  label: string;
-  class?: string;
-  action: (question: QuestionDto) => void;
-}
+import { CustomAction, QuestionAction, QuestionSignalData } from './_model/questions.model';
 
 @Component({
   selector: 'app-questions',
   templateUrl: './questions.component.html',
   styleUrls: ['./questions.component.less']
 })
-export class QuestionsComponent extends AppComponentBase implements AfterViewInit {
+export class QuestionsComponent extends AppComponentBase implements OnInit, AfterViewInit {
   @Input() isSidebar = true;
   @Input() referenceId: string;
   @Input() answered: boolean;
   @Input() creatorId: number;
   @Input() hostId: number;
+  @Input() attendeeIds: number[] = [];
   @Input() showHostBadge: boolean = true;
   @Input() customReactionActions: CustomAction[] = [];
   @Input() customActions: CustomAction[] = [];
@@ -37,16 +34,75 @@ export class QuestionsComponent extends AppComponentBase implements AfterViewIni
 
   private _maxRepliesToLoad = 3;
 
+  questionsHub: HubConnection;
+  hubConnected: boolean;
+
+  get userId(): number { return this.appSession.userId; }
+
   constructor(
     injector: Injector,
-    route: ActivatedRoute,
+    private _hubService: HubService,
     private _questionsService: QuestionsServiceProxy,
   ) {
     super(injector);
   }
 
+  ngOnInit(): void {
+    this.initHub();
+  }
+
   ngAfterViewInit(): void {
     this.getQuestions();
+  }
+
+  private async initHub(): Promise<void> {
+    this.questionsHub = await this._hubService.getQuestionsHub(() => {
+      this.hubConnected = true;
+      this.questionsHub.on('receiveSignal', async (strData: string) => {
+        const data = new QuestionSignalData();
+        Object.assign(data, JSON.parse(strData));
+
+        switch (data.action) {
+          case QuestionAction.Created:
+            if (!this.answered && (!this.creatorId || this.hostId !== this.creatorId))
+              this.questions.unshift(data.getDataObject<QuestionDto>());
+            break;
+
+          case QuestionAction.Replied:
+            this.addQuestionToParent(this.questions, data.getDataObject<QuestionDto>());
+            break;
+
+          case QuestionAction.Upvoted:
+            this.forceUpdateQuestion(this.questions, data.getDataObject<QuestionDto>());
+            break;
+
+          case QuestionAction.Downvoted:
+            this.forceUpdateQuestion(this.questions, data.getDataObject<QuestionDto>());
+            break;
+        }
+
+      });
+    });
+  }
+
+  private addQuestionToParent(list: QuestionDto[], question: QuestionDto): void {
+    list.forEach((q, idx) => {
+      if (q.id === question.parentId) {
+        list[idx].children.unshift(question);
+        return;
+      }
+    });
+  }
+
+  private forceUpdateQuestion(list: QuestionDto[], question: QuestionDto): void {
+    list.forEach((q, idx) => {
+      if (q.id === question.id) {
+        list[idx] = question;
+        return;
+      } else if (q.children && q.children.length) {
+        this.forceUpdateQuestion(q.children, question);
+      }
+    });
   }
 
   onFormSubmit(): void {
@@ -83,6 +139,7 @@ export class QuestionsComponent extends AppComponentBase implements AfterViewIni
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         question.questionReactions.push(response);
+        this.sendQuestionSignal<QuestionDto>(new QuestionSignalData(QuestionAction.Upvoted, question));
       });
   }
 
@@ -93,6 +150,7 @@ export class QuestionsComponent extends AppComponentBase implements AfterViewIni
         .pipe(takeUntil(this.destroyed$))
         .subscribe(() => {
           question.questionReactions.splice(index, 1);
+          this.sendQuestionSignal<QuestionDto>(new QuestionSignalData(QuestionAction.Downvoted, question));
         });
     }
   }
@@ -120,6 +178,8 @@ export class QuestionsComponent extends AppComponentBase implements AfterViewIni
           response.replyCount = 0;
           this.questions.unshift(response);
           this.loadedReplyCount[response.id] = 0;
+
+          this.sendQuestionSignal<QuestionDto>(new QuestionSignalData(QuestionAction.Created, response));
         });
     }
   }
@@ -147,6 +207,7 @@ export class QuestionsComponent extends AppComponentBase implements AfterViewIni
           this.loadedReplyCount[parent.id]++;
           this.skipCount[parent.id]++;
           this.isReplying = [];
+          this.sendQuestionSignal<QuestionDto>(new QuestionSignalData(QuestionAction.Replied, response));
         });
     }
   }
@@ -213,4 +274,11 @@ export class QuestionsComponent extends AppComponentBase implements AfterViewIni
         this.loadedReplyCount[question.id] += response.items.length;
       });
   }
+
+  private async sendQuestionSignal<TObject>(data: QuestionSignalData<TObject>, callback?: () => void): Promise<void> {
+    const sSignalData = JSON.stringify(data);
+    const ids = [this.hostId].concat(this.attendeeIds ?? []).filter(i => i !== this.userId);
+    await this.questionsHub.invoke('sendSignal', ids, sSignalData).then(() => { if (callback) callback(); });
+  }
+
 }

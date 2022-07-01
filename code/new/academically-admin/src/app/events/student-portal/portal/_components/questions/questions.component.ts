@@ -3,7 +3,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { PortalService } from '../../_services/portal.service';
 import { takeUntil } from 'rxjs/operators';
 import { EventDto } from '@shared/service-proxies/service-proxies';
-import { CustomAction } from '@app/_shared/modules/questions/questions.component';
+import { CustomAction } from '@app/_shared/modules/questions/_model/questions.model';
 
 @Component({
   selector: 'app-sidebar-questions',
@@ -14,6 +14,7 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
   @Input() referenceId: string;
 
   event: EventDto;
+  attendeeIds: number[] = [];
 
   customReactionActions: CustomAction[] = [];
   customActions: CustomAction[] = [];
@@ -37,6 +38,12 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
       .subscribe(event => {
         this.event = event;
         this.referenceId = event.id;
+      });
+
+    this._portalService.attendees$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(attendees => {
+        this.attendeeIds = attendees.filter(a => a.user).map(a => a.user.id);
       });
   }
 
