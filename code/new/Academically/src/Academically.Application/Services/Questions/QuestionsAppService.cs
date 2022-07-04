@@ -37,6 +37,14 @@ namespace Academically.Services.Questions
             var questionsWithReplyCount = await _questionsRepository.GetAll()
                 .Where(e => e.ParentId == null && e.ReferenceId == input.ReferenceId)
                 .WhereIf(input.CreatorId.HasValue, q => q.CreatorUserId == input.CreatorId.Value)
+                .WhereIf(
+                    input.HostId.HasValue && input.Answered.HasValue && !input.Answered.Value,
+                    q => !q.Children.Any(q => q.CreatorUserId == input.HostId.Value)
+                )
+                .WhereIf(
+                    input.HostId.HasValue && input.Answered.HasValue && input.Answered.Value,
+                    q => q.Children.Any(q => q.CreatorUserId == input.HostId.Value)
+                )
                 .Include(e => e.CreatorUser)
                     .ThenInclude(e => e.ProfilePictureDocument)
                 .Include(e => e.QuestionReactions)
@@ -46,8 +54,6 @@ namespace Academically.Services.Questions
                     Question = e,
                     ChildCount = e.Children.Count(),
                 })
-                .WhereIf(input.Answered.HasValue && !input.Answered.Value, q => q.ChildCount == 0)
-                .WhereIf(input.Answered.HasValue && input.Answered.Value, q => q.ChildCount > 0)
                 .ToListAsync();
 
             return questionsWithReplyCount.Select(e =>

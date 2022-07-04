@@ -49,7 +49,13 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
 
   initCustomActions(): void {
     this.customReactionActions = [
-      { label: 'Upvote', class: 'btn-outline-secondary', action: (question) => { console.log(question); } }
+      {
+        label: 'Upvote',
+        icon: 'fe fe-arrow-up-circle',
+        class: 'btn-outline-secondary',
+        prefix: (question) => `${question.questionReactions.length}`,
+        action: (question) => { console.log(question); }
+      }
     ];
 
     this.customActions = [

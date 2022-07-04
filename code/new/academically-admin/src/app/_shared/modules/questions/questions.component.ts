@@ -64,20 +64,22 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
 
         switch (data.action) {
           case QuestionAction.Created:
-            if (!this.answered && (!this.creatorId || this.hostId !== this.creatorId))
-              this.questions.unshift(data.getDataObject<QuestionDto>());
+            if (!this.answered && (!this.creatorId || this.hostId !== this.creatorId)) {
+              this.questions.unshift(data.getDataObject());
+              this.newReply[this.questions.length-1] = new QuestionDto();
+            }
             break;
 
           case QuestionAction.Replied:
-            this.addQuestionToParent(this.questions, data.getDataObject<QuestionDto>());
+            this.addQuestionToParent(this.questions, data.getDataObject());
             break;
 
           case QuestionAction.Upvoted:
-            this.forceUpdateQuestion(this.questions, data.getDataObject<QuestionDto>());
+            this.forceUpdateQuestion(this.questions, data.getDataObject());
             break;
 
           case QuestionAction.Downvoted:
-            this.forceUpdateQuestion(this.questions, data.getDataObject<QuestionDto>());
+            this.forceUpdateQuestion(this.questions, data.getDataObject());
             break;
         }
 
@@ -87,8 +89,10 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
 
   private addQuestionToParent(list: QuestionDto[], question: QuestionDto): void {
     list.forEach((q, idx) => {
-      if (q.id === question.parentId) {
+      if (q.id === question.parentId && !q.children.some(x => x.id === question.id)) {
         list[idx].children.unshift(question);
+        list[idx].replyCount += 1;
+        this.loadedReplyCount[q.id] += 1;
         return;
       }
     });
@@ -139,7 +143,7 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         question.questionReactions.push(response);
-        this.sendQuestionSignal<QuestionDto>(new QuestionSignalData(QuestionAction.Upvoted, question));
+        this.sendQuestionSignal(new QuestionSignalData(QuestionAction.Upvoted, question));
       });
   }
 
@@ -150,7 +154,7 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
         .pipe(takeUntil(this.destroyed$))
         .subscribe(() => {
           question.questionReactions.splice(index, 1);
-          this.sendQuestionSignal<QuestionDto>(new QuestionSignalData(QuestionAction.Downvoted, question));
+          this.sendQuestionSignal(new QuestionSignalData(QuestionAction.Downvoted, question));
         });
     }
   }
@@ -178,8 +182,9 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
           response.replyCount = 0;
           this.questions.unshift(response);
           this.loadedReplyCount[response.id] = 0;
+          this.newReply[this.questions.length-1] = new QuestionDto();
 
-          this.sendQuestionSignal<QuestionDto>(new QuestionSignalData(QuestionAction.Created, response));
+          this.sendQuestionSignal(new QuestionSignalData(QuestionAction.Created, response));
         });
     }
   }
@@ -207,7 +212,7 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
           this.loadedReplyCount[parent.id]++;
           this.skipCount[parent.id]++;
           this.isReplying = [];
-          this.sendQuestionSignal<QuestionDto>(new QuestionSignalData(QuestionAction.Replied, response));
+          this.sendQuestionSignal(new QuestionSignalData(QuestionAction.Replied, response));
         });
     }
   }
@@ -219,7 +224,7 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
     this.loadedReplyCount = [];
     this.isReplying = [];
 
-    this._questionsService.getAll(this.referenceId, this.answered, this.creatorId)
+    this._questionsService.getAll(this.referenceId, this.hostId, this.answered, this.creatorId)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
@@ -275,7 +280,7 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
       });
   }
 
-  private async sendQuestionSignal<TObject>(data: QuestionSignalData<TObject>, callback?: () => void): Promise<void> {
+  private async sendQuestionSignal(data: QuestionSignalData, callback?: () => void): Promise<void> {
     const sSignalData = JSON.stringify(data);
     const ids = [this.hostId].concat(this.attendeeIds ?? []).filter(i => i !== this.userId);
     await this.questionsHub.invoke('sendSignal', ids, sSignalData).then(() => { if (callback) callback(); });

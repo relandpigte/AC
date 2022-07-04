@@ -1,6 +1,6 @@
-<div class="comments-container" [class.sidebar]="isSidebar">
+<div class="comments-container d-flex flex-column flex-nowrap" [class.sidebar]="isSidebar">
   <div *ngIf="questions && questions.length; else noQuestionsContainer;"
-    class="comments comments-small parent-comments">
+    class="comments comments-small parent-comments flex-grow-1" style="height: 0">
     <div *ngFor="let question of questions; let i = index;" class="comment mb-3 comment-main-body">
       <div class="row">
         <div class="col-2">
@@ -108,7 +108,7 @@
             </div>
           </div>
 
-          <a *ngIf="loadedReplyCount[question.id] !== question.replyCount" href="#!load-more" class="d-block text-muted"
+          <a *ngIf="loadedReplyCount[question.id] < question.replyCount" href="#!load-more" class="d-block text-muted"
             (click)="$event.preventDefault(); onLoadMoreRepliesClick(question);">
             <small>{{ 'LoadMoreReplies' | localize }}...</small>
           </a>
@@ -183,10 +183,13 @@
 <ng-template #hasNotReactedTemplate let-question="question">
   <div class="d-flex flex-row align-items-center">
     <a class="btn btn-sm btn-white" href="#!like" (click)="$event.preventDefault(); onLikeClick(question);">
-      <span class="fe fe-arrow-up-circle"></span>
-      {{ question.questionReactions.length }}
+      <span class="fe fe-arrow-up-circle mr-1"></span>
+      <span class="mr-1">{{ question.questionReactions.length }}</span>
+      {{ 'Upvote' | localize }}
     </a>
     <a *ngFor="let action of customReactionActions" class="btn btn-sm ml-1" [ngClass]="[action.class ? action.class: '']" (click)="action.action?.call(this, question);">
+      <span *ngIf="action.icon" [class]="action.icon"></span>
+      <span *ngIf="action.prefix" [class]="mr-2">{{ action.prefix.call(this, question) }}</span>
       {{ action.label | localize }}
     </a>
   </div>
@@ -194,12 +197,14 @@
 
 <ng-template #hasReactedTemplate let-question="question">
   <div class="d-flex flex-row align-items-center">
-    <a class="btn btn-sm btn-white text-success" href="#!unlike"
-      (click)="$event.preventDefault(); onUnlikeClick(question);">
-      <span class="fe fe-arrow-up-circle text-success"></span>
-      {{ question.questionReactions.length }}
+    <a class="btn btn-sm btn-white text-success" href="#!unlike" (click)="$event.preventDefault(); onUnlikeClick(question);">
+      <span class="fe fe-arrow-up-circle mr-1"></span>
+      <span class="mr-1">{{ question.questionReactions.length }}</span>
+      {{ 'Upvote' | localize }}
     </a>
     <a *ngFor="let action of customReactionActions" class="btn btn-sm ml-1" [ngClass]="[action.class ? action.class: '']" (click)="action.action?.call(this, question);">
+      <span *ngIf="action.icon" [class]="action.icon"></span>
+      <span *ngIf="action.prefix" [class]="mr-2">{{ action.prefix.call(this, question) }}</span>
       {{ action.label | localize }}
     </a>
   </div>
