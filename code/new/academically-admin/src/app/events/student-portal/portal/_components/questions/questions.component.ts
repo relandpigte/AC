@@ -59,7 +59,7 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
     ];
 
     this.customActions = [
-      { label: 'AnswerLive', class: 'btn-outline-primary', action: (question) => { console.log(question); } }
+      { label: 'AnswerLive', class: 'btn-primary', action: (question) => { console.log(question); } }
     ];
   }
 }
