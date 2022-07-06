@@ -12,9 +12,9 @@ import { takeUntil, finalize } from 'rxjs/operators';
 })
 export class CreateEditPollComponent extends AppComponentBase implements OnInit {
   @Input() eventId: string;
+  @Input() model = new CreateEventPollDto();
   @Output() modelSaved = new EventEmitter();
 
-  model = new CreateEventPollDto();
   currentQuestion: EventPollQuestionDto;
   isLoading = false;
 
@@ -31,7 +31,9 @@ export class CreateEditPollComponent extends AppComponentBase implements OnInit 
   }
 
   ngOnInit(): void {
-    this.model.eventId = this.eventId;
+    if (!this.model.id) {
+      this.model.eventId = this.eventId;
+    }
   }
 
   onCloseClick(): void {
@@ -40,7 +42,9 @@ export class CreateEditPollComponent extends AppComponentBase implements OnInit 
 
   onFormSubmit(): void {
     this.isLoading = true;
-    this._eventPollsService.create(this.model)
+    (!this.model.id
+      ? this._eventPollsService.create(this.model)
+      : this._eventPollsService.update(this.model))
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {

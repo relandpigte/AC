@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { EventDto, EventPresenterDto, StudentEventDto, EventUserDto } from '@shared/service-proxies/service-proxies';
+import { HubConnection } from '@aspnet/signalr';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ export class PortalService {
   public grantRequestToSpeak$: Observable<EventUserDto>;
   public declineRequestToSpeak$: Observable<EventUserDto>;
   public grantedRequestToSpeak$: Observable<boolean>;
+  public hub$: Observable<HubConnection>;
 
   private _eventSubject: BehaviorSubject<EventDto>;
   private _attendeesSubject: BehaviorSubject<EventUserDto[]>;
@@ -27,6 +29,7 @@ export class PortalService {
   private _grantRequestToSpeakSubject: BehaviorSubject<EventUserDto>;
   private _declineRequestToSpeakSubject: BehaviorSubject<EventUserDto>;
   private _grantedRequestToSpeakSubject: BehaviorSubject<boolean>;
+  private _hubSubject: BehaviorSubject<HubConnection>;
 
   constructor() {
     this._eventSubject = new BehaviorSubject<EventDto>(undefined);
@@ -58,6 +61,9 @@ export class PortalService {
 
     this._grantedRequestToSpeakSubject = new BehaviorSubject<boolean>(undefined);
     this.grantedRequestToSpeak$ = this._grantedRequestToSpeakSubject.asObservable();
+
+    this._hubSubject = new BehaviorSubject<HubConnection>(undefined);
+    this.hub$ = this._hubSubject.asObservable();
   }
 
   public set event(value: EventDto) {
@@ -98,5 +104,9 @@ export class PortalService {
 
   public set grantedRequestToSpeak(value: boolean) {
     this._grantedRequestToSpeakSubject.next(value);
+  }
+
+  public set hub(value: HubConnection) {
+    this._hubSubject.next(value);
   }
 }

@@ -9,7 +9,7 @@
   border-style: solid;
   z-index     : 1;
   transition  : 0.5s;
-  overflow  : hidden;
+  overflow    : hidden;
 
   &.content-hidden {
     width: 57px;
@@ -65,8 +65,10 @@
   }
 
   .sidebar-contents {
-    margin-left: 57px;
-    height     : 100%;
+    margin-left   : 57px;
+    height        : 100%;
+    display       : flex;
+    flex-direction: column;
 
     .sidebar-title {
       display      : flex;
@@ -83,7 +85,7 @@
     }
 
     .sidebar-content {
-      height: calc(100% - 48px);
+      flex-grow: 1;
     }
   }
 }

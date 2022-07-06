@@ -1,6 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="CreatePoll">Create poll</text>
+    <text name="YouCanSelectMultipleAnswers">You can select multiple answers</text>
+    <text name="YouCanSelectOneAnswer">You can select one answer</text>
+    <text name="FinishedVotingSubmessage">Your answers have been sent to the presenter.</text>
+    <text name="FinishedVotingMessage">Thank you for your participation in the survey.</text>
+    <text name="Vote">Vote</text>
+    <text name="ViewResults">View results</text>
+    <text name="ResultsSharedWithAudience">Results shared with audience</text>
+    <text name="ShareResultsWithAttendeesNoQM">Share results with attendees</text>
+    <text name="ClosePoll">Close poll</text>
+    <text name="StopPoll">Stop poll</text>
+    <text name="NoClosedPolls">No closed polls</text>
+    <text name="NoOpenPolls">No open polls</text>
+    <text name="TotalVotes">Total votes</text>
+    <text name="StartPoll">Start poll</text>
+    <text name="EditPoll">Edit poll</text>
+    <text name="Voted">Voted</text>
+    <text name="Select">Select</text>
     <text name="AutoAdmit">Auto admit</text>
     <text name="AttendeeAdmissionSettings">Attendee admission settings</text>
     <text name="RequestToSpeakDeclined">Your request to speak was declined.</text>

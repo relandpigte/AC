@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
@@ -49,6 +50,23 @@ namespace Academically.Services.EventPolls
         {
             base.DeleteAsync(input);
             return base.CreateAsync(input);
+        }
+
+        public override Task<EventPollDto> UpdateAsync(CreateEventPollDto input)
+        {
+            base.DeleteAsync(input);
+            UnitOfWorkManager.Current.SaveChanges();
+            return base.CreateAsync(input);
+        }
+
+        public async Task<IEnumerable<EventPollDto>> GetAllUnpagedAsync(Guid eventId)
+        {
+            return await Repository.GetAll()
+                .Where(e => e.EventId == eventId)
+                    .Include(e => e.EventPollQuestions)
+                        .ThenInclude(e => e.EventPollQuestionOptions)
+                .Select(e => ObjectMapper.Map<EventPollDto>(e))
+                .ToListAsync();
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Academically.Services.EventPolls.Dto
         public Guid EventPollId { get; set; }
 
         public IEnumerable<EventPollQuestionOptionDto> EventPollQuestionOptions { get; set; }
+        public IEnumerable<EventPollQuestionAnswerDto> EventPollAnswers { get; set; }
     }
 }
 

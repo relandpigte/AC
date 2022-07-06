@@ -6,6 +6,7 @@ import {
   EventUserDto,
   EventSessionsServiceProxy,
   EventUserType,
+  EventPollDto,
 } from '@shared/service-proxies/service-proxies';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -18,6 +19,10 @@ import * as _ from 'lodash';
 import { HubConnection } from '@aspnet/signalr';
 import { ShareVideosComponent } from './_components/share-videos/share-videos.component';
 import * as rtc from 'rtc-lib';
+import { SignalAction as PortalSignalAction } from './_components/polls/polls.component';
+import { PortalPollService } from './_components/polls/_services/portal-poll.service';
+import { BsModalService, ModalOptions, BsModalRef } from 'ngx-bootstrap/modal';
+import { AttendeeOpenDialogComponent } from './_components/polls/_components/attendee-open-dialog/attendee-open-dialog.component';
 
 enum SignalAction {
   StartEvent,
@@ -93,7 +98,9 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     private _hubService: HubService,
     private _eventsService: EventsServiceProxy,
     private _portalService: PortalService,
+    private _portalPollService: PortalPollService,
     private _eventSessionsService: EventSessionsServiceProxy,
+    private _modalService: BsModalService,
   ) {
     super(injector);
     this.pipeDestroy(route.paramMap, (paramMap) => {
@@ -245,7 +252,9 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   private async initHub(): Promise<void> {
     this.eventSessionsHub = await this._hubService.getEventSessionsHub(() => {
       this.hubConnected = true;
+      this._portalService.hub = this.eventSessionsHub;
       this.initRoom();
+      let modal: BsModalRef;
 
       this.eventSessionsHub.on('receiveSignal', async (sSignalData: string) => {
         const signalData = new SignalData();
@@ -301,6 +310,25 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
               if (!this.model.autoAdmitAttendees && this.inLobby) {
                 this.sendSignal([this.host.user.id], new SignalData(SignalAction.LobbyEntered, this.eventUser));
               }
+            }
+            break;
+        }
+
+        switch (signalData.action as number as PortalSignalAction) {
+          case PortalSignalAction.PollStarted:
+            this._portalPollService.pollSelected = signalData.getDataObject() as EventPollDto;
+            const modalSettings = this.defaultModalSettings as ModalOptions<AttendeeOpenDialogComponent>;
+            modal = this._modalService.show(AttendeeOpenDialogComponent, modalSettings);
+            console.log(modal);
+            break;
+
+          case PortalSignalAction.SharePoll:
+          case PortalSignalAction.PollStopped:
+          case PortalSignalAction.PollClosed:
+            console.log(modal);
+            if (modal) {
+              modal.hide();
+              modal = undefined;
             }
             break;
         }

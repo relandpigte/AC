@@ -55,6 +55,19 @@ export class PollsComponent extends PagedListingComponentBase<EventPollDto> impl
       });
   }
 
+  onEditClick(poll: EventPollDto): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditPollComponent>;
+    modalSettings.class = 'modal-lg';
+    modalSettings.initialState = {
+      model: poll,
+    };
+    const modal = this._modalService.show(CreateEditPollComponent, modalSettings).content;
+    this.pipeDestroy(modal.modelSaved, () => {
+      this.pageNumber = 1;
+      this.refresh();
+    });
+  }
+
   onDeleteClick(eventPoll: EventPollDto): void {
     this.message.confirm(this.l('DeleteEventPollConfirmationMessage'), undefined, (result => {
       if (result) {

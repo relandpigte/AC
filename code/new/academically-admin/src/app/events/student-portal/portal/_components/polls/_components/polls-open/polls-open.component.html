@@ -1,0 +1,38 @@
+<div *ngIf="poll && poll.id else noPollSelectedTemplate" class="poll-queue p-3">
+  <app-poll [poll]="poll" class="poll"></app-poll>
+  <div class="actions">
+    <ng-container [ngSwitch]="pollStatus">
+      <ng-container *ngSwitchCase="PollStatus.Preparing">
+        <button class="btn btn-sm btn-white" (click)="onCancelClick()">
+          {{ 'Cancel' | localize }}
+        </button>
+        <button class="btn btn-sm btn-white" (click)="onEditClick()">
+          {{ 'EditPoll' | localize }}
+        </button>
+        <button class="btn btn-sm btn-primary" (click)="onStartClick()">
+          {{ 'StartPoll' | localize }}
+        </button>
+      </ng-container>
+      <ng-container *ngSwitchCase="PollStatus.Started">
+        <button class="btn btn-sm btn-white" (click)="onStopClick()">
+          {{ 'StopPoll' | localize }}
+        </button>
+      </ng-container>
+      <ng-container *ngSwitchCase="PollStatus.Stopped">
+        <button class="btn btn-sm btn-info" (click)="onShareClick()" [disabled]="isResultsShared"
+          [class.results-shared]="isResultsShared" [class.text-primary]="isResultsShared">
+          {{ (isResultsShared ? 'ResultsSharedWithAudience' : 'ShareResultsWithAttendeesNoQM') | localize }}
+        </button>
+        <button class="btn btn-sm btn-outline-primary" (click)="onCloseClick()">
+          {{ 'ClosePoll' | localize }}
+        </button>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #noPollSelectedTemplate>
+  <p class="small text-center my-5">
+    {{ 'NoOpenPolls' | localize }}
+  </p>
+</ng-template>

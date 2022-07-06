@@ -105,6 +105,10 @@
             </div>
             <p class="m-0 ml-3">
               <b>{{ attendee.user.fullName }}</b>
+              <br />
+              <span class="badge badge-info">
+                {{ EventUserType[attendee.type] }}
+              </span>
             </p>
           </div>
           <div class="col-auto flex-y-center">

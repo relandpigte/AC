@@ -35,6 +35,7 @@ export class SidebarComponent extends AppComponentBase implements OnInit {
     this.menuItems.push(new MenuItem('Attendees', 'fe-users'));
     this.menuItems.push(new MenuItem('Comments', 'fe-message-circle'));
     this.menuItems.push(new MenuItem('Questions', 'fe-help-circle'));
+    this.menuItems.push(new MenuItem('Polls', 'fe-pie-chart'));
     this.menuItems.push(new MenuItem('Handouts', 'fe-folder'));
     this.menuItems.push(new MenuItem('Offers', 'fe-shopping-bag'));
     this.menuItems.push(new MenuItem('Reviews', 'fe-star'));
