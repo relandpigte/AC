@@ -200,7 +200,7 @@
     <a class="btn btn-sm btn-white text-success" href="#!unlike" (click)="$event.preventDefault(); onUnlikeClick(question);">
       <span class="fe fe-arrow-up-circle mr-1"></span>
       <span class="mr-1">{{ question.questionReactions.length }}</span>
-      {{ 'Upvote' | localize }}
+      {{ 'Upvoted' | localize }}
     </a>
     <a *ngFor="let action of customReactionActions" class="btn btn-sm ml-1" [ngClass]="[action.class ? action.class: '']" (click)="action.action?.call(this, question);">
       <span *ngIf="action.icon" [class]="action.icon"></span>
