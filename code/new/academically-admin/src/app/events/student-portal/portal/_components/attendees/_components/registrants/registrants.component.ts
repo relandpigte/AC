@@ -2,7 +2,8 @@ import { Component, OnInit, Injector } from '@angular/core';
 import { PortalService } from '@app/events/student-portal/portal/_services/portal.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { takeUntil } from 'rxjs/operators';
-import { EventPresenterDto, EventUserDto } from '@shared/service-proxies/service-proxies';
+import { EventPresenterDto, EventUserDto, EventUserType } from '@shared/service-proxies/service-proxies';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-registrants',
@@ -13,6 +14,8 @@ export class RegistrantsComponent extends AppComponentBase implements OnInit {
   attendees: EventUserDto[] = [];
   lobbyUsers: EventUserDto[] = [];
   waitingUsers: EventUserDto[] = [];
+
+  EventUserType = EventUserType;
 
   constructor(
     injector: Injector,
@@ -26,7 +29,7 @@ export class RegistrantsComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(responses => {
         console.log('registrants - attendees');
-        this.attendees = responses;
+        this.attendees = _.cloneDeep(responses);
       });
     this._portalService.lobbyUser$
       .pipe(takeUntil(this.destroyed$))

@@ -30,6 +30,14 @@ import { CoHostsComponent } from './_components/settings/_components/co-hosts/co
 import { ShareVideosComponent } from './_components/share-videos/share-videos.component';
 import { PortalTempComponent } from './_components/portal-temp/portal-temp.component';
 import { QuestionsComponent } from './_components/questions/questions.component';
+import { PollsComponent } from './_components/polls/polls.component';
+import { PollsQueueComponent } from './_components/polls/_components/polls-queue/polls-queue.component';
+import { PollsOpenComponent } from './_components/polls/_components/polls-open/polls-open.component';
+import { PollsClosedComponent } from './_components/polls/_components/polls-closed/polls-closed.component';
+import { PollsAttendeeOpenComponent } from './_components/polls/_components/polls-attendee-open/polls-attendee-open.component';
+import { PollsAttendeeClosedComponent } from './_components/polls/_components/polls-attendee-closed/polls-attendee-closed.component';
+import { PollComponent } from './_components/polls/_components/poll/poll.component';
+import { AttendeeOpenDialogComponent } from './_components/polls/_components/attendee-open-dialog/attendee-open-dialog.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +64,15 @@ import { QuestionsComponent } from './_components/questions/questions.component'
     CoHostsComponent,
     ShareVideosComponent,
     PortalTempComponent,
-    QuestionsComponent
+    QuestionsComponent,
+    PollsComponent,
+    PollsQueueComponent,
+    PollsOpenComponent,
+    PollsClosedComponent,
+    PollsAttendeeOpenComponent,
+    PollsAttendeeClosedComponent,
+    PollComponent,
+    AttendeeOpenDialogComponent,
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,51 @@
+.poll-closed {
+  display       : flex;
+  flex-direction: column;
+  height        : 100%;
+
+  .polls {
+    overflow-y: auto;
+    flex      : 1 1 0px;
+
+    .poll {
+      border-radius: 5px;
+    }
+  }
+
+  .poll-queue {
+    position      : relative;
+    height        : 100%;
+    display       : flex;
+    flex-direction: column;
+
+    .poll {
+      flex: 1 1 0px
+    }
+
+    .actions {
+      display       : flex;
+      flex-direction: column;
+      background    : #FFFFFF;
+      padding       : 5px 0 0 0;
+
+      button {
+        margin-top   : 5px;
+        margin-bottom: 5px;
+
+        &.results-shared {
+          background: none;
+          border    : none;
+          opacity   : 1;
+        }
+      }
+    }
+  }
+
+
+  small,
+  .small {
+    font-size  : 12px;
+    line-height: 12px;
+  }
+
+}

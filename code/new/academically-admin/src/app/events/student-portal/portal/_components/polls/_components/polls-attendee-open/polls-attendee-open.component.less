@@ -1,0 +1,41 @@
+.attendee-open {
+  height: 100%;
+
+  .poll {
+    height        : 100%;
+    display       : flex;
+    flex-direction: column;
+
+    .questions {
+      flex      : 1 1 0px;
+      overflow-y: auto;
+
+      .option {
+        .option-icon {
+          font-size: 18px;
+          cursor   : pointer;
+        }
+      }
+    }
+  }
+
+  .finish-voting {
+    .option-icon {
+      font-size: 24px;
+      cursor   : pointer;
+    }
+  }
+
+  small,
+  .small {
+    font-size: 12px;
+  }
+
+  .card {
+    box-shadow: none;
+  }
+}
+
+.poll {
+  height: 100%;
+}
