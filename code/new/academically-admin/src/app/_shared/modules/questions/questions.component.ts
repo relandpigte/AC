@@ -29,7 +29,6 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
   newQuestion = new QuestionDto();
   newReply: QuestionDto[] = [];
   isReplying: boolean[] = [];
-  skipCount: number[] = [];
   loadedReplyCount: number[] = [];
 
   private _maxRepliesToLoad = 3;
@@ -64,7 +63,8 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
 
         switch (data.action) {
           case QuestionAction.Created:
-            if (!this.answered && (!this.creatorId || this.hostId !== this.creatorId)) {
+            const isAsked = _.isNil(this.creatorId) || this.creatorId === data.getDataObject().creatorUser?.id;
+            if (!this.answered && isAsked) {
               this.questions.unshift(data.getDataObject());
               this.newReply[this.questions.length-1] = new QuestionDto();
             }
@@ -210,7 +210,6 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
           parent.children = [response, ...parent.children];
           parent.replyCount++;
           this.loadedReplyCount[parent.id]++;
-          this.skipCount[parent.id]++;
           this.isReplying = [];
           this.sendQuestionSignal(new QuestionSignalData(QuestionAction.Replied, response));
         });
@@ -220,7 +219,6 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
   private getQuestions(): void {
     this.isQuestionsLoading = true;
     this.questions = [];
-    this.skipCount = [];
     this.loadedReplyCount = [];
     this.isReplying = [];
 
@@ -245,29 +243,10 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
   }
 
   private getReplies(question: QuestionDto): void {
-    let count = 0;
-    if (_.isNil(this.skipCount[question.id])) {
-      this.skipCount[question.id] = 0;
-      count = 1;
-    } else {
-      if (this.skipCount[question.id] === 0) {
-        count = this._maxRepliesToLoad;
-        this.skipCount[question.id] = 1;
-      } else {
-        const remainingReplyCount = (this.loadedReplyCount[question.id] - 1) % 3;
-        if (remainingReplyCount === 0) {
-          count = this._maxRepliesToLoad;
-        } else {
-          count = remainingReplyCount;
-        }
-        this.skipCount[question.id] += count;
-      }
-    }
-
     this._questionsService.getAllReplies(
       question.id,
-      this.skipCount[question.id],
-      count,
+      this.loadedReplyCount[question.id],
+      this.loadedReplyCount[question.id] === 0 ? 1 : this._maxRepliesToLoad
     )
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
