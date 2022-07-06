@@ -56,6 +56,8 @@ namespace Academically.Services.Events
         {
             return base.CreateFilteredQuery(input)
                 .Where(e => e.ParentId == input.ParentIdFilter)
+                .WhereIf(input.Visible.HasValue, e => e.Visible == input.Visible.Value)
+                .WhereIf(input.Open.HasValue, e => e.Opened == input.Open.Value)
                 .WhereIf(input.UserIdFilter.HasValue, e => e.CreatorUserId == input.UserIdFilter.Value)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.Name.ToLower().Contains(input.SearchFilter.ToLower())
                     || e.Description.ToLower().Contains(input.SearchFilter.ToLower()))

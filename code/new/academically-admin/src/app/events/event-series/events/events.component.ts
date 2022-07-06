@@ -67,6 +67,8 @@ export class EventsComponent extends PagedListingComponentBase<EventDto> impleme
         request.parentIdFilter,
         undefined,
         request.searchFilter,
+        undefined,
+        undefined,
         request.statusFilter,
         request.skipCount,
         request.maxResultCount

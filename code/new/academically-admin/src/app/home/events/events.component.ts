@@ -42,6 +42,8 @@ export class EventsComponent extends PagedListingComponentBase<EventDto> impleme
         undefined,
         undefined,
         undefined,
+        true,
+        true,
         EventStatus.Published,
         request.skipCount,
         request.maxResultCount,

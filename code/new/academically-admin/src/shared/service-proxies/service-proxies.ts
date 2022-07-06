@@ -9093,6 +9093,8 @@ export class EventsServiceProxy {
      * @param parentIdFilter (optional) 
      * @param userIdFilter (optional) 
      * @param searchFilter (optional) 
+     * @param visible (optional) 
+     * @param open (optional) 
      * @param statusFilter (optional) 0 = Draft
     
     1 = Published
@@ -9100,7 +9102,7 @@ export class EventsServiceProxy {
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(parentIdFilter: string | undefined, userIdFilter: number | undefined, searchFilter: string | undefined, statusFilter: EventStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventDtoPagedResultDto> {
+    getAll(parentIdFilter: string | undefined, userIdFilter: number | undefined, searchFilter: string | undefined, visible: boolean | undefined, open: boolean | undefined, statusFilter: EventStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Events/GetAll?";
         if (parentIdFilter === null)
             throw new Error("The parameter 'parentIdFilter' cannot be null.");
@@ -9114,6 +9116,14 @@ export class EventsServiceProxy {
             throw new Error("The parameter 'searchFilter' cannot be null.");
         else if (searchFilter !== undefined)
             url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (visible === null)
+            throw new Error("The parameter 'visible' cannot be null.");
+        else if (visible !== undefined)
+            url_ += "Visible=" + encodeURIComponent("" + visible) + "&";
+        if (open === null)
+            throw new Error("The parameter 'open' cannot be null.");
+        else if (open !== undefined)
+            url_ += "Open=" + encodeURIComponent("" + open) + "&";
         if (statusFilter === null)
             throw new Error("The parameter 'statusFilter' cannot be null.");
         else if (statusFilter !== undefined)
