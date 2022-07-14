@@ -17,14 +17,17 @@ namespace Academically.Services.Videos
     {
         private readonly IRepository<Video, Guid> _videosRepository;
         private readonly IRepository<Reaction, Guid> _reactionsRepository;
+        private readonly IRepository<StudentVideo, Guid> _studentVideoRepository;
 
         public VideosAppService(
             IRepository<Video, Guid> videosRepository,
-            IRepository<Reaction, Guid> reactionsRepository
+            IRepository<Reaction, Guid> reactionsRepository,
+            IRepository<StudentVideo, Guid> studentVideoRepository
             )
         {
             _videosRepository = videosRepository;
             _reactionsRepository = reactionsRepository;
+            _studentVideoRepository = studentVideoRepository;
         }
 
         public async Task<PagedResultDto<VideoDto>> GetAll(PagedVideoResultRequestDto input)
@@ -205,6 +208,7 @@ namespace Academically.Services.Videos
             {
                 await _videosRepository.DeleteAsync(child.Id);
             }
+            await _studentVideoRepository.DeleteAsync(sv => sv.VideoId == id);
             await _videosRepository.DeleteAsync(id);
         }
     }

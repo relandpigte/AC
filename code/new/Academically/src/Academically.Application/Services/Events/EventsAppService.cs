@@ -31,6 +31,8 @@ namespace Academically.Services.Events
         private readonly IRepository<User, long> _usersRepository;
         private readonly IRepository<EventPresenter, Guid> _eventPresentersRepository;
         private readonly ISettingManager _settingManager;
+        private readonly IRepository<EventPoll, Guid> _eventPollRepository;
+        private readonly IRepository<EventResource, Guid> _eventResourceRepository;
 
         public EventsAppService(
             RoleManager roleManager,
@@ -39,7 +41,9 @@ namespace Academically.Services.Events
             IRepository<User, long> usersRepository,
             IRepository<EventPresenter, Guid> eventPresentersRepository,
             ISettingManager settingManager,
-            IRepository<Event, Guid> repository
+            IRepository<Event, Guid> repository,
+            IRepository<EventPoll, Guid> eventPollRepository,
+            IRepository<EventResource, Guid> eventResourceRepository
             ) : base(repository)
         {
             LocalizationSourceName = AcademicallyConsts.LocalizationSourceName;
@@ -50,6 +54,8 @@ namespace Academically.Services.Events
             _eventPresentersRepository = eventPresentersRepository;
             _usersRepository = usersRepository;
             _settingManager = settingManager;
+            _eventPollRepository = eventPollRepository;
+            _eventResourceRepository = eventResourceRepository;
         }
 
         protected override IQueryable<Event> CreateFilteredQuery(PagedEventResultRequestDto input)
@@ -442,6 +448,15 @@ namespace Academically.Services.Events
             var @event = await Repository.GetAsync(id);
             @event.AutoAdmitAttendees = autoAdmitAttendees;
             await Repository.UpdateAsync(@event);
+        }
+
+        public override async Task DeleteAsync(EntityDto<Guid> input)
+        {
+            await _eventPollRepository.DeleteAsync(ep => ep.EventId == input.Id);
+            await _eventPresentersRepository.DeleteAsync(ep => ep.EventId == input.Id);
+            await _eventResourceRepository.DeleteAsync(er => er.EventId == input.Id);
+            await _studentEventsRepository.DeleteAsync(se => se.EventId == input.Id);
+            await Repository.DeleteAsync(input.Id);
         }
     }
 }

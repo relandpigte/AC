@@ -21,14 +21,26 @@ namespace Academically.Services.Courses
     [AbpAuthorize(PermissionNames.Pages_Courses, PermissionNames.Pages_Home_Courses)]
     public class CoursesAppService : AsyncCrudAppService<Course, CourseDto, Guid, PagedCourseResultRequestDto, CreateCourseDto, CourseDto>, ICoursesAppService
     {
+        private readonly IRepository<CourseRating, Guid> _ratingRepository;
+        private readonly IRepository<StudentCourse, Guid> _studentCourseRepository;
+        private readonly IRepository<CourseSection, Guid> _sectionRepository;
+        private readonly IRepository<StudentCourseSection, Guid> _courseSectionRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
 
         public CoursesAppService(
             IRepository<Course, Guid> coursesRepository,
+            IRepository<CourseRating, Guid> ratingRepository,
+            IRepository<StudentCourse, Guid> studentCourseRepository,
+            IRepository<CourseSection, Guid> sectionRepository,
+            IRepository<StudentCourseSection, Guid> courseSectionRepository,
             IDocumentsDomainService documentsDomainService
             ) : base(coursesRepository)
         {
+            _ratingRepository = ratingRepository;
+            _studentCourseRepository = studentCourseRepository;
+            _sectionRepository = sectionRepository;
             _documentsDomainService = documentsDomainService;
+            _courseSectionRepository = courseSectionRepository;
         }
 
         public override async Task<CourseDto> GetAsync(EntityDto<Guid> input)
@@ -95,6 +107,22 @@ namespace Academically.Services.Courses
             var course = await Repository.GetAsync(input.Id);
             ObjectMapper.Map(input, course);
             return ObjectMapper.Map<CourseDto>(await Repository.UpdateAsync(course));
+        }
+
+        public override async Task DeleteAsync(EntityDto<Guid> input)
+        {
+            await _ratingRepository.DeleteAsync(cr => cr.CourseId == input.Id);
+            await _sectionRepository.DeleteAsync(cs => cs.CourseId == input.Id);
+
+            var studentCourses = await _sectionRepository.GetAll().Where(sc => sc.CourseId == input.Id).ToListAsync();
+            foreach (var studentCourse in studentCourses)
+            {
+                await _courseSectionRepository.DeleteAsync(scs => scs.CourseSectionId == studentCourse.Id);
+            }
+
+            await _studentCourseRepository.DeleteAsync(sc => sc.CourseId == input.Id);
+            
+            await Repository.DeleteAsync(input.Id);
         }
     }
 }
