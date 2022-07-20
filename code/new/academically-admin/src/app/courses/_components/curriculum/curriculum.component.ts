@@ -113,7 +113,8 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
 
   onDuplicateClick(courseSection): void {
     this.isLoading = true;
-    this._courseSectionsService.createDuplicate(courseSection)
+    const clonedCourseSection = this.duplicateCourseSection(courseSection);
+    this._courseSectionsService.createDuplicate(clonedCourseSection)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
@@ -121,9 +122,22 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
         })
       )
       .subscribe(result => {
-        this.notify.success(this.l('SuccessfullyDuplicateCreated'));
+        this.notify.success(this.l('Successfully Duplicate Created'));
         this.getCourseSections();
       });
+  }
+
+  private duplicateCourseSection(courseSection: CourseSectionDto): CourseSectionDto {
+    let newCourseSection: CourseSectionDto = courseSection.clone();
+    this.clearIdsOfClonedCourseSection(newCourseSection);
+    return newCourseSection;
+  }
+
+  private clearIdsOfClonedCourseSection(courseSection: CourseSectionDto): void {
+    delete courseSection.id;
+    courseSection.children.forEach(child => {
+      this.clearIdsOfClonedCourseSection(child);
+    });
   }
 
   private getCourseSections(): void {
