@@ -12,16 +12,7 @@
             <column name="EventId" type="CHAR(36)">
                 <constraints nullable="false"/>
             </column>
-            <column name="IsNotDiscounted" type="BIT(1)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="IsDiscountedByPercentage" type="BIT(1)">
-                <constraints nullable="false"/>
-            </column>
             <column name="PercentageDiscount" type="DOUBLE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="IsDiscountedByAmount" type="BIT(1)">
                 <constraints nullable="false"/>
             </column>
             <column name="DiscountAmount" type="DECIMAL(65, 30)">
@@ -48,9 +39,18 @@
             <column name="OfferLimitSeconds" type="INT">
                 <constraints nullable="false"/>
             </column>
+            <column name="ServiceTitle" type="LONGTEXT"/>
+            <column defaultValueNumeric="0" name="ServiceType" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="00000000-0000-0000-0000-000000000000" name="ServiceId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="DiscountType" type="INT">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
-
     <changeSet author="ralph (generated)" id="1658502291977-2">
         <createIndex indexName="IX_AcademicallyEventOffers_CreatorUserId" tableName="academicallyeventoffers">
             <column name="CreatorUserId"/>
@@ -61,7 +61,6 @@
             <column name="EventId"/>
         </createIndex>
     </changeSet>
-
     <changeSet author="ralph (generated)" id="1658502291977-4">
         <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallyeventoffers" constraintName="FK_AcademicallyEventOffers_AbpUsers_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
     </changeSet>

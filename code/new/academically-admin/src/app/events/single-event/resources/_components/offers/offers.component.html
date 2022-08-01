@@ -14,9 +14,9 @@
     </div>
   </div>
   <div class="card-body py-0" [loader]="isLoading">
-    <ul *ngIf="eventPolls.length else noEventPollsTemplate" class="list-group list-group-flush">
+    <ul *ngIf="eventOffers.length else noEventOffersTemplate" class="list-group list-group-flush">
       <li
-        *ngFor="let eventPoll of (eventPolls | paginate: { id: 'event-polls', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })"
+        *ngFor="let eventOffer of (eventOffers | paginate: { id: 'event-polls', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })"
         class="list-group-item py-4">
         <div class="row">
           <div class="col-auto d-flex justify-content-center align-items-center">
@@ -25,14 +25,14 @@
             </div>
           </div>
           <div class="col d-flex flex-column justify-content-center">
-            <h4 class="m-0">{{ eventPoll.name }}</h4>
-            <small class="text-muted mb-2">
-              {{ eventPoll.eventPollQuestions.length }}
-              {{ (eventPoll.eventPollQuestions.length === 1 ? 'Question' : 'Questions') | localize }}
-            </small>
+            <h4 class="m-0">{{ eventOffer.serviceTitle }}</h4>
+            <!-- <small class="text-muted mb-2">
+              {{ eventOffer.eventOfferQuestions.length }}
+              {{ (eventOffer.eventOfferQuestions.length === 1 ? 'Question' : 'Questions') | localize }}
+            </small> -->
             <small class="text-muted m-0">
               {{ 'CreatedOn' | localize }}
-              {{ eventPoll.creationTime | dateFormat: 'MMM D, YYYY' }}
+              {{ eventOffer.creationTime | dateFormat: 'MMM D, YYYY' }}
             </small>
           </div>
           <div class="col-auto d-flex align-items-center">
@@ -42,10 +42,10 @@
                 class="custom-control-input" />
               <label class="custom-control-label" for="displayAtRegistration"></label>
             </div>
-            <button class="btn btn-sm btn-rounded-circle btn-outline-info mr-2" (click)="onEditClick(eventPoll)">
+            <button class="btn btn-sm btn-rounded-circle btn-outline-info mr-2" (click)="onEditClick(eventOffer)">
               <i class="fe fe-edit-2"></i>
             </button>
-            <button class="btn btn-sm btn-rounded-circle btn-outline-danger" (click)="onDeleteClick(eventPoll)">
+            <button class="btn btn-sm btn-rounded-circle btn-outline-danger" (click)="onDeleteClick(eventOffer)">
               <i class="fe fe-trash-2"></i>
             </button>
           </div>
@@ -53,18 +53,12 @@
       </li>
     </ul>
   </div>
-  <abp-pagination-controls *ngIf="totalItems > eventPolls.length" id="event-polls" (pageChange)="getDataPage($event)">
+  <abp-pagination-controls *ngIf="totalItems > eventOffers.length" id="event-polls" (pageChange)="getDataPage($event)">
   </abp-pagination-controls>
 </div>
 
-<ng-template #noEventResourcesTemplate>
-  <p class="m-0 p-5 text-muted text-center">
-    {{ 'NoItemsFound' | localize }}
-  </p>
-</ng-template>
 
-
-<ng-template #noEventPollsTemplate>
+<ng-template #noEventOffersTemplate>
   <p class="m-0 p-5 text-muted text-center">
     {{ 'NoItemsFound' | localize }}
   </p>

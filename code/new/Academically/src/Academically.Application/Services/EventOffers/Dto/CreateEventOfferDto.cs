@@ -1,15 +1,15 @@
-﻿using Abp.Domain.Entities.Auditing;
-using Academically.Authorization.Users;
+﻿using Abp.Application.Services.Dto;
+using Abp.AutoMapper;
+using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Academically.Domain.Entities
+namespace Academically.Services.EventOffers.Dto
 {
-    [Table("AcademicallyEventOffers")]
-    public class EventOffer: CreationAuditedEntity<Guid>
+    [AutoMapTo(typeof(EventOffer))]
+    public class CreateEventOfferDto : EntityDto<Guid>
     {
         public Guid EventId { get; set; }
         public EventOfferServiceTypes ServiceType { get; set; }
@@ -25,11 +25,5 @@ namespace Academically.Domain.Entities
         public int OfferLimitHours { get; set; } = 0;
         public int OfferLimitMinutes { get; set; } = 0;
         public int OfferLimitSeconds { get; set; } = 0;
-
-        [ForeignKey("EventId")]
-        public virtual Event Event { get; set; }
-
-        [ForeignKey("CreatorUserId")]
-        public virtual User CreatorUser { get; set; }
     }
 }

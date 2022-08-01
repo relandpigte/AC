@@ -1,0 +1,169 @@
+<form autocomplete="off" #form="ngForm">
+  <div class="modal-card card" [loader]="isLoading">
+    <abp-modal-header [title]="'CreateOffer' | localize" (onCloseClick)="onCloseClick()">
+    </abp-modal-header>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+              <select class="custom-select" select2 [defaultValue]="{ id: 1, type: 'Courses', title: 'Course 1' }"
+                (select2ValueChange)="serviceSelect($event)" [(ngModel)]="selectedService" id="service"
+                name="service" #service="ngModel">
+                <ng-container *ngFor="let service of services">
+                  <option disabled>{{ service.group | localize }}</option>
+                  <ng-container *ngFor="let item of service.services">
+                    <option [value]="item" ><h5>&nbsp;&nbsp;&nbsp;{{ item.title | localize }}</h5></option>
+                  </ng-container>
+                </ng-container>
+              </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-sm-12">
+          <div class="custom-control custom-radio">
+            <input [(ngModel)]="model.discountType" class="custom-control-input" type="radio" name="NoDiscount"
+              id="NoDiscount" [value]="eventOfferDiscountTypes.NoDiscount">
+            <label class="custom-control-label" for="NoDiscount">{{ 'NoDiscount' | localize }}</label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 col-sm-6">
+
+            <div class="custom-control custom-radio mt-2 mr-sm-2">
+              <input [(ngModel)]="model.discountType" class="custom-control-input" type="radio" name="PercentageDiscount"
+                id="PercentageDiscount" [value]="eventOfferDiscountTypes.PercentageDiscount">
+              <label class="custom-control-label" for="PercentageDiscount">{{ 'DiscountPercentage' | localize }}</label>
+            </div>
+
+        </div>
+        <div class="col-sm-2">
+          <div class="form-group">
+                <input type="number" class="form-control"  name="discountPercentage" id="discountPercentage">
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="form-group mt-3">
+                 %
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 col-sm-6">
+          <div class="form-inline">
+            <div class="custom-control custom-radio mt-2 mr-sm-2">
+              <input [(ngModel)]="model.discountType" class="custom-control-input" type="radio" name="AmountDiscount"
+                id="AmountDiscount" [value]="eventOfferDiscountTypes.AmountDiscount">
+              <label class="custom-control-label" for="AmountDiscount">{{ 'DiscountAmount' | localize }}</label>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="form-group">
+                <input type="number" class="form-control"  name="discountAmount" id="discountAmount">
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="form-group mt-3">
+            &#163;
+          </div>
+        </div>
+      </div>
+
+      <div class="list-group list-group-flush my-n3">
+        <div class="row align-items-center mb-4 mt-4">
+          <div class="col">
+            <span class="font-weight-base ">
+              {{ 'DisplayRealtimeSales' | localize }}
+            </span>
+          </div>
+          <div class="col-auto">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="isSalesDisplayedInRealtime" name="isSalesDisplayedInRealtime"
+                [checked]="model.isSalesDisplayedInRealtime" [(ngModel)]="model.isSalesDisplayedInRealtime"
+                >
+              <label class="custom-control-label" for="isSalesDisplayedInRealtime"></label>
+            </div>
+          </div>
+          <div class="col-10">
+            <p class="text-muted">{{ 'DisplayRealtimeSalesDescription' | localize }}</p>
+          </div>
+        </div>
+
+        <div class="row align-items-center mb-4">
+          <div class="col">
+            <span class="font-weight-base ">
+              {{ 'LimitUnitsAvailable' | localize }}
+            </span>
+          </div>
+          <div class="col-auto">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="isNumberOfUnitsLimited" name="isNumberOfUnitsLimited"
+                [checked]="model.isNumberOfUnitsLimited" [(ngModel)]="model.isNumberOfUnitsLimited"
+                >
+              <label class="custom-control-label" for="isNumberOfUnitsLimited"></label>
+            </div>
+
+          </div>
+          <div class="col-10">
+            <p class="text-muted">{{ 'LimitUnitsAvailableDescription' | localize }}</p>
+            <div class="row">
+              <div class="col-2"><input type="number" class="form-control"  name="discountAmount" id="discountAmount"></div>
+              <div class="col-6 mt-3">Units</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row align-items-center mb-4 brd-pad">
+          <div class="col">
+
+            <!-- Heading -->
+            <span class="font-weight-base ">
+              {{ 'LimitDurationOffer' | localize }}
+            </span>
+          </div>
+          <div class="col-auto">
+
+            <!-- Switch -->
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="isOfferDurationLimited" name="isOfferDurationLimited"
+                [checked]="model.isOfferDurationLimited" [(ngModel)]="model.isOfferDurationLimited"
+                >
+              <label class="custom-control-label" for="isOfferDurationLimited"></label>
+            </div>
+
+          </div>
+
+          <div class="col-12">
+            <p class="text-muted">{{ 'LimitDurationOfferDescription' | localize }}</p>
+            <div class="form-inline">
+              <input type="number" class="form-control mb-2 mr-sm-2 col-sm-1" id="hoursRemaining" name="hoursRemaining" placeholder="0">
+              Hours &nbsp; &nbsp; &nbsp;
+              <input type="number" class="form-control mb-2 mr-sm-2 ml-sm-2 col-sm-1" id="minutesRemaining" name="minutesRemaining"  placeholder="0">
+              Minutes &nbsp; &nbsp; &nbsp;
+              <input type="number" class="form-control mb-2 mr-sm-2 ml-sm-2 col-sm-1" id="secondsRemaining" name="secondsRemaining" placeholder="0">
+              Seconds
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+      <button [disabled]="isLoading" type="button" class="btn btn-white" (click)="onCloseClick()">
+        {{ 'Cancel' | localize }}
+      </button>
+      <button
+        [disabled]="isLoading || !form.form.valid"
+        type="button" class="btn btn-primary" (click)="onFormSubmit()">
+        {{ 'Save' | localize }}
+      </button>
+    </div>
+  </div>
+</form>

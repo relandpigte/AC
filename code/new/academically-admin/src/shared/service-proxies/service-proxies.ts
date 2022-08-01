@@ -7287,6 +7287,372 @@ export class EducationLevelsServiceProxy {
 }
 
 @Injectable()
+export class EventOffersServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param eventId (optional) 
+     * @return Success
+     */
+    getAllUnpaged(eventId: string | undefined): Observable<EventOfferDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/EventOffers/GetAllUnpaged?";
+        if (eventId === null)
+            throw new Error("The parameter 'eventId' cannot be null.");
+        else if (eventId !== undefined)
+            url_ += "eventId=" + encodeURIComponent("" + eventId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllUnpaged(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllUnpaged(<any>response_);
+                } catch (e) {
+                    return <Observable<EventOfferDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventOfferDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllUnpaged(response: HttpResponseBase): Observable<EventOfferDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(EventOfferDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventOfferDto[]>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<EventOfferDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventOffers/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<EventOfferDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventOfferDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<EventOfferDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventOfferDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventOfferDto>(<any>null);
+    }
+
+    /**
+     * @param eventIdFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(eventIdFilter: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventOfferDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventOffers/GetAll?";
+        if (eventIdFilter === null)
+            throw new Error("The parameter 'eventIdFilter' cannot be null.");
+        else if (eventIdFilter !== undefined)
+            url_ += "EventIdFilter=" + encodeURIComponent("" + eventIdFilter) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<EventOfferDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventOfferDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<EventOfferDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventOfferDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventOfferDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateEventOfferDto | undefined): Observable<EventOfferDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventOffers/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<EventOfferDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventOfferDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<EventOfferDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventOfferDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventOfferDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: CreateEventOfferDto | undefined): Observable<EventOfferDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventOffers/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<EventOfferDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventOfferDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<EventOfferDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventOfferDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventOfferDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/EventOffers/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class EventPollsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -29454,6 +29820,105 @@ export interface ICreateEventDto {
     parentId: string | undefined;
 }
 
+export class CreateEventOfferDto implements ICreateEventOfferDto {
+    id: string;
+    eventId: string;
+    serviceType: EventOfferServiceTypes;
+    serviceTitle: string | undefined;
+    serviceId: string;
+    discountType: EventOfferDiscountTypes;
+    percentageDiscount: number;
+    discountAmount: number;
+    isSalesDisplayedInRealtime: boolean;
+    isNumberOfUnitsLimited: boolean;
+    unitLimit: number;
+    isOfferDurationLimited: boolean;
+    offerLimitHours: number;
+    offerLimitMinutes: number;
+    offerLimitSeconds: number;
+
+    constructor(data?: ICreateEventOfferDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.eventId = _data["eventId"];
+            this.serviceType = _data["serviceType"];
+            this.serviceTitle = _data["serviceTitle"];
+            this.serviceId = _data["serviceId"];
+            this.discountType = _data["discountType"];
+            this.percentageDiscount = _data["percentageDiscount"];
+            this.discountAmount = _data["discountAmount"];
+            this.isSalesDisplayedInRealtime = _data["isSalesDisplayedInRealtime"];
+            this.isNumberOfUnitsLimited = _data["isNumberOfUnitsLimited"];
+            this.unitLimit = _data["unitLimit"];
+            this.isOfferDurationLimited = _data["isOfferDurationLimited"];
+            this.offerLimitHours = _data["offerLimitHours"];
+            this.offerLimitMinutes = _data["offerLimitMinutes"];
+            this.offerLimitSeconds = _data["offerLimitSeconds"];
+        }
+    }
+
+    static fromJS(data: any): CreateEventOfferDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateEventOfferDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["eventId"] = this.eventId;
+        data["serviceType"] = this.serviceType;
+        data["serviceTitle"] = this.serviceTitle;
+        data["serviceId"] = this.serviceId;
+        data["discountType"] = this.discountType;
+        data["percentageDiscount"] = this.percentageDiscount;
+        data["discountAmount"] = this.discountAmount;
+        data["isSalesDisplayedInRealtime"] = this.isSalesDisplayedInRealtime;
+        data["isNumberOfUnitsLimited"] = this.isNumberOfUnitsLimited;
+        data["unitLimit"] = this.unitLimit;
+        data["isOfferDurationLimited"] = this.isOfferDurationLimited;
+        data["offerLimitHours"] = this.offerLimitHours;
+        data["offerLimitMinutes"] = this.offerLimitMinutes;
+        data["offerLimitSeconds"] = this.offerLimitSeconds;
+        return data; 
+    }
+
+    clone(): CreateEventOfferDto {
+        const json = this.toJSON();
+        let result = new CreateEventOfferDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateEventOfferDto {
+    id: string;
+    eventId: string;
+    serviceType: EventOfferServiceTypes;
+    serviceTitle: string | undefined;
+    serviceId: string;
+    discountType: EventOfferDiscountTypes;
+    percentageDiscount: number;
+    discountAmount: number;
+    isSalesDisplayedInRealtime: boolean;
+    isNumberOfUnitsLimited: boolean;
+    unitLimit: number;
+    isOfferDurationLimited: boolean;
+    offerLimitHours: number;
+    offerLimitMinutes: number;
+    offerLimitSeconds: number;
+}
+
 export class CreateEventPollDto implements ICreateEventPollDto {
     id: string;
     name: string | undefined;
@@ -31999,6 +32464,177 @@ export class EventInstanceDtoPagedResultDto implements IEventInstanceDtoPagedRes
 export interface IEventInstanceDtoPagedResultDto {
     items: EventInstanceDto[] | undefined;
     totalCount: number;
+}
+
+/** 0 = NoDiscount 1 = PercentageDiscount 2 = AmountDiscount */
+export enum EventOfferDiscountTypes {
+    NoDiscount = 0,
+    PercentageDiscount = 1,
+    AmountDiscount = 2,
+}
+
+export class EventOfferDto implements IEventOfferDto {
+    id: string;
+    eventId: string;
+    serviceType: EventOfferServiceTypes;
+    serviceTitle: string | undefined;
+    serviceId: string;
+    discountType: EventOfferDiscountTypes;
+    percentageDiscount: number;
+    discountAmount: number;
+    isSalesDisplayedInRealtime: boolean;
+    isNumberOfUnitsLimited: boolean;
+    unitLimit: number;
+    isOfferDurationLimited: boolean;
+    offerLimitHours: number;
+    offerLimitMinutes: number;
+    offerLimitSeconds: number;
+
+    constructor(data?: IEventOfferDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.eventId = _data["eventId"];
+            this.serviceType = _data["serviceType"];
+            this.serviceTitle = _data["serviceTitle"];
+            this.serviceId = _data["serviceId"];
+            this.discountType = _data["discountType"];
+            this.percentageDiscount = _data["percentageDiscount"];
+            this.discountAmount = _data["discountAmount"];
+            this.isSalesDisplayedInRealtime = _data["isSalesDisplayedInRealtime"];
+            this.isNumberOfUnitsLimited = _data["isNumberOfUnitsLimited"];
+            this.unitLimit = _data["unitLimit"];
+            this.isOfferDurationLimited = _data["isOfferDurationLimited"];
+            this.offerLimitHours = _data["offerLimitHours"];
+            this.offerLimitMinutes = _data["offerLimitMinutes"];
+            this.offerLimitSeconds = _data["offerLimitSeconds"];
+        }
+    }
+
+    static fromJS(data: any): EventOfferDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventOfferDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["eventId"] = this.eventId;
+        data["serviceType"] = this.serviceType;
+        data["serviceTitle"] = this.serviceTitle;
+        data["serviceId"] = this.serviceId;
+        data["discountType"] = this.discountType;
+        data["percentageDiscount"] = this.percentageDiscount;
+        data["discountAmount"] = this.discountAmount;
+        data["isSalesDisplayedInRealtime"] = this.isSalesDisplayedInRealtime;
+        data["isNumberOfUnitsLimited"] = this.isNumberOfUnitsLimited;
+        data["unitLimit"] = this.unitLimit;
+        data["isOfferDurationLimited"] = this.isOfferDurationLimited;
+        data["offerLimitHours"] = this.offerLimitHours;
+        data["offerLimitMinutes"] = this.offerLimitMinutes;
+        data["offerLimitSeconds"] = this.offerLimitSeconds;
+        return data; 
+    }
+
+    clone(): EventOfferDto {
+        const json = this.toJSON();
+        let result = new EventOfferDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEventOfferDto {
+    id: string;
+    eventId: string;
+    serviceType: EventOfferServiceTypes;
+    serviceTitle: string | undefined;
+    serviceId: string;
+    discountType: EventOfferDiscountTypes;
+    percentageDiscount: number;
+    discountAmount: number;
+    isSalesDisplayedInRealtime: boolean;
+    isNumberOfUnitsLimited: boolean;
+    unitLimit: number;
+    isOfferDurationLimited: boolean;
+    offerLimitHours: number;
+    offerLimitMinutes: number;
+    offerLimitSeconds: number;
+}
+
+export class EventOfferDtoPagedResultDto implements IEventOfferDtoPagedResultDto {
+    items: EventOfferDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IEventOfferDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(EventOfferDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): EventOfferDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventOfferDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): EventOfferDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new EventOfferDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEventOfferDtoPagedResultDto {
+    items: EventOfferDto[] | undefined;
+    totalCount: number;
+}
+
+/** 1 = Event 2 = Course 3 = Video 4 = Articles 5 = Coaching 6 = Workshop */
+export enum EventOfferServiceTypes {
+    Event = 1,
+    Course = 2,
+    Video = 3,
+    Articles = 4,
+    Coaching = 5,
+    Workshop = 6,
 }
 
 export class EventPollDto implements IEventPollDto {
