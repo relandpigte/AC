@@ -7361,6 +7361,64 @@ export class EventOffersServiceProxy {
     }
 
     /**
+     * @return Success
+     */
+    getAllMyServices(): Observable<MyServiceViewDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/EventOffers/GetAllMyServices";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllMyServices(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllMyServices(<any>response_);
+                } catch (e) {
+                    return <Observable<MyServiceViewDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<MyServiceViewDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllMyServices(response: HttpResponseBase): Observable<MyServiceViewDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(MyServiceViewDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<MyServiceViewDto[]>(<any>null);
+    }
+
+    /**
      * @param id (optional) 
      * @return Success
      */
@@ -35363,6 +35421,112 @@ export class ModuleHandle implements IModuleHandle {
 
 export interface IModuleHandle {
     mdStreamVersion: number;
+}
+
+export class MyServiceItemViewDto implements IMyServiceItemViewDto {
+    id: string;
+    serviceType: string | undefined;
+    title: string | undefined;
+
+    constructor(data?: IMyServiceItemViewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.serviceType = _data["serviceType"];
+            this.title = _data["title"];
+        }
+    }
+
+    static fromJS(data: any): MyServiceItemViewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new MyServiceItemViewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["serviceType"] = this.serviceType;
+        data["title"] = this.title;
+        return data; 
+    }
+
+    clone(): MyServiceItemViewDto {
+        const json = this.toJSON();
+        let result = new MyServiceItemViewDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IMyServiceItemViewDto {
+    id: string;
+    serviceType: string | undefined;
+    title: string | undefined;
+}
+
+export class MyServiceViewDto implements IMyServiceViewDto {
+    serviceType: string | undefined;
+    items: MyServiceItemViewDto[] | undefined;
+
+    constructor(data?: IMyServiceViewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.serviceType = _data["serviceType"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(MyServiceItemViewDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): MyServiceViewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new MyServiceViewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["serviceType"] = this.serviceType;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): MyServiceViewDto {
+        const json = this.toJSON();
+        let result = new MyServiceViewDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IMyServiceViewDto {
+    serviceType: string | undefined;
+    items: MyServiceItemViewDto[] | undefined;
 }
 
 export class NotificationData implements INotificationData {

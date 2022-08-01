@@ -1,8 +1,10 @@
+import { MyServiceViewDto } from './../../../../../../shared/service-proxies/service-proxies';
+import { ServiceGroupedDropdownData } from './../../_models/serviceGroupedDropdownData';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { Component, Injector, OnInit } from "@angular/core";
 import { EventService } from "@app/events/_services/event.service";
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from "@shared/paged-listing-component-base";
-import { EventDto, EventOfferDto, EventOffersServiceProxy, EventPollDto } from "@shared/service-proxies/service-proxies";
+import { CoachingDto, CourseDto, EventDto, EventOfferDto, EventOffersServiceProxy, EventPollDto, WorkshopDto, VideoDto, ArticleDto, CoursesServiceProxy, CoachingsServiceProxy, WorkshopsServiceProxy, VideosServiceProxy, ArticlesServiceProxy, CourseStatus } from "@shared/service-proxies/service-proxies";
 import { BsModalService, ModalOptions } from "ngx-bootstrap/modal";
 import { CreateEditOfferComponent } from '../create-edit-offer/create-edit-offer.component';
 
@@ -20,6 +22,13 @@ export class OffersComponent extends PagedListingComponentBase<EventOfferDto> im
   event = new EventDto();
   eventOffers: EventOfferDto[] = [];
   isLoading = false;
+  events: EventDto[] = [];
+  courses: CourseDto[] = [];
+  coachings: CoachingDto[] = [];
+  workshops: WorkshopDto[] = [];
+  videos: VideoDto[] = [];
+  articles: ArticleDto[] = [];
+  allServices: MyServiceViewDto[] = [];
 
   constructor(
     injector: Injector,
@@ -39,6 +48,7 @@ export class OffersComponent extends PagedListingComponentBase<EventOfferDto> im
   }
 
   ngOnInit(): void {
+    this.loadAllServices();
   }
 
   onAddClick(): void {
@@ -46,6 +56,7 @@ export class OffersComponent extends PagedListingComponentBase<EventOfferDto> im
     modalSettings.class = 'modal-lg';
     modalSettings.initialState = {
       eventId: this.event.id,
+      allMyServices: this.allServices,
     };
     const modal = this._modalService.show(CreateEditOfferComponent, modalSettings).content;
     modal.modelSaved
@@ -87,6 +98,14 @@ export class OffersComponent extends PagedListingComponentBase<EventOfferDto> im
     //       });
     //   }
     // }));
+  }
+
+  loadAllServices(): void {
+
+    this._eventOffersService.getAllMyServices()
+      .subscribe(result => {
+        this.allServices = result;
+      });
   }
 
   protected list(
