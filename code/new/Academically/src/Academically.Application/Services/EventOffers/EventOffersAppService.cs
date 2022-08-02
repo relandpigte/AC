@@ -78,7 +78,7 @@ namespace Academically.Services.EventOffers
             {
                 var newCourseItem = new MyServiceItemViewDto();
                 newCourseItem.Id = course.Id;
-                newCourseItem.ServiceType = ServiceTypeNames.Courses;
+                newCourseItem.ServiceType = EventOfferServiceTypes.Course;
                 newCourseItem.Title = course.Name;
                 courseServices.Items.Add(newCourseItem);
             }
@@ -97,7 +97,7 @@ namespace Academically.Services.EventOffers
             {
                 var newCoachingItem = new MyServiceItemViewDto();
                 newCoachingItem.Id = coaching.Id;
-                newCoachingItem.ServiceType = ServiceTypeNames.Coachings;
+                newCoachingItem.ServiceType = EventOfferServiceTypes.Coaching;
                 newCoachingItem.Title = coaching.Name;
                 coachingServices.Items.Add(newCoachingItem);
             }
@@ -116,7 +116,7 @@ namespace Academically.Services.EventOffers
             {
                 var newArticleItem = new MyServiceItemViewDto();
                 newArticleItem.Id = article.Id;
-                newArticleItem.ServiceType = ServiceTypeNames.Articles;
+                newArticleItem.ServiceType = EventOfferServiceTypes.Articles;
                 newArticleItem.Title = article.Name;
                 articleServices.Items.Add(newArticleItem);
             }
@@ -135,7 +135,7 @@ namespace Academically.Services.EventOffers
             {
                 var newEventItem = new MyServiceItemViewDto();
                 newEventItem.Id = eventItem.Id;
-                newEventItem.ServiceType = ServiceTypeNames.Events;
+                newEventItem.ServiceType = EventOfferServiceTypes.Event;
                 newEventItem.Title = eventItem.Name;
                 eventServices.Items.Add(newEventItem);
             }
@@ -154,7 +154,7 @@ namespace Academically.Services.EventOffers
             {
                 var newWorkshopItem = new MyServiceItemViewDto();
                 newWorkshopItem.Id = workshopItem.Id;
-                newWorkshopItem.ServiceType = ServiceTypeNames.Workshops;
+                newWorkshopItem.ServiceType = EventOfferServiceTypes.Workshop;
                 newWorkshopItem.Title = workshopItem.Name;
                 workshopServices.Items.Add(newWorkshopItem);
             }
@@ -173,7 +173,7 @@ namespace Academically.Services.EventOffers
             {
                 var newVideoItem = new MyServiceItemViewDto();
                 newVideoItem.Id = eventItem.Id;
-                newVideoItem.ServiceType = ServiceTypeNames.Videos;
+                newVideoItem.ServiceType = EventOfferServiceTypes.Video;
                 newVideoItem.Title = eventItem.Name;
                 videoServices.Items.Add(newVideoItem);
             }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Academically.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,7 +14,7 @@ namespace Academically.Services.EventOffers.Dto
     public class MyServiceItemViewDto
     {
         public Guid Id { get; set; }
-        public string ServiceType { get; set; }
+        public EventOfferServiceTypes ServiceType { get; set; }
         public string Title { get; set; }
     }
 

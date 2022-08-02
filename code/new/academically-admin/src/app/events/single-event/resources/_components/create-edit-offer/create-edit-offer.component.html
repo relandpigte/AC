@@ -6,13 +6,13 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-              <select class="custom-select" select2 [defaultValue]="{ id: 1, type: 'Courses', title: 'Course 1' }"
-                (select2ValueChange)="serviceSelect($event)" [(ngModel)]="selectedService" id="service"
-                name="service" #service="ngModel">
+              <select class="custom-select" select2 [defaultValue]="model.serviceId + '\n' + model.serviceTitle + '\n' + model.serviceType"
+                [(ngModel)]="selectedService" id="serviceSelected"
+                name="serviceSelected" (select2ValueChange)="serviceSelect($event); selectedService = $event;">
                 <ng-container *ngFor="let service of allMyServices">
                   <option disabled class="text-muted" *ngIf="service.items.length > 0">{{ service.serviceType | localize }}</option>
-                  <ng-container *ngFor="let item of service.items">
-                    <option [value]="item" ><h5>&nbsp;&nbsp;&nbsp;{{ item.title | localize }}</h5></option>
+                  <ng-container *ngFor="let itemservice of service.items;">
+                    <option [value]="itemservice.id + '\n' + itemservice.title + '\n' + itemservice.serviceType"><h5>&nbsp;&nbsp;&nbsp;{{ itemservice.title | localize }}</h5></option>
                   </ng-container>
                 </ng-container>
               </select>
@@ -28,12 +28,10 @@
             <label class="custom-control-label" for="NoDiscount">{{ 'NoDiscount' | localize }}</label>
           </div>
         </div>
-
       </div>
 
       <div class="row">
         <div class="col-md-4 col-sm-6">
-
             <div class="custom-control custom-radio mt-2 mr-sm-2">
               <input [(ngModel)]="model.discountType" class="custom-control-input" type="radio" name="PercentageDiscount"
                 id="PercentageDiscount" [value]="eventOfferDiscountTypes.PercentageDiscount">
@@ -43,7 +41,9 @@
         </div>
         <div class="col-sm-2">
           <div class="form-group">
-                <input type="number" class="form-control"  name="discountPercentage" id="discountPercentage">
+                <input type="number" class="form-control"  name="discountPercentage"
+                id="discountPercentage" [(ngModel)]="model.percentageDiscount"
+                [disabled]="model.discountType !== eventOfferDiscountTypes.PercentageDiscount" min="0" max="100">
           </div>
         </div>
         <div class="col-sm-2">
@@ -58,14 +58,15 @@
           <div class="form-inline">
             <div class="custom-control custom-radio mt-2 mr-sm-2">
               <input [(ngModel)]="model.discountType" class="custom-control-input" type="radio" name="AmountDiscount"
-                id="AmountDiscount" [value]="eventOfferDiscountTypes.AmountDiscount">
+                id="AmountDiscount" [value]="eventOfferDiscountTypes.AmountDiscount" min="0">
               <label class="custom-control-label" for="AmountDiscount">{{ 'DiscountAmount' | localize }}</label>
             </div>
           </div>
         </div>
         <div class="col-sm-2">
           <div class="form-group">
-                <input type="number" class="form-control"  name="discountAmount" id="discountAmount">
+                <input type="number" class="form-control"  name="discountAmount" id="discountAmount" [(ngModel)]="model.discountAmount"
+                [disabled]="model.discountType !== eventOfferDiscountTypes.AmountDiscount">
           </div>
         </div>
         <div class="col-sm-2">
@@ -113,7 +114,10 @@
           <div class="col-10">
             <p class="text-muted">{{ 'LimitUnitsAvailableDescription' | localize }}</p>
             <div class="row">
-              <div class="col-2"><input type="number" class="form-control"  name="discountAmount" id="discountAmount"></div>
+              <div class="col-2">
+                <input type="number" class="form-control"  name="unitLimit" id="unitLimit" [(ngModel)]="model.unitLimit"
+                [disabled]="!model.isNumberOfUnitsLimited">
+              </div>
               <div class="col-6 mt-3">{{ 'Units' | localize }}</div>
             </div>
 
@@ -143,11 +147,17 @@
           <div class="col-12">
             <p class="text-muted">{{ 'LimitDurationOfferDescription' | localize }}</p>
             <div class="form-inline">
-              <input type="number" class="form-control mb-2 mr-sm-2 col-sm-1" id="hoursRemaining" name="hoursRemaining" placeholder="0">
+              <input type="number" class="form-control mb-2 mr-sm-2 col-sm-1"
+                id="hoursRemaining" name="hoursRemaining" placeholder="0" [(ngModel)]="model.offerLimitHours"
+                [disabled]="!model.isOfferDurationLimited" min="0" max="60">
               {{ 'Hours' | localize }} &nbsp; &nbsp; &nbsp;
-              <input type="number" class="form-control mb-2 mr-sm-2 ml-sm-2 col-sm-1" id="minutesRemaining" name="minutesRemaining"  placeholder="0">
+              <input type="number" class="form-control mb-2 mr-sm-2 ml-sm-2 col-sm-1"
+              id="minutesRemaining" name="minutesRemaining"  placeholder="0" [(ngModel)]="model.offerLimitMinutes"
+              [disabled]="!model.isOfferDurationLimited" min="0" max="60">
               {{ 'Minutes' | localize }} &nbsp; &nbsp; &nbsp;
-              <input type="number" class="form-control mb-2 mr-sm-2 ml-sm-2 col-sm-1" id="secondsRemaining" name="secondsRemaining" placeholder="0">
+              <input type="number" class="form-control mb-2 mr-sm-2 ml-sm-2 col-sm-1"
+              id="secondsRemaining" name="secondsRemaining" placeholder="0" [(ngModel)]="model.offerLimitSeconds"
+              [disabled]="!model.isOfferDurationLimited" min="0" max="60">
               {{ 'Seconds' | localize }}
             </div>
           </div>
@@ -167,3 +177,4 @@
     </div>
   </div>
 </form>
+

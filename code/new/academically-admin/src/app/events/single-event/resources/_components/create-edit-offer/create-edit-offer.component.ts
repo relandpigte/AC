@@ -27,7 +27,7 @@ export class CreateEditOfferComponent extends AppComponentBase implements OnInit
   EventPollQuestionType = EventPollQuestionType;
   selectedCity3: string;
 
-  selectedService: MyServiceItemViewDto;
+  selectedService: string = '';
 
 
   constructor(
@@ -45,10 +45,16 @@ export class CreateEditOfferComponent extends AppComponentBase implements OnInit
     }
   }
 
-  serviceSelect(service: any): void {
-    this.model.serviceTitle = service.title;
-    this.model.serviceId = service.id;
-    this.model.serviceType = service.Type;
+  serviceSelect(selected: string): void {
+    const selectedDetails = selected.split('\n');
+
+    this.model.serviceId = selectedDetails[0];
+    this.model.serviceTitle = selectedDetails[1];
+
+    const x: string = EventOfferServiceTypes[selectedDetails[2]];
+    const y : EventOfferServiceTypes = EventOfferServiceTypes[x as keyof typeof EventOfferServiceTypes];
+
+    this.model.serviceType = y;
   }
 
   onCloseClick(): void {

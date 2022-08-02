@@ -35425,7 +35425,7 @@ export interface IModuleHandle {
 
 export class MyServiceItemViewDto implements IMyServiceItemViewDto {
     id: string;
-    serviceType: string | undefined;
+    serviceType: EventOfferServiceTypes;
     title: string | undefined;
 
     constructor(data?: IMyServiceItemViewDto) {
@@ -35470,7 +35470,7 @@ export class MyServiceItemViewDto implements IMyServiceItemViewDto {
 
 export interface IMyServiceItemViewDto {
     id: string;
-    serviceType: string | undefined;
+    serviceType: EventOfferServiceTypes;
     title: string | undefined;
 }
 

@@ -67,37 +67,38 @@ export class OffersComponent extends PagedListingComponentBase<EventOfferDto> im
       });
   }
 
-  onEditClick(poll: EventPollDto): void {
-    // const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditPollComponent>;
-    // modalSettings.class = 'modal-lg';
-    // modalSettings.initialState = {
-    //   model: poll,
-    // };
-    // const modal = this._modalService.show(CreateEditPollComponent, modalSettings).content;
-    // this.pipeDestroy(modal.modelSaved, () => {
-    //   this.pageNumber = 1;
-    //   this.refresh();
-    // });
+  onEditClick(offer: EventOfferDto): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditOfferComponent>;
+    modalSettings.class = 'modal-lg';
+    modalSettings.initialState = {
+      model: offer,
+      allMyServices: this.allServices,
+    };
+    const modal = this._modalService.show(CreateEditOfferComponent, modalSettings).content;
+    this.pipeDestroy(modal.modelSaved, () => {
+      this.pageNumber = 1;
+      this.refresh();
+    });
   }
 
-  onDeleteClick(eventPoll: EventPollDto): void {
-    // this.message.confirm(this.l('DeleteEventPollConfirmationMessage'), undefined, (result => {
-    //   if (result) {
-    //     this.isLoading = true;
-    //     this._eventOffersService.delete(eventPoll.id)
-    //       .pipe(
-    //         takeUntil(this.destroyed$),
-    //         finalize(() => {
-    //           this.isLoading = false;
-    //         })
-    //       )
-    //       .subscribe(() => {
-    //         this.notify.success(this.l('SuccessfullyDeleted'));
-    //         this.pageNumber = 1;
-    //         this.refresh();
-    //       });
-    //   }
-    // }));
+  onDeleteClick(offer: EventOfferDto): void {
+    this.message.confirm(this.l('DeleteEventOfferConfirmationMessage'), undefined, (result => {
+      if (result) {
+        this.isLoading = true;
+        this._eventOffersService.delete(offer.id)
+          .pipe(
+            takeUntil(this.destroyed$),
+            finalize(() => {
+              this.isLoading = false;
+            })
+          )
+          .subscribe(() => {
+            this.notify.success(this.l('SuccessfullyDeleted'));
+            this.pageNumber = 1;
+            this.refresh();
+          });
+      }
+    }));
   }
 
   loadAllServices(): void {

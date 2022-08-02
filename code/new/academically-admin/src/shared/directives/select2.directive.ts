@@ -10,6 +10,7 @@ export class Select2Directive implements AfterViewInit {
   @Input() hideSearchBox = false;
   @Input() bodyContainer = false;
   @Output() select2ValueChange: EventEmitter<any> = new EventEmitter();
+  @Output() select2ObjectValueChange: EventEmitter<any> = new EventEmitter();
 
   private _el: any;
   private _select2: JQuery<any>;
@@ -46,6 +47,7 @@ export class Select2Directive implements AfterViewInit {
     self._select2 = $(this._el).select2(self.select2options);
     $(this._el).on('select2:select', function (e) {
       self.select2ValueChange.emit(e.params.data.id);
+      self.select2ObjectValueChange.emit(e);
     });
     setTimeout(() => {
       self._select2.val(self.defaultValue).trigger('change');
