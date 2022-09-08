@@ -78,7 +78,11 @@ namespace Academically.Services.CourseSections
 
         public async Task CreateDuplicate(CourseSectionDto input)
         {
-            await DuplicateSectionChildren(new List<CourseSectionDto>() { input }, input.ParentId);
+            //await DuplicateSectionChildren(new List<CourseSectionDto>() { input }, input.ParentId);
+            var course = ObjectMapper.Map<CourseSection>(input);
+            course.Name = GetDuplicateName(input.Name);
+            course.Status = CourseSectionStatus.Draft;
+            await _courseSectionsRepository.InsertAsync(course);
         }
 
         public async Task UpdateCourseSectionParent(Guid id, Guid? parentId, int newIndex)
