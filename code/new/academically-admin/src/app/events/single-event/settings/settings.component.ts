@@ -42,7 +42,7 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
   endDate: Date;
   lastEventValue: string;
   specificDateValue: Date;
-  scheduleTimeValues: string[] = [];
+  scheduleTimeValues: {key: number, value: string}[] = [];
   scheduleWeekValues: DayOfWeek[] = [];
   scheduleMonthsValues: Date[];
   test: string;
@@ -175,6 +175,12 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
         break;
     }
 
+    let convertedSessionTimesArray = [];
+    this.scheduleTimeValues.forEach(element => {
+      convertedSessionTimesArray.push(element.value);
+    });
+    this.model.sessionTimes = JSON.stringify(convertedSessionTimesArray);
+
     this._eventsService.updateSettings(this.model)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
@@ -215,7 +221,14 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
         }
 
         if (this.model.sessionTimes) {
-          this.scheduleTimeValues = JSON.parse(this.model.sessionTimes);
+          const sessionTimesArray = JSON.parse(this.model.sessionTimes);
+          let counter: number = 0;
+          sessionTimesArray.forEach(element => {
+            this.scheduleTimeValues.push({key: counter, value: element});
+            counter++;
+          });
+          // this.scheduleTimeValues = JSON.parse(this.model.sessionTimes);
+
         }
 
         if (this.model.sessionDaysOfWeek) {
@@ -244,9 +257,9 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
     this.scheduleTimeValues = [];
     for (let index = 0; index < this.model.timesPerDay; index++) {
       if (tempScheduleTimeValues[index]) {
-        this.scheduleTimeValues.push(tempScheduleTimeValues[index]);
+        this.scheduleTimeValues.push({ key:index, value: tempScheduleTimeValues[index].value});
       } else {
-        this.scheduleTimeValues.push('10:00 AM');
+        this.scheduleTimeValues.push({ key: index, value: '10:00 AM'});
       }
     }
 
