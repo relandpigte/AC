@@ -1,3 +1,5 @@
+import { CreateEditOfferComponent } from './_components/create-edit-offer/create-edit-offer.component';
+import { OffersComponent } from './_components/offers/offers.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ResourcesRoutingModule } from './resources-routing.module';
@@ -23,6 +25,8 @@ import { SelectPollQuestionComponent } from './_components/select-poll-question/
     PollsComponent,
     CreateEditPollComponent,
     SelectPollQuestionComponent,
+    OffersComponent,
+    CreateEditOfferComponent
   ],
   imports: [
     CommonModule,

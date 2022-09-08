@@ -1,6 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="es">
   <texts>
+	<text name="SelectAnItem">Selecciona un artículo</text>
+    <text name="Seconds">Segundos</text>
+    <text name="Hours">Horas</text>
+    <text name="LimitDurationOfferDescription">
+      Aplique urgencia agregando un temporizador de cuenta regresiva para alentar a su audiencia a comprar antes.
+    </text>
+    <text name="LimitDurationOffer">Limitar la duración de la oferta</text>
+    <text name="Units">Unidades</text>
+    <text name="LimitUnitsAvailableDescription">
+      Genera escasez al limitar el número de unidades disponibles para
+      anime a su audiencia a tomar acción.
+    </text>
+    <text name="LimitUnitsAvailable">Limitar el número de unidades disponibles</text>
+    <text name="DisplayRealtimeSalesDescription">
+      Utilice pruebas sociales mostrando el número de ventas en tiempo real
+      a su audiencia para animarlos a comprar
+    </text>
+    <text name="DisplayRealtimeSales">Mostrar ventas en tiempo real</text>
+    <text name="DiscountAmount">Importe de descuento</text>
+    <text name="DiscountPercentage">Porcentaje de descuento</text>
+    <text name="NoDiscount">Sin descuento</text>
+    <text name="CreateOffer">Crear una oferta</text>
     <text name="ApplyFilter">Aplicar filtro</text>
     <text name="ClearFilters">Borrar filtros</text>
     <text name="Filters">Filtros</text>

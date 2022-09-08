@@ -1,6 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+	<text name="SelectAnItem">Select an item</text>
+    <text name="Seconds">Seconds</text>
+    <text name="Hours">Hours</text>
+    <text name="LimitDurationOfferDescription">
+      Apply urgency by adding a count down timer to encourage your audience to purchase sooner.
+    </text>
+    <text name="LimitDurationOffer">Limit the duration of offer</text>
+    <text name="Units">Units</text>
+    <text name="LimitUnitsAvailableDescription">
+      Generate scarcity by limiting the number of units available to 
+      encourage your audience to take action.
+    </text>
+    <text name="LimitUnitsAvailable">Limit the number of units available</text>
+    <text name="DisplayRealtimeSalesDescription">
+      Utilise social proof by displaying the number of of sales in real-time 
+      to your audience to encourage them to purchase
+    </text>
+    <text name="DisplayRealtimeSales">Display realtime sales</text>
+    <text name="DiscountAmount">Discount Amount</text>
+    <text name="DiscountPercentage">Discount Percentage</text>
+    <text name="NoDiscount">No Discount</text>
+    <text name="CreateOffer">Create an offer</text>
     <text name="CreatePoll">Create poll</text>
     <text name="YouCanSelectMultipleAnswers">You can select multiple answers</text>
     <text name="YouCanSelectOneAnswer">You can select one answer</text>
