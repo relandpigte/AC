@@ -261,14 +261,14 @@
             <div class="sessions">
               <div *ngFor="let scheduleTime of scheduleTimeValues; let i = index" class="form-row form-row-sm">
                 <div *ngIf="(i + 1) <= maxTimesPerDay" class="form-group col-6 offset-4">
-                  <label for="time_{{i}}" class="col-form-label p-0 mr-5 align-items-center session-time-label">
+                  <label for="time{{i}}" class="col-form-label p-0 mr-5 align-items-center session-time-label">
                     {{ 'Session' | localize }} {{ i + 1 }}
                   </label>
                   <div class="session-time">
                     <div class="input-group input-group-merge">
-                      <p-calendar [(ngModel)]="scheduleTimeValues[i]" id="time_{{i}}" name="time_{{i}}"
+                      <p-calendar [(ngModel)]="scheduleTimeValues[i].value" id="time{{i}}" name="time{{i}}"
                         [timeOnly]="true" [hourFormat]="12" [class]="'form-control form-control-appended'"
-                        [dataType]="'string'" (onSelect)="onSessionTimeChange()">
+                        [dataType]="'string'" (onSelect)="onSessionTimeChange()" (onInput)="onSessionTimeChange()">
                       </p-calendar>
                       <div class="input-group-append">
                         <span class="input-group-text">
