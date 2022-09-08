@@ -117,6 +117,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<WorkshopPoll> WorkshopPolls { get; set; }
         public virtual DbSet<WorkshopPollQuestion> WorkshopPollQuestions { get; set; }
         public virtual DbSet<WorkshopPollQuestionOption> WorkshopPollQuestionOptions { get; set; }
+        public virtual DbSet<EventOffer> EventOffer { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

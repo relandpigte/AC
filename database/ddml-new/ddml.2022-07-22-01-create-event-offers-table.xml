@@ -1,0 +1,71 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="ralph (generated)" id="1658502291977-1">
+        <createTable tableName="academicallyeventoffers">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT"/>
+            <column name="EventId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PercentageDiscount" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DiscountAmount" type="DECIMAL(65, 30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsSalesDisplayedInRealtime" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsNumberOfUnitsLimited" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UnitLimit" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsOfferDurationLimited" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OfferLimitHours" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OfferLimitMinutes" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OfferLimitSeconds" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ServiceTitle" type="LONGTEXT"/>
+            <column defaultValueNumeric="0" name="ServiceType" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="00000000-0000-0000-0000-000000000000" name="ServiceId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="DiscountType" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="ralph (generated)" id="1658502291977-2">
+        <createIndex indexName="IX_AcademicallyEventOffers_CreatorUserId" tableName="academicallyeventoffers">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ralph (generated)" id="1658502291977-3">
+        <createIndex indexName="IX_AcademicallyEventOffers_EventId" tableName="academicallyeventoffers">
+            <column name="EventId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ralph (generated)" id="1658502291977-4">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallyeventoffers" constraintName="FK_AcademicallyEventOffers_AbpUsers_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    <changeSet author="ralph (generated)" id="1658502291977-5">
+        <addForeignKeyConstraint baseColumnNames="EventId" baseTableName="academicallyeventoffers" constraintName="FK_AcademicallyEventOffers_AcademicallyEvents_EventId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyevents" validate="true"/>
+    </changeSet>
+
+</databaseChangeLog>
