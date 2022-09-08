@@ -9,5 +9,7 @@ namespace Academically.Services.EventOffers
     public interface IEventOffersAppService : IAsyncCrudAppService<EventOfferDto, Guid, PagedEventOfferResultRequestDto, CreateEventOfferDto>
     {
         Task<IEnumerable<EventOfferDto>> GetAllUnpagedAsync(Guid eventId);
+
+        Task<IEnumerable<MyServiceViewDto>> GetAllMyServices();
     }
 }
