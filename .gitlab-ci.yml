@@ -361,8 +361,7 @@ deploy_schema_to_uat:
 
 deploy_backend_to_uat:
   <<: *backend
-  needs:
-    - deploy_backend_to_ci
+  needs:    
     - build_backend
   dependencies:
     - build_backend
