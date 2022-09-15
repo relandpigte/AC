@@ -48,8 +48,8 @@ import { ExploreComponent } from './explore.component';
                     (m) => m.ExploreForYouModule
                   ),
               },
-              { path: '', redirectTo: 'events' },
-              { path: '**', redirectTo: 'events' }
+              { path: '', redirectTo: 'for-you' },
+              { path: '**', redirectTo: 'for-you' }
             ]
           }
         ]
