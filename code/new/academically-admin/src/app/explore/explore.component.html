@@ -1,0 +1,64 @@
+<div [@routerTransition]>
+  <div class="header">
+    <div class="container-fluid">
+      <div class="header-body pt-0">
+        <div class="row align-items-end">
+          <div class="col mb-md-0 mb-3">
+            <div class="hero-banner d-flex">
+              <div class="bg-center flex-grow-1"  [ngStyle]="{ 'background-image': 'url(\'' + heroBannerSrc + '\')' }"></div>
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col">
+            <ul class="nav nav-tabs nav-overflow header-tabs">
+              <li class="nav-item">
+                <a [routerLink]="['for-you']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'ForYou' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['courses']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Courses' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['events']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Events' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['coaching']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Coaching' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['tutorials']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Tutorials' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['articles']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Articles' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['spaces']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Spaces' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['users']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Users' | localize }}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <router-outlet></router-outlet>
+  </div>
+</div>

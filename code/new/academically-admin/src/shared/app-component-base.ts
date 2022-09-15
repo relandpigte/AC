@@ -1,22 +1,16 @@
-import { Injector, ElementRef, OnDestroy, Injectable } from '@angular/core';
+import { ElementRef, Injectable, Injector, OnDestroy } from '@angular/core';
 import { AppConsts } from '@shared/AppConsts';
 import {
-  LocalizationService,
-  PermissionCheckerService,
-  FeatureCheckerService,
-  NotifyService,
-  SettingService,
-  MessageService,
-  AbpMultiTenancyService
+  AbpMultiTenancyService, FeatureCheckerService, LocalizationService, MessageService, NotifyService, PermissionCheckerService, SettingService
 } from 'abp-ng2-module';
 
-import { AppSessionService } from '@shared/session/app-session.service';
-import { Moment } from 'moment';
-import { DocumentDto, UserDto } from './service-proxies/service-proxies';
-import { ReplaySubject, Observable } from 'rxjs';
-import * as moment from 'moment';
 import { UploadService } from '@app/_shared/services/upload.service';
-import { takeUntil, finalize } from 'rxjs/operators';
+import { AppSessionService } from '@shared/session/app-session.service';
+import * as moment from 'moment';
+import { Moment } from 'moment';
+import { Observable, ReplaySubject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
+import { ArticleDto, ArticleType, CoachingDto, CoachingType, CourseDto, CourseType, DocumentDto, EventDto, EventType, PricingType, UserDto, WorkshopDto, WorkshopType } from './service-proxies/service-proxies';
 
 @Injectable()
 export abstract class AppComponentBase implements OnDestroy {
@@ -178,8 +172,8 @@ export abstract class AppComponentBase implements OnDestroy {
     return this.convertMomentToDate(date).toISOString();
   }
 
-  convertMomentToDateAgo(date: Moment): string {
-    return moment(date).fromNow();
+  convertMomentToDateAgo(date: Moment, removeSuffix = false): string {
+    return moment(date).fromNow(removeSuffix);
   }
 
   getCourseImageUrl(courseImageUrl: string): string {
@@ -295,5 +289,116 @@ export abstract class AppComponentBase implements OnDestroy {
     }
 
     return true;
+  }
+
+  randomNonZero = (max, min = 1) => Math.floor(Math.random() * (max - min)) + min;
+
+  generateRandomCourse(): CourseDto {
+    var course = new CourseDto();
+    var id = this.uuidv4();
+
+    course.id = id;
+    course.type = CourseType.Standard;
+    course.name = `Test Course #${this.randomNonZero(1000)}`;
+    course.description = `Test Description #${this.randomNonZero(1000)}`;
+    course.pricingType = PricingType.FixedPrice;
+    course.price = this.randomNonZero(500);
+
+    var creator = new UserDto();
+    creator.id = this.randomNonZero(200);
+    creator.name = 'Creator User1';
+    creator.profilePictureUrl = `https://i.pravatar.cc/300?u=${id}`;
+
+    course.creatorUser = creator;
+
+    return course;
+  }
+
+  generateRandomWorkshop(): WorkshopDto {
+    var workshop = new WorkshopDto();
+    var id = this.uuidv4();
+
+    workshop.id = id;
+    workshop.type = WorkshopType.Single;
+    workshop.name = `Test Workshop #${this.randomNonZero(1000)}`;
+    workshop.description = `Test Description #${this.randomNonZero(1000)}`;
+    workshop.pricingType = PricingType.FixedPrice;
+    workshop.price = this.randomNonZero(500);
+    workshop.duration = this.randomNonZero(10000);
+    workshop.endDate = moment().add(this.randomNonZero(20, 10), 'days');
+    workshop.workshopDateTime = moment().add(this.randomNonZero(6000), 'minutes');
+
+    var creator = new UserDto();
+    creator.id = this.randomNonZero(200);
+    creator.name = 'Creator User1';
+    creator.profilePictureUrl = `https://i.pravatar.cc/300?u=${id}`;
+
+    workshop.creatorUser = creator;
+
+    return workshop;
+  }
+
+  generateRandomArticle(): ArticleDto {
+    var article = new ArticleDto();
+    var id = this.uuidv4();
+
+    article.id = id;
+    article.type = ArticleType.SingleArticle;
+    article.name = `Test Article #${this.randomNonZero(1000)}`;
+    article.description = `Test Description #${this.randomNonZero(1000)}`;
+    article.pricingType = PricingType.FixedPrice;
+    article.price = this.randomNonZero(500);
+
+    var creator = new UserDto();
+    creator.id = this.randomNonZero(200);
+    creator.name = 'Creator User1';
+    creator.profilePictureUrl = `https://i.pravatar.cc/300?u=${id}`;
+
+    return article;
+  }
+
+  generateRandomCoaching(): CoachingDto {
+    var coaching = new CoachingDto();
+    var id = this.uuidv4();
+
+    coaching.id = id;
+    coaching.type = CoachingType.Single;
+    coaching.name = `Test Coaching #${this.randomNonZero(1000)}`;
+    coaching.description = `Test Description #${this.randomNonZero(1000)}`;
+    coaching.pricingType = PricingType.FixedPrice;
+    coaching.price = this.randomNonZero(500);
+
+    var creator = new UserDto();
+    creator.id = this.randomNonZero(200);
+    creator.name = 'Creator User1';
+    creator.profilePictureUrl = `https://i.pravatar.cc/300?u=${id}`;
+
+    coaching.creatorUser = creator;
+
+    return coaching;
+  }
+
+  generateRandomEvent(): EventDto {
+    var event = new EventDto;
+    var id = this.uuidv4();
+
+    event.id = id;
+    event.type = EventType.SingleEvent;
+    event.name = `Test Event #${this.randomNonZero(1000)}`;
+    event.description = `Test Description #${this.randomNonZero(1000)}`;
+    event.pricingType = PricingType.FixedPrice;
+    event.price = this.randomNonZero(500);
+    event.duration = this.randomNonZero(10000);
+    event.endDate = moment().add(this.randomNonZero(20, 10), 'days');
+    event.eventDateTime = moment().add(this.randomNonZero(6000), 'minutes');
+
+    var creator = new UserDto();
+    creator.id = this.randomNonZero(200);
+    creator.name = 'Creator User1';
+    creator.profilePictureUrl = `https://i.pravatar.cc/300?u=${id}`;
+
+    event.creatorUser = creator;
+
+    return event;
   }
 }

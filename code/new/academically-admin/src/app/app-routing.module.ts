@@ -33,6 +33,13 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
               ),
           },
           {
+            path: 'explore',
+            loadChildren: () =>
+              import('@app/explore/explore.module').then(
+                (m) => m.ExploreModule
+              )
+          },
+          {
             path: 'roles',
             component: WrapperComponent,
             data: { permission: 'Pages.Roles' },

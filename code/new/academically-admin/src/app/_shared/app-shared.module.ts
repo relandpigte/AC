@@ -23,7 +23,7 @@ import { FixedHeightDirective } from './directives/fixed-height.directive';
 import { BottomScrollerDirective } from './directives/bottom-scroller.directive';
 import { SidebarCollapseDirective } from './directives/sidebar-collapse.directive';
 
-
+import { ServiceCardComponent } from '../../shared/components/service-card/service-card.component';
 import { DocumentUploaderComponent } from './components/document-uploader/document-uploader.component';
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
 import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
@@ -39,6 +39,7 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
     ImageCropperComponent,
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
+    ServiceCardComponent,
     ColorPickerComponent,
     WhiteboardComponent,
     DateFormatPipe,
@@ -93,6 +94,7 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
     ImageCropperComponent,
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
+    ServiceCardComponent,
     ColorPickerComponent,
     WhiteboardComponent,
     CalendarModule,

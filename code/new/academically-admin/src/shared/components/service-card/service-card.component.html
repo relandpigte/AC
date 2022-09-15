@@ -1,0 +1,152 @@
+<div class="service-card d-flex flex-column" [ngClass]="[type]">
+    <div *ngIf="this.sanitizedOptions?.isShowPill" class="service-card-pill" [ngClass]="[pillClass]" [innerHTML]="pillLabel | titlecase"></div>
+
+    <div *ngIf="this.sanitizedOptions?.isShowImages" class="service-card-img d-flex flex-row flex-wrap flex-gap-1px">
+        <ng-container [ngSwitch]="images.length">
+            <ng-container *ngSwitchCase="1">
+                <div class="service-card-img-box bg-center flex-grow-1" [alt]="name" [ngStyle]="{ 'background-image': 'url(\'' + images[0].src + '\')' }" [ngClass]="[images[0].class ? images[0].class : '']"></div>
+            </ng-container>
+            <ng-container *ngSwitchCase="2">
+                <div class="service-card-img-box bg-center flex-grow-1" [alt]="name" [ngStyle]="{ 'background-image': 'url(\'' + images[0].src + '\')' }" [ngClass]="[images[0].class ? images[0].class : '']"></div>
+                <div class="service-card-img-box bg-center flex-grow-1" [alt]="name" [ngStyle]="{ 'background-image': 'url(\'' + images[1].src + '\')' }" [ngClass]="[images[1].class ? images[1].class : '']"></div>
+            </ng-container>
+            <ng-container *ngSwitchCase="3">
+                <div class="d-flex flex-column flex-grow-1">
+                    <div class="service-card-img-box bg-center flex-grow-1" [alt]="name" [ngStyle]="{ 'background-image': 'url(\'' + images[0].src + '\')' }" [ngClass]="[images[0].class ? images[0].class : '']"></div>
+                </div>
+                <div class="d-flex flex-column flex-grow-1 flex-gap-1px">
+                    <div class="service-card-img-box bg-center flex-grow-1" [alt]="name" [ngStyle]="{ 'background-image': 'url(\'' + images[1].src + '\')' }" [ngClass]="[images[1].class ? images[1].class : '']"></div>
+                    <div class="service-card-img-box bg-center flex-grow-1" [alt]="name" [ngStyle]="{ 'background-image': 'url(\'' + images[2].src + '\')' }" [ngClass]="[images[2].class ? images[1].class : '']"></div>
+                </div>
+            </ng-container>
+        </ng-container>
+    </div>
+
+    <div class="service-card-body d-flex flex-column flex-grow-1 pb-0" [class.pt-0]="this.sanitizedOptions?.isShowImages" [class.mt-0]="!this.sanitizedOptions?.isShowImages">
+        <div *ngIf="owner?.isBannerAvatar && owner?.avatar" class="service-card-body-avatar avatar">
+            <img [src]="getPersonAvatarUrl(owner?.avatar)" alt="..." class="avatar-img rounded-circle" [ngClass]="[owner?.avatar?.class ? owner?.avatar?.class : '']">
+        </div>
+
+        <div *ngIf="this.sanitizedOptions?.isShowCalendarCard" class="service-card-body-calendar d-flex flex-column flex-nowrap justify-content-center align-content-center align-items-center">
+            <div class="service-card-body-calendar-label">{{ 'From' | localize }}</div>
+            <div class="service-card-body-calendar-date">{{ startDate | date: 'd' }}</div>
+            <div class="service-card-body-calendar-month">{{ startDate | date: 'LLL' }}</div>
+        </div>
+
+        <div *ngIf="this.sanitizedOptions?.isShowHeading && (location || schedule)" class="service-card-body-heading" [style.marginTop.px]="this.sanitizedOptions?.isShowCalendarCard ? 15 : 0">
+            <span *ngIf="this.sanitizedOptions?.headingType === 'location' && location">{{ location }}</span>
+            <span *ngIf="this.sanitizedOptions?.headingType === 'schedule' && schedule">{{ schedule }}</span>
+        </div>
+
+        <div class="service-card-body-name" [style.marginTop.px]="owner?.isBannerAvatar && owner?.avatar ? 15 : 5">{{ name }}</div>
+
+        <div *ngIf="this.sanitizedOptions?.isShowInfo" class="service-card-body-info">{{ info }}</div>
+
+        <div *ngIf="this.sanitizedOptions?.isShowProgress" class="service-card-body-progress">
+            <div class="service-card-body-progress-label">{{ 'Progress' | localize }}</div>
+            <div class="service-card-body-progress-chart d-flex align-items-center">
+                <div class="service-card-body-progress-chart-progress progress flex-grow-1">
+                    <div class="progress-bar" role="progressbar" [ngStyle]="{ width: progress + '%' }"></div>
+                </div>
+                <div class="service-card-body-progress-chart-value">{{ progress }}%</div>
+            </div>
+        </div>
+
+        <div *ngIf="this.sanitizedOptions?.isShowDetails" class="service-card-body-details d-flex flex-row flex-wrap align-items-center">
+            <div *ngIf="this.sanitizedOptions?.isShowDetailsPrice" class="service-card-body-details-price">{{ priceValue | currency: priceCurrency }}<span *ngIf="priceSuffix"> {{ priceSuffix }}</span></div>
+
+            <ng-container *ngIf="this.sanitizedOptions?.isShowDetailsComposition && composition">
+                <div class="service-card-body-details-separator">|</div>
+                <div class="service-card-body-details-composition">{{ compositionString }}</div>
+            </ng-container>
+
+            <ng-container *ngIf="this.sanitizedOptions?.isShowDetailsLastActive && lastActive">
+                <div class="service-card-body-details-separator">|</div>
+                <div class="service-card-body-details-composition">{{ lastActive }}</div>
+            </ng-container>
+
+            <ng-container *ngIf="this.sanitizedOptions?.isShowDetailsRsvp && rsvp">
+                <div class="service-card-body-details-separator">|</div>
+                <div class="service-card-body-details-composition">{{ rsvpString }}</div>
+            </ng-container>
+
+            <ng-container *ngIf="this.sanitizedOptions?.isShowDetailsReviews && reviews">
+                <div *ngIf="!this.sanitizedOptions?.isDetailsReviewsSeparated" class="service-card-body-details-separator">|</div>
+                <div *ngIf="this.sanitizedOptions?.isDetailsReviewsSeparated" class="flex-break"></div>
+                <div class="service-card-body-details-reviews d-flex flex-row align-items-center">
+                    <div *ngIf="reviewValue" class="service-card-body-details-reviews-value">{{ reviewValue | number:'1.1-1' }}</div>
+                    <span *ngIf="reviewStar" class="service-card-body-details-reviews-star fas fa-star"></span>
+                    <div *ngIf="reviewCount" class="service-card-body-details-reviews-count"> · {{ 'ReviewCount' | localize: reviewCount }}</div>
+                </div>
+            </ng-container>
+        </div>
+
+        <div *ngIf="this.sanitizedOptions?.isShowDescription" class="service-card-body-description">{{ description }}</div>
+
+        <div class="service-card-body-spacer flex-grow-1"></div>
+
+        <div class="service-card-body-people d-flex flex-row align-items-center">
+            <ng-container *ngIf="owner" >
+                <div *ngIf="owner?.isShowAvatar && !owner?.isBannerAvatar && owner?.avatar" class="service-card-body-people-avatar avatar avatar-xs">
+                    <img [src]="getPersonAvatarUrl(owner?.avatar)" alt="..." class="avatar-img rounded-circle" [ngClass]="[owner?.avatar?.class ? owner?.avatar?.class : '']">
+                </div>
+
+                <div *ngIf="owner?.isShowFullName && owner?.fullName" class="service-card-body-people-fullname">{{ owner?.fullName | titlecase }}</div>
+            </ng-container>
+
+            <div class="service-card-body-people-cluster-spacer flex-grow-1"></div>
+
+            <ng-container *ngIf="people">
+                <div *ngIf="people?.isShowAvatars && people?.people && people?.avatarStackCount > 0" class="service-card-body-people-cluster avatar-group">
+                    <div *ngFor="let p of people?.people?.slice(0, people?.avatarStackCount)" class="service-card-body-people-cluster-avatar avatar avatar-xs">
+                      <img [src]="getPersonAvatarUrl(p.avatar)" alt="..." class="avatar-img rounded-circle" [ngClass]="[p.avatar?.class ? p.avatar?.class : '']">
+                    </div>
+                </div>
+                <div *ngIf="people?.isShowCount && people?.people && people?.avatarStackCount > 0" class="service-card-body-people-cluster-count">+ {{ people?.people?.length - people?.avatarStackCount }}</div>
+            </ng-container>
+
+        </div>
+    </div>
+
+    <div class="service-card-actions d-flex flex-row align-items-center pt-0" style="gap: 10px">
+        <ng-container *ngFor="let action of sanitizedActions">
+            <ng-container [ngSwitch]="action.type">
+                <ng-container *ngSwitchCase="'save'">
+                    <button type="button" class="btn text-center flex-grow-1 d-flex flex-row justify-content-center align-items-center" [ngClass]="[action.class ? action.class : 'btn-light']" style="gap: 5px">
+                        <span *ngIf="action.label">{{ action.label | localize}}</span>
+                        <i *ngIf="action.icon" [class]="action.icon"></i>
+                    </button>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'share'">
+                    <button type="button" class="btn text-center d-flex flex-row justify-content-center align-items-center" [ngClass]="[action.class ? action.class : 'btn-light']" style="gap: 5px">
+                        <span *ngIf="action.label">{{ action.label | localize}}</span>
+                        <i *ngIf="action.icon" [class]="action.icon"></i>
+                    </button>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'group'">
+                    <div class="btn-group flex-grow-1">
+                        <button type="button" class="btn dropdown-toggle d-flex justify-content-center align-items-center" data-toggle="dropdown" [ngClass]="[action.class ? action.class : 'btn-light']" style="gap: 5px">
+                            <span *ngIf="action.label">{{ action.label | localize}}</span>
+                            <i *ngIf="action.icon" [class]="action.icon"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                          <a *ngFor="let a of action.buttons" class="btn dropdown-item" [ngClass]="[a.class ? a.class : 'btn-light']">
+                            <span *ngIf="a.label">{{ a.label | localize}}</span>
+                            <i *ngIf="a.icon" [class]="a.icon"></i>
+                          </a>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngSwitchDefault>
+                    <button type="button" class="btn text-center flex-grow-1 d-flex flex-row justify-content-center align-items-center" [ngClass]="[action.class ? action.class : 'btn-light']" style="gap: 5px">
+                        <span *ngIf="action.label">{{ action.label | localize}}</span>
+                        <i *ngIf="action.icon" [class]="action.icon"></i>
+                    </button>
+                </ng-container>
+            </ng-container>
+        </ng-container>
+    </div>
+</div>
