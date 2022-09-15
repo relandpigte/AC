@@ -21,10 +21,10 @@ import { ExploreComponent } from './explore.component';
             component: ExploreComponent,
             children: [
               {
-                path: 'events',
+                path: 'coaching',
                 loadChildren: () =>
-                  import('@app/explore/events/events.module').then(
-                    (m) => m.ExploreEventsModule
+                  import('@app/explore/coaching/coaching.module').then(
+                    (m) => m.ExploreCoachingModule
                   ),
               },
               {
@@ -32,6 +32,13 @@ import { ExploreComponent } from './explore.component';
                 loadChildren: () =>
                   import('@app/explore/courses/courses.module').then(
                     (m) => m.ExploreCoursesModule
+                  ),
+              },
+              {
+                path: 'events',
+                loadChildren: () =>
+                  import('@app/explore/events/events.module').then(
+                    (m) => m.ExploreEventsModule
                   ),
               },
               {

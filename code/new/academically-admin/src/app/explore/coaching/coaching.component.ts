@@ -3,12 +3,12 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 
 @Component({
-  selector: 'app-explore-courses',
-  templateUrl: './courses.component.html',
-  styleUrls: ['./courses.component.less'],
+  selector: 'app-explore-coaching',
+  templateUrl: './coaching.component.html',
+  styleUrls: ['./coaching.component.less'],
   animations: [appModuleAnimation()],
 })
-export class ExploreCoursesComponent extends AppComponentBase implements OnInit {
+export class ExploreCoachingComponent extends AppComponentBase implements OnInit {
 
   latest: any[];
   lastMonth: any[];
@@ -25,8 +25,8 @@ export class ExploreCoursesComponent extends AppComponentBase implements OnInit 
   }
 
   private loadData(): void {
-    this.latest = this.generateData(6, 4);
-    this.lastMonth = this.generateData(6, 4);
+    this.latest = this.generateData(6, 3);
+    this.lastMonth = this.generateData(6, 3);
   }
 
   private generateData(count?: number, type?: number): any[] {
