@@ -152,7 +152,7 @@ import * as moment from 'moment';
           this.sanitized.composition.lessons = 53;
           this.sanitized.people = {} as ServiceCardPeople;
           this.sanitized.people.people = Array(this.randomNonZero(45, 12)).fill({} as ServiceCardPerson).map(i => ({ ...this.sanitized.owner, avatar: { src: `https://i.pravatar.cc/300?u=${this.uuidv4()}`} }));
-          this.sanitized.people.avatarStackCount = 10;
+          this.sanitized.people.avatarStackCount = 5;
           this.sanitized.people.isShowAvatars = true;
           this.sanitized.people.isShowCount = true;
 
