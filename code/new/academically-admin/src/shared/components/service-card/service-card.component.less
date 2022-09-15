@@ -1,0 +1,367 @@
+@service-card-background-color: #FFFFFF;
+@service-card-radius: 10px;
+@service-card-border-width: 1px;
+@service-card-border-color: #e4ebf6;
+@service-card-padding: 22px;
+@service-card-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+
+@service-card-image-height: 158px;
+@service-card-image-background-color: #E4EBF6;
+
+@service-card-pill-background-color: rgba(0, 0, 0, 0.3);
+@service-card-pill-color: #fff;
+@service-card-pill-font-size: 12px;
+@service-card-pill-font-weight: 600;
+@service-card-pill-padding: 4px 12px;
+@service-card-pill-border-radius: 13px;
+
+@service-card-location-color: #2C7BE5;
+@service-card-location-font-size: 12px;
+@service-card-location-font-weight: 400;
+
+@service-card-name-font-size: 22px;
+@service-card-name-font-weight: 600;
+@service-card-name-line-height: 26px;
+@service-card-name-color: #12263F;
+
+@service-card-info-font-size: 13px;
+@service-card-info-font-weight: 400;
+@service-card-info-line-height: 18px;
+@service-card-info-color: #646464;
+
+@service-card-details-separator-font-size: 12px;
+@service-card-details-separator-font-weight: 400;
+@service-card-details-separator-color: #6E84A3;
+@service-card-details-separator-padding: 0 10px;
+
+@service-card-details-price-font-size: 14px;
+@service-card-details-price-font-weight: 400;
+@service-card-details-price-color: #12263F;
+
+@service-card-details-composition-font-size: 12px;
+@service-card-details-composition-font-weight: 400;
+@service-card-details-composition-color: #6E84A3;
+
+@service-card-details-reviews-value-font-size: 12px;
+@service-card-details-reviews-value-font-weight: 700;
+@service-card-details-reviews-value-color: #646464;
+
+@service-card-details-reviews-star-font-size: 10px;
+@service-card-details-reviews-star-padding: 0 5px;
+@service-card-details-reviews-star-color: #F5D83E;
+
+@service-card-details-reviews-count-font-size: 12px;
+@service-card-details-reviews-count-font-weight: 400;
+@service-card-details-reviews-count-color: #646464;
+
+@service-card-description-font-size: 13px;
+@service-card-description-font-weight: 400;
+@service-card-description-line-height: 16.51px;
+@service-card-description-color: #646464;
+
+@service-card-people-fullname-font-size: 14px;
+@service-card-people-fullname-font-weight: 400;
+@service-card-people-fullname-color: #6E84A3;
+
+@service-card-people-cluster-count-font-size: 14px;
+@service-card-people-cluster-count-font-weight: 400;
+@service-card-people-cluster-count-color: #6E84A3;
+
+@service-card-action-font-size: 15px;
+@service-card-action-font-weight: 400;
+@service-card-action-line-height: 19.05px;
+@service-card-action-button-background-color: #EEEFF2;
+
+:host {
+    &:hover {
+        .service-card {
+            box-shadow: @service-card-shadow;
+        }
+    }
+}
+
+.service-card {
+    background-color: @service-card-background-color;
+    position: relative;
+    box-sizing: content-box;
+
+    display: flex;
+    flex-direction: column;
+
+    border-radius: @service-card-radius;
+    border: @service-card-border-width solid @service-card-border-color;
+
+    min-height: 398px;
+    height: 398px;
+    max-height: 398px;
+
+    min-width: 352px;
+    width: 352px;
+    max-width: 352px;
+
+    transition: all 0.2s ease-in-out;;
+
+    &.event {
+        min-height: 400px;
+        height: 400px;
+        max-height: 400px;
+    }
+
+    &.article {
+        min-height: 229px;
+        height: 229px;
+        max-height: 229px;
+
+        min-width: 543px;
+        width: 543px;
+        max-width: 543px;
+    }
+
+    &.tutorial {
+        min-height: 337px;
+        height: 337px;
+        max-height: 337px;
+    }
+
+    &.coaching, &.workshop {
+        min-height: 397px;
+        height: 397px;
+        max-height: 397px;
+    }
+
+    &.space {
+        min-height: 381px;
+        height: 381px;
+        max-height: 381px;
+
+        min-width: 351px;
+        width: 351px;
+        max-width: 351px;
+    }
+
+    &.user {
+        min-height: 202px;
+        height: 202px;
+        max-height: 202pxh;
+
+        min-width: 351px;
+        width: 351px;
+        max-width: 351px;
+    }
+
+    &-img {
+        overflow: hidden;
+        min-height: @service-card-image-height;
+        height: @service-card-image-height;
+        max-height: @service-card-image-height;
+        background-color: @service-card-image-background-color;
+        border-top-left-radius: @service-card-radius;
+        border-top-right-radius: @service-card-radius;
+    }
+
+    &-pill {
+        position: absolute;
+        right: 22px;
+        top: 22px;
+        font-size: @service-card-pill-font-size;
+        font-weight: @service-card-pill-font-weight;
+        color: @service-card-pill-color;
+        background-color: @service-card-pill-background-color;
+        padding: @service-card-pill-padding;
+        border-radius: @service-card-pill-border-radius;
+    }
+
+    &-body {
+        padding: @service-card-padding;
+        margin-top: 15px;
+        position: relative;
+
+        &-avatar {
+            position: absolute;
+            top: -50px;
+            width: 60px;
+            height: 60px;
+
+            .avatar {
+                width: 60px;
+                height: 60px;
+            }
+        }
+
+        &-calendar {
+            position: absolute;
+            top: -50px;
+            width: 58px;
+            height: 60px;
+            border-radius: 5px;
+            box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            gap: 4px;
+
+            &-label {
+                font-weight: 400;
+                font-size: 10px;
+                color: #B1C2D9;
+                line-height: 12px;
+            }
+
+            &-date {
+                font-weight: 600;
+                font-size: 15px;
+                color: #12263F;
+                line-height: 12px;
+            }
+
+            &-month {
+                font-weight: 600;
+                font-size: 12px;
+                color: #2C7BE5;
+                line-height: 12px;
+            }
+        }
+
+        &-heading {
+            text-transform: uppercase;
+            font-size: @service-card-location-font-size;
+            font-weight: @service-card-location-font-weight;
+            color: @service-card-location-color;
+        }
+
+        &-name {
+            font-size: @service-card-name-font-size;
+            font-weight: @service-card-name-font-weight;
+            line-height: @service-card-name-line-height;
+            color: @service-card-name-color;
+        }
+
+        &-info {
+            margin-top: 10px;
+            font-size: @service-card-info-font-size;
+            font-weight: @service-card-info-font-weight;
+            line-height: @service-card-info-line-height;
+            color: @service-card-info-color;
+        }
+
+        &-progress {
+            margin-top: 14px;
+
+            &-label {
+                font-weight: 400;
+                font-size: 10px;
+                color: #5A5A5A;
+                line-height: 0;
+                margin-bottom: 4px;
+            }
+
+            &-chart {
+                gap: 10px;
+
+                &-progress {
+                    height: 8px;
+                }
+
+                &-value {
+                    font-weight: 500;
+                    font-size: 10px;
+                    color: black;
+                }
+            }
+        }
+
+        &-details {
+            margin-top: 5px;
+            row-gap: 5px;
+
+            &-separator {
+                font-size: @service-card-details-separator-font-size;
+                font-weight: @service-card-details-separator-font-weight;
+                color: @service-card-details-separator-color;
+                padding: @service-card-details-separator-padding;
+            }
+
+            &-price {
+                font-size: @service-card-details-price-font-size;
+                font-weight: @service-card-details-price-font-weight;
+                color: @service-card-details-price-color;
+            }
+
+            &-composition {
+                font-size: @service-card-details-composition-font-size;
+                font-weight: @service-card-details-composition-font-weight;
+                color: @service-card-details-composition-color;
+            }
+
+            &-reviews {
+                &-value {
+                    font-size: @service-card-details-reviews-value-font-size;
+                    font-weight: @service-card-details-reviews-value-font-weight;
+                    color: @service-card-details-reviews-value-color;
+                }
+
+                &-star {
+                    font-size: @service-card-details-reviews-star-font-size;
+                    color: @service-card-details-reviews-star-color;
+                    padding: @service-card-details-reviews-star-padding;
+                }
+
+                &-count {
+                    font-size: @service-card-details-reviews-count-font-size;
+                    font-weight: @service-card-details-reviews-count-font-weight;
+                    color: @service-card-details-reviews-count-color;
+                }
+            }
+        }
+
+        &-description {
+            margin-top: 10px;
+            font-size: @service-card-description-font-size;
+            font-weight: @service-card-description-font-weight;
+            line-height: @service-card-description-line-height;
+            color: @service-card-description-color;
+        }
+
+        &-people {
+            &-avatar {
+                width: 27px;
+                height: 27px;
+                margin-right: 5px;
+            }
+
+            &-fullname {
+                font-size: @service-card-people-fullname-font-size;
+                font-weight: @service-card-people-fullname-font-weight;
+                color: @service-card-people-fullname-color;
+            }
+
+            &-cluster {
+                &-avatar {
+                    width: 18px;
+                    height: 18px;
+                }
+
+                &-count {
+                    margin-left: 10px;
+                    font-size: @service-card-people-cluster-count-font-size;
+                    font-weight: @service-card-people-cluster-count-font-weight;
+                    color: @service-card-people-cluster-count-color;
+                }
+            }
+        }
+    }
+
+    &-actions {
+        margin-top: 15px;
+        padding: @service-card-padding;
+        font-size: @service-card-action-font-size;
+        font-weight: @service-card-action-font-weight;
+        line-height: @service-card-action-line-height;
+
+        button {
+            height: 34px;
+
+            &.btn-light {
+                background-color: @service-card-action-button-background-color;
+            }
+        }
+    }
+}
