@@ -238,6 +238,7 @@ import * as moment from 'moment';
 
         case 'coaching':
           if (!this.options || !('isShowHeading' in this.options)) this.sanitizedOptions.isShowHeading = false;
+          if (!this.options || !('isShowInfo' in this.options)) this.sanitizedOptions.isShowInfo = true;
           if (!this.options || !('isShowDetailsPrice' in this.options)) this.sanitizedOptions.isShowDetailsPrice = true;
           if (!this.options || !('isShowDetailsComposition' in this.options)) this.sanitizedOptions.isShowDetailsComposition = true;
           if (!this.options || !('isShowDetailsReviews' in this.options)) this.sanitizedOptions.isShowDetailsReviews = true;
