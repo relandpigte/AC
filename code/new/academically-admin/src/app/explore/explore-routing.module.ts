@@ -48,6 +48,13 @@ import { ExploreComponent } from './explore.component';
                     (m) => m.ExploreForYouModule
                   ),
               },
+              {
+                path: 'spaces',
+                loadChildren: () =>
+                  import('@app/explore/spaces/spaces.module').then(
+                    (m) => m.ExploreSpacesModule
+                  ),
+              },
               { path: '', redirectTo: 'for-you' },
               { path: '**', redirectTo: 'for-you' }
             ]
