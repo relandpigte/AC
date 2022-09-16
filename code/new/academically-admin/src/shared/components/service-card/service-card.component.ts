@@ -12,10 +12,12 @@ import * as moment from 'moment';
     styleUrls: ['./service-card.component.less']
   })
   export class ServiceCardComponent extends AppComponentBase implements OnInit {
-    @Input() shimmerType: ServiceCardType;
+    @Input() isLoading: boolean;
     @Input() options: ServiceCardOptions;
     @Input() data: any;
     @Input() actions: ServiceCardButton[];
+
+    shimmerType: number = 0;
 
     sanitized: ServiceCard;
     sanitizedOptions: ServiceCardOptions;
@@ -29,6 +31,7 @@ import * as moment from 'moment';
 
     ngOnInit(): void {
       this.sanitizeData();
+      this.setShimmerType();
     }
 
     get type(): ServiceCardType { return this.sanitized?.type ?? 'course'; }
@@ -96,6 +99,19 @@ import * as moment from 'moment';
       if (this.data instanceof WorkshopDto) return 'workshop';
       if (this.data instanceof VideoDto) return 'tutorial';
       return 'space';
+    }
+
+    private setShimmerType(): void {
+      switch(this.type) {
+        case 'article':
+          this.shimmerType = 1;
+          break;
+        case 'user':
+          this.shimmerType = 2;
+          break;
+        default:
+          this.shimmerType = 0;
+      }
     }
 
     private sanitizeData(): void {

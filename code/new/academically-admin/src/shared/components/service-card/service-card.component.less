@@ -88,6 +88,15 @@
 @service-card-action-line-height: 19.05px;
 @service-card-action-button-background-color: #EEEFF2;
 
+@bar-loader-background-color: #EFEFEF;
+@bar-loader-background-color-light: #f7f7f7;
+
+@keyframes loader {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
 :host {
     &:hover {
         .service-card {
@@ -115,7 +124,7 @@
     width: 352px;
     max-width: 352px;
 
-    transition: all 0.2s ease-in-out;;
+    transition: all 0.2s ease-in-out;
 
     &.event {
         min-height: 400px;
@@ -163,6 +172,61 @@
         min-width: 351px;
         width: 351px;
         max-width: 351px;
+    }
+
+    &-shimmer {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 99999;
+        background-color: @service-card-background-color;
+        border-radius: @service-card-radius;
+
+        &-bar {
+            animation: loader 1s infinite linear;
+            background: linear-gradient(90deg, @bar-loader-background-color, @bar-loader-background-color-light);
+            background-size: 400% 400%;
+            width: 100%;
+            position: relative;
+            min-height: 25px;
+            border-radius: 5px;
+        }
+
+        &-img {
+            height: 158px;
+            border-radius: 0px;
+        }
+
+        &-header {
+            width: 80%;
+            margin-top: 5%;
+            margin-left: 22px;
+        }
+
+        &-title {
+            width: 65%;
+            margin-top: 15px;
+            margin-left: 22px;
+        }
+
+        &-owner {
+            position: absolute;
+            width: 35%;
+            bottom: 10%;
+            left: 22px;
+        }
+
+        &-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+
+        &-name {
+            width: 173px;
+        }
     }
 
     &-img {

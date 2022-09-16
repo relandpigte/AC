@@ -9,7 +9,7 @@
         </div>
         <div class="row align-items-center mb-5">
           <div class="col d-flex flex-wrap gap-27">
-            <app-service-card *ngFor="let d of data" [data]="d"></app-service-card>
+            <app-service-card *ngFor="let d of data" [data]="d" [isLoading]="isLoading"></app-service-card>
             <div class="flex-break"></div>
             <div class="btn btn-block btn-white flex-grow-1">Show More</div>
           </div>

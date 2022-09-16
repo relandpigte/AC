@@ -12,6 +12,8 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
 
   data: any[];
 
+  isLoading = true;
+
   constructor(
     injector: Injector,
   ) {
@@ -20,6 +22,7 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+    setTimeout(() => this.isLoading = false, 5000);
   }
 
   private loadData(): void {

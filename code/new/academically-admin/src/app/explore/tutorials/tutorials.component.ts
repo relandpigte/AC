@@ -13,6 +13,8 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
   latest: any[];
   lastMonth: any[];
 
+  isLoading = true;
+
   constructor(
     injector: Injector,
   ) {
@@ -21,6 +23,7 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
 
   ngOnInit(): void {
     this.loadData();
+    setTimeout(() => this.isLoading = false, 5000);
   }
 
   private loadData(): void {

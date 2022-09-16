@@ -13,6 +13,8 @@ export class ExploreSpacesComponent extends AppComponentBase implements OnInit {
   latest: any[];
   lastMonth: any[];
 
+  isLoading = true;
+
   constructor(
     injector: Injector,
   ) {
@@ -21,6 +23,7 @@ export class ExploreSpacesComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+    setTimeout(() => this.isLoading = false, 5000);
   }
 
   private loadData(): void {
