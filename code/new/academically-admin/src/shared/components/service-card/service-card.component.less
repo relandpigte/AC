@@ -29,6 +29,22 @@
 @service-card-info-line-height: 18px;
 @service-card-info-color: #646464;
 
+@service-card-quick-preview-font-size: 10px;
+@service-card-quick-preview-font-weight: 400;
+@service-card-quick-preview-color: #617FA9;
+@service-card-quick-preview-padding: 6px 22px 4px;
+@service-card-quick-preview-background-color: white;
+@service-card-quick-preview-border-radius: 15px;
+@service-card-quick-preview-height: 17px;
+
+@service-card-quick-preview-duration-icon-font-size: 8px;
+
+@service-card-quick-preview-duration-value-height: 17px;
+@service-card-quick-preview-duration-value-line-height: 20px;
+
+@service-card-quick-preview-composition-height: 17px;
+@service-card-quick-preview-composition-line-height: 0px;
+
 @service-card-details-separator-font-size: 12px;
 @service-card-details-separator-font-weight: 400;
 @service-card-details-separator-color: #6E84A3;
@@ -217,6 +233,36 @@
                 font-size: 12px;
                 color: #2C7BE5;
                 line-height: 12px;
+            }
+        }
+
+        &-quick-preview {
+            position: absolute;
+            top: -32px;
+            right: 0;
+
+            font-size: @service-card-quick-preview-font-size;
+            font-weight: @service-card-quick-preview-font-weight;
+            color: @service-card-quick-preview-color;
+            padding: @service-card-quick-preview-padding;
+            background-color: @service-card-quick-preview-background-color;
+            border-top-left-radius: @service-card-quick-preview-border-radius;
+            height: @service-card-quick-preview-height;
+
+            &-duration {
+                &-icon {
+                    font-size: @service-card-quick-preview-duration-icon-font-size;
+                }
+
+                &-value {
+                    height: @service-card-quick-preview-duration-value-height;
+                    line-height: @service-card-quick-preview-duration-value-line-height;
+                }
+            }
+
+            &-composition {
+                height: @service-card-quick-preview-composition-height;
+                line-height: @service-card-quick-preview-composition-line-height;
             }
         }
 

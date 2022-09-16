@@ -33,6 +33,11 @@
             <div class="service-card-body-calendar-month">{{ startDate | date: 'LLL' }}</div>
         </div>
 
+        <div *ngIf="this.sanitizedOptions?.isShowQuickPreview" class="service-card-body-quick-preview d-flex align-items-center">
+            <div *ngIf="composition?.videos === 1" class="service-card-body-quick-preview-duration d-flex align-items-center"><i class="service-card-body-quick-preview-duration-icon fas fa-play"></i><div class="service-card-body-quick-preview-duration-value ml-2">{{ compositionVideoDuration }}</div></div>
+            <div *ngIf="composition?.videos > 1" class="service-card-body-quick-preview-composition d-flex align-items-center">{{ compositionVideoString }}</div>
+        </div>
+
         <div *ngIf="this.sanitizedOptions?.isShowHeading && (location || schedule)" class="service-card-body-heading" [style.marginTop.px]="this.sanitizedOptions?.isShowCalendarCard ? 15 : 0">
             <span *ngIf="this.sanitizedOptions?.headingType === 'location' && location">{{ location }}</span>
             <span *ngIf="this.sanitizedOptions?.headingType === 'schedule' && schedule">{{ schedule }}</span>

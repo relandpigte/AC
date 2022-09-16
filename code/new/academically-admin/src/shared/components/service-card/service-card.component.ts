@@ -50,6 +50,8 @@ import * as moment from 'moment';
     get priceCurrency(): string { return this.sanitized?.price?.currency ?? 'GBP'; }
     get priceSuffix(): string { return this.sanitized?.price?.suffix; }
     get composition(): ServiceCardComposition { return this.sanitized?.composition; }
+    get compositionVideoDuration(): string { return this.composition?.durationInSec ? moment.utc(this.composition?.durationInSec * 1000).format('HH:mm:ss') : null; }
+    get compositionVideoString(): string { return `${this.composition?.videos} videos`; }
     get compositionString(): string {
       const comp = [];
       if (this.sanitized?.composition?.articles) comp.push(`${this.sanitized?.composition?.articles} articles`);
@@ -187,8 +189,8 @@ import * as moment from 'moment';
 
         case 'tutorial':
           this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
-          this.sanitized.composition.videos = 15;
-          this.sanitized.composition.durationInSec = 1325;
+          this.sanitized.composition.videos = this.randomNonZero(20);
+          this.sanitized.composition.durationInSec = this.randomNonZero(4000);
 
           this.sanitizedActions.splice(0, 0, { type: 'submit', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
           break;
