@@ -167,11 +167,11 @@
     &.user {
         min-height: 202px;
         height: 202px;
-        max-height: 202pxh;
+        max-height: 202px;
 
-        min-width: 351px;
-        width: 351px;
-        max-width: 351px;
+        min-width: 260px;
+        width: 260px;
+        max-width: 260px;
     }
 
     &-shimmer {
@@ -255,6 +255,25 @@
         padding: @service-card-padding;
         margin-top: 15px;
         position: relative;
+        margin-bottom: -5px;
+
+        &.user {
+            align-items: center;
+        }
+
+        &.user &-avatar {
+            position: relative;
+            margin-bottom: -15px;
+            top: 0px;
+        }
+
+        &.user &-name {
+            margin-top: 20px !important;
+        }
+
+        &.user &-info {
+            margin-top: 5px;
+        }
 
         &-avatar {
             position: absolute;

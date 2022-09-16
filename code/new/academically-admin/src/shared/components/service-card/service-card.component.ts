@@ -1,7 +1,7 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DefaultServiceCardActions, DefaultServiceCardOptions, ServiceCard, ServiceCardButton, ServiceCardComposition, ServiceCardDates, ServiceCardImage, ServiceCardOptions, ServiceCardPeople, ServiceCardPerson, ServiceCardPill, ServiceCardPrice, ServiceCardReview, ServiceCardRsvp, ServiceCardType } from '@shared/models/service-card.model';
-import { ArticleDto, CoachingDto, CourseDto, EventDto, VideoDto, WorkshopDto } from '@shared/service-proxies/service-proxies';
+import { DefaultServiceCardActions, DefaultServiceCardOptions, ServiceCard, ServiceCardButton, ServiceCardComposition, ServiceCardDates, ServiceCardImage, ServiceCardOptions, ServiceCardPeople, ServiceCardPerson, ServiceCardPill, ServiceCardPrice, ServiceCardReview, ServiceCardRsvp, ServiceCardType, UserServiceCardActions } from '@shared/models/service-card.model';
+import { ArticleDto, CoachingDto, CourseDto, EventDto, UserDto, VideoDto, WorkshopDto } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -88,6 +88,7 @@ import * as moment from 'moment';
       if (this.data instanceof CourseDto) return 'course';
       if (this.data instanceof WorkshopDto) return 'workshop';
       if (this.data instanceof VideoDto) return 'tutorial';
+      if (this.data instanceof UserDto) return 'user';
       return 'space';
     }
 
@@ -98,6 +99,7 @@ import * as moment from 'moment';
       if (this.data instanceof CourseDto) return 'course';
       if (this.data instanceof WorkshopDto) return 'workshop';
       if (this.data instanceof VideoDto) return 'tutorial';
+      if (this.data instanceof UserDto) return 'user';
       return 'space';
     }
 
@@ -116,14 +118,13 @@ import * as moment from 'moment';
 
     private sanitizeData(): void {
       this.sanitizedOptions = _.merge({}, DefaultServiceCardOptions, this.options);
-      this.sanitizedActions = _.merge([], DefaultServiceCardActions, this.actions);
 
       this.sanitized = {} as ServiceCard;
 
       this.sanitized.type = this.getCardType();
       this.sanitized.images = Array(this.randomNonZero(4, 1)).fill({} as ServiceCardImage).map(i => ({...i, src: `https://picsum.photos/seed/${this.uuidv4()}/500`}));
       this.sanitized.name = this.data?.name;
-      this.sanitized.info = this.data?.description;
+      this.sanitized.info = this.data?.description ?? this.data?.about;
       this.sanitized.description = this.data?.description;
       this.sanitized.location = this.data?.location;
 
@@ -139,10 +140,12 @@ import * as moment from 'moment';
 
       this.sanitized.owner = {} as ServiceCardPerson;
       this.sanitized.owner.avatar = {} as ServiceCardImage;
-      this.sanitized.owner.avatar.src = this.data.creatorUser?.profilePictureUrl ?? `https://i.pravatar.cc/300?u=${this.data.id}`;
-      this.sanitized.owner.fullName = this.data.creatorUser?.name ?? 'Test User X';
+      this.sanitized.owner.avatar.src = this.data.creatorUser?.profilePictureUrl ?? this.data.profilePictureUrl ?? `https://i.pravatar.cc/300?u=${this.data.id}`;
+      this.sanitized.owner.fullName = this.data.creatorUser?.name?? this.data.name ??  'Test User X';
       this.sanitized.owner.isShowAvatar = true;
       this.sanitized.owner.isShowFullName = true;
+
+      this.sanitizedActions = _.merge([], this.type === 'user' ? UserServiceCardActions : DefaultServiceCardActions, this.actions);
 
       this.setValueOverrides();
       this.setOptionOverrides();
@@ -212,6 +215,8 @@ import * as moment from 'moment';
           break;
 
         case 'user':
+          this.sanitized.owner.isBannerAvatar = true;
+          this.sanitized.owner.isShowFullName = false;
           break;
 
         case 'workshop':
@@ -291,6 +296,14 @@ import * as moment from 'moment';
           break;
 
         case 'user':
+          if (!this.options || !('isShowImages' in this.options)) this.sanitizedOptions.isShowImages = false;
+          if (!this.options || !('isShowPill' in this.options)) this.sanitizedOptions.isShowPill = false;
+          if (!this.options || !('isShowInfo' in this.options)) this.sanitizedOptions.isShowInfo = true;
+          if (!this.options || !('isShowHeading' in this.options)) this.sanitizedOptions.isShowHeading = false;
+          if (!this.options || !('isShowCalendarCard' in this.options)) this.sanitizedOptions.isShowCalendarCard = false;
+          if (!this.options || !('isShowDescription' in this.options)) this.sanitizedOptions.isShowDescription = false;
+          if (!this.options || !('isShowQuickPreview' in this.options)) this.sanitizedOptions.isShowQuickPreview = false;
+          if (!this.options || !('isShowProgress' in this.options)) this.sanitizedOptions.isShowProgress = false;
           if (!this.options || !('isShowDetails' in this.options)) this.sanitizedOptions.isShowDetails = false;
           break;
 

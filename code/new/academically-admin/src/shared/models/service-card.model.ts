@@ -64,6 +64,11 @@ export const DefaultServiceCardActions: ServiceCardButton[] = [
     { type: 'share', action: 'share', icon: 'fas fa-share', class: 'btn-light' }
 ];
 
+export const UserServiceCardActions: ServiceCardButton[] = [
+    { type: 'submit', action: 'follow', label: 'Follow', class: 'btn-primary' },
+    { type: 'submit', action: 'remove', label: 'Remove', class: 'btn-light' }
+];
+
 export type ServiceCardType = 'course' | 'tutorial' | 'article' | 'event' | 'broadcast' | 'coaching' | 'workshop' | 'user' | 'space';
 export type ServiceCardButtonType = 'submit' | 'group' | 'share';
 export type HeadingType = 'location' | 'schedule';

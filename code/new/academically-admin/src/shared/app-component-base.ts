@@ -449,4 +449,15 @@ export abstract class AppComponentBase implements OnDestroy {
 
     return space;
   }
+
+  generateRandomUser(): UserDto {
+    var id = this.uuidv4();
+    var user = new UserDto();
+    user.id = this.randomNonZero(200);
+    user.name = 'Test User1';
+    user.profilePictureUrl = `https://i.pravatar.cc/300?u=${id}`;
+    user.about = `Test about this user biography.`;
+
+    return user;
+  }
 }

@@ -46,7 +46,7 @@
         </ng-container>
     </div>
 
-    <div class="service-card-body d-flex flex-column flex-grow-1 pb-0" [class.pt-0]="this.sanitizedOptions?.isShowImages" [class.mt-0]="!this.sanitizedOptions?.isShowImages">
+    <div class="service-card-body d-flex flex-column flex-grow-1 pb-0" [class.pt-0]="this.sanitizedOptions?.isShowImages" [class.mt-0]="!this.sanitizedOptions?.isShowImages"  [class.user]="type === 'user'">
         <div *ngIf="owner?.isBannerAvatar && owner?.avatar" class="service-card-body-avatar avatar">
             <img [src]="getPersonAvatarUrl(owner?.avatar)" alt="..." class="avatar-img rounded-circle" [ngClass]="[owner?.avatar?.class ? owner?.avatar?.class : '']">
         </div>
@@ -67,7 +67,7 @@
             <span *ngIf="this.sanitizedOptions?.headingType === 'schedule' && schedule">{{ schedule }}</span>
         </div>
 
-        <div class="service-card-body-name" [style.marginTop.px]="owner?.isBannerAvatar && owner?.avatar ? 15 : 5">{{ name }}</div>
+        <div class="service-card-body-name" [style.marginTop.px]="owner?.isBannerAvatar && owner?.avatar ? 15 : 5" [class.centered]="type === 'user'">{{ name }}</div>
 
         <div *ngIf="this.sanitizedOptions?.isShowInfo" class="service-card-body-info">{{ info }}</div>
 

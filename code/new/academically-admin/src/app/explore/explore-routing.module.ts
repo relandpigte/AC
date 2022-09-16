@@ -69,6 +69,13 @@ import { ExploreComponent } from './explore.component';
                     (m) => m.ExploreArticlesModule
                   ),
               },
+              {
+                path: 'users',
+                loadChildren: () =>
+                  import('@app/explore/users/users.module').then(
+                    (m) => m.ExploreUsersModule
+                  ),
+              },
               { path: '', redirectTo: 'for-you' },
               { path: '**', redirectTo: 'for-you' }
             ]
