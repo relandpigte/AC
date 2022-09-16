@@ -1,7 +1,7 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DefaultServiceCardActions, DefaultServiceCardOptions, ServiceCard, ServiceCardButton, ServiceCardComposition, ServiceCardDates, ServiceCardImage, ServiceCardOptions, ServiceCardPeople, ServiceCardPerson, ServiceCardPill, ServiceCardPrice, ServiceCardReview, ServiceCardRsvp, ServiceCardType } from '@shared/models/service-card.model';
-import { ArticleDto, CoachingDto, CourseDto, EventDto, WorkshopDto } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, CoachingDto, CourseDto, EventDto, VideoDto, WorkshopDto } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -82,7 +82,8 @@ import * as moment from 'moment';
       if (this.data instanceof CoachingDto) return 'coaching';
       if (this.data instanceof CourseDto) return 'course';
       if (this.data instanceof WorkshopDto) return 'workshop';
-      return 'course';
+      if (this.data instanceof VideoDto) return 'tutorial';
+      return 'space';
     }
 
     private getCardPillLabel(): string {
@@ -91,7 +92,8 @@ import * as moment from 'moment';
       if (this.data instanceof CoachingDto) return 'coaching';
       if (this.data instanceof CourseDto) return 'course';
       if (this.data instanceof WorkshopDto) return 'workshop';
-      return 'course';
+      if (this.data instanceof VideoDto) return 'tutorial';
+      return 'space';
     }
 
     private sanitizeData(): void {
@@ -260,12 +262,14 @@ import * as moment from 'moment';
         case 'space':
           if (!this.options || !('isShowDetailsPrice' in this.options)) this.sanitizedOptions.isShowDetailsPrice = true;
           if (!this.options || !('isShowDetailsLastActive' in this.options)) this.sanitizedOptions.isShowDetailsLastActive = true;
+          if (!this.options || !('isShowHeading' in this.options)) this.sanitizedOptions.isShowHeading = false;
           break;
 
         case 'tutorial':
           if (!this.options || !('isShowQuickPreview' in this.options)) this.sanitizedOptions.isShowQuickPreview = true;
           if (!this.options || !('isShowDetailsPrice' in this.options)) this.sanitizedOptions.isShowDetailsPrice = true;
           if (!this.options || !('isShowDetailsReviews' in this.options)) this.sanitizedOptions.isShowDetailsReviews = true;
+          if (!this.options || !('isShowHeading' in this.options)) this.sanitizedOptions.isShowHeading = false;
           break;
 
         case 'user':

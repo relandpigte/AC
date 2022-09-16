@@ -10,7 +10,7 @@ import * as moment from 'moment';
 import { Moment } from 'moment';
 import { Observable, ReplaySubject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
-import { ArticleDto, ArticleType, CoachingDto, CoachingType, CourseDto, CourseType, DocumentDto, EventDto, EventType, PricingType, UserDto, WorkshopDto, WorkshopType } from './service-proxies/service-proxies';
+import { ArticleDto, ArticleType, CoachingDto, CoachingType, CourseDto, CourseType, DocumentDto, EventDto, EventType, PricingType, UserDto, VideoDto, VideoType, WorkshopDto, WorkshopType } from './service-proxies/service-proxies';
 
 @Injectable()
 export abstract class AppComponentBase implements OnDestroy {
@@ -400,5 +400,53 @@ export abstract class AppComponentBase implements OnDestroy {
     event.creatorUser = creator;
 
     return event;
+  }
+
+  generateRandomTutorial(): VideoDto {
+    var video = new VideoDto;
+    var id = this.uuidv4();
+
+    video.id = id;
+    video.categories = 'Tutorials, Videos';
+    video.name = `Test Tutorial #${this.randomNonZero(1000)}`;
+    video.description = `Test Description #${this.randomNonZero(1000)}`;
+    video.pricingType = PricingType.FixedPrice;
+    video.price = this.randomNonZero(500);
+    video.price = this.randomNonZero(10000);
+    video.type = VideoType.VideoSeries;
+
+
+    var creator = new UserDto();
+    creator.id = this.randomNonZero(200);
+    creator.name = 'Creator User1';
+    creator.profilePictureUrl = `https://i.pravatar.cc/300?u=${id}`;
+
+    video.creatorUser = creator;
+
+    return video;
+  }
+
+  generateRandomSpace(): any {
+    let space: any = {};
+    var id = this.uuidv4();
+
+    space.id = id;
+    space.categories = 'Tutorials, Videos';
+    space.name = `This is a space title #${this.randomNonZero(1000)}`;
+    space.description = `Space Description #${this.randomNonZero(1000)}`;
+    space.pricingType = PricingType.FixedPrice;
+    space.price = this.randomNonZero(500);
+    space.price = this.randomNonZero(10000);
+    space.type = VideoType.VideoSeries;
+
+
+    var creator = new UserDto();
+    creator.id = this.randomNonZero(200);
+    creator.name = 'Creator User1';
+    creator.profilePictureUrl = `https://i.pravatar.cc/300?u=${id}`;
+
+    space.creatorUser = creator;
+
+    return space;
   }
 }
