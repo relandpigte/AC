@@ -62,6 +62,13 @@ import { ExploreComponent } from './explore.component';
                     (m) => m.ExploreTutorialsModule
                   ),
               },
+              {
+                path: 'articles',
+                loadChildren: () =>
+                  import('@app/explore/articles/articles.module').then(
+                    (m) => m.ExploreArticlesModule
+                  ),
+              },
               { path: '', redirectTo: 'for-you' },
               { path: '**', redirectTo: 'for-you' }
             ]
