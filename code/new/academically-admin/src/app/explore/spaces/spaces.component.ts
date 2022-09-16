@@ -24,8 +24,8 @@ export class ExploreSpacesComponent extends AppComponentBase implements OnInit {
   }
 
   private loadData(): void {
-    this.latest = this.generateData(6, 1);
-    this.lastMonth = this.generateData(6, 1);
+    this.latest = this.generateData(6, 7);
+    this.lastMonth = this.generateData(6, 7);
   }
 
   private generateData(count?: number, type?: number): any[] {
@@ -37,6 +37,8 @@ export class ExploreSpacesComponent extends AppComponentBase implements OnInit {
         case 3: return this.generateRandomCoaching();
         case 4: return this.generateRandomCourse();
         case 5: return this.generateRandomWorkshop();
+        case 6: return this.generateRandomTutorial();
+        case 7: return this.generateRandomSpace();
       }
     });
     return data;
