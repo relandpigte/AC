@@ -55,6 +55,13 @@ import { ExploreComponent } from './explore.component';
                     (m) => m.ExploreSpacesModule
                   ),
               },
+              {
+                path: 'tutorials',
+                loadChildren: () =>
+                  import('@app/explore/tutorials/tutorials.module').then(
+                    (m) => m.ExploreTutorialsModule
+                  ),
+              },
               { path: '', redirectTo: 'for-you' },
               { path: '**', redirectTo: 'for-you' }
             ]
