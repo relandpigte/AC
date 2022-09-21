@@ -211,6 +211,30 @@ namespace Academically.Services.Videos
             await _studentVideoRepository.DeleteAsync(sv => sv.VideoId == id);
             await _videosRepository.DeleteAsync(id);
         }
+
+        public async Task<Dictionary<string, List<VideoDto>>> GetByTopicAsync()
+        {
+            var videos = await _videosRepository.GetAll()
+                .Where(e => e.ParentId == null)
+                .Include(e => e.Children)
+                .OrderByDescending(v => v.CreationTime)
+                .Select(e => ObjectMapper.Map<VideoDto>(e))
+                .ToListAsync(); 
+            return GroupByTopic<VideoDto>(videos);
+        }
+
+        public async Task<Dictionary<string, List<VideoDto>>> GetByDatesAsync(DateGrains grain, int itemsPerGroup = 6)
+        {
+            var videos = await _videosRepository.GetAll()
+                .Where(e => e.ParentId == null)
+                .Include(e => e.Children)
+                .OrderByDescending(v => v.CreationTime)
+                .Select(e => ObjectMapper.Map<VideoDto>(e))
+                .ToListAsync();
+            return GroupByDateRange<VideoDto>(videos, grain, itemsPerGroup);
+        }
+
+
     }
 }
 

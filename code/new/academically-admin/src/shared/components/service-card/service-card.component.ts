@@ -1,3 +1,4 @@
+import { VideoType } from './../../service-proxies/service-proxies';
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DefaultServiceCardActions, DefaultServiceCardOptions, ServiceCard, ServiceCardButton, ServiceCardComposition, ServiceCardDates, ServiceCardImage, ServiceCardOptions, ServiceCardPeople, ServiceCardPerson, ServiceCardPill, ServiceCardPrice, ServiceCardReview, ServiceCardRsvp, ServiceCardSlots, ServiceCardType, UserServiceCardActions } from '@shared/models/service-card.model';
@@ -93,6 +94,20 @@ import * as moment from 'moment';
       else if (this.data instanceof WorkshopDto) return 'workshop';
       else if (this.data instanceof VideoDto) return 'tutorial';
       else if (this.data instanceof UserDto) return 'user';
+      return 'space';
+    }
+
+    private getCardPillLabel(): string {
+      if (this.data instanceof EventDto) return 'event';
+      if (this.data instanceof ArticleDto) return 'article';
+      if (this.data instanceof CoachingDto) return 'coaching';
+      if (this.data instanceof CourseDto) return 'course';
+      if (this.data instanceof WorkshopDto) return 'workshop';
+      if (this.data instanceof VideoDto){
+        if (this.data?.type == VideoType.VideoSeries) return 'tutorial series';
+        return 'tutorial';
+      }
+      if (this.data instanceof UserDto) return 'user';
       return 'space';
     }
 

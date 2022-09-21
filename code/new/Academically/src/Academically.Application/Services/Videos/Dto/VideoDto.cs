@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
+using Abp.Domain.Entities.Auditing;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Domain.Interfaces;
 using Academically.Services.Documents.Dto;
 using Academically.Users.Dto;
 
 namespace Academically.Services.Videos.Dto
 {
 	[AutoMap(typeof(Video))]
-	public class VideoDto : EntityDto<Guid>
+	public class VideoDto : CreationAuditedEntityDto<Guid>, IHasTopic, IHasCreationTime
 	{
 		public VideoType Type { get; set; }
 		public string Name { get; set; }
