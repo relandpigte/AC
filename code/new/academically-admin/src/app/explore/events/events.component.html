@@ -2,6 +2,11 @@
   <div class="header">
     <div class="container-fluid p-0">
       <div class="header-body">
+        <div class="row align-items-center mb-5">
+          <div class="col d-flex flex-wrap justify-content-between">
+            <app-service-card *ngFor="let f of featured" [data]="f" [isLoading]="isLoading" [isFeatured]="true"></app-service-card>
+          </div>
+        </div>
         <div class="row align-items-center">
           <div class="col d-flex flex-wrap gap-15">
             <h3>Latest</h3>

@@ -26,6 +26,7 @@ export interface ServiceCardOptions {
     isShowPill?: boolean;
     isShowInfo?: boolean;
     isShowHeading?: boolean;
+    isShowHeadingSlots?: boolean;
     isShowCalendarCard?: boolean;
     headingType?: HeadingType;
     isShowDescription?: boolean;
@@ -35,9 +36,11 @@ export interface ServiceCardOptions {
     isShowDetailsPrice?: boolean;
     isShowDetailsComposition?: boolean;
     isShowDetailsLastActive?: boolean;
+    isShowDetailsSlots?: boolean;
     isShowDetailsRsvp?: boolean;
     isShowDetailsReviews?: boolean;
     isDetailsReviewsSeparated?: boolean;
+    isShowActions?: boolean;
 }
 
 export const DefaultServiceCardOptions: ServiceCardOptions = {
@@ -45,6 +48,7 @@ export const DefaultServiceCardOptions: ServiceCardOptions = {
     isShowPill: true,
     isShowInfo: false,
     isShowHeading: true,
+    isShowHeadingSlots: false,
     isShowCalendarCard: false,
     headingType: 'location',
     isShowDescription: false,
@@ -54,9 +58,11 @@ export const DefaultServiceCardOptions: ServiceCardOptions = {
     isShowDetailsPrice: false,
     isShowDetailsComposition: false,
     isShowDetailsLastActive: false,
+    isShowDetailsSlots: false,
     isShowDetailsRsvp: false,
     isShowDetailsReviews: false,
-    isDetailsReviewsSeparated: false
+    isDetailsReviewsSeparated: false,
+    isShowActions: true
 }
 
 export const DefaultServiceCardActions: ServiceCardButton[] = [
@@ -69,7 +75,7 @@ export const UserServiceCardActions: ServiceCardButton[] = [
     { type: 'submit', action: 'remove', label: 'Remove', class: 'btn-light' }
 ];
 
-export type ServiceCardType = 'course' | 'tutorial' | 'article' | 'event' | 'broadcast' | 'coaching' | 'workshop' | 'user' | 'space';
+export type ServiceCardType = 'course' | 'tutorial' | 'article' | 'event' | 'broadcast' | 'coaching' | 'workshop' | 'user' | 'space' | 'feature';
 export type ServiceCardButtonType = 'submit' | 'group' | 'share';
 export type HeadingType = 'location' | 'schedule';
 

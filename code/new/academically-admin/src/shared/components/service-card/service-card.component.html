@@ -1,4 +1,4 @@
-<div class="service-card d-flex flex-column" [ngClass]="[type]">
+<div class="service-card d-flex flex-column" [ngClass]="[isFeatured ? 'feature' : type]">
     <div *ngIf="isLoading" class="service-card-shimmer flex-grow-1 d-flex flex-column">
         <ng-container *ngIf="shimmerType === 0">
             <div class="service-card-shimmer-img service-card-shimmer-bar"></div>
@@ -21,6 +21,10 @@
                 </div>
             </div>
         </ng-container>
+    </div>
+
+    <div *ngIf="isFeatured" class="service-card-bg-img bg-center w-100 h-100" [ngStyle]="{ 'background-image': 'url(\'' + images[0].src + '\')' }" [ngClass]="[images[0].class ? images[0].class : '']">
+        <div class="service-card-bg-img-veil w-100 h-100"></div>
     </div>
 
     <div *ngIf="this.sanitizedOptions?.isShowPill" class="service-card-pill" [ngClass]="[pillClass]" [innerHTML]="pillLabel | titlecase"></div>
@@ -46,16 +50,28 @@
         </ng-container>
     </div>
 
-    <div class="service-card-body d-flex flex-column flex-grow-1 pb-0" [class.pt-0]="this.sanitizedOptions?.isShowImages" [class.mt-0]="!this.sanitizedOptions?.isShowImages"  [class.user]="type === 'user'">
+    <div class="service-card-body d-flex flex-column flex-grow-1 pb-0"
+        [class.pt-0]="this.sanitizedOptions?.isShowImages"
+        [class.mt-0]="!this.sanitizedOptions?.isShowImages"
+        [class.user]="type === 'user'"
+        [class.owner-img-sm]="isFeatured && !owner?.isBannerAvatar"
+        [class.owner-img-lg]="isFeatured && owner?.isBannerAvatar">
+
         <div *ngIf="owner?.isBannerAvatar && owner?.avatar" class="service-card-body-avatar avatar">
             <img [src]="getPersonAvatarUrl(owner?.avatar)" alt="..." class="avatar-img rounded-circle" [ngClass]="[owner?.avatar?.class ? owner?.avatar?.class : '']">
         </div>
 
-        <div *ngIf="this.sanitizedOptions?.isShowCalendarCard" class="service-card-body-calendar d-flex flex-column flex-nowrap justify-content-center align-content-center align-items-center">
-            <div class="service-card-body-calendar-label">{{ 'From' | localize }}</div>
-            <div class="service-card-body-calendar-date">{{ startDate | date: 'd' }}</div>
-            <div class="service-card-body-calendar-month">{{ startDate | date: 'LLL' }}</div>
-        </div>
+        <ng-container *ngIf="this.sanitizedOptions?.isShowCalendarCard">
+            <div *ngIf="!isFeatured" class="service-card-body-calendar d-flex flex-column flex-nowrap justify-content-center align-content-center align-items-center">
+                <div class="service-card-body-calendar-label">{{ 'From' | localize }}</div>
+                <div class="service-card-body-calendar-date">{{ startDate | date: 'd' }}</div>
+                <div class="service-card-body-calendar-month">{{ startDate | date: 'LLL' }}</div>
+            </div>
+            <div *ngIf="isFeatured" class="service-card-body-calendar d-flex flex-nowrap justify-content-center align-content-center align-items-center">
+                <div class="service-card-body-calendar-label">{{ 'Starting' | localize }}</div>
+                <div class="service-card-body-calendar-date">{{ startDate | date: 'dd MMM yyyy' }}</div>
+            </div>
+        </ng-container>
 
         <div *ngIf="this.sanitizedOptions?.isShowQuickPreview" class="service-card-body-quick-preview d-flex align-items-center">
             <div *ngIf="composition?.videos === 1" class="service-card-body-quick-preview-duration d-flex align-items-center"><i class="service-card-body-quick-preview-duration-icon fas fa-play"></i><div class="service-card-body-quick-preview-duration-value ml-2">{{ compositionVideoDuration }}</div></div>
@@ -65,6 +81,7 @@
         <div *ngIf="this.sanitizedOptions?.isShowHeading && (location || schedule)" class="service-card-body-heading" [style.marginTop.px]="this.sanitizedOptions?.isShowCalendarCard ? 15 : 0">
             <span *ngIf="this.sanitizedOptions?.headingType === 'location' && location">{{ location }}</span>
             <span *ngIf="this.sanitizedOptions?.headingType === 'schedule' && schedule">{{ schedule }}</span>
+            <span *ngIf="this.sanitizedOptions?.isShowHeadingSlots" class="service-card-body-heading-slots">{{ slotsCount }} {{ slotsUnit }} left</span>
         </div>
 
         <div class="service-card-body-name" [style.marginTop.px]="owner?.isBannerAvatar && owner?.avatar ? 15 : 5" [class.centered]="type === 'user'">{{ name }}</div>
@@ -82,6 +99,12 @@
         </div>
 
         <div *ngIf="this.sanitizedOptions?.isShowDetails" class="service-card-body-details d-flex flex-row flex-wrap align-items-center">
+            <ng-container *ngIf="isFeatured && this.sanitized?.type">
+                <div class="service-card-body-details-type">{{ this.sanitized.type | titlecase }}</div>
+                <div class="service-card-body-details-separator">|</div>
+            </ng-container>
+
+
             <div *ngIf="this.sanitizedOptions?.isShowDetailsPrice" class="service-card-body-details-price">{{ priceValue | currency: priceCurrency }}<span *ngIf="priceSuffix"> {{ priceSuffix }}</span></div>
 
             <ng-container *ngIf="this.sanitizedOptions?.isShowDetailsComposition && composition">
@@ -92,6 +115,11 @@
             <ng-container *ngIf="this.sanitizedOptions?.isShowDetailsLastActive && lastActive">
                 <div class="service-card-body-details-separator">|</div>
                 <div class="service-card-body-details-composition">{{ lastActive }}</div>
+            </ng-container>
+
+            <ng-container *ngIf="this.sanitizedOptions?.isShowDetailsSlots && slots">
+                <div class="service-card-body-details-separator">|</div>
+                <div class="service-card-body-details-slots">{{ slotsCount }} {{ slotsUnit }} left</div>
             </ng-container>
 
             <ng-container *ngIf="this.sanitizedOptions?.isShowDetailsRsvp && rsvp">
@@ -133,11 +161,10 @@
                 </div>
                 <div *ngIf="people?.isShowCount && people?.people && people?.avatarStackCount > 0" class="service-card-body-people-cluster-count">+ {{ people?.people?.length - people?.avatarStackCount }}</div>
             </ng-container>
-
         </div>
     </div>
 
-    <div class="service-card-actions d-flex flex-row align-items-center pt-0" style="gap: 10px">
+    <div *ngIf="this.sanitizedOptions?.isShowActions && sanitizedActions" class="service-card-actions d-flex flex-row align-items-center pt-0" style="gap: 10px">
         <ng-container *ngFor="let action of sanitizedActions">
             <ng-container [ngSwitch]="action.type">
                 <ng-container *ngSwitchCase="'save'">

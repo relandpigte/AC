@@ -1,6 +1,6 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DefaultServiceCardActions, DefaultServiceCardOptions, ServiceCard, ServiceCardButton, ServiceCardComposition, ServiceCardDates, ServiceCardImage, ServiceCardOptions, ServiceCardPeople, ServiceCardPerson, ServiceCardPill, ServiceCardPrice, ServiceCardReview, ServiceCardRsvp, ServiceCardType, UserServiceCardActions } from '@shared/models/service-card.model';
+import { DefaultServiceCardActions, DefaultServiceCardOptions, ServiceCard, ServiceCardButton, ServiceCardComposition, ServiceCardDates, ServiceCardImage, ServiceCardOptions, ServiceCardPeople, ServiceCardPerson, ServiceCardPill, ServiceCardPrice, ServiceCardReview, ServiceCardRsvp, ServiceCardSlots, ServiceCardType, UserServiceCardActions } from '@shared/models/service-card.model';
 import { ArticleDto, CoachingDto, CourseDto, EventDto, UserDto, VideoDto, WorkshopDto } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
@@ -13,6 +13,7 @@ import * as moment from 'moment';
   })
   export class ServiceCardComponent extends AppComponentBase implements OnInit {
     @Input() isLoading: boolean;
+    @Input() isFeatured: boolean;
     @Input() options: ServiceCardOptions;
     @Input() data: any;
     @Input() actions: ServiceCardButton[];
@@ -40,7 +41,7 @@ import * as moment from 'moment';
     get info(): string { return this.sanitized?.info; }
     get description(): string { return this.sanitized?.description; }
     get pillClass(): string { return this.sanitized?.pill?.class ?? ''; }
-    get pillLabel(): string { return this.sanitized?.pill?.label ?? ''; }
+    get pillLabel(): string { return this.isFeatured ? 'feature' : this.sanitized?.pill?.label ?? ''; }
     get location(): string { return this.sanitized?.location ?? null; }
     get schedule(): string {
       if (!this.sanitized?.dates?.startDate) return null;
@@ -67,6 +68,9 @@ import * as moment from 'moment';
       return comp.join(', ');
     }
     get lastActive(): string { return (!!this.sanitized?.dates?.lastActiveDate) ? this.l('LastActive', this.convertMomentToDateAgo(this.sanitized.dates.lastActiveDate)) : null; }
+    get slots(): ServiceCardSlots { return this.sanitized?.slots; }
+    get slotsCount(): number { return this.sanitized?.slots?.left ?? 0; }
+    get slotsUnit(): string { return this.sanitized?.slots?.unit ?? 'space'; }
     get rsvp(): ServiceCardRsvp { return this.sanitized?.rsvp; }
     get rsvpString(): string {
       const rsvp = [];
@@ -83,27 +87,20 @@ import * as moment from 'moment';
 
     private getCardType(): ServiceCardType {
       if (this.data instanceof EventDto) return 'event';
-      if (this.data instanceof ArticleDto) return 'article';
-      if (this.data instanceof CoachingDto) return 'coaching';
-      if (this.data instanceof CourseDto) return 'course';
-      if (this.data instanceof WorkshopDto) return 'workshop';
-      if (this.data instanceof VideoDto) return 'tutorial';
-      if (this.data instanceof UserDto) return 'user';
-      return 'space';
-    }
-
-    private getCardPillLabel(): string {
-      if (this.data instanceof EventDto) return 'event';
-      if (this.data instanceof ArticleDto) return 'article';
-      if (this.data instanceof CoachingDto) return 'coaching';
-      if (this.data instanceof CourseDto) return 'course';
-      if (this.data instanceof WorkshopDto) return 'workshop';
-      if (this.data instanceof VideoDto) return 'tutorial';
-      if (this.data instanceof UserDto) return 'user';
+      else if (this.data instanceof ArticleDto) return 'article';
+      else if (this.data instanceof CoachingDto) return 'coaching';
+      else if (this.data instanceof CourseDto) return 'course';
+      else if (this.data instanceof WorkshopDto) return 'workshop';
+      else if (this.data instanceof VideoDto) return 'tutorial';
+      else if (this.data instanceof UserDto) return 'user';
       return 'space';
     }
 
     private setShimmerType(): void {
+      if (this.isFeatured) {
+        this.shimmerType = 1;
+        return;
+      }
       switch(this.type) {
         case 'article':
           this.shimmerType = 1;
@@ -129,7 +126,7 @@ import * as moment from 'moment';
       this.sanitized.location = this.data?.location;
 
       this.sanitized.pill = {} as ServiceCardPill;
-      this.sanitized.pill.label =  this.sanitized.pill.label ?? this.getCardPillLabel();
+      this.sanitized.pill.label =  this.sanitized.pill.label ?? this.sanitized.type;
 
       this.sanitized.dates = {} as ServiceCardDates;
       this.sanitized.dates.startDate = this.data.eventDateTime ?? this.data.workshopDateTime;
@@ -220,6 +217,8 @@ import * as moment from 'moment';
           break;
 
         case 'workshop':
+          this.sanitized.slots = { left: this.randomNonZero(23, 2) } as ServiceCardSlots;
+
           this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
           this.sanitized.composition.workshops = 5;
 
@@ -239,6 +238,11 @@ import * as moment from 'moment';
             } as ServiceCardButton
           );
           break;
+      }
+
+      if (this.isFeatured) {
+        this.sanitized.people = null;
+        this.sanitizedActions = null;
       }
     }
 
@@ -308,6 +312,7 @@ import * as moment from 'moment';
           break;
 
         case 'workshop':
+          if (!this.options || !('isShowHeadingSlots' in this.options)) this.sanitizedOptions.isShowHeadingSlots = true;
           if (!this.options || !('headingType' in this.options)) this.sanitizedOptions.headingType = 'schedule';
           if (!this.options || !('isShowCalendarCard' in this.options)) this.sanitizedOptions.isShowCalendarCard = true;
           if (!this.options || !('isShowDetailsPrice' in this.options)) this.sanitizedOptions.isShowDetailsPrice = true;
@@ -315,6 +320,25 @@ import * as moment from 'moment';
           if (!this.options || !('isShowDetailsRsvp' in this.options)) this.sanitizedOptions.isShowDetailsRsvp = true;
           break;
       }
+
+      if (this.isFeatured) {
+        if (!this.options || !('isShowImages' in this.options)) this.sanitizedOptions.isShowImages = false;
+        if (!this.options || !('isShowHeading' in this.options)) this.sanitizedOptions.isShowHeading = false;
+        if (!this.options || !('isShowHeadingSlots' in this.options)) this.sanitizedOptions.isShowHeadingSlots = false;
+        if (!this.options || !('isShowInfo' in this.options)) this.sanitizedOptions.isShowInfo = false;
+        if (!this.options || !('isShowDescription' in this.options)) this.sanitizedOptions.isShowDescription = false;
+        if (!this.options || !('isShowDetailsPrice' in this.options)) this.sanitizedOptions.isShowDetailsPrice = true;
+        if (!this.options || !('isShowDetailsComposition' in this.options)) this.sanitizedOptions.isShowDetailsComposition = true;
+        if (!this.options || !('isShowDetailsReviews' in this.options)) this.sanitizedOptions.isShowDetailsReviews = true;
+        if (!this.options || !('isShowDetailsSlots' in this.options)) this.sanitizedOptions.isShowDetailsSlots = true;
+        if (!this.options || !('isShowDetailsRsvp' in this.options)) this.sanitizedOptions.isShowDetailsRsvp = false;
+        if (!this.options || !('isDetailsReviewsSeparated' in this.options)) this.sanitizedOptions.isDetailsReviewsSeparated = false;
+        if (!this.options || !('isShowActions' in this.options)) this.sanitizedOptions.isShowActions = false;
+      }
+    }
+
+    getPersonAvatarUrl(image: ServiceCardImage): string {
+        return image?.src ?? 'assets/themes/dashkit/img/covers/profile-cover-1.jpg';
     }
 
     private setTempValues(): void {
@@ -322,14 +346,10 @@ import * as moment from 'moment';
       if (!this.sanitized.location) this.sanitized.location = '12 XX, XXXX, LONDON, WC1, 5DY';
       if (!this.sanitized.dates.lastActiveDate) this.sanitized.dates.lastActiveDate = moment().subtract(this.randomNonZero(600, 2), 'minutes');
       if (!this.sanitized.reviews) this.sanitized.reviews = { value: 5, hasStar: true, count: 253 } as ServiceCardReview;
-      if (this.sanitized?.type === 'course' && this.randomNonZero(10) % 2 === 0) {
+      if (this.sanitized?.type === 'course' && !this.isFeatured && this.randomNonZero(10) % 2 === 0) {
         this.sanitized.progress = this.randomNonZero(100);
         if (!this.options || !('isShowProgress' in this.options)) this.sanitizedOptions.isShowProgress = true;
         if (!this.options || !('isShowDetails' in this.options)) this.sanitizedOptions.isShowDetails = false;
       }
-    }
-
-    getPersonAvatarUrl(image: ServiceCardImage): string {
-        return image?.src ?? 'assets/themes/dashkit/img/covers/profile-cover-1.jpg';
     }
   }

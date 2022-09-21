@@ -19,6 +19,10 @@
 @service-card-location-font-size: 12px;
 @service-card-location-font-weight: 400;
 
+@service-card-heading-slots-color: #E63757;
+@service-card-heading-slots-font-size: 12px;
+@service-card-heading-slots-font-weight: 400;
+
 @service-card-name-font-size: 22px;
 @service-card-name-font-weight: 600;
 @service-card-name-line-height: 26px;
@@ -50,9 +54,17 @@
 @service-card-details-separator-color: #6E84A3;
 @service-card-details-separator-padding: 0 10px;
 
+@service-card-details-type-font-size: 14px;
+@service-card-details-type-font-weight: 400;
+@service-card-details-type-color: #12263F;
+
 @service-card-details-price-font-size: 14px;
 @service-card-details-price-font-weight: 400;
 @service-card-details-price-color: #12263F;
+
+@service-card-details-slots-font-size: 12px;
+@service-card-details-slots-font-weight: 400;
+@service-card-details-slots-color: #6E84A3;
 
 @service-card-details-composition-font-size: 12px;
 @service-card-details-composition-font-weight: 400;
@@ -108,7 +120,7 @@
 .service-card {
     background-color: @service-card-background-color;
     position: relative;
-    box-sizing: content-box;
+    box-sizing: border-box;
 
     display: flex;
     flex-direction: column;
@@ -125,6 +137,89 @@
     max-width: 352px;
 
     transition: all 0.2s ease-in-out;
+
+    &.feature {
+        min-height: 237px;
+        height: 237px;
+        max-height: 237px;
+
+        min-width: 543px;
+        width: 543px;
+        max-width: 543px;
+
+        * { color: white; }
+    }
+
+    &.feature &-body {
+        justify-content: flex-end;
+        margin-bottom: 22px;
+
+        &-name { margin-top: 0px; }
+        &-info { margin-top: 0px; }
+        &-details { margin-top: 0px; }
+        &-description { margin-top: 0px; }
+        &-spacer { display: none; }
+
+        &-calendar {
+            top: 22px;
+            left: 22px;
+            height: 21px;
+            width: auto;
+            border-radius: 46px;
+            padding: 0 14px;
+
+            &-label {
+                color: #2C7BE5;
+                text-transform: uppercase;
+                font-size: 12px;
+                font-weight: 400;
+            }
+
+            &-date {
+                color: #646464;
+                text-transform: uppercase;
+                font-size: 12px;
+                font-weight: 400;
+            }
+        }
+
+        &-avatar {
+            position: absolute;
+            top: unset;
+            left: unset;
+            right: unset;
+            bottom: 10px;
+        }
+
+        &-people {
+            &-avatar {
+                width: 30px;
+                height: 30px;
+                position: absolute;
+                -webkit-transform: translateY(-43px);
+                -moz-transform: translateY(-43px);
+                -ms-transform: translateY(-43px);
+                -o-transform: translateY(-43px);
+                transform: translateY(-43px);
+            }
+        }
+    }
+
+    &.feature &-body.owner-img-sm &-body {
+        &-name { margin-left: 40px; }
+        &-info { margin-left: 40px; }
+        &-details { margin-left: 40px; }
+        &-description { margin-left: 40px; }
+        &-people-fullname { margin-left: 40px; }
+    }
+
+    &.feature &-body.owner-img-lg &-body {
+        &-name { margin-left: 70px; }
+        &-info { margin-left: 70px; }
+        &-details { margin-left: 70px; }
+        &-description { margin-left: 70px; }
+        &-people-fullname { margin-left: 70px; }
+    }
 
     &.event {
         min-height: 400px;
@@ -226,6 +321,18 @@
 
         &-name {
             width: 173px;
+        }
+    }
+
+    &-bg-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+        border-radius: @service-card-radius;
+
+        &-veil {
+            background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5));
         }
     }
 
@@ -354,6 +461,14 @@
             font-size: @service-card-location-font-size;
             font-weight: @service-card-location-font-weight;
             color: @service-card-location-color;
+
+            &-slots {
+                text-transform: none;
+                margin-left: 10px;
+                font-size: @service-card-heading-slots-font-size;
+                font-weight: @service-card-heading-slots-font-weight;
+                color: @service-card-heading-slots-color;
+            }
         }
 
         &-name {
@@ -408,10 +523,22 @@
                 padding: @service-card-details-separator-padding;
             }
 
+            &-type {
+                font-size: @service-card-details-type-font-size;
+                font-weight: @service-card-details-type-font-weight;
+                color: @service-card-details-type-color;
+            }
+
             &-price {
                 font-size: @service-card-details-price-font-size;
                 font-weight: @service-card-details-price-font-weight;
                 color: @service-card-details-price-color;
+            }
+
+            &-slots {
+                font-size: @service-card-details-slots-font-size;
+                font-weight: @service-card-details-slots-font-weight;
+                color: @service-card-details-slots-color;
             }
 
             &-composition {

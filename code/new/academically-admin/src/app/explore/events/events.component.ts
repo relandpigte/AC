@@ -10,6 +10,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 })
 export class ExploreEventsComponent extends AppComponentBase implements OnInit {
 
+  featured: any[];
   latest: any[];
   lastMonth: any[];
 
@@ -23,10 +24,11 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    setTimeout(() => this.isLoading = false, 5000);
+    setTimeout(() => this.isLoading = false, this.randomNonZero(5000, 500));
   }
 
   private loadData(): void {
+    this.featured = this.generateData(2);
     this.latest = this.generateData(6, 1);
     this.lastMonth = this.generateData(6, 1);
   }
