@@ -1,3 +1,5 @@
+import { FeaturedCarouselComponent } from './../../shared/components/featured-carousel/featured-carousel.component';
+import { CarouselWrapperComponent } from './../../shared/components/carousel-wrapper/carousel-wrapper.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '@shared/shared.module';
@@ -31,6 +33,7 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { WhiteboardComponent } from './components/whiteboard/whiteboard.component';
 import { PopoverModule } from 'ngx-bootstrap/popover';
+import {CarouselModule} from 'primeng/carousel';
 
 @NgModule({
   declarations: [
@@ -47,6 +50,8 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
     FixedHeightDirective,
     BottomScrollerDirective,
     SidebarCollapseDirective,
+    CarouselWrapperComponent,
+    FeaturedCarouselComponent
   ],
   imports: [
     CommonModule,
@@ -68,6 +73,7 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
     NgxMaskModule.forRoot(),
     CalendarModule,
     PopoverModule.forRoot(),
+    CarouselModule
   ],
   exports: [
     SharedModule,
@@ -99,6 +105,9 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
     WhiteboardComponent,
     CalendarModule,
     PopoverModule,
+    CarouselWrapperComponent,
+    CarouselModule,
+    FeaturedCarouselComponent
   ],
 })
 export class AppSharedModule { }

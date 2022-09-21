@@ -1,0 +1,17 @@
+<div *ngIf="items && items?.length > 0" class="row align-items-center mb-5">
+  <div class="col d-flex flex-wrap gap-27">
+    <app-service-card
+      *ngFor="let d of items; let i = index" [data]="d"
+      [isLoading]="isLoading"
+      [ngClass]="{'page-active': isItemInPage(i) }">
+    </app-service-card>
+    <div class="btn-carousel btn-prev" *ngIf="!isFirstPage()">
+      <i class="fa fa-arrow-circle-left icon-carousel icon-prev"
+      (click)="onPrevClick()"></i>
+    </div>
+    <div class="btn-carousel btn-next" *ngIf="!isLastPage()">
+      <i class="fa fa-arrow-circle-right icon-carousel icon-next"
+      (click)="onNextClick()"></i>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+// ::ng-deep .p-carousel-next.p-link.p-ripple {
+//     min-height: 100px;
+//     min-width: 100px;
+// }
+
+// ::ng-deep .p-carousel-next.p-link.p-ripple {
+//     min-height: 100px;
+//     min-width: 100px;
+// }
+
+// ::ng-deep .p-carousel-prev-icon, .p-carousel-next-icon {
+//     font-size: 50px;
+// }
+
+// ::ng-deep .p-carousel-item {
+//     padding-left: 10px;
+//     padding-right: 10px;
+// }
+
+::ng-deep .hidden {
+    visibility: hidden;
+}
+
+::ng-deep .p-carousel-container {
+    padding: 0;
+    position: relative;
+
+    .p-carousel-next {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+
+    }
+
+    .p-carousel-prev {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+        z-index: 999;
+    }
+
+
+}
+
+

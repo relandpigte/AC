@@ -4,16 +4,10 @@
       <div class="header-body">
         <div class="row align-items-center">
           <div class="col d-flex flex-wrap gap-15">
-            <h3>Latest</h3>
+            <h3>Carousel</h3>
           </div>
         </div>
-        <div class="row align-items-center mb-5">
-          <div class="col d-flex flex-wrap gap-27">
-            <app-service-card *ngFor="let d of latest" [data]="d" [isLoading]="isLoading"></app-service-card>
-            <div class="flex-break"></div>
-            <div class="btn btn-block btn-white flex-grow-1">Show More</div>
-          </div>
-        </div>
+        <app-carousel [items]="latest" [isInfiteScroll]="false"></app-carousel>
         <div class="row align-items-center">
           <div class="col d-flex flex-wrap gap-15">
             <h3>Last Month</h3>
