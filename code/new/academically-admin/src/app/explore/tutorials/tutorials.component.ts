@@ -1,6 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
+import { VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-explore-tutorials',
@@ -14,9 +15,11 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
   lastMonth: any[];
 
   isLoading = true;
+  data: { [key: string]: VideoDto[] };
 
   constructor(
     injector: Injector,
+    private _videoService: VideosServiceProxy
   ) {
     super(injector);
   }
@@ -29,6 +32,11 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
   private loadData(): void {
     this.latest = this.generateData(6, 6);
     this.lastMonth = this.generateData(6, 6);
+    this._videoService.getByTopic().subscribe(result => {
+      this.data = result;
+      console.log('TUTORIALS ----> ', result);
+      console.log('DATA ----> ', this.data);
+    })
   }
 
   private generateData(count?: number, type?: number): any[] {
