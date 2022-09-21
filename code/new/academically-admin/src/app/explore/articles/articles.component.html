@@ -7,6 +7,9 @@
             <h3>Latest</h3>
           </div>
         </div>
+        <div class="row">
+          <app-carousel [items]="latest" [isInfiteScroll]="false"></app-carousel>
+        </div>
         <div class="row align-items-center mb-5">
           <div class="col d-flex flex-wrap gap-26">
             <app-service-card *ngFor="let d of latest" [data]="d" [isLoading]="isLoading"></app-service-card>

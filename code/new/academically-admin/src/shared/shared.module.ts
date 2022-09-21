@@ -38,7 +38,7 @@ import { PasswordToggleComponent } from './components/password-toggle/password-t
     CommonModule,
     RouterModule,
     NgxPaginationModule,
-    BsDatepickerModule.forRoot(),
+    BsDatepickerModule.forRoot()
   ],
   declarations: [
     LocalizePipe,

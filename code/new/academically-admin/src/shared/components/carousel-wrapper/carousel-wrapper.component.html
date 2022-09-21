@@ -1,0 +1,14 @@
+<p-carousel [value]="items"
+    [numVisible]="visibleItems" [numScroll]="numScroll"
+    [circular]="circular"
+    [autoplayInterval]="autoplayInterval"
+    [indicatorsContentClass]="'hidden'"
+    (onPage)="onPage($event)"
+    [responsiveOptions]="responsiveOptions"
+    >
+  <ng-template let-content pTemplate="item">
+
+    <app-service-card [data]="content" [ngClass]="{'item-active': expression}"></app-service-card>
+
+  </ng-template>
+</p-carousel>

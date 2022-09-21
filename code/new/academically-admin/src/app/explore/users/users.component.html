@@ -8,6 +8,9 @@
           </div>
         </div>
         <div class="row align-items-center mb-5">
+          <app-carousel [items]="latest" [isInfiteScroll]="true"></app-carousel>
+        </div>
+        <div class="row align-items-center mb-5">
           <div class="col d-flex flex-wrap gap-22">
             <app-service-card *ngFor="let d of latest" [data]="d" [isLoading]="isLoading"></app-service-card>
             <div class="flex-break"></div>
