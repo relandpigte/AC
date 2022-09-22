@@ -28,7 +28,7 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
   }
 
   private loadData(): void {
-    this.featured = this.generateData(2);
+    this.featured = this.generateData(5);
     this.latest = this.generateData(6, 1);
     this.lastMonth = this.generateData(6, 1);
   }
