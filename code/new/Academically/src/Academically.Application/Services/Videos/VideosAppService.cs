@@ -8,6 +8,7 @@ using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Extensions;
 using Academically.Services.Videos.Dto;
 using Microsoft.EntityFrameworkCore;
 
@@ -219,8 +220,9 @@ namespace Academically.Services.Videos
                 .Include(e => e.Children)
                 .OrderByDescending(v => v.CreationTime)
                 .Select(e => ObjectMapper.Map<VideoDto>(e))
-                .ToListAsync(); 
-            return GroupByTopic<VideoDto>(videos);
+                .ToListAsync();
+                
+            return videos.GroupByTopicExt();
         }
 
         public async Task<Dictionary<string, List<VideoDto>>> GetByDatesAsync(DateGrains grain, int itemsPerGroup = 6)
@@ -231,7 +233,7 @@ namespace Academically.Services.Videos
                 .OrderByDescending(v => v.CreationTime)
                 .Select(e => ObjectMapper.Map<VideoDto>(e))
                 .ToListAsync();
-            return GroupByDateRange<VideoDto>(videos, grain, itemsPerGroup);
+            return videos.GroupByDateRangeExt(grain, itemsPerGroup);
         }
 
 
