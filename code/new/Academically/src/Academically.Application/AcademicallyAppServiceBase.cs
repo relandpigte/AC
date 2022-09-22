@@ -72,43 +72,29 @@ namespace Academically
             const int maxItems = 10;
             itemsPerGroup = itemsPerGroup > maxItems ? maxItems : itemsPerGroup;
 
-            var dateRanges = new List<string>();
+            return list.GroupBy(x => new { DateRange = ToDateRangeString(x.CreationTime, grain) })
+                                .Select(x => new
+                                {
+                                    Range = x.Key.DateRange,
+                                    Items = list.Where(l => x.Key.DateRange.Equals(ToDateRangeString(l.CreationTime, grain))).Take(itemsPerGroup).ToList()
+                                })
+                                .ToDictionary(key => key.Range, value => value.Items);
 
-            var result = new Dictionary<string, List<DtoType>>();
+        }
+
+        private string ToDateRangeString(DateTime date, DateGrains grain)
+        {
             switch (grain)
             {
                 case DateGrains.Daily:
-                    dateRanges = list.GroupBy(x => new { DateRange = CreateDailyRangeString(x.CreationTime) }).Select(x => x.Key.DateRange).ToList();
-                    foreach (var range in dateRanges)
-                    {
-                        var dtoList = list.Where(x => range.Equals(CreateDailyRangeString(x.CreationTime))).Take(itemsPerGroup).ToList();
-                        result.Add(range, dtoList);
-                    }
-                    break;
-
+                    return CreateDailyRangeString(date);
                 case DateGrains.Weekly:
-                    dateRanges = list.GroupBy(x => new { DateRange = CreateWeekRangeString(x.CreationTime) }).Select(x => x.Key.DateRange).ToList();
-                    foreach (var range in dateRanges)
-                    {
-                        var dtoList = list.Where(x => range.Equals(CreateWeekRangeString(x.CreationTime))).Take(itemsPerGroup).ToList();
-                        result.Add(range, dtoList);
-                    }
-                    break;
-
+                    return CreateWeekRangeString(date);
                 case DateGrains.Monthly:
-                    dateRanges = list.GroupBy(x => new { DateRange = CreateMonthRangeString(x.CreationTime) }).Select(x => x.Key.DateRange).ToList();
-                    foreach (var range in dateRanges)
-                    {
-                        var dtoList = list.Where(x => range.Equals(CreateMonthRangeString(x.CreationTime))).Take(itemsPerGroup).ToList();
-                        result.Add(range, dtoList);
-                    }
-                    break;
-
+                    return CreateMonthRangeString(date);
                 default:
-                    break;
+                    return String.Empty;
             }
-
-            return result;
         }
 
         private string CreateDailyRangeString(DateTime date)
