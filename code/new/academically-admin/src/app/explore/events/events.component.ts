@@ -1,8 +1,11 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DateGrains, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
-import { takeUntil } from 'rxjs/operators';
+import { DateGrains, EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { finalize, takeUntil } from 'rxjs/operators';
+
+import * as moment from 'moment';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-explore-events',
@@ -12,9 +15,9 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class ExploreEventsComponent extends AppComponentBase implements OnInit {
 
-  featured: any[];
-  latest: any[];
-  lastMonth: any[];
+  featured: EventDto[] = Array(5).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
+  latest: EventDto[] = Array(3).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
+  lastMonth: EventDto[] = Array(3).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
 
   isLoading = true;
 
@@ -27,32 +30,23 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    setTimeout(() => this.isLoading = false, this.randomNonZero(5000, 500));
   }
 
   private loadData(): void {
+    this.isLoading = true;
     this._eventsService.getByDates(DateGrains.Monthly, 6)
       .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isLoading = false))
       .subscribe(events => {
-        console.error('@@@ events: ', events);
+        this.latest = [];
+        this.lastMonth = [];
+        Object.keys(events).forEach(range => {
+          const [startDate] = range.split(' - ');
+          if (moment().diff(moment(startDate), 'months'))
+            this.lastMonth = _.concat(this.lastMonth, events[range]);
+          else
+            this.latest = _.concat(this.latest, events[range]);
+        });
       });
-
-    this.featured = this.generateData(5, 1);
-    this.latest = this.generateData(6, 1);
-    this.lastMonth = this.generateData(6, 1);
-  }
-
-  private generateData(count?: number, type?: number): any[] {
-    let data = Array(count).fill([]).map(() => {
-      const dataType = this.randomNonZero(6);
-      switch(type ?? dataType) {
-        case 1: return this.generateRandomEvent();
-        case 2: return this.generateRandomArticle();
-        case 3: return this.generateRandomCoaching();
-        case 4: return this.generateRandomCourse();
-        case 5: return this.generateRandomWorkshop();
-      }
-    });
-    return data;
   }
 }

@@ -134,7 +134,7 @@ import * as moment from 'moment';
       this.sanitized = {} as ServiceCard;
 
       this.sanitized.type = this.getCardType();
-      this.sanitized.images = Array(this.randomNonZero(4, 1)).fill({} as ServiceCardImage).map(i => ({...i, src: `https://picsum.photos/seed/${this.uuidv4()}/500`}));
+      this.sanitized.images = [{ src: this.data.thumbnailImageUrl ?? 'assets/img/img-placeholder.png' }];
       this.sanitized.name = this.data?.name;
       this.sanitized.info = this.data?.description ?? this.data?.about;
       this.sanitized.description = this.data?.description;
@@ -152,8 +152,8 @@ import * as moment from 'moment';
 
       this.sanitized.owner = {} as ServiceCardPerson;
       this.sanitized.owner.avatar = {} as ServiceCardImage;
-      this.sanitized.owner.avatar.src = this.data.creatorUser?.profilePictureUrl ?? this.data.profilePictureUrl ?? `https://i.pravatar.cc/300?u=${this.data.id}`;
-      this.sanitized.owner.fullName = this.data.creatorUser?.name?? this.data.name ??  'Test User X';
+      this.sanitized.owner.avatar.src = this.data?.creatorUser?.profilePictureUrl ?? this.data.profilePictureUrl ?? `https://i.pravatar.cc/300?u=${this.data.id}`;
+      this.sanitized.owner.fullName = this.data?.creatorUser?.fullName?? this.data.fullName ??  'Anonymous';
       this.sanitized.owner.isShowAvatar = true;
       this.sanitized.owner.isShowFullName = true;
 
@@ -195,17 +195,7 @@ import * as moment from 'moment';
           break;
 
         case 'event':
-          this.sanitizedActions.splice(0, 0,
-            {
-              type: 'group',
-              label: 'RSVP',
-              class: 'btn-primary',
-              buttons: [
-                { type: 'submit', action: 'interested', label: 'Interested' } as ServiceCardButton,
-                { type: 'submit', action: 'going', label: 'Going' } as ServiceCardButton
-              ]
-            } as ServiceCardButton
-          );
+          this.sanitizedActions.splice(0, 0, { type: 'submit', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
           break;
 
         case 'space':
@@ -358,8 +348,10 @@ import * as moment from 'moment';
 
     private setTempValues(): void {
       if (!this.sanitized) return;
-      if (!this.sanitized.location) this.sanitized.location = '12 XX, XXXX, LONDON, WC1, 5DY';
-      if (!this.sanitized.dates.lastActiveDate) this.sanitized.dates.lastActiveDate = moment().subtract(this.randomNonZero(600, 2), 'minutes');
+      if (this.isFeatured) {
+        this.sanitized.images = Array(this.randomNonZero(4, 1)).fill({} as ServiceCardImage).map(i => ({...i, src: `https://picsum.photos/seed/${this.uuidv4()}/500`}));
+      }
+
       if (!this.sanitized.reviews) this.sanitized.reviews = { value: 5, hasStar: true, count: 253 } as ServiceCardReview;
       if (this.sanitized?.type === 'course' && !this.isFeatured && this.randomNonZero(10) % 2 === 0) {
         this.sanitized.progress = this.randomNonZero(100);

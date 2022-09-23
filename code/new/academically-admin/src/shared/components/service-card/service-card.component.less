@@ -160,9 +160,16 @@
 
         &-name { margin-top: 0px; }
         &-info { margin-top: 0px; }
-        &-details { margin-top: 0px; }
         &-description { margin-top: 0px; }
         &-spacer { display: none; }
+
+        &-details {
+            margin-top: 0px;
+            * {
+                font-size: 12px;
+                line-height: 15.24px;
+            }
+        }
 
         &-calendar {
             top: 22px;
@@ -192,7 +199,7 @@
             top: unset;
             left: unset;
             right: unset;
-            bottom: 10px;
+            bottom: 0;
         }
 
         &-people {
@@ -200,11 +207,16 @@
                 width: 30px;
                 height: 30px;
                 position: absolute;
-                -webkit-transform: translateY(-43px);
-                -moz-transform: translateY(-43px);
-                -ms-transform: translateY(-43px);
-                -o-transform: translateY(-43px);
-                transform: translateY(-43px);
+                -webkit-transform: translateY(-30px);
+                -moz-transform: translateY(-30px);
+                -ms-transform: translateY(-30px);
+                -o-transform: translateY(-30px);
+                transform: translateY(-30px);
+            }
+
+            &-fullname {
+                font-size: 12px;
+                line-height: 15.24px;
             }
         }
     }

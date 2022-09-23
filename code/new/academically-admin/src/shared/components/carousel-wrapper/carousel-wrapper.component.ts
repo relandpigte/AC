@@ -61,7 +61,7 @@ export class CarouselWrapperComponent extends AppComponentBase implements OnInit
     }
     this.pages = this.items.length - this.visibleItems;
     this.renderCarousel = false;
-    setTimeout(() => this.renderCarousel = true);
+    setTimeout(() => this.renderCarousel = true, 1);
   }
 
   onPage(event: any): void {

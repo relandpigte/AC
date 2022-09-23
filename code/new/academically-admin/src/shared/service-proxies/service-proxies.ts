@@ -32451,6 +32451,7 @@ export class EventDto implements IEventDto {
     audienceEnableOffersTabDisplayNoOfPurchases: boolean;
     audienceEnableHandoutsTab: boolean;
     autoAdmitAttendees: boolean;
+    thumbnailImageUrl: string | undefined;
     parent: EventDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;
@@ -32560,6 +32561,7 @@ export class EventDto implements IEventDto {
             this.audienceEnableOffersTabDisplayNoOfPurchases = _data["audienceEnableOffersTabDisplayNoOfPurchases"];
             this.audienceEnableHandoutsTab = _data["audienceEnableHandoutsTab"];
             this.autoAdmitAttendees = _data["autoAdmitAttendees"];
+            this.thumbnailImageUrl = _data["thumbnailImageUrl"];
             this.parent = _data["parent"] ? EventDto.fromJS(_data["parent"]) : <any>undefined;
             this.thumbnailDocument = _data["thumbnailDocument"] ? DocumentDto.fromJS(_data["thumbnailDocument"]) : <any>undefined;
             this.language = _data["language"] ? SpokenLanguageDto.fromJS(_data["language"]) : <any>undefined;
@@ -32673,6 +32675,7 @@ export class EventDto implements IEventDto {
         data["audienceEnableOffersTabDisplayNoOfPurchases"] = this.audienceEnableOffersTabDisplayNoOfPurchases;
         data["audienceEnableHandoutsTab"] = this.audienceEnableHandoutsTab;
         data["autoAdmitAttendees"] = this.autoAdmitAttendees;
+        data["thumbnailImageUrl"] = this.thumbnailImageUrl;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
         data["language"] = this.language ? this.language.toJSON() : <any>undefined;
@@ -32786,6 +32789,7 @@ export interface IEventDto {
     audienceEnableOffersTabDisplayNoOfPurchases: boolean;
     audienceEnableHandoutsTab: boolean;
     autoAdmitAttendees: boolean;
+    thumbnailImageUrl: string | undefined;
     parent: EventDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;

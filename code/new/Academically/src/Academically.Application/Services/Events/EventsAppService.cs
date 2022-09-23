@@ -15,6 +15,7 @@ using Academically.Authorization.Users;
 using Academically.Configuration;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Domain.Services.Documents;
 using Academically.Extensions;
 using Academically.Services.Events.Dto;
 using Academically.Services.Events.Enums;
@@ -34,6 +35,7 @@ namespace Academically.Services.Events
         private readonly ISettingManager _settingManager;
         private readonly IRepository<EventPoll, Guid> _eventPollRepository;
         private readonly IRepository<EventResource, Guid> _eventResourceRepository;
+        private readonly IDocumentsDomainService _documentsDomainService;
 
         public EventsAppService(
             RoleManager roleManager,
@@ -44,7 +46,8 @@ namespace Academically.Services.Events
             ISettingManager settingManager,
             IRepository<Event, Guid> repository,
             IRepository<EventPoll, Guid> eventPollRepository,
-            IRepository<EventResource, Guid> eventResourceRepository
+            IRepository<EventResource, Guid> eventResourceRepository,
+            IDocumentsDomainService documentsDomainService
             ) : base(repository)
         {
             LocalizationSourceName = AcademicallyConsts.LocalizationSourceName;
@@ -57,6 +60,7 @@ namespace Academically.Services.Events
             _settingManager = settingManager;
             _eventPollRepository = eventPollRepository;
             _eventResourceRepository = eventResourceRepository;
+            _documentsDomainService = documentsDomainService;
         }
 
         protected override IQueryable<Event> CreateFilteredQuery(PagedEventResultRequestDto input)
@@ -91,9 +95,18 @@ namespace Academically.Services.Events
             var events = await Repository.GetAll()
                 .Where(e => e.ParentId == null)
                 .Include(e => e.Children)
+                .Include(e => e.ThumbnailDocument)
+                .Include(e => e.CreatorUser)
                 .OrderByDescending(v => v.CreationTime)
                 .Select(e => ObjectMapper.Map<EventDto>(e))
                 .ToListAsync();
+
+            foreach (var evt in events)
+            {
+                if (evt.ThumbnailDocumentId.HasValue)
+                    evt.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(evt.ThumbnailDocumentId.Value);
+            }
+
             return events.GroupByTopicExt();
         }
 
@@ -102,9 +115,18 @@ namespace Academically.Services.Events
             var events = await Repository.GetAll()
                 .Where(e => e.ParentId == null)
                 .Include(e => e.Children)
+                .Include(e => e.ThumbnailDocument)
+                .Include(e => e.CreatorUser)
                 .OrderByDescending(v => v.CreationTime)
                 .Select(e => ObjectMapper.Map<EventDto>(e))
                 .ToListAsync();
+
+            foreach (var evt in events)
+            {
+                if (evt.ThumbnailDocumentId.HasValue)
+                    evt.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(evt.ThumbnailDocumentId.Value);
+            }
+
             return events.GroupByDateRangeExt(grain, itemsPerGroup);
         }
 

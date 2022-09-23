@@ -107,6 +107,8 @@ namespace Academically.Services.Events.Dto
 
         public long CreatorUserId { get; set; }
 
+        public string ThumbnailImageUrl { get; set; }
+
         public EventDto Parent { get; set; }
         public DocumentDto ThumbnailDocument { get; set; }
         public SpokenLanguageDto Language { get; set; }
