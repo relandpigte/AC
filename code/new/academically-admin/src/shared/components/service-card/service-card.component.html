@@ -58,7 +58,7 @@
         [class.owner-img-lg]="isFeatured && owner?.isBannerAvatar">
 
         <div *ngIf="owner?.isBannerAvatar && owner?.avatar" class="service-card-body-avatar avatar">
-            <img [src]="getPersonAvatarUrl(owner?.avatar)" alt="..." class="avatar-img rounded-circle" [ngClass]="[owner?.avatar?.class ? owner?.avatar?.class : '']">
+            <img [src]="owner.avatar.src" alt="..." class="avatar-img rounded-circle" [ngClass]="[owner.avatar.class ? owner.avatar.class : '']">
         </div>
 
         <ng-container *ngIf="this.sanitizedOptions?.isShowCalendarCard">
@@ -147,7 +147,7 @@
         <div class="service-card-body-people d-flex flex-row align-items-center">
             <ng-container *ngIf="owner" >
                 <div *ngIf="owner?.isShowAvatar && !owner?.isBannerAvatar && owner?.avatar" class="service-card-body-people-avatar avatar avatar-xs">
-                    <img [src]="getPersonAvatarUrl(owner?.avatar)" alt="..." class="avatar-img rounded-circle" [ngClass]="[owner?.avatar?.class ? owner?.avatar?.class : '']">
+                    <img [src]="owner.avatar.src" alt="..." class="avatar-img rounded-circle" [ngClass]="[owner.avatar.class ? owner.avatar.class : '']">
                 </div>
 
                 <div *ngIf="owner?.isShowFullName && owner?.fullName" class="service-card-body-people-fullname">{{ owner?.fullName | titlecase }}</div>
@@ -157,9 +157,11 @@
 
             <ng-container *ngIf="people">
                 <div *ngIf="people?.isShowAvatars && people?.people && people?.avatarStackCount > 0" class="service-card-body-people-cluster avatar-group">
-                    <div *ngFor="let p of people?.people?.slice(0, people?.avatarStackCount)" class="service-card-body-people-cluster-avatar avatar avatar-xs">
-                        <img [src]="getPersonAvatarUrl(p.avatar)" alt="..." class="avatar-img rounded-circle" [ngClass]="[p.avatar?.class ? p.avatar?.class : '']">
-                    </div>
+                    <ng-container *ngFor="let p of people?.people?.slice(0, people?.avatarStackCount)">
+                        <div *if="p.avatar" class="service-card-body-people-cluster-avatar avatar avatar-xs">
+                            <img [src]="p.avatar.src" alt="..." class="avatar-img rounded-circle" [ngClass]="[p.avatar.class ? p.avatar.class : '']">
+                        </div>
+                    </ng-container>
                 </div>
                 <div *ngIf="people?.isShowCount && people?.people && people?.avatarStackCount > 0" class="service-card-body-people-cluster-count">+ {{ people?.people?.length - people?.avatarStackCount }}</div>
             </ng-container>

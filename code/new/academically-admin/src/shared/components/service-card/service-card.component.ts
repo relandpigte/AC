@@ -97,20 +97,6 @@ import * as moment from 'moment';
       return 'space';
     }
 
-    private getCardPillLabel(): string {
-      if (this.data instanceof EventDto) return 'event';
-      if (this.data instanceof ArticleDto) return 'article';
-      if (this.data instanceof CoachingDto) return 'coaching';
-      if (this.data instanceof CourseDto) return 'course';
-      if (this.data instanceof WorkshopDto) return 'workshop';
-      if (this.data instanceof VideoDto){
-        if (this.data?.type == VideoType.VideoSeries) return 'tutorial series';
-        return 'tutorial';
-      }
-      if (this.data instanceof UserDto) return 'user';
-      return 'space';
-    }
-
     private setShimmerType(): void {
       if (this.isFeatured) {
         this.shimmerType = 1;
@@ -152,7 +138,7 @@ import * as moment from 'moment';
 
       this.sanitized.owner = {} as ServiceCardPerson;
       this.sanitized.owner.avatar = {} as ServiceCardImage;
-      this.sanitized.owner.avatar.src = this.data?.creatorUser?.profilePictureUrl ?? this.data.profilePictureUrl ?? `https://i.pravatar.cc/300?u=${this.data.id}`;
+      this.sanitized.owner.avatar.src = this.data?.creatorUser?.profilePictureUrl ?? this.data.profilePictureUrl ?? 'assets/img/avatar-placeholder.png';
       this.sanitized.owner.fullName = this.data?.creatorUser?.fullName?? this.data.fullName ??  'Anonymous';
       this.sanitized.owner.isShowAvatar = true;
       this.sanitized.owner.isShowFullName = true;
@@ -340,10 +326,6 @@ import * as moment from 'moment';
         if (!this.options || !('isDetailsReviewsSeparated' in this.options)) this.sanitizedOptions.isDetailsReviewsSeparated = false;
         if (!this.options || !('isShowActions' in this.options)) this.sanitizedOptions.isShowActions = false;
       }
-    }
-
-    getPersonAvatarUrl(image: ServiceCardImage): string {
-        return image?.src ?? 'assets/themes/dashkit/img/covers/profile-cover-1.jpg';
     }
 
     private setTempValues(): void {

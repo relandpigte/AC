@@ -306,7 +306,7 @@ export abstract class AppComponentBase implements OnDestroy {
 
     var creator = new UserDto();
     creator.id = this.randomNonZero(200);
-    creator.name = 'Creator User1';
+    creator.fullName = 'Creator User1';
     creator.profilePictureUrl = `https://i.pravatar.cc/300?u=${id}`;
 
     course.creatorUser = creator;
@@ -330,7 +330,7 @@ export abstract class AppComponentBase implements OnDestroy {
 
     var creator = new UserDto();
     creator.id = this.randomNonZero(200);
-    creator.name = 'Creator User1';
+    creator.fullName = 'Creator User1';
     creator.profilePictureUrl = `https://i.pravatar.cc/300?u=${id}`;
 
     workshop.creatorUser = creator;
@@ -351,7 +351,7 @@ export abstract class AppComponentBase implements OnDestroy {
 
     var creator = new UserDto();
     creator.id = this.randomNonZero(200);
-    creator.name = 'Creator User1';
+    creator.fullName = 'Creator User1';
     creator.profilePictureUrl = `https://i.pravatar.cc/300?u=${id}`;
 
     return article;
@@ -370,7 +370,7 @@ export abstract class AppComponentBase implements OnDestroy {
 
     var creator = new UserDto();
     creator.id = this.randomNonZero(200);
-    creator.name = 'Creator User1';
+    creator.fullName = 'Creator User1';
     creator.profilePictureUrl = `https://i.pravatar.cc/300?u=${id}`;
 
     coaching.creatorUser = creator;
@@ -394,7 +394,7 @@ export abstract class AppComponentBase implements OnDestroy {
 
     var creator = new UserDto();
     creator.id = this.randomNonZero(200);
-    creator.name = 'Creator User1';
+    creator.fullName = 'Creator User1';
     creator.profilePictureUrl = `https://i.pravatar.cc/300?u=${id}`;
 
     event.creatorUser = creator;
@@ -418,7 +418,7 @@ export abstract class AppComponentBase implements OnDestroy {
 
     var creator = new UserDto();
     creator.id = this.randomNonZero(200);
-    creator.name = 'Creator User1';
+    creator.fullName = 'Creator User1';
     creator.profilePictureUrl = `https://i.pravatar.cc/300?u=${id}`;
 
     video.creatorUser = creator;
@@ -442,7 +442,7 @@ export abstract class AppComponentBase implements OnDestroy {
 
     var creator = new UserDto();
     creator.id = this.randomNonZero(200);
-    creator.name = 'Creator User1';
+    creator.fullName = 'Creator User1';
     creator.profilePictureUrl = `https://i.pravatar.cc/300?u=${id}`;
 
     space.creatorUser = creator;
