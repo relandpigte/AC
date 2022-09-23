@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
+using Abp.Domain.Entities.Auditing;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Domain.Interfaces;
 using Academically.Services.Documents.Dto;
 
 namespace Academically.Services.Articles.Dto
 {
 	[AutoMap(typeof(Article))]
-	public class ArticleDto : EntityDto<Guid>
+	public class ArticleDto : EntityDto<Guid>, IHasTopic, IHasCreationTime
 	{
 		public ArticleType Type { get; set; }
 		public string Name { get; set; }
@@ -34,6 +36,8 @@ namespace Academically.Services.Articles.Dto
 		public Document ThumbnailDocument { get; set; }
 
 		public IEnumerable<ArticleDto> Children { get; set; }
+
+		public DateTime CreationTime { get; set; }
 
 		public ArticleDto()
 		{

@@ -1034,6 +1034,140 @@ export class ArticlesServiceProxy {
         }
         return _observableOf<void>(<any>null);
     }
+
+    /**
+     * @return Success
+     */
+    getByTopic(): Observable<{ [key: string]: ArticleDto[]; }> {
+        let url_ = this.baseUrl + "/api/services/app/Articles/GetByTopic";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByTopic(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByTopic(<any>response_);
+                } catch (e) {
+                    return <Observable<{ [key: string]: ArticleDto[]; }>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<{ [key: string]: ArticleDto[]; }>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByTopic(response: HttpResponseBase): Observable<{ [key: string]: ArticleDto[]; }> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200) {
+                result200 = {} as any;
+                for (let key in resultData200) {
+                    if (resultData200.hasOwnProperty(key))
+                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => ArticleDto.fromJS(i)) : [];
+                }
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<{ [key: string]: ArticleDto[]; }>(<any>null);
+    }
+
+    /**
+     * @param grain (optional) 0 = Daily
+    
+    1 = Weekly
+    
+    2 = Monthly
+     * @param itemsPerGroup (optional) 
+     * @return Success
+     */
+    getByDates(grain: DateGrains | undefined, itemsPerGroup: number | undefined): Observable<{ [key: string]: ArticleDto[]; }> {
+        let url_ = this.baseUrl + "/api/services/app/Articles/GetByDates?";
+        if (grain === null)
+            throw new Error("The parameter 'grain' cannot be null.");
+        else if (grain !== undefined)
+            url_ += "grain=" + encodeURIComponent("" + grain) + "&";
+        if (itemsPerGroup === null)
+            throw new Error("The parameter 'itemsPerGroup' cannot be null.");
+        else if (itemsPerGroup !== undefined)
+            url_ += "itemsPerGroup=" + encodeURIComponent("" + itemsPerGroup) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByDates(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByDates(<any>response_);
+                } catch (e) {
+                    return <Observable<{ [key: string]: ArticleDto[]; }>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<{ [key: string]: ArticleDto[]; }>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByDates(response: HttpResponseBase): Observable<{ [key: string]: ArticleDto[]; }> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200) {
+                result200 = {} as any;
+                for (let key in resultData200) {
+                    if (resultData200.hasOwnProperty(key))
+                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => ArticleDto.fromJS(i)) : [];
+                }
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<{ [key: string]: ArticleDto[]; }>(<any>null);
+    }
 }
 
 @Injectable()
@@ -5354,6 +5488,140 @@ export class CoursesServiceProxy {
     }
 
     /**
+     * @return Success
+     */
+    getByTopic(): Observable<{ [key: string]: CourseDto[]; }> {
+        let url_ = this.baseUrl + "/api/services/app/Courses/GetByTopic";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByTopic(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByTopic(<any>response_);
+                } catch (e) {
+                    return <Observable<{ [key: string]: CourseDto[]; }>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<{ [key: string]: CourseDto[]; }>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByTopic(response: HttpResponseBase): Observable<{ [key: string]: CourseDto[]; }> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200) {
+                result200 = {} as any;
+                for (let key in resultData200) {
+                    if (resultData200.hasOwnProperty(key))
+                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => CourseDto.fromJS(i)) : [];
+                }
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<{ [key: string]: CourseDto[]; }>(<any>null);
+    }
+
+    /**
+     * @param grain (optional) 0 = Daily
+    
+    1 = Weekly
+    
+    2 = Monthly
+     * @param itemsPerGroup (optional) 
+     * @return Success
+     */
+    getByDates(grain: DateGrains | undefined, itemsPerGroup: number | undefined): Observable<{ [key: string]: CourseDto[]; }> {
+        let url_ = this.baseUrl + "/api/services/app/Courses/GetByDates?";
+        if (grain === null)
+            throw new Error("The parameter 'grain' cannot be null.");
+        else if (grain !== undefined)
+            url_ += "grain=" + encodeURIComponent("" + grain) + "&";
+        if (itemsPerGroup === null)
+            throw new Error("The parameter 'itemsPerGroup' cannot be null.");
+        else if (itemsPerGroup !== undefined)
+            url_ += "itemsPerGroup=" + encodeURIComponent("" + itemsPerGroup) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByDates(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByDates(<any>response_);
+                } catch (e) {
+                    return <Observable<{ [key: string]: CourseDto[]; }>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<{ [key: string]: CourseDto[]; }>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByDates(response: HttpResponseBase): Observable<{ [key: string]: CourseDto[]; }> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200) {
+                result200 = {} as any;
+                for (let key in resultData200) {
+                    if (resultData200.hasOwnProperty(key))
+                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => CourseDto.fromJS(i)) : [];
+                }
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<{ [key: string]: CourseDto[]; }>(<any>null);
+    }
+
+    /**
      * @param name (optional) 
      * @param subtitle (optional) 
      * @param description (optional) 
@@ -8398,6 +8666,140 @@ export class EventsServiceProxy {
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    getByTopic(): Observable<{ [key: string]: EventDto[]; }> {
+        let url_ = this.baseUrl + "/api/services/app/Events/GetByTopic";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByTopic(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByTopic(<any>response_);
+                } catch (e) {
+                    return <Observable<{ [key: string]: EventDto[]; }>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<{ [key: string]: EventDto[]; }>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByTopic(response: HttpResponseBase): Observable<{ [key: string]: EventDto[]; }> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200) {
+                result200 = {} as any;
+                for (let key in resultData200) {
+                    if (resultData200.hasOwnProperty(key))
+                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => EventDto.fromJS(i)) : [];
+                }
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<{ [key: string]: EventDto[]; }>(<any>null);
+    }
+
+    /**
+     * @param grain (optional) 0 = Daily
+    
+    1 = Weekly
+    
+    2 = Monthly
+     * @param itemsPerGroup (optional) 
+     * @return Success
+     */
+    getByDates(grain: DateGrains | undefined, itemsPerGroup: number | undefined): Observable<{ [key: string]: EventDto[]; }> {
+        let url_ = this.baseUrl + "/api/services/app/Events/GetByDates?";
+        if (grain === null)
+            throw new Error("The parameter 'grain' cannot be null.");
+        else if (grain !== undefined)
+            url_ += "grain=" + encodeURIComponent("" + grain) + "&";
+        if (itemsPerGroup === null)
+            throw new Error("The parameter 'itemsPerGroup' cannot be null.");
+        else if (itemsPerGroup !== undefined)
+            url_ += "itemsPerGroup=" + encodeURIComponent("" + itemsPerGroup) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByDates(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByDates(<any>response_);
+                } catch (e) {
+                    return <Observable<{ [key: string]: EventDto[]; }>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<{ [key: string]: EventDto[]; }>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByDates(response: HttpResponseBase): Observable<{ [key: string]: EventDto[]; }> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200) {
+                result200 = {} as any;
+                for (let key in resultData200) {
+                    if (resultData200.hasOwnProperty(key))
+                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => EventDto.fromJS(i)) : [];
+                }
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<{ [key: string]: EventDto[]; }>(<any>null);
     }
 
     /**
@@ -23766,6 +24168,80 @@ export class VideosServiceProxy {
         }
         return _observableOf<{ [key: string]: VideoDto[]; }>(<any>null);
     }
+
+    /**
+     * @param grain (optional) 0 = Daily
+    
+    1 = Weekly
+    
+    2 = Monthly
+     * @param itemsPerGroup (optional) 
+     * @return Success
+     */
+    getByDates(grain: DateGrains | undefined, itemsPerGroup: number | undefined): Observable<{ [key: string]: VideoDto[]; }> {
+        let url_ = this.baseUrl + "/api/services/app/Videos/GetByDates?";
+        if (grain === null)
+            throw new Error("The parameter 'grain' cannot be null.");
+        else if (grain !== undefined)
+            url_ += "grain=" + encodeURIComponent("" + grain) + "&";
+        if (itemsPerGroup === null)
+            throw new Error("The parameter 'itemsPerGroup' cannot be null.");
+        else if (itemsPerGroup !== undefined)
+            url_ += "itemsPerGroup=" + encodeURIComponent("" + itemsPerGroup) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByDates(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByDates(<any>response_);
+                } catch (e) {
+                    return <Observable<{ [key: string]: VideoDto[]; }>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<{ [key: string]: VideoDto[]; }>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByDates(response: HttpResponseBase): Observable<{ [key: string]: VideoDto[]; }> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200) {
+                result200 = {} as any;
+                for (let key in resultData200) {
+                    if (resultData200.hasOwnProperty(key))
+                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => VideoDto.fromJS(i)) : [];
+                }
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<{ [key: string]: VideoDto[]; }>(<any>null);
+    }
 }
 
 @Injectable()
@@ -25674,6 +26150,7 @@ export class ArticleDto implements IArticleDto {
     parent: ArticleDto;
     thumbnailDocument: Document;
     children: ArticleDto[] | undefined;
+    creationTime: moment.Moment;
 
     constructor(data?: IArticleDto) {
         if (data) {
@@ -25711,6 +26188,7 @@ export class ArticleDto implements IArticleDto {
                 for (let item of _data["children"])
                     this.children.push(ArticleDto.fromJS(item));
             }
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
         }
     }
 
@@ -25748,6 +26226,7 @@ export class ArticleDto implements IArticleDto {
             for (let item of this.children)
                 data["children"].push(item.toJSON());
         }
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         return data; 
     }
 
@@ -25781,6 +26260,7 @@ export interface IArticleDto {
     parent: ArticleDto;
     thumbnailDocument: Document;
     children: ArticleDto[] | undefined;
+    creationTime: moment.Moment;
 }
 
 export class ArticleDtoPagedResultDto implements IArticleDtoPagedResultDto {
@@ -31284,6 +31764,13 @@ export interface ICustomAttributeTypedArgument {
     value: any | undefined;
 }
 
+/** 0 = Daily 1 = Weekly 2 = Monthly */
+export enum DateGrains {
+    Daily = 0,
+    Weekly = 1,
+    Monthly = 2,
+}
+
 /** 0 = Sunday 1 = Monday 2 = Tuesday 3 = Wednesday 4 = Thursday 5 = Friday 6 = Saturday */
 export enum DayOfWeek {
     Sunday = 0,
@@ -31873,6 +32360,8 @@ export enum EventAttributes {
 
 export class EventDto implements IEventDto {
     id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number;
     type: EventType;
     status: EventStatus;
     parentId: string | undefined;
@@ -31962,7 +32451,6 @@ export class EventDto implements IEventDto {
     audienceEnableOffersTabDisplayNoOfPurchases: boolean;
     audienceEnableHandoutsTab: boolean;
     autoAdmitAttendees: boolean;
-    creatorUserId: number;
     parent: EventDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;
@@ -31981,6 +32469,8 @@ export class EventDto implements IEventDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
             this.type = _data["type"];
             this.status = _data["status"];
             this.parentId = _data["parentId"];
@@ -32070,7 +32560,6 @@ export class EventDto implements IEventDto {
             this.audienceEnableOffersTabDisplayNoOfPurchases = _data["audienceEnableOffersTabDisplayNoOfPurchases"];
             this.audienceEnableHandoutsTab = _data["audienceEnableHandoutsTab"];
             this.autoAdmitAttendees = _data["autoAdmitAttendees"];
-            this.creatorUserId = _data["creatorUserId"];
             this.parent = _data["parent"] ? EventDto.fromJS(_data["parent"]) : <any>undefined;
             this.thumbnailDocument = _data["thumbnailDocument"] ? DocumentDto.fromJS(_data["thumbnailDocument"]) : <any>undefined;
             this.language = _data["language"] ? SpokenLanguageDto.fromJS(_data["language"]) : <any>undefined;
@@ -32093,6 +32582,8 @@ export class EventDto implements IEventDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
         data["type"] = this.type;
         data["status"] = this.status;
         data["parentId"] = this.parentId;
@@ -32182,7 +32673,6 @@ export class EventDto implements IEventDto {
         data["audienceEnableOffersTabDisplayNoOfPurchases"] = this.audienceEnableOffersTabDisplayNoOfPurchases;
         data["audienceEnableHandoutsTab"] = this.audienceEnableHandoutsTab;
         data["autoAdmitAttendees"] = this.autoAdmitAttendees;
-        data["creatorUserId"] = this.creatorUserId;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
         data["language"] = this.language ? this.language.toJSON() : <any>undefined;
@@ -32205,6 +32695,8 @@ export class EventDto implements IEventDto {
 
 export interface IEventDto {
     id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number;
     type: EventType;
     status: EventStatus;
     parentId: string | undefined;
@@ -32294,7 +32786,6 @@ export interface IEventDto {
     audienceEnableOffersTabDisplayNoOfPurchases: boolean;
     audienceEnableHandoutsTab: boolean;
     autoAdmitAttendees: boolean;
-    creatorUserId: number;
     parent: EventDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;
@@ -45415,6 +45906,8 @@ export interface IVerificationStatusDto {
 
 export class VideoDto implements IVideoDto {
     id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
     type: VideoType;
     name: string | undefined;
     description: string | undefined;
@@ -45452,6 +45945,8 @@ export class VideoDto implements IVideoDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
             this.type = _data["type"];
             this.name = _data["name"];
             this.description = _data["description"];
@@ -45493,6 +45988,8 @@ export class VideoDto implements IVideoDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
         data["type"] = this.type;
         data["name"] = this.name;
         data["description"] = this.description;
@@ -45534,6 +46031,8 @@ export class VideoDto implements IVideoDto {
 
 export interface IVideoDto {
     id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
     type: VideoType;
     name: string | undefined;
     description: string | undefined;

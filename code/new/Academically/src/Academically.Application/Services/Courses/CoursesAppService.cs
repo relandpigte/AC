@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Academically.Authorization;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
+using Academically.Extensions;
 using Academically.Services.Courses.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -79,6 +81,24 @@ namespace Academically.Services.Courses
                 }
             }
             return output;
+        }
+
+        public async Task<Dictionary<string, List<CourseDto>>> GetByTopicAsync()
+        {
+            var courses = await Repository.GetAll()
+                .OrderByDescending(v => v.CreationTime)
+                .Select(e => ObjectMapper.Map<CourseDto>(e))
+                .ToListAsync();
+            return courses.GroupByTopicExt();
+        }
+
+        public async Task<Dictionary<string, List<CourseDto>>> GetByDatesAsync(DateGrains grain, int itemsPerGroup = 6)
+        {
+            var courses = await Repository.GetAll()
+                .OrderByDescending(v => v.CreationTime)
+                .Select(e => ObjectMapper.Map<CourseDto>(e))
+                .ToListAsync();
+            return courses.GroupByDateRangeExt(grain, itemsPerGroup);
         }
 
         public async Task<CourseDto> UpdateDetails([FromForm] UpdateCourseDetailsDto input)

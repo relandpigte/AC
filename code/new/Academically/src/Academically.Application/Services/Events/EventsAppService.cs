@@ -15,6 +15,7 @@ using Academically.Authorization.Users;
 using Academically.Configuration;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Extensions;
 using Academically.Services.Events.Dto;
 using Academically.Services.Events.Enums;
 using Academically.Users.Dto;
@@ -83,6 +84,28 @@ namespace Academically.Services.Events
                     .Include(e => e.ThumbnailDocument)
                     .Include(e => e.Children);
             }
+        }
+
+        public async Task<Dictionary<string, List<EventDto>>> GetByTopicAsync()
+        {
+            var events = await Repository.GetAll()
+                .Where(e => e.ParentId == null)
+                .Include(e => e.Children)
+                .OrderByDescending(v => v.CreationTime)
+                .Select(e => ObjectMapper.Map<EventDto>(e))
+                .ToListAsync();
+            return events.GroupByTopicExt();
+        }
+
+        public async Task<Dictionary<string, List<EventDto>>> GetByDatesAsync(DateGrains grain, int itemsPerGroup = 6)
+        {
+            var events = await Repository.GetAll()
+                .Where(e => e.ParentId == null)
+                .Include(e => e.Children)
+                .OrderByDescending(v => v.CreationTime)
+                .Select(e => ObjectMapper.Map<EventDto>(e))
+                .ToListAsync();
+            return events.GroupByDateRangeExt(grain, itemsPerGroup);
         }
 
         protected override Task<Event> GetEntityByIdAsync(Guid id)

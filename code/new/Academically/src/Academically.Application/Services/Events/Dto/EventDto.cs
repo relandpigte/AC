@@ -1,7 +1,9 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
+using Abp.Domain.Entities.Auditing;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Domain.Interfaces;
 using Academically.Services.Documents.Dto;
 using Academically.Services.SpokenLanugages.Dto;
 using Academically.Users.Dto;
@@ -11,7 +13,7 @@ using System.Collections.Generic;
 namespace Academically.Services.Events.Dto
 {
     [AutoMapFrom(typeof(Event))]
-    public class EventDto : EntityDto<Guid>
+    public class EventDto : CreationAuditedEntityDto<Guid>, IHasTopic, IHasCreationTime
     {
         public EventType Type { get; set; }
         public EventStatus Status { get; set; }

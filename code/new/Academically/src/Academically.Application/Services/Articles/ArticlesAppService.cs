@@ -4,9 +4,11 @@ using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
+using Academically.Extensions;
 using Academically.Services.Articles.Dto;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -141,6 +143,30 @@ namespace Academically.Services.Articles
                 await _articlesRepository.DeleteAsync(child.Id);
             }
             await _articlesRepository.DeleteAsync(id);
+        }
+
+        public async Task<Dictionary<string, List<ArticleDto>>> GetByTopicAsync()
+        {
+            var articles = await _articlesRepository.GetAll()
+                .Where(e => e.ParentId == null)
+                .Include(e => e.Children)
+                .OrderByDescending(v => v.CreationTime)
+                .Select(e => ObjectMapper.Map<ArticleDto>(e))
+                .ToListAsync();
+
+            return articles.GroupByTopicExt();
+        }
+
+        public async Task<Dictionary<string, List<ArticleDto>>> GetByDatesAsync(DateGrains grain, int itemsPerGroup = 6)
+        {
+            var articles = await _articlesRepository.GetAll()
+                .Where(e => e.ParentId == null)
+                .Include(e => e.Children)
+                .OrderByDescending(v => v.CreationTime)
+                .Select(e => ObjectMapper.Map<ArticleDto>(e))
+                .ToListAsync();
+
+            return articles.GroupByDateRangeExt(grain, itemsPerGroup);
         }
     }
 }

@@ -67,7 +67,7 @@ export const DefaultServiceCardOptions: ServiceCardOptions = {
 
 export const DefaultServiceCardActions: ServiceCardButton[] = [
     { type: 'submit', action: 'save', label: 'Save', class: 'btn-light' },
-    { type: 'share', action: 'share', icon: 'fas fa-share', class: 'btn-light' }
+    { type: 'share', action: 'share', class: 'btn-light' }
 ];
 
 export const UserServiceCardActions: ServiceCardButton[] = [

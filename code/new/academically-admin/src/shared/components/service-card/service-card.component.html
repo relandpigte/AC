@@ -74,7 +74,9 @@
         </ng-container>
 
         <div *ngIf="this.sanitizedOptions?.isShowQuickPreview" class="service-card-body-quick-preview d-flex align-items-center">
-            <div *ngIf="composition?.videos === 1" class="service-card-body-quick-preview-duration d-flex align-items-center"><i class="service-card-body-quick-preview-duration-icon fas fa-play"></i><div class="service-card-body-quick-preview-duration-value ml-2">{{ compositionVideoDuration }}</div></div>
+            <div *ngIf="composition?.videos === 1" class="service-card-body-quick-preview-duration d-flex align-items-center">
+                <i class="service-card-body-quick-preview-duration-icon bg-center" [ngStyle]="{ 'background-image': 'url(\'assets/img/icon-play.png\')' }"></i><div class="service-card-body-quick-preview-duration-value">{{ compositionVideoDuration }}</div>
+            </div>
             <div *ngIf="composition?.videos > 1" class="service-card-body-quick-preview-composition d-flex align-items-center">{{ compositionVideoString }}</div>
         </div>
 
@@ -132,7 +134,7 @@
                 <div *ngIf="this.sanitizedOptions?.isDetailsReviewsSeparated" class="flex-break"></div>
                 <div class="service-card-body-details-reviews d-flex flex-row align-items-center">
                     <div *ngIf="reviewValue" class="service-card-body-details-reviews-value">{{ reviewValue | number:'1.1-1' }}</div>
-                    <span *ngIf="reviewStar" class="service-card-body-details-reviews-star fas fa-star"></span>
+                    <span *ngIf="reviewStar" class="service-card-body-details-reviews-star bg-center" [ngStyle]="{ 'background-image': 'url(\'assets/img/icon-star.png\')' }"></span>
                     <div *ngIf="reviewCount" class="service-card-body-details-reviews-count"> · {{ 'ReviewCount' | localize: reviewCount }}</div>
                 </div>
             </ng-container>
@@ -178,6 +180,7 @@
                     <button type="button" class="btn text-center d-flex flex-row justify-content-center align-items-center" [ngClass]="[action.class ? action.class : 'btn-light']" style="gap: 5px">
                         <span *ngIf="action.label">{{ action.label | localize}}</span>
                         <i *ngIf="action.icon" [class]="action.icon"></i>
+                        <span class="service-card-actions-share-icon bg-center" [ngStyle]="{ 'background-image': 'url(\'assets/img/icon-share.png\')' }"></span>
                     </button>
                 </ng-container>
 

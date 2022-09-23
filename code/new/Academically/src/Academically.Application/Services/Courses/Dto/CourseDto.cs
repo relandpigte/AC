@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
+using Abp.Domain.Entities.Auditing;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Domain.Interfaces;
 using Academically.Services.Documents.Dto;
 using Academically.Services.StudentCourses.Dto;
 using Academically.Users.Dto;
@@ -11,7 +13,7 @@ using Academically.Users.Dto;
 namespace Academically.Services.Courses.Dto
 {
     [AutoMap(typeof(Course))]
-    public class CourseDto : EntityDto<Guid>
+    public class CourseDto : EntityDto<Guid>, IHasTopic, IHasCreationTime
     {
 
         public string Name { get; set; }

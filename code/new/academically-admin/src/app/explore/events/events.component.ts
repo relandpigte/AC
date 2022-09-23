@@ -1,6 +1,8 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
+import { DateGrains, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-explore-events',
@@ -18,6 +20,7 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
+    private _eventsService: EventsServiceProxy
   ) {
     super(injector);
   }
@@ -28,7 +31,13 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
   }
 
   private loadData(): void {
-    this.featured = this.generateData(5);
+    this._eventsService.getByDates(DateGrains.Monthly, 6)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(events => {
+        console.error('@@@ events: ', events);
+      });
+
+    this.featured = this.generateData(5, 1);
     this.latest = this.generateData(6, 1);
     this.lastMonth = this.generateData(6, 1);
   }

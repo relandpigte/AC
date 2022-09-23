@@ -41,7 +41,9 @@
 @service-card-quick-preview-border-radius: 15px;
 @service-card-quick-preview-height: 17px;
 
-@service-card-quick-preview-duration-icon-font-size: 8px;
+@service-card-quick-preview-duration-icon-width: 9px;
+@service-card-quick-preview-duration-icon-height: 9px;
+@service-card-quick-preview-duration-icon-margin-right: 5px;
 
 @service-card-quick-preview-duration-value-height: 17px;
 @service-card-quick-preview-duration-value-line-height: 20px;
@@ -74,9 +76,9 @@
 @service-card-details-reviews-value-font-weight: 700;
 @service-card-details-reviews-value-color: #646464;
 
-@service-card-details-reviews-star-font-size: 10px;
-@service-card-details-reviews-star-padding: 0 5px;
-@service-card-details-reviews-star-color: #F5D83E;
+@service-card-details-reviews-star-width: 11px;
+@service-card-details-reviews-star-height: 11px;
+@service-card-details-reviews-star-margin: 0 4px;
 
 @service-card-details-reviews-count-font-size: 12px;
 @service-card-details-reviews-count-font-weight: 400;
@@ -443,7 +445,9 @@
 
             &-duration {
                 &-icon {
-                    font-size: @service-card-quick-preview-duration-icon-font-size;
+                    width: @service-card-quick-preview-duration-icon-width;
+                    height: @service-card-quick-preview-duration-icon-height;
+                    margin-right: @service-card-quick-preview-duration-icon-margin-right;
                 }
 
                 &-value {
@@ -557,9 +561,9 @@
                 }
 
                 &-star {
-                    font-size: @service-card-details-reviews-star-font-size;
-                    color: @service-card-details-reviews-star-color;
-                    padding: @service-card-details-reviews-star-padding;
+                    width: @service-card-details-reviews-star-width;
+                    height: @service-card-details-reviews-star-height;
+                    margin: @service-card-details-reviews-star-margin;
                 }
 
                 &-count {
@@ -621,5 +625,17 @@
                 background-color: @service-card-action-button-background-color;
             }
         }
+
+        &-share {
+            &-icon {
+                width: 14px;
+                height: 11px;
+            }
+        }
     }
+}
+
+
+.avatar > img {
+    border: 1px solid white;
 }
