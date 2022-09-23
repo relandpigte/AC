@@ -47,6 +47,8 @@ namespace Academically.Users.Dto
         public string StripeUserId { get; set; }
         public bool IsPhoneNumberConfirmed { get; set; }
 
+        public Guid? ProfilePictureDocumentId { get; set; }
+
         public DocumentDto ProfilePictureDocument { get; set; }
         public DocumentDto CoverPhotoDocument { get; set; }
 

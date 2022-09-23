@@ -105,6 +105,8 @@ namespace Academically.Services.Events
             {
                 if (evt.ThumbnailDocumentId.HasValue)
                     evt.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(evt.ThumbnailDocumentId.Value);
+                if (evt.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    evt.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(evt.CreatorUser.ProfilePictureDocumentId.Value);
             }
 
             return events.GroupByTopicExt();
@@ -125,6 +127,8 @@ namespace Academically.Services.Events
             {
                 if (evt.ThumbnailDocumentId.HasValue)
                     evt.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(evt.ThumbnailDocumentId.Value);
+                if (evt.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    evt.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(evt.CreatorUser.ProfilePictureDocumentId.Value);
             }
 
             return events.GroupByDateRangeExt(grain, itemsPerGroup);

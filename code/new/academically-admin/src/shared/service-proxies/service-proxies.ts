@@ -44245,6 +44245,7 @@ export class UserDto implements IUserDto {
     creationTime: moment.Moment;
     stripeUserId: string | undefined;
     isPhoneNumberConfirmed: boolean;
+    profilePictureDocumentId: string | undefined;
     profilePictureDocument: DocumentDto;
     coverPhotoDocument: DocumentDto;
     coverPhotoUrl: string | undefined;
@@ -44289,6 +44290,7 @@ export class UserDto implements IUserDto {
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.stripeUserId = _data["stripeUserId"];
             this.isPhoneNumberConfirmed = _data["isPhoneNumberConfirmed"];
+            this.profilePictureDocumentId = _data["profilePictureDocumentId"];
             this.profilePictureDocument = _data["profilePictureDocument"] ? DocumentDto.fromJS(_data["profilePictureDocument"]) : <any>undefined;
             this.coverPhotoDocument = _data["coverPhotoDocument"] ? DocumentDto.fromJS(_data["coverPhotoDocument"]) : <any>undefined;
             this.coverPhotoUrl = _data["coverPhotoUrl"];
@@ -44341,6 +44343,7 @@ export class UserDto implements IUserDto {
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["stripeUserId"] = this.stripeUserId;
         data["isPhoneNumberConfirmed"] = this.isPhoneNumberConfirmed;
+        data["profilePictureDocumentId"] = this.profilePictureDocumentId;
         data["profilePictureDocument"] = this.profilePictureDocument ? this.profilePictureDocument.toJSON() : <any>undefined;
         data["coverPhotoDocument"] = this.coverPhotoDocument ? this.coverPhotoDocument.toJSON() : <any>undefined;
         data["coverPhotoUrl"] = this.coverPhotoUrl;
@@ -44393,6 +44396,7 @@ export interface IUserDto {
     creationTime: moment.Moment;
     stripeUserId: string | undefined;
     isPhoneNumberConfirmed: boolean;
+    profilePictureDocumentId: string | undefined;
     profilePictureDocument: DocumentDto;
     coverPhotoDocument: DocumentDto;
     coverPhotoUrl: string | undefined;
