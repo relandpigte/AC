@@ -12,7 +12,7 @@ using Academically.Users.Dto;
 namespace Academically.Services.Videos.Dto
 {
 	[AutoMap(typeof(Video))]
-	public class VideoDto : CreationAuditedEntityDto<Guid>, IHasTopic, IHasCreationTime
+	public class VideoDto : CreationAuditedEntityDto<Guid>, IHasTopic, IHasCreationTime, IHasThumbnail
 	{
 		public VideoType Type { get; set; }
 		public string Name { get; set; }
@@ -32,8 +32,12 @@ namespace Academically.Services.Videos.Dto
 		public PricingType PricingType { get; set; }
 		public ServiceDelayType? DelayType { get; set; }
 		public string DelayValue { get; set; }
+        public int VideoCount { get; set; }
+        public int VideoLength { get; set; }
+        public float Rating { get; set; }
+        public int Reviews { get; set; }
 
-		public VideoDto Parent { get; set; }
+        public VideoDto Parent { get; set; }
 		public DocumentDto Document { get; set; }
 		public Document ThumbnailDocument { get; set; }
         public UserDto CreatorUser { get; set; }
@@ -41,6 +45,7 @@ namespace Academically.Services.Videos.Dto
         public IEnumerable<VideoDto> Children { get; set; }
 
         public int LikeCount { get; set; }
+        public string ThumbnailImageUrl { get; set; }
 
         public VideoDto()
 		{

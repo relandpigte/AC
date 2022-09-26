@@ -1,7 +1,10 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { DateGrains, VideoDto, VideoDtoPagedResultDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import * as _ from 'lodash';
+import * as moment from 'moment';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-explore-tutorials',
@@ -11,8 +14,9 @@ import { VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-pr
 })
 export class ExploreTutorialsComponent extends AppComponentBase implements OnInit {
 
-  latest: any[];
-  lastMonth: any[];
+  latest: VideoDtoPagedResultDto;
+  lastMonth: VideoDtoPagedResultDto;
+  featured: VideoDto[] = Array(5).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
 
   isLoading = true;
   data: { [key: string]: VideoDto[] };
@@ -25,18 +29,33 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
   }
 
   ngOnInit(): void {
-    this.loadData();
+    this.loadData(0);
     setTimeout(() => this.isLoading = false, 5000);
   }
 
-  private loadData(): void {
-    this.latest = this.generateData(6, 6);
-    this.lastMonth = this.generateData(6, 6);
-    this._videoService.getByTopic().subscribe(result => {
-      this.data = result;
-      console.log('TUTORIALS ----> ', result);
-      console.log('DATA ----> ', this.data);
-    })
+  private loadData(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
+    this.isLoading = true;
+    this._videoService.getByDates(this.appSession.userId, start,moving, end, DateGrains.Monthly, currentCount, 6)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe(groupedVideos => {
+        Object.keys(groupedVideos).forEach(range => {
+          const [startDate] = range.split(' - ');
+          if (moment().diff(moment(startDate), 'months'))
+            this.lastMonth = groupedVideos[range]; // _.concat(this.lastMonth, groupedVideos[range]);
+          else
+            this.latest = groupedVideos[range]; // _.concat(this.latest, groupedVideos[range]);
+
+        });
+      });
+  }
+
+  onShowMoreLatestButtonClick(): void {
+    console.log('LATEST SHOW MORE CLICKED')
+  }
+
+  onShowMoreLastMonthButtonClick(): void {
+    console.log('LAST MONTH SHOW MORE CLICKED')
   }
 
   private generateData(count?: number, type?: number): any[] {
