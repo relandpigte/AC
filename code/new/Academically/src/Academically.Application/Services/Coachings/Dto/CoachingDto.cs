@@ -1,7 +1,9 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
+using Abp.Domain.Entities.Auditing;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Domain.Interfaces;
 using Academically.Services.Documents.Dto;
 using Academically.Services.SpokenLanugages.Dto;
 using Academically.Users.Dto;
@@ -11,7 +13,7 @@ using System.Collections.Generic;
 namespace Academically.Services.Coachings.Dto
 {
     [AutoMapFrom(typeof(Coaching))]
-    public class CoachingDto : EntityDto<Guid>
+    public class CoachingDto : EntityDto<Guid>, IHasTopic, IHasThumbnail, IHasCreationTime
     {
         public CoachingType Type { get; set; }
         public CoachingStatus Status { get; set; }
@@ -93,6 +95,7 @@ namespace Academically.Services.Coachings.Dto
 
         public long CreatorUserId { get; set; }
         public DateTime CreationTime { get; set; }
+        public string ThumbnailImageUrl { get; set; }
 
         public CoachingDto Parent { get; set; }
         public DocumentDto ThumbnailDocument { get; set; }

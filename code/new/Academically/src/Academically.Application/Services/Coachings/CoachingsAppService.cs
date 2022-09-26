@@ -15,6 +15,8 @@ using Academically.Authorization.Users;
 using Academically.Configuration;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Domain.Services.Documents;
+using Academically.Extensions;
 using Academically.Services.Coachings.Dto;
 using Academically.Users.Dto;
 using Microsoft.EntityFrameworkCore;
@@ -27,12 +29,14 @@ namespace Academically.Services.Coachings
         private readonly RoleManager _roleManager;
         private readonly IRepository<User, long> _usersRepository;
         private readonly IRepository<CoachingPresenter, Guid> _coachingPresentersRepository;
+        private readonly IDocumentsDomainService _documentsDomainService;
 
         public CoachingsAppService(
             RoleManager roleManager,
             IRepository<User, long> usersRepository,
             IRepository<CoachingPresenter, Guid> coachingPresentersRepository,
-            IRepository<Coaching, Guid> repository
+            IRepository<Coaching, Guid> repository,
+            IDocumentsDomainService documentsDomainService
             ) : base(repository)
         {
             LocalizationSourceName = AcademicallyConsts.LocalizationSourceName;
@@ -40,6 +44,7 @@ namespace Academically.Services.Coachings
             _roleManager = roleManager;
             _usersRepository = usersRepository;
             _coachingPresentersRepository = coachingPresentersRepository;
+            _documentsDomainService = documentsDomainService;
         }
 
         protected override IQueryable<Coaching> CreateFilteredQuery(PagedCoachingResultRequestDto input)
@@ -141,6 +146,46 @@ namespace Academically.Services.Coachings
             ObjectMapper.Map(input, @event);
             await Repository.UpdateAsync(@event);
             return ObjectMapper.Map<CoachingDto>(@event);
+        }
+
+        public async Task<Dictionary<string, List<CoachingDto>>> GetByTopicAsync()
+        {
+            var coachings = await Repository.GetAll()
+                .Include(x => x.ThumbnailDocument)
+                .Include(x => x.CreatorUser)
+                .OrderByDescending(v => v.CreationTime)
+                .Select(x => ObjectMapper.Map<CoachingDto>(x))
+                .ToListAsync();
+
+            foreach (var coaching in coachings)
+            {
+                if (coaching.ThumbnailDocumentId.HasValue)
+                    coaching.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(coaching.ThumbnailDocumentId.Value);
+                if (coaching.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    coaching.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(coaching.CreatorUser.ProfilePictureDocumentId.Value);
+            }
+
+            return coachings.GroupByTopicExt();
+        }
+
+        public async Task<Dictionary<string, List<CoachingDto>>> GetByDatesAsync(DateGrains grain, int itemsPerGroup = 6)
+        {
+            var coachings = await Repository.GetAll()
+                .Include(x => x.ThumbnailDocument)
+                .Include(x => x.CreatorUser)
+                .OrderByDescending(v => v.CreationTime)
+                .Select(x => ObjectMapper.Map<CoachingDto>(x))
+                .ToListAsync();
+
+            foreach (var coaching in coachings)
+            {
+                if (coaching.ThumbnailDocumentId.HasValue)
+                    coaching.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(coaching.ThumbnailDocumentId.Value);
+                if (coaching.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    coaching.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(coaching.CreatorUser.ProfilePictureDocumentId.Value);
+            }
+
+            return coachings.GroupByDateRangeExt(grain, itemsPerGroup);
         }
     }
 }

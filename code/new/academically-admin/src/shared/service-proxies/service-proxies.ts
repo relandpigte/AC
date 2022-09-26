@@ -3080,6 +3080,140 @@ export class CoachingsServiceProxy {
     }
 
     /**
+     * @return Success
+     */
+    getByTopic(): Observable<{ [key: string]: CoachingDto[]; }> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/GetByTopic";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByTopic(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByTopic(<any>response_);
+                } catch (e) {
+                    return <Observable<{ [key: string]: CoachingDto[]; }>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<{ [key: string]: CoachingDto[]; }>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByTopic(response: HttpResponseBase): Observable<{ [key: string]: CoachingDto[]; }> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200) {
+                result200 = {} as any;
+                for (let key in resultData200) {
+                    if (resultData200.hasOwnProperty(key))
+                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => CoachingDto.fromJS(i)) : [];
+                }
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<{ [key: string]: CoachingDto[]; }>(<any>null);
+    }
+
+    /**
+     * @param grain (optional) 0 = Daily
+    
+    1 = Weekly
+    
+    2 = Monthly
+     * @param itemsPerGroup (optional) 
+     * @return Success
+     */
+    getByDates(grain: DateGrains | undefined, itemsPerGroup: number | undefined): Observable<{ [key: string]: CoachingDto[]; }> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/GetByDates?";
+        if (grain === null)
+            throw new Error("The parameter 'grain' cannot be null.");
+        else if (grain !== undefined)
+            url_ += "grain=" + encodeURIComponent("" + grain) + "&";
+        if (itemsPerGroup === null)
+            throw new Error("The parameter 'itemsPerGroup' cannot be null.");
+        else if (itemsPerGroup !== undefined)
+            url_ += "itemsPerGroup=" + encodeURIComponent("" + itemsPerGroup) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByDates(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByDates(<any>response_);
+                } catch (e) {
+                    return <Observable<{ [key: string]: CoachingDto[]; }>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<{ [key: string]: CoachingDto[]; }>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByDates(response: HttpResponseBase): Observable<{ [key: string]: CoachingDto[]; }> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200) {
+                result200 = {} as any;
+                for (let key in resultData200) {
+                    if (resultData200.hasOwnProperty(key))
+                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => CoachingDto.fromJS(i)) : [];
+                }
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<{ [key: string]: CoachingDto[]; }>(<any>null);
+    }
+
+    /**
      * @param id (optional) 
      * @return Success
      */
@@ -27202,6 +27336,7 @@ export class CoachingDto implements ICoachingDto {
     audienceEnableHandoutsTab: boolean;
     creatorUserId: number;
     creationTime: moment.Moment;
+    thumbnailImageUrl: string | undefined;
     parent: CoachingDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;
@@ -27299,6 +27434,7 @@ export class CoachingDto implements ICoachingDto {
             this.audienceEnableHandoutsTab = _data["audienceEnableHandoutsTab"];
             this.creatorUserId = _data["creatorUserId"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.thumbnailImageUrl = _data["thumbnailImageUrl"];
             this.parent = _data["parent"] ? CoachingDto.fromJS(_data["parent"]) : <any>undefined;
             this.thumbnailDocument = _data["thumbnailDocument"] ? DocumentDto.fromJS(_data["thumbnailDocument"]) : <any>undefined;
             this.language = _data["language"] ? SpokenLanguageDto.fromJS(_data["language"]) : <any>undefined;
@@ -27400,6 +27536,7 @@ export class CoachingDto implements ICoachingDto {
         data["audienceEnableHandoutsTab"] = this.audienceEnableHandoutsTab;
         data["creatorUserId"] = this.creatorUserId;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["thumbnailImageUrl"] = this.thumbnailImageUrl;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
         data["language"] = this.language ? this.language.toJSON() : <any>undefined;
@@ -27501,6 +27638,7 @@ export interface ICoachingDto {
     audienceEnableHandoutsTab: boolean;
     creatorUserId: number;
     creationTime: moment.Moment;
+    thumbnailImageUrl: string | undefined;
     parent: CoachingDto;
     thumbnailDocument: DocumentDto;
     language: SpokenLanguageDto;
