@@ -13,7 +13,7 @@ using Academically.Users.Dto;
 namespace Academically.Services.Courses.Dto
 {
     [AutoMap(typeof(Course))]
-    public class CourseDto : EntityDto<Guid>, IHasTopic, IHasCreationTime
+    public class CourseDto : EntityDto<Guid>, IHasTopic, IHasThumbnail, IHasCreationTime
     {
 
         public string Name { get; set; }
@@ -39,6 +39,7 @@ namespace Academically.Services.Courses.Dto
 
         public DateTime CreationTime { get; set; }
         public string CourseImageUrl { get; set; }
+        public string ThumbnailImageUrl { get; set; }
 
         public UserDto CreatorUser { get; set; }
         public DocumentDto ImageDocument { get; set; }

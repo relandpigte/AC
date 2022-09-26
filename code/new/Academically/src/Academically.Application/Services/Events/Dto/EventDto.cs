@@ -13,7 +13,7 @@ using System.Collections.Generic;
 namespace Academically.Services.Events.Dto
 {
     [AutoMapFrom(typeof(Event))]
-    public class EventDto : CreationAuditedEntityDto<Guid>, IHasTopic, IHasCreationTime
+    public class EventDto : CreationAuditedEntityDto<Guid>, IHasTopic, IHasThumbnail, IHasCreationTime
     {
         public EventType Type { get; set; }
         public EventStatus Status { get; set; }

@@ -29203,6 +29203,7 @@ export class CourseDto implements ICourseDto {
     commentsNeedAdminApproval: boolean | undefined;
     creationTime: moment.Moment;
     courseImageUrl: string | undefined;
+    thumbnailImageUrl: string | undefined;
     creatorUser: UserDto;
     imageDocument: DocumentDto;
     studentCourses: StudentCourseDto[] | undefined;
@@ -29241,6 +29242,7 @@ export class CourseDto implements ICourseDto {
             this.commentsNeedAdminApproval = _data["commentsNeedAdminApproval"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.courseImageUrl = _data["courseImageUrl"];
+            this.thumbnailImageUrl = _data["thumbnailImageUrl"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.imageDocument = _data["imageDocument"] ? DocumentDto.fromJS(_data["imageDocument"]) : <any>undefined;
             if (Array.isArray(_data["studentCourses"])) {
@@ -29283,6 +29285,7 @@ export class CourseDto implements ICourseDto {
         data["commentsNeedAdminApproval"] = this.commentsNeedAdminApproval;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["courseImageUrl"] = this.courseImageUrl;
+        data["thumbnailImageUrl"] = this.thumbnailImageUrl;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["imageDocument"] = this.imageDocument ? this.imageDocument.toJSON() : <any>undefined;
         if (Array.isArray(this.studentCourses)) {
@@ -29325,6 +29328,7 @@ export interface ICourseDto {
     commentsNeedAdminApproval: boolean | undefined;
     creationTime: moment.Moment;
     courseImageUrl: string | undefined;
+    thumbnailImageUrl: string | undefined;
     creatorUser: UserDto;
     imageDocument: DocumentDto;
     studentCourses: StudentCourseDto[] | undefined;

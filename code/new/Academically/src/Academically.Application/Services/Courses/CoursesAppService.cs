@@ -86,18 +86,40 @@ namespace Academically.Services.Courses
         public async Task<Dictionary<string, List<CourseDto>>> GetByTopicAsync()
         {
             var courses = await Repository.GetAll()
+                .Include(e => e.ImageDocument)
+                .Include(e => e.CreatorUser)
                 .OrderByDescending(v => v.CreationTime)
                 .Select(e => ObjectMapper.Map<CourseDto>(e))
                 .ToListAsync();
+
+            foreach (var course in courses)
+            {
+                if (course.ImageDocumentId.HasValue)
+                    course.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(course.ImageDocumentId.Value);
+                if (course.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    course.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(course.CreatorUser.ProfilePictureDocumentId.Value);
+            }
+
             return courses.GroupByTopicExt();
         }
 
         public async Task<Dictionary<string, List<CourseDto>>> GetByDatesAsync(DateGrains grain, int itemsPerGroup = 6)
         {
             var courses = await Repository.GetAll()
+                .Include(e => e.ImageDocument)
+                .Include(e => e.CreatorUser)
                 .OrderByDescending(v => v.CreationTime)
                 .Select(e => ObjectMapper.Map<CourseDto>(e))
                 .ToListAsync();
+
+            foreach (var course in courses)
+            {
+                if (course.ImageDocumentId.HasValue)
+                    course.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(course.ImageDocumentId.Value);
+                if (course.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    course.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(course.CreatorUser.ProfilePictureDocumentId.Value);
+            }
+
             return courses.GroupByDateRangeExt(grain, itemsPerGroup);
         }
 
