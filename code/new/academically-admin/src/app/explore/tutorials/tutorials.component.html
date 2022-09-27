@@ -27,9 +27,9 @@
           </div>
           <div class="row align-items-center mb-5">
             <div class="col d-flex flex-wrap gap-27">
-              <app-service-card *ngFor="let d of latest?.items" [data]="d" [isLoading]="isLoading"></app-service-card>
+              <app-service-card *ngFor="let d of latest?.items; trackBy:d?.id" [data]="d" [isLoading]="isLoading"></app-service-card>
               <div class="flex-break"></div>
-              <div class="btn btn-block btn-white flex-grow-1" (click)="onShowMoreLatestButtonClick()">Show More</div>
+              <div class="btn btn-block btn-white flex-grow-1" *ngIf="showLastestShowMore" (click)="onShowMoreLatestButtonClick()">Show More</div>
             </div>
           </div>
         </ng-container>
@@ -44,7 +44,7 @@
             <div class="col d-flex flex-wrap gap-27">
               <app-service-card *ngFor="let d of lastMonth?.items" [data]="d" [isLoading]="isLoading"></app-service-card>
               <div class="flex-break"></div>
-              <div class="btn btn-block btn-white flex-grow-1" (click)="onShowMoreLastMonthButtonClick()">Show More</div>
+              <div class="btn btn-block btn-white flex-grow-1" *ngIf="showLastMonthShowMoreButton" (click)="onShowMoreLastMonthButtonClick()">Show More</div>
             </div>
           </div>
         </ng-container>

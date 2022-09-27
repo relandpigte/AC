@@ -24244,10 +24244,49 @@ export class VideosServiceProxy {
     }
 
     /**
+     * @param userIdFilter (optional) 
+     * @param startDate (optional) 
+     * @param movingDate (optional) 
+     * @param endDate (optional) 
+     * @param grain (optional) 0 = Daily
+    
+    1 = Weekly
+    
+    2 = Monthly
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getByTopic(): Observable<{ [key: string]: VideoDto[]; }> {
-        let url_ = this.baseUrl + "/api/services/app/Videos/GetByTopic";
+    getByTopic(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: VideoDtoPagedResultDto; }> {
+        let url_ = this.baseUrl + "/api/services/app/Videos/GetByTopic?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (startDate === null)
+            throw new Error("The parameter 'startDate' cannot be null.");
+        else if (startDate !== undefined)
+            url_ += "StartDate=" + encodeURIComponent(startDate ? "" + startDate.toJSON() : "") + "&";
+        if (movingDate === null)
+            throw new Error("The parameter 'movingDate' cannot be null.");
+        else if (movingDate !== undefined)
+            url_ += "MovingDate=" + encodeURIComponent(movingDate ? "" + movingDate.toJSON() : "") + "&";
+        if (endDate === null)
+            throw new Error("The parameter 'endDate' cannot be null.");
+        else if (endDate !== undefined)
+            url_ += "EndDate=" + encodeURIComponent(endDate ? "" + endDate.toJSON() : "") + "&";
+        if (grain === null)
+            throw new Error("The parameter 'grain' cannot be null.");
+        else if (grain !== undefined)
+            url_ += "Grain=" + encodeURIComponent("" + grain) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -24265,14 +24304,14 @@ export class VideosServiceProxy {
                 try {
                     return this.processGetByTopic(<any>response_);
                 } catch (e) {
-                    return <Observable<{ [key: string]: VideoDto[]; }>><any>_observableThrow(e);
+                    return <Observable<{ [key: string]: VideoDtoPagedResultDto; }>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<{ [key: string]: VideoDto[]; }>><any>_observableThrow(response_);
+                return <Observable<{ [key: string]: VideoDtoPagedResultDto; }>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetByTopic(response: HttpResponseBase): Observable<{ [key: string]: VideoDto[]; }> {
+    protected processGetByTopic(response: HttpResponseBase): Observable<{ [key: string]: VideoDtoPagedResultDto; }> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -24287,7 +24326,7 @@ export class VideosServiceProxy {
                 result200 = {} as any;
                 for (let key in resultData200) {
                     if (resultData200.hasOwnProperty(key))
-                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => VideoDto.fromJS(i)) : [];
+                        (<any>result200)[key] = resultData200[key] ? VideoDtoPagedResultDto.fromJS(resultData200[key]) : new VideoDtoPagedResultDto();
                 }
             }
             else {
@@ -24300,28 +24339,53 @@ export class VideosServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<{ [key: string]: VideoDto[]; }>(<any>null);
+        return _observableOf<{ [key: string]: VideoDtoPagedResultDto; }>(<any>null);
     }
 
     /**
+     * @param userIdFilter (optional) 
+     * @param startDate (optional) 
+     * @param movingDate (optional) 
+     * @param endDate (optional) 
      * @param grain (optional) 0 = Daily
     
     1 = Weekly
     
     2 = Monthly
-     * @param itemsPerGroup (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getByDates(grain: DateGrains | undefined, itemsPerGroup: number | undefined): Observable<{ [key: string]: VideoDto[]; }> {
+    getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: VideoDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Videos/GetByDates?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (startDate === null)
+            throw new Error("The parameter 'startDate' cannot be null.");
+        else if (startDate !== undefined)
+            url_ += "StartDate=" + encodeURIComponent(startDate ? "" + startDate.toJSON() : "") + "&";
+        if (movingDate === null)
+            throw new Error("The parameter 'movingDate' cannot be null.");
+        else if (movingDate !== undefined)
+            url_ += "MovingDate=" + encodeURIComponent(movingDate ? "" + movingDate.toJSON() : "") + "&";
+        if (endDate === null)
+            throw new Error("The parameter 'endDate' cannot be null.");
+        else if (endDate !== undefined)
+            url_ += "EndDate=" + encodeURIComponent(endDate ? "" + endDate.toJSON() : "") + "&";
         if (grain === null)
             throw new Error("The parameter 'grain' cannot be null.");
         else if (grain !== undefined)
-            url_ += "grain=" + encodeURIComponent("" + grain) + "&";
-        if (itemsPerGroup === null)
-            throw new Error("The parameter 'itemsPerGroup' cannot be null.");
-        else if (itemsPerGroup !== undefined)
-            url_ += "itemsPerGroup=" + encodeURIComponent("" + itemsPerGroup) + "&";
+            url_ += "Grain=" + encodeURIComponent("" + grain) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -24339,14 +24403,14 @@ export class VideosServiceProxy {
                 try {
                     return this.processGetByDates(<any>response_);
                 } catch (e) {
-                    return <Observable<{ [key: string]: VideoDto[]; }>><any>_observableThrow(e);
+                    return <Observable<{ [key: string]: VideoDtoPagedResultDto; }>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<{ [key: string]: VideoDto[]; }>><any>_observableThrow(response_);
+                return <Observable<{ [key: string]: VideoDtoPagedResultDto; }>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetByDates(response: HttpResponseBase): Observable<{ [key: string]: VideoDto[]; }> {
+    protected processGetByDates(response: HttpResponseBase): Observable<{ [key: string]: VideoDtoPagedResultDto; }> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -24361,7 +24425,7 @@ export class VideosServiceProxy {
                 result200 = {} as any;
                 for (let key in resultData200) {
                     if (resultData200.hasOwnProperty(key))
-                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => VideoDto.fromJS(i)) : [];
+                        (<any>result200)[key] = resultData200[key] ? VideoDtoPagedResultDto.fromJS(resultData200[key]) : new VideoDtoPagedResultDto();
                 }
             }
             else {
@@ -24374,7 +24438,7 @@ export class VideosServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<{ [key: string]: VideoDto[]; }>(<any>null);
+        return _observableOf<{ [key: string]: VideoDtoPagedResultDto; }>(<any>null);
     }
 }
 
@@ -46076,12 +46140,17 @@ export class VideoDto implements IVideoDto {
     pricingType: PricingType;
     delayType: ServiceDelayType;
     delayValue: string | undefined;
+    videoCount: number;
+    videoLength: number;
+    rating: number;
+    reviews: number;
     parent: VideoDto;
     document: DocumentDto;
     thumbnailDocument: Document;
     creatorUser: UserDto;
     children: VideoDto[] | undefined;
     likeCount: number;
+    thumbnailImageUrl: string | undefined;
 
     constructor(data?: IVideoDto) {
         if (data) {
@@ -46115,6 +46184,10 @@ export class VideoDto implements IVideoDto {
             this.pricingType = _data["pricingType"];
             this.delayType = _data["delayType"];
             this.delayValue = _data["delayValue"];
+            this.videoCount = _data["videoCount"];
+            this.videoLength = _data["videoLength"];
+            this.rating = _data["rating"];
+            this.reviews = _data["reviews"];
             this.parent = _data["parent"] ? VideoDto.fromJS(_data["parent"]) : <any>undefined;
             this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
             this.thumbnailDocument = _data["thumbnailDocument"] ? Document.fromJS(_data["thumbnailDocument"]) : <any>undefined;
@@ -46125,6 +46198,7 @@ export class VideoDto implements IVideoDto {
                     this.children.push(VideoDto.fromJS(item));
             }
             this.likeCount = _data["likeCount"];
+            this.thumbnailImageUrl = _data["thumbnailImageUrl"];
         }
     }
 
@@ -46158,6 +46232,10 @@ export class VideoDto implements IVideoDto {
         data["pricingType"] = this.pricingType;
         data["delayType"] = this.delayType;
         data["delayValue"] = this.delayValue;
+        data["videoCount"] = this.videoCount;
+        data["videoLength"] = this.videoLength;
+        data["rating"] = this.rating;
+        data["reviews"] = this.reviews;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
         data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
@@ -46168,6 +46246,7 @@ export class VideoDto implements IVideoDto {
                 data["children"].push(item.toJSON());
         }
         data["likeCount"] = this.likeCount;
+        data["thumbnailImageUrl"] = this.thumbnailImageUrl;
         return data; 
     }
 
@@ -46201,12 +46280,17 @@ export interface IVideoDto {
     pricingType: PricingType;
     delayType: ServiceDelayType;
     delayValue: string | undefined;
+    videoCount: number;
+    videoLength: number;
+    rating: number;
+    reviews: number;
     parent: VideoDto;
     document: DocumentDto;
     thumbnailDocument: Document;
     creatorUser: UserDto;
     children: VideoDto[] | undefined;
     likeCount: number;
+    thumbnailImageUrl: string | undefined;
 }
 
 export class VideoDtoPagedResultDto implements IVideoDtoPagedResultDto {

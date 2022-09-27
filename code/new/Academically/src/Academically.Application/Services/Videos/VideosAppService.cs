@@ -269,6 +269,10 @@ namespace Academically.Services.Videos
                     vid.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(vid.ThumbnailDocumentId.Value);
                 if (vid.CreatorUser.ProfilePictureDocumentId.HasValue)
                     vid.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(vid.CreatorUser.ProfilePictureDocumentId.Value);
+
+                vid.LikeCount = await _reactionsRepository.CountAsync(e => e.ReferenceId == vid.Id.ToString()
+                    && e.Type == ReactionType.Like);
+                vid.VideoCount = vid.Children.Count();
             }
 
             return videos.GroupByDateRangePagedExt(input.Grain, input.MaxResultCount);
