@@ -3,8 +3,9 @@ import { ArticleService } from '@app/articles/_services/article.service';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ArticleDto, ArticlesServiceProxy, DateGrains } from '@shared/service-proxies/service-proxies';
-import * as moment from 'moment';
 import { finalize, takeUntil } from 'rxjs/operators';
+
+import * as moment from 'moment';
 import * as _ from 'lodash';
 
 @Component({
@@ -30,7 +31,6 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
 
   ngOnInit(): void {
     this.loadData();
-    setTimeout(() => this.isLoading = false, 5000);
   }
 
   private loadData(): void {
@@ -51,19 +51,5 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
       });
 
   }
-
-  private generateData(count?: number, type?: number): any[] {
-    let data = Array(count).fill([]).map(() => {
-      const dataType = this.randomNonZero(6);
-      switch(type ?? dataType) {
-        case 1: return this.generateRandomEvent();
-        case 2: return this.generateRandomArticle();
-        case 3: return this.generateRandomCoaching();
-        case 4: return this.generateRandomCourse();
-        case 5: return this.generateRandomWorkshop();
-        case 6: return this.generateRandomTutorial();
-      }
-    });
-    return data;
-  }
+  
 }
