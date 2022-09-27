@@ -1,7 +1,9 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
+using Abp.Domain.Entities.Auditing;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Domain.Interfaces;
 using Academically.Services.Documents.Dto;
 using Academically.Services.SpokenLanugages.Dto;
 using Academically.Users.Dto;
@@ -11,7 +13,7 @@ using System.Collections.Generic;
 namespace Academically.Services.Workshops.Dto
 {
     [AutoMapFrom(typeof(Workshop))]
-    public class WorkshopDto : EntityDto<Guid>
+    public class WorkshopDto : EntityDto<Guid>, IHasTopic, IHasCreationTime
     {
         public WorkshopType Type { get; set; }
         public WorkshopStatus Status { get; set; }

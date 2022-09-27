@@ -8,6 +8,7 @@ using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Domain.Services.Documents;
 using Academically.Extensions;
 using Academically.Services.Videos.Dto;
 using Microsoft.EntityFrameworkCore;
@@ -19,16 +20,19 @@ namespace Academically.Services.Videos
         private readonly IRepository<Video, Guid> _videosRepository;
         private readonly IRepository<Reaction, Guid> _reactionsRepository;
         private readonly IRepository<StudentVideo, Guid> _studentVideoRepository;
+        private readonly IDocumentsDomainService _documentsDomainService;
 
         public VideosAppService(
             IRepository<Video, Guid> videosRepository,
             IRepository<Reaction, Guid> reactionsRepository,
-            IRepository<StudentVideo, Guid> studentVideoRepository
+            IRepository<StudentVideo, Guid> studentVideoRepository,
+            IDocumentsDomainService documentsDomainService
             )
         {
             _videosRepository = videosRepository;
             _reactionsRepository = reactionsRepository;
             _studentVideoRepository = studentVideoRepository;
+            _documentsDomainService = documentsDomainService;
         }
 
         public async Task<PagedResultDto<VideoDto>> GetAll(PagedVideoResultRequestDto input)
@@ -213,29 +217,66 @@ namespace Academically.Services.Videos
             await _videosRepository.DeleteAsync(id);
         }
 
-        public async Task<Dictionary<string, List<VideoDto>>> GetByTopicAsync()
+        public async Task<Dictionary<string, PagedResultDto<VideoDto>>> GetByTopicAsync(PagedExploreVideoResultRequestDto input)
         {
-            var videos = await _videosRepository.GetAll()
-                .Where(e => e.ParentId == null)
+            var query = _videosRepository.GetAll()
+               .Where(e => e.ParentId == null)
+               .Where(e => e.Status == VideoStatus.Published)
+               //.WhereIf(input.UserIdFilter.HasValue, e => e.CreatorUserId != input.UserIdFilter.Value)
+               .WhereIf(input.MovingDate.HasValue, v => v.CreationTime < input.MovingDate);
+            var totalCount = await query.CountAsync();
+            var videos = await query.OrderBy(e => e.Name)
+                .Include(e => e.ThumbnailDocument)
                 .Include(e => e.Children)
+                .Include(e => e.CreatorUser)
                 .OrderByDescending(v => v.CreationTime)
                 .Select(e => ObjectMapper.Map<VideoDto>(e))
                 .ToListAsync();
-                
-            return videos.GroupByTopicExt();
+
+
+            foreach (var vid in videos)
+            {
+                if (vid.ThumbnailDocumentId.HasValue)
+                    vid.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(vid.ThumbnailDocumentId.Value);
+                if (vid.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    vid.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(vid.CreatorUser.ProfilePictureDocumentId.Value);
+            }
+
+            return videos.GroupByTopicsPagedExt();
         }
 
-        public async Task<Dictionary<string, List<VideoDto>>> GetByDatesAsync(DateGrains grain, int itemsPerGroup = 6)
+        public async Task<Dictionary<string, PagedResultDto<VideoDto>>> GetByDatesAsync(PagedExploreVideoResultRequestDto input)
         {
-            var videos = await _videosRepository.GetAll()
+            var query = _videosRepository.GetAll()
                 .Where(e => e.ParentId == null)
+                .Where(e => e.Status == VideoStatus.Published)
+                .Where(e => e.IsVisible)
+                .WhereIf(input.MovingDate.HasValue && input.StartDate.HasValue, v => v.CreationTime < input.MovingDate.Value && v.CreationTime >= input.StartDate.Value) // For next page of latest month
+                .WhereIf(input.MovingDate.HasValue && !input.StartDate.HasValue && !input.EndDate.HasValue, v => v.CreationTime < input.MovingDate.Value)
+                ;
+            var totalCount = await query.CountAsync();
+            var videos = await query.OrderBy(e => e.Name)
+                .Include(e => e.ThumbnailDocument)
                 .Include(e => e.Children)
+                .Include(e => e.CreatorUser)
                 .OrderByDescending(v => v.CreationTime)
                 .Select(e => ObjectMapper.Map<VideoDto>(e))
                 .ToListAsync();
-            return videos.GroupByDateRangeExt(grain, itemsPerGroup);
-        }
 
+            foreach (var vid in videos)
+            {
+                if (vid.ThumbnailDocumentId.HasValue)
+                    vid.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(vid.ThumbnailDocumentId.Value);
+                if (vid.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    vid.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(vid.CreatorUser.ProfilePictureDocumentId.Value);
+
+                vid.LikeCount = await _reactionsRepository.CountAsync(e => e.ReferenceId == vid.Id.ToString()
+                    && e.Type == ReactionType.Like);
+                vid.VideoCount = vid.Children.Count();
+            }
+
+            return videos.GroupByDateRangePagedExt(input.Grain, input.MaxResultCount);
+        }
 
     }
 }

@@ -196,8 +196,8 @@ import * as moment from 'moment';
 
         case 'tutorial':
           this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
-          this.sanitized.composition.videos = this.randomNonZero(5);
-          this.sanitized.composition.durationInSec = this.randomNonZero(10000);
+          this.sanitized.composition.videos = this.data?.videoCount;
+          this.sanitized.composition.durationInSec = this.data?.videoLength;
 
           this.sanitizedActions.splice(0, 0, { type: 'submit', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
           break;
@@ -284,7 +284,9 @@ import * as moment from 'moment';
           break;
 
         case 'tutorial':
-          if (!this.options || !('isShowQuickPreview' in this.options)) this.sanitizedOptions.isShowQuickPreview = true;
+          if (!this.options || !('isShowQuickPreview' in this.options)) {
+            this.sanitizedOptions.isShowQuickPreview = this.sanitized.composition.videos > 1 ? true : false;
+          }
           if (!this.options || !('isShowDetailsPrice' in this.options)) this.sanitizedOptions.isShowDetailsPrice = true;
           if (!this.options || !('isShowDetailsReviews' in this.options)) this.sanitizedOptions.isShowDetailsReviews = true;
           if (!this.options || !('isShowHeading' in this.options)) this.sanitizedOptions.isShowHeading = false;
