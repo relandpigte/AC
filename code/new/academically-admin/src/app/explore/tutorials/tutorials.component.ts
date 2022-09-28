@@ -17,15 +17,19 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
   latest: VideoDtoPagedResultDto;
   latestStartDate: moment.Moment;
   lastMonth: VideoDtoPagedResultDto;
+  popular: VideoDtoPagedResultDto;
   featured: VideoDto[] = Array(5).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
 
 
   isLoading = true;
+  isPopularLoading = true;
   data: { [key: string]: VideoDto[] };
 
   showLastestShowMore: boolean = true;
   showLastMonthShowMoreButton: boolean = true;
+  showPopularShowMoreButton: boolean = true;
   itemsPerGroup = 6;
+  popularItems = 3;
 
   constructor(
     injector: Injector,
@@ -36,7 +40,9 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
 
   ngOnInit(): void {
     this.loadData(0);
+    this.loadPopular(0);
     setTimeout(() => this.isLoading = false, 5000);
+
   }
 
   setLatestShowMoreButtons(items: number): void {
@@ -55,6 +61,14 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
     }
   }
 
+  setPopularShowMoreButtons(items: number): void {
+    if (items == this.popularItems) {
+      this.showPopularShowMoreButton = true;
+    } else {
+      this.showPopularShowMoreButton = false;
+    }
+  }
+
   private loadData(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
     this.isLoading = true;
     this._videoService.getByDates(this.appSession.userId, start,moving, end, DateGrains.Monthly, currentCount, this.itemsPerGroup)
@@ -66,6 +80,7 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
           console.log('GroupedVideos ----> ', groupedVideos[range]);
           if (moment().diff(moment(startDate), 'months')) {
             if (currentCount == 0) {
+              this.latestStartDate = moment(startDate);
               this.lastMonth = groupedVideos[range];
               this.setLastMonthShowMoreButtons(this.lastMonth?.items?.length);
             }
@@ -91,29 +106,49 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
       });
   }
 
+  private loadPopular(currentCount: number): void {
+    this.isPopularLoading = true;
+    this._videoService.getByPopularity(this.appSession.userId, currentCount, this.popularItems)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isPopularLoading = false))
+      .subscribe(groupedVideos => {
+        if (groupedVideos) {
+          Object.keys(groupedVideos).forEach(label => {
+            const [startDate] = label.split(' - ');
+            console.log('Popular Videos ----> ', groupedVideos[label]);
+            if (label == 'Popular') {
+              if (currentCount == 0) {
+                this.popular = groupedVideos[label];
+                this.setPopularShowMoreButtons(this.popular?.items?.length);
+              }
+              else {
+                this.popular.items.push(...groupedVideos[label].items);
+                this.setPopularShowMoreButtons(groupedVideos[label]?.items?.length);
+              }
+            }
+          });
+        } else {
+          console.log('NO RESULT');
+          this.setPopularShowMoreButtons(1);
+        }
+      });
+  }
+
+  onShowMorePopularButtonClick(): void {
+    console.log('Show  more popular clicked -->', this.popular?.items?.length)
+    this.loadPopular(this.popular?.items?.length);
+  }
+
   onShowMoreLatestButtonClick(): void {
     const lastItem = this.latest.items.slice(-1)[0];
     console.log('LAST ITEM --->', lastItem)
     this.loadData(this.latest.items.length, this.latestStartDate, lastItem.creationTime);
-    // this.latest.items.push(this.generateRandomTutorial());
   }
 
   onShowMoreLastMonthButtonClick(): void {
-    console.log('LAST MONTH SHOW MORE CLICKED')
+    const lastItem = this.lastMonth.items.slice(-1)[0];
+    console.log('POPULAR BUTTON CLICKED');
+    this.loadData(this.lastMonth.items.length, null, lastItem.creationTime);
   }
 
-  private generateData(count?: number, type?: number): any[] {
-    let data = Array(count).fill([]).map(() => {
-      const dataType = this.randomNonZero(6);
-      switch(type ?? dataType) {
-        case 1: return this.generateRandomEvent();
-        case 2: return this.generateRandomArticle();
-        case 3: return this.generateRandomCoaching();
-        case 4: return this.generateRandomCourse();
-        case 5: return this.generateRandomWorkshop();
-        case 6: return this.generateRandomTutorial();
-      }
-    });
-    return data;
-  }
 }

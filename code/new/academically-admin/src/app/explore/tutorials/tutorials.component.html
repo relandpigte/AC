@@ -4,20 +4,20 @@
       <div class="header-body">
         <app-carousel [items]="featured" [isInfiteScroll]="false" [isLoading]="isLoading" [isFeatured]="true" [circular]="true"></app-carousel>
 
-        <!-- <ng-container *ngFor="let topic of data|keys">
+        <ng-container *ngIf="popular?.items?.length">
           <div class="row align-items-center">
             <div class="col d-flex flex-wrap gap-15">
-              <h3>{{topic}}</h3>
+              <h3>Popular</h3>
             </div>
           </div>
           <div class="row align-items-center mb-5">
             <div class="col d-flex flex-wrap gap-27">
-              <app-service-card *ngFor="let d of data[topic]" [data]="d" [isLoading]="isLoading"></app-service-card>
+              <app-service-card *ngFor="let d of popular?.items; trackBy:d?.id" [data]="d" [isLoading]="isPopularLoading"></app-service-card>
               <div class="flex-break"></div>
-              <div class="btn btn-block btn-white flex-grow-1">Show More</div>
+              <div class="btn btn-block btn-white flex-grow-1" *ngIf="showPopularShowMoreButton" (click)="onShowMorePopularButtonClick()">Show More</div>
             </div>
           </div>
-        </ng-container> -->
+        </ng-container>
 
         <ng-container *ngIf="latest?.items?.length">
           <div class="row align-items-center">

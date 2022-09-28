@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Academically.Services.Explore.Dto
 {
-    public class PagedExploreRequestDto: PagedResultRequestDto
+    public class PagedPopularRequestDto: PagedResultRequestDto
     {
-
+        public long? UserIdFilter { get; set; }
     }
 }
