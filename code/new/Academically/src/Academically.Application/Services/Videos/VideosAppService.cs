@@ -9,7 +9,9 @@ using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
+using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
+using Academically.Services.Explore.Dto;
 using Academically.Services.Videos.Dto;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,18 +23,21 @@ namespace Academically.Services.Videos
         private readonly IRepository<Reaction, Guid> _reactionsRepository;
         private readonly IRepository<StudentVideo, Guid> _studentVideoRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
+        private readonly IExploreRepository _exploreRepository;
 
         public VideosAppService(
             IRepository<Video, Guid> videosRepository,
             IRepository<Reaction, Guid> reactionsRepository,
             IRepository<StudentVideo, Guid> studentVideoRepository,
-            IDocumentsDomainService documentsDomainService
+            IDocumentsDomainService documentsDomainService,
+            IExploreRepository exploreRepository
             )
         {
             _videosRepository = videosRepository;
             _reactionsRepository = reactionsRepository;
             _studentVideoRepository = studentVideoRepository;
             _documentsDomainService = documentsDomainService;
+            _exploreRepository = exploreRepository;
         }
 
         public async Task<PagedResultDto<VideoDto>> GetAll(PagedVideoResultRequestDto input)
@@ -251,6 +256,7 @@ namespace Academically.Services.Videos
                 .Where(e => e.ParentId == null)
                 .Where(e => e.Status == VideoStatus.Published)
                 .Where(e => e.IsVisible)
+                //.WhereIf(input.UserIdFilter.HasValue, e => e.CreatorUserId != input.UserIdFilter.Value)
                 .WhereIf(input.MovingDate.HasValue && input.StartDate.HasValue, v => v.CreationTime < input.MovingDate.Value && v.CreationTime >= input.StartDate.Value) // For next page of latest month
                 .WhereIf(input.MovingDate.HasValue && !input.StartDate.HasValue && !input.EndDate.HasValue, v => v.CreationTime < input.MovingDate.Value)
                 ;
@@ -276,6 +282,27 @@ namespace Academically.Services.Videos
             }
 
             return videos.GroupByDateRangePagedExt(input.Grain, input.MaxResultCount);
+        }
+
+        public async Task<Dictionary<string, PagedResultDto<VideoDto>>> GetByPopularityAsync(PagedPopularRequestDto input)
+        {
+            var popularVideos = (await _exploreRepository.GetPopularVideos(input.SkipCount, input.MaxResultCount, input.UserIdFilter))
+                    .Select(e => ObjectMapper.Map<VideoDto>(e))
+                    .ToList();
+
+            foreach (var vid in popularVideos)
+            {
+                if (vid.ThumbnailDocumentId.HasValue)
+                    vid.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(vid.ThumbnailDocumentId.Value);
+                if (vid.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    vid.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(vid.CreatorUser.ProfilePictureDocumentId.Value);
+
+                vid.LikeCount = await _reactionsRepository.CountAsync(e => e.ReferenceId == vid.Id.ToString()
+                    && e.Type == ReactionType.Like);
+                vid.VideoCount = vid.Children.Count();
+            }
+
+            return popularVideos.GroupByPopularityPagedExt(input.MaxResultCount);
         }
 
     }

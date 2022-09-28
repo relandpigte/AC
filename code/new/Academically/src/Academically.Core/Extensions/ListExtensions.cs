@@ -72,6 +72,17 @@ namespace Academically.Extensions
                                 .ToDictionary(key => key.Range, value => new PagedResultDto<DtoType>(value.Items.Count, value.Items));
         }
 
+        public static Dictionary<string, PagedResultDto<DtoType>> GroupByPopularityPagedExt<DtoType>(this List<DtoType> list, int itemsPerGroup) where DtoType : IHasPopularityWeight
+        {
+            return list.GroupBy(x => new { Label = "Popular" })
+                                .Select(x => new
+                                {
+                                    Range = x.Key.Label,
+                                    Items = list
+                                })
+                                .ToDictionary(key => key.Range, value => new PagedResultDto<DtoType>(value.Items.Count, value.Items));
+        }
+
         private static string ToDateRangeString(DateTime date, DateGrains grain)
         {
             switch (grain)
