@@ -226,9 +226,9 @@ namespace Academically.Services.Videos
         {
             var query = _videosRepository.GetAll()
                .Where(e => e.ParentId == null)
-               .Where(e => e.Status == VideoStatus.Published)
+               .Where(e => e.Status == VideoStatus.Published);
                //.WhereIf(input.UserIdFilter.HasValue, e => e.CreatorUserId != input.UserIdFilter.Value)
-               .WhereIf(input.MovingDate.HasValue, v => v.CreationTime < input.MovingDate);
+               //.WhereIf(input.MovingDate.HasValue, v => v.CreationTime < input.MovingDate);
             var totalCount = await query.CountAsync();
             var videos = await query.OrderBy(e => e.Name)
                 .Include(e => e.ThumbnailDocument)

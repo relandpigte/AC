@@ -21,7 +21,85 @@ namespace Academically.EntityFrameworkCore.Repositories.Explore
             _dbContextProvider = dbContextProvider;
         }
 
-       public async Task<List<VideoPopularityViewModel>> GetPopularVideos(int skipCount, int maxCount, long? userIdFilter)
+        public async Task<List<ArticlePopularityViewModel>> GetPopularArticles(int skipCount, int maxCount, long? userIdFilter)
+        {
+            var articlesContext = _dbContextProvider.GetDbContext().Articles
+                    .Include(e => e.ThumbnailDocument)
+                    .Include(e => e.Children)
+                    .Include(e => e.CreatorUser)
+                    .Where(e => e.ParentId == null)
+                    .Where(e => e.Status == ArticleStatus.Published)
+                    .Where(e => e.IsVisible)
+                    //.WhereIf(input.userIdFilter.HasValue, e => e.CreatorUserId != userIdFilter.Value)
+                    .AsQueryable();
+
+            var studentArticles = _dbContextProvider.GetDbContext().StudentArticles.AsQueryable();
+
+            // Get Top videos
+            var topArticles = await studentArticles.Select(x => new
+            {
+                x.ArticleId,
+                x.SaveOnly,
+                Point = x.SaveOnly ? 1 : 5
+            })
+                .GroupBy(x => new { x.ArticleId })
+                .Select(g => new { g.Key.ArticleId, Popularity = g.Sum(s => s.Point) })
+                .OrderByDescending(x => x.Popularity)
+                .PageBy(skipCount, maxCount)
+                .ToListAsync();
+
+            var articles = await articlesContext.Where(x => topArticles.Select(t => t.ArticleId).Contains(x.Id)).ToListAsync();
+
+            var joinedArticles = articles.Join(
+                                topArticles,
+                                v => v.Id,
+                                tv => tv.ArticleId,
+                                (v, tv) => new ArticlePopularityViewModel(v, tv.Popularity))
+                         .OrderByDescending(x => x.PopularityWeight);
+
+            return joinedArticles.ToList();
+        }
+
+       
+        public async Task<List<EventPopularityViewModel>> GetPopularEvents(int skipCount, int maxCount, long? userIdFilter)
+        {
+            var eventsContext = _dbContextProvider.GetDbContext().Events
+                    .Include(e => e.ThumbnailDocument)
+                    .Include(e => e.Children)
+                    .Include(e => e.CreatorUser)
+                    .Where(e => e.ParentId == null)
+                    .Where(e => e.Status == EventStatus.Published)
+                    .Where(e => e.Visible.Value)
+                    //.WhereIf(input.userIdFilter.HasValue, e => e.CreatorUserId != userIdFilter.Value)
+                    .AsQueryable();
+
+            var studentEvents = _dbContextProvider.GetDbContext().StudentEvents.AsQueryable();
+
+            // Get Top videos
+            var topEvents = await studentEvents.Select(x => new
+            {
+                x.EventId,
+                x.SaveOnly,
+                Point = x.SaveOnly ? 1 : 5
+            })
+                .GroupBy(x => new { x.EventId })
+                .Select(g => new { g.Key.EventId, Popularity = g.Sum(s => s.Point) })
+                .OrderByDescending(x => x.Popularity)
+                .PageBy(skipCount, maxCount)
+                .ToListAsync();
+
+            var videos = await eventsContext.Where(x => topEvents.Select(t => t.EventId).Contains(x.Id)).ToListAsync();
+
+            var joinedVideos = videos.Join(
+                                topEvents,
+                                v => v.Id,
+                                tv => tv.EventId,
+                                (v, tv) => new EventPopularityViewModel(v, tv.Popularity))
+                         .OrderByDescending(x => x.PopularityWeight);
+            return joinedVideos.ToList();
+        }
+
+        public async Task<List<VideoPopularityViewModel>> GetPopularVideos(int skipCount, int maxCount, long? userIdFilter)
         {
             var videosContext = _dbContextProvider.GetDbContext().Videos
                     .Include(e => e.ThumbnailDocument)
@@ -59,5 +137,7 @@ namespace Academically.EntityFrameworkCore.Repositories.Explore
 
             return joinedVideos.ToList();
         }
+
+        
     }
 }

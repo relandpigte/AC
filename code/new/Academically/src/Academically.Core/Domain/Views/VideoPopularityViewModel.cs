@@ -40,6 +40,9 @@ namespace Academically.Domain.Views
             Document = video.Document;
             ThumbnailDocument = video.ThumbnailDocument;
             Children = video.Children;
+            CreatorUserId = video.CreatorUserId;
+            CreationTime = video.CreationTime;
+
 
             PopularityWeight = popularityPoints;
         }
