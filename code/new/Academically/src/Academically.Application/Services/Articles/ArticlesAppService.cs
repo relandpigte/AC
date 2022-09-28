@@ -172,6 +172,7 @@ namespace Academically.Services.Articles
                     article.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocumentId.Value);
                 if (article.CreatorUser.ProfilePictureDocumentId.HasValue)
                     article.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(article.CreatorUser.ProfilePictureDocumentId.Value);
+                article.ArticlesCount = article.Children.Count();
             }
 
             return articles.GroupByTopicsPagedExt();
@@ -202,6 +203,7 @@ namespace Academically.Services.Articles
                     article.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocumentId.Value);
                 if (article.CreatorUser.ProfilePictureDocumentId.HasValue)
                     article.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(article.CreatorUser.ProfilePictureDocumentId.Value);
+                article.ArticlesCount = article.Children.Count();
             }
 
             return articles.GroupByDateRangePagedExt(input.Grain, input.MaxResultCount);
@@ -213,12 +215,14 @@ namespace Academically.Services.Articles
                     .Select(e => ObjectMapper.Map<ArticleDto>(e))
                     .ToList();
 
-            foreach (var vid in popularVideos)
+            foreach (var article in popularVideos)
             {
-                if (vid.ThumbnailDocumentId.HasValue)
-                    vid.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(vid.ThumbnailDocumentId.Value);
-                if (vid.CreatorUser.ProfilePictureDocumentId.HasValue)
-                    vid.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(vid.CreatorUser.ProfilePictureDocumentId.Value);
+                if (article.ThumbnailDocumentId.HasValue)
+                    article.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocumentId.Value);
+                if (article.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    article.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(article.CreatorUser.ProfilePictureDocumentId.Value);
+
+                article.ArticlesCount = article.Children.Count();
             }
 
             return popularVideos.GroupByPopularityPagedExt(input.MaxResultCount);

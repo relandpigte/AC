@@ -154,7 +154,10 @@ import * as moment from 'moment';
       switch(this.sanitized?.type) {
         case 'article':
           this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
-          this.sanitized.composition.articles = 5;
+          // if (this.data?.articlesCount) {
+            console.log('ARTICLES COUNT ---->', this.data?.articlesCount);
+            this.sanitized.composition.articles = this.data?.articlesCount;
+          // }
 
           this.sanitizedActions.splice(0, 0, { type: 'submit', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
           break;
@@ -244,7 +247,7 @@ import * as moment from 'moment';
           if (!this.options || !('isShowHeading' in this.options)) this.sanitizedOptions.isShowHeading = false;
           if (!this.options || !('isShowDescription' in this.options)) this.sanitizedOptions.isShowDescription = true;
           if (!this.options || !('isShowDetailsPrice' in this.options)) this.sanitizedOptions.isShowDetailsPrice = true;
-          if (!this.options || !('isShowDetailsComposition' in this.options)) this.sanitizedOptions.isShowDetailsComposition = true;
+          if ((!this.options || !('isShowDetailsComposition' in this.options)) && this.sanitized.composition.articles > 0) this.sanitizedOptions.isShowDetailsComposition = true;
           if (!this.options || !('isShowDetailsReviews' in this.options)) this.sanitizedOptions.isShowDetailsReviews = true;
           break;
 
