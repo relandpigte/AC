@@ -60,7 +60,42 @@ namespace Academically.EntityFrameworkCore.Repositories.Explore
             return joinedArticles.ToList();
         }
 
-       
+        public async Task<List<CoursePopularityViewModel>> GetPopularCourses(int skipCount, int maxCount, long? userIdFilter)
+        {
+            var coursesContext = _dbContextProvider.GetDbContext().Courses
+                    .Include(e => e.ImageDocument)
+                    .Include(e => e.CreatorUser)
+                    .Where(e => e.Status == CourseStatus.Published)
+                    .Where(e => e.IsVisible)
+                    //.WhereIf(input.userIdFilter.HasValue, e => e.CreatorUserId != userIdFilter.Value)
+                    .AsQueryable();
+
+            var studentCourses = _dbContextProvider.GetDbContext().StudentCourses.AsQueryable();
+
+            // Get Top videos
+            var topCourses = await studentCourses.Select(x => new
+            {
+                x.CourseId,
+                Point = 5
+            })
+                .GroupBy(x => new { x.CourseId })
+                .Select(g => new { g.Key.CourseId, Popularity = g.Sum(s => s.Point) })
+                .OrderByDescending(x => x.Popularity)
+                .PageBy(skipCount, maxCount)
+                .ToListAsync();
+
+            var courses = await coursesContext.Where(x => topCourses.Select(t => t.CourseId).Contains(x.Id)).ToListAsync();
+
+            var joinedCourses = courses.Join(
+                                topCourses,
+                                v => v.Id,
+                                tv => tv.CourseId,
+                                (v, tv) => new CoursePopularityViewModel(v, tv.Popularity))
+                         .OrderByDescending(x => x.PopularityWeight);
+
+            return joinedCourses.ToList();
+        }
+
         public async Task<List<EventPopularityViewModel>> GetPopularEvents(int skipCount, int maxCount, long? userIdFilter)
         {
             var eventsContext = _dbContextProvider.GetDbContext().Events
