@@ -5761,10 +5761,49 @@ export class CoursesServiceProxy {
     }
 
     /**
+     * @param userIdFilter (optional) 
+     * @param startDate (optional) 
+     * @param movingDate (optional) 
+     * @param endDate (optional) 
+     * @param grain (optional) 0 = Daily
+    
+    1 = Weekly
+    
+    2 = Monthly
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getByTopic(): Observable<{ [key: string]: CourseDto[]; }> {
-        let url_ = this.baseUrl + "/api/services/app/Courses/GetByTopic";
+    getByTopic(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
+        let url_ = this.baseUrl + "/api/services/app/Courses/GetByTopic?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (startDate === null)
+            throw new Error("The parameter 'startDate' cannot be null.");
+        else if (startDate !== undefined)
+            url_ += "StartDate=" + encodeURIComponent(startDate ? "" + startDate.toJSON() : "") + "&";
+        if (movingDate === null)
+            throw new Error("The parameter 'movingDate' cannot be null.");
+        else if (movingDate !== undefined)
+            url_ += "MovingDate=" + encodeURIComponent(movingDate ? "" + movingDate.toJSON() : "") + "&";
+        if (endDate === null)
+            throw new Error("The parameter 'endDate' cannot be null.");
+        else if (endDate !== undefined)
+            url_ += "EndDate=" + encodeURIComponent(endDate ? "" + endDate.toJSON() : "") + "&";
+        if (grain === null)
+            throw new Error("The parameter 'grain' cannot be null.");
+        else if (grain !== undefined)
+            url_ += "Grain=" + encodeURIComponent("" + grain) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -5782,14 +5821,14 @@ export class CoursesServiceProxy {
                 try {
                     return this.processGetByTopic(<any>response_);
                 } catch (e) {
-                    return <Observable<{ [key: string]: CourseDto[]; }>><any>_observableThrow(e);
+                    return <Observable<{ [key: string]: CourseDtoPagedResultDto; }>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<{ [key: string]: CourseDto[]; }>><any>_observableThrow(response_);
+                return <Observable<{ [key: string]: CourseDtoPagedResultDto; }>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetByTopic(response: HttpResponseBase): Observable<{ [key: string]: CourseDto[]; }> {
+    protected processGetByTopic(response: HttpResponseBase): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -5804,7 +5843,7 @@ export class CoursesServiceProxy {
                 result200 = {} as any;
                 for (let key in resultData200) {
                     if (resultData200.hasOwnProperty(key))
-                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => CourseDto.fromJS(i)) : [];
+                        (<any>result200)[key] = resultData200[key] ? CourseDtoPagedResultDto.fromJS(resultData200[key]) : new CourseDtoPagedResultDto();
                 }
             }
             else {
@@ -5817,28 +5856,53 @@ export class CoursesServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<{ [key: string]: CourseDto[]; }>(<any>null);
+        return _observableOf<{ [key: string]: CourseDtoPagedResultDto; }>(<any>null);
     }
 
     /**
+     * @param userIdFilter (optional) 
+     * @param startDate (optional) 
+     * @param movingDate (optional) 
+     * @param endDate (optional) 
      * @param grain (optional) 0 = Daily
     
     1 = Weekly
     
     2 = Monthly
-     * @param itemsPerGroup (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getByDates(grain: DateGrains | undefined, itemsPerGroup: number | undefined): Observable<{ [key: string]: CourseDto[]; }> {
+    getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Courses/GetByDates?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (startDate === null)
+            throw new Error("The parameter 'startDate' cannot be null.");
+        else if (startDate !== undefined)
+            url_ += "StartDate=" + encodeURIComponent(startDate ? "" + startDate.toJSON() : "") + "&";
+        if (movingDate === null)
+            throw new Error("The parameter 'movingDate' cannot be null.");
+        else if (movingDate !== undefined)
+            url_ += "MovingDate=" + encodeURIComponent(movingDate ? "" + movingDate.toJSON() : "") + "&";
+        if (endDate === null)
+            throw new Error("The parameter 'endDate' cannot be null.");
+        else if (endDate !== undefined)
+            url_ += "EndDate=" + encodeURIComponent(endDate ? "" + endDate.toJSON() : "") + "&";
         if (grain === null)
             throw new Error("The parameter 'grain' cannot be null.");
         else if (grain !== undefined)
-            url_ += "grain=" + encodeURIComponent("" + grain) + "&";
-        if (itemsPerGroup === null)
-            throw new Error("The parameter 'itemsPerGroup' cannot be null.");
-        else if (itemsPerGroup !== undefined)
-            url_ += "itemsPerGroup=" + encodeURIComponent("" + itemsPerGroup) + "&";
+            url_ += "Grain=" + encodeURIComponent("" + grain) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -5856,14 +5920,14 @@ export class CoursesServiceProxy {
                 try {
                     return this.processGetByDates(<any>response_);
                 } catch (e) {
-                    return <Observable<{ [key: string]: CourseDto[]; }>><any>_observableThrow(e);
+                    return <Observable<{ [key: string]: CourseDtoPagedResultDto; }>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<{ [key: string]: CourseDto[]; }>><any>_observableThrow(response_);
+                return <Observable<{ [key: string]: CourseDtoPagedResultDto; }>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetByDates(response: HttpResponseBase): Observable<{ [key: string]: CourseDto[]; }> {
+    protected processGetByDates(response: HttpResponseBase): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -5878,7 +5942,7 @@ export class CoursesServiceProxy {
                 result200 = {} as any;
                 for (let key in resultData200) {
                     if (resultData200.hasOwnProperty(key))
-                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => CourseDto.fromJS(i)) : [];
+                        (<any>result200)[key] = resultData200[key] ? CourseDtoPagedResultDto.fromJS(resultData200[key]) : new CourseDtoPagedResultDto();
                 }
             }
             else {
@@ -5891,7 +5955,82 @@ export class CoursesServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<{ [key: string]: CourseDto[]; }>(<any>null);
+        return _observableOf<{ [key: string]: CourseDtoPagedResultDto; }>(<any>null);
+    }
+
+    /**
+     * @param userIdFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getByPopularity(userIdFilter: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
+        let url_ = this.baseUrl + "/api/services/app/Courses/GetByPopularity?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByPopularity(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByPopularity(<any>response_);
+                } catch (e) {
+                    return <Observable<{ [key: string]: CourseDtoPagedResultDto; }>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<{ [key: string]: CourseDtoPagedResultDto; }>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByPopularity(response: HttpResponseBase): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200) {
+                result200 = {} as any;
+                for (let key in resultData200) {
+                    if (resultData200.hasOwnProperty(key))
+                        (<any>result200)[key] = resultData200[key] ? CourseDtoPagedResultDto.fromJS(resultData200[key]) : new CourseDtoPagedResultDto();
+                }
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<{ [key: string]: CourseDtoPagedResultDto; }>(<any>null);
     }
 
     /**
@@ -29639,6 +29778,11 @@ export class CourseDto implements ICourseDto {
     creatorUser: UserDto;
     imageDocument: DocumentDto;
     studentCourses: StudentCourseDto[] | undefined;
+    popularityWeight: number;
+    modules: number;
+    lessons: number;
+    progress: number;
+    units: number;
 
     constructor(data?: ICourseDto) {
         if (data) {
@@ -29682,6 +29826,11 @@ export class CourseDto implements ICourseDto {
                 for (let item of _data["studentCourses"])
                     this.studentCourses.push(StudentCourseDto.fromJS(item));
             }
+            this.popularityWeight = _data["popularityWeight"];
+            this.modules = _data["modules"];
+            this.lessons = _data["lessons"];
+            this.progress = _data["progress"];
+            this.units = _data["units"];
         }
     }
 
@@ -29725,6 +29874,11 @@ export class CourseDto implements ICourseDto {
             for (let item of this.studentCourses)
                 data["studentCourses"].push(item.toJSON());
         }
+        data["popularityWeight"] = this.popularityWeight;
+        data["modules"] = this.modules;
+        data["lessons"] = this.lessons;
+        data["progress"] = this.progress;
+        data["units"] = this.units;
         return data; 
     }
 
@@ -29764,6 +29918,11 @@ export interface ICourseDto {
     creatorUser: UserDto;
     imageDocument: DocumentDto;
     studentCourses: StudentCourseDto[] | undefined;
+    popularityWeight: number;
+    modules: number;
+    lessons: number;
+    progress: number;
+    units: number;
 }
 
 export class CourseDtoPagedResultDto implements ICourseDtoPagedResultDto {

@@ -172,8 +172,9 @@ import * as moment from 'moment';
 
         case 'course':
           this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
-          this.sanitized.composition.modules = 4;
-          this.sanitized.composition.lessons = 53;
+          this.sanitized.composition.modules = this.data?.modules;
+          this.sanitized.composition.lessons = this.data?.lessons;
+          this.sanitized.progress = this.data?.progress > 0 ? this.data?.progress : undefined;
           this.sanitized.people = {} as ServiceCardPeople;
           this.sanitized.people.people = Array(this.randomNonZero(45, 12)).fill({} as ServiceCardPerson).map(i => ({ ...this.sanitized.owner, avatar: { src: `https://i.pravatar.cc/300?u=${this.uuidv4()}`} }));
           this.sanitized.people.avatarStackCount = 5;
@@ -272,6 +273,7 @@ import * as moment from 'moment';
           if (!this.options || !('isShowDetailsComposition' in this.options)) this.sanitizedOptions.isShowDetailsComposition = true;
           if (!this.options || !('isShowDetailsReviews' in this.options)) this.sanitizedOptions.isShowDetailsReviews = true;
           if (!this.options || !('isDetailsReviewsSeparated' in this.options)) this.sanitizedOptions.isDetailsReviewsSeparated = true;
+          if ((!this.options || !('isShowProgress' in this.options)) && this.sanitized?.progress > 0) this.sanitizedOptions.isShowProgress = true;
           break;
 
         case 'event':
@@ -340,10 +342,10 @@ import * as moment from 'moment';
       }
 
       if (!this.sanitized.reviews) this.sanitized.reviews = { value: 5, hasStar: true, count: 253 } as ServiceCardReview;
-      if (this.sanitized?.type === 'course' && !this.isFeatured && this.randomNonZero(10) % 2 === 0) {
-        this.sanitized.progress = this.randomNonZero(100);
-        if (!this.options || !('isShowProgress' in this.options)) this.sanitizedOptions.isShowProgress = true;
-        if (!this.options || !('isShowDetails' in this.options)) this.sanitizedOptions.isShowDetails = false;
-      }
+      // if (this.sanitized?.type === 'course' && !this.isFeatured && this.randomNonZero(10) % 2 === 0) {
+      //   this.sanitized.progress = this.randomNonZero(100);
+      //   if (!this.options || !('isShowProgress' in this.options)) this.sanitizedOptions.isShowProgress = true;
+      //   if (!this.options || !('isShowDetails' in this.options)) this.sanitizedOptions.isShowDetails = false;
+      // }
     }
   }

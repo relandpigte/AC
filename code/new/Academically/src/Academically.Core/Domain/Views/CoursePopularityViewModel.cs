@@ -40,9 +40,16 @@ namespace Academically.Domain.Views
             PopularityWeight = popularityPoints;
             CreationTime = course.CreationTime;
             CreatorUserId = course.CreatorUserId;
+            
 
-        }
+    }
 
         public int PopularityWeight { get; set; }
+        public int Modules { get; set; }
+        public int Lessons { get; set; }
+        public decimal Progress { get; set; }
+        public int Units { get; set; }
+        public int Reviews { get; set; }
+        public float Rating { get; set; }
     }
 }

@@ -6,14 +6,15 @@ using Abp.Domain.Entities.Auditing;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Interfaces;
+using Academically.Domain.Views;
 using Academically.Services.Documents.Dto;
 using Academically.Services.StudentCourses.Dto;
 using Academically.Users.Dto;
 
 namespace Academically.Services.Courses.Dto
 {
-    [AutoMap(typeof(Course))]
-    public class CourseDto : EntityDto<Guid>, IHasTopic, IHasThumbnail, IHasCreationTime
+    [AutoMap(typeof(Course), typeof(CoursePopularityViewModel))]
+    public class CourseDto : EntityDto<Guid>, IHasTopic, IHasThumbnail, IHasCreationTime, IHasPopularityWeight
     {
 
         public string Name { get; set; }
@@ -45,5 +46,10 @@ namespace Academically.Services.Courses.Dto
         public DocumentDto ImageDocument { get; set; }
 
         public IEnumerable<StudentCourseDto> StudentCourses { get; set; }
+        public int PopularityWeight { get; set; }
+        public int Modules { get; set; }
+        public int Lessons { get; set; }
+        public decimal Progress { get; set; }
+        public int Units { get; set; }
     }
 }
