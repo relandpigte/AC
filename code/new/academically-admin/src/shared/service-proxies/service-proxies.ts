@@ -1036,10 +1036,49 @@ export class ArticlesServiceProxy {
     }
 
     /**
+     * @param userIdFilter (optional) 
+     * @param startDate (optional) 
+     * @param movingDate (optional) 
+     * @param endDate (optional) 
+     * @param grain (optional) 0 = Daily
+    
+    1 = Weekly
+    
+    2 = Monthly
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getByTopic(): Observable<{ [key: string]: ArticleDto[]; }> {
-        let url_ = this.baseUrl + "/api/services/app/Articles/GetByTopic";
+    getByTopic(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
+        let url_ = this.baseUrl + "/api/services/app/Articles/GetByTopic?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (startDate === null)
+            throw new Error("The parameter 'startDate' cannot be null.");
+        else if (startDate !== undefined)
+            url_ += "StartDate=" + encodeURIComponent(startDate ? "" + startDate.toJSON() : "") + "&";
+        if (movingDate === null)
+            throw new Error("The parameter 'movingDate' cannot be null.");
+        else if (movingDate !== undefined)
+            url_ += "MovingDate=" + encodeURIComponent(movingDate ? "" + movingDate.toJSON() : "") + "&";
+        if (endDate === null)
+            throw new Error("The parameter 'endDate' cannot be null.");
+        else if (endDate !== undefined)
+            url_ += "EndDate=" + encodeURIComponent(endDate ? "" + endDate.toJSON() : "") + "&";
+        if (grain === null)
+            throw new Error("The parameter 'grain' cannot be null.");
+        else if (grain !== undefined)
+            url_ += "Grain=" + encodeURIComponent("" + grain) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1057,14 +1096,14 @@ export class ArticlesServiceProxy {
                 try {
                     return this.processGetByTopic(<any>response_);
                 } catch (e) {
-                    return <Observable<{ [key: string]: ArticleDto[]; }>><any>_observableThrow(e);
+                    return <Observable<{ [key: string]: ArticleDtoPagedResultDto; }>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<{ [key: string]: ArticleDto[]; }>><any>_observableThrow(response_);
+                return <Observable<{ [key: string]: ArticleDtoPagedResultDto; }>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetByTopic(response: HttpResponseBase): Observable<{ [key: string]: ArticleDto[]; }> {
+    protected processGetByTopic(response: HttpResponseBase): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1079,7 +1118,7 @@ export class ArticlesServiceProxy {
                 result200 = {} as any;
                 for (let key in resultData200) {
                     if (resultData200.hasOwnProperty(key))
-                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => ArticleDto.fromJS(i)) : [];
+                        (<any>result200)[key] = resultData200[key] ? ArticleDtoPagedResultDto.fromJS(resultData200[key]) : new ArticleDtoPagedResultDto();
                 }
             }
             else {
@@ -1092,28 +1131,53 @@ export class ArticlesServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<{ [key: string]: ArticleDto[]; }>(<any>null);
+        return _observableOf<{ [key: string]: ArticleDtoPagedResultDto; }>(<any>null);
     }
 
     /**
+     * @param userIdFilter (optional) 
+     * @param startDate (optional) 
+     * @param movingDate (optional) 
+     * @param endDate (optional) 
      * @param grain (optional) 0 = Daily
     
     1 = Weekly
     
     2 = Monthly
-     * @param itemsPerGroup (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getByDates(grain: DateGrains | undefined, itemsPerGroup: number | undefined): Observable<{ [key: string]: ArticleDto[]; }> {
+    getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Articles/GetByDates?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (startDate === null)
+            throw new Error("The parameter 'startDate' cannot be null.");
+        else if (startDate !== undefined)
+            url_ += "StartDate=" + encodeURIComponent(startDate ? "" + startDate.toJSON() : "") + "&";
+        if (movingDate === null)
+            throw new Error("The parameter 'movingDate' cannot be null.");
+        else if (movingDate !== undefined)
+            url_ += "MovingDate=" + encodeURIComponent(movingDate ? "" + movingDate.toJSON() : "") + "&";
+        if (endDate === null)
+            throw new Error("The parameter 'endDate' cannot be null.");
+        else if (endDate !== undefined)
+            url_ += "EndDate=" + encodeURIComponent(endDate ? "" + endDate.toJSON() : "") + "&";
         if (grain === null)
             throw new Error("The parameter 'grain' cannot be null.");
         else if (grain !== undefined)
-            url_ += "grain=" + encodeURIComponent("" + grain) + "&";
-        if (itemsPerGroup === null)
-            throw new Error("The parameter 'itemsPerGroup' cannot be null.");
-        else if (itemsPerGroup !== undefined)
-            url_ += "itemsPerGroup=" + encodeURIComponent("" + itemsPerGroup) + "&";
+            url_ += "Grain=" + encodeURIComponent("" + grain) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1131,14 +1195,14 @@ export class ArticlesServiceProxy {
                 try {
                     return this.processGetByDates(<any>response_);
                 } catch (e) {
-                    return <Observable<{ [key: string]: ArticleDto[]; }>><any>_observableThrow(e);
+                    return <Observable<{ [key: string]: ArticleDtoPagedResultDto; }>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<{ [key: string]: ArticleDto[]; }>><any>_observableThrow(response_);
+                return <Observable<{ [key: string]: ArticleDtoPagedResultDto; }>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetByDates(response: HttpResponseBase): Observable<{ [key: string]: ArticleDto[]; }> {
+    protected processGetByDates(response: HttpResponseBase): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1153,7 +1217,7 @@ export class ArticlesServiceProxy {
                 result200 = {} as any;
                 for (let key in resultData200) {
                     if (resultData200.hasOwnProperty(key))
-                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => ArticleDto.fromJS(i)) : [];
+                        (<any>result200)[key] = resultData200[key] ? ArticleDtoPagedResultDto.fromJS(resultData200[key]) : new ArticleDtoPagedResultDto();
                 }
             }
             else {
@@ -1166,7 +1230,82 @@ export class ArticlesServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<{ [key: string]: ArticleDto[]; }>(<any>null);
+        return _observableOf<{ [key: string]: ArticleDtoPagedResultDto; }>(<any>null);
+    }
+
+    /**
+     * @param userIdFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getByPopularity(userIdFilter: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
+        let url_ = this.baseUrl + "/api/services/app/Articles/GetByPopularity?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByPopularity(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByPopularity(<any>response_);
+                } catch (e) {
+                    return <Observable<{ [key: string]: ArticleDtoPagedResultDto; }>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<{ [key: string]: ArticleDtoPagedResultDto; }>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByPopularity(response: HttpResponseBase): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200) {
+                result200 = {} as any;
+                for (let key in resultData200) {
+                    if (resultData200.hasOwnProperty(key))
+                        (<any>result200)[key] = resultData200[key] ? ArticleDtoPagedResultDto.fromJS(resultData200[key]) : new ArticleDtoPagedResultDto();
+                }
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<{ [key: string]: ArticleDtoPagedResultDto; }>(<any>null);
     }
 }
 
@@ -26424,6 +26563,10 @@ export class ArticleDto implements IArticleDto {
     thumbnailDocument: Document;
     children: ArticleDto[] | undefined;
     creationTime: moment.Moment;
+    creatorUser: UserDto;
+    popularityWeight: number;
+    thumbnailImageUrl: string | undefined;
+    articlesCount: number;
 
     constructor(data?: IArticleDto) {
         if (data) {
@@ -26462,6 +26605,10 @@ export class ArticleDto implements IArticleDto {
                     this.children.push(ArticleDto.fromJS(item));
             }
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.popularityWeight = _data["popularityWeight"];
+            this.thumbnailImageUrl = _data["thumbnailImageUrl"];
+            this.articlesCount = _data["articlesCount"];
         }
     }
 
@@ -26500,6 +26647,10 @@ export class ArticleDto implements IArticleDto {
                 data["children"].push(item.toJSON());
         }
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["popularityWeight"] = this.popularityWeight;
+        data["thumbnailImageUrl"] = this.thumbnailImageUrl;
+        data["articlesCount"] = this.articlesCount;
         return data; 
     }
 
@@ -26534,6 +26685,10 @@ export interface IArticleDto {
     thumbnailDocument: Document;
     children: ArticleDto[] | undefined;
     creationTime: moment.Moment;
+    creatorUser: UserDto;
+    popularityWeight: number;
+    thumbnailImageUrl: string | undefined;
+    articlesCount: number;
 }
 
 export class ArticleDtoPagedResultDto implements IArticleDtoPagedResultDto {

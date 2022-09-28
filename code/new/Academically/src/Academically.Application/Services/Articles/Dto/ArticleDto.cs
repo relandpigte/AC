@@ -6,12 +6,13 @@ using Abp.Domain.Entities.Auditing;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Interfaces;
+using Academically.Domain.Views;
 using Academically.Services.Documents.Dto;
 using Academically.Users.Dto;
 
 namespace Academically.Services.Articles.Dto
 {
-	[AutoMap(typeof(Article))]
+	[AutoMap(typeof(Article), typeof(ArticlePopularityViewModel))]
 	public class ArticleDto : EntityDto<Guid>, IHasTopic, IHasCreationTime, IHasPopularityWeight, IHasThumbnail
 	{
 		public ArticleType Type { get; set; }
@@ -42,6 +43,7 @@ namespace Academically.Services.Articles.Dto
 		public UserDto CreatorUser { get; set; }
 		public int PopularityWeight { get; set; }
         public string ThumbnailImageUrl { get; set; }
+		public int ArticlesCount { get; set; } = 0;
 
         public ArticleDto()
 		{
