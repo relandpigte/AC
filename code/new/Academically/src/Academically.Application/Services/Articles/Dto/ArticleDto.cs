@@ -7,11 +7,12 @@ using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Interfaces;
 using Academically.Services.Documents.Dto;
+using Academically.Users.Dto;
 
 namespace Academically.Services.Articles.Dto
 {
 	[AutoMap(typeof(Article))]
-	public class ArticleDto : EntityDto<Guid>, IHasTopic, IHasCreationTime
+	public class ArticleDto : EntityDto<Guid>, IHasTopic, IHasCreationTime, IHasPopularityWeight, IHasThumbnail
 	{
 		public ArticleType Type { get; set; }
 		public string Name { get; set; }
@@ -38,8 +39,11 @@ namespace Academically.Services.Articles.Dto
 		public IEnumerable<ArticleDto> Children { get; set; }
 
 		public DateTime CreationTime { get; set; }
+		public UserDto CreatorUser { get; set; }
+		public int PopularityWeight { get; set; }
+        public string ThumbnailImageUrl { get; set; }
 
-		public ArticleDto()
+        public ArticleDto()
 		{
 		}
 	}

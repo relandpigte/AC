@@ -4,8 +4,10 @@ using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
+using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
 using Academically.Services.Articles.Dto;
+using Academically.Services.Explore.Dto;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,15 +20,17 @@ namespace Academically.Services.Articles
 	{
         private readonly IRepository<Article, Guid> _articlesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
+        private readonly IExploreRepository _exploreRepository;
 
-		public ArticlesAppService(
+        public ArticlesAppService(
             IRepository<Article, Guid> articlesRepository,
-            IDocumentsDomainService documentsDomainService
+            IDocumentsDomainService documentsDomainService,
+            IExploreRepository exploreRepository
             )
 		{
             _articlesRepository = articlesRepository;
             _documentsDomainService = documentsDomainService;
-
+            _exploreRepository = exploreRepository;
         }
 
         public async Task<PagedResultDto<ArticleDto>> GetAll(PagedArticleResultRequestDto input)
@@ -145,29 +149,82 @@ namespace Academically.Services.Articles
             await _articlesRepository.DeleteAsync(id);
         }
 
-        public async Task<Dictionary<string, List<ArticleDto>>> GetByTopicAsync()
+        public async Task<Dictionary<string, PagedResultDto<ArticleDto>>> GetByTopicAsync(PagedExploreResultRequestDto input)
         {
-            var articles = await _articlesRepository.GetAll()
-                .Where(e => e.ParentId == null)
+            var query = _articlesRepository.GetAll()
+               .Where(e => e.ParentId == null)
+               .Where(e => e.Status == ArticleStatus.Published);
+               //.WhereIf(input.UserIdFilter.HasValue, e => e.CreatorUserId != input.UserIdFilter.Value)
+               //.WhereIf(input.MovingDate.HasValue, v => v.CreationTime < input.MovingDate);
+            var totalCount = await query.CountAsync();
+            var articles = await query.OrderBy(e => e.Name)
+                .Include(e => e.ThumbnailDocument)
                 .Include(e => e.Children)
+                .Include(e => e.CreatorUser)
                 .OrderByDescending(v => v.CreationTime)
                 .Select(e => ObjectMapper.Map<ArticleDto>(e))
                 .ToListAsync();
 
-            return articles.GroupByTopicExt();
+
+            foreach (var article in articles)
+            {
+                if (article.ThumbnailDocumentId.HasValue)
+                    article.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocumentId.Value);
+                if (article.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    article.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(article.CreatorUser.ProfilePictureDocumentId.Value);
+            }
+
+            return articles.GroupByTopicsPagedExt();
         }
 
-        public async Task<Dictionary<string, List<ArticleDto>>> GetByDatesAsync(DateGrains grain, int itemsPerGroup = 6)
+        public async Task<Dictionary<string, PagedResultDto<ArticleDto>>> GetByDatesAsync(PagedExploreResultRequestDto input)
         {
-            var articles = await _articlesRepository.GetAll()
+            var query = _articlesRepository.GetAll()
                 .Where(e => e.ParentId == null)
+                .Where(e => e.Status == ArticleStatus.Published)
+                .Where(e => e.IsVisible)
+                //.WhereIf(input.UserIdFilter.HasValue, e => e.CreatorUserId != input.UserIdFilter.Value)
+                .WhereIf(input.MovingDate.HasValue && input.StartDate.HasValue, v => v.CreationTime < input.MovingDate.Value && v.CreationTime >= input.StartDate.Value) // For next page of latest month
+                .WhereIf(input.MovingDate.HasValue && !input.StartDate.HasValue && !input.EndDate.HasValue, v => v.CreationTime < input.MovingDate.Value)
+                ;
+            var totalCount = await query.CountAsync();
+            var articles = await query.OrderBy(e => e.Name)
+                .Include(e => e.ThumbnailDocument)
                 .Include(e => e.Children)
+                .Include(e => e.CreatorUser)
                 .OrderByDescending(v => v.CreationTime)
                 .Select(e => ObjectMapper.Map<ArticleDto>(e))
                 .ToListAsync();
 
-            return articles.GroupByDateRangeExt(grain, itemsPerGroup);
+            foreach (var article in articles)
+            {
+                if (article.ThumbnailDocumentId.HasValue)
+                    article.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocumentId.Value);
+                if (article.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    article.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(article.CreatorUser.ProfilePictureDocumentId.Value);
+            }
+
+            return articles.GroupByDateRangePagedExt(input.Grain, input.MaxResultCount);
         }
+
+        public async Task<Dictionary<string, PagedResultDto<ArticleDto>>> GetByPopularityAsync(PagedPopularRequestDto input)
+        {
+            var popularVideos = (await _exploreRepository.GetPopularArticles(input.SkipCount, input.MaxResultCount, input.UserIdFilter))
+                    .Select(e => ObjectMapper.Map<ArticleDto>(e))
+                    .ToList();
+
+            foreach (var vid in popularVideos)
+            {
+                if (vid.ThumbnailDocumentId.HasValue)
+                    vid.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(vid.ThumbnailDocumentId.Value);
+                if (vid.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    vid.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(vid.CreatorUser.ProfilePictureDocumentId.Value);
+            }
+
+            return popularVideos.GroupByPopularityPagedExt(input.MaxResultCount);
+        }
+
+
     }
 }
 
