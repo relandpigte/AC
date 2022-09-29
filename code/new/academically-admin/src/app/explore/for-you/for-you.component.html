@@ -2,18 +2,21 @@
   <div class="header">
     <div class="container-fluid p-0">
       <div class="header-body">
-        <div class="row align-items-center">
-          <div class="col d-flex flex-wrap gap-15">
-            <h3>All Types</h3>
+
+        <ng-container *ngIf="top3UpcomingEvent?.length">
+          <div class="row align-items-center">
+            <div class="col d-flex flex-wrap gap-15">
+              <h3>Upcoming Events</h3>
+            </div>            
           </div>
-        </div>
-        <div class="row align-items-center mb-5">
-          <div class="col d-flex flex-wrap gap-27">
-            <app-service-card *ngFor="let d of data" [data]="d" [isLoading]="isLoading"></app-service-card>
-            <div class="flex-break"></div>
-            <div class="btn btn-block btn-white flex-grow-1">Show More</div>
+          <div class="row align-items-center mb-5">
+            <div class="col d-flex flex-wrap gap-27">
+              <app-service-card *ngFor="let d of top3UpcomingEvent" [data]="d" [isLoading]="isLoading"></app-service-card>
+              <div class="flex-break"></div>
+            </div>
           </div>
-        </div>
+        </ng-container>
+        
       </div>
     </div>
   </div>
