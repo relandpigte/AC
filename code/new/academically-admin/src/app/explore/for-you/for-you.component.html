@@ -3,7 +3,35 @@
     <div class="container-fluid p-0">
       <div class="header-body">
 
-        <ng-container *ngIf="top3UpcomingEvent?.length">
+        <ng-container *ngIf="top3Tutorials?.length > 0">
+          <div class="row align-items-center">
+            <div class="col d-flex flex-wrap gap-15">
+              <h3>Recommended Tutorials</h3>
+            </div>            
+          </div>
+          <div class="row align-items-center mb-5">
+            <div class="col d-flex flex-wrap gap-27">
+              <app-service-card *ngFor="let t1 of top3Tutorials" [data]="t1" [isLoading]="isLoadingTutorials"></app-service-card>
+              <div class="flex-break"></div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="top3VideosData !== undefined">
+          <div class="row align-items-center">
+            <div class="col d-flex flex-wrap gap-15">
+              <h3>Recommended Tutorials</h3>
+            </div>            
+          </div>
+          <div class="row align-items-center mb-5">
+            <div class="col d-flex flex-wrap gap-27">
+              <app-service-card *ngFor="let t2 of top3VideosData.items" [data]="t2" [isLoading]="isLoadingTutorials"></app-service-card>
+              <div class="flex-break"></div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="top3UpcomingEvent?.length > 0">
           <div class="row align-items-center">
             <div class="col d-flex flex-wrap gap-15">
               <h3>Upcoming Events</h3>
@@ -11,7 +39,7 @@
           </div>
           <div class="row align-items-center mb-5">
             <div class="col d-flex flex-wrap gap-27">
-              <app-service-card *ngFor="let d of top3UpcomingEvent" [data]="d" [isLoading]="isLoading"></app-service-card>
+              <app-service-card *ngFor="let e1 of top3UpcomingEvent" [data]="e1" [isLoading]="isLoadingEvents"></app-service-card>
               <div class="flex-break"></div>
             </div>
           </div>
