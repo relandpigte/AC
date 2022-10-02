@@ -45,6 +45,20 @@
           </div>
         </ng-container>
         
+        <ng-container *ngIf="top3coaching?.length">
+          <div class="row align-items-center">
+            <div class="col d-flex flex-wrap gap-15">
+              <h3>New Coaching</h3>
+            </div>            
+          </div>
+          <div class="row align-items-center mb-5">
+            <div class="col d-flex flex-wrap gap-27">
+              <app-service-card *ngFor="let d of top3coaching" [data]="d" [isLoading]="isLoadingCoaching"></app-service-card>
+              <div class="flex-break"></div>
+            </div>
+          </div>
+        </ng-container>
+        
       </div>
     </div>
   </div>
