@@ -1,10 +1,9 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { VideoDto, VideosServiceProxy, DateGrains, VideoDtoPagedResultDto, EventDto, EventsServiceProxy, CoachingsServiceProxy, CoachingDto } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, ArticlesServiceProxy, ArticleStatus, CoachingDto, CoachingsServiceProxy, CoachingStatus, CourseDto, CoursesServiceProxy, DateGrains, EventDto, EventsServiceProxy, UserDto, UserServiceProxy, VideoDto, VideoDtoPagedResultDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 
-import * as moment from 'moment';
 import * as _ from 'lodash';
 
 @Component({
@@ -15,72 +14,116 @@ import * as _ from 'lodash';
 })
 export class ExploreForYouComponent extends AppComponentBase implements OnInit {
 
-  top3Tutorials: VideoDto[] = Array(3).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
-  top3UpcomingEvent: EventDto[] = Array(3).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
-  top3coaching: CoachingDto[] = Array(3).fill([]).map(() => this.generateRandomCoaching()) as CoachingDto[];
+  newUsers: UserDto[] = Array(5).fill([]).map(() => this.generateRandomUser()) as UserDto[];
+  upcomingEvents: EventDto[] = Array(4).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
+  recommendedCourses: CourseDto[] = Array(4).fill([]).map(() => this.generateRandomCourse()) as CourseDto[];
+  newArticles: ArticleDto[] =  Array(4).fill([]).map(() => this.generateRandomArticle()) as ArticleDto[];
+  recommendedTutorials: VideoDto[] = Array(4).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
+  newCoachings: CoachingDto[] = Array(4).fill([]).map(() => this.generateRandomCoaching()) as CoachingDto[];
 
-  top3VideosData: VideoDtoPagedResultDto;
-
-  isLoadingTutorials = true;
-  isLoadingEvents = true;
-  isLoadingCoaching = true;
+  isLoadingNewUsers = true;
+  isLoadingUpcomingEvents = true;
+  isLoadingRecommendedCourses = true;
+  isLoadingNewArticles = true;
+  isLoadingRecommendedTutorials = true;
+  isLoadingNewCoachings = true;
 
   constructor(
     injector: Injector,
-    private _videoService: VideosServiceProxy,
+    private _usersService: UserServiceProxy,
     private _eventsService: EventsServiceProxy,
+    private _coursesService: CoursesServiceProxy,
+    private _articlesService: ArticlesServiceProxy,
+    private _videoService: VideosServiceProxy,
     private _coachingsService: CoachingsServiceProxy
   ) {
     super(injector);
   }
 
   ngOnInit(): void {
-    this.loadDataTutorials();    
-    this.loadDataEvents();
-    this.loadDataCoaching();
+    this.loadNewUsers();
+    this.loadUpcomingEvents();
+    this.loadRecommendedCourses();
+    this.loadNewArticles();
+    this.loadRecommendedTutorials();
+    this.loadNewCoachings();
   }
 
-  private loadDataTutorials(): void {
-    this.isLoadingTutorials = true;
-    this._videoService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Monthly, undefined, 3)
+  private loadNewUsers(): void {
+    this.isLoadingNewUsers = true;
+    this._usersService.getAll('', true, 'creationTime desc', 0, 10)
       .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this.isLoadingTutorials = false))
-      .subscribe(videos => {       
-        if (videos) {          
-          this.top3Tutorials = [];
-
-          Object.keys(videos).forEach(range => {
-            this.top3VideosData = videos[range];              
-          });
-        } 
-    });
-  }
-  private loadDataCoaching(): void {
-    this.isLoadingCoaching = true;
-    this._coachingsService.getByDates(DateGrains.Monthly, 3)
-      .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this.isLoadingCoaching = false))
-      .subscribe(coachings => {
-        this.top3coaching = [];
-        Object.keys(coachings).forEach(range => {
-            this.top3coaching = _.concat(this.top3coaching, coachings[range]);
-        });
-    });
+      .pipe(finalize(() => this.isLoadingNewUsers = false))
+      .subscribe(users => {
+        this.newUsers = users?.items ?? [];
+      });
   }
 
-  private loadDataEvents(): void {
-    this.isLoadingEvents = true;
-    this._eventsService.getByDates(DateGrains.Monthly, 3)
+  private loadUpcomingEvents(): void {
+    this.isLoadingUpcomingEvents = true;
+    this._eventsService.getByDates(DateGrains.Monthly, 10)
       .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this.isLoadingEvents = false))
+      .pipe(finalize(() => this.isLoadingUpcomingEvents = false))
       .subscribe(events => {
         if (events) {
-          this.top3UpcomingEvent = [];
+          this.upcomingEvents = [];
           Object.keys(events).forEach(range => {
-            this.top3UpcomingEvent = _.concat(this.top3UpcomingEvent, events[range]);
+            this.upcomingEvents = _.concat(this.upcomingEvents, events[range]);
           });
-        }        
-    });       
+        }
+    });
   }
-  
+
+  private loadRecommendedCourses(): void {
+    this.isLoadingRecommendedCourses = true;
+    this._coursesService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Monthly, 0, 10)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isLoadingRecommendedCourses = false))
+      .subscribe(pagedCourses => {
+        const courses = pagedCourses?.items;
+        if (courses) {
+          this.recommendedCourses = [];
+          Object.keys(courses).forEach(range => {
+            this.recommendedCourses = _.concat(this.recommendedCourses, courses[range]);
+          });
+        }
+    });
+  }
+
+  private loadNewArticles(): void {
+    this.isLoadingNewArticles = true;
+    this._articlesService.getAll(this.appSession.userId, '', ArticleStatus.Published, 'creationTime desc', 0, 10)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isLoadingNewArticles = false))
+      .subscribe(articles => {
+        this.newArticles = articles?.items ?? [];
+      });
+  }
+
+  private loadRecommendedTutorials(): void {
+    this.isLoadingRecommendedTutorials = true;
+    this._videoService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Monthly, 0, 10)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isLoadingRecommendedTutorials = false))
+      .subscribe(pagedVideos => {
+        const videos = pagedVideos?.items;
+        if (videos) {
+          this.recommendedTutorials = [];
+          Object.keys(videos).forEach(range => {
+            this.recommendedTutorials =  _.concat(this.recommendedTutorials, videos[range]);
+          });
+        }
+    });
+  }
+
+  private loadNewCoachings(): void {
+    this.isLoadingNewCoachings = true;
+    this._coachingsService.getAll(undefined, this.appSession.userId, '', CoachingStatus.Published, 'creationTime desc', 0, 10)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isLoadingNewCoachings = false))
+      .subscribe(coachings => {
+        this.newCoachings = coachings?.items ?? [];
+      });
+  }
+
 }

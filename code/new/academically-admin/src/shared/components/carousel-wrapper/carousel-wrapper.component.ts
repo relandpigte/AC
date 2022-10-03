@@ -48,20 +48,22 @@ export class CarouselWrapperComponent extends AppComponentBase implements OnInit
 
   @HostListener('window:resize')
   onWindowResize() {
-    if (this.windowResizeInterval$) clearTimeout(this.windowResizeInterval$);
-    this.windowResizeInterval$ = setTimeout(() => this.computeVisibleItems(), 500);
+    this.computeVisibleItems();
   }
 
   private computeVisibleItems(): void {
-    const serviceCard = this._elRef.nativeElement.querySelector('.service-card');
-    if (serviceCard) {
-      const containerWidth = this._elRef.nativeElement.getBoundingClientRect().width;
-      const cardWidth = serviceCard.getBoundingClientRect().width;
-      this.visibleItems = Math.floor(containerWidth / cardWidth);
-    }
-    this.pages = this.items.length - this.visibleItems;
-    this.renderCarousel = false;
-    setTimeout(() => this.renderCarousel = true, 100);
+    if (this.windowResizeInterval$) clearTimeout(this.windowResizeInterval$);
+    this.windowResizeInterval$ = setTimeout(() => {
+      const serviceCard = this._elRef.nativeElement.querySelector('.service-card');
+      if (serviceCard) {
+        const containerWidth = this._elRef.nativeElement.getBoundingClientRect().width;
+        const cardWidth = serviceCard.getBoundingClientRect().width;
+        this.visibleItems = Math.floor(containerWidth / cardWidth);
+      }
+      this.pages = this.items.length - this.visibleItems;
+      this.renderCarousel = false;
+      setTimeout(() => this.renderCarousel = true, 100);
+    }, 100);
   }
 
   onPage(event: any): void {

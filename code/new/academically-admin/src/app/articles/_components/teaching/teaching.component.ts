@@ -85,6 +85,7 @@ export class TeachingComponent extends PagedListingComponentBase<ArticleDto> imp
         request.userIdFilter,
         request.searchFilter,
         request.statusFilter,
+        undefined,
         request.skipCount,
         request.maxResultCount
       )

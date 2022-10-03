@@ -68,6 +68,7 @@ export class CoachingsComponent extends PagedListingComponentBase<CoachingDto> i
         undefined,
         request.searchFilter,
         request.statusFilter,
+        undefined,
         request.skipCount,
         request.maxResultCount
       )

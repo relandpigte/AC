@@ -4,7 +4,7 @@ using System;
 
 namespace Academically.Services.Coachings.Dto
 {
-    public  class PagedCoachingResultRequestDto : PagedResultRequestDto
+    public  class PagedCoachingResultRequestDto : PagedAndSortedResultRequestDto
     {
         public Guid? ParentIdFilter { get; set; }
         public long? UserIdFilter { get; set; }

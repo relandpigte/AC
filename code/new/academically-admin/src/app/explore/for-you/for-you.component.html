@@ -1,64 +1,62 @@
 <div [@routerTransition]>
   <div class="header">
     <div class="container-fluid p-0">
-      <div class="header-body">
+      <div class="header-body p-0 pb-5">
 
-        <ng-container *ngIf="top3Tutorials?.length > 0">
-          <div class="row align-items-center">
+        <ng-container *ngIf="newUsers?.length > 0">
+          <div class="row align-items-center" [style.marginBottom.px]="25">
             <div class="col d-flex flex-wrap gap-15">
-              <h3>Recommended Tutorials</h3>
-            </div>            
-          </div>
-          <div class="row align-items-center mb-5">
-            <div class="col d-flex flex-wrap gap-27">
-              <app-service-card *ngFor="let t1 of top3Tutorials" [data]="t1" [isLoading]="isLoadingTutorials"></app-service-card>
-              <div class="flex-break"></div>
+              <span class="recommended-title">New Users</span>
             </div>
           </div>
+          <app-carousel [items]="newUsers" [isLoading]="isLoadingNewUsers"></app-carousel>
         </ng-container>
 
-        <ng-container *ngIf="top3VideosData !== undefined">
-          <div class="row align-items-center">
+        <ng-container *ngIf="upcomingEvents?.length > 0">
+          <div class="row align-items-center" [style.marginTop.px]="45" [style.marginBottom.px]="25">
             <div class="col d-flex flex-wrap gap-15">
-              <h3>Recommended Tutorials</h3>
-            </div>            
-          </div>
-          <div class="row align-items-center mb-5">
-            <div class="col d-flex flex-wrap gap-27">
-              <app-service-card *ngFor="let t2 of top3VideosData.items" [data]="t2" [isLoading]="isLoadingTutorials"></app-service-card>
-              <div class="flex-break"></div>
+              <span class="recommended-title">Upcoming Events</span>
             </div>
           </div>
+          <app-carousel [items]="upcomingEvents" [isLoading]="isLoadingUpcomingEvents"></app-carousel>
         </ng-container>
 
-        <ng-container *ngIf="top3UpcomingEvent?.length > 0">
-          <div class="row align-items-center">
+        <ng-container *ngIf="upcomingEvents?.length > 0">
+          <div class="row align-items-center" [style.marginTop.px]="45" [style.marginBottom.px]="25">
             <div class="col d-flex flex-wrap gap-15">
-              <h3>Upcoming Events</h3>
-            </div>            
-          </div>
-          <div class="row align-items-center mb-5">
-            <div class="col d-flex flex-wrap gap-27">
-              <app-service-card *ngFor="let e1 of top3UpcomingEvent" [data]="e1" [isLoading]="isLoadingEvents"></app-service-card>
-              <div class="flex-break"></div>
+              <span class="recommended-title">Recommended Courses</span>
             </div>
           </div>
+          <app-carousel [items]="recommendedCourses" [isLoading]="isLoadingRecommendedCourses"></app-carousel>
         </ng-container>
-        
-        <ng-container *ngIf="top3coaching?.length">
-          <div class="row align-items-center">
+
+        <ng-container *ngIf="newArticles?.length > 0">
+          <div class="row align-items-center" [style.marginTop.px]="45" [style.marginBottom.px]="25">
             <div class="col d-flex flex-wrap gap-15">
-              <h3>New Coaching</h3>
-            </div>            
-          </div>
-          <div class="row align-items-center mb-5">
-            <div class="col d-flex flex-wrap gap-27">
-              <app-service-card *ngFor="let d of top3coaching" [data]="d" [isLoading]="isLoadingCoaching"></app-service-card>
-              <div class="flex-break"></div>
+              <span class="recommended-title">New Articles</span>
             </div>
           </div>
+          <app-carousel [items]="newArticles" [isLoading]="isLoadingNewArticles"></app-carousel>
         </ng-container>
-        
+
+        <ng-container *ngIf="upcomingEvents?.length > 0">
+          <div class="row align-items-center" [style.marginTop.px]="45" [style.marginBottom.px]="25">
+            <div class="col d-flex flex-wrap gap-15">
+              <span class="recommended-title">Recommended Tutorials</span>
+            </div>
+          </div>
+          <app-carousel [items]="recommendedTutorials" [isLoading]="isLoadingRecommendedTutorials"></app-carousel>
+        </ng-container>
+
+        <ng-container *ngIf="newCoachings?.length > 0">
+          <div class="row align-items-center" [style.marginTop.px]="45" [style.marginBottom.px]="25">
+            <div class="col d-flex flex-wrap gap-15">
+              <span class="recommended-title">New Coachings</span>
+            </div>
+          </div>
+          <app-carousel [items]="newCoachings" [isLoading]="isLoadingNewCoachings"></app-carousel>
+        </ng-container>
+
       </div>
     </div>
   </div>

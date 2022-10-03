@@ -4,7 +4,7 @@ using Academically.Domain.Enums;
 
 namespace Academically.Services.Articles.Dto
 {
-    public class PagedArticleResultRequestDto : PagedResultRequestDto
+    public class PagedArticleResultRequestDto : PagedAndSortedResultRequestDto
     {
         public long? UserIdFilter { get; set; }
         public string SearchFilter { get; set; }

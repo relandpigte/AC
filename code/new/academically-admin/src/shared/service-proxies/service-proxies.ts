@@ -491,11 +491,12 @@ export class ArticlesServiceProxy {
      * @param statusFilter (optional) 0 = Draft
     
     1 = Published
+     * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(userIdFilter: number | undefined, searchFilter: string | undefined, statusFilter: ArticleStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
+    getAll(userIdFilter: number | undefined, searchFilter: string | undefined, statusFilter: ArticleStatus | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Articles/GetAll?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
@@ -509,6 +510,10 @@ export class ArticlesServiceProxy {
             throw new Error("The parameter 'statusFilter' cannot be null.");
         else if (statusFilter !== undefined)
             url_ += "StatusFilter=" + encodeURIComponent("" + statusFilter) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -3415,11 +3420,12 @@ export class CoachingsServiceProxy {
      * @param statusFilter (optional) 0 = Draft
     
     1 = Published
+     * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(parentIdFilter: string | undefined, userIdFilter: number | undefined, searchFilter: string | undefined, statusFilter: CoachingStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CoachingDtoPagedResultDto> {
+    getAll(parentIdFilter: string | undefined, userIdFilter: number | undefined, searchFilter: string | undefined, statusFilter: CoachingStatus | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CoachingDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Coachings/GetAll?";
         if (parentIdFilter === null)
             throw new Error("The parameter 'parentIdFilter' cannot be null.");
@@ -3437,6 +3443,10 @@ export class CoachingsServiceProxy {
             throw new Error("The parameter 'statusFilter' cannot be null.");
         else if (statusFilter !== undefined)
             url_ += "StatusFilter=" + encodeURIComponent("" + statusFilter) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)

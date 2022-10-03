@@ -18,5 +18,5 @@ export class ExploreComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
   }
 
-  get heroBannerSrc(): string { return `https://picsum.photos/seed/${this.uuidv4()}/500`; }
+  get heroBannerSrc(): string { return `https://picsum.photos/500`; }
 }

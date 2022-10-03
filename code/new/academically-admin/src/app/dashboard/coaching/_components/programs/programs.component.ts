@@ -81,6 +81,7 @@ export class ProgramsComponent extends PagedListingComponentBase<CoachingDto> im
         request.userIdFilter,
         request.searchFilter,
         request.statusFilter,
+        undefined,
         request.skipCount,
         request.maxResultCount
       )

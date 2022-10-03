@@ -338,7 +338,7 @@ import * as moment from 'moment';
     private setTempValues(): void {
       if (!this.sanitized) return;
       if (this.isFeatured) {
-        this.sanitized.images = Array(this.randomNonZero(4, 1)).fill({} as ServiceCardImage).map(i => ({...i, src: `https://picsum.photos/seed/${this.uuidv4()}/500`}));
+        this.sanitized.images = Array(this.randomNonZero(4, 1)).fill({} as ServiceCardImage).map(i => ({...i, src: `https://picsum.photos/500`}));
       }
 
       if (!this.sanitized.reviews) this.sanitized.reviews = { value: 5, hasStar: true, count: 253 } as ServiceCardReview;

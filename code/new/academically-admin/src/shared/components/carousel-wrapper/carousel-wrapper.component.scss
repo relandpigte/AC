@@ -1,5 +1,6 @@
 ::ng-deep .hidden {
     visibility: hidden;
+    display: none !important;
 }
 
 ::ng-deep .p-carousel-container {
@@ -25,6 +26,10 @@
             box-shadow: none !important;
         }
 
+        &.p-disabled {
+            display: none !important;
+        }
+
         > span {
             display: none;
         }
@@ -47,6 +52,10 @@
 
         &:focus {
             box-shadow: none !important;
+        }
+
+        &.p-disabled {
+            display: none !important;
         }
 
         > span {

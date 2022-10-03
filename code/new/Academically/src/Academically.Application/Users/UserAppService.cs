@@ -13,6 +13,7 @@ using Abp.UI;
 using Academically.Authorization;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
+using Academically.Domain.Services.Documents;
 using Academically.Roles.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Identity;
@@ -37,6 +38,7 @@ namespace Academically.Users
         private readonly LogInManager _logInManager;
         private readonly UrlEncoder _urlEncoder;
         private readonly ISettingManager _settingManager;
+        private readonly IDocumentsDomainService _documentsDomainService;
 
         public UserAppService(
             IRepository<User, long> repository,
@@ -47,7 +49,8 @@ namespace Academically.Users
             IAbpSession abpSession,
             LogInManager logInManager,
             UrlEncoder urlEncoder,
-            ISettingManager settingManager
+            ISettingManager settingManager,
+            IDocumentsDomainService documentsDomainService
             )
             : base(repository)
         {
@@ -59,7 +62,7 @@ namespace Academically.Users
             _logInManager = logInManager;
             _urlEncoder = urlEncoder;
             _settingManager = settingManager;
-
+            _documentsDomainService = documentsDomainService;
         }
 
         [AbpAuthorize(PermissionNames.Pages_Users_Create)]
@@ -152,12 +155,16 @@ namespace Academically.Users
             userDto.RoleNames = roles.Select(e => e.NormalizedName).ToArray();
             userDto.RoleDisplayNames = roles.Select(e => e.DisplayName).ToArray();
 
+            if (userDto.ProfilePictureDocumentId.HasValue)
+                userDto.ProfilePictureUrl = Task.Run(async () => await _documentsDomainService.GetFileUrlAsync(userDto.ProfilePictureDocumentId.Value)).Result;
+
             return userDto;
         }
 
         protected override IQueryable<User> CreateFilteredQuery(PagedUserResultRequestDto input)
         {
             return Repository.GetAllIncluding(x => x.Roles)
+                .Include(x => x.ProfilePictureDocument)
                 .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(input.Keyword)
                     || x.Surname.Contains(input.Keyword)
                     || x.EmailAddress.Contains(input.Keyword)
