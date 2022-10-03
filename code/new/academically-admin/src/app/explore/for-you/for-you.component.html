@@ -59,6 +59,34 @@
           </div>
         </ng-container>
         
+        <ng-container *ngIf="top3courses?.length > 0">
+          <div class="row align-items-center">
+            <div class="col d-flex flex-wrap gap-15">
+              <h3>Recommended Courses</h3>
+            </div>            
+          </div>
+          <div class="row align-items-center mb-5">
+            <div class="col d-flex flex-wrap gap-27">
+              <app-service-card *ngFor="let t1 of top3courses" [data]="t1" [isLoading]="isLoadingCourses"></app-service-card>
+              <div class="flex-break"></div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="top3CoursesData !== undefined">
+          <div class="row align-items-center">
+            <div class="col d-flex flex-wrap gap-15">
+              <h3>Recommended Courses</h3>
+            </div>            
+          </div>
+          <div class="row align-items-center mb-5">
+            <div class="col d-flex flex-wrap gap-27">
+              <app-service-card *ngFor="let t2 of top3CoursesData.items" [data]="t2" [isLoading]="isLoadingCourses"></app-service-card>
+              <div class="flex-break"></div>
+            </div>
+          </div>
+        </ng-container>
+
       </div>
     </div>
   </div>
