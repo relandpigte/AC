@@ -3,6 +3,34 @@
     <div class="container-fluid p-0">
       <div class="header-body">
 
+        <ng-container *ngIf="top2articles?.length">
+          <div class="row align-items-center">
+            <div class="col d-flex flex-wrap gap-15">
+              <h3>New Articles</h3>
+            </div>            
+          </div>
+          <div class="row align-items-center mb-5">
+            <div class="col d-flex flex-wrap gap-27">
+              <app-service-card *ngFor="let t1 of top2articles" [data]="t1" [isLoading]="isLoadingArticles"></app-service-card>
+              <div class="flex-break"></div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="top2ArticlesData !== undefined">
+          <div class="row align-items-center">
+            <div class="col d-flex flex-wrap gap-15">
+              <h3>New Articles</h3>
+            </div>            
+          </div>
+          <div class="row align-items-center mb-5">
+            <div class="col d-flex flex-wrap gap-27">
+              <app-service-card *ngFor="let t2 of top2ArticlesData.items" [data]="t2" [isLoading]="isLoadingArticles"></app-service-card>
+              <div class="flex-break"></div>
+            </div>
+          </div>
+        </ng-container>
+
         <ng-container *ngIf="top3Tutorials?.length > 0">
           <div class="row align-items-center">
             <div class="col d-flex flex-wrap gap-15">
