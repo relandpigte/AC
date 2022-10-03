@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+	<text name="TopicsAndTags">Topics and tags</text>
 	<text name="DeleteEventOfferConfirmationMessage">Are you sure you want to delete this offer?</text>
 	<text name="SelectAnItem">Select an item</text>
     <text name="Seconds">Seconds</text>
