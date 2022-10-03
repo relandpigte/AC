@@ -65,7 +65,7 @@ namespace Academically.EntityFrameworkCore.Repositories.Explore
             var coursesContext = _dbContextProvider.GetDbContext().Courses
                     .Include(e => e.ImageDocument)
                     .Include(e => e.CreatorUser)
-                    .Where(e => e.Status == CourseStatus.Published)
+                    //.Where(e => e.Status == CourseStatus.Published)
                     .Where(e => e.IsVisible)
                     //.WhereIf(input.userIdFilter.HasValue, e => e.CreatorUserId != userIdFilter.Value)
                     .AsQueryable();

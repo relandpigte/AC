@@ -93,7 +93,7 @@ namespace Academically.Services.Courses
         public async Task<Dictionary<string, PagedResultDto<CourseDto>>> GetByTopicAsync(PagedExploreResultRequestDto input)
         {
             var query = Repository.GetAll()
-                .Where(e => e.Status == CourseStatus.Published)
+                //.Where(e => e.Status == CourseStatus.Published)
                 .Where(e => e.IsVisible)
                 //.WhereIf(input.MovingDate.HasValue && input.StartDate.HasValue, v => v.CreationTime < input.MovingDate.Value && v.CreationTime >= input.StartDate.Value) // For next page of latest month
                 //.WhereIf(input.MovingDate.HasValue && !input.StartDate.HasValue && !input.EndDate.HasValue, v => v.CreationTime < input.MovingDate.Value)
@@ -136,7 +136,7 @@ namespace Academically.Services.Courses
         public async Task<Dictionary<string, PagedResultDto<CourseDto>>> GetByDatesAsync(PagedExploreResultRequestDto input)
         {
             var query = Repository.GetAll()
-                .Where(e => e.Status == CourseStatus.Published)
+                //.Where(e => e.Status == CourseStatus.Published)
                 .Where(e => e.IsVisible)
                 .WhereIf(input.MovingDate.HasValue && input.StartDate.HasValue, v => v.CreationTime < input.MovingDate.Value && v.CreationTime >= input.StartDate.Value) // For next page of latest month
                 .WhereIf(input.MovingDate.HasValue && !input.StartDate.HasValue && !input.EndDate.HasValue, v => v.CreationTime < input.MovingDate.Value)
