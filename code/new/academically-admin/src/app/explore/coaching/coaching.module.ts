@@ -16,5 +16,8 @@ import { ExploreCoachingComponent } from './coaching.component';
     SharedModule,
     AppSharedModule,
   ],
+  exports: [
+    ExploreCoachingComponent
+  ]
 })
 export class ExploreCoachingModule { }

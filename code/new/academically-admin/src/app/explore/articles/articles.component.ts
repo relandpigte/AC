@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { ArticleService } from '@app/articles/_services/article.service';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -16,6 +16,10 @@ import * as _ from 'lodash';
 })
 export class ExploreArticlesComponent extends AppComponentBase implements OnInit {
 
+  @Input() isGroupByTopics = false;
+
+  topicGroups: { [key: string]: ArticleDtoPagedResultDto  } = { 'Topic': { items: Array(3).fill([]).map(() => this.generateRandomArticle()) as ArticleDto[], totalCount: 3 } as ArticleDtoPagedResultDto };
+
   latest: ArticleDtoPagedResultDto;
   latestStartDate: moment.Moment;
   lastMonth: ArticleDtoPagedResultDto;
@@ -31,6 +35,8 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
   itemsPerGroup = 6;
   popularItems = 3;
 
+  get topics(): string[] { return this.topicGroups ? Object.keys(this.topicGroups) : null; }
+
   constructor(
     injector: Injector,
     private _articleService: ArticlesServiceProxy
@@ -39,9 +45,7 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
   }
 
   ngOnInit(): void {
-    this.loadData(0);
-    this.loadPopular(0);
-    setTimeout(() => this.isLoading = false, 5000);
+    this.loadData();
   }
 
   setLatestShowMoreButtons(items: number): void {
@@ -68,7 +72,25 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
     }
   }
 
-  private loadData(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
+  private loadData(): void {
+    this.isLoading = true;
+    if (this.isGroupByTopics) this.loadGroupedByTopics(0);
+    else {
+      this.loadGroupedByDates(0);
+      this.loadPopular(0);
+    }
+  }
+
+  private loadGroupedByTopics(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
+    this._articleService.getByTopic(this.appSession.userId, start, moving, end, DateGrains.Monthly, currentCount, this.itemsPerGroup)
+    .pipe(takeUntil(this.destroyed$))
+    .pipe(finalize(() => this.isLoading = false))
+    .subscribe(articles => {
+      this.topicGroups = articles;
+    });
+  }
+
+  private loadGroupedByDates(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
     this.isLoading = true;
     this._articleService.getByDates(this.appSession.userId, start,moving, end, DateGrains.Monthly, currentCount, this.itemsPerGroup)
       .pipe(takeUntil(this.destroyed$))
@@ -141,13 +163,13 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
   onShowMoreLatestButtonClick(): void {
     const lastItem = this.latest.items.slice(-1)[0];
     console.log('LAST ITEM --->', lastItem)
-    this.loadData(this.latest.items.length, this.latestStartDate, lastItem.creationTime);
+    this.loadGroupedByDates(this.latest.items.length, this.latestStartDate, lastItem.creationTime);
   }
 
   onShowMoreLastMonthButtonClick(): void {
     const lastItem = this.lastMonth.items.slice(-1)[0];
     console.log('POPULAR BUTTON CLICKED');
-    this.loadData(this.lastMonth.items.length, null, lastItem.creationTime);
+    this.loadGroupedByDates(this.lastMonth.items.length, null, lastItem.creationTime);
   }
 
 }

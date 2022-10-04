@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, TrackByFunction } from '@angular/core';
+import { Component, Injector, Input, OnInit, TrackByFunction } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DateGrains, VideoDto, VideoDtoPagedResultDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -13,6 +13,10 @@ import { finalize, takeUntil } from 'rxjs/operators';
   animations: [appModuleAnimation()],
 })
 export class ExploreTutorialsComponent extends AppComponentBase implements OnInit {
+
+  @Input() isGroupByTopics = false;
+
+  topicGroups: { [key: string]: VideoDtoPagedResultDto } = { 'Topic': { items: Array(3).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[], totalCount: 3 } as VideoDtoPagedResultDto };
 
   latest: VideoDtoPagedResultDto;
   latestStartDate: moment.Moment;
@@ -31,6 +35,8 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
   itemsPerGroup = 6;
   popularItems = 3;
 
+  get topics(): string[] { return this.topicGroups ? Object.keys(this.topicGroups) : null; }
+
   constructor(
     injector: Injector,
     private _videoService: VideosServiceProxy,
@@ -39,10 +45,16 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
   }
 
   ngOnInit(): void {
-    this.loadData(0);
-    this.loadPopular(0);
-    setTimeout(() => this.isLoading = false, 5000);
+    this.loadData();
+  }
 
+  private loadData(): void {
+    this.isLoading = true;
+    if (this.isGroupByTopics) this.loadGroupedByTopics(0);
+    else {
+      this.loadGroupedByDates(0);
+      this.loadPopular(0);
+    }
   }
 
   setLatestShowMoreButtons(items: number): void {
@@ -69,7 +81,16 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
     }
   }
 
-  private loadData(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
+  private loadGroupedByTopics(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
+    this._videoService.getByTopic(this.appSession.userId, start, moving, end, DateGrains.Monthly, currentCount, this.itemsPerGroup)
+    .pipe(takeUntil(this.destroyed$))
+    .pipe(finalize(() => this.isLoading = false))
+    .subscribe(courses => {
+      this.topicGroups = courses;
+    });
+  }
+
+  private loadGroupedByDates(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
     this.isLoading = true;
     this._videoService.getByDates(this.appSession.userId, start,moving, end, DateGrains.Monthly, currentCount, this.itemsPerGroup)
       .pipe(takeUntil(this.destroyed$))
@@ -142,13 +163,13 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
   onShowMoreLatestButtonClick(): void {
     const lastItem = this.latest.items.slice(-1)[0];
     console.log('LAST ITEM --->', lastItem)
-    this.loadData(this.latest.items.length, this.latestStartDate, lastItem.creationTime);
+    this.loadGroupedByDates(this.latest.items.length, this.latestStartDate, lastItem.creationTime);
   }
 
   onShowMoreLastMonthButtonClick(): void {
     const lastItem = this.lastMonth.items.slice(-1)[0];
     console.log('POPULAR BUTTON CLICKED');
-    this.loadData(this.lastMonth.items.length, null, lastItem.creationTime);
+    this.loadGroupedByDates(this.lastMonth.items.length, null, lastItem.creationTime);
   }
 
 }

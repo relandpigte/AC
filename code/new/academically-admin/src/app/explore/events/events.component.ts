@@ -27,7 +27,6 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
 
   get topics(): string[] { return this.topicGroups ? Object.keys(this.topicGroups) : null; }
 
-
   constructor(
     injector: Injector,
     private _eventsService: EventsServiceProxy

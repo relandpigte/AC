@@ -53,7 +53,13 @@
 
       <div [style.marginTop.px]="50">
         <ng-container [ngSwitch]="type">
+          <ng-container *ngSwitchCase="'courses'"><app-explore-courses [isGroupByTopics]="true"></app-explore-courses></ng-container>
           <ng-container *ngSwitchCase="'events'"><app-explore-events [isGroupByTopics]="true"></app-explore-events></ng-container>
+          <ng-container *ngSwitchCase="'coachings'"><app-explore-coachings [isGroupByTopics]="true"></app-explore-coachings></ng-container>
+          <ng-container *ngSwitchCase="'tutorials'"><app-explore-tutorials [isGroupByTopics]="true"></app-explore-tutorials></ng-container>
+          <ng-container *ngSwitchCase="'articles'"><app-explore-articles [isGroupByTopics]="true"></app-explore-articles></ng-container>
+          <ng-container *ngSwitchCase="'spaces'"><app-explore-spaces [isGroupByTopics]="true"></app-explore-spaces></ng-container>
+          <ng-container *ngSwitchCase="'users'"><app-explore-users [isGroupByTopics]="true"></app-explore-users></ng-container>
         </ng-container>
       </div>
 

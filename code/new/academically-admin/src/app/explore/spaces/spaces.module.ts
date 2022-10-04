@@ -16,5 +16,8 @@ import { ExploreSpacesComponent } from './spaces.component';
     SharedModule,
     AppSharedModule,
   ],
+  exports: [
+    ExploreSpacesComponent
+  ]
 })
 export class ExploreSpacesModule { }

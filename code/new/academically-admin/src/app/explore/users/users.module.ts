@@ -16,5 +16,8 @@ import { ExploreUsersComponent } from './users.component';
     SharedModule,
     AppSharedModule,
   ],
+  exports: [
+    ExploreUsersComponent
+  ]
 })
 export class ExploreUsersModule { }

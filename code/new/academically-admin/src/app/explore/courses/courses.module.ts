@@ -16,5 +16,8 @@ import { ExploreCoursesComponent } from './courses.component';
     SharedModule,
     AppSharedModule,
   ],
+  exports: [
+    ExploreCoursesComponent
+  ]
 })
 export class ExploreCoursesModule { }

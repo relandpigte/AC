@@ -2,51 +2,73 @@
   <div class="header">
     <div class="container-fluid p-0">
       <div class="header-body">
-        <app-carousel [items]="featured" [isInfiteScroll]="false" [isLoading]="isLoading" [isFeatured]="true" [circular]="true"></app-carousel>
 
-        <ng-container *ngIf="popular?.items?.length">
-          <div class="row align-items-center">
-            <div class="col d-flex flex-wrap gap-15">
-              <h3>Popular</h3>
+        <div [style.marginBottom.px]="40">
+          <app-carousel [items]="featured" [isInfiteScroll]="false" [isLoading]="isLoading" [isFeatured]="true" [circular]="true"></app-carousel>
+        </div>
+
+        <ng-container *ngIf="isGroupByTopics">
+          <ng-container *ngFor="let t of topics">
+            <div class="row align-items-center" [style.marginBottom.px]="25">
+              <div class="col d-flex flex-wrap gap-15">
+                <span class="section-title">{{ t | titlecase }}</span>
+              </div>
             </div>
-          </div>
-          <div class="row align-items-center mb-5">
-            <div class="col d-flex flex-wrap gap-27">
-              <app-service-card *ngFor="let d of popular?.items; trackBy:d?.id" [data]="d" [isLoading]="isPopularLoading"></app-service-card>
-              <div class="flex-break"></div>
-              <div class="btn btn-block btn-white flex-grow-1" *ngIf="showPopularShowMoreButton" (click)="onShowMorePopularButtonClick()">Show More</div>
+            <div class="row align-items-center mb-5">
+              <div class="col d-flex flex-wrap gap-27">
+                <app-service-card *ngFor="let d of topicGroups[t]" [data]="d" [isLoading]="isLoading"></app-service-card>
+                <div class="flex-break"></div>
+                <div class="btn btn-block btn-white flex-grow-1">Show More</div>
+              </div>
             </div>
-          </div>
+          </ng-container>
         </ng-container>
 
-        <ng-container *ngIf="latest?.items?.length">
-          <div class="row align-items-center">
-            <div class="col d-flex flex-wrap gap-15">
-              <h3>Latest</h3>
+        <ng-container *ngIf="!isGroupByTopics">
+          <ng-container *ngIf="popular?.items?.length">
+            <div class="row align-items-center" [style.marginBottom.px]="25">
+              <div class="col d-flex flex-wrap gap-15">
+                <span class="section-title">Popular</span>
+              </div>
             </div>
-          </div>
-          <div class="row align-items-center mb-5">
-            <div class="col d-flex flex-wrap gap-27">
-              <app-service-card *ngFor="let d of latest?.items; trackBy:d?.id" [data]="d" [isLoading]="isLoading"></app-service-card>
-              <div class="flex-break"></div>
-              <div class="btn btn-block btn-white flex-grow-1" *ngIf="showLastestShowMore" (click)="onShowMoreLatestButtonClick()">Show More</div>
+            <div class="row align-items-center mb-5">
+              <div class="col d-flex flex-wrap gap-27">
+                <app-service-card *ngFor="let d of popular?.items; trackBy:d?.id" [data]="d" [isLoading]="isPopularLoading"></app-service-card>
+                <div class="flex-break"></div>
+                <div class="btn btn-block btn-white flex-grow-1" *ngIf="showPopularShowMoreButton" (click)="onShowMorePopularButtonClick()">Show More</div>
+              </div>
             </div>
-          </div>
-        </ng-container>
+          </ng-container>
 
-        <ng-container *ngIf="lastMonth?.items?.length">
-          <div class="row align-items-center">
-            <div class="col d-flex flex-wrap gap-15">
-              <h3>Last Month</h3>
+          <ng-container *ngIf="latest?.items?.length">
+            <div class="row align-items-center" [style.marginBottom.px]="25">
+              <div class="col d-flex flex-wrap gap-15">
+                <span class="section-title">Latest</span>
+              </div>
             </div>
-          </div>
-          <div class="row align-items-center">
-            <div class="col d-flex flex-wrap gap-27">
-              <app-service-card *ngFor="let d of lastMonth?.items" [data]="d" [isLoading]="isLoading"></app-service-card>
-              <div class="flex-break"></div>
-              <div class="btn btn-block btn-white flex-grow-1" *ngIf="showLastMonthShowMoreButton" (click)="onShowMoreLastMonthButtonClick()">Show More</div>
+            <div class="row align-items-center mb-5">
+              <div class="col d-flex flex-wrap gap-27">
+                <app-service-card *ngFor="let d of latest?.items; trackBy:d?.id" [data]="d" [isLoading]="isLoading"></app-service-card>
+                <div class="flex-break"></div>
+                <div class="btn btn-block btn-white flex-grow-1" *ngIf="showLastestShowMore" (click)="onShowMoreLatestButtonClick()">Show More</div>
+              </div>
             </div>
-          </div>
+          </ng-container>
+
+          <ng-container *ngIf="lastMonth?.items?.length">
+            <div class="row align-items-center" [style.marginBottom.px]="25">
+              <div class="col d-flex flex-wrap gap-15">
+                <span class="section-title">Last Month</span>
+              </div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col d-flex flex-wrap gap-27">
+                <app-service-card *ngFor="let d of lastMonth?.items" [data]="d" [isLoading]="isLoading"></app-service-card>
+                <div class="flex-break"></div>
+                <div class="btn btn-block btn-white flex-grow-1" *ngIf="showLastMonthShowMoreButton" (click)="onShowMoreLastMonthButtonClick()">Show More</div>
+              </div>
+            </div>
+          </ng-container>
         </ng-container>
 
       </div>

@@ -16,5 +16,8 @@ import { ExploreArticlesComponent } from './articles.component';
     SharedModule,
     AppSharedModule,
   ],
+  exports: [
+    ExploreArticlesComponent
+  ]
 })
 export class ExploreArticlesModule { }

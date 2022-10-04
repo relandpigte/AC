@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { CourseDto, CourseDtoPagedResultDto, CoursesServiceProxy, DateGrains } from '@shared/service-proxies/service-proxies';
@@ -14,6 +14,10 @@ import * as _ from 'lodash';
   animations: [appModuleAnimation()],
 })
 export class ExploreCoursesComponent extends AppComponentBase implements OnInit {
+
+  @Input() isGroupByTopics = false;
+
+  topicGroups: { [key: string]: CourseDtoPagedResultDto  } = { 'Topic': { items: Array(3).fill([]).map(() => this.generateRandomCourse()) as CourseDto[], totalCount: 3 } as CourseDtoPagedResultDto };
 
   featured: CourseDto[] = Array(5).fill([]).map(() => this.generateRandomCourse()) as CourseDto[];
   latest: CourseDtoPagedResultDto;
@@ -31,6 +35,8 @@ export class ExploreCoursesComponent extends AppComponentBase implements OnInit 
   itemsPerGroup = 6;
   popularItems = 3;
 
+  get topics(): string[] { return this.topicGroups ? Object.keys(this.topicGroups) : null; }
+
   constructor(
     injector: Injector,
     private _coursesService: CoursesServiceProxy
@@ -39,10 +45,16 @@ export class ExploreCoursesComponent extends AppComponentBase implements OnInit 
   }
 
   ngOnInit(): void {
-    this.loadData(0);
-    this.loadPopular(0);
-    setTimeout(() => this.isLoading = false, 5000);
+    this.loadData();
+  }
 
+  private loadData(): void {
+    this.isLoading = true;
+    if (this.isGroupByTopics) this.loadGroupedByTopics(0);
+    else {
+      this.loadGroupedByDates(0);
+      this.loadPopular(0);
+    }
   }
 
   setLatestShowMoreButtons(items: number): void {
@@ -69,9 +81,18 @@ export class ExploreCoursesComponent extends AppComponentBase implements OnInit 
     }
   }
 
-  private loadData(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
+  private loadGroupedByTopics(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
+    this._coursesService.getByTopic(this.appSession.userId, start, moving, end, DateGrains.Monthly, currentCount, this.itemsPerGroup)
+    .pipe(takeUntil(this.destroyed$))
+    .pipe(finalize(() => this.isLoading = false))
+    .subscribe(courses => {
+      this.topicGroups = courses;
+    });
+  }
+
+  private loadGroupedByDates(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
     this.isLoading = true;
-    this._coursesService.getByDates(this.appSession.userId, start,moving, end, DateGrains.Monthly, currentCount, this.itemsPerGroup)
+    this._coursesService.getByDates(this.appSession.userId, start, moving, end, DateGrains.Monthly, currentCount, this.itemsPerGroup)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoading = false))
       .subscribe(groupedCourses => {
