@@ -2,7 +2,7 @@
   <div class="header">
     <div class="container-fluid p-0">
 
-      <div class="header-body">
+      <div class="header-body pt-0">
         <div class="row" [style.marginTop.px]="65">
           <div class="col">
             <span class="for-you-title">For you</span>
@@ -51,7 +51,7 @@
         </div>
       </div>
 
-      <div [style.marginTop.px]="50">
+      <div [style.marginTop.px]="30">
         <ng-container [ngSwitch]="type">
           <ng-container *ngSwitchCase="'courses'"><app-explore-courses [isGroupByTopics]="true"></app-explore-courses></ng-container>
           <ng-container *ngSwitchCase="'events'"><app-explore-events [isGroupByTopics]="true"></app-explore-events></ng-container>

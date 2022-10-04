@@ -1,0 +1,12 @@
+<div class="carousel-pill d-flex flex-row flex-nowrap justify-content-start align-content-center align-items-center">
+    <div *ngIf="canAdd" class="carousel-pill-item add-pill" (click)="handleAddPill()">
+        <i class="fas fa-plus"></i><span class="add-pill-label">{{ 'Add' | localize }}</span>
+    </div>
+    <div class="carousel-pill-separator"></div>
+    <div *ngIf="showAll" class="carousel-pill-item all-pill" [class.active]="isAllPillsSelected(i)"  (click)="handleSelectAll()">
+        <span class="add-pill-label">{{ 'All Topics' | localize }}</span>
+    </div>
+    <div *ngFor="let i of choices" class="carousel-pill-item" [class.active]="isPillSelected(i)" (click)="handleSelectPill(i)">
+       #{{ i }}
+    </div>
+</div>

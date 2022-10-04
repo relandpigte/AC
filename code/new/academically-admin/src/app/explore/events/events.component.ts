@@ -25,7 +25,10 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
 
   isLoading = true;
 
-  get topics(): string[] { return this.topicGroups ? Object.keys(this.topicGroups) : null; }
+  selectedTopics: string[] = [];
+
+  get topics(): string[] { return this.topicGroups ? Object.keys(this.topicGroups) : []; }
+  get filteredTopics(): string[] { return this.topics.filter(t => this.selectedTopics.includes(t)); }
 
   constructor(
     injector: Injector,
@@ -68,5 +71,9 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
             this.latest = _.concat(this.latest, events[range]);
         });
       });
+  }
+
+  handleFilterTopics(topics: string[]): void {
+    this.selectedTopics = topics;
   }
 }

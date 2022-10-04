@@ -35,7 +35,10 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
   itemsPerGroup = 6;
   popularItems = 3;
 
+  selectedTopics: string[] = [];
+
   get topics(): string[] { return this.topicGroups ? Object.keys(this.topicGroups) : null; }
+  get filteredTopics(): string[] { return this.topics.filter(t => this.selectedTopics.includes(t)); }
 
   constructor(
     injector: Injector,
@@ -172,4 +175,7 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
     this.loadGroupedByDates(this.lastMonth.items.length, null, lastItem.creationTime);
   }
 
+  handleFilterTopics(topics: string[]): void {
+    this.selectedTopics = topics;
+  }
 }

@@ -3,12 +3,16 @@
     <div class="container-fluid p-0">
       <div class="header-body">
 
+        <div *ngIf="isGroupByTopics" [style.marginBottom.px]="50">
+          <app-carousel-pill [choices]="topics" (onSelect)="handleFilterTopics($event)"></app-carousel-pill>
+        </div>
+
         <div [style.marginBottom.px]="40">
           <app-carousel [items]="featured" [isInfiteScroll]="false" [isLoading]="isLoading" [isFeatured]="true" [circular]="true"></app-carousel>
         </div>
 
         <ng-container *ngIf="isGroupByTopics">
-          <ng-container *ngFor="let t of topics">
+          <ng-container *ngFor="let t of filteredTopics">
             <div class="row align-items-center" [style.marginBottom.px]="25">
               <div class="col d-flex flex-wrap gap-15">
                 <span class="section-title">{{ t | titlecase }}</span>

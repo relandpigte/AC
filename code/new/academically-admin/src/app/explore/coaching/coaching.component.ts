@@ -25,7 +25,10 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
 
   isLoading = true;
 
+  selectedTopics: string[] = [];
+
   get topics(): string[] { return this.topicGroups ? Object.keys(this.topicGroups) : null; }
+  get filteredTopics(): string[] { return this.topics.filter(t => this.selectedTopics.includes(t)); }
 
   constructor(
     injector: Injector,
@@ -69,5 +72,9 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
             this.latest = _.concat(this.latest, coachings[range]);
         });
       });
+  }
+
+  handleFilterTopics(topics: string[]): void {
+    this.selectedTopics = topics;
   }
 }

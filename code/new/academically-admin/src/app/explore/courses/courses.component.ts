@@ -35,7 +35,10 @@ export class ExploreCoursesComponent extends AppComponentBase implements OnInit 
   itemsPerGroup = 6;
   popularItems = 3;
 
+  selectedTopics: string[] = [];
+
   get topics(): string[] { return this.topicGroups ? Object.keys(this.topicGroups) : null; }
+  get filteredTopics(): string[] { return this.topics.filter(t => this.selectedTopics.includes(t)); }
 
   constructor(
     injector: Injector,
@@ -153,5 +156,9 @@ export class ExploreCoursesComponent extends AppComponentBase implements OnInit 
           this.setPopularShowMoreButtons(1);
         }
       });
+  }
+
+  handleFilterTopics(topics: string[]): void {
+    this.selectedTopics = topics;
   }
 }

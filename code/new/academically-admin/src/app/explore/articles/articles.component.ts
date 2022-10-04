@@ -35,7 +35,10 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
   itemsPerGroup = 6;
   popularItems = 3;
 
+  selectedTopics: string[] = [];
+
   get topics(): string[] { return this.topicGroups ? Object.keys(this.topicGroups) : null; }
+  get filteredTopics(): string[] { return this.topics.filter(t => this.selectedTopics.includes(t)); }
 
   constructor(
     injector: Injector,
@@ -170,6 +173,10 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
     const lastItem = this.lastMonth.items.slice(-1)[0];
     console.log('POPULAR BUTTON CLICKED');
     this.loadGroupedByDates(this.lastMonth.items.length, null, lastItem.creationTime);
+  }
+
+  handleFilterTopics(topics: string[]): void {
+    this.selectedTopics = topics;
   }
 
 }

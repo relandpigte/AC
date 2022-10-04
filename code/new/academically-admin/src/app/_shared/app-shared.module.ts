@@ -1,5 +1,6 @@
 import { KeysPipe } from './../../shared/pipes/keys.pipe';
 import { FeaturedCarouselComponent } from './../../shared/components/featured-carousel/featured-carousel.component';
+import { CarouselPillComponent } from './../../shared/components/carousel-pill/carousel-pill.component';
 import { CarouselWrapperComponent } from './../../shared/components/carousel-wrapper/carousel-wrapper.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -51,6 +52,7 @@ import {CarouselModule} from 'primeng/carousel';
     FixedHeightDirective,
     BottomScrollerDirective,
     SidebarCollapseDirective,
+    CarouselPillComponent,
     CarouselWrapperComponent,
     FeaturedCarouselComponent,
     KeysPipe,
@@ -107,6 +109,7 @@ import {CarouselModule} from 'primeng/carousel';
     WhiteboardComponent,
     CalendarModule,
     PopoverModule,
+    CarouselPillComponent,
     CarouselWrapperComponent,
     FeaturedCarouselComponent,
     KeysPipe,
