@@ -51,6 +51,12 @@
         </div>
       </div>
 
+      <div [style.marginTop.px]="50">
+        <ng-container [ngSwitch]="type">
+          <ng-container *ngSwitchCase="'events'"><app-explore-events [isGroupByTopics]="true"></app-explore-events></ng-container>
+        </ng-container>
+      </div>
+
     </div>
   </div>
 </div>

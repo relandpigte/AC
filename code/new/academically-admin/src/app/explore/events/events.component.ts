@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DateGrains, EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -15,11 +15,18 @@ import * as _ from 'lodash';
 })
 export class ExploreEventsComponent extends AppComponentBase implements OnInit {
 
+  @Input() isGroupByTopics = false;
+
+  topicGroups: { [key: string]: EventDto[]  } = { 'Topic': Array(3).fill([]).map(() => this.generateRandomEvent()) as EventDto[] };
+
   featured: EventDto[] = Array(5).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
   latest: EventDto[] = Array(3).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
   lastMonth: EventDto[] = Array(3).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
 
   isLoading = true;
+
+  get topics(): string[] { return this.topicGroups ? Object.keys(this.topicGroups) : null; }
+
 
   constructor(
     injector: Injector,
@@ -34,6 +41,20 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
 
   private loadData(): void {
     this.isLoading = true;
+    if (this.isGroupByTopics) this.loadGroupedByTopics();
+    else this.loadGroupedByDates();
+  }
+
+  private loadGroupedByTopics(): void {
+    this._eventsService.getByTopic()
+    .pipe(takeUntil(this.destroyed$))
+    .pipe(finalize(() => this.isLoading = false))
+    .subscribe(events => {
+      this.topicGroups = events;
+    });
+  }
+
+  private loadGroupedByDates(): void {
     this._eventsService.getByDates(DateGrains.Monthly, 6)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoading = false))

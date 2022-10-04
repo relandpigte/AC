@@ -16,5 +16,8 @@ import { ExploreEventsComponent } from './events.component';
     SharedModule,
     AppSharedModule,
   ],
+  exports: [
+    ExploreEventsComponent
+  ]
 })
 export class ExploreEventsModule { }
