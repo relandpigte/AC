@@ -62,6 +62,14 @@
             display: none;
         }
     }
+
+    .p-carousel-item-start app-service-card {
+        justify-content: flex-start !important;
+    }
+
+    .p-carousel-item-end app-service-card {
+        justify-content: flex-end !important;
+    }
 }
 
 
