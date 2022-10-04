@@ -1,4 +1,5 @@
 import { Component, Injector, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 
@@ -11,6 +12,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 export class ExploreComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
+    private _route: ActivatedRoute
   ) {
     super(injector);
   }
@@ -19,4 +21,5 @@ export class ExploreComponent extends AppComponentBase implements OnInit {
   }
 
   get heroBannerSrc(): string { return `https://picsum.photos/500`; }
+  get hasHeader(): boolean { return !this._route.snapshot.firstChild.firstChild.url.length; }
 }

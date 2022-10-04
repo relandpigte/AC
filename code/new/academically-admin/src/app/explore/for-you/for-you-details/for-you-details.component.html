@@ -1,0 +1,56 @@
+<div [@routerTransition]>
+  <div class="header">
+    <div class="container-fluid p-0">
+
+      <div class="header-body">
+        <div class="row" [style.marginTop.px]="65">
+          <div class="col">
+            <span class="for-you-title">For you</span>
+          </div>
+        </div>
+        <div class="row align-items-center" [style.marginTop.px]="40">
+          <div class="col">
+            <ul class="nav nav-tabs nav-overflow header-tabs">
+              <li class="nav-item">
+                <a [routerLink]="['../courses']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Courses' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['../events']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Events' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['../coachings']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Coaching' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['../tutorials']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Tutorials' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['../articles']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Articles' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['../spaces']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Spaces' | localize }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['../users']" routerLinkActive="active" class="nav-link" role="button">
+                  {{ 'Users' | localize }}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
