@@ -12,6 +12,7 @@ namespace Academically.Domain.Views
 
         public EventPopularityViewModel(Event _event, int popularityPoints)
         {
+            Id = _event.Id;
             Type = _event.Type;
             Status = _event.Status;
             ParentId = _event.ParentId;
@@ -109,11 +110,8 @@ namespace Academically.Domain.Views
             StudentEvents = _event.StudentEvents;
             EventPresenters = _event.EventPresenters;
             CreationTime = _event.CreationTime;
-            CreatorUserId = _event.CreatorUserId;
+            CreatorUserId = _event.CreatorUserId;           
             PopularityWeight = popularityPoints;
-
+        }
     }
-
-
-}
 }

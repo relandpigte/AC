@@ -4,6 +4,7 @@ using Abp.Domain.Entities.Auditing;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Interfaces;
+using Academically.Domain.Views;
 using Academically.Services.Documents.Dto;
 using Academically.Services.SpokenLanugages.Dto;
 using Academically.Users.Dto;
@@ -12,8 +13,8 @@ using System.Collections.Generic;
 
 namespace Academically.Services.Events.Dto
 {
-    [AutoMapFrom(typeof(Event))]
-    public class EventDto : CreationAuditedEntityDto<Guid>, IHasTopic, IHasThumbnail, IHasCreationTime
+    [AutoMapFrom(typeof(Event), typeof(EventPopularityViewModel))]
+    public class EventDto : CreationAuditedEntityDto<Guid>, IHasTopic, IHasThumbnail, IHasCreationTime, IHasPopularityWeight
     {
         public EventType Type { get; set; }
         public EventStatus Status { get; set; }
@@ -115,5 +116,6 @@ namespace Academically.Services.Events.Dto
         public UserDto CreatorUser { get; set; }
 
         public IEnumerable<EventDto> Children { get; set; }
+        public int PopularityWeight { get; set; }
     }
 }

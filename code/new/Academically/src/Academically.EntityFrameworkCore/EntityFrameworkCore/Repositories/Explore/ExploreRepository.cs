@@ -123,15 +123,15 @@ namespace Academically.EntityFrameworkCore.Repositories.Explore
                 .PageBy(skipCount, maxCount)
                 .ToListAsync();
 
-            var videos = await eventsContext.Where(x => topEvents.Select(t => t.EventId).Contains(x.Id)).ToListAsync();
+            var events = await eventsContext.Where(x => topEvents.Select(t => t.EventId).Contains(x.Id)).ToListAsync();
 
-            var joinedVideos = videos.Join(
+            var joinedEvents = events.Join(
                                 topEvents,
                                 v => v.Id,
                                 tv => tv.EventId,
                                 (v, tv) => new EventPopularityViewModel(v, tv.Popularity))
                          .OrderByDescending(x => x.PopularityWeight);
-            return joinedVideos.ToList();
+            return joinedEvents.ToList();
         }
 
         public async Task<List<VideoPopularityViewModel>> GetPopularVideos(int skipCount, int maxCount, long? userIdFilter)

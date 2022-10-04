@@ -61,10 +61,11 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
 
   private loadUpcomingEvents(): void {
     this.isLoadingUpcomingEvents = true;
-    this._eventsService.getByDates(DateGrains.Monthly, 10)
+    this._eventsService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Monthly, 0, 10)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingUpcomingEvents = false))
-      .subscribe(events => {
+      .subscribe(pagedEvents => {
+        const events = pagedEvents?.items;
         if (events) {
           this.upcomingEvents = [];
           Object.keys(events).forEach(range => {

@@ -16,9 +16,11 @@ using Academically.Configuration;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
+using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
 using Academically.Services.Events.Dto;
 using Academically.Services.Events.Enums;
+using Academically.Services.Explore.Dto;
 using Academically.Users.Dto;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -36,6 +38,7 @@ namespace Academically.Services.Events
         private readonly IRepository<EventPoll, Guid> _eventPollRepository;
         private readonly IRepository<EventResource, Guid> _eventResourceRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
+        private readonly IExploreRepository _exploreRepository;
 
         public EventsAppService(
             RoleManager roleManager,
@@ -47,7 +50,8 @@ namespace Academically.Services.Events
             IRepository<Event, Guid> repository,
             IRepository<EventPoll, Guid> eventPollRepository,
             IRepository<EventResource, Guid> eventResourceRepository,
-            IDocumentsDomainService documentsDomainService
+            IDocumentsDomainService documentsDomainService,
+            IExploreRepository exploreRepository
             ) : base(repository)
         {
             LocalizationSourceName = AcademicallyConsts.LocalizationSourceName;
@@ -61,6 +65,7 @@ namespace Academically.Services.Events
             _eventPollRepository = eventPollRepository;
             _eventResourceRepository = eventResourceRepository;
             _documentsDomainService = documentsDomainService;
+            _exploreRepository = exploreRepository;
         }
 
         protected override IQueryable<Event> CreateFilteredQuery(PagedEventResultRequestDto input)
@@ -90,11 +95,12 @@ namespace Academically.Services.Events
             }
         }
 
-        public async Task<Dictionary<string, List<EventDto>>> GetByTopicAsync()
+        public async Task<Dictionary<string, PagedResultDto<EventDto>>> GetByTopicsAsync(PagedExploreResultRequestDto input)
         {
-            var events = await Repository.GetAll()
-                .Where(e => e.ParentId == null)
-                .Include(e => e.Children)
+            var query = Repository.GetAll()
+                .Where(e => e.ParentId == null);
+            var totalCount = await query.CountAsync();
+            var events = await query.Include(e => e.Children)
                 .Include(e => e.ThumbnailDocument)
                 .Include(e => e.CreatorUser)
                 .OrderByDescending(v => v.CreationTime)
@@ -109,14 +115,15 @@ namespace Academically.Services.Events
                     evt.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(evt.CreatorUser.ProfilePictureDocumentId.Value);
             }
 
-            return events.GroupByTopicExt();
+            return events.GroupByTopicsPagedExt();
         }
 
-        public async Task<Dictionary<string, List<EventDto>>> GetByDatesAsync(DateGrains grain, int itemsPerGroup = 6)
+        public async Task<Dictionary<string, PagedResultDto<EventDto>>> GetByDatesAsync(PagedExploreResultRequestDto input)
         {
-            var events = await Repository.GetAll()
-                .Where(e => e.ParentId == null)
-                .Include(e => e.Children)
+            var query = Repository.GetAll()
+                .Where(e => e.ParentId == null);
+            var totalCount = await query.CountAsync();
+            var events = await query.Include(e => e.Children)
                 .Include(e => e.ThumbnailDocument)
                 .Include(e => e.CreatorUser)
                 .OrderByDescending(v => v.CreationTime)
@@ -131,8 +138,27 @@ namespace Academically.Services.Events
                     evt.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(evt.CreatorUser.ProfilePictureDocumentId.Value);
             }
 
-            return events.GroupByDateRangeExt(grain, itemsPerGroup);
+            return events.GroupByDateRangePagedExt(input.Grain, input.MaxResultCount);
         }
+
+        public async Task<Dictionary<string, PagedResultDto<EventDto>>> GetByPopularityAsync(PagedPopularRequestDto input)
+        {
+            var popularEvents = (await _exploreRepository.GetPopularEvents(input.SkipCount, input.MaxResultCount, input.UserIdFilter))
+                    .Select(e => ObjectMapper.Map<EventDto>(e))
+                    .ToList();
+
+            foreach (var vid in popularEvents)
+            {
+                if (vid.ThumbnailDocumentId.HasValue)
+                    vid.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(vid.ThumbnailDocumentId.Value);
+                if (vid.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    vid.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(vid.CreatorUser.ProfilePictureDocumentId.Value);
+
+            }
+
+            return popularEvents.GroupByPopularityPagedExt(input.MaxResultCount);
+        }
+
 
         protected override Task<Event> GetEntityByIdAsync(Guid id)
         {
