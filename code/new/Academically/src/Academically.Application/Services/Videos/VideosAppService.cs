@@ -222,35 +222,64 @@ namespace Academically.Services.Videos
             await _videosRepository.DeleteAsync(id);
         }
 
-        public async Task<Dictionary<string, PagedResultDto<VideoDto>>> GetByTopicAsync(PagedExploreVideoResultRequestDto input)
+        public async Task<Dictionary<string, PagedResultDto<VideoDto>>> GetByTopicAsync(PagedExploreGroupByTopicResultRequestDto input)
         {
-            var query = _videosRepository.GetAll()
-               .Where(e => e.ParentId == null)
-               .Where(e => e.Status == VideoStatus.Published);
-               //.WhereIf(input.UserIdFilter.HasValue, e => e.CreatorUserId != input.UserIdFilter.Value)
-               //.WhereIf(input.MovingDate.HasValue, v => v.CreationTime < input.MovingDate);
-            var totalCount = await query.CountAsync();
-            var videos = await query.OrderBy(e => e.Name)
-                .Include(e => e.ThumbnailDocument)
-                .Include(e => e.Children)
-                .Include(e => e.CreatorUser)
-                .OrderByDescending(v => v.CreationTime)
-                .Select(e => ObjectMapper.Map<VideoDto>(e))
-                .ToListAsync();
+            var topics = new List<string>();
+            string allTopicsInString;
+            IEnumerable<string> distinctTopics = new List<string>();
 
 
-            foreach (var vid in videos)
+            if (!string.IsNullOrEmpty(input.Topic))
             {
-                if (vid.ThumbnailDocumentId.HasValue)
-                    vid.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(vid.ThumbnailDocumentId.Value);
-                if (vid.CreatorUser.ProfilePictureDocumentId.HasValue)
-                    vid.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(vid.CreatorUser.ProfilePictureDocumentId.Value);
+                distinctTopics = distinctTopics.Append(input.Topic);
+            }
+            else
+            {
+                // Get all topics
+                topics = await _videosRepository.GetAll()
+                    .Where(x => !string.IsNullOrEmpty(x.Categories))
+                    .Where(e => e.IsVisible)
+                    .Select(x => x.Categories).ToListAsync();
+                allTopicsInString = string.Join(",", topics.ToArray());
+                distinctTopics = allTopicsInString.Split(",").OrderBy(x => x).Distinct();
             }
 
-            return videos.GroupByTopicsPagedExt();
+            // Loop on all topics
+            var result = new Dictionary<string, PagedResultDto<VideoDto>>();
+            foreach (var topic in distinctTopics)
+            { 
+                var query = _videosRepository.GetAll()
+                   .Where(e => e.ParentId == null)
+                   .Where(e => e.Status == VideoStatus.Published)
+                   .Where(c => c.Categories.Contains(topic));
+                var totalCount = await query.CountAsync();
+                var videos = await query.PageBy(input)
+                    .Include(e => e.ThumbnailDocument)
+                    .Include(e => e.Children)
+                    .Include(e => e.CreatorUser)
+                    .OrderByDescending(v => v.CreationTime)
+                    .Select(e => ObjectMapper.Map<VideoDto>(e))
+                    .ToListAsync();
+
+
+                foreach (var vid in videos)
+                {
+                    if (vid.ThumbnailDocumentId.HasValue)
+                        vid.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(vid.ThumbnailDocumentId.Value);
+                    if (vid.CreatorUser.ProfilePictureDocumentId.HasValue)
+                        vid.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(vid.CreatorUser.ProfilePictureDocumentId.Value);
+                    
+                    vid.LikeCount = await _reactionsRepository.CountAsync(e => e.ReferenceId == vid.Id.ToString()
+                    && e.Type == ReactionType.Like);
+                    vid.VideoCount = vid.Children.Count();
+                }
+                result.Add(topic, new PagedResultDto<VideoDto>(totalCount, videos));
+            }
+
+            return result;
         }
 
-        public async Task<Dictionary<string, PagedResultDto<VideoDto>>> GetByDatesAsync(PagedExploreVideoResultRequestDto input)
+        public async Task<Dictionary<string, PagedResultDto<VideoDto>>> GetByDatesAsync(PagedExploreGroupByDateResultRequestDto input)
         {
             var query = _videosRepository.GetAll()
                 .Where(e => e.ParentId == null)
@@ -281,7 +310,7 @@ namespace Academically.Services.Videos
                 vid.VideoCount = vid.Children.Count();
             }
 
-            return videos.GroupByDateRangePagedExt(input.Grain, input.MaxResultCount);
+            return videos.GroupByDateRangePagedExt(input.Grain.Value, input.MaxResultCount);
         }
 
         public async Task<Dictionary<string, PagedResultDto<VideoDto>>> GetByPopularityAsync(PagedPopularRequestDto input)

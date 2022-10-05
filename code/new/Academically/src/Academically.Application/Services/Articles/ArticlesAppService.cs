@@ -149,36 +149,61 @@ namespace Academically.Services.Articles
             await _articlesRepository.DeleteAsync(id);
         }
 
-        public async Task<Dictionary<string, PagedResultDto<ArticleDto>>> GetByTopicAsync(PagedExploreResultRequestDto input)
+        public async Task<Dictionary<string, PagedResultDto<ArticleDto>>> GetByTopicAsync(PagedExploreGroupByTopicResultRequestDto input)
         {
-            var query = _articlesRepository.GetAll()
-               .Where(e => e.ParentId == null)
-               .Where(e => e.Status == ArticleStatus.Published);
-               //.WhereIf(input.UserIdFilter.HasValue, e => e.CreatorUserId != input.UserIdFilter.Value)
-               //.WhereIf(input.MovingDate.HasValue, v => v.CreationTime < input.MovingDate);
-            var totalCount = await query.CountAsync();
-            var articles = await query.OrderBy(e => e.Name)
-                .Include(e => e.ThumbnailDocument)
-                .Include(e => e.Children)
-                .Include(e => e.CreatorUser)
-                .OrderByDescending(v => v.CreationTime)
-                .Select(e => ObjectMapper.Map<ArticleDto>(e))
-                .ToListAsync();
+            var topics = new List<string>();
+            string allTopicsInString;
+            IEnumerable<string> distinctTopics = new List<string>();
 
 
-            foreach (var article in articles)
+            if (!string.IsNullOrEmpty(input.Topic))
             {
-                if (article.ThumbnailDocumentId.HasValue)
-                    article.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocumentId.Value);
-                if (article.CreatorUser.ProfilePictureDocumentId.HasValue)
-                    article.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(article.CreatorUser.ProfilePictureDocumentId.Value);
-                article.ArticlesCount = article.Children.Count();
+                distinctTopics = distinctTopics.Append(input.Topic);
+            }
+            else
+            {
+                // Get all topics
+                topics = await _articlesRepository.GetAll()
+                    .Where(x => !string.IsNullOrEmpty(x.Categories))
+                    .Where(e => e.IsVisible)
+                    .Select(x => x.Categories).ToListAsync();
+                allTopicsInString = string.Join(",", topics.ToArray());
+                distinctTopics = allTopicsInString.Split(",").OrderBy(x => x).Distinct();
             }
 
-            return articles.GroupByTopicsPagedExt();
+            // Loop on all topics
+            var result = new Dictionary<string, PagedResultDto<ArticleDto>>();
+            foreach (var topic in distinctTopics)
+            {
+                var query = _articlesRepository.GetAll()
+               .Where(e => e.ParentId == null)
+               .Where(e => e.Status == ArticleStatus.Published)
+               .Where(c => c.Categories.Contains(topic));
+                var totalCount = await query.CountAsync();
+                var articles = await query
+                    .Include(e => e.ThumbnailDocument)
+                    .Include(e => e.Children)
+                    .Include(e => e.CreatorUser)
+                    .PageBy(input)
+                    .OrderByDescending(v => v.CreationTime)
+                    .Select(e => ObjectMapper.Map<ArticleDto>(e))
+                    .ToListAsync();
+
+                foreach (var article in articles)
+                {
+                    if (article.ThumbnailDocumentId.HasValue)
+                        article.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocumentId.Value);
+                    if (article.CreatorUser.ProfilePictureDocumentId.HasValue)
+                        article.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(article.CreatorUser.ProfilePictureDocumentId.Value);
+                    article.ArticlesCount = article.Children.Count();
+                }
+
+                result.Add(topic, new PagedResultDto<ArticleDto>(totalCount, articles));
+            }
+            return result;
         }
 
-        public async Task<Dictionary<string, PagedResultDto<ArticleDto>>> GetByDatesAsync(PagedExploreResultRequestDto input)
+        public async Task<Dictionary<string, PagedResultDto<ArticleDto>>> GetByDatesAsync(PagedExploreGroupByDateResultRequestDto input)
         {
             var query = _articlesRepository.GetAll()
                 .Where(e => e.ParentId == null)
@@ -206,7 +231,7 @@ namespace Academically.Services.Articles
                 article.ArticlesCount = article.Children.Count();
             }
 
-            return articles.GroupByDateRangePagedExt(input.Grain, input.MaxResultCount);
+            return articles.GroupByDateRangePagedExt(input.Grain.Value, input.MaxResultCount);
         }
 
         public async Task<Dictionary<string, PagedResultDto<ArticleDto>>> GetByPopularityAsync(PagedPopularRequestDto input)

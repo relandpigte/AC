@@ -35,6 +35,10 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
   itemsPerGroup = 6;
   popularItems = 3;
 
+  latestMaxItems: number = 0;
+  lastMonthMaxItems: number = 0;
+  popularMaxItems: number = 0;
+
   selectedTopics: string[] = [];
 
   get topics(): string[] { return this.topicGroups ? Object.keys(this.topicGroups) : null; }
@@ -51,30 +55,6 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
     this.loadData();
   }
 
-  setLatestShowMoreButtons(items: number): void {
-    if (items == this.itemsPerGroup) {
-      this.showLastestShowMore = true;
-    } else {
-      this.showLastestShowMore = false;
-    }
-  }
-
-  setLastMonthShowMoreButtons(items: number): void {
-    if (items == this.itemsPerGroup) {
-      this.showLastMonthShowMoreButton = true;
-    } else {
-      this.showLastMonthShowMoreButton = false;
-    }
-  }
-
-  setPopularShowMoreButtons(items: number): void {
-    if (items == this.popularItems) {
-      this.showPopularShowMoreButton = true;
-    } else {
-      this.showPopularShowMoreButton = false;
-    }
-  }
-
   private loadData(): void {
     this.isLoading = true;
     if (this.isGroupByTopics) this.loadGroupedByTopics(0);
@@ -84,12 +64,49 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
     }
   }
 
-  private loadGroupedByTopics(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
-    this._articleService.getByTopic(this.appSession.userId, start, moving, end, DateGrains.Monthly, currentCount, this.itemsPerGroup)
+  setLatestShowMoreButtons(items: number): void {
+    if (items < this.latestMaxItems) {
+      this.showLastestShowMore = true;
+    } else {
+      this.showLastestShowMore = false;
+    }
+  }
+
+  setLastMonthShowMoreButtons(items: number): void {
+    console.log('setLastMonthShowMoreButtons() --->', items, this.lastMonthMaxItems)
+    if (items < this.lastMonthMaxItems) {
+      this.showLastMonthShowMoreButton = true;
+    } else {
+      this.showLastMonthShowMoreButton = false;
+    }
+  }
+
+  setPopularShowMoreButtons(items: number): void {
+    if (items < this.popularMaxItems) {
+      this.showPopularShowMoreButton = true;
+    } else {
+      this.showPopularShowMoreButton = false;
+    }
+  }
+
+  setTopicShowMoreButtons(items: number): void {
+    if (items == this.popularItems) {
+      this.showPopularShowMoreButton = true;
+    } else {
+      this.showPopularShowMoreButton = false;
+    }
+  }
+
+  private loadGroupedByTopics(currentCount: number, topic?: string): void {
+    this._articleService.getByTopic(this.appSession.userId, topic, currentCount, this.itemsPerGroup)
     .pipe(takeUntil(this.destroyed$))
     .pipe(finalize(() => this.isLoading = false))
     .subscribe(articles => {
-      this.topicGroups = articles;
+      if (topic) {
+        this.topicGroups[topic]?.items?.push(...articles[topic].items)
+      } else {
+        this.topicGroups = articles;
+      }
     });
   }
 
@@ -106,6 +123,7 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
             if (currentCount == 0) {
               this.latestStartDate = moment(startDate);
               this.lastMonth = groupedArticles[range];
+              this.lastMonthMaxItems = groupedArticles[range].totalCount;
               this.setLastMonthShowMoreButtons(this.lastMonth?.items?.length);
             }
             else {
@@ -117,6 +135,7 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
             this.latestStartDate = moment(startDate);
             if (currentCount == 0) {
               this.latest = groupedArticles[range];
+              this.latestMaxItems = groupedArticles[range].totalCount;
               this.setLatestShowMoreButtons(this.latest?.items?.length);
 
             } else {
@@ -143,6 +162,7 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
             if (label == 'Popular') {
               if (currentCount == 0) {
                 this.popular = groupedArticles[label];
+                this.popularMaxItems = groupedArticles[label]?.items?.length;
                 this.setPopularShowMoreButtons(this.popular?.items?.length);
               }
               else {
@@ -153,7 +173,7 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
           });
         } else {
           console.log('NO RESULT');
-          this.setPopularShowMoreButtons(1);
+          this.setPopularShowMoreButtons(this.popular?.items?.length);
         }
       });
   }
@@ -175,8 +195,20 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
     this.loadGroupedByDates(this.lastMonth.items.length, null, lastItem.creationTime);
   }
 
+  onShowMoreTopicButtonClick(topic: string): void {
+    console.log('SHOW MORE TOPIC BUTTON CLICKED');
+    this.loadGroupedByTopics(this.topicGroups[topic].items.length, topic);
+  }
+
   handleFilterTopics(topics: string[]): void {
     this.selectedTopics = topics;
+  }
+
+  showTopicShowMoreButton(topic: string): boolean {
+    if (this.topicGroups[topic]?.items?.length < this.topicGroups[topic]?.totalCount) {
+      return true
+    }
+    return false;
   }
 
 }

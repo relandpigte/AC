@@ -23,7 +23,7 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
   latest: EventDtoPagedResultDto;
   latestStartDate: moment.Moment;
   lastMonth: EventDtoPagedResultDto;
-  popular: EventDtoPagedResultDto;   
+  popular: EventDtoPagedResultDto;
 
   isLoading = true;
   isPopularLoading = true;
@@ -35,6 +35,10 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
 
   itemsPerGroup = 6;
   popularItems = 3;
+
+  latestMaxItems: number = 0;
+  lastMonthMaxItems: number = 0;
+  popularMaxItems: number = 0;
 
   selectedTopics: string[] = [];
 
@@ -62,8 +66,7 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
   }
 
   setLatestShowMoreButtons(items: number): void {
-    
-    if (items == this.itemsPerGroup) {
+    if (items < this.latestMaxItems) {
       this.showLastestShowMore = true;
     } else {
       this.showLastestShowMore = false;
@@ -71,7 +74,8 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
   }
 
   setLastMonthShowMoreButtons(items: number): void {
-    if (items == this.itemsPerGroup) {
+    console.log('setLastMonthShowMoreButtons() --->', items, this.lastMonthMaxItems)
+    if (items < this.lastMonthMaxItems) {
       this.showLastMonthShowMoreButton = true;
     } else {
       this.showLastMonthShowMoreButton = false;
@@ -79,6 +83,14 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
   }
 
   setPopularShowMoreButtons(items: number): void {
+    if (items < this.popularMaxItems) {
+      this.showPopularShowMoreButton = true;
+    } else {
+      this.showPopularShowMoreButton = false;
+    }
+  }
+
+  setTopicShowMoreButtons(items: number): void {
     if (items == this.popularItems) {
       this.showPopularShowMoreButton = true;
     } else {
@@ -86,41 +98,44 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
     }
   }
 
-  private loadGroupedByTopics(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
-    this._eventsService.getByTopics(this.appSession.userId, start, moving, end, DateGrains.Monthly, currentCount, this.itemsPerGroup)
-    .pipe(takeUntil(this.destroyed$))
+  private loadGroupedByTopics(currentCount: number, topic?: string): void {
+    this._eventsService.getByTopics(this.appSession.userId, topic, currentCount, this.itemsPerGroup)
     .pipe(finalize(() => this.isLoading = false))
     .subscribe(events => {
-     
-      this.topicGroups = events;
+      if (topic) {
+        this.topicGroups[topic]?.items?.push(...events[topic].items)
+      } else {
+        this.topicGroups = events;
+      }
     });
   }
 
   private loadGroupedByDates(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
-    this._eventsService.getByDates(this.appSession.userId, start, moving, end, DateGrains.Monthly, currentCount, this.itemsPerGroup)
+    this._eventsService.getByDates(this.appSession.userId, start, moving, end, DateGrains.Aged30, currentCount, this.itemsPerGroup)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoading = false))
       .subscribe(groupedEvents => {
-        
+
         Object.keys(groupedEvents).forEach(range => {
-          const [startDate] = range.split(' - ');          
-            
+          const [startDate] = range.split(' - ');
+
           if (moment().diff(moment(startDate), 'months')) {
             if (currentCount == 0) {
               this.latestStartDate = moment(startDate);
               this.lastMonth = groupedEvents[range];
+              this.lastMonthMaxItems = groupedEvents[range].totalCount;
               this.setLastMonthShowMoreButtons(this.lastMonth?.items?.length);
             }
             else {
               this.lastMonth.items.push(...groupedEvents[range].items);
-              this.setLastMonthShowMoreButtons(groupedEvents[range]?.items?.length);
+              this.setLastMonthShowMoreButtons(this.lastMonth?.items?.length);
             }
           }
           else {
             this.latestStartDate = moment(startDate);
             if (currentCount == 0) {
               this.latest = groupedEvents[range];
-              console.log(this.latest);
+              this.latestMaxItems = groupedEvents[range].totalCount;
               this.setLatestShowMoreButtons(this.latest?.items?.length);
 
             } else {
@@ -147,6 +162,7 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
             if (label == 'Popular') {
               if (currentCount == 0) {
                 this.popular = groupedEvents[label];
+                this.popularMaxItems = groupedEvents[label]?.items?.length;
                 this.setPopularShowMoreButtons(this.popular?.items?.length);
               }
               else {
@@ -157,9 +173,16 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
           });
         } else {
           console.log('NO RESULT');
-          this.setPopularShowMoreButtons(1);
+          this.setPopularShowMoreButtons(this.popular?.items?.length);
         }
       });
+  }
+
+  showTopicShowMoreButton(topic: string): boolean {
+    if (this.topicGroups[topic]?.items?.length < this.topicGroups[topic]?.totalCount) {
+      return true
+    }
+    return false;
   }
 
   onShowMorePopularButtonClick(): void {
@@ -173,7 +196,12 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
 
   onShowMoreLastMonthButtonClick(): void {
     const lastItem = this.lastMonth.items.slice(-1)[0];
-    this.loadGroupedByDates(this.lastMonth.items.length, null, lastItem.creationTime);
+    this.loadGroupedByDates(this.lastMonth.items.length, undefined, lastItem.creationTime);
+  }
+
+  onShowMoreTopicButtonClick(topic: string): void {
+    console.log('SHOW MORE TOPIC BUTTON CLICKED');
+    this.loadGroupedByTopics(this.topicGroups[topic].items.length, topic);
   }
 
   handleFilterTopics(topics: string[]): void {

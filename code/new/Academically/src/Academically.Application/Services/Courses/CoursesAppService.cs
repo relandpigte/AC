@@ -90,16 +90,38 @@ namespace Academically.Services.Courses
             return output;
         }
 
-        public async Task<Dictionary<string, PagedResultDto<CourseDto>>> GetByTopicAsync(PagedExploreResultRequestDto input)
+        public async Task<Dictionary<string, PagedResultDto<CourseDto>>> GetByTopicAsync(PagedExploreGroupByTopicResultRequestDto input)
         {
-            var query = Repository.GetAll()
-                //.Where(e => e.Status == CourseStatus.Published)
-                .Where(e => e.IsVisible)
-                //.WhereIf(input.MovingDate.HasValue && input.StartDate.HasValue, v => v.CreationTime < input.MovingDate.Value && v.CreationTime >= input.StartDate.Value) // For next page of latest month
-                //.WhereIf(input.MovingDate.HasValue && !input.StartDate.HasValue && !input.EndDate.HasValue, v => v.CreationTime < input.MovingDate.Value)
-                ;
-            var totalCount = await query.CountAsync();
-            var courses = await query
+            var topics = new List<string>();
+            string allTopicsInString;
+            IEnumerable<string> distinctTopics = new List<string>();
+
+            
+            if (!string.IsNullOrEmpty(input.Topic))
+            {
+                distinctTopics = distinctTopics.Append(input.Topic);
+            }
+            else
+            {
+                // Get all topics
+                topics = await Repository.GetAll()
+                    .Where(x => !string.IsNullOrEmpty(x.Categories))
+                    .Where(e => e.IsVisible)
+                    .Select(x => x.Categories).ToListAsync();
+                allTopicsInString = string.Join(",", topics.ToArray());
+                distinctTopics = allTopicsInString.Split(",").OrderBy(x => x).Distinct();
+            }
+
+            // Loop on all topics
+            var result = new Dictionary<string, PagedResultDto<CourseDto>>();
+            foreach (var topic in distinctTopics)
+            {
+                var query = Repository.GetAll()
+                    .Where(e => e.IsVisible)
+                    .Where(c => c.Categories.Contains(topic));
+                var totalCount = await query.CountAsync();
+                var courses = await query
+                .PageBy(input)
                 .Include(e => e.ImageDocument)
                 .Include(e => e.CreatorUser)
                 .Include(e => e.StudentCourses)
@@ -107,33 +129,36 @@ namespace Academically.Services.Courses
                 .Select(e => ObjectMapper.Map<CourseDto>(e))
                 .ToListAsync();
 
-            var courseSections = await _sectionRepository.GetAll()
+                var courseSections = await _sectionRepository.GetAll()
                    .Where(cs => courses.Select(x => x.Id).Contains(cs.CourseId))
                    .ToListAsync();
 
-            var studentCourses = await _studentCourseRepository.GetAll()
-                .Where(x => x.CreatorUserId == AbpSession.GetUserId())
-                .ToListAsync();
+                var studentCourses = await _studentCourseRepository.GetAll()
+                    .Where(x => x.CreatorUserId == AbpSession.GetUserId())
+                    .ToListAsync();
 
-            foreach (var course in courses)
-            {
-                if (course.ImageDocumentId.HasValue)
-                    course.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(course.ImageDocumentId.Value);
-                if (course.CreatorUser.ProfilePictureDocumentId.HasValue)
-                    course.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(course.CreatorUser.ProfilePictureDocumentId.Value);
+                foreach (var course in courses)
+                {
+                    if (course.ImageDocumentId.HasValue)
+                        course.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(course.ImageDocumentId.Value);
+                    if (course.CreatorUser.ProfilePictureDocumentId.HasValue)
+                        course.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(course.CreatorUser.ProfilePictureDocumentId.Value);
 
-                course.Modules = courseSections.Where(x => x.Type == CourseSectionType.Module).Count();
-                course.Lessons = courseSections.Where(x => x.Type == CourseSectionType.Lesson).Count();
-                course.Units = courseSections.Where(x => x.Type == CourseSectionType.Unit).Count();
+                    course.Modules = courseSections.Where(x => x.Type == CourseSectionType.Module).Count();
+                    course.Lessons = courseSections.Where(x => x.Type == CourseSectionType.Lesson).Count();
+                    course.Units = courseSections.Where(x => x.Type == CourseSectionType.Unit).Count();
 
-                if (studentCourses.Any(x => x.CourseId == course.Id))
-                    course.Progress = studentCourses.FirstOrDefault(x => x.CourseId == course.Id).Progress;
+                    if (studentCourses.Any(x => x.CourseId == course.Id))
+                        course.Progress = studentCourses.FirstOrDefault(x => x.CourseId == course.Id).Progress;
+                }
+
+                result.Add(topic, new PagedResultDto<CourseDto>(totalCount, courses));
             }
 
-            return courses.GroupByTopicsPagedExt();
+            return result;
         }
 
-        public async Task<Dictionary<string, PagedResultDto<CourseDto>>> GetByDatesAsync(PagedExploreResultRequestDto input)
+        public async Task<Dictionary<string, PagedResultDto<CourseDto>>> GetByDatesAsync(PagedExploreGroupByDateResultRequestDto input)
         {
             var query = Repository.GetAll()
                 //.Where(e => e.Status == CourseStatus.Published)
@@ -173,7 +198,7 @@ namespace Academically.Services.Courses
                     course.Progress = studentCourses.FirstOrDefault(x => x.CourseId == course.Id).Progress;
             }
 
-            return courses.GroupByDateRangePagedExt(input.Grain, input.MaxResultCount);
+            return courses.GroupByDateRangePagedExt(input.Grain.Value, input.MaxResultCount);
         }
 
         public async Task<Dictionary<string, PagedResultDto<CourseDto>>> GetByPopularityAsync(PagedPopularRequestDto input)

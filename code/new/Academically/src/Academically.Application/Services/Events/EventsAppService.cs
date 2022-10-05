@@ -95,33 +95,66 @@ namespace Academically.Services.Events
             }
         }
 
-        public async Task<Dictionary<string, PagedResultDto<EventDto>>> GetByTopicsAsync(PagedExploreResultRequestDto input)
+        public async Task<Dictionary<string, PagedResultDto<EventDto>>> GetByTopicsAsync(PagedExploreGroupByTopicResultRequestDto input)
         {
-            var query = Repository.GetAll()
-                .Where(e => e.ParentId == null);
-            var totalCount = await query.CountAsync();
-            var events = await query.Include(e => e.Children)
-                .Include(e => e.ThumbnailDocument)
-                .Include(e => e.CreatorUser)
-                .OrderByDescending(v => v.CreationTime)
-                .Select(e => ObjectMapper.Map<EventDto>(e))
-                .ToListAsync();
+            var topics = new List<string>();
+            string allTopicsInString;
+            IEnumerable<string> distinctTopics = new List<string>();
 
-            foreach (var evt in events)
+
+            if (!string.IsNullOrEmpty(input.Topic))
             {
-                if (evt.ThumbnailDocumentId.HasValue)
-                    evt.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(evt.ThumbnailDocumentId.Value);
-                if (evt.CreatorUser.ProfilePictureDocumentId.HasValue)
-                    evt.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(evt.CreatorUser.ProfilePictureDocumentId.Value);
+                distinctTopics = distinctTopics.Append(input.Topic);
+            }
+            else
+            {
+                // Get all topics
+                topics = await Repository.GetAll()
+                    .Where(x => !string.IsNullOrEmpty(x.Categories))
+                    .Where(e => e.Visible.Value)
+                    .Select(x => x.Categories).ToListAsync();
+                allTopicsInString = string.Join(",", topics.ToArray());
+                distinctTopics = allTopicsInString.Split(",").OrderBy(x => x).Distinct();
             }
 
-            return events.GroupByTopicsPagedExt();
+            // Loop on all topics
+            var result = new Dictionary<string, PagedResultDto<EventDto>>();
+            foreach (var topic in distinctTopics)
+            {
+                var query = Repository.GetAll()
+                    .Where(e => e.ParentId == null)
+                    .Where(c => c.Categories.Contains(topic));
+                var totalCount = await query.CountAsync();
+                var events = await query
+                    .PageBy(input)
+                    .Include(e => e.Children)
+                    .Include(e => e.ThumbnailDocument)
+                    .Include(e => e.CreatorUser)
+                    .OrderByDescending(v => v.CreationTime)
+                    .Select(e => ObjectMapper.Map<EventDto>(e))
+                    .ToListAsync();
+
+                foreach (var evt in events)
+                {
+                    if (evt.ThumbnailDocumentId.HasValue)
+                        evt.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(evt.ThumbnailDocumentId.Value);
+                    if (evt.CreatorUser.ProfilePictureDocumentId.HasValue)
+                        evt.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(evt.CreatorUser.ProfilePictureDocumentId.Value);
+                }
+
+                result.Add(topic, new PagedResultDto<EventDto>(totalCount, events));
+
+            }
+
+            return result;
         }
 
-        public async Task<Dictionary<string, PagedResultDto<EventDto>>> GetByDatesAsync(PagedExploreResultRequestDto input)
+        public async Task<Dictionary<string, PagedResultDto<EventDto>>> GetByDatesAsync(PagedExploreGroupByDateResultRequestDto input)
         {
             var query = Repository.GetAll()
-                .Where(e => e.ParentId == null);
+                .Where(e => e.ParentId == null)
+                .WhereIf(input.MovingDate.HasValue && input.StartDate.HasValue, v => v.CreationTime < input.MovingDate.Value && v.CreationTime >= input.StartDate.Value) // For next page of latest month
+                .WhereIf(input.MovingDate.HasValue && !input.StartDate.HasValue && !input.EndDate.HasValue, v => v.CreationTime < input.MovingDate.Value);
             var totalCount = await query.CountAsync();
             var events = await query.Include(e => e.Children)
                 .Include(e => e.ThumbnailDocument)
@@ -138,7 +171,7 @@ namespace Academically.Services.Events
                     evt.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(evt.CreatorUser.ProfilePictureDocumentId.Value);
             }
 
-            return events.GroupByDateRangePagedExt(input.Grain, input.MaxResultCount);
+            return events.GroupByDateRangePagedExt(input.Grain.Value, input.MaxResultCount);
         }
 
         public async Task<Dictionary<string, PagedResultDto<EventDto>>> GetByPopularityAsync(PagedPopularRequestDto input)
