@@ -14,6 +14,7 @@ using Academically.Authorization;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
+using Academically.Domain.Views;
 using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
 using Academically.Services.Courses.Dto;
@@ -144,9 +145,9 @@ namespace Academically.Services.Courses
                     if (course.CreatorUser.ProfilePictureDocumentId.HasValue)
                         course.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(course.CreatorUser.ProfilePictureDocumentId.Value);
 
-                    course.Modules = courseSections.Where(x => x.Type == CourseSectionType.Module).Count();
-                    course.Lessons = courseSections.Where(x => x.Type == CourseSectionType.Lesson).Count();
-                    course.Units = courseSections.Where(x => x.Type == CourseSectionType.Unit).Count();
+                    course.Modules = courseSections.Where(x => x.Type == CourseSectionType.Module && course.Id == x.CourseId).Count();
+                    course.Lessons = courseSections.Where(x => x.Type == CourseSectionType.Lesson && course.Id == x.CourseId).Count();
+                    course.Units = courseSections.Where(x => x.Type == CourseSectionType.Unit && course.Id == x.CourseId).Count();
 
                     if (studentCourses.Any(x => x.CourseId == course.Id))
                         course.Progress = studentCourses.FirstOrDefault(x => x.CourseId == course.Id).Progress;
@@ -190,9 +191,9 @@ namespace Academically.Services.Courses
                 if (course.CreatorUser.ProfilePictureDocumentId.HasValue)
                     course.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(course.CreatorUser.ProfilePictureDocumentId.Value);
 
-                course.Modules = courseSections.Where(x => x.Type == CourseSectionType.Module).Count();
-                course.Lessons = courseSections.Where(x => x.Type == CourseSectionType.Lesson).Count();
-                course.Units = courseSections.Where(x => x.Type == CourseSectionType.Unit).Count();
+                course.Modules = courseSections.Where(x => x.Type == CourseSectionType.Module && course.Id == x.CourseId).Count();
+                course.Lessons = courseSections.Where(x => x.Type == CourseSectionType.Lesson && course.Id == x.CourseId).Count();
+                course.Units = courseSections.Where(x => x.Type == CourseSectionType.Unit && course.Id == x.CourseId).Count();
 
                 if (studentCourses.Any(x => x.CourseId == course.Id))
                     course.Progress = studentCourses.FirstOrDefault(x => x.CourseId == course.Id).Progress;
@@ -203,9 +204,35 @@ namespace Academically.Services.Courses
 
         public async Task<Dictionary<string, PagedResultDto<CourseDto>>> GetByPopularityAsync(PagedPopularRequestDto input)
         {
-            var popularCourses = (await _exploreRepository.GetPopularCourses(input.SkipCount, input.MaxResultCount, input.UserIdFilter))
-                    .Select(e => ObjectMapper.Map<CourseDto>(e))
-                    .ToList();
+            
+            var topCoursesQuery = _studentCourseRepository.GetAll().Select(x => new
+            {
+                x.CourseId,
+                Point = 5
+            })
+                .GroupBy(x => new { x.CourseId })
+                .Select(g => new { g.Key.CourseId, Popularity = g.Sum(s => s.Point) });
+                
+            var totalCount = topCoursesQuery.Count();
+            var topCourses = await topCoursesQuery.OrderByDescending(x => x.Popularity)
+                 .PageBy(input)
+                .ToListAsync();
+
+            var courses = await Repository.GetAll()
+                    .Include(e => e.ImageDocument)
+                    .Include(e => e.CreatorUser)
+                    //.Where(e => e.Status == CourseStatus.Published)
+                    .Where(e => e.IsVisible).Where(x => topCourses.Select(t => t.CourseId).Contains(x.Id)).ToListAsync();
+
+            var popularCourses = courses.Join(
+                                topCourses,
+                                v => v.Id,
+                                tv => tv.CourseId,
+                                (v, tv) => new CoursePopularityViewModel(v, tv.Popularity))
+                         .OrderByDescending(x => x.PopularityWeight)
+                         .Select(e => ObjectMapper.Map<CourseDto>(e))
+                         .ToList();
+
 
             var courseSections = await _sectionRepository.GetAll()
                    .Where(cs => popularCourses.Select(x => x.Id).Contains(cs.CourseId))
@@ -222,15 +249,15 @@ namespace Academically.Services.Courses
                 if (course.CreatorUser.ProfilePictureDocumentId.HasValue)
                     course.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(course.CreatorUser.ProfilePictureDocumentId.Value);
 
-                course.Modules = courseSections.Where(x => x.Type == CourseSectionType.Module).Count();
-                course.Lessons = courseSections.Where(x => x.Type == CourseSectionType.Lesson).Count();
-                course.Units = courseSections.Where(x => x.Type == CourseSectionType.Unit).Count();
+                course.Modules = courseSections.Where(x => x.Type == CourseSectionType.Module && course.Id == x.CourseId).Count();
+                course.Lessons = courseSections.Where(x => x.Type == CourseSectionType.Lesson && course.Id == x.CourseId).Count();
+                course.Units = courseSections.Where(x => x.Type == CourseSectionType.Unit && course.Id == x.CourseId).Count();
 
                 if (studentCourses.Any(x => x.CourseId == course.Id))
                     course.Progress = studentCourses.FirstOrDefault(x => x.CourseId == course.Id).Progress;
             }
 
-            return popularCourses.GroupByPopularityPagedExt(input.MaxResultCount);
+            return popularCourses.GroupByPopularityPagedExt(totalCount);
         }
 
         public async Task<CourseDto> UpdateDetails([FromForm] UpdateCourseDetailsDto input)
