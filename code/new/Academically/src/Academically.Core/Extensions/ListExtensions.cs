@@ -48,28 +48,38 @@ namespace Academically.Extensions
         {
             const int maxItems = 10;
             itemsPerGroup = itemsPerGroup > maxItems ? maxItems : itemsPerGroup;
+            // Get the earliest creation time
+            DateTime earliestCreationTime = list.Min(x => x.CreationTime);
+            DateTime olderThanThisMonth = list.Max(x => x.CreationTime);
 
-            return list.GroupBy(x => new { DateRange = ToDateRangeString(x.CreationTime, grain) })
+            return list.GroupBy(x => new { DateRange = ToDateRangeString(x.CreationTime, grain, earliestCreationTime, olderThanThisMonth) })
                                 .Select(x => new
                                 {
                                     Range = x.Key.DateRange,
-                                    Items = list.Where(l => x.Key.DateRange.Equals(ToDateRangeString(l.CreationTime, grain))).Take(itemsPerGroup).ToList()
+                                    Items = list.Where(l => x.Key.DateRange.Equals(ToDateRangeString(l.CreationTime, grain, earliestCreationTime, olderThanThisMonth))).Take(itemsPerGroup).ToList()
                                 })
                                 .ToDictionary(key => key.Range, value => value.Items);
         }
 
         public static Dictionary<string, PagedResultDto<DtoType>> GroupByDateRangePagedExt<DtoType>(this List<DtoType> list, DateGrains grain, int itemsPerGroup) where DtoType : IHasCreationTime
         {
+            if (list.Count == 0)
+                return null;
             const int maxItems = 10;
             itemsPerGroup = itemsPerGroup > maxItems ? maxItems : itemsPerGroup;
+            // Get the earliest creation time
+            DateTime today = DateTime.Now;
+            DateTime earliestCreationTime = list.Min(x => x.CreationTime);
+            DateTime olderThanThisMonth = new DateTime(today.Year, today.Month-1, DateTime.DaysInMonth(today.Year, today.Month-1), 23, 59, 59, 999);
 
-            return list.GroupBy(x => new { DateRange = ToDateRangeString(x.CreationTime, grain) })
+            return list.GroupBy(x => new { DateRange = ToDateRangeString(x.CreationTime, grain, earliestCreationTime, olderThanThisMonth) })
                                 .Select(x => new
                                 {
                                     Range = x.Key.DateRange,
-                                    Items = list.Where(l => x.Key.DateRange.Equals(ToDateRangeString(l.CreationTime, grain))).Take(itemsPerGroup).ToList()
+                                    Items = list.Where(l => x.Key.DateRange.Equals(ToDateRangeString(l.CreationTime, grain, earliestCreationTime, olderThanThisMonth))).Take(itemsPerGroup).ToList(),
+                                    MaxItems = list.Where(l => x.Key.DateRange.Equals(ToDateRangeString(l.CreationTime, grain, earliestCreationTime, olderThanThisMonth))).Count()
                                 })
-                                .ToDictionary(key => key.Range, value => new PagedResultDto<DtoType>(value.Items.Count, value.Items));
+                                .ToDictionary(key => key.Range, value => new PagedResultDto<DtoType>(value.MaxItems, value.Items));
         }
 
         public static Dictionary<string, PagedResultDto<DtoType>> GroupByPopularityPagedExt<DtoType>(this List<DtoType> list, int itemsPerGroup) where DtoType : IHasPopularityWeight
@@ -83,7 +93,7 @@ namespace Academically.Extensions
                                 .ToDictionary(key => key.Range, value => new PagedResultDto<DtoType>(value.Items.Count, value.Items));
         }
 
-        private static string ToDateRangeString(DateTime date, DateGrains grain)
+        private static string ToDateRangeString(DateTime date, DateGrains grain, DateTime earliestDate, DateTime olderThanThisMonth)
         {
             switch (grain)
             {
@@ -93,6 +103,8 @@ namespace Academically.Extensions
                     return CreateWeekRangeString(date);
                 case DateGrains.Monthly:
                     return CreateMonthRangeString(date);
+                case DateGrains.Aged30:
+                    return CreateAged30RangeString(date, earliestDate, olderThanThisMonth);
                 default:
                     return String.Empty;
             }
@@ -117,6 +129,25 @@ namespace Academically.Extensions
         {
             var start = new DateTime(date.Year, date.Month, 1, 0, 0, 0);
             var end = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month), 23, 59, 59, 999);
+            return $"{start.ToString("MM/dd/yyyy HH:mm:ss")} - {end.ToString("MM/dd/yyyy HH:mm:ss")}";
+        }
+        
+        private static string CreateAged30RangeString(DateTime date, DateTime earliestCreationTime, DateTime olderThanThisMonth)
+        {
+            DateTime start;
+            DateTime end;
+            if (date.Month == DateTime.Now.Month)
+            {
+                start = new DateTime(date.Year, date.Month, 1, 0, 0, 0);
+                end = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month), 23, 59, 59, 999);
+            }
+            else
+            {
+                start = earliestCreationTime;
+                end = new DateTime(olderThanThisMonth.Year, olderThanThisMonth.Month, DateTime.DaysInMonth(olderThanThisMonth.Year, olderThanThisMonth.Month), 23, 59, 59, 999);
+            }
+
+            
             return $"{start.ToString("MM/dd/yyyy HH:mm:ss")} - {end.ToString("MM/dd/yyyy HH:mm:ss")}";
         }
     }

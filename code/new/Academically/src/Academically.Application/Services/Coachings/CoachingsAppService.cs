@@ -18,6 +18,7 @@ using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
 using Academically.Extensions;
 using Academically.Services.Coachings.Dto;
+using Academically.Services.Explore.Dto;
 using Academically.Users.Dto;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -148,33 +149,71 @@ namespace Academically.Services.Coachings
             return ObjectMapper.Map<CoachingDto>(@event);
         }
 
-        public async Task<Dictionary<string, List<CoachingDto>>> GetByTopicAsync()
+        public async Task<Dictionary<string, PagedResultDto<CoachingDto>>> GetByTopicAsync(PagedExploreGroupByTopicResultRequestDto input)
         {
-            var coachings = await Repository.GetAll()
-                .Include(x => x.ThumbnailDocument)
-                .Include(x => x.CreatorUser)
-                .OrderByDescending(v => v.CreationTime)
-                .Select(x => ObjectMapper.Map<CoachingDto>(x))
-                .ToListAsync();
+            var topics = new List<string>();
+            string allTopicsInString;
+            IEnumerable<string> distinctTopics = new List<string>();
 
-            foreach (var coaching in coachings)
+
+            if (!string.IsNullOrEmpty(input.Topic))
             {
-                if (coaching.ThumbnailDocumentId.HasValue)
-                    coaching.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(coaching.ThumbnailDocumentId.Value);
-                if (coaching.CreatorUser.ProfilePictureDocumentId.HasValue)
-                    coaching.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(coaching.CreatorUser.ProfilePictureDocumentId.Value);
+                distinctTopics = distinctTopics.Append(input.Topic);
+            }
+            else
+            {
+                // Get all topics
+                topics = await Repository.GetAll()
+                    .Where(x => !string.IsNullOrEmpty(x.Categories))
+                    .Where(e => e.Visible.Value)
+                    .Select(x => x.Categories).ToListAsync();
+                allTopicsInString = string.Join(",", topics.ToArray());
+                distinctTopics = allTopicsInString.Split(",").OrderBy(x => x).Distinct();
             }
 
-            return coachings.GroupByTopicExt();
+            // Loop on all topics
+            var result = new Dictionary<string, PagedResultDto<CoachingDto>>();
+            foreach (var topic in distinctTopics)
+            {
+                var query = Repository.GetAll()
+                    .Where(e => e.Visible.Value)
+                    .Where(c => c.Categories.Contains(topic));
+                var totalCount = await query.CountAsync();
+                var coachings = await query
+                .PageBy(input)
+                .Include(e => e.ThumbnailDocument)
+                .Include(e => e.CreatorUser)
+                .OrderByDescending(v => v.CreationTime)
+                .Select(e => ObjectMapper.Map<CoachingDto>(e))
+                .ToListAsync();
+
+                foreach (var coaching in coachings)
+                {
+                    if (coaching.ThumbnailDocumentId.HasValue)
+                        coaching.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(coaching.ThumbnailDocumentId.Value);
+                    if (coaching.CreatorUser.ProfilePictureDocumentId.HasValue)
+                        coaching.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(coaching.CreatorUser.ProfilePictureDocumentId.Value);
+                }
+
+                result.Add(topic, new PagedResultDto<CoachingDto>(totalCount, coachings));
+            }
+              
+            return result;
         }
 
-        public async Task<Dictionary<string, List<CoachingDto>>> GetByDatesAsync(DateGrains grain, int itemsPerGroup = 6)
+        public async Task<Dictionary<string, PagedResultDto<CoachingDto>>> GetByDatesAsync(PagedExploreGroupByDateResultRequestDto input)
         {
-            var coachings = await Repository.GetAll()
-                .Include(x => x.ThumbnailDocument)
-                .Include(x => x.CreatorUser)
+            var query = Repository.GetAll()
+                .Where(e => e.Status == CoachingStatus.Published)
+                .WhereIf(input.MovingDate.HasValue && input.StartDate.HasValue, v => v.CreationTime < input.MovingDate.Value && v.CreationTime >= input.StartDate.Value) // For next page of latest month
+                .WhereIf(input.MovingDate.HasValue && !input.StartDate.HasValue && !input.EndDate.HasValue, v => v.CreationTime < input.MovingDate.Value)
+                ;
+            var totalCount = await query.CountAsync();
+            var coachings = await query
+                .Include(e => e.ThumbnailDocument)
+                .Include(e => e.CreatorUser)
                 .OrderByDescending(v => v.CreationTime)
-                .Select(x => ObjectMapper.Map<CoachingDto>(x))
+                .Select(e => ObjectMapper.Map<CoachingDto>(e))
                 .ToListAsync();
 
             foreach (var coaching in coachings)
@@ -185,7 +224,7 @@ namespace Academically.Services.Coachings
                     coaching.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(coaching.CreatorUser.ProfilePictureDocumentId.Value);
             }
 
-            return coachings.GroupByDateRangeExt(grain, itemsPerGroup);
+            return coachings.GroupByDateRangePagedExt(input.Grain.Value, input.MaxResultCount);
         }
     }
 }

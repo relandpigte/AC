@@ -1042,40 +1042,21 @@ export class ArticlesServiceProxy {
 
     /**
      * @param userIdFilter (optional) 
-     * @param startDate (optional) 
-     * @param movingDate (optional) 
-     * @param endDate (optional) 
-     * @param grain (optional) 0 = Daily
-    
-    1 = Weekly
-    
-    2 = Monthly
+     * @param topic (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByTopic(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
+    getByTopic(userIdFilter: number | undefined, topic: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Articles/GetByTopic?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
         else if (userIdFilter !== undefined)
             url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
-        if (startDate === null)
-            throw new Error("The parameter 'startDate' cannot be null.");
-        else if (startDate !== undefined)
-            url_ += "StartDate=" + encodeURIComponent(startDate ? "" + startDate.toJSON() : "") + "&";
-        if (movingDate === null)
-            throw new Error("The parameter 'movingDate' cannot be null.");
-        else if (movingDate !== undefined)
-            url_ += "MovingDate=" + encodeURIComponent(movingDate ? "" + movingDate.toJSON() : "") + "&";
-        if (endDate === null)
-            throw new Error("The parameter 'endDate' cannot be null.");
-        else if (endDate !== undefined)
-            url_ += "EndDate=" + encodeURIComponent(endDate ? "" + endDate.toJSON() : "") + "&";
-        if (grain === null)
-            throw new Error("The parameter 'grain' cannot be null.");
-        else if (grain !== undefined)
-            url_ += "Grain=" + encodeURIComponent("" + grain) + "&";
+        if (topic === null)
+            throw new Error("The parameter 'topic' cannot be null.");
+        else if (topic !== undefined)
+            url_ += "Topic=" + encodeURIComponent("" + topic) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -1149,6 +1130,8 @@ export class ArticlesServiceProxy {
     1 = Weekly
     
     2 = Monthly
+    
+    3 = Aged30
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
@@ -3224,10 +3207,30 @@ export class CoachingsServiceProxy {
     }
 
     /**
+     * @param userIdFilter (optional) 
+     * @param topic (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getByTopic(): Observable<{ [key: string]: CoachingDto[]; }> {
-        let url_ = this.baseUrl + "/api/services/app/Coachings/GetByTopic";
+    getByTopic(userIdFilter: number | undefined, topic: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CoachingDtoPagedResultDto; }> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/GetByTopic?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (topic === null)
+            throw new Error("The parameter 'topic' cannot be null.");
+        else if (topic !== undefined)
+            url_ += "Topic=" + encodeURIComponent("" + topic) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -3245,14 +3248,14 @@ export class CoachingsServiceProxy {
                 try {
                     return this.processGetByTopic(<any>response_);
                 } catch (e) {
-                    return <Observable<{ [key: string]: CoachingDto[]; }>><any>_observableThrow(e);
+                    return <Observable<{ [key: string]: CoachingDtoPagedResultDto; }>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<{ [key: string]: CoachingDto[]; }>><any>_observableThrow(response_);
+                return <Observable<{ [key: string]: CoachingDtoPagedResultDto; }>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetByTopic(response: HttpResponseBase): Observable<{ [key: string]: CoachingDto[]; }> {
+    protected processGetByTopic(response: HttpResponseBase): Observable<{ [key: string]: CoachingDtoPagedResultDto; }> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3267,7 +3270,7 @@ export class CoachingsServiceProxy {
                 result200 = {} as any;
                 for (let key in resultData200) {
                     if (resultData200.hasOwnProperty(key))
-                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => CoachingDto.fromJS(i)) : [];
+                        (<any>result200)[key] = resultData200[key] ? CoachingDtoPagedResultDto.fromJS(resultData200[key]) : new CoachingDtoPagedResultDto();
                 }
             }
             else {
@@ -3280,28 +3283,55 @@ export class CoachingsServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<{ [key: string]: CoachingDto[]; }>(<any>null);
+        return _observableOf<{ [key: string]: CoachingDtoPagedResultDto; }>(<any>null);
     }
 
     /**
+     * @param userIdFilter (optional) 
+     * @param startDate (optional) 
+     * @param movingDate (optional) 
+     * @param endDate (optional) 
      * @param grain (optional) 0 = Daily
     
     1 = Weekly
     
     2 = Monthly
-     * @param itemsPerGroup (optional) 
+    
+    3 = Aged30
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getByDates(grain: DateGrains | undefined, itemsPerGroup: number | undefined): Observable<{ [key: string]: CoachingDto[]; }> {
+    getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CoachingDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Coachings/GetByDates?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (startDate === null)
+            throw new Error("The parameter 'startDate' cannot be null.");
+        else if (startDate !== undefined)
+            url_ += "StartDate=" + encodeURIComponent(startDate ? "" + startDate.toJSON() : "") + "&";
+        if (movingDate === null)
+            throw new Error("The parameter 'movingDate' cannot be null.");
+        else if (movingDate !== undefined)
+            url_ += "MovingDate=" + encodeURIComponent(movingDate ? "" + movingDate.toJSON() : "") + "&";
+        if (endDate === null)
+            throw new Error("The parameter 'endDate' cannot be null.");
+        else if (endDate !== undefined)
+            url_ += "EndDate=" + encodeURIComponent(endDate ? "" + endDate.toJSON() : "") + "&";
         if (grain === null)
             throw new Error("The parameter 'grain' cannot be null.");
         else if (grain !== undefined)
-            url_ += "grain=" + encodeURIComponent("" + grain) + "&";
-        if (itemsPerGroup === null)
-            throw new Error("The parameter 'itemsPerGroup' cannot be null.");
-        else if (itemsPerGroup !== undefined)
-            url_ += "itemsPerGroup=" + encodeURIComponent("" + itemsPerGroup) + "&";
+            url_ += "Grain=" + encodeURIComponent("" + grain) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -3319,14 +3349,14 @@ export class CoachingsServiceProxy {
                 try {
                     return this.processGetByDates(<any>response_);
                 } catch (e) {
-                    return <Observable<{ [key: string]: CoachingDto[]; }>><any>_observableThrow(e);
+                    return <Observable<{ [key: string]: CoachingDtoPagedResultDto; }>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<{ [key: string]: CoachingDto[]; }>><any>_observableThrow(response_);
+                return <Observable<{ [key: string]: CoachingDtoPagedResultDto; }>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetByDates(response: HttpResponseBase): Observable<{ [key: string]: CoachingDto[]; }> {
+    protected processGetByDates(response: HttpResponseBase): Observable<{ [key: string]: CoachingDtoPagedResultDto; }> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3341,7 +3371,7 @@ export class CoachingsServiceProxy {
                 result200 = {} as any;
                 for (let key in resultData200) {
                     if (resultData200.hasOwnProperty(key))
-                        (<any>result200)[key] = resultData200[key] ? resultData200[key].map((i: any) => CoachingDto.fromJS(i)) : [];
+                        (<any>result200)[key] = resultData200[key] ? CoachingDtoPagedResultDto.fromJS(resultData200[key]) : new CoachingDtoPagedResultDto();
                 }
             }
             else {
@@ -3354,7 +3384,7 @@ export class CoachingsServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<{ [key: string]: CoachingDto[]; }>(<any>null);
+        return _observableOf<{ [key: string]: CoachingDtoPagedResultDto; }>(<any>null);
     }
 
     /**
@@ -5772,40 +5802,21 @@ export class CoursesServiceProxy {
 
     /**
      * @param userIdFilter (optional) 
-     * @param startDate (optional) 
-     * @param movingDate (optional) 
-     * @param endDate (optional) 
-     * @param grain (optional) 0 = Daily
-    
-    1 = Weekly
-    
-    2 = Monthly
+     * @param topic (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByTopic(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
+    getByTopic(userIdFilter: number | undefined, topic: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Courses/GetByTopic?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
         else if (userIdFilter !== undefined)
             url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
-        if (startDate === null)
-            throw new Error("The parameter 'startDate' cannot be null.");
-        else if (startDate !== undefined)
-            url_ += "StartDate=" + encodeURIComponent(startDate ? "" + startDate.toJSON() : "") + "&";
-        if (movingDate === null)
-            throw new Error("The parameter 'movingDate' cannot be null.");
-        else if (movingDate !== undefined)
-            url_ += "MovingDate=" + encodeURIComponent(movingDate ? "" + movingDate.toJSON() : "") + "&";
-        if (endDate === null)
-            throw new Error("The parameter 'endDate' cannot be null.");
-        else if (endDate !== undefined)
-            url_ += "EndDate=" + encodeURIComponent(endDate ? "" + endDate.toJSON() : "") + "&";
-        if (grain === null)
-            throw new Error("The parameter 'grain' cannot be null.");
-        else if (grain !== undefined)
-            url_ += "Grain=" + encodeURIComponent("" + grain) + "&";
+        if (topic === null)
+            throw new Error("The parameter 'topic' cannot be null.");
+        else if (topic !== undefined)
+            url_ += "Topic=" + encodeURIComponent("" + topic) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -5879,6 +5890,8 @@ export class CoursesServiceProxy {
     1 = Weekly
     
     2 = Monthly
+    
+    3 = Aged30
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
@@ -9092,40 +9105,21 @@ export class EventsServiceProxy {
 
     /**
      * @param userIdFilter (optional) 
-     * @param startDate (optional) 
-     * @param movingDate (optional) 
-     * @param endDate (optional) 
-     * @param grain (optional) 0 = Daily
-    
-    1 = Weekly
-    
-    2 = Monthly
+     * @param topic (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByTopics(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: EventDtoPagedResultDto; }> {
+    getByTopics(userIdFilter: number | undefined, topic: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: EventDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Events/GetByTopics?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
         else if (userIdFilter !== undefined)
             url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
-        if (startDate === null)
-            throw new Error("The parameter 'startDate' cannot be null.");
-        else if (startDate !== undefined)
-            url_ += "StartDate=" + encodeURIComponent(startDate ? "" + startDate.toJSON() : "") + "&";
-        if (movingDate === null)
-            throw new Error("The parameter 'movingDate' cannot be null.");
-        else if (movingDate !== undefined)
-            url_ += "MovingDate=" + encodeURIComponent(movingDate ? "" + movingDate.toJSON() : "") + "&";
-        if (endDate === null)
-            throw new Error("The parameter 'endDate' cannot be null.");
-        else if (endDate !== undefined)
-            url_ += "EndDate=" + encodeURIComponent(endDate ? "" + endDate.toJSON() : "") + "&";
-        if (grain === null)
-            throw new Error("The parameter 'grain' cannot be null.");
-        else if (grain !== undefined)
-            url_ += "Grain=" + encodeURIComponent("" + grain) + "&";
+        if (topic === null)
+            throw new Error("The parameter 'topic' cannot be null.");
+        else if (topic !== undefined)
+            url_ += "Topic=" + encodeURIComponent("" + topic) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -9199,6 +9193,8 @@ export class EventsServiceProxy {
     1 = Weekly
     
     2 = Monthly
+    
+    3 = Aged30
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
@@ -24672,40 +24668,21 @@ export class VideosServiceProxy {
 
     /**
      * @param userIdFilter (optional) 
-     * @param startDate (optional) 
-     * @param movingDate (optional) 
-     * @param endDate (optional) 
-     * @param grain (optional) 0 = Daily
-    
-    1 = Weekly
-    
-    2 = Monthly
+     * @param topic (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByTopic(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: VideoDtoPagedResultDto; }> {
+    getByTopic(userIdFilter: number | undefined, topic: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: VideoDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Videos/GetByTopic?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
         else if (userIdFilter !== undefined)
             url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
-        if (startDate === null)
-            throw new Error("The parameter 'startDate' cannot be null.");
-        else if (startDate !== undefined)
-            url_ += "StartDate=" + encodeURIComponent(startDate ? "" + startDate.toJSON() : "") + "&";
-        if (movingDate === null)
-            throw new Error("The parameter 'movingDate' cannot be null.");
-        else if (movingDate !== undefined)
-            url_ += "MovingDate=" + encodeURIComponent(movingDate ? "" + movingDate.toJSON() : "") + "&";
-        if (endDate === null)
-            throw new Error("The parameter 'endDate' cannot be null.");
-        else if (endDate !== undefined)
-            url_ += "EndDate=" + encodeURIComponent(endDate ? "" + endDate.toJSON() : "") + "&";
-        if (grain === null)
-            throw new Error("The parameter 'grain' cannot be null.");
-        else if (grain !== undefined)
-            url_ += "Grain=" + encodeURIComponent("" + grain) + "&";
+        if (topic === null)
+            throw new Error("The parameter 'topic' cannot be null.");
+        else if (topic !== undefined)
+            url_ += "Topic=" + encodeURIComponent("" + topic) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -24779,6 +24756,8 @@ export class VideosServiceProxy {
     1 = Weekly
     
     2 = Monthly
+    
+    3 = Aged30
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
@@ -32508,11 +32487,12 @@ export interface ICustomAttributeTypedArgument {
     value: any | undefined;
 }
 
-/** 0 = Daily 1 = Weekly 2 = Monthly */
+/** 0 = Daily 1 = Weekly 2 = Monthly 3 = Aged30 */
 export enum DateGrains {
     Daily = 0,
     Weekly = 1,
     Monthly = 2,
+    Aged30 = 3,
 }
 
 /** 0 = Sunday 1 = Monday 2 = Tuesday 3 = Wednesday 4 = Thursday 5 = Friday 6 = Saturday */
