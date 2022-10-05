@@ -28,18 +28,20 @@
           </ng-container>
         </ng-container>
 
+
+
         <ng-container *ngIf="!isGroupByTopics">
-          <ng-container *ngIf="latest?.items?.length">
+          <ng-container *ngIf="popular?.items?.length">
             <div class="row align-items-center" [style.marginBottom.px]="25">
               <div class="col d-flex flex-wrap gap-15">
-                <span class="section-title">Latest</span>
+                <span class="section-title">Popular</span>
               </div>
             </div>
             <div class="row align-items-center mb-5">
               <div class="col d-flex flex-wrap gap-27">
-                <app-service-card *ngFor="let d of latest?.items; trackBy:d?.id" [data]="d" [isLoading]="isLoading"></app-service-card>
+                <app-service-card *ngFor="let d of popular?.items; trackBy:d?.id" [data]="d" [isLoading]="isPopularLoading"></app-service-card>
                 <div class="flex-break"></div>
-                <div class="btn btn-block btn-white flex-grow-1" *ngIf="showLastestShowMore" (click)="onShowMoreLatestButtonClick()">Show More</div>
+                <div class="btn btn-block btn-white flex-grow-1" *ngIf="showPopularShowMoreButton" (click)="onShowMorePopularButtonClick()">Show More</div>
               </div>
             </div>
           </ng-container>

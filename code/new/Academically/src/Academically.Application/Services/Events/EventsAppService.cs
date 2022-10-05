@@ -16,6 +16,7 @@ using Academically.Configuration;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
+using Academically.Domain.Views;
 using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
 using Academically.Services.Events.Dto;
@@ -176,9 +177,40 @@ namespace Academically.Services.Events
 
         public async Task<Dictionary<string, PagedResultDto<EventDto>>> GetByPopularityAsync(PagedPopularRequestDto input)
         {
-            var popularEvents = (await _exploreRepository.GetPopularEvents(input.SkipCount, input.MaxResultCount, input.UserIdFilter))
-                    .Select(e => ObjectMapper.Map<EventDto>(e))
-                    .ToList();
+            var topEventsQuery = _studentEventsRepository.GetAll().Select(x => new
+                    {
+                        x.EventId,
+                        Point = x.SaveOnly ? 1 : 5
+                    })
+                .GroupBy(x => new { x.EventId })
+                .Select(g => new { g.Key.EventId, Popularity = g.Sum(s => s.Point) });
+
+            var topEvents = await topEventsQuery.OrderByDescending(x => x.Popularity)
+                .ToListAsync();
+            
+
+            var events = await Repository.GetAll()
+                    .Include(e => e.ThumbnailDocument)
+                    .Include(e => e.Children)
+                    .Include(e => e.CreatorUser)
+                    .Where(e => e.ParentId == null)
+                    .Where(e => e.Status == EventStatus.Published)
+                    .Where(e => e.Visible.Value)
+                    .Where(x => topEvents.Select(t => t.EventId).Contains(x.Id))
+                    .ToListAsync();
+
+            var popularEventsQuery = events.Join(
+                                topEvents,
+                                v => v.Id,
+                                tv => tv.EventId,
+                                (v, tv) => new EventPopularityViewModel(v, tv.Popularity))
+                         .OrderByDescending(x => x.PopularityWeight);
+            var totalCount = popularEventsQuery.Count();
+            var popularEvents = popularEventsQuery
+                         .Skip(input.SkipCount)
+                         .Take(input.MaxResultCount)
+                         .Select(e => ObjectMapper.Map<EventDto>(e))
+                         .ToList();
 
             foreach (var vid in popularEvents)
             {
@@ -189,7 +221,7 @@ namespace Academically.Services.Events
 
             }
 
-            return popularEvents.GroupByPopularityPagedExt(input.MaxResultCount);
+            return popularEvents.GroupByPopularityPagedExt(totalCount);
         }
 
 

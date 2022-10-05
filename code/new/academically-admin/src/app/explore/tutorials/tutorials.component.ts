@@ -132,10 +132,10 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
               this.setLatestShowMoreButtons(this.latest?.items?.length);
 
             } else {
-              this.setLatestShowMoreButtons(groupedVideos[range]?.items?.length);
               groupedVideos[range].items.forEach(item => {
                 this.latest.items.push(item);
               });
+              this.setLatestShowMoreButtons(this.latest?.items?.length);
             }
           }
         });
@@ -155,7 +155,7 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
             if (label == 'Popular') {
               if (currentCount == 0) {
                 this.popular = groupedVideos[label];
-                this.popularMaxItems = groupedVideos[label]?.items?.length;
+                this.popularMaxItems = groupedVideos[label]?.totalCount;
                 this.setPopularShowMoreButtons(this.popular?.items?.length);
               }
               else {

@@ -39,6 +39,7 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
 
   latestMaxItems: number = 0;
   lastMonthMaxItems: number = 0;
+  popularMaxItems: number = 0;
 
   get topics(): string[] { return this.topicGroups ? Object.keys(this.topicGroups) : null; }
   get filteredTopics(): string[] { return this.topics.filter(t => this.selectedTopics.includes(t)); }
@@ -64,7 +65,7 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
   }
 
   setLatestShowMoreButtons(items: number): void {
-      if (items == this.latestMaxItems) {
+    if (items < this.latestMaxItems) {
       this.showLastestShowMore = true;
     } else {
       this.showLastestShowMore = false;
@@ -72,7 +73,7 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
   }
 
   setLastMonthShowMoreButtons(items: number): void {
-      if (items == this.lastMonthMaxItems) {
+    if (items < this.lastMonthMaxItems) {
       this.showLastMonthShowMoreButton = true;
     } else {
       this.showLastMonthShowMoreButton = false;
@@ -80,7 +81,7 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
   }
 
   setPopularShowMoreButtons(items: number): void {
-    if (items == this.popularItems) {
+    if (items < this.popularMaxItems) {
       this.showPopularShowMoreButton = true;
     } else {
       this.showPopularShowMoreButton = false;
@@ -117,7 +118,7 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
             }
             else {
               this.lastMonth.items.push(...groupedCoachings[range].items);
-              this.setLastMonthShowMoreButtons(groupedCoachings[range]?.items?.length);
+              this.setLastMonthShowMoreButtons(this.lastMonth?.items?.length);
             }
           }
           else {
@@ -127,10 +128,10 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
               this.setLatestShowMoreButtons(this.latest?.items?.length);
 
             } else {
-              this.setLatestShowMoreButtons(groupedCoachings[range]?.items?.length);
               groupedCoachings[range].items.forEach(item => {
                 this.latest.items.push(item);
               });
+              this.setLatestShowMoreButtons(this.latest?.items?.length);
             }
           }
         });
@@ -150,16 +151,17 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
             if (label == 'Popular') {
               if (currentCount == 0) {
                 this.popular = groupedCourses[label];
+                this.popularMaxItems = groupedCourses[label]?.totalCount;
                 this.setPopularShowMoreButtons(this.popular?.items?.length);
               }
               else {
                 this.popular.items.push(...groupedCourses[label].items);
-                this.setPopularShowMoreButtons(groupedCourses[label]?.items?.length);
+                this.setPopularShowMoreButtons(this.popular?.items?.length);
               }
             }
           });
         } else {
-          this.setPopularShowMoreButtons(1);
+          this.setPopularShowMoreButtons(this.popular?.items?.length);
         }
       });
   }
@@ -173,6 +175,11 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
       return true
     }
     return false;
+  }
+
+  onShowMorePopularButtonClick(): void {
+    console.log('Show  more popular clicked -->', this.popular?.items?.length)
+    this.loadPopular(this.popular?.items?.length);
   }
 
   onShowMoreLatestButtonClick(): void {

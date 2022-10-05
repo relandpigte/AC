@@ -9,6 +9,7 @@ using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
+using Academically.Domain.Views;
 using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
 using Academically.Services.Explore.Dto;
@@ -315,9 +316,41 @@ namespace Academically.Services.Videos
 
         public async Task<Dictionary<string, PagedResultDto<VideoDto>>> GetByPopularityAsync(PagedPopularRequestDto input)
         {
-            var popularVideos = (await _exploreRepository.GetPopularVideos(input.SkipCount, input.MaxResultCount, input.UserIdFilter))
-                    .Select(e => ObjectMapper.Map<VideoDto>(e))
-                    .ToList();
+            var topVideosQuery = _studentVideoRepository.GetAll().Select(x => new
+            {
+                x.VideoId,
+                Point = x.SaveOnly ? 1 : 5
+            })
+                .GroupBy(x => new { x.VideoId })
+                .Select(g => new { g.Key.VideoId, Popularity = g.Sum(s => s.Point) });
+
+            var topEvents = await topVideosQuery.OrderByDescending(x => x.Popularity)
+                .ToListAsync();
+
+
+            var videos = await _videosRepository.GetAll()
+                    .Include(e => e.ThumbnailDocument)
+                    .Include(e => e.Children)
+                    .Include(e => e.CreatorUser)
+                    .Where(e => e.ParentId == null)
+                    .Where(e => e.Status == VideoStatus.Published)
+                    .Where(e => e.IsVisible)
+                    .Where(x => topEvents.Select(t => t.VideoId).Contains(x.Id))
+                    .ToListAsync();
+
+            var popularVideosQuery = videos.Join(
+                                topEvents,
+                                v => v.Id,
+                                tv => tv.VideoId,
+                                (v, tv) => new VideoPopularityViewModel(v, tv.Popularity))
+                         .OrderByDescending(x => x.PopularityWeight);
+            var totalCount = popularVideosQuery.Count();
+            var popularVideos = popularVideosQuery
+                         .Skip(input.SkipCount)
+                         .Take(input.MaxResultCount)
+                         .Select(e => ObjectMapper.Map<VideoDto>(e))
+                         .ToList();
+
 
             foreach (var vid in popularVideos)
             {
@@ -331,7 +364,7 @@ namespace Academically.Services.Videos
                 vid.VideoCount = vid.Children.Count();
             }
 
-            return popularVideos.GroupByPopularityPagedExt(input.MaxResultCount);
+            return popularVideos.GroupByPopularityPagedExt(totalCount);
         }
 
     }

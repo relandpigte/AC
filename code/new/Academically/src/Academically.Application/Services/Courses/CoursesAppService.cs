@@ -213,9 +213,9 @@ namespace Academically.Services.Courses
                 .GroupBy(x => new { x.CourseId })
                 .Select(g => new { g.Key.CourseId, Popularity = g.Sum(s => s.Point) });
 
-            var totalCount = topCoursesQuery.Count();
             var topCourses = await topCoursesQuery.OrderByDescending(x => x.Popularity)
                 .ToListAsync();
+            var totalCount = topCourses.Count();
 
             var courses = await Repository.GetAll()
                     .Include(e => e.ImageDocument)

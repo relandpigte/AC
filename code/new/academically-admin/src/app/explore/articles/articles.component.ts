@@ -128,7 +128,7 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
             }
             else {
               this.lastMonth.items.push(...groupedArticles[range].items);
-              this.setLastMonthShowMoreButtons(groupedArticles[range]?.items?.length);
+              this.setLastMonthShowMoreButtons(this.lastMonth?.items?.length);
             }
           }
           else {
@@ -139,10 +139,10 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
               this.setLatestShowMoreButtons(this.latest?.items?.length);
 
             } else {
-              this.setLatestShowMoreButtons(groupedArticles[range]?.items?.length);
               groupedArticles[range].items.forEach(item => {
                 this.latest.items.push(item);
               });
+              this.setLatestShowMoreButtons(this.latest?.items?.length);
             }
           }
         });
@@ -162,12 +162,12 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
             if (label == 'Popular') {
               if (currentCount == 0) {
                 this.popular = groupedArticles[label];
-                this.popularMaxItems = groupedArticles[label]?.items?.length;
+                this.popularMaxItems = groupedArticles[label]?.totalCount;
                 this.setPopularShowMoreButtons(this.popular?.items?.length);
               }
               else {
                 this.popular.items.push(...groupedArticles[label].items);
-                this.setPopularShowMoreButtons(groupedArticles[label]?.items?.length);
+                this.setPopularShowMoreButtons(this.popular?.items?.length);
               }
             }
           });
@@ -192,7 +192,7 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
   onShowMoreLastMonthButtonClick(): void {
     const lastItem = this.lastMonth.items.slice(-1)[0];
     console.log('POPULAR BUTTON CLICKED');
-    this.loadGroupedByDates(this.lastMonth.items.length, null, lastItem.creationTime);
+    this.loadGroupedByDates(this.lastMonth.items.length, undefined, lastItem.creationTime);
   }
 
   onShowMoreTopicButtonClick(topic: string): void {

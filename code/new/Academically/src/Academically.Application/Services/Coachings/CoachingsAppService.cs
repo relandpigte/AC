@@ -233,9 +233,18 @@ namespace Academically.Services.Coachings
 
         public async Task<Dictionary<string, PagedResultDto<CoachingDto>>> GetByPopularityAsync(PagedPopularRequestDto input)
         {
-            var popularCoachings = (await _exploreRepository.GetPopularCoachings(input.SkipCount, input.MaxResultCount, input.UserIdFilter))
-                    .Select(e => ObjectMapper.Map<CoachingDto>(e))
-                    .ToList();
+            // Purchase of Coachings is not yet implemented so generate a random popularity list
+
+            var query = Repository.GetAll()
+                .Where(e => e.ParentId == null);
+            var totalCount = input.MaxResultCount;
+            var popularCoachings = await query.Include(e => e.Children)
+                .Include(e => e.ThumbnailDocument)
+                .Include(e => e.CreatorUser)
+                .OrderBy(v => Guid.NewGuid())
+                .PageBy(input)
+                .Select(e => ObjectMapper.Map<CoachingDto>(e))
+                .ToListAsync();
 
             foreach (var popular in popularCoachings)
             {
