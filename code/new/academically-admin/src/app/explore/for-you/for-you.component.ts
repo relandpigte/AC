@@ -65,11 +65,11 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingUpcomingEvents = false))
       .subscribe(pagedEvents => {
-        const events = pagedEvents?.items;
+        const events = pagedEvents;
         if (events) {
           this.upcomingEvents = [];
           Object.keys(events).forEach(range => {
-            this.upcomingEvents = _.concat(this.upcomingEvents, events[range]);
+            this.upcomingEvents = _.concat(this.upcomingEvents, events[range]?.items);
           });
         }
     });
@@ -81,11 +81,11 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingRecommendedCourses = false))
       .subscribe(pagedCourses => {
-        const courses = pagedCourses?.items;
+        const courses = pagedCourses;
         if (courses) {
           this.recommendedCourses = [];
           Object.keys(courses).forEach(range => {
-            this.recommendedCourses = _.concat(this.recommendedCourses, courses[range]);
+            this.recommendedCourses = _.concat(this.recommendedCourses, courses[range]?.items);
           });
         }
     });
@@ -93,7 +93,7 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
 
   private loadNewArticles(): void {
     this.isLoadingNewArticles = true;
-    this._articlesService.getAll(this.appSession.userId, '', ArticleStatus.Published, 'creationTime desc', 0, 10)
+    this._articlesService.getAll(this.appSession.userId, '', undefined, 'creationTime desc', 0, 10)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingNewArticles = false))
       .subscribe(articles => {
@@ -107,11 +107,11 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingRecommendedTutorials = false))
       .subscribe(pagedVideos => {
-        const videos = pagedVideos?.items;
+        const videos = pagedVideos;
         if (videos) {
           this.recommendedTutorials = [];
           Object.keys(videos).forEach(range => {
-            this.recommendedTutorials =  _.concat(this.recommendedTutorials, videos[range]);
+            this.recommendedTutorials =  _.concat(this.recommendedTutorials, videos[range]?.items);
           });
         }
     });
