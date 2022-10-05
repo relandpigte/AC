@@ -162,7 +162,7 @@ export class ExploreCoursesComponent extends AppComponentBase implements OnInit 
             if (label == 'Popular') {
               if (currentCount == 0) {
                 this.popular = groupedCourses[label];
-                this.popularMaxItems = groupedCourses[label]?.items?.length;
+                this.popularMaxItems = groupedCourses[label]?.totalCount;
                 this.setPopularShowMoreButtons(this.popular?.items?.length);
               }
               else {
@@ -177,7 +177,7 @@ export class ExploreCoursesComponent extends AppComponentBase implements OnInit 
         }
       });
   }
-  
+
   handleFilterTopics(topics: string[]): void {
     this.selectedTopics = topics;
   }

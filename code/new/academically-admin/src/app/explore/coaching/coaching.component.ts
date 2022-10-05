@@ -92,8 +92,8 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
     .pipe(takeUntil(this.destroyed$))
     .pipe(finalize(() => this.isLoading = false))
     .subscribe(coachings => {
-      if (coachings) {
-        this.topicGroups[topic]?.items?.push(...coachings[topic].items)
+      if (topic) {
+        this.topicGroups[topic]?.items?.push(...coachings[topic]?.items)
       } else {
         this.topicGroups = coachings;
       }
@@ -108,7 +108,7 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
       .subscribe(groupedCoachings => {
         Object.keys(groupedCoachings).forEach(range => {
           const [startDate] = range.split(' - ');
-          
+
           if (moment().diff(moment(startDate), 'months')) {
             if (currentCount == 0) {
               this.latestStartDate = moment(startDate);
@@ -146,7 +146,7 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
         if (groupedCourses) {
           Object.keys(groupedCourses).forEach(label => {
             const [startDate] = label.split(' - ');
-            
+
             if (label == 'Popular') {
               if (currentCount == 0) {
                 this.popular = groupedCourses[label];

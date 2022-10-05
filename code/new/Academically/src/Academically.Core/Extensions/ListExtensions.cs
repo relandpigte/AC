@@ -82,7 +82,7 @@ namespace Academically.Extensions
                                 .ToDictionary(key => key.Range, value => new PagedResultDto<DtoType>(value.MaxItems, value.Items));
         }
 
-        public static Dictionary<string, PagedResultDto<DtoType>> GroupByPopularityPagedExt<DtoType>(this List<DtoType> list, int itemsPerGroup) where DtoType : IHasPopularityWeight
+        public static Dictionary<string, PagedResultDto<DtoType>> GroupByPopularityPagedExt<DtoType>(this List<DtoType> list, int totalCount) where DtoType : IHasPopularityWeight
         {
             return list.GroupBy(x => new { Label = "Popular" }) 
                                 .Select(x => new
@@ -90,7 +90,7 @@ namespace Academically.Extensions
                                     Range = x.Key.Label,
                                     Items = list
                                 })
-                                .ToDictionary(key => key.Range, value => new PagedResultDto<DtoType>(value.Items.Count, value.Items));
+                                .ToDictionary(key => key.Range, value => new PagedResultDto<DtoType>(totalCount, value.Items));
         }
 
         private static string ToDateRangeString(DateTime date, DateGrains grain, DateTime earliestDate, DateTime olderThanThisMonth)

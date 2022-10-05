@@ -29,7 +29,7 @@
         </ng-container>
 
         <ng-container *ngIf="!isGroupByTopics">
-          <ng-container *ngIf="latest?.length">
+          <ng-container *ngIf="latest?.items?.length">
             <div class="row align-items-center" [style.marginBottom.px]="25">
               <div class="col d-flex flex-wrap gap-15">
                 <span class="section-title">Latest</span>
@@ -43,7 +43,7 @@
               </div>
             </div>
           </ng-container>
-          
+
           <ng-container *ngIf="latest?.items?.length">
             <div class="row align-items-center">
               <div class="col d-flex flex-wrap gap-15">
@@ -58,8 +58,8 @@
               </div>
             </div>
           </ng-container>
-          
-          <ng-container *ngIf="lastMonth?.length">
+
+          <ng-container *ngIf="lastMonth?.items?.length">
             <div class="row align-items-center" [style.marginBottom.px]="25">
               <div class="col d-flex flex-wrap gap-15">
                 <span class="section-title">Last Month</span>
@@ -67,7 +67,7 @@
             </div>
             <div class="row align-items-center">
               <div class="col d-flex flex-wrap gap-27">
-                <app-service-card *ngFor="let d of lastMonth.items; trackBy:d?.id" [data]="d" [isLoading]="isLoading"></app-service-card>
+                <app-service-card *ngFor="let d of lastMonth?.items; trackBy:d?.id" [data]="d" [isLoading]="isLoading"></app-service-card>
                 <div class="flex-break"></div>
                 <div class="btn btn-block btn-white flex-grow-1" *ngIf="showLastMonthShowMoreButton" (click)="onShowMoreLastMonthButtonClick()">Show More</div>
               </div>
