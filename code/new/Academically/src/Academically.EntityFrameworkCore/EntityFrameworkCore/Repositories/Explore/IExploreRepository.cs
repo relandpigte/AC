@@ -19,6 +19,6 @@ namespace Academically.EntityFrameworkCore.Repositories.Explore
 
         //Task<List<WorkshopPopularityViewModel>> GetPopularWorkshops(int skipCount, int maxCount, long? userIdFilter);
 
-        //Task<List<CoachingPopularityViewModel>> GetPopularCoachings(int skipCount, int maxCount, long? userIdFilter);
+        Task<List<CoachingPopularityViewModel>> GetPopularCoachings(int skipCount, int maxCount, long? userIdFilter);
     }
 }

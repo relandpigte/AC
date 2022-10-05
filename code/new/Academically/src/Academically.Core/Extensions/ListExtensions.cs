@@ -84,7 +84,7 @@ namespace Academically.Extensions
 
         public static Dictionary<string, PagedResultDto<DtoType>> GroupByPopularityPagedExt<DtoType>(this List<DtoType> list, int itemsPerGroup) where DtoType : IHasPopularityWeight
         {
-            return list.GroupBy(x => new { Label = "Popular" })
+            return list.GroupBy(x => new { Label = "Popular" }) 
                                 .Select(x => new
                                 {
                                     Range = x.Key.Label,

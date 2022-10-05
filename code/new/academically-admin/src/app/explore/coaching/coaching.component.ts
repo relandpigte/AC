@@ -23,14 +23,19 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
   latest: CoachingDtoPagedResultDto;
   latestStartDate: moment.Moment;
   lastMonth: CoachingDtoPagedResultDto;
+  popular: CoachingDtoPagedResultDto;
 
   isLoading = true;
+  isPopularLoading = true;
   data: { [key: string]: CoachingDto[] };
-  selectedTopics: string[] = [];
 
   showLastestShowMore: boolean = true;
   showLastMonthShowMoreButton: boolean = true;
+  showPopularShowMoreButton: boolean = true;
   itemsPerGroup = 6;
+  popularItems = 3;
+
+  selectedTopics: string[] = [];
 
   latestMaxItems: number = 0;
   lastMonthMaxItems: number = 0;
@@ -52,11 +57,14 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
   private loadData(): void {
     this.isLoading = true;
     if (this.isGroupByTopics) this.loadGroupedByTopics(0);
-    else this.loadGroupedByDates(0);
+    else {
+      this.loadGroupedByDates(0);
+      this.loadPopular(0);
+    }
   }
 
   setLatestShowMoreButtons(items: number): void {
-    if (items < this.latestMaxItems) {
+      if (items == this.latestMaxItems) {
       this.showLastestShowMore = true;
     } else {
       this.showLastestShowMore = false;
@@ -64,11 +72,18 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
   }
 
   setLastMonthShowMoreButtons(items: number): void {
-    console.log('setLastMonthShowMoreButtons() --->', items, this.lastMonthMaxItems)
-    if (items < this.lastMonthMaxItems) {
+      if (items == this.lastMonthMaxItems) {
       this.showLastMonthShowMoreButton = true;
     } else {
       this.showLastMonthShowMoreButton = false;
+    }
+  }
+
+  setPopularShowMoreButtons(items: number): void {
+    if (items == this.popularItems) {
+      this.showPopularShowMoreButton = true;
+    } else {
+      this.showPopularShowMoreButton = false;
     }
   }
 
@@ -90,37 +105,62 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
     this._coachingsService.getByDates(this.appSession.userId, start, moving, end, DateGrains.Aged30, currentCount, this.itemsPerGroup)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoading = false))
-      .subscribe(coachings => {
-        Object.keys(coachings).forEach(range => {
+      .subscribe(groupedCoachings => {
+        Object.keys(groupedCoachings).forEach(range => {
           const [startDate] = range.split(' - ');
-          console.log('GroupedCourses ----> ', coachings[range]);
+          
           if (moment().diff(moment(startDate), 'months')) {
             if (currentCount == 0) {
               this.latestStartDate = moment(startDate);
-              this.lastMonth = coachings[range];
-              this.lastMonthMaxItems = coachings[range].totalCount;
+              this.lastMonth = groupedCoachings[range];
               this.setLastMonthShowMoreButtons(this.lastMonth?.items?.length);
             }
             else {
-              this.lastMonth.items.push(...coachings[range].items);
-              this.setLastMonthShowMoreButtons(this.lastMonth.items?.length);
+              this.lastMonth.items.push(...groupedCoachings[range].items);
+              this.setLastMonthShowMoreButtons(groupedCoachings[range]?.items?.length);
             }
           }
           else {
             this.latestStartDate = moment(startDate);
             if (currentCount == 0) {
-              this.latest = coachings[range];
-              this.latestMaxItems = coachings[range].totalCount;
+              this.latest = groupedCoachings[range];
               this.setLatestShowMoreButtons(this.latest?.items?.length);
 
             } else {
-              this.setLatestShowMoreButtons(coachings[range]?.items?.length);
-              coachings[range].items.forEach(item => {
+              this.setLatestShowMoreButtons(groupedCoachings[range]?.items?.length);
+              groupedCoachings[range].items.forEach(item => {
                 this.latest.items.push(item);
               });
             }
           }
         });
+      });
+  }
+
+  private loadPopular(currentCount: number): void {
+    this.isPopularLoading = true;
+    this._coachingsService.getByPopularity(this.appSession.userId, currentCount, this.popularItems)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isPopularLoading = false))
+      .subscribe(groupedCourses => {
+        if (groupedCourses) {
+          Object.keys(groupedCourses).forEach(label => {
+            const [startDate] = label.split(' - ');
+            
+            if (label == 'Popular') {
+              if (currentCount == 0) {
+                this.popular = groupedCourses[label];
+                this.setPopularShowMoreButtons(this.popular?.items?.length);
+              }
+              else {
+                this.popular.items.push(...groupedCourses[label].items);
+                this.setPopularShowMoreButtons(groupedCourses[label]?.items?.length);
+              }
+            }
+          });
+        } else {
+          this.setPopularShowMoreButtons(1);
+        }
       });
   }
 
@@ -134,7 +174,6 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
     }
     return false;
   }
-
 
   onShowMoreLatestButtonClick(): void {
     const lastItem = this.latest.items.slice(-1)[0];

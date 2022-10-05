@@ -43,7 +43,22 @@
               </div>
             </div>
           </ng-container>
-
+          
+          <ng-container *ngIf="latest?.items?.length">
+            <div class="row align-items-center">
+              <div class="col d-flex flex-wrap gap-15">
+                <span class="section-title">Latest</span>
+              </div>
+            </div>
+            <div class="row align-items-center mb-5">
+              <div class="col d-flex flex-wrap gap-27">
+                <app-service-card *ngFor="let d of latest?.items; trackBy:d?.id" [data]="d" [isLoading]="isLoading"></app-service-card>
+                <div class="flex-break"></div>
+                <div class="btn btn-block btn-white flex-grow-1" *ngIf="showLastestShowMore" (click)="onShowMoreLatestButtonClick()">Show More</div>
+              </div>
+            </div>
+          </ng-container>
+          
           <ng-container *ngIf="lastMonth?.length">
             <div class="row align-items-center" [style.marginBottom.px]="25">
               <div class="col d-flex flex-wrap gap-15">

@@ -177,7 +177,7 @@ export class ExploreCoursesComponent extends AppComponentBase implements OnInit 
         }
       });
   }
-
+  
   handleFilterTopics(topics: string[]): void {
     this.selectedTopics = topics;
   }

@@ -150,17 +150,17 @@ namespace Academically.EntityFrameworkCore.Repositories.Explore
 
             // Get Top videos
             var topVideos = await studentVideos.Select(x => new
-                    {
-                        x.VideoId,
-                        x.SaveOnly,
-                        Point = x.SaveOnly ? 1 : 5
-                    })
+            {
+                x.VideoId,
+                x.SaveOnly,
+                Point = x.SaveOnly ? 1 : 5
+            })
                 .GroupBy(x => new { x.VideoId })
                 .Select(g => new { g.Key.VideoId, Popularity = g.Sum(s => s.Point) })
                 .OrderByDescending(x => x.Popularity)
                 .PageBy(skipCount, maxCount)
                 .ToListAsync();
-            
+
             var videos = await videosContext.Where(x => topVideos.Select(t => t.VideoId).Contains(x.Id)).ToListAsync();
 
             var joinedVideos = videos.Join(
@@ -173,6 +173,10 @@ namespace Academically.EntityFrameworkCore.Repositories.Explore
             return joinedVideos.ToList();
         }
 
-        
+        //no student coaching implemented
+        public async Task<List<CoachingPopularityViewModel>> GetPopularCoachings(int skipCount, int maxCount, long? userIdFilter)
+        {
+            return new List<CoachingPopularityViewModel>();
+        }
     }
 }
