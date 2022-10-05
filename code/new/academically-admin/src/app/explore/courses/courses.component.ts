@@ -139,10 +139,10 @@ export class ExploreCoursesComponent extends AppComponentBase implements OnInit 
               this.setLatestShowMoreButtons(this.latest?.items?.length);
 
             } else {
-              this.setLatestShowMoreButtons(groupedCourses[range]?.items?.length);
               groupedCourses[range].items.forEach(item => {
                 this.latest.items.push(item);
               });
+              this.setLatestShowMoreButtons(this.latest?.items?.length);
             }
           }
         });

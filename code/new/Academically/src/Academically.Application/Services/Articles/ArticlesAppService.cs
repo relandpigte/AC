@@ -4,6 +4,7 @@ using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
+using Academically.Domain.Views;
 using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
 using Academically.Services.Articles.Dto;
@@ -20,16 +21,19 @@ namespace Academically.Services.Articles
 	{
         private readonly IRepository<Article, Guid> _articlesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
+        private readonly IRepository<StudentArticle, Guid> _studentArticleRepository;
         private readonly IExploreRepository _exploreRepository;
 
         public ArticlesAppService(
             IRepository<Article, Guid> articlesRepository,
             IDocumentsDomainService documentsDomainService,
+            IRepository<StudentArticle, Guid> studentArticleRepository,
             IExploreRepository exploreRepository
             )
 		{
             _articlesRepository = articlesRepository;
             _documentsDomainService = documentsDomainService;
+            _studentArticleRepository = studentArticleRepository;
             _exploreRepository = exploreRepository;
         }
 
@@ -236,11 +240,42 @@ namespace Academically.Services.Articles
 
         public async Task<Dictionary<string, PagedResultDto<ArticleDto>>> GetByPopularityAsync(PagedPopularRequestDto input)
         {
-            var popularVideos = (await _exploreRepository.GetPopularArticles(input.SkipCount, input.MaxResultCount, input.UserIdFilter))
-                    .Select(e => ObjectMapper.Map<ArticleDto>(e))
-                    .ToList();
+            var topArticlesQuery = _studentArticleRepository.GetAll().Select(x => new
+            {
+                x.ArticleId,
+                Point = x.SaveOnly ? 1 : 5
+            })
+                .GroupBy(x => new { x.ArticleId })
+                .Select(g => new { g.Key.ArticleId, Popularity = g.Sum(s => s.Point) });
 
-            foreach (var article in popularVideos)
+            var topArticles = await topArticlesQuery.OrderByDescending(x => x.Popularity)
+                .ToListAsync();
+
+
+            var events = await _articlesRepository.GetAll()
+                    .Include(e => e.ThumbnailDocument)
+                    .Include(e => e.Children)
+                    .Include(e => e.CreatorUser)
+                    .Where(e => e.ParentId == null)
+                    .Where(e => e.Status == ArticleStatus.Published)
+                    .Where(e => e.IsVisible)
+                    .Where(x => topArticles.Select(t => t.ArticleId).Contains(x.Id))
+                    .ToListAsync();
+
+            var popularAticlesQuery = events.Join(
+                                topArticles,
+                                v => v.Id,
+                                tv => tv.ArticleId,
+                                (v, tv) => new ArticlePopularityViewModel(v, tv.Popularity))
+                         .OrderByDescending(x => x.PopularityWeight);
+            var totalCount = popularAticlesQuery.Count();
+            var popularArticles = popularAticlesQuery
+                         .Skip(input.SkipCount)
+                         .Take(input.MaxResultCount)
+                         .Select(e => ObjectMapper.Map<ArticleDto>(e))
+                         .ToList();
+
+            foreach (var article in popularArticles)
             {
                 if (article.ThumbnailDocumentId.HasValue)
                     article.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocumentId.Value);
@@ -250,7 +285,7 @@ namespace Academically.Services.Articles
                 article.ArticlesCount = article.Children.Count();
             }
 
-            return popularVideos.GroupByPopularityPagedExt(input.MaxResultCount);
+            return popularArticles.GroupByPopularityPagedExt(totalCount);
         }
 
 

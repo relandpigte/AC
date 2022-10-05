@@ -139,10 +139,10 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
               this.setLatestShowMoreButtons(this.latest?.items?.length);
 
             } else {
-              this.setLatestShowMoreButtons(groupedEvents[range]?.items?.length);
               groupedEvents[range].items.forEach(item => {
                 this.latest.items.push(item);
               });
+              this.setLatestShowMoreButtons(this.latest?.items?.length);
             }
           }
         });
@@ -157,17 +157,15 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
       .subscribe(groupedEvents => {
         if (groupedEvents) {
           Object.keys(groupedEvents).forEach(label => {
-            const [startDate] = label.split(' - ');
-
             if (label == 'Popular') {
               if (currentCount == 0) {
                 this.popular = groupedEvents[label];
-                this.popularMaxItems = groupedEvents[label]?.items?.length;
+                this.popularMaxItems = groupedEvents[label]?.totalCount;
                 this.setPopularShowMoreButtons(this.popular?.items?.length);
               }
               else {
                 this.popular.items.push(...groupedEvents[label].items);
-                this.setPopularShowMoreButtons(groupedEvents[label]?.items?.length);
+                this.setPopularShowMoreButtons(this.popular.items?.length);
               }
             }
           });
