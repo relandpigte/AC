@@ -3388,6 +3388,81 @@ export class CoachingsServiceProxy {
     }
 
     /**
+     * @param userIdFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getByPopularity(userIdFilter: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CoachingDtoPagedResultDto; }> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/GetByPopularity?";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByPopularity(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByPopularity(<any>response_);
+                } catch (e) {
+                    return <Observable<{ [key: string]: CoachingDtoPagedResultDto; }>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<{ [key: string]: CoachingDtoPagedResultDto; }>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByPopularity(response: HttpResponseBase): Observable<{ [key: string]: CoachingDtoPagedResultDto; }> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200) {
+                result200 = {} as any;
+                for (let key in resultData200) {
+                    if (resultData200.hasOwnProperty(key))
+                        (<any>result200)[key] = resultData200[key] ? CoachingDtoPagedResultDto.fromJS(resultData200[key]) : new CoachingDtoPagedResultDto();
+                }
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<{ [key: string]: CoachingDtoPagedResultDto; }>(<any>null);
+    }
+
+    /**
      * @param id (optional) 
      * @return Success
      */
@@ -27903,6 +27978,7 @@ export class CoachingDto implements ICoachingDto {
     language: SpokenLanguageDto;
     creatorUser: UserDto;
     children: CoachingDto[] | undefined;
+    popularityWeight: number;
 
     constructor(data?: ICoachingDto) {
         if (data) {
@@ -28005,6 +28081,7 @@ export class CoachingDto implements ICoachingDto {
                 for (let item of _data["children"])
                     this.children.push(CoachingDto.fromJS(item));
             }
+            this.popularityWeight = _data["popularityWeight"];
         }
     }
 
@@ -28107,6 +28184,7 @@ export class CoachingDto implements ICoachingDto {
             for (let item of this.children)
                 data["children"].push(item.toJSON());
         }
+        data["popularityWeight"] = this.popularityWeight;
         return data; 
     }
 
@@ -28205,6 +28283,7 @@ export interface ICoachingDto {
     language: SpokenLanguageDto;
     creatorUser: UserDto;
     children: CoachingDto[] | undefined;
+    popularityWeight: number;
 }
 
 export class CoachingDtoPagedResultDto implements ICoachingDtoPagedResultDto {

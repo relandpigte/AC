@@ -13,7 +13,7 @@ using System.Collections.Generic;
 namespace Academically.Services.Coachings.Dto
 {
     [AutoMapFrom(typeof(Coaching))]
-    public class CoachingDto : EntityDto<Guid>, IHasTopic, IHasThumbnail, IHasCreationTime
+    public class CoachingDto : EntityDto<Guid>, IHasTopic, IHasThumbnail, IHasCreationTime, IHasPopularityWeight
     {
         public CoachingType Type { get; set; }
         public CoachingStatus Status { get; set; }
@@ -103,5 +103,6 @@ namespace Academically.Services.Coachings.Dto
         public UserDto CreatorUser { get; set; }
 
         public IEnumerable<CoachingDto> Children { get; set; }
+        public int PopularityWeight { get; set; }
     }
 }

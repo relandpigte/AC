@@ -16,6 +16,7 @@ using Academically.Configuration;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
+using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
 using Academically.Services.Coachings.Dto;
 using Academically.Services.Explore.Dto;
@@ -31,13 +32,15 @@ namespace Academically.Services.Coachings
         private readonly IRepository<User, long> _usersRepository;
         private readonly IRepository<CoachingPresenter, Guid> _coachingPresentersRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
+        private readonly IExploreRepository _exploreRepository;
 
         public CoachingsAppService(
             RoleManager roleManager,
             IRepository<User, long> usersRepository,
             IRepository<CoachingPresenter, Guid> coachingPresentersRepository,
             IRepository<Coaching, Guid> repository,
-            IDocumentsDomainService documentsDomainService
+            IDocumentsDomainService documentsDomainService,
+            IExploreRepository exploreRepository
             ) : base(repository)
         {
             LocalizationSourceName = AcademicallyConsts.LocalizationSourceName;
@@ -46,6 +49,7 @@ namespace Academically.Services.Coachings
             _usersRepository = usersRepository;
             _coachingPresentersRepository = coachingPresentersRepository;
             _documentsDomainService = documentsDomainService;
+            _exploreRepository = exploreRepository;
         }
 
         protected override IQueryable<Coaching> CreateFilteredQuery(PagedCoachingResultRequestDto input)
@@ -226,5 +230,24 @@ namespace Academically.Services.Coachings
 
             return coachings.GroupByDateRangePagedExt(input.Grain.Value, input.MaxResultCount);
         }
+
+        public async Task<Dictionary<string, PagedResultDto<CoachingDto>>> GetByPopularityAsync(PagedPopularRequestDto input)
+        {
+            var popularCoachings = (await _exploreRepository.GetPopularCoachings(input.SkipCount, input.MaxResultCount, input.UserIdFilter))
+                    .Select(e => ObjectMapper.Map<CoachingDto>(e))
+                    .ToList();
+
+            foreach (var popular in popularCoachings)
+            {
+                if (popular.ThumbnailDocumentId.HasValue)
+                    popular.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(popular.ThumbnailDocumentId.Value);
+                if (popular.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    popular.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(popular.CreatorUser.ProfilePictureDocumentId.Value);
+
+            }
+
+            return popularCoachings.GroupByPopularityPagedExt(input.MaxResultCount);
+        }
+
     }
 }
