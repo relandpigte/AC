@@ -204,7 +204,7 @@ namespace Academically.Services.Courses
 
         public async Task<Dictionary<string, PagedResultDto<CourseDto>>> GetByPopularityAsync(PagedPopularRequestDto input)
         {
-            
+
             var topCoursesQuery = _studentCourseRepository.GetAll().Select(x => new
             {
                 x.CourseId,
@@ -212,10 +212,9 @@ namespace Academically.Services.Courses
             })
                 .GroupBy(x => new { x.CourseId })
                 .Select(g => new { g.Key.CourseId, Popularity = g.Sum(s => s.Point) });
-                
+
             var totalCount = topCoursesQuery.Count();
             var topCourses = await topCoursesQuery.OrderByDescending(x => x.Popularity)
-                 .PageBy(input)
                 .ToListAsync();
 
             var courses = await Repository.GetAll()
@@ -231,6 +230,8 @@ namespace Academically.Services.Courses
                                 (v, tv) => new CoursePopularityViewModel(v, tv.Popularity))
                          .OrderByDescending(x => x.PopularityWeight)
                          .Select(e => ObjectMapper.Map<CourseDto>(e))
+                         .Skip(input.SkipCount)
+                         .Take(input.MaxResultCount)
                          .ToList();
 
 
