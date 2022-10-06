@@ -169,7 +169,9 @@ namespace Academically.Services.Articles
                 // Get all topics
                 topics = await _articlesRepository.GetAll()
                     .Where(x => !string.IsNullOrEmpty(x.Categories))
+                    .Where(e => e.ParentId == null)
                     .Where(e => e.IsVisible)
+                    .Where(e => e.Status == ArticleStatus.Published)
                     .Select(x => x.Categories).ToListAsync();
                 allTopicsInString = string.Join(",", topics.ToArray());
                 distinctTopics = allTopicsInString.Split(",").OrderBy(x => x).Distinct();
@@ -181,6 +183,7 @@ namespace Academically.Services.Articles
             {
                 var query = _articlesRepository.GetAll()
                .Where(e => e.ParentId == null)
+               .Where(e => e.IsVisible)
                .Where(e => e.Status == ArticleStatus.Published)
                .Where(c => c.Categories.Contains(topic));
                 var totalCount = await query.CountAsync();
