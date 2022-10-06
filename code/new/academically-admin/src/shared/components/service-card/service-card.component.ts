@@ -176,7 +176,12 @@ import * as moment from 'moment';
           this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
           this.sanitized.composition.modules = this.data?.modules;
           this.sanitized.composition.lessons = this.data?.lessons;
-          this.sanitized.progress = this.data?.progress > 0 ? this.data?.progress : undefined;
+
+          if (this.data?.progress) {
+            this.sanitized.progress = this.data.progress;
+            this.sanitizedOptions.isShowDetails = false; // turn off all course details, show only progress
+          }
+
           this.sanitized.people = {} as ServiceCardPeople;
           this.sanitized.people.people = Array(this.randomNonZero(45, 12)).fill({} as ServiceCardPerson).map(i => ({ ...this.sanitized.owner, avatar: { src: `https://i.pravatar.cc/300?u=${this.uuidv4()}`} }));
           this.sanitized.people.avatarStackCount = 5;
