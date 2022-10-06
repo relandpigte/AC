@@ -7,6 +7,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-explore-articles',
@@ -46,6 +47,7 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _articleService: ArticlesServiceProxy
   ) {
     super(injector);
@@ -209,6 +211,10 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
       return true
     }
     return false;
+  }
+
+  handleServiceCardClick(article: ArticleDto): void {
+    this._router.navigate(['/app/articles/student-portal', article.id]);
   }
 
 }

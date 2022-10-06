@@ -6,6 +6,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-explore-events',
@@ -47,6 +48,7 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _eventsService: EventsServiceProxy
   ) {
     super(injector);
@@ -204,5 +206,9 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
 
   handleFilterTopics(topics: string[]): void {
     this.selectedTopics = topics;
+  }
+
+  handleServiceCardClick(event: EventDto): void {
+      this._router.navigate(['/app/events/student-portal', event.id, 'portal']);
   }
 }

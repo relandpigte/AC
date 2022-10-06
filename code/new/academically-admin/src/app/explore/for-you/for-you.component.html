@@ -20,7 +20,7 @@
               <span class="view-all cursor-pointer" [routerLink]="['events']">View All <i class="fas fa-arrow-right"></i></span>
             </div>
           </div>
-          <app-carousel [items]="upcomingEvents" [isLoading]="isLoadingUpcomingEvents"></app-carousel>
+          <app-carousel [items]="upcomingEvents" [isLoading]="isLoadingUpcomingEvents" (onServiceCardClick)="handleEventServiceCardClick($event)"></app-carousel>
         </ng-container>
 
         <ng-container *ngIf="recommendedCourses?.length > 0">
@@ -30,7 +30,7 @@
               <span class="view-all cursor-pointer" [routerLink]="['courses']">View All <i class="fas fa-arrow-right"></i></span>
             </div>
           </div>
-          <app-carousel [items]="recommendedCourses" [isLoading]="isLoadingRecommendedCourses"></app-carousel>
+          <app-carousel [items]="recommendedCourses" [isLoading]="isLoadingRecommendedCourses" (onServiceCardClick)="handleCourseServiceCardClick($event)"></app-carousel>
         </ng-container>
 
         <ng-container *ngIf="newArticles?.length > 0">
@@ -40,17 +40,17 @@
               <span class="view-all cursor-pointer" [routerLink]="['articles']">View All <i class="fas fa-arrow-right"></i></span>
             </div>
           </div>
-          <app-carousel [items]="newArticles" [isLoading]="isLoadingNewArticles"></app-carousel>
+          <app-carousel [items]="newArticles" [isLoading]="isLoadingNewArticles" (onServiceCardClick)="handleArticleServiceCardClick($event)"></app-carousel>
         </ng-container>
 
-        <ng-container *ngIf="upcomingEvents?.length > 0">
+        <ng-container *ngIf="recommendedTutorials?.length > 0">
           <div class="row align-items-center" [style.marginTop.px]="45" [style.marginBottom.px]="25">
             <div class="col d-flex flex-wrap align-items-center justify-content-between">
               <span class="recommended-title">Recommended Tutorials</span>
               <span class="view-all cursor-pointer" [routerLink]="['tutorials']">View All <i class="fas fa-arrow-right"></i></span>
             </div>
           </div>
-          <app-carousel [items]="recommendedTutorials" [isLoading]="isLoadingRecommendedTutorials"></app-carousel>
+          <app-carousel [items]="recommendedTutorials" [isLoading]="isLoadingRecommendedTutorials"  (onServiceCardClick)="handleTutorialServiceCardClick($event)"></app-carousel>
         </ng-container>
 
         <ng-container *ngIf="newCoachings?.length > 0">

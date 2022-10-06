@@ -1,5 +1,5 @@
 import { VideoType } from './../../service-proxies/service-proxies';
-import { Component, Injector, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DefaultServiceCardActions, DefaultServiceCardOptions, ServiceCard, ServiceCardButton, ServiceCardComposition, ServiceCardDates, ServiceCardImage, ServiceCardOptions, ServiceCardPeople, ServiceCardPerson, ServiceCardPill, ServiceCardPrice, ServiceCardReview, ServiceCardRsvp, ServiceCardSlots, ServiceCardType, UserServiceCardActions } from '@shared/models/service-card.model';
 import { ArticleDto, CoachingDto, CourseDto, EventDto, UserDto, VideoDto, WorkshopDto } from '@shared/service-proxies/service-proxies';
@@ -18,6 +18,8 @@ import * as moment from 'moment';
     @Input() options: ServiceCardOptions;
     @Input() data: any;
     @Input() actions: ServiceCardButton[];
+
+    @Output() onClick = new EventEmitter<any>();
 
     shimmerType: number = 0;
 
@@ -347,5 +349,9 @@ import * as moment from 'moment';
       //   if (!this.options || !('isShowProgress' in this.options)) this.sanitizedOptions.isShowProgress = true;
       //   if (!this.options || !('isShowDetails' in this.options)) this.sanitizedOptions.isShowDetails = false;
       // }
+    }
+
+    handleClick(): void {
+      this.onClick.emit(this.data);
     }
   }

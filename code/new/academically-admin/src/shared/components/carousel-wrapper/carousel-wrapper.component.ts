@@ -19,6 +19,7 @@ export class CarouselWrapperComponent extends AppComponentBase implements OnInit
   @Input() isLoading: boolean = false;
 
   @Output() requestNewData: EventEmitter<boolean> = new EventEmitter();
+  @Output() onServiceCardClick: EventEmitter<any> = new EventEmitter();
 
   leftNav: HTMLElement;
   rightNav: HTMLElement;
@@ -92,5 +93,9 @@ export class CarouselWrapperComponent extends AppComponentBase implements OnInit
 
   private isLastPage(page: number): boolean {
     return this.pages == page;
+  }
+
+  handleServiceCardClick(data: any): void {
+    this.onServiceCardClick.emit(data);
   }
 }

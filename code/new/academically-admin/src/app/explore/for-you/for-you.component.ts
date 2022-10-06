@@ -5,6 +5,7 @@ import { ArticleDto, ArticlesServiceProxy, ArticleStatus, CoachingDto, Coachings
 import { finalize, takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-explore-for-you',
@@ -30,6 +31,7 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _usersService: UserServiceProxy,
     private _eventsService: EventsServiceProxy,
     private _coursesService: CoursesServiceProxy,
@@ -135,6 +137,22 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
           });
         }
       });
+  }
+
+  handleEventServiceCardClick(event: EventDto): void {
+    this._router.navigate(['/app/events/student-portal', event.id, 'portal']);
+  }
+
+  handleCourseServiceCardClick(course: CourseDto): void {
+    this._router.navigate(['app/student-portal' , course.id]);
+  }
+
+  handleArticleServiceCardClick(article: ArticleDto): void {
+    this._router.navigate(['/app/articles/student-portal', article.id]);
+  }
+
+  handleTutorialServiceCardClick(tutorial: VideoDto): void {
+    this._router.navigate(['app/videos/student-portal' , tutorial.id]);
   }
 
 }

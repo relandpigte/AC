@@ -1,4 +1,5 @@
 import { Component, Injector, Input, OnInit, TrackByFunction } from '@angular/core';
+import { Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DateGrains, VideoDto, VideoDtoPagedResultDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -46,6 +47,7 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _videoService: VideosServiceProxy,
   ) {
     super(injector);
@@ -202,5 +204,9 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
 
   handleFilterTopics(topics: string[]): void {
     this.selectedTopics = topics;
+  }
+
+  handleServiceCardClick(tutorial: VideoDto): void {
+    this._router.navigate(['app/videos/student-portal' , tutorial.id]);
   }
 }

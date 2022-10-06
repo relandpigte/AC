@@ -9,7 +9,7 @@
   (onPage)="onPage($event)">
   <ng-template let-content pTemplate="item">
 
-    <app-service-card [data]="content" [ngClass]="{'item-active': expression}" [isLoading]="isLoading" [isFeatured]="isFeatured"></app-service-card>
+    <app-service-card [data]="content" [ngClass]="{'item-active': expression}" [isLoading]="isLoading" [isFeatured]="isFeatured" (onClick)="handleServiceCardClick($event)"></app-service-card>
 
   </ng-template>
 </p-carousel>

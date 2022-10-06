@@ -1,4 +1,4 @@
-<div class="service-card d-flex flex-column" [ngClass]="[isFeatured ? 'feature' : type]">
+<div class="service-card d-flex flex-column" [ngClass]="[isFeatured ? 'feature' : type]" (click)="handleClick()">
     <div *ngIf="isLoading" class="service-card-shimmer flex-grow-1 d-flex flex-column">
         <ng-container *ngIf="shimmerType === 0">
             <div class="service-card-shimmer-img service-card-shimmer-bar"></div>
