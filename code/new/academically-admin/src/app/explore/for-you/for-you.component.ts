@@ -93,11 +93,16 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
 
   private loadNewArticles(): void {
     this.isLoadingNewArticles = true;
-    this._articlesService.getAll(this.appSession.userId, '', undefined, 'creationTime desc', 0, 10)
+    this._articlesService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Monthly, 0, 10)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingNewArticles = false))
       .subscribe(articles => {
-        this.newArticles = articles?.items ?? [];
+        if (articles) {
+          this.newCoachings = [];
+            Object.keys(articles).forEach(range => {
+            this.newArticles =  _.concat(this.newArticles, articles[range]?.items);
+          });
+        }
       });
   }
 
@@ -119,11 +124,16 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
 
   private loadNewCoachings(): void {
     this.isLoadingNewCoachings = true;
-    this._coachingsService.getAll(undefined, this.appSession.userId, '', CoachingStatus.Published, 'creationTime desc', 0, 10)
+    this._coachingsService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Monthly, 0, 10)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingNewCoachings = false))
       .subscribe(coachings => {
-        this.newCoachings = coachings?.items ?? [];
+        if (coachings) {
+          this.newCoachings = [];
+            Object.keys(coachings).forEach(range => {
+            this.newCoachings =  _.concat(this.newCoachings, coachings[range]?.items);
+          });
+        }
       });
   }
 
