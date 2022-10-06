@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/app/dashboard/overview', pathMatch: 'full' },
+  { path: '', redirectTo: '/app/explore/for-you', pathMatch: 'full' },
   {
     path: 'account',
     loadChildren: () => import('account/account.module').then(m => m.AccountModule), // Lazy load account module
