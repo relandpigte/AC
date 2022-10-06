@@ -100,6 +100,9 @@ export class UploadService {
       case DocumentType.CourseSectionImage:
         folder = folders.courseSectionImage;
         break;
+      case DocumentType.CoachingThumbnail:
+        folder = folders.coachingThumbnail;
+        break;
       case DocumentType.EventThumbnail:
         folder = folders.eventThumbnail;
         break;

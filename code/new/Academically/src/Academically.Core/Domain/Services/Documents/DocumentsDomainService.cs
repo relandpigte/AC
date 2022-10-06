@@ -308,6 +308,10 @@ namespace Academically.Domain.Services.Documents
                     folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_CourseSectionImages);
                     isSecured = false;
                     break;
+                case DocumentType.CoachingThumbnail:
+                    folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_CoachingThumbnails);
+                    isSecured = false;
+                    break;
                 case DocumentType.EventThumbnail:
                     folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_EventThumbnails);
                     isSecured = false;

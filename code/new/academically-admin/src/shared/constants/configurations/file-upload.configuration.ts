@@ -95,6 +95,7 @@ export const fileUploadConfiguration = {
     videoThumbnail: 'video-thumbnails',
     articleThumbnail: 'article-thumbnails',
     courseSectionImage: 'course-section-images',
+    coachingThumbnail: 'coaching-thumbnails',
     eventThumbnail: 'event-thumbnails',
     profilePicture: 'profile-pictures',
     eventResource: 'event-resources',
