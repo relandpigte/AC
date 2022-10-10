@@ -29,7 +29,7 @@ export abstract class BaseMenu extends AppComponentBase {
   protected getMenuItems(): MenuItem[] {
     return [
       // new MenuItem(this.l('Dashboard'), '/app/dashboard', 'fe fe-home', 'Pages.Dashboard'),
-      new MenuItem(this.l('Home'), '/app/home', 'fe fe-home', 'Pages.Home'),
+      // new MenuItem(this.l('Home'), '/app/home', 'fe fe-home', 'Pages.Home'),
       new MenuItem(this.l('Explore'), '/app/explore', 'fe fe-home', 'Pages.Home'),
       new MenuItem(this.l('Dashboard'), '', 'fe fe-home', 'Pages.Dashboard', [
         new MenuItem(this.l('Overview'), '/app/dashboard/overview', 'fe fe-feather', 'Pages.Dashboard.Overview'),
@@ -63,7 +63,7 @@ export abstract class BaseMenu extends AppComponentBase {
       ]),
       new MenuItem(this.l('SeeAllProjects'), '/app/projects/browse', 'fe fe-briefcase', 'Pages.Projects.Browse'),
       new MenuItem(this.l('Schedule'), '/app/calendar', 'fe fe-calendar'),
-      new MenuItem(this.l('Forums'), '/app/forums', 'fe fe-hash', 'Pages.Forums'),
+      // new MenuItem(this.l('Forums'), '/app/forums', 'fe fe-hash', 'Pages.Forums'),
     ];
   }
 
