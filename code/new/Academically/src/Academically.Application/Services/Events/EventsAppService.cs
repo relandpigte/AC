@@ -135,15 +135,7 @@ namespace Academically.Services.Events
                     .Select(e => ObjectMapper.Map<EventDto>(e))
                     .ToListAsync();
 
-                foreach (var evt in events)
-                {
-                    if (evt.ThumbnailDocumentId.HasValue)
-                        evt.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(evt.ThumbnailDocumentId.Value);
-                    if (evt.CreatorUser.ProfilePictureDocumentId.HasValue)
-                        evt.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(evt.CreatorUser.ProfilePictureDocumentId.Value);
-                }
-
-                result.Add(topic, new PagedResultDto<EventDto>(totalCount, events));
+                result.Add(topic, new PagedResultDto<EventDto>(totalCount, (await GetEventDetailsAsync(events))));
 
             }
 
@@ -164,64 +156,48 @@ namespace Academically.Services.Events
                 .Select(e => ObjectMapper.Map<EventDto>(e))
                 .ToListAsync();
 
-            foreach (var evt in events)
-            {
-                if (evt.ThumbnailDocumentId.HasValue)
-                    evt.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(evt.ThumbnailDocumentId.Value);
-                if (evt.CreatorUser.ProfilePictureDocumentId.HasValue)
-                    evt.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(evt.CreatorUser.ProfilePictureDocumentId.Value);
-            }
-
-            return events.GroupByDateRangePagedExt(input.Grain.Value, input.MaxResultCount);
+            return (await GetEventDetailsAsync(events)).GroupByDateRangePagedExt(input.Grain.Value, input.MaxResultCount);
         }
 
         public async Task<Dictionary<string, PagedResultDto<EventDto>>> GetByPopularityAsync(PagedPopularRequestDto input)
         {
-            var topEventsQuery = _studentEventsRepository.GetAll().Select(x => new
+            var topEventsQuery = _studentEventsRepository.GetAll()
+                .Include(x => x.Event)
+                .Where(x => x.Event.Visible.Value)
+                .Where(e => e.Event.ParentId == null)
+                .Where(e => e.Event.Status == EventStatus.Published)
+                .Select(x => new
                     {
                         x.EventId,
                         Point = x.SaveOnly ? 1 : 5
                     })
                 .GroupBy(x => new { x.EventId })
-                .Select(g => new { g.Key.EventId, Popularity = g.Sum(s => s.Point) });
+                .Select(g => new { g.Key.EventId, Popularity = g.Sum(s => s.Point) })
+                .OrderByDescending(x => x.Popularity);
 
-            var topEvents = await topEventsQuery.OrderByDescending(x => x.Popularity)
+            var totalCount = topEventsQuery.Count();
+
+            var topEvents = await topEventsQuery.PageBy(input)
+                .Join(Repository.GetAll().Include(e => e.ThumbnailDocument).Include(e => e.CreatorUser),
+                        outer => outer.EventId,
+                        inner => inner.Id,
+                        (inner, outer) => new EventPopularityViewModel(outer, inner.Popularity))
+                .Select(e => ObjectMapper.Map<EventDto>(e))
                 .ToListAsync();
-            
 
-            var events = await Repository.GetAll()
-                    .Include(e => e.ThumbnailDocument)
-                    .Include(e => e.Children)
-                    .Include(e => e.CreatorUser)
-                    .Where(e => e.ParentId == null)
-                    .Where(e => e.Status == EventStatus.Published)
-                    .Where(e => e.Visible.Value)
-                    .Where(x => topEvents.Select(t => t.EventId).Contains(x.Id))
-                    .ToListAsync();
+            return (await GetEventDetailsAsync(topEvents)).GroupByPopularityPagedExt(totalCount);
+        }
 
-            var popularEventsQuery = events.Join(
-                                topEvents,
-                                v => v.Id,
-                                tv => tv.EventId,
-                                (v, tv) => new EventPopularityViewModel(v, tv.Popularity))
-                         .OrderByDescending(x => x.PopularityWeight);
-            var totalCount = popularEventsQuery.Count();
-            var popularEvents = popularEventsQuery
-                         .Skip(input.SkipCount)
-                         .Take(input.MaxResultCount)
-                         .Select(e => ObjectMapper.Map<EventDto>(e))
-                         .ToList();
-
+        private async Task<List<EventDto>> GetEventDetailsAsync(List<EventDto> popularEvents)
+        {
             foreach (var vid in popularEvents)
             {
                 if (vid.ThumbnailDocumentId.HasValue)
                     vid.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(vid.ThumbnailDocumentId.Value);
                 if (vid.CreatorUser.ProfilePictureDocumentId.HasValue)
                     vid.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(vid.CreatorUser.ProfilePictureDocumentId.Value);
-
             }
-
-            return popularEvents.GroupByPopularityPagedExt(totalCount);
+            return popularEvents;
         }
 
 
