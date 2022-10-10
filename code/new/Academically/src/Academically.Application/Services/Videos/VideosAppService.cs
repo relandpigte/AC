@@ -262,19 +262,7 @@ namespace Academically.Services.Videos
                     .Select(e => ObjectMapper.Map<VideoDto>(e))
                     .ToListAsync();
 
-
-                foreach (var vid in videos)
-                {
-                    if (vid.ThumbnailDocumentId.HasValue)
-                        vid.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(vid.ThumbnailDocumentId.Value);
-                    if (vid.CreatorUser.ProfilePictureDocumentId.HasValue)
-                        vid.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(vid.CreatorUser.ProfilePictureDocumentId.Value);
-                    
-                    vid.LikeCount = await _reactionsRepository.CountAsync(e => e.ReferenceId == vid.Id.ToString()
-                    && e.Type == ReactionType.Like);
-                    vid.VideoCount = vid.Children.Count();
-                }
-                result.Add(topic, new PagedResultDto<VideoDto>(totalCount, videos));
+                result.Add(topic, new PagedResultDto<VideoDto>(totalCount, await GetVideosDetailsAsync(videos)));
             }
 
             return result;
@@ -299,60 +287,46 @@ namespace Academically.Services.Videos
                 .Select(e => ObjectMapper.Map<VideoDto>(e))
                 .ToListAsync();
 
-            foreach (var vid in videos)
-            {
-                if (vid.ThumbnailDocumentId.HasValue)
-                    vid.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(vid.ThumbnailDocumentId.Value);
-                if (vid.CreatorUser.ProfilePictureDocumentId.HasValue)
-                    vid.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(vid.CreatorUser.ProfilePictureDocumentId.Value);
-
-                vid.LikeCount = await _reactionsRepository.CountAsync(e => e.ReferenceId == vid.Id.ToString()
-                    && e.Type == ReactionType.Like);
-                vid.VideoCount = vid.Children.Count();
-            }
-
-            return videos.GroupByDateRangePagedExt(input.Grain.Value, input.MaxResultCount);
+           
+            return (await GetVideosDetailsAsync(videos)).GroupByDateRangePagedExt(input.Grain.Value, input.MaxResultCount);
         }
 
         public async Task<Dictionary<string, PagedResultDto<VideoDto>>> GetByPopularityAsync(PagedPopularRequestDto input)
         {
-            var topVideosQuery = _studentVideoRepository.GetAll().Select(x => new
-            {
-                x.VideoId,
-                Point = x.SaveOnly ? 1 : 5
-            })
+            var topVideosQuery = _studentVideoRepository.GetAll()
+                .Include(x => x.Video)
+                .Where(e => e.Video.ParentId == null)
+                .Where(e => e.Video.Status == VideoStatus.Published)
+                .Where(e => e.Video.IsVisible)
+                .Select(x => new
+                    {
+                        x.VideoId,
+                        Point = x.SaveOnly ? 1 : 5
+                    })
                 .GroupBy(x => new { x.VideoId })
-                .Select(g => new { g.Key.VideoId, Popularity = g.Sum(s => s.Point) });
+                .Select(g => new { g.Key.VideoId, Popularity = g.Sum(s => s.Point) })
+                .OrderByDescending(x => x.Popularity);
 
-            var topEvents = await topVideosQuery.OrderByDescending(x => x.Popularity)
+            var totalCount = topVideosQuery.Count();
+
+            var topVideos = await topVideosQuery.PageBy(input)
+                .Join(_videosRepository.GetAll()
+                            .Include(e => e.ThumbnailDocument)
+                            .Include(e => e.Children)
+                            .Include(e => e.CreatorUser),
+                        outer => outer.VideoId,
+                        inner => inner.Id,
+                        (inner, outer) => new VideoPopularityViewModel(outer, inner.Popularity))
+                .Select(e => ObjectMapper.Map<VideoDto>(e))
                 .ToListAsync();
 
 
-            var videos = await _videosRepository.GetAll()
-                    .Include(e => e.ThumbnailDocument)
-                    .Include(e => e.Children)
-                    .Include(e => e.CreatorUser)
-                    .Where(e => e.ParentId == null)
-                    .Where(e => e.Status == VideoStatus.Published)
-                    .Where(e => e.IsVisible)
-                    .Where(x => topEvents.Select(t => t.VideoId).Contains(x.Id))
-                    .ToListAsync();
+            return (await GetVideosDetailsAsync(topVideos)).GroupByPopularityPagedExt(totalCount);
+        }
 
-            var popularVideosQuery = videos.Join(
-                                topEvents,
-                                v => v.Id,
-                                tv => tv.VideoId,
-                                (v, tv) => new VideoPopularityViewModel(v, tv.Popularity))
-                         .OrderByDescending(x => x.PopularityWeight);
-            var totalCount = popularVideosQuery.Count();
-            var popularVideos = popularVideosQuery
-                         .Skip(input.SkipCount)
-                         .Take(input.MaxResultCount)
-                         .Select(e => ObjectMapper.Map<VideoDto>(e))
-                         .ToList();
-
-
-            foreach (var vid in popularVideos)
+        private async Task<List<VideoDto>> GetVideosDetailsAsync(List<VideoDto> topVideos)
+        {
+            foreach (var vid in topVideos)
             {
                 if (vid.ThumbnailDocumentId.HasValue)
                     vid.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(vid.ThumbnailDocumentId.Value);
@@ -364,7 +338,7 @@ namespace Academically.Services.Videos
                 vid.VideoCount = vid.Children.Count();
             }
 
-            return popularVideos.GroupByPopularityPagedExt(totalCount);
+            return topVideos;
         }
 
     }

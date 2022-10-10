@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace Academically.Services.Articles
 {
     public class ArticlesAppService : AcademicallyAppServiceBase, IArticlesAppService
-	{
+    {
         private readonly IRepository<Article, Guid> _articlesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IRepository<StudentArticle, Guid> _studentArticleRepository;
@@ -30,7 +30,7 @@ namespace Academically.Services.Articles
             IRepository<StudentArticle, Guid> studentArticleRepository,
             IExploreRepository exploreRepository
             )
-		{
+        {
             _articlesRepository = articlesRepository;
             _documentsDomainService = documentsDomainService;
             _studentArticleRepository = studentArticleRepository;
@@ -196,16 +196,8 @@ namespace Academically.Services.Articles
                     .Select(e => ObjectMapper.Map<ArticleDto>(e))
                     .ToListAsync();
 
-                foreach (var article in articles)
-                {
-                    if (article.ThumbnailDocumentId.HasValue)
-                        article.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocumentId.Value);
-                    if (article.CreatorUser.ProfilePictureDocumentId.HasValue)
-                        article.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(article.CreatorUser.ProfilePictureDocumentId.Value);
-                    article.ArticlesCount = article.Children.Count();
-                }
-
-                result.Add(topic, new PagedResultDto<ArticleDto>(totalCount, articles));
+               
+                result.Add(topic, new PagedResultDto<ArticleDto>(totalCount, await GetArticleDetailsAsync(articles)));
             }
             return result;
         }
@@ -229,56 +221,46 @@ namespace Academically.Services.Articles
                 .Select(e => ObjectMapper.Map<ArticleDto>(e))
                 .ToListAsync();
 
-            foreach (var article in articles)
-            {
-                if (article.ThumbnailDocumentId.HasValue)
-                    article.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocumentId.Value);
-                if (article.CreatorUser.ProfilePictureDocumentId.HasValue)
-                    article.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(article.CreatorUser.ProfilePictureDocumentId.Value);
-                article.ArticlesCount = article.Children.Count();
-            }
+            
 
-            return articles.GroupByDateRangePagedExt(input.Grain.Value, input.MaxResultCount);
+            return (await GetArticleDetailsAsync(articles)).GroupByDateRangePagedExt(input.Grain.Value, input.MaxResultCount);
         }
 
         public async Task<Dictionary<string, PagedResultDto<ArticleDto>>> GetByPopularityAsync(PagedPopularRequestDto input)
         {
-            var topArticlesQuery = _studentArticleRepository.GetAll().Select(x => new
-            {
-                x.ArticleId,
-                Point = x.SaveOnly ? 1 : 5
-            })
+            var topArticlesQuery = _studentArticleRepository.GetAll()
+                .Include(x => x.Article)
+                .Where(e => e.Article.IsVisible)
+                .Where(e => e.Article.ParentId == null)
+                .Where(e => e.Article.Status == ArticleStatus.Published)
+                .Select(x => new
+                {
+                    x.ArticleId,
+                    Point = x.SaveOnly ? 1 : 5
+                })
                 .GroupBy(x => new { x.ArticleId })
-                .Select(g => new { g.Key.ArticleId, Popularity = g.Sum(s => s.Point) });
+                .Select(g => new { g.Key.ArticleId, Popularity = g.Sum(s => s.Point) })
+                .OrderByDescending(x => x.Popularity);
 
-            var topArticles = await topArticlesQuery.OrderByDescending(x => x.Popularity)
+            var totalCount = topArticlesQuery.Count();
+
+            var topArticles = await topArticlesQuery.PageBy(input)
+                .Join(_articlesRepository.GetAll()
+                    .Include(e => e.ThumbnailDocument)
+                    .Include(e => e.CreatorUser)
+                    .Include(e => e.Children),
+                        outer => outer.ArticleId,
+                        inner => inner.Id,
+                        (inner, outer) => new ArticlePopularityViewModel(outer, inner.Popularity))
+                .Select(e => ObjectMapper.Map<ArticleDto>(e))
                 .ToListAsync();
 
+            return (await GetArticleDetailsAsync(topArticles)).GroupByPopularityPagedExt(totalCount);
+        }
 
-            var events = await _articlesRepository.GetAll()
-                    .Include(e => e.ThumbnailDocument)
-                    .Include(e => e.Children)
-                    .Include(e => e.CreatorUser)
-                    .Where(e => e.ParentId == null)
-                    .Where(e => e.Status == ArticleStatus.Published)
-                    .Where(e => e.IsVisible)
-                    .Where(x => topArticles.Select(t => t.ArticleId).Contains(x.Id))
-                    .ToListAsync();
-
-            var popularAticlesQuery = events.Join(
-                                topArticles,
-                                v => v.Id,
-                                tv => tv.ArticleId,
-                                (v, tv) => new ArticlePopularityViewModel(v, tv.Popularity))
-                         .OrderByDescending(x => x.PopularityWeight);
-            var totalCount = popularAticlesQuery.Count();
-            var popularArticles = popularAticlesQuery
-                         .Skip(input.SkipCount)
-                         .Take(input.MaxResultCount)
-                         .Select(e => ObjectMapper.Map<ArticleDto>(e))
-                         .ToList();
-
-            foreach (var article in popularArticles)
+        private async Task<List<ArticleDto>> GetArticleDetailsAsync(List<ArticleDto> topArticles)
+        {
+            foreach (var article in topArticles)
             {
                 if (article.ThumbnailDocumentId.HasValue)
                     article.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocumentId.Value);
@@ -287,11 +269,9 @@ namespace Academically.Services.Articles
 
                 article.ArticlesCount = article.Children.Count();
             }
+            return topArticles;
 
-            return popularArticles.GroupByPopularityPagedExt(totalCount);
         }
-
-
     }
 }
 
