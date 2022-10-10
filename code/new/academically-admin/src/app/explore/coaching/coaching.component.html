@@ -18,17 +18,17 @@
                 <span class="section-title">{{ t | titlecase }}</span>
               </div>
             </div>
-            <div class="row align-items-center mb-5">
+            <div class="row align-items-center" [style.marginBottom.px]="45">
               <div class="col d-flex flex-wrap gap-27">
                 <app-service-card *ngFor="let d of topicGroups[t]?.items; trackBy:d?.id;" [data]="d" [isLoading]="isLoading"></app-service-card>
-                <div class="flex-break"></div>
-                <div class="btn btn-block btn-white flex-grow-1" *ngIf="showTopicShowMoreButton(t)" (click)="onShowMoreTopicButtonClick(t)">Show More</div>
+                <ng-container *ngIf="showTopicShowMoreButton(t)">
+                  <div class="flex-break"></div>
+                  <div class="btn btn-block btn-white flex-grow-1" (click)="onShowMoreTopicButtonClick(t)" [style.marginTop.px]="-34">Show More</div>
+                </ng-container>
               </div>
             </div>
           </ng-container>
         </ng-container>
-
-
 
         <ng-container *ngIf="!isGroupByTopics">
           <ng-container *ngIf="popular?.items?.length">
@@ -37,26 +37,30 @@
                 <span class="section-title">Popular</span>
               </div>
             </div>
-            <div class="row align-items-center mb-5">
+            <div class="row align-items-center" [style.marginBottom.px]="45">
               <div class="col d-flex flex-wrap gap-27">
                 <app-service-card *ngFor="let d of popular?.items; trackBy:d?.id" [data]="d" [isLoading]="isPopularLoading"></app-service-card>
-                <div class="flex-break"></div>
-                <div class="btn btn-block btn-white flex-grow-1" *ngIf="showPopularShowMoreButton" (click)="onShowMorePopularButtonClick()">Show More</div>
+                <ng-container *ngIf="showPopularShowMoreButton">
+                  <div class="flex-break"></div>
+                  <div class="btn btn-block btn-white flex-grow-1" (click)="onShowMorePopularButtonClick()" [style.marginTop.px]="-34">Show More</div>
+                </ng-container>
               </div>
             </div>
           </ng-container>
 
           <ng-container *ngIf="latest?.items?.length">
-            <div class="row align-items-center">
+            <div class="row align-items-center" [style.marginBottom.px]="25">
               <div class="col d-flex flex-wrap gap-15">
                 <span class="section-title">Latest</span>
               </div>
             </div>
-            <div class="row align-items-center mb-5">
+            <div class="row align-items-center" [style.marginBottom.px]="45">
               <div class="col d-flex flex-wrap gap-27">
                 <app-service-card *ngFor="let d of latest?.items; trackBy:d?.id" [data]="d" [isLoading]="isLoading"></app-service-card>
-                <div class="flex-break"></div>
-                <div class="btn btn-block btn-white flex-grow-1" *ngIf="showLastestShowMore" (click)="onShowMoreLatestButtonClick()">Show More</div>
+                <ng-container *ngIf="showLastestShowMore">
+                  <div class="flex-break"></div>
+                  <div class="btn btn-block btn-white flex-grow-1" (click)="onShowMoreLatestButtonClick()" [style.marginTop.px]="-34">Show More</div>
+                </ng-container>
               </div>
             </div>
           </ng-container>
@@ -70,8 +74,10 @@
             <div class="row align-items-center">
               <div class="col d-flex flex-wrap gap-27">
                 <app-service-card *ngFor="let d of lastMonth?.items; trackBy:d?.id" [data]="d" [isLoading]="isLoading"></app-service-card>
-                <div class="flex-break"></div>
-                <div class="btn btn-block btn-white flex-grow-1" *ngIf="showLastMonthShowMoreButton" (click)="onShowMoreLastMonthButtonClick()">Show More</div>
+                <ng-container *ngIf="showLastMonthShowMoreButton">
+                  <div class="flex-break"></div>
+                  <div class="btn btn-block btn-white flex-grow-1" (click)="onShowMoreLastMonthButtonClick()" [style.marginTop.px]="-34">Show More</div>
+                </ng-container>
               </div>
             </div>
           </ng-container>
