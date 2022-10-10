@@ -222,7 +222,7 @@ namespace Academically.Authorization
 
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
 
-
+            context.CreatePermission(PermissionNames.Pages_Community, L("Community"));
         }
 
         private static ILocalizableString L(string name)
