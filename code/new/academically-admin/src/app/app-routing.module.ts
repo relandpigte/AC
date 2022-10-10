@@ -233,6 +233,13 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
               },
             ],
           },
+          {
+            path: 'community',
+            loadChildren: () =>
+              import('@app/community/community.module').then(
+                (m) => m.CommunityModule
+              ),
+          }
         ]
       }
     ])

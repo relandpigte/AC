@@ -1,0 +1,44 @@
+import { NgModule } from '@angular/core';
+import { CommunityComponent } from './community.component';
+import { RouterModule } from '@angular/router';
+import { WrapperComponent } from '@app/layout/wrapper/wrapper.component';
+import { AppRouteGuard } from '@shared/auth/auth-route-guard';
+
+@NgModule({
+  imports: [
+    RouterModule.forChild([
+      {
+        path: '',
+        component: WrapperComponent,
+        canActivate: [AppRouteGuard],
+        canActivateChild: [AppRouteGuard],
+        children: [
+          {
+            path: '',
+            component: CommunityComponent,
+            children: [
+                {
+                    path: 'following',
+                    loadChildren: () =>
+                      import('@app/community/following/following.module').then(
+                        (m) => m.FollowingModule
+                      ),
+                  },
+                  {
+                    path: 'popular',
+                    loadChildren: () =>
+                      import('@app/community/popular/popular.module').then(
+                        (m) => m.PopularModule
+                      ),
+                  },
+            ]
+          },
+        ],
+      }
+    ]),
+  ],
+  exports: [
+    RouterModule
+  ],
+})
+export class CommunityRoutingModule { }

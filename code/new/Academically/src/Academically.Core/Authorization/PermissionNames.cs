@@ -215,5 +215,7 @@
 
         public const string Pages_Tenants = "Pages.Tenants";
 
+        public const string Pages_Community = "Pages.Community";
+
     }
 }
