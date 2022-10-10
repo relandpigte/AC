@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Injector, Input, OnInit, Output, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Injector, Input, OnChanges, Output, Renderer2, SimpleChanges } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 
 @Component({
@@ -6,7 +6,9 @@ import { AppComponentBase } from '@shared/app-component-base';
   templateUrl: './carousel-wrapper.component.html',
   styleUrls: ['./carousel-wrapper.component.scss']
 })
-export class CarouselWrapperComponent extends AppComponentBase implements OnInit, AfterViewInit {
+export class CarouselWrapperComponent extends AppComponentBase implements AfterViewInit, OnChanges {
+
+  private MIN_ITEMS = 3;
 
   @Input() items: any[] = [];
   @Input() circular: boolean = false;
@@ -35,6 +37,14 @@ export class CarouselWrapperComponent extends AppComponentBase implements OnInit
     private _elRef : ElementRef
     ) {
     super(injector);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+      if (changes.items?.previousValue !== changes.items?.currentValue && changes.items?.currentValue.length) {
+        if (this.items.length < this.MIN_ITEMS) {
+          this.items.push(Array(this.MIN_ITEMS - this.items.length).fill({}));
+        }
+      }
   }
 
   ngAfterViewInit(): void {

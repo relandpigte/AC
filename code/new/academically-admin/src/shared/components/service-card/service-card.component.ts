@@ -38,7 +38,7 @@ import * as moment from 'moment';
       this.setShimmerType();
     }
 
-    get type(): ServiceCardType { return this.sanitized?.type ?? 'course'; }
+    get type(): ServiceCardType { return this.sanitized?.type; }
     get images(): ServiceCardImage[] { return this.sanitized?.images; }
     get name(): string { return this.sanitized?.name; }
     get info(): string { return this.sanitized?.info; }
@@ -96,7 +96,7 @@ import * as moment from 'moment';
       else if (this.data instanceof WorkshopDto) return 'workshop';
       else if (this.data instanceof VideoDto) return 'tutorial';
       else if (this.data instanceof UserDto) return 'user';
-      return 'space';
+      return null;
     }
 
     private setShimmerType(): void {
