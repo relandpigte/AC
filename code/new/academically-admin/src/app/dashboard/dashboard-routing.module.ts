@@ -42,10 +42,10 @@ import { DashboardComponent } from './dashboard.component';
               ),
           },
           {
-            path: 'workshop',
+            path: 'events',
             loadChildren: () =>
-              import('@app/dashboard/workshop/workshop.module').then(
-                (m) => m.WorkshopModule
+              import('@app/dashboard/events/events.module').then(
+                (m) => m.EventsModule
               ),
           },
           { path: '', redirectTo: 'overview' },

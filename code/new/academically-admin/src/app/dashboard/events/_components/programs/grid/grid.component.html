@@ -1,0 +1,44 @@
+<div class="row m-0">
+  <div *ngFor="let workshop of workshops" class="col-12 col-md-6 col-xl-4 p-0">
+    <div class="card mx-0 m-md-1">
+      <a href="#!visit" (click)="$event.preventDefault();">
+        <img [src]="getServiceImageUrl(workshop.thumbnailDocument)" alt="..." class="card-img-top">
+      </a>
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col">
+            <h4 class="mb-2 name">
+              <a href="#!visit" [routerLink]="[workshop.id]" (click)="$event.preventDefault();">
+                {{ workshop.name }}
+              </a>
+            </h4>
+            <p class="card-text small text-muted">
+              {{ 'Created' | localize }} {{ convertMomentToDateAgo(workshop.creationTime) }}
+            </p>
+          </div>
+          <div class="col-auto">
+            <div class="dropdown">
+              <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fe fe-more-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="#!visit" *ngIf="workshop.type === WorkshopType.Single" class="dropdown-item"
+                  (click)="$event.preventDefault();navToUrl('app/dashboard/events/workshop/' , workshop.id)">
+                  {{ 'Edit' | localize }}
+                </a>
+                <a href="#!visit" *ngIf="workshop.type === WorkshopType.Series" class="dropdown-item"
+                  (click)="$event.preventDefault();navToUrl('app/dashboard/events/workshop/series' , workshop.id)">
+                  {{ 'Edit' | localize }}
+                </a>
+                <a href="#!visit" class="dropdown-item" (click)="onDeleteClick(workshop.id)" (click)="$event.preventDefault(); ">
+                  {{ 'Delete' | localize }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -200,13 +200,6 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
               ),
           },
           {
-            path: 'events',
-            loadChildren: () =>
-              import('@app/events/events.module').then(
-                (m) => m.EventsModule
-              ),
-          },
-          {
             path: 'topics',
             children: [
               {

@@ -112,6 +112,9 @@ export class UploadService {
       case DocumentType.EventResource:
         folder = folders.eventResource;
         break;
+      case DocumentType.WorkshopThumbnail:
+        folder = folders.workshopThumbnail;
+        break;
     }
     return folder;
   }

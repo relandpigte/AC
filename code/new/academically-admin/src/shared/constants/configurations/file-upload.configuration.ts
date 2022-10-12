@@ -99,5 +99,6 @@ export const fileUploadConfiguration = {
     eventThumbnail: 'event-thumbnails',
     profilePicture: 'profile-pictures',
     eventResource: 'event-resources',
+    workshopThumbnail: 'workshop-thumbnails',
   },
 };

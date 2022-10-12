@@ -1794,6 +1794,9 @@
     <text name="Coaching">Coaching</text>
 	<text name="EndEventConfirmation">Are you sure you want to end this event?</text>
 	<text name="AnswerLive">Answer Live</text>
+	<!-- Generics -->
+	<text name="Requests">Requests</text>
+	<text name="Programs">Programs</text>
 	<!-- Coaching -->
 	<text name="NewCoaching">New Coaching</text>
 	<text name="CreateCoaching">Create Coaching</text>
@@ -1827,7 +1830,9 @@
 	<text name="NewWorkshop">New Workshop</text>
 	<text name="CreateWorkshop">Create Workshop</text>
 	<text name="SingleWorkshop">Single Workshop</text>
+	<text name="SingleWorkshopDescription">Create a Single Workshop</text>
 	<text name="WorkshopSeries">Workshop Series</text>
+	<text name="WorkshopSeriesDescription">Create a series of Workshops</text>
 	<text name="AddWorkshop">Add Workshop</text>
 	<text name="WorkshopName">Workshop name</text>
 	<text name="WorkshopSeriesName">Workshop series name</text>
@@ -1859,6 +1864,16 @@
 	<text name="WorkshopRequests">Workshop Requests</text>
 	<text name="WorkshopPrograms">Workshop Programs</text>
 	<text name="DeleteWorkshopConfirmationMessage">Are you sure you want to delete this workshop?</text>
+	<!-- Broadcast -->
+	<text name="NewBroadcast">New Broadcast</text>
+	<text name="SingleBroadcast">Single Broadcast</text>
+	<text name="SingleBroadcastDescription">Create a Single Broadcast</text>
+	<text name="BroadcastSeries">Broadcast Series</text>
+	<text name="BroadcastSeriesDescription">Create a series of Broadcasts</text>
+	<text name="NameYourBroadcast">Name your broadcast</text>
+	<text name="NameYourBroadcastSeries">Name your broadcast series</text>
+    <text name="CreateBroadcast">Create broadcast</text>
+	<!-- For You -->
 	<text name="Explore">Explore</text>
 	<text name="ForYou">For You</text>
   <text name="LiveNow">Live now</text>
