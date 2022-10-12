@@ -34,7 +34,7 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
   showLastMonthShowMoreButton: boolean = true;
   showPopularShowMoreButton: boolean = true;
   itemsPerGroup = 6;
-  popularItems = 3;
+  popularItems = 2;
 
   latestMaxItems: number = 0;
   lastMonthMaxItems: number = 0;
