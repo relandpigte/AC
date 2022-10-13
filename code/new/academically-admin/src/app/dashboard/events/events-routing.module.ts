@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { WrapperComponent } from '@app/layout/wrapper/wrapper.component';
+import { AppRouteGuard } from '@shared/auth/auth-route-guard';
 
 import { EventsComponent } from './events.component';
 
@@ -50,6 +51,41 @@ import { EventsComponent } from './events.component';
           }
         ]
       },
+      {
+        path: 'portal/broadcast/tutor',
+        data: { permission: 'Pages.Events' },
+        canActivate: [AppRouteGuard],
+        canActivateChild: [AppRouteGuard],
+        children: [
+          {
+            path: ':id',
+            loadChildren: () =>
+              import('@app/dashboard/events/portal/broadcast/tutor/tutor-portal.module').then(
+                (m) => m.TutorPortalModule
+              ),
+          },
+        ],
+      },
+      {
+        path: 'portal/broadcast/student',
+        canActivate: [AppRouteGuard],
+        canActivateChild: [AppRouteGuard],
+        data: { permission: 'Pages.Events.StudentPortal' },
+        loadChildren: () =>
+          import('@app/dashboard/events/portal/broadcast/student/student-portal.module').then(
+            (m) => m.StudentPortalModule
+          ),
+      },
+      {
+        path: 'session/broadcast',
+        canActivate: [AppRouteGuard],
+        canActivateChild: [AppRouteGuard],
+        data: { permission: 'Pages.Events.StudentPortal' },
+        loadChildren: () =>
+          import('@app/dashboard/events/session/broadcast/broadcast-session.module').then(
+            (m) => m.BroadcastSessionModule
+          ),
+      }
     ]),
   ],
   exports: [

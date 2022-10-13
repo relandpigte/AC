@@ -1,0 +1,122 @@
+<ng-container *ngIf="model.parent && model.parent.id">
+  <div class="p-3">
+    <div class="row align-items-center">
+      <div class="col">
+        <h6 class="header-pretitle">{{ 'EventSeries' | localize }}</h6>
+        <h3 class="header-title">
+          {{ model.parent.name }}
+        </h3>
+      </div>
+      <div *ngIf="model.parent.pricingType !== PricingType.Free" class="col-auto">
+        <button
+          *ngIf="(!parentStudentEvent || !parentStudentEvent.id) && model.creatorUser.id !== appSession.userId else checkTemplate"
+          [disabled]="preview" class="btn btn-sm btn-primary" (click)="onPurchaseClick(model.parent)">
+          &#163;{{ model.parent.price }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <hr class="m-0 p-0">
+</ng-container>
+<div class="p-3" *ngIf="isTutor">
+  <div class="avatar-group">
+    <div class="avatar-sm">
+      <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-1.jpg" alt="..." class="avatar-img rounded-circle">
+    </div>
+    <div class="avatar-sm">
+      <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-2.jpg" alt="..." class="avatar-img rounded-circle">
+    </div>
+    <div class="avatar-sm">
+      <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-3.jpg" alt="..." class="avatar-img rounded-circle">
+    </div>
+    <div class="avatar-sm">
+      <img src="/assets/themes/dashkit/img/avatars/profiles/avatar-4.jpg" alt="..." class="avatar-img rounded-circle">
+    </div>
+  </div>
+</div>
+<div class="p-3" *ngIf="!isTutor && model.creatorUser">
+  <div class="row align-items-center">
+    <div class="col-auto">
+      <a href="#!" class="avatar avatar-sm">
+        <img [src]="getProfilePictureUrl(model.creatorUser.profilePictureDocument)" alt="..."
+          class="avatar-img rounded-circle">
+      </a>
+    </div>
+    <div class="col ml-n2">
+      <h4 class="m-0 p-0">{{ model.creatorUser.fullName }}</h4>
+    </div>
+    <div *ngIf="appSession.userId !== model.creatorUser.id" class="col-auto">
+      <button *ngIf="!userFollower || !userFollower.id else unfollowTemplate" class="btn btn-sm btn-outline-primary"
+        (click)="onFollowClick()">
+        {{ 'Follow' | localize }}
+      </button>
+      <ng-template #unfollowTemplate>
+        <button class="btn btn-sm btn-outline-success" (click)="onUnfollowClick()">
+          {{ 'Unfollow' | localize }}
+        </button>
+      </ng-template>
+    </div>
+  </div>
+</div>
+<hr class="m-0 p-0">
+<div class="p-3">
+  <div class="d-flex align-items-center justify-content-between">
+    <h4 class="p-0">{{ model.name }}</h4>
+  </div>
+  <p *ngIf="model.description" class="pt-1 m-0 small">{{ model.description }}</p>
+  <div class="row small text-muted text-center mx-2 mt-2">
+    <div class="col p-0 no-wrap">
+      <a [class.text-success]="isLiked" href="#!like" (click)="$event.preventDefault(); onLikeClick()">
+        <i class="fe fe-thumbs-up"></i> {{ likeCount }}
+      </a>
+    </div>
+    <div class="col-auto p-0 ">|</div>
+    <div class="col p-0 no-wrap">
+      <i class="fe fe-share-2"></i> {{ 'Share' }}
+    </div>
+    <ng-container *ngIf="!preview && ((!studentEvent || !studentEvent.id) || (studentEvent && studentEvent.saveOnly))">
+      <div class="col-auto p-0 ">|</div>
+      <div class="col p-0 no-wrap">
+        <a *ngIf="!studentEvent || !studentEvent.id else unsaveEventTemplate" href="#!save"
+          (click)="$event.preventDefault(); onSaveClick()">
+          <i class="fe fe-bookmark"></i> {{ 'Save' }}
+        </a>
+        <ng-template #unsaveEventTemplate>
+          <a href="#!save" (click)="$event.preventDefault(); onUnsaveClick()" class="text-success">
+            <i class="fe fe-bookmark"></i> {{ 'Unsave' }}
+          </a>
+        </ng-template>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<ng-container *ngIf="!preview && model.id">
+  <hr class="m-0 p-0">
+  <ul class="nav nav-tabs nav-tabs-sm px-3">
+    <li *ngIf="isTutor" class="nav-item">
+      <a href="#" class="nav-link active" id="upcoming-tab" data-toggle="tab" href="#upcoming-container" role="tab"
+        aria-controls="upcoming-container" aria-selected="true">
+        {{ 'MoreInSeries' | localize }}
+      </a>
+    </li>
+    <li *ngIf="!isTutor" class="nav-item">
+      <a href="#" class="nav-link active" id="related-tab" data-toggle="tab" href="#related-container" role="tab"
+        aria-controls="related-container" aria-selected="true">
+        {{ 'Related' | localize }}
+      </a>
+    </li>
+  </ul>
+  <div class="p-3">
+    <div class="tab-content">
+      <div *ngIf="isTutor" class="tab-pane fade show active" id="more-container" role="tabpanel"
+        aria-labelledby="more-tab">
+        <app-upcoming></app-upcoming>
+      </div>
+      <div *ngIf="!isTutor" class="tab-pane fade show active" id="related-container" role="tabpanel"
+        aria-labelledby="related-tab">
+        <app-related></app-related>
+      </div>
+    </div>
+  </div>
+</ng-container>

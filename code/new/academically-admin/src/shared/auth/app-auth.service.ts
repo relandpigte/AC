@@ -77,7 +77,7 @@ export class AppAuthService {
         if (!result.isTwoFactorEnabled) {
           let redirectUrl = '';
           if (+autoAuthModel.type === AutoAuthenticateType.Event) {
-            redirectUrl = `/app/events/student-portal/${result.referenceId}/portal/${autoAuthModel.referenceId}`;
+            redirectUrl = `/app/dashboard/events/portal/broadcast/student/${result.referenceId}/portal/${autoAuthModel.referenceId}`;
           }
           console.log(redirectUrl);
           this.processAuthenticateResult(redirectUrl);

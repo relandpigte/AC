@@ -1,0 +1,390 @@
+<table class="table table-sm table-sm-custom table-stripeless mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-y-center">
+            {{ 'InteractiveTools' | localize }}
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row mb-2">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'EnableMicrophone' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="coHostEnableMicrophone"
+                name="coHostEnableMicrophone">
+              <label class="custom-control-label" for="coHostEnableMicrophone"></label>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'EnableWebcam' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="coHostEnableWebcam" name="coHostEnableWebcam">
+              <label class="custom-control-label" for="coHostEnableWebcam"></label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'EnablePresentationTools' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="coHostEnablePresentationTools"
+                name="coHostEnablePresentationTools">
+              <label class="custom-control-label" for="coHostEnablePresentationTools"></label>
+            </div>
+          </div>
+        </div>
+        <hr class="my-2">
+        <div class="row">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'EnableSpeakRequests' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="coHostEnableSpeakRequests"
+                name="coHostEnableSpeakRequests">
+              <label class="custom-control-label" for="coHostEnableSpeakRequests"></label>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm table-sm-custom table-stripeless mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-y-center">
+            {{ 'Attendees' | localize }}
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row mb-2">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'ViewRegistrants' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="coHostViewRegistrants"
+                name="coHostViewRegistrants">
+              <label class="custom-control-label" for="coHostViewRegistrants"></label>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'ManageGuests' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="coHostManageGuests" name="coHostManageGuests">
+              <label class="custom-control-label" for="coHostManageGuests"></label>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'ManageGuestSettings' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="coHostManageGuestSettings"
+                name="coHostManageGuestSettings">
+              <label class="custom-control-label" for="coHostManageGuestSettings"></label>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'ManageAudience' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="coHostManageAudience" name="coHostManageAudience">
+              <label class="custom-control-label" for="coHostManageAudience"></label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'ManageAudienceSettings' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="coHostManageAudienceSettings"
+                name="coHostManageAudienceSettings">
+              <label class="custom-control-label" for="coHostManageAudienceSettings"></label>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm table-sm-custom table-stripeless mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-y-center">
+            {{ 'Chat' | localize }}
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="mb-2">
+          <div class="row mb-2">
+            <div class="col flex-y-center">
+              <p class="m-0">
+                {{ 'ChatPublicly' | localize }}
+              </p>
+            </div>
+            <div class="col-auto flex-y-center">
+              <div class="custom-control custom-switch mr-n2">
+                <input class="custom-control-input" type="checkbox" id="coHostChatPublicly" name="coHostChatPublicly">
+                <label class="custom-control-label" for="coHostChatPublicly"></label>
+              </div>
+            </div>
+          </div>
+          <div class="ml-2 row">
+            <div class="col flex-y-center">
+              <p class="m-0">
+                {{ 'TagMembers' | localize }}
+              </p>
+            </div>
+            <div class="col-auto flex-y-center">
+              <div class="custom-control custom-switch mr-n2">
+                <input class="custom-control-input" type="checkbox" id="coHostTagMembers" name="coHostTagMembers">
+                <label class="custom-control-label" for="coHostTagMembers"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'ChatPrivately' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="coHostChatPrivately" name="coHostChatPrivately">
+              <label class="custom-control-label" for="coHostChatPrivately"></label>
+            </div>
+          </div>
+        </div>
+        <div class="ml-2 row">
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-radio">
+              <input class="custom-control-input" type="radio" name="coHostChatPrivatelyType" id="coHostWithAnyone">
+              <label class="custom-control-label label-center" for="coHostWithAnyone">
+                {{ 'WithAnyone' | localize }}
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="ml-2 row">
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-radio">
+              <input class="custom-control-input" type="radio" name="coHostChatPrivatelyType" id="coHostWithAdminOnly">
+              <label class="custom-control-label label-center" for="coHostWithAdminOnly">
+                {{ 'WithAdminOnly' | localize }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm table-sm-custom table-stripeless mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-y-center">
+            {{ 'Questions' | localize }}
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row mb-2">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'AllowCoHostsToUpvote' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="allowCoHostsToUpvote" name="allowCoHostsToUpvote">
+              <label class="custom-control-label" for="allowCoHostsToUpvote"></label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'AllowCoHostsToRespond' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="allowCoHostsToRespond"
+                name="allowCoHostsToRespond">
+              <label class="custom-control-label" for="allowCoHostsToRespond"></label>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm table-sm-custom table-stripeless mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-y-center">
+            {{ 'Polls' | localize }}
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'CreatePolls' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="coChostCreatePolls" name="coChostCreatePolls">
+              <label class="custom-control-label" for="coChostCreatePolls"></label>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm table-sm-custom table-stripeless mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-y-center">
+            {{ 'Offers' | localize }}
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'CreateOffers' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="coHostCreateOffers" name="coHostCreateOffers">
+              <label class="custom-control-label" for="coHostCreateOffers"></label>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm table-sm-custom table-stripeless mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-y-center">
+            {{ 'Handouts' | localize }}
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'UploadHandouts' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="coHostUploadHandouts" name="coHostUploadHandouts">
+              <label class="custom-control-label" for="coHostUploadHandouts"></label>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

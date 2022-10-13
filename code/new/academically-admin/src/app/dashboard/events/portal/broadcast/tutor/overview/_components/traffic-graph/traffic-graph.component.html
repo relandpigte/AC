@@ -1,0 +1,41 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Traffic' | localize }}
+    </h4>
+    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+      <li class="nav-item">
+        <a (click)="onRangeTypeChange(RangeType.Week)" class="nav-link active" href="#" data-toggle="tab">
+          {{ 'ThisWeek' | localize }}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a (click)="onRangeTypeChange(RangeType.Month)" class="nav-link" href="#" data-toggle="tab">
+          {{ 'ThisMonth' | localize }}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a (click)="onRangeTypeChange(RangeType.Year)" class="nav-link" href="#" data-toggle="tab">
+          {{ 'ThisYear' | localize }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body">
+    <div class="position-relative">
+      <canvas class="chart-canvas overview-chart" chart [chartSettings]="chartSettings" [chartDataset]="chartDataset">
+      </canvas>
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center mt-3">
+      <div *ngFor="let chartType of ChartType | enumToArray | keyvalue" class="custom-control custom-checkbox mx-5">
+        <input [(ngModel)]="currentChartType" (change)="onChartTypeChange()" class="custom-control-input"
+          name="trafficChartType" id="trafficChartType_{{chartType.key}}" type="radio" [value]="+chartType.key" />
+        <label class="custom-control-label" for="trafficChartType_{{chartType.key}}"></label>
+        <label class="custom-control-caption m-0" for="trafficChartType_{{chartType.key}}">
+          {{ chartType.value | localize }}
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

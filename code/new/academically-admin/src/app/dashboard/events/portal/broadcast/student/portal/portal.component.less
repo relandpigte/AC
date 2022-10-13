@@ -1,0 +1,117 @@
+.main-content {
+  margin-right: 350px;
+  transition  : 0.5s;
+  position    : relative;
+
+  .navbar-brand-header,
+  .header-title {
+    white-space  : nowrap;
+    overflow     : hidden;
+    text-overflow: ellipsis;
+  }
+
+  .navbar-brand-header {
+    display        : flex;
+    flex-direction : column;
+    justify-content: center;
+  }
+
+  .avatar {
+    min-width: 64px;
+  }
+
+  .article-container {
+    .presentation-feed {
+      width   : 100%;
+      overflow: hidden;
+      padding : 20px;
+      display : flex;
+      position: relative;
+
+      .attendees {
+        .attendee {
+          padding: 10px;
+
+          img {
+            border-radius  : 10px;
+            width          : 200px;
+            height         : auto;
+            object-fit     : cover;
+            object-position: center;
+          }
+
+          video {
+            border-radius  : 10px;
+            width          : 200px;
+            object-fit     : cover;
+            object-position: center;
+            height         : 100%;
+          }
+        }
+      }
+
+      .presenter {
+        width   : 100%;
+        overflow: hidden;
+        padding : 10px;
+        position: relative;
+
+        img {
+          height         : calc(100vh - 200px);
+          width          : 100%;
+          object-fit     : cover;
+          object-position: center;
+          border-radius  : 10px;
+        }
+
+        video {
+          border-radius  : 10px;
+          object-fit     : cover;
+          object-position: center;
+          height         : calc(100vh - 200px);
+          width          : 100%;
+        }
+      }
+    }
+
+    .presentation-controls {
+      position       : absolute;
+      bottom         : 0;
+      width          : 100%;
+      padding        : 20px;
+      display        : flex;
+      justify-content: center;
+      align-items    : center;
+      border-top     : 1px solid #e3ebf6 !important;
+    }
+  }
+
+  &.sidebar-hidden {
+    margin-right: 57px;
+  }
+
+  .collapse-toggle {
+    a {
+      padding: 10px;
+    }
+  }
+
+  .separator {
+    height     : 100%;
+    border-left: 1px solid #e3ebf6;
+  }
+
+  .event-not-started-container {
+    width          : calc(100% - 20px);
+    height         : calc(100% - 20px);
+    display        : flex;
+    flex-direction : column;
+    align-items    : center;
+    justify-content: center;
+    position       : absolute;
+    top            : 0px;
+    left           : 0;
+    margin         : 10px;
+    border-radius  : 10px;
+  }
+}

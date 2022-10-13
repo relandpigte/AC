@@ -1,0 +1,361 @@
+<table class="table table-sm table-sm-custom table-stripeless mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-y-center">
+            {{ 'InteractiveTools' | localize }}
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row mb-2">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'EnableMicrophone' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="guestEnableMicrophone"
+                name="guestEnableMicrophone">
+              <label class="custom-control-label" for="guestEnableMicrophone"></label>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'EnableWebcam' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="guestEnableWebcam" name="guestEnableWebcam">
+              <label class="custom-control-label" for="guestEnableWebcam"></label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'EnablePresentationTools' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="guestEnablePresentationTools"
+                name="guestEnablePresentationTools">
+              <label class="custom-control-label" for="guestEnablePresentationTools"></label>
+            </div>
+          </div>
+        </div>
+        <hr class="my-2">
+        <div class="row">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'EnableSpeakRequests' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="guestEnableSpeakRequests"
+                name="guestEnableSpeakRequests">
+              <label class="custom-control-label" for="guestEnableSpeakRequests"></label>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm table-sm-custom table-stripeless mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-y-center">
+            {{ 'Attendees' | localize }}
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row mb-2">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'ViewRegistrants' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="guestViewRegistrants" name="guestViewRegistrants">
+              <label class="custom-control-label" for="guestViewRegistrants"></label>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'ManageAudience' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="guestManageAudience" name="guestManageAudience">
+              <label class="custom-control-label" for="guestManageAudience"></label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'ManageAudienceSettings' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="guestManageAudienceSettings"
+                name="guestManageAudienceSettings">
+              <label class="custom-control-label" for="guestManageAudienceSettings"></label>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm table-sm-custom table-stripeless mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-y-center">
+            {{ 'Chat' | localize }}
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="mb-2">
+          <div class="row mb-2">
+            <div class="col flex-y-center">
+              <p class="m-0">
+                {{ 'ChatPublicly' | localize }}
+              </p>
+            </div>
+            <div class="col-auto flex-y-center">
+              <div class="custom-control custom-switch mr-n2">
+                <input class="custom-control-input" type="checkbox" id="guestChatPublicly" name="guestChatPublicly">
+                <label class="custom-control-label" for="guestChatPublicly"></label>
+              </div>
+            </div>
+          </div>
+          <div class="ml-2 row">
+            <div class="col flex-y-center">
+              <p class="m-0">
+                {{ 'TagMembers' | localize }}
+              </p>
+            </div>
+            <div class="col-auto flex-y-center">
+              <div class="custom-control custom-switch mr-n2">
+                <input class="custom-control-input" type="checkbox" id="guestTagMembers" name="guestTagMembers">
+                <label class="custom-control-label" for="guestTagMembers"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'ChatPrivately' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="guestChatPrivately" name="guestChatPrivately">
+              <label class="custom-control-label" for="guestChatPrivately"></label>
+            </div>
+          </div>
+        </div>
+        <div class="ml-2 row">
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-radio">
+              <input class="custom-control-input" type="radio" name="guestChatPrivatelyType" id="guestWithAnyone">
+              <label class="custom-control-label label-center" for="guestWithAnyone">
+                {{ 'WithAnyone' | localize }}
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="ml-2 row">
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-radio">
+              <input class="custom-control-input" type="radio" name="guestChatPrivatelyType" id="guestWithAdminOnly">
+              <label class="custom-control-label label-center" for="guestWithAdminOnly">
+                {{ 'WithAdminOnly' | localize }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm table-sm-custom table-stripeless mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-y-center">
+            {{ 'Questions' | localize }}
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row mb-2">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'AllowGuestsToUpvote' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="allowGuestsToUpvote" name="allowGuestsToUpvote">
+              <label class="custom-control-label" for="allowGuestsToUpvote"></label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'AllowGuestsToRespond' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="allowGuestsToRespond" name="allowGuestsToRespond">
+              <label class="custom-control-label" for="allowGuestsToRespond"></label>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm table-sm-custom table-stripeless mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-y-center">
+            {{ 'Polls' | localize }}
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'CreatePolls' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="createPolls" name="createPolls">
+              <label class="custom-control-label" for="createPolls"></label>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm table-sm-custom table-stripeless mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-y-center">
+            {{ 'Offers' | localize }}
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'CreateOffers' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="createOffers" name="createOffers">
+              <label class="custom-control-label" for="createOffers"></label>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm table-sm-custom table-stripeless mb-0">
+  <thead>
+    <tr>
+      <th>
+        <div class="row">
+          <div class="col flex-y-center">
+            {{ 'Handouts' | localize }}
+          </div>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="row">
+          <div class="col flex-y-center">
+            <p class="m-0">
+              {{ 'UploadHandouts' | localize }}
+            </p>
+          </div>
+          <div class="col-auto flex-y-center">
+            <div class="custom-control custom-switch mr-n2">
+              <input class="custom-control-input" type="checkbox" id="uploadHandouts" name="uploadHandouts">
+              <label class="custom-control-label" for="uploadHandouts"></label>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

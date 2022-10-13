@@ -1,0 +1,79 @@
+import { Injectable } from '@angular/core';
+import { CanActivate, CanActivateChild, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { PricingType, EventsServiceProxy, EventType } from '@shared/service-proxies/service-proxies';
+import { AppSessionService } from '@shared/session/app-session.service';
+import * as _ from 'lodash';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class StudentPortalRouteGuard implements CanActivate, CanActivateChild {
+  constructor(
+    private _eventsService: EventsServiceProxy,
+    private _router: Router,
+    private _appSession: AppSessionService,
+  ) {
+  }
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+    abp.ui.setBusy();
+    return new Promise((resolve) => {
+      const eventId: string = route.params['event-id'];
+      let eventPresenterId: string;
+      _.each(route.children, childRoute => {
+        _.each(childRoute.children, grandChildRoute => {
+          eventPresenterId = grandChildRoute.params['invitation-id'];
+        });
+      });
+      this._eventsService.get(eventId)
+        .subscribe(response => {
+          if (response.type === EventType.EventSeries && response.children && response.children.length) {
+            const seriesFirstEventId = response.children[0].id;
+            if (seriesFirstEventId !== eventId) {
+              if (this._appSession.userId === response.creatorUserId) {
+                this._router.navigate([`/app/dashboard/events/portal/broadcast/student/${seriesFirstEventId}/portal`]);
+              } else {
+                this._router.navigate([`/app/dashboard/events/portal/broadcast/student/${seriesFirstEventId}/landing-page`]);
+              }
+            }
+          }
+          if (this._appSession.userId === response.creatorUserId) {
+            abp.ui.clearBusy();
+            return resolve(true);
+          }
+          if (response.pricingType !== PricingType.Free && !eventPresenterId) {
+            this._eventsService.getPurchased(eventId)
+              .subscribe(studentEvent => {
+                if (state.url.includes('landing-page')) {
+                  abp.ui.clearBusy();
+                  if (studentEvent && studentEvent.id) {
+                    this._router.navigate([`/app/dashboard/events/portal/broadcast/student/${eventId}/portal`]);
+                  } else {
+                    return resolve(true);
+                  }
+                } else {
+                  abp.ui.clearBusy();
+                  if (!studentEvent || !studentEvent.id) {
+                    this._router.navigate([`/app/dashboard/events/portal/broadcast/student/${eventId}/landing-page`]);
+                  } else {
+                    return resolve(true);
+                  }
+                }
+              });
+          } else {
+            abp.ui.clearBusy();
+            if (state.url.includes('landing-page')) {
+              this._router.navigate([`/app/dashboard/events/portal/broadcast/student/${eventId}/portal`]);
+            } else {
+              return resolve(true);
+            }
+          }
+        });
+    });
+  }
+
+  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+    return this.canActivate(route, state);
+  }
+
+}

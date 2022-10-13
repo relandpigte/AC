@@ -209,6 +209,6 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
   }
 
   handleServiceCardClick(event: EventDto): void {
-      this._router.navigate(['/app/events/student-portal', event.id, 'portal']);
+      this._router.navigate(['/app/dashboard/events/portal/broadcast/student', event.id, 'portal']);
   }
 }
