@@ -28,6 +28,20 @@
             <app-community-composer></app-community-composer>
             <router-outlet></router-outlet>
         </div>
-        <div class="community-content-right"></div>
+        <div class="community-content-right" [style.marginLeft.px]="24">
+            <app-community-side-card header="Topics you might like" [items]="suggestedTopics" [template]="topicsTemplate"></app-community-side-card>
+
+            <ng-template #topicsTemplate let-item="item">
+                <div class="topic d-flex flex-row flex-nowrap">
+                    <div class="topic-left flex-grow-1 d-flex flex-column flex-nowrap">
+                        <div class="topic-name">{{ item.topic }}</div>
+                        <div class="topic-followers">{{ item.followers }} followers</div>
+                    </div>
+                    <div class="topic-right">
+                        <div type="button" class="btn btn-white topic-btn d-flex justify-content-center align-items-center">Follow</div>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
     </div>
 </div>
