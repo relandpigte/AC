@@ -8,7 +8,7 @@ import { FollowingComponent } from './following.component';
 
 @NgModule({
   declarations: [
-    FollowingComponent,
+    FollowingComponent
   ],
   imports: [
     CommonModule,

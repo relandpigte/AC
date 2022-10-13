@@ -10,11 +10,19 @@ import { AppComponentBase } from '@shared/app-component-base';
 })
 export class CommunityComponent extends AppComponentBase implements OnInit {
 
-  constructor(injector: Injector,) { 
+  selectedTopics: string[] = [];
+
+  get topics(): string[] { return ['Test', 'Sample 10122022', 'Astronomy', 'Biology', 'Fiction']; }
+
+  constructor(injector: Injector,) {
     super(injector);
   }
 
   ngOnInit(): void {
+  }
+
+  handleFilterTopics(topics: string[]): void {
+    this.selectedTopics = topics;
   }
 
 }

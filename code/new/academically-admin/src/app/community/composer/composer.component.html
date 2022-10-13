@@ -1,0 +1,18 @@
+<div class="composer d-flex flex-column" [style.marginBottom.px]="31">
+    <div class="composer-post d-flex flex-row flex-nowrap">
+        <div class="composer-post-avatar">
+            <a href="javascript: void(0);" class="avatar avatar-sm avatar-online">
+                <img [src]="getProfilePicture(appSession.user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
+            </a>
+        </div>
+        <div class="composer-post-text flex-grow-1 position-relative" [ngStyle]="{ 'height': textAreaRows > 1 ? 'auto' : '43px' }">
+            <textarea class="composer-post-text-input" placeholder="Start quick post..." [rows]="textAreaRows" #input></textarea>
+            <i class="composer-post-text-icon fas fa-camera cursor-pointer"></i>
+        </div>
+    </div>
+    <div class="composer-actions d-flex flex-row flex-nowrap align-items-center">
+        <button type="button" class="btn btn-white flex-grow-1 border-0"> Question </button>
+        <div class="composer-actions-separator"></div>
+        <button type="button" class="btn btn-white flex-grow-1 border-0"> Discussion </button>
+    </div>
+</div>

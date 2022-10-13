@@ -1,0 +1,80 @@
+@composer-background-color: white;
+@composer-padding: 20px 20px 0 20px;
+@composer-border-radius: 10px;
+@composer-border: 1px solid #E4EBF6;
+@composer-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+
+@composer-post-avatar-margin-right: 15px;
+@composer-post-avatar-width: 38px;
+@composer-post-avatar-height: 38px;
+
+.composer {
+    background-color: @composer-background-color;
+    padding: @composer-padding;
+    border: @composer-border;
+    border-radius: @composer-border-radius;
+
+    &:hover {
+        box-shadow: @composer-shadow;
+    }
+
+    &-post {
+        &-avatar {
+            margin-right: @composer-post-avatar-margin-right;
+
+            img {
+                width: @composer-post-avatar-width;
+                height: @composer-post-avatar-height;
+            }
+        }
+
+        &-text {
+            background-color: #F9FAFC;
+            border-radius: 10px;
+            padding: 13px;
+
+            textarea {
+                resize: none;
+
+                width: 100%;
+                border: none;
+                padding: 0;
+                background-color: transparent;
+
+                color: #95AAC9;
+                font-weight: 400;
+                font-size: 15px;
+                line-height: 14px;
+
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            &-icon {
+                position: absolute;
+                top: 14px;
+                right: 13px;
+            }
+        }
+    }
+
+    &-actions {
+        height: 54px;
+
+        .btn {
+            font-weight: 600;
+            font-size: 15px;
+            line-height: 19px;
+            color: #3B516C;
+        }
+
+        &-separator {
+            border-right: 2px solid #D2DDEC;
+            width: 0px;
+            height: 18px;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+    }
+}
