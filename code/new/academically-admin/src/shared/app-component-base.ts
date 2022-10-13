@@ -472,9 +472,11 @@ export abstract class AppComponentBase implements OnDestroy {
         if (this[`${destinationField}MaxItems`] == 0)
           this[destinationField] = []
 
-        const items = this.deepSearch(newData, 'items');
-        this[`${destinationField}MaxItems`] = this.deepSearch(newData, 'totalCount');
-        this[destinationField] = _.concat(this[destinationField], items);
+        if (newData) {
+          const items = this.deepSearch(newData, 'items');
+          this[`${destinationField}MaxItems`] = this.deepSearch(newData, 'totalCount');
+          this[destinationField] = _.concat(this[destinationField], items);
+        }
       });
 
   }

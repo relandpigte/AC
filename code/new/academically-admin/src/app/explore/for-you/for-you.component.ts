@@ -15,24 +15,26 @@ import * as moment from 'moment';
   animations: [appModuleAnimation()],
 })
 export class ExploreForYouComponent extends AppComponentBase implements OnInit {
-
   newUsers: UserDto[] = Array(5).fill([]).map(() => this.generateRandomUser()) as UserDto[];
   upcomingEvents: EventDto[] = Array(4).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
   recommendedCourses: CourseDto[] = Array(4).fill([]).map(() => this.generateRandomCourse()) as CourseDto[];
-  infiniteCourses: CourseDto[] = Array(4).fill([]).map(() => this.generateRandomCourse()) as CourseDto[];
   newArticles: ArticleDto[] =  Array(4).fill([]).map(() => this.generateRandomArticle()) as ArticleDto[];
   recommendedTutorials: VideoDto[] = Array(4).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
   newCoachings: CoachingDto[] = Array(4).fill([]).map(() => this.generateRandomCoaching()) as CoachingDto[];
 
-  isLoadingNewUsers = true;
-  isLoadingUpcomingEvents = true;
-  isLoadingRecommendedCourses = true;
-  isLoadingNewArticles = true;
-  isLoadingRecommendedTutorials = true;
-  isLoadingNewCoachings = true;
-  isLoading_infiniteCourses = true;
+  isLoading_newUsers = true;
+  isLoading_upcomingEvents = true;
+  isLoading_recommendedCourses = true;
+  isLoading_newArticles = true;
+  isLoading_recommendedTutorials = true;
+  isLoading_newCoachings = true;
 
-  infiniteCoursesMaxItems: number = 0;
+  newUsersMaxItems: number = 0;
+  upcomingEventsMaxItems: number = 0;
+  recommendedCoursesMaxItems: number = 0;
+  newArticlesMaxItems: number = 0;
+  recommendedTutorialsMaxItems: number = 0;
+  newCoachingsMaxItems: number = 0;
 
   constructor(
     injector: Injector,
@@ -48,108 +50,41 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadNewUsers();
-    this.loadUpcomingEvents();
-    this.loadRecommendedCourses();
-    this.loadNewArticles();
-    this.loadRecommendedTutorials();
-    this.loadNewCoachings();
-    this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'infiniteCourses');
-
+    this.loadInfiniteData(this._usersService, 'getAll', ['', true, 'creationTime desc', 0, 6], 'newUsers');
+    this.loadInfiniteData(this._eventsService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'upcomingEvents');
+    this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'recommendedCourses');
+    this.loadInfiniteData(this._articlesService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'newArticles');
+    this.loadInfiniteData(this._videoService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'recommendedTutorials');
+    this.loadInfiniteData(this._coachingsService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'newCoachings');
   }
 
-  private loadNewUsers(): void {
-    this.isLoadingNewUsers = true;
-    this._usersService.getAll('', true, 'creationTime desc', 0, 10)
-      .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this.isLoadingNewUsers = false))
-      .subscribe(users => {
-        this.newUsers = users?.items ?? [];
-      });
+  handleNewUsersRequestData(skipCount: number): void {
+    this.loadInfiniteData(this._usersService, 'getAll', ['', true, 'creationTime desc', skipCount, 6], 'newUsers');
   }
 
-  private loadUpcomingEvents(): void {
-    this.isLoadingUpcomingEvents = true;
-    this._eventsService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Monthly, 0, 10)
-      .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this.isLoadingUpcomingEvents = false))
-      .subscribe(pagedEvents => {
-        const events = pagedEvents;
-        if (events) {
-          this.upcomingEvents = [];
-          Object.keys(events).forEach(range => {
-            this.upcomingEvents = _.concat(this.upcomingEvents, events[range]?.items);
-          });
-        }
-    });
+  handleUpcomingEventsRequestData(skipCount: number): void {
+    const lastItem = this.upcomingEvents.slice(-1)[0];
+    this.loadInfiniteData(this._eventsService, 'getByDates', [this.appSession.userId, undefined, lastItem.creationTime, undefined, DateGrains.Aged30, skipCount, 4], 'upcomingEvents');
   }
 
-  private loadRecommendedCourses(): void {
-    this.isLoadingRecommendedCourses = true;
-    this._coursesService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Monthly, 0, 10)
-      .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this.isLoadingRecommendedCourses = false))
-      .subscribe(pagedCourses => {
-        const courses = pagedCourses;
-        if (courses) {
-          this.recommendedCourses = [];
-          Object.keys(courses).forEach(range => {
-            this.recommendedCourses = _.concat(this.recommendedCourses, courses[range]?.items);
-          });
-        }
-    });
+  handleRecommendedCoursesRequestData(skipCount: number): void {
+    const lastItem = this.recommendedCourses.slice(-1)[0];
+    this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, lastItem.creationTime, undefined, DateGrains.Aged30, skipCount, 4], 'recommendedCourses');
   }
 
-  private loadNewArticles(): void {
-    this.isLoadingNewArticles = true;
-    this._articlesService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Monthly, 0, 10)
-      .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this.isLoadingNewArticles = false))
-      .subscribe(articles => {
-        if (articles) {
-          this.newCoachings = [];
-            Object.keys(articles).forEach(range => {
-            this.newArticles =  _.concat(this.newArticles, articles[range]?.items);
-          });
-        }
-      });
+  handleNewArticlesRequestData(skipCount: number): void {
+    const lastItem = this.newArticles.slice(-1)[0];
+    this.loadInfiniteData(this._articlesService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, skipCount, 4], 'newArticles');
   }
 
-  private loadRecommendedTutorials(): void {
-    this.isLoadingRecommendedTutorials = true;
-    this._videoService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Monthly, 0, 10)
-      .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this.isLoadingRecommendedTutorials = false))
-      .subscribe(pagedVideos => {
-        const videos = pagedVideos;
-        if (videos) {
-          this.recommendedTutorials = [];
-          Object.keys(videos).forEach(range => {
-            this.recommendedTutorials =  _.concat(this.recommendedTutorials, videos[range]?.items);
-          });
-        }
-    });
+  handleRecommendedTutorialsRequestData(skipCount: number): void {
+    const lastItem = this.recommendedTutorials.slice(-1)[0];
+    this.loadInfiniteData(this._videoService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, skipCount, 4], 'recommendedTutorials');
   }
 
-  private loadNewCoachings(): void {
-    this.isLoadingNewCoachings = true;
-    this._coachingsService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Monthly, 0, 10)
-      .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this.isLoadingNewCoachings = false))
-      .subscribe(coachings => {
-        if (coachings) {
-          this.newCoachings = [];
-            Object.keys(coachings).forEach(range => {
-            this.newCoachings =  _.concat(this.newCoachings, coachings[range]?.items);
-          });
-        }
-      });
-  }
-
-
-  handleInfiniteCoursesRequestData(skipCount: number): void {
-    const lastItem = this.infiniteCourses.slice(-1)[0];
-    this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, lastItem.creationTime, undefined, DateGrains.Aged30, skipCount, 4], 'infiniteCourses');
+  handleNewCoachingsRequestData(skipCount: number): void {
+    const lastItem = this.newCoachings.slice(-1)[0];
+    this.loadInfiniteData(this._coachingsService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, skipCount, 4], 'newCoachings');
   }
 
   handleEventServiceCardClick(event: EventDto): void {
