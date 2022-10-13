@@ -11,6 +11,7 @@ import { Moment } from 'moment';
 import { Observable, ReplaySubject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { ArticleDto, ArticleType, CoachingDto, CoachingType, CourseDto, CourseType, DocumentDto, EventDto, EventType, PricingType, UserDto, VideoDto, VideoType, WorkshopDto, WorkshopType } from './service-proxies/service-proxies';
+import * as _ from 'lodash';
 
 @Injectable()
 export abstract class AppComponentBase implements OnDestroy {
@@ -459,5 +460,29 @@ export abstract class AppComponentBase implements OnDestroy {
     user.about = `Test about this user biography.`;
 
     return user;
+  }
+
+  loadInfiniteData(service: any, functionName: string, args: any[], destinationField: string): void {
+    this[`isLoading_${destinationField}`] = true;
+    service[functionName](...args)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this[`isLoading_${destinationField}`] = false))
+      .subscribe(newData => {
+
+        if (this[`${destinationField}MaxItems`] == 0)
+          this[destinationField] = []
+
+        const items = this.deepSearch(newData, 'items');
+        this[`${destinationField}MaxItems`] = this.deepSearch(newData, 'totalCount');
+        this[destinationField] = _.concat(this[destinationField], items);
+      });
+
+  }
+
+  private deepSearch(object, key) {
+    if (!(object instanceof Array)) object = [object];
+    for (const o of object)
+      if (key in o) return o[key]
+      else return this.deepSearch(Object.values(o), key);
   }
 }

@@ -16,11 +16,12 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
   @Input() numScroll: number = 1;
   @Input() visibleItems: number = 3;
   @Input() isInfiteScroll: boolean = false;
+  @Input() maxItems: number = 0;
 
   @Input() isFeatured: boolean = false;
   @Input() isLoading: boolean = false;
 
-  @Output() requestNewData: EventEmitter<boolean> = new EventEmitter();
+  @Output() onRequestNewData: EventEmitter<any> = new EventEmitter();
   @Output() onServiceCardClick: EventEmitter<any> = new EventEmitter();
 
   leftNav: HTMLElement;
@@ -53,6 +54,7 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
     if (this.leftNav) this._renderer.setStyle(this.leftNav, 'visibility', 'hidden');
 
     this.computeVisibleItems();
+    this.showNextButton();
   }
 
   ngOnInit() {}
@@ -80,21 +82,42 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
   onPage(event: any): void {
     if (this.isLastPage(event.page)) {
       if (this.isInfiteScroll == true) {
-        this.requestNewData.emit(true);
-        // this._renderer.setAttribute(this.rightNav, 'disabled', 'false');
+        this.showNextButton();
+        if (this.items?.length < this.maxItems) {
+          this.onRequestNewData.emit(this.items?.length);
+          this.pages = this.items.length - this.visibleItems;
+        }  else {
+          this.hideNextButton();
+        }
         this._renderer.removeAttribute(this.rightNav, 'disabled');
         this._renderer.removeClass(this.rightNav, 'p-disabled');
       } else {
-        this._renderer.setStyle(this.rightNav, 'visibility', 'hidden');
-        this._renderer.setStyle(this.leftNav, 'visibility', 'visible');
+        this.hideNextButton();
+        this.showPrevButton();
       }
     } else if (this.isFirstPage(event.page)) {
-      this._renderer.setStyle(this.rightNav, 'visibility', 'visible');
-      this._renderer.setStyle(this.leftNav, 'visibility', 'hidden');
+      this.showNextButton();
+      this.hidePrevButton();
     } else {
-      this._renderer.setStyle(this.rightNav, 'visibility', 'visible');
-      this._renderer.setStyle(this.leftNav, 'visibility', 'visible');
+      this.showNextButton();
+      this.showPrevButton();
     }
+  }
+
+  private hidePrevButton(): void {
+    this._renderer.setStyle(this.leftNav, 'visibility', 'hidden');
+  }
+
+  private showPrevButton(): void {
+    this._renderer.setStyle(this.leftNav, 'visibility', 'visible');
+  }
+
+  private hideNextButton(): void {
+    this._renderer.setStyle(this.rightNav, 'visibility', 'hidden');
+  }
+
+  private showNextButton(): void {
+    this._renderer.setStyle(this.rightNav, 'visibility', 'visible');
   }
 
   private isFirstPage(page: number): boolean {

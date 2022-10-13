@@ -63,6 +63,21 @@
           <app-carousel [items]="newCoachings" [isLoading]="isLoadingNewCoachings"></app-carousel>
         </ng-container>
 
+        <ng-container *ngIf="infiniteCourses?.length > 0">
+          <div class="row align-items-center" [style.marginTop.px]="45" [style.marginBottom.px]="25">
+            <div class="col d-flex flex-wrap align-items-center justify-content-between">
+              <span class="recommended-title">Latest Courses (Infinite scroll demo)</span>
+              <span class="view-all cursor-pointer" [routerLink]="['coachings']">View All <i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+          <app-carousel [items]="infiniteCourses"
+            [isLoading]="isLoading_infiniteCourses"
+            [isInfiteScroll]="true"
+            [maxItems]="infiniteCoursesMaxItems"
+            (onRequestNewData)="handleInfiniteCoursesRequestData($event)" >
+          </app-carousel>
+        </ng-container>
+
       </div>
     </div>
   </div>
