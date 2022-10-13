@@ -29,7 +29,18 @@
             <router-outlet></router-outlet>
         </div>
         <div class="community-content-right" [style.marginLeft.px]="24">
-            <app-community-side-card header="Topics you might like" [items]="suggestedTopics" [template]="topicsTemplate"></app-community-side-card>
+            <div>
+                <app-community-side-card header="Topics you might like" [items]="suggestedTopics" [template]="topicsTemplate"></app-community-side-card>
+            </div>
+
+            <div [style.marginTop.px]="44">
+                <app-community-side-card header="People to follow" [items]="peopleToFollow" [template]="peopleToFollowTemplate"></app-community-side-card>
+            </div>
+
+
+            <div [style.marginTop.px]="44">
+                <app-community-side-card header="Recommended courses" [items]="recommendedCourses" [template]="recommendedCoursesTemplate"></app-community-side-card>
+            </div>
 
             <ng-template #topicsTemplate let-item="item">
                 <div class="topic d-flex flex-row flex-nowrap">
@@ -37,8 +48,37 @@
                         <div class="topic-name">{{ item.topic }}</div>
                         <div class="topic-followers">{{ item.followers }} followers</div>
                     </div>
-                    <div class="topic-right">
+                    <div class="topic-right d-flex justify-content-center align-items-center">
                         <div type="button" class="btn btn-white topic-btn d-flex justify-content-center align-items-center">Follow</div>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template #peopleToFollowTemplate let-item="item">
+                <div class="people d-flex flex-row flex-nowrap">
+                    <div class="people-left flex-grow-1 d-flex flex-row flex-nowrap justify-content-center align-items-center">
+                        <div class="people-avatar d-flex justify-content-center align-items-center">
+                            <img [src]="getProfilePicture(item.profilePictureUrl)" class="avatar avatar-sm avatar-img rounded-circle" alt="profile" />
+                        </div>
+                        <div class="people-status flex-grow-1 ">
+                            <div class="people-status-name">{{ item.fullName }}</div>
+                            <div class="people-status-value"><span class="people-status-value-indicator">●</span>Online</div>
+                        </div>
+                    </div>
+                    <div class="people-right d-flex justify-content-center align-items-center">
+                        <div type="button" class="btn btn-white topic-btn d-flex justify-content-center align-items-center">Follow</div>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template #recommendedCoursesTemplate let-item="item">
+                <div class="course d-flex flex-row flex-nowrap">
+                    <div class="course-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
+                        <div class="course-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
+                    </div>
+                    <div class="course-right flex-grow-1 d-flex flex-column">
+                        <div class="course-name">{{ item.name }}</div>
+                        <div class="course-composition">{{ getCourseComposition(item) }}</div>
                     </div>
                 </div>
             </ng-template>
