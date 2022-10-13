@@ -2,10 +2,11 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ArticleDto, ArticlesServiceProxy, ArticleStatus, CoachingDto, CoachingsServiceProxy, CoachingStatus, CourseDto, CoursesServiceProxy, DateGrains, EventDto, EventsServiceProxy, UserDto, UserServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { finalize, last, takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-explore-for-you',
@@ -18,6 +19,7 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
   newUsers: UserDto[] = Array(5).fill([]).map(() => this.generateRandomUser()) as UserDto[];
   upcomingEvents: EventDto[] = Array(4).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
   recommendedCourses: CourseDto[] = Array(4).fill([]).map(() => this.generateRandomCourse()) as CourseDto[];
+  infiniteCourses: CourseDto[] = Array(4).fill([]).map(() => this.generateRandomCourse()) as CourseDto[];
   newArticles: ArticleDto[] =  Array(4).fill([]).map(() => this.generateRandomArticle()) as ArticleDto[];
   recommendedTutorials: VideoDto[] = Array(4).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
   newCoachings: CoachingDto[] = Array(4).fill([]).map(() => this.generateRandomCoaching()) as CoachingDto[];
@@ -28,6 +30,9 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
   isLoadingNewArticles = true;
   isLoadingRecommendedTutorials = true;
   isLoadingNewCoachings = true;
+  isLoading_infiniteCourses = true;
+
+  infiniteCoursesMaxItems: number = 0;
 
   constructor(
     injector: Injector,
@@ -49,6 +54,8 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
     this.loadNewArticles();
     this.loadRecommendedTutorials();
     this.loadNewCoachings();
+    this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'infiniteCourses');
+
   }
 
   private loadNewUsers(): void {
@@ -137,6 +144,12 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
           });
         }
       });
+  }
+
+
+  handleInfiniteCoursesRequestData(skipCount: number): void {
+    const lastItem = this.infiniteCourses.slice(-1)[0];
+    this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, lastItem.creationTime, undefined, DateGrains.Aged30, skipCount, 4], 'infiniteCourses');
   }
 
   handleEventServiceCardClick(event: EventDto): void {
