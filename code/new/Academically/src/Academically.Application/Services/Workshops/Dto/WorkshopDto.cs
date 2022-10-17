@@ -13,7 +13,7 @@ using System.Collections.Generic;
 namespace Academically.Services.Workshops.Dto
 {
     [AutoMapFrom(typeof(Workshop))]
-    public class WorkshopDto : EntityDto<Guid>, IHasTopic, IHasCreationTime
+    public class WorkshopDto : EntityDto<Guid>, IHasTopic, IHasThumbnail, IHasCreationTime, IHasPopularityWeight
     {
         public WorkshopType Type { get; set; }
         public WorkshopStatus Status { get; set; }
@@ -114,5 +114,7 @@ namespace Academically.Services.Workshops.Dto
         public UserDto CreatorUser { get; set; }
 
         public IEnumerable<WorkshopDto> Children { get; set; }
+        public int PopularityWeight { get; set; }
+        public string ThumbnailImageUrl { get; set; }
     }
 }
