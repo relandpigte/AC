@@ -23,16 +23,34 @@ namespace Academically.Services.DisciplineTaxonomies
             _disciplineTaxonomiesRepository = disciplineTaxonomiesRepository;
         }
 
-        public async Task<IEnumerable<DisciplineTaxonomyDto>> GetAll()
+        public async Task<IEnumerable<DisciplineTaxonomyDto>> GetAll(Guid? parentId, bool includeChildren)
+        {
+            var query = _disciplineTaxonomiesRepository.GetAll()
+                .Where(x => x.ParentId == parentId);
+
+            if (includeChildren)
+            {
+                query = _disciplineTaxonomiesRepository.GetAll()
+                    .Include(x => x.Children)
+                    .Where(x => x.ParentId == parentId);
+            }
+
+            query = query.OrderBy(x => x.Name);
+
+            var disciplineTaxonomies = await query.ToListAsync();
+            var result = disciplineTaxonomies.Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e));
+            return result;
+        }
+
+        public async Task<IEnumerable<DisciplineTaxonomyDto>> GetAllLastChildren()
         {
             var disciplineTaxonomies = await _disciplineTaxonomiesRepository.GetAll()
-                .Include(e => e.Children)
-                .OrderBy(e => e.Name)
-                .ToListAsync();
+                .Where(x => x.Children.Count() == 0)
+                .OrderBy(x => x.Name)
+                .ToListAsync(); 
 
-            var rootDisciplineTaxonomies = disciplineTaxonomies.Where(e => e.ParentId == null)
-                .Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e));
-            return rootDisciplineTaxonomies;
+            var result = disciplineTaxonomies.Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e));
+            return result;
         }
 
         public async Task<IEnumerable<DisciplineTaxonomyDto>> Search(string keyword)
