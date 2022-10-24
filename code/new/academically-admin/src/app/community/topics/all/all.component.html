@@ -1,6 +1,6 @@
 <div class="container-fluid all-topics d-flex flex-column flex-nowrap p-0">
     <div class="all-topics-content flex-grow-1">
-        <app-carousel customClass="wrap-around" [items]="parentTopics" [templateRef]="topicClusterRef1"></app-carousel>
+        <app-carousel customClass="wrap-around" [isLoading]="isLoadingParentTopics" [items]="parentTopics" [templateRef]="topicClusterRef1"></app-carousel>
     </div>
 
     <div class="all-topics-content flex-grow-1">
@@ -10,7 +10,7 @@
               <span class="all-topics-content-view-all cursor-pointer" [routerLink]="['events']">View All <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>
-        <app-carousel customClass="left-align peek-enabled items-content-90p" [items]="forYouTopics" [templateRef]="topicClusterRef2"></app-carousel>
+        <app-carousel customClass="left-align peek-enabled items-content-90p" [isLoading]="isLoadingForYouTopics" [items]="forYouTopics" [templateRef]="topicClusterRef2"></app-carousel>
     </div>
 
     <div *ngFor="let t of tailoredTopics | keyvalue" class="all-topics-content flex-grow-1">
@@ -20,22 +20,22 @@
               <span class="all-topics-content-view-all cursor-pointer" [routerLink]="['events']">View All <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>
-        <app-carousel customClass="left-align peek-enabled items-content-90p" [items]="t.value" [templateRef]="topicClusterRef1"></app-carousel>
+        <app-carousel customClass="left-align peek-enabled items-content-90p" [isLoading]="isLoadingTailoredTopics" [items]="t.value" [templateRef]="topicClusterRef1"></app-carousel>
     </div>
 </div>
 
-<ng-template #topicClusterRef1 let-items="item">
-    <app-card-cluster [templateRef]="topicTemplateRef1" [data]="items" [gap]="20" ></app-card-cluster>
+<ng-template #topicClusterRef1 let-items="item" let-isLoading="isLoading">
+    <app-card-cluster [templateRef]="topicTemplateRef1" [data]="items" [gap]="20" [isLoading]="isLoading"></app-card-cluster>
 </ng-template>
 
-<ng-template #topicTemplateRef1 let-item="item">
-    <app-topic-card [data]="item"></app-topic-card>
+<ng-template #topicTemplateRef1 let-item="item" let-isLoading="isLoading">
+    <app-topic-card [data]="item" [isLoading]="isLoading"></app-topic-card>
 </ng-template>
 
-<ng-template #topicClusterRef2 let-items="item">
-    <app-card-cluster [templateRef]="topicTemplateRef2" [data]="items" [gap]="20" ></app-card-cluster>
+<ng-template #topicClusterRef2 let-items="item" let-isLoading="isLoading">
+    <app-card-cluster [templateRef]="topicTemplateRef2" [data]="items" [gap]="20" [isLoading]="isLoading"></app-card-cluster>
 </ng-template>
 
-<ng-template #topicTemplateRef2 let-item="item">
-    <app-topic-card [data]="item" [showRemove]="true"></app-topic-card>
+<ng-template #topicTemplateRef2 let-item="item" let-isLoading="isLoading">
+    <app-topic-card [data]="item" [isLoading]="isLoading" [showRemove]="true"></app-topic-card>
 </ng-template>

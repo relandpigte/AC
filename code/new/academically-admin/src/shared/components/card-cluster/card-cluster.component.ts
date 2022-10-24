@@ -14,6 +14,7 @@ export class CardClusterComponent extends AppComponentBase {
     @Input() data: any[];
     @Input() templateRef: any;
     @Input() gap: number = 0;
+    @Input() isLoading = false;
 
     constructor(
         injector: Injector

@@ -1,16 +1,24 @@
 <div class="topic d-flex flex-row flex-nowrap align-items-center" [ngClass]="[customClass]" [class.parent]="isParent">
-    <div class="topic-left flex-grow-1">
-        <div class="topic-name"><span *ngIf="!isParent">#</span>{{ name }}</div>
-        <div *ngIf="isParent" class="topic-composition">{{ 'Community.Topics.Composition' | localize: composition }}</div>
-        <div *ngIf="!isParent" class="topic-followers">{{ 'Community.Topics.Followers' | localize: followers }}</div>
-    </div>
-    <div *ngIf="!isParent" class="topic-right d-flex flex-row flex-nowrap align-items-center">
-        <div class="topic-right-left align-items-center">
-            <div class="topic-right-left-follow"><i class="fas fa-plus"></i></div>
+    <ng-container *ngIf="isLoading">
+        <div class="d-flex flex-column flex-grow-1 gap-4">
+            <div class="topic-shimmer-bar" [style.width.%]="80" [style.minHeight.px]="isParent ? 20 : 16"></div>
+            <div class="topic-shimmer-bar" [style.width.%]="45" [style.minHeight.px]="isParent ? 14 : 12"></div>
         </div>
-        <div *ngIf="showRemove" class="topic-right-right d-flex flex-row flex-nowrap align-items-center">
-            <div class="topic-right-right-separator"></div>
-            <div class="topic-right-right-remove"><i class="fas fa-times"></i></div>
+    </ng-container>
+    <ng-container *ngIf="!isLoading">
+        <div class="topic-left flex-grow-1">
+            <div class="topic-name"><span *ngIf="!isParent">#</span>{{ name }}</div>
+            <div *ngIf="isParent" class="topic-composition">{{ 'Community.Topics.Composition' | localize: composition }}</div>
+            <div *ngIf="!isParent" class="topic-followers">{{ 'Community.Topics.Followers' | localize: followers }}</div>
         </div>
-    </div>
+        <div *ngIf="!isParent" class="topic-right d-flex flex-row flex-nowrap align-items-center">
+            <div class="topic-right-left align-items-center">
+                <div class="topic-right-left-follow"><i class="fas fa-plus"></i></div>
+            </div>
+            <div *ngIf="showRemove" class="topic-right-right d-flex flex-row flex-nowrap align-items-center">
+                <div class="topic-right-right-separator"></div>
+                <div class="topic-right-right-remove"><i class="fas fa-times"></i></div>
+            </div>
+        </div>
+    </ng-container>
 </div>

@@ -12,9 +12,9 @@ import * as _ from 'lodash';
 })
 export class AllComponent extends AppComponentBase implements OnInit {
 
-  parentTopics: any;
-  forYouTopics: any;
-  tailoredTopics: any;
+  parentTopics: any = this.chunkArrayInGroups(Array(12).fill([]).map(() => this.generateRandomTopic()), 3);
+  forYouTopics: any = this.chunkArrayInGroups(Array(15).fill([]).map(() => this.generateRandomTopic()), 3);
+  tailoredTopics: any = { 'Topic': this.chunkArrayInGroups(Array(15).fill([]).map(() => this.generateRandomCoaching()), 3) };
 
   isLoadingParentTopics = false;
   isLoadingForYouTopics = false;

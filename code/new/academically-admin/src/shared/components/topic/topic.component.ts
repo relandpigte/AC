@@ -15,6 +15,7 @@ export class TopicCardComponent extends AppComponentBase {
     @Input() data: any;
     @Input() customClass = '';
     @Input() showRemove = false;
+    @Input() isLoading = true;
 
     get isParent(): boolean { return this.data?.children?.length; }
     get name(): string { return this.data?.name; }

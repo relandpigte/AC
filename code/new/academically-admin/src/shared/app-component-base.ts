@@ -469,6 +469,10 @@ export abstract class AppComponentBase implements OnDestroy {
     return user;
   }
 
+  generateRandomTopic(): any {
+    return { name: 'Topic' };
+  }
+
   loadInfiniteData(service: any, functionName: string, args: any[], destinationField: string): void {
     this[`isLoading_${destinationField}`] = true;
     service[functionName](...args)
