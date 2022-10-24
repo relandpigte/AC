@@ -1,0 +1,23 @@
+import { Component, Injector, Input } from '@angular/core';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
+import { AppComponentBase } from '@shared/app-component-base';
+
+
+@Component({
+    selector: 'app-card-cluster',
+    templateUrl: './card-cluster.component.html',
+    styleUrls: ['./card-cluster.component.scss'],
+    animations: [appModuleAnimation()]
+})
+export class CardClusterComponent extends AppComponentBase {
+
+    @Input() data: any[];
+    @Input() templateRef: any;
+    @Input() gap: number = 0;
+
+    constructor(
+        injector: Injector
+    ) {
+        super(injector);
+    }
+}

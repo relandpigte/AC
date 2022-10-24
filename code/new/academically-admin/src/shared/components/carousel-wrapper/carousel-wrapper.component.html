@@ -8,9 +8,15 @@
   [indicatorsContentClass]="'hidden'"
   [ngClass]="[customClass]"
   (onPage)="onPage($event)">
+
   <ng-template let-content pTemplate="item">
 
-    <app-service-card [data]="content" [ngClass]="{'item-active': expression}" [isLoading]="isLoading" [isFeatured]="isFeatured" (onClick)="handleServiceCardClick($event)"></app-service-card>
+    <app-service-card *ngIf="!templateRef" [data]="content" [ngClass]="{'item-active': expression}" [isLoading]="isLoading" [isFeatured]="isFeatured" (onClick)="handleServiceCardClick($event)"></app-service-card>
+
+    <ng-container *ngIf="templateRef">
+      <ng-container *ngTemplateOutlet="templateRef; context: { item: content }"></ng-container>
+    </ng-container>
 
   </ng-template>
+
 </p-carousel>

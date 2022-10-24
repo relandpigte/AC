@@ -27,7 +27,9 @@ import { FixedHeightDirective } from './directives/fixed-height.directive';
 import { BottomScrollerDirective } from './directives/bottom-scroller.directive';
 import { SidebarCollapseDirective } from './directives/sidebar-collapse.directive';
 
+import { CardClusterComponent } from '../../shared/components/card-cluster/card-cluster.component';
 import { ServiceCardComponent } from '../../shared/components/service-card/service-card.component';
+import { TopicCardComponent } from '../../shared/components/topic/topic.component';
 import { DocumentUploaderComponent } from './components/document-uploader/document-uploader.component';
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
 import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
@@ -44,7 +46,10 @@ import {CarouselModule} from 'primeng/carousel';
     ImageCropperComponent,
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
+    CardClusterComponent,
     ServiceCardComponent,
+    TopicCardComponent,
+    CardClusterComponent,
     ColorPickerComponent,
     WhiteboardComponent,
     DateFormatPipe,
@@ -104,7 +109,9 @@ import {CarouselModule} from 'primeng/carousel';
     ImageCropperComponent,
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
+    CardClusterComponent,
     ServiceCardComponent,
+    TopicCardComponent,
     ColorPickerComponent,
     WhiteboardComponent,
     CalendarModule,

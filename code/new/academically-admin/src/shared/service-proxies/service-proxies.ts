@@ -7575,10 +7575,20 @@ export class DisciplineTaxonomiesServiceProxy {
     }
 
     /**
+     * @param parentId (optional) 
+     * @param includeChildren (optional) 
      * @return Success
      */
-    getAll(): Observable<DisciplineTaxonomyDto[]> {
-        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/GetAll";
+    getAll(parentId: string | undefined, includeChildren: boolean | undefined): Observable<DisciplineTaxonomyDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/GetAll?";
+        if (parentId === null)
+            throw new Error("The parameter 'parentId' cannot be null.");
+        else if (parentId !== undefined)
+            url_ += "parentId=" + encodeURIComponent("" + parentId) + "&";
+        if (includeChildren === null)
+            throw new Error("The parameter 'includeChildren' cannot be null.");
+        else if (includeChildren !== undefined)
+            url_ += "includeChildren=" + encodeURIComponent("" + includeChildren) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -7604,6 +7614,64 @@ export class DisciplineTaxonomiesServiceProxy {
     }
 
     protected processGetAll(response: HttpResponseBase): Observable<DisciplineTaxonomyDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(DisciplineTaxonomyDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DisciplineTaxonomyDto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAllLastChildren(): Observable<DisciplineTaxonomyDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/GetAllLastChildren";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllLastChildren(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllLastChildren(<any>response_);
+                } catch (e) {
+                    return <Observable<DisciplineTaxonomyDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DisciplineTaxonomyDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllLastChildren(response: HttpResponseBase): Observable<DisciplineTaxonomyDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -10996,6 +11064,111 @@ export class EventSessionsServiceProxy {
             }));
         }
         return _observableOf<EventUserDto[]>(<any>null);
+    }
+}
+
+@Injectable()
+export class EventsWorkshopsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param parentIdFilter (optional) 
+     * @param userIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param visible (optional) 
+     * @param open (optional) 
+     * @param statusFilter (optional) 0 = Draft
+    
+    1 = Published
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(parentIdFilter: string | undefined, userIdFilter: number | undefined, searchFilter: string | undefined, visible: boolean | undefined, open: boolean | undefined, statusFilter: EventStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ObjectPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventsWorkshops/GetAll?";
+        if (parentIdFilter === null)
+            throw new Error("The parameter 'parentIdFilter' cannot be null.");
+        else if (parentIdFilter !== undefined)
+            url_ += "ParentIdFilter=" + encodeURIComponent("" + parentIdFilter) + "&";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (visible === null)
+            throw new Error("The parameter 'visible' cannot be null.");
+        else if (visible !== undefined)
+            url_ += "Visible=" + encodeURIComponent("" + visible) + "&";
+        if (open === null)
+            throw new Error("The parameter 'open' cannot be null.");
+        else if (open !== undefined)
+            url_ += "Open=" + encodeURIComponent("" + open) + "&";
+        if (statusFilter === null)
+            throw new Error("The parameter 'statusFilter' cannot be null.");
+        else if (statusFilter !== undefined)
+            url_ += "StatusFilter=" + encodeURIComponent("" + statusFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<ObjectPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ObjectPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<ObjectPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ObjectPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ObjectPagedResultDto>(<any>null);
     }
 }
 
@@ -36959,6 +37132,61 @@ export enum NotificationSeverity {
     Fatal = 4,
 }
 
+export class ObjectPagedResultDto implements IObjectPagedResultDto {
+    items: any[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IObjectPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(item);
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): ObjectPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ObjectPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item);
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ObjectPagedResultDto {
+        const json = this.toJSON();
+        let result = new ObjectPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IObjectPagedResultDto {
+    items: any[] | undefined;
+    totalCount: number;
+}
+
 /** 0 = None 1 = In 2 = Out 4 = Lcid 8 = Retval 16 = Optional 4096 = HasDefault 8192 = HasFieldMarshal 16384 = Reserved3 32768 = Reserved4 61440 = ReservedMask */
 export enum ParameterAttributes {
     None = 0,
@@ -47134,6 +47362,8 @@ export class WorkshopDto implements IWorkshopDto {
     language: SpokenLanguageDto;
     creatorUser: UserDto;
     children: WorkshopDto[] | undefined;
+    popularityWeight: number;
+    thumbnailImageUrl: string | undefined;
 
     constructor(data?: IWorkshopDto) {
         if (data) {
@@ -47247,6 +47477,8 @@ export class WorkshopDto implements IWorkshopDto {
                 for (let item of _data["children"])
                     this.children.push(WorkshopDto.fromJS(item));
             }
+            this.popularityWeight = _data["popularityWeight"];
+            this.thumbnailImageUrl = _data["thumbnailImageUrl"];
         }
     }
 
@@ -47360,6 +47592,8 @@ export class WorkshopDto implements IWorkshopDto {
             for (let item of this.children)
                 data["children"].push(item.toJSON());
         }
+        data["popularityWeight"] = this.popularityWeight;
+        data["thumbnailImageUrl"] = this.thumbnailImageUrl;
         return data; 
     }
 
@@ -47469,6 +47703,8 @@ export interface IWorkshopDto {
     language: SpokenLanguageDto;
     creatorUser: UserDto;
     children: WorkshopDto[] | undefined;
+    popularityWeight: number;
+    thumbnailImageUrl: string | undefined;
 }
 
 export class WorkshopDtoPagedResultDto implements IWorkshopDtoPagedResultDto {

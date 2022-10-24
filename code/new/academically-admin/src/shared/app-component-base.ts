@@ -212,6 +212,13 @@ export abstract class AppComponentBase implements OnDestroy {
     return `${user.name.charAt(0)}${user.surname.charAt(0)}`;
   }
 
+  protected chunkArrayInGroups(arr, size) {
+    var result = [];
+    for (var i=0; i<arr.length; i+=size)
+      result.push(arr.slice(i, i+size));
+    return result;
+  }
+
   protected uuidv4(): string {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
       /[xy]/g,

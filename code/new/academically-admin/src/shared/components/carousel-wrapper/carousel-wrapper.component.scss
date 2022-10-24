@@ -13,19 +13,19 @@
 
     &:hover {
         .p-carousel-prev {
-            visibility: visible;
-            opacity: 1;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
 
         .p-carousel-next {
-            visibility: visible;
-            opacity: 1;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
     }
 
     .p-carousel-prev {
-        visibility: hidden;
-        opacity: 0;
+        visibility: hidden !important;
+        opacity: 0 !important;
         background-image: url('../../../assets/img/icon-carousel-left.png') !important;
         background-size: cover !important;
         width: 56px !important;
@@ -54,7 +54,8 @@
     }
 
     .p-carousel-next {
-        visibility: hidden;
+        visibility: hidden !important;
+        opacity: 0 !important;
         background-image: url('../../../assets/img/icon-carousel-right.png') !important;
         background-size: cover !important;
         width: 56px !important;
@@ -84,23 +85,32 @@
 }
 
 ::ng-deep p-carousel.wrap-around .p-carousel-container {
-    .p-carousel-item-start app-service-card {
+    .p-carousel-item app-service-card,
+    .p-carousel-item app-topic-card {
+        justify-content: center !important;
+    }
+
+    .p-carousel-item-start app-service-card,
+    .p-carousel-item-start app-topic-card {
         justify-content: flex-start !important;
     }
 
-    .p-carousel-item-end app-service-card {
+    .p-carousel-item-end app-service-card,
+    .p-carousel-item-end app-topic-card {
         justify-content: flex-end !important;
     }
 }
 
 ::ng-deep p-carousel.left-align .p-carousel-container {
-    .p-carousel-item app-service-card {
+    .p-carousel-item app-service-card,
+    .p-carousel-item app-topic-card {
         justify-content: flex-start !important;
     }
 }
 
 ::ng-deep p-carousel.right-align .p-carousel-container {
-    .p-carousel-item app-service-card {
+    .p-carousel-item app-service-card,
+    .p-carousel-item app-topic-card {
         justify-content: flex-end !important;
     }
 }

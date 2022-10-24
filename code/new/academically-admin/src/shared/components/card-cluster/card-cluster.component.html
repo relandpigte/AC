@@ -1,0 +1,5 @@
+<div class="cluster d-flex flex-column flex-nowrap" [style.gap.px]="gap">
+    <ng-container *ngFor="let i of data">
+        <ng-container *ngTemplateOutlet="templateRef; context: { item: i }"></ng-container>
+    </ng-container>
+</div>

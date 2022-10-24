@@ -1,0 +1,99 @@
+:host {
+    display: flex;
+    &:hover {
+        .service-card {
+            box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+        }
+    }
+}
+
+.topic {
+    padding: 8px 20px;
+    width: 240px;
+    height: 55px;
+    background-color: #FFFFFF;
+    border: 1px solid #D2DDEC;
+    border-radius: 15px;
+
+    &.parent {
+        cursor: pointer;
+        padding: 23px;
+        width: 257px;
+        height: 88px;
+        border-radius: 10px;
+        background-color: #2C7BE5;
+    }
+
+    &-name {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: normal;
+        color: #12263F;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        .parent & {
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 25px;
+            letter-spacing: -0.02em;
+            color: #FFFFFF;
+        }
+    }
+
+    &-composition {
+        font-weight: 600;
+        font-size: 11px;
+        line-height: normal;
+        letter-spacing: 0.08em;
+        text-transform: capitalize;
+        color: #EDF2F9;
+    }
+
+    &-followers {
+        font-weight: 400;
+        font-size: 11px;
+        line-height: normal;
+        margin-top: -2px;
+        color: #6E84A3;
+    }
+
+    &-left {
+        width: 55%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    &-right {
+        &-left {
+            &-follow {
+                cursor: pointer;
+                font-weight: 400;
+                font-size: 15px;
+                color: #2C7BE5;
+                margin-left: 15px;
+            }
+        }
+
+        &-right {
+
+            &-separator {
+                width: 1px;
+                height: 9px;
+                border-right: 1px solid #6FCF97;
+                margin-left: 15px;
+            }
+
+            &-remove {
+                cursor: pointer;
+                opacity: 0.8;
+                font-weight: 400;
+                font-size: 15px;
+                color: #B1C2D9;
+                margin-left: 15px;
+            }
+        }
+    }
+}

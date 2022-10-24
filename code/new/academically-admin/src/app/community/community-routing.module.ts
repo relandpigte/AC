@@ -18,23 +18,30 @@ import { AppRouteGuard } from '@shared/auth/auth-route-guard';
             component: CommunityComponent,
             children: [
                 {
-                    path: 'following',
-                    loadChildren: () =>
-                      import('@app/community/following/following.module').then(
-                        (m) => m.FollowingModule
-                      ),
-                  },
-                  {
-                    path: 'popular',
-                    loadChildren: () =>
-                      import('@app/community/popular/popular.module').then(
-                        (m) => m.PopularModule
-                      ),
-                  },
+                  path: 'following',
+                  loadChildren: () =>
+                    import('@app/community/following/following.module').then(
+                      (m) => m.FollowingModule
+                    ),
+                },
+                {
+                  path: 'popular',
+                  loadChildren: () =>
+                    import('@app/community/popular/popular.module').then(
+                      (m) => m.PopularModule
+                    ),
+                }
             ]
           },
         ],
-      }
+      },
+      {
+        path: 'topics',
+        loadChildren: () =>
+          import('./topics/topics.module').then(
+            (m) => m.TopicsModule
+          ),
+      },
     ]),
   ],
   exports: [

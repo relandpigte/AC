@@ -199,18 +199,6 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
                 (m) => m.ArticlesModule
               ),
           },
-          {
-            path: 'topics',
-            children: [
-              {
-                path: 'usage',
-                loadChildren: () =>
-                  import('@app/topics/usage/usage.module').then(
-                    (m) => m.UsageModule
-                  ),
-              }
-            ]
-          },
           { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
           { path: 'about', component: AboutComponent },
           { path: 'update-password', component: ChangePasswordComponent },

@@ -254,6 +254,7 @@
     <text name="NoRelatedVideo">No related video</text>
     <text name="Related">Related</text>
     <text name="Follow">Follow</text>
+	<text name="Following">Following</text>
     <text name="Share">Share</text>
     <text name="Purchased">Purchased</text>
     <text name="Saved">Saved</text>
@@ -1876,6 +1877,12 @@
 	<!-- For You -->
 	<text name="Explore">Explore</text>
 	<text name="ForYou">For You</text>
+	<!-- Community -->
+	<text name="Community.Header">Community</text>
+	<text name="Community.Topics">Topics</text>
+	<text name="Community.Topics.AllTopics">All Topics</text>
+	<text name="Community.Topics.Composition">{0} Topics</text>
+	<text name="Community.Topics.Followers">{0} followers</text>
 	<!-- Events -->
 	<text name="EventsSchedule">From {0}</text>
 	  

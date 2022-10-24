@@ -8,6 +8,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 import { LocalizePipe } from '@shared/pipes/localize.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+import { ShortNumPipe } from './pipes/short-num.pipe';
 import { EqualValidator } from './directives/equal-validator.directive';
 import { UniqueEmailValidator } from './directives/unique-email-validator.directive';
 import { BusyDirective } from './directives/busy.directive';
@@ -43,6 +44,7 @@ import { PasswordToggleComponent } from './components/password-toggle/password-t
   declarations: [
     LocalizePipe,
     SafeHtmlPipe,
+    ShortNumPipe,
     EqualValidator,
     UniqueEmailValidator,
     BusyDirective,
@@ -63,6 +65,7 @@ import { PasswordToggleComponent } from './components/password-toggle/password-t
     BsDatepickerModule,
     LocalizePipe,
     SafeHtmlPipe,
+    ShortNumPipe,
     EqualValidator,
     UniqueEmailValidator,
     BusyDirective,

@@ -84,6 +84,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.WorkshopsServiceProxy,
         ApiServiceProxies.WorkshopPollsServiceProxy,
         ApiServiceProxies.WorkshopResourcesServiceProxy,
+        ApiServiceProxies.DisciplineTaxonomiesServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

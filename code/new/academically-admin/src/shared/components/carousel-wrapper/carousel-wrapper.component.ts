@@ -11,14 +11,14 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
   private MIN_ITEMS = 3;
 
   @Input() items: any[] = [];
+  @Input() templateRef: any;
   @Input() circular: boolean = false;
   @Input() autoplayInterval: number = 0;
   @Input() numScroll: number = 1;
   @Input() displayItems: number;
   @Input() isInfiteScroll: boolean = false;
   @Input() maxItems: number = 0;
-  @Input() customClass: string = 'w100p wrap-around btn-overflow';
-
+  @Input() customClass: string = 'wrap-around btn-overflow';
   @Input() isFeatured: boolean = false;
   @Input() isLoading: boolean = false;
 
@@ -73,16 +73,20 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
     }
     if (this.windowResizeInterval$) clearTimeout(this.windowResizeInterval$);
     this.windowResizeInterval$ = setTimeout(() => {
-      const serviceCard = this._elRef.nativeElement.querySelector('.service-card');
-      if (serviceCard) {
-        const containerWidth = this._elRef.nativeElement.getBoundingClientRect().width;
-        const cardWidth = serviceCard.getBoundingClientRect().width;
-        this.visibleItems = Math.floor(containerWidth / cardWidth);
+      const item = this._elRef.nativeElement.querySelector('.service-card') ?? this._elRef.nativeElement.querySelector('.topic') ??
+        this._elRef.nativeElement.querySelector('.cluster') ;
+      if (!item) {
+        this.computeVisibleItems();
+        return;
       }
+
+      const containerWidth = this._elRef.nativeElement.getBoundingClientRect().width;
+      const cardWidth = item.getBoundingClientRect().width;
+      this.visibleItems = Math.floor(containerWidth / cardWidth);
       this.pages = this.items.length - this.visibleItems;
       this.renderCarousel = false;
       setTimeout(() => this.renderCarousel = true, 100);
-    }, 100);
+    });
   }
 
   onPage(event: any): void {
