@@ -32,7 +32,7 @@
         height: 56px !important;
         position: absolute;
         top: 48%;
-        left: -38px;
+        left: 0;
         transform: translateY(-50%);
         z-index: 999;
 
@@ -61,7 +61,7 @@
         height: 56px !important;
         position: absolute;
         top: 48%;
-        right: -38px;
+        right: 0;
         transform: translateY(-50%);
         z-index: 999;
 
@@ -81,7 +81,9 @@
             display: none;
         }
     }
+}
 
+::ng-deep p-carousel.wrap-around .p-carousel-container {
     .p-carousel-item-start app-service-card {
         justify-content: flex-start !important;
     }
@@ -91,4 +93,56 @@
     }
 }
 
+::ng-deep p-carousel.left-align .p-carousel-container {
+    .p-carousel-item app-service-card {
+        justify-content: flex-start !important;
+    }
+}
+
+::ng-deep p-carousel.right-align .p-carousel-container {
+    .p-carousel-item app-service-card {
+        justify-content: flex-end !important;
+    }
+}
+
+::ng-deep p-carousel.btn-overflow .p-carousel-container {
+    .p-carousel-prev {
+        left: -38px;
+    }
+
+    .p-carousel-next {
+        right: -38px;
+    }
+}
+
+::ng-deep p-carousel.peek-enabled {
+    .p-carousel-container {
+        width: 100% !important;
+        margin: auto;
+        overflow: hidden !important;
+    }
+
+    .p-carousel-items-content {
+        overflow: visible !important;
+        width: 80% !important;
+    }
+
+    .p-carousel-content::-webkit-scrollbar {
+        display: none;
+    }
+
+    .p-carousel-content {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+}
+
+@for $i from 1 through 50 {
+    $value: $i * 2;
+    ::ng-deep p-carousel.items-content-#{$value}p {
+        .p-carousel-items-content {
+            width: $value * 1% !important;
+        }
+    }
+}
 

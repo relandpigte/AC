@@ -14,9 +14,10 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
   @Input() circular: boolean = false;
   @Input() autoplayInterval: number = 0;
   @Input() numScroll: number = 1;
-  @Input() visibleItems: number = 3;
+  @Input() displayItems: number;
   @Input() isInfiteScroll: boolean = false;
   @Input() maxItems: number = 0;
+  @Input() customClass: string = 'w100p wrap-around btn-overflow';
 
   @Input() isFeatured: boolean = false;
   @Input() isLoading: boolean = false;
@@ -27,6 +28,7 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
   leftNav: HTMLElement;
   rightNav: HTMLElement;
 
+  visibleItems: number = 3;
   pages: number = 0;
 
   windowResizeInterval$: any;
@@ -65,6 +67,10 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
   }
 
   private computeVisibleItems(): void {
+    if (this.displayItems) {
+      this.visibleItems = this.displayItems;
+      return;
+    }
     if (this.windowResizeInterval$) clearTimeout(this.windowResizeInterval$);
     this.windowResizeInterval$ = setTimeout(() => {
       const serviceCard = this._elRef.nativeElement.querySelector('.service-card');
