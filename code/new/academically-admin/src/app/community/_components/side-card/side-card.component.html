@@ -1,10 +1,10 @@
 <div class="side-card">
     <div class="side-card-header d-flex flex-row flex-nowrap justify-content-between">
         <div class="side-card-header-title">{{ header }}</div>
-        <div class="side-card-header-view-all cursor-pointer">View All</div>
+        <div class="side-card-header-view-all cursor-pointer" (click)="handleViewAllClick()">View All</div>
     </div>
     <div class="side-card-items">
-        <div *ngFor="let row of items" class="side-card-items-row">
+        <div *ngFor="let row of items" class="side-card-items-row" (click)="handleItemClick(row)">
             <ng-container *ngTemplateOutlet="template; context: { item: row }"></ng-container>
         </div>
     </div>

@@ -1,10 +1,11 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CourseDto, CoursesServiceProxy, DateGrains, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, ArticlesServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, EventDto, EventsServiceProxy, UserDto, UserServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-community',
@@ -18,13 +19,20 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   suggestedTopics: { topic: string, followers: number }[] = [];
   peopleToFollow: UserDto[] = [];
   recommendedCourses: CourseDto[] = [];
+  recommendedArticles: ArticleDto[] = [];
+  recommendedEvents: EventDto[] = [];
+  recommendedTutorials: VideoDto[] = [];
 
   get topics(): string[] { return ['Test', 'Sample 10122022', 'Astronomy', 'Biology', 'Fiction']; }
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _usersService: UserServiceProxy,
-    private _coursesService: CoursesServiceProxy
+    private _coursesService: CoursesServiceProxy,
+    private _articlesService: ArticlesServiceProxy,
+    private _eventsService: EventsServiceProxy,
+    private _videosService: VideosServiceProxy
   ) {
     super(injector);
   }
@@ -33,14 +41,51 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     this.getSuggestedTopics();
     this.getPeopleToFollow();
     this.getRecommendedCourses();
+    this.getRecommendedArticles();
+    this.getRecommendedEvents();
+    this.getRecommendedTutorials();
   }
 
   handleFilterTopics(topics: string[]): void {
     this.selectedTopics = topics;
   }
 
+  handleViewAllClick(type: string): void {
+    switch(type) {
+      case 'topics':
+        break;
+      default:
+        this._router.navigate(['app', 'explore', type]);
+    }
+  }
+
+  handleItemClick(type: string, item: any): void {
+    switch(type) {
+      case 'topics':
+        break;
+      case 'user':
+        break;
+      case 'courses':
+        break;
+      case 'articles':
+        break;
+      case 'events':
+        break;
+      case 'tutorials':
+        break;
+    }
+  }
+
   getCourseThumbnail(course: CourseDto): string {
     return course.thumbnailImageUrl ?? 'assets/img/img-placeholder.png';
+  }
+
+  getArticleAuthorAvatar(article: ArticleDto): string {
+    return article.creatorUser?.profilePictureUrl ?? 'assets/img/avatar-placeholder.png';
+  }
+
+  getEventThumbnail(event: EventDto): string {
+    return event.thumbnailImageUrl ?? 'assets/img/img-placeholder.png';
   }
 
   getCourseComposition(course: CourseDto): string {
@@ -62,7 +107,10 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   getPeopleToFollow(): void {
     this._usersService.getAll('', true, 'creationTime desc', 0, 4)
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(pagedUsers => this.peopleToFollow = pagedUsers.items ?? [])
+      .subscribe(pagedUsers => {
+        this.peopleToFollow = pagedUsers.items ?? [];
+        this.peopleToFollow = _.take(this.peopleToFollow, 4);
+      });
   }
 
   getRecommendedCourses(): void {
@@ -74,9 +122,55 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
           this.recommendedCourses = [];
           Object.keys(courses).forEach(range => {
             this.recommendedCourses = _.concat(this.recommendedCourses, courses[range]?.items);
+            this.recommendedCourses = _.take(this.recommendedCourses, 4);
           });
         }
       });
+  }
+
+  getRecommendedArticles(): void {
+    this._articlesService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4)
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(pagedArticles => {
+      const articles = pagedArticles;
+      if (articles) {
+        this.recommendedArticles = [];
+        Object.keys(articles).forEach(range => {
+          this.recommendedArticles = _.concat(this.recommendedArticles, articles[range]?.items);
+          this.recommendedArticles = _.take(this.recommendedArticles, 4);
+        });
+      }
+    });
+  }
+
+  getRecommendedEvents(): void {
+    this._eventsService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4)
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(pagedEvents => {
+      const events = pagedEvents;
+      if (events) {
+        this.recommendedEvents = [];
+        Object.keys(events).forEach(range => {
+          this.recommendedEvents = _.concat(this.recommendedEvents, events[range]?.items);
+          this.recommendedEvents = _.take(this.recommendedEvents, 4);
+        });
+      }
+    });
+  }
+
+  getRecommendedTutorials(): void {
+    this._videosService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4)
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(pagedTutorials => {
+      const tutorials = pagedTutorials;
+      if (tutorials) {
+        this.recommendedTutorials = [];
+        Object.keys(tutorials).forEach(range => {
+          this.recommendedTutorials = _.concat(this.recommendedTutorials, tutorials[range]?.items);
+          this.recommendedTutorials = _.take(this.recommendedTutorials, 4);
+        });
+      }
+    });
   }
 
 }

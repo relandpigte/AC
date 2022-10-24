@@ -14,6 +14,7 @@ export class CommunitySideCardComponent extends AppComponentBase implements Afte
     @Input() items: any[] = [];
     @Input() template: any;
 
+    @Output() onClickItem: EventEmitter<any> = new EventEmitter();
     @Output() onViewAll: EventEmitter<any> = new EventEmitter();
 
     constructor(
@@ -24,5 +25,13 @@ export class CommunitySideCardComponent extends AppComponentBase implements Afte
     }
 
     ngAfterViewInit(): void {
+    }
+
+    handleItemClick(row: any): void {
+        this.onClickItem.emit(row);
+    }
+
+    handleViewAllClick(): void {
+        this.onViewAll.emit();
     }
 }

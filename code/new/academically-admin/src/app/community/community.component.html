@@ -30,16 +30,63 @@
         </div>
         <div class="community-content-right" [style.marginLeft.px]="24">
             <div>
-                <app-community-side-card header="Topics you might like" [items]="suggestedTopics" [template]="topicsTemplate"></app-community-side-card>
+                <app-community-side-card
+                    header="Topics you might like"
+                    [items]="suggestedTopics"
+                    [template]="topicsTemplate"
+                    (onClickItem)="handleItemClick($event, 'topics')"
+                    (onViewAll)="handleViewAllClick('topics')"
+                ></app-community-side-card>
             </div>
 
             <div [style.marginTop.px]="44">
-                <app-community-side-card header="People to follow" [items]="peopleToFollow" [template]="peopleToFollowTemplate"></app-community-side-card>
+                <app-community-side-card
+                    header="People to follow"
+                    [items]="peopleToFollow"
+                    [template]="peopleToFollowTemplate"
+                    (onClickItem)="handleItemClick($event, 'users')"
+                    (onViewAll)="handleViewAllClick('users')"
+                ></app-community-side-card>
             </div>
 
+            <div [style.marginTop.px]="44">
+                <app-community-side-card
+                    header="Recommended courses"
+                    [items]="recommendedCourses"
+                    [template]="recommendedCoursesTemplate"
+                    (onClickItem)="handleItemClick($event, 'courses')"
+                    (onViewAll)="handleViewAllClick('courses')"
+                ></app-community-side-card>
+            </div>
 
             <div [style.marginTop.px]="44">
-                <app-community-side-card header="Recommended courses" [items]="recommendedCourses" [template]="recommendedCoursesTemplate"></app-community-side-card>
+                <app-community-side-card
+                    header="Recommended articles"
+                    [items]="recommendedArticles"
+                    [template]="recommendedArticlesTemplate"
+                    (onClickItem)="handleItemClick($event, 'articles')"
+                    (onViewAll)="handleViewAllClick('articles')"
+                ></app-community-side-card>
+            </div>
+
+            <div [style.marginTop.px]="44">
+                <app-community-side-card
+                    header="Recommended events"
+                    [items]="recommendedEvents"
+                    [template]="recommendedEventsTemplate"
+                    (onClickItem)="handleItemClick($event, 'events')"
+                    (onViewAll)="handleViewAllClick('events')"
+                ></app-community-side-card>
+            </div>
+
+            <div [style.marginTop.px]="44">
+                <app-community-side-card
+                    header="Recommended tutorials"
+                    [items]="recommendedTutorials"
+                    [template]="recommendedTutorialsTemplate"
+                    (onClickItem)="handleItemClick($event, 'tutorials')"
+                    (onViewAll)="handleViewAllClick('tutorials')"
+                ></app-community-side-card>
             </div>
 
             <ng-template #topicsTemplate let-item="item">
@@ -79,6 +126,41 @@
                     <div class="course-right flex-grow-1 d-flex flex-column">
                         <div class="course-name">{{ item.name }}</div>
                         <div class="course-composition">{{ getCourseComposition(item) }}</div>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template #recommendedArticlesTemplate let-item="item">
+                <div class="article d-flex flex-row flex-nowrap">
+                    <div *ngIf="item.creatorUser" class="article-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
+                        <div class="article-author bg-center flex-grow-1 avatar avatar-sm" [alt]="item.creatorUser?.fullName" [ngStyle]="{ 'background-image': 'url(\'' + getArticleAuthorAvatar(item) + '\')' }" ></div>
+                    </div>
+                    <div class="article-right flex-grow-1 d-flex flex-column justify-content-center">
+                        <div class="article-name">{{ item.name }}</div>
+                        <div class="article-description"><span *ngIf="item.creatorUser">{{ item.creatorUser.fullName | titleCase }} | </span>{{ item.description }}</div>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template #recommendedEventsTemplate let-item="item">
+                <div class="event d-flex flex-row flex-nowrap">
+                    <div class="event-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
+                        <div class="event-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
+                    </div>
+                    <div class="event-right flex-grow-1 d-flex flex-column">
+                        <div *ngIf="item.eventDateTime || item.workshopDateTime" class="event-schedule">{{ 'EventsSchedule' | localize: ((item.eventDateTime ? item.eventDateTime : item.workshopDateTime) | date:'HH:mm, dd LLL, yyyy' ) }}</div>
+                        <div class="event-name">{{ item.name }}</div>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template #recommendedTutorialsTemplate let-item="item">
+                <div class="tutorial d-flex flex-row flex-nowrap">
+                    <div class="tutorial-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
+                        <div class="tutorial-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
+                    </div>
+                    <div class="tutorial-right flex-grow-1 d-flex flex-column">
+                        <div class="tutorial-name">{{ item.name }}</div>
                     </div>
                 </div>
             </ng-template>

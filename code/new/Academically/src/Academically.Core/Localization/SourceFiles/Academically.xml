@@ -1876,6 +1876,11 @@
 	<!-- For You -->
 	<text name="Explore">Explore</text>
 	<text name="ForYou">For You</text>
+	<!-- Events -->
+	<text name="EventsSchedule">From {0}</text>
+	  
+	  
+	  
   <text name="LiveNow">Live now</text>
   <text name="ToStart">{0} to start</text>
   <text name="LastActive">Active {0}</text>
