@@ -28,6 +28,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<ResearchMethod> ResearchMethods { get; set; }
         public virtual DbSet<UserResearchMethodology> UserResearchMethodologies { get; set; }
         public virtual DbSet<UserResearchMethodologyResearchMethod> UserResearchMethodologyResearchMethods { get; set; }
+        public virtual DbSet<UserTopic> UserTopics { get; set; }
         public virtual DbSet<PublicationTag> PublicationTags { get; set; }
         public virtual DbSet<UserPublication> UserPublications { get; set; }
         public virtual DbSet<UserPublicationTag> UserPublicationTags { get; set; }

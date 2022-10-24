@@ -223,6 +223,11 @@ namespace Academically.Authorization
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
 
             context.CreatePermission(PermissionNames.Pages_Community, L("Community"));
+
+            var userTopicPermission = context.CreatePermission(PermissionNames.Pages_Community_UserTopics, L("UserTopics"));
+            userTopicPermission.CreateChildPermission(PermissionNames.Pages_Community_UserTopics_Create, L("Create"));
+            userTopicPermission.CreateChildPermission(PermissionNames.Pages_Community_UserTopics_Delete, L("Update"));
+            userTopicPermission.CreateChildPermission(PermissionNames.Pages_Community_UserTopics_Update, L("Delete"));
         }
 
         private static ILocalizableString L(string name)
