@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="Jabbar Daomilang" id="1">
+        <createTable tableName="academicallyusertopics">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DisciplineTaxonomyId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Jabbar Daomilang" id="2">
+        <createIndex indexName="IX_AUT_Users_UserId" tableName="academicallyusertopics">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Jabbar Daomilang" id="3">
+        <createIndex indexName="IX_AUT_DisciplineTaxonomies_DisciplineTaxonomyId" tableName="academicallyusertopics">
+            <column name="DisciplineTaxonomyId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Jabbar Daomilang" id="4">
+        <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="academicallyusertopics" constraintName="FK_AUT_Users_UserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    <changeSet author="Jabbar Daomilang" id="5">
+        <addForeignKeyConstraint baseColumnNames="DisciplineTaxonomyId" baseTableName="academicallyusertopics" constraintName="FK_AUT_DisciplineTaxonomies_DisciplineTaxonomyId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="AcademicallyDisciplineTaxonomies" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

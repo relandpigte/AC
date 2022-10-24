@@ -217,5 +217,9 @@
 
         public const string Pages_Community = "Pages.Community";
 
+        public const string Pages_Community_UserTopics = "Pages.Community.UserTopics";
+        public const string Pages_Community_UserTopics_Create = "Pages.Community.UserTopics.Create";
+        public const string Pages_Community_UserTopics_Update = "Pages.Community.UserTopics.Update";
+        public const string Pages_Community_UserTopics_Delete = "Pages.Community.UserTopics.Delete";
     }
 }

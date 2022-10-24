@@ -248,7 +248,11 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Forums_Create,
                 PermissionNames.Pages_Forums_Update,
                 PermissionNames.Pages_Forums_Delete,
-                PermissionNames.Pages_Community
+                PermissionNames.Pages_Community,
+                PermissionNames.Pages_Community_UserTopics,
+                PermissionNames.Pages_Community_UserTopics_Create,
+                PermissionNames.Pages_Community_UserTopics_Update,
+                PermissionNames.Pages_Community_UserTopics_Delete
             );
 
             #endregion
@@ -353,7 +357,11 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Forums_Delete,
                 PermissionNames.Pages_Events,
                 PermissionNames.Pages_Events_StudentPortal,
-                PermissionNames.Pages_Community
+                PermissionNames.Pages_Community,
+                PermissionNames.Pages_Community_UserTopics,
+                PermissionNames.Pages_Community_UserTopics_Create,
+                PermissionNames.Pages_Community_UserTopics_Update,
+                PermissionNames.Pages_Community_UserTopics_Delete
             );
 
             #endregion
