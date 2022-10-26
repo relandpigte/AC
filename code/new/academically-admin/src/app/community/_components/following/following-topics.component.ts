@@ -1,5 +1,10 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { Utils } from '@shared/helpers/utils';
+import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, GetDisciplineTaxonomyFollowerCountDto, UserTopicDto, UserTopicsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { finalize, switchMap, takeUntil } from 'rxjs/operators';
+
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-following-topics',
@@ -7,12 +12,75 @@ import { AppComponentBase } from '@shared/app-component-base';
     styleUrls: ['./following-topics.component.scss']
 })
 export class FollowingTopicsComponent extends AppComponentBase implements OnInit {
+
+    userTopics: UserTopicDto[];
+    displayedUserTopics: DisciplineTaxonomyDto[];
+
+    followers: GetDisciplineTaxonomyFollowerCountDto[] = [];
+    followersMap: Map<string, number> = new Map();
+
+    searchFilter: string;
+
+    isLoadingUserTopics = false;
+    isUnfollowingTopic = false;
+    isSearching = false;
+
     constructor(
-        injector: Injector
+        injector: Injector,
+        private _userTopics: UserTopicsServiceProxy,
+        private _taxonomyService: DisciplineTaxonomiesServiceProxy,
     ) {
         super(injector);
     }
 
+    get loading(): boolean { return this.isLoadingUserTopics || this.isUnfollowingTopic || this.isSearching; }
+
     ngOnInit(): void {
+        this.loadUserTopics();
+    }
+
+    getFollowerCount(topicId: string): number {
+        return this.followersMap.get(topicId) ?? 0;
+    }
+
+    private loadUserTopics(): void {
+        this.isLoadingUserTopics = true;
+        this._userTopics.getAll(this.appSession.userId)
+            .pipe(takeUntil(this.destroyed$))
+            .pipe(finalize(() => this.isLoadingUserTopics = false))
+            .pipe(switchMap((userTopics) => {
+                this.userTopics = userTopics;
+                this.displayedUserTopics = _.clone(this.userTopics.map(t => t.disciplineTaxonomy));
+                return this._taxonomyService.getFollowerCount(this.userTopics.map(t => t.id));
+            }))
+            .subscribe(followers => {
+                this.followersMap = Utils.toMap(followers, f => f.disciplineTaxonomyId, f => f.followerCount);
+            });
+    }
+
+    handleOnSearch(searchFilter: string): void {
+        this.searchFilter = searchFilter;
+        this.isSearching = true;
+        this.displayedUserTopics = _.clone(
+            this.userTopics.map(t => t.disciplineTaxonomy).filter(t => t.name.toLowerCase().includes(this.searchFilter.toLowerCase()))
+        );
+        this.isSearching = false;
+    }
+
+    handleOnUnfollow(topic: DisciplineTaxonomyDto): void {
+        this.isUnfollowingTopic = true;
+
+        const userTopic = this.userTopics.find(u => topic.id === u.disciplineTaxonomyId);
+
+        if (userTopic) {
+            this._userTopics.delete(userTopic.id)
+            .pipe(takeUntil(this.destroyed$))
+            .pipe(finalize(() => this.isUnfollowingTopic = false))
+            .subscribe(_ => {
+                this.notify.info(this.l('Community.Topics.Unfollow.Success', topic.name));
+                this.loadUserTopics();
+            });
+        }
+
     }
 }

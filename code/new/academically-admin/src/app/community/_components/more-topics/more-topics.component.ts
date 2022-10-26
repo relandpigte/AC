@@ -42,7 +42,6 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
         return this.followersMap.get(topicId) ?? 0;
     }
 
-
     handleOnSearch(searchFilter: string): void {
         this.searchFilter = searchFilter;
 

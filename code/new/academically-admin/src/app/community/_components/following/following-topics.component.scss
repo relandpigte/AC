@@ -1,0 +1,38 @@
+:host {
+    ::ng-deep {
+        .btn-primary {
+            background-color: rgba(44, 123, 229, 0.1);
+            color: #2C7BE5;
+        }
+    }
+}
+
+
+.topic {
+    &-row {
+        height: 79px;
+        padding: 25px 24px;
+
+        &:hover {
+            background-color: rgb(253, 253, 253);
+        }
+
+        &-left {
+            &-name {
+                font-weight: 400;
+                font-size: 15px;
+                line-height: 19px;
+                letter-spacing: -0.01em;
+                color: #1F2D3D;
+            }
+
+            &-followers {
+                font-weight: 400;
+                font-size: 13px;
+                line-height: 17px;
+                letter-spacing: -0.01em;
+                color: #6E84A3;
+            }
+        }
+    }
+}
