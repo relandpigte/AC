@@ -6,6 +6,8 @@ import { takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash';
 import { Router } from '@angular/router';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { AddTopicsComponent } from './_modals/add-topics/add-topics.component';
 
 @Component({
   selector: 'app-community',
@@ -28,6 +30,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _router: Router,
+    private _modalService: BsModalService,
     private _usersService: UserServiceProxy,
     private _coursesService: CoursesServiceProxy,
     private _articlesService: ArticlesServiceProxy,
@@ -74,6 +77,13 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
       case 'tutorials':
         break;
     }
+  }
+
+  handleAddTopics(): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<AddTopicsComponent>;
+    modalSettings.class = 'modal-lg';
+
+    const modal = this._modalService.show(AddTopicsComponent, modalSettings).content;
   }
 
   getCourseThumbnail(course: CourseDto): string {

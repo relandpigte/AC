@@ -1372,3 +1372,46 @@ each(range(1px, 30px, 1), {
   height: 400px;
   max-height: 400px;
 }
+
+.veil {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+@keyframes loader {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+.box {
+  &-shimmer {
+    &-bar {
+        animation: loader 1s infinite linear;
+        background: linear-gradient(90deg, #EFEFEF, #f7f7f7);
+        background-size: 400% 400%;
+        width: 100%;
+        position: relative;
+        min-height: 25px;
+        border-radius: 5px;
+
+        &.action {
+          background: linear-gradient(90deg, #2C7BE5, #3f91fb);
+          background-size: 400% 400%;
+        }
+    }
+  }
+}

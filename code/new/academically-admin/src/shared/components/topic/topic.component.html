@@ -1,8 +1,8 @@
 <div class="topic d-flex flex-row flex-nowrap align-items-center" [ngClass]="[customClass]" [class.parent]="isParent">
     <ng-container *ngIf="isLoading">
         <div class="d-flex flex-column flex-grow-1 gap-4">
-            <div class="topic-shimmer-bar" [style.width.%]="80" [style.minHeight.px]="isParent ? 20 : 16"></div>
-            <div class="topic-shimmer-bar" [style.width.%]="45" [style.minHeight.px]="isParent ? 14 : 12"></div>
+            <div class="box-shimmer-bar" [style.width.%]="80" [style.minHeight.px]="isParent ? 20 : 16"></div>
+            <div class="box-shimmer-bar" [style.width.%]="45" [style.minHeight.px]="isParent ? 14 : 12"></div>
         </div>
     </ng-container>
     <ng-container *ngIf="!isLoading">

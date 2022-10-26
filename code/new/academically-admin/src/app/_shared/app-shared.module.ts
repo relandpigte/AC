@@ -28,6 +28,7 @@ import { BottomScrollerDirective } from './directives/bottom-scroller.directive'
 import { SidebarCollapseDirective } from './directives/sidebar-collapse.directive';
 
 import { CardClusterComponent } from '../../shared/components/card-cluster/card-cluster.component';
+import { SearchComponent } from '../../shared/components/search/search.component';
 import { ServiceCardComponent } from '../../shared/components/service-card/service-card.component';
 import { TopicCardComponent } from '../../shared/components/topic/topic.component';
 import { DocumentUploaderComponent } from './components/document-uploader/document-uploader.component';
@@ -37,7 +38,7 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { WhiteboardComponent } from './components/whiteboard/whiteboard.component';
 import { PopoverModule } from 'ngx-bootstrap/popover';
-import {CarouselModule} from 'primeng/carousel';
+import { CarouselModule } from 'primeng/carousel';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import {CarouselModule} from 'primeng/carousel';
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
     CardClusterComponent,
+    SearchComponent,
     ServiceCardComponent,
     TopicCardComponent,
     CardClusterComponent,
@@ -110,6 +112,7 @@ import {CarouselModule} from 'primeng/carousel';
     ImageGalleryComponent,
     ProfilePictureChangerComponent,
     CardClusterComponent,
+    SearchComponent,
     ServiceCardComponent,
     TopicCardComponent,
     ColorPickerComponent,

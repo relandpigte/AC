@@ -1,0 +1,24 @@
+.search {
+    overflow-x: hidden;
+
+    &-input {
+        height: 42px;
+        border-top: 1px solid #EDF2F9;
+        border-bottom: 1px solid #EDF2F9;
+    }
+
+    &-list {
+        &-item {
+            &:not(:first-child) {
+                border-top: 1px solid #EDF2F9;
+            }
+        }
+    }
+}
+
+
+.mock {
+    &-item {
+        height: 79px;
+    }
+}

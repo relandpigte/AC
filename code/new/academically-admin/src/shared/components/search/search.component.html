@@ -1,0 +1,61 @@
+<div class="search container-fluid d-flex flex-column">
+    <div class="search-input row">
+        <div class="col h-100">
+            <form class="h-100">
+                <div class="input-group input-group-flush h-100 d-flex align-items-center">
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="fe fe-search"></i></span></div>
+                    <input #searchInput class="list-search form-control" type="search" name="Search" placeholder="Search" (keyup.enter)="handleOnSearch()" />
+                    <div class="bg-white veil d-flex align-items-center" [style.marginLeft.px]="28" [ngClass]="[loading ? 'show' : 'hidden']">
+                        <div class="box-shimmer-bar"  [style.width.%]="30" [style.height.%]="50"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div *ngIf="options.pagination" class="col-auto mr-n3">
+            <form>
+                <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize"
+                (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
+                class="custom-select custom-select-sm form-control-flush" data-toggle="select">
+                <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
+                    {{ pageSizeSelection }} {{ 'PerPage' | localize }}
+                </option>
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <div class="search-list">
+        <ng-container *ngIf="loading">
+            <div class="search-list-item"><ng-container *ngTemplateOutlet="loadingTemplate"></ng-container> </div>
+            <div class="search-list-item"><ng-container *ngTemplateOutlet="loadingTemplate"></ng-container> </div>
+            <div class="search-list-item"><ng-container *ngTemplateOutlet="loadingTemplate"></ng-container> </div>
+            <div class="search-list-item"><ng-container *ngTemplateOutlet="loadingTemplate"></ng-container> </div>
+        </ng-container>
+        <ng-container *ngIf="!loading">
+            <div
+                *ngFor="let d of (data | paginate: { id: 'data-pagination', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })"
+                class="search-list-item">
+                <ng-container *ngIf="itemTemplate"><ng-container *ngTemplateOutlet="itemTemplate; context: { item: d }"></ng-container></ng-container>
+                <ng-container *ngIf="!itemTemplate">{{ d.name }}</ng-container>
+            </div>
+            <abp-pagination-controls *ngIf="options.pagination" id="data-pagination" (pageChange)="getDataPage($event)" [customClass]="'border-0'"></abp-pagination-controls>
+        </ng-container>
+
+    </div>
+</div>
+
+<ng-template #loadingTemplate>
+    <ng-container *ngIf="itemLoadingTemplate"><ng-container *ngTemplateOutlet="itemLoadingTemplate"></ng-container></ng-container>
+    <ng-container *ngIf="!itemLoadingTemplate">
+        <div class="mock-item d-flex flex-row">
+            <div class="mock-item-left d-flex flex-column flex-grow-1 justify-content-center gap-5">
+                <div class="box-shimmer-bar"  [style.width.%]="55" [style.height.px]="18"></div>
+                <div class="box-shimmer-bar"  [style.width.%]="15" [style.height.px]="6"></div>
+            </div>
+            <div class="mock-item-right d-flex flex-row align-items-center gap-20">
+                <div class="box-shimmer-bar"  [style.width.px]="120" [style.height.px]="40"></div>
+                <div class="box-shimmer-bar action"  [style.width.px]="120" [style.height.px]="40"></div>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>

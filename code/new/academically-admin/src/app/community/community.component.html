@@ -20,7 +20,7 @@
             </div>
         </div>
         <div [style.marginBottom.px]="50">
-            <app-carousel-pill [choices]="topics" (onSelect)="handleFilterTopics($event)"></app-carousel-pill>
+            <app-carousel-pill [choices]="topics" (onAdd)="handleAddTopics()" (onSelect)="handleFilterTopics($event)"></app-carousel-pill>
         </div>
     </div>
     <div class="container-fluid community-content d-flex flex-row flex-nowrap">

@@ -19,8 +19,8 @@ export class TopicCardComponent extends AppComponentBase {
 
     get isParent(): boolean { return this.data?.children?.length; }
     get name(): string { return this.data?.name; }
-    get composition(): string { return this._snPipe.transform(this.data?.children?.length ?? 4323); }
-    get followers(): string { return this._snPipe.transform(this.data?.followers?.length ?? 8362); }
+    get composition(): string { return this._snPipe.transform(this.data?.children?.length ?? 4323, 1); }
+    get followers(): string { return this._snPipe.transform(this.data?.followers?.length ?? 8362, 1); }
 
     constructor(
         injector: Injector,
