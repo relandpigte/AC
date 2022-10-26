@@ -53,6 +53,32 @@ namespace Academically.Services.DisciplineTaxonomies
             return result;
         }
 
+        public async Task<IEnumerable<GetDisciplineTaxonomyChildrenCountDto>> GetChildrenCount(List<Guid> disciplineTaxonomyIds)
+        {
+            var query = _disciplineTaxonomiesRepository.GetAll()
+               .Where(x => disciplineTaxonomyIds.Any(y => y == x.Id))
+               .Select(x => new GetDisciplineTaxonomyChildrenCountDto
+               {
+                   DisciplineTaxonomyId = x.Id,
+                   ChildCount = x.Children.Count()
+               });
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<IEnumerable<GetDisciplineTaxonomyFollowerCountDto>> GetFollowerCount(List<Guid> disciplineTaxonomyIds)
+        {
+            var query = _disciplineTaxonomiesRepository.GetAll()
+               .Where(x => disciplineTaxonomyIds.Any(y => y == x.Id))
+               .Select(x => new GetDisciplineTaxonomyFollowerCountDto
+               {
+                   DisciplineTaxonomyId = x.Id,
+                   FollowerCount = x.UserTopics.Count()
+               });
+
+            return await query.ToListAsync();
+        }
+
         public async Task<IEnumerable<DisciplineTaxonomyDto>> Search(string keyword)
         {
             var disciplineTaxonomies = await _disciplineTaxonomiesRepository.GetAll()

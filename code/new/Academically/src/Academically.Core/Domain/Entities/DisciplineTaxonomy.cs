@@ -11,6 +11,7 @@ namespace Academically.Domain.Entities
         public DisciplineTaxonomy()
         {
             Children = new HashSet<DisciplineTaxonomy>();
+            UserTopics = new HashSet<UserTopic>();
         }
 
         public string Name { get; set; }
@@ -20,5 +21,6 @@ namespace Academically.Domain.Entities
 
         public virtual DisciplineTaxonomy Parent { get; set; }
         public virtual ICollection<DisciplineTaxonomy> Children { get; set; }
+        public virtual ICollection<UserTopic> UserTopics { get; set; }
     }
 }

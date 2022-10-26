@@ -10,6 +10,8 @@ namespace Academically.Services.DisciplineTaxonomies
     {
         Task<IEnumerable<DisciplineTaxonomyDto>> GetAll(Guid? parentId, bool includeChildren);
         Task<IEnumerable<DisciplineTaxonomyDto>> GetAllLastChildren();
+        Task<IEnumerable<GetDisciplineTaxonomyChildrenCountDto>> GetChildrenCount(List<Guid> disciplineTaxonomyIds);
+        Task<IEnumerable<GetDisciplineTaxonomyFollowerCountDto>> GetFollowerCount(List<Guid> disciplineTaxonomyIds);
         Task<IEnumerable<DisciplineTaxonomyDto>> Search(string keyword);
     }
 }

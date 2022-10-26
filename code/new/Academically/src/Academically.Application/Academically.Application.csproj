@@ -46,8 +46,6 @@
     <Folder Include="Services\EducationLevels\Dto\" />
     <Folder Include="Services\PhoneVerifications\" />
     <Folder Include="Services\PhoneVerifications\Dto\" />
-    <Folder Include="Services\DisciplineTaxonomies\" />
-    <Folder Include="Services\DisciplineTaxonomies\Dto\" />
     <Folder Include="Services\UserResearchInterests\" />
     <Folder Include="Services\UserResearchInterests\Dto\" />
     <Folder Include="Services\ResearchMethods\" />
