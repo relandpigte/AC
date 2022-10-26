@@ -7701,6 +7701,132 @@ export class DisciplineTaxonomiesServiceProxy {
     }
 
     /**
+     * @param disciplineTaxonomyIds (optional) 
+     * @return Success
+     */
+    getChildrenCount(disciplineTaxonomyIds: string[] | undefined): Observable<GetDisciplineTaxonomyChildrenCountDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/GetChildrenCount?";
+        if (disciplineTaxonomyIds === null)
+            throw new Error("The parameter 'disciplineTaxonomyIds' cannot be null.");
+        else if (disciplineTaxonomyIds !== undefined)
+            disciplineTaxonomyIds && disciplineTaxonomyIds.forEach(item => { url_ += "disciplineTaxonomyIds=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetChildrenCount(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetChildrenCount(<any>response_);
+                } catch (e) {
+                    return <Observable<GetDisciplineTaxonomyChildrenCountDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetDisciplineTaxonomyChildrenCountDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetChildrenCount(response: HttpResponseBase): Observable<GetDisciplineTaxonomyChildrenCountDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(GetDisciplineTaxonomyChildrenCountDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetDisciplineTaxonomyChildrenCountDto[]>(<any>null);
+    }
+
+    /**
+     * @param disciplineTaxonomyIds (optional) 
+     * @return Success
+     */
+    getFollowerCount(disciplineTaxonomyIds: string[] | undefined): Observable<GetDisciplineTaxonomyFollowerCountDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/GetFollowerCount?";
+        if (disciplineTaxonomyIds === null)
+            throw new Error("The parameter 'disciplineTaxonomyIds' cannot be null.");
+        else if (disciplineTaxonomyIds !== undefined)
+            disciplineTaxonomyIds && disciplineTaxonomyIds.forEach(item => { url_ += "disciplineTaxonomyIds=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetFollowerCount(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetFollowerCount(<any>response_);
+                } catch (e) {
+                    return <Observable<GetDisciplineTaxonomyFollowerCountDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetDisciplineTaxonomyFollowerCountDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetFollowerCount(response: HttpResponseBase): Observable<GetDisciplineTaxonomyFollowerCountDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(GetDisciplineTaxonomyFollowerCountDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetDisciplineTaxonomyFollowerCountDto[]>(<any>null);
+    }
+
+    /**
      * @param keyword (optional) 
      * @return Success
      */
@@ -24172,6 +24298,185 @@ export class UserSpokenlanguageServiceProxy {
 }
 
 @Injectable()
+export class UserTopicsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param userId (optional) 
+     * @return Success
+     */
+    getAll(userId: number | undefined): Observable<UserTopicDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/UserTopics/GetAll?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<UserTopicDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserTopicDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<UserTopicDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(UserTopicDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserTopicDto[]>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateUserTopicDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserTopics/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/UserTopics/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class VideosServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -32291,6 +32596,53 @@ export interface ICreateUserDto {
     password: string;
 }
 
+export class CreateUserTopicDto implements ICreateUserTopicDto {
+    userId: number;
+    disciplineTaxonomyId: string;
+
+    constructor(data?: ICreateUserTopicDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userId = _data["userId"];
+            this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+        }
+    }
+
+    static fromJS(data: any): CreateUserTopicDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateUserTopicDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        return data; 
+    }
+
+    clone(): CreateUserTopicDto {
+        const json = this.toJSON();
+        let result = new CreateUserTopicDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateUserTopicDto {
+    userId: number;
+    disciplineTaxonomyId: string;
+}
+
 export class CreateWorkshopDto implements ICreateWorkshopDto {
     name: string | undefined;
     type: WorkshopType;
@@ -35644,6 +35996,100 @@ export class GetDelayStatusDto implements IGetDelayStatusDto {
 export interface IGetDelayStatusDto {
     isFirstVideoPublished: boolean;
     videoCount: number;
+}
+
+export class GetDisciplineTaxonomyChildrenCountDto implements IGetDisciplineTaxonomyChildrenCountDto {
+    disciplineTaxonomyId: string;
+    childCount: number;
+
+    constructor(data?: IGetDisciplineTaxonomyChildrenCountDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.childCount = _data["childCount"];
+        }
+    }
+
+    static fromJS(data: any): GetDisciplineTaxonomyChildrenCountDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetDisciplineTaxonomyChildrenCountDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["childCount"] = this.childCount;
+        return data; 
+    }
+
+    clone(): GetDisciplineTaxonomyChildrenCountDto {
+        const json = this.toJSON();
+        let result = new GetDisciplineTaxonomyChildrenCountDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetDisciplineTaxonomyChildrenCountDto {
+    disciplineTaxonomyId: string;
+    childCount: number;
+}
+
+export class GetDisciplineTaxonomyFollowerCountDto implements IGetDisciplineTaxonomyFollowerCountDto {
+    disciplineTaxonomyId: string;
+    followerCount: number;
+
+    constructor(data?: IGetDisciplineTaxonomyFollowerCountDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.followerCount = _data["followerCount"];
+        }
+    }
+
+    static fromJS(data: any): GetDisciplineTaxonomyFollowerCountDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetDisciplineTaxonomyFollowerCountDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["followerCount"] = this.followerCount;
+        return data; 
+    }
+
+    clone(): GetDisciplineTaxonomyFollowerCountDto {
+        const json = this.toJSON();
+        let result = new GetDisciplineTaxonomyFollowerCountDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetDisciplineTaxonomyFollowerCountDto {
+    disciplineTaxonomyId: string;
+    followerCount: number;
 }
 
 export class GetEventDelayStatusDto implements IGetEventDelayStatusDto {
@@ -46894,6 +47340,61 @@ export interface IUserSpokenLanguageDto {
     spokenLanguageId: string;
     spokenLanguageName: string | undefined;
     proficiency: SpokenLanguageProficiency;
+}
+
+export class UserTopicDto implements IUserTopicDto {
+    id: string | undefined;
+    userId: number;
+    disciplineTaxonomyId: string;
+    disciplineTaxonomy: DisciplineTaxonomyDto;
+
+    constructor(data?: IUserTopicDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userId = _data["userId"];
+            this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomyDto.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserTopicDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserTopicDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userId"] = this.userId;
+        data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): UserTopicDto {
+        const json = this.toJSON();
+        let result = new UserTopicDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserTopicDto {
+    id: string | undefined;
+    userId: number;
+    disciplineTaxonomyId: string;
+    disciplineTaxonomy: DisciplineTaxonomyDto;
 }
 
 export class VerificationStatusDto implements IVerificationStatusDto {

@@ -23,7 +23,6 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.UserQualificationsServiceProxy,
         ApiServiceProxies.DocumentsServiceProxy,
         ApiServiceProxies.PassportVerificationsServiceProxy,
-        ApiServiceProxies.DisciplineTaxonomiesServiceProxy,
         ApiServiceProxies.UserResearchInterestsServiceProxy,
         ApiServiceProxies.ResearchMethodsServiceProxy,
         ApiServiceProxies.UserResearchMethodologiesServiceProxy,
@@ -85,6 +84,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.WorkshopPollsServiceProxy,
         ApiServiceProxies.WorkshopResourcesServiceProxy,
         ApiServiceProxies.DisciplineTaxonomiesServiceProxy,
+        ApiServiceProxies.UserTopicsServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

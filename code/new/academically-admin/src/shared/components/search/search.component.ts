@@ -8,6 +8,7 @@ export interface SearchOptions {
     sortable?: boolean;
     pagination?: boolean;
     onEnter?: boolean;
+    searchDelay?: number;
     maxItems?: number;
 };
 
@@ -41,7 +42,7 @@ export class SearchComponent<T> extends PagedListingComponentBase<T> implements 
 
         this.searchInputTrigger$
             .pipe(takeUntil(this.destroyed$))
-            .pipe(debounceTime(1000))
+            .pipe(debounceTime(this.options?.searchDelay ?? 600))
             .pipe(distinctUntilChanged())
             .subscribe(filter => {
                 this.searchFilter = filter;

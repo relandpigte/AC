@@ -1,6 +1,6 @@
 <app-search
-    [data]="data"
-    [options]="{ sortable: true, maxItems: 4 }"
+    [data]="topics"
+    [options]="{ sortable: true }"
     [itemTemplate]="topicItemTemplate"
     [itemLoadingTemplate]="topicItemLoadingTemplate"
     [loading]="loading"
@@ -8,12 +8,22 @@
 ></app-search>
 
 <ng-template #topicItemTemplate let-item="item">
-    <div class="topic-row">
-      {{ item.name }}
+    <div class="topic-row d-flex flex-row">
+        <div class="topic-row-left d-flex flex-column flex-grow-1 justify-content-center gap-0">
+            <div class="topic-row-left-name">{{ item.name }}</div>
+            <div class="topic-row-left-followers">{{ 'Community.Topics.Followers' | localize: (getFollowerCount(item.id) | shortNum: 1)  }}</div>
+        </div>
+        <div class="topic-row-right d-flex flex-row align-items-center gap-10">
+            <button class="btn btn-md btn-light">{{ 'Remove' | localize }}</button>
+            <button class="btn btn-md btn-primary" (click)="handleOnFollow(item)">
+                {{ (isFollowingTopic ? 'Following' : 'Follow') | localize }}
+                <span *ngIf="isFollowingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            </button>
+        </div>
     </div>
 </ng-template>
 
-<ng-template #topicItemLoadingTemplate let-item="item">
+<ng-template #topicItemLoadingTemplate>
   <div class="topic-row d-flex flex-row">
       <div class="topic-row-left d-flex flex-column flex-grow-1 justify-content-center gap-5">
           <div class="box-shimmer-bar"  [style.width.%]="55" [style.height.px]="18"></div>

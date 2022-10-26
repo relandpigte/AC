@@ -1885,6 +1885,7 @@
 	<text name="Community.Topics.AllTopics">All Topics</text>
 	<text name="Community.Topics.Composition">{0} Topics</text>
 	<text name="Community.Topics.Followers">{0} followers</text>
+	<text name="Community.Topics.Follow.Success">You are now following {0} topic.</text>
 	<!-- Events -->
 	<text name="EventsSchedule">From {0}</text>
 	  

@@ -25,22 +25,23 @@
     </div>
 
     <div class="search-list">
-        <ng-container *ngIf="loading">
-            <div class="search-list-item"><ng-container *ngTemplateOutlet="loadingTemplate"></ng-container> </div>
-            <div class="search-list-item"><ng-container *ngTemplateOutlet="loadingTemplate"></ng-container> </div>
-            <div class="search-list-item"><ng-container *ngTemplateOutlet="loadingTemplate"></ng-container> </div>
-            <div class="search-list-item"><ng-container *ngTemplateOutlet="loadingTemplate"></ng-container> </div>
+        <ng-container *ngIf="!data || data.length === 0">
+            <div class="search-list-item"><p class="text-center text-muted m-0 p-4">{{ 'NoRecordsFound' | localize }}</p></div>
         </ng-container>
-        <ng-container *ngIf="!loading">
-            <div
-                *ngFor="let d of (data | paginate: { id: 'data-pagination', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })"
-                class="search-list-item">
-                <ng-container *ngIf="itemTemplate"><ng-container *ngTemplateOutlet="itemTemplate; context: { item: d }"></ng-container></ng-container>
-                <ng-container *ngIf="!itemTemplate">{{ d.name }}</ng-container>
-            </div>
-            <abp-pagination-controls *ngIf="options.pagination" id="data-pagination" (pageChange)="getDataPage($event)" [customClass]="'border-0'"></abp-pagination-controls>
+        <ng-container *ngIf="data && data.length">
+            <ng-container *ngIf="loading">
+                <div class="search-list-item"><ng-container *ngTemplateOutlet="loadingTemplate"></ng-container></div>
+            </ng-container>
+            <ng-container *ngIf="!loading">
+                <div
+                    *ngFor="let d of (data | paginate: { id: 'data-pagination', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })"
+                    class="search-list-item">
+                    <ng-container *ngIf="itemTemplate"><ng-container *ngTemplateOutlet="itemTemplate; context: { item: d }"></ng-container></ng-container>
+                    <ng-container *ngIf="!itemTemplate">{{ d.name }}</ng-container>
+                </div>
+                <abp-pagination-controls *ngIf="options.pagination" id="data-pagination" (pageChange)="getDataPage($event)" [customClass]="'border-0'"></abp-pagination-controls>
+            </ng-container>
         </ng-container>
-
     </div>
 </div>
 
