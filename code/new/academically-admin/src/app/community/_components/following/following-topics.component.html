@@ -17,6 +17,7 @@
             <button class="btn btn-md btn-primary" (click)="handleOnUnfollow(item)">
                 {{ (isUnfollowingTopic ? 'Unfollowing' : 'Following') | localize }}
                 <span *ngIf="isUnfollowingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <i *ngIf="!isUnfollowingTopic" class="fe fe-check" role="status" aria-hidden="true"></i>
             </button>
         </div>
     </div>
