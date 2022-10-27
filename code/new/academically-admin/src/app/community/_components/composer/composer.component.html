@@ -5,9 +5,9 @@
                 <img [src]="getProfilePicture(appSession.user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
             </a>
         </div>
-        <div class="composer-post-text flex-grow-1 position-relative" [ngStyle]="{ 'height': textAreaRows > 1 ? 'auto' : '43px' }">
-            <textarea class="composer-post-text-input" placeholder="Start quick post..." [rows]="textAreaRows" #input></textarea>
-            <i class="composer-post-text-icon fas fa-camera cursor-pointer"></i>
+        <div class="composer-post-text flex-grow-1 position-relative">
+            <div class="composer-post-text-input d-flex align-items-center">{{ 'Start quick post...' | localize }}</div>
+            <i class="composer-post-text-icon fe fe-camera cursor-pointer"></i>
         </div>
     </div>
     <div class="composer-actions d-flex flex-row flex-nowrap align-items-center">
