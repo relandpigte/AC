@@ -10,7 +10,8 @@ import * as _ from 'lodash';
 })
 export class CarouselPillComponent extends AppComponentBase implements OnChanges {
 
-    @Input() choices: string[];
+    @Input() choices: any[];
+    @Input() key: string;
 
     @Input() showAll: boolean = true;
     @Input() canAdd: boolean = true;
@@ -34,6 +35,7 @@ export class CarouselPillComponent extends AppComponentBase implements OnChanges
 
     isPillSelected(i: string): boolean { return this.selected.includes(i); }
     isAllPillSelected(): boolean { return !this.selected.length; }
+    getDisplayValue(choice: any): string { return this.key ? _.get(choice, this.key) : choice; }
 
     handleAddPill(): void {
         this.onAdd.emit();

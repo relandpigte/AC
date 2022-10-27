@@ -11,7 +11,7 @@
     <div class="topic-row d-flex flex-row">
         <div class="topic-row-left d-flex flex-column flex-grow-1 justify-content-center gap-0">
             <div class="topic-row-left-name">#{{ item.name }}</div>
-            <div class="topic-row-left-followers">{{ 'Community.Topics.Followers' | localize: (getFollowerCount(item.id) | shortNum: 1)  }}</div>
+            <div class="topic-row-left-followers">{{ 'Community.Topics.Followers' | localize: (item.followers | shortNum: 1)  }}</div>
         </div>
         <div class="topic-row-right d-flex flex-row align-items-center gap-10">
             <button class="btn btn-md btn-primary" (click)="handleOnUnfollow(item)">

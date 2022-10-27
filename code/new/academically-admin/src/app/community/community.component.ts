@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ArticleDto, ArticlesServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, EventDto, EventsServiceProxy, UserDto, UserServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, ArticlesServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, EventDto, EventsServiceProxy, UserDto, UserServiceProxy, UserTopicDto, UserTopicsServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash';
@@ -17,6 +17,7 @@ import { AddTopicsComponent } from './_modals/add-topics/add-topics.component';
 })
 export class CommunityComponent extends AppComponentBase implements OnInit {
 
+  userTopics: UserTopicDto[] = [];
   selectedTopics: string[] = [];
   suggestedTopics: { topic: string, followers: number }[] = [];
   peopleToFollow: UserDto[] = [];
@@ -25,12 +26,11 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   recommendedEvents: EventDto[] = [];
   recommendedTutorials: VideoDto[] = [];
 
-  get topics(): string[] { return ['Test', 'Sample 10122022', 'Astronomy', 'Biology', 'Fiction']; }
-
   constructor(
     injector: Injector,
     private _router: Router,
     private _modalService: BsModalService,
+    private _userTopicsService: UserTopicsServiceProxy,
     private _usersService: UserServiceProxy,
     private _coursesService: CoursesServiceProxy,
     private _articlesService: ArticlesServiceProxy,
@@ -41,6 +41,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getUserTopics();
     this.getSuggestedTopics();
     this.getPeopleToFollow();
     this.getRecommendedCourses();
@@ -103,6 +104,12 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     const lessons = course?.lessons ? `${course?.lessons} lessons` : null;
     const values = [modules, lessons].filter(x => x);
     return values.join(', ');
+  }
+
+  getUserTopics(): void {
+    this._userTopicsService.getAll(this.appSession.userId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(topics => this.userTopics = topics);
   }
 
   getSuggestedTopics(): void {

@@ -8,6 +8,8 @@
 @carousel-pill-item-margin-right: 10px;
 
 .carousel-pill {
+    overflow-y: auto;
+
     &-separator {
         border-right: 2px solid #D2DDEC;
         width: 0px;
@@ -25,6 +27,7 @@
         border: @carousel-pill-item-border;
         border-radius: @carousel-pill-item-border-radius;
         margin-right: @carousel-pill-item-margin-right;
+        white-space: nowrap;
 
         &.add-pill {
             border-style: dashed;

@@ -14,7 +14,7 @@ import * as _ from 'lodash';
 export class FollowingTopicsComponent extends AppComponentBase implements OnInit {
 
     userTopics: UserTopicDto[];
-    displayedUserTopics: DisciplineTaxonomyDto[];
+    displayedUserTopics: any[];
 
     followers: GetDisciplineTaxonomyFollowerCountDto[] = [];
     followersMap: Map<string, number> = new Map();
@@ -39,10 +39,6 @@ export class FollowingTopicsComponent extends AppComponentBase implements OnInit
         this.loadUserTopics();
     }
 
-    getFollowerCount(topicId: string): number {
-        return this.followersMap.get(topicId) ?? 0;
-    }
-
     private loadUserTopics(): void {
         this.isLoadingUserTopics = true;
         this._userTopics.getAll(this.appSession.userId)
@@ -50,11 +46,11 @@ export class FollowingTopicsComponent extends AppComponentBase implements OnInit
             .pipe(finalize(() => this.isLoadingUserTopics = false))
             .pipe(switchMap((userTopics) => {
                 this.userTopics = userTopics;
-                this.displayedUserTopics = _.clone(this.userTopics.map(t => t.disciplineTaxonomy));
-                return this._taxonomyService.getFollowerCount(this.userTopics.map(t => t.id));
+                return this._taxonomyService.getFollowerCount(this.userTopics.map(t => t.disciplineTaxonomyId));
             }))
             .subscribe(followers => {
                 this.followersMap = Utils.toMap(followers, f => f.disciplineTaxonomyId, f => f.followerCount);
+                this.displayedUserTopics = _.clone(this.userTopics.map(t => ({ ...t.disciplineTaxonomy, followers: this.followersMap.get(t.disciplineTaxonomyId) ?? 0 }) ));
             });
     }
 
@@ -62,7 +58,8 @@ export class FollowingTopicsComponent extends AppComponentBase implements OnInit
         this.searchFilter = searchFilter;
         this.isSearching = true;
         this.displayedUserTopics = _.clone(
-            this.userTopics.map(t => t.disciplineTaxonomy).filter(t => t.name.toLowerCase().includes(this.searchFilter.toLowerCase()))
+            this.userTopics?.filter(t => t.disciplineTaxonomy.name.toLowerCase().includes(this.searchFilter.toLowerCase()))
+                .map(t => ({ ...t.disciplineTaxonomy, followers: this.followersMap.get(t.disciplineTaxonomyId) ?? 0 }))
         );
         this.isSearching = false;
     }
