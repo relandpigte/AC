@@ -49,7 +49,7 @@ export class ResearchFieldsTreeComponent extends AppComponentBase implements OnI
 
   private getDisciplineTaxonomies(): void {
     this.isLoading = true;
-    this._disciplineTaxonomiesService.getAll(undefined, undefined).subscribe((researchInterest) => {
+    this._disciplineTaxonomiesService.getAll(undefined, undefined, 'foryou').subscribe((researchInterest) => {
       this.disciplineTaxonomies = this.buildTreeNodes(researchInterest);
       this.isLoading = false;
     });

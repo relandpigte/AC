@@ -36,7 +36,7 @@ export class AllComponent extends AppComponentBase implements OnInit {
 
   private loadParentTopics(): void {
     this.isLoadingParentTopics = true;
-    this._taxonomyService.getAll(undefined, true)
+    this._taxonomyService.getAll(undefined, true, 'foryou')
         .pipe(takeUntil(this.destroyed$))
         .pipe(finalize(() => this.isLoadingParentTopics = false ))
         .subscribe(topics => {

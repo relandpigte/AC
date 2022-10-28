@@ -46,14 +46,9 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
         this.searchFilter = searchFilter;
 
         this.isSearching = true;
-        this._userTopics.getAll(this.appSession.userId)
+        this._taxonomyService.search(searchFilter, true)
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => this.isSearching = false))
-            .pipe(switchMap((userTopics) => {
-                this.userTopics = userTopics;
-                this.userTopicMap = Utils.toMap(userTopics, u => u.disciplineTaxonomyId);
-                return this._taxonomyService.search(searchFilter);
-            }))
             .pipe(switchMap((topics) => {
                 this.topics = topics.filter(t => !this.userTopicMap.has(t.id));
                 return this._taxonomyService.getFollowerCount(topics.map(t => t.id));

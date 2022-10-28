@@ -7577,9 +7577,10 @@ export class DisciplineTaxonomiesServiceProxy {
     /**
      * @param parentId (optional) 
      * @param includeChildren (optional) 
+     * @param sorting (optional) 
      * @return Success
      */
-    getAll(parentId: string | undefined, includeChildren: boolean | undefined): Observable<DisciplineTaxonomyDto[]> {
+    getAll(parentId: string | undefined, includeChildren: boolean | undefined, sorting: string | undefined): Observable<DisciplineTaxonomyDto[]> {
         let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/GetAll?";
         if (parentId === null)
             throw new Error("The parameter 'parentId' cannot be null.");
@@ -7589,6 +7590,10 @@ export class DisciplineTaxonomiesServiceProxy {
             throw new Error("The parameter 'includeChildren' cannot be null.");
         else if (includeChildren !== undefined)
             url_ += "includeChildren=" + encodeURIComponent("" + includeChildren) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "sorting=" + encodeURIComponent("" + sorting) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -7640,6 +7645,82 @@ export class DisciplineTaxonomiesServiceProxy {
             }));
         }
         return _observableOf<DisciplineTaxonomyDto[]>(<any>null);
+    }
+
+    /**
+     * @param parentId (optional) 
+     * @param includeChildren (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAllPaged(parentId: string | undefined, includeChildren: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<DisciplineTaxonomyDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/GetAllPaged?";
+        if (parentId === null)
+            throw new Error("The parameter 'parentId' cannot be null.");
+        else if (parentId !== undefined)
+            url_ += "ParentId=" + encodeURIComponent("" + parentId) + "&";
+        if (includeChildren === null)
+            throw new Error("The parameter 'includeChildren' cannot be null.");
+        else if (includeChildren !== undefined)
+            url_ += "IncludeChildren=" + encodeURIComponent("" + includeChildren) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllPaged(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllPaged(<any>response_);
+                } catch (e) {
+                    return <Observable<DisciplineTaxonomyDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DisciplineTaxonomyDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllPaged(response: HttpResponseBase): Observable<DisciplineTaxonomyDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DisciplineTaxonomyDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DisciplineTaxonomyDtoPagedResultDto>(<any>null);
     }
 
     /**
@@ -7828,14 +7909,19 @@ export class DisciplineTaxonomiesServiceProxy {
 
     /**
      * @param keyword (optional) 
+     * @param excludeFollowing (optional) 
      * @return Success
      */
-    search(keyword: string | undefined): Observable<DisciplineTaxonomyDto[]> {
+    search(keyword: string | undefined, excludeFollowing: boolean | undefined): Observable<DisciplineTaxonomyDto[]> {
         let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/Search?";
         if (keyword === null)
             throw new Error("The parameter 'keyword' cannot be null.");
         else if (keyword !== undefined)
             url_ += "keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (excludeFollowing === null)
+            throw new Error("The parameter 'excludeFollowing' cannot be null.");
+        else if (excludeFollowing !== undefined)
+            url_ += "excludeFollowing=" + encodeURIComponent("" + excludeFollowing) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -24310,14 +24396,21 @@ export class UserTopicsServiceProxy {
 
     /**
      * @param userId (optional) 
+     * @param type (optional) 0 = Following
+    
+    1 = NotInterested
      * @return Success
      */
-    getAll(userId: number | undefined): Observable<UserTopicDto[]> {
+    getAll(userId: number | undefined, type: UserTopicType | undefined): Observable<UserTopicDto[]> {
         let url_ = this.baseUrl + "/api/services/app/UserTopics/GetAll?";
         if (userId === null)
             throw new Error("The parameter 'userId' cannot be null.");
         else if (userId !== undefined)
             url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (type === null)
+            throw new Error("The parameter 'type' cannot be null.");
+        else if (type !== undefined)
+            url_ += "type=" + encodeURIComponent("" + type) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -24369,6 +24462,84 @@ export class UserTopicsServiceProxy {
             }));
         }
         return _observableOf<UserTopicDto[]>(<any>null);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @param type (optional) 0 = Following
+    
+    1 = NotInterested
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAllPaged(userId: number | undefined, type: UserTopicType | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserTopicDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/UserTopics/GetAllPaged?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "UserId=" + encodeURIComponent("" + userId) + "&";
+        if (type === null)
+            throw new Error("The parameter 'type' cannot be null.");
+        else if (type !== undefined)
+            url_ += "Type=" + encodeURIComponent("" + type) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllPaged(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllPaged(<any>response_);
+                } catch (e) {
+                    return <Observable<UserTopicDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserTopicDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllPaged(response: HttpResponseBase): Observable<UserTopicDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserTopicDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserTopicDtoPagedResultDto>(<any>null);
     }
 
     /**
@@ -32599,6 +32770,7 @@ export interface ICreateUserDto {
 export class CreateUserTopicDto implements ICreateUserTopicDto {
     userId: number;
     disciplineTaxonomyId: string;
+    type: UserTopicType;
 
     constructor(data?: ICreateUserTopicDto) {
         if (data) {
@@ -32613,6 +32785,7 @@ export class CreateUserTopicDto implements ICreateUserTopicDto {
         if (_data) {
             this.userId = _data["userId"];
             this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.type = _data["type"];
         }
     }
 
@@ -32627,6 +32800,7 @@ export class CreateUserTopicDto implements ICreateUserTopicDto {
         data = typeof data === 'object' ? data : {};
         data["userId"] = this.userId;
         data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["type"] = this.type;
         return data; 
     }
 
@@ -32641,6 +32815,7 @@ export class CreateUserTopicDto implements ICreateUserTopicDto {
 export interface ICreateUserTopicDto {
     userId: number;
     disciplineTaxonomyId: string;
+    type: UserTopicType;
 }
 
 export class CreateWorkshopDto implements ICreateWorkshopDto {
@@ -33287,6 +33462,7 @@ export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
     parentId: string | undefined;
     parentIdMap: string | undefined;
     isEditable: boolean;
+    creationTime: moment.Moment;
     parent: DisciplineTaxonomyDto;
     children: DisciplineTaxonomyDto[] | undefined;
 
@@ -33306,6 +33482,7 @@ export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
             this.parentId = _data["parentId"];
             this.parentIdMap = _data["parentIdMap"];
             this.isEditable = _data["isEditable"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.parent = _data["parent"] ? DisciplineTaxonomyDto.fromJS(_data["parent"]) : <any>undefined;
             if (Array.isArray(_data["children"])) {
                 this.children = [] as any;
@@ -33329,6 +33506,7 @@ export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
         data["parentId"] = this.parentId;
         data["parentIdMap"] = this.parentIdMap;
         data["isEditable"] = this.isEditable;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         if (Array.isArray(this.children)) {
             data["children"] = [];
@@ -33352,8 +33530,64 @@ export interface IDisciplineTaxonomyDto {
     parentId: string | undefined;
     parentIdMap: string | undefined;
     isEditable: boolean;
+    creationTime: moment.Moment;
     parent: DisciplineTaxonomyDto;
     children: DisciplineTaxonomyDto[] | undefined;
+}
+
+export class DisciplineTaxonomyDtoPagedResultDto implements IDisciplineTaxonomyDtoPagedResultDto {
+    items: DisciplineTaxonomyDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IDisciplineTaxonomyDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(DisciplineTaxonomyDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): DisciplineTaxonomyDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DisciplineTaxonomyDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): DisciplineTaxonomyDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new DisciplineTaxonomyDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDisciplineTaxonomyDtoPagedResultDto {
+    items: DisciplineTaxonomyDto[] | undefined;
+    totalCount: number;
 }
 
 export class Document implements IDocument {
@@ -47346,6 +47580,7 @@ export class UserTopicDto implements IUserTopicDto {
     id: string | undefined;
     userId: number;
     disciplineTaxonomyId: string;
+    type: UserTopicType;
     disciplineTaxonomy: DisciplineTaxonomyDto;
 
     constructor(data?: IUserTopicDto) {
@@ -47362,6 +47597,7 @@ export class UserTopicDto implements IUserTopicDto {
             this.id = _data["id"];
             this.userId = _data["userId"];
             this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.type = _data["type"];
             this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomyDto.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
         }
     }
@@ -47378,6 +47614,7 @@ export class UserTopicDto implements IUserTopicDto {
         data["id"] = this.id;
         data["userId"] = this.userId;
         data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["type"] = this.type;
         data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
         return data; 
     }
@@ -47394,7 +47631,69 @@ export interface IUserTopicDto {
     id: string | undefined;
     userId: number;
     disciplineTaxonomyId: string;
+    type: UserTopicType;
     disciplineTaxonomy: DisciplineTaxonomyDto;
+}
+
+export class UserTopicDtoPagedResultDto implements IUserTopicDtoPagedResultDto {
+    items: UserTopicDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IUserTopicDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(UserTopicDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): UserTopicDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserTopicDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): UserTopicDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new UserTopicDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserTopicDtoPagedResultDto {
+    items: UserTopicDto[] | undefined;
+    totalCount: number;
+}
+
+/** 0 = Following 1 = NotInterested */
+export enum UserTopicType {
+    Following = 0,
+    NotInterested = 1,
 }
 
 export class VerificationStatusDto implements IVerificationStatusDto {

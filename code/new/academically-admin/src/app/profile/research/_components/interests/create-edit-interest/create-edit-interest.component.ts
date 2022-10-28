@@ -92,7 +92,7 @@ export class CreateEditInterestComponent extends AppComponentBase implements OnI
       observer.next(this.disciplineTaxonomy);
     }).pipe(
       switchMap((query: string) => {
-        return this._disciplineTaxonomiesService.search(query);
+        return this._disciplineTaxonomiesService.search(query, false);
       })
     );
   }

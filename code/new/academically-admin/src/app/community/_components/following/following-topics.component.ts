@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { Utils } from '@shared/helpers/utils';
-import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, GetDisciplineTaxonomyFollowerCountDto, UserTopicDto, UserTopicsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, GetDisciplineTaxonomyFollowerCountDto, UserTopicDto, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
 import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash';
@@ -41,7 +41,7 @@ export class FollowingTopicsComponent extends AppComponentBase implements OnInit
 
     private loadUserTopics(): void {
         this.isLoadingUserTopics = true;
-        this._userTopics.getAll(this.appSession.userId)
+        this._userTopics.getAll(this.appSession.userId, UserTopicType.Following)
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => this.isLoadingUserTopics = false))
             .pipe(switchMap((userTopics) => {

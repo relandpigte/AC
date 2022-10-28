@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ArticleDto, ArticlesServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, EventDto, EventsServiceProxy, UserDto, UserServiceProxy, UserTopicDto, UserTopicsServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, ArticlesServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, EventDto, EventsServiceProxy, UserDto, UserServiceProxy, UserTopicDto, UserTopicsServiceProxy, UserTopicType, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash';
@@ -107,7 +107,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getUserTopics(): void {
-    this._userTopicsService.getAll(this.appSession.userId)
+    this._userTopicsService.getAll(this.appSession.userId, UserTopicType.Following)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(topics => this.userTopics = topics);
   }
