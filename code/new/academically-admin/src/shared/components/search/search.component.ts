@@ -12,6 +12,11 @@ export interface SearchOptions {
     maxItems?: number;
 };
 
+export interface SortOption {
+    label?: string;
+    value?: any;
+};
+
 @Component({
     selector: 'app-search',
     templateUrl: './search.component.html',
@@ -28,10 +33,14 @@ export class SearchComponent<T> extends PagedListingComponentBase<T> implements 
     @Input() currentPage: number;
     @Input() options: SearchOptions = {};
 
+    @Input() sort: SortOption;
+    @Input() sortOptions: SortOption[] = [];
+
     @Input() itemTemplate: any;
     @Input() itemLoadingTemplate: any;
 
     @Output() onSearch: EventEmitter<any> = new EventEmitter<any>();
+    @Output() onSort: EventEmitter<SortOption> = new EventEmitter<SortOption>();
 
     searchInputTrigger$ = new BehaviorSubject<string>('');
 
@@ -56,6 +65,10 @@ export class SearchComponent<T> extends PagedListingComponentBase<T> implements 
             this.showPaging(this.pagedData, this.currentPage);
         }
 
+        if (this.options.sortable && 'sortOptions' in changes && this.sortOptions?.length) {
+            this.handleOnSort(this.sortOptions[0]);
+        }
+
         if ('data' in changes && this.data) {
             if (this.options.maxItems) this.data = _.take(this.data, this.options.maxItems);
         }
@@ -77,5 +90,10 @@ export class SearchComponent<T> extends PagedListingComponentBase<T> implements 
 
         if (this.options.pagination) this.getDataPage(1);
         else this.onSearch.emit(this.searchFilter);
+    }
+
+    handleOnSort(sort): void {
+        this.sort = sort;
+        this.onSort.emit(sort);
     }
 }

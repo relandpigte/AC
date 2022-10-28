@@ -7910,9 +7910,10 @@ export class DisciplineTaxonomiesServiceProxy {
     /**
      * @param keyword (optional) 
      * @param excludeFollowing (optional) 
+     * @param sorting (optional) 
      * @return Success
      */
-    search(keyword: string | undefined, excludeFollowing: boolean | undefined): Observable<DisciplineTaxonomyDto[]> {
+    search(keyword: string | undefined, excludeFollowing: boolean | undefined, sorting: string | undefined): Observable<DisciplineTaxonomyDto[]> {
         let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/Search?";
         if (keyword === null)
             throw new Error("The parameter 'keyword' cannot be null.");
@@ -7922,6 +7923,10 @@ export class DisciplineTaxonomiesServiceProxy {
             throw new Error("The parameter 'excludeFollowing' cannot be null.");
         else if (excludeFollowing !== undefined)
             url_ += "excludeFollowing=" + encodeURIComponent("" + excludeFollowing) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "sorting=" + encodeURIComponent("" + sorting) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

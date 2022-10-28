@@ -1,5 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { SortOption } from '@shared/components/search/search.component';
 import { Utils } from '@shared/helpers/utils';
 import { CreateUserTopicDto, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, GetDisciplineTaxonomyFollowerCountDto, UserTopicDto, UserTopicsServiceProxy } from '@shared/service-proxies/service-proxies';
 
@@ -25,6 +26,13 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
     isFollowingTopic = false;
     isSearching = false;
 
+    sort: SortOption = { label: 'ForYou', value: 'foryou' };
+    sortOptions = [
+        { label: 'ForYou', value: 'foryou' },
+        { label: 'Popular', value: 'popular' },
+        { label: 'Recent', value: 'recent' }
+    ];
+
     constructor(
         injector: Injector,
         private _taxonomyService: DisciplineTaxonomiesServiceProxy,
@@ -46,7 +54,7 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
         this.searchFilter = searchFilter;
 
         this.isSearching = true;
-        this._taxonomyService.search(searchFilter, true)
+        this._taxonomyService.search(searchFilter, true, this.sort.value)
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => this.isSearching = false))
             .pipe(switchMap((topics) => {
@@ -56,6 +64,11 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
             .subscribe(followers => {
                 this.followersMap = Utils.toMap(followers, f => f.disciplineTaxonomyId, f => f.followerCount);
             });
+    }
+
+    handleOnSort(sort: SortOption): void {
+        this.sort = sort;
+        this.handleOnSearch(this.searchFilter);
     }
 
     handleOnFollow(topic: DisciplineTaxonomyDto): void {

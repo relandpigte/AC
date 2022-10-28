@@ -1,10 +1,12 @@
 <app-search
     [data]="displayedUserTopics"
     [options]="{ sortable: true }"
+    [sortOptions]="sortOptions"
     [itemTemplate]="topicItemTemplate"
     [itemLoadingTemplate]="topicItemLoadingTemplate"
     [loading]="loading"
     (onSearch)="handleOnSearch($event)"
+    (onSort)="handleOnSort($event)"
 ></app-search>
 
 <ng-template #topicItemTemplate let-item="item">

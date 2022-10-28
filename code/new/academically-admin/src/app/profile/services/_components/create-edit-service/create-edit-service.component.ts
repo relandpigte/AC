@@ -248,7 +248,7 @@ export class CreateEditServiceComponent extends AppComponentBase implements OnIn
     }).pipe(
       takeUntil(this.destroyed$),
       switchMap((query: string) => {
-        return this._disciplineTaxonomiesService.search(query, false);
+        return this._disciplineTaxonomiesService.search(query, false, null);
       })
     );
   }

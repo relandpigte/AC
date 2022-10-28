@@ -1798,6 +1798,9 @@
 	<!-- Generics -->
 	<text name="Requests">Requests</text>
 	<text name="Programs">Programs</text>
+	<text name="SortedBy">Sorted by</text>
+	<text name="Recent">Recent</text>
+	<text name="Popular">Popular</text>
 	<!-- Coaching -->
 	<text name="NewCoaching">New Coaching</text>
 	<text name="CreateCoaching">Create Coaching</text>

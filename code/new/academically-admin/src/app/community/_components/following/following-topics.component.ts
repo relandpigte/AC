@@ -5,6 +5,7 @@ import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, GetDisciplineT
 import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash';
+import { SortOption } from '@shared/components/search/search.component';
 
 @Component({
     selector: 'app-following-topics',
@@ -24,6 +25,13 @@ export class FollowingTopicsComponent extends AppComponentBase implements OnInit
     isLoadingUserTopics = false;
     isUnfollowingTopic = false;
     isSearching = false;
+
+    sort: SortOption = { label: 'ForYou', value: 'foryou' };
+    sortOptions = [
+        { label: 'ForYou', value: 'foryou' },
+        { label: 'Popular', value: 'popular' },
+        { label: 'Recent', value: 'recent' }
+    ];
 
     constructor(
         injector: Injector,
@@ -62,6 +70,11 @@ export class FollowingTopicsComponent extends AppComponentBase implements OnInit
                 .map(t => ({ ...t.disciplineTaxonomy, followers: this.followersMap.get(t.disciplineTaxonomyId) ?? 0 }))
         );
         this.isSearching = false;
+    }
+
+    handleOnSort(sort: SortOption): void {
+        this.sort = sort;
+        this.handleOnSearch(this.searchFilter);
     }
 
     handleOnUnfollow(topic: DisciplineTaxonomyDto): void {

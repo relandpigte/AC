@@ -1,4 +1,4 @@
-<div class="search container-fluid d-flex flex-column">
+<div class="search container-fluid d-flex flex-column p-0">
     <div class="search-input row">
         <div class="col h-100">
             <form class="h-100">
@@ -21,6 +21,20 @@
                 </option>
                 </select>
             </form>
+        </div>
+    </div>
+
+    <div *ngIf="options.sortable && sortOptions?.length && sort" class="search-sort row" [style.marginTop.px]="10">
+        <div class="dropdown">
+            <span class="dropdown-label">{{ 'SortedBy' | localize }}:</span>
+            <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <span class="dropdown-value">{{ sort.label | localize }}</span>
+              <i class="fe fe-chevron-down"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <div *ngFor="let opt of sortOptions" class="dropdown-item" (click)="handleOnSort(opt)">{{ opt.label | localize }}</div>
+            </div>
         </div>
     </div>
 

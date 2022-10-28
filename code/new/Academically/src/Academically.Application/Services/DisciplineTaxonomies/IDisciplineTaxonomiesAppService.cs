@@ -15,6 +15,6 @@ namespace Academically.Services.DisciplineTaxonomies
         Task<IEnumerable<DisciplineTaxonomyDto>> GetAllLastChildren();
         Task<IEnumerable<GetDisciplineTaxonomyChildrenCountDto>> GetChildrenCount(List<Guid> disciplineTaxonomyIds);
         Task<IEnumerable<GetDisciplineTaxonomyFollowerCountDto>> GetFollowerCount(List<Guid> disciplineTaxonomyIds);
-        Task<IEnumerable<DisciplineTaxonomyDto>> Search(string keyword, bool excludeFollowing);
+        Task<IEnumerable<DisciplineTaxonomyDto>> Search(string keyword, bool excludeFollowing, string sorting);
     }
 }
