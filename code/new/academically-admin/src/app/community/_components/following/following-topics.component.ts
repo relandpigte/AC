@@ -44,12 +44,13 @@ export class FollowingTopicsComponent extends AppComponentBase implements OnInit
     get loading(): boolean { return this.isLoadingUserTopics || this.isUnfollowingTopic || this.isSearching; }
 
     ngOnInit(): void {
-        this.loadUserTopics();
     }
 
-    private loadUserTopics(): void {
+    handleOnSearch(searchFilter: string): void {
+        this.searchFilter = searchFilter;
+
         this.isLoadingUserTopics = true;
-        this._userTopics.getAll(this.appSession.userId, UserTopicType.Following)
+        this._userTopics.search(searchFilter, this.sort.value, UserTopicType.Following)
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => this.isLoadingUserTopics = false))
             .pipe(switchMap((userTopics) => {
@@ -60,16 +61,6 @@ export class FollowingTopicsComponent extends AppComponentBase implements OnInit
                 this.followersMap = Utils.toMap(followers, f => f.disciplineTaxonomyId, f => f.followerCount);
                 this.displayedUserTopics = _.clone(this.userTopics.map(t => ({ ...t.disciplineTaxonomy, followers: this.followersMap.get(t.disciplineTaxonomyId) ?? 0 }) ));
             });
-    }
-
-    handleOnSearch(searchFilter: string): void {
-        this.searchFilter = searchFilter;
-        this.isSearching = true;
-        this.displayedUserTopics = _.clone(
-            this.userTopics?.filter(t => t.disciplineTaxonomy.name.toLowerCase().includes(this.searchFilter.toLowerCase()))
-                .map(t => ({ ...t.disciplineTaxonomy, followers: this.followersMap.get(t.disciplineTaxonomyId) ?? 0 }))
-        );
-        this.isSearching = false;
     }
 
     handleOnSort(sort: SortOption): void {
@@ -88,7 +79,7 @@ export class FollowingTopicsComponent extends AppComponentBase implements OnInit
             .pipe(finalize(() => this.isUnfollowingTopic = false))
             .subscribe(_ => {
                 this.notify.info(this.l('Community.Topics.Unfollow.Success', topic.name));
-                this.loadUserTopics();
+                this.handleOnSearch(this.searchFilter);
             });
         }
 

@@ -107,7 +107,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getUserTopics(): void {
-    this._userTopicsService.getAll(this.appSession.userId, UserTopicType.Following)
+    this._userTopicsService.getAll(this.appSession.userId, UserTopicType.Following, undefined)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(topics => this.userTopics = topics);
   }

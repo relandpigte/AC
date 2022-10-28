@@ -13,7 +13,7 @@ import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 })
 export class MoreTopicsComponent extends AppComponentBase implements OnInit {
 
-    topics: DisciplineTaxonomyDto[] = [];
+    topics: any[] = [];
     followers: GetDisciplineTaxonomyFollowerCountDto[] = [];
     followersMap: Map<string, number> = new Map();
 
@@ -46,10 +46,6 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
     ngOnInit(): void {
     }
 
-    getFollowerCount(topicId: string): number {
-        return this.followersMap.get(topicId) ?? 0;
-    }
-
     handleOnSearch(searchFilter: string): void {
         this.searchFilter = searchFilter;
 
@@ -63,6 +59,7 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
             }))
             .subscribe(followers => {
                 this.followersMap = Utils.toMap(followers, f => f.disciplineTaxonomyId, f => f.followerCount);
+                this.topics = this.topics.map(t => ({ ...t, followers: this.followersMap.get(t.id) ?? 0 }) )
             });
     }
 
