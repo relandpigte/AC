@@ -1,5 +1,6 @@
 ﻿using Abp.AutoMapper;
 using Academically.Domain.Entities;
+using Academically.Domain.Enums;
 using System;
 
 namespace Academically.Services.UserTopics.Dto
@@ -9,6 +10,7 @@ namespace Academically.Services.UserTopics.Dto
 	{
         public long UserId { get; set; }
         public Guid DisciplineTaxonomyId { get; set; }
+        public UserTopicType Type { get; set; }
     }
 }
 

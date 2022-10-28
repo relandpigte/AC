@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
+using Academically.Domain.Enums;
 
 namespace Academically.Domain.Entities
 {
@@ -9,6 +10,8 @@ namespace Academically.Domain.Entities
     {
         public long UserId { get; set; }
         public Guid DisciplineTaxonomyId { get; set; }
+
+        public UserTopicType Type { get; set; }
 
         [ForeignKey("DisciplineTaxonomyId")]
         public virtual DisciplineTaxonomy DisciplineTaxonomy { get; set; }
