@@ -41,14 +41,7 @@ namespace Academically.Services.DisciplineTaxonomies
 
             if (!string.IsNullOrWhiteSpace(sorting))
             {
-                if (sorting.Contains("recent"))
-                    query = query.OrderByDescending(x => x.CreationTime);
-                else if (sorting.Contains("popular"))
-                    query = query.OrderByDescending(x => x.UserTopics.Count());
-                else if (sorting.Contains("foryou"))
-                    query = query.OrderBy(x => x.Name);
-                else
-                    query = query.OrderBy(x => x.Name);
+                query = Sort(query, sorting);
             }
 
             var disciplineTaxonomies = await query.Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e))
@@ -72,14 +65,7 @@ namespace Academically.Services.DisciplineTaxonomies
 
             if (!string.IsNullOrWhiteSpace(request.Sorting))
             {
-                if (request.Sorting.Contains("recent"))
-                    query = query.OrderByDescending(x => x.CreationTime);
-                else if (request.Sorting.Contains("popular"))
-                    query = query.OrderByDescending(x => x.UserTopics.Count());
-                else if (request.Sorting.Contains("foryou"))
-                    query = query.OrderBy(x => x.Name);
-                else
-                    query = query.OrderBy(request.Sorting);
+                query = Sort(query, request.Sorting);
             }
 
             query = query.PageBy(request);
@@ -147,21 +133,26 @@ namespace Academically.Services.DisciplineTaxonomies
                     .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.ToLower().Contains(keyword.ToLower()))
                     .WhereIf(excludeFollowing && followingIds.Any(), x => !followingIds.Contains(x.Id))
                     .Take(10);
-                    
 
             if (!string.IsNullOrWhiteSpace(sorting))
             {
-                if (sorting.Contains("recent"))
-                    query = query.OrderByDescending(x => x.CreationTime);
-                else if (sorting.Contains("popular"))
-                    query = query.OrderByDescending(x => x.UserTopics.Count());
-                else if (sorting.Contains("foryou"))
-                    query = query.OrderBy(x => x.Name);
-                else
-                    query = query.OrderBy(x => x.Name);
+                query = Sort(query, sorting);
             }
 
             return await query.Select(x => ObjectMapper.Map<DisciplineTaxonomyDto>(x)).ToListAsync();
+        }
+
+        private IQueryable<DisciplineTaxonomy> Sort(IQueryable<DisciplineTaxonomy> query, string sorting)
+        {
+            if (sorting.Contains("recent"))
+                query = query.OrderByDescending(x => x.CreationTime);
+            else if (sorting.Contains("popular"))
+                query = query.OrderByDescending(x => x.UserTopics.Count());
+            else if (sorting.Contains("foryou"))
+                query = query.OrderBy(x => x.Name);
+            else
+                query = query.OrderBy(x => x.Name);
+            return query;
         }
     }
 }

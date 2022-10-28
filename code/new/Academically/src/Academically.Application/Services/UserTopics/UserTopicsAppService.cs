@@ -35,14 +35,7 @@ namespace Academically.Services.UserTopics
 
             if (!string.IsNullOrWhiteSpace(sorting))
             {
-                if (sorting.Contains("recent"))
-                    query = query.OrderByDescending(x => x.DisciplineTaxonomy.CreationTime);
-                else if (sorting.Contains("popular"))
-                    query = query.OrderByDescending(x => x.DisciplineTaxonomy.UserTopics.Count());
-                else if (sorting.Contains("foryou"))
-                    query = query.OrderBy(x => x.DisciplineTaxonomy.Name);
-                else
-                    query = query.OrderBy(x => x.DisciplineTaxonomy.Name);
+                query = Sort(query, sorting);
             }
 
             return await query.Select(x => ObjectMapper.Map<UserTopicDto>(x)).ToListAsync();
@@ -59,16 +52,9 @@ namespace Academically.Services.UserTopics
 
             if (!string.IsNullOrWhiteSpace(request.Sorting))
             {
-                if (request.Sorting.Contains("recent"))
-                    query = query.OrderByDescending(x => x.DisciplineTaxonomy.CreationTime);
-                else if (request.Sorting.Contains("popular"))
-                    query = query.OrderByDescending(x => x.DisciplineTaxonomy.UserTopics.Count());
-                else if (request.Sorting.Contains("foryou"))
-                    query = query.OrderBy(x => x.DisciplineTaxonomy.Name);
-                else
-                    query = query.OrderBy(request.Sorting);
+                query = Sort(query, request.Sorting);
             }
-               
+
             query = query.PageBy(request);
 
             var userTopics = await query.Select(e => ObjectMapper.Map<UserTopicDto>(e))
@@ -105,20 +91,25 @@ namespace Academically.Services.UserTopics
                     .Where(x => x.Type == type)
                     .Take(10);
 
-
             if (!string.IsNullOrWhiteSpace(sorting))
             {
-                if (sorting.Contains("recent"))
-                    query = query.OrderByDescending(x => x.DisciplineTaxonomy.CreationTime);
-                else if (sorting.Contains("popular"))
-                    query = query.OrderByDescending(x => x.DisciplineTaxonomy.UserTopics.Count());
-                else if (sorting.Contains("foryou"))
-                    query = query.OrderBy(x => x.DisciplineTaxonomy.Name);
-                else
-                    query = query.OrderBy(x => x.DisciplineTaxonomy.Name);
+                query = Sort(query, sorting);
             }
 
             return await query.Select(x => ObjectMapper.Map<UserTopicDto>(x)).ToListAsync();
+        }
+
+        private IQueryable<UserTopic> Sort(IQueryable<UserTopic> query, string sorting)
+        {
+            if (sorting.Contains("recent"))
+                query = query.OrderByDescending(x => x.DisciplineTaxonomy.CreationTime);
+            else if (sorting.Contains("popular"))
+                query = query.OrderByDescending(x => x.DisciplineTaxonomy.UserTopics.Count());
+            else if (sorting.Contains("foryou"))
+                query = query.OrderBy(x => x.DisciplineTaxonomy.Name);
+            else
+                query = query.OrderBy(x => x.DisciplineTaxonomy.Name);
+            return query;
         }
     }
 }
