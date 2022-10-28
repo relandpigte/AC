@@ -10,9 +10,10 @@ namespace Academically.Services.UserTopics
 {
     public interface IUserTopicsAppService : IApplicationService
     {
-        Task<List<UserTopicDto>> GetAll(long userId, UserTopicType type);
+        Task<List<UserTopicDto>> GetAll(long userId, UserTopicType type, string sorting);
         Task<PagedResultDto<UserTopicDto>> GetAllPaged(PagedUserTopicResultRequestDto request);
         Task Create(CreateUserTopicDto input);
         Task Delete(Guid id);
+        Task<IEnumerable<UserTopicDto>> Search(string keyword, UserTopicType type, string sorting);
     }
 }

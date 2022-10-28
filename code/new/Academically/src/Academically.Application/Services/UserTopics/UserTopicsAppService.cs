@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Academically.Authorization;
 using Academically.Domain.Entities;
@@ -25,14 +26,26 @@ namespace Academically.Services.UserTopics
             _userTopicRepository = userTopicRepository;
         }
 
-        public async Task<List<UserTopicDto>> GetAll(long userId, UserTopicType type)
+        public async Task<List<UserTopicDto>> GetAll(long userId, UserTopicType type, string sorting)
         {
-            var userTopics = await _userTopicRepository.GetAll()
+            var query = _userTopicRepository.GetAll()
                 .Include(x => x.DisciplineTaxonomy)
                 .Where(x => x.UserId == userId)
-                .Where(x => x.Type == type)
-                .ToListAsync();
-            return ObjectMapper.Map<List<UserTopicDto>>(userTopics);
+                .Where(x => x.Type == type);
+
+            if (!string.IsNullOrWhiteSpace(sorting))
+            {
+                if (sorting.Contains("recent"))
+                    query = query.OrderByDescending(x => x.DisciplineTaxonomy.CreationTime);
+                else if (sorting.Contains("popular"))
+                    query = query.OrderByDescending(x => x.DisciplineTaxonomy.UserTopics.Count());
+                else if (sorting.Contains("foryou"))
+                    query = query.OrderBy(x => x.DisciplineTaxonomy.Name);
+                else
+                    query = query.OrderBy(x => x.DisciplineTaxonomy.Name);
+            }
+
+            return await query.Select(x => ObjectMapper.Map<UserTopicDto>(x)).ToListAsync();
         }
 
         public async Task<PagedResultDto<UserTopicDto>> GetAllPaged(PagedUserTopicResultRequestDto request)
@@ -46,7 +59,14 @@ namespace Academically.Services.UserTopics
 
             if (!string.IsNullOrWhiteSpace(request.Sorting))
             {
-                query = query.OrderBy(request.Sorting);
+                if (request.Sorting.Contains("recent"))
+                    query = query.OrderByDescending(x => x.DisciplineTaxonomy.CreationTime);
+                else if (request.Sorting.Contains("popular"))
+                    query = query.OrderByDescending(x => x.DisciplineTaxonomy.UserTopics.Count());
+                else if (request.Sorting.Contains("foryou"))
+                    query = query.OrderBy(x => x.DisciplineTaxonomy.Name);
+                else
+                    query = query.OrderBy(request.Sorting);
             }
                
             query = query.PageBy(request);
@@ -72,6 +92,33 @@ namespace Academically.Services.UserTopics
         public async Task Delete(Guid id)
         {
             await _userTopicRepository.DeleteAsync(id);
+        }
+
+        public async Task<IEnumerable<UserTopicDto>> Search(string keyword, UserTopicType type, string sorting)
+        {
+            var currentUserId = AbpSession.UserId.Value;
+
+            var query = _userTopicRepository.GetAll()
+                    .Include(x => x.DisciplineTaxonomy)
+                    .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.DisciplineTaxonomy.Name.ToLower().Contains(keyword.ToLower()))
+                    .Where(x => x.UserId == currentUserId)
+                    .Where(x => x.Type == type)
+                    .Take(10);
+
+
+            if (!string.IsNullOrWhiteSpace(sorting))
+            {
+                if (sorting.Contains("recent"))
+                    query = query.OrderByDescending(x => x.DisciplineTaxonomy.CreationTime);
+                else if (sorting.Contains("popular"))
+                    query = query.OrderByDescending(x => x.DisciplineTaxonomy.UserTopics.Count());
+                else if (sorting.Contains("foryou"))
+                    query = query.OrderBy(x => x.DisciplineTaxonomy.Name);
+                else
+                    query = query.OrderBy(x => x.DisciplineTaxonomy.Name);
+            }
+
+            return await query.Select(x => ObjectMapper.Map<UserTopicDto>(x)).ToListAsync();
         }
     }
 }

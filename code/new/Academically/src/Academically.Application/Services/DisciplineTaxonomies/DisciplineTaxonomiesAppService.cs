@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
 using Abp.Application.Services.Dto;
 using Abp.Auditing;
 using Abp.Domain.Repositories;
@@ -78,7 +79,7 @@ namespace Academically.Services.DisciplineTaxonomies
                 else if (request.Sorting.Contains("foryou"))
                     query = query.OrderBy(x => x.Name);
                 else
-                    query = query.OrderBy(x => x.Name);
+                    query = query.OrderBy(request.Sorting);
             }
 
             query = query.PageBy(request);
@@ -145,7 +146,6 @@ namespace Academically.Services.DisciplineTaxonomies
             var query = _disciplineTaxonomiesRepository.GetAll()
                     .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.ToLower().Contains(keyword.ToLower()))
                     .WhereIf(excludeFollowing && followingIds.Any(), x => !followingIds.Contains(x.Id))
-                    .OrderBy(x => x.Name)
                     .Take(10);
                     
 
