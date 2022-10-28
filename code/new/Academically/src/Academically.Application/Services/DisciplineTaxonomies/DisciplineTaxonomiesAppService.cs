@@ -17,12 +17,13 @@ namespace Academically.Services.DisciplineTaxonomies
     public class DisciplineTaxonomiesAppService : AcademicallyAppServiceBase, IDisciplineTaxonomiesAppService
     {
         private readonly IRepository<DisciplineTaxonomy, Guid> _disciplineTaxonomiesRepository;
+        private readonly IRepository<UserTopic, Guid> _userTopicRepository;
 
-        public DisciplineTaxonomiesAppService(
-             IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomiesRepository
-            )
+        public DisciplineTaxonomiesAppService(IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomiesRepository,
+            IRepository<UserTopic, Guid> userTopicRepository)
         {
             _disciplineTaxonomiesRepository = disciplineTaxonomiesRepository;
+            _userTopicRepository = userTopicRepository;
         }
 
         public async Task<IEnumerable<DisciplineTaxonomyDto>> GetAll(Guid? parentId, bool includeChildren, string sorting)
@@ -129,13 +130,24 @@ namespace Academically.Services.DisciplineTaxonomies
             return await query.ToListAsync();
         }
 
-        public async Task<IEnumerable<DisciplineTaxonomyDto>> Search(string keyword)
+        public async Task<IEnumerable<DisciplineTaxonomyDto>> Search(string keyword, bool excludeFollowing)
         {
+            var followingIds = new List<Guid>();
+            if (excludeFollowing)
+            {
+                var currentUserId = AbpSession.UserId.Value;
+                followingIds = await _userTopicRepository.GetAll()
+                    .Where(x => x.UserId == currentUserId)
+                    .Select(x => x.DisciplineTaxonomyId)
+                    .ToListAsync();
+            }
+
             var disciplineTaxonomies = await _disciplineTaxonomiesRepository.GetAll()
-                    .WhereIf(!keyword.IsNullOrWhiteSpace(), e => e.Name.ToLower().Contains(keyword.ToLower()))
-                    .OrderBy(e => e.Name)
+                    .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.ToLower().Contains(keyword.ToLower()))
+                    .WhereIf(excludeFollowing && followingIds.Any(), x => !followingIds.Contains(x.Id))
+                    .OrderBy(x => x.Name)
                     .Take(10)
-                    .Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e))
+                    .Select(x => ObjectMapper.Map<DisciplineTaxonomyDto>(x))
                     .ToListAsync();
             return disciplineTaxonomies;
         }
