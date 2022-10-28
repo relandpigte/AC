@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Application.Services.Dto;
 using Abp.Auditing;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
+using Academically.Services.Articles.Dto;
 using Academically.Services.DisciplineTaxonomies.Dto;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +25,7 @@ namespace Academically.Services.DisciplineTaxonomies
             _disciplineTaxonomiesRepository = disciplineTaxonomiesRepository;
         }
 
-        public async Task<IEnumerable<DisciplineTaxonomyDto>> GetAll(Guid? parentId, bool includeChildren)
+        public async Task<IEnumerable<DisciplineTaxonomyDto>> GetAll(Guid? parentId, bool includeChildren, string sorting)
         {
             var query = _disciplineTaxonomiesRepository.GetAll()
                 .Where(x => x.ParentId == parentId);
@@ -35,11 +37,59 @@ namespace Academically.Services.DisciplineTaxonomies
                     .Where(x => x.ParentId == parentId);
             }
 
-            query = query.OrderBy(x => x.Name);
+            if (!string.IsNullOrWhiteSpace(sorting))
+            {
+                if (sorting.Contains("recent"))
+                    query = query.OrderByDescending(x => x.CreationTime);
+                else if (sorting.Contains("popular"))
+                    query = query.OrderByDescending(x => x.UserTopics.Count());
+                else if (sorting.Contains("foryou"))
+                    query = query.OrderBy(x => x.Name);
+                else
+                    query = query.OrderBy(x => x.Name);
+            }
 
-            var disciplineTaxonomies = await query.ToListAsync();
-            var result = disciplineTaxonomies.Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e));
-            return result;
+            var disciplineTaxonomies = await query.Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e))
+                .ToListAsync();
+            return disciplineTaxonomies;
+        }
+
+        public async Task<PagedResultDto<DisciplineTaxonomyDto>> GetAllPaged(PagedDisciplineTaxonomyResultRequestDto request)
+        {
+            var query = _disciplineTaxonomiesRepository.GetAll()
+                .Where(x => x.ParentId == request.ParentId);
+
+            if (request.IncludeChildren)
+            {
+                query = _disciplineTaxonomiesRepository.GetAll()
+                    .Include(x => x.Children)
+                    .Where(x => x.ParentId == request.ParentId);
+            }
+
+            var totalCount = await query.CountAsync();
+
+            if (!string.IsNullOrWhiteSpace(request.Sorting))
+            {
+                if (request.Sorting.Contains("recent"))
+                    query = query.OrderByDescending(x => x.CreationTime);
+                else if (request.Sorting.Contains("popular"))
+                    query = query.OrderByDescending(x => x.UserTopics.Count());
+                else if (request.Sorting.Contains("foryou"))
+                    query = query.OrderBy(x => x.Name);
+                else
+                    query = query.OrderBy(x => x.Name);
+            }
+
+            query = query.PageBy(request);
+
+            var disciplineTaxonomies = await query.Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e))
+                .ToListAsync();
+
+            return new PagedResultDto<DisciplineTaxonomyDto>()
+            {
+                TotalCount = totalCount,
+                Items = disciplineTaxonomies
+            };
         }
 
         public async Task<IEnumerable<DisciplineTaxonomyDto>> GetAllLastChildren()

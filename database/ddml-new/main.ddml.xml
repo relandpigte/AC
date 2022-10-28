@@ -143,8 +143,8 @@
 	<include file="ddml-new/ddml.2022-06-21-04-create-workshop-tables.xml" />
 	<include file="ddml-new/ddml.2022-06-21-05-alter-workshop-tables.xml" />
 	<include file="ddml-new/ddml.2022-06-21-06-alter-coaching-workshop-tables.xml" />
-	<include file="ddml-new/ddml.2022-06-29-01-alter-events-add-autoadmitattendees-field.xml" />
 	<include file="ddml-new/ddml.2022-07-22-01-create-event-offers-table.xml" />
 	<include file="ddml-new/ddml.2022-10-21-01.create-usertopics-table.xml" />
+	<include file="ddml-new/ddml.2022-10-28-01-alter-disciplinetaxonomy-add-creation-time-field.xml" />
 </databaseChangeLog>
 	

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 
 namespace Academically.Domain.Entities
 {
     [Table("AcademicallyDisciplineTaxonomies")]
-    public class DisciplineTaxonomy : Entity<Guid>
+    public class DisciplineTaxonomy : CreationAuditedEntity<Guid>
     {
         public DisciplineTaxonomy()
         {
