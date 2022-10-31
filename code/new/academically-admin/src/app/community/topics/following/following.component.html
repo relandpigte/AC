@@ -2,7 +2,7 @@
   <app-search
     [options]="{ pagination: true, searchHeight: 59 }"
     [pagedData]="pagedTopics"
-    [currentPage]="currentPage"
+    [currentPage]="searchObj?.pageNumber"
     [itemTemplate]="topicItemTemplate"
     [itemLoadingTemplate]="topicItemLoadingTemplate"
     [loading]="loading"
@@ -17,7 +17,7 @@
           <div class="topic-row-left-followers">{{ 'Community.Topics.Followers' | localize: (getFollowersCount(item.disciplineTaxonomy) | shortNum: 1)  }}</div>
       </div>
       <div class="topic-row-right d-flex flex-row align-items-center gap-10">
-          <button class="btn btn-md btn-primary" (click)="handleOnUnfollow(item)">
+          <button class="btn btn-md btn-primary" (click)="handleOnUnfollow(item.disciplineTaxonomy)">
               {{ (isUnfollowingTopic ? 'Unfollowing' : 'Following') | localize }}
               <span *ngIf="isUnfollowingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
               <i *ngIf="!isUnfollowingTopic" class="fe fe-check" role="status" aria-hidden="true"></i>

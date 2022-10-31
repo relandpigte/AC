@@ -18,10 +18,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
   followers: GetDisciplineTaxonomyFollowerCountDto[] = [];
   followersMap: Map<string, number> = new Map();
 
-  searchFilter: string;
-  currentPage: number;
-  skipCount: number;
-  maxResultCount: number;
+  searchObj: any;
 
   isLoadingUserTopics = false;
   isUnfollowingTopic = false;
@@ -42,13 +39,16 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
   getFollowersCount(item: DisciplineTaxonomyDto): number { return this.followersMap.get(item.id) ?? 0; }
 
   handleOnSearch(searchObj: any): void {
-    this.searchFilter = searchObj?.request?.searchFilter;
-    this.currentPage = searchObj?.pageNumber;
-    this.skipCount = searchObj?.request?.skipCount;
-    this.maxResultCount = searchObj?.request?.maxResultCount;
+    this.searchObj = searchObj;
 
     this.isLoadingUserTopics = true;
-    this._userTopics.getAllPaged(this.searchFilter, this.appSession.userId, UserTopicType.Following, 'recent', this.skipCount, this.maxResultCount)
+    this._userTopics.getAllPaged(
+      searchObj?.request?.searchFilter,
+      this.appSession.userId,
+      UserTopicType.Following, 'recent',
+      searchObj?.request?.skipCount,
+      searchObj?.request?.maxResultCount
+    )
         .pipe(takeUntil(this.destroyed$))
         .pipe(finalize(() => this.isLoadingUserTopics = false))
         .pipe(switchMap((pagedTopics) => {
@@ -71,7 +71,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
         .pipe(finalize(() => this.isUnfollowingTopic = false))
         .subscribe(_ => {
             this.notify.info(this.l('Community.Topics.Unfollow.Success', topic.name));
-            this.handleOnSearch(this.searchFilter);
+            this.handleOnSearch(this.searchObj);
         });
     }
   }
