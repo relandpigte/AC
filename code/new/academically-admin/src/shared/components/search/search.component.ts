@@ -9,6 +9,7 @@ export interface SearchOptions {
     pagination?: boolean;
     onEnter?: boolean;
     searchDelay?: number;
+    searchHeight?: number;
     maxItems?: number;
 };
 

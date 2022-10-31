@@ -45,6 +45,7 @@ namespace Academically.Services.UserTopics
         {
             var query = _userTopicRepository.GetAll()
                 .Include(x => x.DisciplineTaxonomy)
+                .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), x => x.DisciplineTaxonomy.Name.ToLower().Contains(request.Keyword.ToLower()))
                 .Where(x => x.UserId == request.UserId)
                 .Where(x => x.Type == request.Type);
 

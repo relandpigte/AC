@@ -1881,7 +1881,8 @@
 	<text name="Explore">Explore</text>
 	<text name="ForYou">For You</text>
 	<!-- Community -->
-	<text name="Community.Header">Community</text>
+	<text name="Community.Header1">Community</text>
+	<text name="Community.Header2">Interests</text>
 	<text name="Community.Topics">Topics</text>
 	<text name="Community.Topics.More">More topics</text>
 	<text name="Community.Topics.BrowseAll">Browse all topics</text>

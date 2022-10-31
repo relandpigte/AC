@@ -82,6 +82,5 @@ export class FollowingTopicsComponent extends AppComponentBase implements OnInit
                 this.handleOnSearch(this.searchFilter);
             });
         }
-
     }
 }

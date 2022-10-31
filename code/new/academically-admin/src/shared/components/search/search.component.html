@@ -1,17 +1,17 @@
 <div class="search container-fluid d-flex flex-column p-0">
-    <div class="search-input row">
-        <div class="col h-100">
+    <div class="search-input row m-0" [style.height.px]="options?.searchHeight ? options.searchHeight : 52">
+        <div class="col p-0 h-100">
             <form class="h-100">
                 <div class="input-group input-group-flush h-100 d-flex align-items-center">
                     <div class="input-group-prepend"><span class="input-group-text"><i class="fe fe-search"></i></span></div>
                     <input #searchInput class="list-search form-control" type="search" name="Search" placeholder="Search" (keyup.enter)="handleOnSearch()" />
-                    <div class="bg-white veil d-flex align-items-center" [style.marginLeft.px]="28" [ngClass]="[loading ? 'show' : 'hidden']">
+                    <div class="bg-white veil d-flex align-items-center" [ngClass]="[loading ? 'show' : 'hidden']">
                         <div class="box-shimmer-bar"  [style.width.%]="30" [style.height.%]="50"></div>
                     </div>
                 </div>
             </form>
         </div>
-        <div *ngIf="options.pagination" class="col-auto mr-n3">
+        <div *ngIf="options.pagination" class="col-auto p-0 d-flex align-items-center">
             <form>
                 <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize"
                 (select2ValueChange)="pageSizeChange($event)" name="PageNumber"
@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    <div *ngIf="options.sortable && sortOptions?.length && sort" class="search-sort row" [style.marginTop.px]="10">
+    <div *ngIf="options.sortable && sortOptions?.length && sort" class="search-sort row m-0" [style.marginTop.px]="10">
         <div class="dropdown">
             <span class="dropdown-label">{{ 'SortedBy' | localize }}:</span>
             <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
@@ -53,9 +53,14 @@
                     <ng-container *ngIf="itemTemplate"><ng-container *ngTemplateOutlet="itemTemplate; context: { item: d }"></ng-container></ng-container>
                     <ng-container *ngIf="!itemTemplate">{{ d.name }}</ng-container>
                 </div>
-                <abp-pagination-controls *ngIf="options.pagination" id="data-pagination" (pageChange)="getDataPage($event)" [customClass]="'border-0'"></abp-pagination-controls>
             </ng-container>
         </ng-container>
+    </div>
+
+    <div *ngIf="options.pagination" class="search-footer row border-top">
+        <div class="flex-grow-1">
+            <abp-pagination-controls *ngIf="options.pagination" id="data-pagination" (pageChange)="getDataPage($event)" [customClass]="'border-0'"></abp-pagination-controls>
+        </div>
     </div>
 </div>
 

@@ -24475,6 +24475,7 @@ export class UserTopicsServiceProxy {
     }
 
     /**
+     * @param keyword (optional) 
      * @param userId (optional) 
      * @param type (optional) 0 = Following
     
@@ -24484,8 +24485,12 @@ export class UserTopicsServiceProxy {
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllPaged(userId: number | undefined, type: UserTopicType | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserTopicDtoPagedResultDto> {
+    getAllPaged(keyword: string | undefined, userId: number | undefined, type: UserTopicType | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserTopicDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/UserTopics/GetAllPaged?";
+        if (keyword === null)
+            throw new Error("The parameter 'keyword' cannot be null.");
+        else if (keyword !== undefined)
+            url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
         if (userId === null)
             throw new Error("The parameter 'userId' cannot be null.");
         else if (userId !== undefined)
