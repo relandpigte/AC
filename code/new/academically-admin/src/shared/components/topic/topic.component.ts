@@ -1,7 +1,12 @@
-import { Component, Injector, Input } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, Output } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShortNumPipe } from '@shared/pipes/short-num.pipe';
+
+export interface TopicOptions {
+    showFollow?: boolean;
+    showRemove?: boolean;
+};
 
 @Component({
     selector: 'app-topic-card',
@@ -14,13 +19,20 @@ export class TopicCardComponent extends AppComponentBase {
 
     @Input() data: any;
     @Input() customClass = '';
-    @Input() showRemove = false;
+    @Input() showFollow: boolean;
+    @Input() showRemove: boolean;
+    @Input() lazyLoadFollowerCount: boolean;
     @Input() isLoading = true;
+
+    @Output() onFollow: EventEmitter<any> = new EventEmitter();
+    @Output() onRemove: EventEmitter<any> = new EventEmitter();
+
+    followerCount: number;
 
     get isParent(): boolean { return this.data?.children?.length; }
     get name(): string { return this.data?.name; }
-    get composition(): string { return this._snPipe.transform(this.data?.children?.length ?? 4323, 1); }
-    get followers(): string { return this._snPipe.transform(this.data?.followers?.length ?? 8362, 1); }
+    get composition(): string { return this._snPipe.transform(this.data?.children?.length ?? 0, 1); }
+    get followers(): string { return this._snPipe.transform(this.data?.followers ?? 0, 1); }
 
     constructor(
         injector: Injector,
@@ -28,4 +40,7 @@ export class TopicCardComponent extends AppComponentBase {
     ) {
         super(injector);
     }
+
+    handleFollowClick(): void { this.onFollow.emit(this.data); }
+    handleRemoveClick(): void { this.onRemove.emit(this.data); }
 }

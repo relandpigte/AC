@@ -1890,6 +1890,7 @@
 	<text name="Community.Topics.Composition">{0} Topics</text>
 	<text name="Community.Topics.Followers">{0} followers</text>
 	<text name="Community.Topics.Follow.Success">You are now following {0} topic.</text>
+	<text name="Community.Topics.NotInterested.Success">{0} topic will no longer be suggested to you.</text>
 	<text name="Community.Topics.Unfollow.Success">You have unfollowed {0} topic.</text>
 	<!-- Events -->
 	<text name="EventsSchedule">From {0}</text>

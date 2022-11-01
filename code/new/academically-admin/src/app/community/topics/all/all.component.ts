@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto } from '@shared/service-proxies/service-proxies';
+import { CreateUserTopicDto, DisciplineTaxonomiesServiceProxy, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash';
@@ -19,12 +19,15 @@ export class AllComponent extends AppComponentBase implements OnInit {
   isLoadingParentTopics = false;
   isLoadingForYouTopics = false;
   isLoadingTailoredTopics = false
+  isFollowingTopic = false;
+  isRemovingTopic = false;
 
-  get isLoading(): boolean { return this.isLoadingParentTopics || this.isLoadingForYouTopics || this.isLoadingTailoredTopics; }
+  get isLoading(): boolean { return this.isLoadingParentTopics || this.isLoadingForYouTopics || this.isLoadingTailoredTopics || this.isFollowingTopic; }
 
   constructor(
     injector: Injector,
-    private _taxonomyService: DisciplineTaxonomiesServiceProxy
+    private _taxonomyService: DisciplineTaxonomiesServiceProxy,
+    private _userTopics: UserTopicsServiceProxy
   ) {
     super(injector);
   }
@@ -50,7 +53,9 @@ export class AllComponent extends AppComponentBase implements OnInit {
     this._taxonomyService.getAllLastChildren()
         .pipe(takeUntil(this.destroyed$))
         .pipe(finalize(() => this.isLoadingForYouTopics = false ))
-        .subscribe(topics => this.forYouTopics = this.chunkArrayInGroups(topics, 3));
+        .subscribe((topics) => {
+          this.forYouTopics = this.chunkArrayInGroups(topics, 3)
+        });
   }
 
   private getTailoredTopics(source: any, count?: number): void {
@@ -60,5 +65,35 @@ export class AllComponent extends AppComponentBase implements OnInit {
     this.isLoadingTailoredTopics = false;
   }
 
+  handleTopicFollowClick(topic: any): void {
+      this.isFollowingTopic = true;
 
+      const request = new CreateUserTopicDto();
+      request.userId = this.appSession.userId;
+      request.disciplineTaxonomyId = topic.id;
+      request.type = UserTopicType.Following;
+
+      this._userTopics.create(request)
+          .pipe(takeUntil(this.destroyed$))
+          .pipe(finalize(() => this.isFollowingTopic = false))
+          .subscribe(_ => {
+              this.notify.info(this.l('Community.Topics.Follow.Success', topic.name));
+          });
+  }
+
+  handleTopicRemoveClick(topic: any): void {
+    this.isRemovingTopic = true;
+
+    const request = new CreateUserTopicDto();
+    request.userId = this.appSession.userId;
+    request.disciplineTaxonomyId = topic.id;
+    request.type = UserTopicType.NotInterested;
+
+    this._userTopics.create(request)
+        .pipe(takeUntil(this.destroyed$))
+        .pipe(finalize(() => this.isRemovingTopic = false))
+        .subscribe(_ => {
+            this.notify.info(this.l('Community.Topics.NotInterested.Success', topic.name));
+        });
+  }
 }

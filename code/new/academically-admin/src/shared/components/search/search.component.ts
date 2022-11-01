@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, Injector, Input, On
 import { PagedListingComponentBase } from '@shared/paged-listing-component-base';
 import * as _ from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, skip, takeUntil } from 'rxjs/operators';
 
 export interface SearchOptions {
     sortable?: boolean;
@@ -49,29 +49,32 @@ export class SearchComponent<T> extends PagedListingComponentBase<T> implements 
         injector: Injector
     ) {
         super(injector);
-
-        this.searchInputTrigger$
-            .pipe(takeUntil(this.destroyed$))
-            .pipe(debounceTime(this.options?.searchDelay ?? 600))
-            .pipe(distinctUntilChanged())
-            .subscribe(filter => {
-                this.searchFilter = filter;
-                this.handleOnSearch();
-            });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (this.options.pagination && 'pagedData' in changes && this.pagedData) {
+        if ('options' in changes && this.options) {
+            this.searchInputTrigger$
+                .pipe(skip(this.options.pagination ? 1 : 0))
+                .pipe(takeUntil(this.destroyed$))
+                .pipe(debounceTime(this.options.searchDelay ?? 600))
+                .pipe(distinctUntilChanged())
+                .subscribe(filter => {
+                    this.searchFilter = filter;
+                    this.handleOnSearch();
+                });
+        }
+
+        if (this.options?.pagination && 'pagedData' in changes && this.pagedData) {
             this.data = this.pagedData.items ?? [];
             this.showPaging(this.pagedData, this.currentPage);
         }
 
-        if (this.options.sortable && 'sortOptions' in changes && this.sortOptions?.length) {
+        if (this.options?.sortable && 'sortOptions' in changes && this.sortOptions?.length) {
             this.handleOnSort(this.sortOptions[0]);
         }
 
-        if ('data' in changes && this.data) {
-            if (this.options.maxItems) this.data = _.take(this.data, this.options.maxItems);
+        if (this.options?.maxItems && 'data' in changes && this.data) {
+            this.data = _.take(this.data, this.options.maxItems);
         }
     }
 
@@ -88,7 +91,6 @@ export class SearchComponent<T> extends PagedListingComponentBase<T> implements 
 
     handleOnSearch(): void {
         this.searchFilter = this.searchInput?.nativeElement.value ?? '';
-
         if (this.options.pagination) this.getDataPage(1);
         else this.onSearch.emit(this.searchFilter);
     }
