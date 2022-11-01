@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Abp.Domain.Entities.Auditing;
 using Academically.Domain.Entities;
+using Academically.Services.UserTopics.Dto;
 
 namespace Academically.Services.DisciplineTaxonomies.Dto
 {
@@ -17,5 +19,8 @@ namespace Academically.Services.DisciplineTaxonomies.Dto
         public DateTime CreationTime { get; set; }
         public DisciplineTaxonomyDto Parent { get; set; }
         public IEnumerable<DisciplineTaxonomyDto> Children { get; set; }
+        public IEnumerable<UserTopicDto> UserTopics { get; set; }
+        public int ChildrentCount { get { return Children.Count(); } }
+        public int FollowerCount { get { return UserTopics.Count(); } }
     }
 }

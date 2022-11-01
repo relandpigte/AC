@@ -10,11 +10,12 @@ namespace Academically.Services.DisciplineTaxonomies
 {
     public interface IDisciplineTaxonomiesAppService : IApplicationService
     {
-        Task<IEnumerable<DisciplineTaxonomyDto>> GetAll(Guid? parentId, bool includeChildren, string sorting);
+        Task<DisciplineTaxonomyDto> Get(Guid id);
+        Task<IEnumerable<DisciplineTaxonomyDto>> GetAll(GetAllDisciplineTaxonomyRequestDto request);
         Task<PagedResultDto<DisciplineTaxonomyDto>> GetAllPaged(PagedDisciplineTaxonomyResultRequestDto request);
-        Task<IEnumerable<DisciplineTaxonomyDto>> GetAllLastChildren();
+        Task<IEnumerable<DisciplineTaxonomyDto>> Search(SearchDisciplineTaxonomyRequestDto request);
+        Task<IEnumerable<DisciplineTaxonomyDto>> GetAllLastChildren(GetAllLastChildrenDisciplineTaxonomyRequestDto request);
         Task<IEnumerable<GetDisciplineTaxonomyChildrenCountDto>> GetChildrenCount(List<Guid> disciplineTaxonomyIds);
         Task<IEnumerable<GetDisciplineTaxonomyFollowerCountDto>> GetFollowerCount(List<Guid> disciplineTaxonomyIds);
-        Task<IEnumerable<DisciplineTaxonomyDto>> Search(string keyword, bool excludeFollowing, string sorting);
     }
 }

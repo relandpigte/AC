@@ -27,24 +27,38 @@ namespace Academically.Services.DisciplineTaxonomies
             _userTopicRepository = userTopicRepository;
         }
 
-        public async Task<IEnumerable<DisciplineTaxonomyDto>> GetAll(Guid? parentId, bool includeChildren, string sorting)
+        public async Task<DisciplineTaxonomyDto> Get(Guid id)
+        {
+            var disciplineTaxonomy = await _disciplineTaxonomiesRepository.GetAll()
+                .Include(x => x.Children)
+                .Include(x => x.UserTopics)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            return ObjectMapper.Map<DisciplineTaxonomyDto>(disciplineTaxonomy);
+        }
+
+        public async Task<IEnumerable<DisciplineTaxonomyDto>> GetAll(GetAllDisciplineTaxonomyRequestDto request)
         {
             var query = _disciplineTaxonomiesRepository.GetAll()
-                .Where(x => x.ParentId == parentId);
+                .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), x => x.Name.ToLower().Contains(request.Keyword.ToLower()))
+                .Where(x => x.ParentId == request.ParentId);
 
-            if (includeChildren)
+            if (request.ExcludeFollowing)
             {
-                query = _disciplineTaxonomiesRepository.GetAll()
-                    .Include(x => x.Children)
-                    .Where(x => x.ParentId == parentId);
+                var followingIds = await GetFollowingIds();
+                query = query.WhereIf(followingIds.Any(), x => !followingIds.Contains(x.Id));
             }
 
-            if (!string.IsNullOrWhiteSpace(sorting))
-            {
-                query = Sort(query, sorting);
-            }
+            if (request.IncludeChildren)
+                query = query.Include(x => x.Children);
 
-            var disciplineTaxonomies = await query.Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e))
+            if (request.IncludeFollowers)
+                query = query.Include(x => x.UserTopics);
+
+            if (!string.IsNullOrWhiteSpace(request.Sorting))
+                query = Sort(query, request.Sorting);
+
+            var disciplineTaxonomies = await query.Select(x => ObjectMapper.Map<DisciplineTaxonomyDto>(x))
                 .ToListAsync();
             return disciplineTaxonomies;
         }
@@ -52,21 +66,25 @@ namespace Academically.Services.DisciplineTaxonomies
         public async Task<PagedResultDto<DisciplineTaxonomyDto>> GetAllPaged(PagedDisciplineTaxonomyResultRequestDto request)
         {
             var query = _disciplineTaxonomiesRepository.GetAll()
+                .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), x => x.Name.ToLower().Contains(request.Keyword.ToLower()))
                 .Where(x => x.ParentId == request.ParentId);
 
-            if (request.IncludeChildren)
+            if (request.ExcludeFollowing)
             {
-                query = _disciplineTaxonomiesRepository.GetAll()
-                    .Include(x => x.Children)
-                    .Where(x => x.ParentId == request.ParentId);
+                var followingIds = await GetFollowingIds();
+                query = query.WhereIf(followingIds.Any(), x => !followingIds.Contains(x.Id));
             }
+
+            if (request.IncludeChildren)
+                query = query.Include(x => x.Children);
+
+            if (request.IncludeFollowers)
+                query = query.Include(x => x.UserTopics);
 
             var totalCount = await query.CountAsync();
 
             if (!string.IsNullOrWhiteSpace(request.Sorting))
-            {
                 query = Sort(query, request.Sorting);
-            }
 
             query = query.PageBy(request);
 
@@ -80,15 +98,40 @@ namespace Academically.Services.DisciplineTaxonomies
             };
         }
 
-        public async Task<IEnumerable<DisciplineTaxonomyDto>> GetAllLastChildren()
+        public async Task<IEnumerable<DisciplineTaxonomyDto>> Search(SearchDisciplineTaxonomyRequestDto request)
         {
-            var disciplineTaxonomies = await _disciplineTaxonomiesRepository.GetAll()
-                .Where(x => x.Children.Count() == 0)
-                .OrderBy(x => x.Name)
-                .ToListAsync(); 
+            var query = _disciplineTaxonomiesRepository.GetAll()
+                .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), x => x.Name.ToLower().Contains(request.Keyword.ToLower()));
 
-            var result = disciplineTaxonomies.Select(e => ObjectMapper.Map<DisciplineTaxonomyDto>(e));
-            return result;
+            if (request.ExcludeFollowing)
+            {
+                var followingIds = await GetFollowingIds();
+                query = query.WhereIf(followingIds.Any(), x => !followingIds.Contains(x.Id));
+            }
+
+            if (!request.Sorting.IsNullOrWhiteSpace())
+                query = Sort(query, request.Sorting);
+
+            return await query.Select(x => ObjectMapper.Map<DisciplineTaxonomyDto>(x)).ToListAsync();
+        }
+
+        public async Task<IEnumerable<DisciplineTaxonomyDto>> GetAllLastChildren(GetAllLastChildrenDisciplineTaxonomyRequestDto request)
+        {
+            var query = _disciplineTaxonomiesRepository.GetAll()
+                .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), x => x.Name.ToLower().Contains(request.Keyword.ToLower()))
+                .Where(x => x.Children.Count() == 0);
+
+            if (request.ExcludeFollowing)
+            {
+                var followingIds = await GetFollowingIds();
+                query = query.WhereIf(followingIds.Any(), x => !followingIds.Contains(x.Id));
+            }
+
+            query = query.OrderBy(x => x.Name);
+
+            var disciplineTaxonomies = await query.Select(x => ObjectMapper.Map<DisciplineTaxonomyDto>(x))
+                .ToListAsync();
+            return disciplineTaxonomies;
         }
 
         public async Task<IEnumerable<GetDisciplineTaxonomyChildrenCountDto>> GetChildrenCount(List<Guid> disciplineTaxonomyIds)
@@ -117,31 +160,6 @@ namespace Academically.Services.DisciplineTaxonomies
             return await query.ToListAsync();
         }
 
-        public async Task<IEnumerable<DisciplineTaxonomyDto>> Search(string keyword, bool excludeFollowing, string sorting)
-        {
-            var followingIds = new List<Guid>();
-            if (excludeFollowing)
-            {
-                var currentUserId = AbpSession.UserId.Value;
-                followingIds = await _userTopicRepository.GetAll()
-                    .Where(x => x.UserId == currentUserId)
-                    .Select(x => x.DisciplineTaxonomyId)
-                    .ToListAsync();
-            }
-
-            var query = _disciplineTaxonomiesRepository.GetAll()
-                    .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.ToLower().Contains(keyword.ToLower()))
-                    .WhereIf(excludeFollowing && followingIds.Any(), x => !followingIds.Contains(x.Id))
-                    .Take(10);
-
-            if (!string.IsNullOrWhiteSpace(sorting))
-            {
-                query = Sort(query, sorting);
-            }
-
-            return await query.Select(x => ObjectMapper.Map<DisciplineTaxonomyDto>(x)).ToListAsync();
-        }
-
         private IQueryable<DisciplineTaxonomy> Sort(IQueryable<DisciplineTaxonomy> query, string sorting)
         {
             if (sorting.Contains("recent"))
@@ -153,6 +171,16 @@ namespace Academically.Services.DisciplineTaxonomies
             else
                 query = query.OrderBy(x => x.Name);
             return query;
+        }
+
+        private async Task<IEnumerable<Guid>> GetFollowingIds()
+        {
+            var currentUserId = AbpSession.UserId.Value;
+
+            return await _userTopicRepository.GetAll()
+                .Where(x => x.UserId == currentUserId)
+                .Select(x => x.DisciplineTaxonomyId)
+                .ToListAsync();
         }
     }
 }

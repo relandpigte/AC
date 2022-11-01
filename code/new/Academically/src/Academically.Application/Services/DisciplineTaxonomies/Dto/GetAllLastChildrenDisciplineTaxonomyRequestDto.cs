@@ -4,12 +4,9 @@ using Academically.Domain.Enums;
 
 namespace Academically.Services.Articles.Dto
 {
-    public class PagedDisciplineTaxonomyResultRequestDto : PagedAndSortedResultRequestDto
+    public class GetAllLastChildrenDisciplineTaxonomyRequestDto
     {
-        public Guid? ParentId { get; set; }
         public string Keyword { get; set; }
-        public bool IncludeChildren { get; set; }
-        public bool IncludeFollowers { get; set; }
         public bool ExcludeFollowing { get; set; }
     }
 }

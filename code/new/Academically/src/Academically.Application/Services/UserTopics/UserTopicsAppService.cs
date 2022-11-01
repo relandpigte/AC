@@ -10,7 +10,6 @@ using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Academically.Authorization;
 using Academically.Domain.Entities;
-using Academically.Domain.Enums;
 using Academically.Services.UserTopics.Dto;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,17 +25,16 @@ namespace Academically.Services.UserTopics
             _userTopicRepository = userTopicRepository;
         }
 
-        public async Task<List<UserTopicDto>> GetAll(long userId, UserTopicType type, string sorting)
+        public async Task<IEnumerable<UserTopicDto>> GetAll(GetAllUserTopicResultRequestDto request)
         {
             var query = _userTopicRepository.GetAll()
                 .Include(x => x.DisciplineTaxonomy)
-                .Where(x => x.UserId == userId)
-                .Where(x => x.Type == type);
+                .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), x => x.DisciplineTaxonomy.Name.ToLower().Contains(request.Keyword.ToLower()))
+                .Where(x => x.UserId == request.UserId)
+                .Where(x => x.Type == request.Type);
 
-            if (!string.IsNullOrWhiteSpace(sorting))
-            {
-                query = Sort(query, sorting);
-            }
+            if (!request.Sorting.IsNullOrWhiteSpace())
+                query = Sort(query, request.Sorting);
 
             return await query.Select(x => ObjectMapper.Map<UserTopicDto>(x)).ToListAsync();
         }
@@ -51,10 +49,8 @@ namespace Academically.Services.UserTopics
 
             var totalCount = await query.CountAsync();
 
-            if (!string.IsNullOrWhiteSpace(request.Sorting))
-            {
+            if (!request.Sorting.IsNullOrWhiteSpace())
                 query = Sort(query, request.Sorting);
-            }
 
             query = query.PageBy(request);
 
@@ -79,25 +75,6 @@ namespace Academically.Services.UserTopics
         public async Task Delete(Guid id)
         {
             await _userTopicRepository.DeleteAsync(id);
-        }
-
-        public async Task<IEnumerable<UserTopicDto>> Search(string keyword, UserTopicType type, string sorting)
-        {
-            var currentUserId = AbpSession.UserId.Value;
-
-            var query = _userTopicRepository.GetAll()
-                    .Include(x => x.DisciplineTaxonomy)
-                    .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.DisciplineTaxonomy.Name.ToLower().Contains(keyword.ToLower()))
-                    .Where(x => x.UserId == currentUserId)
-                    .Where(x => x.Type == type)
-                    .Take(10);
-
-            if (!string.IsNullOrWhiteSpace(sorting))
-            {
-                query = Sort(query, sorting);
-            }
-
-            return await query.Select(x => ObjectMapper.Map<UserTopicDto>(x)).ToListAsync();
         }
 
         private IQueryable<UserTopic> Sort(IQueryable<UserTopic> query, string sorting)
