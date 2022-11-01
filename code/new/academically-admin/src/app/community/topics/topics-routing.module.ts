@@ -28,6 +28,13 @@ import { TopicsComponent } from './topics.component';
                   ),
               },
               {
+                path: 'view/:id',
+                loadChildren: () =>
+                  import('./children/children.module').then(
+                    (m) => m.ChildrenModule
+                  ),
+              },
+              {
                 path: 'following',
                 loadChildren: () =>
                   import('./following/following.module').then(

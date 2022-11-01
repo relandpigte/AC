@@ -10,6 +10,7 @@
         [isLoading]="isLoading"
         [showFollow]="topicOptions?.showFollow"
         [showRemove]="topicOptions?.showRemove"
+        (onClick)="handleTopicClick($event)"
         (onFollow)="handleTopicFollowClick($event)"
         (onRemove)="handleTopicRemoveClick($event)"
     ></app-topic-card>

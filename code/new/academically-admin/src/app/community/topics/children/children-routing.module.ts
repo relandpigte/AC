@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { AllComponent } from './all.component';
+import { ChildrenComponent } from './children.component';
 
 @NgModule({
   imports: [
     RouterModule.forChild([
       {
         path: '',
-        component: AllComponent
+        component: ChildrenComponent
       }
     ]),
   ],
@@ -16,4 +16,4 @@ import { AllComponent } from './all.component';
     RouterModule
   ],
 })
-export class AllRoutingModule { }
+export class ChildrenRoutingModule { }
