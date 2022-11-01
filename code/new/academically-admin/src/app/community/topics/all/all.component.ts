@@ -3,6 +3,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { CreateUserTopicDto, DisciplineTaxonomiesServiceProxy, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 
+import { Router } from '@angular/router';
 import * as _ from 'lodash';
 
 @Component({
@@ -26,6 +27,7 @@ export class AllComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _taxonomyService: DisciplineTaxonomiesServiceProxy,
     private _userTopics: UserTopicsServiceProxy
   ) {
@@ -63,6 +65,10 @@ export class AllComponent extends AppComponentBase implements OnInit {
     const topics = count ? _.take(source, count) : source;
     this.tailoredTopics = topics.reduce((topics, t) => ({...topics, [t.name] : this.chunkArrayInGroups(t.children, 3) }), {});
     this.isLoadingTailoredTopics = false;
+  }
+
+  handleTopicClick(topic: any): void {
+    if (topic?.children?.length) this._router.navigate(['app', 'community', 'topics', 'view', topic.id]);
   }
 
   handleTopicFollowClick(topic: any): void {

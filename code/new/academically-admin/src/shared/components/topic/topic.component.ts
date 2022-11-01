@@ -24,6 +24,7 @@ export class TopicCardComponent extends AppComponentBase {
     @Input() lazyLoadFollowerCount: boolean;
     @Input() isLoading = true;
 
+    @Output() onClick: EventEmitter<any> = new EventEmitter();
     @Output() onFollow: EventEmitter<any> = new EventEmitter();
     @Output() onRemove: EventEmitter<any> = new EventEmitter();
 
@@ -41,6 +42,7 @@ export class TopicCardComponent extends AppComponentBase {
         super(injector);
     }
 
+    handleTopicClick(): void { this.onClick.emit(this.data); }
     handleFollowClick(): void { this.onFollow.emit(this.data); }
     handleRemoveClick(): void { this.onRemove.emit(this.data); }
 }

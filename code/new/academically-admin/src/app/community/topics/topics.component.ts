@@ -19,6 +19,7 @@ export class TopicsComponent extends AppComponentBase implements OnInit, OnDestr
     super(injector);
   }
 
+  get showPageHeading(): boolean { return !this._router.url.includes(['community', 'topics', 'view'].join('/')) }
   get pageHeadingSuperscript(): string { return this._router.url.includes(['community', 'topics', 'following'].join('/')) ? 'Community.Header2' : 'Community.Header1'; }
 
   ngOnInit(): void {
