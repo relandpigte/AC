@@ -110,6 +110,10 @@ export class AllComponent extends AppComponentBase implements OnInit {
     if (topic?.children?.length) this._router.navigate(['app', 'community', 'topics', 'view', topic.id]);
   }
 
+  handleViewAllTopicsClick(topicId: string): void {
+    this._router.navigate(['app', 'community', 'topics', 'view', topicId]);
+  }
+
   handleTopicFollowClick(key: string, topic: any): void {
       this.isFollowingTopic = true;
 

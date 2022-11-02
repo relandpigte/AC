@@ -17,7 +17,7 @@
         <div class="row align-items-center" [style.marginTop.px]="40" [style.marginBottom.px]="25">
             <div class="col d-flex flex-wrap align-items-center justify-content-between">
               <span class="all-topics-content-header">{{ t.value.name }}</span>
-              <span class="all-topics-content-view-all cursor-pointer" [routerLink]="['events']">View All <i class="fas fa-arrow-right"></i></span>
+              <span class="all-topics-content-view-all cursor-pointer" (click)="handleViewAllTopicsClick(t.key)">View All <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>
         <app-carousel customClass="left-align peek-enabled items-content-90p" [isLoading]="isLoadingTailoredTopics[t.key]" [items]="t.value.items" [templateRef]="topicClusterRef1" [metadata]="{ isParent: false, group: t.key }"></app-carousel>

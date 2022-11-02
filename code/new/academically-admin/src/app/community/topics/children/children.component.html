@@ -2,7 +2,7 @@
     <div class="row align-items-end" [style.marginTop.px]="40">
         <div class="col mb-md-0">
             <div class="topics-superscript">{{ 'Community.Topics' | localize }}</div>
-            <div class="topics-header">{{ 'Community.Topics' | localize }}</div>
+            <div class="topics-header">{{ topic?.name }}</div>
         </div>
     </div>
 </div>
@@ -24,10 +24,10 @@
         <div class="topic-row d-flex flex-row">
             <div class="topic-row-left d-flex flex-column flex-grow-1 justify-content-center gap-0">
                 <div class="topic-row-left-name">#{{ item.name }}</div>
-                <div class="topic-row-left-followers">{{ 'Community.Topics.Followers' | localize: (getFollowersCount(item) | shortNum: 1)  }}</div>
+                <div class="topic-row-left-followers">{{ 'Community.Topics.Followers' | localize: (item.followerCount | shortNum: 1)  }}</div>
             </div>
             <div class="topic-row-right d-flex flex-row align-items-center gap-10">
-                <button class="btn btn-md btn-primary" (click)="handleOnFollow(item.id)">
+                <button class="btn btn-md btn-primary" (click)="handleOnFollow(item)">
                     {{ (isFollowingTopic ? 'Following' : 'Follow') | localize }}
                     <span *ngIf="isFollowingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 </button>
