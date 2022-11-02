@@ -15,7 +15,7 @@
             <div class="topic-row-left-followers">{{ 'Community.Topics.Followers' | localize: (item.followerCount | shortNum: 1)  }}</div>
         </div>
         <div class="topic-row-right d-flex flex-row align-items-center gap-10">
-            <button class="btn btn-md btn-light">{{ 'Remove' | localize }}</button>
+            <button class="btn btn-md btn-light" (click)="handleOnRemove(item)">{{ 'Remove' | localize }}</button>
             <button class="btn btn-md btn-primary" (click)="handleOnFollow(item)">
                 {{ (isFollowingTopic ? 'Following' : 'Follow') | localize }}
                 <span *ngIf="isFollowingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

@@ -2,7 +2,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { SortOption } from '@shared/components/search/search.component';
 import { TopicSorting } from '@shared/components/topic/topic.component';
-import { CreateUserTopicDto, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, SearchDisciplineTaxonomyRequestDto, UserTopicsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CreateUserTopicDto, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, SearchDisciplineTaxonomyRequestDto, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
 
 import { finalize, takeUntil } from 'rxjs/operators';
 
@@ -18,6 +18,7 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
     searchFilter: string;
 
     isFollowingTopic = false;
+    isUnfollowingTopic = false;
     isSearching = false;
 
     sort: SortOption = { label: 'ForYou', value: TopicSorting.ForYou };
@@ -35,7 +36,7 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
         super(injector);
     }
 
-    get loading(): boolean { return this.isFollowingTopic || this.isSearching; }
+    get loading(): boolean { return this.isFollowingTopic || this.isUnfollowingTopic || this.isSearching; }
 
     ngOnInit(): void {
     }
@@ -67,12 +68,30 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
         const request = new CreateUserTopicDto();
         request.userId = this.appSession.userId;
         request.disciplineTaxonomyId = topic.id;
+        request.type = UserTopicType.Following;
 
         this._userTopics.create(request)
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => this.isFollowingTopic = false))
             .subscribe(_ => {
                 this.notify.info(this.l('Community.Topics.Follow.Success', topic.name));
+                this.handleOnSearch(this.searchFilter);
+            });
+    }
+
+    handleOnRemove(topic: DisciplineTaxonomyDto): void {
+        this.isUnfollowingTopic = true;
+
+        const request = new CreateUserTopicDto();
+        request.userId = this.appSession.userId;
+        request.disciplineTaxonomyId = topic.id;
+        request.type = UserTopicType.NotInterested;
+
+        this._userTopics.create(request)
+            .pipe(takeUntil(this.destroyed$))
+            .pipe(finalize(() => this.isUnfollowingTopic = false))
+            .subscribe(_ => {
+                this.notify.info(this.l('Community.Topics.NotInterested.Success', topic.name));
                 this.handleOnSearch(this.searchFilter);
             });
     }
