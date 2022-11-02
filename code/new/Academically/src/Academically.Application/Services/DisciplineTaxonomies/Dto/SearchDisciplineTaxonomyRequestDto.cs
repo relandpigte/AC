@@ -1,8 +1,4 @@
-﻿using System;
-using Abp.Application.Services.Dto;
-using Academically.Domain.Enums;
-
-namespace Academically.Services.Articles.Dto
+﻿namespace Academically.Services.Articles.Dto
 {
     public class SearchDisciplineTaxonomyRequestDto
     {

@@ -29,6 +29,7 @@ namespace Academically.Services.UserTopics
         {
             var query = _userTopicRepository.GetAll()
                 .Include(x => x.DisciplineTaxonomy)
+                .Include(x => x.DisciplineTaxonomy.UserTopics)
                 .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), x => x.DisciplineTaxonomy.Name.ToLower().Contains(request.Keyword.ToLower()))
                 .Where(x => x.UserId == request.UserId)
                 .Where(x => x.Type == request.Type);
@@ -43,6 +44,7 @@ namespace Academically.Services.UserTopics
         {
             var query = _userTopicRepository.GetAll()
                 .Include(x => x.DisciplineTaxonomy)
+                .Include(x => x.DisciplineTaxonomy.UserTopics)
                 .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), x => x.DisciplineTaxonomy.Name.ToLower().Contains(request.Keyword.ToLower()))
                 .Where(x => x.UserId == request.UserId)
                 .Where(x => x.Type == request.Type);
@@ -80,7 +82,7 @@ namespace Academically.Services.UserTopics
         private IQueryable<UserTopic> Sort(IQueryable<UserTopic> query, string sorting)
         {
             if (sorting.Contains("recent"))
-                query = query.OrderByDescending(x => x.DisciplineTaxonomy.CreationTime);
+                query = query.OrderByDescending(x => x.CreationTime);
             else if (sorting.Contains("popular"))
                 query = query.OrderByDescending(x => x.DisciplineTaxonomy.UserTopics.Count());
             else if (sorting.Contains("foryou"))
