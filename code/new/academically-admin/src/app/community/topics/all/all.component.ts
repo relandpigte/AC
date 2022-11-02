@@ -16,15 +16,15 @@ export class AllComponent extends AppComponentBase implements OnInit {
 
   parentTopics: any = this.chunkArrayInGroups(Array(12).fill([]).map(() => this.generateRandomTopic()), 3);
   forYouTopics: any = this.chunkArrayInGroups(Array(15).fill([]).map(() => this.generateRandomTopic()), 3);
-  tailoredTopics: any = { 'Topic': this.chunkArrayInGroups(Array(15).fill([]).map(() => this.generateRandomCoaching()), 3) };
+  tailoredTopics: any;
 
   isLoadingParentTopics = false;
   isLoadingForYouTopics = false;
-  isLoadingTailoredTopics = false
+  isLoadingTailoredTopics: { key: string, value: boolean };
   isFollowingTopic = false;
   isRemovingTopic = false;
 
-  get isLoading(): boolean { return this.isLoadingParentTopics || this.isLoadingForYouTopics || this.isLoadingTailoredTopics || this.isFollowingTopic; }
+  get isLoading(): boolean { return this.isLoadingParentTopics || this.isLoadingForYouTopics || Object.values(this.isLoadingTailoredTopics).some(t => t) || this.isFollowingTopic; }
 
   constructor(
     injector: Injector,
@@ -72,17 +72,45 @@ export class AllComponent extends AppComponentBase implements OnInit {
   }
 
   private getTailoredTopics(source: any, count?: number): void {
-    this.isLoadingTailoredTopics = true;
     const topics = count ? _.take(source, count) : source;
-    this.tailoredTopics = topics.reduce((topics, t) => ({...topics, [t.name] : this.chunkArrayInGroups(t.children, 3) }), {});
-    this.isLoadingTailoredTopics = false;
+
+    this.tailoredTopics = topics.reduce((topics, t) => ({ ...topics, [t.id]: { name: t.name, items: this.chunkArrayInGroups(Array(15).fill([]).map(() => this.generateRandomCoaching()), 3) } }), {});
+    this.isLoadingTailoredTopics = topics.reduce((topics, t) => ({ ...topics, [t.id]: true }), {});
+
+    topics.forEach(t => {
+      this._taxonomyService.getAll(
+        t.id,
+        undefined,
+        true,
+        true,
+        TopicSorting.Popular
+      )
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isLoadingTailoredTopics[t.id] = false ))
+      .subscribe((topics) => this.tailoredTopics[t.id].items = this.chunkArrayInGroups(topics, 3));
+    });
+  }
+
+  private refreshTailoredTopics(groupId: string): void {
+    this.isLoadingTailoredTopics[groupId] = true;
+
+    this._taxonomyService.getAll(
+      groupId,
+      undefined,
+      true,
+      true,
+      TopicSorting.Popular
+    )
+    .pipe(takeUntil(this.destroyed$))
+    .pipe(finalize(() => this.isLoadingTailoredTopics[groupId] = false ))
+    .subscribe((topics) => this.tailoredTopics[groupId].items = this.chunkArrayInGroups(topics, 3));
   }
 
   handleTopicClick(topic: any): void {
     if (topic?.children?.length) this._router.navigate(['app', 'community', 'topics', 'view', topic.id]);
   }
 
-  handleTopicFollowClick(topic: any): void {
+  handleTopicFollowClick(key: string, topic: any): void {
       this.isFollowingTopic = true;
 
       const request = new CreateUserTopicDto();
@@ -94,11 +122,12 @@ export class AllComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .pipe(finalize(() => this.isFollowingTopic = false))
           .subscribe(_ => {
-              this.notify.info(this.l('Community.Topics.Follow.Success', topic.name));
+            key ? this.refreshTailoredTopics(key) : this.loadForYouTopics();
+            this.notify.info(this.l('Community.Topics.Follow.Success', topic.name));
           });
   }
 
-  handleTopicRemoveClick(topic: any): void {
+  handleTopicRemoveClick(key: string, topic: any): void {
     this.isRemovingTopic = true;
 
     const request = new CreateUserTopicDto();
@@ -110,7 +139,8 @@ export class AllComponent extends AppComponentBase implements OnInit {
         .pipe(takeUntil(this.destroyed$))
         .pipe(finalize(() => this.isRemovingTopic = false))
         .subscribe(_ => {
-            this.notify.info(this.l('Community.Topics.NotInterested.Success', topic.name));
+          key ? this.refreshTailoredTopics(key) : this.loadForYouTopics();
+          this.notify.info(this.l('Community.Topics.NotInterested.Success', topic.name));
         });
   }
 }

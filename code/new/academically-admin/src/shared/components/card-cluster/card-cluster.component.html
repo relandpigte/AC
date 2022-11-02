@@ -1,12 +1,13 @@
 <div class="cluster d-flex flex-column flex-nowrap" [style.gap.px]="gap">
     <ng-container *ngFor="let i of data">
-        <ng-container *ngTemplateOutlet="templateRef ? templateRef : topicTemplate; context: { item: i, isLoading: isLoading }"></ng-container>
+        <ng-container *ngTemplateOutlet="templateRef ? templateRef : topicTemplate; context: { item: i, isLoading: isLoading, isParent: isParent }"></ng-container>
     </ng-container>
 </div>
 
-<ng-template #topicTemplate let-item="item" let-isLoading="isLoading">
+<ng-template #topicTemplate let-item="item" let-isLoading="isLoading" let-isParent="isParent">
     <app-topic-card
         [data]="item"
+        [isParent]="isParent"
         [isLoading]="isLoading"
         [showFollow]="topicOptions?.showFollow"
         [showRemove]="topicOptions?.showRemove"

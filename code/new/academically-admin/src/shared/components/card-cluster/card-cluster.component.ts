@@ -12,6 +12,7 @@ import { TopicOptions } from '../topic/topic.component';
 export class CardClusterComponent extends AppComponentBase {
 
     @Input() data: any[];
+    @Input() isParent = false;
     @Input() templateRef: any;
     @Input() gap: number = 0;
     @Input() isLoading = false;

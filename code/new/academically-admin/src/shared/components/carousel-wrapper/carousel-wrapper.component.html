@@ -14,7 +14,7 @@
     <app-service-card *ngIf="!templateRef" [data]="content" [ngClass]="{'item-active': expression}" [isLoading]="isLoading" [isFeatured]="isFeatured" (onClick)="handleServiceCardClick($event)"></app-service-card>
 
     <ng-container *ngIf="templateRef">
-      <ng-container *ngTemplateOutlet="templateRef; context: { item: content, isLoading: isLoading }"></ng-container>
+      <ng-container *ngTemplateOutlet="templateRef; context: { item: content, isLoading: isLoading, metadata: metadata }"></ng-container>
     </ng-container>
 
   </ng-template>

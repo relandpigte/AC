@@ -21,6 +21,7 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
   @Input() customClass: string = 'wrap-around btn-overflow';
   @Input() isFeatured: boolean = false;
   @Input() isLoading: boolean = false;
+  @Input() metadata: any;
 
   @Output() onRequestNewData: EventEmitter<any> = new EventEmitter();
   @Output() onServiceCardClick: EventEmitter<any> = new EventEmitter();

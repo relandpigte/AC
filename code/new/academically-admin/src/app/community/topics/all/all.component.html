@@ -1,6 +1,6 @@
 <div class="container-fluid all-topics d-flex flex-column flex-nowrap p-0">
     <div class="all-topics-content flex-grow-1">
-        <app-carousel customClass="wrap-around" [isLoading]="isLoadingParentTopics" [items]="parentTopics" [templateRef]="topicClusterRef1"></app-carousel>
+        <app-carousel customClass="wrap-around" [isLoading]="isLoadingParentTopics" [items]="parentTopics" [templateRef]="topicClusterRef1" [metadata]="{ isParent: true }"></app-carousel>
     </div>
 
     <div class="all-topics-content flex-grow-1">
@@ -10,38 +10,40 @@
               <span class="all-topics-content-view-all cursor-pointer" [routerLink]="['events']">View All <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>
-        <app-carousel customClass="left-align peek-enabled items-content-90p" [isLoading]="isLoadingForYouTopics" [items]="forYouTopics" [templateRef]="topicClusterRef2"></app-carousel>
+        <app-carousel customClass="left-align peek-enabled items-content-90p" [isLoading]="isLoadingForYouTopics" [items]="forYouTopics" [templateRef]="topicClusterRef2" [metadata]="{ isParent: false }"></app-carousel>
     </div>
 
     <div *ngFor="let t of tailoredTopics | keyvalue" class="all-topics-content flex-grow-1">
         <div class="row align-items-center" [style.marginTop.px]="40" [style.marginBottom.px]="25">
             <div class="col d-flex flex-wrap align-items-center justify-content-between">
-              <span class="all-topics-content-header">{{ t.key }}</span>
+              <span class="all-topics-content-header">{{ t.value.name }}</span>
               <span class="all-topics-content-view-all cursor-pointer" [routerLink]="['events']">View All <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>
-        <app-carousel customClass="left-align peek-enabled items-content-90p" [isLoading]="isLoadingTailoredTopics" [items]="t.value" [templateRef]="topicClusterRef1"></app-carousel>
+        <app-carousel customClass="left-align peek-enabled items-content-90p" [isLoading]="isLoadingTailoredTopics[t.key]" [items]="t.value.items" [templateRef]="topicClusterRef1" [metadata]="{ isParent: false, group: t.key }"></app-carousel>
     </div>
 </div>
 
-<ng-template #topicClusterRef1 let-items="item" let-isLoading="isLoading">
+<ng-template #topicClusterRef1 let-items="item" let-isLoading="isLoading" let-metadata="metadata">
     <app-card-cluster
         [data]="items"
         [gap]="20"
+        [isParent]="metadata.isParent"
         [isLoading]="isLoading"
         [topicOptions]="{ showFollow: true }"
         (onTopicClick)="handleTopicClick($event)"
-        (onTopicFollow)="handleTopicFollowClick($event)"
+        (onTopicFollow)="handleTopicFollowClick(metadata.group, $event)"
     ></app-card-cluster>
 </ng-template>
 
-<ng-template #topicClusterRef2 let-items="item" let-isLoading="isLoading">
+<ng-template #topicClusterRef2 let-items="item" let-isLoading="isLoading" let-metadata="metadata">
     <app-card-cluster
         [data]="items"
         [gap]="20"
+        [isParent]="metadata.isParent"
         [isLoading]="isLoading"
         [topicOptions]="{ showFollow: true, showRemove: true }"
-        (onTopicFollow)="handleTopicFollowClick($event)"
-        (onTopicRemove)="handleTopicRemoveClick($event)"
+        (onTopicFollow)="handleTopicFollowClick(metadata.group, $event)"
+        (onTopicRemove)="handleTopicRemoveClick(metadata.group, $event)"
     ></app-card-cluster>
 </ng-template>

@@ -24,6 +24,7 @@ export enum TopicSorting {
 export class TopicCardComponent extends AppComponentBase {
 
     @Input() data: any;
+    @Input() isParent = false;
     @Input() customClass = '';
     @Input() showFollow: boolean;
     @Input() showRemove: boolean;
@@ -36,10 +37,9 @@ export class TopicCardComponent extends AppComponentBase {
 
     followerCount: number;
 
-    get isParent(): boolean { return this.data?.children?.length; }
     get name(): string { return this.data?.name; }
     get composition(): string { return this._snPipe.transform(this.data?.children?.length ?? 0, 1); }
-    get followers(): string { return this._snPipe.transform(this.data?.followers ?? 0, 1); }
+    get followers(): string { return this._snPipe.transform(this.data?.followerCount ?? 0, 1); }
 
     constructor(
         injector: Injector,
