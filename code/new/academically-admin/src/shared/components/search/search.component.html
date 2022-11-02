@@ -25,7 +25,8 @@
     </div>
 
     <div *ngIf="options.sortable && sortOptions?.length && sort" class="search-sort row m-0" [style.marginTop.px]="10">
-        <div class="dropdown">
+        <div *ngIf="loading" class="box-shimmer-bar" [style.width.%]="15" [style.height.px]="8" [style.marginTop.px]="10" [style.marginLeft.px]="20"></div>
+        <div *ngIf="!loading" class="dropdown">
             <span class="dropdown-label">{{ 'SortedBy' | localize }}:</span>
             <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
@@ -39,20 +40,23 @@
     </div>
 
     <div class="search-list">
-        <ng-container *ngIf="!data || data.length === 0">
-            <div class="search-list-item"><p class="text-center text-muted m-0 p-4">{{ 'NoRecordsFound' | localize }}</p></div>
+        <ng-container *ngIf="loading">
+            <div class="search-list-item"><ng-container *ngTemplateOutlet="loadingTemplate"></ng-container></div>
+            <div class="search-list-item"><ng-container *ngTemplateOutlet="loadingTemplate"></ng-container></div>
+            <div class="search-list-item"><ng-container *ngTemplateOutlet="loadingTemplate"></ng-container></div>
+            <div class="search-list-item"><ng-container *ngTemplateOutlet="loadingTemplate"></ng-container></div>
         </ng-container>
-        <ng-container *ngIf="data && data.length">
-            <ng-container *ngIf="loading">
-                <div class="search-list-item"><ng-container *ngTemplateOutlet="loadingTemplate"></ng-container></div>
-            </ng-container>
-            <ng-container *ngIf="!loading">
+        <ng-container *ngIf="!loading">
+            <ng-container *ngIf="data && data.length">
                 <div
                     *ngFor="let d of (data | paginate: { id: 'data-pagination', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems })"
                     class="search-list-item">
                     <ng-container *ngIf="itemTemplate"><ng-container *ngTemplateOutlet="itemTemplate; context: { item: d }"></ng-container></ng-container>
                     <ng-container *ngIf="!itemTemplate">{{ d.name }}</ng-container>
                 </div>
+            </ng-container>
+            <ng-container *ngIf="!data || data.length === 0">
+                <div class="search-list-item"><p class="text-center text-muted m-0 p-4">{{ 'NoRecordsFound' | localize }}</p></div>
             </ng-container>
         </ng-container>
     </div>

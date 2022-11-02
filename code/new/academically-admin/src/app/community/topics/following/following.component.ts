@@ -1,10 +1,10 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { TopicSorting } from '@shared/components/topic/topic.component';
 import { Utils } from '@shared/helpers/utils';
-import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, GetDisciplineTaxonomyFollowerCountDto, UserTopicDto, UserTopicDtoPagedResultDto, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
+import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, GetDisciplineTaxonomyFollowerCountDto, UserTopicDtoPagedResultDto, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
 import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 
-import * as _ from 'lodash';
 
 @Component({
   selector: 'app-following',
@@ -45,7 +45,8 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
     this._userTopics.getAllPaged(
       searchObj?.request?.searchFilter,
       this.appSession.userId,
-      UserTopicType.Following, 'recent',
+      UserTopicType.Following,
+      TopicSorting.Recent,
       searchObj?.request?.skipCount,
       searchObj?.request?.maxResultCount
     )

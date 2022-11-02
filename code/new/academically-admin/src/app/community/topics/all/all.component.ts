@@ -5,6 +5,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
+import { TopicSorting } from '@shared/components/topic/topic.component';
 
 @Component({
   selector: 'app-all-topics',
@@ -41,23 +42,33 @@ export class AllComponent extends AppComponentBase implements OnInit {
 
   private loadParentTopics(): void {
     this.isLoadingParentTopics = true;
-    this._taxonomyService.getAll(undefined, true, 'foryou')
-        .pipe(takeUntil(this.destroyed$))
-        .pipe(finalize(() => this.isLoadingParentTopics = false ))
-        .subscribe(topics => {
-          this.parentTopics = this.chunkArrayInGroups(topics, 3);
-          this.getTailoredTopics(topics);
-        });
+    this._taxonomyService.getAll(
+      undefined,
+      undefined,
+      true,
+      true,
+      TopicSorting.ForYou
+    )
+    .pipe(takeUntil(this.destroyed$))
+    .pipe(finalize(() => this.isLoadingParentTopics = false ))
+    .subscribe(topics => {
+      this.parentTopics = this.chunkArrayInGroups(topics, 3);
+      this.getTailoredTopics(topics);
+    });
   }
 
   private loadForYouTopics(): void {
     this.isLoadingForYouTopics = true;
-    this._taxonomyService.getAllLastChildren()
-        .pipe(takeUntil(this.destroyed$))
-        .pipe(finalize(() => this.isLoadingForYouTopics = false ))
-        .subscribe((topics) => {
-          this.forYouTopics = this.chunkArrayInGroups(topics, 3)
-        });
+    this._taxonomyService.getAllLastChildren(
+      undefined,
+      true,
+      TopicSorting.ForYou
+    )
+    .pipe(takeUntil(this.destroyed$))
+    .pipe(finalize(() => this.isLoadingForYouTopics = false ))
+    .subscribe((topics) => {
+      this.forYouTopics = this.chunkArrayInGroups(topics, 3)
+    });
   }
 
   private getTailoredTopics(source: any, count?: number): void {

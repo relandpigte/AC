@@ -54,7 +54,7 @@ export class SearchComponent<T> extends PagedListingComponentBase<T> implements 
     ngOnChanges(changes: SimpleChanges): void {
         if ('options' in changes && this.options) {
             this.searchInputTrigger$
-                .pipe(skip(this.options.pagination ? 1 : 0))
+                .pipe(skip(1))
                 .pipe(takeUntil(this.destroyed$))
                 .pipe(debounceTime(this.options.searchDelay ?? 600))
                 .pipe(distinctUntilChanged())
@@ -86,7 +86,7 @@ export class SearchComponent<T> extends PagedListingComponentBase<T> implements 
     protected list(request: any, pageNumber: number, finishedCallback: Function): void {
         request.userIdFilter = this.appSession.userId;
         request.searchFilter = this.searchFilter;
-        this.onSearch.emit({ request, pageNumber, finishedCallback });
+        if (this.options.pagination) this.onSearch.emit({ request, pageNumber, finishedCallback });
     }
 
     handleOnSearch(): void {

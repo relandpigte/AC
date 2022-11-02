@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, ServiceDto, ServiceExpertiseLevel, ServiceMappingDto, ServicesServiceProxy, SubjectDto, UserServiceDto, UserServicesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { TopicSorting } from '@shared/components/topic/topic.component';
+import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, SearchDisciplineTaxonomyRequestDto, ServiceDto, ServiceExpertiseLevel, ServiceMappingDto, ServicesServiceProxy, SubjectDto, UserServiceDto, UserServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash-es';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable, Observer } from 'rxjs';
@@ -248,7 +249,11 @@ export class CreateEditServiceComponent extends AppComponentBase implements OnIn
     }).pipe(
       takeUntil(this.destroyed$),
       switchMap((query: string) => {
-        return this._disciplineTaxonomiesService.search(query, false, null);
+        const request = new SearchDisciplineTaxonomyRequestDto();
+        request.keyword = query;
+        request.excludeFollowing = false;
+        request.sorting = TopicSorting.Recent;
+        return this._disciplineTaxonomiesService.search(request);
       })
     );
   }

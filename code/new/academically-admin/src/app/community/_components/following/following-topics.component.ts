@@ -6,6 +6,7 @@ import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash';
 import { SortOption } from '@shared/components/search/search.component';
+import { TopicSorting } from '@shared/components/topic/topic.component';
 
 @Component({
     selector: 'app-following-topics',
@@ -15,10 +16,7 @@ import { SortOption } from '@shared/components/search/search.component';
 export class FollowingTopicsComponent extends AppComponentBase implements OnInit {
 
     userTopics: UserTopicDto[];
-    displayedUserTopics: any[];
-
-    followers: GetDisciplineTaxonomyFollowerCountDto[] = [];
-    followersMap: Map<string, number> = new Map();
+    displayedUserTopics: DisciplineTaxonomyDto[];
 
     searchFilter: string;
 
@@ -26,11 +24,11 @@ export class FollowingTopicsComponent extends AppComponentBase implements OnInit
     isUnfollowingTopic = false;
     isSearching = false;
 
-    sort: SortOption = { label: 'ForYou', value: 'foryou' };
+    sort: SortOption = { label: 'ForYou', value: TopicSorting.ForYou };
     sortOptions = [
-        { label: 'ForYou', value: 'foryou' },
-        { label: 'Popular', value: 'popular' },
-        { label: 'Recent', value: 'recent' }
+        { label: 'ForYou', value: TopicSorting.ForYou },
+        { label: 'Popular', value: TopicSorting.Popular },
+        { label: 'Recent', value: TopicSorting.Recent }
     ];
 
     constructor(
@@ -50,16 +48,12 @@ export class FollowingTopicsComponent extends AppComponentBase implements OnInit
         this.searchFilter = searchFilter;
 
         this.isLoadingUserTopics = true;
-        this._userTopics.search(searchFilter, this.sort.value, UserTopicType.Following)
+        this._userTopics.getAll(searchFilter, this.appSession.userId, UserTopicType.Following, this.sort.value)
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => this.isLoadingUserTopics = false))
-            .pipe(switchMap((userTopics) => {
+            .subscribe(userTopics => {
                 this.userTopics = userTopics;
-                return this._taxonomyService.getFollowerCount(this.userTopics.map(t => t.disciplineTaxonomyId));
-            }))
-            .subscribe(followers => {
-                this.followersMap = Utils.toMap(followers, f => f.disciplineTaxonomyId, f => f.followerCount);
-                this.displayedUserTopics = _.clone(this.userTopics.map(t => ({ ...t.disciplineTaxonomy, followers: this.followersMap.get(t.disciplineTaxonomyId) ?? 0 }) ));
+                this.displayedUserTopics = _.clone(userTopics.map(t => t.disciplineTaxonomy));
             });
     }
 

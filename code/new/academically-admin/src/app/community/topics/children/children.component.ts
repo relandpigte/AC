@@ -1,6 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
+import { TopicSorting } from '@shared/components/topic/topic.component';
 import { Utils } from '@shared/helpers/utils';
 import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, DisciplineTaxonomyDtoPagedResultDto, UserTopicsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize, switchMap, takeUntil } from 'rxjs/operators';
@@ -52,10 +53,16 @@ export class ChildrenComponent extends AppComponentBase implements OnInit {
   private loadTaxonomyInfo(): void {
     this.isLoadingTaxonomyInfo = true;
 
-    this._taxonomyService.getAll(this.id, true, 'foryou')
-      .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this.isLoadingTaxonomyInfo = false))
-      .subscribe(topics => this.clusteredTopics = topics.reduce((topics, t) => ({...topics, [t.name] : this.chunkArrayInGroups(t.children, 3) }), {}));
+    this._taxonomyService.getAll(
+      this.id,
+      undefined,
+      true,
+      true,
+      TopicSorting.ForYou
+    )
+    .pipe(takeUntil(this.destroyed$))
+    .pipe(finalize(() => this.isLoadingTaxonomyInfo = false))
+    .subscribe(topics => this.clusteredTopics = topics.reduce((topics, t) => ({...topics, [t.name] : this.chunkArrayInGroups(t.children, 3) }), {}));
   }
 
   getFollowersCount(item: DisciplineTaxonomyDto): number { return this.followersMap.get(item.id) ?? 0; }
@@ -66,8 +73,10 @@ export class ChildrenComponent extends AppComponentBase implements OnInit {
     this.isLoadingTopics = true;
     this._taxonomyService.getAllPaged(
       this.id,
+      undefined,
       true,
-      'recent',
+      true,
+      TopicSorting.Recent,
       searchObj?.request?.skipCount,
       searchObj?.request?.maxResultCount
     )

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { TopicSorting } from '@shared/components/topic/topic.component';
 import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -49,7 +50,13 @@ export class StudyFieldsTreeComponent extends AppComponentBase implements OnInit
 
   private getDisciplineTaxonomies(): void {
     this.isLoading = true;
-    this._disciplineTaxonomiesService.getAll(undefined, undefined, 'foryou').subscribe((researchInterest) => {
+    this._disciplineTaxonomiesService.getAll(
+      undefined,
+      undefined,
+      true,
+      false,
+      TopicSorting.ForYou
+    ).subscribe((researchInterest) => {
       this.disciplineTaxonomies = this.buildTreeNodes(researchInterest);
       this.isLoading = false;
     });

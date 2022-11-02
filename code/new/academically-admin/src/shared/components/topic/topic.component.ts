@@ -8,6 +8,12 @@ export interface TopicOptions {
     showRemove?: boolean;
 };
 
+export enum TopicSorting {
+    ForYou = 'foryou',
+    Popular = 'popular',
+    Recent = 'recent'
+};
+
 @Component({
     selector: 'app-topic-card',
     templateUrl: './topic.component.html',

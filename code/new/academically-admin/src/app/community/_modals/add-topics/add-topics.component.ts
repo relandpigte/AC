@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
@@ -14,6 +14,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
     constructor(
       private _router: Router,
       private _modal: BsModalRef,
+      private _cdr: ChangeDetectorRef
     ) {
     }
       ngOnInit(): void {
@@ -26,5 +27,10 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
     navigateToAllTopics(): void {
       this.onCloseClick();
       this._router.navigate(['app', 'community', 'topics' ]);
+    }
+
+    setActiveTab(tab: string): void {
+      this.activeTab = tab;
+      this._cdr.detectChanges();
     }
   }
