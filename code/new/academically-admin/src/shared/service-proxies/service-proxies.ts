@@ -12608,6 +12608,103 @@ export class PhotoIdVerificationsServiceProxy {
 }
 
 @Injectable()
+export class PostsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param title (optional) 
+     * @param content (optional) 
+     * @param spaceId (optional) 
+     * @param type (optional) 
+     * @param topics (optional) 
+     * @param newTopics (optional) 
+     * @param attachments (optional) 
+     * @return Success
+     */
+    create(title: string | undefined, content: string | undefined, spaceId: string | undefined, type: PostType | undefined, topics: string[] | undefined, newTopics: string[] | undefined, attachments: FileParameter[] | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (title === null || title === undefined) {
+            // do nothing
+        } else
+            content_.append("Title", title.toString());
+        if (content === null || content === undefined) {
+            // do nothing
+        } else
+            content_.append("Content", content.toString());
+        if (spaceId === null || spaceId === undefined) {
+            // do nothing
+        } else
+            content_.append("SpaceId", spaceId.toString());
+        if (type === null || type === undefined) {
+            // do nothing
+        } else
+            content_.append("Type", type.toString());
+        if (topics === null || topics === undefined) {
+            // do nothing
+        } else
+            topics.forEach(item_ => content_.append("Topics", item_.toString()));
+        if (newTopics === null || newTopics === undefined) {
+            // do nothing
+        } else
+            newTopics.forEach(item_ => content_.append("NewTopics", item_.toString()));
+        if (attachments === null || attachments === undefined) {
+            // do nothing
+        } else
+            attachments.forEach(item_ => content_.append("Attachments", item_.data, item_.fileName ? item_.fileName : "Attachments") );
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class ProfilesServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -33849,7 +33946,7 @@ export interface IDocumentDto {
     creatorUserId: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail 17 = CourseSectionImage 18 = EventThumbnail 19 = EventResource 20 = Project 21 = CoachingThumbnail 22 = CoachingResource 23 = WorkshopThumbnail 24 = WorkshopResource */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail 17 = CourseSectionImage 18 = EventThumbnail 19 = EventResource 20 = Project 21 = CoachingThumbnail 22 = CoachingResource 23 = WorkshopThumbnail 24 = WorkshopResource 25 = PostAttachment */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -33876,6 +33973,7 @@ export enum DocumentType {
     CoachingResource = 22,
     WorkshopThumbnail = 23,
     WorkshopResource = 24,
+    PostAttachment = 25,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {
@@ -38284,6 +38382,13 @@ export enum PhotoIdVerificationStatus {
     Pending = 0,
     Accepted = 1,
     Declined = 2,
+}
+
+/** 0 = QuickPost 1 = Question 2 = Discussion */
+export enum PostType {
+    QuickPost = 0,
+    Question = 1,
+    Discussion = 2,
 }
 
 /** 0 = Free 1 = FixedPrice 2 = PaymentPlan 3 = Subscription */

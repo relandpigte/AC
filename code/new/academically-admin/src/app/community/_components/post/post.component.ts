@@ -29,10 +29,7 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit {
     model: any = {};
 
     constructor(
-        injector: Injector,
-        private _router: Router,
-        private _modal: BsModalRef,
-        private _cdr: ChangeDetectorRef
+        injector: Injector
     ) {
         super(injector);
     }

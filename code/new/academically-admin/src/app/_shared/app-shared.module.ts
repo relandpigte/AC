@@ -27,6 +27,7 @@ import { FixedHeightDirective } from './directives/fixed-height.directive';
 import { BottomScrollerDirective } from './directives/bottom-scroller.directive';
 import { SidebarCollapseDirective } from './directives/sidebar-collapse.directive';
 
+import { AutocompleteComponent } from '../../shared/components/autocomplete/autocomplete.component';
 import { CardClusterComponent } from '../../shared/components/card-cluster/card-cluster.component';
 import { SearchComponent } from '../../shared/components/search/search.component';
 import { ServiceCardComponent } from '../../shared/components/service-card/service-card.component';
@@ -63,6 +64,7 @@ import { CarouselModule } from 'primeng/carousel';
     CarouselWrapperComponent,
     FeaturedCarouselComponent,
     KeysPipe,
+    AutocompleteComponent
   ],
   imports: [
     CommonModule,
@@ -123,6 +125,7 @@ import { CarouselModule } from 'primeng/carousel';
     CarouselWrapperComponent,
     FeaturedCarouselComponent,
     KeysPipe,
+    AutocompleteComponent
   ],
 })
 export class AppSharedModule { }

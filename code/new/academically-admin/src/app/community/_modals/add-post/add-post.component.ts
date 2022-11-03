@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { PostsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 export enum PostTabs {
@@ -17,10 +18,13 @@ export enum PostTabs {
 
     activeTab: string = PostTabs.QuickPost;
 
+    isCreating = false;
+
     constructor(
       private _router: Router,
       private _modal: BsModalRef,
-      private _cdr: ChangeDetectorRef
+      private _cdr: ChangeDetectorRef,
+      private _postsService: PostsServiceProxy
     ) {
     }
 
@@ -28,6 +32,8 @@ export enum PostTabs {
     get canAddFile(): boolean { return this.activeTab === PostTabs.QuickPost; }
     get canAddEmoticons(): boolean { return this.activeTab === PostTabs.QuickPost; }
     get canAddService(): boolean { return this.activeTab === PostTabs.QuickPost; }
+
+    get isLoading(): boolean { return this.isCreating; }
 
     ngOnInit(): void {
     }
@@ -44,5 +50,9 @@ export enum PostTabs {
     setActiveTab(tab: string): void {
         this.activeTab = tab;
         this._cdr.detectChanges();
+    }
+
+    handleCreatePost(): void {
+        this.isCreating = true;
     }
 }

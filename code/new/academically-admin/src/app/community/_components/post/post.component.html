@@ -107,7 +107,6 @@
                     placeholder="{{ 'Community.AddTopics' | localize: (isTopicsOptional ? '(optional)' : '') }}"
                     (keydown)="onTopicsKeyDown($event)"
                 />
-
                 <div class="ac-alerts">
                   <div *ngFor="let topic of topics" class="alert alert-info alert-dismissible ac-alert" role="alert">
                     {{ topic }} <button (click)="onRemoveTopicClick(topic)" type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
