@@ -19,17 +19,20 @@ namespace Academically.Services.Posts
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<PostTopic, Guid> _postTopicRepository;
         private readonly IRepository<PostAttachment, Guid> _postAttachmentRepository;
+        private readonly IRepository<DisciplineTaxonomy, Guid> _disciplineTaxonomyRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
 
         public PostsAppService(
             IRepository<Post, Guid> postRepository,
             IRepository<PostTopic, Guid> postTopicRepository,
             IRepository<PostAttachment, Guid> postAttachmentRepository,
+            IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomyRepository,
             IDocumentsDomainService documentsDomainService)
         {
             _postRepository = postRepository;
             _postTopicRepository = postTopicRepository;
             _postAttachmentRepository = postAttachmentRepository;
+            _disciplineTaxonomyRepository = disciplineTaxonomyRepository;
             _documentsDomainService = documentsDomainService;
         }
 
@@ -38,6 +41,27 @@ namespace Academically.Services.Posts
         {
             var post = ObjectMapper.Map<Post>(input);
             var postId = await _postRepository.InsertAndGetIdAsync(post);
+
+            if (input.NewTopics != null && input.NewTopics.Any())
+            {
+                var otherTopicParent = await _disciplineTaxonomyRepository.FirstOrDefaultAsync(x => x.Name == "Other Topics");
+                if(otherTopicParent != null)
+                {
+                    foreach (var newTopic in input.NewTopics)
+                    {
+                        var topicId = await _disciplineTaxonomyRepository.InsertAndGetIdAsync(new DisciplineTaxonomy
+                        {
+                            ParentId = otherTopicParent.Id,
+                            Name = newTopic
+                        });
+                        await _postTopicRepository.InsertAsync(new PostTopic
+                        {
+                            PostId = postId,
+                            DisciplineTaxonomyId = topicId,
+                        });
+                    }
+                }
+            }
 
             if (input.Topics != null && input.Topics.Any())
             {
