@@ -1,4 +1,4 @@
-import { Component, Injector, Renderer2 } from '@angular/core';
+import { Component, Injector, Renderer2, Output, EventEmitter } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 
@@ -9,6 +9,10 @@ import { AppComponentBase } from '@shared/app-component-base';
     animations: [appModuleAnimation()]
 })
 export class CommunityComposerComponent extends AppComponentBase {
+
+    @Output() onQuickPostClick: EventEmitter<any> = new EventEmitter();
+    @Output() onQuestionClick: EventEmitter<any> = new EventEmitter();
+    @Output() onDiscussionClick: EventEmitter<any> = new EventEmitter();
 
     textAreaRows = 1;
 

@@ -1,0 +1,119 @@
+<div class="post container-fluid p-0">
+    <div class="post-author d-flex flex-row align-items-center">
+        <div class="post-author-avatar">
+            <a href="javascript: void(0);" class="avatar d-flex align-items-center">
+                <img [src]="getProfilePicture(appSession.user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
+            </a>
+        </div>
+        <div class="post-author-name" [style.marginLeft.px]="10">{{ authorName | titlecase }}</div>
+        <div class="post-author-visibility" [style.marginLeft.px]="15">
+            <div class="dropdown">
+                <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="dropdown-value">{{ (visibility.label | localize) | titlecase }}</span><i class="fe fe-chevron-down"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <div *ngFor="let opt of visibilityOptions" class="dropdown-item" (click)="visibility=opt">{{ (opt.label | localize) | titlecase }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-body" [style.marginTop.px]="15">
+        <ng-container [ngSwitch]="type">
+            <ng-container *ngSwitchCase="'quick-post'">
+                <div class="post-body-information" [style.paddingTop.px]="10">
+                    <textarea
+                        [rows]="8"
+                        [(ngModel)]="information"
+                        #informationModel="ngModel"
+                        #informationEl
+                        class="form-control"
+                        id="information"
+                        name="information"
+                        required
+                        placeholder="{{ 'Community.QuickPost.Add.Information' | localize }}"
+                    ></textarea>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'add-question'">
+                <div class="post-body-title">
+                    <input
+                        [(ngModel)]="title"
+                        #titleModel="ngModel"
+                        #titleEl
+                        type="text"
+                        class="form-control"
+                        type="text"
+                        id="title"
+                        name="title"
+                        required
+                        placeholder="{{ 'Community.Question.Add.Title' | localize }}"
+                    />
+                </div>
+                <div class="post-body-information" [style.paddingTop.px]="10">
+                    <textarea
+                        [rows]="8"
+                        [(ngModel)]="information"
+                        #informationModel="ngModel"
+                        #informationEl
+                        class="form-control"
+                        id="information"
+                        name="information"
+                        required
+                        placeholder="{{ 'Community.Question.Add.Information' | localize }}"
+                    ></textarea>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'add-discussion'">
+                <div class="post-body-title">
+                    <input
+                        [(ngModel)]="title"
+                        #titleModel="ngModel"
+                        #titleEl
+                        type="text"
+                        class="form-control"
+                        type="text"
+                        id="title"
+                        name="title"
+                        required
+                        placeholder="{{ 'Community.Discussion.Add.Title' | localize }}"
+                    />
+                </div>
+                <div class="post-body-information" [style.paddingTop.px]="10">
+                    <textarea
+                        [rows]="8"
+                        [(ngModel)]="information"
+                        #informationModel="ngModel"
+                        #informationEl
+                        class="form-control"
+                        id="information"
+                        name="information"
+                        required
+                        placeholder="{{ 'Community.Discussion.Add.Information' | localize }}"
+                    ></textarea>
+                </div>
+            </ng-container>
+        </ng-container>
+        <div class="post-body-topics">
+            <div class="form-group required mb-0">
+                <input
+                    [(ngModel)]="topic"
+                    #topicModel="ngModel"
+                    #topicEl
+                    class="form-control"
+                    type="text"
+                    id="topic"
+                    name="topic"
+                    [required]="isTopicsOptional ? null : ''"
+                    placeholder="{{ 'Community.AddTopics' | localize: (isTopicsOptional ? '(optional)' : '') }}"
+                    (keydown)="onTopicsKeyDown($event)"
+                />
+
+                <div class="ac-alerts">
+                  <div *ngFor="let topic of topics" class="alert alert-info alert-dismissible ac-alert" role="alert">
+                    {{ topic }} <button (click)="onRemoveTopicClick(topic)" type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

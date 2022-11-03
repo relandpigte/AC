@@ -1,0 +1,65 @@
+:host {
+    ::ng-deep {
+        .nav {
+            .nav-item {
+                margin: 0;
+
+                &:not(:first-child) {
+                    margin-left: 40px;
+                }
+
+                .nav-link {
+                    padding-top: 0;
+                    padding-bottom: 15px;
+                }
+            }
+        }
+    }
+}
+
+
+.card {
+    padding
+    &-header {
+        .close {
+            font-size: 30px;
+            font-weight: 200;
+        }
+    }
+
+    &-body {
+        padding: 22px 24px 0 24px;
+    }
+
+    &-footer {
+        padding: 10px 24px 20px 24px;
+        border-top: none;
+
+        &-left {
+            height: 32px;
+
+            &-icon {
+                color: #B1C2D9;
+                font-size: 18px;
+
+                &.disabled, &:disabled {
+                    color: #E4EBF6;
+                    pointer-events: none;
+                }
+            }
+        }
+
+        &-right {
+            height: 32px;
+
+            .btn {
+                width: 114px;
+                height: 32px;
+
+                font-weight: 400;
+                font-size: 12px;
+                line-height: 15px;
+            }
+        }
+    }
+}

@@ -25,7 +25,11 @@
     </div>
     <div class="container-fluid community-content d-flex flex-row flex-nowrap">
         <div class="community-content-left flex-grow-1">
-            <app-community-composer></app-community-composer>
+            <app-community-composer
+                (onQuickPostClick)="handleAddPost('quick-post')"
+                (onQuestionClick)="handleAddPost('add-question')"
+                (onDiscussionClick)="handleAddPost('add-discussion')"
+            ></app-community-composer>
             <router-outlet></router-outlet>
         </div>
         <div class="community-content-right" [style.marginLeft.px]="24">

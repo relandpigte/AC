@@ -6,13 +6,13 @@
             </a>
         </div>
         <div class="composer-post-text flex-grow-1 position-relative">
-            <div class="composer-post-text-input d-flex align-items-center">{{ 'Start quick post...' | localize }}</div>
+            <div class="composer-post-text-input d-flex align-items-center" (click)="onQuickPostClick.emit()">{{ 'Start quick post...' | localize }}</div>
             <i class="composer-post-text-icon fe fe-camera cursor-pointer"></i>
         </div>
     </div>
     <div class="composer-actions d-flex flex-row flex-nowrap align-items-center">
-        <button type="button" class="btn btn-white flex-grow-1 border-0"> Question </button>
+        <button type="button" class="btn btn-white flex-grow-1 border-0" (click)="onQuestionClick.emit()"> Question </button>
         <div class="composer-actions-separator"></div>
-        <button type="button" class="btn btn-white flex-grow-1 border-0"> Discussion </button>
+        <button type="button" class="btn btn-white flex-grow-1 border-0" (click)="onDiscussionClick.emit()"> Discussion </button>
     </div>
 </div>
