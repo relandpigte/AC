@@ -1,7 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { PostsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { AppComponentBase } from '@shared/app-component-base';
+import { PostsServiceProxy, PostType } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+
+import { finalize, takeUntil } from 'rxjs/operators';
 
 export enum PostTabs {
     QuickPost = 'quick-post',
@@ -14,18 +17,23 @@ export enum PostTabs {
     templateUrl: './add-post.component.html',
     styleUrls: ['./add-post.component.scss']
   })
-  export class AddPostComponent implements OnInit {
+  export class AddPostComponent extends AppComponentBase implements OnInit {
 
     activeTab: string = PostTabs.QuickPost;
+    @Output() onPostCreated = new EventEmitter<any>();
+
+    model: any;
 
     isCreating = false;
 
     constructor(
+        injector: Injector,
       private _router: Router,
       private _modal: BsModalRef,
       private _cdr: ChangeDetectorRef,
       private _postsService: PostsServiceProxy
     ) {
+        super(injector)
     }
 
     get canAddImage(): boolean { return this.activeTab === PostTabs.QuickPost; }
@@ -54,5 +62,20 @@ export enum PostTabs {
 
     handleCreatePost(): void {
         this.isCreating = true;
+        this._postsService.create(
+            this.model.title,
+            this.model.information,
+            this.model.visibility,
+            this.model.type,
+            this.model.topics,
+            this.model.newTopics,
+            null
+        )
+        .pipe(takeUntil(this.destroyed$))
+        .pipe(finalize(() => this.isCreating = false))
+        .subscribe(_ => {
+            this.onCloseClick();
+            this.onPostCreated.emit();
+        });
     }
 }

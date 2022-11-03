@@ -21,9 +21,9 @@
     </div>
 
     <div class="card-body">
-        <app-community-post *ngIf="activeTab === 'quick-post'" type="quick-post"></app-community-post>
-        <app-community-post *ngIf="activeTab === 'add-question'" type="add-question"></app-community-post>
-        <app-community-post *ngIf="activeTab === 'add-discussion'" type="add-discussion"></app-community-post>
+        <app-community-post *ngIf="activeTab === 'quick-post'" type="quick-post" (onModelChange)="model=$event"></app-community-post>
+        <app-community-post *ngIf="activeTab === 'add-question'" type="add-question" (onModelChange)="model=$event"></app-community-post>
+        <app-community-post *ngIf="activeTab === 'add-discussion'" type="add-discussion" (onModelChange)="model=$event"></app-community-post>
     </div>
 
     <div class="card-footer d-flex justify-content-between">
@@ -37,7 +37,7 @@
             <button type="button" class="btn btn-light" (click)="onCloseClick()">
                 {{ 'Cancel' | localize }}
             </button>
-            <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-primary" (click)="handleCreatePost()">
                 {{ 'Post' | localize }}
             </button>
         </div>

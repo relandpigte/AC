@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit, Injector, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Injector, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PostTabs } from '@app/community/_modals/add-post/add-post.component';
+import { PostType } from '@shared/service-proxies/service-proxies';
 
 export interface VisibilityOptions {
     label: string;
@@ -17,6 +18,7 @@ export interface VisibilityOptions {
 export class CommunityPostComponent extends AppComponentBase implements OnInit {
 
     @Input() type: PostTabs;
+    @Output() onModelChange = new EventEmitter<any>();
 
     visibility: VisibilityOptions;
     visibilityOptions: VisibilityOptions[] = [];
@@ -24,7 +26,8 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit {
     title: string;
     information: string;
     topic: string;
-    topics: string[] = [];
+    topics: { id: string, name: string }[] = [];
+    newTopics: { id: string, name: string }[] = [];
 
     model: any = {};
 
@@ -39,6 +42,7 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit {
 
     ngOnInit(): void {
         this.initVisibilityOptions();
+        this.updateModel();
     }
 
     private initVisibilityOptions(): void {
@@ -48,25 +52,45 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit {
         this.visibility = this.visibilityOptions[0];
     }
 
-    onTopicsKeyDown(e: KeyboardEvent): void {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          const idx = this.topics.findIndex(i => i.trim() === this.topic.trim());
-          if (idx < 0) {
-            this.topics.push(this.topic.trim());
-            this.topic = undefined;
-          }
-          this.updateModelTopics();
+    private getPostType(): PostType {
+        switch(this.type) {
+            case PostTabs.QuickPost:
+                return PostType.QuickPost;
+            case PostTabs.AddQuestion:
+                return PostType.Question;
+            default:
+                return PostType.Discussion;
         }
     }
 
-    onRemoveTopicClick(topic: string): void {
-        const idx = this.topics.findIndex(e => e === topic);
-        if (idx >= 0) this.topics.splice(idx, 1);
-        this.updateModelTopics();
+    onTopicsKeyDown(e: KeyboardEvent): void {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const idx = this.topics.findIndex(i => i.name.trim() === this.topic.trim());
+          if (idx < 0) {
+            this.topics.push({ id: null, name: this.topic.trim() });
+            this.newTopics.push({ id: null, name: this.topic.trim() });
+            this.topic = undefined;
+          }
+          this.updateModel();
+        }
     }
 
-    updateModelTopics(): void {
-        this.model.topics = this.topics.join(',');
+    onRemoveTopicClick(topic: any): void {
+        const idx = this.topics.findIndex(e => e.name === topic.name);
+        const newIdx = this.topics.findIndex(e => e.name === topic.name);
+        if (idx >= 0) this.topics.splice(idx, 1);
+        if (newIdx >= 0) this.newTopics.splice(newIdx, 1);
+        this.updateModel();
+    }
+
+    updateModel(): void {
+        this.model.title = this.title;
+        this.model.information = this.information;
+        this.model.visibility = this.visibility.value;
+        this.model.type = this.getPostType();
+        this.model.topics = this.topics.filter(t => t.id).map(t => t.id) ?? [];
+        this.model.newTopics = this.newTopics.map(t => t.name);
+        this.onModelChange.emit(this.model);
     }
 }

@@ -39,13 +39,16 @@ namespace Academically.Services.Posts
             var post = ObjectMapper.Map<Post>(input);
             var postId = await _postRepository.InsertAndGetIdAsync(post);
 
-            foreach (var topicId in input.Topics)
+            if (input.Topics != null && input.Topics.Any())
             {
-                await _postTopicRepository.InsertAsync(new PostTopic
+                foreach (var topicId in input.Topics)
                 {
-                    PostId = postId,
-                    DisciplineTaxonomyId = topicId,
-                });
+                    await _postTopicRepository.InsertAsync(new PostTopic
+                    {
+                        PostId = postId,
+                        DisciplineTaxonomyId = topicId,
+                    });
+                }
             }
 
             if (input.Attachments != null && input.Attachments.Any())

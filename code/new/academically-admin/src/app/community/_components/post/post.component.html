@@ -12,7 +12,7 @@
                     <span class="dropdown-value">{{ (visibility.label | localize) | titlecase }}</span><i class="fe fe-chevron-down"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <div *ngFor="let opt of visibilityOptions" class="dropdown-item" (click)="visibility=opt">{{ (opt.label | localize) | titlecase }}</div>
+                  <div *ngFor="let opt of visibilityOptions" class="dropdown-item" (click)="visibility=opt; updateModel();">{{ (opt.label | localize) | titlecase }}</div>
                 </div>
             </div>
         </div>
@@ -24,6 +24,7 @@
                     <textarea
                         [rows]="8"
                         [(ngModel)]="information"
+                        (ngModelChange)="updateModel()"
                         #informationModel="ngModel"
                         #informationEl
                         class="form-control"
@@ -38,6 +39,7 @@
                 <div class="post-body-title">
                     <input
                         [(ngModel)]="title"
+                        (ngModelChange)="updateModel()"
                         #titleModel="ngModel"
                         #titleEl
                         type="text"
@@ -53,6 +55,7 @@
                     <textarea
                         [rows]="8"
                         [(ngModel)]="information"
+                        (ngModelChange)="updateModel()"
                         #informationModel="ngModel"
                         #informationEl
                         class="form-control"
@@ -67,6 +70,7 @@
                 <div class="post-body-title">
                     <input
                         [(ngModel)]="title"
+                        (ngModelChange)="updateModel()"
                         #titleModel="ngModel"
                         #titleEl
                         type="text"
@@ -82,6 +86,7 @@
                     <textarea
                         [rows]="8"
                         [(ngModel)]="information"
+                        (ngModelChange)="updateModel()"
                         #informationModel="ngModel"
                         #informationEl
                         class="form-control"
@@ -109,7 +114,7 @@
                 />
                 <div class="ac-alerts">
                   <div *ngFor="let topic of topics" class="alert alert-info alert-dismissible ac-alert" role="alert">
-                    {{ topic }} <button (click)="onRemoveTopicClick(topic)" type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                    #{{ topic.name }} <button (click)="onRemoveTopicClick(topic)" type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
                   </div>
                 </div>
             </div>
