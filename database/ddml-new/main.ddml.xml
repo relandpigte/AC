@@ -149,5 +149,6 @@
 	<include file="ddml-new/ddml.2022-10-28-02-alter-usertopics-add-type-field.xml" />
 	<include file="ddml-new/ddml.2022-11-02-01-alter-usertopics-add-creation-time-field.xml" />
 	<include file="ddml-new/ddml.2022-11-02-02-alter-discriplinetaxonomy-usertopics-set-default-values.xml" />
+	<include file="ddml-new/ddml.2022-11-03-01-create-post-tables.xml" />
 </databaseChangeLog>
 	

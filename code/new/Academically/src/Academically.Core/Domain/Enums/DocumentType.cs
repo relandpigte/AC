@@ -26,6 +26,7 @@
         CoachingThumbnail,
         CoachingResource,
         WorkshopThumbnail,
-        WorkshopResource
+        WorkshopResource,
+        PostAttachment
     }
 }

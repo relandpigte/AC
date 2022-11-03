@@ -228,6 +228,11 @@ namespace Academically.Authorization
             userTopicPermission.CreateChildPermission(PermissionNames.Pages_Community_UserTopics_Create, L("Create"));
             userTopicPermission.CreateChildPermission(PermissionNames.Pages_Community_UserTopics_Delete, L("Update"));
             userTopicPermission.CreateChildPermission(PermissionNames.Pages_Community_UserTopics_Update, L("Delete"));
+
+            var postPermission = context.CreatePermission(PermissionNames.Pages_Posts, L("Posts"));
+            postPermission.CreateChildPermission(PermissionNames.Pages_Posts_Create, L("Create"));
+            postPermission.CreateChildPermission(PermissionNames.Pages_Posts_Delete, L("Update"));
+            postPermission.CreateChildPermission(PermissionNames.Pages_Posts_Update, L("Delete"));
         }
 
         private static ILocalizableString L(string name)

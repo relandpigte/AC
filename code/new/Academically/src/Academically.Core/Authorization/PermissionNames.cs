@@ -221,5 +221,10 @@
         public const string Pages_Community_UserTopics_Create = "Pages.Community.UserTopics.Create";
         public const string Pages_Community_UserTopics_Update = "Pages.Community.UserTopics.Update";
         public const string Pages_Community_UserTopics_Delete = "Pages.Community.UserTopics.Delete";
+
+        public const string Pages_Posts = "Pages.Posts";
+        public const string Pages_Posts_Create = "Pages.Posts.Create";
+        public const string Pages_Posts_Update = "Pages.Posts.Update";
+        public const string Pages_Posts_Delete = "Pages.Posts.Delete";
     }
 }
