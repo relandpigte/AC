@@ -1,8 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit, Injector, Input, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
-import { BsModalRef } from 'ngx-bootstrap/modal';
-import { AppComponentBase } from '@shared/app-component-base';
+import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { PostTabs } from '@app/community/_modals/add-post/add-post.component';
+import { AppComponentBase } from '@shared/app-component-base';
 import { PostType } from '@shared/service-proxies/service-proxies';
 
 export interface VisibilityOptions {

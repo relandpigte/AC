@@ -5,6 +5,7 @@ import { SharedModule } from '@shared/shared.module';
 import { CommunityRoutingModule } from './community-routing.module';
 import { CommunityComponent } from './community.component';
 import { CommunityComposerComponent } from './_components/composer/composer.component';
+import { CommunityPostCardComponent } from './_components/community-post/community-post.component';
 import { FollowingTopicsComponent } from './_components/following/following-topics.component';
 import { MoreTopicsComponent } from './_components/more-topics/more-topics.component';
 import { CommunitySideCardComponent } from './_components/side-card/side-card.component';
@@ -18,6 +19,7 @@ import { AddPostComponent } from './_modals/add-post/add-post.component';
     AddPostComponent,
     CommunityComponent,
     CommunityComposerComponent,
+    CommunityPostCardComponent,
     CommunitySideCardComponent,
     CommunityPostComponent,
     FollowingTopicsComponent,

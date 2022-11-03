@@ -1,4 +1,9 @@
 <div class="container-fluid following d-flex flex-column flex-nowrap p-0">
+
+    <div *ngFor="let p of posts" class="card community-content-post">
+        <app-community-post-card [post]="p"></app-community-post-card>
+    </div>
+
     <div *ngIf="usersYouMayKnow?.length > 0" class="card community-content-post">
         <div class="row align-items-center" [style.marginBottom.px]="12">
           <div class="col d-flex flex-wrap align-items-center justify-content-between">

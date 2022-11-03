@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Academically.Authorization;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
 using Academically.Services.Posts.Dto;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Academically.Services.Posts
 {
@@ -34,6 +37,16 @@ namespace Academically.Services.Posts
             _postAttachmentRepository = postAttachmentRepository;
             _disciplineTaxonomyRepository = disciplineTaxonomyRepository;
             _documentsDomainService = documentsDomainService;
+        }
+
+
+        public async Task<List<PostDto>> GetAllPosts(PostType? type)
+        {
+            return await _postRepository.GetAll()
+                    .Include(p => p.CreatorUser)
+                    .WhereIf(type.HasValue, p => p.Type == type)
+                    .Select(p => ObjectMapper.Map<PostDto>(p))
+                    .ToListAsync();
         }
 
         [AbpAuthorize(PermissionNames.Pages_Posts_Create)]

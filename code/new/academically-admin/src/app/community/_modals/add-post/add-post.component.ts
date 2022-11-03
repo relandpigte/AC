@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output } 
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PostsServiceProxy, PostType } from '@shared/service-proxies/service-proxies';
+import { CommunityPostService } from '@shared/services/community-post.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -31,6 +32,7 @@ export enum PostTabs {
       private _router: Router,
       private _modal: BsModalRef,
       private _cdr: ChangeDetectorRef,
+      private _postSub: CommunityPostService,
       private _postsService: PostsServiceProxy
     ) {
         super(injector)
@@ -76,6 +78,7 @@ export enum PostTabs {
         .subscribe(_ => {
             this.onCloseClick();
             this.onPostCreated.emit();
+            this._postSub.hasNewPost(null);
         });
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
+using Academically.Authorization.Users;
 using Academically.Domain.Enums;
 
 namespace Academically.Domain.Entities
@@ -19,6 +20,9 @@ namespace Academically.Domain.Entities
 		public string Content { get; set; }
 		public Guid? SpaceId { get; set; }
 		public PostType Type { get; set; }
+
+		[ForeignKey("CreatorUserId")]
+		public virtual User CreatorUser { get; set; }
 
 		public virtual ICollection<PostTopic> PostTopics { get; set; }
 		public virtual ICollection<PostAttachment> PostAttachments { get; set; }
