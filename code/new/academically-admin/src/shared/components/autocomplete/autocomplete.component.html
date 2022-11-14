@@ -1,0 +1,20 @@
+<div class="autocomplete d-flex shadow" [class.show]="isShown">
+    <div class="autocomplete-scroll-wrapper flex-grow-1">
+        <ng-container *ngIf="!data?.length">
+            <div class="autocomplete-row no-data">
+                {{ noDataText | localize }}
+            </div>
+        </ng-container>
+        <ng-container *ngIf="data?.length">
+            <div *ngFor="let item of data" class="autocomplete-row" (click)="handleOnItemSelect(item)">
+                <ng-container *ngIf="!templateRef">
+                    {{ item.name | titlecase }}
+                </ng-container>
+
+                <ng-container *ngIf="templateRef">
+                    <ng-container *ngTemplateOutlet="templateRef; context: { item: item, isLoading: isLoading, metadata: metadata }"></ng-container>
+                </ng-container>
+            </div>
+        </ng-container>
+    </div>
+</div>

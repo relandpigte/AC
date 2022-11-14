@@ -1,7 +1,10 @@
-import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { PostTabs } from '@app/community/_modals/add-post/add-post.component';
 import { AppComponentBase } from '@shared/app-component-base';
-import { PostType } from '@shared/service-proxies/service-proxies';
+import { TopicSorting } from '@shared/components/topic/topic.component';
+import { DisciplineTaxonomiesServiceProxy, PostType } from '@shared/service-proxies/service-proxies';
+
+import { takeUntil, finalize } from 'rxjs/operators';
 
 export interface VisibilityOptions {
     label: string;
@@ -29,8 +32,12 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit {
 
     model: any = {};
 
+    availableTopics: any = [];
+    isLoadingTopics = false;
+
     constructor(
-        injector: Injector
+        injector: Injector,
+        private _taxonomyService: DisciplineTaxonomiesServiceProxy
     ) {
         super(injector);
     }
@@ -74,6 +81,11 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit {
         }
     }
 
+    onSelectExistingTopic(topic: any): void {
+        this.topics.push(topic);
+        this.updateModel();
+    }
+
     onRemoveTopicClick(topic: any): void {
         const idx = this.topics.findIndex(e => e.name === topic.name);
         const newIdx = this.topics.findIndex(e => e.name === topic.name);
@@ -90,5 +102,14 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit {
         this.model.topics = this.topics.filter(t => t.id).map(t => t.id) ?? [];
         this.model.newTopics = this.newTopics.map(t => t.name);
         this.onModelChange.emit(this.model);
+    }
+
+    loadTopics(data: any): void {
+        const { keyword, showLoading } = data;
+        this.isLoadingTopics = showLoading;
+        this._taxonomyService.getAllLastChildren(keyword, true, TopicSorting.Popular)
+            .pipe(takeUntil(this.destroyed$))
+            .pipe(finalize(() => this.isLoadingTopics = false))
+            .subscribe(topics => this.availableTopics = topics.filter(t => !this.topics.some(x => x.id === t.id)));
     }
 }

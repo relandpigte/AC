@@ -115,3 +115,32 @@
         }
     }
 }
+
+
+.topic {
+    &-row {
+        padding: 10px 20px 10px 24px;
+
+        &:hover {
+            background-color: #F9FBFD;
+            cursor: pointer;
+        }
+
+        &-name {
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 18px;
+            color: #12263F;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &-followers {
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 15px;
+            color: #6F84A2;
+        }
+    }
+}

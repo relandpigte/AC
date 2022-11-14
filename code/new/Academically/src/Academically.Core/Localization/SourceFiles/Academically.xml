@@ -1896,6 +1896,7 @@
 	<text name="Community.AddQuestion">Add question</text>
 	<text name="Community.AddDiscussion">Add discussion</text>
 	<text name="Community.AddTopics">Add topics to your post {0}</text>
+	<text name="Community.NoTopicsFoundEnterToCreate">No topics found. Push enter to create a new one.</text>
 	<!-- Community - Quick Post -->
 	<text name="Community.QuickPost.Add.Information">Say something...</text>
 	<!-- Community - Question -->
