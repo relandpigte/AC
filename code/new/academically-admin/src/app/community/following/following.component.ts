@@ -45,11 +45,11 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
   }
 
   private getPosts(): void {
-    // this.isLoadingPosts = true;
-    // this._postsService.getAllPosts(PostType.Discussion)
-    //   .pipe(takeUntil(this.destroyed$))
-    //   .pipe(finalize(() => this.isLoadingPosts = false))
-    //   .subscribe(posts => this.posts = posts);
+    this.isLoadingPosts = true;
+    this._postsService.getAllPosts(PostType.Discussion)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isLoadingPosts = false))
+      .subscribe(posts => this.posts = posts);
   }
 
 }

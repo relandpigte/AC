@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Academically.Services.Posts.Dto
 {
-    [AutoMapTo(typeof(Post))]
+    [AutoMapFrom(typeof(Post))]
     public class PostDto : CreationAuditedEntityDto<Guid>
     {
         public string Title { get; set; }
