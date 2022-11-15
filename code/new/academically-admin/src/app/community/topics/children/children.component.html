@@ -57,7 +57,7 @@
                   <span class="all-topics-content-view-all cursor-pointer" [routerLink]="['events']">View All <i class="fas fa-arrow-right"></i></span>
                 </div>
             </div>
-            <app-carousel customClass="left-align peek-enabled items-content-90p" [isLoading]="isLoadingTailoredTopics" [items]="t.value" [templateRef]="topicClusterRef1"></app-carousel>
+            <app-carousel [isLoading]="isLoadingTailoredTopics" [items]="t.value" [templateRef]="topicClusterRef1"></app-carousel>
         </div>
     </div>
 

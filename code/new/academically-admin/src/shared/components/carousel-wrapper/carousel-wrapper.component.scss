@@ -1,158 +1,76 @@
-::ng-deep .hidden {
-    visibility: hidden;
-    display: none !important;
-}
-
-::ng-deep .p-carousel-content {
-    overflow: visible !important;
-}
-
-::ng-deep .p-carousel-container {
-    padding: 0;
-    position: relative;
-
+.keen-slider {
     &:hover {
-        .p-carousel-prev {
-            visibility: visible !important;
-            opacity: 1 !important;
-        }
-
-        .p-carousel-next {
+        .carousel-nav-prev, .carousel-nav-next {
             visibility: visible !important;
             opacity: 1 !important;
         }
     }
+}
 
-    .p-carousel-prev {
-        visibility: hidden !important;
-        opacity: 0 !important;
-        background-image: url('../../../assets/img/icon-carousel-left.png') !important;
-        background-size: cover !important;
-        width: 56px !important;
-        height: 56px !important;
-        position: absolute;
-        top: 48%;
-        left: 0;
-        transform: translateY(-50%);
-        z-index: 999;
+.carousel {
+    &-nav {
+        &-prev {
+            visibility: hidden;
+            opacity: 0 !important;
+            border-radius: 50%;
+            background-color: #fff;
+            background-image: url('../../../assets/img/icon-carousel-left.png') !important;
+            background-size: cover !important;
+            width: 56px !important;
+            height: 56px !important;
+            position: absolute;
+            top: 48%;
+            left: 15px;
+            z-index: 999;
+            -webkit-transition: all 0.2s ease-out;
+            -moz-transition: all 0.2s ease-out;
+            -ms-transition: all 0.2s ease-out;
+            -o-transition: all 0.2s ease-out;
+            transition: all 0.2s ease-out;
+            -webkit-transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            -o-transform: translateY(-50%);
+            transform: translateY(-50%);
 
-        &:hover {
-            background-image: url('../../../assets/img/icon-carousel-left-hover.png') !important;
+            &:hover {
+                cursor: pointer;
+                background-image: url('../../../assets/img/icon-carousel-left-hover.png') !important;
+            }
         }
 
-        &:focus {
-            box-shadow: none !important;
+        &-next {
+            visibility: hidden;
+            opacity: 0 !important;
+            border-radius: 50%;
+            background-color: #fff;
+            background-image: url('../../../assets/img/icon-carousel-right.png') !important;
+            background-size: cover !important;
+            width: 56px !important;
+            height: 56px !important;
+            position: absolute;
+            top: 48%;
+            right: 15px;
+            z-index: 999;
+            -webkit-transition: all 0.2s ease-out;
+            -moz-transition: all 0.2s ease-out;
+            -ms-transition: all 0.2s ease-out;
+            -o-transition: all 0.2s ease-out;
+            transition: all 0.2s ease-out;
+            -webkit-transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            -o-transform: translateY(-50%);
+            transform: translateY(-50%);
+
+            &:hover {
+                cursor: pointer;
+                background-image: url('../../../assets/img/icon-carousel-right-hover.png') !important;
+            }
         }
 
-        &.p-disabled {
+        &-hidden {
             display: none !important;
         }
-
-        > span {
-            display: none;
-        }
-    }
-
-    .p-carousel-next {
-        visibility: hidden !important;
-        opacity: 0 !important;
-        background-image: url('../../../assets/img/icon-carousel-right.png') !important;
-        background-size: cover !important;
-        width: 56px !important;
-        height: 56px !important;
-        position: absolute;
-        top: 48%;
-        right: 0;
-        transform: translateY(-50%);
-        z-index: 999;
-
-        &:hover {
-            background-image: url('../../../assets/img/icon-carousel-right-hover.png') !important;
-        }
-
-        &:focus {
-            box-shadow: none !important;
-        }
-
-        &.p-disabled {
-            display: none !important;
-        }
-
-        > span {
-            display: none;
-        }
     }
 }
-
-::ng-deep p-carousel.wrap-around .p-carousel-container {
-    .p-carousel-item app-service-card,
-    .p-carousel-item app-topic-card {
-        justify-content: center !important;
-    }
-
-    .p-carousel-item-start app-service-card,
-    .p-carousel-item-start app-topic-card {
-        justify-content: flex-start !important;
-    }
-
-    .p-carousel-item-end app-service-card,
-    .p-carousel-item-end app-topic-card {
-        justify-content: flex-end !important;
-    }
-}
-
-::ng-deep p-carousel.left-align .p-carousel-container {
-    .p-carousel-item app-service-card,
-    .p-carousel-item app-topic-card {
-        justify-content: flex-start !important;
-    }
-}
-
-::ng-deep p-carousel.right-align .p-carousel-container {
-    .p-carousel-item app-service-card,
-    .p-carousel-item app-topic-card {
-        justify-content: flex-end !important;
-    }
-}
-
-::ng-deep p-carousel.btn-overflow .p-carousel-container {
-    .p-carousel-prev {
-        left: -38px;
-    }
-
-    .p-carousel-next {
-        right: -38px;
-    }
-}
-
-::ng-deep p-carousel.peek-enabled {
-    .p-carousel-container {
-        width: 100% !important;
-        margin: auto;
-        overflow: hidden !important;
-    }
-
-    .p-carousel-items-content {
-        overflow: visible !important;
-        width: 80% !important;
-    }
-
-    .p-carousel-content::-webkit-scrollbar {
-        display: none;
-    }
-
-    .p-carousel-content {
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none; /* Firefox */
-    }
-}
-
-@for $i from 1 through 50 {
-    $value: $i * 2;
-    ::ng-deep p-carousel.items-content-#{$value}p {
-        .p-carousel-items-content {
-            width: $value * 1% !important;
-        }
-    }
-}
-

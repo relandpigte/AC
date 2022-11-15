@@ -1,4 +1,3 @@
-import { VideoType } from './../../service-proxies/service-proxies';
 import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DefaultServiceCardActions, DefaultServiceCardOptions, ServiceCard, ServiceCardButton, ServiceCardComposition, ServiceCardDates, ServiceCardImage, ServiceCardOptions, ServiceCardPeople, ServiceCardPerson, ServiceCardPill, ServiceCardPrice, ServiceCardReview, ServiceCardRsvp, ServiceCardSlots, ServiceCardType, UserServiceCardActions } from '@shared/models/service-card.model';

@@ -489,7 +489,6 @@ export abstract class AppComponentBase implements OnDestroy {
           this[destinationField] = _.concat(this[destinationField], items);
         }
       });
-
   }
 
   private deepSearch(object, key) {

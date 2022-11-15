@@ -41,6 +41,8 @@
               "node_modules/quill/dist/quill.core.css",
               "node_modules/quill/dist/quill.bubble.css",
               "node_modules/quill/dist/quill.snow.css",
+              "node_modules/cookieconsent/build/cookieconsent.min.css",
+              "node_modules/keen-slider/keen-slider.min.css",
               "node_modules/primeicons/primeicons.css",
               "node_modules/primeng/resources/themes/saga-blue/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
@@ -49,8 +51,7 @@
               "src/assets/themes/dashkit/libs/quill/dist/quill.core.css",
               "src/assets/themes/dashkit/libs/highlightjs/styles/vs2015.css",
               "src/assets/themes/dashkit/css/theme.min.css",
-              "src/shared/core.less",
-              "node_modules/cookieconsent/build/cookieconsent.min.css"
+              "src/shared/core.less"
             ],
             "scripts": [
               "node_modules/moment/min/moment.min.js",
@@ -58,6 +59,9 @@
               "node_modules/sweetalert2/dist/sweetalert2.js",
               "src/assets/freeze-ui/freeze-ui.js",
               "node_modules/push.js/bin/push.min.js",
+              "node_modules/abp-web-resources/Abp/Framework/scripts/libs/abp.moment.js",
+              "node_modules/cookieconsent/build/cookieconsent.min.js",
+              "node_modules/keen-slider/keen-slider.js",
               "src/assets/themes/dashkit/libs/jquery/dist/jquery.min.js",
               "src/assets/themes/dashkit/libs/bootstrap/dist/js/bootstrap.bundle.min.js",
               "src/assets/themes/dashkit/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js",
@@ -73,9 +77,7 @@
               "src/assets/themes/dashkit/js/theme.min.js",
               "node_modules/abp-web-resources/Abp/Framework/scripts/abp.js",
               "src/assets/abp-web-resources/abp.sweet-alert.js",
-              "src/assets/abp-web-resources/abp.freeze-ui.js",
-              "node_modules/abp-web-resources/Abp/Framework/scripts/libs/abp.moment.js",
-              "node_modules/cookieconsent/build/cookieconsent.min.js"
+              "src/assets/abp-web-resources/abp.freeze-ui.js"
             ]
           },
           "configurations": {

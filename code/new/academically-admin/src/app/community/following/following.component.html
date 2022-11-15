@@ -5,37 +5,45 @@
     </div>
 
     <div *ngIf="usersYouMayKnow?.length > 0" class="card community-content-post">
-        <div class="row align-items-center" [style.marginBottom.px]="12">
+        <div class="row align-items-center community-content-post-title">
           <div class="col d-flex flex-wrap align-items-center justify-content-between">
-            <span class="community-content-post-heading">Users you may know</span>
-            <span class="community-content-post-view-all cursor-pointer" [routerLink]="['users']">View All <i class="fas fa-arrow-right"></i></span>
+            <span class="community-content-post-title-heading">Users you may know</span>
+            <span class="community-content-post-title-view-all cursor-pointer" [routerLink]="['users']">View All <i class="fas fa-arrow-right"></i></span>
           </div>
         </div>
-        <app-carousel
-          [items]="usersYouMayKnow"
-          [isLoading]="isLoading_usersYouMayKnow"
-          [isInfiteScroll]="true"
-          [maxItems]="usersYouMayKnowMaxItems"
-          customClass="left-align peek-enabled"
-          (onRequestNewData)="handleUsersYouMayKnowRequestData($event)">
-        </app-carousel>
+        <div class="community-content-post-items">
+          <app-carousel
+            [items]="usersYouMayKnow"
+            [maxItems]="usersYouMayKnowMaxItems"
+            [itemWidth]="260"
+            [itemSpacing]="25"
+            [isLoading]="isLoading_usersYouMayKnow"
+            [isAutoFit]="true"
+            [isInfiteScroll]="true"
+            (onRequestNewData)="handleUsersYouMayKnowRequestData($event)">
+          </app-carousel>
+        </div>
     </div>
 
     <div *ngIf="recommendedCourses?.length > 0" class="card community-content-post">
-      <div class="row align-items-center" [style.marginBottom.px]="18">
+      <div class="row align-items-center community-content-post-title">
         <div class="col d-flex flex-wrap align-items-center justify-content-between">
-          <span class="community-content-post-heading">Recommended Courses</span>
-          <span class="community-content-post-view-all cursor-pointer" [routerLink]="['courses']">View All <i class="fas fa-arrow-right"></i></span>
+          <span class="community-content-post-title-heading">Recommended Courses</span>
+          <span class="community-content-post-title-view-all cursor-pointer" [routerLink]="['courses']">View All <i class="fas fa-arrow-right"></i></span>
         </div>
       </div>
-      <app-carousel
-        [items]="recommendedCourses"
-        [isLoading]="isLoading_recommendedCourses"
-        [isInfiteScroll]="true"
-        [maxItems]="recommendedCoursesMaxItems"
-        customClass="left-align peek-enabled items-content-54p"
-        (onRequestNewData)="handleRecommendedCoursesRequestData($event)"
-        (onServiceCardClick)="handleCourseServiceCardClick($event)">
-      </app-carousel>
+      <div class="community-content-post-items">
+        <app-carousel
+          [items]="recommendedCourses"
+          [maxItems]="recommendedCoursesMaxItems"
+          [itemWidth]="352"
+          [itemSpacing]="30"
+          [isLoading]="isLoading_recommendedCourses"
+          [isAutoFit]="true"
+          [isInfiteScroll]="true"
+          (onRequestNewData)="handleRecommendedCoursesRequestData($event)"
+          (onServiceCardClick)="handleCourseServiceCardClick($event)">
+        </app-carousel>
+      </div>
     </div>
 </div>

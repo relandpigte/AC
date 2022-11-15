@@ -1,22 +1,29 @@
-<p-carousel
-  *ngIf="renderCarousel"
-  [value]="items"
-  [numScroll]="numScroll"
-  [numVisible]="visibleItems"
-  [circular]="circular"
-  [autoplayInterval]="autoplayInterval"
-  [indicatorsContentClass]="'hidden'"
-  [ngClass]="[customClass]"
-  (onPage)="onPage($event)">
-
-  <ng-template let-content pTemplate="item">
-
-    <app-service-card *ngIf="!templateRef" [data]="content" [ngClass]="{'item-active': expression}" [isLoading]="isLoading" [isFeatured]="isFeatured" (onClick)="handleServiceCardClick($event)"></app-service-card>
+<div class="keen-slider" #carouselContainer>
+  <div *ngFor="let item of items" class="keen-slider__slide" [style.minWidth.px]="itemWidth">
+    <app-service-card
+      *ngIf="!templateRef"
+      [data]="item"
+      [ngClass]="{'item-active': expression}"
+      [isLoading]="allowLoader && isLoading"
+      [isFeatured]="isFeatured"
+      (onClick)="handleServiceCardClick($event)"
+    ></app-service-card>
 
     <ng-container *ngIf="templateRef">
-      <ng-container *ngTemplateOutlet="templateRef; context: { item: content, isLoading: isLoading, metadata: metadata }"></ng-container>
+      <ng-container *ngTemplateOutlet="templateRef; context: { item: item, isLoading: isLoading, metadata: metadata }"></ng-container>
     </ng-container>
+  </div>
 
-  </ng-template>
+  <div
+    *ngIf="carouselInstance"
+    [ngClass]="'carousel-nav carousel-nav-prev shadow ' + (!isCircular && currentItem === 0 ? 'carousel-nav-hidden' : '')"
+    (click)="carouselInstance.prev()"
+  ></div>
+  <div
+    *ngIf="carouselInstance"
+    [ngClass]="'carousel-nav carousel-nav-next shadow ' + (!isCircular && isLastItem ? 'carousel-nav-hidden' : '')"
+    (click)="carouselInstance.next()"
+  ></div>
 
-</p-carousel>
+</div>
+
