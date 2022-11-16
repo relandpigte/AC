@@ -1,6 +1,14 @@
-<div class="container-fluid all-topics d-flex flex-column flex-nowrap p-0">
+<div class="container-fluid all-topics d-flex flex-column flex-nowrap p-0 pb-5">
     <div class="all-topics-content flex-grow-1">
-        <app-carousel [isLoading]="isLoadingParentTopics" [items]="parentTopics" [templateRef]="topicClusterRef1" [metadata]="{ isParent: true }"></app-carousel>
+        <app-carousel
+            [isLoading]="isLoadingParentTopics"
+            [items]="parentTopics"
+            [templateRef]="topicClusterRef1"
+            [metadata]="{ isParent: true }"
+            [itemWidth]="257"
+            [itemSpacing]="30"
+            [isAutoFit]="true"
+        ></app-carousel>
     </div>
 
     <div class="all-topics-content flex-grow-1">

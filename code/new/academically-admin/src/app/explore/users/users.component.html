@@ -3,7 +3,13 @@
     <div class="container-fluid p-0">
       <div class="header-body">
         <div class="mb-5">
-          <app-carousel [items]="latest" [isInfiteScroll]="true"></app-carousel>
+          <app-carousel
+            [items]="latest"
+            [isInfiteScroll]="true"
+            [itemWidth]="543"
+            [itemSpacing]="30"
+            [isAutoFit]="true"
+          ></app-carousel>
         </div>
         <div class="row align-items-center">
           <div class="col d-flex flex-wrap gap-15">

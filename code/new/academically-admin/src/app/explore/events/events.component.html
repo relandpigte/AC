@@ -8,7 +8,15 @@
         </div>
 
         <div [style.marginBottom.px]="40">
-          <app-carousel [items]="featured" [isInfiteScroll]="false" [isLoading]="isLoading" [isFeatured]="true"></app-carousel>
+          <app-carousel
+            [items]="featured"
+            [isInfiteScroll]="false"
+            [isLoading]="isLoading"
+            [isFeatured]="true"
+            [itemWidth]="543"
+            [itemSpacing]="30"
+            [isAutoFit]="true"
+          ></app-carousel>
         </div>
 
         <ng-container *ngIf="isGroupByTopics">

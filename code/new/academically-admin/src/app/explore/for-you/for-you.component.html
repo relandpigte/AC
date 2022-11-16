@@ -12,9 +12,12 @@
           </div>
           <app-carousel
             [items]="newUsers"
+            [maxItems]="newUsersMaxItems"
+            [itemWidth]="260"
+            [itemSpacing]="25"
+            [isAutoFit]="true"
             [isLoading]="isLoading_newUsers"
             [isInfiteScroll]="true"
-            [maxItems]="newUsersMaxItems"
             (onRequestNewData)="handleNewUsersRequestData($event)">
           </app-carousel>
         </ng-container>
@@ -28,8 +31,11 @@
           </div>
           <app-carousel
             [items]="upcomingEvents"
-            [isInfiteScroll]="true"
             [maxItems]="upcomingEventsMaxItems"
+            [itemWidth]="352"
+            [itemSpacing]="30"
+            [isAutoFit]="true"
+            [isInfiteScroll]="true"
             (onRequestNewData)="handleUpcomingEventsRequestData($event)"
             (onServiceCardClick)="handleEventServiceCardClick($event)">
           </app-carousel>
@@ -44,9 +50,12 @@
           </div>
           <app-carousel
             [items]="recommendedCourses"
+            [maxItems]="recommendedCoursesMaxItems"
+            [itemWidth]="352"
+            [itemSpacing]="30"
+            [isAutoFit]="true"
             [isLoading]="isLoading_recommendedCourses"
             [isInfiteScroll]="true"
-            [maxItems]="recommendedCoursesMaxItems"
             (onRequestNewData)="handleRecommendedCoursesRequestData($event)"
             (onServiceCardClick)="handleCourseServiceCardClick($event)">
           </app-carousel>
@@ -61,9 +70,12 @@
           </div>
           <app-carousel
             [items]="newArticles"
+            [maxItems]="newArticlesMaxItems"
+            [itemWidth]="543"
+            [itemSpacing]="30"
+            [isAutoFit]="true"
             [isLoading]="isLoading_newArticles"
             [isInfiteScroll]="true"
-            [maxItems]="newArticlesMaxItems"
             (onRequestNewData)="handleNewArticlesRequestData($event)"
             (onServiceCardClick)="handleArticleServiceCardClick($event)">
           </app-carousel>
@@ -78,9 +90,12 @@
           </div>
           <app-carousel
             [items]="recommendedTutorials"
+            [maxItems]="recommendedTutorialsMaxItems"
+            [itemWidth]="352"
+            [itemSpacing]="30"
+            [isAutoFit]="true"
             [isLoading]="isLoading_recommendedTutorials"
             [isInfiteScroll]="true"
-            [maxItems]="recommendedTutorialsMaxItems"
             (onRequestNewData)="handleRecommendedTutorialsRequestData($event)"
             (onServiceCardClick)="handleTutorialServiceCardClick($event)">
           </app-carousel>
@@ -95,9 +110,12 @@
           </div>
           <app-carousel
             [items]="newCoachings"
+            [maxItems]="newCoachingsMaxItems"
+            [itemWidth]="352"
+            [itemSpacing]="30"
+            [isAutoFit]="true"
             [isLoading]="isLoading_newCoachings"
             [isInfiteScroll]="true"
-            [maxItems]="newCoachingsMaxItems"
             (onRequestNewData)="handleNewCoachingsRequestData($event)">
           </app-carousel>
         </ng-container>

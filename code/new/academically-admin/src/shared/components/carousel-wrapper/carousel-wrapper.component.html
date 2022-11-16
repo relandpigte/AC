@@ -1,5 +1,5 @@
 <div class="keen-slider" #carouselContainer>
-  <div *ngFor="let item of items" class="keen-slider__slide" [style.minWidth.px]="itemWidth">
+  <div *ngFor="let item of items" class="keen-slider__slide" [style.minWidth.px]="itemWidth" [style.maxWidth.px]="itemWidth">
     <app-service-card
       *ngIf="!templateRef"
       [data]="item"
