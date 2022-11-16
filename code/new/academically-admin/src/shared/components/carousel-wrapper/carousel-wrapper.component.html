@@ -21,7 +21,7 @@
   ></div>
   <div
     *ngIf="carouselInstance"
-    [ngClass]="'carousel-nav carousel-nav-next shadow ' + (!isCircular && isAboveProgress(1) ? 'carousel-nav-hidden' : '')"
+    [ngClass]="'carousel-nav carousel-nav-next shadow ' + (!isCircular && isLastItem ? 'carousel-nav-hidden' : '')"
     (click)="carouselInstance.next()"
   ></div>
 

@@ -35,7 +35,8 @@ export class CarouselPillComponent extends AppComponentBase implements AfterView
         super(injector);
     }
 
-    isAboveProgress(progress: number): boolean { return this.carouselInstance.track.details.maxIdx === 0 || this.carouselInstance.track.details.progress >= progress; }
+    get isLastItem(): boolean { return this.carouselInstance.track.details.maxIdx === 0 || this.currentItem === this.carouselInstance.track.details.maxIdx}
+    isAboveProgress(progress: number): boolean { return this.carouselInstance.track.details.progress >= progress; }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.choices?.previousValue !== changes.choices?.currentValue && this.choices?.length) {

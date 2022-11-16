@@ -20,7 +20,7 @@
     ></div>
     <div
         *ngIf="carouselInstance"
-        [ngClass]="'carousel-nav carousel-nav-next ' + (isAboveProgress(1) ? 'carousel-nav-hidden' : '')"
+        [ngClass]="'carousel-nav carousel-nav-next ' + (isLastItem ? 'carousel-nav-hidden' : '')"
         (click)="carouselInstance.next()"
     ></div>
 </div>

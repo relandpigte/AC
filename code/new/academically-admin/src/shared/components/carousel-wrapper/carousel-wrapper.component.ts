@@ -45,7 +45,8 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
     super(injector);
   }
 
-  isAboveProgress(progress: number): boolean { return this.carouselInstance.track.details.maxIdx === 0 || this.carouselInstance.track.details.progress >= progress; }
+  get isLastItem(): boolean { return this.carouselInstance.track.details.maxIdx === 0 || this.currentItem === this.carouselInstance.track.details.maxIdx}
+  isAboveProgress(progress: number): boolean { return this.carouselInstance.track.details.progress >= progress; }
 
   ngOnChanges(changes: SimpleChanges): void {
       if (changes.items?.previousValue !== changes.items?.currentValue && this.items?.length) {
