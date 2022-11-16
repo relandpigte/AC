@@ -43,6 +43,7 @@ export class ExploreCoursesComponent extends AppComponentBase implements OnInit 
   selectedTopics: string[] = [];
 
   get topics(): string[] { return this.topicGroups ? Object.keys(this.topicGroups) : null; }
+  get validTopics(): string[] { return this.topics.filter(x => x); }
   get filteredTopics(): string[] { return this.topics.filter(t => this.selectedTopics.includes(t)); }
 
   constructor(

@@ -158,7 +158,7 @@
             <ng-container *ngIf="people">
                 <div *ngIf="people?.isShowAvatars && people?.people && people?.avatarStackCount > 0" class="service-card-body-people-cluster avatar-group">
                     <ng-container *ngFor="let p of people?.people?.slice(0, people?.avatarStackCount)">
-                        <div *if="p.avatar" class="service-card-body-people-cluster-avatar avatar avatar-xs">
+                        <div *ngIf="p.avatar" class="service-card-body-people-cluster-avatar avatar avatar-xs">
                             <img [src]="p.avatar.src" alt="..." class="avatar-img rounded-circle" [ngClass]="[p.avatar.class ? p.avatar.class : '']">
                         </div>
                     </ng-container>

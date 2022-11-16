@@ -3,10 +3,10 @@
         <div *ngIf="canAdd" class="carousel-pill-item add-pill" (click)="handleAddPill()">
             <i class="fas fa-plus"></i><span class="add-pill-label">{{ 'Add' | localize }}</span>
         </div>
-        <div class="carousel-pill-separator" [style.marginLeft.px]="itemSpacing"></div>
+        <div *ngIf="choices?.length" class="carousel-pill-separator" [style.marginLeft.px]="itemSpacing"></div>
     </div>
 
-    <div *ngIf="showAll" class="carousel-pill-item all-pill keen-slider__slide" [class.active]="isAllPillSelected()"  (click)="handleSelectAll()">
+    <div *ngIf="choices?.length && showAll" class="carousel-pill-item all-pill keen-slider__slide" [class.active]="isAllPillSelected()"  (click)="handleSelectAll()">
         <span class="add-pill-label">{{ 'All Topics' | localize }}</span>
     </div>
     <div *ngFor="let i of choices" class="carousel-pill-item keen-slider__slide" [class.active]="isPillSelected(i)" (click)="handleSelectPill(i)">
@@ -20,7 +20,7 @@
     ></div>
     <div
         *ngIf="carouselInstance"
-        [ngClass]="'carousel-nav carousel-nav-next ' + (isLastItem ? 'carousel-nav-hidden' : '')"
+        [ngClass]="'carousel-nav carousel-nav-next ' + (isAboveProgress(1) ? 'carousel-nav-hidden' : '')"
         (click)="carouselInstance.next()"
     ></div>
 </div>

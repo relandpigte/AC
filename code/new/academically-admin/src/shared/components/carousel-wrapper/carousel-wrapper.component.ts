@@ -45,7 +45,7 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
     super(injector);
   }
 
-  get isLastItem(): boolean { return this.carouselInstance.track.details.progress === 1; }
+  isAboveProgress(progress: number): boolean { return this.carouselInstance.track.details.maxIdx === 0 || this.carouselInstance.track.details.progress >= progress; }
 
   ngOnChanges(changes: SimpleChanges): void {
       if (changes.items?.previousValue !== changes.items?.currentValue && this.items?.length) {
@@ -114,7 +114,7 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
 
   handleInfiniteScroll(): void {
     if (this.isInfiteScroll == true) {
-      if (this.isLastItem) {
+      if (this.isAboveProgress(0.8)) {
         if (this.items?.length < this.maxItems) {
           this.onRequestNewData.emit(this.items?.length);
         }

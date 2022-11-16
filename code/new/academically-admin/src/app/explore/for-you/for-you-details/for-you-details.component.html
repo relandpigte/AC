@@ -51,7 +51,7 @@
         </div>
       </div>
 
-      <div [style.marginTop.px]="30">
+      <div>
         <ng-container [ngSwitch]="type">
           <ng-container *ngSwitchCase="'courses'"><app-explore-courses [isGroupByTopics]="true"></app-explore-courses></ng-container>
           <ng-container *ngSwitchCase="'events'"><app-explore-events [isGroupByTopics]="true"></app-explore-events></ng-container>

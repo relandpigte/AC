@@ -52,4 +52,9 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
       .subscribe(posts => this.posts = posts);
   }
 
+  handleRecommendedCoursesRequestData(skipCount: number): void {
+    const lastItem = this.recommendedCourses.slice(-1)[0];
+    this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, lastItem.creationTime, undefined, DateGrains.Aged30, skipCount, 4], 'recommendedCourses');
+  }
+
 }

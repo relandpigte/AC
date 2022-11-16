@@ -35,7 +35,7 @@ export class CarouselPillComponent extends AppComponentBase implements AfterView
         super(injector);
     }
 
-    get isLastItem(): boolean { return this.carouselInstance.track.details.progress === 1; }
+    isAboveProgress(progress: number): boolean { return this.carouselInstance.track.details.maxIdx === 0 || this.carouselInstance.track.details.progress >= progress; }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.choices?.previousValue !== changes.choices?.currentValue && this.choices?.length) {
@@ -62,27 +62,27 @@ export class CarouselPillComponent extends AppComponentBase implements AfterView
     }
 
     private initCarousel(): void {
-        if (this.windowResizeInterval$) clearTimeout(this.windowResizeInterval$);
-        this.windowResizeInterval$ = setTimeout(() => {
-          if (this.carouselInstance) this.carouselInstance.destroy();
-          this.carouselInstance = new KeenSlider(this.carouselContainer.nativeElement, {
-            initial: this.currentItem,
-            loop: false,
-            mode: 'free-snap',
-            slides: {
-              perView: 'auto',
-              spacing: this.itemSpacing,
-            }
-          },
-          [
-            slider => {
-              slider.on('slideChanged', (s) => {
-                this.currentItem = s.track.details.rel;
-              });
-            }
-          ]);
-        });
-      }
+      if (this.windowResizeInterval$) clearTimeout(this.windowResizeInterval$);
+      this.windowResizeInterval$ = setTimeout(() => {
+        if (this.carouselInstance) this.carouselInstance.destroy();
+        this.carouselInstance = new KeenSlider(this.carouselContainer.nativeElement, {
+          initial: this.currentItem,
+          loop: false,
+          mode: 'free-snap',
+          slides: {
+            perView: 'auto',
+            spacing: this.itemSpacing,
+          }
+        },
+        [
+          slider => {
+            slider.on('slideChanged', (s) => {
+              this.currentItem = s.track.details.rel;
+            });
+          }
+        ]);
+      });
+    }
 
     isPillSelected(i: string): boolean { return this.selected.includes(i); }
     isAllPillSelected(): boolean { return !this.selected.length; }

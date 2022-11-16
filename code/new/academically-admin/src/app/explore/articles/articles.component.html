@@ -1,10 +1,10 @@
 <div [@routerTransition]>
   <div class="header">
     <div class="container-fluid p-0">
-      <div class="header-body">
+      <div class="header-body pt-0">
 
-        <div *ngIf="isGroupByTopics" [style.marginBottom.px]="50">
-          <app-carousel-pill [choices]="topics" (onSelect)="handleFilterTopics($event)"></app-carousel-pill>
+        <div *ngIf="isGroupByTopics" [style.marginBottom.px]="20">
+          <app-carousel-pill [choices]="validTopics" (onSelect)="handleFilterTopics($event)"></app-carousel-pill>
         </div>
 
         <div [style.marginBottom.px]="40">
