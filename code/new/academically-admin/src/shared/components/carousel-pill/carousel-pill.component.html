@@ -15,12 +15,13 @@
 
     <div
         *ngIf="carouselInstance"
-        [ngClass]="'carousel-nav carousel-nav-prev ' + (currentItem === 0 ? 'carousel-nav-hidden' : '')"
-        (click)="carouselInstance.prev()"
-    ></div>
+        [ngClass]="'carousel-nav carousel-nav-prev ' + (currentItem === 0 ? 'carousel-nav-hidden' : '')">
+        <div class="carousel-nav-btn" (click)="carouselInstance.prev()"></div>
+    </div>
+
     <div
         *ngIf="carouselInstance"
-        [ngClass]="'carousel-nav carousel-nav-next ' + (isLastItem ? 'carousel-nav-hidden' : '')"
-        (click)="carouselInstance.next()"
-    ></div>
+        [ngClass]="'carousel-nav carousel-nav-next ' + (isLastItem ? 'carousel-nav-hidden' : '')">
+        <div class="carousel-nav-btn" (click)="carouselInstance.next()"></div>
+    </div>
 </div>

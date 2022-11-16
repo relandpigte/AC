@@ -1,10 +1,11 @@
 @carousel-pill-item-font-weight: 400;
 @carousel-pill-item-font-size: 14px;
 @carousel-pill-item-line-height: 18px;
-@carousel-pill-item-color: #2C7BE5;
+@carousel-pill-item-background-color: #2C7BE5;
+@carousel-pill-item-color: #282828;
 @carousel-pill-item-padding: 7px 15px;
-@carousel-pill-item-border: 1px solid #2C7BE5;
-@carousel-pill-item-border-radius: 20px;
+@carousel-pill-item-border: 1px solid #D2DDEC;
+@carousel-pill-item-border-radius: 8px;
 
 :host {
     ::ng-deep {
@@ -18,7 +19,7 @@
             }
 
             &:hover {
-                .carousel-nav-prev, .carousel-nav-next {
+                .carousel-nav {
                     visibility: visible !important;
                     opacity: 1 !important;
                 }
@@ -50,6 +51,8 @@
 
             &.add-pill {
                 border-style: dashed;
+                border-color: #2C7BE5;
+                color: #2C7BE5;
 
                 > .fas {
                     font-size: 12px;
@@ -59,72 +62,75 @@
 
             &.active {
                 color: white;
-                background-color: @carousel-pill-item-color;
+                border-color: #2C7BE5;
+                background-color: @carousel-pill-item-background-color;
             }
         }
     }
 
     &-nav {
-        &-prev {
-            visibility: hidden;
-            opacity: 0 !important;
-            border-radius: 50%;
-            background-color: #fff;
-            background-image: url('../../../assets/img/icon-carousel-left.png') !important;
-            background-size: cover !important;
-            width: 56px !important;
-            height: 56px !important;
-            position: absolute;
-            top: 50%;
-            left: 15px;
-            z-index: 999;
-            box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
-            -webkit-transition: all 0.2s ease-out;
-            -moz-transition: all 0.2s ease-out;
-            -ms-transition: all 0.2s ease-out;
-            -o-transition: all 0.2s ease-out;
-            transition: all 0.2s ease-out;
-            -webkit-transform: translateY(-50%);
-            -moz-transform: translateY(-50%);
-            -ms-transform: translateY(-50%);
-            -o-transform: translateY(-50%);
-            transform: translateY(-50%);
+        visibility: hidden;
+        opacity: 0 !important;
+        position: absolute;
+        top: 50%;
+        z-index: 999;
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        -o-transform: translateY(-50%);
+        transform: translateY(-50%);
+        -webkit-transition: all 0.2s ease-out;
+        -moz-transition: all 0.2s ease-out;
+        -ms-transition: all 0.2s ease-out;
+        -o-transition: all 0.2s ease-out;
+        transition: all 0.2s ease-out;
+        width: 150px;
+        height: 36px;
+        overflow: visible;
 
-            &:hover {
-                cursor: pointer;
-                background-image: url('../../../assets/img/icon-carousel-left-hover.png') !important;
+        display: flex;
+        align-items: center;
+        align-content: center;
+
+        &-prev {
+            left: 0;
+            padding-left: 5px;
+            background: linear-gradient(to right, white 0, white 35%, transparent 100%);
+            justify-content: flex-start;
+
+            > div {
+                background-image: url('../../../assets/img/icon-carousel-left.png') !important;
+
+                &:hover {
+                    cursor: pointer;
+                    background-image: url('../../../assets/img/icon-carousel-left-hover.png') !important;
+                }
             }
         }
 
         &-next {
-            visibility: hidden;
-            opacity: 0 !important;
+            right: 0;
+            padding-right: 5px;
+            background: linear-gradient(to left, white 0, white 35%, transparent 100%);
+            justify-content: flex-end;
+
+            > div {
+                background-image: url('../../../assets/img/icon-carousel-right.png') !important;
+
+                &:hover {
+                    cursor: pointer;
+                    background-image: url('../../../assets/img/icon-carousel-right-hover.png') !important;
+                }
+            }
+        }
+
+        &-btn {
             border-radius: 50%;
             background-color: #fff;
-            background-image: url('../../../assets/img/icon-carousel-right.png') !important;
             background-size: cover !important;
             width: 56px !important;
             height: 56px !important;
-            position: absolute;
-            top: 50%;
-            right: 15px;
-            z-index: 999;
             box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
-            -webkit-transition: all 0.2s ease-out;
-            -moz-transition: all 0.2s ease-out;
-            -ms-transition: all 0.2s ease-out;
-            -o-transition: all 0.2s ease-out;
-            transition: all 0.2s ease-out;
-            -webkit-transform: translateY(-50%);
-            -moz-transform: translateY(-50%);
-            -ms-transform: translateY(-50%);
-            -o-transform: translateY(-50%);
-            transform: translateY(-50%);
-
-            &:hover {
-                cursor: pointer;
-                background-image: url('../../../assets/img/icon-carousel-right-hover.png') !important;
-            }
         }
 
         &-hidden {
