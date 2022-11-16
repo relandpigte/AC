@@ -1,6 +1,6 @@
 <div [@routerTransition]>
     <div class="container-fluid">
-        <div class="header-body pt-0" [style.marginBottom.px]="30">
+        <div class="header-body pt-0">
             <div class="row align-items-end" [style.marginTop.px]="40">
                 <div class="col mb-md-0">
                     <div class="community-header">Community</div>
@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-        <div [style.marginBottom.px]="50">
+        <div [style.marginBottom.px]="20">
             <app-carousel-pill [choices]="userTopics" key="disciplineTaxonomy.name" (onAdd)="handleAddTopics()" (onSelect)="handleFilterTopics($event)"></app-carousel-pill>
         </div>
     </div>

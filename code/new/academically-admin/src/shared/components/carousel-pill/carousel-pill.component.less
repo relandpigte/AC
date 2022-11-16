@@ -5,42 +5,130 @@
 @carousel-pill-item-padding: 7px 15px;
 @carousel-pill-item-border: 1px solid #2C7BE5;
 @carousel-pill-item-border-radius: 20px;
-@carousel-pill-item-margin-right: 10px;
 
-.carousel-pill {
-    overflow-y: auto;
+:host {
+    ::ng-deep {
+        .keen-slider {
+            height: 94px;
 
-    &-separator {
-        border-right: 2px solid #D2DDEC;
-        width: 0px;
-        height: 25px;
-        margin-right: 10px;
+            &:not([data-keen-slider-disabled]) .keen-slider__slide {
+                overflow: unset;
+                width: unset;
+                min-height: unset;
+            }
+
+            &:hover {
+                .carousel-nav-prev, .carousel-nav-next {
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                }
+            }
+        }
+    }
+}
+
+.carousel {
+    &-pill {
+        overflow-y: auto;
+
+        &-separator {
+            border-right: 2px solid #D2DDEC;
+            width: 0px;
+            height: 25px;
+        }
+
+        &-item {
+            cursor: pointer;
+            padding: @carousel-pill-item-padding;
+            font-weight: @carousel-pill-item-font-weight;
+            font-size: @carousel-pill-item-font-size;
+            line-height: @carousel-pill-item-line-height;
+            color: @carousel-pill-item-color;
+            border: @carousel-pill-item-border;
+            border-radius: @carousel-pill-item-border-radius;
+            white-space: nowrap;
+
+            &.add-pill {
+                border-style: dashed;
+
+                > .fas {
+                    font-size: 12px;
+                    margin-right: 6px;
+                }
+            }
+
+            &.active {
+                color: white;
+                background-color: @carousel-pill-item-color;
+            }
+        }
     }
 
-    &-item {
-        cursor: pointer;
-        padding: @carousel-pill-item-padding;
-        font-weight: @carousel-pill-item-font-weight;
-        font-size: @carousel-pill-item-font-size;
-        line-height: @carousel-pill-item-line-height;
-        color: @carousel-pill-item-color;
-        border: @carousel-pill-item-border;
-        border-radius: @carousel-pill-item-border-radius;
-        margin-right: @carousel-pill-item-margin-right;
-        white-space: nowrap;
+    &-nav {
+        &-prev {
+            visibility: hidden;
+            opacity: 0 !important;
+            border-radius: 50%;
+            background-color: #fff;
+            background-image: url('../../../assets/img/icon-carousel-left.png') !important;
+            background-size: cover !important;
+            width: 56px !important;
+            height: 56px !important;
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            z-index: 999;
+            box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+            -webkit-transition: all 0.2s ease-out;
+            -moz-transition: all 0.2s ease-out;
+            -ms-transition: all 0.2s ease-out;
+            -o-transition: all 0.2s ease-out;
+            transition: all 0.2s ease-out;
+            -webkit-transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            -o-transform: translateY(-50%);
+            transform: translateY(-50%);
 
-        &.add-pill {
-            border-style: dashed;
-
-            > .fas {
-                font-size: 12px;
-                margin-right: 6px;
+            &:hover {
+                cursor: pointer;
+                background-image: url('../../../assets/img/icon-carousel-left-hover.png') !important;
             }
         }
 
-        &.active {
-            color: white;
-            background-color: @carousel-pill-item-color;
+        &-next {
+            visibility: hidden;
+            opacity: 0 !important;
+            border-radius: 50%;
+            background-color: #fff;
+            background-image: url('../../../assets/img/icon-carousel-right.png') !important;
+            background-size: cover !important;
+            width: 56px !important;
+            height: 56px !important;
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            z-index: 999;
+            box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+            -webkit-transition: all 0.2s ease-out;
+            -moz-transition: all 0.2s ease-out;
+            -ms-transition: all 0.2s ease-out;
+            -o-transition: all 0.2s ease-out;
+            transition: all 0.2s ease-out;
+            -webkit-transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            -o-transform: translateY(-50%);
+            transform: translateY(-50%);
+
+            &:hover {
+                cursor: pointer;
+                background-image: url('../../../assets/img/icon-carousel-right-hover.png') !important;
+            }
+        }
+
+        &-hidden {
+            display: none !important;
         }
     }
 }

@@ -45,10 +45,10 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
     super(injector);
   }
 
-  get isLastItem(): boolean { return this.carouselInstance.track.details.slides.length <= (this.currentItem + this.perView); }
+  get isLastItem(): boolean { return this.carouselInstance.track.details.progress === 1; }
 
   ngOnChanges(changes: SimpleChanges): void {
-      if (changes.items?.previousValue !== changes.items?.currentValue && changes.items?.currentValue.length) {
+      if (changes.items?.previousValue !== changes.items?.currentValue && this.items?.length) {
         if (this.items.length < this.MIN_ITEMS) {
           this.items.push(Array(this.MIN_ITEMS - this.items.length).fill({}));
         }
