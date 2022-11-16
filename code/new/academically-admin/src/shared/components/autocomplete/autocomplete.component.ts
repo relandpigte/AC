@@ -46,7 +46,10 @@ export class AutocompleteComponent extends AppComponentBase implements OnInit, A
       }));
 
     this.input.addEventListener('focus', () => {
-      this.keywordChanged$.next(this.input.value.replace(/ /g, '').toLowerCase().trim());
+      this.onKeywordChange.next({
+        keyword: this.input.value.replace(/ /g, '').toLowerCase().trim(),
+        showLoading: false
+      });
       this.isShown = true;
     });
     this.input.addEventListener('keydown', (evt) => setTimeout(() => this.keywordChanged$.next(evt.target.value.replace(/ /g, '').toLowerCase().trim())));

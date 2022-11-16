@@ -10,7 +10,15 @@
               <span class="all-topics-content-view-all cursor-pointer" [routerLink]="['events']">View All <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>
-        <app-carousel [isLoading]="isLoadingForYouTopics" [items]="forYouTopics" [templateRef]="topicClusterRef2" [metadata]="{ isParent: false }"></app-carousel>
+        <app-carousel
+            [isLoading]="isLoadingForYouTopics"
+            [items]="forYouTopics"
+            [templateRef]="topicClusterRef2"
+            [metadata]="{ isParent: false }"
+            [itemWidth]="240"
+            [itemSpacing]="20"
+            [isAutoFit]="true"
+        ></app-carousel>
     </div>
 
     <div *ngFor="let t of tailoredTopics | keyvalue" class="all-topics-content flex-grow-1">
@@ -20,7 +28,15 @@
               <span class="all-topics-content-view-all cursor-pointer" (click)="handleViewAllTopicsClick(t.key)">View All <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>
-        <app-carousel [isLoading]="isLoadingTailoredTopics[t.key]" [items]="t.value.items" [templateRef]="topicClusterRef1" [metadata]="{ isParent: false, group: t.key }"></app-carousel>
+        <app-carousel
+            [isLoading]="isLoadingTailoredTopics[t.key]"
+            [items]="t.value.items"
+            [templateRef]="topicClusterRef1"
+            [metadata]="{ isParent: false, group: t.key }"
+            [itemWidth]="240"
+            [itemSpacing]="20"
+            [isAutoFit]="true"
+        ></app-carousel>
     </div>
 </div>
 
