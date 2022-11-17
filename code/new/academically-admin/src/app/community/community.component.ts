@@ -101,7 +101,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getArticleAuthorAvatar(article: ArticleDto): string {
-    return article.creatorUser?.profilePictureUrl ?? 'assets/img/avatar-placeholder.png';
+    return article.creatorUser?.profilePictureUrl ?? 'assets/img/anonymous.png';
   }
 
   getEventThumbnail(event: EventDto): string {

@@ -139,7 +139,7 @@ import * as moment from 'moment';
 
       this.sanitized.owner = {} as ServiceCardPerson;
       this.sanitized.owner.avatar = {} as ServiceCardImage;
-      this.sanitized.owner.avatar.src = this.data?.creatorUser?.profilePictureUrl ?? this.data.profilePictureUrl ?? 'assets/img/avatar-placeholder.png';
+      this.sanitized.owner.avatar.src = this.data?.creatorUser?.profilePictureUrl ?? this.data.profilePictureUrl ?? 'assets/img/anonymous.png';
       this.sanitized.owner.fullName = this.data?.creatorUser?.fullName?? this.data.fullName ??  'Anonymous';
       this.sanitized.owner.isShowAvatar = true;
       this.sanitized.owner.isShowFullName = true;

@@ -16,7 +16,7 @@
             <div class="topic-row-left-followers">{{ 'Community.Topics.Followers' | localize: (item.followerCount | shortNum: 1)  }}</div>
         </div>
         <div class="topic-row-right d-flex flex-row align-items-center gap-10">
-            <button class="btn btn-md btn-primary" (click)="handleOnUnfollow(item)">
+            <button class="btn btn-md btn-primary border-0" (click)="handleOnUnfollow(item)">
                 {{ (isUnfollowingTopic ? 'Unfollowing' : 'Following') | localize }}
                 <span *ngIf="isUnfollowingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 <i *ngIf="!isUnfollowingTopic" class="fe fe-check" role="status" aria-hidden="true"></i>

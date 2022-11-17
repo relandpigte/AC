@@ -1,4 +1,4 @@
-<div class="post container-fluid p-0">
+<div class="post container-fluid d-flex flex-column p-0" [style.minHeight.px]="307" [style.maxHeight.px]="307">
     <div class="post-author d-flex flex-row align-items-center">
         <div class="post-author-avatar">
             <a href="javascript: void(0);" class="avatar d-flex align-items-center">
@@ -17,12 +17,12 @@
             </div>
         </div>
     </div>
-    <div class="post-body" [style.marginTop.px]="15">
+    <div class="post-body flex-grow-1 d-flex flex-column" [style.marginTop.px]="15">
         <ng-container [ngSwitch]="type">
             <ng-container *ngSwitchCase="'quick-post'">
-                <div class="post-body-information" [style.paddingTop.px]="10">
+                <div class="post-body-information flex-grow-1" [style.paddingTop.px]="10">
                     <textarea
-                        [rows]="8"
+                        [rows]="6"
                         [(ngModel)]="information"
                         (ngModelChange)="updateModel()"
                         #informationModel="ngModel"
@@ -51,9 +51,9 @@
                         placeholder="{{ 'Community.Question.Add.Title' | localize }}"
                     />
                 </div>
-                <div class="post-body-information" [style.paddingTop.px]="10">
-                    <textarea
-                        [rows]="8"
+                <div class="post-body-information flex-grow-1" [style.paddingTop.px]="10">
+                    <!-- <textarea
+                        [rows]="6"
                         [(ngModel)]="information"
                         (ngModelChange)="updateModel()"
                         #informationModel="ngModel"
@@ -63,7 +63,7 @@
                         name="information"
                         required
                         placeholder="{{ 'Community.Question.Add.Information' | localize }}"
-                    ></textarea>
+                    ></textarea> -->
                 </div>
             </ng-container>
             <ng-container *ngSwitchCase="'add-discussion'">
@@ -82,9 +82,9 @@
                         placeholder="{{ 'Community.Discussion.Add.Title' | localize }}"
                     />
                 </div>
-                <div class="post-body-information" [style.paddingTop.px]="10">
+                <div class="post-body-information flex-grow-1" [style.paddingTop.px]="10">
                     <textarea
-                        [rows]="8"
+                        [rows]="6"
                         [(ngModel)]="information"
                         (ngModelChange)="updateModel()"
                         #informationModel="ngModel"
