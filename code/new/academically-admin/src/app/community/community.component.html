@@ -94,10 +94,10 @@
             </div>
 
             <ng-template #topicsTemplate let-item="item">
-                <div class="topic d-flex flex-row flex-nowrap">
-                    <div class="topic-left flex-grow-1 d-flex flex-column flex-nowrap">
-                        <div class="topic-name">{{ item.topic }}</div>
-                        <div class="topic-followers">{{ item.followers }} followers</div>
+                <div class="topic d-flex flex-row flex-nowrap" [title]="item.name">
+                    <div class="topic-left flex-grow-1 d-flex flex-column flex-nowrap" [style.minWidth.px]="0">
+                        <div class="topic-name wrap-text">#{{ item.name }}</div>
+                        <div class="topic-followers">{{ 'Community.Topics.Followers' | localize: (item.followerCount | shortNum: 1) }}</div>
                     </div>
                     <div class="topic-right d-flex justify-content-center align-items-center">
                         <div type="button" class="btn btn-white topic-btn d-flex justify-content-center align-items-center">Follow</div>

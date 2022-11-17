@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ArticleDto, ArticlesServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, EventDto, EventsServiceProxy, UserDto, UserServiceProxy, UserTopicDto, UserTopicsServiceProxy, UserTopicType, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, ArticlesServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, EventDto, EventsServiceProxy, SearchDisciplineTaxonomyRequestDto, UserDto, UserServiceProxy, UserTopicDto, UserTopicsServiceProxy, UserTopicType, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash';
@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { AddTopicsComponent } from './_modals/add-topics/add-topics.component';
 import { AddPostComponent } from './_modals/add-post/add-post.component';
+import { TopicSorting } from '@shared/components/topic/topic.component';
 
 @Component({
   selector: 'app-community',
@@ -20,7 +21,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
 
   userTopics: UserTopicDto[] = [];
   selectedTopics: string[] = [];
-  suggestedTopics: { topic: string, followers: number }[] = [];
+  suggestedTopics: DisciplineTaxonomyDto[] = [];
   peopleToFollow: UserDto[] = [];
   recommendedCourses: CourseDto[] = [];
   recommendedArticles: ArticleDto[] = [];
@@ -31,6 +32,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     private _router: Router,
     private _modalService: BsModalService,
+    private _taxonomyService: DisciplineTaxonomiesServiceProxy,
     private _userTopicsService: UserTopicsServiceProxy,
     private _usersService: UserServiceProxy,
     private _coursesService: CoursesServiceProxy,
@@ -122,12 +124,15 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getSuggestedTopics(): void {
-    this.suggestedTopics = [
-      { topic: "Trending", followers: 2420 },
-      { topic: "JustinBeiber", followers: 3520 },
-      { topic: "OkiDokiCollective", followers: 1220 },
-      { topic: "Trending", followers: 4220 }
-    ];
+    const request = new SearchDisciplineTaxonomyRequestDto();
+    request.keyword = undefined;
+    request.excludeFollowing = true;
+    request.sorting = TopicSorting.Popular;
+    request.take = 4;
+
+    this._taxonomyService.search(request)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(topics => this.suggestedTopics = topics);
   }
 
   getPeopleToFollow(): void {
