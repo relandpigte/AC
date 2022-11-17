@@ -1,3 +1,56 @@
 .post {
     padding: 24px;
+
+    &-heading {
+        &-avatar {
+            margin-right: 15px;
+            width: 48px;
+            height: 48px;
+
+            img {
+                width: 48px;
+                height: 48px;
+            }
+        }
+
+        &-owner {
+            &-name {
+                font-weight: 600;
+                font-size: 15px;
+                line-height: 19px;
+                letter-spacing: -0.01em;
+                color: #12263F;
+            }
+
+            &-time {
+                font-weight: 600;
+                font-size: 13px;
+                line-height: 17px;
+                display: flex;
+                align-items: center;
+                letter-spacing: -0.01em;
+                color: #95AAC9;
+            }
+        }
+    }
+
+    &-content {
+        &-title {
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 25px;
+            letter-spacing: -0.01em;
+            color: #12263F;
+        }
+
+        &-description {
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 23px;
+            display: flex;
+            align-items: center;
+            letter-spacing: -0.01em;
+            color: #12263F;
+        }
+    }
 }

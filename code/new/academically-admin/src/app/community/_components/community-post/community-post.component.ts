@@ -2,6 +2,8 @@
 import { Component, Injector, OnInit, OnChanges, Input, SimpleChanges } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 
+import * as moment from 'moment';
+
 @Component({
     selector: 'app-community-post-card',
     templateUrl: './community-post.component.html',
@@ -16,6 +18,18 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnIn
     ) {
         super(injector);
     }
+
+    get posterName(): string { return this.data.creatorUser?.fullName ?? 'Anonymous'; }
+    get postDate(): string {
+        const time = moment(this.data.creationTime);
+        if (time.isSame(new Date(), 'day'))
+            return time.format('h:mm a');
+        else
+            return time.format('MMM D, YYYY h:mm a');
+    }
+
+    get title(): string { return this.data.title; }
+    get description(): string { return this.data.content; }
 
     ngOnInit(): void {
     }

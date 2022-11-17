@@ -1,4 +1,18 @@
 <div class="post d-flex flex-column">
-    <div class="post-title">{{ data.title }}</div>
-    <div class="post-description">{{ data.content }}</div>
+    <div class="post-heading d-flex flex-row flex-nowrap align-items-center">
+        <div class="post-heading-avatar">
+            <a href="javascript: void(0);" class="avatar avatar-sm">
+                <img [src]="getProfilePicture(data?.creatorUser?.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
+            </a>
+        </div>
+        <div class="post-heading-owner d-flex flex-column flex-nowrap">
+            <div class="post-heading-owner-name">{{ posterName | titlecase }}</div>
+            <div class="post-heading-owner-time">{{ postDate }}</div>
+        </div>
+    </div>
+    <div class="post-content d-flex flex-column" [style.marginTop.px]="15" [style.marginBottom.px]="15">
+        <div class="post-content-title">{{ title }}</div>
+        <div class="post-content-description" [innerHTML]="description"  [style.marginTop.px]="10"></div>
+        <div class="post-content-topics"></div>
+    </div>
 </div>
