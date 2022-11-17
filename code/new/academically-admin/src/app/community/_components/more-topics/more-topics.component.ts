@@ -2,9 +2,12 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { SortOption } from '@shared/components/search/search.component';
 import { TopicSorting } from '@shared/components/topic/topic.component';
+import { Utils } from '@shared/helpers/utils';
 import { CreateUserTopicDto, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, SearchDisciplineTaxonomyRequestDto, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
 
-import { finalize, takeUntil } from 'rxjs/operators';
+import * as _ from 'lodash';
+import { forkJoin, of } from 'rxjs';
+import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'app-more-topics',
@@ -13,12 +16,15 @@ import { finalize, takeUntil } from 'rxjs/operators';
 })
 export class MoreTopicsComponent extends AppComponentBase implements OnInit {
 
-    topics: any[] = [];
+    topics: Map<string, DisciplineTaxonomyDto> = new Map();
+    topicInFocus: string;
 
     searchFilter: string;
 
+    isAllowLoading = true;
     isFollowingTopic = false;
     isUnfollowingTopic = false;
+    isRemovingTopic = false;
     isSearching = false;
 
     sort: SortOption = { label: 'ForYou', value: TopicSorting.ForYou };
@@ -28,6 +34,24 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
         { label: 'Recent', value: TopicSorting.Recent }
     ];
 
+    searchProcess$ = (searchFilter: string) => {
+        this.searchFilter = searchFilter;
+
+        const request = new SearchDisciplineTaxonomyRequestDto();
+        request.keyword = searchFilter;
+        request.excludeFollowing = false;
+        request.sorting = this.sort.value;
+        request.take = 10;
+
+        return this._taxonomyService.search(request)
+        .pipe(takeUntil(this.destroyed$))
+        .pipe(finalize(() => {
+            this.isSearching = false;
+            this.isAllowLoading = true;
+            this.topicInFocus = undefined;
+        }));
+    };
+
     constructor(
         injector: Injector,
         private _taxonomyService: DisciplineTaxonomiesServiceProxy,
@@ -36,25 +60,22 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
         super(injector);
     }
 
-    get loading(): boolean { return this.isFollowingTopic || this.isUnfollowingTopic || this.isSearching; }
+    get isLoading(): boolean { return this.isSearching || this.isFollowingTopic || this.isUnfollowingTopic || this.isRemovingTopic; }
+    get topicValues(): any { return Array.from(this.topics.values()) }
 
     ngOnInit(): void {
     }
 
+    isFollowed(topic: DisciplineTaxonomyDto): boolean {
+        return topic.userTopics.some(u => u.userId === this.appSession.userId && u.type === UserTopicType.Following);
+    }
+
     handleOnSearch(searchFilter: string): void {
-        this.searchFilter = searchFilter;
-
         this.isSearching = true;
-
-        const request = new SearchDisciplineTaxonomyRequestDto();
-        request.keyword = searchFilter;
-        request.excludeFollowing = true;
-        request.sorting = this.sort.value;
-
-        this._taxonomyService.search(request)
-            .pipe(takeUntil(this.destroyed$))
-            .pipe(finalize(() => this.isSearching = false))
-            .subscribe(topics => this.topics = topics);
+        this.searchProcess$(searchFilter)
+            .subscribe(topics => {
+                this.updateSearchResults(topics);
+            });
     }
 
     handleOnSort(sort: SortOption): void {
@@ -63,7 +84,9 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
     }
 
     handleOnFollow(topic: DisciplineTaxonomyDto): void {
+        this.isAllowLoading = false;
         this.isFollowingTopic = true;
+        this.topicInFocus = topic.id;
 
         const request = new CreateUserTopicDto();
         request.userId = this.appSession.userId;
@@ -71,16 +94,34 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
         request.type = UserTopicType.Following;
 
         this._userTopics.create(request)
+            .pipe(switchMap(() => this.searchProcess$(this.searchFilter)))
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => this.isFollowingTopic = false))
-            .subscribe(_ => {
+            .subscribe((topics) => {
+                this.updateSearchResults(topics);
                 this.notify.info(this.l('Community.Topics.Follow.Success', topic.name));
-                this.handleOnSearch(this.searchFilter);
+            });
+    }
+
+    handleOnUnfollow(topic: DisciplineTaxonomyDto): void {
+        this.isAllowLoading = false;
+        this.isUnfollowingTopic = true;
+        this.topicInFocus = topic.id;
+
+        this._userTopics.deleteByTopicId(topic.id)
+            .pipe(switchMap(() => this.searchProcess$(this.searchFilter)))
+            .pipe(takeUntil(this.destroyed$))
+            .pipe(finalize(() => this.isUnfollowingTopic = false))
+            .subscribe((topics) => {
+                this.updateSearchResults(topics);
+                this.notify.info(this.l('Community.Topics.Unfollow.Success', topic.name));
             });
     }
 
     handleOnRemove(topic: DisciplineTaxonomyDto): void {
-        this.isUnfollowingTopic = true;
+        this.isAllowLoading = false;
+        this.isRemovingTopic = true;
+        this.topicInFocus = topic.id;
 
         const request = new CreateUserTopicDto();
         request.userId = this.appSession.userId;
@@ -88,11 +129,18 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
         request.type = UserTopicType.NotInterested;
 
         this._userTopics.create(request)
+            .pipe(switchMap(() => this.searchProcess$(this.searchFilter)))
             .pipe(takeUntil(this.destroyed$))
-            .pipe(finalize(() => this.isUnfollowingTopic = false))
-            .subscribe(_ => {
+            .pipe(finalize(() => this.isRemovingTopic = false))
+            .subscribe((topics) => {
+                this.updateSearchResults(topics);
+                this.topics.delete(topic.id);
                 this.notify.info(this.l('Community.Topics.NotInterested.Success', topic.name));
-                this.handleOnSearch(this.searchFilter);
             });
+    }
+
+    private updateSearchResults(topics: DisciplineTaxonomyDto[]): void {
+        if (this.isAllowLoading) this.topics = Utils.toMap(topics, t => t.id);
+        else topics.forEach(t => Utils.assignToMap(this.topics, t.id, t));
     }
 }

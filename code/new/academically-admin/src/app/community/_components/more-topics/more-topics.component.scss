@@ -1,3 +1,12 @@
+:host {
+    ::ng-deep {
+        .btn.following {
+            background-color: rgba(44, 123, 229, 0.1);
+            color: #2C7BE5;
+        }
+    }
+}
+
 .topic {
     &-row {
         height: 79px;

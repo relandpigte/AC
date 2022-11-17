@@ -79,6 +79,12 @@ namespace Academically.Services.UserTopics
             await _userTopicRepository.DeleteAsync(id);
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Community_UserTopics_Delete)]
+        public async Task DeleteByTopicId(Guid id)
+        {
+            await _userTopicRepository.DeleteAsync(t => t.DisciplineTaxonomyId == id);
+        }
+
         private IQueryable<UserTopic> Sort(IQueryable<UserTopic> query, string sorting)
         {
             if (sorting.Contains("recent"))

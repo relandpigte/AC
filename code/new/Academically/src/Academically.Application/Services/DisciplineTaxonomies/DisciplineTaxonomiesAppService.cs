@@ -12,6 +12,7 @@ using Academically.Domain.Entities;
 using Academically.Services.Articles.Dto;
 using Academically.Services.DisciplineTaxonomies.Dto;
 using Microsoft.EntityFrameworkCore;
+using Academically.Domain.Enums;
 
 namespace Academically.Services.DisciplineTaxonomies
 {
@@ -44,11 +45,8 @@ namespace Academically.Services.DisciplineTaxonomies
                 .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), x => x.Name.ToLower().Contains(request.Keyword.ToLower()))
                 .Where(x => x.ParentId == request.ParentId);
 
-            if (request.ExcludeFollowing)
-            {
-                var followingIds = await GetFollowingIds();
-                query = query.WhereIf(followingIds.Any(), x => !followingIds.Contains(x.Id));
-            }
+            var markedIds = await GetMarkedIds(request.ExcludeFollowing);
+            query = query.WhereIf(markedIds.Any(), x => !markedIds.Contains(x.Id));
 
             if (request.IncludeChildren)
                 query = query.Include(x => x.Children);
@@ -68,11 +66,8 @@ namespace Academically.Services.DisciplineTaxonomies
                 .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), x => x.Name.ToLower().Contains(request.Keyword.ToLower()))
                 .Where(x => x.ParentId == request.ParentId);
 
-            if (request.ExcludeFollowing)
-            {
-                var followingIds = await GetFollowingIds();
-                query = query.WhereIf(followingIds.Any(), x => !followingIds.Contains(x.Id));
-            }
+            var markedIds = await GetMarkedIds(request.ExcludeFollowing);
+            query = query.WhereIf(markedIds.Any(), x => !markedIds.Contains(x.Id));
 
             if (request.IncludeChildren)
                 query = query.Include(x => x.Children);
@@ -100,14 +95,14 @@ namespace Academically.Services.DisciplineTaxonomies
                 .Include(x => x.UserTopics)
                 .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), x => x.Name.ToLower().Contains(request.Keyword.ToLower()));
 
-            if (request.ExcludeFollowing)
-            {
-                var followingIds = await GetFollowingIds();
-                query = query.WhereIf(followingIds.Any(), x => !followingIds.Contains(x.Id));
-            }
+            var markedIds = await GetMarkedIds(request.ExcludeFollowing);
+            query = query.WhereIf(markedIds.Any(), x => !markedIds.Contains(x.Id));
 
             if (!request.Sorting.IsNullOrWhiteSpace())
                 query = Sort(query, request.Sorting);
+
+            if (request.Take.HasValue)
+                query = query.Take(request.Take.Value);
 
             return await query.Select(x => ObjectMapper.Map<DisciplineTaxonomyDto>(x)).ToListAsync();
         }
@@ -119,11 +114,8 @@ namespace Academically.Services.DisciplineTaxonomies
                 .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), x => x.Name.ToLower().Contains(request.Keyword.ToLower()))
                 .Where(x => x.Children.Count() == 0);
 
-            if (request.ExcludeFollowing)
-            {
-                var followingIds = await GetFollowingIds();
-                query = query.WhereIf(followingIds.Any(), x => !followingIds.Contains(x.Id));
-            }
+            var markedIds = await GetMarkedIds(request.ExcludeFollowing);
+            query = query.WhereIf(markedIds.Any(), x => !markedIds.Contains(x.Id));
 
             if (!request.Sorting.IsNullOrWhiteSpace())
                 query = Sort(query, request.Sorting);
@@ -172,12 +164,14 @@ namespace Academically.Services.DisciplineTaxonomies
             return query;
         }
 
-        private async Task<IEnumerable<Guid>> GetFollowingIds()
+        private async Task<IEnumerable<Guid>> GetMarkedIds(bool excludeFollowing)
         {
             var currentUserId = AbpSession.UserId.Value;
 
             return await _userTopicRepository.GetAll()
                 .Where(x => x.UserId == currentUserId)
+                .WhereIf(!excludeFollowing, x => x.Type == UserTopicType.NotInterested)
+                .WhereIf(excludeFollowing, x => x.Type == UserTopicType.NotInterested || x.Type == UserTopicType.Following)
                 .Select(x => x.DisciplineTaxonomyId)
                 .ToListAsync();
         }

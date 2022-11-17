@@ -1,10 +1,10 @@
 <app-search
-    [data]="topics"
+    [data]="topicValues"
     [options]="{ sortable: true }"
     [sortOptions]="sortOptions"
     [itemTemplate]="topicItemTemplate"
     [itemLoadingTemplate]="topicItemLoadingTemplate"
-    [loading]="loading"
+    [loading]="isAllowLoading && isLoading"
     (onSearch)="handleOnSearch($event)"
     (onSort)="handleOnSort($event)"
 ></app-search>
@@ -15,11 +15,23 @@
             <div class="topic-row-left-followers">{{ 'Community.Topics.Followers' | localize: (item.followerCount | shortNum: 1)  }}</div>
         </div>
         <div class="topic-row-right d-flex flex-row align-items-center gap-10">
-            <button class="btn btn-md btn-light" (click)="handleOnRemove(item)">{{ 'Remove' | localize }}</button>
-            <button class="btn btn-md btn-primary" (click)="handleOnFollow(item)">
-                {{ (isFollowingTopic ? 'Following' : 'Follow') | localize }}
-                <span *ngIf="isFollowingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            </button>
+            <ng-container *ngIf="!isFollowed(item)">
+                <button class="btn btn-md btn-light" (click)="handleOnRemove(item)" [disabled]="isLoading">
+                    {{ (isRemovingTopic ? 'Removing' : 'Remove') | localize }}
+                    <span *ngIf="topicInFocus === item.id && isRemovingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                </button>
+                <button class="btn btn-md btn-primary" (click)="handleOnFollow(item)" [disabled]="isLoading">
+                    {{ (isFollowingTopic ? 'Following' : 'Follow') | localize }}
+                    <span *ngIf="topicInFocus === item.id && isFollowingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                </button>
+            </ng-container>
+            <ng-container *ngIf="isFollowed(item)">
+                <button class="btn btn-md btn-primary following border-0" (click)="handleOnUnfollow(item)" [disabled]="isLoading">
+                    {{ (isUnfollowingTopic ? 'Unfollowing' : 'Following') | localize }}
+                    <span *ngIf="topicInFocus === item.id && isUnfollowingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <i *ngIf="!isLoading && !isUnfollowingTopic" class="fe fe-check" role="status" aria-hidden="true"></i>
+                </button>
+            </ng-container>
         </div>
     </div>
 </ng-template>

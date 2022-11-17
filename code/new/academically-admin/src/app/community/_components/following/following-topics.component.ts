@@ -1,12 +1,11 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { Utils } from '@shared/helpers/utils';
-import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, GetDisciplineTaxonomyFollowerCountDto, UserTopicDto, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
-import { finalize, switchMap, takeUntil } from 'rxjs/operators';
+import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, UserTopicDto, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
+import { finalize, takeUntil } from 'rxjs/operators';
 
-import * as _ from 'lodash';
 import { SortOption } from '@shared/components/search/search.component';
 import { TopicSorting } from '@shared/components/topic/topic.component';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-following-topics',
