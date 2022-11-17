@@ -18,13 +18,15 @@ export class AllComponent extends AppComponentBase implements OnInit {
   forYouTopics: any = this.chunkArrayInGroups(Array(15).fill([]).map(() => this.generateRandomTopic()), 3);
   tailoredTopics: any;
 
+  isAllowLoading = true;
   isLoadingParentTopics = false;
   isLoadingForYouTopics = false;
   isLoadingTailoredTopics: { key: string, value: boolean };
   isFollowingTopic = false;
+  isUnfollowingTopic = false;
   isRemovingTopic = false;
 
-  get isLoading(): boolean { return this.isLoadingParentTopics || this.isLoadingForYouTopics || Object.values(this.isLoadingTailoredTopics).some(t => t) || this.isFollowingTopic; }
+  get isLoading(): boolean { return this.isLoadingParentTopics || this.isLoadingForYouTopics || Object.values(this.isLoadingTailoredTopics).some(t => t) || this.isFollowingTopic || this.isUnfollowingTopic; }
 
   constructor(
     injector: Injector,
@@ -61,7 +63,7 @@ export class AllComponent extends AppComponentBase implements OnInit {
     this.isLoadingForYouTopics = true;
     this._taxonomyService.getAllLastChildren(
       undefined,
-      true,
+      false,
       TopicSorting.ForYou
     )
     .pipe(takeUntil(this.destroyed$))
@@ -82,8 +84,8 @@ export class AllComponent extends AppComponentBase implements OnInit {
         t.id,
         undefined,
         true,
-        true,
-        TopicSorting.Popular
+        false,
+        TopicSorting.ForYou
       )
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingTailoredTopics[t.id] = false ))
@@ -98,11 +100,14 @@ export class AllComponent extends AppComponentBase implements OnInit {
       groupId,
       undefined,
       true,
-      true,
-      TopicSorting.Popular
+      false,
+      TopicSorting.ForYou
     )
     .pipe(takeUntil(this.destroyed$))
-    .pipe(finalize(() => this.isLoadingTailoredTopics[groupId] = false ))
+    .pipe(finalize(() => {
+      this.isLoadingTailoredTopics[groupId] = false;
+      this.isAllowLoading = true;
+    }))
     .subscribe((topics) => this.tailoredTopics[groupId].items = this.chunkArrayInGroups(topics, 3));
   }
 
@@ -115,6 +120,7 @@ export class AllComponent extends AppComponentBase implements OnInit {
   }
 
   handleTopicFollowClick(key: string, topic: any): void {
+      this.isAllowLoading = false;
       this.isFollowingTopic = true;
 
       const request = new CreateUserTopicDto();
@@ -131,7 +137,21 @@ export class AllComponent extends AppComponentBase implements OnInit {
           });
   }
 
+  handleTopicUnfollowClick(key: string, topic: any): void {
+    this.isAllowLoading = false;
+    this.isUnfollowingTopic = true;
+
+    this._userTopics.deleteByTopicId(topic.id)
+        .pipe(takeUntil(this.destroyed$))
+        .pipe(finalize(() => this.isUnfollowingTopic = false))
+        .subscribe(_ => {
+          key ? this.refreshTailoredTopics(key) : this.loadForYouTopics();
+          this.notify.info(this.l('Community.Topics.Unfollow.Success', topic.name));
+        });
+  }
+
   handleTopicRemoveClick(key: string, topic: any): void {
+    this.isAllowLoading = false;
     this.isRemovingTopic = true;
 
     const request = new CreateUserTopicDto();

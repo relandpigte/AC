@@ -13,7 +13,8 @@
         </div>
         <div *ngIf="!isParent" class="topic-right d-flex flex-row flex-nowrap align-items-center">
             <div *ngIf="showFollow" class="topic-right-left align-items-center">
-                <div class="topic-right-left-follow" (click)="handleFollowClick()"><i class="fas fa-plus"></i></div>
+                <div *ngIf="!isFollowed" class="topic-right-left-follow" (click)="handleFollowClick()"><i class="fas fa-plus"></i></div>
+                <div *ngIf="isFollowed" class="topic-right-left-follow" (click)="handleUnfollowClick()"><i class="fas fa-check"></i></div>
             </div>
             <div *ngIf="showRemove" class="topic-right-right d-flex flex-row flex-nowrap align-items-center">
                 <div *ngIf="showFollow" class="topic-right-right-separator"></div>

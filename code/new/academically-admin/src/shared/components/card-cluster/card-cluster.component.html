@@ -13,6 +13,7 @@
         [showRemove]="topicOptions?.showRemove"
         (onClick)="handleTopicClick($event)"
         (onFollow)="handleTopicFollowClick($event)"
+        (onUnfollow)="handleTopicUnfollowClick($event)"
         (onRemove)="handleTopicRemoveClick($event)"
     ></app-topic-card>
 </ng-template>

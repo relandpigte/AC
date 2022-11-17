@@ -20,6 +20,7 @@ export class CardClusterComponent extends AppComponentBase {
 
     @Output() onTopicClick: EventEmitter<any> = new EventEmitter();
     @Output() onTopicFollow: EventEmitter<any> = new EventEmitter();
+    @Output() onTopicUnfollow: EventEmitter<any> = new EventEmitter();
     @Output() onTopicRemove: EventEmitter<any> = new EventEmitter();
 
     constructor(
@@ -30,5 +31,6 @@ export class CardClusterComponent extends AppComponentBase {
 
     handleTopicClick(topic: any): void { this.onTopicClick.emit(topic); }
     handleTopicFollowClick(topic: any): void { this.onTopicFollow.emit(topic); }
+    handleTopicUnfollowClick(topic: any): void { this.onTopicUnfollow.emit(topic); }
     handleTopicRemoveClick(topic: any): void { this.onTopicRemove.emit(topic); }
 }

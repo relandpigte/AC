@@ -37,7 +37,7 @@
             </div>
         </div>
         <app-carousel
-            [isLoading]="isLoadingTailoredTopics[t.key]"
+            [isLoading]="isAllowLoading && isLoadingTailoredTopics[t.key]"
             [items]="t.value.items"
             [templateRef]="topicClusterRef1"
             [metadata]="{ isParent: false, group: t.key }"
@@ -57,6 +57,7 @@
         [topicOptions]="{ showFollow: true }"
         (onTopicClick)="handleTopicClick($event)"
         (onTopicFollow)="handleTopicFollowClick(metadata.group, $event)"
+        (onTopicUnfollow)="handleTopicUnfollowClick(metadata.group, $event)"
     ></app-card-cluster>
 </ng-template>
 
@@ -68,6 +69,7 @@
         [isLoading]="isLoading"
         [topicOptions]="{ showFollow: true, showRemove: true }"
         (onTopicFollow)="handleTopicFollowClick(metadata.group, $event)"
+        (onTopicUnfollow)="handleTopicUnfollowClick(metadata.group, $event)"
         (onTopicRemove)="handleTopicRemoveClick(metadata.group, $event)"
     ></app-card-cluster>
 </ng-template>
