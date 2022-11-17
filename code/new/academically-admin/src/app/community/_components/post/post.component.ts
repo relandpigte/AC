@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { PostTabs } from '@app/community/_modals/add-post/add-post.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { TopicSorting } from '@shared/components/topic/topic.component';
@@ -16,7 +16,9 @@ export interface VisibilityOptions {
     templateUrl: './post.component.html',
     styleUrls: ['./post.component.scss']
 })
-export class CommunityPostComponent extends AppComponentBase implements OnInit {
+export class CommunityPostComponent extends AppComponentBase implements OnInit, AfterViewInit {
+
+    @ViewChild('topicEl') topicInput: ElementRef<HTMLElement>;
 
     @Input() type: PostTabs;
     @Output() onModelChange = new EventEmitter<any>();
@@ -35,6 +37,8 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit {
     availableTopics: any = [];
     isLoadingTopics = false;
 
+    isShowHashtag = false;
+
     constructor(
         injector: Injector,
         private _taxonomyService: DisciplineTaxonomiesServiceProxy
@@ -48,6 +52,11 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit {
     ngOnInit(): void {
         this.initVisibilityOptions();
         this.updateModel();
+    }
+
+    ngAfterViewInit(): void {
+        this.topicInput.nativeElement.addEventListener('focus', () => this.isShowHashtag = true );
+        this.topicInput.nativeElement.addEventListener('blur', () => this.isShowHashtag = false );
     }
 
     private initVisibilityOptions(): void {

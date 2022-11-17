@@ -114,6 +114,11 @@
                 line-height: 18px;
 
             }
+
+            &-hashtag {
+                position: absolute;
+                transform: translateY(-30px);
+            }
         }
     }
 }

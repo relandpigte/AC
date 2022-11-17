@@ -105,6 +105,7 @@
                     #topicModel="ngModel"
                     #topicEl
                     class="form-control"
+                    [style.paddingLeft.px]="isShowHashtag ? 13 : 0"
                     type="text"
                     id="topic"
                     name="topic"
@@ -112,6 +113,7 @@
                     placeholder="{{ 'Community.AddTopics' | localize: (isTopicsOptional ? '(optional)' : '') }}"
                     (keydown)="onTopicsKeyDown($event)"
                 />
+                <span *ngIf="isShowHashtag" class="post-body-topics-hashtag">#</span>
                 <app-autocomplete
                     [input]="topicEl"
                     [templateRef]="topicRowItem"
