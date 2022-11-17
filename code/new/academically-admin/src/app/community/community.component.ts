@@ -112,7 +112,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     const modules = course?.modules ? `${course?.modules} modules` : null;
     const lessons = course?.lessons ? `${course?.lessons} lessons` : null;
     const values = [modules, lessons].filter(x => x);
-    return values.join(', ');
+    return values?.length ? values.join(', ') : 'no lessons';
   }
 
   getUserTopics(): void {

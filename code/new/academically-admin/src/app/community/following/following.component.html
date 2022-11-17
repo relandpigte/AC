@@ -1,7 +1,7 @@
 <div class="container-fluid following d-flex flex-column flex-nowrap p-0">
 
     <div *ngFor="let p of posts" class="card community-content-post">
-        <app-community-post-card [post]="p"></app-community-post-card>
+      <app-community-post-card [data]="p"></app-community-post-card>
     </div>
 
     <div *ngIf="usersYouMayKnow?.length > 0" class="card community-content-post">
