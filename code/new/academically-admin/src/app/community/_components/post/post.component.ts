@@ -116,7 +116,7 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit, 
     loadTopics(data: any): void {
         const { keyword, showLoading } = data;
         this.isLoadingTopics = showLoading;
-        this._taxonomyService.getAllLastChildren(keyword, true, TopicSorting.Popular)
+        this._taxonomyService.getAllLastChildren(keyword, true, TopicSorting.Popular, 50)
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => this.isLoadingTopics = false))
             .subscribe(topics => this.availableTopics = topics.filter(t => !this.topics.some(x => x.id === t.id)));

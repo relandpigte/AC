@@ -4,7 +4,7 @@
             <form class="h-100">
                 <div class="input-group input-group-flush h-100 d-flex align-items-center">
                     <div class="input-group-prepend"><span class="input-group-text"><i class="fe fe-search"></i></span></div>
-                    <input #searchInput class="list-search form-control" [ngClass]="[loading ? 'hidden' : 'show']" type="search" name="Search" placeholder="Search" (keyup.enter)="handleOnSearch()" />
+                    <input #searchInput class="list-search form-control" [ngClass]="[loading ? 'hidden' : 'show']" type="search" name="Search" placeholder="Search" (keyup.enter)="handleOnSearch()"/>
                     <div class="bg-white veil d-flex align-items-center" [ngClass]="[loading ? 'show' : 'hidden']">
                         <div class="box-shimmer-bar"  [style.width.%]="30" [style.height.%]="50"></div>
                     </div>

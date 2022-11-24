@@ -1,7 +1,7 @@
 <div class="container-fluid all-topics d-flex flex-column flex-nowrap p-0 pb-5">
     <div class="all-topics-content flex-grow-1">
         <app-carousel
-            [isLoading]="isLoadingParentTopics"
+            [isLoading]="isAllowLoading && isLoadingParentTopics"
             [items]="parentTopics"
             [templateRef]="topicClusterRef1"
             [metadata]="{ isParent: true }"
@@ -19,7 +19,7 @@
             </div>
         </div>
         <app-carousel
-            [isLoading]="isLoadingForYouTopics"
+            [isLoading]="isAllowLoading && isLoadingForYouTopics"
             [items]="forYouTopics"
             [templateRef]="topicClusterRef2"
             [metadata]="{ isParent: false }"
