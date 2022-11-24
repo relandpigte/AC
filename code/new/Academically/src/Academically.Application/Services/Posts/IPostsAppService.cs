@@ -10,5 +10,6 @@ namespace Academically.Services.Posts
     {
         Task<List<PostDto>> GetAllPosts(PostType? Type);
         Task Create(CreatePostDto input);
+        Task<List<PostDto>> GetByUser(long userId, PostType? type);
     }
 }

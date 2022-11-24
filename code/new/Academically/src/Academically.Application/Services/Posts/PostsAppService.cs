@@ -103,5 +103,16 @@ namespace Academically.Services.Posts
                 }
             }
         }
+
+        public async Task<List<PostDto>> GetByUser(long userId, PostType? type)
+        {
+            return await _postRepository.GetAll()
+                .Include(p => p.CreatorUser)
+                .WhereIf(type.HasValue, p => p.Type == type)
+                .Where(p => p.CreatorUserId == userId)
+                .OrderByDescending(p => p.CreationTime)
+                .Select(p => ObjectMapper.Map<PostDto>(p))
+                .ToListAsync();
+        }
     }
 }

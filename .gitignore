@@ -119,3 +119,4 @@ UpgradeLog*.XML
 src/.vs/config/applicationhost.config
 appsettings.Development.json
 code/academically-survey/node_modules/
+/code/Academically/Academically.Application/Sessions/ISessionAppService.cs
