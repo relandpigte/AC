@@ -8,8 +8,8 @@ using Academically.Domain.Enums;
 namespace Academically.Domain.Entities
 {
     [Table("AcademicallyPosts")]
-	public class Post : CreationAuditedEntity<Guid>
-	{
+	public class Post : FullAuditedEntity<Guid>
+    {
 		public Post()
 		{
 			PostTopics = new HashSet<PostTopic>();
