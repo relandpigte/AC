@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
@@ -91,6 +91,16 @@ namespace Academically.Services.Posts
 
             if (input.Attachments != null && input.Attachments.Any())
             {
+                var fileExtensionList = input.Attachments.Select(a => Path.GetExtension(a.FileName).Substring((1))).ToList();
+                foreach (var f in fileExtensionList)
+                {
+                    var isVailidExtension = Enum.IsDefined(typeof(AttachmentType), f.ToLower());
+                    if (!isVailidExtension)
+                    {
+                        throw new InvalidOperationException("Invalid File Extension!");
+                    }
+                }
+
                 var userId = AbpSession.UserId.Value;
                 foreach (var attachment in input.Attachments)
                 {
