@@ -5,8 +5,6 @@ import { TopicSorting } from '@shared/components/topic/topic.component';
 import { Utils } from '@shared/helpers/utils';
 import { CreateUserTopicDto, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, SearchDisciplineTaxonomyRequestDto, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
 
-import * as _ from 'lodash';
-import { forkJoin, of } from 'rxjs';
 import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -34,12 +32,12 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
         { label: 'Recent', value: TopicSorting.Recent }
     ];
 
-    searchProcess$ = (searchFilter: string) => {
+    searchProcess$ = (searchFilter: string, excludeFollowing = true) => {
         this.searchFilter = searchFilter;
 
         const request = new SearchDisciplineTaxonomyRequestDto();
         request.keyword = searchFilter;
-        request.excludeFollowing = false;
+        request.excludeFollowing = excludeFollowing;
         request.sorting = this.sort.value;
         request.take = 10;
 
@@ -94,7 +92,7 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
         request.type = UserTopicType.Following;
 
         this._userTopics.create(request)
-            .pipe(switchMap(() => this.searchProcess$(this.searchFilter)))
+            .pipe(switchMap(() => this.searchProcess$(this.searchFilter, false)))
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => this.isFollowingTopic = false))
             .subscribe((topics) => {
@@ -109,7 +107,7 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
         this.topicInFocus = topic.id;
 
         this._userTopics.deleteByTopicId(topic.id)
-            .pipe(switchMap(() => this.searchProcess$(this.searchFilter)))
+            .pipe(switchMap(() => this.searchProcess$(this.searchFilter, false)))
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => this.isUnfollowingTopic = false))
             .subscribe((topics) => {
@@ -129,7 +127,7 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
         request.type = UserTopicType.NotInterested;
 
         this._userTopics.create(request)
-            .pipe(switchMap(() => this.searchProcess$(this.searchFilter)))
+            .pipe(switchMap(() => this.searchProcess$(this.searchFilter, false)))
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => this.isRemovingTopic = false))
             .subscribe((topics) => {
@@ -141,6 +139,6 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
 
     private updateSearchResults(topics: DisciplineTaxonomyDto[]): void {
         if (this.isAllowLoading) this.topics = Utils.toMap(topics, t => t.id);
-        else topics.forEach(t => Utils.assignToMap(this.topics, t.id, t));
+        else topics.forEach(t => Utils.assignToMap(this.topics, t.id, t, true));
     }
 }

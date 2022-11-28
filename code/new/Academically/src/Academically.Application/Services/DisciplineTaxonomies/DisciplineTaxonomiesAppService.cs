@@ -120,6 +120,9 @@ namespace Academically.Services.DisciplineTaxonomies
             if (!request.Sorting.IsNullOrWhiteSpace())
                 query = Sort(query, request.Sorting);
 
+            if (request.Take.HasValue)
+                query = query.Take(request.Take.Value);
+
             var disciplineTaxonomies = await query.Select(x => ObjectMapper.Map<DisciplineTaxonomyDto>(x))
                 .ToListAsync();
             return disciplineTaxonomies;

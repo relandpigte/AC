@@ -76,6 +76,10 @@ export class SearchComponent<T> extends PagedListingComponentBase<T> implements 
         if (this.options?.maxItems && 'data' in changes && this.data) {
             this.data = _.take(this.data, this.options.maxItems);
         }
+
+        if (changes.loading?.previousValue != changes.loading?.currentValue && !this.loading) {
+            setTimeout(() => this.searchInput.nativeElement.focus());
+        }
     }
 
     ngAfterViewInit(): void {

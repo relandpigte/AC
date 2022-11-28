@@ -7866,9 +7866,10 @@ export class DisciplineTaxonomiesServiceProxy {
      * @param keyword (optional) 
      * @param excludeFollowing (optional) 
      * @param sorting (optional) 
+     * @param take (optional) 
      * @return Success
      */
-    getAllLastChildren(keyword: string | undefined, excludeFollowing: boolean | undefined, sorting: string | undefined): Observable<DisciplineTaxonomyDto[]> {
+    getAllLastChildren(keyword: string | undefined, excludeFollowing: boolean | undefined, sorting: string | undefined, take: number | undefined): Observable<DisciplineTaxonomyDto[]> {
         let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/GetAllLastChildren?";
         if (keyword === null)
             throw new Error("The parameter 'keyword' cannot be null.");
@@ -7882,6 +7883,10 @@ export class DisciplineTaxonomiesServiceProxy {
             throw new Error("The parameter 'sorting' cannot be null.");
         else if (sorting !== undefined)
             url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (take === null)
+            throw new Error("The parameter 'take' cannot be null.");
+        else if (take !== undefined)
+            url_ += "Take=" + encodeURIComponent("" + take) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

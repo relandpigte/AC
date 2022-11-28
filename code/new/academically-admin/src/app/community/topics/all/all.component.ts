@@ -1,11 +1,12 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { Utils } from '@shared/helpers/utils';
 import { CreateUserTopicDto, DisciplineTaxonomiesServiceProxy, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 
 import { Router } from '@angular/router';
-import * as _ from 'lodash';
 import { TopicSorting } from '@shared/components/topic/topic.component';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-all-topics',
@@ -17,6 +18,9 @@ export class AllComponent extends AppComponentBase implements OnInit {
   parentTopics: any = this.chunkArrayInGroups(Array(12).fill([]).map(() => this.generateRandomTopic()), 3);
   forYouTopics: any = this.chunkArrayInGroups(Array(15).fill([]).map(() => this.generateRandomTopic()), 3);
   tailoredTopics: any;
+
+  forYouTopicsMap: Map<string, any> = new Map();
+  tailoredTopicsMap: Map<string, Map<string, any>> = new Map();
 
   isAllowLoading = true;
   isLoadingParentTopics = false;
@@ -48,7 +52,7 @@ export class AllComponent extends AppComponentBase implements OnInit {
       undefined,
       undefined,
       true,
-      true,
+      false,
       TopicSorting.ForYou
     )
     .pipe(takeUntil(this.destroyed$))
@@ -59,17 +63,19 @@ export class AllComponent extends AppComponentBase implements OnInit {
     });
   }
 
-  private loadForYouTopics(): void {
+  private loadForYouTopics(excludeFollowing = true): void {
     this.isLoadingForYouTopics = true;
     this._taxonomyService.getAllLastChildren(
       undefined,
-      false,
-      TopicSorting.ForYou
+      excludeFollowing,
+      TopicSorting.ForYou,
+      50
     )
     .pipe(takeUntil(this.destroyed$))
     .pipe(finalize(() => this.isLoadingForYouTopics = false ))
     .subscribe((topics) => {
-      this.forYouTopics = this.chunkArrayInGroups(topics, 3)
+      this.updateForYouTopicsMap(topics);
+      this.forYouTopics = this.chunkArrayInGroups(Array.from(this.forYouTopicsMap.values()), 3);
     });
   }
 
@@ -84,12 +90,15 @@ export class AllComponent extends AppComponentBase implements OnInit {
         t.id,
         undefined,
         true,
-        false,
+        true,
         TopicSorting.ForYou
       )
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingTailoredTopics[t.id] = false ))
-      .subscribe((topics) => this.tailoredTopics[t.id].items = this.chunkArrayInGroups(topics, 3));
+      .subscribe((topics) => {
+        this.updateTailoredTopicsMap(t.id, topics);
+        this.tailoredTopics[t.id].items = this.chunkArrayInGroups(Array.from(this.tailoredTopicsMap.get(t.id).values()), 3);
+      });
     });
   }
 
@@ -108,7 +117,10 @@ export class AllComponent extends AppComponentBase implements OnInit {
       this.isLoadingTailoredTopics[groupId] = false;
       this.isAllowLoading = true;
     }))
-    .subscribe((topics) => this.tailoredTopics[groupId].items = this.chunkArrayInGroups(topics, 3));
+    .subscribe((topics) => {
+      this.updateTailoredTopicsMap(groupId, topics);
+      this.tailoredTopics[groupId].items = this.chunkArrayInGroups(Array.from(this.tailoredTopicsMap.get(groupId).values()), 3);
+    });
   }
 
   handleTopicClick(topic: any): void {
@@ -132,7 +144,7 @@ export class AllComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .pipe(finalize(() => this.isFollowingTopic = false))
           .subscribe(_ => {
-            key ? this.refreshTailoredTopics(key) : this.loadForYouTopics();
+            key ? this.refreshTailoredTopics(key) : this.loadForYouTopics(false);
             this.notify.info(this.l('Community.Topics.Follow.Success', topic.name));
           });
   }
@@ -145,7 +157,7 @@ export class AllComponent extends AppComponentBase implements OnInit {
         .pipe(takeUntil(this.destroyed$))
         .pipe(finalize(() => this.isUnfollowingTopic = false))
         .subscribe(_ => {
-          key ? this.refreshTailoredTopics(key) : this.loadForYouTopics();
+          key ? this.refreshTailoredTopics(key) : this.loadForYouTopics(false);
           this.notify.info(this.l('Community.Topics.Unfollow.Success', topic.name));
         });
   }
@@ -163,8 +175,24 @@ export class AllComponent extends AppComponentBase implements OnInit {
         .pipe(takeUntil(this.destroyed$))
         .pipe(finalize(() => this.isRemovingTopic = false))
         .subscribe(_ => {
-          key ? this.refreshTailoredTopics(key) : this.loadForYouTopics();
+          key ? this.refreshTailoredTopics(key) : this.loadForYouTopics(false);
           this.notify.info(this.l('Community.Topics.NotInterested.Success', topic.name));
         });
+  }
+
+  private updateForYouTopicsMap(topics: any): void {
+    if (this.isAllowLoading) this.forYouTopicsMap = Utils.toMap<any, any>(topics, t => t.id);
+    else topics.forEach(t => Utils.assignToMap(this.forYouTopicsMap, t.id, t, true));
+  }
+
+  private updateTailoredTopicsMap(group: string, topics: any): void {
+    if (this.isAllowLoading) this.tailoredTopicsMap.set(group, Utils.toMap<any, any>(topics, t => t.id));
+    else {
+      let groupMap = this.tailoredTopicsMap.get(group);
+      if (groupMap) {
+        topics.forEach(t => Utils.assignToMap(groupMap, t.id, t, true));
+        this.tailoredTopicsMap.set(group, groupMap);
+      }
+    }
   }
 }
