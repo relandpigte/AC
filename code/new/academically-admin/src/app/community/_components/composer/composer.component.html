@@ -11,8 +11,22 @@
         </div>
     </div>
     <div class="composer-actions d-flex flex-row flex-nowrap align-items-center">
-        <button type="button" class="btn btn-white flex-grow-1 border-0" (click)="onQuestionClick.emit()"> Question </button>
+        <button type="button" class="btn btn-white flex-grow-1 border-0 d-flex justify-content-center gap-12" (click)="onQuestionClick.emit()">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.4739 11.1989C16.6873 10.969 16.9769 10.8398 17.2787 10.8398C17.5806 10.8398 17.8701 10.969 18.0836 11.1989C18.2971 11.4288 18.417 11.7405 18.417 12.0656C18.417 12.3908 18.2971 12.7025 18.0836 12.9324L12.9861 18.422L10.8398 18.9998L11.3764 16.6884L16.4739 11.1989Z" stroke="#3B516C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 2H14.8914C15.4437 2 15.8914 2.44772 15.8914 3V7.31176C15.8914 7.57086 15.7909 7.81984 15.6109 8.00626L7.07571 16.8488C6.88725 17.044 6.62756 17.1543 6.35621 17.1543H3C2.44772 17.1543 2 16.7066 2 16.1543V3C2 2.44772 2.44772 2 3 2Z" stroke="#3B516C" stroke-width="1.5" stroke-linejoin="round"/>
+                <path d="M7.5923 9.43H8.89231C8.7323 8.05 10.9223 7.87 10.9223 6.41C10.9223 5.08 9.86231 4.4 8.4123 4.4C7.34231 4.4 6.4623 4.89 5.8223 5.63L6.6423 6.38C7.1323 5.87 7.6323 5.59 8.24231 5.59C9.03231 5.59 9.5123 5.93 9.5123 6.54C9.5123 7.51 7.3823 7.86 7.5923 9.43ZM8.2523 12.1C8.75231 12.1 9.1323 11.73 9.1323 11.21C9.1323 10.69 8.75231 10.33 8.2523 10.33C7.7423 10.33 7.3623 10.69 7.3623 11.21C7.3623 11.73 7.7323 12.1 8.2523 12.1Z" fill="#3B516C"/>
+            </svg>
+            Question
+        </button>
         <div class="composer-actions-separator"></div>
-        <button type="button" class="btn btn-white flex-grow-1 border-0" (click)="onDiscussionClick.emit()"> Discussion </button>
+        <button type="button" class="btn btn-white flex-grow-1 border-0 d-flex justify-content-center gap-12" (click)="onDiscussionClick.emit()">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 11.2758V17C2 17.5523 2.44772 18 3 18H8.72425C8.98946 18 9.24382 17.8946 9.43135 17.7071L17.2929 9.84557C17.6834 9.45504 17.6834 8.82188 17.2929 8.43135L11.5686 2.70711C11.1781 2.31658 10.545 2.31658 10.1544 2.70711L2.29289 10.5686C2.10536 10.7562 2 11.0105 2 11.2758Z" stroke="#3B516C" stroke-width="1.5"/>
+                <path d="M3 18L17 18" stroke="#3B516C" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M8.66895 5.11328L12.6689 9.11328" stroke="#3B516C" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Discussion
+        </button>
     </div>
 </div>
