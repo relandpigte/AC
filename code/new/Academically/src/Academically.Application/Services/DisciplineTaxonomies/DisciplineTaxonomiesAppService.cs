@@ -107,7 +107,7 @@ namespace Academically.Services.DisciplineTaxonomies
             return await query.Select(x => ObjectMapper.Map<DisciplineTaxonomyDto>(x)).ToListAsync();
         }
 
-        public async Task<IEnumerable<DisciplineTaxonomyDto>> GetAllLastChildren(GetAllLastChildrenDisciplineTaxonomyRequestDto request)
+        public async Task<PagedResultDto<DisciplineTaxonomyDto>> GetAllLastChildren(PagedGetAllLastChildrenDisciplineTaxonomyRequestDto request)
         {
             var query = _disciplineTaxonomiesRepository.GetAll()
                 .Include(x => x.UserTopics)
@@ -123,9 +123,18 @@ namespace Academically.Services.DisciplineTaxonomies
             if (request.Take.HasValue)
                 query = query.Take(request.Take.Value);
 
+            var totalCount = await query.CountAsync();
+
+            query = query.PageBy(request);
+
             var disciplineTaxonomies = await query.Select(x => ObjectMapper.Map<DisciplineTaxonomyDto>(x))
                 .ToListAsync();
-            return disciplineTaxonomies;
+
+            return new PagedResultDto<DisciplineTaxonomyDto>()
+            {
+                TotalCount = totalCount,
+                Items = disciplineTaxonomies
+            };
         }
 
         public async Task<IEnumerable<GetDisciplineTaxonomyChildrenCountDto>> GetChildrenCount(List<Guid> disciplineTaxonomyIds)
