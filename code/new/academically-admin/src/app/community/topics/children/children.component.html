@@ -15,7 +15,7 @@
             [currentPage]="searchObj?.pageNumber"
             [itemTemplate]="topicItemTemplate"
             [itemLoadingTemplate]="topicItemLoadingTemplate"
-            [loading]="loading"
+            [loading]="isAllowLoading && loading"
             (onSearch)="handleOnSearch($event)"
         ></app-search>
     </div>
@@ -27,9 +27,15 @@
                 <div class="topic-row-left-followers">{{ 'Community.Topics.Followers' | localize: (item.followerCount | shortNum: 1)  }}</div>
             </div>
             <div class="topic-row-right d-flex flex-row align-items-center gap-10">
-                <button class="btn btn-md btn-primary" (click)="handleOnFollow(item)">
-                    {{ (isFollowingTopic ? 'Following' : 'Follow') | localize }}
-                    <span *ngIf="isFollowingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                {{ topicInFocus }}|{{isUnfollowingTopic}}|{{ item.id }}
+                <button *ngIf="!isFollowed(item)" class="btn btn-md btn-primary" (click)="handleOnFollow(item)" [disabled]="isLoading">
+                    {{ (topicInFocus === item.id && isFollowingTopic ? 'Following' : 'Follow') | localize }}
+                    <span *ngIf="topicInFocus === item.id && isFollowingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                </button>
+                <button *ngIf="isFollowed(item)" class="btn btn-md btn-primary following border-0" (click)="handleOnUnfollow(item)" [disabled]="isLoading">
+                    {{ (topicInFocus === item.id && isUnfollowingTopic ? 'Unfollowing' : 'Following') | localize }}
+                    <i class="fe fe-check" role="status" aria-hidden="true"></i>
+                    <span *ngIf="topicInFocus === item.id && isUnfollowingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 </button>
             </div>
         </div>

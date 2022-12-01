@@ -3,9 +3,10 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { SortOption } from '@shared/components/search/search.component';
 import { TopicSorting } from '@shared/components/topic/topic.component';
 import { Utils } from '@shared/helpers/utils';
-import { CreateUserTopicDto, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, SearchDisciplineTaxonomyRequestDto, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
+import { CreateUserTopicDto, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, SearchDisciplineTaxonomyRequestDto, UserTopicDto, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
 
 import { finalize, switchMap, takeUntil } from 'rxjs/operators';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-more-topics',
@@ -64,6 +65,21 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
     ngOnInit(): void {
     }
 
+    private updateSearchResults(topics: DisciplineTaxonomyDto[]): void {
+        if (this.isAllowLoading) this.topics = Utils.toMap(topics, t => t.id);
+        else topics.forEach(t => Utils.assignToMap(this.topics, t.id, t, true));
+    }
+
+    private updateTopicFromData(topic: DisciplineTaxonomyDto, type: UserTopicType): void {
+        let existing = this.topics.get(topic.id);
+        if (_.isNil(type)) {
+            existing.userTopics = existing.userTopics.filter(u => !(u.userId === this.appSession.userId && u.type === UserTopicType.Following));
+        } else {
+            existing.userTopics.push({ userId: this.appSession.userId, type } as UserTopicDto);
+        }
+        this.topics.set(topic.id, existing);
+    }
+
     isFollowed(topic: DisciplineTaxonomyDto): boolean {
         return topic.userTopics.some(u => u.userId === this.appSession.userId && u.type === UserTopicType.Following);
     }
@@ -94,9 +110,11 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
         this._userTopics.create(request)
             .pipe(switchMap(() => this.searchProcess$(this.searchFilter, false)))
             .pipe(takeUntil(this.destroyed$))
-            .pipe(finalize(() => this.isFollowingTopic = false))
+            .pipe(finalize(() => {
+                this.isFollowingTopic = false;
+                this.updateTopicFromData(topic, UserTopicType.Following);
+            }))
             .subscribe((topics) => {
-                this.updateSearchResults(topics);
                 this.notify.info(this.l('Community.Topics.Follow.Success', topic.name));
             });
     }
@@ -109,9 +127,11 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
         this._userTopics.deleteByTopicId(topic.id)
             .pipe(switchMap(() => this.searchProcess$(this.searchFilter, false)))
             .pipe(takeUntil(this.destroyed$))
-            .pipe(finalize(() => this.isUnfollowingTopic = false))
+            .pipe(finalize(() => {
+                this.isUnfollowingTopic = false;
+                this.updateTopicFromData(topic, null);
+            }))
             .subscribe((topics) => {
-                this.updateSearchResults(topics);
                 this.notify.info(this.l('Community.Topics.Unfollow.Success', topic.name));
             });
     }
@@ -135,10 +155,5 @@ export class MoreTopicsComponent extends AppComponentBase implements OnInit {
                 this.topics.delete(topic.id);
                 this.notify.info(this.l('Community.Topics.NotInterested.Success', topic.name));
             });
-    }
-
-    private updateSearchResults(topics: DisciplineTaxonomyDto[]): void {
-        if (this.isAllowLoading) this.topics = Utils.toMap(topics, t => t.id);
-        else topics.forEach(t => Utils.assignToMap(this.topics, t.id, t, true));
     }
 }
