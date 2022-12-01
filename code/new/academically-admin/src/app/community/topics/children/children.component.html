@@ -27,7 +27,6 @@
                 <div class="topic-row-left-followers">{{ 'Community.Topics.Followers' | localize: (item.followerCount | shortNum: 1)  }}</div>
             </div>
             <div class="topic-row-right d-flex flex-row align-items-center gap-10">
-                {{ topicInFocus }}|{{isUnfollowingTopic}}|{{ item.id }}
                 <button *ngIf="!isFollowed(item)" class="btn btn-md btn-primary" (click)="handleOnFollow(item)" [disabled]="isLoading">
                     {{ (topicInFocus === item.id && isFollowingTopic ? 'Following' : 'Follow') | localize }}
                     <span *ngIf="topicInFocus === item.id && isFollowingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
