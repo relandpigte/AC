@@ -9,7 +9,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 export class PillPickerComponent extends AppComponentBase implements AfterViewInit, OnInit, OnDestroy {
     @ViewChild('keywordEl') keywordInput: ElementRef<HTMLElement>;
 
-    @Input() choices: any = [];
+    @Input() choices: any;
     @Input() maxSelected: number;
 
     @Input() keywordPrefix: string;

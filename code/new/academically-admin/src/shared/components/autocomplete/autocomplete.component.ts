@@ -33,7 +33,7 @@ export class AutocompleteComponent extends AppComponentBase implements OnInit, A
     super(injector);
   }
 
-  get isShown(): boolean { return this.isShowChoices && this.input.value?.length >= this.minChars; }
+  get isShown(): boolean { return this.isShowChoices && this.input.value?.length >= this.minChars && !!this.data; }
 
   ngOnInit(): void {
   }
@@ -64,7 +64,7 @@ export class AutocompleteComponent extends AppComponentBase implements OnInit, A
     });
 
     this.input.addEventListener('keydown', (evt) => {
-      this.isShowChoices = false;
+      if (evt.key === 'Enter') this.data = null;
       setTimeout(() => this.keywordChanged$.next(evt.target.value));
     });
   }
@@ -78,6 +78,7 @@ export class AutocompleteComponent extends AppComponentBase implements OnInit, A
 
   handleOnItemSelect(item: any): void {
     this.onItemSelect.emit(item);
+    this.data = null;
     this.input.focus();
   }
 }
