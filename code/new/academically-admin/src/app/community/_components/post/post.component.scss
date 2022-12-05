@@ -108,17 +108,7 @@
 
         &-topics {
             border-top: 1px solid #EDF2F9;
-            input {
-                font-weight: 400;
-                font-size: 14px;
-                line-height: 18px;
-
-            }
-
-            &-hashtag {
-                position: absolute;
-                transform: translateY(-30px);
-            }
+            padding-top: 7px;
         }
     }
 }

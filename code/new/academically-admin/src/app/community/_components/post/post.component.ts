@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { PostTabs } from '@app/community/_modals/add-post/add-post.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { TopicSorting } from '@shared/components/topic/topic.component';
 import { DisciplineTaxonomiesServiceProxy, PostType } from '@shared/service-proxies/service-proxies';
 
-import { takeUntil, finalize } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 export interface VisibilityOptions {
     label: string;
@@ -16,7 +16,7 @@ export interface VisibilityOptions {
     templateUrl: './post.component.html',
     styleUrls: ['./post.component.scss']
 })
-export class CommunityPostComponent extends AppComponentBase implements OnInit, AfterViewInit {
+export class CommunityPostComponent extends AppComponentBase implements OnInit {
 
     @ViewChild('topicEl') topicInput: ElementRef<HTMLElement>;
 
@@ -28,16 +28,13 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit, 
 
     title: string;
     information: string;
-    topic: string;
-    topics: { id: string, name: string }[] = [];
-    newTopics: { id: string, name: string }[] = [];
 
-    model: any = {};
-
-    availableTopics: any = [];
+    topicsChoices: any[] = [];
+    selectedTopics: { id: string, name: string }[] = [];
+    newSelectedTopics: { id: string, name: string }[] = [];
     isLoadingTopics = false;
 
-    isShowHashtag = false;
+    model: any = {};
 
     constructor(
         injector: Injector,
@@ -52,11 +49,6 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit, 
     ngOnInit(): void {
         this.initVisibilityOptions();
         this.updateModel();
-    }
-
-    ngAfterViewInit(): void {
-        this.topicInput.nativeElement.addEventListener('focus', () => this.isShowHashtag = true );
-        this.topicInput.nativeElement.addEventListener('blur', () => this.isShowHashtag = false );
     }
 
     private initVisibilityOptions(): void {
@@ -77,48 +69,29 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit, 
         }
     }
 
-    onTopicsKeyDown(e: KeyboardEvent): void {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          const idx = this.topics.findIndex(i => i.name.trim() === this.topic.trim());
-          if (idx < 0) {
-            this.topics.push({ id: null, name: this.topic.trim() });
-            this.newTopics.push({ id: null, name: this.topic.trim() });
-            this.topic = undefined;
-          }
-          this.updateModel();
-        }
-    }
-
-    onSelectExistingTopic(topic: any): void {
-        this.topics.push(topic);
-        this.updateModel();
-    }
-
-    onRemoveTopicClick(topic: any): void {
-        const idx = this.topics.findIndex(e => e.name === topic.name);
-        const newIdx = this.topics.findIndex(e => e.name === topic.name);
-        if (idx >= 0) this.topics.splice(idx, 1);
-        if (newIdx >= 0) this.newTopics.splice(newIdx, 1);
-        this.updateModel();
-    }
-
     updateModel(): void {
         this.model.title = this.title;
         this.model.information = this.information;
         this.model.visibility = this.visibility.value;
         this.model.type = this.getPostType();
-        this.model.topics = this.topics.filter(t => t.id).map(t => t.id) ?? [];
-        this.model.newTopics = this.newTopics.map(t => t.name);
+        this.model.topics = this.selectedTopics.filter(t => t.id).map(t => t.id) ?? [];
+        this.model.newTopics = this.newSelectedTopics.map(t => t.name);
         this.onModelChange.emit(this.model);
     }
 
-    loadTopics(data: any): void {
+    handleTopicsModelUpdate(data: any): void {
+        const { selected, newSelected } = data;
+        this.selectedTopics = selected;
+        this.newSelectedTopics = newSelected;
+        this.updateModel();
+    }
+
+    handleTopicsKeywordUpdate(data: any): void {
         const { keyword, showLoading } = data;
         this.isLoadingTopics = showLoading;
         this._taxonomyService.getAllLastChildren(keyword, true, TopicSorting.Popular, 50)
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => this.isLoadingTopics = false))
-            .subscribe(topics => this.availableTopics = topics.filter(t => !this.topics.some(x => x.id === t.id)));
+            .subscribe(topics => this.topicsChoices = topics.filter(t => !this.selectedTopics.some(x => x.id === t.id)));
     }
 }
