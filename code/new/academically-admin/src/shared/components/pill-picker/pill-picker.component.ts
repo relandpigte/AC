@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Injector, Input, Output, OnDestroy, OnInit, EventEmitter, ViewChild, ElementRef } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from "@angular/core";
 import { AppComponentBase } from '@shared/app-component-base';
 
 @Component({
@@ -6,7 +6,7 @@ import { AppComponentBase } from '@shared/app-component-base';
     templateUrl: './pill-picker.component.html',
     styleUrls: ['./pill-picker.component.scss']
 })
-export class PillPickerComponent extends AppComponentBase implements AfterViewInit, OnInit, OnDestroy {
+export class PillPickerComponent extends AppComponentBase implements OnInit, OnDestroy {
     @ViewChild('keywordEl') keywordInput: ElementRef<HTMLElement>;
 
     @Input() choices: any;
@@ -38,11 +38,6 @@ export class PillPickerComponent extends AppComponentBase implements AfterViewIn
     get canAddItems(): boolean { return this.selected.length < this.maxSelected; }
 
     ngOnInit(): void {
-    }
-
-    ngAfterViewInit(): void {
-        this.keywordInput.nativeElement.addEventListener('focus', () => this.isShowKeywordPrefix = true );
-        this.keywordInput.nativeElement.addEventListener('blur', () => this.isShowKeywordPrefix = false );
     }
 
     handleKeyDown(e: KeyboardEvent): void {

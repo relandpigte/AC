@@ -16,6 +16,8 @@
                 name="keyword"
                 [placeholder]="keywordPlaceholder"
                 (keydown)="handleKeyDown($event)"
+                (blur)="isShowKeywordPrefix=false"
+                (focus)="isShowKeywordPrefix=true"
                 autocomplete="off"
             />
         </div>
