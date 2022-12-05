@@ -20,14 +20,13 @@
     <div class="post-body flex-grow-1 d-flex flex-column" [style.marginTop.px]="15">
         <ng-container [ngSwitch]="type">
             <ng-container *ngSwitchCase="'quick-post'">
-                <div class="post-body-information flex-grow-1" [style.paddingTop.px]="10">
+                <div class="post-body-information flex-grow-1 d-flex" [style.paddingTop.px]="10">
                     <textarea
-                        [rows]="6"
                         [(ngModel)]="information"
                         (ngModelChange)="updateModel()"
                         #informationModel="ngModel"
                         #informationEl
-                        class="form-control"
+                        class="form-control flex-grow-1"
                         id="information"
                         name="information"
                         required
@@ -36,34 +35,18 @@
                 </div>
             </ng-container>
             <ng-container *ngSwitchCase="'add-question'">
-                <div class="post-body-title">
-                    <input
+                <div class="post-body-title flex-grow-1 d-flex" [style.paddingTop.px]="10">
+                    <textarea
                         [(ngModel)]="title"
                         (ngModelChange)="updateModel()"
                         #titleModel="ngModel"
                         #titleEl
-                        type="text"
-                        class="form-control"
-                        type="text"
+                        class="form-control flex-grow-1"
                         id="title"
                         name="title"
                         required
                         placeholder="{{ 'Community.Question.Add.Title' | localize }}"
-                    />
-                </div>
-                <div class="post-body-information flex-grow-1" [style.paddingTop.px]="10">
-                    <!-- <textarea
-                        [rows]="6"
-                        [(ngModel)]="information"
-                        (ngModelChange)="updateModel()"
-                        #informationModel="ngModel"
-                        #informationEl
-                        class="form-control"
-                        id="information"
-                        name="information"
-                        required
-                        placeholder="{{ 'Community.Question.Add.Information' | localize }}"
-                    ></textarea> -->
+                    ></textarea>
                 </div>
             </ng-container>
             <ng-container *ngSwitchCase="'add-discussion'">
@@ -82,14 +65,13 @@
                         placeholder="{{ 'Community.Discussion.Add.Title' | localize }}"
                     />
                 </div>
-                <div class="post-body-information flex-grow-1" [style.paddingTop.px]="10">
+                <div class="post-body-information flex-grow-1 d-flex" [style.paddingTop.px]="10">
                     <textarea
-                        [rows]="6"
                         [(ngModel)]="information"
                         (ngModelChange)="updateModel()"
                         #informationModel="ngModel"
                         #informationEl
-                        class="form-control"
+                        class="form-control flex-grow-1"
                         id="information"
                         name="information"
                         required
