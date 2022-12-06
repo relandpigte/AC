@@ -67,6 +67,7 @@ export class AllComponent extends AppComponentBase implements OnInit {
     this.isLoadingForYouTopics = true;
     this._taxonomyService.getAllLastChildren(
       undefined,
+      undefined,
       excludeFollowing,
       TopicSorting.ForYou,
       50

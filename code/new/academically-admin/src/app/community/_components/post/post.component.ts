@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, V
 import { PostTabs } from '@app/community/_modals/add-post/add-post.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { TopicSorting } from '@shared/components/topic/topic.component';
-import { DisciplineTaxonomiesServiceProxy, PostType } from '@shared/service-proxies/service-proxies';
+import { DisciplineTaxonomiesServiceProxy, KeywordSearchStrategy, PostType } from '@shared/service-proxies/service-proxies';
 
 import { finalize, takeUntil } from 'rxjs/operators';
 
@@ -89,7 +89,7 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit {
     handleTopicsKeywordUpdate(data: any): void {
         const { keyword, showLoading } = data;
         this.isLoadingTopics = showLoading;
-        this._taxonomyService.getAllLastChildren(keyword, true, TopicSorting.Popular, 50)
+        this._taxonomyService.getAllLastChildren(keyword, KeywordSearchStrategy.StartsWith, true, TopicSorting.Popular, undefined)
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => this.isLoadingTopics = false))
             .subscribe(topics => this.topicsChoices = topics.filter(t => !this.selectedTopics.some(x => x.id === t.id)));

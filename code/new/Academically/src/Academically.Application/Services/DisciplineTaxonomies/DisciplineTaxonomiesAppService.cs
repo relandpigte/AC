@@ -107,11 +107,32 @@ namespace Academically.Services.DisciplineTaxonomies
             return await query.Select(x => ObjectMapper.Map<DisciplineTaxonomyDto>(x)).ToListAsync();
         }
 
-        public async Task<PagedResultDto<DisciplineTaxonomyDto>> GetAllLastChildren(PagedGetAllLastChildrenDisciplineTaxonomyRequestDto request)
+        public async Task<IEnumerable<DisciplineTaxonomyDto>> GetAllLastChildren(GetAllLastChildrenDisciplineTaxonomyRequestDto request)
         {
             var query = _disciplineTaxonomiesRepository.GetAll()
                 .Include(x => x.UserTopics)
-                .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), x => x.Name.ToLower().Contains(request.Keyword.ToLower()))
+                .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), this.GetSearchConditionFromSearchStrategy(request.Keyword.ToLower(), request.SearchStrategy))
+                .Where(x => x.Children.Count() == 0);
+
+            var markedIds = await GetMarkedIds(request.ExcludeFollowing);
+            query = query.WhereIf(markedIds.Any(), x => !markedIds.Contains(x.Id));
+
+            if (!request.Sorting.IsNullOrWhiteSpace())
+                query = Sort(query, request.Sorting);
+
+            if (request.Take.HasValue)
+                query = query.Take(request.Take.Value);
+
+            var disciplineTaxonomies = await query.Select(x => ObjectMapper.Map<DisciplineTaxonomyDto>(x))
+                .ToListAsync();
+            return disciplineTaxonomies;
+        }
+
+        public async Task<PagedResultDto<DisciplineTaxonomyDto>> GetAllLastChildrenPaged(PagedGetAllLastChildrenDisciplineTaxonomyRequestDto request)
+        {
+            var query = _disciplineTaxonomiesRepository.GetAll()
+                .Include(x => x.UserTopics)
+                .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), this.GetSearchConditionFromSearchStrategy(request.Keyword.ToLower(), request.SearchStrategy))
                 .Where(x => x.Children.Count() == 0);
 
             var markedIds = await GetMarkedIds(request.ExcludeFollowing);
@@ -186,6 +207,19 @@ namespace Academically.Services.DisciplineTaxonomies
                 .WhereIf(excludeFollowing, x => x.Type == UserTopicType.NotInterested || x.Type == UserTopicType.Following)
                 .Select(x => x.DisciplineTaxonomyId)
                 .ToListAsync();
+        }
+
+        private System.Linq.Expressions.Expression <Func<DisciplineTaxonomy, bool>> GetSearchConditionFromSearchStrategy(string keyword, KeywordSearchStrategy? strategy)
+        {
+            switch (strategy ?? null)
+            {
+                case KeywordSearchStrategy.StartsWith:
+                    return x => x.Name.ToLower().StartsWith(keyword);
+                case KeywordSearchStrategy.EndsWith:
+                    return x => x.Name.ToLower().EndsWith(keyword);
+                default:
+                    return x => x.Name.ToLower().Contains(keyword);
+            }
         }
     }
 }
