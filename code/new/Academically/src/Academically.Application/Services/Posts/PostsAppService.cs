@@ -11,6 +11,7 @@ using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
 using Academically.Services.Posts.Dto;
+using Academically.Services.Projects.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,6 +45,7 @@ namespace Academically.Services.Posts
         {
             return await _postRepository.GetAll()
                     .Include(p => p.CreatorUser)
+                    .Where(e => !e.IsDeleted)
                     .WhereIf(type.HasValue, p => p.Type == type)
                     .OrderByDescending(p => p.CreationTime)
                     .Select(p => ObjectMapper.Map<PostDto>(p))
@@ -123,6 +125,33 @@ namespace Academically.Services.Posts
                 .OrderByDescending(p => p.CreationTime)
                 .Select(p => ObjectMapper.Map<PostDto>(p))
                 .ToListAsync();
+        }
+
+        public async Task<PostDto> UpdateAsync(UpdatePostDto input)
+        {
+            var post = await _postRepository.GetAsync(input.Id);
+            if (post == null)
+                return null;
+            if (post.IsDeleted)
+            {
+                post.DeleterUserId = AbpSession.UserId.Value;
+                post.DeletionTime = DateTime.Now;
+            }
+            else
+            {
+                post.LastModifierUserId = AbpSession.UserId.Value;
+                post.LastModificationTime = DateTime.Now;
+            }
+
+            ObjectMapper.Map(input, post);
+            post = await _postRepository.UpdateAsync(post);
+
+            return ObjectMapper.Map<PostDto>(post);
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            await _postRepository.DeleteAsync(id);
         }
     }
 }
