@@ -111,7 +111,7 @@ namespace Academically.Services.DisciplineTaxonomies
         {
             var query = _disciplineTaxonomiesRepository.GetAll()
                 .Include(x => x.UserTopics)
-                .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), this.GetSearchConditionFromSearchStrategy(request.Keyword.ToLower(), request.SearchStrategy))
+                .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), this.GetSearchConditionFromSearchStrategy(request.Keyword, request.SearchStrategy))
                 .Where(x => x.Children.Count() == 0);
 
             var markedIds = await GetMarkedIds(request.ExcludeFollowing);
@@ -132,7 +132,7 @@ namespace Academically.Services.DisciplineTaxonomies
         {
             var query = _disciplineTaxonomiesRepository.GetAll()
                 .Include(x => x.UserTopics)
-                .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), this.GetSearchConditionFromSearchStrategy(request.Keyword.ToLower(), request.SearchStrategy))
+                .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), this.GetSearchConditionFromSearchStrategy(request.Keyword, request.SearchStrategy))
                 .Where(x => x.Children.Count() == 0);
 
             var markedIds = await GetMarkedIds(request.ExcludeFollowing);
@@ -214,11 +214,11 @@ namespace Academically.Services.DisciplineTaxonomies
             switch (strategy ?? null)
             {
                 case KeywordSearchStrategy.StartsWith:
-                    return x => x.Name.ToLower().StartsWith(keyword);
+                    return x => x.Name.ToLower().StartsWith(keyword.ToLower());
                 case KeywordSearchStrategy.EndsWith:
-                    return x => x.Name.ToLower().EndsWith(keyword);
-                default:
-                    return x => x.Name.ToLower().Contains(keyword);
+                    return x => x.Name.ToLower().EndsWith(keyword.ToLower());
+                default: 
+                    return x => x.Name.ToLower().Contains(keyword.ToLower());
             }
         }
     }
