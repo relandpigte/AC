@@ -9,7 +9,7 @@ using Academically.Domain.Enums;
 namespace Academically.Domain.Entities
 {
     [Table("AcademicallyPosts")]
-	public class Post : FullAuditedEntityDto<Guid>
+	public class Post : FullAuditedEntity<Guid>
     {
 		public Post()
 		{
