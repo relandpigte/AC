@@ -10,7 +10,7 @@ using System.Text;
 namespace Academically.Services.Posts.Dto
 {
     [AutoMapFrom(typeof(Post))]
-    public class PostDto : CreationAuditedEntityDto<Guid>
+    public class PostDto : FullAuditedEntityDto<Guid>
     {
         public string Title { get; set; }
         public string Content { get; set; }

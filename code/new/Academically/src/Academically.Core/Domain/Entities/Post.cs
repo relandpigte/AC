@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Application.Services.Dto;
 using Abp.Domain.Entities.Auditing;
 using Academically.Authorization.Users;
 using Academically.Domain.Enums;
@@ -8,7 +9,7 @@ using Academically.Domain.Enums;
 namespace Academically.Domain.Entities
 {
     [Table("AcademicallyPosts")]
-	public class Post : FullAuditedEntity<Guid>
+	public class Post : FullAuditedEntityDto<Guid>
     {
 		public Post()
 		{
