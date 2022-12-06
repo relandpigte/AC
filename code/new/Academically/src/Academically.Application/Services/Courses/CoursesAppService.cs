@@ -30,8 +30,11 @@ namespace Academically.Services.Courses
     {
         private readonly IRepository<CourseRating, Guid> _ratingRepository;
         private readonly IRepository<StudentCourse, Guid> _studentCourseRepository;
-        private readonly IRepository<CourseSection, Guid> _sectionRepository;
-        private readonly IRepository<StudentCourseSection, Guid> _courseSectionRepository;
+        private readonly IRepository<CourseSection, Guid> _courseSectionRepository;
+        private readonly IRepository<StudentCourseSection, Guid> _studentCourseSectionRepository;
+        private readonly IRepository<CourseRatingArea, Guid> _courseRatingAreaRepository;
+        private readonly IRepository<CourseConversation, Guid> _courseConversationRepository;
+        private readonly IRepository<CourseConversationReaction, Guid> _courseConversationReactionRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IExploreRepository _exploreRepository;
 
@@ -39,18 +42,24 @@ namespace Academically.Services.Courses
             IRepository<Course, Guid> coursesRepository,
             IRepository<CourseRating, Guid> ratingRepository,
             IRepository<StudentCourse, Guid> studentCourseRepository,
-            IRepository<CourseSection, Guid> sectionRepository,
-            IRepository<StudentCourseSection, Guid> courseSectionRepository,
+            IRepository<CourseSection, Guid> courseSectionRepository,
+            IRepository<StudentCourseSection, Guid> studentCourseSectionRepository,
+            IRepository<CourseRatingArea, Guid> courseRatingAreaRepository,
+            IRepository<CourseConversation, Guid> courseConversationRepository,
+            IRepository<CourseConversationReaction, Guid> courseConversationReactionRepository,
             IDocumentsDomainService documentsDomainService,
             IExploreRepository exploreRepository
             ) : base(coursesRepository)
         {
             _ratingRepository = ratingRepository;
             _studentCourseRepository = studentCourseRepository;
-            _sectionRepository = sectionRepository;
+            _courseSectionRepository = courseSectionRepository;
             _documentsDomainService = documentsDomainService;
             _exploreRepository = exploreRepository;
-            _courseSectionRepository = courseSectionRepository;
+            _studentCourseSectionRepository = studentCourseSectionRepository;
+            _courseRatingAreaRepository = courseRatingAreaRepository;
+            _courseConversationRepository = courseConversationRepository;
+            _courseConversationReactionRepository = courseConversationReactionRepository;
         }
 
         public override async Task<CourseDto> GetAsync(EntityDto<Guid> input)
@@ -185,7 +194,7 @@ namespace Academically.Services.Courses
 
         private async Task<List<CourseDto>> GetCoursesDetailsAsync(List<CourseDto> popularCourses)
         {
-            var courseSections = await _sectionRepository.GetAll()
+            var courseSections = await _courseSectionRepository.GetAll()
                                .Where(cs => popularCourses.Select(x => x.Id).Contains(cs.CourseId))
                                .ToListAsync();
 
@@ -241,17 +250,41 @@ namespace Academically.Services.Courses
 
         public override async Task DeleteAsync(EntityDto<Guid> input)
         {
-            await _ratingRepository.DeleteAsync(cr => cr.CourseId == input.Id);
-            await _sectionRepository.DeleteAsync(cs => cs.CourseId == input.Id);
-
-            var studentCourses = await _sectionRepository.GetAll().Where(sc => sc.CourseId == input.Id).ToListAsync();
-            foreach (var studentCourse in studentCourses)
+            var ratings = await _ratingRepository.GetAll()
+                .Include(x => x.CourseRatingAreas)
+                .Where(c => c.CourseId == input.Id)
+                .ToListAsync();
+            var courseRatingAreaIds = ratings.SelectMany(x => x.CourseRatingAreas
+                .Select(ca => ca.Id)).ToList();
+            
+            foreach (var crId in courseRatingAreaIds)
             {
-                await _courseSectionRepository.DeleteAsync(scs => scs.CourseSectionId == studentCourse.Id);
+                await _courseRatingAreaRepository.DeleteAsync(crId);
+            }
+            
+            await _ratingRepository.DeleteAsync(cr => cr.CourseId == input.Id);
+
+            var studentCourses = await _studentCourseRepository.GetAll()
+                .Include(x => x.StudentCourseSections)
+                .Include(c => c.StudentCourseConversations)
+                .Where(c => c.CourseId == input.Id)
+                .ToListAsync();
+            var studentCourseSectionIds = studentCourses.SelectMany(x=> x.StudentCourseSections.Select(c => c.Id)).ToList();
+            var studentConversationIds = studentCourses.SelectMany(x => x.StudentCourseConversations.Select(c => c.Id)).ToList();
+
+            foreach (var scsId in studentCourseSectionIds)
+            {
+                await _studentCourseSectionRepository.DeleteAsync(scsId);
+            }
+
+            foreach (var scsId in studentConversationIds)
+            {
+                await _courseConversationReactionRepository.DeleteAsync(x => x.CourseConversationId == scsId);
+                await _courseConversationRepository.DeleteAsync(scsId);
             }
 
             await _studentCourseRepository.DeleteAsync(sc => sc.CourseId == input.Id);
-            
+            await _courseSectionRepository.DeleteAsync(cs => cs.CourseId == input.Id);
             await Repository.DeleteAsync(input.Id);
         }
     }
