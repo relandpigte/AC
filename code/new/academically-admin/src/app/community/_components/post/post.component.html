@@ -20,14 +20,13 @@
     <div class="post-body flex-grow-1 d-flex flex-column" [style.marginTop.px]="15">
         <ng-container [ngSwitch]="type">
             <ng-container *ngSwitchCase="'quick-post'">
-                <div class="post-body-information flex-grow-1" [style.paddingTop.px]="10">
+                <div class="post-body-information flex-grow-1 d-flex" [style.paddingTop.px]="10">
                     <textarea
-                        [rows]="6"
                         [(ngModel)]="information"
                         (ngModelChange)="updateModel()"
                         #informationModel="ngModel"
                         #informationEl
-                        class="form-control"
+                        class="form-control flex-grow-1"
                         id="information"
                         name="information"
                         required
@@ -36,34 +35,18 @@
                 </div>
             </ng-container>
             <ng-container *ngSwitchCase="'add-question'">
-                <div class="post-body-title">
-                    <input
+                <div class="post-body-title flex-grow-1 d-flex" [style.paddingTop.px]="10">
+                    <textarea
                         [(ngModel)]="title"
                         (ngModelChange)="updateModel()"
                         #titleModel="ngModel"
                         #titleEl
-                        type="text"
-                        class="form-control"
-                        type="text"
+                        class="form-control flex-grow-1"
                         id="title"
                         name="title"
                         required
                         placeholder="{{ 'Community.Question.Add.Title' | localize }}"
-                    />
-                </div>
-                <div class="post-body-information flex-grow-1" [style.paddingTop.px]="10">
-                    <!-- <textarea
-                        [rows]="6"
-                        [(ngModel)]="information"
-                        (ngModelChange)="updateModel()"
-                        #informationModel="ngModel"
-                        #informationEl
-                        class="form-control"
-                        id="information"
-                        name="information"
-                        required
-                        placeholder="{{ 'Community.Question.Add.Information' | localize }}"
-                    ></textarea> -->
+                    ></textarea>
                 </div>
             </ng-container>
             <ng-container *ngSwitchCase="'add-discussion'">
@@ -82,14 +65,13 @@
                         placeholder="{{ 'Community.Discussion.Add.Title' | localize }}"
                     />
                 </div>
-                <div class="post-body-information flex-grow-1" [style.paddingTop.px]="10">
+                <div class="post-body-information flex-grow-1 d-flex" [style.paddingTop.px]="10">
                     <textarea
-                        [rows]="6"
                         [(ngModel)]="information"
                         (ngModelChange)="updateModel()"
                         #informationModel="ngModel"
                         #informationEl
-                        class="form-control"
+                        class="form-control flex-grow-1"
                         id="information"
                         name="information"
                         required
@@ -100,34 +82,17 @@
         </ng-container>
         <div class="post-body-topics">
             <div class="form-group required mb-0">
-                <input
-                    [(ngModel)]="topic"
-                    #topicModel="ngModel"
-                    #topicEl
-                    class="form-control"
-                    [style.paddingLeft.px]="isShowHashtag ? 13 : 0"
-                    type="text"
-                    id="topic"
-                    name="topic"
-                    [required]="isTopicsOptional ? null : ''"
-                    placeholder="{{ 'Community.AddTopics' | localize: (isTopicsOptional ? '(optional)' : '') }}"
-                    (keydown)="onTopicsKeyDown($event)"
-                />
-                <span *ngIf="isShowHashtag" class="post-body-topics-hashtag">#</span>
-                <app-autocomplete
-                    [input]="topicEl"
-                    [templateRef]="topicRowItem"
+                <app-pill-picker
+                    [choices]="topicsChoices"
+                    [maxSelected]="10"
+                    keywordPrefix="#"
+                    keywordPlaceholder="{{ 'Community.AddTopics' | localize: (isTopicsOptional ? '(optional)' : '') }}"
+                    [autocompleteTemplateRef]="topicRowItem"
+                    autocompleteNoDataText="{{ 'Community.NoTopicsFoundEnterToCreate' | localize }}"
                     [isLoading]="isLoadingTopics"
-                    [data]="availableTopics"
-                    (onKeywordChange)="loadTopics($event)"
-                    (onItemSelect)="onSelectExistingTopic($event)"
-                    noDataText="Community.NoTopicsFoundEnterToCreate"
-                ></app-autocomplete>
-                <div class="ac-alerts">
-                  <div *ngFor="let topic of topics" class="alert alert-info alert-dismissible ac-alert" role="alert">
-                    #{{ topic.name }} <button (click)="onRemoveTopicClick(topic)" type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
-                  </div>
-                </div>
+                    (onUpdateModel)="handleTopicsModelUpdate($event)"
+                    (onKeywordUpdate)="handleTopicsKeywordUpdate($event)"
+                ></app-pill-picker>
             </div>
         </div>
     </div>

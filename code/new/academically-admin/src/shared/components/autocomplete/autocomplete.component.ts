@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { BehaviorSubject, combineLatest, ReplaySubject, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, skip, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, skip, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-autocomplete',
@@ -15,7 +15,7 @@ export class AutocompleteComponent extends AppComponentBase implements OnInit, A
   @Input() templateRef: any;
   @Input() isLoading: boolean = true;
   @Input() inputDelay: number = 300;
-  @Input() isShown = false;
+  @Input() minChars: number = 0;
 
   @Output() onKeywordChange = new EventEmitter<any>();
   @Output() onItemSelect = new EventEmitter<any>();
@@ -24,12 +24,16 @@ export class AutocompleteComponent extends AppComponentBase implements OnInit, A
   keywordChanged$ = new BehaviorSubject<string>('');
   keyword: string = '';
 
+  isShowChoices = false;
+
   constructor(
     injector: Injector,
     private _elRef: ElementRef
   ) {
     super(injector);
   }
+
+  get isShown(): boolean { return this.isShowChoices && this.input.value?.length >= this.minChars && !!this.data; }
 
   ngOnInit(): void {
   }
@@ -38,36 +42,43 @@ export class AutocompleteComponent extends AppComponentBase implements OnInit, A
     this.keywordChanged$
       .pipe(skip(1))
       .pipe(takeUntil(this.destroyed$))
+      .pipe(filter(v => v.length >= this.minChars))
       .pipe(debounceTime(this.inputDelay))
       .pipe(distinctUntilChanged())
-      .subscribe(text => this.onKeywordChange.next({
-        keyword: text.replace(/ /g, '').toLowerCase().trim(),
-        showLoading: true
-      }));
+      .subscribe(text => {
+        this.keyword = text.toLowerCase().trim();
+        this.onKeywordChange.next({ keyword: this.keyword, showLoading: true });
+        this.isShowChoices = true;
+      });
 
     this.input.addEventListener('focus', () => {
-      this.onKeywordChange.next({
-        keyword: this.input.value.replace(/ /g, '').toLowerCase().trim(),
-        showLoading: false
-      });
-      this.isShown = true;
+      this.isShowChoices = false;
+      const inputValue = this.input.value.toLowerCase().trim();
+      if (inputValue.length >= this.minChars) {
+        this.isShowChoices = true;
+        if (inputValue !== this.keyword) {
+          this.keyword = inputValue;
+          this.onKeywordChange.next({ keyword: this.keyword, showLoading: false });
+        }
+      }
     });
-    this.input.addEventListener('keydown', (evt) => setTimeout(() => this.keywordChanged$.next(evt.target.value.replace(/ /g, '').toLowerCase().trim())));
+
+    this.input.addEventListener('keydown', (evt) => {
+      if (evt.key === 'Enter') this.data = null;
+      setTimeout(() => this.keywordChanged$.next(evt.target.value));
+    });
   }
 
   @HostListener('document:click', ['$event.target'])
   onFocusOut(element): void {
     if (!this.input.contains(element) && !this._elRef.nativeElement.contains(element)) {
-      this.isShown = false;
+      this.isShowChoices = false;
     }
   }
 
   handleOnItemSelect(item: any): void {
     this.onItemSelect.emit(item);
-    this.onKeywordChange.next({
-      keyword: this.input.value.replace(/ /g, '').toLowerCase().trim(),
-      showLoading: false
-    });
+    this.data = null;
     this.input.focus();
   }
 }

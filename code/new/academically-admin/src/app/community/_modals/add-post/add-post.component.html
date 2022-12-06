@@ -37,7 +37,7 @@
             <button type="button" class="btn btn-light" (click)="onCloseClick()">
                 {{ 'Cancel' | localize }}
             </button>
-            <button type="button" class="btn btn-primary" (click)="handleCreatePost()">
+            <button type="button" class="btn btn-primary" (click)="handleCreatePost()" [disabled]="!isModelValid">
                 {{ 'Post' | localize }}
             </button>
         </div>

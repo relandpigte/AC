@@ -28,6 +28,7 @@ import { BottomScrollerDirective } from './directives/bottom-scroller.directive'
 import { SidebarCollapseDirective } from './directives/sidebar-collapse.directive';
 
 import { AutocompleteComponent } from '../../shared/components/autocomplete/autocomplete.component';
+import { PillPickerComponent } from '../../shared/components/pill-picker/pill-picker.component';
 import { CardClusterComponent } from '../../shared/components/card-cluster/card-cluster.component';
 import { SearchComponent } from '../../shared/components/search/search.component';
 import { ServiceCardComponent } from '../../shared/components/service-card/service-card.component';
@@ -64,7 +65,8 @@ import { CarouselModule } from 'primeng/carousel';
     CarouselWrapperComponent,
     FeaturedCarouselComponent,
     KeysPipe,
-    AutocompleteComponent
+    AutocompleteComponent,
+    PillPickerComponent
   ],
   imports: [
     CommonModule,
@@ -125,7 +127,8 @@ import { CarouselModule } from 'primeng/carousel';
     CarouselWrapperComponent,
     FeaturedCarouselComponent,
     KeysPipe,
-    AutocompleteComponent
+    AutocompleteComponent,
+    PillPickerComponent
   ],
 })
 export class AppSharedModule { }

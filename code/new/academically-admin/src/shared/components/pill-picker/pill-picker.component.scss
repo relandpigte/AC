@@ -1,0 +1,40 @@
+.pill-picker {
+    &-selected {
+        background: #EDF2F9;
+        border-radius: 4px;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 165.1%;
+        color: #3B516C;
+        padding: 2px 10px;
+
+        .close {
+            margin-left: 10px;
+            color: #95AAC9;
+        }
+    }
+
+    &-keyword {
+        &-prefix {
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 18px;
+            letter-spacing: -0.01em;
+            color: #12263F;
+            margin-right: 2px;
+        }
+
+        &-input {
+            height: 24px;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 18px;
+            letter-spacing: -0.01em;
+            color: #12263F;
+            border: none;
+            padding: 0 !important;
+            outline: none !important;
+        }
+    }
+
+}

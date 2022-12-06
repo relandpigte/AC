@@ -128,8 +128,8 @@
                         <div class="course-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
                     </div>
                     <div class="course-right flex-grow-1 d-flex flex-column justify-content-center">
-                        <div class="course-name">{{ item.name }}</div>
-                        <div class="course-composition">{{ getCourseComposition(item) }}</div>
+                        <div class="course-name line-clamp">{{ item.name }}</div>
+                        <div class="course-composition wrap-text">{{ getCourseComposition(item) }}</div>
                     </div>
                 </div>
             </ng-template>
@@ -152,9 +152,9 @@
                         <div class="event-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
                     </div>
                     <div class="event-right flex-grow-1 d-flex flex-column justify-content-center">
-                        <div *ngIf="item.eventDateTime || item.workshopDateTime" class="event-schedule">{{ 'EventsSchedule' | localize: ((item.eventDateTime ? item.eventDateTime : item.workshopDateTime) | date:'HH:mm, dd LLL, yyyy' ) }}</div>
-                        <div class="event-name">{{ item.name }}</div>
-                        <div class="event-description">{{ item.description }}</div>
+                        <div *ngIf="item.eventDateTime || item.workshopDateTime" class="event-schedule wrap-text">{{ 'EventsSchedule' | localize: ((item.eventDateTime ? item.eventDateTime : item.workshopDateTime) | date:'HH:mm, dd LLL, yyyy' ) }}</div>
+                        <div class="event-name wrap-text">{{ item.name }}</div>
+                        <div class="event-description wrap-text">{{ item.description }}</div>
                     </div>
                 </div>
             </ng-template>
@@ -165,8 +165,8 @@
                         <div class="tutorial-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
                     </div>
                     <div class="tutorial-right flex-grow-1 d-flex flex-column justify-content-center">
-                        <div class="tutorial-name">{{ item.name }}</div>
-                        <div class="tutorial-description">{{ item.description }}</div>
+                        <div class="tutorial-name line-clamp">{{ item.name }}</div>
+                        <div class="tutorial-description wrap-text">{{ item.description }}</div>
                     </div>
                 </div>
             </ng-template>

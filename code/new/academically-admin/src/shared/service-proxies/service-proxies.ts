@@ -7864,17 +7864,26 @@ export class DisciplineTaxonomiesServiceProxy {
 
     /**
      * @param keyword (optional) 
+     * @param searchStrategy (optional) 1 = StartsWith
+    
+    2 = Contains
+    
+    3 = EndsWith
      * @param excludeFollowing (optional) 
      * @param sorting (optional) 
      * @param take (optional) 
      * @return Success
      */
-    getAllLastChildren(keyword: string | undefined, excludeFollowing: boolean | undefined, sorting: string | undefined, take: number | undefined): Observable<DisciplineTaxonomyDto[]> {
+    getAllLastChildren(keyword: string | undefined, searchStrategy: KeywordSearchStrategy | undefined, excludeFollowing: boolean | undefined, sorting: string | undefined, take: number | undefined): Observable<DisciplineTaxonomyDto[]> {
         let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/GetAllLastChildren?";
         if (keyword === null)
             throw new Error("The parameter 'keyword' cannot be null.");
         else if (keyword !== undefined)
             url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (searchStrategy === null)
+            throw new Error("The parameter 'searchStrategy' cannot be null.");
+        else if (searchStrategy !== undefined)
+            url_ += "SearchStrategy=" + encodeURIComponent("" + searchStrategy) + "&";
         if (excludeFollowing === null)
             throw new Error("The parameter 'excludeFollowing' cannot be null.");
         else if (excludeFollowing !== undefined)
@@ -7938,6 +7947,96 @@ export class DisciplineTaxonomiesServiceProxy {
             }));
         }
         return _observableOf<DisciplineTaxonomyDto[]>(<any>null);
+    }
+
+    /**
+     * @param keyword (optional) 
+     * @param searchStrategy (optional) 1 = StartsWith
+    
+    2 = Contains
+    
+    3 = EndsWith
+     * @param excludeFollowing (optional) 
+     * @param take (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAllLastChildrenPaged(keyword: string | undefined, searchStrategy: KeywordSearchStrategy | undefined, excludeFollowing: boolean | undefined, take: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<DisciplineTaxonomyDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/DisciplineTaxonomies/GetAllLastChildrenPaged?";
+        if (keyword === null)
+            throw new Error("The parameter 'keyword' cannot be null.");
+        else if (keyword !== undefined)
+            url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (searchStrategy === null)
+            throw new Error("The parameter 'searchStrategy' cannot be null.");
+        else if (searchStrategy !== undefined)
+            url_ += "SearchStrategy=" + encodeURIComponent("" + searchStrategy) + "&";
+        if (excludeFollowing === null)
+            throw new Error("The parameter 'excludeFollowing' cannot be null.");
+        else if (excludeFollowing !== undefined)
+            url_ += "ExcludeFollowing=" + encodeURIComponent("" + excludeFollowing) + "&";
+        if (take === null)
+            throw new Error("The parameter 'take' cannot be null.");
+        else if (take !== undefined)
+            url_ += "Take=" + encodeURIComponent("" + take) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllLastChildrenPaged(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllLastChildrenPaged(<any>response_);
+                } catch (e) {
+                    return <Observable<DisciplineTaxonomyDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DisciplineTaxonomyDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllLastChildrenPaged(response: HttpResponseBase): Observable<DisciplineTaxonomyDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DisciplineTaxonomyDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DisciplineTaxonomyDtoPagedResultDto>(<any>null);
     }
 
     /**
@@ -12773,6 +12872,78 @@ export class PostsServiceProxy {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @param type (optional) 0 = QuickPost
+    
+    1 = Question
+    
+    2 = Discussion
+     * @return Success
+     */
+    getByUser(userId: number | undefined, type: PostType | undefined): Observable<PostDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/GetByUser?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (type === null)
+            throw new Error("The parameter 'type' cannot be null.");
+        else if (type !== undefined)
+            url_ += "type=" + encodeURIComponent("" + type) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByUser(<any>response_);
+                } catch (e) {
+                    return <Observable<PostDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PostDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByUser(response: HttpResponseBase): Observable<PostDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(PostDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PostDto[]>(<any>null);
     }
 }
 
@@ -37228,6 +37399,13 @@ export class IsTenantAvailableOutput implements IIsTenantAvailableOutput {
 export interface IIsTenantAvailableOutput {
     state: TenantAvailabilityState;
     tenantId: number | undefined;
+}
+
+/** 1 = StartsWith 2 = Contains 3 = EndsWith */
+export enum KeywordSearchStrategy {
+    StartsWith = 1,
+    Contains = 2,
+    EndsWith = 3,
 }
 
 /** 0 = Sequential 2 = Explicit 3 = Auto */

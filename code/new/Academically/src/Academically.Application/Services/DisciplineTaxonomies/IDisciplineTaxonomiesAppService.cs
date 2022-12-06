@@ -15,6 +15,7 @@ namespace Academically.Services.DisciplineTaxonomies
         Task<PagedResultDto<DisciplineTaxonomyDto>> GetAllPaged(PagedDisciplineTaxonomyResultRequestDto request);
         Task<IEnumerable<DisciplineTaxonomyDto>> Search(SearchDisciplineTaxonomyRequestDto request);
         Task<IEnumerable<DisciplineTaxonomyDto>> GetAllLastChildren(GetAllLastChildrenDisciplineTaxonomyRequestDto request);
+        Task<PagedResultDto<DisciplineTaxonomyDto>> GetAllLastChildrenPaged(PagedGetAllLastChildrenDisciplineTaxonomyRequestDto request);
         Task<IEnumerable<GetDisciplineTaxonomyChildrenCountDto>> GetChildrenCount(List<Guid> disciplineTaxonomyIds);
         Task<IEnumerable<GetDisciplineTaxonomyFollowerCountDto>> GetFollowerCount(List<Guid> disciplineTaxonomyIds);
     }
