@@ -44,6 +44,18 @@ export enum PostTabs {
     get canAddService(): boolean { return this.activeTab === PostTabs.QuickPost; }
 
     get isLoading(): boolean { return this.isCreating; }
+    get isModelValid(): boolean {
+        switch (this.model?.type) {
+            case PostType.QuickPost:
+                return this.isValidQuickPost();
+            case PostType.Question:
+                return this.isValidQuestion();
+            case PostType.Discussion:
+                return this.isValidDiscussion();
+            default:
+                return false;
+        }
+    }
 
     ngOnInit(): void {
     }
@@ -80,5 +92,17 @@ export enum PostTabs {
             this.onPostCreated.emit();
             this._postSub.hasNewPost(null);
         });
+    }
+
+    private isValidQuickPost(): boolean {
+        return this.model && this.model.information;
+    }
+
+    private isValidQuestion(): boolean {
+        return this.model && this.model.title && (this.model.topics?.length || this.model.newTopics?.length);
+    }
+
+    private isValidDiscussion(): boolean {
+        return this.model && this.model.title && this.model.information && (this.model.topics?.length || this.model.newTopics?.length);
     }
 }
