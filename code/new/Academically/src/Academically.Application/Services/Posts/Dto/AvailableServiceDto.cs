@@ -14,8 +14,6 @@ namespace Academically.Services.Posts.Dto
     [AutoMap(typeof(Article), typeof(Event), typeof(Course), typeof(Video), typeof(Coaching), typeof(Workshop))]
     public class AvailableServiceDto : FullAuditedEntityDto<Guid>
     {
-        public ServicesType ServiceType { get; set; }
-
         #region Event
         public int Type { get; set; }
         public int Status { get; set; }
