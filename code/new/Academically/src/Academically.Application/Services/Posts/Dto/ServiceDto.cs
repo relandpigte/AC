@@ -18,7 +18,7 @@ using System.Text;
 namespace Academically.Services.Posts.Dto
 {
     //[AutoMapFrom(typeof(Post))]
-    public class ServicesDto : FullAuditedEntityDto<Guid>
+    public class ServiceDto : FullAuditedEntityDto<Guid>
     {
         public ServicesType ServiceType { get; set; }
 
