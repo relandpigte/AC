@@ -229,7 +229,8 @@ namespace Academically.Services.Events
         public async Task<IEnumerable<AvailableServiceDto>> GetEventsByKeyword(string keyword)
         {
             return await Repository.GetAll()
-                             .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword))
+                             .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword)
+                                      || x.Id.ToString().Equals(keyword))
                              .AsNoTracking()
                              .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                              .ToListAsync();

@@ -289,7 +289,8 @@ namespace Academically.Services.Articles
         public async Task<IEnumerable<AvailableServiceDto>> GetArticlesByKeyword(string keyword)
         {
             return await _articlesRepository.GetAll().Where(w => w.ParentId == null && w.IsVisible && w.Status == ArticleStatus.Published)
-                                      .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Price.ToString().Contains(keyword))
+                                      .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Price.ToString().Contains(keyword)
+                                               || x.Id.ToString().Equals(keyword))
                                       .AsNoTracking()
                                       .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                                       .ToListAsync();

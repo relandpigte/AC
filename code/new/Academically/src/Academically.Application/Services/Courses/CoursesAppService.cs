@@ -301,7 +301,8 @@ namespace Academically.Services.Courses
         public async Task<IEnumerable<AvailableServiceDto>> GetCoursesByKeyword(string keyword)
         {
             return await Repository.GetAll().Where(w => w.IsVisible && w.Status == CourseStatus.Published)
-                             .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Subtitle.Contains(keyword) || x.Price.ToString().Contains(keyword))
+                             .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Subtitle.Contains(keyword) || x.Price.ToString().Contains(keyword)
+                                      || x.Id.ToString().Equals(keyword))
                              .AsNoTracking()
                              .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                              .ToListAsync();

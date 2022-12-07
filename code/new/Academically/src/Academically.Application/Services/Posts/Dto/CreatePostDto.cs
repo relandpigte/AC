@@ -13,6 +13,7 @@ namespace Academically.Services.Posts.Dto
         public string Title { get; set; }
         public string Content { get; set; }
         public Guid? SpaceId { get; set; }
+        public Guid? ServiceId { get; set; }
         public PostType Type { get; set; }
         public IEnumerable<Guid> Topics { get; set; }
         public IEnumerable<string> NewTopics { get; set; }

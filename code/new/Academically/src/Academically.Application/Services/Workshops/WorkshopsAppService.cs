@@ -77,7 +77,7 @@ namespace Academically.Services.Workshops
         {
             return await Repository.GetAll()
                              .WhereIf(!keyword.IsNullOrWhiteSpace(),
-                                x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword))
+                                x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword) || x.Id.ToString().Equals(keyword))
                              .AsNoTracking()
                              .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                              .ToListAsync();
