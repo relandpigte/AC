@@ -12,6 +12,7 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { ArticleDto, ArticleType, CoachingDto, CoachingType, CourseDto, CourseType, DocumentDto, EventDto, EventType, PricingType, UserDto, VideoDto, VideoType, WorkshopDto, WorkshopType } from './service-proxies/service-proxies';
 import * as _ from 'lodash';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Injectable()
 export abstract class AppComponentBase implements OnDestroy {
@@ -20,6 +21,7 @@ export abstract class AppComponentBase implements OnDestroy {
 
   localizationSourceName = AppConsts.localization.defaultLocalizationSourceName;
 
+  sanitizer: DomSanitizer;
   localization: LocalizationService;
   permission: PermissionCheckerService;
   feature: FeatureCheckerService;
@@ -36,6 +38,7 @@ export abstract class AppComponentBase implements OnDestroy {
   protected destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(injector: Injector) {
+    this.sanitizer = injector.get(DomSanitizer);
     this.localization = injector.get(LocalizationService);
     this.permission = injector.get(PermissionCheckerService);
     this.feature = injector.get(FeatureCheckerService);
