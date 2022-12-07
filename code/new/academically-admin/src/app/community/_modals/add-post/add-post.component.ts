@@ -51,8 +51,8 @@ export enum PostTabs {
     }
 
     get fileAttachment(): File { return this.model?.file; }
-    get fileAttachmentName(): string { return this.fileAttachment?.name; }
-    get fileAttachmentType(): string { return FileUtils.getFileExtension(this.fileAttachmentName).replace(/\./g, ''); }
+    get fileAttachmentName(): string { return FileUtils.getFileName(this.fileAttachment?.name); }
+    get fileAttachmentType(): string { return FileUtils.getFileExtension(this.fileAttachment?.name).replace(/\./g, ''); }
     get fileAttachmentSize(): string { return this.formatBytes(this.fileAttachment?.size, 2); }
     get isImageAttachment(): boolean { return this.imageExtensions.some(x => x === `.${FileUtils.getFileExtension(this.fileAttachment?.name)}`); }
     get isVideoAttachment(): boolean { return this.videoExtensions.some(x => x === `.${FileUtils.getFileExtension(this.fileAttachment?.name)}`); }

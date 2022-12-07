@@ -6,6 +6,10 @@ export class FileUtils {
         return URL.createObjectURL(file);
     }
 
+    static getFileName(fileName: string | null): string {
+        return fileName?.toLowerCase().split('.')?.[0] ?? '-';
+    }
+
     static getFileExtension(fileName: string | null): string {
         return fileName?.toLowerCase().split('.').pop() ?? '-';
     }
