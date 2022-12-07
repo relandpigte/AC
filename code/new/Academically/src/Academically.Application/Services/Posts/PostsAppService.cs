@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Academically.Authorization;
 using Academically.Domain.Entities;
@@ -13,8 +15,10 @@ using Academically.Domain.Services.Documents;
 using Academically.Services.Articles;
 using Academically.Services.Coachings;
 using Academically.Services.Courses;
+using Academically.Services.Events;
 using Academically.Services.Posts.Dto;
-using Academically.Services.Projects.Dto;
+using Academically.Services.Videos;
+using Academically.Services.Workshops;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,6 +35,9 @@ namespace Academically.Services.Posts
         private readonly IArticlesAppService _articlesAppService;
         private readonly ICoachingsAppService _coachingsAppService;
         private readonly ICoursesAppService _coursesAppService;
+        private readonly IVideosAppService _videosAppService;
+        private readonly IEventsAppService _eventsAppService;
+        private readonly IWorkshopsAppService _workshopsAppService;
 
         public PostsAppService(
             IRepository<Post, Guid> postRepository,
@@ -40,7 +47,10 @@ namespace Academically.Services.Posts
             IDocumentsDomainService documentsDomainService,
             IArticlesAppService articlesAppService,
             ICoachingsAppService coachingsAppService,
-            ICoursesAppService coursesAppService)
+            ICoursesAppService coursesAppService,
+            IVideosAppService videosAppService,
+            IEventsAppService eventsAppService,
+            IWorkshopsAppService workshopsAppService)
         {
             _postRepository = postRepository;
             _postTopicRepository = postTopicRepository;
@@ -50,6 +60,9 @@ namespace Academically.Services.Posts
             _articlesAppService = articlesAppService;
             _coachingsAppService = coachingsAppService;
             _coursesAppService = coursesAppService;
+            _videosAppService = videosAppService;
+            _eventsAppService = eventsAppService;
+            _workshopsAppService = workshopsAppService;
         }
 
 
@@ -166,11 +179,52 @@ namespace Academically.Services.Posts
             await _postRepository.DeleteAsync(id);
         }
 
-        public void GetAvailableServices()
+        public async Task<PagedResultDto<AvailableServiceDto>> GetAvailableServices(PagedGetAvailableServicesRequestDto request)
         {
-            var articles = _articlesAppService.GetAllArticles();
-            var courses = _coursesAppService.GetAllCourses();
-            var coaching = _coachingsAppService.GetAllCoaching();
+            var articles = await _articlesAppService.GetArticlesByKeyword(request.Keyword);
+            var courses = await _coursesAppService.GetCoursesByKeyword(request.Keyword);
+            var coaching = await _coachingsAppService.GetCoachingByKeyword(request.Keyword);
+            var videos = await _videosAppService.GetVideosByKeyword(request.Keyword);
+            var workshops = await _workshopsAppService.GetWorkshopByKeyword(request.Keyword);
+            var events = await _eventsAppService.GetEventsByKeyword(request.Keyword);
+
+            var query = articles.Union(courses)
+                                .Union(coaching)
+                                .Union(videos)
+                                .Union(workshops)
+                                .Union(events)
+                                .AsQueryable();
+
+            if (!request.Sorting.IsNullOrWhiteSpace())
+                query = Sort(query, request.Sorting);
+
+            if (request.Take.HasValue)
+                query = query.Take(request.Take.Value);
+
+            var totalCount = query.Count();
+
+            query = query.PageBy(request);
+
+            var availableServices = query.Select(x => ObjectMapper.Map<AvailableServiceDto>(x)).ToList();
+
+            return new PagedResultDto<AvailableServiceDto>()
+            {
+                TotalCount = totalCount,
+                Items = availableServices
+            }; 
+        }
+
+        private IQueryable<AvailableServiceDto> Sort(IQueryable<AvailableServiceDto> query, string sorting)
+        {
+            if (sorting.Contains("recent"))
+                query = query.OrderByDescending(x => x.CreationTime);
+            //else if (sorting.Contains("popular"))//todo
+            //    query = query.OrderByDescending(x => x); 
+            else if (sorting.Contains("foryou"))
+                query = query.OrderBy(x => x.Name);
+            else
+                query = query.OrderBy(x => x.Name);
+            return query;
         }
     }
 }

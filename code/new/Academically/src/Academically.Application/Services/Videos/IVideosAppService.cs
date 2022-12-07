@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Academically.Domain.Enums;
-using Academically.Services.Events.Dto;
+using Academically.Services.Posts.Dto;
 using Academically.Services.Videos.Dto;
 
 namespace Academically.Services.Videos
@@ -12,8 +11,8 @@ namespace Academically.Services.Videos
     public interface IVideosAppService
     {
         Task<PagedResultDto<VideoDto>> GetAll(PagedVideoResultRequestDto input);
-        IQueryable<VideoDto> GetAllVideos();
-        IQueryable<VideoDto> GetVideosByKeyword(string keyword);
+        Task<IEnumerable<AvailableServiceDto>> GetAllVideos();
+        Task<IEnumerable<AvailableServiceDto>> GetVideosByKeyword(string keyword);
         Task<PagedResultDto<VideoDto>> GetAllForSeries(PagedSeriesVideoResultRequestDto input);
         Task<IEnumerable<VideoDto>> GetOtherVideosForSeries(Guid id);
         Task<PagedResultDto<VideoDto>> GetAllForHome(PagedResultRequestDto input);

@@ -2,23 +2,17 @@
 using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
-using Academically.Services.Articles.Dto;
-using Academically.Services.Coachings.Dto;
 using Academically.Services.Documents.Dto;
-using Academically.Services.Events.Dto;
 using Academically.Services.SpokenLanugages.Dto;
 using Academically.Services.StudentCourses.Dto;
-using Academically.Services.Videos.Dto;
-using Academically.Services.Workshops.Dto;
 using Academically.Users.Dto;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Academically.Services.Posts.Dto
 {
-    //[AutoMapFrom(typeof(Post))]
-    public class ServiceDto : FullAuditedEntityDto<Guid>
+    [AutoMap(typeof(Article), typeof(Event), typeof(Course), typeof(Video), typeof(Coaching), typeof(Workshop))]
+    public class AvailableServiceDto : FullAuditedEntityDto<Guid>
     {
         public ServicesType ServiceType { get; set; }
 

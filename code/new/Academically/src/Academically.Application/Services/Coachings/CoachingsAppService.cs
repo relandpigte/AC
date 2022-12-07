@@ -6,6 +6,7 @@ using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
 using Abp.Timing;
@@ -20,6 +21,8 @@ using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
 using Academically.Services.Coachings.Dto;
 using Academically.Services.Explore.Dto;
+using Academically.Services.Posts.Dto;
+using Academically.Services.Services.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -260,21 +263,22 @@ namespace Academically.Services.Coachings
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IQueryable<CoachingDto> GetAllCoaching()
+        public async Task<IEnumerable<AvailableServiceDto>> GetAllCoaching()
         {
-            return Repository.GetAll().Where(w => w.ParentId == null && w.Visible.Value && w.Status == CoachingStatus.Published)
+            return await Repository.GetAll().Where(w => w.ParentId == null && w.Visible.Value && w.Status == CoachingStatus.Published)
                                  .AsNoTracking()
-                                 .Select(e => ObjectMapper.Map<CoachingDto>(e));
+                                 .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                                 .ToListAsync();
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IQueryable<CoachingDto> GetCoachingByKeyword(string keyword = "")
+        public async Task<IEnumerable<AvailableServiceDto>> GetCoachingByKeyword(string keyword)
         {
-            return Repository.GetAll().Where(w => w.ParentId == null && w.Visible.Value && w.Status == CoachingStatus.Published)
-                                  .WhereIf(!string.IsNullOrWhiteSpace(keyword), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Price.ToString().Contains(keyword))
+            return await Repository.GetAll().Where(w => w.ParentId == null && w.Visible.Value && w.Status == CoachingStatus.Published)
+                                  .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Price.ToString().Contains(keyword))
                                   .AsNoTracking()
-                                  .Select(e => ObjectMapper.Map<CoachingDto>(e));
-
+                                  .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                                  .ToListAsync();
         }
     }
 }
