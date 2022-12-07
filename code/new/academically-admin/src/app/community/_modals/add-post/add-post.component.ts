@@ -1,10 +1,12 @@
-import { ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
+import { SafeStyle, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { FileUtils } from '@shared/helpers/file-utils';
 import { PostsServiceProxy, PostType } from '@shared/service-proxies/service-proxies';
 import { CommunityPostService } from '@shared/services/community-post.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-
 import { finalize, takeUntil } from 'rxjs/operators';
 
 export enum PostTabs {
@@ -19,27 +21,40 @@ export enum PostTabs {
     styleUrls: ['./add-post.component.scss']
   })
   export class AddPostComponent extends AppComponentBase implements OnInit {
+    model: any;
 
     activeTab: string = PostTabs.QuickPost;
-    @Output() onPostCreated = new EventEmitter<any>();
-
-    model: any;
+    allowedExtensions: string[] = [];
 
     isCreating = false;
 
+    @ViewChild('fileInput') fileInput: ElementRef;
+    @Output() onPostCreated = new EventEmitter<any>();
+
+    private maxFileSize = fileUploadConfiguration.maxFileSize;
+    private fileExtensions = fileUploadConfiguration.allowedFileExtensions;
+    private imageExtensions = fileUploadConfiguration.allowedImageExtensions;
+
+    sanitizedImageAttachmentUrl: SafeUrl;
+
     constructor(
         injector: Injector,
-      private _router: Router,
-      private _modal: BsModalRef,
-      private _cdr: ChangeDetectorRef,
-      private _postSub: CommunityPostService,
-      private _postsService: PostsServiceProxy
+        private _router: Router,
+        private _modal: BsModalRef,
+        private _cdr: ChangeDetectorRef,
+        private _postSub: CommunityPostService,
+        private _postsService: PostsServiceProxy
     ) {
         super(injector)
     }
 
-    get canAddImage(): boolean { return this.activeTab === PostTabs.QuickPost; }
-    get canAddFile(): boolean { return this.activeTab === PostTabs.QuickPost; }
+    get fileAttachment(): File { return this.model?.file; }
+    get isImageAttachment(): boolean { return this.imageExtensions.some(x => x === `.${FileUtils.getFileExtension(this.fileAttachment?.name)}`); }
+    get isFileAttachment(): boolean { return this.fileExtensions.some(x => x === `.${FileUtils.getFileExtension(this.fileAttachment?.name)}`); }
+
+    get canAttachFile(): boolean { return this.model && !this.model.file; }
+    get canAddImage(): boolean { return this.canAttachFile && this.activeTab === PostTabs.QuickPost; }
+    get canAddFile(): boolean { return this.canAttachFile && this.activeTab === PostTabs.QuickPost; }
     get canAddEmoticons(): boolean { return this.activeTab === PostTabs.QuickPost; }
     get canAddService(): boolean { return this.activeTab === PostTabs.QuickPost; }
 
@@ -104,5 +119,31 @@ export enum PostTabs {
 
     private isValidDiscussion(): boolean {
         return this.model && this.model.title && this.model.information && (this.model.topics?.length || this.model.newTopics?.length);
+    }
+
+    handleImageUploadBtnClick(): void {
+        this.allowedExtensions = this.imageExtensions;
+        this.fileInput.nativeElement.click();
+    }
+
+    handleFileUploadBtnClick(): void {
+        this.allowedExtensions = this.fileExtensions;
+        this.fileInput.nativeElement.click();
+    }
+
+    removeAttachment(): void {
+        this.model.file = null;
+        this.fileInput.nativeElement.value = '';
+    }
+
+    onFileChange(e: any) {
+        const file = e.target.files[0] as File;
+        if (FileUtils.validateFile(this, [file], this.maxFileSize, 1, this.allowedExtensions)) {
+            this.model.file = file;
+            if (this.isImageAttachment) {
+                this.sanitizedImageAttachmentUrl = FileUtils.getSanitizedFileUrl(this, file);
+            }
+        }
+        this.fileInput.nativeElement.value = '';
     }
 }

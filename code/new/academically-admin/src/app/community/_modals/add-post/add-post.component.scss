@@ -29,6 +29,39 @@
 
     &-body {
         padding: 22px 24px 0 24px;
+
+        &-attachment {
+            margin-top: 10px;
+            margin-bottom: 10px;
+
+            &-remove {
+                position: absolute;
+                top: 14px;
+                right: 16px;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: #12263F;
+                color: white;
+                opacity: 0.5;
+                backdrop-filter: blur(2px);
+            }
+
+            &-image {
+                height: 279px;
+                border-radius: 10px;
+                overflow: hidden;
+
+                img {
+                    display: block;
+                    width: 100vw;
+                    height: 100vh;
+                    max-height: 100%;
+                    max-width: 100%;
+                    object-fit: cover;
+                }
+            }
+        }
     }
 
     &-footer {

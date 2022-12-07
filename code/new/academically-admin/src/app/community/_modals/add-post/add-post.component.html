@@ -24,12 +24,20 @@
         <app-community-post *ngIf="activeTab === 'quick-post'" type="quick-post" (onModelChange)="model=$event"></app-community-post>
         <app-community-post *ngIf="activeTab === 'add-question'" type="add-question" (onModelChange)="model=$event"></app-community-post>
         <app-community-post *ngIf="activeTab === 'add-discussion'" type="add-discussion" (onModelChange)="model=$event"></app-community-post>
+        <div *ngIf="fileAttachment" class="card-body-attachment position-relative">
+            <div class="card-body-attachment-remove d-flex justify-content-center align-items-center cursor-pointer" (click)="removeAttachment()">
+                <span class="fe fe-x"></span>
+            </div>
+            <div *ngIf="isImageAttachment" class="card-body-attachment-image">
+                <img [src]="sanitizedImageAttachmentUrl" />
+            </div>
+        </div>
     </div>
 
     <div class="card-footer d-flex justify-content-between">
         <div class="card-footer-left d-flex align-items-center flex-grow-1 gap-20">
-            <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddImage"><i class="fe fe-camera"></i></a>
-            <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddFile"><i class="fe fe-paperclip"></i></a>
+            <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddImage" (click)="handleImageUploadBtnClick()"><i class="fe fe-camera"></i></a>
+            <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddFile" (click)="handleFileUploadBtnClick()"><i class="fe fe-paperclip"></i></a>
             <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddEmoticons"><i class="fas fa-smile"></i></a>
             <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddService"><i class="fe fe-plus"></i></a>
         </div>
@@ -42,4 +50,8 @@
             </button>
         </div>
     </div>
+
+
   </div>
+
+<input #fileInput (change)="onFileChange($event)" [accept]="allowedExtensions" class="hidden position-absolute" type="file">
