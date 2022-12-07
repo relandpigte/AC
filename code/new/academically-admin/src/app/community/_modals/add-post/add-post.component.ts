@@ -29,13 +29,15 @@ export enum PostTabs {
     isCreating = false;
 
     @ViewChild('fileInput') fileInput: ElementRef;
+    @ViewChild('videoAttachment') videoAttachment: ElementRef;
     @Output() onPostCreated = new EventEmitter<any>();
 
     private maxFileSize = fileUploadConfiguration.maxFileSize;
-    private fileExtensions = fileUploadConfiguration.allowedFileExtensions;
     private imageExtensions = fileUploadConfiguration.allowedImageExtensions;
+    private videoExtensions = fileUploadConfiguration.videoExtensions;
+    private fileExtensions = fileUploadConfiguration.allowedFileExtensions;
 
-    sanitizedImageAttachmentUrl: SafeUrl;
+    sanitizedAttachmentUrl: SafeUrl;
 
     constructor(
         injector: Injector,
@@ -49,8 +51,17 @@ export enum PostTabs {
     }
 
     get fileAttachment(): File { return this.model?.file; }
+    get fileAttachmentName(): string { return this.fileAttachment?.name; }
+    get fileAttachmentType(): string { return FileUtils.getFileExtension(this.fileAttachmentName).replace(/\./g, ''); }
+    get fileAttachmentSize(): string { return this.formatBytes(this.fileAttachment?.size, 2); }
     get isImageAttachment(): boolean { return this.imageExtensions.some(x => x === `.${FileUtils.getFileExtension(this.fileAttachment?.name)}`); }
+    get isVideoAttachment(): boolean { return this.videoExtensions.some(x => x === `.${FileUtils.getFileExtension(this.fileAttachment?.name)}`); }
     get isFileAttachment(): boolean { return this.fileExtensions.some(x => x === `.${FileUtils.getFileExtension(this.fileAttachment?.name)}`); }
+    get isShowAttachmentInfo(): boolean { return !this.isImageAttachment; }
+    get isVideoPlaying(): boolean {
+        const video = this.videoAttachment?.nativeElement;
+        return video && !!(video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2);
+    }
 
     get canAttachFile(): boolean { return this.model && !this.model.file; }
     get canAddImage(): boolean { return this.canAttachFile && this.activeTab === PostTabs.QuickPost; }
@@ -122,13 +133,18 @@ export enum PostTabs {
     }
 
     handleImageUploadBtnClick(): void {
-        this.allowedExtensions = this.imageExtensions;
-        this.fileInput.nativeElement.click();
+        this.allowedExtensions = [...this.imageExtensions, ...this.videoExtensions];
+        setTimeout(() => this.fileInput.nativeElement.click());
     }
 
     handleFileUploadBtnClick(): void {
         this.allowedExtensions = this.fileExtensions;
-        this.fileInput.nativeElement.click();
+        setTimeout(() => this.fileInput.nativeElement.click());
+    }
+
+    togglePlayVideo(): void {
+        if (this.isVideoPlaying) this.videoAttachment.nativeElement.pause();
+        else this.videoAttachment.nativeElement.play()
     }
 
     removeAttachment(): void {
@@ -140,9 +156,7 @@ export enum PostTabs {
         const file = e.target.files[0] as File;
         if (FileUtils.validateFile(this, [file], this.maxFileSize, 1, this.allowedExtensions)) {
             this.model.file = file;
-            if (this.isImageAttachment) {
-                this.sanitizedImageAttachmentUrl = FileUtils.getSanitizedFileUrl(this, file);
-            }
+            this.sanitizedAttachmentUrl = FileUtils.getSanitizedFileUrl(this, file);
         }
         this.fileInput.nativeElement.value = '';
     }
