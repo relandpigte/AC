@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
@@ -19,5 +20,7 @@ namespace Academically.Services.Coachings
         Task<IEnumerable<CoachingPresenterDto>> GetAllPresenters(Guid id);
         Task<CoachingDto> UpdateSettingsAsync(UpdateCoachingSettingsDto input);
 
+        IQueryable<CoachingDto> GetAllCoaching();
+        IQueryable<CoachingDto> GetCoachingByKeyword(string keyword = "");
     }
 }

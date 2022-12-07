@@ -9,6 +9,7 @@ using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
 using Academically.Services.Articles.Dto;
 using Academically.Services.Explore.Dto;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -271,6 +272,23 @@ namespace Academically.Services.Articles
             }
             return topArticles;
 
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IQueryable<ArticleDto> GetAllArticles()
+        {
+            return _articlesRepository.GetAll().Where(w => w.ParentId == null && w.IsVisible && w.Status == ArticleStatus.Published)
+                                          .AsNoTracking()
+                                          .Select(e => ObjectMapper.Map<ArticleDto>(e));
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IQueryable<ArticleDto> GetArticlesByKeyword(string keyword = "")
+        {
+            return _articlesRepository.GetAll().Where(w => w.ParentId == null && w.IsVisible && w.Status == ArticleStatus.Published)
+                                           .WhereIf(!string.IsNullOrWhiteSpace(keyword), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Price.ToString().Contains(keyword))
+                                           .AsNoTracking()
+                                           .Select(e => ObjectMapper.Map<ArticleDto>(e));
         }
     }
 }
