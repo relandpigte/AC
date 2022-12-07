@@ -21,6 +21,7 @@ using Academically.Extensions;
 using Academically.Services.Coachings.Dto;
 using Academically.Services.Explore.Dto;
 using Academically.Users.Dto;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -258,5 +259,22 @@ namespace Academically.Services.Coachings
             return popularCoachings.GroupByPopularityPagedExt(input.MaxResultCount);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IQueryable<CoachingDto> GetAllCoaching()
+        {
+            return Repository.GetAll().Where(w => w.ParentId == null && w.Visible.Value && w.Status == CoachingStatus.Published)
+                                 .AsNoTracking()
+                                 .Select(e => ObjectMapper.Map<CoachingDto>(e));
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IQueryable<CoachingDto> GetCoachingByKeyword(string keyword = "")
+        {
+            return Repository.GetAll().Where(w => w.ParentId == null && w.Visible.Value && w.Status == CoachingStatus.Published)
+                                  .WhereIf(!string.IsNullOrWhiteSpace(keyword), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Price.ToString().Contains(keyword))
+                                  .AsNoTracking()
+                                  .Select(e => ObjectMapper.Map<CoachingDto>(e));
+
+        }
     }
 }

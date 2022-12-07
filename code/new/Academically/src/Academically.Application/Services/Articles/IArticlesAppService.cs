@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Academically.Domain.Enums;
@@ -17,6 +18,8 @@ namespace Academically.Services.Articles
 		Task<ArticleDto> UpdateSettings(UpdateArticleSettingsDto input);
 		Task UpdateStatusAsync(Guid id, ArticleStatus status);
 		Task DeleteAsync(Guid id);
+		IQueryable<ArticleDto> GetAllArticles();
+		IQueryable<ArticleDto> GetArticlesByKeyword(string keyword = "");
 	}
 }
 

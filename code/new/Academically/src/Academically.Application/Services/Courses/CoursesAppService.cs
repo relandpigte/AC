@@ -287,5 +287,22 @@ namespace Academically.Services.Courses
             await _courseSectionRepository.DeleteAsync(cs => cs.CourseId == input.Id);
             await Repository.DeleteAsync(input.Id);
         }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IQueryable<CourseDto> GetAllCourses()
+        {
+            return Repository.GetAll().Where(w => w.IsVisible && w.Status == CourseStatus.Published)
+                                      .AsNoTracking()
+                                      .Select(e => ObjectMapper.Map<CourseDto>(e));
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IQueryable<CourseDto> GetCoursesByKeyword(string keyword = "")
+        {
+            return Repository.GetAll().Where(w => w.IsVisible && w.Status == CourseStatus.Published)
+                        .WhereIf(!string.IsNullOrWhiteSpace(keyword), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Subtitle.Contains(keyword) || x.Price.ToString().Contains(keyword))
+                        .AsNoTracking()
+                        .Select(e => ObjectMapper.Map<CourseDto>(e));
+        }
     }
 }

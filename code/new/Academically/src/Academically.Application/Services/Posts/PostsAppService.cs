@@ -10,6 +10,9 @@ using Academically.Authorization;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
+using Academically.Services.Articles;
+using Academically.Services.Coachings;
+using Academically.Services.Courses;
 using Academically.Services.Posts.Dto;
 using Academically.Services.Projects.Dto;
 using Microsoft.AspNetCore.Mvc;
@@ -25,19 +28,28 @@ namespace Academically.Services.Posts
         private readonly IRepository<PostAttachment, Guid> _postAttachmentRepository;
         private readonly IRepository<DisciplineTaxonomy, Guid> _disciplineTaxonomyRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
+        private readonly IArticlesAppService _articlesAppService;
+        private readonly ICoachingsAppService _coachingsAppService;
+        private readonly ICoursesAppService _coursesAppService;
 
         public PostsAppService(
             IRepository<Post, Guid> postRepository,
             IRepository<PostTopic, Guid> postTopicRepository,
             IRepository<PostAttachment, Guid> postAttachmentRepository,
             IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomyRepository,
-            IDocumentsDomainService documentsDomainService)
+            IDocumentsDomainService documentsDomainService,
+            IArticlesAppService articlesAppService,
+            ICoachingsAppService coachingsAppService,
+            ICoursesAppService coursesAppService)
         {
             _postRepository = postRepository;
             _postTopicRepository = postTopicRepository;
             _postAttachmentRepository = postAttachmentRepository;
             _disciplineTaxonomyRepository = disciplineTaxonomyRepository;
             _documentsDomainService = documentsDomainService;
+            _articlesAppService = articlesAppService;
+            _coachingsAppService = coachingsAppService;
+            _coursesAppService = coursesAppService;
         }
 
 
@@ -152,6 +164,13 @@ namespace Academically.Services.Posts
         public async Task DeleteAsync(Guid id)
         {
             await _postRepository.DeleteAsync(id);
+        }
+
+        public void GetAvailableServices()
+        {
+            var articles = _articlesAppService.GetAllArticles();
+            var courses = _coursesAppService.GetAllCourses();
+            var coaching = _coachingsAppService.GetAllCoaching();
         }
     }
 }
