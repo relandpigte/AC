@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
@@ -12,8 +13,10 @@ using Academically.Domain.Services.Documents;
 using Academically.Domain.Views;
 using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
+using Academically.Services.Events.Dto;
 using Academically.Services.Explore.Dto;
 using Academically.Services.Videos.Dto;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Academically.Services.Videos
@@ -68,6 +71,24 @@ namespace Academically.Services.Videos
                 TotalCount = totalCount,
                 Items = videos,
             };
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IQueryable<VideoDto> GetAllVideos()
+        {
+            return _videosRepository.GetAll()
+                .AsNoTracking()
+                .Select(e => ObjectMapper.Map<VideoDto>(e));
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IQueryable<VideoDto> GetVideosByKeyword(string keyword)
+        {
+            return _videosRepository.GetAll()
+                .WhereIf(!keyword.IsNullOrWhiteSpace(),
+                    x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword))
+                .AsNoTracking()
+                .Select(e => ObjectMapper.Map<VideoDto>(e));
         }
 
         public async Task<PagedResultDto<VideoDto>> GetAllForSeries(PagedSeriesVideoResultRequestDto input)

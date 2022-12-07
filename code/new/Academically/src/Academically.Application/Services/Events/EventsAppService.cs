@@ -6,6 +6,7 @@ using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
 using Abp.Timing;
@@ -23,6 +24,9 @@ using Academically.Services.Events.Dto;
 using Academically.Services.Events.Enums;
 using Academically.Services.Explore.Dto;
 using Academically.Users.Dto;
+using AutoMapper.QueryableExtensions;
+using Castle.Core.Internal;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -211,6 +215,21 @@ namespace Academically.Services.Events
                     .ThenInclude(e => e.ProfilePictureDocument)
                 .Include(e => e.Children)
                 .FirstOrDefaultAsync();
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IQueryable<EventDto> GetAllEvents()
+        {
+            return Repository.GetAll().AsNoTracking().Select(e => ObjectMapper.Map<EventDto>(e));
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IQueryable<EventDto> GetEventsByKeyword(string keyword)
+        {
+            return Repository.GetAll()
+                .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword))
+                .AsNoTracking()
+                .Select(e => ObjectMapper.Map<EventDto>(e));
         }
 
         public async Task<PagedResultDto<EventDto>> GetEventSchedules(PagedEventScheduleResultRequestDto input)
