@@ -206,7 +206,22 @@ namespace Academically.Services.Posts
             query = query.PageBy(request);
 
             var availableServices = query.Select(x => ObjectMapper.Map<AvailableServiceDto>(x)).ToList();
-
+            foreach (var item in availableServices)
+            {
+                //ImageDocumentId: thumbnail for courses
+                var docId = item.ImageDocumentId.HasValue ? item.ImageDocumentId.Value : item.ThumbnailDocumentId.GetValueOrDefault();
+                if (docId != null)
+                {
+                    try
+                    {
+                        item.ThumbnailImageUrl = _documentsDomainService.GetFileUrlAsync(docId).Result;
+                    }
+                    catch (Exception)
+                    {
+                        item.ThumbnailImageUrl = string.Empty;
+                    }
+                }
+            }
             return new PagedResultDto<AvailableServiceDto>()
             {
                 TotalCount = totalCount,
