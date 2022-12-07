@@ -15,6 +15,7 @@ using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
 using Academically.Services.Events.Dto;
 using Academically.Services.Explore.Dto;
+using Academically.Services.Posts.Dto;
 using Academically.Services.Videos.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -74,21 +75,23 @@ namespace Academically.Services.Videos
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IQueryable<VideoDto> GetAllVideos()
+        public async Task<IEnumerable<AvailableServiceDto>> GetAllVideos()
         {
-            return _videosRepository.GetAll()
-                .AsNoTracking()
-                .Select(e => ObjectMapper.Map<VideoDto>(e));
+            return await _videosRepository.GetAll()
+                                    .AsNoTracking()
+                                    .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                                    .ToListAsync();
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IQueryable<VideoDto> GetVideosByKeyword(string keyword)
+        public async Task<IEnumerable<AvailableServiceDto>> GetVideosByKeyword(string keyword)
         {
-            return _videosRepository.GetAll()
-                .WhereIf(!keyword.IsNullOrWhiteSpace(),
-                    x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword))
-                .AsNoTracking()
-                .Select(e => ObjectMapper.Map<VideoDto>(e));
+            return await _videosRepository.GetAll()
+                                    .WhereIf(!keyword.IsNullOrWhiteSpace(),
+                                        x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword))
+                                    .AsNoTracking()
+                                    .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                                    .ToListAsync();
         }
 
         public async Task<PagedResultDto<VideoDto>> GetAllForSeries(PagedSeriesVideoResultRequestDto input)

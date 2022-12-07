@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Academically.Domain.Enums;
 using Academically.Services.Articles.Dto;
+using Academically.Services.Posts.Dto;
 
 namespace Academically.Services.Articles
 {
-	public interface IArticlesAppService
+    public interface IArticlesAppService
 	{
 		Task<PagedResultDto<ArticleDto>> GetAll(PagedArticleResultRequestDto input);
 		Task<PagedResultDto<ArticleDto>> GetAllForSeries(PagedSeriesArticleResultRequestDto input);
@@ -18,8 +19,8 @@ namespace Academically.Services.Articles
 		Task<ArticleDto> UpdateSettings(UpdateArticleSettingsDto input);
 		Task UpdateStatusAsync(Guid id, ArticleStatus status);
 		Task DeleteAsync(Guid id);
-		IQueryable<ArticleDto> GetAllArticles();
-		IQueryable<ArticleDto> GetArticlesByKeyword(string keyword = "");
+		Task<IEnumerable<AvailableServiceDto>> GetAllArticles();
+		Task<IEnumerable<AvailableServiceDto>> GetArticlesByKeyword(string keyword);
 	}
 }
 

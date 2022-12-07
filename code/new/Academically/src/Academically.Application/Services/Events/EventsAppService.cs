@@ -23,9 +23,8 @@ using Academically.Extensions;
 using Academically.Services.Events.Dto;
 using Academically.Services.Events.Enums;
 using Academically.Services.Explore.Dto;
+using Academically.Services.Posts.Dto;
 using Academically.Users.Dto;
-using AutoMapper.QueryableExtensions;
-using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -218,18 +217,22 @@ namespace Academically.Services.Events
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IQueryable<EventDto> GetAllEvents()
+        public async Task<IEnumerable<AvailableServiceDto>> GetAllEvents()
         {
-            return Repository.GetAll().AsNoTracking().Select(e => ObjectMapper.Map<EventDto>(e));
+            return await Repository.GetAll()
+                             .AsNoTracking()
+                             .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                             .ToListAsync();
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IQueryable<EventDto> GetEventsByKeyword(string keyword)
+        public async Task<IEnumerable<AvailableServiceDto>> GetEventsByKeyword(string keyword)
         {
-            return Repository.GetAll()
-                .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword))
-                .AsNoTracking()
-                .Select(e => ObjectMapper.Map<EventDto>(e));
+            return await Repository.GetAll()
+                             .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword))
+                             .AsNoTracking()
+                             .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                             .ToListAsync();
         }
 
         public async Task<PagedResultDto<EventDto>> GetEventSchedules(PagedEventScheduleResultRequestDto input)

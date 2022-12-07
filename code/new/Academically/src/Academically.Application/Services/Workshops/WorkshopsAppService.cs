@@ -4,24 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
-using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
-using Abp.Timing;
-using Abp.UI;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
-using Academically.Configuration;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
-using Academically.Services.Videos.Dto;
+using Academically.Services.Posts.Dto;
 using Academically.Services.Workshops.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace Academically.Services.Workshops
 {
@@ -70,21 +64,23 @@ namespace Academically.Services.Workshops
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IQueryable<WorkshopDto> GetAllWorkshop()
+        public async Task<IEnumerable<AvailableServiceDto>> GetAllWorkshop()
         {
-            return Repository.GetAll()
-                .AsNoTracking()
-                .Select(e => ObjectMapper.Map<WorkshopDto>(e));
+            return await Repository.GetAll()
+                             .AsNoTracking()
+                             .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                             .ToListAsync();
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IQueryable<WorkshopDto> GetWorkshopByKeyword(string keyword)
+        public async Task<IEnumerable<AvailableServiceDto>> GetWorkshopByKeyword(string keyword)
         {
-            return Repository.GetAll()
-                .WhereIf(!keyword.IsNullOrWhiteSpace(),
-                    x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword))
-                .AsNoTracking()
-                .Select(e => ObjectMapper.Map<WorkshopDto>(e));
+            return await Repository.GetAll()
+                             .WhereIf(!keyword.IsNullOrWhiteSpace(),
+                                x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword))
+                             .AsNoTracking()
+                             .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                             .ToListAsync();
         }
 
         public async Task UpdateStatusAsync(Guid id, WorkshopStatus status)

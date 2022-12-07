@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
@@ -9,6 +10,7 @@ using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
 using Academically.Services.Articles.Dto;
 using Academically.Services.Explore.Dto;
+using Academically.Services.Posts.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -275,20 +277,22 @@ namespace Academically.Services.Articles
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IQueryable<ArticleDto> GetAllArticles()
+        public async Task<IEnumerable<AvailableServiceDto>> GetAllArticles()
         {
-            return _articlesRepository.GetAll().Where(w => w.ParentId == null && w.IsVisible && w.Status == ArticleStatus.Published)
-                                          .AsNoTracking()
-                                          .Select(e => ObjectMapper.Map<ArticleDto>(e));
+            return await _articlesRepository.GetAll().Where(w => w.ParentId == null && w.IsVisible && w.Status == ArticleStatus.Published)
+                                      .AsNoTracking()
+                                      .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                                      .ToListAsync();
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IQueryable<ArticleDto> GetArticlesByKeyword(string keyword = "")
+        public async Task<IEnumerable<AvailableServiceDto>> GetArticlesByKeyword(string keyword)
         {
-            return _articlesRepository.GetAll().Where(w => w.ParentId == null && w.IsVisible && w.Status == ArticleStatus.Published)
-                                           .WhereIf(!string.IsNullOrWhiteSpace(keyword), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Price.ToString().Contains(keyword))
-                                           .AsNoTracking()
-                                           .Select(e => ObjectMapper.Map<ArticleDto>(e));
+            return await _articlesRepository.GetAll().Where(w => w.ParentId == null && w.IsVisible && w.Status == ArticleStatus.Published)
+                                      .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Price.ToString().Contains(keyword))
+                                      .AsNoTracking()
+                                      .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                                      .ToListAsync();
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Academically.Domain.Enums;
 using Academically.Services.Coachings.Dto;
+using Academically.Services.Posts.Dto;
 using Academically.Users.Dto;
 
 namespace Academically.Services.Coachings
@@ -19,8 +19,7 @@ namespace Academically.Services.Coachings
         Task<PagedResultDto<UserDto>> GetPresentersForInvite(PagedCoachingPresentersForInviteResultRequestDto input);
         Task<IEnumerable<CoachingPresenterDto>> GetAllPresenters(Guid id);
         Task<CoachingDto> UpdateSettingsAsync(UpdateCoachingSettingsDto input);
-
-        IQueryable<CoachingDto> GetAllCoaching();
-        IQueryable<CoachingDto> GetCoachingByKeyword(string keyword = "");
+        Task<IEnumerable<AvailableServiceDto>> GetAllCoaching();
+        Task<IEnumerable<AvailableServiceDto>> GetCoachingByKeyword(string keyword);
     }
 }
