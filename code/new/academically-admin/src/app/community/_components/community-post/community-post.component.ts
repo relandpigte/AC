@@ -30,11 +30,13 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnIn
 
     get title(): string { return this.data.title; }
     get description(): string { return this.data.content; }
+    get isOwner(): boolean {
+        return this.appSession.userId === this.data?.creatorUserId;
+    }
 
     ngOnInit(): void {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
     }
-
 }

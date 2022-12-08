@@ -17,10 +17,14 @@
                 <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="fe fe-more-vertical"></span>
                 </a>
-                <div class="dropdown-menu dropdown-menu-left">
+                <div *ngIf="isOwner" class="dropdown-menu dropdown-menu-left">
                   <div class="dropdown-item cursor-pointer">Edit post</div>
                   <div class="dropdown-item cursor-pointer pb-3">Delete post</div>
                   <div class="dropdown-item cursor-pointer border-top pt-3">Hide this post</div>
+                </div>
+                <div *ngIf="!isOwner" class="dropdown-menu dropdown-menu-left">
+                    <div class="dropdown-item cursor-pointer">Hide this post</div>
+                    <div class="dropdown-item cursor-pointer">Report post</div>
                 </div>
             </div>
         </div>
