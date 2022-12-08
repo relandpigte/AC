@@ -22,6 +22,7 @@ export enum PostTabs {
   })
   export class AddPostComponent extends AppComponentBase implements OnInit {
     model: any;
+    selectedService: AvailableServiceDto;
 
     activeTab: string = PostTabs.QuickPost;
     allowedExtensions: string[] = [];
@@ -139,6 +140,7 @@ export enum PostTabs {
 
     handleOnAddService(service: AvailableServiceDto): void {
         this.model.serviceId = service.id;
+        this.selectedService = service;
         this.isShowServicePicker = false;
     }
 
