@@ -103,7 +103,7 @@ export enum PostTabs {
             this.model.type,
             this.model.topics,
             this.model.newTopics,
-            [FileUtils.getFileParameter(this.model.file)]
+            [this.model.file].filter(x => x).map(f => FileUtils.getFileParameter(f))
         )
         .pipe(takeUntil(this.destroyed$))
         .pipe(finalize(() => this.isCreating = false))
