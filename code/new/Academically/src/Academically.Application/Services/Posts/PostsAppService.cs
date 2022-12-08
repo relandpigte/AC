@@ -3,15 +3,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Academically.Authorization;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
+using Academically.Services.Articles;
+using Academically.Services.Coachings;
+using Academically.Services.Courses;
+using Academically.Services.Events;
 using Academically.Services.Posts.Dto;
-using Academically.Services.Projects.Dto;
+using Academically.Services.Videos;
+using Academically.Services.Workshops;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,31 +32,59 @@ namespace Academically.Services.Posts
         private readonly IRepository<PostAttachment, Guid> _postAttachmentRepository;
         private readonly IRepository<DisciplineTaxonomy, Guid> _disciplineTaxonomyRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
+        private readonly IArticlesAppService _articlesAppService;
+        private readonly ICoachingsAppService _coachingsAppService;
+        private readonly ICoursesAppService _coursesAppService;
+        private readonly IVideosAppService _videosAppService;
+        private readonly IEventsAppService _eventsAppService;
+        private readonly IWorkshopsAppService _workshopsAppService;
 
         public PostsAppService(
             IRepository<Post, Guid> postRepository,
             IRepository<PostTopic, Guid> postTopicRepository,
             IRepository<PostAttachment, Guid> postAttachmentRepository,
             IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomyRepository,
-            IDocumentsDomainService documentsDomainService)
+            IDocumentsDomainService documentsDomainService,
+            IArticlesAppService articlesAppService,
+            ICoachingsAppService coachingsAppService,
+            ICoursesAppService coursesAppService,
+            IVideosAppService videosAppService,
+            IEventsAppService eventsAppService,
+            IWorkshopsAppService workshopsAppService)
         {
             _postRepository = postRepository;
             _postTopicRepository = postTopicRepository;
             _postAttachmentRepository = postAttachmentRepository;
             _disciplineTaxonomyRepository = disciplineTaxonomyRepository;
             _documentsDomainService = documentsDomainService;
+            _articlesAppService = articlesAppService;
+            _coachingsAppService = coachingsAppService;
+            _coursesAppService = coursesAppService;
+            _videosAppService = videosAppService;
+            _eventsAppService = eventsAppService;
+            _workshopsAppService = workshopsAppService;
         }
 
 
         public async Task<List<PostDto>> GetAllPosts(PostType? type)
         {
-            return await _postRepository.GetAll()
-                    .Include(p => p.CreatorUser)
-                    .Where(e => !e.IsDeleted)
-                    .WhereIf(type.HasValue, p => p.Type == type)
-                    .OrderByDescending(p => p.CreationTime)
-                    .Select(p => ObjectMapper.Map<PostDto>(p))
-                    .ToListAsync();
+            var result = await _postRepository.GetAll()
+                                  .Include(p => p.CreatorUser)
+                                  .Where(e => !e.IsDeleted)
+                                  .WhereIf(type.HasValue, p => p.Type == type)
+                                  .OrderByDescending(p => p.CreationTime)
+                                  .Select(p => ObjectMapper.Map<PostDto>(p))
+                                  .ToListAsync();
+            foreach (var item in result)
+            {
+                if (item.ServiceId.HasValue)
+                {
+                    var param = new PagedGetAvailableServicesRequestDto() { Keyword = item.ServiceId.Value.ToString() };
+                    item.Service = this.GetAvailableServices(param).Result.Items.FirstOrDefault();
+                }
+            }
+
+            return result;
         }
 
         [AbpAuthorize(PermissionNames.Pages_Posts_Create)]
@@ -118,13 +153,24 @@ namespace Academically.Services.Posts
 
         public async Task<List<PostDto>> GetByUser(long userId, PostType? type)
         {
-            return await _postRepository.GetAll()
+            var result = await _postRepository.GetAll()
                 .Include(p => p.CreatorUser)
                 .WhereIf(type.HasValue, p => p.Type == type)
                 .Where(p => p.CreatorUserId == userId)
                 .OrderByDescending(p => p.CreationTime)
                 .Select(p => ObjectMapper.Map<PostDto>(p))
                 .ToListAsync();
+
+            foreach (var item in result)
+            {
+                if (item.ServiceId.HasValue)
+                {
+                    var param = new PagedGetAvailableServicesRequestDto() { Keyword = item.ServiceId.Value.ToString() };
+                    item.Service = this.GetAvailableServices(param).Result.Items.FirstOrDefault();
+                }
+            }
+
+            return result;
         }
 
         public async Task<PostDto> UpdateAsync(UpdatePostDto input)
@@ -152,6 +198,69 @@ namespace Academically.Services.Posts
         public async Task DeleteAsync(Guid id)
         {
             await _postRepository.DeleteAsync(id);
+        }
+
+        public async Task<PagedResultDto<AvailableServiceDto>> GetAvailableServices(PagedGetAvailableServicesRequestDto request)
+        {
+            var articles = await _articlesAppService.GetArticlesByKeyword(request.Keyword);
+            var courses = await _coursesAppService.GetCoursesByKeyword(request.Keyword);
+            var coaching = await _coachingsAppService.GetCoachingByKeyword(request.Keyword);
+            var videos = await _videosAppService.GetVideosByKeyword(request.Keyword);
+            var workshops = await _workshopsAppService.GetWorkshopByKeyword(request.Keyword);
+            var events = await _eventsAppService.GetEventsByKeyword(request.Keyword);
+
+            var query = articles.Union(courses)
+                                .Union(coaching)
+                                .Union(videos)
+                                .Union(workshops)
+                                .Union(events)
+                                .AsQueryable();
+
+            if (!request.Sorting.IsNullOrWhiteSpace())
+                query = Sort(query, request.Sorting);
+
+            if (request.Take.HasValue)
+                query = query.Take(request.Take.Value);
+
+            var totalCount = query.Count();
+
+            query = query.PageBy(request);
+
+            var availableServices = query.Select(x => ObjectMapper.Map<AvailableServiceDto>(x)).ToList();
+            foreach (var item in availableServices)
+            {
+                //ImageDocumentId: thumbnail for courses
+                var docId = item.ImageDocumentId.HasValue ? item.ImageDocumentId.Value : item.ThumbnailDocumentId.GetValueOrDefault();
+                if (docId != null)
+                {
+                    try
+                    {
+                        item.ThumbnailImageUrl = _documentsDomainService.GetFileUrlAsync(docId).Result;
+                    }
+                    catch (Exception)
+                    {
+                        item.ThumbnailImageUrl = string.Empty;
+                    }
+                }
+            }
+            return new PagedResultDto<AvailableServiceDto>()
+            {
+                TotalCount = totalCount,
+                Items = availableServices
+            }; 
+        }
+
+        private IQueryable<AvailableServiceDto> Sort(IQueryable<AvailableServiceDto> query, string sorting)
+        {
+            if (sorting.Contains("recent"))
+                query = query.OrderByDescending(x => x.CreationTime);
+            //else if (sorting.Contains("popular"))//todo
+            //    query = query.OrderByDescending(x => x); 
+            else if (sorting.Contains("foryou"))
+                query = query.OrderBy(x => x.Name);
+            else
+                query = query.OrderBy(x => x.Name);
+            return query;
         }
     }
 }

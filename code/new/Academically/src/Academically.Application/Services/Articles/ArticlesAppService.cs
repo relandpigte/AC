@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
@@ -9,6 +10,8 @@ using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
 using Academically.Services.Articles.Dto;
 using Academically.Services.Explore.Dto;
+using Academically.Services.Posts.Dto;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -271,6 +274,26 @@ namespace Academically.Services.Articles
             }
             return topArticles;
 
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IEnumerable<AvailableServiceDto>> GetAllArticles()
+        {
+            return await _articlesRepository.GetAll().Where(w => w.ParentId == null && w.IsVisible && w.Status == ArticleStatus.Published)
+                                      .AsNoTracking()
+                                      .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                                      .ToListAsync();
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IEnumerable<AvailableServiceDto>> GetArticlesByKeyword(string keyword)
+        {
+            return await _articlesRepository.GetAll().Where(w => w.ParentId == null && w.IsVisible && w.Status == ArticleStatus.Published)
+                                      .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Price.ToString().Contains(keyword)
+                                               || x.Id.ToString().Equals(keyword))
+                                      .AsNoTracking()
+                                      .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                                      .ToListAsync();
         }
     }
 }

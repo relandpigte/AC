@@ -4,21 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using Abp.Configuration;
 using Abp.Domain.Repositories;
-using Abp.Linq.Expressions;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
-using Abp.Timing;
-using Abp.UI;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
-using Academically.Configuration;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Services.Posts.Dto;
 using Academically.Services.Workshops.Dto;
 using Academically.Users.Dto;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace Academically.Services.Workshops
 {
@@ -64,6 +61,26 @@ namespace Academically.Services.Workshops
                 .Include(e => e.CreatorUser)
                     .ThenInclude(e => e.ProfilePictureDocument)
                 .FirstOrDefaultAsync();
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IEnumerable<AvailableServiceDto>> GetAllWorkshop()
+        {
+            return await Repository.GetAll()
+                             .AsNoTracking()
+                             .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                             .ToListAsync();
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IEnumerable<AvailableServiceDto>> GetWorkshopByKeyword(string keyword)
+        {
+            return await Repository.GetAll()
+                             .WhereIf(!keyword.IsNullOrWhiteSpace(),
+                                x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword) || x.Id.ToString().Equals(keyword))
+                             .AsNoTracking()
+                             .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                             .ToListAsync();
         }
 
         public async Task UpdateStatusAsync(Guid id, WorkshopStatus status)

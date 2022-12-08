@@ -6,6 +6,7 @@ using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
 using Abp.Timing;
@@ -22,7 +23,9 @@ using Academically.Extensions;
 using Academically.Services.Events.Dto;
 using Academically.Services.Events.Enums;
 using Academically.Services.Explore.Dto;
+using Academically.Services.Posts.Dto;
 using Academically.Users.Dto;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -211,6 +214,26 @@ namespace Academically.Services.Events
                     .ThenInclude(e => e.ProfilePictureDocument)
                 .Include(e => e.Children)
                 .FirstOrDefaultAsync();
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IEnumerable<AvailableServiceDto>> GetAllEvents()
+        {
+            return await Repository.GetAll()
+                             .AsNoTracking()
+                             .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                             .ToListAsync();
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IEnumerable<AvailableServiceDto>> GetEventsByKeyword(string keyword)
+        {
+            return await Repository.GetAll()
+                             .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword)
+                                      || x.Id.ToString().Equals(keyword))
+                             .AsNoTracking()
+                             .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                             .ToListAsync();
         }
 
         public async Task<PagedResultDto<EventDto>> GetEventSchedules(PagedEventScheduleResultRequestDto input)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
@@ -12,8 +13,11 @@ using Academically.Domain.Services.Documents;
 using Academically.Domain.Views;
 using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
+using Academically.Services.Events.Dto;
 using Academically.Services.Explore.Dto;
+using Academically.Services.Posts.Dto;
 using Academically.Services.Videos.Dto;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Academically.Services.Videos
@@ -68,6 +72,26 @@ namespace Academically.Services.Videos
                 TotalCount = totalCount,
                 Items = videos,
             };
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IEnumerable<AvailableServiceDto>> GetAllVideos()
+        {
+            return await _videosRepository.GetAll()
+                                    .AsNoTracking()
+                                    .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                                    .ToListAsync();
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IEnumerable<AvailableServiceDto>> GetVideosByKeyword(string keyword)
+        {
+            return await _videosRepository.GetAll()
+                                    .WhereIf(!keyword.IsNullOrWhiteSpace(),
+                                        x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword) || x.Id.ToString().Equals(keyword))
+                                    .AsNoTracking()
+                                    .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                                    .ToListAsync();
         }
 
         public async Task<PagedResultDto<VideoDto>> GetAllForSeries(PagedSeriesVideoResultRequestDto input)

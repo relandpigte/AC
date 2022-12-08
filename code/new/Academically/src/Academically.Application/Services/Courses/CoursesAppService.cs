@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
 using Academically.Authorization;
@@ -19,7 +19,7 @@ using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
 using Academically.Services.Courses.Dto;
 using Academically.Services.Explore.Dto;
-using Academically.Services.Videos.Dto;
+using Academically.Services.Posts.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -286,6 +286,26 @@ namespace Academically.Services.Courses
             await _studentCourseRepository.DeleteAsync(sc => sc.CourseId == input.Id);
             await _courseSectionRepository.DeleteAsync(cs => cs.CourseId == input.Id);
             await Repository.DeleteAsync(input.Id);
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IEnumerable<AvailableServiceDto>> GetAllCourses()
+        {
+            return await Repository.GetAll().Where(w => w.IsVisible && w.Status == CourseStatus.Published)
+                                      .AsNoTracking()
+                                      .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                                      .ToListAsync();
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IEnumerable<AvailableServiceDto>> GetCoursesByKeyword(string keyword)
+        {
+            return await Repository.GetAll().Where(w => w.IsVisible && w.Status == CourseStatus.Published)
+                             .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Subtitle.Contains(keyword) || x.Price.ToString().Contains(keyword)
+                                      || x.Id.ToString().Equals(keyword))
+                             .AsNoTracking()
+                             .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                             .ToListAsync();
         }
     }
 }
