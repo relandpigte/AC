@@ -37,6 +37,11 @@
             <div *ngIf="isVideoAttachment" class="card-body-attachment-video d-flex flex-wrap justify-content-center align-content-center align-items-center cursor-pointer" (click)="togglePlayVideo()">
                 <video #videoAttachment [src]="sanitizedAttachmentUrl" class="bg-light" loop playsinline></video>
             </div>
+            <div *ngIf="!isImageAttachment && !isVideoAttachment" class="card-body-attachment-file d-flex justify-content-center align-items-start">
+                <div class="card d-flex justify-content-center align-items-center p-5 mt-4">
+                    <span class="fas fa-6x fa-file"></span>
+                </div>
+            </div>
             <div *ngIf="isShowAttachmentInfo" class="card-body-attachment-info d-flex flex-column justify-content-center">
                 <div class="card-body-attachment-info-name">{{ fileAttachmentName }}</div>
                 <div class="card-body-attachment-info-details d-flex flex-row align-content-center gap-5">
