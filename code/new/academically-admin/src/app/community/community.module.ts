@@ -11,6 +11,7 @@ import { MoreTopicsComponent } from './_components/more-topics/more-topics.compo
 import { CommunitySideCardComponent } from './_components/side-card/side-card.component';
 import { CommunityPostComponent } from './_components/post/post.component';
 import { ServicePickerComponent } from './_components/service-picker/service-picker.component';
+import { ServicePreviewComponent } from './_components/service-preview/service-preview.component';
 import { AddTopicsComponent } from './_modals/add-topics/add-topics.component';
 import { AddPostComponent } from './_modals/add-post/add-post.component';
 
@@ -25,7 +26,8 @@ import { AddPostComponent } from './_modals/add-post/add-post.component';
     CommunityPostComponent,
     FollowingTopicsComponent,
     MoreTopicsComponent,
-    ServicePickerComponent
+    ServicePickerComponent,
+    ServicePreviewComponent
   ],
   imports: [
     CommonModule,

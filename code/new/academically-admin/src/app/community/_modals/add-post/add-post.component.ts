@@ -53,11 +53,11 @@ export enum PostTabs {
 
     get fileAttachment(): File { return this.model?.file; }
 
-    get canAttachFile(): boolean { return this.model && !this.model.file; }
-    get canAddImage(): boolean { return this.canAttachFile && this.activeTab === PostTabs.QuickPost; }
-    get canAddFile(): boolean { return this.canAttachFile && this.activeTab === PostTabs.QuickPost; }
+    get canAddAttachment(): boolean { return this.model && !this.model.file && !this.model.serviceId; }
+    get canAddImage(): boolean { return this.canAddAttachment && this.activeTab === PostTabs.QuickPost; }
+    get canAddFile(): boolean { return this.canAddAttachment && this.activeTab === PostTabs.QuickPost; }
     get canAddEmoticons(): boolean { return this.activeTab === PostTabs.QuickPost; }
-    get canAddService(): boolean { return this.activeTab === PostTabs.QuickPost; }
+    get canAddService(): boolean { return this.canAddAttachment && this.activeTab === PostTabs.QuickPost; }
 
     get isLoading(): boolean { return this.isCreating; }
     get isModelValid(): boolean {
@@ -87,6 +87,9 @@ export enum PostTabs {
 
     setActiveTab(tab: string): void {
         this.activeTab = tab;
+        this.model.file = null;
+        this.model.serviceId = null;
+        this.selectedService = null;
         this._cdr.detectChanges();
     }
 
@@ -136,6 +139,11 @@ export enum PostTabs {
     handleRemoveAttachment(): void {
         this.model.file = null;
         this.fileInput.nativeElement.value = '';
+    }
+
+    handleRemoveService(): void {
+        this.model.serviceId = null;
+        this.selectedService = null;
     }
 
     handleOnAddService(service: AvailableServiceDto): void {

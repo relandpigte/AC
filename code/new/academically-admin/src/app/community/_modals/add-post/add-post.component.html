@@ -25,7 +25,9 @@
         <app-community-post *ngIf="activeTab === 'add-question'" type="add-question" (onModelChange)="model=$event"></app-community-post>
         <app-community-post *ngIf="activeTab === 'add-discussion'" type="add-discussion" (onModelChange)="model=$event"></app-community-post>
         <app-attachment-preview *ngIf="fileAttachment" [file]="fileAttachment" (onRemove)="handleRemoveAttachment()"></app-attachment-preview>
+        <app-service-preview *ngIf="selectedService" [service]="selectedService" (onRemove)="handleRemoveService()"></app-service-preview>
         <app-service-picker
+            [selectedService]="selectedService"
             [class.show]="isShowServicePicker"
             (onClose)="isShowServicePicker = false"
             (onBack)="isShowServicePicker = false"

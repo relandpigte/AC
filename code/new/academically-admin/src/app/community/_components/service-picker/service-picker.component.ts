@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { AvailableServiceDto, PostsServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -13,13 +13,13 @@ import * as _ from 'lodash';
     animations: [appModuleAnimation()]
 })
 export class ServicePickerComponent extends AppComponentBase implements OnInit {
+    @Input() selectedService: AvailableServiceDto;
 
     @Output() onBack = new EventEmitter<any>();
     @Output() onClose = new EventEmitter<any>();
     @Output() onAdd = new EventEmitter<any>();
 
     availableServices: AvailableServiceDto[];
-    selectedService: AvailableServiceDto;
 
     searchFilter: string;
 
