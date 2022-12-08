@@ -1,0 +1,59 @@
+<div class="card service-picker h-100">
+    <div class="card-header">
+        <div class="service-picker-header d-flex flex-row align-items-center gap-20">
+            <span class="fe fe-chevron-left service-picker-header-back" (click)="handleOnBack()"></span>
+            <div class="service-picker-header-title flex-grow-1">Add to your post</div>
+            <span class="fe fe-x service-picker-header-close cursor-pointer" (click)="handleOnClose()"></span>
+        </div>
+    </div>
+    <div class="card-body service-picker-body d-flex p-0 h-0 slick-scroll">
+        <div class="flex-grow-1">
+            <app-search
+                [data]="availableServices"
+                [options]="{
+                    maxItems: 10,
+                    placeholder: 'Search the service you would like to share',
+                    hasDivider: false
+                }"
+                [itemTemplate]="serviceItemTemplate"
+                [itemLoadingTemplate]="serviceItemLoadingTemplate"
+                [loading]="loading"
+                (onSearch)="handleOnSearch($event)"
+            ></app-search>
+        </div>
+    </div>
+    <div class="card-footer service-picker-footer d-flex justify-content-end align-items-center gap-20">
+        <button type="button" class="btn btn-light" (click)="handleOnBack()">
+            {{ 'Back' | localize }}
+        </button>
+        <button type="button" class="btn btn-primary" (click)="handleOnAdd()" [disabled]="!selectedService">
+            {{ 'Add' | localize }}
+        </button>
+    </div>
+</div>
+
+<ng-template #serviceItemTemplate let-item="item">
+    <div class="service-row d-flex flex-row gap-15 cursor-pointer" [class.selected]="isServiceSelected(item)" (click)="setSelectedService(item)">
+        <div class="service-row-left d-flex flex-column justify-content-center gap-0">
+            <div class="service-row-left-image">
+                <img [src]="item.thumbnailImageUrl ? item.thumbnailImageUrl : 'assets/img/img-placeholder.png'" />
+            </div>
+        </div>
+        <div class="service-row-right flex-grow-1 d-flex flex-column justify-content-center">
+            <div class="service-row-right-name">{{ item.name }}</div>
+            <div class="service-row-right-type">Course</div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #serviceItemLoadingTemplate>
+    <div class="topic-row d-flex flex-row">
+        <div class="topic-row-left d-flex flex-column flex-grow-1 justify-content-center gap-5">
+            <div class="box-shimmer-bar"  [style.width.%]="55" [style.height.px]="18"></div>
+            <div class="box-shimmer-bar"  [style.width.%]="15" [style.height.px]="6"></div>
+        </div>
+        <div class="topic-row-right d-flex flex-row align-items-center gap-20">
+            <div class="box-shimmer-bar action"  [style.width.px]="120" [style.height.px]="40"></div>
+        </div>
+    </div>
+</ng-template>

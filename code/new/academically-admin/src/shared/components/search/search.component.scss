@@ -38,7 +38,7 @@
     }
 
     &-list {
-        &-item {
+        &.divided &-item {
             &:not(:first-child) {
                 border-top: 1px solid #EDF2F9;
             }

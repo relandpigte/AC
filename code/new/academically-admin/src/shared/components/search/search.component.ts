@@ -11,6 +11,8 @@ export interface SearchOptions {
     searchDelay?: number;
     searchHeight?: number;
     maxItems?: number;
+    placeholder?: string;
+    hasDivider?: boolean;
 };
 
 export interface SortOption {

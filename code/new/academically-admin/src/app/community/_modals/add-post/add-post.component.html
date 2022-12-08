@@ -25,6 +25,12 @@
         <app-community-post *ngIf="activeTab === 'add-question'" type="add-question" (onModelChange)="model=$event"></app-community-post>
         <app-community-post *ngIf="activeTab === 'add-discussion'" type="add-discussion" (onModelChange)="model=$event"></app-community-post>
         <app-attachment-preview *ngIf="fileAttachment" [file]="fileAttachment" (onRemove)="handleRemoveAttachment()"></app-attachment-preview>
+        <app-service-picker
+            [class.show]="isShowServicePicker"
+            (onClose)="isShowServicePicker = false"
+            (onBack)="isShowServicePicker = false"
+            (onAdd)="handleOnAddService($event)"
+        ></app-service-picker>
     </div>
 
     <div class="card-footer d-flex justify-content-between">
@@ -32,7 +38,7 @@
             <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddImage" (click)="handleImageUploadBtnClick()"><i class="fe fe-camera"></i></a>
             <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddFile" (click)="handleFileUploadBtnClick()"><i class="fe fe-paperclip"></i></a>
             <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddEmoticons"><i class="fas fa-smile"></i></a>
-            <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddService"><i class="fe fe-plus"></i></a>
+            <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddService" (click)="isShowServicePicker = !isShowServicePicker"><i class="fe fe-plus"></i></a>
         </div>
         <div class="card-footer-right d-flex align-items-center gap-20">
             <button type="button" class="btn btn-light" (click)="onCloseClick()">
