@@ -12793,13 +12793,14 @@ export class PostsServiceProxy {
      * @param title (optional) 
      * @param content (optional) 
      * @param spaceId (optional) 
+     * @param serviceId (optional) 
      * @param type (optional) 
      * @param topics (optional) 
      * @param newTopics (optional) 
      * @param attachments (optional) 
      * @return Success
      */
-    create(title: string | undefined, content: string | undefined, spaceId: string | undefined, type: PostType | undefined, topics: string[] | undefined, newTopics: string[] | undefined, attachments: FileParameter[] | undefined): Observable<void> {
+    create(title: string | undefined, content: string | undefined, spaceId: string | undefined, serviceId: string | undefined, type: PostType | undefined, topics: string[] | undefined, newTopics: string[] | undefined, attachments: FileParameter[] | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Posts/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -12816,6 +12817,10 @@ export class PostsServiceProxy {
             // do nothing
         } else
             content_.append("SpaceId", spaceId.toString());
+        if (serviceId === null || serviceId === undefined) {
+            // do nothing
+        } else
+            content_.append("ServiceId", serviceId.toString());
         if (type === null || type === undefined) {
             // do nothing
         } else
@@ -13052,6 +13057,82 @@ export class PostsServiceProxy {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param keyword (optional) 
+     * @param take (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAvailableServices(keyword: string | undefined, take: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<AvailableServiceDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/GetAvailableServices?";
+        if (keyword === null)
+            throw new Error("The parameter 'keyword' cannot be null.");
+        else if (keyword !== undefined)
+            url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (take === null)
+            throw new Error("The parameter 'take' cannot be null.");
+        else if (take !== undefined)
+            url_ += "Take=" + encodeURIComponent("" + take) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAvailableServices(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAvailableServices(<any>response_);
+                } catch (e) {
+                    return <Observable<AvailableServiceDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AvailableServiceDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAvailableServices(response: HttpResponseBase): Observable<AvailableServiceDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AvailableServiceDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AvailableServiceDtoPagedResultDto>(<any>null);
     }
 }
 
@@ -28799,6 +28880,644 @@ export enum AutoAuthenticateType {
     Event = 0,
 }
 
+export class AvailableServiceDto implements IAvailableServiceDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    type: number;
+    status: number;
+    replayType: number | undefined;
+    frequencyType: number | undefined;
+    eventDateTime: moment.Moment | undefined;
+    duration: number;
+    recursionType: number;
+    timesPerDay: number | undefined;
+    sessionTimes: string | undefined;
+    sessionDaysOfWeek: string | undefined;
+    sessionDaysOfMonth: string | undefined;
+    autoAdmitAttendees: boolean;
+    subtitle: string | undefined;
+    isOpen: boolean;
+    imageDocumentId: string | undefined;
+    currencyId: string | undefined;
+    numberOfPlaces: number | undefined;
+    startDate: moment.Moment | undefined;
+    startTime: string | undefined;
+    endTime: string | undefined;
+    commentsVisibility: CommentSetting;
+    commentsNeedAdminApproval: boolean | undefined;
+    courseImageUrl: string | undefined;
+    imageDocument: DocumentDto;
+    studentCourses: StudentCourseDto[] | undefined;
+    modules: number;
+    lessons: number;
+    progress: number;
+    units: number;
+    documentId: string | undefined;
+    commentModeration: boolean;
+    customUrl: string | undefined;
+    category: string | undefined;
+    videoCount: number;
+    videoLength: number;
+    rating: number;
+    reviews: number;
+    document: DocumentDto;
+    likeCount: number;
+    articlesCount: number;
+    workshopDateTime: moment.Moment | undefined;
+    numberOfAttendees: number | undefined;
+    parentId: string | undefined;
+    name: string | undefined;
+    description: string | undefined;
+    categories: string | undefined;
+    thumbnailDocumentId: string | undefined;
+    languageId: string | undefined;
+    pricingType: PricingType;
+    price: number | undefined;
+    endDate: moment.Moment | undefined;
+    isVisible: boolean;
+    questionsEnabled: boolean | undefined;
+    questionType: QuestionType;
+    attendeesCanUpvote: boolean | undefined;
+    attendeesCanRespond: boolean | undefined;
+    chatEnabled: boolean | undefined;
+    customWebinarUrl: string | undefined;
+    registrationEmailNotification: boolean | undefined;
+    twentyFourHourReminderNotification: boolean | undefined;
+    oneHourReminderNotification: boolean | undefined;
+    fifteenMinuteReminderNotification: boolean | undefined;
+    replayFollowUpNotification: boolean | undefined;
+    visible: boolean | undefined;
+    opened: boolean | undefined;
+    delayType: ServiceDelayType;
+    delayValue: string | undefined;
+    cohostsEnableMicrophone: boolean;
+    cohostsEnableWebCam: boolean;
+    cohostsEnablePresentationTools: boolean;
+    cohostsEnableSpeakRequests: boolean;
+    cohostsViewRegistrants: boolean;
+    cohostsManageGuests: boolean;
+    cohostsManageGuestSettings: boolean;
+    cohostsManageAudience: boolean;
+    cohostsManageAudienceSettings: boolean;
+    cohostsChatPublicly: boolean;
+    cohostsChatPubliclyTagMembers: boolean;
+    cohostsChatPrivately: boolean;
+    cohostsChatPrivatelySelected: boolean;
+    cohostsAllowCohostsToUpvote: boolean;
+    cohostsAllowCohostsToRespond: boolean;
+    cohostsCreatePolls: boolean;
+    cohostsCreateOffers: boolean;
+    cohostsUploadHandouts: boolean;
+    guestsEnableMicrophone: boolean;
+    guestsEnableWebCam: boolean;
+    guestsEnablePresentationTools: boolean;
+    guestsEnableSpeakRequests: boolean;
+    guestsViewRegistrants: boolean;
+    guestsManageAudience: boolean;
+    guestsManageAudienceSettings: boolean;
+    guestsChatPublicly: boolean;
+    guestsChatPubliclyTagMembers: boolean;
+    guestsChatPrivately: boolean;
+    guestsChatPrivatelySelected: boolean;
+    guestsAllowGuestsToUpvote: boolean;
+    guestsAllowGuestsToRespond: boolean;
+    guestsCreatePolls: boolean;
+    guestsCreateOffers: boolean;
+    guestsCreateHandouts: boolean;
+    audienceEnableMicrophone: boolean;
+    audienceEnableWebCam: boolean;
+    audienceEnablePresentationTools: boolean;
+    audienceEnableSpeakRequests: boolean;
+    audienceViewAudience: boolean;
+    audienceChatPublicly: boolean;
+    audienceChatPubliclyTagMembers: boolean;
+    audienceChatPrivately: boolean;
+    audienceChatPrivatelySelected: boolean;
+    audienceAskQuestions: boolean;
+    audienceAskPublicQuestions: boolean;
+    audienceAskPublicQuestionsAllowAudienceToUpvote: boolean;
+    audienceAskPublicQuestionsAllowAudienceToRespond: boolean;
+    audienceAskPrivateQuestionsWithAdmins: boolean;
+    audienceAskPrivateQuestionsAllowFollowUpResponse: boolean;
+    audienceEnablePollsTab: boolean;
+    audienceEnableOffersTab: boolean;
+    audienceEnableOffersTabDisplayNoOfPurchases: boolean;
+    audienceEnableHandoutsTab: boolean;
+    commentSetting: CommentSetting;
+    thumbnailImageUrl: string | undefined;
+    thumbnailDocument: DocumentDto;
+    language: SpokenLanguageDto;
+    creatorUser: UserDto;
+    popularityWeight: number;
+
+    constructor(data?: IAvailableServiceDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? moment(_data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
+            this.type = _data["type"];
+            this.status = _data["status"];
+            this.replayType = _data["replayType"];
+            this.frequencyType = _data["frequencyType"];
+            this.eventDateTime = _data["eventDateTime"] ? moment(_data["eventDateTime"].toString()) : <any>undefined;
+            this.duration = _data["duration"];
+            this.recursionType = _data["recursionType"];
+            this.timesPerDay = _data["timesPerDay"];
+            this.sessionTimes = _data["sessionTimes"];
+            this.sessionDaysOfWeek = _data["sessionDaysOfWeek"];
+            this.sessionDaysOfMonth = _data["sessionDaysOfMonth"];
+            this.autoAdmitAttendees = _data["autoAdmitAttendees"];
+            this.subtitle = _data["subtitle"];
+            this.isOpen = _data["isOpen"];
+            this.imageDocumentId = _data["imageDocumentId"];
+            this.currencyId = _data["currencyId"];
+            this.numberOfPlaces = _data["numberOfPlaces"];
+            this.startDate = _data["startDate"] ? moment(_data["startDate"].toString()) : <any>undefined;
+            this.startTime = _data["startTime"];
+            this.endTime = _data["endTime"];
+            this.commentsVisibility = _data["commentsVisibility"];
+            this.commentsNeedAdminApproval = _data["commentsNeedAdminApproval"];
+            this.courseImageUrl = _data["courseImageUrl"];
+            this.imageDocument = _data["imageDocument"] ? DocumentDto.fromJS(_data["imageDocument"]) : <any>undefined;
+            if (Array.isArray(_data["studentCourses"])) {
+                this.studentCourses = [] as any;
+                for (let item of _data["studentCourses"])
+                    this.studentCourses.push(StudentCourseDto.fromJS(item));
+            }
+            this.modules = _data["modules"];
+            this.lessons = _data["lessons"];
+            this.progress = _data["progress"];
+            this.units = _data["units"];
+            this.documentId = _data["documentId"];
+            this.commentModeration = _data["commentModeration"];
+            this.customUrl = _data["customUrl"];
+            this.category = _data["category"];
+            this.videoCount = _data["videoCount"];
+            this.videoLength = _data["videoLength"];
+            this.rating = _data["rating"];
+            this.reviews = _data["reviews"];
+            this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
+            this.likeCount = _data["likeCount"];
+            this.articlesCount = _data["articlesCount"];
+            this.workshopDateTime = _data["workshopDateTime"] ? moment(_data["workshopDateTime"].toString()) : <any>undefined;
+            this.numberOfAttendees = _data["numberOfAttendees"];
+            this.parentId = _data["parentId"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.categories = _data["categories"];
+            this.thumbnailDocumentId = _data["thumbnailDocumentId"];
+            this.languageId = _data["languageId"];
+            this.pricingType = _data["pricingType"];
+            this.price = _data["price"];
+            this.endDate = _data["endDate"] ? moment(_data["endDate"].toString()) : <any>undefined;
+            this.isVisible = _data["isVisible"];
+            this.questionsEnabled = _data["questionsEnabled"];
+            this.questionType = _data["questionType"];
+            this.attendeesCanUpvote = _data["attendeesCanUpvote"];
+            this.attendeesCanRespond = _data["attendeesCanRespond"];
+            this.chatEnabled = _data["chatEnabled"];
+            this.customWebinarUrl = _data["customWebinarUrl"];
+            this.registrationEmailNotification = _data["registrationEmailNotification"];
+            this.twentyFourHourReminderNotification = _data["twentyFourHourReminderNotification"];
+            this.oneHourReminderNotification = _data["oneHourReminderNotification"];
+            this.fifteenMinuteReminderNotification = _data["fifteenMinuteReminderNotification"];
+            this.replayFollowUpNotification = _data["replayFollowUpNotification"];
+            this.visible = _data["visible"];
+            this.opened = _data["opened"];
+            this.delayType = _data["delayType"];
+            this.delayValue = _data["delayValue"];
+            this.cohostsEnableMicrophone = _data["cohostsEnableMicrophone"];
+            this.cohostsEnableWebCam = _data["cohostsEnableWebCam"];
+            this.cohostsEnablePresentationTools = _data["cohostsEnablePresentationTools"];
+            this.cohostsEnableSpeakRequests = _data["cohostsEnableSpeakRequests"];
+            this.cohostsViewRegistrants = _data["cohostsViewRegistrants"];
+            this.cohostsManageGuests = _data["cohostsManageGuests"];
+            this.cohostsManageGuestSettings = _data["cohostsManageGuestSettings"];
+            this.cohostsManageAudience = _data["cohostsManageAudience"];
+            this.cohostsManageAudienceSettings = _data["cohostsManageAudienceSettings"];
+            this.cohostsChatPublicly = _data["cohostsChatPublicly"];
+            this.cohostsChatPubliclyTagMembers = _data["cohostsChatPubliclyTagMembers"];
+            this.cohostsChatPrivately = _data["cohostsChatPrivately"];
+            this.cohostsChatPrivatelySelected = _data["cohostsChatPrivatelySelected"];
+            this.cohostsAllowCohostsToUpvote = _data["cohostsAllowCohostsToUpvote"];
+            this.cohostsAllowCohostsToRespond = _data["cohostsAllowCohostsToRespond"];
+            this.cohostsCreatePolls = _data["cohostsCreatePolls"];
+            this.cohostsCreateOffers = _data["cohostsCreateOffers"];
+            this.cohostsUploadHandouts = _data["cohostsUploadHandouts"];
+            this.guestsEnableMicrophone = _data["guestsEnableMicrophone"];
+            this.guestsEnableWebCam = _data["guestsEnableWebCam"];
+            this.guestsEnablePresentationTools = _data["guestsEnablePresentationTools"];
+            this.guestsEnableSpeakRequests = _data["guestsEnableSpeakRequests"];
+            this.guestsViewRegistrants = _data["guestsViewRegistrants"];
+            this.guestsManageAudience = _data["guestsManageAudience"];
+            this.guestsManageAudienceSettings = _data["guestsManageAudienceSettings"];
+            this.guestsChatPublicly = _data["guestsChatPublicly"];
+            this.guestsChatPubliclyTagMembers = _data["guestsChatPubliclyTagMembers"];
+            this.guestsChatPrivately = _data["guestsChatPrivately"];
+            this.guestsChatPrivatelySelected = _data["guestsChatPrivatelySelected"];
+            this.guestsAllowGuestsToUpvote = _data["guestsAllowGuestsToUpvote"];
+            this.guestsAllowGuestsToRespond = _data["guestsAllowGuestsToRespond"];
+            this.guestsCreatePolls = _data["guestsCreatePolls"];
+            this.guestsCreateOffers = _data["guestsCreateOffers"];
+            this.guestsCreateHandouts = _data["guestsCreateHandouts"];
+            this.audienceEnableMicrophone = _data["audienceEnableMicrophone"];
+            this.audienceEnableWebCam = _data["audienceEnableWebCam"];
+            this.audienceEnablePresentationTools = _data["audienceEnablePresentationTools"];
+            this.audienceEnableSpeakRequests = _data["audienceEnableSpeakRequests"];
+            this.audienceViewAudience = _data["audienceViewAudience"];
+            this.audienceChatPublicly = _data["audienceChatPublicly"];
+            this.audienceChatPubliclyTagMembers = _data["audienceChatPubliclyTagMembers"];
+            this.audienceChatPrivately = _data["audienceChatPrivately"];
+            this.audienceChatPrivatelySelected = _data["audienceChatPrivatelySelected"];
+            this.audienceAskQuestions = _data["audienceAskQuestions"];
+            this.audienceAskPublicQuestions = _data["audienceAskPublicQuestions"];
+            this.audienceAskPublicQuestionsAllowAudienceToUpvote = _data["audienceAskPublicQuestionsAllowAudienceToUpvote"];
+            this.audienceAskPublicQuestionsAllowAudienceToRespond = _data["audienceAskPublicQuestionsAllowAudienceToRespond"];
+            this.audienceAskPrivateQuestionsWithAdmins = _data["audienceAskPrivateQuestionsWithAdmins"];
+            this.audienceAskPrivateQuestionsAllowFollowUpResponse = _data["audienceAskPrivateQuestionsAllowFollowUpResponse"];
+            this.audienceEnablePollsTab = _data["audienceEnablePollsTab"];
+            this.audienceEnableOffersTab = _data["audienceEnableOffersTab"];
+            this.audienceEnableOffersTabDisplayNoOfPurchases = _data["audienceEnableOffersTabDisplayNoOfPurchases"];
+            this.audienceEnableHandoutsTab = _data["audienceEnableHandoutsTab"];
+            this.commentSetting = _data["commentSetting"];
+            this.thumbnailImageUrl = _data["thumbnailImageUrl"];
+            this.thumbnailDocument = _data["thumbnailDocument"] ? DocumentDto.fromJS(_data["thumbnailDocument"]) : <any>undefined;
+            this.language = _data["language"] ? SpokenLanguageDto.fromJS(_data["language"]) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.popularityWeight = _data["popularityWeight"];
+        }
+    }
+
+    static fromJS(data: any): AvailableServiceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AvailableServiceDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
+        data["type"] = this.type;
+        data["status"] = this.status;
+        data["replayType"] = this.replayType;
+        data["frequencyType"] = this.frequencyType;
+        data["eventDateTime"] = this.eventDateTime ? this.eventDateTime.toISOString() : <any>undefined;
+        data["duration"] = this.duration;
+        data["recursionType"] = this.recursionType;
+        data["timesPerDay"] = this.timesPerDay;
+        data["sessionTimes"] = this.sessionTimes;
+        data["sessionDaysOfWeek"] = this.sessionDaysOfWeek;
+        data["sessionDaysOfMonth"] = this.sessionDaysOfMonth;
+        data["autoAdmitAttendees"] = this.autoAdmitAttendees;
+        data["subtitle"] = this.subtitle;
+        data["isOpen"] = this.isOpen;
+        data["imageDocumentId"] = this.imageDocumentId;
+        data["currencyId"] = this.currencyId;
+        data["numberOfPlaces"] = this.numberOfPlaces;
+        data["startDate"] = this.startDate ? this.startDate.toISOString() : <any>undefined;
+        data["startTime"] = this.startTime;
+        data["endTime"] = this.endTime;
+        data["commentsVisibility"] = this.commentsVisibility;
+        data["commentsNeedAdminApproval"] = this.commentsNeedAdminApproval;
+        data["courseImageUrl"] = this.courseImageUrl;
+        data["imageDocument"] = this.imageDocument ? this.imageDocument.toJSON() : <any>undefined;
+        if (Array.isArray(this.studentCourses)) {
+            data["studentCourses"] = [];
+            for (let item of this.studentCourses)
+                data["studentCourses"].push(item.toJSON());
+        }
+        data["modules"] = this.modules;
+        data["lessons"] = this.lessons;
+        data["progress"] = this.progress;
+        data["units"] = this.units;
+        data["documentId"] = this.documentId;
+        data["commentModeration"] = this.commentModeration;
+        data["customUrl"] = this.customUrl;
+        data["category"] = this.category;
+        data["videoCount"] = this.videoCount;
+        data["videoLength"] = this.videoLength;
+        data["rating"] = this.rating;
+        data["reviews"] = this.reviews;
+        data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        data["likeCount"] = this.likeCount;
+        data["articlesCount"] = this.articlesCount;
+        data["workshopDateTime"] = this.workshopDateTime ? this.workshopDateTime.toISOString() : <any>undefined;
+        data["numberOfAttendees"] = this.numberOfAttendees;
+        data["parentId"] = this.parentId;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["categories"] = this.categories;
+        data["thumbnailDocumentId"] = this.thumbnailDocumentId;
+        data["languageId"] = this.languageId;
+        data["pricingType"] = this.pricingType;
+        data["price"] = this.price;
+        data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
+        data["isVisible"] = this.isVisible;
+        data["questionsEnabled"] = this.questionsEnabled;
+        data["questionType"] = this.questionType;
+        data["attendeesCanUpvote"] = this.attendeesCanUpvote;
+        data["attendeesCanRespond"] = this.attendeesCanRespond;
+        data["chatEnabled"] = this.chatEnabled;
+        data["customWebinarUrl"] = this.customWebinarUrl;
+        data["registrationEmailNotification"] = this.registrationEmailNotification;
+        data["twentyFourHourReminderNotification"] = this.twentyFourHourReminderNotification;
+        data["oneHourReminderNotification"] = this.oneHourReminderNotification;
+        data["fifteenMinuteReminderNotification"] = this.fifteenMinuteReminderNotification;
+        data["replayFollowUpNotification"] = this.replayFollowUpNotification;
+        data["visible"] = this.visible;
+        data["opened"] = this.opened;
+        data["delayType"] = this.delayType;
+        data["delayValue"] = this.delayValue;
+        data["cohostsEnableMicrophone"] = this.cohostsEnableMicrophone;
+        data["cohostsEnableWebCam"] = this.cohostsEnableWebCam;
+        data["cohostsEnablePresentationTools"] = this.cohostsEnablePresentationTools;
+        data["cohostsEnableSpeakRequests"] = this.cohostsEnableSpeakRequests;
+        data["cohostsViewRegistrants"] = this.cohostsViewRegistrants;
+        data["cohostsManageGuests"] = this.cohostsManageGuests;
+        data["cohostsManageGuestSettings"] = this.cohostsManageGuestSettings;
+        data["cohostsManageAudience"] = this.cohostsManageAudience;
+        data["cohostsManageAudienceSettings"] = this.cohostsManageAudienceSettings;
+        data["cohostsChatPublicly"] = this.cohostsChatPublicly;
+        data["cohostsChatPubliclyTagMembers"] = this.cohostsChatPubliclyTagMembers;
+        data["cohostsChatPrivately"] = this.cohostsChatPrivately;
+        data["cohostsChatPrivatelySelected"] = this.cohostsChatPrivatelySelected;
+        data["cohostsAllowCohostsToUpvote"] = this.cohostsAllowCohostsToUpvote;
+        data["cohostsAllowCohostsToRespond"] = this.cohostsAllowCohostsToRespond;
+        data["cohostsCreatePolls"] = this.cohostsCreatePolls;
+        data["cohostsCreateOffers"] = this.cohostsCreateOffers;
+        data["cohostsUploadHandouts"] = this.cohostsUploadHandouts;
+        data["guestsEnableMicrophone"] = this.guestsEnableMicrophone;
+        data["guestsEnableWebCam"] = this.guestsEnableWebCam;
+        data["guestsEnablePresentationTools"] = this.guestsEnablePresentationTools;
+        data["guestsEnableSpeakRequests"] = this.guestsEnableSpeakRequests;
+        data["guestsViewRegistrants"] = this.guestsViewRegistrants;
+        data["guestsManageAudience"] = this.guestsManageAudience;
+        data["guestsManageAudienceSettings"] = this.guestsManageAudienceSettings;
+        data["guestsChatPublicly"] = this.guestsChatPublicly;
+        data["guestsChatPubliclyTagMembers"] = this.guestsChatPubliclyTagMembers;
+        data["guestsChatPrivately"] = this.guestsChatPrivately;
+        data["guestsChatPrivatelySelected"] = this.guestsChatPrivatelySelected;
+        data["guestsAllowGuestsToUpvote"] = this.guestsAllowGuestsToUpvote;
+        data["guestsAllowGuestsToRespond"] = this.guestsAllowGuestsToRespond;
+        data["guestsCreatePolls"] = this.guestsCreatePolls;
+        data["guestsCreateOffers"] = this.guestsCreateOffers;
+        data["guestsCreateHandouts"] = this.guestsCreateHandouts;
+        data["audienceEnableMicrophone"] = this.audienceEnableMicrophone;
+        data["audienceEnableWebCam"] = this.audienceEnableWebCam;
+        data["audienceEnablePresentationTools"] = this.audienceEnablePresentationTools;
+        data["audienceEnableSpeakRequests"] = this.audienceEnableSpeakRequests;
+        data["audienceViewAudience"] = this.audienceViewAudience;
+        data["audienceChatPublicly"] = this.audienceChatPublicly;
+        data["audienceChatPubliclyTagMembers"] = this.audienceChatPubliclyTagMembers;
+        data["audienceChatPrivately"] = this.audienceChatPrivately;
+        data["audienceChatPrivatelySelected"] = this.audienceChatPrivatelySelected;
+        data["audienceAskQuestions"] = this.audienceAskQuestions;
+        data["audienceAskPublicQuestions"] = this.audienceAskPublicQuestions;
+        data["audienceAskPublicQuestionsAllowAudienceToUpvote"] = this.audienceAskPublicQuestionsAllowAudienceToUpvote;
+        data["audienceAskPublicQuestionsAllowAudienceToRespond"] = this.audienceAskPublicQuestionsAllowAudienceToRespond;
+        data["audienceAskPrivateQuestionsWithAdmins"] = this.audienceAskPrivateQuestionsWithAdmins;
+        data["audienceAskPrivateQuestionsAllowFollowUpResponse"] = this.audienceAskPrivateQuestionsAllowFollowUpResponse;
+        data["audienceEnablePollsTab"] = this.audienceEnablePollsTab;
+        data["audienceEnableOffersTab"] = this.audienceEnableOffersTab;
+        data["audienceEnableOffersTabDisplayNoOfPurchases"] = this.audienceEnableOffersTabDisplayNoOfPurchases;
+        data["audienceEnableHandoutsTab"] = this.audienceEnableHandoutsTab;
+        data["commentSetting"] = this.commentSetting;
+        data["thumbnailImageUrl"] = this.thumbnailImageUrl;
+        data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
+        data["language"] = this.language ? this.language.toJSON() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["popularityWeight"] = this.popularityWeight;
+        return data; 
+    }
+
+    clone(): AvailableServiceDto {
+        const json = this.toJSON();
+        let result = new AvailableServiceDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAvailableServiceDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    type: number;
+    status: number;
+    replayType: number | undefined;
+    frequencyType: number | undefined;
+    eventDateTime: moment.Moment | undefined;
+    duration: number;
+    recursionType: number;
+    timesPerDay: number | undefined;
+    sessionTimes: string | undefined;
+    sessionDaysOfWeek: string | undefined;
+    sessionDaysOfMonth: string | undefined;
+    autoAdmitAttendees: boolean;
+    subtitle: string | undefined;
+    isOpen: boolean;
+    imageDocumentId: string | undefined;
+    currencyId: string | undefined;
+    numberOfPlaces: number | undefined;
+    startDate: moment.Moment | undefined;
+    startTime: string | undefined;
+    endTime: string | undefined;
+    commentsVisibility: CommentSetting;
+    commentsNeedAdminApproval: boolean | undefined;
+    courseImageUrl: string | undefined;
+    imageDocument: DocumentDto;
+    studentCourses: StudentCourseDto[] | undefined;
+    modules: number;
+    lessons: number;
+    progress: number;
+    units: number;
+    documentId: string | undefined;
+    commentModeration: boolean;
+    customUrl: string | undefined;
+    category: string | undefined;
+    videoCount: number;
+    videoLength: number;
+    rating: number;
+    reviews: number;
+    document: DocumentDto;
+    likeCount: number;
+    articlesCount: number;
+    workshopDateTime: moment.Moment | undefined;
+    numberOfAttendees: number | undefined;
+    parentId: string | undefined;
+    name: string | undefined;
+    description: string | undefined;
+    categories: string | undefined;
+    thumbnailDocumentId: string | undefined;
+    languageId: string | undefined;
+    pricingType: PricingType;
+    price: number | undefined;
+    endDate: moment.Moment | undefined;
+    isVisible: boolean;
+    questionsEnabled: boolean | undefined;
+    questionType: QuestionType;
+    attendeesCanUpvote: boolean | undefined;
+    attendeesCanRespond: boolean | undefined;
+    chatEnabled: boolean | undefined;
+    customWebinarUrl: string | undefined;
+    registrationEmailNotification: boolean | undefined;
+    twentyFourHourReminderNotification: boolean | undefined;
+    oneHourReminderNotification: boolean | undefined;
+    fifteenMinuteReminderNotification: boolean | undefined;
+    replayFollowUpNotification: boolean | undefined;
+    visible: boolean | undefined;
+    opened: boolean | undefined;
+    delayType: ServiceDelayType;
+    delayValue: string | undefined;
+    cohostsEnableMicrophone: boolean;
+    cohostsEnableWebCam: boolean;
+    cohostsEnablePresentationTools: boolean;
+    cohostsEnableSpeakRequests: boolean;
+    cohostsViewRegistrants: boolean;
+    cohostsManageGuests: boolean;
+    cohostsManageGuestSettings: boolean;
+    cohostsManageAudience: boolean;
+    cohostsManageAudienceSettings: boolean;
+    cohostsChatPublicly: boolean;
+    cohostsChatPubliclyTagMembers: boolean;
+    cohostsChatPrivately: boolean;
+    cohostsChatPrivatelySelected: boolean;
+    cohostsAllowCohostsToUpvote: boolean;
+    cohostsAllowCohostsToRespond: boolean;
+    cohostsCreatePolls: boolean;
+    cohostsCreateOffers: boolean;
+    cohostsUploadHandouts: boolean;
+    guestsEnableMicrophone: boolean;
+    guestsEnableWebCam: boolean;
+    guestsEnablePresentationTools: boolean;
+    guestsEnableSpeakRequests: boolean;
+    guestsViewRegistrants: boolean;
+    guestsManageAudience: boolean;
+    guestsManageAudienceSettings: boolean;
+    guestsChatPublicly: boolean;
+    guestsChatPubliclyTagMembers: boolean;
+    guestsChatPrivately: boolean;
+    guestsChatPrivatelySelected: boolean;
+    guestsAllowGuestsToUpvote: boolean;
+    guestsAllowGuestsToRespond: boolean;
+    guestsCreatePolls: boolean;
+    guestsCreateOffers: boolean;
+    guestsCreateHandouts: boolean;
+    audienceEnableMicrophone: boolean;
+    audienceEnableWebCam: boolean;
+    audienceEnablePresentationTools: boolean;
+    audienceEnableSpeakRequests: boolean;
+    audienceViewAudience: boolean;
+    audienceChatPublicly: boolean;
+    audienceChatPubliclyTagMembers: boolean;
+    audienceChatPrivately: boolean;
+    audienceChatPrivatelySelected: boolean;
+    audienceAskQuestions: boolean;
+    audienceAskPublicQuestions: boolean;
+    audienceAskPublicQuestionsAllowAudienceToUpvote: boolean;
+    audienceAskPublicQuestionsAllowAudienceToRespond: boolean;
+    audienceAskPrivateQuestionsWithAdmins: boolean;
+    audienceAskPrivateQuestionsAllowFollowUpResponse: boolean;
+    audienceEnablePollsTab: boolean;
+    audienceEnableOffersTab: boolean;
+    audienceEnableOffersTabDisplayNoOfPurchases: boolean;
+    audienceEnableHandoutsTab: boolean;
+    commentSetting: CommentSetting;
+    thumbnailImageUrl: string | undefined;
+    thumbnailDocument: DocumentDto;
+    language: SpokenLanguageDto;
+    creatorUser: UserDto;
+    popularityWeight: number;
+}
+
+export class AvailableServiceDtoPagedResultDto implements IAvailableServiceDtoPagedResultDto {
+    items: AvailableServiceDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IAvailableServiceDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(AvailableServiceDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): AvailableServiceDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AvailableServiceDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): AvailableServiceDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new AvailableServiceDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAvailableServiceDtoPagedResultDto {
+    items: AvailableServiceDto[] | undefined;
+    totalCount: number;
+}
+
 /** 0 = AboutYou 1 = Education 2 = Research 3 = Languages 4 = ServicesOffered 5 = ProfilePicture 6 = PhotoId 7 = Address 8 = ContactNumber 9 = References 10 = DbsCheck 11 = TermsOfUse 12 = PrivacyPolicy 13 = Declaration 14 = CompleteApplication */
 export enum BecomeATutorStep {
     AboutYou = 0,
@@ -38806,8 +39525,10 @@ export class PostDto implements IPostDto {
     title: string | undefined;
     content: string | undefined;
     spaceId: string | undefined;
+    serviceId: string | undefined;
     type: PostType;
     creatorUser: UserDto;
+    service: AvailableServiceDto;
 
     constructor(data?: IPostDto) {
         if (data) {
@@ -38831,8 +39552,10 @@ export class PostDto implements IPostDto {
             this.title = _data["title"];
             this.content = _data["content"];
             this.spaceId = _data["spaceId"];
+            this.serviceId = _data["serviceId"];
             this.type = _data["type"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.service = _data["service"] ? AvailableServiceDto.fromJS(_data["service"]) : <any>undefined;
         }
     }
 
@@ -38856,8 +39579,10 @@ export class PostDto implements IPostDto {
         data["title"] = this.title;
         data["content"] = this.content;
         data["spaceId"] = this.spaceId;
+        data["serviceId"] = this.serviceId;
         data["type"] = this.type;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["service"] = this.service ? this.service.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -38881,8 +39606,10 @@ export interface IPostDto {
     title: string | undefined;
     content: string | undefined;
     spaceId: string | undefined;
+    serviceId: string | undefined;
     type: PostType;
     creatorUser: UserDto;
+    service: AvailableServiceDto;
 }
 
 /** 0 = QuickPost 1 = Question 2 = Discussion */
@@ -45735,6 +46462,7 @@ export class UpdatePostDto implements IUpdatePostDto {
     title: string | undefined;
     content: string | undefined;
     spaceId: string | undefined;
+    serviceId: string | undefined;
     type: PostType;
     isDeleted: boolean;
 
@@ -45753,6 +46481,7 @@ export class UpdatePostDto implements IUpdatePostDto {
             this.title = _data["title"];
             this.content = _data["content"];
             this.spaceId = _data["spaceId"];
+            this.serviceId = _data["serviceId"];
             this.type = _data["type"];
             this.isDeleted = _data["isDeleted"];
         }
@@ -45771,6 +46500,7 @@ export class UpdatePostDto implements IUpdatePostDto {
         data["title"] = this.title;
         data["content"] = this.content;
         data["spaceId"] = this.spaceId;
+        data["serviceId"] = this.serviceId;
         data["type"] = this.type;
         data["isDeleted"] = this.isDeleted;
         return data; 
@@ -45789,6 +46519,7 @@ export interface IUpdatePostDto {
     title: string | undefined;
     content: string | undefined;
     spaceId: string | undefined;
+    serviceId: string | undefined;
     type: PostType;
     isDeleted: boolean;
 }

@@ -1,0 +1,126 @@
+.attachment {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 1px solid #E4EBF6;
+    overflow: hidden;
+
+    &:hover {
+        .attachment-play {
+            visibility: visible;
+            opacity: 0.5;
+        }
+    }
+
+    &-remove {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        z-index: 2;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #12263F;
+        color: white;
+        opacity: 0.5;
+        backdrop-filter: blur(2px);
+    }
+
+    &-play {
+        position: absolute;
+        top: 50%;
+        right: 50%;
+        z-index: 2;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #12263F;
+        color: white;
+        backdrop-filter: blur(2px);
+
+        visibility: hidden;
+        opacity: 0;
+
+        -webkit-transform: translate(50%, -100%);
+        -moz-transform: translate(50%, -100%);
+        -ms-transform: translate(50%, -100%);
+        -o-transform: translate(50%, -100%);
+        transform: translate(50%, -100%);
+
+        -webkit-transition: all 0.2s ease-in-out;
+        -moz-transition: all 0.2s ease-in-out;
+        -ms-transition: all 0.2s ease-in-out;
+        -o-transition: all 0.2s ease-in-out;
+        transition: all 0.2s ease-in-out;
+    }
+
+    &-image {
+        height: 279px;
+
+        img {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: cover;
+        }
+    }
+
+    &-video {
+        height: 279px;
+
+        video {
+            min-width: 100%;
+            max-width: 100%;
+        }
+    }
+
+    &-file {
+        height: 279px;
+
+        video {
+            min-width: 100%;
+            max-width: 100%;
+        }
+    }
+
+    &-info {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background-color: white;
+        border-top: 1px solid #E4EBF6;
+        padding: 15px 23px;
+
+        &-name {
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 23px;
+            letter-spacing: -0.01em;
+            color: #12263F;
+        }
+
+        &-details {
+            &-type {
+                background: rgba(110, 132, 163, 0.1);
+                border-radius: 3px;
+                font-style: normal;
+                font-weight: 600;
+                font-size: 10px;
+                line-height: 13px;
+                text-align: center;
+                color: #6E84A3;
+                padding: 0 10px;
+            }
+
+            &-size {
+                font-weight: 400;
+                font-size: 13px;
+                line-height: 21px;
+                letter-spacing: -0.01em;
+                color: #6E84A3;
+            }
+        }
+    }
+}

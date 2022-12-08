@@ -24,32 +24,7 @@
         <app-community-post *ngIf="activeTab === 'quick-post'" type="quick-post" (onModelChange)="model=$event"></app-community-post>
         <app-community-post *ngIf="activeTab === 'add-question'" type="add-question" (onModelChange)="model=$event"></app-community-post>
         <app-community-post *ngIf="activeTab === 'add-discussion'" type="add-discussion" (onModelChange)="model=$event"></app-community-post>
-        <div *ngIf="fileAttachment" class="card-body-attachment position-relative">
-            <div class="card-body-attachment-remove d-flex justify-content-center align-items-center cursor-pointer" (click)="removeAttachment()">
-                <span class="fe fe-x"></span>
-            </div>
-            <div *ngIf="isVideoAttachment" class="card-body-attachment-play d-flex justify-content-center align-items-center cursor-pointer" (click)="togglePlayVideo()">
-                <span class="fas" [ngClass]="[isVideoPlaying ? 'fa-pause' : 'fa-play']"></span>
-            </div>
-            <div *ngIf="isImageAttachment" class="card-body-attachment-image">
-                <img [src]="sanitizedAttachmentUrl" />
-            </div>
-            <div *ngIf="isVideoAttachment" class="card-body-attachment-video d-flex flex-wrap justify-content-center align-content-center align-items-center cursor-pointer" (click)="togglePlayVideo()">
-                <video #videoAttachment [src]="sanitizedAttachmentUrl" class="bg-light" loop playsinline></video>
-            </div>
-            <div *ngIf="!isImageAttachment && !isVideoAttachment" class="card-body-attachment-file d-flex justify-content-center align-items-start">
-                <div class="card d-flex justify-content-center align-items-center p-5 mt-4">
-                    <span class="fas fa-6x fa-file"></span>
-                </div>
-            </div>
-            <div *ngIf="isShowAttachmentInfo" class="card-body-attachment-info d-flex flex-column justify-content-center">
-                <div class="card-body-attachment-info-name">{{ fileAttachmentName }}</div>
-                <div class="card-body-attachment-info-details d-flex flex-row align-content-center gap-5">
-                    <div class="card-body-attachment-info-details-type d-flex align-items-center">{{ fileAttachmentType | uppercase }}</div>
-                    <div class="card-body-attachment-info-details-size">{{ fileAttachmentSize }}</div>
-                </div>
-            </div>
-        </div>
+        <app-attachment-preview *ngIf="fileAttachment" [file]="fileAttachment" (onRemove)="handleRemoveAttachment()"></app-attachment-preview>
     </div>
 
     <div class="card-footer d-flex justify-content-between">

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
-import { SafeStyle, SafeUrl } from '@angular/platform-browser';
+import { SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
@@ -29,7 +29,6 @@ export enum PostTabs {
     isCreating = false;
 
     @ViewChild('fileInput') fileInput: ElementRef;
-    @ViewChild('videoAttachment') videoAttachment: ElementRef;
     @Output() onPostCreated = new EventEmitter<any>();
 
     private maxFileSize = fileUploadConfiguration.maxFileSize;
@@ -51,17 +50,6 @@ export enum PostTabs {
     }
 
     get fileAttachment(): File { return this.model?.file; }
-    get fileAttachmentName(): string { return FileUtils.getFileName(this.fileAttachment?.name); }
-    get fileAttachmentType(): string { return FileUtils.getFileExtension(this.fileAttachment?.name).replace(/\./g, ''); }
-    get fileAttachmentSize(): string { return this.formatBytes(this.fileAttachment?.size, 2); }
-    get isImageAttachment(): boolean { return this.imageExtensions.some(x => x === `.${FileUtils.getFileExtension(this.fileAttachment?.name)}`); }
-    get isVideoAttachment(): boolean { return this.videoExtensions.some(x => x === `.${FileUtils.getFileExtension(this.fileAttachment?.name)}`); }
-    get isFileAttachment(): boolean { return this.fileExtensions.some(x => x === `.${FileUtils.getFileExtension(this.fileAttachment?.name)}`); }
-    get isShowAttachmentInfo(): boolean { return !this.isImageAttachment; }
-    get isVideoPlaying(): boolean {
-        const video = this.videoAttachment?.nativeElement;
-        return video && !!(video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2);
-    }
 
     get canAttachFile(): boolean { return this.model && !this.model.file; }
     get canAddImage(): boolean { return this.canAttachFile && this.activeTab === PostTabs.QuickPost; }
@@ -106,6 +94,7 @@ export enum PostTabs {
             this.model.title,
             this.model.information,
             this.model.visibility,
+            this.model.serviceId,
             this.model.type,
             this.model.topics,
             this.model.newTopics,
@@ -142,12 +131,7 @@ export enum PostTabs {
         setTimeout(() => this.fileInput.nativeElement.click());
     }
 
-    togglePlayVideo(): void {
-        if (this.isVideoPlaying) this.videoAttachment.nativeElement.pause();
-        else this.videoAttachment.nativeElement.play()
-    }
-
-    removeAttachment(): void {
+    handleRemoveAttachment(): void {
         this.model.file = null;
         this.fileInput.nativeElement.value = '';
     }

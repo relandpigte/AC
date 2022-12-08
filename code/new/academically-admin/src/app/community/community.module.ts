@@ -4,6 +4,7 @@ import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { SharedModule } from '@shared/shared.module';
 import { CommunityRoutingModule } from './community-routing.module';
 import { CommunityComponent } from './community.component';
+import { AttachmentPreviewComponent } from './_components/attachment-preview/attachment-preview.component';
 import { CommunityComposerComponent } from './_components/composer/composer.component';
 import { FollowingTopicsComponent } from './_components/following/following-topics.component';
 import { MoreTopicsComponent } from './_components/more-topics/more-topics.component';
@@ -16,6 +17,7 @@ import { AddPostComponent } from './_modals/add-post/add-post.component';
   declarations: [
     AddTopicsComponent,
     AddPostComponent,
+    AttachmentPreviewComponent,
     CommunityComponent,
     CommunityComposerComponent,
     CommunitySideCardComponent,
