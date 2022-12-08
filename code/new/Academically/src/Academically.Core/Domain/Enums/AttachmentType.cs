@@ -8,6 +8,7 @@
 		csv,
 		png,
 		jpeg,
+		jpg,
 		mp4
 	}
 }

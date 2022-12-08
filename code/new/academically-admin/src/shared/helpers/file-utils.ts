@@ -1,5 +1,6 @@
 import { SafeUrl } from '@angular/platform-browser';
 import { AppComponentBase } from '@shared/app-component-base';
+import { FileParameter } from '@shared/service-proxies/service-proxies';
 
 export class FileUtils {
     static getFileUrl(file: File): string {
@@ -16,6 +17,11 @@ export class FileUtils {
 
     static getSanitizedFileUrl(component: AppComponentBase, file: File): SafeUrl {
         return component.sanitizer.bypassSecurityTrustUrl(this.getFileUrl(file));
+    }
+
+    static getFileParameter(file: File): FileParameter {
+        if (!file) return null;
+        return { fileName: file.name, data: file } as FileParameter;
     }
 
     static validateFile(component: AppComponentBase, files: File[], maxSize: number, maxFiles: number, allowedExtensions: string[]): boolean {

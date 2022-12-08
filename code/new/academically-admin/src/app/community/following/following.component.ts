@@ -46,7 +46,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
 
   private getPosts(): void {
     this.isLoadingPosts = true;
-    this._postsService.getAllPosts(PostType.Discussion)
+    this._postsService.getAllPosts(undefined)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingPosts = false))
       .subscribe(posts => this.posts = posts);
