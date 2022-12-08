@@ -39,7 +39,7 @@ export class ServicePickerComponent extends AppComponentBase implements OnInit {
     }
 
     isServiceSelected(service: AvailableServiceDto): boolean {
-        return this.selectedService?.id === service.id;
+        return this.selectedService && this.selectedService?.id === service?.id;
     }
 
     setSelectedService(service: AvailableServiceDto): void {

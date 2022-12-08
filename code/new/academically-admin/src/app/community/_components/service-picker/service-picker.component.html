@@ -47,13 +47,13 @@
 </ng-template>
 
 <ng-template #serviceItemLoadingTemplate>
-    <div class="topic-row d-flex flex-row">
-        <div class="topic-row-left d-flex flex-column flex-grow-1 justify-content-center gap-5">
-            <div class="box-shimmer-bar"  [style.width.%]="55" [style.height.px]="18"></div>
-            <div class="box-shimmer-bar"  [style.width.%]="15" [style.height.px]="6"></div>
+    <div class="service-row d-flex flex-row gap-15 cursor-pointer" [class.selected]="isServiceSelected(item)" (click)="setSelectedService(item)">
+        <div class="service-row-left d-flex flex-column justify-content-center gap-0">
+            <div class="box-shimmer-bar" [style.width.px]="65" [style.height.px]="48"></div>
         </div>
-        <div class="topic-row-right d-flex flex-row align-items-center gap-20">
-            <div class="box-shimmer-bar action"  [style.width.px]="120" [style.height.px]="40"></div>
+        <div class="service-row-right flex-grow-1 d-flex flex-column justify-content-center gap-2">
+            <div class="box-shimmer-bar" [style.width.%]="55" [style.height.px]="18"></div>
+            <div class="box-shimmer-bar" [style.width.%]="15" [style.height.px]="6"></div>
         </div>
     </div>
 </ng-template>
