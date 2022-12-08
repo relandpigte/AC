@@ -15,6 +15,7 @@ using Academically.Domain.Services.Documents;
 using Academically.Services.Articles;
 using Academically.Services.Coachings;
 using Academically.Services.Courses;
+using Academically.Services.Documents;
 using Academically.Services.Events;
 using Academically.Services.Posts.Dto;
 using Academically.Services.Videos;
@@ -24,7 +25,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Academically.Services.Posts
 {
-    [AbpAuthorize(PermissionNames.Pages_Posts)]
+    //[AbpAuthorize(PermissionNames.Pages_Posts)]
     public class PostsAppService : AcademicallyAppServiceBase, IPostsAppService
     {
         private readonly IRepository<Post, Guid> _postRepository;
@@ -38,6 +39,7 @@ namespace Academically.Services.Posts
         private readonly IVideosAppService _videosAppService;
         private readonly IEventsAppService _eventsAppService;
         private readonly IWorkshopsAppService _workshopsAppService;
+        private readonly IDocumentsAppService _documentsAppService;
 
         public PostsAppService(
             IRepository<Post, Guid> postRepository,
@@ -50,7 +52,8 @@ namespace Academically.Services.Posts
             ICoursesAppService coursesAppService,
             IVideosAppService videosAppService,
             IEventsAppService eventsAppService,
-            IWorkshopsAppService workshopsAppService)
+            IWorkshopsAppService workshopsAppService,
+            IDocumentsAppService documentsAppService)
         {
             _postRepository = postRepository;
             _postTopicRepository = postTopicRepository;
@@ -63,13 +66,16 @@ namespace Academically.Services.Posts
             _videosAppService = videosAppService;
             _eventsAppService = eventsAppService;
             _workshopsAppService = workshopsAppService;
+            _documentsAppService = documentsAppService;
         }
 
 
         public async Task<List<PostDto>> GetAllPosts(PostType? type)
         {
-            var result = await _postRepository.GetAll()
+           var result = await _postRepository.GetAll()
                                   .Include(p => p.CreatorUser)
+                                  .Include(p => p.PostAttachments)
+                                  .Include(p => p.PostTopics)
                                   .Where(e => !e.IsDeleted)
                                   .WhereIf(type.HasValue, p => p.Type == type)
                                   .OrderByDescending(p => p.CreationTime)
@@ -262,5 +268,6 @@ namespace Academically.Services.Posts
                 query = query.OrderBy(x => x.Name);
             return query;
         }
+        
     }
 }

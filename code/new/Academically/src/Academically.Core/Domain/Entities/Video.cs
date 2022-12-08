@@ -10,6 +10,8 @@ namespace Academically.Domain.Entities
 	[Table("AcademicallyVideos")]
 	public class Video : CreationAuditedEntity<Guid>
 	{
+        [NotMapped]
+        public ServicesType ServiceType { get; set; } = ServicesType.Video;
         public VideoType Type { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

@@ -10,6 +10,8 @@ namespace Academically.Domain.Entities
     [Table("AcademicallyCourses")]
     public class Course : CreationAuditedEntity<Guid>
     {
+        [NotMapped]
+        public ServicesType ServiceType { get; set; } = ServicesType.Course;
         public string Name { get; set; }
         public string Subtitle { get; set; }
         public string Description { get; set; }
