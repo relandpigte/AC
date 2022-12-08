@@ -28931,6 +28931,7 @@ export class AvailableServiceDto implements IAvailableServiceDto {
     articlesCount: number;
     workshopDateTime: moment.Moment | undefined;
     numberOfAttendees: number | undefined;
+    serviceType: ServicesType;
     parentId: string | undefined;
     name: string | undefined;
     description: string | undefined;
@@ -29081,6 +29082,7 @@ export class AvailableServiceDto implements IAvailableServiceDto {
             this.articlesCount = _data["articlesCount"];
             this.workshopDateTime = _data["workshopDateTime"] ? moment(_data["workshopDateTime"].toString()) : <any>undefined;
             this.numberOfAttendees = _data["numberOfAttendees"];
+            this.serviceType = _data["serviceType"];
             this.parentId = _data["parentId"];
             this.name = _data["name"];
             this.description = _data["description"];
@@ -29231,6 +29233,7 @@ export class AvailableServiceDto implements IAvailableServiceDto {
         data["articlesCount"] = this.articlesCount;
         data["workshopDateTime"] = this.workshopDateTime ? this.workshopDateTime.toISOString() : <any>undefined;
         data["numberOfAttendees"] = this.numberOfAttendees;
+        data["serviceType"] = this.serviceType;
         data["parentId"] = this.parentId;
         data["name"] = this.name;
         data["description"] = this.description;
@@ -29377,6 +29380,7 @@ export interface IAvailableServiceDto {
     articlesCount: number;
     workshopDateTime: moment.Moment | undefined;
     numberOfAttendees: number | undefined;
+    serviceType: ServicesType;
     parentId: string | undefined;
     name: string | undefined;
     description: string | undefined;
@@ -39513,6 +39517,69 @@ export enum PhotoIdVerificationStatus {
     Declined = 2,
 }
 
+export class PostAttachmentDto implements IPostAttachmentDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    postId: string;
+    documentId: string;
+    document: DocumentDto;
+
+    constructor(data?: IPostAttachmentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.postId = _data["postId"];
+            this.documentId = _data["documentId"];
+            this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PostAttachmentDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PostAttachmentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["postId"] = this.postId;
+        data["documentId"] = this.documentId;
+        data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): PostAttachmentDto {
+        const json = this.toJSON();
+        let result = new PostAttachmentDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPostAttachmentDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    postId: string;
+    documentId: string;
+    document: DocumentDto;
+}
+
 export class PostDto implements IPostDto {
     id: string;
     creationTime: moment.Moment;
@@ -39529,6 +39596,8 @@ export class PostDto implements IPostDto {
     type: PostType;
     creatorUser: UserDto;
     service: AvailableServiceDto;
+    postTopics: PostTopicDto[] | undefined;
+    postAttachments: PostAttachmentDto[] | undefined;
 
     constructor(data?: IPostDto) {
         if (data) {
@@ -39556,6 +39625,16 @@ export class PostDto implements IPostDto {
             this.type = _data["type"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.service = _data["service"] ? AvailableServiceDto.fromJS(_data["service"]) : <any>undefined;
+            if (Array.isArray(_data["postTopics"])) {
+                this.postTopics = [] as any;
+                for (let item of _data["postTopics"])
+                    this.postTopics.push(PostTopicDto.fromJS(item));
+            }
+            if (Array.isArray(_data["postAttachments"])) {
+                this.postAttachments = [] as any;
+                for (let item of _data["postAttachments"])
+                    this.postAttachments.push(PostAttachmentDto.fromJS(item));
+            }
         }
     }
 
@@ -39583,6 +39662,16 @@ export class PostDto implements IPostDto {
         data["type"] = this.type;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["service"] = this.service ? this.service.toJSON() : <any>undefined;
+        if (Array.isArray(this.postTopics)) {
+            data["postTopics"] = [];
+            for (let item of this.postTopics)
+                data["postTopics"].push(item.toJSON());
+        }
+        if (Array.isArray(this.postAttachments)) {
+            data["postAttachments"] = [];
+            for (let item of this.postAttachments)
+                data["postAttachments"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -39610,6 +39699,67 @@ export interface IPostDto {
     type: PostType;
     creatorUser: UserDto;
     service: AvailableServiceDto;
+    postTopics: PostTopicDto[] | undefined;
+    postAttachments: PostAttachmentDto[] | undefined;
+}
+
+export class PostTopicDto implements IPostTopicDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    postId: string;
+    disciplineTaxonomyId: string;
+
+    constructor(data?: IPostTopicDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.postId = _data["postId"];
+            this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+        }
+    }
+
+    static fromJS(data: any): PostTopicDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PostTopicDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["postId"] = this.postId;
+        data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        return data; 
+    }
+
+    clone(): PostTopicDto {
+        const json = this.toJSON();
+        let result = new PostTopicDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPostTopicDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    postId: string;
+    disciplineTaxonomyId: string;
 }
 
 /** 0 = QuickPost 1 = Question 2 = Discussion */
@@ -42074,6 +42224,16 @@ export enum ServicesNameType {
     Projects = 2,
     CourseSections = 3,
     Courses = 4,
+}
+
+/** 1 = Event 2 = Course 3 = Video 4 = Articles 5 = Coaching 6 = Workshop */
+export enum ServicesType {
+    Event = 1,
+    Course = 2,
+    Video = 3,
+    Articles = 4,
+    Coaching = 5,
+    Workshop = 6,
 }
 
 export class SessionCandidateDto implements ISessionCandidateDto {
