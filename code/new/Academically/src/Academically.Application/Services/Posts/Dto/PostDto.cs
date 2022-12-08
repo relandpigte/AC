@@ -6,7 +6,6 @@ using Academically.Users.Dto;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Academically.Services.Posts.Dto
 {
@@ -22,5 +21,9 @@ namespace Academically.Services.Posts.Dto
         public UserDto CreatorUser { get; set; }
         [NotMapped]
         public AvailableServiceDto Service { get; set; }
+
+        public IEnumerable<PostTopicDto> PostTopics { get; set; }
+        public IEnumerable<PostAttachmentDto> PostAttachments { get; set; }
+        
     }
 }

@@ -75,6 +75,7 @@ namespace Academically.Services.Posts.Dto
         #endregion
 
         #region Common Fields
+        public ServicesType ServiceType { get; set; }
         public Guid? ParentId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Abp.Application.Services;
 using Academically.Domain.Enums;
 using Academically.Services.Posts.Dto;
-using Academically.Services.Projects.Dto;
 
 namespace Academically.Services.Posts
 {
@@ -15,5 +14,6 @@ namespace Academically.Services.Posts
         Task<List<PostDto>> GetByUser(long userId, PostType? type);
         Task<PostDto> UpdateAsync(UpdatePostDto input);
         Task DeleteAsync(Guid id);
+
     }
 }

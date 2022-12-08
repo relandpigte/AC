@@ -10,6 +10,8 @@ namespace Academically.Domain.Entities
     [Table("AcademicallyCoachings")]
     public class Coaching : CreationAuditedEntity<Guid>
     {
+        [NotMapped]
+        public ServicesType ServiceType { get; set; } = ServicesType.Coaching;
         public CoachingType Type { get; set; }
         public CoachingStatus Status { get; set; }
         public Guid? ParentId { get; set; }

@@ -10,6 +10,8 @@ namespace Academically.Domain.Entities
     [Table("AcademicallyEvents")]
     public class Event : CreationAuditedEntity<Guid>
     {
+        [NotMapped]
+        public ServicesType ServiceType { get; set; } = ServicesType.Event;
         public EventType Type { get; set; }
         public EventStatus Status { get; set; }
         public Guid? ParentId { get; set; }

@@ -9,7 +9,9 @@ namespace Academically.Domain.Entities
 {
     [Table("AcademicallyArticles")]
     public class Article : CreationAuditedEntity<Guid>
-    {
+    { 
+        [NotMapped]
+        public ServicesType ServiceType { get; set; } = ServicesType.Articles;
         public ArticleType Type { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
