@@ -6,13 +6,59 @@
             </a>
         </div>
         <div class="post-heading-owner d-flex flex-column flex-nowrap">
-            <div class="post-heading-owner-name">{{ posterName | titlecase }}</div>
+            <div class="post-heading-owner-name d-flex flex-row align-items-center gap-15">
+                {{ posterName | titlecase }}
+                <div type="button" class="btn btn-white post-heading-owner-follow d-flex justify-content-center align-items-center">Follow</div>
+            </div>
             <div class="post-heading-owner-time">{{ postDate }}</div>
         </div>
     </div>
-    <div class="post-content d-flex flex-column" [style.marginTop.px]="15" [style.marginBottom.px]="15">
+    <div class="post-content d-flex flex-column" [style.marginTop.px]="15">
         <div class="post-content-title">{{ title }}</div>
         <div class="post-content-description" [innerHTML]="description"  [style.marginTop.px]="10"></div>
         <div class="post-content-topics"></div>
+    </div>
+
+    <div class="post-topics d-flex flex-wrap flex-row gap-15" [style.marginTop.px]="5">
+        <div class="post-topics-item cursor-pointer">#{{ 'Language Development' }}</div>
+        <div class="post-topics-item cursor-pointer">#{{ 'Strategy' }}</div>
+        <div class="post-topics-item cursor-pointer">#{{ 'Law and Order' }}</div>
+    </div>
+
+    <div class="post-actions d-flex flex-row" [style.marginTop.px]="15">
+        <div class="post-actions-left d-flex justify-content-start align-items-center gap-10">
+            <div type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9">
+                <span class="fe fe-thumbs-up"></span>Like
+            </div>
+            <div type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9">
+                <span class="fe fe-message-circle"></span>Comment
+            </div>
+            <div type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9">
+                <span class="post-actions-left-item-share bg-center" [ngStyle]="{ 'background-image': 'url(\'assets/img/icon-share.png\')' }"></span>Share
+            </div>
+            <div type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9">
+                <span class="fe fe-more-horizontal"></span>
+            </div>
+        </div>
+        <div class="post-actions-right flex-grow-1 d-flex justify-content-end align-items-center gap-7">
+            <div class="post-actions-right-comments cursor-pointer">
+                {{ 14 }} comments
+            </div>
+            <div class="post-actions-right-separator">•</div>
+            <div class="post-actions-right-reactions cursor-pointer d-flex gap-7">
+                {{ 14 }}
+                <div class="post-actions-right-reactions-type d-flex">
+                    <div class="post-actions-right-reactions-type-item blue d-flex justify-content-center align-items-center">
+                        <span class="fe fe-thumbs-up"></span>
+                    </div>
+                    <div class="post-actions-right-reactions-type-item red d-flex justify-content-center align-items-center">
+                        <span class="fe fe-heart"></span>
+                    </div>
+                    <div class="post-actions-right-reactions-type-item yellow d-flex justify-content-center align-items-center">
+                        <span class="fe fe-thumbs-down"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
