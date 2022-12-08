@@ -5,12 +5,24 @@
                 <img [src]="getProfilePicture(data?.creatorUser?.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
             </a>
         </div>
-        <div class="post-heading-owner d-flex flex-column flex-nowrap">
+        <div class="post-heading-owner flex-grow-1 d-flex flex-column flex-nowrap">
             <div class="post-heading-owner-name d-flex flex-row align-items-center gap-15">
                 {{ posterName | titlecase }}
                 <div type="button" class="btn btn-white post-heading-owner-follow d-flex justify-content-center align-items-center">Follow</div>
             </div>
             <div class="post-heading-owner-time">{{ postDate }}</div>
+        </div>
+        <div class="post-heading-options align-self-start">
+            <div class="dropdown">
+                <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="fe fe-more-vertical"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-left">
+                  <div class="dropdown-item cursor-pointer">Edit post</div>
+                  <div class="dropdown-item cursor-pointer pb-3">Delete post</div>
+                  <div class="dropdown-item cursor-pointer border-top pt-3">Hide this post</div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="post-content d-flex flex-column" [style.marginTop.px]="15">
