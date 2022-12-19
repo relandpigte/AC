@@ -93,10 +93,10 @@ export class ChildrenComponent extends AppComponentBase implements OnInit {
     return topic.userTopics.some(u => u.userId === this.appSession.userId && u.type === UserTopicType.Following);
   }
 
-  handleOnSearch(searchObj: any): void {
+  handleOnSearch(searchObj: any, isAllowLoading = true): void {
     this.searchObj = searchObj;
 
-    this.isLoadingTopics = true;
+    this.isLoadingTopics = isAllowLoading;
     this._taxonomyService.getAllPaged(
       this.id,
       searchObj?.request?.searchFilter,
@@ -130,7 +130,7 @@ export class ChildrenComponent extends AppComponentBase implements OnInit {
             this.isFollowingTopic = false;
             this.isAllowLoading = true;
             this.topicInFocus = undefined;
-            this.updateTopicFromPagedData(topic, true);
+            this.handleOnSearch(this.searchObj, false);
           }))
           .subscribe(_ => {
               this.notify.info(this.l('Community.Topics.Follow.Success', topic.name));
@@ -149,7 +149,7 @@ export class ChildrenComponent extends AppComponentBase implements OnInit {
           this.isUnfollowingTopic = false;
           this.isAllowLoading = true;
           this.topicInFocus = undefined;
-          this.updateTopicFromPagedData(topic, false);
+            this.handleOnSearch(this.searchObj, false);
         }))
         .subscribe(_ => {
           this.notify.info(this.l('Community.Topics.Unfollow.Success', topic.name));
