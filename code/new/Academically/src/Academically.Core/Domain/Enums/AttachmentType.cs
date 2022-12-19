@@ -9,6 +9,9 @@
 		png,
 		jpeg,
 		jpg,
-		mp4
+		mp4,
+		txt,
+		ppt,
+		pptx
 	}
 }
