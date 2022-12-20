@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using Academically.Services.Posts.Dto;
 using Abp.Domain.Entities.Auditing;
+using Academically.Services.DisciplineTaxonomies.Dto;
 
 namespace Academically.Services.Posts.Dto
 {
@@ -17,7 +18,6 @@ namespace Academically.Services.Posts.Dto
     {
         public Guid PostId { get; set; }
         public Guid DisciplineTaxonomyId { get; set; }
-        
-       
+        public DisciplineTaxonomyDto DisciplineTaxonomy { get; set; }
     }
 }

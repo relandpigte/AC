@@ -39709,6 +39709,7 @@ export class PostTopicDto implements IPostTopicDto {
     creatorUserId: number | undefined;
     postId: string;
     disciplineTaxonomyId: string;
+    disciplineTaxonomy: DisciplineTaxonomyDto;
 
     constructor(data?: IPostTopicDto) {
         if (data) {
@@ -39726,6 +39727,7 @@ export class PostTopicDto implements IPostTopicDto {
             this.creatorUserId = _data["creatorUserId"];
             this.postId = _data["postId"];
             this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomyDto.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
         }
     }
 
@@ -39743,6 +39745,7 @@ export class PostTopicDto implements IPostTopicDto {
         data["creatorUserId"] = this.creatorUserId;
         data["postId"] = this.postId;
         data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -39760,6 +39763,7 @@ export interface IPostTopicDto {
     creatorUserId: number | undefined;
     postId: string;
     disciplineTaxonomyId: string;
+    disciplineTaxonomy: DisciplineTaxonomyDto;
 }
 
 /** 0 = QuickPost 1 = Question 2 = Discussion */

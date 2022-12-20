@@ -76,6 +76,7 @@ namespace Academically.Services.Posts
                                   .Include(p => p.CreatorUser)
                                   .Include(p => p.PostAttachments)
                                   .Include(p => p.PostTopics)
+                                    .ThenInclude(t => t.DisciplineTaxonomy)
                                   .Where(e => !e.IsDeleted)
                                   .WhereIf(type.HasValue, p => p.Type == type)
                                   .OrderByDescending(p => p.CreationTime)

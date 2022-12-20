@@ -1,6 +1,7 @@
 
 import { Component, Injector, OnInit, OnChanges, Input, SimpleChanges } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { DisciplineTaxonomyDto } from '@shared/service-proxies/service-proxies';
 
 import * as moment from 'moment';
 
@@ -12,6 +13,8 @@ import * as moment from 'moment';
 export class CommunityPostCardComponent extends AppComponentBase implements OnInit, OnChanges {
 
     @Input() data: any;
+
+    userTopics: DisciplineTaxonomyDto[];
 
     constructor(
         injector: Injector
@@ -38,5 +41,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnIn
     }
 
     ngOnChanges(changes: SimpleChanges): void {
+        if ('data' in changes && this.data) {
+            this.userTopics = this.data.postTopics?.map?.(t => t.disciplineTaxonomy);
+        }
     }
 }

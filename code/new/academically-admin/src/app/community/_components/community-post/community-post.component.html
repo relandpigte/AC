@@ -35,10 +35,8 @@
         <div class="post-content-topics"></div>
     </div>
 
-    <div class="post-topics d-flex flex-wrap flex-row gap-15" [style.marginTop.px]="5">
-        <div class="post-topics-item cursor-pointer">#{{ 'Language Development' }}</div>
-        <div class="post-topics-item cursor-pointer">#{{ 'Strategy' }}</div>
-        <div class="post-topics-item cursor-pointer">#{{ 'Law and Order' }}</div>
+    <div *ngIf="userTopics && userTopics.length" class="post-topics d-flex flex-wrap flex-row gap-15" [style.marginTop.px]="5">
+        <div *ngFor="let topic of userTopics" class="post-topics-item cursor-pointer">#{{ topic.name }}</div>
     </div>
 
     <div class="post-actions d-flex flex-row" [style.marginTop.px]="15">
