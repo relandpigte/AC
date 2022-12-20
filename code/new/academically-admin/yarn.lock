@@ -1816,6 +1816,11 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@ctrl/ngx-emoji-mart@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@ctrl/ngx-emoji-mart/-/ngx-emoji-mart-3.1.0.tgz#e75cb11f8f98228f6b0225a370f2deecff6cfd7d"
+  integrity sha512-LWjiBQafG27ASe4QBzm1APohLIuLRVke/YmPWOmNEYQ+KUl7A3AM/M3wjIWRBG317sUyBOj6r6hXo5TsCIFeSQ==
+
 "@fortawesome/fontawesome-free@^5.13.0":
   version "5.13.0"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.13.0.tgz#fcb113d1aca4b471b709e8c9c168674fbd6e06d9"

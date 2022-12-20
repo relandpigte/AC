@@ -33,13 +33,20 @@
             (onBack)="isShowServicePicker = false"
             (onAdd)="handleOnAddService($event)"
         ></app-service-picker>
+        <app-emoji-picker
+            *ngIf="isShowEmojiPicker"
+            [input]="emojiPickerToggle"
+            (onClose)="isShowEmojiPicker = false"
+            (onBack)="isShowEmojiPicker = false"
+            (onSelect)="handleOnEmojiSelect($event)"
+        ></app-emoji-picker>
     </div>
 
     <div class="card-footer d-flex justify-content-between">
         <div class="card-footer-left d-flex align-items-center flex-grow-1 gap-20">
             <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddImage" (click)="handleImageUploadBtnClick()"><i class="fe fe-camera"></i></a>
             <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddFile" (click)="handleFileUploadBtnClick()"><i class="fe fe-paperclip"></i></a>
-            <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddEmoticons"><i class="fas fa-smile"></i></a>
+            <a #emojiPickerToggle class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddEmoticons" (click)="isShowEmojiPicker = !isShowEmojiPicker"><i class="fas fa-smile"></i></a>
             <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddService" (click)="isShowServicePicker = !isShowServicePicker"><i class="fe fe-plus"></i></a>
         </div>
         <div class="card-footer-right d-flex align-items-center gap-20">

@@ -2,6 +2,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { EmojiModule } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { SharedModule } from '@shared/shared.module';
 import { DragulaModule } from 'ng2-dragula';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -38,6 +40,7 @@ import { AutocompleteComponent } from '@shared/components/autocomplete/autocompl
 import { CardClusterComponent } from '@shared/components/card-cluster/card-cluster.component';
 import { CarouselPillComponent } from '@shared/components/carousel-pill/carousel-pill.component';
 import { CarouselWrapperComponent } from '@shared/components/carousel-wrapper/carousel-wrapper.component';
+import { EmojiPickerComponent } from '@shared/components/emoji-picker/emoji-picker.component';
 import { FeaturedCarouselComponent } from '@shared/components/featured-carousel/featured-carousel.component';
 import { PillPickerComponent } from '@shared/components/pill-picker/pill-picker.component';
 import { SearchComponent } from '@shared/components/search/search.component';
@@ -74,7 +77,8 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     PillPickerComponent,
     AttachmentPreviewComponent,
     ServicePickerComponent,
-    ServicePreviewComponent
+    ServicePreviewComponent,
+    EmojiPickerComponent
   ],
   imports: [
     CommonModule,
@@ -96,7 +100,9 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     NgxMaskModule.forRoot(),
     CalendarModule,
     PopoverModule.forRoot(),
-    CarouselModule
+    CarouselModule,
+    PickerModule,
+    EmojiModule
   ],
   exports: [
     SharedModule,
@@ -113,6 +119,8 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     DragulaModule,
     ColorPickerModule,
     NgxMaskModule,
+    PickerModule,
+    EmojiModule,
     EnumToArrayPipe,
     DateFormatPipe,
     SafePipe,
@@ -139,7 +147,8 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     PillPickerComponent,
     AttachmentPreviewComponent,
     ServicePickerComponent,
-    ServicePreviewComponent
+    ServicePreviewComponent,
+    EmojiPickerComponent
   ],
 })
 export class AppSharedModule { }

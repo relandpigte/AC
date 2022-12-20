@@ -29,6 +29,7 @@ export enum PostTabs {
 
     isCreating = false;
     isShowServicePicker = false;
+    isShowEmojiPicker = false;
 
     @ViewChild('fileInput') fileInput: ElementRef;
     @Output() onPostCreated = new EventEmitter<any>();
@@ -150,6 +151,10 @@ export enum PostTabs {
         this.model.serviceId = service.id;
         this.selectedService = service;
         this.isShowServicePicker = false;
+    }
+
+    handleOnEmojiSelect(emoji): void {
+        this.isShowEmojiPicker = false;
     }
 
     onFileChange(e: any) {
