@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Injector, Input, Output, OnChanges, SimpleChanges, ElementRef, ViewChild, OnDestroy, AfterViewInit, HostListener } from "@angular/core";
 import { AppComponentBase } from '@shared/app-component-base';
+import { Utils } from "@shared/helpers/utils";
 import KeenSlider, { KeenSliderInstance } from 'keen-slider';
 
 import * as _ from 'lodash';
@@ -77,6 +78,8 @@ export class CarouselPillComponent extends AppComponentBase implements AfterView
         },
         [
           slider => {
+            Utils.wheelController(slider);
+
             slider.on('slideChanged', (s) => {
               this.currentItem = s.track.details.rel;
             });

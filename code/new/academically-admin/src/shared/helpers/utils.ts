@@ -24,4 +24,45 @@ export class Utils {
       }
 
     static randomNonZero = (max, min = 1) => Math.floor(Math.random() * (max - min)) + min;
+
+    static wheelController = (slider) => {
+      let touchTimeout;
+      let position;
+      let wheelActive;
+
+      function dispatch(e, name) {
+        position.x -= e.deltaY;
+        position.y -= e.deltaX;
+        slider.container.dispatchEvent( new CustomEvent(name, { detail: { x: position.x, y: position.y } }) );
+      }
+
+      function wheelStart(e) {
+        position = { x: e.pageX, y: e.pageY };
+        dispatch(e, 'ksDragStart');
+      }
+
+      function wheel(e) {
+        dispatch(e, 'ksDrag');
+      }
+
+      function wheelEnd(e) {
+        dispatch(e, 'ksDragEnd');
+      }
+
+      function eventWheel(e) {
+        e.preventDefault();
+        if (!wheelActive) {
+          wheelStart(e);
+          wheelActive = true;
+        }
+        wheel(e);
+        clearTimeout(touchTimeout);
+        touchTimeout = setTimeout(() => {
+          wheelActive = false;
+          wheelEnd(e);
+        }, 50);
+      }
+
+      slider.on('created', () => slider.container.addEventListener('wheel', eventWheel, { passive: false }));
+    }
 }
