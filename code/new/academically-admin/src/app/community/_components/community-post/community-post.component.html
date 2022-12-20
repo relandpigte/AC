@@ -35,17 +35,31 @@
         <div class="post-content-topics"></div>
     </div>
 
-    <div *ngIf="userTopics && userTopics.length" class="post-topics d-flex flex-wrap flex-row gap-15" [style.marginTop.px]="5">
+    <div *ngIf="userTopics && userTopics.length" class="post-topics d-flex flex-wrap flex-row gap-5" [style.marginTop.px]="5">
         <div *ngFor="let topic of userTopics" class="post-topics-item cursor-pointer">#{{ topic.name }}</div>
+    </div>
+
+    <div *ngIf="fileAttachment" class="post-attachment d-flex flex-wrap flex-row" [style.marginTop.px]="5">
+        <app-attachment-preview [file]="fileAttachment" [canRemove]="false"></app-attachment-preview>
+    </div>
+
+    <div *ngIf="serviceAttachment" class="post-attachment d-flex flex-wrap flex-row" [style.marginTop.px]="5">
+        <app-service-preview [service]="serviceAttachment" [canRemove]="false"></app-service-preview>
     </div>
 
     <div class="post-actions d-flex flex-row" [style.marginTop.px]="15">
         <div class="post-actions-left d-flex justify-content-start align-items-center gap-10">
-            <div type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
+            <div *ngIf="!isDiscussion" type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
                 <span class="fe fe-thumbs-up"></span>Like
             </div>
-            <div type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
+            <div *ngIf="isQuickPost" type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
                 <span class="fe fe-message-circle"></span>Comment
+            </div>
+            <div *ngIf="isQuestion" type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
+                <span class="fe fe-edit"></span>Answer
+            </div>
+            <div *ngIf="isDiscussion" type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
+                <span class="fe fe-download rotate right"></span>View in discussion
             </div>
             <div type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
                 <span class="post-actions-left-item-share bg-center" [ngStyle]="{ 'background-image': 'url(\'assets/img/icon-share.png\')' }"></span>Share
@@ -55,8 +69,14 @@
             </div>
         </div>
         <div class="post-actions-right flex-grow-1 d-flex justify-content-end align-items-center gap-7">
-            <div class="post-actions-right-comments cursor-pointer">
+            <div *ngIf="isQuickPost" class="post-actions-right-comments cursor-pointer">
                 {{ 14 }} comments
+            </div>
+            <div *ngIf="isQuestion" class="post-actions-right-comments cursor-pointer">
+                {{ 4 }} answers
+            </div>
+            <div *ngIf="isDiscussion" class="post-actions-right-comments cursor-pointer">
+                {{ 28 }} posts
             </div>
             <div class="post-actions-right-separator">•</div>
             <div class="post-actions-right-reactions cursor-pointer d-flex gap-7">

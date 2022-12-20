@@ -18,5 +18,6 @@ namespace Academically.Services.Posts.Dto
         public Guid PostId { get; set; }
         public Guid DocumentId { get; set; }
         public DocumentDto Document { get; set; }
+        public string DocumentUrl { get; set; }
     }
 }

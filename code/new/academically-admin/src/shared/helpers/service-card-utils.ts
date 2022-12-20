@@ -1,5 +1,5 @@
 import { DefaultServiceCardActions, DefaultServiceCardOptions, ServiceCard, ServiceCardDates, ServiceCardType, ServiceCardButton, ServiceCardImage, ServiceCardOptions, ServiceCardPerson, ServiceCardPill, ServiceCardPrice, UserServiceCardActions, ServiceCardComposition, ServiceCardPeople, ServiceCardSlots, ServiceCardRsvp } from '@shared/models/service-card.model';
-import { ArticleDto, CoachingDto, CourseDto, EventDto, UserDto, VideoDto, WorkshopDto } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, CoachingDto, CourseDto, EventDto, ServicesType, UserDto, VideoDto, WorkshopDto } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
 import { Utils } from './utils';
@@ -7,6 +7,9 @@ import { Utils } from './utils';
 export class ServiceCardUtils {
 
     static getCardType(data: any): ServiceCardType {
+      if (data.serviceType) {
+        return Object.keys(ServicesType).find(k => ServicesType[k] === data.serviceType).toLowerCase() as ServiceCardType;
+      } else {
         if (data instanceof EventDto) return 'event';
         else if (data instanceof ArticleDto) return 'article';
         else if (data instanceof CoachingDto) return 'coaching';
@@ -14,7 +17,8 @@ export class ServiceCardUtils {
         else if (data instanceof WorkshopDto) return 'workshop';
         else if (data instanceof VideoDto) return 'tutorial';
         else if (data instanceof UserDto) return 'user';
-        return 'course'; // null - update this;
+        return null;
+      }
     }
 
     static getSanitizeServiceData(data: any, options: ServiceCardOptions, actions: ServiceCardButton[], isFeatured = false):

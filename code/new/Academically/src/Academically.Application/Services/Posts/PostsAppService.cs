@@ -75,6 +75,7 @@ namespace Academically.Services.Posts
            var result = await _postRepository.GetAll()
                                   .Include(p => p.CreatorUser)
                                   .Include(p => p.PostAttachments)
+                                    .ThenInclude(a => a.Document)
                                   .Include(p => p.PostTopics)
                                     .ThenInclude(t => t.DisciplineTaxonomy)
                                   .Where(e => !e.IsDeleted)
@@ -88,6 +89,11 @@ namespace Academically.Services.Posts
                 {
                     var param = new PagedGetAvailableServicesRequestDto() { Keyword = item.ServiceId.Value.ToString() };
                     item.Service = this.GetAvailableServices(param).Result.Items.FirstOrDefault();
+                }
+
+                foreach (var attachment in item.PostAttachments)
+                {
+                    attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
                 }
             }
 

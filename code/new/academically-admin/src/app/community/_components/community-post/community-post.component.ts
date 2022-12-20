@@ -1,7 +1,8 @@
 
-import { Component, Injector, OnInit, OnChanges, Input, SimpleChanges } from '@angular/core';
+import { Component, Injector, OnInit, OnChanges, Input, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DisciplineTaxonomyDto } from '@shared/service-proxies/service-proxies';
+import { FileUtils } from '@shared/helpers/file-utils';
+import { AvailableServiceDto, DisciplineTaxonomyDto, PostType } from '@shared/service-proxies/service-proxies';
 
 import * as moment from 'moment';
 
@@ -14,10 +15,13 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnIn
 
     @Input() data: any;
 
+    fileAttachment: File;
+    serviceAttachment: AvailableServiceDto;
     userTopics: DisciplineTaxonomyDto[];
 
     constructor(
-        injector: Injector
+        injector: Injector,
+        private _cdr: ChangeDetectorRef
     ) {
         super(injector);
     }
@@ -37,12 +41,37 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnIn
         return this.appSession.userId === this.data?.creatorUserId;
     }
 
+    get isQuickPost(): boolean { return this.data?.type === PostType.QuickPost; }
+    get isQuestion(): boolean { return this.data?.type === PostType.Question; }
+    get isDiscussion(): boolean { return this.data?.type === PostType.Discussion; }
+
     ngOnInit(): void {
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    async ngOnChanges(changes: SimpleChanges) {
         if ('data' in changes && this.data) {
             this.userTopics = this.data.postTopics?.map?.(t => t.disciplineTaxonomy);
+            await this.getFileAttachment();
+            this.getServiceAttachment();
+        }
+    }
+
+    private async getFileAttachment() {
+        if (this.data.postAttachments) {
+            const [file] = this.data.postAttachments;
+            if (file) {
+                const document = file.document;
+                if (document) {
+                    this.fileAttachment = await FileUtils.getFileBlob(file.documentUrl, document.name, document.fileType);
+                    this._cdr.detectChanges();
+                }
+            }
+        }
+    }
+
+    private getServiceAttachment() {
+        if (this.data.service) {
+            this.serviceAttachment = this.data.service;
         }
     }
 }

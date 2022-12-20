@@ -1,46 +1,51 @@
-import { KeysPipe } from './../../shared/pipes/keys.pipe';
-import { FeaturedCarouselComponent } from './../../shared/components/featured-carousel/featured-carousel.component';
-import { CarouselPillComponent } from './../../shared/components/carousel-pill/carousel-pill.component';
-import { CarouselWrapperComponent } from './../../shared/components/carousel-wrapper/carousel-wrapper.component';
-import { NgModule } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '@shared/shared.module';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ImageCropperModule } from 'ngx-image-cropper';
-import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
-import { QuillModule } from 'ngx-quill';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { TimepickerModule } from 'ngx-bootstrap/timepicker';
-import { ModalModule } from 'ngx-bootstrap/modal';
+import { SharedModule } from '@shared/shared.module';
 import { DragulaModule } from 'ng2-dragula';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { PopoverModule } from 'ngx-bootstrap/popover';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { CalendarModule } from 'primeng/calendar';
-
-import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
-import { DateFormatPipe } from './pipes/date-format.pipe';
-import { SafePipe } from './pipes/safe.pipe';
+import { ImageCropperModule } from 'ngx-image-cropper';
 import { NgxMaskModule } from 'ngx-mask';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { QuillModule } from 'ngx-quill';
+import { CalendarModule } from 'primeng/calendar';
+import { CarouselModule } from 'primeng/carousel';
 
-import { FixedHeightDirective } from './directives/fixed-height.directive';
+import { DateFormatPipe } from './pipes/date-format.pipe';
+import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
+import { SafePipe } from './pipes/safe.pipe';
+
 import { BottomScrollerDirective } from './directives/bottom-scroller.directive';
+import { FixedHeightDirective } from './directives/fixed-height.directive';
 import { SidebarCollapseDirective } from './directives/sidebar-collapse.directive';
 
-import { AutocompleteComponent } from '../../shared/components/autocomplete/autocomplete.component';
-import { PillPickerComponent } from '../../shared/components/pill-picker/pill-picker.component';
-import { CardClusterComponent } from '../../shared/components/card-cluster/card-cluster.component';
-import { SearchComponent } from '../../shared/components/search/search.component';
-import { ServiceCardComponent } from '../../shared/components/service-card/service-card.component';
-import { TopicCardComponent } from '../../shared/components/topic/topic.component';
+import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { DocumentUploaderComponent } from './components/document-uploader/document-uploader.component';
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
 import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
 import { ProfilePictureChangerComponent } from './components/profile-picture-changer/profile-picture-changer.component';
-import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { WhiteboardComponent } from './components/whiteboard/whiteboard.component';
-import { PopoverModule } from 'ngx-bootstrap/popover';
-import { CarouselModule } from 'primeng/carousel';
+
+import { AttachmentPreviewComponent } from '@shared/components/attachment-preview/attachment-preview.component';
+import { AutocompleteComponent } from '@shared/components/autocomplete/autocomplete.component';
+import { CardClusterComponent } from '@shared/components/card-cluster/card-cluster.component';
+import { CarouselPillComponent } from '@shared/components/carousel-pill/carousel-pill.component';
+import { CarouselWrapperComponent } from '@shared/components/carousel-wrapper/carousel-wrapper.component';
+import { FeaturedCarouselComponent } from '@shared/components/featured-carousel/featured-carousel.component';
+import { PillPickerComponent } from '@shared/components/pill-picker/pill-picker.component';
+import { SearchComponent } from '@shared/components/search/search.component';
+import { ServiceCardComponent } from '@shared/components/service-card/service-card.component';
+import { ServicePickerComponent } from '@shared/components/service-picker/service-picker.component';
+import { ServicePreviewComponent } from '@shared/components/service-preview/service-preview.component';
+import { TopicCardComponent } from '@shared/components/topic/topic.component';
+import { KeysPipe } from '@shared/pipes/keys.pipe';
 
 @NgModule({
   declarations: [
@@ -66,7 +71,10 @@ import { CarouselModule } from 'primeng/carousel';
     FeaturedCarouselComponent,
     KeysPipe,
     AutocompleteComponent,
-    PillPickerComponent
+    PillPickerComponent,
+    AttachmentPreviewComponent,
+    ServicePickerComponent,
+    ServicePreviewComponent
   ],
   imports: [
     CommonModule,
@@ -128,7 +136,10 @@ import { CarouselModule } from 'primeng/carousel';
     FeaturedCarouselComponent,
     KeysPipe,
     AutocompleteComponent,
-    PillPickerComponent
+    PillPickerComponent,
+    AttachmentPreviewComponent,
+    ServicePickerComponent,
+    ServicePreviewComponent
   ],
 })
 export class AppSharedModule { }

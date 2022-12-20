@@ -13,6 +13,7 @@ import { FileUtils } from '@shared/helpers/file-utils';
 })
 export class AttachmentPreviewComponent extends AppComponentBase implements OnChanges {
     @Input() file: File;
+    @Input() canRemove: boolean = true;
 
     @Output() onRemove = new EventEmitter<any>();
 
@@ -44,7 +45,7 @@ export class AttachmentPreviewComponent extends AppComponentBase implements OnCh
     get isShowAttachmentInfo(): boolean { return !this.isImageAttachment; }
     get isVideoPlaying(): boolean {
         const video = this.videoAttachment?.nativeElement;
-        return video && !!(video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2);
+        return video && !video.paused && !video.ended && video.readyState > 2;
     }
 
     removeAttachment(): void {

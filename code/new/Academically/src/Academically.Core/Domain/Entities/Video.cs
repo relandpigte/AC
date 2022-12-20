@@ -11,7 +11,7 @@ namespace Academically.Domain.Entities
 	public class Video : CreationAuditedEntity<Guid>
 	{
         [NotMapped]
-        public ServicesType ServiceType { get; set; } = ServicesType.Video;
+        public ServicesType ServiceType { get; set; } = ServicesType.Tutorial;
         public VideoType Type { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

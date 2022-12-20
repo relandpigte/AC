@@ -1,5 +1,5 @@
 <div class="attachment position-relative">
-    <div class="attachment-remove d-flex justify-content-center align-items-center cursor-pointer" (click)="removeAttachment()">
+    <div *ngIf="canRemove" class="attachment-remove d-flex justify-content-center align-items-center cursor-pointer" (click)="removeAttachment()">
         <span class="fe fe-x"></span>
     </div>
     <div *ngIf="isVideoAttachment" class="attachment-play d-flex justify-content-center align-items-center cursor-pointer" (click)="togglePlayVideo()">

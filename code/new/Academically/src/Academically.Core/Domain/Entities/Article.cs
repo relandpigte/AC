@@ -11,7 +11,7 @@ namespace Academically.Domain.Entities
     public class Article : CreationAuditedEntity<Guid>
     { 
         [NotMapped]
-        public ServicesType ServiceType { get; set; } = ServicesType.Articles;
+        public ServicesType ServiceType { get; set; } = ServicesType.Article;
         public ArticleType Type { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

@@ -1,5 +1,5 @@
 <div class="service-preview position-relative">
-    <div class="service-preview-remove d-flex justify-content-center align-items-center cursor-pointer" (click)="removeService()">
+    <div *ngIf="canRemove" class="service-preview-remove d-flex justify-content-center align-items-center cursor-pointer" (click)="removeService()">
         <span class="fe fe-x"></span>
     </div>
     <div class="service-preview-image position-relative">
@@ -16,7 +16,7 @@
         <div class="service-preview-info-left flex-grow-1 d-flex flex-column">
             <div class="service-preview-info-left-identity d-flex justify-content-start align-items-center gap-12">
                 <div class="service-preview-info-left-identity-name">{{ serviceName }}</div>
-                <div class="service-preview-info-left-identity-type d-flex justify-content-center align-items-center">{{ 'Course' }}</div>
+                <div class="service-preview-info-left-identity-type d-flex justify-content-center align-items-center">{{ serviceType | titlecase }}</div>
             </div>
             <div class="service-preview-info-left-details d-flex justify-content-start align-items-center gap-5">
                 <div *ngIf="this.sanitizedOptions?.isShowDetailsPrice" class="service-preview-info-left-details-price">{{ priceValue | currency: priceCurrency }}<span *ngIf="priceSuffix"> {{ priceSuffix }}</span></div>

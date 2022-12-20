@@ -8,11 +8,10 @@ namespace Academically.Domain.Enums
     {
         Event = 1,
         Course = 2,
-        Video = 3,
-        Articles = 4,
+        Tutorial = 3,
+        Article = 4,
         Coaching = 5,
         Workshop = 6,
-
-
+        User = 7
     }
 }

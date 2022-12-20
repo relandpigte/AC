@@ -15,6 +15,7 @@ import * as moment from 'moment';
 })
 export class ServicePreviewComponent extends AppComponentBase implements OnChanges {
     @Input() service: AvailableServiceDto;
+    @Input() canRemove: boolean = true;
 
     @Output() onRemove = new EventEmitter<any>();
 
@@ -31,6 +32,7 @@ export class ServicePreviewComponent extends AppComponentBase implements OnChang
     get creatorName(): string { return this.service?.creatorUser?.fullName ?? 'Anonymous'; }
     get creatorProfilePictureUrl(): string { return this.service?.creatorUser?.profilePictureUrl ?? 'assets/img/anonymous.png'; }
 
+    get serviceType(): string { return this.sanitized?.type; }
     get serviceName(): string { return this.service?.name; }
     get priceValue(): number { return this.sanitized?.price?.price ?? 0; }
     get priceCurrency(): string { return this.sanitized?.price?.currency ?? 'GBP'; }

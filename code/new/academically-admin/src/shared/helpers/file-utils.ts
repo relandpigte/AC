@@ -7,6 +7,11 @@ export class FileUtils {
         return URL.createObjectURL(file);
     }
 
+    static async getFileBlob(url: string, name: string, type: string): Promise<File> {
+        const blob = await (await fetch(url)).blob();
+        return new File([blob], name, { type });
+    }
+
     static getFileName(fileName: string | null): string {
         return fileName?.toLowerCase().split('.')?.[0] ?? '-';
     }

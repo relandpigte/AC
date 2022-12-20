@@ -39524,6 +39524,7 @@ export class PostAttachmentDto implements IPostAttachmentDto {
     postId: string;
     documentId: string;
     document: DocumentDto;
+    documentUrl: string | undefined;
 
     constructor(data?: IPostAttachmentDto) {
         if (data) {
@@ -39542,6 +39543,7 @@ export class PostAttachmentDto implements IPostAttachmentDto {
             this.postId = _data["postId"];
             this.documentId = _data["documentId"];
             this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
+            this.documentUrl = _data["documentUrl"];
         }
     }
 
@@ -39560,6 +39562,7 @@ export class PostAttachmentDto implements IPostAttachmentDto {
         data["postId"] = this.postId;
         data["documentId"] = this.documentId;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        data["documentUrl"] = this.documentUrl;
         return data; 
     }
 
@@ -39578,6 +39581,7 @@ export interface IPostAttachmentDto {
     postId: string;
     documentId: string;
     document: DocumentDto;
+    documentUrl: string | undefined;
 }
 
 export class PostDto implements IPostDto {
@@ -42230,14 +42234,15 @@ export enum ServicesNameType {
     Courses = 4,
 }
 
-/** 1 = Event 2 = Course 3 = Video 4 = Articles 5 = Coaching 6 = Workshop */
+/** 1 = Event 2 = Course 3 = Tutorial 4 = Article 5 = Coaching 6 = Workshop 7 = User */
 export enum ServicesType {
     Event = 1,
     Course = 2,
-    Video = 3,
-    Articles = 4,
+    Tutorial = 3,
+    Article = 4,
     Coaching = 5,
     Workshop = 6,
+    User = 7,
 }
 
 export class SessionCandidateDto implements ISessionCandidateDto {
