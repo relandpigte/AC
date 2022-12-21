@@ -58,7 +58,12 @@
             <div *ngIf="isQuestion" type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
                 <span class="fe fe-edit"></span>Answer
             </div>
-            <div *ngIf="isDiscussion" type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
+            <div
+                *ngIf="isDiscussion"
+                type="button"
+                class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0"
+                (click)="goToDiscussion()"
+            >
                 <span class="fe fe-download rotate right"></span>View in discussion
             </div>
             <div type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">

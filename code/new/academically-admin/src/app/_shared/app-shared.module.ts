@@ -40,6 +40,7 @@ import { AutocompleteComponent } from '@shared/components/autocomplete/autocompl
 import { CardClusterComponent } from '@shared/components/card-cluster/card-cluster.component';
 import { CarouselPillComponent } from '@shared/components/carousel-pill/carousel-pill.component';
 import { CarouselWrapperComponent } from '@shared/components/carousel-wrapper/carousel-wrapper.component';
+import { CommunityPostCardComponent } from '@shared/components/community-post/community-post.component';
 import { EmojiPickerComponent } from '@shared/components/emoji-picker/emoji-picker.component';
 import { FeaturedCarouselComponent } from '@shared/components/featured-carousel/featured-carousel.component';
 import { PillPickerComponent } from '@shared/components/pill-picker/pill-picker.component';
@@ -78,6 +79,7 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     AttachmentPreviewComponent,
     ServicePickerComponent,
     ServicePreviewComponent,
+    CommunityPostCardComponent,
     EmojiPickerComponent
   ],
   imports: [
@@ -148,6 +150,7 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     AttachmentPreviewComponent,
     ServicePickerComponent,
     ServicePreviewComponent,
+    CommunityPostCardComponent,
     EmojiPickerComponent
   ],
 })

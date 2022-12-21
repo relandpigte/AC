@@ -1,0 +1,99 @@
+.discussion {
+    &-header {
+        &-back {
+            &-btn {
+                position: absolute;
+                left: 0;
+
+                width: 40px;
+                height: 40px;
+
+                background: #FFFFFF;
+                border: 1px solid #E3EBF6;
+                border-radius: 50%;
+
+                font-weight: 600;
+                font-size: 16px;
+                line-height: 20px;
+                color: #000000;
+
+                -webkit-transition: all 0.2s ease-in-out;
+                -moz-transition: all 0.2s ease-in-out;
+                -ms-transition: all 0.2s ease-in-out;
+                -o-transition: all 0.2s ease-in-out;
+                transition: all 0.2s ease-in-out;
+
+                &:hover {
+                    box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+                }
+            }
+
+            &-text {
+                font-weight: 600;
+                font-size: 16px;
+                line-height: 20px;
+                color: #000000;
+                margin-left: 49px;
+            }
+        }
+    }
+
+    &-title {
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 15px;
+        color: #6E84A3;
+        text-transform: uppercase;
+    }
+
+    &-info {
+        .card-body {
+            padding: 32px 24px 20px;
+        }
+
+        .card-footer {
+            padding: 13px 24px 17px;
+        }
+
+        &-header {
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 25px;
+            letter-spacing: -0.01em;
+            color: #12263F;
+        }
+
+        &-description {
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 19px;
+            letter-spacing: -0.01em;
+            color: #12263F;
+        }
+
+        &-topics {
+            &-item {
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 18px;
+                color: #2C7BE5;
+                margin-right: 10px;
+            }
+        }
+
+        &-participants {
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 20px;
+            color: #95AAC9;
+        }
+
+        &-invite {
+            padding: 7.5px 21.5px;
+        }
+
+        &-subscribe {
+            padding: 7.5px 21.5px;
+        }
+    }
+}

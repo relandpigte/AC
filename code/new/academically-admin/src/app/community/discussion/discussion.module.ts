@@ -2,24 +2,22 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { SharedModule } from '@shared/shared.module';
-import { CommunityModule } from '../community.module';
-import { FollowingRoutingModule } from './following-routing.module';
 
-import { FollowingComponent } from './following.component';
+import { DiscussionRoutingModule } from './discussion-routing.module';
+import { DiscussionComponent } from './discussion.component';
 
 @NgModule({
   declarations: [
-    FollowingComponent
+    DiscussionComponent
   ],
   imports: [
     CommonModule,
-    FollowingRoutingModule,
     SharedModule,
     AppSharedModule,
-    CommunityModule
+    DiscussionRoutingModule
   ],
   exports: [
-    FollowingComponent
+    DiscussionComponent
   ]
 })
-export class FollowingModule { }
+export class DiscussionModule { }

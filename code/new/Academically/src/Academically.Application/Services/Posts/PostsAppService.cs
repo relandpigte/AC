@@ -69,7 +69,6 @@ namespace Academically.Services.Posts
             _documentsAppService = documentsAppService;
         }
 
-
         public async Task<List<PostDto>> GetAllPosts(PostType? type)
         {
            var result = await _postRepository.GetAll()
@@ -184,6 +183,18 @@ namespace Academically.Services.Posts
             }
 
             return result;
+        }
+
+        public async Task<PostDto> GetAsync(Guid id)
+        {
+            var post = await _postRepository.GetAll()
+                        .Include(p => p.CreatorUser)
+                        .Include(p => p.PostAttachments)
+                            .ThenInclude(a => a.Document)
+                        .Include(p => p.PostTopics)
+                            .ThenInclude(t => t.DisciplineTaxonomy)
+                        .SingleOrDefaultAsync(p => p.Id == id);
+            return ObjectMapper.Map<PostDto>(post);
         }
 
         public async Task<PostDto> UpdateAsync(UpdatePostDto input)
