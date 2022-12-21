@@ -1,6 +1,9 @@
 <div class="modal-card card">
     <div class="card-header">
-        <div class="row align-items-center">
+        <div *ngIf="!allowTabs && title" class="flex-grow-1 row align-items-center m-0">
+            {{ title | localize }}
+        </div>
+        <div *ngIf="allowTabs" class="flex-grow-1 row align-items-center">
             <div class="col">
                 <ul class="nav nav-tabs nav-overflow header-tabs">
                     <li class="nav-item">
@@ -15,9 +18,11 @@
                 </ul>
             </div>
         </div>
-        <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
-          <span aria-hidden="true">×</span>
-        </button>
+        <div class="flex-grow-1">
+            <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
     </div>
 
     <div class="card-body">
