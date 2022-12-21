@@ -4,6 +4,19 @@ import { CourseDto, CoursesServiceProxy, DateGrains, PostsServiceProxy, PostType
 import { CommunityPostService } from '@shared/services/community-post.service';
 import { finalize, takeUntil } from 'rxjs/operators';
 
+export enum PostFiltering {
+  All = 'Community.Posts.Filtering.All',
+  Post = 'Community.Posts.Filtering.Post',
+  Question = 'Community.Posts.Filtering.Question',
+  Discussion = 'Community.Posts.Filtering.Discussion'
+}
+
+export enum PostSorting {
+  Latest = 'Community.Posts.Sorting.Latest',
+  Replied = 'Community.Posts.Sorting.Replied',
+  Reacted = 'Community.Posts.Sorting.Reacted'
+}
+
 @Component({
   selector: 'app-following',
   templateUrl: './following.component.html',
@@ -22,6 +35,12 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
 
   usersYouMayKnowMaxItems: number = 0;
   recommendedCoursesMaxItems: number = 0;
+
+  postFilteringEnum = PostFiltering;
+  postSortingEnum = PostSorting;
+
+  selectedFiltering: PostFiltering = PostFiltering.All;
+  selectedSorting: PostSorting = PostSorting.Latest;
 
   constructor(
     injector: Injector,

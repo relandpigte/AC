@@ -1,5 +1,34 @@
 <div class="container-fluid following d-flex flex-column flex-nowrap p-0">
 
+    <div class="following-controls d-flex flex-row justify-content-between" [style.marginBottom.px]="10">
+      <div class="following-controls-filter">
+        <div class="dropdown">
+          <a href="#" class="dropdown-ellipses dropdown-toggle d-flex flex-row align-items-center gap-5" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ selectedFiltering | localize }} <span class="fe fe-chevron-down"></span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-left" [style.marginTop.px]="10">
+            <div class="dropdown-item cursor-pointer">{{ postFilteringEnum.All  | localize }}</div>
+            <div class="dropdown-item cursor-pointer">{{ postFilteringEnum.Post  | localize }}</div>
+            <div class="dropdown-item cursor-pointer">{{ postFilteringEnum.Question  | localize }}</div>
+            <div class="dropdown-item cursor-pointer">{{ postFilteringEnum.Discussion  | localize }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="following-controls-sort d-flex flex-row align-items-center gap-10">
+        Sort by:
+        <div class="dropdown">
+          <a href="#" class="dropdown-ellipses dropdown-toggle d-flex flex-row align-items-center gap-5" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ selectedSorting | localize }} <span class="fe fe-chevron-down"></span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" [style.marginTop.px]="10">
+            <div class="dropdown-item cursor-pointer">{{ postSortingEnum.Latest  | localize }}</div>
+            <div class="dropdown-item cursor-pointer">{{ postSortingEnum.Replied  | localize }}</div>
+            <div class="dropdown-item cursor-pointer">{{ postSortingEnum.Reacted  | localize }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div *ngFor="let p of posts" class="card community-content-post">
       <app-community-post-card [data]="p"></app-community-post-card>
     </div>
