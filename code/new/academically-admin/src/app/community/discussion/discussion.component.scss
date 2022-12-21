@@ -23,9 +23,7 @@
                 -o-transition: all 0.2s ease-in-out;
                 transition: all 0.2s ease-in-out;
 
-                &:hover {
-                    box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
-                }
+                box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
             }
 
             &-text {
@@ -108,7 +106,7 @@
     }
 }
 
-.people {
+.participants {
     padding: 15px 0;
 
     &-avatar {
@@ -163,5 +161,24 @@
         text-align: center;
         letter-spacing: -0.01em;
         color: #12263F;
+    }
+}
+
+.discussions {
+    padding: 15px 0;
+
+    &-description {
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 19px;
+        letter-spacing: -0.01em;
+        color: #12263F;
+    }
+
+    &-participants {
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 17px;
+        color: #6F84A2;
     }
 }

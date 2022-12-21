@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DisciplineTaxonomyDto, PostDto, PostsServiceProxy, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
+import { DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { AddPostComponent } from '../_modals/add-post/add-post.component';
@@ -17,8 +17,11 @@ export class DiscussionComponent extends AppComponentBase implements OnInit {
 
     discussionTopics: DisciplineTaxonomyDto[];
     participants: UserDto[] = [];
+    relatedDiscussions: PostDto[] = [];
 
     isLoadingPost = false;
+    isLoadingParticipants = false;
+    isLoadingRelatedDiscussions = false;
 
     constructor(
         injector: Injector,
@@ -37,13 +40,14 @@ export class DiscussionComponent extends AppComponentBase implements OnInit {
         });
     }
 
-    get isLoading(): boolean { return this.isLoadingPost; }
+    get isLoading(): boolean { return this.isLoadingPost || this.isLoadingParticipants || this.isLoadingRelatedDiscussions; }
     get isOwner(): boolean { return this.appSession.userId === this.discussion?.creatorUserId; }
     get discussionTitle(): string { return this.discussion?.title; }
     get discussionDescription(): string { return this.discussion?.content; }
 
     ngOnInit(): void {
         this.getParticipants();
+        this.getRelatedDiscussions();
     }
 
     private loadDiscussion(id: string): void {
@@ -69,26 +73,42 @@ export class DiscussionComponent extends AppComponentBase implements OnInit {
     }
 
     getParticipants(): void {
+        this.isLoadingParticipants = true;
         this._usersService.getAll('', true, 'creationTime desc', 0, 4)
           .pipe(takeUntil(this.destroyed$))
+          .pipe(finalize(() => this.isLoadingParticipants = false))
           .subscribe(pagedUsers => {
             this.participants = pagedUsers.items ?? [];
             this.participants = _.take(this.participants, 4);
         });
     }
 
+    getRelatedDiscussions(): void {
+        this.isLoadingRelatedDiscussions = true;
+        this._postsService.getAllPosts(PostType.Discussion)
+            .pipe(takeUntil(this.destroyed$))
+            .pipe(finalize(() => this.isLoadingRelatedDiscussions = false))
+            .subscribe(discussions => {
+                this.relatedDiscussions = discussions.filter(d => d.id !== this.discussion?.id);
+                this.relatedDiscussions = _.take(this.relatedDiscussions, 4);
+            });
+    }
+
     handleItemClick(type: string, item: any): void {
         switch(type) {
             case 'participants':
                 break;
+            case 'discussions':
+                break;
             default:
-
         }
     }
 
     handleViewAllClick(type: string): void {
         switch(type) {
             case 'participants':
+                break;
+            case 'discussions':
                 break;
             default:
                 this._router.navigate(['app', 'community', 'following']);

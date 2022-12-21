@@ -1,4 +1,4 @@
-<div class="discussion position-relative">
+<div class="discussion position-relative" [style.paddingBottom.px]="20">
     <div class="discussion-header d-flex align-items-center" [style.marginTop.px]="40">
         <div
             class="discussion-header-back-btn d-flex justify-content-center align-items-center cursor-pointer"
@@ -60,27 +60,43 @@
                     (onViewAll)="handleViewAllClick('participants')"
                 ></app-community-side-card>
             </div>
+            <div [style.marginTop.px]="24">
+                <app-community-side-card
+                    header="Related discussion"
+                    [items]="relatedDiscussions"
+                    [template]="relatedDiscussionsTemplate"
+                    (onClickItem)="handleItemClick($event, 'discussions')"
+                    (onViewAll)="handleViewAllClick('discussions')"
+                ></app-community-side-card>
+            </div>
         </div>
     </div>
 </div>
 
-
 <ng-template #participantsTemplate let-item="item">
-    <div class="people d-flex flex-row flex-nowrap">
-        <div class="people-left flex-grow-1 d-flex flex-row flex-nowrap justify-content-center align-items-center">
-            <div class="people-avatar d-flex justify-content-center align-items-center">
+    <div class="participants d-flex flex-row flex-nowrap">
+        <div class="participants-left flex-grow-1 d-flex flex-row flex-nowrap justify-content-center align-items-center">
+            <div class="participants-avatar d-flex justify-content-center align-items-center">
                 <img [src]="getProfilePicture(item.profilePictureUrl)" class="avatar avatar-sm avatar-img rounded-circle" alt="profile" />
             </div>
-            <div class="people-status flex-grow-1 ">
+            <div class="participants-status flex-grow-1 ">
                 <div class="d-flex flex-row gap-10">
-                    <div class="people-status-name">{{ item.fullName }}</div>
-                    <div class="people-status-badge d-flex justify-content-center align-items-center">Creator</div>
+                    <div class="participants-status-name">{{ item.fullName }}</div>
+                    <div class="participants-status-badge d-flex justify-content-center align-items-center">Creator</div>
                 </div>
-                <div class="people-status-value"><span class="people-status-value-indicator">●</span>Online</div>
+                <div class="participants-status-value"><span class="people-status-value-indicator">●</span>Online</div>
             </div>
         </div>
-        <div class="people-right d-flex justify-content-center align-items-center">
+        <div class="participants-right d-flex justify-content-center align-items-center">
             <div type="button" class="btn btn-white topic-btn d-flex justify-content-center align-items-center">Follow</div>
         </div>
+    </div>
+</ng-template>
+
+
+<ng-template #relatedDiscussionsTemplate let-item="item">
+    <div class="discussions d-flex flex-column flex-nowrap justify-content-center gap-2">
+        <div class="discussions-description line-clamp">{{ item.content }}</div>
+        <div class="discussions-participants">{{ 23 }} participants</div>
     </div>
 </ng-template>
