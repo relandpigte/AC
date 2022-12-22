@@ -157,6 +157,25 @@
             color: #6F84A2;
         }
     }
+
+    &-content {
+        &-post {
+            &.end {
+                .left, .right {
+                    width: 162px;
+                    height: 0.5px;
+                    background-color: #95AAC9;
+                }
+                .center {
+                    padding: 0 163px;
+                    font-weight: 600;
+                    font-size: 13px;
+                    line-height: 17px;
+                    color: #95AAC9;
+                }
+            }
+        }
+    }
 }
 
 .participants {

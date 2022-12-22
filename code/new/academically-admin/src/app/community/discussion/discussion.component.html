@@ -80,10 +80,15 @@
                 </div>
             </div>
 
-            <div *ngFor="let p of children" class="card community-content-post">
+            <div *ngFor="let p of children" class="card discussion-content-post">
                 <app-community-post-card [data]="p"></app-community-post-card>
             </div>
 
+            <div class="discussion-content-post end d-flex flex-row justify-content-center align-items-center" [style.marginTop.px]="40" [style.marginBottom.px]="20">
+                <div class="left"></div>
+                <div class="center flex-grow-1">This is the end</div>
+                <div class="right"></div>
+            </div>
         </div>
         <div class="community-content-right" [style.marginLeft.px]="24">
             <div>
