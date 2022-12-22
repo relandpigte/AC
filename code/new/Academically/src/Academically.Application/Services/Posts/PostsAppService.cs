@@ -69,7 +69,7 @@ namespace Academically.Services.Posts
             _documentsAppService = documentsAppService;
         }
 
-        public async Task<List<PostDto>> GetAllPosts(PostType? type)
+        public async Task<List<PostDto>> GetAllPosts(PostType? type, Guid? parentId)
         {
            var result = await _postRepository.GetAll()
                                   .Include(p => p.CreatorUser)
@@ -80,6 +80,8 @@ namespace Academically.Services.Posts
                                     .ThenInclude(t => t.DisciplineTaxonomy)
                                   .Where(e => !e.IsDeleted)
                                   .WhereIf(type.HasValue, p => p.Type == type)
+                                  .WhereIf(parentId.HasValue, p => p.ParentId == parentId)
+                                  .WhereIf(!parentId.HasValue, p => p.ParentId == null)
                                   .OrderByDescending(p => p.CreationTime)
                                   .Select(p => ObjectMapper.Map<PostDto>(p))
                                   .ToListAsync();

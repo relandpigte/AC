@@ -12728,14 +12728,19 @@ export class PostsServiceProxy {
     1 = Question
     
     2 = Discussion
+     * @param parentId (optional) 
      * @return Success
      */
-    getAllPosts(type: PostType | undefined): Observable<PostDto[]> {
+    getAllPosts(type: PostType | undefined, parentId: string | undefined): Observable<PostDto[]> {
         let url_ = this.baseUrl + "/api/services/app/Posts/GetAllPosts?";
         if (type === null)
             throw new Error("The parameter 'type' cannot be null.");
         else if (type !== undefined)
             url_ += "type=" + encodeURIComponent("" + type) + "&";
+        if (parentId === null)
+            throw new Error("The parameter 'parentId' cannot be null.");
+        else if (parentId !== undefined)
+            url_ += "parentId=" + encodeURIComponent("" + parentId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -12795,12 +12800,13 @@ export class PostsServiceProxy {
      * @param spaceId (optional) 
      * @param serviceId (optional) 
      * @param type (optional) 
+     * @param parentId (optional) 
      * @param topics (optional) 
      * @param newTopics (optional) 
      * @param attachments (optional) 
      * @return Success
      */
-    create(title: string | undefined, content: string | undefined, spaceId: string | undefined, serviceId: string | undefined, type: PostType | undefined, topics: string[] | undefined, newTopics: string[] | undefined, attachments: FileParameter[] | undefined): Observable<void> {
+    create(title: string | undefined, content: string | undefined, spaceId: string | undefined, serviceId: string | undefined, type: PostType | undefined, parentId: string | undefined, topics: string[] | undefined, newTopics: string[] | undefined, attachments: FileParameter[] | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Posts/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -12825,6 +12831,10 @@ export class PostsServiceProxy {
             // do nothing
         } else
             content_.append("Type", type.toString());
+        if (parentId === null || parentId === undefined) {
+            // do nothing
+        } else
+            content_.append("ParentId", parentId.toString());
         if (topics === null || topics === undefined) {
             // do nothing
         } else
@@ -39710,10 +39720,12 @@ export class PostDto implements IPostDto {
     spaceId: string | undefined;
     serviceId: string | undefined;
     type: PostType;
+    parentId: string | undefined;
     creatorUser: UserDto;
     service: AvailableServiceDto;
     postTopics: PostTopicDto[] | undefined;
     postAttachments: PostAttachmentDto[] | undefined;
+    children: PostDto[] | undefined;
 
     constructor(data?: IPostDto) {
         if (data) {
@@ -39739,6 +39751,7 @@ export class PostDto implements IPostDto {
             this.spaceId = _data["spaceId"];
             this.serviceId = _data["serviceId"];
             this.type = _data["type"];
+            this.parentId = _data["parentId"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.service = _data["service"] ? AvailableServiceDto.fromJS(_data["service"]) : <any>undefined;
             if (Array.isArray(_data["postTopics"])) {
@@ -39750,6 +39763,11 @@ export class PostDto implements IPostDto {
                 this.postAttachments = [] as any;
                 for (let item of _data["postAttachments"])
                     this.postAttachments.push(PostAttachmentDto.fromJS(item));
+            }
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(PostDto.fromJS(item));
             }
         }
     }
@@ -39776,6 +39794,7 @@ export class PostDto implements IPostDto {
         data["spaceId"] = this.spaceId;
         data["serviceId"] = this.serviceId;
         data["type"] = this.type;
+        data["parentId"] = this.parentId;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["service"] = this.service ? this.service.toJSON() : <any>undefined;
         if (Array.isArray(this.postTopics)) {
@@ -39787,6 +39806,11 @@ export class PostDto implements IPostDto {
             data["postAttachments"] = [];
             for (let item of this.postAttachments)
                 data["postAttachments"].push(item.toJSON());
+        }
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
         }
         return data; 
     }
@@ -39813,10 +39837,12 @@ export interface IPostDto {
     spaceId: string | undefined;
     serviceId: string | undefined;
     type: PostType;
+    parentId: string | undefined;
     creatorUser: UserDto;
     service: AvailableServiceDto;
     postTopics: PostTopicDto[] | undefined;
     postAttachments: PostAttachmentDto[] | undefined;
+    children: PostDto[] | undefined;
 }
 
 export class PostTopicDto implements IPostTopicDto {
@@ -46745,6 +46771,7 @@ export class UpdatePostDto implements IUpdatePostDto {
     spaceId: string | undefined;
     serviceId: string | undefined;
     type: PostType;
+    parentId: string | undefined;
     isDeleted: boolean;
 
     constructor(data?: IUpdatePostDto) {
@@ -46764,6 +46791,7 @@ export class UpdatePostDto implements IUpdatePostDto {
             this.spaceId = _data["spaceId"];
             this.serviceId = _data["serviceId"];
             this.type = _data["type"];
+            this.parentId = _data["parentId"];
             this.isDeleted = _data["isDeleted"];
         }
     }
@@ -46783,6 +46811,7 @@ export class UpdatePostDto implements IUpdatePostDto {
         data["spaceId"] = this.spaceId;
         data["serviceId"] = this.serviceId;
         data["type"] = this.type;
+        data["parentId"] = this.parentId;
         data["isDeleted"] = this.isDeleted;
         return data; 
     }
@@ -46802,6 +46831,7 @@ export interface IUpdatePostDto {
     spaceId: string | undefined;
     serviceId: string | undefined;
     type: PostType;
+    parentId: string | undefined;
     isDeleted: boolean;
 }
 

@@ -4,14 +4,14 @@ import { CourseDto, CoursesServiceProxy, DateGrains, PostsServiceProxy, PostType
 import { CommunityPostService } from '@shared/services/community-post.service';
 import { finalize, takeUntil } from 'rxjs/operators';
 
-export enum PostFiltering {
+enum PostFiltering {
   All = 'Community.Posts.Filtering.All',
   Post = 'Community.Posts.Filtering.Post',
   Question = 'Community.Posts.Filtering.Question',
   Discussion = 'Community.Posts.Filtering.Discussion'
 }
 
-export enum PostSorting {
+enum PostSorting {
   Latest = 'Community.Posts.Sorting.Latest',
   Replied = 'Community.Posts.Sorting.Replied',
   Reacted = 'Community.Posts.Sorting.Reacted'
@@ -65,7 +65,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
 
   private getPosts(): void {
     this.isLoadingPosts = true;
-    this._postsService.getAllPosts(undefined)
+    this._postsService.getAllPosts(undefined, undefined)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingPosts = false))
       .subscribe(posts => this.posts = posts);

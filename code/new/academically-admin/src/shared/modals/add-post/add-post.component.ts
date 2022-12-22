@@ -21,6 +21,8 @@ export enum PostTabs {
     styleUrls: ['./add-post.component.scss']
   })
   export class AddPostComponent extends AppComponentBase implements OnInit {
+    parentPostId: string;
+
     model: any;
     selectedService: AvailableServiceDto;
 
@@ -108,6 +110,7 @@ export enum PostTabs {
             this.model.visibility,
             this.model.serviceId,
             this.model.type,
+            this.parentPostId,
             this.model.topics,
             this.model.newTopics,
             [this.model.file].filter(x => x).map(f => FileUtils.getFileParameter(f))

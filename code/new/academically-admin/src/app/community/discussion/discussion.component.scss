@@ -104,6 +104,59 @@
             padding: 7.5px 21.5px;
         }
     }
+
+
+    &-controls {
+        &-filter {
+            .dropdown {
+                &-toggle,
+                &-toggle .fe {
+                    font-weight: 600;
+                    font-size: 16px;
+                    line-height: 20px;
+                    color: #12263F;
+                }
+            }
+        }
+
+        &-sort {
+            font-weight: 400;
+            font-size: 13px;
+            line-height: 20px;
+            text-align: right;
+            letter-spacing: -0.01em;
+            color: #6E84A3;
+
+            .dropdown {
+                &-toggle,
+                &-toggle .fe {
+                    font-weight: 600;
+                    font-size: 13px;
+                    line-height: 20px;
+                    color: #12263F;
+                }
+            }
+        }
+    }
+
+    &-item {
+        padding: 15px 0;
+
+        &-description {
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 19px;
+            letter-spacing: -0.01em;
+            color: #12263F;
+        }
+
+        &-participants {
+            font-weight: 400;
+            font-size: 13px;
+            line-height: 17px;
+            color: #6F84A2;
+        }
+    }
 }
 
 .participants {
@@ -165,20 +218,5 @@
 }
 
 .discussions {
-    padding: 15px 0;
 
-    &-description {
-        font-weight: 400;
-        font-size: 15px;
-        line-height: 19px;
-        letter-spacing: -0.01em;
-        color: #12263F;
-    }
-
-    &-participants {
-        font-weight: 400;
-        font-size: 13px;
-        line-height: 17px;
-        color: #6F84A2;
-    }
 }
