@@ -52,6 +52,19 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
+  get postTypeFilter(): PostType {
+    switch(this.selectedFiltering) {
+      case PostFiltering.All:
+        return undefined;
+      case PostFiltering.Post:
+        return PostType.QuickPost;
+      case PostFiltering.Question:
+        return PostType.Question;
+      case PostFiltering.Discussion:
+        return PostType.Discussion;
+    }
+  }
+
   ngOnInit(): void {
     this.loadInfiniteData(this._usersService, 'getAll', ['', true, 'creationTime desc', 0, 6], 'usersYouMayKnow');
     this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'recommendedCourses');
@@ -65,7 +78,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
 
   private getPosts(): void {
     this.isLoadingPosts = true;
-    this._postsService.getAllPosts(undefined, undefined)
+    this._postsService.getAllPosts(this.postTypeFilter, undefined)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingPosts = false))
       .subscribe(posts => this.posts = posts);
@@ -74,6 +87,23 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
   handleRecommendedCoursesRequestData(skipCount: number): void {
     const lastItem = this.recommendedCourses.slice(-1)[0];
     this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, lastItem.creationTime, undefined, DateGrains.Aged30, skipCount, 4], 'recommendedCourses');
+  }
+
+  isSelectedFiltering(filter: PostFiltering): boolean {
+    return this.selectedFiltering === filter;
+  }
+
+  isSelectedSorting(sort: PostSorting): boolean {
+    return this.selectedSorting === sort;
+  }
+
+  handleFilteringChange(filter: PostFiltering): void {
+    this.selectedFiltering = filter;
+    this.getPosts();
+  }
+
+  handleSortingChange(sort: PostSorting): void {
+    this.selectedSorting = sort;
   }
 
 }

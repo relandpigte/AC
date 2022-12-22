@@ -67,6 +67,18 @@ export class DiscussionComponent extends AppComponentBase implements OnInit {
     get isOwner(): boolean { return this.appSession.userId === this.discussion?.creatorUserId; }
     get discussionTitle(): string { return this.discussion?.title; }
     get discussionDescription(): string { return this.discussion?.content; }
+    get postTypeFilter(): PostType {
+        switch(this.selectedFiltering) {
+          case PostFiltering.All:
+            return undefined;
+          case PostFiltering.Post:
+            return PostType.QuickPost;
+          case PostFiltering.Question:
+            return PostType.Question;
+          case PostFiltering.Discussion:
+            return PostType.Discussion;
+        }
+    }
 
     ngOnInit(): void {
         this.getParticipants();
@@ -155,5 +167,22 @@ export class DiscussionComponent extends AppComponentBase implements OnInit {
             default:
                 this._router.navigate(['app', 'community', 'following']);
         }
+    }
+
+    isSelectedFiltering(filter: PostFiltering): boolean {
+        return this.selectedFiltering === filter;
+    }
+
+    isSelectedSorting(sort: PostSorting): boolean {
+        return this.selectedSorting === sort;
+    }
+
+    handleFilteringChange(filter: PostFiltering): void {
+        this.selectedFiltering = filter;
+        this.getChildren();
+    }
+
+    handleSortingChange(sort: PostSorting): void {
+        this.selectedSorting = sort;
     }
 }
