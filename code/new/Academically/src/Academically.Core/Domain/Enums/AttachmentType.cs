@@ -10,6 +10,7 @@
 		jpeg,
 		jpg,
 		mp4,
+		mov,
 		txt,
 		ppt,
 		pptx
