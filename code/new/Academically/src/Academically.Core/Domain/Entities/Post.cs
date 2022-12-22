@@ -15,19 +15,24 @@ namespace Academically.Domain.Entities
 		{
 			PostTopics = new HashSet<PostTopic>();
 			PostAttachments = new HashSet<PostAttachment>();
-		}
-
-		public string Title { get; set; }
+            Children = new HashSet<Post>();
+        }
+        public string Title { get; set; }
 		public string Content { get; set; }
 		public Guid? SpaceId { get; set; }
 		public Guid? ServiceId { get; set; }
 		public PostType Type { get; set; }
+		public Guid? ParentId { get; set; }
 
 		[ForeignKey("CreatorUserId")]
 		public virtual User CreatorUser { get; set; }
+        [ForeignKey("ParentId")]
+        public virtual Post Parent { get; set; }
 
-		public virtual ICollection<PostTopic> PostTopics { get; set; }
+        public virtual ICollection<PostTopic> PostTopics { get; set; }
 		public virtual ICollection<PostAttachment> PostAttachments { get; set; }
-	}
+        public virtual ICollection<Post> Children { get; set; }
+
+    }
 }
 
