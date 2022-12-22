@@ -25,7 +25,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Academically.Services.Posts
 {
-    //[AbpAuthorize(PermissionNames.Pages_Posts)]
+    [AbpAuthorize(PermissionNames.Pages_Posts)]
     public class PostsAppService : AcademicallyAppServiceBase, IPostsAppService
     {
         private readonly IRepository<Post, Guid> _postRepository;
@@ -74,6 +74,7 @@ namespace Academically.Services.Posts
         {
            var result = await _postRepository.GetAll()
                                   .Include(p => p.CreatorUser)
+                                  .Include(e => e.Parent)
                                   .Include(p => p.PostAttachments)
                                     .ThenInclude(a => a.Document)
                                   .Include(p => p.PostTopics)
