@@ -43,6 +43,8 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
+  get isDiscussion(): boolean { return this._router.url.includes(['community', 'discussion'].join('/')) }
+
   ngOnInit(): void {
     this.getUserTopics();
     this.getSuggestedTopics();

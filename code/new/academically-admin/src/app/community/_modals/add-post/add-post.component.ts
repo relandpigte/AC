@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -30,6 +30,9 @@ export enum PostTabs {
     isCreating = false;
     isShowServicePicker = false;
     isShowEmojiPicker = false;
+
+    @Input() allowTabs = true;
+    @Input() title: string;
 
     @ViewChild('fileInput') fileInput: ElementRef;
     @Output() onPostCreated = new EventEmitter<any>();

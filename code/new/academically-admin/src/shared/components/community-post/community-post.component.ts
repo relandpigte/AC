@@ -1,5 +1,6 @@
 
 import { Component, Injector, OnInit, OnChanges, Input, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { FileUtils } from '@shared/helpers/file-utils';
 import { AvailableServiceDto, DisciplineTaxonomyDto, PostType } from '@shared/service-proxies/service-proxies';
@@ -21,7 +22,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnIn
 
     constructor(
         injector: Injector,
-        private _cdr: ChangeDetectorRef
+        private _cdr: ChangeDetectorRef,
+        private _router: Router
     ) {
         super(injector);
     }
@@ -73,5 +75,9 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnIn
         if (this.data.service) {
             this.serviceAttachment = this.data.service;
         }
+    }
+
+    goToDiscussion(): void {
+        this._router.navigate(['app', 'community', 'discussion', this.data.id]);
     }
 }

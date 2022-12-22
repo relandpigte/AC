@@ -40,6 +40,8 @@ import { AutocompleteComponent } from '@shared/components/autocomplete/autocompl
 import { CardClusterComponent } from '@shared/components/card-cluster/card-cluster.component';
 import { CarouselPillComponent } from '@shared/components/carousel-pill/carousel-pill.component';
 import { CarouselWrapperComponent } from '@shared/components/carousel-wrapper/carousel-wrapper.component';
+import { CommunityPostCardComponent } from '@shared/components/community-post/community-post.component';
+import { CommunityComposerComponent } from '@shared/components/composer/composer.component';
 import { EmojiPickerComponent } from '@shared/components/emoji-picker/emoji-picker.component';
 import { FeaturedCarouselComponent } from '@shared/components/featured-carousel/featured-carousel.component';
 import { PillPickerComponent } from '@shared/components/pill-picker/pill-picker.component';
@@ -47,6 +49,7 @@ import { SearchComponent } from '@shared/components/search/search.component';
 import { ServiceCardComponent } from '@shared/components/service-card/service-card.component';
 import { ServicePickerComponent } from '@shared/components/service-picker/service-picker.component';
 import { ServicePreviewComponent } from '@shared/components/service-preview/service-preview.component';
+import { CommunitySideCardComponent } from '@shared/components/side-card/side-card.component';
 import { TopicCardComponent } from '@shared/components/topic/topic.component';
 import { KeysPipe } from '@shared/pipes/keys.pipe';
 
@@ -78,6 +81,9 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     AttachmentPreviewComponent,
     ServicePickerComponent,
     ServicePreviewComponent,
+    CommunityComposerComponent,
+    CommunityPostCardComponent,
+    CommunitySideCardComponent,
     EmojiPickerComponent
   ],
   imports: [
@@ -148,6 +154,9 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     AttachmentPreviewComponent,
     ServicePickerComponent,
     ServicePreviewComponent,
+    CommunityComposerComponent,
+    CommunityPostCardComponent,
+    CommunitySideCardComponent,
     EmojiPickerComponent
   ],
 })

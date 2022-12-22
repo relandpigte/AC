@@ -1,0 +1,102 @@
+<div class="discussion position-relative" [style.paddingBottom.px]="20">
+    <div class="discussion-header d-flex align-items-center" [style.marginTop.px]="40">
+        <div
+            class="discussion-header-back-btn d-flex justify-content-center align-items-center cursor-pointer"
+            (click)="navigateBack()"
+        >
+            <span class="fe fe-arrow-left"></span>
+        </div>
+        <div class="discussion-header-back-text">Back to community</div>
+    </div>
+    <div class="discussion-title" [style.marginTop.px]="30">Discussion</div>
+    <div class="discussion-info card p-0" [style.marginTop.px]="10">
+        <div class="card-body position-relative">
+            <div class="discussion-info-options d-flex justify-content-start align-items-center">
+                <div class="dropdown">
+                    <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="fe fe-more-vertical"></span>
+                    </a>
+                    <div *ngIf="isOwner" class="dropdown-menu dropdown-menu-right">
+                      <div class="dropdown-item cursor-pointer">Edit discussion</div>
+                      <div class="dropdown-item cursor-pointer">Delete discussion</div>
+                    </div>
+                    <div *ngIf="!isOwner" class="dropdown-menu dropdown-menu-right">
+                        <div class="dropdown-item cursor-pointer">Report discussion</div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="discussionTitle" class="discussion-info-header" [innerHTML]="discussionTitle"></div>
+            <div *ngIf="discussionDescription" class="discussion-info-description" [innerHTML]="discussionDescription" [style.marginTop.px]="10"></div>
+            <div *ngIf="discussionTopics && discussionTopics.length"  class="discussion-info-topics d-flex flex-wrap flex-row gap-5" [style.marginTop.px]="10">
+                <div *ngFor="let topic of discussionTopics" class="discussion-info-topics-item cursor-pointer">#{{ topic.name }}</div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="flex-grow-1 d-flex align-items-center">
+                <div class="discussion-info-participants">{{ 23 }} participants</div>
+            </div>
+            <div class="flex-grow-1 d-flex justify-content-end gap-20">
+                <button type="button" class="btn btn-light discussion-info-invite">
+                    <span class="fe fe-user-plus flipped-horizontal"></span> Invite
+                </button>
+                <button type="button" class="btn btn-primary discussion-info-subscribe">
+                    <span class="fe fe-bell"></span> Turn on notifications
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid community-content d-flex flex-row flex-nowrap p-0">
+        <div class="community-content-left flex-grow-1">
+            <app-community-composer [showBottomActions]="false" (onQuickPostClick)="handleAddPost('quick-post')"></app-community-composer>
+            <router-outlet></router-outlet>
+        </div>
+        <div class="community-content-right" [style.marginLeft.px]="24">
+            <div>
+                <app-community-side-card
+                    header="Participants"
+                    [items]="participants"
+                    [template]="participantsTemplate"
+                    (onClickItem)="handleItemClick($event, 'participants')"
+                    (onViewAll)="handleViewAllClick('participants')"
+                ></app-community-side-card>
+            </div>
+            <div [style.marginTop.px]="24">
+                <app-community-side-card
+                    header="Related discussion"
+                    [items]="relatedDiscussions"
+                    [template]="relatedDiscussionsTemplate"
+                    (onClickItem)="handleItemClick($event, 'discussions')"
+                    (onViewAll)="handleViewAllClick('discussions')"
+                ></app-community-side-card>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #participantsTemplate let-item="item">
+    <div class="participants d-flex flex-row flex-nowrap">
+        <div class="participants-left flex-grow-1 d-flex flex-row flex-nowrap justify-content-center align-items-center">
+            <div class="participants-avatar d-flex justify-content-center align-items-center">
+                <img [src]="getProfilePicture(item.profilePictureUrl)" class="avatar avatar-sm avatar-img rounded-circle" alt="profile" />
+            </div>
+            <div class="participants-status flex-grow-1 ">
+                <div class="d-flex flex-row gap-10">
+                    <div class="participants-status-name">{{ item.fullName }}</div>
+                    <div class="participants-status-badge d-flex justify-content-center align-items-center">Creator</div>
+                </div>
+                <div class="participants-status-value"><span class="people-status-value-indicator">●</span>Online</div>
+            </div>
+        </div>
+        <div class="participants-right d-flex justify-content-center align-items-center">
+            <div type="button" class="btn btn-white topic-btn d-flex justify-content-center align-items-center">Follow</div>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #relatedDiscussionsTemplate let-item="item">
+    <div class="discussions d-flex flex-column flex-nowrap justify-content-center gap-2">
+        <div class="discussions-description line-clamp">{{ item.content }}</div>
+        <div class="discussions-participants">{{ 23 }} participants</div>
+    </div>
+</ng-template>

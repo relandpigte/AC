@@ -30,6 +30,13 @@ import { AppRouteGuard } from '@shared/auth/auth-route-guard';
                     import('@app/community/popular/popular.module').then(
                       (m) => m.PopularModule
                     ),
+                },
+                {
+                  path: 'discussion/:id',
+                  loadChildren: () =>
+                    import('@app/community/discussion/discussion.module').then(
+                      (m) => m.DiscussionModule
+                    ),
                 }
             ]
           },
