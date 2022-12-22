@@ -6,6 +6,7 @@ import { AvailableServiceDto } from '@shared/service-proxies/service-proxies';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-service-preview',
@@ -28,14 +29,14 @@ export class ServicePreviewComponent extends AppComponentBase implements OnChang
         super(injector);
     }
 
-    get thumbnailImageUrl(): string { return this.service?.thumbnailImageUrl ?? 'assets/img/img-placeholder.png'; }
-    get creatorName(): string { return this.service?.creatorUser?.fullName ?? 'Anonymous'; }
-    get creatorProfilePictureUrl(): string { return this.service?.creatorUser?.profilePictureUrl ?? 'assets/img/anonymous.png'; }
+    get thumbnailImageUrl(): string { return this.service?.thumbnailImageUrl ? this.service.thumbnailImageUrl : 'assets/img/img-placeholder.png'; }
+    get creatorName(): string { return this.service?.creatorUser?.fullName ? this.service.creatorUser.fullName : 'Anonymous'; }
+    get creatorProfilePictureUrl(): string { return this.service?.creatorUser?.profilePictureUrl ? this.service.creatorUser.profilePictureUrl : 'assets/img/anonymous.png'; }
 
     get serviceType(): string { return this.sanitized?.type; }
     get serviceName(): string { return this.service?.name; }
     get priceValue(): number { return this.sanitized?.price?.price ?? 0; }
-    get priceCurrency(): string { return this.sanitized?.price?.currency ?? 'GBP'; }
+    get priceCurrency(): string { return this.sanitized?.price?.currency ? this.sanitized.price.currency : 'GBP'; }
     get priceSuffix(): string { return this.sanitized?.price?.suffix; }
     get composition(): ServiceCardComposition { return this.sanitized?.composition; }
     get compositionVideoDuration(): string { return this.composition?.durationInSec ? moment.utc(this.composition?.durationInSec * 1000).format(`${this.composition?.durationInSec >= 3600 ? 'HH:' : ''}mm:ss`) : null; }

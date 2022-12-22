@@ -32,6 +32,9 @@ export enum PostTabs {
     isShowEmojiPicker = false;
 
     @Input() allowTabs = true;
+    @Input() canCancel = true;
+    @Input() canRemoveAttachment = true;
+
     @Input() title: string;
 
     @ViewChild('fileInput') fileInput: ElementRef;
@@ -128,6 +131,10 @@ export enum PostTabs {
 
     private isValidDiscussion(): boolean {
         return this.model && this.model.title && this.model.information && (this.model.topics?.length || this.model.newTopics?.length);
+    }
+
+    handleModelChanged(model: any): void {
+        this.model = { ...this.model, ...model };
     }
 
     handleImageUploadBtnClick(): void {

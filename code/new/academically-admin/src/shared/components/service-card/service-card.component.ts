@@ -18,6 +18,7 @@ import * as moment from 'moment';
     @Input() data: any;
     @Input() actions: ServiceCardButton[];
 
+    @Output() onShareClick = new EventEmitter<any>();
     @Output() onClick = new EventEmitter<any>();
 
     shimmerType: number = 0;
@@ -353,6 +354,11 @@ import * as moment from 'moment';
       //   if (!this.options || !('isShowProgress' in this.options)) this.sanitizedOptions.isShowProgress = true;
       //   if (!this.options || !('isShowDetails' in this.options)) this.sanitizedOptions.isShowDetails = false;
       // }
+    }
+
+    handleShareClick(evt): void {
+      evt.stopPropagation();
+      this.onShareClick.emit(this.data);
     }
 
     handleClick(): void {

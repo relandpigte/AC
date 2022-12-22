@@ -224,6 +224,12 @@ namespace Academically.Services.Posts
             await _postRepository.DeleteAsync(id);
         }
 
+        public async Task<AvailableServiceDto> GetAvailableService(Guid id)
+        {
+            var param = new PagedGetAvailableServicesRequestDto() { Keyword = id.ToString() };
+            return this.GetAvailableServices(param).Result.Items.FirstOrDefault();
+        }
+
         public async Task<PagedResultDto<AvailableServiceDto>> GetAvailableServices(PagedGetAvailableServicesRequestDto request)
         {
             var articles = await _articlesAppService.GetArticlesByKeyword(request.Keyword);

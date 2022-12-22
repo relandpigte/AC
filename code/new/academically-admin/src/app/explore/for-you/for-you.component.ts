@@ -1,12 +1,12 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ArticleDto, ArticlesServiceProxy, ArticleStatus, CoachingDto, CoachingsServiceProxy, CoachingStatus, CourseDto, CoursesServiceProxy, DateGrains, EventDto, EventsServiceProxy, UserDto, UserServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
-import { finalize, last, takeUntil } from 'rxjs/operators';
+import { ArticleDto, ArticlesServiceProxy, CoachingDto, CoachingsServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, EventDto, EventsServiceProxy, PostsServiceProxy, UserDto, UserServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 
-import * as _ from 'lodash';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
+import { finalize, takeUntil } from 'rxjs/operators';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { AddPostComponent } from '@shared/modals/add-post/add-post.component';
 
 @Component({
   selector: 'app-explore-for-you',
@@ -29,6 +29,8 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
   isLoading_recommendedTutorials = true;
   isLoading_newCoachings = true;
 
+  isLoadingService = false;
+
   newUsersMaxItems: number = 0;
   upcomingEventsMaxItems: number = 0;
   recommendedCoursesMaxItems: number = 0;
@@ -39,12 +41,14 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _router: Router,
+    private _modalService: BsModalService,
     private _usersService: UserServiceProxy,
     private _eventsService: EventsServiceProxy,
     private _coursesService: CoursesServiceProxy,
     private _articlesService: ArticlesServiceProxy,
     private _videoService: VideosServiceProxy,
-    private _coachingsService: CoachingsServiceProxy
+    private _coachingsService: CoachingsServiceProxy,
+    private _postsService: PostsServiceProxy
   ) {
     super(injector);
   }
@@ -101,6 +105,31 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
 
   handleTutorialServiceCardClick(tutorial: VideoDto): void {
     this._router.navigate(['app/videos/student-portal' , tutorial.id]);
+  }
+
+  handleNewCoachingServiceCardClick(coaching: CoachingDto): void {
+    this._router.navigate(['app/coachings/student-portal' , coaching.id]);
+  }
+
+  handleServiceCardShareClick(service: any): void {
+    this.isLoadingService = true;
+    this._postsService.getAvailableService(service.id)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isLoadingService = false))
+      .subscribe(service => {
+        const modalSettings = this.defaultModalSettings as ModalOptions<AddPostComponent>;
+        modalSettings.class = 'modal-lg';
+        modalSettings.initialState = {
+          allowTabs: false,
+          canCancel: false,
+          canRemoveAttachment: false,
+          title: 'Community.SharePost',
+          activeTab: 'quick-post',
+          model: { serviceId: service.id },
+          selectedService: service
+        };
+        this._modalService.show(AddPostComponent, modalSettings).content;
+      });
   }
 
 }

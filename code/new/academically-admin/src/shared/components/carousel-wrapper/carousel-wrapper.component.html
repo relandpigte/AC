@@ -6,6 +6,7 @@
       [ngClass]="{'item-active': expression}"
       [isLoading]="allowLoader && isLoading"
       [isFeatured]="isFeatured"
+      (onShareClick)="handleServiceCardShareClick($event)"
       (onClick)="handleServiceCardClick($event)"
     ></app-service-card>
 

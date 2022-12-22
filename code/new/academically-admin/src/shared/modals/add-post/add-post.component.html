@@ -1,6 +1,6 @@
 <div class="modal-card card">
     <div class="card-header">
-        <div *ngIf="!allowTabs && title" class="flex-grow-1 row align-items-center m-0">
+        <div *ngIf="!allowTabs && title" class="card-header-title flex-grow-1 row align-items-center m-0">
             {{ title | localize }}
         </div>
         <div *ngIf="allowTabs" class="flex-grow-1 row align-items-center">
@@ -26,11 +26,21 @@
     </div>
 
     <div class="card-body">
-        <app-community-post *ngIf="activeTab === 'quick-post'" type="quick-post" (onModelChange)="model=$event"></app-community-post>
-        <app-community-post *ngIf="activeTab === 'add-question'" type="add-question" (onModelChange)="model=$event"></app-community-post>
-        <app-community-post *ngIf="activeTab === 'add-discussion'" type="add-discussion" (onModelChange)="model=$event"></app-community-post>
-        <app-attachment-preview *ngIf="fileAttachment" [file]="fileAttachment" (onRemove)="handleRemoveAttachment()"></app-attachment-preview>
-        <app-service-preview *ngIf="selectedService" [service]="selectedService" (onRemove)="handleRemoveService()"></app-service-preview>
+        <app-community-post *ngIf="activeTab === 'quick-post'" type="quick-post" (onModelChange)="handleModelChanged($event)"></app-community-post>
+        <app-community-post *ngIf="activeTab === 'add-question'" type="add-question" (onModelChange)="handleModelChanged($event)"></app-community-post>
+        <app-community-post *ngIf="activeTab === 'add-discussion'" type="add-discussion" (onModelChange)="handleModelChanged($event)"></app-community-post>
+        <app-attachment-preview
+            *ngIf="fileAttachment"
+            [canRemove]="canRemoveAttachment"
+            [file]="fileAttachment"
+            (onRemove)="handleRemoveAttachment()"
+        ></app-attachment-preview>
+        <app-service-preview
+            *ngIf="selectedService"
+            [canRemove]="canRemoveAttachment"
+            [service]="selectedService"
+            (onRemove)="handleRemoveService()"
+        ></app-service-preview>
         <app-service-picker
             [selectedService]="selectedService"
             [class.show]="isShowServicePicker"
@@ -55,7 +65,7 @@
             <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddService" (click)="isShowServicePicker = !isShowServicePicker"><i class="fe fe-plus"></i></a>
         </div>
         <div class="card-footer-right d-flex align-items-center gap-20">
-            <button type="button" class="btn btn-light" (click)="onCloseClick()">
+            <button *ngIf="canCancel" type="button" class="btn btn-light" (click)="onCloseClick()">
                 {{ 'Cancel' | localize }}
             </button>
             <button type="button" class="btn btn-primary" (click)="handleCreatePost()" [disabled]="!isModelValid">

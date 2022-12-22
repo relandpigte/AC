@@ -6,16 +6,10 @@ import { CommunityRoutingModule } from './community-routing.module';
 import { CommunityComponent } from './community.component';
 import { FollowingTopicsComponent } from './_components/following/following-topics.component';
 import { MoreTopicsComponent } from './_components/more-topics/more-topics.component';
-import { CommunityPostComponent } from './_components/post/post.component';
-import { AddTopicsComponent } from './_modals/add-topics/add-topics.component';
-import { AddPostComponent } from './_modals/add-post/add-post.component';
 
 @NgModule({
   declarations: [
-    AddTopicsComponent,
-    AddPostComponent,
     CommunityComponent,
-    CommunityPostComponent,
     FollowingTopicsComponent,
     MoreTopicsComponent
   ],

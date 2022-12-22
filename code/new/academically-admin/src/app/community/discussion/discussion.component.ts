@@ -5,7 +5,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
-import { AddPostComponent } from '../_modals/add-post/add-post.component';
+import { AddPostComponent } from '../../../shared/modals/add-post/add-post.component';
 import * as _ from 'lodash';
 @Component({
     selector: 'app-discussion',
@@ -61,10 +61,10 @@ export class DiscussionComponent extends AppComponentBase implements OnInit {
             });
     }
 
-    handleAddPost(tab: string): void {
+    handleAddPost(): void {
         const modalSettings = this.defaultModalSettings as ModalOptions<AddPostComponent>;
         modalSettings.class = 'modal-lg';
-        modalSettings.initialState = { allowTabs: false, title: 'Community.QuickPost', activeTab: tab };
+        modalSettings.initialState = { allowTabs: false, title: 'Community.QuickPost', activeTab: 'quick-post' };
         this._modalService.show(AddPostComponent, modalSettings).content;
     }
 

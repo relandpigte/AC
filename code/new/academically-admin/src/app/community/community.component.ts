@@ -7,8 +7,8 @@ import { takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { Router } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { AddTopicsComponent } from './_modals/add-topics/add-topics.component';
-import { AddPostComponent } from './_modals/add-post/add-post.component';
+import { AddTopicsComponent } from '@shared/modals/add-topics/add-topics.component';
+import { AddPostComponent } from '../../shared/modals/add-post/add-post.component';
 import { TopicSorting } from '@shared/components/topic/topic.component';
 
 @Component({

@@ -45,12 +45,15 @@ import { CommunityComposerComponent } from '@shared/components/composer/composer
 import { EmojiPickerComponent } from '@shared/components/emoji-picker/emoji-picker.component';
 import { FeaturedCarouselComponent } from '@shared/components/featured-carousel/featured-carousel.component';
 import { PillPickerComponent } from '@shared/components/pill-picker/pill-picker.component';
+import { CommunityPostComponent } from '@shared/components/post/post.component';
 import { SearchComponent } from '@shared/components/search/search.component';
 import { ServiceCardComponent } from '@shared/components/service-card/service-card.component';
 import { ServicePickerComponent } from '@shared/components/service-picker/service-picker.component';
 import { ServicePreviewComponent } from '@shared/components/service-preview/service-preview.component';
 import { CommunitySideCardComponent } from '@shared/components/side-card/side-card.component';
 import { TopicCardComponent } from '@shared/components/topic/topic.component';
+import { AddPostComponent } from '@shared/modals/add-post/add-post.component';
+import { AddTopicsComponent } from '@shared/modals/add-topics/add-topics.component';
 import { KeysPipe } from '@shared/pipes/keys.pipe';
 
 @NgModule({
@@ -78,10 +81,13 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     KeysPipe,
     AutocompleteComponent,
     PillPickerComponent,
+    AddPostComponent,
+    AddTopicsComponent,
     AttachmentPreviewComponent,
     ServicePickerComponent,
     ServicePreviewComponent,
     CommunityComposerComponent,
+    CommunityPostComponent,
     CommunityPostCardComponent,
     CommunitySideCardComponent,
     EmojiPickerComponent
@@ -149,12 +155,15 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     CarouselWrapperComponent,
     FeaturedCarouselComponent,
     KeysPipe,
+    AddPostComponent,
+    AddTopicsComponent,
     AutocompleteComponent,
     PillPickerComponent,
     AttachmentPreviewComponent,
     ServicePickerComponent,
     ServicePreviewComponent,
     CommunityComposerComponent,
+    CommunityPostComponent,
     CommunityPostCardComponent,
     CommunitySideCardComponent,
     EmojiPickerComponent
