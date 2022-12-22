@@ -14,6 +14,7 @@ namespace Academically.Services.Posts.Dto
         public Guid? SpaceId { get; set; }
         public Guid? ServiceId { get; set; }
         public PostType Type { get; set; }
+        public Guid? ParentId { get; set; }
         public bool IsDeleted { get; set; }
 
     }
