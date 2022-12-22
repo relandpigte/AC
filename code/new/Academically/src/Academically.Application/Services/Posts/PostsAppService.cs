@@ -190,6 +190,7 @@ namespace Academically.Services.Posts
         {
             var post = await _postRepository.GetAll()
                         .Include(p => p.CreatorUser)
+                        .Include(p => p.Children)
                         .Include(p => p.PostAttachments)
                             .ThenInclude(a => a.Document)
                         .Include(p => p.PostTopics)
