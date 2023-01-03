@@ -154,5 +154,6 @@
 	<include file="ddml-new/ddml.2022-12-07-01-alter-post-table.xml" />
 	<include file="ddml-new/ddml.2022-12-07-01-alter-posts-add-serviceid-field.xml" />
 	<include file="ddml-new/ddml.2022-12-22-01-alter-posts-add-parentId-field.xml" />
+	<include file="ddml-new/ddml.2023-01-03-01-create-postnotification-table.xml" />
 </databaseChangeLog>
 	

@@ -1,0 +1,37 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="CDavid" id="1">
+        <createTable tableName="academicallypostnotification">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="PostId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NotifyUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="CDavid" id="2">
+        <createIndex indexName="FK_PostNotification_Posts_PostId_idx" tableName="academicallypostnotification">
+            <column name="PostId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="CDavid" id="3">
+        <createIndex indexName="FK_PostNotification_Users_NotifyUserId_idx" tableName="academicallypostnotification">
+            <column name="NotifyUserId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="CDavid" id="4">
+        <addForeignKeyConstraint baseColumnNames="NotifyUserId" baseTableName="academicallypostnotification" constraintName="FK_PostNotification_Users_NotifyUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+    <changeSet author="CDavid" id="5">
+        <addForeignKeyConstraint baseColumnNames="PostId" baseTableName="academicallypostnotification" constraintName="FK_PostNotification_Posts_PostId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyposts" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
