@@ -9,13 +9,12 @@ namespace Academically.Domain.Entities
 	public class PostNotification : CreationAuditedEntity<Guid>
 	{
 		public Guid PostId { get; set; }
-		public long? NotifyUserId { get; set; }
 
 		[ForeignKey("PostId")]
 		public virtual Post Post { get; set; }
 
-		[ForeignKey("NotifyUserId")]
+		[ForeignKey("CreatorUserId")]
 		public virtual User User { get; set; }
-	}
+    }
 }
 

@@ -8,7 +8,7 @@
             <column name="PostId" type="CHAR(36)">
                 <constraints nullable="false"/>
             </column>
-            <column name="NotifyUserId" type="BIGINT">
+            <column name="CreatorUserId" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="CreationTime" type="datetime">
@@ -23,13 +23,13 @@
         </createIndex>
     </changeSet>
     <changeSet author="CDavid" id="3">
-        <createIndex indexName="FK_PostNotification_Users_NotifyUserId_idx" tableName="academicallypostnotification">
-            <column name="NotifyUserId"/>
+        <createIndex indexName="FK_PostNotification_Users_CreatorUserId_idx" tableName="academicallypostnotification">
+            <column name="CreatorUserId"/>
         </createIndex>
     </changeSet>
 
     <changeSet author="CDavid" id="4">
-        <addForeignKeyConstraint baseColumnNames="NotifyUserId" baseTableName="academicallypostnotification" constraintName="FK_PostNotification_Users_NotifyUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="academicallypostnotification" constraintName="FK_PostNotification_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
     </changeSet>
     <changeSet author="CDavid" id="5">
         <addForeignKeyConstraint baseColumnNames="PostId" baseTableName="academicallypostnotification" constraintName="FK_PostNotification_Posts_PostId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="academicallyposts" validate="true"/>

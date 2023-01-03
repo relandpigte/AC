@@ -32,6 +32,7 @@ namespace Academically.Services.Posts
         private readonly IRepository<PostTopic, Guid> _postTopicRepository;
         private readonly IRepository<PostAttachment, Guid> _postAttachmentRepository;
         private readonly IRepository<DisciplineTaxonomy, Guid> _disciplineTaxonomyRepository;
+        private readonly IRepository<PostNotification, Guid> _postNotificationRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IArticlesAppService _articlesAppService;
         private readonly ICoachingsAppService _coachingsAppService;
@@ -46,6 +47,7 @@ namespace Academically.Services.Posts
             IRepository<PostTopic, Guid> postTopicRepository,
             IRepository<PostAttachment, Guid> postAttachmentRepository,
             IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomyRepository,
+            IRepository<PostNotification, Guid> postNotificationRepository,
             IDocumentsDomainService documentsDomainService,
             IArticlesAppService articlesAppService,
             ICoachingsAppService coachingsAppService,
@@ -67,6 +69,7 @@ namespace Academically.Services.Posts
             _eventsAppService = eventsAppService;
             _workshopsAppService = workshopsAppService;
             _documentsAppService = documentsAppService;
+            _postNotificationRepository = postNotificationRepository;
         }
 
         public async Task<List<PostDto>> GetAllPosts(PostType? type, Guid? parentId)
@@ -296,6 +299,12 @@ namespace Academically.Services.Posts
                 query = query.OrderBy(x => x.Name);
             return query;
         }
-        
+
+
+        public async Task CreatePostNotification([FromForm] CreatePostNotificationDto input)
+        {
+            var postNotif = ObjectMapper.Map<PostNotification>(input);
+            await _postNotificationRepository.InsertAsync(postNotif);
+        }
     }
 }

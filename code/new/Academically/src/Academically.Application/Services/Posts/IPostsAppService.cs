@@ -16,5 +16,6 @@ namespace Academically.Services.Posts
         Task<PostDto> UpdateAsync(UpdatePostDto input);
         Task DeleteAsync(Guid id);
         Task<AvailableServiceDto> GetAvailableService(Guid id);
+        Task CreatePostNotification(CreatePostNotificationDto input);
     }
 }
