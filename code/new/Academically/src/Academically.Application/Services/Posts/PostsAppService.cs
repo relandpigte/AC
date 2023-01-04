@@ -306,5 +306,10 @@ namespace Academically.Services.Posts
             var postNotif = ObjectMapper.Map<PostNotification>(input);
             await _postNotificationRepository.InsertAsync(postNotif);
         }
+
+        public async Task DeletePostNotification(Guid id)
+        {
+            await _postNotificationRepository.DeleteAsync(id);
+        }
     }
 }
