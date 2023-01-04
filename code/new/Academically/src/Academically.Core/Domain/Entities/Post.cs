@@ -15,7 +15,8 @@ namespace Academically.Domain.Entities
 		{
 			PostTopics = new HashSet<PostTopic>();
 			PostAttachments = new HashSet<PostAttachment>();
-            Children = new HashSet<Post>();
+			PostNotification = new HashSet<PostNotification>();
+			Children = new HashSet<Post>();
         }
         public string Title { get; set; }
 		public string Content { get; set; }
@@ -31,7 +32,8 @@ namespace Academically.Domain.Entities
 
         public virtual ICollection<PostTopic> PostTopics { get; set; }
 		public virtual ICollection<PostAttachment> PostAttachments { get; set; }
-        public virtual ICollection<Post> Children { get; set; }
+		public virtual ICollection<PostNotification> PostNotification { get; set; }
+		public virtual ICollection<Post> Children { get; set; }
 
     }
 }
