@@ -25,7 +25,7 @@ namespace Academically.Domain.Entities
         public bool CommentModeration { get; set; }
         public string CustomUrl { get; set; }
         public string Categories { get; set; }
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
         public PricingType PricingType { get; set; }
         public ServiceDelayType? DelayType { get; set; }
         public string DelayValue { get; set; }

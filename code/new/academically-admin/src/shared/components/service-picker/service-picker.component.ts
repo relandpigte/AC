@@ -1,10 +1,9 @@
-import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { AvailableServiceDto, PostsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 
-import * as _ from 'lodash';
 
 @Component({
     selector: 'app-service-picker',
@@ -12,8 +11,9 @@ import * as _ from 'lodash';
     styleUrls: ['./service-picker.component.scss'],
     animations: [appModuleAnimation()]
 })
-export class ServicePickerComponent extends AppComponentBase implements OnInit {
+export class ServicePickerComponent extends AppComponentBase implements OnChanges {
     @Input() selectedService: AvailableServiceDto;
+    @Input() isShown = false;
 
     @Output() onBack = new EventEmitter<any>();
     @Output() onClose = new EventEmitter<any>();
@@ -34,8 +34,10 @@ export class ServicePickerComponent extends AppComponentBase implements OnInit {
 
     get loading(): boolean { return this.isSearching; }
 
-    ngOnInit(): void {
-        this.handleOnSearch(this.searchFilter);
+    ngOnChanges(changes: SimpleChanges): void {
+        if ('isShown' in changes && changes.isShown?.previousValue != changes.isShown?.currentValue && this.isShown) {
+            this.handleOnSearch(this.searchFilter);
+        }
     }
 
     isServiceSelected(service: AvailableServiceDto): boolean {

@@ -10,6 +10,7 @@ export interface SearchOptions {
     onEnter?: boolean;
     searchDelay?: number;
     searchHeight?: number;
+    searchInputLoader?: boolean;
     maxItems?: number;
     placeholder?: string;
     hasDivider?: boolean;
