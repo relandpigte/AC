@@ -70,7 +70,8 @@ namespace Academically.Extensions
             // Get the earliest creation time
             DateTime today = DateTime.Now;
             DateTime earliestCreationTime = list.Min(x => x.CreationTime);
-            DateTime olderThanThisMonth = new DateTime(today.Year, today.Month-1, DateTime.DaysInMonth(today.Year, today.Month-1), 23, 59, 59, 999);
+            var previousMonth = today.Month == 1 ? 12 : today.Month - 1;
+            DateTime olderThanThisMonth = new DateTime(today.Year, previousMonth, DateTime.DaysInMonth(today.Year, previousMonth), 23, 59, 59, 999);
 
             return list.GroupBy(x => new { DateRange = ToDateRangeString(x.CreationTime, grain, earliestCreationTime, olderThanThisMonth) })
                                 .Select(x => new
