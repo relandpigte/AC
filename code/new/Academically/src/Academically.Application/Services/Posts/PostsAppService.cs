@@ -35,6 +35,7 @@ namespace Academically.Services.Posts
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<PostTopic, Guid> _postTopicRepository;
         private readonly IRepository<PostAttachment, Guid> _postAttachmentRepository;
+        private readonly IRepository<PostVisibility, Guid> _postVisibilityRepository;
         private readonly IRepository<DisciplineTaxonomy, Guid> _disciplineTaxonomyRepository;
         private readonly IRepository<PostNotification, Guid> _postNotificationRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
@@ -52,6 +53,7 @@ namespace Academically.Services.Posts
             IRepository<Post, Guid> postRepository,
             IRepository<PostTopic, Guid> postTopicRepository,
             IRepository<PostAttachment, Guid> postAttachmentRepository,
+            IRepository<PostVisibility, Guid> postVisibilityRepository,
             IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomyRepository,
             IRepository<PostNotification, Guid> postNotificationRepository,
             IDocumentsDomainService documentsDomainService,
@@ -68,6 +70,7 @@ namespace Academically.Services.Posts
             _postRepository = postRepository;
             _postTopicRepository = postTopicRepository;
             _postAttachmentRepository = postAttachmentRepository;
+            _postVisibilityRepository = postVisibilityRepository;
             _postNotificationRepository = postNotificationRepository;
             _disciplineTaxonomyRepository = disciplineTaxonomyRepository;
             _documentsDomainService = documentsDomainService;
@@ -84,6 +87,10 @@ namespace Academically.Services.Posts
 
         public async Task<List<PostDto>> GetAllPosts(PostType? type, Guid? parentId)
         {
+            var userId = AbpSession.UserId.Value;
+            var userHiddenPost = _postVisibilityRepository.GetAll()
+                                                          .Where(w => w.IsHidden && w.CreatorUserId == userId)
+                                                          .Select(s => s.PostId).ToList();
            var result = await _postRepository.GetAll()
                                   .Include(p => p.CreatorUser)
                                   .Include(e => e.Parent)
@@ -95,6 +102,7 @@ namespace Academically.Services.Posts
                                   .WhereIf(type.HasValue, p => p.Type == type)
                                   .WhereIf(parentId.HasValue, p => p.ParentId == parentId)
                                   .WhereIf(!parentId.HasValue, p => p.ParentId == null)
+                                  .Where(e => e.IsHidden == false && !userHiddenPost.Contains(e.Id))
                                   .OrderByDescending(p => p.CreationTime)
                                   .Select(p => ObjectMapper.Map<PostDto>(p))
                                   .ToListAsync();
@@ -124,7 +132,7 @@ namespace Academically.Services.Posts
             if (input.NewTopics != null && input.NewTopics.Any())
             {
                 var otherTopicParent = await _disciplineTaxonomyRepository.FirstOrDefaultAsync(x => x.Name == "Other Topics");
-                if(otherTopicParent != null)
+                if (otherTopicParent != null)
                 {
                     foreach (var newTopic in input.NewTopics)
                     {
@@ -181,10 +189,14 @@ namespace Academically.Services.Posts
 
         public async Task<List<PostDto>> GetByUser(long userId, PostType? type)
         {
+            var userHiddenPost = _postVisibilityRepository.GetAll()
+                                                          .Where(w => w.IsHidden && w.CreatorUserId == userId)
+                                                          .Select(s => s.PostId).ToList();
             var result = await _postRepository.GetAll()
                 .Include(p => p.CreatorUser)
                 .WhereIf(type.HasValue, p => p.Type == type)
                 .Where(p => p.CreatorUserId == userId)
+                .Where(e => e.IsHidden == false && !userHiddenPost.Contains(e.Id))
                 .OrderByDescending(p => p.CreationTime)
                 .Select(p => ObjectMapper.Map<PostDto>(p))
                 .ToListAsync();
@@ -203,6 +215,10 @@ namespace Academically.Services.Posts
 
         public async Task<PostDto> GetAsync(Guid id)
         {
+            var userId = AbpSession.UserId.Value;
+            var userHiddenPost = _postVisibilityRepository.GetAll()
+                                                          .Where(w => w.IsHidden && w.CreatorUserId == userId)
+                                                          .Select(s => s.PostId).ToList();
             var post = await _postRepository.GetAll()
                         .Include(p => p.CreatorUser)
                         .Include(p => p.Children)
@@ -211,6 +227,7 @@ namespace Academically.Services.Posts
                             .ThenInclude(a => a.Document)
                         .Include(p => p.PostTopics)
                             .ThenInclude(t => t.DisciplineTaxonomy)
+                        .Where(e => e.IsHidden == false && !userHiddenPost.Contains(e.Id))
                         .SingleOrDefaultAsync(p => p.Id == id);
 
             var result = ObjectMapper.Map<PostDto>(post);
@@ -337,6 +354,30 @@ namespace Academically.Services.Posts
             return query;
         }
 
+        public async Task SetPostVisibility([FromForm] PostVisibilityDto input)
+        {
+            input.CreatorUserId = AbpSession.UserId.Value;
+            var mainPost = _postRepository.FirstOrDefault(f => f.Id == input.PostId);
+            if (mainPost != null)
+            {
+                if (mainPost.CreatorUserId == input.CreatorUserId)
+                {
+                    mainPost.IsHidden = input.IsHidden;
+                    await _postRepository.UpdateAsync(mainPost);
+                }
+                var userBoardPost = _postVisibilityRepository.FirstOrDefault(f => f.PostId == input.PostId && f.CreatorUserId == input.CreatorUserId);
+                if (userBoardPost != null)
+                {
+                    userBoardPost.IsHidden = input.IsHidden;
+                    await _postVisibilityRepository.UpdateAsync(userBoardPost);
+                }
+                else
+                {
+                    var newPostVisibility = ObjectMapper.Map<PostVisibility>(input);
+                    await _postVisibilityRepository.InsertAsync(newPostVisibility);
+                }
+            }
+        }
 
         public async Task CreatePostNotification([FromForm] CreatePostNotificationDto input)
         {

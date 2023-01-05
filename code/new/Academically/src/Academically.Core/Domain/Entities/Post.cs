@@ -16,7 +16,8 @@ namespace Academically.Domain.Entities
 			PostTopics = new HashSet<PostTopic>();
 			PostAttachments = new HashSet<PostAttachment>();
 			PostNotification = new HashSet<PostNotification>();
-			Children = new HashSet<Post>();
+			PostVisibility = new HashSet<PostVisibility>();
+            Children = new HashSet<Post>();
         }
         public string Title { get; set; }
 		public string Content { get; set; }
@@ -24,8 +25,9 @@ namespace Academically.Domain.Entities
 		public Guid? ServiceId { get; set; }
 		public PostType Type { get; set; }
 		public Guid? ParentId { get; set; }
+        public bool IsHidden { get; set; }
 
-		[ForeignKey("CreatorUserId")]
+        [ForeignKey("CreatorUserId")]
 		public virtual User CreatorUser { get; set; }
         [ForeignKey("ParentId")]
         public virtual Post Parent { get; set; }
@@ -33,8 +35,8 @@ namespace Academically.Domain.Entities
         public virtual ICollection<PostTopic> PostTopics { get; set; }
 		public virtual ICollection<PostAttachment> PostAttachments { get; set; }
 		public virtual ICollection<PostNotification> PostNotification { get; set; }
-		public virtual ICollection<Post> Children { get; set; }
-
+		public virtual ICollection<PostVisibility> PostVisibility { get; set; }
+        public virtual ICollection<Post> Children { get; set; }
     }
 }
 

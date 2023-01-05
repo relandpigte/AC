@@ -20,6 +20,8 @@ namespace Academically.Services.Posts.Dto
         public PostType Type { get; set; }
         public Guid? ParentId { get; set; }
         public UserDto CreatorUser { get; set; }
+        public bool IsHidden { get; set; }
+
         [NotMapped]
         public AvailableServiceDto Service { get; set; }
 
@@ -27,6 +29,7 @@ namespace Academically.Services.Posts.Dto
         public IEnumerable<PostAttachmentDto> PostAttachments { get; set; }
         public IEnumerable<PostDto> Children { get; set; }
         public IEnumerable<UserDto> Participants { get; set; }
+        public IEnumerable<PostVisibilityDto> PostVisibility { get; set; }
 
     }
 }
