@@ -89,7 +89,6 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnIn
     private startHideTimer(): void {
         const self = this;
         this.hideTimer = setTimeout(() => {
-
             this.isHiding = false;
         }, 1000 * this.closeHiddenPostAfter);
     }
@@ -139,29 +138,35 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnIn
             undefined,
             (result: boolean) => {
                 if (result) {
-                    // this._postsServiceProxy.delete(id)
-                    //     .pipe(takeUntil(this.destroyed$))
-                    //     .subscribe(() => {
-                    //     this.notify.success(this.l('PostHiddenSuccessfully'));
-                    //     this.isHidden = true;
-                    // });
-                    this.notify.success(this.l('PostHiddenSuccessfully'));
-                    this.isHidden = true;
-                    this.isHiding = true;
-                    this.startHideTimer();
+                    this._postsServiceProxy.setPostVisibility(id, true, null, null, null)
+                        .pipe(takeUntil(this.destroyed$))
+                        .subscribe(() => {
+                            this.notify.success(this.l('PostHiddenSuccessfully'));
+                            this.isHidden = true;
+                            this.isHiding = true;
+                            this.startHideTimer();
+                    });
                 }
             }
         );
     }
 
     onUndoHideClick(id: string): void {
-        this.isHidden = false;
-        if (this.hideTimer) {
-            clearTimeout(this.hideTimer);
-        }
+        this._postsServiceProxy.setPostVisibility(id, false, null, null, null)
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe(() => {
+                this.isHidden = false;
+                if (this.hideTimer) {
+                    clearTimeout(this.hideTimer);
+                }
+        });
     }
 
     onCloseHideClick(id: string): void {
-
+        if (this.hideTimer) {
+            clearTimeout(this.hideTimer);
+            this.isHiding = false;
+            this.isHidden = true;
+        }
     }
 }

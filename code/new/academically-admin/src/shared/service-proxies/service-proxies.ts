@@ -13256,6 +13256,249 @@ export class PostsServiceProxy {
         }
         return _observableOf<AvailableServiceDtoPagedResultDto>(<any>null);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createComment(body: CommentDto | undefined): Observable<CommentDto> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/CreateComment";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateComment(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateComment(<any>response_);
+                } catch (e) {
+                    return <Observable<CommentDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CommentDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateComment(response: HttpResponseBase): Observable<CommentDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CommentDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CommentDto>(<any>null);
+    }
+
+    /**
+     * @param postId (optional) 
+     * @param isHidden (optional) 
+     * @param creationTime (optional) 
+     * @param creatorUserId (optional) 
+     * @param id (optional) 
+     * @return Success
+     */
+    setPostVisibility(postId: string | undefined, isHidden: boolean | undefined, creationTime: moment.Moment | undefined, creatorUserId: number | undefined, id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/SetPostVisibility";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (postId === null || postId === undefined) {
+            // do nothing
+        } else
+            content_.append("PostId", postId.toString());
+        if (isHidden === null || isHidden === undefined) {
+            // do nothing
+        } else
+            content_.append("IsHidden", isHidden.toString());
+        if (creationTime === null || creationTime === undefined) {
+            // do nothing
+        } else
+            content_.append("CreationTime", creationTime.toJSON());
+        if (creatorUserId === null || creatorUserId === undefined) {
+            // do nothing
+        } else
+            content_.append("CreatorUserId", creatorUserId.toString());
+        if (id === null || id === undefined) {
+            // do nothing
+        } else
+            content_.append("Id", id.toString());
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSetPostVisibility(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSetPostVisibility(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSetPostVisibility(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param postId (optional) 
+     * @param creatorUserId (optional) 
+     * @return Success
+     */
+    createPostNotification(postId: string | undefined, creatorUserId: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/CreatePostNotification";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (postId === null || postId === undefined) {
+            // do nothing
+        } else
+            content_.append("PostId", postId.toString());
+        if (creatorUserId === null || creatorUserId === undefined) {
+            // do nothing
+        } else
+            content_.append("CreatorUserId", creatorUserId.toString());
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreatePostNotification(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreatePostNotification(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreatePostNotification(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    deletePostNotification(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/DeletePostNotification?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeletePostNotification(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeletePostNotification(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeletePostNotification(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
 }
 
 @Injectable()
@@ -39722,10 +39965,13 @@ export class PostDto implements IPostDto {
     type: PostType;
     parentId: string | undefined;
     creatorUser: UserDto;
+    isHidden: boolean;
     service: AvailableServiceDto;
     postTopics: PostTopicDto[] | undefined;
     postAttachments: PostAttachmentDto[] | undefined;
     children: PostDto[] | undefined;
+    participants: UserDto[] | undefined;
+    postVisibility: PostVisibilityDto[] | undefined;
 
     constructor(data?: IPostDto) {
         if (data) {
@@ -39753,6 +39999,7 @@ export class PostDto implements IPostDto {
             this.type = _data["type"];
             this.parentId = _data["parentId"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.isHidden = _data["isHidden"];
             this.service = _data["service"] ? AvailableServiceDto.fromJS(_data["service"]) : <any>undefined;
             if (Array.isArray(_data["postTopics"])) {
                 this.postTopics = [] as any;
@@ -39768,6 +40015,16 @@ export class PostDto implements IPostDto {
                 this.children = [] as any;
                 for (let item of _data["children"])
                     this.children.push(PostDto.fromJS(item));
+            }
+            if (Array.isArray(_data["participants"])) {
+                this.participants = [] as any;
+                for (let item of _data["participants"])
+                    this.participants.push(UserDto.fromJS(item));
+            }
+            if (Array.isArray(_data["postVisibility"])) {
+                this.postVisibility = [] as any;
+                for (let item of _data["postVisibility"])
+                    this.postVisibility.push(PostVisibilityDto.fromJS(item));
             }
         }
     }
@@ -39796,6 +40053,7 @@ export class PostDto implements IPostDto {
         data["type"] = this.type;
         data["parentId"] = this.parentId;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["isHidden"] = this.isHidden;
         data["service"] = this.service ? this.service.toJSON() : <any>undefined;
         if (Array.isArray(this.postTopics)) {
             data["postTopics"] = [];
@@ -39811,6 +40069,16 @@ export class PostDto implements IPostDto {
             data["children"] = [];
             for (let item of this.children)
                 data["children"].push(item.toJSON());
+        }
+        if (Array.isArray(this.participants)) {
+            data["participants"] = [];
+            for (let item of this.participants)
+                data["participants"].push(item.toJSON());
+        }
+        if (Array.isArray(this.postVisibility)) {
+            data["postVisibility"] = [];
+            for (let item of this.postVisibility)
+                data["postVisibility"].push(item.toJSON());
         }
         return data; 
     }
@@ -39839,10 +40107,13 @@ export interface IPostDto {
     type: PostType;
     parentId: string | undefined;
     creatorUser: UserDto;
+    isHidden: boolean;
     service: AvailableServiceDto;
     postTopics: PostTopicDto[] | undefined;
     postAttachments: PostAttachmentDto[] | undefined;
     children: PostDto[] | undefined;
+    participants: UserDto[] | undefined;
+    postVisibility: PostVisibilityDto[] | undefined;
 }
 
 export class PostTopicDto implements IPostTopicDto {
@@ -39913,6 +40184,65 @@ export enum PostType {
     QuickPost = 0,
     Question = 1,
     Discussion = 2,
+}
+
+export class PostVisibilityDto implements IPostVisibilityDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    postId: string;
+    isHidden: boolean;
+
+    constructor(data?: IPostVisibilityDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.postId = _data["postId"];
+            this.isHidden = _data["isHidden"];
+        }
+    }
+
+    static fromJS(data: any): PostVisibilityDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PostVisibilityDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["postId"] = this.postId;
+        data["isHidden"] = this.isHidden;
+        return data; 
+    }
+
+    clone(): PostVisibilityDto {
+        const json = this.toJSON();
+        let result = new PostVisibilityDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPostVisibilityDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    postId: string;
+    isHidden: boolean;
 }
 
 /** 0 = Free 1 = FixedPrice 2 = PaymentPlan 3 = Subscription */
