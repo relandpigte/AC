@@ -130,7 +130,7 @@
             </div>
         </div>
         <div class="community-content-right" [style.marginLeft.px]="24">
-            <div>
+            <div *ngIf="participants?.length">
                 <app-community-side-card
                     header="Participants"
                     [items]="participants"
@@ -139,7 +139,7 @@
                     (onViewAll)="handleViewAllClick('participants')"
                 ></app-community-side-card>
             </div>
-            <div [style.marginTop.px]="24">
+            <div *ngIf="relatedDiscussions?.length" [style.marginTop.px]="24">
                 <app-community-side-card
                     header="Related discussion"
                     [items]="relatedDiscussions"
@@ -161,9 +161,9 @@
             <div class="participants-status flex-grow-1 ">
                 <div class="d-flex flex-row gap-10">
                     <div class="participants-status-name">{{ item.fullName }}</div>
-                    <div class="participants-status-badge d-flex justify-content-center align-items-center">Creator</div>
+                    <div *ngIf="isParticipantOwner(item)" class="participants-status-badge d-flex justify-content-center align-items-center">Creator</div>
                 </div>
-                <div class="participants-status-value"><span class="people-status-value-indicator">●</span>Online</div>
+                <div class="participants-status-value"><span class="participants-status-value-indicator">●</span>Online</div>
             </div>
         </div>
         <div class="participants-right d-flex justify-content-center align-items-center">
