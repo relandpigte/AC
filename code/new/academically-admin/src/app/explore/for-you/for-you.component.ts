@@ -6,7 +6,7 @@ import { ArticleDto, ArticlesServiceProxy, CoachingDto, CoachingsServiceProxy, C
 import { Router } from '@angular/router';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { AddPostComponent } from '@shared/modals/add-post/add-post.component';
+import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 
 @Component({
   selector: 'app-explore-for-you',
@@ -117,7 +117,7 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingService = false))
       .subscribe(service => {
-        const modalSettings = this.defaultModalSettings as ModalOptions<AddPostComponent>;
+        const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
         modalSettings.class = 'modal-lg';
         modalSettings.initialState = {
           allowTabs: false,
@@ -128,7 +128,7 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
           model: { serviceId: service.id },
           selectedService: service
         };
-        this._modalService.show(AddPostComponent, modalSettings).content;
+        this._modalService.show(UpsertPostComponent, modalSettings).content;
       });
   }
 

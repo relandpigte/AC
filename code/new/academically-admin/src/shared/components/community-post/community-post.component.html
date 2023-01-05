@@ -1,4 +1,4 @@
-<div class="post d-flex flex-column">
+<div class="post d-flex flex-column" *ngIf="!isHidden">
     <div class="post-heading d-flex flex-row flex-nowrap align-items-center">
         <div class="post-heading-avatar">
             <a href="javascript: void(0);" class="avatar avatar-sm">
@@ -18,12 +18,12 @@
                     <span class="fe fe-more-vertical"></span>
                 </a>
                 <div *ngIf="isOwner" class="dropdown-menu dropdown-menu-left">
-                  <div class="dropdown-item cursor-pointer">Edit post</div>
-                  <div class="dropdown-item cursor-pointer pb-3">Delete post</div>
-                  <div class="dropdown-item cursor-pointer border-top pt-3">Hide this post</div>
+                    <div class="dropdown-item cursor-pointer" (click)="onEditClick(data)">Edit post</div>
+                    <div class="dropdown-item cursor-pointer pb-3" (click)="onDeleteClick(data?.id)">Delete post</div>
+                    <div class="dropdown-item cursor-pointer border-top pt-3" (click)="onHideClick(data?.id)">Hide this post</div>
                 </div>
                 <div *ngIf="!isOwner" class="dropdown-menu dropdown-menu-left">
-                    <div class="dropdown-item cursor-pointer">Hide this post</div>
+                    <div class="dropdown-item cursor-pointer" (click)="onHideClick(data?.id)">Hide this post</div>
                     <div class="dropdown-item cursor-pointer">Report post</div>
                 </div>
             </div>
@@ -98,6 +98,30 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="post d-flex flex-row justify-content-between" *ngIf="isHiding && isHidden">
+    <div class="post-content d-flex flex-column">
+        <div class="post-actions-left d-flex justify-content-start align-items-center gap-10">
+            {{ 'YouveHiddenAPost' | localize }}
+        </div>
+        <div class="post-content-topics"></div>
+    </div>
+    <div class="post-actions-left d-flex justify-content-start align-items-right">
+        <div class="post-content-description" [style.paddingRight.px]="15">
+            <a class="text-reset" href="javascript:;" (click)="onUndoHideClick(data?.id)"
+                data-toggle="tooltip" title="" data-original-title="Send">
+                {{'Undo' | localize }}
+            </a>
+        </div>
+
+        <div class="post-content-description" [style.paddingLeft.px]="15">
+            <a class="text-reset" href="javascript:;" (click)="onCloseHideClick(data?.id)"
+                data-toggle="tooltip" title="" data-original-title="Send">
+                <i class="fas fa-times"></i>
+            </a>
         </div>
     </div>
 </div>

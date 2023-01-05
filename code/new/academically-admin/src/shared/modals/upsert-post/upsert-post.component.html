@@ -1,0 +1,90 @@
+<div class="modal-card card">
+    <div class="card-header">
+        <div *ngIf="!allowTabs && title" class="card-header-title flex-grow-1 row align-items-center m-0">
+            {{ title | localize }}
+        </div>
+        <div *ngIf="allowTabs" class="flex-grow-1 row align-items-center">
+            <div class="col">
+                <ul class="nav nav-tabs nav-overflow header-tabs" *ngIf="!updateOnly">
+                    <li class="nav-item">
+                        <a class="nav-link" [class.active]="activeTab === 'quick-post'" role="button" (click)="setActiveTab('quick-post')">{{ 'Community.QuickPost' | localize }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [class.active]="activeTab === 'add-question'" role="button" (click)="setActiveTab('add-question')">{{ 'Community.AddQuestion' | localize }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [class.active]="activeTab === 'add-discussion'" role="button" (click)="setActiveTab('add-discussion')">{{ 'Community.AddDiscussion' | localize }}</a>
+                    </li>
+                </ul>
+                <ul class="nav nav-tabs nav-overflow header-tabs" *ngIf="updateOnly">
+                    <li class="nav-item">
+                        <a class="nav-link" [class.active]="true" role="button" (click)="setActiveTab(activeTab)">
+                            {{ tabTitle | localize }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="flex-grow-1">
+            <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <app-community-post *ngIf="activeTab === 'quick-post'" type="quick-post" [model]="model" (onModelChange)="handleModelChanged($event)"></app-community-post>
+        <app-community-post *ngIf="activeTab === 'add-question'" type="add-question" [model]="model" (onModelChange)="handleModelChanged($event)"></app-community-post>
+        <app-community-post *ngIf="activeTab === 'add-discussion'" type="add-discussion" [model]="model" (onModelChange)="handleModelChanged($event)"></app-community-post>
+        <app-attachment-preview
+            *ngIf="fileAttachment"
+            [canRemove]="canRemoveAttachment"
+            [file]="fileAttachment"
+            (onRemove)="handleRemoveAttachment()"
+        ></app-attachment-preview>
+        <app-service-preview
+            *ngIf="selectedService"
+            [canRemove]="canRemoveAttachment"
+            [service]="selectedService"
+            (onRemove)="handleRemoveService()"
+        ></app-service-preview>
+        <app-service-picker
+            [selectedService]="selectedService"
+            [class.show]="isShowServicePicker"
+            (onClose)="isShowServicePicker = false"
+            (onBack)="isShowServicePicker = false"
+            (onAdd)="handleOnAddService($event)"
+        ></app-service-picker>
+        <app-emoji-picker
+            *ngIf="isShowEmojiPicker"
+            [input]="emojiPickerToggle"
+            (onClose)="isShowEmojiPicker = false"
+            (onBack)="isShowEmojiPicker = false"
+            (onSelect)="handleOnEmojiSelect($event)"
+        ></app-emoji-picker>
+    </div>
+
+    <div class="card-footer d-flex justify-content-between">
+        <div class="card-footer-left d-flex align-items-center flex-grow-1 gap-20">
+            <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddImage" (click)="handleImageUploadBtnClick()"><i class="fe fe-camera"></i></a>
+            <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddFile" (click)="handleFileUploadBtnClick()"><i class="fe fe-paperclip"></i></a>
+            <a #emojiPickerToggle class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddEmoticons" (click)="isShowEmojiPicker = !isShowEmojiPicker"><i class="fas fa-smile"></i></a>
+            <a class="card-footer-left-icon cursor-pointer" [class.disabled]="!canAddService" (click)="isShowServicePicker = !isShowServicePicker"><i class="fe fe-plus"></i></a>
+        </div>
+        <div class="card-footer-right d-flex align-items-center gap-20">
+            <button *ngIf="canCancel" type="button" class="btn btn-light" (click)="onCloseClick()">
+                {{ 'Cancel' | localize }}
+            </button>
+            <button type="button" *ngIf="!updateOnly" class="btn btn-primary" (click)="handleCreatePost()" [disabled]="!isModelValid">
+                {{ 'Post' | localize }}
+            </button>
+            <button type="button" *ngIf="updateOnly" class="btn btn-primary" (click)="handleUpdatePost()" [disabled]="!isModelValid">
+                {{ 'Save' | localize }}
+            </button>
+        </div>
+    </div>
+
+
+</div>
+
+<input #fileInput (change)="onFileChange($event)" [accept]="allowedExtensions" class="hidden position-absolute" type="file">

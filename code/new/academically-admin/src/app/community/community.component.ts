@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 import { Router } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { AddTopicsComponent } from '@shared/modals/add-topics/add-topics.component';
-import { AddPostComponent } from '../../shared/modals/add-post/add-post.component';
+import { UpsertPostComponent } from '../../shared/modals/upsert-post/upsert-post.component';
 import { TopicSorting } from '@shared/components/topic/topic.component';
 
 @Component({
@@ -86,11 +86,11 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   handleAddPost(tab: string): void {
-    const modalSettings = this.defaultModalSettings as ModalOptions<AddPostComponent>;
+    const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
     modalSettings.class = 'modal-lg';
     modalSettings.initialState = { activeTab: tab };
 
-    const modal = this._modalService.show(AddPostComponent, modalSettings).content;
+    const modal = this._modalService.show(UpsertPostComponent, modalSettings).content;
   }
 
   handleAddTopics(): void {

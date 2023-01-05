@@ -1,11 +1,14 @@
 
-import { Component, Injector, OnInit, OnChanges, Input, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, Injector, OnInit, OnChanges, Input, SimpleChanges, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { FileUtils } from '@shared/helpers/file-utils';
-import { AvailableServiceDto, DisciplineTaxonomyDto, PostType } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, DisciplineTaxonomyDto, PostsServiceProxy, PostType } from '@shared/service-proxies/service-proxies';
+import { takeUntil } from 'rxjs/operators';
 
 import * as moment from 'moment';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 
 @Component({
     selector: 'app-community-post-card',
@@ -13,17 +16,23 @@ import * as moment from 'moment';
     styleUrls: ['./community-post.component.scss']
 })
 export class CommunityPostCardComponent extends AppComponentBase implements OnInit, OnChanges {
-
+    @Input() closeHiddenPostAfter: number = 5;
     @Input() data: any;
+    @Output() refresh = new EventEmitter();
 
     fileAttachment: File;
     serviceAttachment: AvailableServiceDto;
     userTopics: DisciplineTaxonomyDto[];
+    isHidden = false;
+    isHiding = false;
+    hideTimer: any;
 
     constructor(
         injector: Injector,
         private _cdr: ChangeDetectorRef,
-        private _router: Router
+        private _router: Router,
+        private _postsServiceProxy: PostsServiceProxy,
+        private _modalService: BsModalService,
     ) {
         super(injector);
     }
@@ -77,7 +86,82 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnIn
         }
     }
 
+    private startHideTimer(): void {
+        const self = this;
+        this.hideTimer = setTimeout(() => {
+
+            this.isHiding = false;
+        }, 1000 * this.closeHiddenPostAfter);
+    }
+
     goToDiscussion(): void {
         this._router.navigate(['app', 'community', 'discussion', this.data.id]);
+    }
+
+    onDeleteClick(id: string): void {
+        this.message.confirm(
+            this.l('DeletePostConfirmationMessage'),
+            undefined,
+            (result: boolean) => {
+                if (result) {
+                    this._postsServiceProxy.delete(id)
+                        .pipe(takeUntil(this.destroyed$))
+                        .subscribe(() => {
+                        this.notify.success(this.l('SuccessfullyDeleted'));
+                        this.refresh.emit();
+                    });
+                }
+            }
+        );
+    }
+
+    onEditClick(data: any): void {
+        const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
+        modalSettings.class = 'modal-lg';
+
+        const tabType = data?.type === 2 ? 'add-discussion' : data?.type === 1 ? 'add-question' : 'quick-post';
+        modalSettings.initialState = {
+            activeTab: tabType,
+            updateOnly: true,
+            model: {...data}
+        };
+
+        const modal = this._modalService.show(UpsertPostComponent, modalSettings).content;
+        modal.onPostCreated.subscribe(() => {
+            this.notify.success(this.l('SavedSuccessfully'));
+            this.refresh.emit();
+        });
+    }
+
+    onHideClick(id: string): void {
+        this.message.confirm(
+            this.l('AreYouSureWantToHideThisPost'),
+            undefined,
+            (result: boolean) => {
+                if (result) {
+                    // this._postsServiceProxy.delete(id)
+                    //     .pipe(takeUntil(this.destroyed$))
+                    //     .subscribe(() => {
+                    //     this.notify.success(this.l('PostHiddenSuccessfully'));
+                    //     this.isHidden = true;
+                    // });
+                    this.notify.success(this.l('PostHiddenSuccessfully'));
+                    this.isHidden = true;
+                    this.isHiding = true;
+                    this.startHideTimer();
+                }
+            }
+        );
+    }
+
+    onUndoHideClick(id: string): void {
+        this.isHidden = false;
+        if (this.hideTimer) {
+            clearTimeout(this.hideTimer);
+        }
+    }
+
+    onCloseHideClick(id: string): void {
+
     }
 }

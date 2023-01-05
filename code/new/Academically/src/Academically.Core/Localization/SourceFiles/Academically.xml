@@ -3,6 +3,7 @@
   <texts>
 	<text name="TopicsAndTags">Topics and tags</text>
 	<text name="DeleteEventOfferConfirmationMessage">Are you sure you want to delete this offer?</text>
+	<text name="DeletePostConfirmationMessage">Are you sure you want to delete this post?</text>
 	<text name="SelectAnItem">Select an item</text>
     <text name="Seconds">Seconds</text>
     <text name="Hours">Hours</text>
@@ -1655,7 +1656,10 @@
     <text name="On">On</text>
     <text name="Off">Off</text>
     <text name="AreYouSureWantToDelete">Are you sure want to delete {0}?</text>
+    <text name="AreYouSureWantToHideThisPost">Are you sure want to hide this post?</text>
     <text name="SuccessfullyDeleted">Successfully deleted</text>
+    <text name="PostHiddenSuccessfully">Post hidden successfully</text>
+    <text name="YouveHiddenAPost">You've hidden a post</text>
     <text name="StartTyping">Start Typing</text>
     <text name="Skins">Skins</text>
     <text name="Settings">Settings</text>
@@ -1895,6 +1899,9 @@
 	<text name="Community.SharePost">Share post</text>
 	<text name="Community.QuickPost">Quick post</text>
 	<text name="Community.AddQuestion">Add question</text>
+    <text name="Community.EditQuestion">Edit question</text>
+    <text name="Community.EditDiscussion">Edit discussion</text>
+    <text name="Community.EditQuickPost">Edit quick post</text>
 	<text name="Community.AddDiscussion">Add discussion</text>
 	<text name="Community.AddTopics">Add topics to your post {0}</text>
 	<text name="Community.NoTopicsFoundEnterToCreate">No topics found. Push enter to create a new one.</text>
