@@ -86,7 +86,7 @@
     </div>
 
     <div *ngFor="let p of posts" class="card community-content-post">
-      <app-community-post-card [data]="p"></app-community-post-card>
+      <app-community-post-card [data]="p" (refresh)="getPosts()"></app-community-post-card>
     </div>
 
     <div *ngIf="usersYouMayKnow?.length > 0" class="card community-content-post">

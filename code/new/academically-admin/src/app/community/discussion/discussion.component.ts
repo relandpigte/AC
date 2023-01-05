@@ -1,19 +1,20 @@
 import { Location } from '@angular/common';
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
-import { AddPostComponent } from '../../../shared/modals/add-post/add-post.component';
+import { UpsertPostComponent } from '../../../shared/modals/upsert-post/upsert-post.component';
 import * as _ from 'lodash';
+import { CommunityPostCardComponent } from '@shared/components/community-post/community-post.component';
 
 enum PostFiltering {
     All = 'Community.Posts.Filtering.All',
     Post = 'Community.Posts.Filtering.Post',
     Question = 'Community.Posts.Filtering.Question',
     Discussion = 'Community.Posts.Filtering.Discussion'
-  }
+}
 
 enum PostSorting {
     Latest = 'Community.Posts.Sorting.Latest',
@@ -46,6 +47,8 @@ export class DiscussionComponent extends AppComponentBase implements OnInit {
     selectedFiltering: PostFiltering = PostFiltering.All;
     selectedSorting: PostSorting = PostSorting.Latest;
 
+    id: string;
+
     constructor(
         injector: Injector,
         private _location: Location,
@@ -58,7 +61,8 @@ export class DiscussionComponent extends AppComponentBase implements OnInit {
         super(injector);
         this._route.paramMap.subscribe(paramMap => {
             if (paramMap.has('id')) {
-                this.loadDiscussion(paramMap.get('id'));
+                this.id = paramMap.get('id');
+                this.loadDiscussion(this.id);
             }
         });
     }
@@ -98,7 +102,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit {
     }
 
     handleAddPost(): void {
-        const modalSettings = this.defaultModalSettings as ModalOptions<AddPostComponent>;
+        const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
         modalSettings.class = 'modal-lg';
         modalSettings.initialState = {
             parentPostId: this.discussion.id,
@@ -106,7 +110,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit {
             title: 'Community.QuickPost',
             activeTab: 'quick-post'
         };
-        const modal = this._modalService.show(AddPostComponent, modalSettings).content;
+        const modal = this._modalService.show(UpsertPostComponent, modalSettings).content;
         modal.onPostCreated
             .pipe(takeUntil(this.destroyed$))
             .subscribe(() => this.getChildren());
@@ -129,11 +133,11 @@ export class DiscussionComponent extends AppComponentBase implements OnInit {
     getParticipants(): void {
         this.isLoadingParticipants = true;
         this._usersService.getAll('', true, 'creationTime desc', 0, 4)
-          .pipe(takeUntil(this.destroyed$))
-          .pipe(finalize(() => this.isLoadingParticipants = false))
-          .subscribe(pagedUsers => {
-            this.participants = pagedUsers.items ?? [];
-            this.participants = _.take(this.participants, 4);
+            .pipe(takeUntil(this.destroyed$))
+            .pipe(finalize(() => this.isLoadingParticipants = false))
+            .subscribe(pagedUsers => {
+                this.participants = pagedUsers.items ?? [];
+                this.participants = _.take(this.participants, 4);
         });
     }
 

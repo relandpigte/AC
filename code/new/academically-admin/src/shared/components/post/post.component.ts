@@ -26,15 +26,15 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit {
     visibility: VisibilityOptions;
     visibilityOptions: VisibilityOptions[] = [];
 
-    title: string;
-    information: string;
+    @Input() title: string;
+    @Input() information: string;
 
     topicsChoices: any[] = [];
     selectedTopics: { id: string, name: string }[] = [];
     newSelectedTopics: { id: string, name: string }[] = [];
     isLoadingTopics = false;
 
-    model: any = {};
+    @Input() model: any = {};
 
     constructor(
         injector: Injector,
@@ -48,7 +48,13 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit {
 
     ngOnInit(): void {
         this.initVisibilityOptions();
-        this.updateModel();
+        this.model = this.model ? this.model : {};
+
+        if (this.model.id != null) {
+            this.updateFields();
+        } else {
+            this.updateModel();
+        }
     }
 
     private initVisibilityOptions(): void {
@@ -67,6 +73,13 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit {
             default:
                 return PostType.Discussion;
         }
+    }
+
+    updateFields(): void {
+        this.title = this.model.title
+        this.information = this.model.content;
+        this.visibility.value = this.model.visibility;
+        this.selectedTopics = this.model.postTopics.map(e => { return { id: e.disciplineTaxonomy.id, name: e.disciplineTaxonomy.name }});
     }
 
     updateModel(): void {

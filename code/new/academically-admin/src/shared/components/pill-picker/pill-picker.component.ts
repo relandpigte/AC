@@ -24,7 +24,7 @@ export class PillPickerComponent extends AppComponentBase implements OnInit, OnD
     @Output() onKeywordUpdate = new EventEmitter<any>();
 
     keyword: string;
-    selected: { id: string, name: string }[] = [];
+    @Input() selected: { id: string, name: string }[] = [];
     newSelected: { id: string, name: string }[] = [];
 
     isShowKeywordPrefix: boolean;
