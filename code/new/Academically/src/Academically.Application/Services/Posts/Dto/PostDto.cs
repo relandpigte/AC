@@ -26,6 +26,7 @@ namespace Academically.Services.Posts.Dto
         public IEnumerable<PostTopicDto> PostTopics { get; set; }
         public IEnumerable<PostAttachmentDto> PostAttachments { get; set; }
         public IEnumerable<PostDto> Children { get; set; }
+        public IEnumerable<UserDto> Participants { get; set; }
 
     }
 }

@@ -8,18 +8,22 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.Timing;
 using Academically.Authorization;
+using Academically.Authorization.Users;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
 using Academically.Services.Articles;
 using Academically.Services.Coachings;
+using Academically.Services.Comments.Dto;
 using Academically.Services.Courses;
 using Academically.Services.Documents;
 using Academically.Services.Events;
 using Academically.Services.Posts.Dto;
 using Academically.Services.Videos;
 using Academically.Services.Workshops;
+using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,6 +45,8 @@ namespace Academically.Services.Posts
         private readonly IEventsAppService _eventsAppService;
         private readonly IWorkshopsAppService _workshopsAppService;
         private readonly IDocumentsAppService _documentsAppService;
+        private readonly IRepository<Comment, Guid> _commentsRepository;
+        private readonly IRepository<User, long> _usersRepository;
 
         public PostsAppService(
             IRepository<Post, Guid> postRepository,
@@ -55,11 +61,14 @@ namespace Academically.Services.Posts
             IVideosAppService videosAppService,
             IEventsAppService eventsAppService,
             IWorkshopsAppService workshopsAppService,
-            IDocumentsAppService documentsAppService)
+            IDocumentsAppService documentsAppService,
+            IRepository<Comment, Guid> commentsRepository,
+            IRepository<User, long> usersRepository)
         {
             _postRepository = postRepository;
             _postTopicRepository = postTopicRepository;
             _postAttachmentRepository = postAttachmentRepository;
+            _postNotificationRepository = postNotificationRepository;
             _disciplineTaxonomyRepository = disciplineTaxonomyRepository;
             _documentsDomainService = documentsDomainService;
             _articlesAppService = articlesAppService;
@@ -69,7 +78,8 @@ namespace Academically.Services.Posts
             _eventsAppService = eventsAppService;
             _workshopsAppService = workshopsAppService;
             _documentsAppService = documentsAppService;
-            _postNotificationRepository = postNotificationRepository;
+            _commentsRepository = commentsRepository;
+            _usersRepository = usersRepository;
         }
 
         public async Task<List<PostDto>> GetAllPosts(PostType? type, Guid? parentId)
@@ -196,12 +206,31 @@ namespace Academically.Services.Posts
             var post = await _postRepository.GetAll()
                         .Include(p => p.CreatorUser)
                         .Include(p => p.Children)
+                            .ThenInclude(p => p.CreatorUser)
                         .Include(p => p.PostAttachments)
                             .ThenInclude(a => a.Document)
                         .Include(p => p.PostTopics)
                             .ThenInclude(t => t.DisciplineTaxonomy)
                         .SingleOrDefaultAsync(p => p.Id == id);
-            return ObjectMapper.Map<PostDto>(post);
+
+            var result = ObjectMapper.Map<PostDto>(post);
+            var participants = new List<UserDto>();
+            if (post.Children.Any())
+            {
+                participants.AddRange(post.Children.Select(s => ObjectMapper.Map<UserDto>(s.CreatorUser)));
+            }
+            var commentsParticipant = _commentsRepository.GetAll()
+                    .Where(w => w.ReferenceId == id.ToString())
+                    .Include(c => c.CreatorUser)
+                    .Select(s => ObjectMapper.Map<UserDto>(s.CreatorUser));
+
+            if (commentsParticipant.Any())
+            {
+                participants.AddRange(commentsParticipant);
+            }
+            result.Participants = participants.GroupBy(g => g.Id).ToList().Select(s => s.FirstOrDefault());
+
+            return result;
         }
 
         public async Task<PostDto> UpdateAsync(UpdatePostDto input)
@@ -285,6 +314,14 @@ namespace Academically.Services.Posts
                 TotalCount = totalCount,
                 Items = availableServices
             }; 
+        }
+
+        public async Task<CommentDto> CreateCommentAsync(CommentDto input)
+        {
+            var comment = ObjectMapper.Map<Comment>(input);
+            input.CreationTime = Clock.Now;
+            input.Id = await _commentsRepository.InsertAndGetIdAsync(comment);
+            return input;
         }
 
         private IQueryable<AvailableServiceDto> Sort(IQueryable<AvailableServiceDto> query, string sorting)
