@@ -41,6 +41,7 @@ import { CardClusterComponent } from '@shared/components/card-cluster/card-clust
 import { CarouselPillComponent } from '@shared/components/carousel-pill/carousel-pill.component';
 import { CarouselWrapperComponent } from '@shared/components/carousel-wrapper/carousel-wrapper.component';
 import { CommunityPostCardComponent } from '@shared/components/community-post/community-post.component';
+import { CommunityDiscussionsComponent } from '@shared/components/community-discussions/community-discussions.component';
 import { CommunityComposerComponent } from '@shared/components/composer/composer.component';
 import { EmojiPickerComponent } from '@shared/components/emoji-picker/emoji-picker.component';
 import { FeaturedCarouselComponent } from '@shared/components/featured-carousel/featured-carousel.component';
@@ -91,6 +92,7 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     CommunityComposerComponent,
     CommunityPostComponent,
     CommunityPostCardComponent,
+    CommunityDiscussionsComponent,
     CommunitySideCardComponent,
     EmojiPickerComponent
   ],
@@ -168,6 +170,7 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     CommunityComposerComponent,
     CommunityPostComponent,
     CommunityPostCardComponent,
+    CommunityDiscussionsComponent,
     CommunitySideCardComponent,
     EmojiPickerComponent
   ],

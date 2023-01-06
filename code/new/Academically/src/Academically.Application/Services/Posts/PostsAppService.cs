@@ -344,6 +344,32 @@ namespace Academically.Services.Posts
             return input;
         }
 
+        //  Task<IEnumerable<CommentDto>> GetAllAsync(string referenceId);
+        public async Task<IEnumerable<CommentDto>> GetAllCommentAsync(string referenceId)
+        {
+            var commentsWithReplyCount = await _commentsRepository.GetAll()
+                .Where(e => e.ParentId == null && e.ReferenceId == referenceId)
+                .Include(e => e.CreatorUser)
+                .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.CommentReactions)
+                .OrderByDescending(e => e.CreationTime)
+                .Select(e => new
+                {
+                    Comment = e,
+                    ChildCount = e.Children.Count(),
+                })
+                .ToListAsync();
+
+            return commentsWithReplyCount.Select(e =>
+            {
+                var comment = ObjectMapper.Map<CommentDto>(e.Comment);
+                comment.ReplyCount = e.ChildCount;
+                return comment;
+            });
+        }
+
+
+
         private IQueryable<AvailableServiceDto> Sort(IQueryable<AvailableServiceDto> query, string sorting)
         {
             if (sorting.Contains("recent"))
