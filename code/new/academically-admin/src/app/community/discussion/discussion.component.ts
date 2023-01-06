@@ -95,6 +95,7 @@ export class DiscussionComponent extends AppComponentBase {
             return PostType.Discussion;
         }
     }
+    get participantsCount(): number { return this.participants?.length ?? 0 + 1; }
 
     private async loadDiscussion(id: string) {
         this.isLoadingPost = true;
