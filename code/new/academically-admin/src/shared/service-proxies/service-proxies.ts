@@ -13449,15 +13449,20 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param id (optional) 
+     * @param postId (optional) 
+     * @param creatorUserId (optional) 
      * @return Success
      */
-    deletePostNotification(id: string | undefined): Observable<void> {
+    deletePostNotification(postId: string | undefined, creatorUserId: number | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Posts/DeletePostNotification?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (postId === null)
+            throw new Error("The parameter 'postId' cannot be null.");
+        else if (postId !== undefined)
+            url_ += "PostId=" + encodeURIComponent("" + postId) + "&";
+        if (creatorUserId === null)
+            throw new Error("The parameter 'creatorUserId' cannot be null.");
+        else if (creatorUserId !== undefined)
+            url_ += "CreatorUserId=" + encodeURIComponent("" + creatorUserId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -39971,6 +39976,7 @@ export class PostDto implements IPostDto {
     postAttachments: PostAttachmentDto[] | undefined;
     children: PostDto[] | undefined;
     participants: UserDto[] | undefined;
+    postNotification: PostNotificationDto[] | undefined;
     postVisibility: PostVisibilityDto[] | undefined;
 
     constructor(data?: IPostDto) {
@@ -40020,6 +40026,11 @@ export class PostDto implements IPostDto {
                 this.participants = [] as any;
                 for (let item of _data["participants"])
                     this.participants.push(UserDto.fromJS(item));
+            }
+            if (Array.isArray(_data["postNotification"])) {
+                this.postNotification = [] as any;
+                for (let item of _data["postNotification"])
+                    this.postNotification.push(PostNotificationDto.fromJS(item));
             }
             if (Array.isArray(_data["postVisibility"])) {
                 this.postVisibility = [] as any;
@@ -40075,6 +40086,11 @@ export class PostDto implements IPostDto {
             for (let item of this.participants)
                 data["participants"].push(item.toJSON());
         }
+        if (Array.isArray(this.postNotification)) {
+            data["postNotification"] = [];
+            for (let item of this.postNotification)
+                data["postNotification"].push(item.toJSON());
+        }
         if (Array.isArray(this.postVisibility)) {
             data["postVisibility"] = [];
             for (let item of this.postVisibility)
@@ -40113,7 +40129,67 @@ export interface IPostDto {
     postAttachments: PostAttachmentDto[] | undefined;
     children: PostDto[] | undefined;
     participants: UserDto[] | undefined;
+    postNotification: PostNotificationDto[] | undefined;
     postVisibility: PostVisibilityDto[] | undefined;
+}
+
+export class PostNotificationDto implements IPostNotificationDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    postId: string;
+    notifyUserId: number | undefined;
+
+    constructor(data?: IPostNotificationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.postId = _data["postId"];
+            this.notifyUserId = _data["notifyUserId"];
+        }
+    }
+
+    static fromJS(data: any): PostNotificationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PostNotificationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["postId"] = this.postId;
+        data["notifyUserId"] = this.notifyUserId;
+        return data; 
+    }
+
+    clone(): PostNotificationDto {
+        const json = this.toJSON();
+        let result = new PostNotificationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPostNotificationDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    postId: string;
+    notifyUserId: number | undefined;
 }
 
 export class PostTopicDto implements IPostTopicDto {

@@ -39,8 +39,27 @@
                 <button type="button" class="btn btn-light discussion-info-invite">
                     <span class="fe fe-user-plus flipped-horizontal"></span> Invite
                 </button>
-                <button type="button" class="btn btn-primary discussion-info-subscribe">
-                    <span class="fe fe-bell"></span> Turn on notifications
+                <button
+                    *ngIf="!isSubscribedToNotifications"
+                    type="button"
+                    class="btn btn-primary discussion-info-subscribe"
+                    [disabled]="isUpdatingSubscribers"
+                    (click)="handleSubscribeClick(subscribeType.subscribe)"
+                >
+                    <span class="fe fe-bell"></span>
+                    Turn on notifications
+                    <span *ngIf="isUpdatingSubscribers" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                </button>
+                <button
+                    *ngIf="isSubscribedToNotifications"
+                    type="button"
+                    class="btn btn-primary discussion-info-unsubscribe"
+                    [disabled]="isUpdatingSubscribers"
+                    (click)="handleSubscribeClick(subscribeType.unsubscribe)"
+                >
+                    <span class="fe fe-bell-off"></span>
+                    Turn off notifications
+                    <span *ngIf="isUpdatingSubscribers" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 </button>
             </div>
         </div>

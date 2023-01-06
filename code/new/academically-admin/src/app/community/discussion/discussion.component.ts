@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, Injector } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
+import { DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, UserDto, PostNotificationDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -21,6 +21,11 @@ enum PostSorting {
     Reacted = 'Community.Posts.Sorting.Reacted'
 }
 
+enum SubscribeType {
+    subscribe = 'Subscribe',
+    unsubscribe = 'Unsubscribe'
+}
+
 @Component({
     selector: 'app-discussion',
     templateUrl: './discussion.component.html',
@@ -34,15 +39,19 @@ export class DiscussionComponent extends AppComponentBase {
     creator: UserDto;
     discussionTopics: DisciplineTaxonomyDto[];
     participants: UserDto[] = [];
+    subscriberIds: number[] = [];
     relatedDiscussions: PostDto[] = [];
 
     isLoadingPost = false;
     isLoadingChildren = false;
     isLoadingParticipants = false;
+    isLoadingSubscriberIds = false;
     isLoadingRelatedDiscussions = false;
+    isUpdatingSubscribers = false;
 
     postFilteringEnum = PostFiltering;
     postSortingEnum = PostSorting;
+    subscribeType = SubscribeType;
 
     selectedFiltering: PostFiltering = PostFiltering.All;
     selectedSorting: PostSorting = PostSorting.Latest;
@@ -55,8 +64,7 @@ export class DiscussionComponent extends AppComponentBase {
         private _route: ActivatedRoute,
         private _router: Router,
         private _modalService: BsModalService,
-        private _postsService: PostsServiceProxy,
-        private _usersService: UserServiceProxy
+        private _postsService: PostsServiceProxy
     ) {
         super(injector);
         this._route.paramMap.subscribe(async paramMap => {
@@ -67,8 +75,12 @@ export class DiscussionComponent extends AppComponentBase {
         });
     }
 
-    get isLoading(): boolean { return this.isLoadingPost || this.isLoadingChildren || this.isLoadingParticipants || this.isLoadingRelatedDiscussions; }
+    get isLoading(): boolean {
+        return this.isLoadingPost || this.isLoadingChildren || this.isLoadingParticipants || this.isLoadingSubscriberIds ||
+            this.isLoadingRelatedDiscussions || this.isUpdatingSubscribers;
+    }
     get isOwner(): boolean { return this.appSession.userId === this.discussion?.creatorUserId; }
+    get isSubscribedToNotifications(): boolean { return this.subscriberIds.includes(this.appSession.userId); }
     get discussionTitle(): string { return this.discussion?.title; }
     get discussionDescription(): string { return this.discussion?.content; }
     get postTypeFilter(): PostType {
@@ -99,6 +111,7 @@ export class DiscussionComponent extends AppComponentBase {
     private async loadOtherInfo() {
         this.getChildren();
         this.getParticipants();
+        this.getSubscriberIds();
         this.getRelatedDiscussions();
     }
 
@@ -141,6 +154,12 @@ export class DiscussionComponent extends AppComponentBase {
             ];
         }
         this.isLoadingParticipants = false;
+    }
+
+    getSubscriberIds(): void {
+        this.isLoadingSubscriberIds = true;
+        if (this.discussion) this.subscriberIds = this.discussion.postNotification?.map(n => n.creatorUserId);
+        this.isLoadingSubscriberIds = false;
     }
 
     getRelatedDiscussions(): void {
@@ -194,5 +213,21 @@ export class DiscussionComponent extends AppComponentBase {
 
     handleSortingChange(sort: PostSorting): void {
         this.selectedSorting = sort;
+    }
+
+    handleSubscribeClick(type: SubscribeType): void {
+        this.isUpdatingSubscribers = true;
+        const postId = this.discussion.id;
+        const userId = this.appSession.userId;
+
+        const service = type === SubscribeType.subscribe ? this._postsService.createPostNotification(postId, userId)
+            : this._postsService.deletePostNotification(postId, userId);
+
+        service.pipe(takeUntil(this.destroyed$))
+            .pipe(finalize(() => this.isUpdatingSubscribers = false))
+            .subscribe(() => {
+                if (type === SubscribeType.subscribe) this.subscriberIds.push(userId);
+                else this.subscriberIds = this.subscriberIds.filter(s => s !== userId);
+            });
     }
 }

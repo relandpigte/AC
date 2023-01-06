@@ -98,6 +98,7 @@ namespace Academically.Services.Posts
                                     .ThenInclude(a => a.Document)
                                   .Include(p => p.PostTopics)
                                     .ThenInclude(t => t.DisciplineTaxonomy)
+                                  .Include(p => p.PostNotification)
                                   .Where(e => !e.IsDeleted)
                                   .WhereIf(type.HasValue, p => p.Type == type)
                                   .WhereIf(parentId.HasValue, p => p.ParentId == parentId)
@@ -194,6 +195,7 @@ namespace Academically.Services.Posts
                                                           .Select(s => s.PostId).ToList();
             var result = await _postRepository.GetAll()
                 .Include(p => p.CreatorUser)
+                .Include(p => p.PostNotification)
                 .WhereIf(type.HasValue, p => p.Type == type)
                 .Where(p => p.CreatorUserId == userId)
                 .Where(e => e.IsHidden == false && !userHiddenPost.Contains(e.Id))
@@ -227,6 +229,7 @@ namespace Academically.Services.Posts
                             .ThenInclude(a => a.Document)
                         .Include(p => p.PostTopics)
                             .ThenInclude(t => t.DisciplineTaxonomy)
+                        .Include(p => p.PostNotification)
                         .Where(e => e.IsHidden == false && !userHiddenPost.Contains(e.Id))
                         .SingleOrDefaultAsync(p => p.Id == id);
 
@@ -385,9 +388,9 @@ namespace Academically.Services.Posts
             await _postNotificationRepository.InsertAsync(postNotif);
         }
 
-        public async Task DeletePostNotification(Guid id)
+        public async Task DeletePostNotification(DeletePostNotificationDto input)
         {
-            await _postNotificationRepository.DeleteAsync(id);
+            await _postNotificationRepository.DeleteAsync(p => p.PostId == input.PostId && p.CreatorUserId == input.CreatorUserId);
         }
     }
 }
