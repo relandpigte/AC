@@ -13,7 +13,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { NgModel, NgForm } from '@angular/forms';
-
+import * as _ from 'lodash';
 @Component({
   selector: 'app-community-discussions',
   templateUrl: './community-discussions.component.html',
@@ -31,12 +31,16 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   inputLength = 0;
 
   _postId: string;
+  isReplyButtonHidden = false; // will enchance later
+  loadedReplyCount: number[] = [];
+  skipCount: number[] = [];
+
+  private _maxRepliesToLoad = 3;
 
   constructor(
     injector: Injector,
     private _route: ActivatedRoute,
     private _courseConversationsService: CourseConversationsServiceProxy,
-    private _studentCoursesService: StudentCoursesServiceProxy,
 
     private _postsServiceProxy: PostsServiceProxy
   ) {
@@ -116,6 +120,11 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     return 0;
   }
 
+  getViewCount(comment: CommentDto): number {
+    const skipCount = this.loadedReplyCount[comment.id];
+    return comment.replyCount - (skipCount == 0 ? 1 : skipCount);
+  }
+
   onMessageKeydown(event: any, form: NgForm, post?: any): void {
     if (event.keyCode === 13) {
       form.ngSubmit.emit();
@@ -127,39 +136,65 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     }
   }
 
-  // private getStudentCourseByCourse(): void {
-  //   this._studentCoursesService.getByCourse(this.courseId)
-  //     .pipe(takeUntil(this.destroyed$))
-  //     .subscribe(studentCourse => {
-  //       this._studentCourseId = studentCourse.id;
-  //       this.getConversations();
-  //     });
-  // }
-
-  // private getStudentCourse(): void {
-  //   this._studentCoursesService.get(this._studentCourseId)
-  //     .pipe(takeUntil(this.destroyed$))
-  //     .subscribe(response => {
-  //       this.getConversations();
-  //     });
-  // }
+  onLoadMoreRepliesClick(parent: CommentDto): void {
+    this.getReplies(parent);
+  }
 
   private getConversations(): void {
-    // this._courseConversationsService.getAll(this.postId)
-    //   .pipe(
-    //     takeUntil(this.destroyed$),
-    //   )
-    //   .subscribe(conversations => {
-    //     this.conversations = conversations;
-    //   });
-
-
     this._postsServiceProxy.getAllComment(this.postId)
       .pipe(
         takeUntil(this.destroyed$),
       )
       .subscribe(conversations => {
         this.conversations = conversations;
+        _.each(this.conversations, comment => {
+          this.loadedReplyCount[comment.id] = 0;
+          this.getReplies(comment);
+        });
       });
+  }
+
+  private getReplies(comment: CommentDto): void {
+    console.log('get replies');
+    let count = 0;
+    if (_.isNil(this.skipCount[comment.id])) {
+      this.skipCount[comment.id] = 0;
+      count = 1;
+    } else {
+      if (this.skipCount[comment.id] === 0) {
+        count = this._maxRepliesToLoad;
+        this.skipCount[comment.id] = 1;
+      } else {
+        const remainingReplyCount = (this.loadedReplyCount[comment.id] - 1) % 3;
+        if (remainingReplyCount === 0) {
+          count = this._maxRepliesToLoad;
+        } else {
+          count = remainingReplyCount;
+        }
+        this.skipCount[comment.id] += count;
+      }
+    }
+
+    this._postsServiceProxy.getAllCommentReplies(
+      comment.id,
+      this.skipCount[comment.id],
+      count,
+    )
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(response => {
+        console.warn(response);
+        if (this.loadedReplyCount[comment.id] === 0) {
+          comment.children = response.items;
+        } else {
+          comment.children = [...comment.children, ...response.items];
+        }
+        this.loadedReplyCount[comment.id] += response.items.length;
+      });
+  }
+
+  reply(): void {
+    console.log(this.isReplyButtonHidden);
+    this.isReplyButtonHidden = false;
+    console.log(this.isReplyButtonHidden);
   }
 }
