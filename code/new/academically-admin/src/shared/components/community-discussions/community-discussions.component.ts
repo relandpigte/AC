@@ -1,28 +1,25 @@
-import { Component, OnInit, Injector, Input } from '@angular/core';
+import { Component, ElementRef, Injector, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
-  CourseConversationsServiceProxy,
-  CourseConversationDto,
-  StudentCoursesServiceProxy,
-  UserLoginInfoDto,
-  ConversationReactionType,
-  CourseConversationReactionDto,
-  PostsServiceProxy,
-  CommentDto,
+  CommentDto, ConversationReactionType,
+  CourseConversationReactionDto, CourseConversationsServiceProxy, PostsServiceProxy
 } from '@shared/service-proxies/service-proxies';
-import { ActivatedRoute } from '@angular/router';
-import { takeUntil, finalize } from 'rxjs/operators';
-import { NgModel, NgForm } from '@angular/forms';
 import * as _ from 'lodash';
+import { finalize, takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-community-discussions',
   templateUrl: './community-discussions.component.html',
   styleUrls: ['./community-discussions.component.less']
 })
-export class CommunityDiscussionsComponent extends AppComponentBase implements OnInit {
+export class CommunityDiscussionsComponent extends AppComponentBase implements OnInit, OnChanges {
+  @Input() show = false;
   @Input() isInCourse = true;
   @Input() isInTutorPortal = false;
   @Input() postId: string;
+
+  @ViewChild('addCommentEl', { static: false }) addCommentEl: ElementRef;
 
   courseId: string;
   conversations: CommentDto[] = [];
@@ -58,6 +55,12 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   ngOnInit(): void {
     this.getConversations();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+      if ('show' in changes && changes?.show?.previousValue !== changes?.show?.currentValue && this.show) {
+        setTimeout(() => this.addCommentEl.nativeElement.focus());
+      }
   }
 
   onFormSubmit(message: any, parentId?: string): void {

@@ -1,258 +1,256 @@
-<hr>
-<div class="discussions-container">
-  <div class="discussions-top">
-    <div class="discussion mb-3">
+<ng-container *ngIf="show || conversations?.length">
+  <hr>
+  <div class="discussions-container">
+    <div class="discussions-top">
+      <div class="discussion">
 
-      <div class="row">
-        <div class="col-auto">
-
-          <!-- Avatar -->
-          <div class="avatar avatar-sm avatar-current-user">
-            <img [src]="getProfilePicture(appSession.user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
-          </div>
-
-        </div>
-
-        <div class="col ms-n2">
-          <div class="d-flex text-area-container">
-            <div class="col ms-n2">
-
-              <form autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit(post)" class="mt-1 comment-box">
-                <textarea #post id="message" name="message" (keydown)="onMessageKeydown($event, form, post)"
-                  class="form-control form-control-flush" placeholder="Leave an comment..." [maxLength]="500"
-                  style="overflow: hidden; overflow-wrap: break-word; height: 41px;"
-                ></textarea>
-              </form>
-
-            </div>
-            <div class="col-auto align-self-center">
-
-              <!-- Icons -->
-              <div class="col-auto pr-0 align-self-center">
-                <div class="text-muted">
-                  <a class="text-reset mr-3" href="#!submit" (click)="$event.preventDefault(); form.ngSubmit.emit()"
-                    data-toggle="tooltip" title="" data-original-title="Send">
-                    <i class="fe fe-send"></i>
-                  </a>
-                  <a class="text-reset mr-3" href="#!" data-toggle="tooltip" title="" data-original-title="Add photo">
-                    <i class="fe fe-camera"></i>
-                  </a>
-                  <a class="text-reset mr-3" href="#!" data-toggle="tooltip" title="" data-original-title="Attach file">
-                    <i class="fe fe-paperclip"></i>
-                  </a>
-                  <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Record audio">
-                    <i class="fe fe-mic"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-      </div>
-
-      <div class="row sorting-section">
-        <div class="col-auto align-self-center">
-          Sort by:
-          <div class="btn-group" dropdown>
-            <button id="button-basic" dropdownToggle type="button" class="btn btn-link btn-sm dropdown-toggle font-weight-bold text-gray-800"
-                    aria-controls="dropdown-basic">
-              Most likes<span class="caret"></span>
-            </button>
-            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
-                role="menu" aria-labelledby="button-basic">
-              <li role="menuitem"><a class="dropdown-item" href="#">Most Recent</a></li>
-              <li role="menuitem"><a class="dropdown-item" href="#">Most Likes <i class="fas fa-check float-right mt-1"></i></a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="discussions">
-
-
-    <div *ngFor="let conversation of conversations" class="discussion">
-      <div class="comment tier-1-comment">
         <div class="row">
           <div class="col-auto">
 
             <!-- Avatar -->
-            <a class="avatar" href="profile-posts.html">
-              <img [src]="getProfilePictureFromDocument(conversation.creatorUser.profilePictureDocument, conversation.creatorUser.id)" alt="..." class="avatar-img rounded-circle">
-            </a>
-            <!-- Indentation line hereeeee -->
-            <!-- <div class="reply-indicator" *ngIf="!isReplyButtonHidden"></div> -->
+            <div class="avatar avatar-sm avatar-current-user">
+              <img [src]="getProfilePicture(appSession.user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
+            </div>
+
           </div>
+
           <div class="col ms-n2">
-
-            <!-- Body -->
-            <div class="comment-body w-100">
-
-              <div class="row">
-                <div class="col">
-
-                  <!-- Title -->
-                  <h5 class="comment-title">
-                    {{ conversation.creatorUser.fullName }}
-                  </h5>
-
-                </div>
-                <div class="col-auto">
-
-                  <!-- Time -->
-                  <time class="comment-time">
-                    {{ convertMomentToDateAgo(conversation.creationTime) }}
-                  </time>
-
-                </div>
-              </div> <!-- / .row -->
-
-              <!-- Text -->
-              <p class="comment-text">
-                {{ conversation.body }}
-              </p>
-
-            </div>
-            <div class="comment-actions justify-content-start align-items-center gap-10">
-              Like
-              <div class="comment-actions-separator">•</div>
-              <div class="comment-actions-reactions cursor-pointer d-flex gap-7">
-                {{ 14 }}
-                <div class="comment-actions-reactions-type d-flex">
-                    <div class="comment-actions-reactions-type-item blue d-flex justify-content-center align-items-center">
-                        <span class="fe fe-thumbs-up"></span>
-                    </div>
-                    <div class="comment-actions-reactions-type-item red d-flex justify-content-center align-items-center">
-                        <span class="fe fe-heart"></span>
-                    </div>
-                    <div class="comment-actions-reactions-type-item yellow d-flex justify-content-center align-items-center">
-                        <span class="fe fe-thumbs-down"></span>
-                    </div>
-                </div>
-              </div>
-              <div class="comment-actions-separator">|</div>
-              <a href="javascript:;" class="reply-btn" (click)="reply()">
-                Reply
-              </a>
-            </div>
-
-            <!-- Reply section -->
-            <div class="row" *ngIf="!isReplyButtonHidden">
-              <div class="col-auto">
-
-                <!-- Avatar -->
-                <div class="avatar avatar-sm avatar-current-user">
-                  <img [src]="getProfilePicture(appSession.user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
-                </div>
-
-              </div>
+            <div class="d-flex text-area-container">
               <div class="col ms-n2">
-                <div class="d-flex text-area-container">
 
-                  <div class="col ms-n2">
-
-                    <form autocomplete="off" #replyForm="ngForm" (ngSubmit)="onFormSubmit(post, conversation.id)" class="mt-1 comment-box">
-                      <textarea #post id="message" name="message" (keydown)="onMessageKeydown($event, replyForm)"
-                        class="form-control form-control-flush" placeholder="Leave an comment..." [maxLength]="500"
-                        style="overflow: hidden; overflow-wrap: break-word; height: 41px; background: #F9FBFD; border-radius: 10px;"
-                      ></textarea>
-                    </form>
-
-                  </div>
-                  <div class="col-auto align-self-center">
-
-                    <!-- Icons -->
-                    <div class="col-auto pr-0 align-self-center">
-                      <div class="text-muted">
-                        <a class="text-reset mr-3" href="#!submit" (click)="$event.preventDefault(); replyForm.ngSubmit.emit()"
-                          data-toggle="tooltip" title="" data-original-title="Send">
-                          <i class="fe fe-send"></i>
-                        </a>
-                        <a class="text-reset mr-3" href="#!" data-toggle="tooltip" title="" data-original-title="Add photo">
-                          <i class="fe fe-camera"></i>
-                        </a>
-                        <a class="text-reset mr-3" href="#!" data-toggle="tooltip" title="" data-original-title="Attach file">
-                          <i class="fe fe-paperclip"></i>
-                        </a>
-                        <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Record audio">
-                          <i class="fe fe-mic"></i>
-                        </a>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
+                <form autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit(addCommentEl)" class="mt-1 comment-box">
+                  <textarea #addCommentEl id="message" name="message" (keydown)="onMessageKeydown($event, form, addCommentEl)"
+                    class="form-control form-control-flush" placeholder="Leave a comment..." [maxLength]="500"
+                    style="overflow: hidden; overflow-wrap: break-word; height: 41px;"
+                  ></textarea>
+                </form>
 
               </div>
+              <div class="col-auto align-self-center">
 
-
-
-            </div>
-
-            <ng-container *ngIf="conversation.children && conversation.children.length">
-              <div *ngFor="let childConversation of conversation.children" class="comment tier-2-comment  mb-1">
-                <div class="row">
-                  <div class="col-auto">
-                    <a class="avatar avatar-xs" href="profile-posts.html">
-                      <img
-                        [src]="getProfilePictureFromDocument(childConversation.creatorUser.profilePictureDocument, childConversation.creatorUser.id)"
-                        alt="..." class="avatar-img rounded-circle">
+                <!-- Icons -->
+                <div class="col-auto pr-0 align-self-center">
+                  <div class="text-muted">
+                    <a class="text-reset mr-3" href="#!submit" (click)="$event.preventDefault(); form.ngSubmit.emit()"
+                      data-toggle="tooltip" title="" data-original-title="Send">
+                      <i class="fe fe-send"></i>
+                    </a>
+                    <a class="text-reset mr-3" href="#!" data-toggle="tooltip" title="" data-original-title="Add photo">
+                      <i class="fe fe-camera"></i>
+                    </a>
+                    <a class="text-reset mr-3" href="#!" data-toggle="tooltip" title="" data-original-title="Attach file">
+                      <i class="fe fe-paperclip"></i>
+                    </a>
+                    <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Record audio">
+                      <i class="fe fe-mic"></i>
                     </a>
                   </div>
-                  <div class="col ml-n3">
-                    <div class="comment-body w-100">
-                      <div class="row">
-                        <div class="col">
-                          <h6 class="comment-title">
-                            {{ childConversation.creatorUser.fullName }}
-                          </h6>
-                        </div>
-                        <div class="col-auto">
-                          <time class="comment-time">
-                            {{ convertMomentToDateAgo(childConversation.creationTime) }}
-                          </time>
-                        </div>
-                      </div>
-                      <p class="comment-text">
-                        {{ childConversation.body }}
-                      </p>
-                    </div>
-                    <div class="comment-actions justify-content-start align-items-center gap-10">
-                      Like
-                      <div class="comment-actions-separator">•</div>
-                      <div class="comment-actions-reactions cursor-pointer d-flex gap-7">
-                        {{ 14 }}
-                        <div class="comment-actions-reactions-type d-flex">
-                            <div class="comment-actions-reactions-type-item blue d-flex justify-content-center align-items-center">
-                                <span class="fe fe-thumbs-up"></span>
-                            </div>
-                            <div class="comment-actions-reactions-type-item red d-flex justify-content-center align-items-center">
-                                <span class="fe fe-heart"></span>
-                            </div>
-                            <div class="comment-actions-reactions-type-item yellow d-flex justify-content-center align-items-center">
-                                <span class="fe fe-thumbs-down"></span>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
-              <a *ngIf="loadedReplyCount[conversation.id] !== conversation.replyCount" href="#!load-more" class="d-block view-more-replies"
-                (click)="$event.preventDefault(); onLoadMoreRepliesClick(conversation);">
-                {{ 'View' | localize }} {{getViewCount(conversation)}} {{ getViewCount(conversation) > 1 ? 'replies' : 'reply'}}
-              </a>
-            </ng-container>
-
+            </div>
           </div>
-        </div> <!-- / .row -->
+        </div>
+
+        <div *ngIf="conversations?.length" class="row sorting-section">
+          <div class="col-auto align-self-center">
+            Sort by:
+            <div class="btn-group" dropdown>
+              <button id="button-basic" dropdownToggle type="button" class="btn btn-link btn-sm dropdown-toggle font-weight-bold text-gray-800"
+                      aria-controls="dropdown-basic">
+                Most likes<span class="caret"></span>
+              </button>
+              <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                  role="menu" aria-labelledby="button-basic">
+                <li role="menuitem"><a class="dropdown-item" href="#">Most Recent</a></li>
+                <li role="menuitem"><a class="dropdown-item" href="#">Most Likes <i class="fas fa-check float-right mt-1"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>
-  </div>
 
-</div>
+    <div *ngIf="conversations?.length" class="discussions">
+      <div *ngFor="let conversation of conversations" class="discussion">
+        <div class="comment tier-1-comment">
+          <div class="row">
+            <div class="col-auto">
+
+              <!-- Avatar -->
+              <a class="avatar" href="profile-posts.html">
+                <img [src]="getProfilePictureFromDocument(conversation.creatorUser.profilePictureDocument, conversation.creatorUser.id)" alt="..." class="avatar-img rounded-circle">
+              </a>
+              <!-- Indentation line hereeeee -->
+              <!-- <div class="reply-indicator" *ngIf="!isReplyButtonHidden"></div> -->
+            </div>
+            <div class="col ms-n2">
+
+              <!-- Body -->
+              <div class="comment-body w-100">
+
+                <div class="row">
+                  <div class="col">
+
+                    <!-- Title -->
+                    <h5 class="comment-title">
+                      {{ conversation.creatorUser.fullName }}
+                    </h5>
+
+                  </div>
+                  <div class="col-auto">
+
+                    <!-- Time -->
+                    <time class="comment-time">
+                      {{ convertMomentToDateAgo(conversation.creationTime) }}
+                    </time>
+
+                  </div>
+                </div> <!-- / .row -->
+
+                <!-- Text -->
+                <p class="comment-text">
+                  {{ conversation.body }}
+                </p>
+
+              </div>
+              <div class="comment-actions justify-content-start align-items-center gap-10">
+                Like
+                <div class="comment-actions-separator">•</div>
+                <div class="comment-actions-reactions cursor-pointer d-flex gap-7">
+                  {{ 14 }}
+                  <div class="comment-actions-reactions-type d-flex">
+                      <div class="comment-actions-reactions-type-item blue d-flex justify-content-center align-items-center">
+                          <span class="fe fe-thumbs-up"></span>
+                      </div>
+                      <div class="comment-actions-reactions-type-item red d-flex justify-content-center align-items-center">
+                          <span class="fe fe-heart"></span>
+                      </div>
+                      <div class="comment-actions-reactions-type-item yellow d-flex justify-content-center align-items-center">
+                          <span class="fe fe-thumbs-down"></span>
+                      </div>
+                  </div>
+                </div>
+                <div class="comment-actions-separator">|</div>
+                <a href="javascript:;" class="reply-btn" (click)="reply()">
+                  Reply
+                </a>
+              </div>
+
+              <!-- Reply section -->
+              <div class="row" *ngIf="!isReplyButtonHidden">
+                <div class="col-auto">
+
+                  <!-- Avatar -->
+                  <div class="avatar avatar-sm avatar-current-user">
+                    <img [src]="getProfilePicture(appSession.user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
+                  </div>
+
+                </div>
+                <div class="col ms-n2">
+                  <div class="d-flex text-area-container">
+
+                    <div class="col ms-n2">
+
+                      <form autocomplete="off" #replyForm="ngForm" (ngSubmit)="onFormSubmit(addReplyEl, conversation.id)" class="mt-1 comment-box">
+                        <textarea #addReplyEl id="message" name="message" (keydown)="onMessageKeydown($event, replyForm)"
+                          class="form-control form-control-flush" placeholder="Leave a comment..." [maxLength]="500"
+                          style="overflow: hidden; overflow-wrap: break-word; height: 41px; background: #F9FBFD; border-radius: 10px;"
+                        ></textarea>
+                      </form>
+
+                    </div>
+                    <div class="col-auto align-self-center">
+
+                      <!-- Icons -->
+                      <div class="col-auto pr-0 align-self-center">
+                        <div class="text-muted">
+                          <a class="text-reset mr-3" href="#!submit" (click)="$event.preventDefault(); replyForm.ngSubmit.emit()"
+                            data-toggle="tooltip" title="" data-original-title="Send">
+                            <i class="fe fe-send"></i>
+                          </a>
+                          <a class="text-reset mr-3" href="#!" data-toggle="tooltip" title="" data-original-title="Add photo">
+                            <i class="fe fe-camera"></i>
+                          </a>
+                          <a class="text-reset mr-3" href="#!" data-toggle="tooltip" title="" data-original-title="Attach file">
+                            <i class="fe fe-paperclip"></i>
+                          </a>
+                          <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Record audio">
+                            <i class="fe fe-mic"></i>
+                          </a>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+
+
+
+              </div>
+
+              <ng-container *ngIf="conversation.children && conversation.children.length">
+                <div *ngFor="let childConversation of conversation.children" class="comment tier-2-comment  mb-1">
+                  <div class="row">
+                    <div class="col-auto">
+                      <a class="avatar avatar-xs" href="profile-posts.html">
+                        <img
+                          [src]="getProfilePictureFromDocument(childConversation.creatorUser.profilePictureDocument, childConversation.creatorUser.id)"
+                          alt="..." class="avatar-img rounded-circle">
+                      </a>
+                    </div>
+                    <div class="col ml-n3">
+                      <div class="comment-body w-100">
+                        <div class="row">
+                          <div class="col">
+                            <h6 class="comment-title">
+                              {{ childConversation.creatorUser.fullName }}
+                            </h6>
+                          </div>
+                          <div class="col-auto">
+                            <time class="comment-time">
+                              {{ convertMomentToDateAgo(childConversation.creationTime) }}
+                            </time>
+                          </div>
+                        </div>
+                        <p class="comment-text">
+                          {{ childConversation.body }}
+                        </p>
+                      </div>
+                      <div class="comment-actions justify-content-start align-items-center gap-10">
+                        Like
+                        <div class="comment-actions-separator">•</div>
+                        <div class="comment-actions-reactions cursor-pointer d-flex gap-7">
+                          {{ 14 }}
+                          <div class="comment-actions-reactions-type d-flex">
+                              <div class="comment-actions-reactions-type-item blue d-flex justify-content-center align-items-center">
+                                  <span class="fe fe-thumbs-up"></span>
+                              </div>
+                              <div class="comment-actions-reactions-type-item red d-flex justify-content-center align-items-center">
+                                  <span class="fe fe-heart"></span>
+                              </div>
+                              <div class="comment-actions-reactions-type-item yellow d-flex justify-content-center align-items-center">
+                                  <span class="fe fe-thumbs-down"></span>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <a *ngIf="loadedReplyCount[conversation.id] !== conversation.replyCount" href="#!load-more" class="d-block view-more-replies"
+                  (click)="$event.preventDefault(); onLoadMoreRepliesClick(conversation);">
+                  {{ 'View' | localize }} {{getViewCount(conversation)}} {{ getViewCount(conversation) > 1 ? 'replies' : 'reply'}}
+                </a>
+              </ng-container>
+
+            </div>
+          </div> <!-- / .row -->
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ng-container>

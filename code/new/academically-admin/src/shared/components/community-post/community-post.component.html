@@ -49,13 +49,28 @@
 
     <div class="post-actions d-flex flex-row" [style.marginTop.px]="15">
         <div class="post-actions-left d-flex justify-content-start align-items-center gap-10">
-            <div *ngIf="!isDiscussion" type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
+            <div
+                *ngIf="!isDiscussion"
+                type="button"
+                class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0"
+                (click)="showCommentsSection = !showCommentsSection"
+            >
                 <span class="fe fe-thumbs-up"></span>Like
             </div>
-            <div *ngIf="isQuickPost" type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
+            <div
+                *ngIf="isQuickPost"
+                type="button"
+                class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0"
+                (click)="showCommentsSection = !showCommentsSection"
+            >
                 <span class="fe fe-message-circle"></span>Comment
             </div>
-            <div *ngIf="isQuestion" type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
+            <div
+                *ngIf="isQuestion"
+                type="button"
+                class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0"
+                (click)="showCommentsSection = !showCommentsSection"
+            >
                 <span class="fe fe-edit"></span>Answer
             </div>
             <div
@@ -101,8 +116,7 @@
         </div>
     </div>
 
-
-    <app-community-discussions [postId]="data?.id"></app-community-discussions>
+    <app-community-discussions [show]="showCommentsSection" [postId]="data?.id"></app-community-discussions>
 
 </div>
 
