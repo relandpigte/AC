@@ -368,6 +368,22 @@ namespace Academically.Services.Posts
             });
         }
 
+        public async Task<PagedResultDto<CommentDto>> GetAllCommentRepliesAsync(PagedCommentResultRequestDto input)
+        {
+            var query = _commentsRepository.GetAll()
+                .Where(e => e.ParentId == input.ParentIdFilter);
+            var totalCount = await query.CountAsync();
+            var comments = await query.OrderByDescending(e => e.CreationTime)
+                .PageBy(input)
+                .Include(e => e.CreatorUser)
+                .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.CommentReactions)
+                .Select(e => ObjectMapper.Map<CommentDto>(e))
+                .ToListAsync();
+            return new PagedResultDto<CommentDto>(totalCount, comments);
+
+        }
+
 
 
         private IQueryable<AvailableServiceDto> Sort(IQueryable<AvailableServiceDto> query, string sorting)

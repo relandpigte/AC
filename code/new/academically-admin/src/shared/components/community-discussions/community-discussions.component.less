@@ -57,3 +57,137 @@
     }
   }
 }
+
+.text-area-container {
+  background: #F9FBFD;
+  border-radius: 10px;
+}
+
+hr {
+  margin-left: -25px;
+  margin-right: -25px;
+  margin-bottom: 15px;
+}
+
+.comment:not(:last-child) {
+  margin-bottom: 25px;
+}
+
+.avatar-current-user {
+  width: 40px;
+  height: 40px;
+}
+
+.sorting-section {
+  margin-top: 15px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #6E84A3;
+}
+
+.tier-1-comment {
+  .avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  &:last-of-type,
+  :last-child,
+  :last-of-type {
+    margin-bottom: 0px !important;
+  }
+
+  .view-more-replies {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 17px;
+    color: #3B516C;
+    margin-top: 15px;
+  }
+}
+
+.tier-2-comment {
+  margin-top: 25px;
+}
+
+.reply-indicator {
+  position: absolute;
+  width: 15px;
+  height: 65%;
+  border-left: 1px solid #B1C2D9;
+  border-bottom: 1px solid #B1C2D9;
+  border-bottom-right-radius: 0 !important;
+  border-top-left-radius: 0 !important;
+  border-radius: 10px;
+  left: 50%;
+}
+
+&-separator {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 19px;
+  text-align: right;
+  color: #95AAC9;
+}
+.comment {
+
+  &-actions {
+
+    display: flex;
+    width: 33px;
+    height: 18px;
+    left: 0px;
+    top: 1px;
+    letter-spacing: -0.01em;
+    font-family: 'Cerebri Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+    color: #6E84A3;
+    margin-top: 6px;
+    margin-bottom: 15px;
+
+    &-reactions {
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 19px;
+      text-align: right;
+      color: #95AAC9;
+
+      &-type {
+          &-item {
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+              border: 1px solid white;
+              color: white;
+              font-size: 10px;
+
+              &:not(:first-child) {
+                  margin-left: -5px;
+              }
+
+              &.blue {
+                  background-color: #2C7BE5;
+              }
+
+              &.red {
+                  background-color: #E63757;
+              }
+
+              &.yellow {
+                  background-color: #F5D83E;
+              }
+          }
+      }
+    }
+
+    .reply-btn {
+      font-size: 14px;
+      line-height: 18px;
+      color: #6E84A3;
+    }
+  }
+
+}
