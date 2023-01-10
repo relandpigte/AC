@@ -30,19 +30,19 @@
 
                 <!-- Icons -->
                 <div class="col-auto pr-0 align-self-center">
-                  <div class="text-muted">
-                    <a class="text-reset mr-3" href="#!submit" (click)="$event.preventDefault(); form.ngSubmit.emit()"
+                  <div class="text-muted d-flex gap-25">
+                    <!-- <a class="text-reset" href="#!submit" (click)="$event.preventDefault(); form.ngSubmit.emit()"
                       data-toggle="tooltip" title="" data-original-title="Send">
                       <i class="fe fe-send"></i>
-                    </a>
-                    <a class="text-reset mr-3" href="#!" data-toggle="tooltip" title="" data-original-title="Add photo">
+                    </a> -->
+                    <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Add photo" [class.disabled]="true">
                       <i class="fe fe-camera"></i>
                     </a>
-                    <a class="text-reset mr-3" href="#!" data-toggle="tooltip" title="" data-original-title="Attach file">
+                    <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Attach file" [class.disabled]="true">
                       <i class="fe fe-paperclip"></i>
                     </a>
-                    <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Record audio">
-                      <i class="fe fe-mic"></i>
+                    <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Add emoticon" [class.disabled]="true">
+                      <i class="fas fa-smile"></i>
                     </a>
                   </div>
                 </div>
@@ -105,7 +105,7 @@
               <div class="comment-actions justify-content-start align-items-center gap-10">
                 Like
                 <div class="comment-actions-separator">•</div>
-                <div class="comment-actions-reactions cursor-pointer d-flex gap-7">
+                <div class="comment-actions-reactions cursor-pointer d-flex align-items-center gap-7">
                   {{ 14 }}
                   <div class="comment-actions-reactions-type d-flex">
                       <div class="comment-actions-reactions-type-item blue d-flex justify-content-center align-items-center">
@@ -151,19 +151,19 @@
                     <div class="col-auto align-self-center">
                       <!-- Icons -->
                       <div class="col-auto pr-0 align-self-center">
-                        <div class="text-muted">
-                          <a class="text-reset mr-3" href="#!submit" (click)="$event.preventDefault(); replyForm.ngSubmit.emit()"
+                        <div class="text-muted d-flex gap-25">
+                          <!-- <a class="text-reset" href="#!submit" (click)="$event.preventDefault(); replyForm.ngSubmit.emit()"
                             data-toggle="tooltip" title="" data-original-title="Send">
                             <i class="fe fe-send"></i>
-                          </a>
-                          <a class="text-reset mr-3" href="#!" data-toggle="tooltip" title="" data-original-title="Add photo">
+                          </a> -->
+                          <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Add photo" [class.disabled]="true">
                             <i class="fe fe-camera"></i>
                           </a>
-                          <a class="text-reset mr-3" href="#!" data-toggle="tooltip" title="" data-original-title="Attach file">
+                          <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Attach file" [class.disabled]="true">
                             <i class="fe fe-paperclip"></i>
                           </a>
-                          <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Record audio">
-                            <i class="fe fe-mic"></i>
+                          <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Add emoticon" [class.disabled]="true">
+                            <i class="fas fa-smile"></i>
                           </a>
                         </div>
                       </div>
@@ -197,7 +197,7 @@
                       <div class="comment-actions justify-content-start align-items-center gap-10">
                         Like
                         <div class="comment-actions-separator">•</div>
-                        <div class="comment-actions-reactions cursor-pointer d-flex gap-7">
+                        <div class="comment-actions-reactions cursor-pointer d-flex align-items-center gap-7">
                           {{ 14 }}
                           <div class="comment-actions-reactions-type d-flex">
                               <div class="comment-actions-reactions-type-item blue d-flex justify-content-center align-items-center">
@@ -221,7 +221,7 @@
                 </div>
                 <a *ngIf="loadedReplyCount[conversation.id] < conversation.replyCount" href="#!load-more" class="d-block view-more-replies"
                   (click)="$event.preventDefault(); onLoadMoreRepliesClick(conversation);">
-                  {{ 'View' | localize }} {{getViewCount(conversation)}} {{ getViewCount(conversation) > 1 ? 'replies' : 'reply'}}
+                  {{ 'View' | localize }} {{getViewCount(conversation)}} {{ getViewCount(conversation) > 1 ? 'replies' : 'reply'}}...
                 </a>
               </ng-container>
 
