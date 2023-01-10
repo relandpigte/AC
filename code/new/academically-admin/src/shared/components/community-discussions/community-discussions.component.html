@@ -219,7 +219,7 @@
                     </div>
                   </div>
                 </div>
-                <a *ngIf="loadedReplyCount[conversation.id] !== conversation.replyCount" href="#!load-more" class="d-block view-more-replies"
+                <a *ngIf="loadedReplyCount[conversation.id] < conversation.replyCount" href="#!load-more" class="d-block view-more-replies"
                   (click)="$event.preventDefault(); onLoadMoreRepliesClick(conversation);">
                   {{ 'View' | localize }} {{getViewCount(conversation)}} {{ getViewCount(conversation) > 1 ? 'replies' : 'reply'}}
                 </a>

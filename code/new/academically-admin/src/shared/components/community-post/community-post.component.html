@@ -90,17 +90,17 @@
         </div>
         <div class="post-actions-right flex-grow-1 d-flex justify-content-end align-items-center gap-7">
             <div *ngIf="isQuickPost" class="post-actions-right-comments cursor-pointer">
-                {{ 14 }} comments
+                {{ data.commentsCount | shortNum: 1  }} comments
             </div>
             <div *ngIf="isQuestion" class="post-actions-right-comments cursor-pointer">
-                {{ 4 }} answers
+                {{ 5 }} answers
             </div>
             <div *ngIf="isDiscussion" class="post-actions-right-comments cursor-pointer">
-                {{ 28 }} posts
+                {{ data.children.length | shortNum: 1  }} posts
             </div>
             <div class="post-actions-right-separator">•</div>
             <div class="post-actions-right-reactions cursor-pointer d-flex gap-7">
-                {{ 14 }}
+                {{ 15 }}
                 <div class="post-actions-right-reactions-type d-flex">
                     <div class="post-actions-right-reactions-type-item blue d-flex justify-content-center align-items-center">
                         <span class="fe fe-thumbs-up"></span>

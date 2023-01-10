@@ -82,7 +82,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
             if (c.id === parentId) {
               c.children.unshift(newComment);
               c.replyCount++;
-              this.loadedReplyCount[c.id]++;
+              this.loadedReplyCount[c.id] = (this.loadedReplyCount[c.id] ?? 0) + 1;
             }
             return c;
           });

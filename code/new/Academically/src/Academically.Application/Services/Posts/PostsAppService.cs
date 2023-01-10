@@ -93,6 +93,7 @@ namespace Academically.Services.Posts
                                                           .Select(s => s.PostId).ToList();
            var result = await _postRepository.GetAll()
                                   .Include(p => p.CreatorUser)
+                                  .Include(p => p.Children)
                                   .Include(e => e.Parent)
                                   .Include(p => p.PostAttachments)
                                     .ThenInclude(a => a.Document)
@@ -119,6 +120,8 @@ namespace Academically.Services.Posts
                 {
                     attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
                 }
+
+                item.CommentsCount = await this.GetCommentsCountAsync(item.Id.ToString());
             }
 
             return result;
@@ -353,6 +356,9 @@ namespace Academically.Services.Posts
         }
 
         //  Task<IEnumerable<CommentDto>> GetAllAsync(string referenceId);
+
+        
+
         public async Task<IEnumerable<CommentDto>> GetAllCommentAsync(string referenceId)
         {
             var commentsWithReplyCount = await _commentsRepository.GetAll()
@@ -389,10 +395,15 @@ namespace Academically.Services.Posts
                 .Select(e => ObjectMapper.Map<CommentDto>(e))
                 .ToListAsync();
             return new PagedResultDto<CommentDto>(totalCount, comments);
-
         }
 
-
+        private async Task<int> GetCommentsCountAsync(string referenceId)
+        {
+            var comments = await _commentsRepository.GetAll()
+                .Include(c => c.Children)
+                .Where(e => e.ParentId == null && e.ReferenceId == referenceId).ToListAsync();
+            return comments.Count() + comments.SelectMany(c => c.Children).Count();
+        }
 
         private IQueryable<AvailableServiceDto> Sort(IQueryable<AvailableServiceDto> query, string sorting)
         {

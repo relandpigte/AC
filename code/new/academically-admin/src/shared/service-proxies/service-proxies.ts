@@ -40101,6 +40101,7 @@ export class PostDto implements IPostDto {
     creatorUser: UserDto;
     isHidden: boolean;
     service: AvailableServiceDto;
+    commentsCount: number;
     postTopics: PostTopicDto[] | undefined;
     postAttachments: PostAttachmentDto[] | undefined;
     children: PostDto[] | undefined;
@@ -40136,6 +40137,7 @@ export class PostDto implements IPostDto {
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.isHidden = _data["isHidden"];
             this.service = _data["service"] ? AvailableServiceDto.fromJS(_data["service"]) : <any>undefined;
+            this.commentsCount = _data["commentsCount"];
             if (Array.isArray(_data["postTopics"])) {
                 this.postTopics = [] as any;
                 for (let item of _data["postTopics"])
@@ -40195,6 +40197,7 @@ export class PostDto implements IPostDto {
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["isHidden"] = this.isHidden;
         data["service"] = this.service ? this.service.toJSON() : <any>undefined;
+        data["commentsCount"] = this.commentsCount;
         if (Array.isArray(this.postTopics)) {
             data["postTopics"] = [];
             for (let item of this.postTopics)
@@ -40254,6 +40257,7 @@ export interface IPostDto {
     creatorUser: UserDto;
     isHidden: boolean;
     service: AvailableServiceDto;
+    commentsCount: number;
     postTopics: PostTopicDto[] | undefined;
     postAttachments: PostAttachmentDto[] | undefined;
     children: PostDto[] | undefined;
