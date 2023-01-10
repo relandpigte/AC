@@ -18,6 +18,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   @Input() isInCourse = true;
   @Input() isInTutorPortal = false;
   @Input() postId: string;
+  @Input() ctrlEnterToSubmit = false;
 
   @ViewChild('addCommentEl', { static: false }) addCommentEl: ElementRef;
 
@@ -138,8 +139,9 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   }
 
   onMessageKeydown(event: any, form: NgForm, post?: any): void {
-    if (event.keyCode === 13 && event.ctrlKey) {
+    if (event.keyCode === 13 && (!this.ctrlEnterToSubmit || (this.ctrlEnterToSubmit && event.ctrlKey))) {
       form.ngSubmit.emit();
+      event.preventDefault();
     }
     if (post) {
       setTimeout(() => {
