@@ -340,8 +340,16 @@ namespace Academically.Services.Posts
         {
             var comment = ObjectMapper.Map<Comment>(input);
             input.CreationTime = Clock.Now;
-            input.Id = await _commentsRepository.InsertAndGetIdAsync(comment);
-            return input;
+            var createdId = await _commentsRepository.InsertAndGetIdAsync(comment);
+            await this.CurrentUnitOfWork.SaveChangesAsync();
+            var created = await _commentsRepository.GetAll()
+                .Include(e => e.CreatorUser)
+                .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.CommentReactions)
+                .OrderByDescending(e => e.CreationTime)
+                .Where(e => e.Id == createdId)
+                .SingleOrDefaultAsync();
+            return ObjectMapper.Map<CommentDto>(created);
         }
 
         //  Task<IEnumerable<CommentDto>> GetAllAsync(string referenceId);

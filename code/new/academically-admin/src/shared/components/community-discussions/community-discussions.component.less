@@ -80,9 +80,15 @@ hr {
 
 .sorting-section {
   margin-top: 15px;
-  margin-bottom: 20px;
+  font-weight: 400;
   font-size: 13px;
+  line-height: 21px;
+  letter-spacing: -0.01em;
   color: #6E84A3;
+
+  .btn-group button:focus {
+    box-shadow: none !important;
+  }
 }
 
 .tier-1-comment {
@@ -130,6 +136,29 @@ hr {
   color: #95AAC9;
 }
 .comment {
+
+  &-title {
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 17px;
+    color: #12263F;
+  }
+
+  &-time {
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 13px;
+    color: #95AAC9;
+  }
+
+  &-text {
+    margin-top: 7px;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 21px;
+    letter-spacing: -0.01em;
+    color: #12263F;
+  }
 
   &-actions {
 

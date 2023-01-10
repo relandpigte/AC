@@ -61,8 +61,8 @@
               </button>
               <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
                   role="menu" aria-labelledby="button-basic">
-                <li role="menuitem"><a class="dropdown-item" href="#">Most Recent</a></li>
-                <li role="menuitem"><a class="dropdown-item" href="#">Most Likes <i class="fas fa-check float-right mt-1"></i></a></li>
+                <li role="menuitem"><a class="dropdown-item" href="javascript:void(0)">Most Recent</a></li>
+                <li role="menuitem"><a class="dropdown-item" href="javascript:void(0)">Most Likes <i class="fas fa-check float-right mt-1"></i></a></li>
               </ul>
             </div>
           </div>
@@ -72,7 +72,7 @@
     </div>
 
     <div *ngIf="conversations?.length" class="discussions">
-      <div *ngFor="let conversation of conversations" class="discussion">
+      <div *ngFor="let conversation of conversations" class="discussion" [style.marginTop.px]="20">
         <div class="comment tier-1-comment">
           <div class="row">
             <div class="col-auto">
@@ -90,28 +90,16 @@
               <div class="comment-body w-100">
 
                 <div class="row">
-                  <div class="col">
-
-                    <!-- Title -->
-                    <h5 class="comment-title">
-                      {{ conversation.creatorUser.fullName }}
-                    </h5>
-
-                  </div>
                   <div class="col-auto">
-
-                    <!-- Time -->
-                    <time class="comment-time">
-                      {{ convertMomentToDateAgo(conversation.creationTime) }}
-                    </time>
-
+                    <h5 class="comment-title">{{ conversation.creatorUser.fullName }}</h5>
                   </div>
-                </div> <!-- / .row -->
+                  <div class="col p-0 d-flex align-items-center">
+                    <time class="comment-time" [title]="conversation.creationTime | date:'short'">{{ convertMomentToDateAgo(conversation.creationTime) }}</time>
+                  </div>
+                </div>
 
                 <!-- Text -->
-                <p class="comment-text">
-                  {{ conversation.body }}
-                </p>
+                <p class="comment-text" [innerHTML]="conversation.body"></p>
 
               </div>
               <div class="comment-actions justify-content-start align-items-center gap-10">
@@ -132,13 +120,13 @@
                   </div>
                 </div>
                 <div class="comment-actions-separator">|</div>
-                <a href="javascript:;" class="reply-btn" (click)="reply()">
+                <a href="javascript:;" class="reply-btn" (click)="initiateReply(conversation)">
                   Reply
                 </a>
               </div>
 
               <!-- Reply section -->
-              <div class="row" *ngIf="!isReplyButtonHidden">
+              <div class="row" *ngIf="conversationReplyId === conversation.id" [style.marginTop.px]="20">
                 <div class="col-auto">
 
                   <!-- Avatar -->
@@ -153,7 +141,7 @@
                     <div class="col ms-n2">
 
                       <form autocomplete="off" #replyForm="ngForm" (ngSubmit)="onFormSubmit(addReplyEl, conversation.id)" class="mt-1 comment-box">
-                        <textarea #addReplyEl id="message" name="message" (keydown)="onMessageKeydown($event, replyForm)"
+                        <textarea #addReplyEl [id]="'add-reply-'+conversation.id" name="message" (keydown)="onMessageKeydown($event, replyForm)"
                           class="form-control form-control-flush" placeholder="Leave a comment..." [maxLength]="500"
                           style="overflow: hidden; overflow-wrap: break-word; height: 41px; background: #F9FBFD; border-radius: 10px;"
                         ></textarea>
@@ -161,7 +149,6 @@
 
                     </div>
                     <div class="col-auto align-self-center">
-
                       <!-- Icons -->
                       <div class="col-auto pr-0 align-self-center">
                         <div class="text-muted">
@@ -180,14 +167,9 @@
                           </a>
                         </div>
                       </div>
-
                     </div>
                   </div>
-
                 </div>
-
-
-
               </div>
 
               <ng-container *ngIf="conversation.children && conversation.children.length">
@@ -203,20 +185,14 @@
                     <div class="col ml-n3">
                       <div class="comment-body w-100">
                         <div class="row">
-                          <div class="col">
-                            <h6 class="comment-title">
-                              {{ childConversation.creatorUser.fullName }}
-                            </h6>
-                          </div>
                           <div class="col-auto">
-                            <time class="comment-time">
-                              {{ convertMomentToDateAgo(childConversation.creationTime) }}
-                            </time>
+                            <h6 class="comment-title">{{ childConversation.creatorUser.fullName }}</h6>
+                          </div>
+                          <div class="col p-0 d-flex align-items-center">
+                            <time class="comment-time" [title]="childConversation.creationTime | date:'short'">{{ convertMomentToDateAgo(childConversation.creationTime) }}</time>
                           </div>
                         </div>
-                        <p class="comment-text">
-                          {{ childConversation.body }}
-                        </p>
+                        <p class="comment-text" [innerHTML]="childConversation.body"></p>
                       </div>
                       <div class="comment-actions justify-content-start align-items-center gap-10">
                         Like
@@ -235,6 +211,10 @@
                               </div>
                           </div>
                         </div>
+                        <div class="comment-actions-separator">|</div>
+                        <a href="javascript:;" class="reply-btn" (click)="initiateReply(conversation)">
+                          Reply
+                        </a>
                       </div>
                     </div>
                   </div>

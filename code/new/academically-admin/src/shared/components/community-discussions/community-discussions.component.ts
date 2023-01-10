@@ -28,7 +28,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   inputLength = 0;
 
   _postId: string;
-  isReplyButtonHidden = false; // will enchance later
+  conversationReplyId: string;
   loadedReplyCount: number[] = [];
   skipCount: number[] = [];
 
@@ -36,6 +36,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   constructor(
     injector: Injector,
+    private _elRef: ElementRef,
     private _route: ActivatedRoute,
     private _courseConversationsService: CourseConversationsServiceProxy,
 
@@ -76,8 +77,16 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
           finalize(() => {
             this.isPosting = false;
           })
-        ).subscribe(() => {
-          this.getConversations();
+        ).subscribe(newComment => {
+          if (parentId) this.conversations = this.conversations.map(c => {
+            if (c.id === parentId) {
+              c.children.unshift(newComment);
+              c.replyCount++;
+              this.loadedReplyCount[c.id]++;
+            }
+            return c;
+          });
+          else this.conversations.unshift(newComment);
           message.value = '';
           this.notify.success(this.l('SuccessfullyPosted'));
         });
@@ -129,7 +138,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   }
 
   onMessageKeydown(event: any, form: NgForm, post?: any): void {
-    if (event.keyCode === 13) {
+    if (event.keyCode === 13 && event.ctrlKey) {
       form.ngSubmit.emit();
     }
     if (post) {
@@ -195,9 +204,13 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       });
   }
 
-  reply(): void {
-    console.log(this.isReplyButtonHidden);
-    this.isReplyButtonHidden = false;
-    console.log(this.isReplyButtonHidden);
+  initiateReply(conversation: CommentDto): void {
+    this.conversationReplyId = this.conversationReplyId === conversation.id ? null : conversation.id;
+    if (this.conversationReplyId === conversation.id) {
+      setTimeout(() => {
+        const addReplyEl = this._elRef.nativeElement.querySelector(`#add-reply-${conversation.id}`);
+        if (addReplyEl) addReplyEl.focus();
+      });
+    }
   }
 }
