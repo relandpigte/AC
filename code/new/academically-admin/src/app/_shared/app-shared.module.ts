@@ -53,7 +53,6 @@ import { ServicePickerComponent } from '@shared/components/service-picker/servic
 import { ServicePreviewComponent } from '@shared/components/service-preview/service-preview.component';
 import { CommunitySideCardComponent } from '@shared/components/side-card/side-card.component';
 import { TopicCardComponent } from '@shared/components/topic/topic.component';
-import { AddPostComponent } from '@shared/modals/add-post/add-post.component';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { AddTopicsComponent } from '@shared/modals/add-topics/add-topics.component';
 import { KeysPipe } from '@shared/pipes/keys.pipe';
@@ -83,7 +82,6 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     KeysPipe,
     AutocompleteComponent,
     PillPickerComponent,
-    AddPostComponent,
     UpsertPostComponent,
     AddTopicsComponent,
     AttachmentPreviewComponent,
@@ -159,7 +157,6 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     CarouselWrapperComponent,
     FeaturedCarouselComponent,
     KeysPipe,
-    AddPostComponent,
     UpsertPostComponent,
     AddTopicsComponent,
     AutocompleteComponent,

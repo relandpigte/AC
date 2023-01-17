@@ -50,6 +50,7 @@
         ></app-service-preview>
         <app-service-picker
             [selectedService]="selectedService"
+            [isShown]="isShowServicePicker"
             [class.show]="isShowServicePicker"
             (onClose)="isShowServicePicker = false"
             (onBack)="isShowServicePicker = false"

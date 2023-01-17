@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { PostTabs } from '@shared/modals/add-post/add-post.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { TopicSorting } from '@shared/components/topic/topic.component';
+import { PostTabs } from '@shared/modals/upsert-post/upsert-post.component';
 import { DisciplineTaxonomiesServiceProxy, KeywordSearchStrategy, PostType } from '@shared/service-proxies/service-proxies';
 
 import { finalize, takeUntil } from 'rxjs/operators';
