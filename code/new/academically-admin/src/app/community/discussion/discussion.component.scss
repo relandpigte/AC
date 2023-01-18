@@ -114,7 +114,14 @@
 
 
     &-controls {
-        &-filter {
+        &-left {
+            &-posts-count {
+                font-weight: 400;
+                font-size: 13px;
+                line-height: 17px;
+                color: #6E84A3;
+            }
+
             .dropdown {
                 &-toggle,
                 &-toggle .fe {
@@ -126,7 +133,7 @@
             }
         }
 
-        &-sort {
+        &-right {
             font-weight: 400;
             font-size: 13px;
             line-height: 20px;

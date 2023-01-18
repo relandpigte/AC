@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, UserDto, PostNotificationDto } from '@shared/service-proxies/service-proxies';
@@ -32,6 +32,9 @@ enum SubscribeType {
     styleUrls: ['./discussion.component.scss']
 })
 export class DiscussionComponent extends AppComponentBase {
+
+    @Input() canFilter = false;
+
     private discussion: PostDto;
 
     children: PostDto[] = [];
@@ -96,6 +99,7 @@ export class DiscussionComponent extends AppComponentBase {
         }
     }
     get participantsCount(): number { return this.participants?.length ?? 0 + 1; }
+    get postsCount(): number { return this.discussion?.children.length ?? 0; }
 
     private async loadDiscussion(id: string) {
         this.isLoadingPost = true;

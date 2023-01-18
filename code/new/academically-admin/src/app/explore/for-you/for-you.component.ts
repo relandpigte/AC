@@ -121,7 +121,6 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
         modalSettings.class = 'modal-lg';
         modalSettings.initialState = {
           allowTabs: false,
-          canCancel: false,
           canRemoveAttachment: false,
           title: 'Community.SharePost',
           activeTab: 'quick-post',

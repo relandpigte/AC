@@ -69,8 +69,11 @@
             <app-community-composer [showBottomActions]="false" (onQuickPostClick)="handleAddPost()"></app-community-composer>
 
             <div class="discussion-controls d-flex flex-row justify-content-between" [style.marginBottom.px]="10">
-                <div class="discussion-controls-filter">
-                    <div *ngIf="false" class="dropdown">
+                <div class="discussion-controls-left d-flex align-items-end">
+                    <div *ngIf="!canFilter" class="discussion-controls-left-posts-count">
+                        {{ postsCount }} posts
+                    </div>
+                    <div *ngIf="canFilter" class="dropdown">
                         <a href="#" class="dropdown-ellipses dropdown-toggle d-flex flex-row align-items-center gap-5" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ selectedFiltering | localize }} <span class="fe fe-chevron-down"></span>
@@ -106,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="discussion-controls-sort d-flex flex-row align-items-center gap-10">
+                <div class="discussion-controls-right d-flex flex-row align-items-center gap-10">
                     Sort by:
                     <div class="dropdown">
                         <a href="#" class="dropdown-ellipses dropdown-toggle d-flex flex-row align-items-center gap-5" role="button"
