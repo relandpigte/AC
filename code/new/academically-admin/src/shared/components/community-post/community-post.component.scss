@@ -1,3 +1,9 @@
+:host {
+    &:empty {
+        display: none;
+    }
+}
+
 .post {
     padding: 24px;
 
@@ -146,6 +152,49 @@
                             background-color: #F5D83E;
                         }
                     }
+                }
+            }
+        }
+    }
+
+    &-hidden {
+        &-text {
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 19px;
+            letter-spacing: -0.01em;
+            color: #95AAC9;
+        }
+
+        &-actions {
+            &-undo {
+                font-weight: 400;
+                font-size: 15px;
+                line-height: 19px;
+                text-align: right;
+                letter-spacing: -0.01em;
+                color: #95AAC9;
+            }
+
+            &-separator {
+                font-weight: 400;
+                font-size: 15px;
+                line-height: 19px;
+                text-align: right;
+                letter-spacing: -0.01em;
+                color: #D2DDEC;
+            }
+
+            &-close {
+                font-weight: 400;
+                font-size: 15px;
+                line-height: 19px;
+                text-align: right;
+                letter-spacing: -0.01em;
+                color: #95AAC9;
+
+                .fe {
+                    font-weight: bold;
                 }
             }
         }

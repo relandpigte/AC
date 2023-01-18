@@ -1,24 +1,26 @@
 
-import { Component, Injector, OnInit, OnChanges, Input, SimpleChanges, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { FileUtils } from '@shared/helpers/file-utils';
 import { AvailableServiceDto, DisciplineTaxonomyDto, PostsServiceProxy, PostType } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 
+import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 
 @Component({
     selector: 'app-community-post-card',
     templateUrl: './community-post.component.html',
     styleUrls: ['./community-post.component.scss']
 })
-export class CommunityPostCardComponent extends AppComponentBase implements OnInit, OnChanges {
-    @Input() closeHiddenPostAfter: number = 5;
+export class CommunityPostCardComponent extends AppComponentBase implements OnChanges {
+    @Input() closeHiddenPostAfter: number = 0;
     @Input() data: any;
+
     @Output() refresh = new EventEmitter();
+    @Output() onUpdate = new EventEmitter();
 
     fileAttachment: File;
     serviceAttachment: AvailableServiceDto;
@@ -57,7 +59,15 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnIn
     get isQuestion(): boolean { return this.data?.type === PostType.Question; }
     get isDiscussion(): boolean { return this.data?.type === PostType.Discussion; }
 
-    ngOnInit(): void {
+    get typeName(): string {
+        switch (this.data?.type) {
+            case PostType.Question:
+                return 'question';
+            case PostType.Discussion:
+                return 'discussion';
+            default:
+                return 'post';
+        }
     }
 
     async ngOnChanges(changes: SimpleChanges) {
@@ -91,6 +101,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnIn
         const self = this;
         this.hideTimer = setTimeout(() => {
             this.isHiding = false;
+            this.data.isHidden = true;
+            this.onUpdate.emit(this.data);
         }, 1000 * this.closeHiddenPostAfter);
     }
 
@@ -142,10 +154,9 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnIn
                     this._postsServiceProxy.setPostVisibility(id, true, null, null, null)
                         .pipe(takeUntil(this.destroyed$))
                         .subscribe(() => {
-                            this.notify.success(this.l('PostHiddenSuccessfully'));
                             this.isHidden = true;
                             this.isHiding = true;
-                            this.startHideTimer();
+                            if (this.closeHiddenPostAfter > 0) this.startHideTimer();
                     });
                 }
             }
@@ -164,10 +175,10 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnIn
     }
 
     onCloseHideClick(id: string): void {
-        if (this.hideTimer) {
-            clearTimeout(this.hideTimer);
-            this.isHiding = false;
-            this.isHidden = true;
-        }
+        if (this.hideTimer) clearTimeout(this.hideTimer);
+        this.isHiding = false;
+        this.isHidden = true;
+        this.data.isHidden = true;
+        this.onUpdate.emit(this.data);
     }
 }

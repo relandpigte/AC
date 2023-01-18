@@ -211,6 +211,13 @@ export class DiscussionComponent extends AppComponentBase {
         return this.creator?.id === item?.id;
     }
 
+    handleOnUpdatePost(post: PostDto): void {
+        this.children = this.children.map(c => {
+            if (c.id === post.id) return post;
+            return c;
+        });
+    }
+
     handleFilteringChange(filter: PostFiltering): void {
         this.selectedFiltering = filter;
         this.getChildren();

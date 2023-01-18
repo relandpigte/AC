@@ -174,6 +174,10 @@
 
     &-content {
         &-post {
+            &:empty {
+                display: none;
+            }
+
             &.end {
                 .left, .right {
                     width: 162px;

@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { TopicSorting } from '@shared/components/topic/topic.component';
 import { PostTabs } from '@shared/modals/upsert-post/upsert-post.component';
@@ -16,8 +16,10 @@ export interface VisibilityOptions {
     templateUrl: './post.component.html',
     styleUrls: ['./post.component.scss']
 })
-export class CommunityPostComponent extends AppComponentBase implements OnInit {
+export class CommunityPostComponent extends AppComponentBase implements OnInit, OnChanges {
 
+    @ViewChild('titleEl') titleEl: ElementRef<HTMLElement>;
+    @ViewChild('informationEl') informationEl: ElementRef<HTMLElement>;
     @ViewChild('topicEl') topicInput: ElementRef<HTMLElement>;
 
     @Input() type: PostTabs;
@@ -57,6 +59,12 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit {
         }
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        if ('type' in changes && changes.type?.previousValue !== changes.type?.currentValue) {
+            this.setFocus();
+        }
+    }
+
     private initVisibilityOptions(): void {
         this.visibilityOptions = [
             { label: 'to everyone', value: null }
@@ -73,6 +81,13 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit {
             default:
                 return PostType.Discussion;
         }
+    }
+
+    private setFocus(): void {
+        setTimeout(() => {
+            if (this.titleEl) this.titleEl.nativeElement.focus();
+            else if (this.informationEl) this.informationEl.nativeElement.focus();
+        }, 10);
     }
 
     updateFields(): void {
