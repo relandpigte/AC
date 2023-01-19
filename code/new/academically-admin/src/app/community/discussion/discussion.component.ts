@@ -99,7 +99,7 @@ export class DiscussionComponent extends AppComponentBase {
         }
     }
     get participantsCount(): number { return this.participants?.length ?? 0 + 1; }
-    get postsCount(): number { return this.discussion?.children.length ?? 0; }
+    get postsCount(): number { return this.children?.length ?? 0; }
 
     private async loadDiscussion(id: string) {
         this.isLoadingPost = true;
