@@ -11,8 +11,8 @@ import { finalize, takeUntil } from 'rxjs/operators';
 
 export enum PostTabs {
     QuickPost = 'quick-post',
-    AddQuestion = 'question',
-    AddDiscussion = 'discussion'
+    AddQuestion = 'add-question',
+    AddDiscussion = 'add-discussion'
 };
 
 @Component({
