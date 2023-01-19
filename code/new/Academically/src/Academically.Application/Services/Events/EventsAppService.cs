@@ -149,6 +149,7 @@ namespace Academically.Services.Events
         {
             var query = Repository.GetAll()
                 .Where(e => e.ParentId == null)
+                .Where(e => e.Status == EventStatus.Published)
                 .WhereIf(input.MovingDate.HasValue && input.StartDate.HasValue, v => v.CreationTime < input.MovingDate.Value && v.CreationTime >= input.StartDate.Value) // For next page of latest month
                 .WhereIf(input.MovingDate.HasValue && !input.StartDate.HasValue && !input.EndDate.HasValue, v => v.CreationTime < input.MovingDate.Value);
             var totalCount = await query.CountAsync();

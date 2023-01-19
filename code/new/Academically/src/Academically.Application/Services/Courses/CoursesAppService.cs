@@ -148,7 +148,7 @@ namespace Academically.Services.Courses
         public async Task<Dictionary<string, PagedResultDto<CourseDto>>> GetByDatesAsync(PagedExploreGroupByDateResultRequestDto input)
         {
             var query = Repository.GetAll()
-                .Where(e => e.IsVisible)
+                .Where(e => e.IsVisible && e.Status == CourseStatus.Published)
                 .WhereIf(input.MovingDate.HasValue && input.StartDate.HasValue, v => v.CreationTime < input.MovingDate.Value && v.CreationTime >= input.StartDate.Value) // For next page of latest month
                 .WhereIf(input.MovingDate.HasValue && !input.StartDate.HasValue && !input.EndDate.HasValue, v => v.CreationTime < input.MovingDate.Value);
             var totalCount = await query.CountAsync();

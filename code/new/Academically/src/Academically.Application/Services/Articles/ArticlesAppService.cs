@@ -210,7 +210,7 @@ namespace Academically.Services.Articles
             var query = _articlesRepository.GetAll()
                 .Where(e => e.ParentId == null)
                 .Where(e => e.Status == ArticleStatus.Published)
-                .Where(e => e.IsVisible)
+                .Where(e => e.IsVisible && e.Status == ArticleStatus.Published)
                 //.WhereIf(input.UserIdFilter.HasValue, e => e.CreatorUserId != input.UserIdFilter.Value)
                 .WhereIf(input.MovingDate.HasValue && input.StartDate.HasValue, v => v.CreationTime < input.MovingDate.Value && v.CreationTime >= input.StartDate.Value) // For next page of latest month
                 .WhereIf(input.MovingDate.HasValue && !input.StartDate.HasValue && !input.EndDate.HasValue, v => v.CreationTime < input.MovingDate.Value)
