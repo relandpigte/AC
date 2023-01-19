@@ -1,26 +1,56 @@
 <div class="attachment position-relative">
-    <div *ngIf="canRemove" class="attachment-remove d-flex justify-content-center align-items-center cursor-pointer" (click)="removeAttachment()">
+
+    <!-- OVERLAY ELEMENTS [START] -->
+    <div
+        *ngIf="canRemove"
+        class="attachment-remove d-flex justify-content-center align-items-center cursor-pointer"
+        (click)="removeAttachment()"
+    >
         <span class="fe fe-x"></span>
     </div>
-    <div *ngIf="isVideoAttachment" class="attachment-play d-flex justify-content-center align-items-center cursor-pointer" (click)="togglePlayVideo()">
+
+    <div
+        *ngIf="isVideoAttachment"
+        class="attachment-play d-flex justify-content-center align-items-center cursor-pointer"
+        (click)="togglePlayVideo()"
+    >
         <span class="fas" [ngClass]="[isVideoPlaying ? 'fa-pause' : 'fa-play']"></span>
     </div>
-    <div *ngIf="isImageAttachment" class="attachment-image">
+    <!-- OVERLAY ELEMENTS [END] -->
+
+    <div
+        *ngIf="isImageAttachment"
+        class="attachment-image"
+    >
         <img [src]="sanitizedAttachmentUrl" />
     </div>
-    <div *ngIf="isVideoAttachment" class="attachment-video d-flex flex-wrap justify-content-center align-content-center align-items-center cursor-pointer" (click)="togglePlayVideo()">
+
+    <div
+        *ngIf="isVideoAttachment"
+        class="attachment-video d-flex flex-wrap justify-content-center align-content-center align-items-center cursor-pointer"
+        (click)="togglePlayVideo()"
+    >
         <video #videoAttachment [src]="sanitizedAttachmentUrl" class="bg-light" loop playsinline></video>
     </div>
-    <div *ngIf="!isImageAttachment && !isVideoAttachment" class="attachment-file d-flex justify-content-center align-items-start">
-        <div class="card d-flex justify-content-center align-items-center p-5 mt-4">
-            <span class="fas fa-6x fa-file"></span>
+
+    <div
+        *ngIf="isShowAttachmentInfo || (!isImageAttachment && !isVideoAttachment)"
+        class="attachment-info d-flex flex-row"
+        [ngClass]="{
+            'video': isVideoAttachment,
+            'file border-0 gap-20': !isImageAttachment && !isVideoAttachment
+        }"
+    >
+        <div *ngIf="!isImageAttachment && !isVideoAttachment" class="attachment-info-file d-flex justify-content-center align-items-center">
+            <div class="d-flex justify-content-center align-items-center"><span class="fe fe-folder"></span></div>
         </div>
-    </div>
-    <div *ngIf="isShowAttachmentInfo" class="attachment-info d-flex flex-column justify-content-center">
-        <div class="attachment-info-name">{{ fileAttachmentName }}</div>
-        <div class="attachment-info-details d-flex flex-row align-content-center gap-5">
-            <div class="attachment-info-details-type d-flex align-items-center">{{ fileAttachmentType | uppercase }}</div>
-            <div class="attachment-info-details-size">{{ fileAttachmentSize }}</div>
+        <div class="attachment-info-id d-flex flex-column justify-content-center">
+            <div class="attachment-info-id-name">{{ fileAttachmentName }}</div>
+            <div class="attachment-info-id-details d-flex flex-row align-content-center gap-5">
+                <div class="attachment-info-id-details-type d-flex align-items-center">{{ fileAttachmentType | uppercase }}</div>
+                <div class="attachment-info-id-details-size">{{ fileAttachmentSize }}</div>
+            </div>
         </div>
+
     </div>
 </div>

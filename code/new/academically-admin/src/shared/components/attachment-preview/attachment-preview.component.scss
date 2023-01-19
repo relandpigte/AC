@@ -8,6 +8,7 @@
     border-radius: 10px;
     border: 1px solid #E4EBF6;
     overflow: hidden;
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.05);
 
     &:hover {
         .attachment-play {
@@ -81,8 +82,6 @@
     }
 
     &-file {
-        height: 279px;
-
         video {
             min-width: 100%;
             max-width: 100%;
@@ -90,40 +89,52 @@
     }
 
     &-info {
-        position: absolute;
-        bottom: 0;
         width: 100%;
         background-color: white;
         border-top: 1px solid #E4EBF6;
-        padding: 15px 23px;
+        padding: 20px;
 
-        &-name {
-            font-weight: 400;
-            font-size: 15px;
-            line-height: 23px;
-            letter-spacing: -0.01em;
-            color: #12263F;
+        &.video {
+            position: absolute;
+            bottom: 0;
         }
 
-        &-details {
-            &-type {
-                background: rgba(110, 132, 163, 0.1);
-                border-radius: 3px;
-                font-style: normal;
-                font-weight: 600;
-                font-size: 10px;
-                line-height: 13px;
-                text-align: center;
-                color: #6E84A3;
-                padding: 0 10px;
+        &-file {
+            height: 60px;
+            width: 60px;
+            font-size: 30px;
+            color: #6E84A3;
+        }
+
+        &-id {
+            &-name {
+                font-weight: 400;
+                font-size: 20px;
+                line-height: 152.4%;
+                letter-spacing: -0.01em;
+                color: #12263F;
             }
 
-            &-size {
-                font-weight: 400;
-                font-size: 13px;
-                line-height: 21px;
-                letter-spacing: -0.01em;
-                color: #6E84A3;
+            &-details {
+                &-type {
+                    background: rgba(110, 132, 163, 0.1);
+                    border-radius: 3px;
+                    font-style: normal;
+                    font-weight: 600;
+                    font-size: 10px;
+                    line-height: 13px;
+                    text-align: center;
+                    color: #6E84A3;
+                    padding: 0 10px;
+                }
+
+                &-size {
+                    font-weight: 400;
+                    font-size: 13px;
+                    line-height: 21px;
+                    letter-spacing: -0.01em;
+                    color: #6E84A3;
+                }
             }
         }
     }
