@@ -24,6 +24,8 @@ export class AttachmentPreviewComponent extends AppComponentBase implements OnCh
     private videoExtensions = fileUploadConfiguration.videoExtensions;
     private fileExtensions = fileUploadConfiguration.allowedFileExtensions;
 
+    isVideoPlaying = false;
+
     constructor(
         injector: Injector
     ) {
@@ -33,6 +35,13 @@ export class AttachmentPreviewComponent extends AppComponentBase implements OnCh
     ngOnChanges(changes: SimpleChanges): void {
         if ('file' in changes && this.file) {
             this.sanitizedAttachmentUrl = FileUtils.getSanitizedFileUrl(this, this.file);
+
+            setTimeout(() => {
+                if (this.videoAttachment) {
+                    this.videoAttachment.nativeElement.addEventListener('play', () => this.isVideoPlaying = true);
+                    this.videoAttachment.nativeElement.addEventListener('pause', () => this.isVideoPlaying = false);
+                }
+            });
         }
     }
 
@@ -42,18 +51,19 @@ export class AttachmentPreviewComponent extends AppComponentBase implements OnCh
     get isImageAttachment(): boolean { return this.imageExtensions.some(x => x === `.${FileUtils.getFileExtension(this.file?.name)}`); }
     get isVideoAttachment(): boolean { return this.videoExtensions.some(x => x === `.${FileUtils.getFileExtension(this.file?.name)}`); }
     get isFileAttachment(): boolean { return this.fileExtensions.some(x => x === `.${FileUtils.getFileExtension(this.file?.name)}`); }
-    get isShowAttachmentInfo(): boolean { return !this.isImageAttachment; }
-    get isVideoPlaying(): boolean {
-        const video = this.videoAttachment?.nativeElement;
-        return video && !video.paused && !video.ended && video.readyState > 2;
-    }
+    get isShowAttachmentInfo(): boolean { return !this.isImageAttachment && !this.isVideoAttachment; }
 
     removeAttachment(): void {
         this.onRemove.emit();
     }
 
-    togglePlayVideo(): void {
+    togglePlayVideo(evt): void {
+        evt.preventDefault();
+        evt.stopPropagation();
+
         if (this.isVideoPlaying) this.videoAttachment.nativeElement.pause();
-        else this.videoAttachment.nativeElement.play()
+        else this.videoAttachment.nativeElement.play();
+
+        this.isVideoPlaying = !this.isVideoPlaying;
     }
 }

@@ -12,36 +12,37 @@
     <div
         *ngIf="isVideoAttachment"
         class="attachment-play d-flex justify-content-center align-items-center cursor-pointer"
-        (click)="togglePlayVideo()"
+        (click)="togglePlayVideo($event)"
     >
-        <span class="fas" [ngClass]="[isVideoPlaying ? 'fa-pause' : 'fa-play']"></span>
+        <span *ngIf="isVideoPlaying" class="fas fa-pause"></span>
+        <span *ngIf="!isVideoPlaying" class="fas fa-play"></span>
     </div>
     <!-- OVERLAY ELEMENTS [END] -->
 
     <div
-        *ngIf="isImageAttachment"
+        *ngIf="isImageAttachment && sanitizedAttachmentUrl"
         class="attachment-image"
     >
         <img [src]="sanitizedAttachmentUrl" />
     </div>
 
     <div
-        *ngIf="isVideoAttachment"
+        *ngIf="isVideoAttachment && sanitizedAttachmentUrl"
         class="attachment-video d-flex flex-wrap justify-content-center align-content-center align-items-center cursor-pointer"
-        (click)="togglePlayVideo()"
+        (click)="togglePlayVideo($event)"
     >
-        <video #videoAttachment [src]="sanitizedAttachmentUrl" class="bg-light" loop playsinline></video>
+        <video #videoAttachment [src]="sanitizedAttachmentUrl" class="bg-light" [controls]="isVideoPlaying" loop playsinline></video>
     </div>
 
     <div
-        *ngIf="isShowAttachmentInfo || (!isImageAttachment && !isVideoAttachment)"
+        *ngIf="isShowAttachmentInfo"
         class="attachment-info d-flex flex-row"
         [ngClass]="{
             'video': isVideoAttachment,
             'file border-0 gap-20': !isImageAttachment && !isVideoAttachment
         }"
     >
-        <div *ngIf="!isImageAttachment && !isVideoAttachment" class="attachment-info-file d-flex justify-content-center align-items-center">
+        <div class="attachment-info-file d-flex justify-content-center align-items-center">
             <div class="d-flex justify-content-center align-items-center"><span class="fe fe-folder"></span></div>
         </div>
         <div class="attachment-info-id d-flex flex-column justify-content-center">
