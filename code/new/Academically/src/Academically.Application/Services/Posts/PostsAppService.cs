@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.Notifications;
 using Abp.Timing;
 using Academically.Authorization;
 using Academically.Authorization.Users;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
+using Academically.Notifications;
 using Academically.Services.Articles;
 using Academically.Services.Coachings;
 using Academically.Services.Comments.Dto;
@@ -21,6 +25,7 @@ using Academically.Services.Courses;
 using Academically.Services.Documents;
 using Academically.Services.Events;
 using Academically.Services.Posts.Dto;
+using Academically.Services.Posts.Notifications;
 using Academically.Services.Videos;
 using Academically.Services.Workshops;
 using Academically.Users.Dto;
@@ -48,6 +53,8 @@ namespace Academically.Services.Posts
         private readonly IDocumentsAppService _documentsAppService;
         private readonly IRepository<Comment, Guid> _commentsRepository;
         private readonly IRepository<User, long> _usersRepository;
+        private readonly INotificationSubscriptionManager _notificationSubscriptionManager;
+        private readonly INotificationPublisher _notificationPublisher;
 
         public PostsAppService(
             IRepository<Post, Guid> postRepository,
@@ -65,7 +72,9 @@ namespace Academically.Services.Posts
             IWorkshopsAppService workshopsAppService,
             IDocumentsAppService documentsAppService,
             IRepository<Comment, Guid> commentsRepository,
-            IRepository<User, long> usersRepository)
+            IRepository<User, long> usersRepository,
+            INotificationSubscriptionManager notificationSubscriptionManager,
+            INotificationPublisher notificationPublisher)
         {
             _postRepository = postRepository;
             _postTopicRepository = postTopicRepository;
@@ -83,6 +92,8 @@ namespace Academically.Services.Posts
             _documentsAppService = documentsAppService;
             _commentsRepository = commentsRepository;
             _usersRepository = usersRepository;
+            _notificationSubscriptionManager = notificationSubscriptionManager;
+            _notificationPublisher = notificationPublisher;
         }
 
         public async Task<List<PostDto>> GetAllPosts(PostType? type, Guid? parentId)
@@ -187,8 +198,17 @@ namespace Academically.Services.Posts
                         PostId = postId,
                         DocumentId = document.Id,
                     });
-                }
+                } 
             }
+
+            await CurrentUnitOfWork.SaveChangesAsync();
+
+            var notificationData = new PostNotificationData();
+            notificationData["PostId"] = post.Id;
+            await _notificationPublisher.PublishAsync(
+                NotificationNames.Notifications_Post_Created,
+                notificationData
+            );
         }
 
         public async Task<List<PostDto>> GetByUser(long userId, PostType? type)
@@ -274,6 +294,14 @@ namespace Academically.Services.Posts
 
             ObjectMapper.Map(input, post);
             post = await _postRepository.UpdateAsync(post);
+
+
+            var notificationData = new PostNotificationData();
+            notificationData["PostId"] = post.Id;
+            await _notificationPublisher.PublishAsync(
+                NotificationNames.Notifications_Post_Updated,
+                notificationData
+            );
 
             return ObjectMapper.Map<PostDto>(post);
         }
@@ -452,6 +480,11 @@ namespace Academically.Services.Posts
         public async Task DeletePostNotification(DeletePostNotificationDto input)
         {
             await _postNotificationRepository.DeleteAsync(p => p.PostId == input.PostId && p.CreatorUserId == input.CreatorUserId);
+        }
+
+        public async Task SubscribePostChanges()
+        {
+            await _notificationSubscriptionManager.SubscribeAsync(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), NotificationNames.Notifications_Post_Created);
         }
     }
 }
