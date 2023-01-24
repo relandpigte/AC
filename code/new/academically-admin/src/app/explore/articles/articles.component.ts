@@ -1,13 +1,13 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
-import { ArticleService } from '@app/articles/_services/article.service';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ArticleDto, ArticleDtoPagedResultDto, ArticlesServiceProxy, DateGrains } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, ArticleDtoPagedResultDto, ArticlesServiceProxy, DateGrains, PostsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 
-import * as moment from 'moment';
-import * as _ from 'lodash';
 import { Router } from '@angular/router';
+import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
+import * as moment from 'moment';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-explore-articles',
@@ -28,6 +28,7 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
   featured: ArticleDto[] = Array(5).fill([]).map(() => this.generateRandomArticle()) as ArticleDto[];
 
   isLoading = true;
+  isLoadingArticle = false;
   isPopularLoading = true;
 
   showLastestShowMore: boolean = true;
@@ -49,7 +50,9 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
   constructor(
     injector: Injector,
     private _router: Router,
-    private _articleService: ArticlesServiceProxy
+    private _modalService: BsModalService,
+    private _articleService: ArticlesServiceProxy,
+    private _postsService: PostsServiceProxy
   ) {
     super(injector);
   }
@@ -216,6 +219,26 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
 
   handleServiceCardClick(article: ArticleDto): void {
     this._router.navigate(['/app/articles/student-portal', article.id]);
+  }
+
+  handleServiceCardShareClick(service: any): void {
+    this.isLoadingArticle = true;
+    this._postsService.getAvailableService(service.id)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isLoadingArticle = false))
+      .subscribe(service => {
+        const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
+        modalSettings.class = 'modal-lg';
+        modalSettings.initialState = {
+          allowTabs: false,
+          canRemoveAttachment: false,
+          title: 'Community.SharePost',
+          activeTab: 'quick-post',
+          model: { serviceId: service.id },
+          selectedService: service
+        };
+        this._modalService.show(UpsertPostComponent, modalSettings).content;
+      });
   }
 
 }

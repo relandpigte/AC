@@ -1,12 +1,13 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DateGrains, EventDto, EventDtoPagedResultDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { DateGrains, EventDto, EventDtoPagedResultDto, EventsServiceProxy, PostsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 
-import * as moment from 'moment';
-import * as _ from 'lodash';
 import { Router } from '@angular/router';
+import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
+import * as moment from 'moment';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-explore-events',
@@ -28,6 +29,8 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
 
   isLoading = true;
   isPopularLoading = true;
+  isLoadingEvent = false;
+
   data: { [key: string]: EventDto[] };
 
   showLastestShowMore: boolean = true;
@@ -50,7 +53,9 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _router: Router,
-    private _eventsService: EventsServiceProxy
+    private _modalService: BsModalService,
+    private _eventsService: EventsServiceProxy,
+    private _postsService: PostsServiceProxy
   ) {
     super(injector);
   }
@@ -211,5 +216,25 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
 
   handleServiceCardClick(event: EventDto): void {
       this._router.navigate(['/app/dashboard/events/portal/broadcast/student', event.id, 'portal']);
+  }
+
+  handleServiceCardShareClick(service: any): void {
+    this.isLoadingEvent = true;
+    this._postsService.getAvailableService(service.id)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isLoadingEvent = false))
+      .subscribe(service => {
+        const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
+        modalSettings.class = 'modal-lg';
+        modalSettings.initialState = {
+          allowTabs: false,
+          canRemoveAttachment: false,
+          title: 'Community.SharePost',
+          activeTab: 'quick-post',
+          model: { serviceId: service.id },
+          selectedService: service
+        };
+        this._modalService.show(UpsertPostComponent, modalSettings).content;
+      });
   }
 }

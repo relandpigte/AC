@@ -212,7 +212,7 @@ namespace Academically.Services.Coachings
         public async Task<Dictionary<string, PagedResultDto<CoachingDto>>> GetByDatesAsync(PagedExploreGroupByDateResultRequestDto input)
         {
             var query = Repository.GetAll()
-                .Where(e => e.Status == CoachingStatus.Published)
+                .Where(e => e.Visible.Value && e.Status == CoachingStatus.Published)
                 .WhereIf(input.MovingDate.HasValue && input.StartDate.HasValue, v => v.CreationTime < input.MovingDate.Value && v.CreationTime >= input.StartDate.Value) // For next page of latest month
                 .WhereIf(input.MovingDate.HasValue && !input.StartDate.HasValue && !input.EndDate.HasValue, v => v.CreationTime < input.MovingDate.Value)
                 ;
