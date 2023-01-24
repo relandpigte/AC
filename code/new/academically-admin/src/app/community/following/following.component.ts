@@ -3,6 +3,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { CourseDto, CoursesServiceProxy, DateGrains, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { CommunityPostService } from '@shared/services/community-post.service';
 import { finalize, takeUntil } from 'rxjs/operators';
+import { notificationNames } from '@shared/constants/notification-names.constant';
 
 enum PostFiltering {
   All = 'Community.Posts.Filtering.All',
@@ -50,6 +51,18 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
     private _postsService: PostsServiceProxy
   ) {
     super(injector);
+
+    abp.event.on('abp.notifications.received', (notification) => {
+      if(notification.notification.notificationName === notificationNames.postCreated 
+      || notification.notification.notificationName === notificationNames.postUpdated){
+
+         console.log(notification );
+         // var postId = notification.notification.data.properties.PostId;
+         // var post = this._postsService.get(postId);
+
+         // Refresh list with single post
+      }
+    });
   }
 
   get postTypeFilter(): PostType {
@@ -74,6 +87,9 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
       .subscribe(_ => this.getPosts());
 
     this.getPosts();
+
+    this._postsService.subscribePostChanges()
+      .subscribe();
   }
 
   private getPosts(): void {
