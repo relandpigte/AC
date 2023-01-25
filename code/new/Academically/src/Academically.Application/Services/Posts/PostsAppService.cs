@@ -486,5 +486,10 @@ namespace Academically.Services.Posts
         {
             await _notificationSubscriptionManager.SubscribeAsync(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), NotificationNames.Notifications_Post_Created);
         }
+
+        public async Task UnsubscribePostChanges()
+        {
+            await _notificationSubscriptionManager.UnsubscribeAsync(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), NotificationNames.Notifications_Post_Created);
+        }
     }
 }

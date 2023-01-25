@@ -8,7 +8,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Router } from '@angular/router';
 import { AppConsts } from '@shared/AppConsts';
 import { uiEvents } from '@shared/constants/ui-events.constant';
-import { notificationNames } from '@shared/constants/notification-names.constant';
+import { NotificationName } from '@shared/services/pub-sub.service';
 
 class FormattedNotification {
   id: string;
@@ -43,8 +43,8 @@ export class NotificationsPreviewComponent extends AppComponentBase implements O
     super(injector);
 
     abp.event.on('abp.notifications.received', (notification) => {
-      if(notification.notification.notificationName !== notificationNames.postCreated
-      && notification.notification.notificationName !== notificationNames.postUpdated){
+      if(notification.notification.notificationName !== NotificationName.PostCreated
+      && notification.notification.notificationName !== NotificationName.PostUpdated){
         console.log(notification);
         this.formatNotification(notification, true);
         this.updateUnreadCount();

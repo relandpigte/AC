@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit, Renderer2 } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { notificationNames } from '@shared/constants/notification-names.constant';
+import { NotificationName } from '@shared/services/pub-sub.service';
 import { SignalRAspNetCoreHelper } from '@shared/helpers/SignalRAspNetCoreHelper';
 import { LayoutStoreService } from '@shared/layout/layout-store.service';
 import { NgcCookieConsentService } from 'ngx-cookieconsent';
@@ -26,14 +26,14 @@ export class AppComponent extends AppComponentBase implements OnInit {
     SignalRAspNetCoreHelper.initSignalR();
 
     abp.event.on('abp.notifications.received', (userNotification) => {
-      if(userNotification.notification.notificationName !== notificationNames.postCreated 
-      && userNotification.notification.notificationName !== notificationNames.postUpdated){
+      if(userNotification.notification.notificationName !== NotificationName.PostCreated
+      && userNotification.notification.notificationName !== NotificationName.PostUpdated){
         abp.notifications.showUiNotifyForUserNotification(userNotification, { timer: 10000 });
         console.log(userNotification);
-  
+
         const message = this.l(userNotification.notification.data.properties.Message.name,
           ...Object.values(userNotification.notification.data.properties));
-  
+
         // Desktop notification
         Push.create('AbpZeroTemplate', {
           body: message.replace(/<[^>]*>?/gm, ''),

@@ -1,9 +1,10 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, OnDestroy } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { CourseDto, CoursesServiceProxy, DateGrains, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { CommunityPostService } from '@shared/services/community-post.service';
+import { PostsStateService } from '@shared/services/posts-state.service';
+import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { finalize, takeUntil } from 'rxjs/operators';
-import { notificationNames } from '@shared/constants/notification-names.constant';
 
 enum PostFiltering {
   All = 'Community.Posts.Filtering.All',
@@ -23,9 +24,17 @@ enum PostSorting {
   templateUrl: './following.component.html',
   styleUrls: ['./following.component.less']
 })
-export class FollowingComponent extends AppComponentBase implements OnInit {
+export class FollowingComponent extends AppComponentBase implements OnInit, OnDestroy {
 
   posts: any[] = [];
+
+  appStateConfig: AppStateConfig = {
+    post: { load: true, update: true }
+  };
+
+  appStateServices: AppStateServices = {
+    post: { type: PostsStateService, args: [this._postsService] }
+  };
 
   usersYouMayKnow: UserDto[] = Array(5).fill([]).map(() => this.generateRandomUser()) as UserDto[];
   recommendedCourses: CourseDto[] = Array(4).fill([]).map(() => this.generateRandomCourse()) as CourseDto[];
@@ -48,21 +57,9 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
     private _postSub: CommunityPostService,
     private _usersService: UserServiceProxy,
     private _coursesService: CoursesServiceProxy,
-    private _postsService: PostsServiceProxy
+    private _postsService: PostsServiceProxy,
   ) {
     super(injector);
-
-    abp.event.on('abp.notifications.received', (notification) => {
-      if(notification.notification.notificationName === notificationNames.postCreated 
-      || notification.notification.notificationName === notificationNames.postUpdated){
-
-         console.log(notification );
-         // var postId = notification.notification.data.properties.PostId;
-         // var post = this._postsService.get(postId);
-
-         // Refresh list with single post
-      }
-    });
   }
 
   get postTypeFilter(): PostType {
@@ -78,7 +75,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.loadInfiniteData(this._usersService, 'getAll', ['', true, 'creationTime desc', 0, 6], 'usersYouMayKnow');
     this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'recommendedCourses');
 
@@ -88,8 +85,11 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
 
     this.getPosts();
 
-    this._postsService.subscribePostChanges()
-      .subscribe();
+    this.pubSubService.start(this, this.appStateConfig, this.appStateServices);
+  }
+
+  ngOnDestroy() {
+    this.pubSubService.stop();
   }
 
   private getPosts(): void {

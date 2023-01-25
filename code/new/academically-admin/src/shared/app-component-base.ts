@@ -13,6 +13,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 import { ArticleDto, ArticleType, CoachingDto, CoachingType, CourseDto, CourseType, DocumentDto, EventDto, EventType, PricingType, UserDto, VideoDto, VideoType, WorkshopDto, WorkshopType } from './service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { DomSanitizer } from '@angular/platform-browser';
+import { PubSubService } from './services/pub-sub.service';
 
 @Injectable()
 export abstract class AppComponentBase implements OnDestroy {
@@ -32,10 +33,11 @@ export abstract class AppComponentBase implements OnDestroy {
   appSession: AppSessionService;
   elementRef: ElementRef;
   uploadService: UploadService;
+  pubSubService: PubSubService;
 
   defaultModalSettings: any;
 
-  protected destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(injector: Injector) {
     this.sanitizer = injector.get(DomSanitizer);
@@ -49,6 +51,7 @@ export abstract class AppComponentBase implements OnDestroy {
     this.appSession = injector.get(AppSessionService);
     this.elementRef = injector.get(ElementRef);
     this.uploadService = injector.get(UploadService);
+    this.pubSubService = injector.get(PubSubService);
 
     this.defaultModalSettings = {
       backdrop: 'static',
