@@ -1,10 +1,10 @@
-import { Component, Injector, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CourseDto, CoursesServiceProxy, DateGrains, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
-import { CommunityPostService } from '@shared/services/community-post.service';
+import { CourseDto, CoursesServiceProxy, DateGrains, PostDto, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { PostsStateService } from '@shared/services/posts-state.service';
-import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { AppStateConfig, AppStateServices, AppStateType } from '@shared/services/pub-sub.service';
+import { StateUpdateType } from '@shared/services/state-base.service';
+import { takeUntil } from 'rxjs/operators';
 
 enum PostFiltering {
   All = 'Community.Posts.Filtering.All',
@@ -25,16 +25,12 @@ enum PostSorting {
   styleUrls: ['./following.component.less']
 })
 export class FollowingComponent extends AppComponentBase implements OnInit, OnDestroy {
-
   posts: any[] = [];
 
-  appStateConfig: AppStateConfig = {
-    post: { load: true, update: true }
-  };
+  appStateConfig: AppStateConfig = { post: { load: true, update: true }};
+  appStateServices: AppStateServices = {post: { type: PostsStateService, args: [this._postsService] }};
 
-  appStateServices: AppStateServices = {
-    post: { type: PostsStateService, args: [this._postsService] }
-  };
+  postStateService: PostsStateService;
 
   usersYouMayKnow: UserDto[] = Array(5).fill([]).map(() => this.generateRandomUser()) as UserDto[];
   recommendedCourses: CourseDto[] = Array(4).fill([]).map(() => this.generateRandomCourse()) as CourseDto[];
@@ -54,7 +50,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
 
   constructor(
     injector: Injector,
-    private _postSub: CommunityPostService,
+    private _cdr: ChangeDetectorRef,
     private _usersService: UserServiceProxy,
     private _coursesService: CoursesServiceProxy,
     private _postsService: PostsServiceProxy,
@@ -75,29 +71,39 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     }
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loadInfiniteData(this._usersService, 'getAll', ['', true, 'creationTime desc', 0, 6], 'usersYouMayKnow');
     this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'recommendedCourses');
-
-    this._postSub.postSubject$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(_ => this.getPosts());
-
-    this.getPosts();
-
-    this.pubSubService.start(this, this.appStateConfig, this.appStateServices);
+    await this.initPostsAppStates();
   }
 
   ngOnDestroy() {
     this.pubSubService.stop();
   }
 
-  private getPosts(): void {
-    this.isLoadingPosts = true;
-    this._postsService.getAllPosts(this.postTypeFilter, undefined)
-      .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this.isLoadingPosts = false))
-      .subscribe(posts => this.posts = posts);
+  private async initPostsAppStates() {
+    await this.pubSubService.start(this, this.appStateConfig, this.appStateServices);
+    this.postStateService = this.pubSubService.getStateService<PostsStateService>(AppStateType.Post);
+
+    this.postStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingPosts = loading);
+
+    this.postStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+      if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) return;
+      switch(event.type) {
+        case StateUpdateType.Add:
+          this.posts = [event.data].concat(this.posts);
+          break;
+        case StateUpdateType.Update:
+          this.posts = this.posts.map(p => p.id === event.data.id ? event.data : p);
+          break;
+        case StateUpdateType.Delete:
+          this.posts = this.posts.filter(p => p.id != event.data.id);
+          break;
+      }
+      this._cdr.detectChanges();
+    });
+
+    this.posts = this.postStateService.getAllPosts();
   }
 
   handleRecommendedCoursesRequestData(skipCount: number): void {
@@ -115,11 +121,10 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
 
   handleFilteringChange(filter: PostFiltering): void {
     this.selectedFiltering = filter;
-    this.getPosts();
+    this.posts = this.postStateService.getPostsByType(this.postTypeFilter);
   }
 
   handleSortingChange(sort: PostSorting): void {
     this.selectedSorting = sort;
   }
-
 }

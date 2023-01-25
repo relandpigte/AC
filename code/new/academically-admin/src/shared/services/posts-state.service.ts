@@ -1,9 +1,10 @@
-import { PostDto, PostsServiceProxy } from '../service-proxies/service-proxies';
 import { BehaviorSubject, Subject } from "rxjs";
-import { finalize, takeUntil } from 'rxjs/operators';
 import { Utils } from '../helpers/utils';
+import { PostDto, PostsServiceProxy, PostType } from '../service-proxies/service-proxies';
 import { NotificationName } from './pub-sub.service';
 import { StateServiceBase, StateUpdate } from './state-base.service';
+
+import * as _ from 'lodash';
 
 export class PostsStateService extends StateServiceBase {
     posts: Map<string, PostDto> = new Map();
@@ -16,12 +17,18 @@ export class PostsStateService extends StateServiceBase {
         super();
     }
 
-    async loadData(c: any, userId: number) {
+    getAllPosts = () => _.orderBy(Array.from(this.posts.values()), p => p.creationTime, 'desc');
+    getPostsByType = (type?: PostType) => _.orderBy(Array.from(this.posts.values()).filter(p => _.isNil(type) || p.type === type), p => p.creationTime, 'desc');
+
+    async loadData(component: any, userId: number) {
         this.loading$.next(true);
-        this._postsService.getAllPosts(undefined, undefined)
-            .pipe(takeUntil(c['destroyed$']))
-            .pipe(finalize(() => this.loading$.next(false)))
-            .subscribe(posts => this.posts = Utils.toMap(posts));
+        try {
+            const posts = await this._postsService.getAllPosts(undefined, undefined).toPromise();
+            this.posts = Utils.toMap(posts);
+        } catch (err) {
+            console.error(err);
+        }
+        this.loading$.next(false);
     }
 
     async stop() {
@@ -30,28 +37,22 @@ export class PostsStateService extends StateServiceBase {
     }
 
     protected async setupSubscriptions(component: any,  userId: number) {
-
-        // .subscribe(async result => {
-        //     const facility = Object.values(result.payload)[0] as Facility;
-        //     const beaconsMap = Utils.toObjectMap(facility.beacons.map(b => removeBeaconNumberPrefix(b)), b => b.id, b => b);
-        //     const updatedIds = Object.keys(beaconsMap);
-        //     const deletedBeacons = Array.from(this.beacons.values()).filter(b => !updatedIds.some(id => id === b.id));
-        //     const updateMap = Object.assign({} , beaconsMap, Utils.toObjectMap(deletedBeacons, b => b.id, b => null));
-
-        //     this.updateFromMap(this.beacons, updateMap, this.beacons$);
-        // });
-
         return this.eventNotification$
-            .subscribe(event => {
-                const { name, key } = event;
-                switch (name) {
-                    case NotificationName.PostCreated:
-                        console.error('@@@ subscription created: ', key);
-                        break;
-                    case NotificationName.PostUpdated:
-                        console.error('@@@ subscription updated: ', key);
-                        break;
+            .subscribe(async event => {
+                this.loading$.next(true);
+                try {
+                    const { name, key } = event;
+                    switch (name) {
+                        case NotificationName.PostCreated:
+                        case NotificationName.PostUpdated:
+                            const post = await this._postsService.get(key).toPromise();
+                            this.updateFromMap(this.posts, Utils.toObjectMap([post], p => p.id, p => p), this.posts$);
+                            break;
+                    }
+                } catch (err) {
+                    console.error(err);
                 }
+                this.loading$.next(false);
             });
     }
 }

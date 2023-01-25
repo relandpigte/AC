@@ -37,6 +37,10 @@ export class PubSubService {
         private _appSessionService: AppSessionService
     ) {}
 
+    getStateService<T extends StateServiceBase> (type: AppStateType): T {
+        return this.allStateServices.get(type) as T;
+    }
+
     async start(component: any, config: AppStateConfig, services: AppStateServices) {
         this.initializeServices(services);
 

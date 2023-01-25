@@ -5,6 +5,10 @@ export class Utils {
         return items?.reduce((agg, i) => agg.set(getKey(i), getValue(i)), new Map<string, U>()) ?? new Map<string, U>();
     }
 
+    static toObjectMap<T, U>(items: T[], getKey: (item: T) => any = x => x['id'], getValue: (item: T) => U = x => <U><unknown>x): { [key: string]: U } {
+      return items?.reduce((agg, i) => (agg[getKey(i)] = getValue(i), agg), {}) ?? {};
+    }
+
     static assignToMap(map: Map<any, any>, id: string, value: any, isSkipInsert = false): void {
         if (map.has(id)) map.set(id, _.assign(map.get(id), value));
         else if (!isSkipInsert) map.set(id, value);

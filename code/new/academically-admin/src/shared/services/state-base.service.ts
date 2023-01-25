@@ -19,13 +19,10 @@ export enum StateUpdateType {
 
 export abstract class StateServiceBase {
     private subscriptions: Subscription[] = [];
-    private eventFn = (event) => {
-        const { notification } = event;
-        this.eventNotification$.next({
-            name: notification.notificationName,
-            key: notification.data.properties.PostId
-        });
-    };
+    private eventFn = (event) => this.eventNotification$.next({
+        name: event.notification.notificationName,
+        key: event.notification.data.properties.PostId
+    });
 
     eventNotification$ = new Subject<EventNotification>();
 
