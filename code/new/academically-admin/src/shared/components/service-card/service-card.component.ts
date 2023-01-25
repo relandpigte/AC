@@ -1,10 +1,13 @@
 import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { DefaultServiceCardActions, DefaultServiceCardOptions, ServiceCard, ServiceCardButton, ServiceCardComposition, ServiceCardDates, ServiceCardImage, ServiceCardOptions, ServiceCardPeople, ServiceCardPerson, ServiceCardPill, ServiceCardPrice, ServiceCardReview, ServiceCardRsvp, ServiceCardSlots, ServiceCardType, UserServiceCardActions } from '@shared/models/service-card.model';
-import { ArticleDto, CoachingDto, CourseDto, EventDto, UserDto, VideoDto, WorkshopDto } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, CoachingDto, CourseDto, EventDto, PostsServiceProxy, UserDto, VideoDto, WorkshopDto } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'app-service-card',
@@ -28,7 +31,9 @@ import * as moment from 'moment';
     sanitizedActions: ServiceCardButton[];
 
     constructor(
-        injector: Injector
+        injector: Injector,
+        private _modalService: BsModalService,
+        private _postsService: PostsServiceProxy
     ) {
         super(injector)
     }
@@ -358,10 +363,34 @@ import * as moment from 'moment';
 
     handleShareClick(evt): void {
       evt.stopPropagation();
-      this.onShareClick.emit(this.data);
+      if (this.onShareClick.observers.length) {
+        this.onShareClick.emit(this.data);
+      } else {
+
+      }
     }
 
     handleClick(): void {
       this.onClick.emit(this.data);
+    }
+
+    private handleServiceCardShareClick(service: any): void {
+      this.isLoading = true;
+      this._postsService.getAvailableService(service.id)
+        .pipe(takeUntil(this.destroyed$))
+        .pipe(finalize(() => this.isLoading = false))
+        .subscribe(service => {
+          const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
+          modalSettings.class = 'modal-lg';
+          modalSettings.initialState = {
+            allowTabs: false,
+            canRemoveAttachment: false,
+            title: 'Community.SharePost',
+            activeTab: 'quick-post',
+            model: { serviceId: service.id },
+            selectedService: service
+          };
+          this._modalService.show(UpsertPostComponent, modalSettings).content;
+        });
     }
   }
