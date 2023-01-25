@@ -81,7 +81,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
         ).subscribe(newComment => {
           if (parentId) this.conversations = this.conversations.map(c => {
             if (c.id === parentId) {
-              c.children.unshift(newComment);
+              c.children.push(newComment);
               c.replyCount++;
               this.loadedReplyCount[c.id] = (this.loadedReplyCount[c.id] ?? 0) + 1;
             }
@@ -150,7 +150,8 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     }
   }
 
-  onLoadMoreRepliesClick(parent: CommentDto): void {
+  onLoadMoreRepliesClick(event: any, parent: CommentDto): void {
+    event.preventDefault();
     this.getReplies(parent);
   }
 
@@ -169,7 +170,6 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   }
 
   private getReplies(comment: CommentDto): void {
-    console.log('get replies');
     let count = 0;
     if (_.isNil(this.skipCount[comment.id])) {
       this.skipCount[comment.id] = 0;
@@ -180,30 +180,29 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
         this.skipCount[comment.id] = 1;
       } else {
         const remainingReplyCount = (this.loadedReplyCount[comment.id] - 1) % 3;
-        if (remainingReplyCount === 0) {
-          count = this._maxRepliesToLoad;
-        } else {
-          count = remainingReplyCount;
-        }
+        if (remainingReplyCount === 0)  count = this._maxRepliesToLoad;
+        else count = remainingReplyCount;
         this.skipCount[comment.id] += count;
       }
     }
+
+    console.error('@@@ comment.id: ', comment.id);
+    console.error('@@@ loadedReplyCount: ', this.loadedReplyCount[comment.id]);
+    console.error('@@@ skipcount: ', this.skipCount[comment.id]);
+    console.error('@@@ count: ', count);
 
     this._postsServiceProxy.getAllCommentReplies(
       comment.id,
       this.skipCount[comment.id],
       count,
     )
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
-        console.warn(response);
-        if (this.loadedReplyCount[comment.id] === 0) {
-          comment.children = response.items;
-        } else {
-          comment.children = [...comment.children, ...response.items];
-        }
-        this.loadedReplyCount[comment.id] += response.items.length;
-      });
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(response => {
+      if (this.loadedReplyCount[comment.id] === 0) comment.children = response.items;
+      else comment.children = [...comment.children, ...response.items];
+      this.loadedReplyCount[comment.id] += response.items.length;
+      comment.children = _.sortBy(comment.children, c => c.creationTime);
+    });
   }
 
   initiateReply(conversation: CommentDto): void {

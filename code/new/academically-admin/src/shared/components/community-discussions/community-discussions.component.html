@@ -125,54 +125,11 @@
                 </a>
               </div>
 
-              <!-- Reply section -->
-              <div class="row" *ngIf="conversationReplyId === conversation.id" [style.marginTop.px]="20">
-                <div class="col-auto">
-
-                  <!-- Avatar -->
-                  <div class="avatar avatar-sm avatar-current-user">
-                    <img [src]="getProfilePicture(appSession.user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
-                  </div>
-
-                </div>
-                <div class="col ms-n2">
-                  <div class="d-flex text-area-container">
-
-                    <div class="col ms-n2">
-
-                      <form autocomplete="off" #replyForm="ngForm" (ngSubmit)="onFormSubmit(addReplyEl, conversation.id)" class="mt-1 comment-box">
-                        <textarea #addReplyEl [id]="'add-reply-'+conversation.id" name="message" (keydown)="onMessageKeydown($event, replyForm)"
-                          class="form-control form-control-flush" placeholder="Leave a comment..." [maxLength]="500"
-                          style="overflow: hidden; overflow-wrap: break-word; height: 41px; background: #F9FBFD; border-radius: 10px;"
-                        ></textarea>
-                      </form>
-
-                    </div>
-                    <div class="col-auto align-self-center">
-                      <!-- Icons -->
-                      <div class="col-auto pr-0 align-self-center">
-                        <div class="text-muted d-flex gap-25">
-                          <!-- <a class="text-reset" href="#!submit" (click)="$event.preventDefault(); replyForm.ngSubmit.emit()"
-                            data-toggle="tooltip" title="" data-original-title="Send">
-                            <i class="fe fe-send"></i>
-                          </a> -->
-                          <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Add photo" [class.disabled]="true">
-                            <i class="fe fe-camera"></i>
-                          </a>
-                          <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Attach file" [class.disabled]="true">
-                            <i class="fe fe-paperclip"></i>
-                          </a>
-                          <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Add emoticon" [class.disabled]="true">
-                            <i class="fas fa-smile"></i>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <ng-container *ngIf="conversation.children && conversation.children.length">
+                <a *ngIf="loadedReplyCount[conversation.id] < conversation.replyCount" href="#!load-more" class="d-block view-more-replies"
+                  (click)="onLoadMoreRepliesClick($event, conversation);">
+                  {{ 'View' | localize }} {{ getViewCount(conversation) }} {{ getViewCount(conversation) > 1 ? 'replies' : 'reply'}}...
+                </a>
                 <div *ngFor="let childConversation of conversation.children" class="comment tier-2-comment  mb-1">
                   <div class="row">
                     <div class="col-auto">
@@ -219,11 +176,55 @@
                     </div>
                   </div>
                 </div>
-                <a *ngIf="loadedReplyCount[conversation.id] < conversation.replyCount" href="#!load-more" class="d-block view-more-replies"
-                  (click)="$event.preventDefault(); onLoadMoreRepliesClick(conversation);">
-                  {{ 'View' | localize }} {{getViewCount(conversation)}} {{ getViewCount(conversation) > 1 ? 'replies' : 'reply'}}...
-                </a>
+
               </ng-container>
+
+              <!-- Reply section -->
+              <div class="row" *ngIf="conversationReplyId === conversation.id" [style.marginTop.px]="20">
+                <div class="col-auto">
+
+                  <!-- Avatar -->
+                  <div class="avatar avatar-sm avatar-current-user">
+                    <img [src]="getProfilePicture(appSession.user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
+                  </div>
+
+                </div>
+                <div class="col ms-n2">
+                  <div class="d-flex text-area-container">
+
+                    <div class="col ms-n2">
+
+                      <form autocomplete="off" #replyForm="ngForm" (ngSubmit)="onFormSubmit(addReplyEl, conversation.id)" class="mt-1 comment-box">
+                        <textarea #addReplyEl [id]="'add-reply-'+conversation.id" name="message" (keydown)="onMessageKeydown($event, replyForm)"
+                          class="form-control form-control-flush" placeholder="Leave a comment..." [maxLength]="500"
+                          style="overflow: hidden; overflow-wrap: break-word; height: 41px; background: #F9FBFD; border-radius: 10px;"
+                        ></textarea>
+                      </form>
+
+                    </div>
+                    <div class="col-auto align-self-center">
+                      <!-- Icons -->
+                      <div class="col-auto pr-0 align-self-center">
+                        <div class="text-muted d-flex gap-25">
+                          <!-- <a class="text-reset" href="#!submit" (click)="$event.preventDefault(); replyForm.ngSubmit.emit()"
+                            data-toggle="tooltip" title="" data-original-title="Send">
+                            <i class="fe fe-send"></i>
+                          </a> -->
+                          <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Add photo" [class.disabled]="true">
+                            <i class="fe fe-camera"></i>
+                          </a>
+                          <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Attach file" [class.disabled]="true">
+                            <i class="fe fe-paperclip"></i>
+                          </a>
+                          <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Add emoticon" [class.disabled]="true">
+                            <i class="fas fa-smile"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
             </div>
           </div> <!-- / .row -->
