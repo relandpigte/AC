@@ -37,6 +37,7 @@ export class PostsStateService extends StateServiceBase {
     }
 
     protected async setupSubscriptions(component: any,  userId: number) {
+        this._postsService.subscribePostChanges().subscribe();
         return this.eventNotification$
             .subscribe(async event => {
                 this.loading$.next(true);
@@ -57,5 +58,9 @@ export class PostsStateService extends StateServiceBase {
                 }
                 this.loading$.next(false);
             });
+    }
+
+    protected async closeSubscriptions() {
+        this._postsService.unsubscribePostChanges().subscribe();
     }
 }

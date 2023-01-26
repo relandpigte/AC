@@ -28,6 +28,7 @@ export abstract class StateServiceBase {
 
     abstract loadData(component: any, userId: number): Promise<void>;
     protected abstract setupSubscriptions(component: any, userId: number): Promise<Subscription | Subscription[]>;
+    protected abstract closeSubscriptions(): Promise<void>;
 
     async start(component: any, userId: number): Promise<void> {
         await this.startSubscriptions(component, userId);
@@ -46,6 +47,7 @@ export abstract class StateServiceBase {
 
     async stopSubscriptions(): Promise<void> {
         abp.event.off('abp.notifications.received', this.eventFn);
+        await this.closeSubscriptions();
         this.subscriptions?.forEach(s => s.unsubscribe());
         this.subscriptions = [];
     }
