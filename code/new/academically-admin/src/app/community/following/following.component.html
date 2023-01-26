@@ -85,9 +85,11 @@
       </div>
     </div>
 
-    <div *ngFor="let p of posts" class="card community-content-post">
-      <app-community-post-card [data]="p"></app-community-post-card>
-    </div>
+    <ng-container *ngFor="let p of posts" >
+      <div *ngIf="!p.isHidden" class="card community-content-post">
+        <app-community-post-card [data]="p"></app-community-post-card>
+      </div>
+    </ng-container>
 
     <div *ngIf="usersYouMayKnow?.length > 0" class="card community-content-post">
         <div class="row align-items-center community-content-post-title">

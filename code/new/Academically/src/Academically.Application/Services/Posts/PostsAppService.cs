@@ -252,6 +252,12 @@ namespace Academically.Services.Posts
                         .SingleOrDefaultAsync(p => p.Id == id);
 
             var result = ObjectMapper.Map<PostDto>(post);
+
+            foreach (var attachment in result.PostAttachments)
+            {
+                attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
+            }
+
             var participants = new List<UserDto>();
             if (post.Children.Any())
             {

@@ -36,7 +36,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   loadedReplyCount: number[] = [];
   skipCount: number[] = [];
 
-  private _maxRepliesToLoad = 0; // load all
+  private _maxRepliesToLoad = 5; // load all
 
   constructor(
     injector: Injector,

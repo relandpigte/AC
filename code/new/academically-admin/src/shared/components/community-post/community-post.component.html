@@ -121,23 +121,25 @@
     <app-community-discussions [show]="showCommentsSection" [postId]="data?.id" [postType]="data?.type"></app-community-discussions>
 </div>
 
-<div class="post d-flex flex-row justify-content-between" *ngIf="isHiding && isHidden">
-    <div class="post-hidden-text d-flex align-items-center ">
-        {{ 'YouveHiddenAPost' | localize }}
-    </div>
-    <div class="post-hidden-actions d-flex align-items-center gap-15">
-        <div class="post-hidden-actions-undo">
-            <a class="text-reset" href="javascript:;" (click)="onUndoHideClick(data?.id)" data-toggle="tooltip" title="" data-original-title="Send">
-                {{'Undo' | localize }}
-            </a>
+<div class="post" *ngIf="isHiding && isHidden">
+    <div class="post-container d-flex flex-row justify-content-between">
+        <div class="post-hidden-text d-flex align-items-center ">
+            {{ 'YouveHiddenAPost' | localize }}
         </div>
+        <div class="post-hidden-actions d-flex align-items-center gap-15">
+            <div class="post-hidden-actions-undo">
+                <a class="text-reset" href="javascript:;" (click)="onUndoHideClick(data?.id)" data-toggle="tooltip" title="" data-original-title="Send">
+                    {{'Undo' | localize }}
+                </a>
+            </div>
 
-        <div class="post-hidden-actions-separator">|</div>
+            <div class="post-hidden-actions-separator">|</div>
 
-        <div class="post-hidden-actions-close">
-            <a class="text-reset" href="javascript:void(0);" (click)="onCloseHideClick(data?.id)" data-toggle="tooltip" title="" data-original-title="Send">
-                <i class="fe fe-x"></i>
-            </a>
+            <div class="post-hidden-actions-close">
+                <a class="text-reset" href="javascript:void(0);" (click)="onCloseHideClick(data?.id)" data-toggle="tooltip" title="" data-original-title="Send">
+                    <i class="fe fe-x"></i>
+                </a>
+            </div>
         </div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -27,7 +27,8 @@ export class AttachmentPreviewComponent extends AppComponentBase implements OnCh
     isVideoPlaying = false;
 
     constructor(
-        injector: Injector
+        injector: Injector,
+        private _cdr: ChangeDetectorRef
     ) {
         super(injector);
     }
@@ -65,5 +66,6 @@ export class AttachmentPreviewComponent extends AppComponentBase implements OnCh
         else this.videoAttachment.nativeElement.play();
 
         this.isVideoPlaying = !this.isVideoPlaying;
+        this._cdr.detectChanges();
     }
 }

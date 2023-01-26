@@ -127,7 +127,7 @@
 
               <ng-container *ngIf="conversation.children && conversation.children.length">
                 <a *ngIf="loadedReplyCount[conversation.id] < conversation.replyCount" href="#!load-more" class="d-block view-more-replies" (click)="onLoadMoreRepliesClick($event, conversation);">
-                  {{ 'View' | localize }} {{ getViewCount(conversation) }} {{ getViewCount(conversation) > 1 ? 'replies' : 'reply'}}
+                  {{ getViewCount(conversation) }} more {{ getViewCount(conversation) > 1 ? 'replies' : 'reply'}}
                 </a>
                 <div *ngFor="let childConversation of conversation.children" class="comment tier-2-comment">
                   <div class="row gap-15 m-0">
