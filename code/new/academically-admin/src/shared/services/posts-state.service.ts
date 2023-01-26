@@ -37,7 +37,11 @@ export class PostsStateService extends StateServiceBase {
     }
 
     protected async setupSubscriptions(component: any,  userId: number) {
-        this._postsService.subscribePostChanges().subscribe();
+        try {
+            await this._postsService.subscribePostChanges().toPromise();
+        } catch (err) {
+            console.error(err);
+        }
         return this.eventNotification$
             .subscribe(async event => {
                 this.loading$.next(true);
@@ -61,6 +65,10 @@ export class PostsStateService extends StateServiceBase {
     }
 
     protected async closeSubscriptions() {
-        this._postsService.unsubscribePostChanges().subscribe();
+        try {
+            await this._postsService.unsubscribePostChanges().toPromise();
+        } catch (err) {
+            console.error(err);
+        }
     }
 }
