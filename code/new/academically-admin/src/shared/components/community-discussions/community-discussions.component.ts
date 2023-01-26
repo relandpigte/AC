@@ -33,7 +33,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   loadedReplyCount: number[] = [];
   skipCount: number[] = [];
 
-  private _maxRepliesToLoad = 3;
+  private _maxRepliesToLoad = 0; // load all
 
   constructor(
     injector: Injector,
@@ -175,25 +175,15 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       this.skipCount[comment.id] = 0;
       count = 1;
     } else {
-      if (this.skipCount[comment.id] === 0) {
-        count = this._maxRepliesToLoad;
-        this.skipCount[comment.id] = 1;
-      } else {
-        const remainingReplyCount = (this.loadedReplyCount[comment.id] - 1) % 3;
-        if (remainingReplyCount === 0)  count = this._maxRepliesToLoad;
-        else count = remainingReplyCount;
-        this.skipCount[comment.id] += count;
-      }
+      const remainingReplyCount = comment.replyCount - this.loadedReplyCount[comment.id];
+      if (remainingReplyCount % this._maxRepliesToLoad === 0)  count = this._maxRepliesToLoad;
+      else count = this._maxRepliesToLoad > 0 ? this._maxRepliesToLoad : remainingReplyCount;
+      this.skipCount[comment.id] += count;
     }
-
-    console.error('@@@ comment.id: ', comment.id);
-    console.error('@@@ loadedReplyCount: ', this.loadedReplyCount[comment.id]);
-    console.error('@@@ skipcount: ', this.skipCount[comment.id]);
-    console.error('@@@ count: ', count);
 
     this._postsServiceProxy.getAllCommentReplies(
       comment.id,
-      this.skipCount[comment.id],
+      this.loadedReplyCount[comment.id],
       count,
     )
     .pipe(takeUntil(this.destroyed$))

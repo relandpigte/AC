@@ -40,13 +40,16 @@ export class PostsStateService extends StateServiceBase {
         return this.eventNotification$
             .subscribe(async event => {
                 this.loading$.next(true);
+                const { name, key } = event;
+                const post = await this._postsService.get(key).toPromise();
                 try {
-                    const { name, key } = event;
                     switch (name) {
                         case NotificationName.PostCreated:
                         case NotificationName.PostUpdated:
-                            const post = await this._postsService.get(key).toPromise();
                             this.updateFromMap(this.posts, Utils.toObjectMap([post], p => p.id, p => p), this.posts$);
+                            break;
+                        case NotificationName.PostDeleted:
+                            this.updateFromMap(this.posts, Utils.toObjectMap([post], p => p.id, p => null), this.posts$);
                             break;
                     }
                 } catch (err) {

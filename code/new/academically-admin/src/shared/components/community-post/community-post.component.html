@@ -1,115 +1,117 @@
 <div class="post d-flex flex-column" *ngIf="!isHidden">
-    <div class="post-heading d-flex flex-row flex-nowrap align-items-center">
-        <div class="post-heading-avatar">
-            <a href="javascript: void(0);" class="avatar avatar-sm">
-                <img [src]="getProfilePicture(data?.creatorUser?.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
-            </a>
-        </div>
-        <div class="post-heading-owner flex-grow-1 d-flex flex-column flex-nowrap gap-3">
-            <div class="post-heading-owner-name d-flex flex-row align-items-center gap-15">
-                {{ posterName | titlecase }}
-                <div type="button" class="btn btn-white post-heading-owner-follow d-flex justify-content-center align-items-center">Follow</div>
-            </div>
-            <div class="post-heading-owner-time">{{ postDate }}</div>
-        </div>
-        <div class="post-heading-options align-self-start">
-            <div class="dropdown">
-                <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="fe fe-more-vertical"></span>
+    <div class="post-container d-flex flex-column">
+        <div class="post-heading d-flex flex-row flex-nowrap align-items-center">
+            <div class="post-heading-avatar">
+                <a href="javascript: void(0);" class="avatar avatar-sm">
+                    <img [src]="getProfilePicture(data?.creatorUser?.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
                 </a>
-                <div *ngIf="isOwner" class="dropdown-menu dropdown-menu-left">
-                    <div class="dropdown-item cursor-pointer" (click)="onEditClick(data)">Edit {{ typeName }}</div>
-                    <div class="dropdown-item cursor-pointer pb-3" (click)="onDeleteClick(data?.id)">Delete {{ typeName }}</div>
-                    <div class="dropdown-item cursor-pointer border-top pt-3" (click)="onHideClick(data?.id)">Hide this {{ typeName }}</div>
+            </div>
+            <div class="post-heading-owner flex-grow-1 d-flex flex-column flex-nowrap gap-3">
+                <div class="post-heading-owner-name d-flex flex-row align-items-center gap-15">
+                    {{ posterName | titlecase }}
+                    <div type="button" class="btn btn-white post-heading-owner-follow d-flex justify-content-center align-items-center">Follow</div>
                 </div>
-                <div *ngIf="!isOwner" class="dropdown-menu dropdown-menu-left">
-                    <div class="dropdown-item cursor-pointer" (click)="onHideClick(data?.id)">Hide this {{ typeName }}</div>
-                    <div class="dropdown-item cursor-pointer">Report {{ typeName }}</div>
+                <div class="post-heading-owner-time">{{ postDate }}</div>
+            </div>
+            <div class="post-heading-options align-self-start">
+                <div class="dropdown">
+                    <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="fe fe-more-vertical"></span>
+                    </a>
+                    <div *ngIf="isOwner" class="dropdown-menu dropdown-menu-left">
+                        <div class="dropdown-item cursor-pointer" (click)="onEditClick(data)">Edit {{ typeName }}</div>
+                        <div class="dropdown-item cursor-pointer pb-3" (click)="onDeleteClick(data?.id)">Delete {{ typeName }}</div>
+                        <div class="dropdown-item cursor-pointer border-top pt-3" (click)="onHideClick(data?.id)">Hide this {{ typeName }}</div>
+                    </div>
+                    <div *ngIf="!isOwner" class="dropdown-menu dropdown-menu-left">
+                        <div class="dropdown-item cursor-pointer" (click)="onHideClick(data?.id)">Hide this {{ typeName }}</div>
+                        <div class="dropdown-item cursor-pointer">Report {{ typeName }}</div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="post-content d-flex flex-column">
-        <div *ngIf="title" class="post-content-title" [style.marginTop.px]="10">{{ title }}</div>
-        <div class="post-content-description" [innerHTML]="description" [style.marginTop.px]="10"></div>
-        <div class="post-content-topics"></div>
-    </div>
-
-    <div *ngIf="userTopics && userTopics.length" class="post-topics d-flex flex-wrap flex-row gap-5" [style.marginTop.px]="5">
-        <div *ngFor="let topic of userTopics" class="post-topics-item cursor-pointer">#{{ topic.name }}</div>
-    </div>
-
-    <div *ngIf="fileAttachment" class="post-attachment d-flex flex-wrap flex-row" [style.marginTop.px]="5">
-        <app-attachment-preview [file]="fileAttachment" [canRemove]="false"></app-attachment-preview>
-    </div>
-
-    <div *ngIf="serviceAttachment" class="post-attachment d-flex flex-wrap flex-row" [style.marginTop.px]="5">
-        <app-service-preview [service]="serviceAttachment" [canRemove]="false"></app-service-preview>
-    </div>
-
-    <div class="post-actions d-flex flex-row" [style.marginTop.px]="15">
-        <div class="post-actions-left d-flex justify-content-start align-items-center gap-10">
-            <div
-                *ngIf="!isDiscussion"
-                type="button"
-                class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0"
-                (click)="showCommentsSection = !showCommentsSection"
-            >
-                <span class="fe fe-thumbs-up"></span>Like
-            </div>
-            <div
-                *ngIf="isQuickPost"
-                type="button"
-                class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0"
-                (click)="showCommentsSection = !showCommentsSection"
-            >
-                <span class="fe fe-message-circle"></span>Comment
-            </div>
-            <div
-                *ngIf="isQuestion"
-                type="button"
-                class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0"
-                (click)="showCommentsSection = !showCommentsSection"
-            >
-                <span class="fe fe-edit"></span>Answer
-            </div>
-            <div
-                *ngIf="isDiscussion"
-                type="button"
-                class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0"
-                (click)="goToDiscussion()"
-            >
-                <span class="fe fe-download rotate right"></span>Go to discussion
-            </div>
-            <div type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
-                <span class="post-actions-left-item-share bg-center" [ngStyle]="{ 'background-image': 'url(\'assets/img/icon-share.png\')' }"></span>Share
-            </div>
-            <div type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
-                <span class="fe fe-more-horizontal"></span>
-            </div>
+        <div class="post-content d-flex flex-column">
+            <div *ngIf="title" class="post-content-title" [style.marginTop.px]="10">{{ title }}</div>
+            <div class="post-content-description" [innerHTML]="description" [style.marginTop.px]="10"></div>
+            <div class="post-content-topics"></div>
         </div>
-        <div class="post-actions-right flex-grow-1 d-flex justify-content-end align-items-center gap-7">
-            <div *ngIf="isQuickPost" class="post-actions-right-comments cursor-pointer">
-                {{ data.commentsCount | shortNum: 1  }} comments
+
+        <div *ngIf="userTopics && userTopics.length" class="post-topics d-flex flex-wrap flex-row gap-5" [style.marginTop.px]="5">
+            <div *ngFor="let topic of userTopics" class="post-topics-item cursor-pointer">#{{ topic.name }}</div>
+        </div>
+
+        <div *ngIf="fileAttachment" class="post-attachment d-flex flex-wrap flex-row" [style.marginTop.px]="5">
+            <app-attachment-preview [file]="fileAttachment" [canRemove]="false"></app-attachment-preview>
+        </div>
+
+        <div *ngIf="serviceAttachment" class="post-attachment d-flex flex-wrap flex-row" [style.marginTop.px]="5">
+            <app-service-preview [service]="serviceAttachment" [canRemove]="false"></app-service-preview>
+        </div>
+
+        <div class="post-actions d-flex flex-row" [style.marginTop.px]="15">
+            <div class="post-actions-left d-flex justify-content-start align-items-center gap-10">
+                <div
+                    *ngIf="!isDiscussion"
+                    type="button"
+                    class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0"
+                    (click)="showCommentsSection = !showCommentsSection"
+                >
+                    <span class="fe fe-thumbs-up"></span>Like
+                </div>
+                <div
+                    *ngIf="isQuickPost"
+                    type="button"
+                    class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0"
+                    (click)="showCommentsSection = !showCommentsSection"
+                >
+                    <span class="fe fe-message-circle"></span>Comment
+                </div>
+                <div
+                    *ngIf="isQuestion"
+                    type="button"
+                    class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0"
+                    (click)="showCommentsSection = !showCommentsSection"
+                >
+                    <span class="fe fe-edit"></span>Answer
+                </div>
+                <div
+                    *ngIf="isDiscussion"
+                    type="button"
+                    class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0"
+                    (click)="goToDiscussion()"
+                >
+                    <span class="fe fe-download rotate right"></span>Go to discussion
+                </div>
+                <div type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
+                    <span class="post-actions-left-item-share bg-center" [ngStyle]="{ 'background-image': 'url(\'assets/img/icon-share.png\')' }"></span>Share
+                </div>
+                <div type="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
+                    <span class="fe fe-more-horizontal"></span>
+                </div>
             </div>
-            <div *ngIf="isQuestion" class="post-actions-right-comments cursor-pointer">
-                {{ 5 }} answers
-            </div>
-            <div *ngIf="isDiscussion" class="post-actions-right-comments cursor-pointer">
-                {{ data.children.length | shortNum: 1  }} posts
-            </div>
-            <div class="post-actions-right-separator">•</div>
-            <div class="post-actions-right-reactions cursor-pointer d-flex gap-5">
-                {{ 15 }}
-                <div class="post-actions-right-reactions-type d-flex">
-                    <div class="post-actions-right-reactions-type-item blue d-flex justify-content-center align-items-center">
-                        <span class="fe fe-thumbs-up"></span>
-                    </div>
-                    <div class="post-actions-right-reactions-type-item red d-flex justify-content-center align-items-center">
-                        <span class="fe fe-heart"></span>
-                    </div>
-                    <div class="post-actions-right-reactions-type-item yellow d-flex justify-content-center align-items-center">
-                        <span class="fe fe-thumbs-down"></span>
+            <div class="post-actions-right flex-grow-1 d-flex justify-content-end align-items-center gap-7">
+                <div *ngIf="isQuickPost" class="post-actions-right-comments cursor-pointer">
+                    {{ data.commentsCount | shortNum: 1  }} comments
+                </div>
+                <div *ngIf="isQuestion" class="post-actions-right-comments cursor-pointer">
+                    {{ 5 }} answers
+                </div>
+                <div *ngIf="isDiscussion" class="post-actions-right-comments cursor-pointer">
+                    {{ data.children.length | shortNum: 1  }} posts
+                </div>
+                <div class="post-actions-right-separator">•</div>
+                <div class="post-actions-right-reactions cursor-pointer d-flex gap-5">
+                    {{ 15 }}
+                    <div class="post-actions-right-reactions-type d-flex">
+                        <div class="post-actions-right-reactions-type-item blue d-flex justify-content-center align-items-center">
+                            <span class="fe fe-thumbs-up"></span>
+                        </div>
+                        <div class="post-actions-right-reactions-type-item red d-flex justify-content-center align-items-center">
+                            <span class="fe fe-heart"></span>
+                        </div>
+                        <div class="post-actions-right-reactions-type-item yellow d-flex justify-content-center align-items-center">
+                            <span class="fe fe-thumbs-down"></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -117,7 +119,6 @@
     </div>
 
     <app-community-discussions [show]="showCommentsSection" [postId]="data?.id"></app-community-discussions>
-
 </div>
 
 <div class="post d-flex flex-row justify-content-between" *ngIf="isHiding && isHidden">
