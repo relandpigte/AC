@@ -4,7 +4,11 @@ import { StateServiceBase } from './state-base.service';
 
 export enum NotificationName {
     PostCreated = 'Notifications.Post.Created',
-    PostUpdated = 'Notifications.Post.Updated'
+    PostUpdated = 'Notifications.Post.Updated',
+    PostDeleted = 'Notifications.Post.Deleted',
+    UserTopicCreated = 'Notifications.UserTopic.Created',
+    UserTopicUpdated = 'Notifications.UserTopic.Updated',
+    UserTopicDeleted = 'Notifications.UserTopic.Deleted'
 };
 
 export enum AppStateType {

@@ -203,12 +203,7 @@ namespace Academically.Services.Posts
 
             await CurrentUnitOfWork.SaveChangesAsync();
 
-            var notificationData = new PostNotificationData();
-            notificationData["PostId"] = post.Id;
-            await _notificationPublisher.PublishAsync(
-                NotificationNames.Notifications_Post_Created,
-                notificationData
-            );
+            await PublishPostNotification(post.Id, NotificationNames.Notifications_Post_Created);
         }
 
         public async Task<List<PostDto>> GetByUser(long userId, PostType? type)
@@ -295,13 +290,7 @@ namespace Academically.Services.Posts
             ObjectMapper.Map(input, post);
             post = await _postRepository.UpdateAsync(post);
 
-
-            var notificationData = new PostNotificationData();
-            notificationData["PostId"] = post.Id;
-            await _notificationPublisher.PublishAsync(
-                NotificationNames.Notifications_Post_Updated,
-                notificationData
-            );
+            await PublishPostNotification(post.Id, NotificationNames.Notifications_Post_Updated);
 
             return ObjectMapper.Map<PostDto>(post);
         }
@@ -309,6 +298,8 @@ namespace Academically.Services.Posts
         public async Task DeleteAsync(Guid id)
         {
             await _postRepository.DeleteAsync(id);
+
+            await PublishPostNotification(id, NotificationNames.Notifications_Post_Deleted);
         }
 
         public async Task<AvailableServiceDto> GetAvailableService(Guid id)
@@ -382,10 +373,6 @@ namespace Academically.Services.Posts
                 .SingleOrDefaultAsync();
             return ObjectMapper.Map<CommentDto>(created);
         }
-
-        //  Task<IEnumerable<CommentDto>> GetAllAsync(string referenceId);
-
-        
 
         public async Task<IEnumerable<CommentDto>> GetAllCommentAsync(string referenceId)
         {
@@ -482,14 +469,32 @@ namespace Academically.Services.Posts
             await _postNotificationRepository.DeleteAsync(p => p.PostId == input.PostId && p.CreatorUserId == input.CreatorUserId);
         }
 
+        #region Pub/Sub Notifications
+
         public async Task SubscribePostChanges()
         {
             await _notificationSubscriptionManager.SubscribeAsync(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), NotificationNames.Notifications_Post_Created);
+            await _notificationSubscriptionManager.SubscribeAsync(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), NotificationNames.Notifications_Post_Updated);
+            await _notificationSubscriptionManager.SubscribeAsync(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), NotificationNames.Notifications_Post_Deleted);
         }
 
         public async Task UnsubscribePostChanges()
         {
             await _notificationSubscriptionManager.UnsubscribeAsync(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), NotificationNames.Notifications_Post_Created);
+            await _notificationSubscriptionManager.UnsubscribeAsync(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), NotificationNames.Notifications_Post_Updated);
+            await _notificationSubscriptionManager.UnsubscribeAsync(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), NotificationNames.Notifications_Post_Deleted);
         }
+
+        private async Task PublishPostNotification(Guid postId, string notificatioName)
+        {
+            var notificationData = new PostNotificationData();
+            notificationData["PostId"] = postId;
+            await _notificationPublisher.PublishAsync(
+                notificatioName,
+                notificationData
+            );
+        }
+
+        #endregion
     }
 }

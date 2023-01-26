@@ -44,7 +44,11 @@ export class NotificationsPreviewComponent extends AppComponentBase implements O
 
     abp.event.on('abp.notifications.received', (notification) => {
       if(notification.notification.notificationName !== NotificationName.PostCreated
-      && notification.notification.notificationName !== NotificationName.PostUpdated){
+      && notification.notification.notificationName !== NotificationName.PostUpdated
+      && notification.notification.notificationName !== NotificationName.PostDeleted
+      && notification.notification.notificationName !== NotificationName.UserTopicCreated
+      && notification.notification.notificationName !== NotificationName.UserTopicUpdated
+      && notification.notification.notificationName !== NotificationName.UserTopicDeleted){
         console.log(notification);
         this.formatNotification(notification, true);
         this.updateUnreadCount();

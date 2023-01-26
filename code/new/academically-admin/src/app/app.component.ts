@@ -27,7 +27,11 @@ export class AppComponent extends AppComponentBase implements OnInit {
 
     abp.event.on('abp.notifications.received', (userNotification) => {
       if(userNotification.notification.notificationName !== NotificationName.PostCreated
-      && userNotification.notification.notificationName !== NotificationName.PostUpdated){
+      && userNotification.notification.notificationName !== NotificationName.PostUpdated
+      && userNotification.notification.notificationName !== NotificationName.PostDeleted
+      && userNotification.notification.notificationName !== NotificationName.UserTopicCreated
+      && userNotification.notification.notificationName !== NotificationName.UserTopicUpdated
+      && userNotification.notification.notificationName !== NotificationName.UserTopicDeleted){
         abp.notifications.showUiNotifyForUserNotification(userNotification, { timer: 10000 });
         console.log(userNotification);
 
