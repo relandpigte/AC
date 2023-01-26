@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   CommentDto, ConversationReactionType,
-  CourseConversationReactionDto, CourseConversationsServiceProxy, PostsServiceProxy
+  CourseConversationReactionDto, CourseConversationsServiceProxy, PostsServiceProxy, PostType
 } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -18,6 +18,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   @Input() isInCourse = true;
   @Input() isInTutorPortal = false;
   @Input() postId: string;
+  @Input() postType: PostType;
   @Input() ctrlEnterToSubmit = false;
 
   @ViewChild('addCommentEl', { static: false }) addCommentEl: ElementRef;
@@ -27,6 +28,8 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   isPosting = false;
   ReactionType = ConversationReactionType;
   inputLength = 0;
+
+  isFolded = true;
 
   _postId: string;
   conversationReplyId: string;
@@ -50,9 +53,20 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       }
     });
   }
+
   @Input() set studentCourseId(value: string) {
     this._postId = value;
     this.getConversations();
+  }
+
+  get foldedDiscussionsCount(): number { return this.conversations?.length - 1 ?? 0; }
+  get typeName(): string {
+    switch (this.postType) {
+        case PostType.Question:
+            return 'answers';
+        default:
+            return 'comments';
+    }
   }
 
   ngOnInit(): void {

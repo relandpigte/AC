@@ -72,7 +72,7 @@
     </div>
 
     <div *ngIf="conversations?.length" class="discussions">
-      <div *ngFor="let conversation of conversations" class="discussion" [style.marginTop.px]="20">
+      <div *ngFor="let conversation of conversations | slice:0:(isFolded ? 1 : undefined)" class="discussion" [style.marginTop.px]="20">
         <div class="comment tier-1-comment">
           <div class="row gap-15 m-0">
             <div class="col-auto p-0">
@@ -229,6 +229,13 @@
           </div> <!-- / .row -->
 
         </div>
+      </div>
+    </div>
+
+    <div *ngIf="foldedDiscussionsCount" class="discussions-expander cursor-pointer">
+      <div class="discussions-expander-fold" (click)="isFolded = !isFolded">
+        <span *ngIf="isFolded">View {{ foldedDiscussionsCount }} more {{ typeName }}</span>
+        <span *ngIf="!isFolded">Fold {{ typeName }}</span>
       </div>
     </div>
 

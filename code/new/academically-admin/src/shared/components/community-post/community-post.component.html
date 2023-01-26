@@ -118,7 +118,7 @@
         </div>
     </div>
 
-    <app-community-discussions [show]="showCommentsSection" [postId]="data?.id"></app-community-discussions>
+    <app-community-discussions [show]="showCommentsSection" [postId]="data?.id" [postType]="data?.type"></app-community-discussions>
 </div>
 
 <div class="post d-flex flex-row justify-content-between" *ngIf="isHiding && isHidden">
