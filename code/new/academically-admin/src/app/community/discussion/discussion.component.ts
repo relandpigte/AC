@@ -1,8 +1,11 @@
 import { Location } from '@angular/common';
-import { Component, Injector, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, UserDto, PostNotificationDto } from '@shared/service-proxies/service-proxies';
+import { DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, UserDto } from '@shared/service-proxies/service-proxies';
+import { PostsStateService } from '@shared/services/posts-state.service';
+import { AppStateConfig, AppStateServices, AppStateType } from '@shared/services/pub-sub.service';
+import { StateUpdateType } from '@shared/services/state-base.service';
 import * as _ from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -31,12 +34,13 @@ enum SubscribeType {
     templateUrl: './discussion.component.html',
     styleUrls: ['./discussion.component.scss']
 })
-export class DiscussionComponent extends AppComponentBase {
+export class DiscussionComponent extends AppComponentBase implements OnInit, OnDestroy {
 
-    @Input() canFilter = false;
+    appStateConfig: AppStateConfig = { post: { load: true, update: true } };
+    appStateServices: AppStateServices = { post: { type: PostsStateService, args: [this._postsService] } };
+    postStateService: PostsStateService;
 
     private discussion: PostDto;
-
     children: PostDto[] = [];
 
     creator: UserDto;
@@ -66,6 +70,7 @@ export class DiscussionComponent extends AppComponentBase {
         private _location: Location,
         private _route: ActivatedRoute,
         private _router: Router,
+        private _cdr: ChangeDetectorRef,
         private _modalService: BsModalService,
         private _postsService: PostsServiceProxy
     ) {
@@ -73,10 +78,10 @@ export class DiscussionComponent extends AppComponentBase {
         this._route.paramMap.subscribe(async paramMap => {
             if (paramMap.has('id')) {
                 this.id = paramMap.get('id');
-                this.loadDiscussion(this.id);
             }
         });
     }
+
 
     get isLoading(): boolean {
         return this.isLoadingPost || this.isLoadingChildren || this.isLoadingParticipants || this.isLoadingSubscriberIds ||
@@ -101,23 +106,77 @@ export class DiscussionComponent extends AppComponentBase {
     get participantsCount(): number { return this.participants?.length ?? 0 + 1; }
     get postsCount(): number { return this.children?.length ?? 0; }
 
-    private async loadDiscussion(id: string) {
+    async ngOnInit() {
+        await this.initPostsAppStates();
+    }
+
+    ngOnDestroy() {
+        this.pubSubService.stop();
+    }
+
+    private async initPostsAppStates() {
         this.isLoadingPost = true;
-        this._postsService.get(id)
-            .pipe(takeUntil(this.destroyed$))
-            .pipe(finalize(() => this.isLoadingPost = false))
-            .subscribe(async post => {
-                this.discussion = post;
-                this.discussionTopics = post.postTopics?.map?.(t => t.disciplineTaxonomy);
-                this.loadOtherInfo();
+        try {
+            this.discussion = await this._postsService.get(this.id).toPromise();
+            await this.pubSubService.start(this, this.appStateConfig, this.appStateServices, [undefined, this.discussion.id]);
+            this.postStateService = this.pubSubService.getStateService<PostsStateService>(AppStateType.Post);
+
+            this.postStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingChildren = loading);
+
+            this.postStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+              if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) return;
+              switch(event.type) {
+                case StateUpdateType.Add:
+                  this.children = [event.data].concat(this.children);
+                  break;
+                case StateUpdateType.Update:
+                  this.children = this.children.map(p => p.id === event.data.id ? event.data : p);
+                  break;
+                case StateUpdateType.Delete:
+                  this.children = this.children.filter(p => p.id != event.data.id);
+                  break;
+              }
+              this._cdr.detectChanges();
             });
+
+            this.children = this.postStateService.getAllPosts();
+            this.loadOtherInfo();
+            this._cdr.detectChanges();
+        } catch(err) {
+            console.error(err);
+        }
+        this.isLoadingPost = false;
     }
 
     private async loadOtherInfo() {
-        this.getChildren();
         this.getParticipants();
         this.getSubscriberIds();
         this.getRelatedDiscussions();
+    }
+
+    async getParticipants() {
+        this.isLoadingParticipants = true;
+        if (this.discussion) {
+            this.creator = this.discussion.creatorUser;
+            this.participants = [
+                this.creator,
+                ...this.discussion.participants.filter(p => p.id !== this.creator.id)
+            ];
+        }
+        this.isLoadingParticipants = false;
+    }
+
+    async getSubscriberIds() {
+        this.isLoadingSubscriberIds = true;
+        if (this.discussion) this.subscriberIds = this.discussion.postNotification?.map(n => n.creatorUserId);
+        this.isLoadingSubscriberIds = false;
+    }
+
+    async getRelatedDiscussions() {
+        this.isLoadingRelatedDiscussions = true;
+        const discussions = await this._postsService.getAllPosts(PostType.Discussion, undefined).toPromise();
+        this.relatedDiscussions = _.take(discussions.filter(d => d.id !== this.discussion?.id), 4);
+        this.isLoadingRelatedDiscussions = false;
     }
 
     handleAddPost(): void {
@@ -132,50 +191,11 @@ export class DiscussionComponent extends AppComponentBase {
         const modal = this._modalService.show(UpsertPostComponent, modalSettings).content;
         modal.onPostCreated
             .pipe(takeUntil(this.destroyed$))
-            .subscribe(async () => this.loadDiscussion(this.id));
+            .subscribe(() => {});
     }
 
     navigateBack(): void {
         this._location.back();
-    }
-
-    getChildren(): void {
-        this.isLoadingChildren = true;
-        this._postsService.getAllPosts(undefined, this.discussion.id)
-            .pipe(takeUntil(this.destroyed$))
-            .pipe(finalize(() => this.isLoadingChildren = false))
-            .subscribe(children => {
-                this.children = children;
-            })
-    }
-
-    getParticipants(): void {
-        this.isLoadingParticipants = true;
-        if (this.discussion) {
-            this.creator = this.discussion.creatorUser;
-            this.participants = [
-                this.creator,
-                ...this.discussion.participants.filter(p => p.id !== this.creator.id)
-            ];
-        }
-        this.isLoadingParticipants = false;
-    }
-
-    getSubscriberIds(): void {
-        this.isLoadingSubscriberIds = true;
-        if (this.discussion) this.subscriberIds = this.discussion.postNotification?.map(n => n.creatorUserId);
-        this.isLoadingSubscriberIds = false;
-    }
-
-    getRelatedDiscussions(): void {
-        this.isLoadingRelatedDiscussions = true;
-        this._postsService.getAllPosts(PostType.Discussion, undefined)
-            .pipe(takeUntil(this.destroyed$))
-            .pipe(finalize(() => this.isLoadingRelatedDiscussions = false))
-            .subscribe(discussions => {
-                this.relatedDiscussions = discussions.filter(d => d.id !== this.discussion?.id);
-                this.relatedDiscussions = _.take(this.relatedDiscussions, 4);
-            });
     }
 
     handleItemClick(type: string, item: any): void {
@@ -209,18 +229,6 @@ export class DiscussionComponent extends AppComponentBase {
 
     isParticipantOwner(item: UserDto): boolean {
         return this.creator?.id === item?.id;
-    }
-
-    handleOnUpdatePost(post: PostDto): void {
-        this.children = this.children.map(c => {
-            if (c.id === post.id) return post;
-            return c;
-        });
-    }
-
-    handleFilteringChange(filter: PostFiltering): void {
-        this.selectedFiltering = filter;
-        this.getChildren();
     }
 
     handleSortingChange(sort: PostSorting): void {

@@ -174,6 +174,7 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
 
     handleModelChanged(model: any): void {
         this.model = { ...this.model, ...model };
+        this._cdr.detectChanges();
     }
 
     handleImageUploadBtnClick(): void {

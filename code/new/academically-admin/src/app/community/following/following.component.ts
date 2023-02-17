@@ -28,8 +28,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
   posts: any[] = [];
 
   appStateConfig: AppStateConfig = { post: { load: true, update: true }};
-  appStateServices: AppStateServices = {post: { type: PostsStateService, args: [this._postsService] }};
-
+  appStateServices: AppStateServices = { post: { type: PostsStateService, args: [this._postsService] } };
   postStateService: PostsStateService;
 
   usersYouMayKnow: UserDto[] = Array(5).fill([]).map(() => this.generateRandomUser()) as UserDto[];

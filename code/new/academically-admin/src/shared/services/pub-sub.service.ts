@@ -45,13 +45,13 @@ export class PubSubService {
         return this.allStateServices.get(type) as T;
     }
 
-    async start(component: any, config: AppStateConfig, services: AppStateServices) {
+    async start(component: any, config: AppStateConfig, services: AppStateServices, fnArgs?: any[]) {
         this.initializeServices(services);
 
         const userId = this._appSessionService.userId;
 
         this.servicesToLoad = this.getServicesFromConfig(config, a => a.load);
-        await Promise.all(this.servicesToLoad.map(s => s.loadData(component, userId)));
+        await Promise.all(this.servicesToLoad.map(s => s.loadData(component, userId, fnArgs)));
 
         this.servicesToUpdate = this.getServicesFromConfig(config, a => a.update);
         await Promise.all(this.servicesToUpdate.map(s => s.startSubscriptions(component, userId)));

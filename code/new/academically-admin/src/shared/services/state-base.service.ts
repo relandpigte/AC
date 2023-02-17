@@ -26,11 +26,11 @@ export abstract class StateServiceBase {
 
     eventNotification$ = new Subject<EventNotification>();
 
-    abstract loadData(component: any, userId: number): Promise<void>;
+    abstract loadData(component: any, userId: number, fnArgs?: any[]): Promise<void>;
     protected abstract setupSubscriptions(component: any, userId: number): Promise<Subscription | Subscription[]>;
     protected abstract closeSubscriptions(): Promise<void>;
 
-    async start(component: any, userId: number): Promise<void> {
+    async start(component: any, userId: number, ): Promise<void> {
         await this.startSubscriptions(component, userId);
         await this.loadData(component, userId);
     }

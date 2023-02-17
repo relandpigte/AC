@@ -70,43 +70,8 @@
 
             <div class="discussion-controls d-flex flex-row justify-content-between" [style.marginBottom.px]="10">
                 <div class="discussion-controls-left d-flex align-items-end">
-                    <div *ngIf="!canFilter" class="discussion-controls-left-posts-count">
+                    <div class="discussion-controls-left-posts-count">
                         {{ postsCount }} posts
-                    </div>
-                    <div *ngIf="canFilter" class="dropdown">
-                        <a href="#" class="dropdown-ellipses dropdown-toggle d-flex flex-row align-items-center gap-5" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ selectedFiltering | localize }} <span class="fe fe-chevron-down"></span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-left" [style.marginTop.px]="10">
-                            <div class="dropdown-item cursor-pointer d-flex justify-content-between"
-                                [class.selected]="isSelectedFiltering(postFilteringEnum.All)"
-                                (click)="handleFilteringChange(postFilteringEnum.All)">
-                                <div>{{ postFilteringEnum.All | localize }}</div>
-                                <i *ngIf="isSelectedFiltering(postFilteringEnum.All)" class="fe fe-check"></i>
-                            </div>
-
-                            <div class="dropdown-item cursor-pointer d-flex justify-content-between"
-                                [class.selected]="isSelectedFiltering(postFilteringEnum.Post)"
-                                (click)="handleFilteringChange(postFilteringEnum.Post)">
-                                <div>{{ postFilteringEnum.Post | localize }}</div>
-                                <i *ngIf="isSelectedFiltering(postFilteringEnum.Post)" class="fe fe-check"></i>
-                            </div>
-
-                            <div class="dropdown-item cursor-pointer d-flex justify-content-between"
-                                [class.selected]="isSelectedFiltering(postFilteringEnum.Question)"
-                                (click)="handleFilteringChange(postFilteringEnum.Question)">
-                                <div>{{ postFilteringEnum.Question | localize }}</div>
-                                <i *ngIf="isSelectedFiltering(postFilteringEnum.Question)" class="fe fe-check"></i>
-                            </div>
-
-                            <div class="dropdown-item cursor-pointer d-flex justify-content-between"
-                                [class.selected]="isSelectedFiltering(postFilteringEnum.Discussion)"
-                                (click)="handleFilteringChange(postFilteringEnum.Discussion)">
-                                <div>{{ postFilteringEnum.Discussion | localize }}</div>
-                                <i *ngIf="isSelectedFiltering(postFilteringEnum.Discussion)" class="fe fe-check"></i>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="discussion-controls-right d-flex flex-row align-items-center gap-10">
@@ -142,12 +107,7 @@
             </div>
 
             <div *ngFor="let p of children" class="card discussion-content-post">
-                <app-community-post-card
-                    *ngIf="!p.isHidden && !p.isDeleted"
-                    [data]="p"
-                    (refresh)="getChildren()"
-                    (onUpdate)="handleOnUpdatePost($event)"
-                ></app-community-post-card>
+                <app-community-post-card *ngIf="!p.isHidden && !p.isDeleted" [data]="p"></app-community-post-card>
             </div>
 
             <div class="discussion-content-post end d-flex flex-row justify-content-center align-items-center" [style.marginTop.px]="40" [style.marginBottom.px]="20">
