@@ -26,24 +26,16 @@ export class PostsStateService extends StateServiceBase {
     super();
   }
 
-  getAllPosts = (sorting?: {
-    pred: (p: any) => any;
-    direction: "desc" | "asc";
-  }) =>
+  getAllPosts = (sorting?: { pred: (p: any) => any; direction: "desc" | "asc"; }) =>
     _.orderBy(
       Array.from(this.posts.values()),
       sorting?.pred ?? ((p) => p.creationTime),
       sorting?.direction ?? "desc"
     );
 
-  getPostsByType = (
-    type?: PostType,
-    sorting?: { pred: () => any; direction: "desc" | "asc" }
-  ) =>
+  getPostsByType = (type?: PostType, sorting?: { pred: () => any; direction: "desc" | "asc" }) =>
     _.orderBy(
-      Array.from(this.posts.values()).filter(
-        (p) => _.isNil(type) || p.type === type
-      ),
+      Array.from(this.posts.values()).filter((p) => _.isNil(type) || p.type === type),
       sorting?.pred ?? ((p) => p.creationTime),
       sorting?.direction ?? "desc"
     );
@@ -51,9 +43,7 @@ export class PostsStateService extends StateServiceBase {
   async loadData(component: any, userId: number, fnArgs?: any[]) {
     this.loading$.next(true);
     try {
-      const posts = await this._postsService[
-        this.fns[this.type ?? pageType.all]
-      ](...(fnArgs || [])).toPromise();
+      const posts = await this._postsService[this.fns[this.type ?? pageType.all]](...(fnArgs || [])).toPromise();
       this.posts = Utils.toMap(posts);
     } catch (err) {
       console.error(err);

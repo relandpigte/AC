@@ -107,45 +107,50 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     get postsCount(): number { return this.children?.length ?? 0; }
 
     async ngOnInit() {
-        await this.initPostsAppStates();
+        this.isLoadingPost = true;
+
+        try {
+            await this.initDiscussion();
+            await this.initPostsAppStates();
+            this.loadOtherInfo();
+        } catch(err) {
+            console.error(err);
+        }
+
+        this.isLoadingPost = false;
+        this._cdr.detectChanges();
     }
 
     ngOnDestroy() {
         this.pubSubService.stop();
     }
 
+    private async initDiscussion() {
+        this.discussion = await this._postsService.get(this.id).toPromise();
+    }
+
     private async initPostsAppStates() {
-        this.isLoadingPost = true;
-        try {
-            this.discussion = await this._postsService.get(this.id).toPromise();
-            await this.pubSubService.start(this, this.appStateConfig, this.appStateServices, [undefined, this.discussion.id]);
-            this.postStateService = this.pubSubService.getStateService<PostsStateService>(AppStateType.Post);
+        await this.pubSubService.start(this, this.appStateConfig, this.appStateServices, [undefined, this.discussion.id]);
+        this.postStateService = this.pubSubService.getStateService<PostsStateService>(AppStateType.Post);
 
-            this.postStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingChildren = loading);
+        this.postStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingChildren = loading);
 
-            this.postStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-              if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) return;
-              switch(event.type) {
-                case StateUpdateType.Add:
-                  this.children = [event.data].concat(this.children);
-                  break;
-                case StateUpdateType.Update:
-                  this.children = this.children.map(p => p.id === event.data.id ? event.data : p);
-                  break;
-                case StateUpdateType.Delete:
-                  this.children = this.children.filter(p => p.id != event.data.id);
-                  break;
-              }
-              this._cdr.detectChanges();
-            });
-
-            this.children = this.postStateService.getAllPosts();
-            this.loadOtherInfo();
+        this.postStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+            if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) return;
+            switch(event.type) {
+            case StateUpdateType.Add:
+                this.children = [event.data].concat(this.children);
+                break;
+            case StateUpdateType.Update:
+                this.children = this.children.map(p => p.id === event.data.id ? event.data : p);
+                break;
+            case StateUpdateType.Delete:
+                this.children = this.children.filter(p => p.id != event.data.id);
+                break;
+            }
             this._cdr.detectChanges();
-        } catch(err) {
-            console.error(err);
-        }
-        this.isLoadingPost = false;
+        });
+        this.children = this.postStateService.getAllPosts();
     }
 
     private async loadOtherInfo() {
