@@ -2,30 +2,19 @@ import { Injectable } from '@angular/core';
 import { AppSessionService } from '@shared/session/app-session.service';
 import { StateServiceBase } from './state-base.service';
 
-export enum NotificationName {
-    PostCreated = 'Notifications.Post.Created',
-    PostUpdated = 'Notifications.Post.Updated',
-    PostDeleted = 'Notifications.Post.Deleted',
-    UserTopicCreated = 'Notifications.UserTopic.Created',
-    UserTopicUpdated = 'Notifications.UserTopic.Updated',
-    UserTopicDeleted = 'Notifications.UserTopic.Deleted'
-};
-
-export enum AppStateType {
-    Post = 'post'
-}
-
 export type AppStateConfig = {
-    [key in AppStateType]?: AppStateActions
+    [key: string]: AppStateActions
 };
 
 export interface AppStateActions {
-    load: boolean;
-    update: boolean;
+    load?: any;
+    update?: any;
 }
 
+export type AppStateActionNames = keyof AppStateActions;
+
 export type AppStateServices = {
-    [key in AppStateType]?:  {
+    [key: string]:  {
         type: new(...args) => any;
         args: any[];
     }
@@ -33,7 +22,7 @@ export type AppStateServices = {
 
 @Injectable({ providedIn: 'root' })
 export class PubSubService {
-    private allStateServices: Map<AppStateType, StateServiceBase> = new Map();
+    private allStateServices: Map<string, StateServiceBase> = new Map();
     private servicesToLoad: StateServiceBase[];
     private servicesToUpdate: StateServiceBase[];
 
@@ -41,26 +30,29 @@ export class PubSubService {
         private _appSessionService: AppSessionService
     ) {}
 
-    getStateService<T extends StateServiceBase> (type: AppStateType): T {
-        return this.allStateServices.get(type) as T;
+    getStateService<T extends StateServiceBase> (key: string): T {
+        return this.allStateServices.get(key) as T;
     }
 
-    async start(component: any, config: AppStateConfig, services: AppStateServices, fnArgs?: any[]) {
-        this.initializeServices(services);
+    async start(component: any, config: AppStateConfig, services: AppStateServices) {
+        this.initializeServices(services, config);
 
         const userId = this._appSessionService.userId;
 
-        this.servicesToLoad = this.getServicesFromConfig(config, a => a.load);
-        await Promise.all(this.servicesToLoad.map(s => s.loadData(component, userId, fnArgs)));
+        this.servicesToLoad = this.getServicesFromConfig(config, a => !!a.load);
+        await Promise.all(this.servicesToLoad.map(s => s.loadData(component, userId)));
 
-        this.servicesToUpdate = this.getServicesFromConfig(config, a => a.update);
+        this.servicesToUpdate = this.getServicesFromConfig(config, a => !!a.update);
         await Promise.all(this.servicesToUpdate.map(s => s.startSubscriptions(component, userId)));
     }
 
-    private initializeServices(services: AppStateServices) {
-        Object.keys(services).forEach((notificationType: AppStateType) => {
-            const { type, args } = services[notificationType];
-            this.allStateServices.set(notificationType, new type(...args));
+    private initializeServices(services: AppStateServices, config: AppStateConfig) {
+        Object.keys(services).forEach((key: string) => {
+            const { type, args } = services[key];
+            const service = new type(...args);
+            const serviceConf = config[key];
+            service['actionArgs'] = { load: serviceConf.load, update: serviceConf.update };
+            this.allStateServices.set(key, service);
         });
     }
 

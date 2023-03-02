@@ -1,10 +1,11 @@
-import { BehaviorSubject, Subject } from "rxjs";
+import { BehaviorSubject, Subject } from 'rxjs';
 import { Utils } from '../helpers/utils';
-import { PostDto, PostsServiceProxy, PostType } from '../service-proxies/service-proxies';
-import { NotificationName } from './pub-sub.service';
+import { HubEvent, PostDto, PostsServiceProxy, PostType } from '../service-proxies/service-proxies';
 import { StateServiceBase, StateUpdate } from './state-base.service';
 
+import { HubService } from '@app/_shared/services/hub.service';
 import * as _ from 'lodash';
+import { finalize } from 'rxjs/operators';
 
 export enum pageType {
     all = 'all',
@@ -18,32 +19,35 @@ export class PostsStateService extends StateServiceBase {
 
   type: pageType;
   fns = {
-    [pageType.all]: "getAllPosts",
-    [pageType.discussion]: "getAllPosts",
+    [pageType.all]: 'getAllPosts',
+    [pageType.discussion]: 'getAllPosts',
   };
 
-  constructor(private _postsService: PostsServiceProxy) {
+  constructor(
+    private _hubService: HubService,
+    private _postsService: PostsServiceProxy
+  ) {
     super();
   }
 
-  getAllPosts = (sorting?: { pred: (p: any) => any; direction: "desc" | "asc"; }) =>
+  getAllPosts = (sorting?: { pred?: (p: any) => any; direction?: 'desc' | 'asc'; }) =>
     _.orderBy(
       Array.from(this.posts.values()),
       sorting?.pred ?? ((p) => p.creationTime),
-      sorting?.direction ?? "desc"
+      sorting?.direction ?? 'desc'
     );
 
-  getPostsByType = (type?: PostType, sorting?: { pred: () => any; direction: "desc" | "asc" }) =>
+  getPostsByType = (type?: PostType, sorting?: { pred: () => any; direction: 'desc' | 'asc' }) =>
     _.orderBy(
       Array.from(this.posts.values()).filter((p) => _.isNil(type) || p.type === type),
       sorting?.pred ?? ((p) => p.creationTime),
-      sorting?.direction ?? "desc"
+      sorting?.direction ?? 'desc'
     );
 
-  async loadData(component: any, userId: number, fnArgs?: any[]) {
+  async loadData(component: any, userId: number) {
     this.loading$.next(true);
     try {
-      const posts = await this._postsService[this.fns[this.type ?? pageType.all]](...(fnArgs || [])).toPromise();
+      const posts = await this._postsService[this.fns[this.type ?? pageType.all]](...this.loadArgs).toPromise();
       this.posts = Utils.toMap(posts);
     } catch (err) {
       console.error(err);
@@ -51,51 +55,34 @@ export class PostsStateService extends StateServiceBase {
     this.loading$.next(false);
   }
 
-  async stop() {
-    super.stop();
-    this.posts.clear();
-  }
-
   protected async setupSubscriptions(component: any, userId: number) {
+    const handleUpsertPosts = async (post: PostDto) => {
+      this.loading$.next(true);
+      this.updateFromMap(this.posts, Utils.toObjectMap([post], (p) => p.id, (p) => p), this.posts$)
+      this.loading$.next(false);
+    };
+
+    const handleDeletePosts = async (id: string) => {
+      this.loading$.next(true);
+      this.updateFromMap(this.posts, { [id]: null }, this.posts$);
+      this.loading$.next(false);
+    }
+
     try {
-      await this._postsService.subscribePostChanges().toPromise();
+      const hub = await this._hubService.getPostsHub(...this.updateArgs);
+      hub.on(HubEvent[HubEvent.PostCreated], handleUpsertPosts);
+      hub.on(HubEvent[HubEvent.PostUpdated], handleUpsertPosts);
+      hub.on(HubEvent[HubEvent.PostDeleted], handleDeletePosts);
     } catch (err) {
       console.error(err);
     }
-    return this.eventNotification$.subscribe(async (event) => {
-      this.loading$.next(true);
-      const { name, key } = event;
-      try {
-        switch (name) {
-          case NotificationName.PostCreated:
-          case NotificationName.PostUpdated:
-            const post = await this._postsService.get(key).toPromise();
-            this.updateFromMap(
-              this.posts,
-              Utils.toObjectMap(
-                [post],
-                (p) => p.id,
-                (p) => p
-              ),
-              this.posts$
-            );
-            break;
-          case NotificationName.PostDeleted:
-            this.updateFromMap(this.posts, { [key]: null }, this.posts$);
-            break;
-        }
-      } catch (err) {
-        console.error(err);
-      }
-      this.loading$.next(false);
-    });
+    return null;
   }
 
-  protected async closeSubscriptions() {
-    try {
-      await this._postsService.unsubscribePostChanges().toPromise();
-    } catch (err) {
-      console.error(err);
-    }
+  updateChildrenCount(post: PostDto) {
+    this.loading$.next(true);
+    this._postsService.getCommentsCount(post.id)
+      .pipe(finalize(() => this.loading$.next(false)))
+      .subscribe(count => post.commentsCount = count)
   }
 }

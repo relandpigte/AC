@@ -22,6 +22,7 @@ using Abp.Timing;
 using Unchase.Swashbuckle.AspNetCore.Extensions.Extensions;
 using Abp.AspNetCore.SignalR.Hubs;
 using Academically.Web.Host.Hubs;
+using Academically.Hubs;
 
 namespace Academically.Web.Host.Startup
 {
@@ -153,6 +154,10 @@ namespace Academically.Web.Host.Startup
                 endpoints.MapHub<ConversationsHub>("/signalr-conversationsHub");
                 endpoints.MapHub<EventSessionsHub>("/signalr-eventSessionsHub");
                 endpoints.MapHub<QuestionsHub>("/signalr-questionsHub");
+                endpoints.MapHub<PostsHub>("/signalr-postsHub");
+                endpoints.MapHub<UserTopicsHub>("/signalr-userTopicsHub");
+                endpoints.MapHub<ServicesHub>("/signalr-servicesHub");
+                endpoints.MapHub<CommentsHub>("/signalr-commentsHub");
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
             });

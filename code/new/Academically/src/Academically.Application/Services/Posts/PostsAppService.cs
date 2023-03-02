@@ -3,21 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
-using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
-using Abp.Notifications;
 using Abp.Timing;
 using Academically.Authorization;
 using Academically.Authorization.Users;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
-using Academically.Notifications;
+using Academically.Hubs;
 using Academically.Services.Articles;
 using Academically.Services.Coachings;
 using Academically.Services.Comments.Dto;
@@ -25,7 +22,6 @@ using Academically.Services.Courses;
 using Academically.Services.Documents;
 using Academically.Services.Events;
 using Academically.Services.Posts.Dto;
-using Academically.Services.Posts.Notifications;
 using Academically.Services.Videos;
 using Academically.Services.Workshops;
 using Academically.Users.Dto;
@@ -50,11 +46,7 @@ namespace Academically.Services.Posts
         private readonly IVideosAppService _videosAppService;
         private readonly IEventsAppService _eventsAppService;
         private readonly IWorkshopsAppService _workshopsAppService;
-        private readonly IDocumentsAppService _documentsAppService;
         private readonly IRepository<Comment, Guid> _commentsRepository;
-        private readonly IRepository<User, long> _usersRepository;
-        private readonly INotificationSubscriptionManager _notificationSubscriptionManager;
-        private readonly INotificationPublisher _notificationPublisher;
 
         public PostsAppService(
             IRepository<Post, Guid> postRepository,
@@ -70,11 +62,7 @@ namespace Academically.Services.Posts
             IVideosAppService videosAppService,
             IEventsAppService eventsAppService,
             IWorkshopsAppService workshopsAppService,
-            IDocumentsAppService documentsAppService,
-            IRepository<Comment, Guid> commentsRepository,
-            IRepository<User, long> usersRepository,
-            INotificationSubscriptionManager notificationSubscriptionManager,
-            INotificationPublisher notificationPublisher)
+            IRepository<Comment, Guid> commentsRepository)
         {
             _postRepository = postRepository;
             _postTopicRepository = postTopicRepository;
@@ -89,11 +77,7 @@ namespace Academically.Services.Posts
             _videosAppService = videosAppService;
             _eventsAppService = eventsAppService;
             _workshopsAppService = workshopsAppService;
-            _documentsAppService = documentsAppService;
             _commentsRepository = commentsRepository;
-            _usersRepository = usersRepository;
-            _notificationSubscriptionManager = notificationSubscriptionManager;
-            _notificationPublisher = notificationPublisher;
         }
 
         public async Task<List<PostDto>> GetAllPosts(PostType? type, Guid? parentId)
@@ -202,8 +186,6 @@ namespace Academically.Services.Posts
             }
 
             await CurrentUnitOfWork.SaveChangesAsync();
-
-            await PublishPostNotification(post.Id, NotificationNames.Notifications_Post_Created);
         }
 
         public async Task<List<PostDto>> GetByUser(long userId, PostType? type)
@@ -296,16 +278,13 @@ namespace Academically.Services.Posts
             ObjectMapper.Map(input, post);
             post = await _postRepository.UpdateAsync(post);
 
-            await PublishPostNotification(post.Id, NotificationNames.Notifications_Post_Updated);
-
-            return ObjectMapper.Map<PostDto>(post);
+            var postDto = ObjectMapper.Map<PostDto>(post);
+            return postDto;
         }
 
         public async Task DeleteAsync(Guid id)
         {
             await _postRepository.DeleteAsync(id);
-
-            await PublishPostNotification(id, NotificationNames.Notifications_Post_Deleted);
         }
 
         public async Task<AvailableServiceDto> GetAvailableService(Guid id)
@@ -380,6 +359,38 @@ namespace Academically.Services.Posts
             return ObjectMapper.Map<CommentDto>(created);
         }
 
+        public async Task<PagedResultDto<CommentDto>> GetAllCommentsPagedAsync(PagedCommentResultRequestDto input)
+        {
+            var query = _commentsRepository.GetAll()
+                .WhereIf(!input.ReferenceIdFilter.IsNullOrEmpty(), e => e.ReferenceId == input.ReferenceIdFilter)
+                .WhereIf(!input.ParentIdFilter.HasValue, e => e.ParentId == null)
+                .WhereIf(input.ParentIdFilter.HasValue, e => e.ParentId == input.ParentIdFilter)
+                .Include(e => e.Children)
+                .Include(e => e.CreatorUser)
+                .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.CommentReactions)
+                .OrderByDescending(e => e.CreationTime);
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .PageBy(input)
+                .Select(e => new
+                {
+                    Comment = e,
+                    ChildCount = e.Children.Count()
+                })
+                .ToListAsync();
+
+            var comments = items.Select(e =>
+            {
+                var comment = ObjectMapper.Map<CommentDto>(e.Comment);
+                comment.ReplyCount = e.ChildCount;
+                return comment;
+            }).ToList();
+
+            return new PagedResultDto<CommentDto>(totalCount, comments);
+        }
+
         public async Task<IEnumerable<CommentDto>> GetAllCommentAsync(string referenceId)
         {
             var commentsWithReplyCount = await _commentsRepository.GetAll()
@@ -418,12 +429,9 @@ namespace Academically.Services.Posts
             return new PagedResultDto<CommentDto>(totalCount, comments);
         }
 
-        private async Task<int> GetCommentsCountAsync(string referenceId)
+        public async Task<int> GetCommentsCountAsync(string referenceId)
         {
-            var comments = await _commentsRepository.GetAll()
-                .Include(c => c.Children)
-                .Where(e => e.ParentId == null && e.ReferenceId == referenceId).ToListAsync();
-            return comments.Count() + comments.SelectMany(c => c.Children).Count();
+            return await _commentsRepository.GetAll().Where(e => e.ReferenceId == referenceId).CountAsync();
         }
 
         private IQueryable<AvailableServiceDto> Sort(IQueryable<AvailableServiceDto> query, string sorting)
@@ -479,26 +487,12 @@ namespace Academically.Services.Posts
 
         public async Task SubscribePostChanges()
         {
-            await _notificationSubscriptionManager.SubscribeAsync(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), NotificationNames.Notifications_Post_Created);
-            await _notificationSubscriptionManager.SubscribeAsync(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), NotificationNames.Notifications_Post_Updated);
-            await _notificationSubscriptionManager.SubscribeAsync(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), NotificationNames.Notifications_Post_Deleted);
+           
         }
 
         public async Task UnsubscribePostChanges()
         {
-            await _notificationSubscriptionManager.UnsubscribeAsync(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), NotificationNames.Notifications_Post_Created);
-            await _notificationSubscriptionManager.UnsubscribeAsync(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), NotificationNames.Notifications_Post_Updated);
-            await _notificationSubscriptionManager.UnsubscribeAsync(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), NotificationNames.Notifications_Post_Deleted);
-        }
-
-        private async Task PublishPostNotification(Guid postId, string notificatioName)
-        {
-            var notificationData = new PostNotificationData();
-            notificationData["PostId"] = postId;
-            await _notificationPublisher.PublishAsync(
-                notificatioName,
-                notificationData
-            );
+         
         }
 
         #endregion

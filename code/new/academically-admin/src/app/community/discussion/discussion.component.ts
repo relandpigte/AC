@@ -1,10 +1,11 @@
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, UserDto } from '@shared/service-proxies/service-proxies';
 import { PostsStateService } from '@shared/services/posts-state.service';
-import { AppStateConfig, AppStateServices, AppStateType } from '@shared/services/pub-sub.service';
+import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import * as _ from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -35,10 +36,7 @@ enum SubscribeType {
     styleUrls: ['./discussion.component.scss']
 })
 export class DiscussionComponent extends AppComponentBase implements OnInit, OnDestroy {
-
-    appStateConfig: AppStateConfig = { post: { load: true, update: true } };
-    appStateServices: AppStateServices = { post: { type: PostsStateService, args: [this._postsService] } };
-    postStateService: PostsStateService;
+    postsStateService: PostsStateService;
 
     private discussion: PostDto;
     children: PostDto[] = [];
@@ -72,6 +70,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         private _router: Router,
         private _cdr: ChangeDetectorRef,
         private _modalService: BsModalService,
+        private _hubService: HubService,
         private _postsService: PostsServiceProxy
     ) {
         super(injector);
@@ -82,7 +81,8 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         });
     }
 
-
+    get postsStateId(): string { return `posts-${this.discussionId}`; }
+    get discussionId(): string { return this.discussion?.id; }
     get isLoading(): boolean {
         return this.isLoadingPost || this.isLoadingChildren || this.isLoadingParticipants || this.isLoadingSubscriberIds ||
             this.isLoadingRelatedDiscussions || this.isUpdatingSubscribers;
@@ -130,12 +130,24 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     }
 
     private async initPostsAppStates() {
-        await this.pubSubService.start(this, this.appStateConfig, this.appStateServices, [undefined, this.discussion.id]);
-        this.postStateService = this.pubSubService.getStateService<PostsStateService>(AppStateType.Post);
+        const appStateConfig: AppStateConfig = {
+            [this.postsStateId]: {
+                load: [undefined, this.discussionId],
+                update: { postId: this.discussionId }
+            }
+        };
+        const appStateServices: AppStateServices = {
+            [this.postsStateId]: {
+                type: PostsStateService,
+                args: [this._hubService, this._postsService]
+            }
+        };
+        await this.pubSubService.start(this, appStateConfig, appStateServices);
+        this.postsStateService = this.pubSubService.getStateService<PostsStateService>(this.postsStateId);
 
-        this.postStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingChildren = loading);
+        this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingChildren = loading);
 
-        this.postStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+        this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
             if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) return;
             switch(event.type) {
             case StateUpdateType.Add:
@@ -150,7 +162,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
             }
             this._cdr.detectChanges();
         });
-        this.children = this.postStateService.getAllPosts();
+        this.children = this.postsStateService.getAllPosts();
     }
 
     private async loadOtherInfo() {
@@ -254,5 +266,9 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
                 if (type === SubscribeType.subscribe) this.subscriberIds.push(userId);
                 else this.subscriberIds = this.subscriberIds.filter(s => s !== userId);
             });
+    }
+
+    handleChildrenUpdate(post: PostDto) {
+        this.postsStateService.updateChildrenCount(post);
     }
 }

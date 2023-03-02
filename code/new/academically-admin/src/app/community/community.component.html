@@ -37,7 +37,7 @@
                 <router-outlet></router-outlet>
             </div>
             <div class="community-content-right" [style.marginLeft.px]="24">
-                <div>
+                <div *ngIf="suggestedTopics?.length">
                     <app-community-side-card
                         header="Topics you might like"
                         [items]="suggestedTopics"
@@ -47,7 +47,7 @@
                     ></app-community-side-card>
                 </div>
 
-                <div [style.marginTop.px]="24">
+                <div *ngIf="peopleToFollow?.length" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="People to follow"
                         [items]="peopleToFollow"
@@ -57,7 +57,7 @@
                     ></app-community-side-card>
                 </div>
 
-                <div [style.marginTop.px]="24">
+                <div *ngIf="recommendedCourses?.length" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="Recommended courses"
                         [items]="recommendedCourses"
@@ -67,7 +67,7 @@
                     ></app-community-side-card>
                 </div>
 
-                <div [style.marginTop.px]="24">
+                <div *ngIf="recommendedArticles?.length" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="Recommended articles"
                         [items]="recommendedArticles"
@@ -77,7 +77,7 @@
                     ></app-community-side-card>
                 </div>
 
-                <div [style.marginTop.px]="24">
+                <div *ngIf="recommendedEvents?.length" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="Recommended events"
                         [items]="recommendedEvents"
@@ -87,7 +87,7 @@
                     ></app-community-side-card>
                 </div>
 
-                <div [style.marginTop.px]="24">
+                <div *ngIf="recommendedTutorials?.length" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="Recommended tutorials"
                         [items]="recommendedTutorials"

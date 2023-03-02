@@ -196,6 +196,7 @@ export class CommentsComponent extends AppComponentBase implements OnInit {
     }
 
     this._commentsService.getAllReplies(
+      undefined,
       comment.id,
       this.skipCount[comment.id],
       count,

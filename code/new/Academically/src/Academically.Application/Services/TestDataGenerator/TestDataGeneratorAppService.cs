@@ -4,6 +4,7 @@ using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Services.TestDataGenerator.Dto;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -197,6 +198,11 @@ namespace Academically.Services.TestDataGenerator
                 result.Append("_generated.test.data_");
             }
             return result.ToString();
+        }
+
+        public async Task<TestDto> ExposeHubEvent()
+        {
+            return new TestDto();
         }
     }
 }

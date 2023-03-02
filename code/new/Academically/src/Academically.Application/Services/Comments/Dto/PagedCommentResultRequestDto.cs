@@ -5,6 +5,7 @@ namespace Academically.Services.Comments.Dto
 {
     public class PagedCommentResultRequestDto : PagedResultRequestDto
     {
-        public Guid ParentIdFilter { get; set; }
+        public string? ReferenceIdFilter { get; set; }
+        public Guid? ParentIdFilter { get; set; }
     }
 }

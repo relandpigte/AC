@@ -1,40 +1,33 @@
-<ng-container *ngIf="show || conversations?.length">
-  <hr class="discussions-separator">
-  <div class="discussions-container">
-    <div class="discussions-top">
-      <div class="discussion">
+<ng-container *ngIf="show || comments?.length">
+  <div class="discussions-container" [class.p-0]="isChild">
 
+    <div *ngIf="!isChild" class="discussions-top">
+      <div class="discussion">
         <div class="row gap-15 m-0">
           <div class="col-auto p-0 d-flex align-items-center">
-
-            <!-- Avatar -->
+            <!-- Avatar | START -->
             <div class="avatar avatar-sm avatar-current-user">
               <img [src]="getProfilePicture(appSession.user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
             </div>
-
+            <!-- Avatar | END -->
           </div>
 
           <div class="col p-0 ms-n2">
             <div class="d-flex text-area-container" [style.padding.px]="10">
               <div class="col d-flex align-items-center p-0 ms-n2">
-
+                <!-- Reply Textarea | START -->
                 <form autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit(addCommentEl)" class="comment-box flex-grow-1">
                   <textarea #addCommentEl id="message" name="message" (keydown)="onMessageKeydown($event, form, addCommentEl)"
                     class="form-control form-control-flush" placeholder="Leave a comment..." [maxLength]="500"
                     style="overflow: hidden; overflow-wrap: break-word; height: 41px;"
                   ></textarea>
                 </form>
-
+                <!-- Reply Textarea | END -->
               </div>
               <div class="col-auto align-self-center p-0">
-
-                <!-- Icons -->
+                <!-- Icons | START -->
                 <div class="col-auto pr-0 align-self-center">
                   <div class="text-muted d-flex gap-25">
-                    <!-- <a class="text-reset" href="#!submit" (click)="$event.preventDefault(); form.ngSubmit.emit()"
-                      data-toggle="tooltip" title="" data-original-title="Send">
-                      <i class="fe fe-send"></i>
-                    </a> -->
                     <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Add photo" [class.disabled]="true">
                       <i class="fe fe-camera"></i>
                     </a>
@@ -46,12 +39,14 @@
                     </a>
                   </div>
                 </div>
+                <!-- Icons | END -->
               </div>
             </div>
           </div>
         </div>
 
-        <div *ngIf="conversations?.length" class="row sorting-section">
+        <div *ngIf="comments?.length" class="row sorting-section">
+          <!-- Sorter | START -->
           <div class="col-auto align-self-center">
             Sort by:
             <div class="btn-group" dropdown>
@@ -66,47 +61,45 @@
               </ul>
             </div>
           </div>
+          <!-- Sorter | END -->
         </div>
 
       </div>
     </div>
 
-    <div *ngIf="conversations?.length" class="discussions">
-      <div *ngFor="let conversation of conversations | slice:0:(isFolded ? 1 : undefined)" class="discussion" [style.marginTop.px]="20">
+
+    <div *ngIf="comments?.length" class="discussions">
+      <div *ngFor="let comment of comments" class="discussion" [style.marginTop.px]="20">
         <div class="comment tier-1-comment">
           <div class="row gap-15 m-0">
             <div class="col-auto p-0">
-
-              <!-- Avatar -->
+              <!-- Avatar | START -->
               <a class="avatar" href="profile-posts.html">
-                <img [src]="getProfilePictureFromDocument(conversation.creatorUser.profilePictureDocument, conversation.creatorUser.id)" alt="..." class="avatar-img rounded-circle">
+                <img [src]="getProfilePictureFromDocument(comment.creatorUser.profilePictureDocument, comment.creatorUser.id)" alt="..." class="avatar-img rounded-circle">
               </a>
-              <!-- Indentation line hereeeee -->
-              <!-- <div class="reply-indicator" *ngIf="!isReplyButtonHidden"></div> -->
+              <!-- Avatar | END -->
             </div>
             <div class="col p-0 ms-n2">
-
-              <!-- Body -->
+              <!-- Comment Body | START -->
               <div class="comment-body">
-
                 <div class="row gap-10 m-0">
                   <div class="col-auto p-0">
-                    <h5 class="comment-title">{{ conversation.creatorUser.fullName }}</h5>
+                    <h5 class="comment-title">{{ comment.creatorUser.fullName }}</h5>
                   </div>
                   <div class="col p-0 d-flex align-items-center">
-                    <time class="comment-time" [title]="conversation.creationTime | date:'short'">{{ convertMomentToDateAgo(conversation.creationTime) }}</time>
+                    <time class="comment-time" [title]="comment.creationTime | date:'short'">{{ convertMomentToDateAgo(comment.creationTime) }}</time>
                   </div>
                 </div>
-
-                <!-- Text -->
-                <p class="comment-text" [innerHTML]="conversation.body"></p>
-
+                <p class="comment-text" [innerHTML]="comment.body"></p>
               </div>
+              <!-- Comment Body | END -->
+
+              <!-- Comment Actions | START -->
               <div class="comment-actions justify-content-start align-items-center gap-10 p-10">
                 <div class="cursor-pointer">Like</div>
                 <div class="comment-actions-separator">•</div>
                 <div class="comment-actions-reactions cursor-pointer d-flex align-items-center gap-7">
-                  {{ 14 }}
+                  {{ 18 }}
                   <div class="comment-actions-reactions-type d-flex">
                       <div class="comment-actions-reactions-type-item blue d-flex justify-content-center align-items-center">
                           <span class="fe fe-thumbs-up"></span>
@@ -120,95 +113,35 @@
                   </div>
                 </div>
                 <div class="comment-actions-separator">|</div>
-                <a href="javascript:;" class="reply-btn" (click)="initiateReply(conversation)">
-                  Reply
-                </a>
+                <a href="javascript:;" class="reply-btn" (click)="initiateReply(comment.id)">Reply</a>
               </div>
-
-              <ng-container *ngIf="conversation.children && conversation.children.length">
-                <a *ngIf="loadedReplyCount[conversation.id] < conversation.replyCount" href="#!load-more" class="d-block view-more-replies" (click)="onLoadMoreRepliesClick($event, conversation);">
-                  {{ getViewCount(conversation) }} more {{ getViewCount(conversation) > 1 ? 'replies' : 'reply'}}
-                </a>
-                <div *ngFor="let childConversation of conversation.children" class="comment tier-2-comment">
-                  <div class="row gap-15 m-0">
-                    <div class="col-auto p-0">
-                      <a class="avatar avatar-xs" href="profile-posts.html">
-                        <img
-                          [src]="getProfilePictureFromDocument(childConversation.creatorUser.profilePictureDocument, childConversation.creatorUser.id)"
-                          alt="..." class="avatar-img rounded-circle">
-                      </a>
-                    </div>
-                    <div class="col p-0">
-                      <div class="comment-body">
-                        <div class="row gap-10 m-0">
-                          <div class="col-auto p-0">
-                            <h6 class="comment-title">{{ childConversation.creatorUser.fullName }}</h6>
-                          </div>
-                          <div class="col p-0 d-flex align-items-center">
-                            <time class="comment-time" [title]="childConversation.creationTime | date:'short'">{{ convertMomentToDateAgo(childConversation.creationTime) }}</time>
-                          </div>
-                        </div>
-                        <p class="comment-text" [innerHTML]="childConversation.body"></p>
-                      </div>
-                      <div class="comment-actions justify-content-start align-items-center gap-10">
-                        <div class="cursor-pointer">Like</div>
-                        <div class="comment-actions-separator">•</div>
-                        <div class="comment-actions-reactions cursor-pointer d-flex align-items-center gap-7">
-                          {{ 14 }}
-                          <div class="comment-actions-reactions-type d-flex">
-                              <div class="comment-actions-reactions-type-item blue d-flex justify-content-center align-items-center">
-                                  <span class="fe fe-thumbs-up"></span>
-                              </div>
-                              <div class="comment-actions-reactions-type-item red d-flex justify-content-center align-items-center">
-                                  <span class="fe fe-heart"></span>
-                              </div>
-                              <div class="comment-actions-reactions-type-item yellow d-flex justify-content-center align-items-center">
-                                  <span class="fe fe-thumbs-down"></span>
-                              </div>
-                          </div>
-                        </div>
-                        <div class="comment-actions-separator">|</div>
-                        <a href="javascript:;" class="reply-btn" (click)="initiateReply(conversation)">
-                          Reply
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </ng-container>
+              <!-- Comment Actions | END -->
 
               <!-- Reply section -->
-              <div class="row gap-15 m-0" *ngIf="conversationReplyId === conversation.id" [style.marginTop.px]="20">
+              <div class="row gap-15 m-0" *ngIf="commentReplyId === comment.id" [style.marginTop.px]="20">
                 <div class="col-auto p-0 d-flex align-items-center">
-
-                  <!-- Avatar -->
+                  <!-- Avatar | START -->
                   <div class="avatar avatar-sm avatar-current-user">
                     <img [src]="getProfilePicture(appSession.user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
                   </div>
-
+                  <!-- Avatar | END -->
                 </div>
                 <div class="col p-0 ms-n2">
                   <div class="d-flex text-area-container" [style.padding.px]="10">
-
                     <div class="col d-flex align-items-center p-0 ms-n2">
-
-                      <form autocomplete="off" #replyForm="ngForm" (ngSubmit)="onFormSubmit(addReplyEl, conversation.id)" class="comment-box flex-grow-1">
-                        <textarea #addReplyEl [id]="'add-reply-'+conversation.id" name="message" (keydown)="onMessageKeydown($event, replyForm)"
+                      <!-- Reply Textarea | START -->
+                      <form autocomplete="off" #replyForm="ngForm" (ngSubmit)="onFormSubmit(addReplyEl, comment.id)" class="comment-box flex-grow-1">
+                        <textarea #addReplyEl [id]="'add-reply-'+comment.id" name="message" (keydown)="onMessageKeydown($event, replyForm)"
                           class="form-control form-control-flush" placeholder="Leave a comment..." [maxLength]="500"
                           style="overflow: hidden; overflow-wrap: break-word; height: 41px; background: #F9FBFD; border-radius: 10px;"
                         ></textarea>
                       </form>
-
+                      <!-- Reply Textarea | END -->
                     </div>
                     <div class="col-auto align-self-center p-0">
-                      <!-- Icons -->
+                      <!-- Icons | START -->
                       <div class="col-auto pr-0 align-self-center">
                         <div class="text-muted d-flex gap-25">
-                          <!-- <a class="text-reset" href="#!submit" (click)="$event.preventDefault(); replyForm.ngSubmit.emit()"
-                            data-toggle="tooltip" title="" data-original-title="Send">
-                            <i class="fe fe-send"></i>
-                          </a> -->
                           <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Add photo" [class.disabled]="true">
                             <i class="fe fe-camera"></i>
                           </a>
@@ -220,24 +153,74 @@
                           </a>
                         </div>
                       </div>
+                      <!-- Icons | END -->
                     </div>
                   </div>
                 </div>
               </div>
 
-            </div>
-          </div> <!-- / .row -->
+              <app-community-discussions
+                [show]="showCommentsSection && comment.children?.length"
+                [referenceId]="referenceId"
+                [parentId]="comment.id"
+                [postType]="postType"
+                [isChild]="true"
+                [level]="level + 1"
+                (onReplyEmit)="initiateReply($event)"
+                (onUpdateEmit)="onUpdateEmit.emit()"
+              ></app-community-discussions>
 
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div *ngIf="foldedDiscussionsCount" class="discussions-expander cursor-pointer">
-      <div class="discussions-expander-fold" (click)="isFolded = !isFolded">
-        <span *ngIf="isFolded">View {{ foldedDiscussionsCount }} more {{ typeName }}</span>
-        <span *ngIf="!isFolded">Fold {{ typeName }}</span>
-      </div>
-    </div>
+    <ng-container *ngIf="isChild">
+      <ng-container *ngIf="totalCommentsCount > 1 && !isExpanded">
+        <div class="discussions-expander-child cursor-pointer" (click)="onFoldClick()">
+          <span>View {{ totalCommentsCount - comments.length }} replies</span>
+        </div>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="!isChild">
+      <ng-container *ngIf="totalCommentsCount > 1">
+        <div class="discussions-expander cursor-pointer">
+          <div class="discussions-expander-fold" (click)="onFoldClick()">
+            <span *ngIf="!isExpanded">View {{ totalCommentsCount - comments.length }} more {{ typeName }}</span>
+            <span *ngIf="isExpanded">Fold {{ typeName }}</span>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
 
   </div>
 </ng-container>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

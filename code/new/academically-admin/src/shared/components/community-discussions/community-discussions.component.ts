@@ -1,13 +1,21 @@
-import { Component, ElementRef, Injector, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   CommentDto, ConversationReactionType,
   CourseConversationReactionDto, CourseConversationsServiceProxy, PostsServiceProxy, PostType
 } from '@shared/service-proxies/service-proxies';
+import { CommentsStateService } from '@shared/services/comments-state.service';
+import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
+import { StateUpdateType } from '@shared/services/state-base.service';
 import * as _ from 'lodash';
 import { finalize, takeUntil } from 'rxjs/operators';
+
+export const MAX_REPLIES_TO_LOAD = 5;
+export const MAX_COMMENT_LEVELS = 3;
+
 @Component({
   selector: 'app-community-discussions',
   templateUrl: './community-discussions.component.html',
@@ -17,49 +25,47 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   @Input() show = false;
   @Input() isInCourse = true;
   @Input() isInTutorPortal = false;
-  @Input() postId: string;
+  @Input() isChild = false;
+  @Input() level = 1;
+  @Input() referenceId: string;
+  @Input() parentId: string;
   @Input() postType: PostType;
   @Input() ctrlEnterToSubmit = false;
 
+  @Output() onReplyEmit = new EventEmitter<string>();
+  @Output() onUpdateEmit = new EventEmitter<string>();
+
   @ViewChild('addCommentEl', { static: false }) addCommentEl: ElementRef;
 
-  courseId: string;
-  conversations: CommentDto[] = [];
-  isPosting = false;
+  commentsStateService: CommentsStateService;
+
   ReactionType = ConversationReactionType;
+
+  isPosting = false;
+  isLoadingComments = false;
+
+  comments: CommentDto[] = [];
+  totalCommentsCount: number;
+  commentReplyId: string;
   inputLength = 0;
 
-  isFolded = true;
-
-  _postId: string;
-  conversationReplyId: string;
   loadedReplyCount: number[] = [];
   skipCount: number[] = [];
 
-  private _maxRepliesToLoad = 5; // load all
+
 
   constructor(
     injector: Injector,
+    private _cdr: ChangeDetectorRef,
     private _elRef: ElementRef,
-    private _route: ActivatedRoute,
+    private _hubService: HubService,
     private _courseConversationsService: CourseConversationsServiceProxy,
-
     private _postsServiceProxy: PostsServiceProxy
   ) {
     super(injector);
-    this._route.parent.parent.parent.paramMap.subscribe(paramMap => {
-      if (paramMap.has('course-id')) {
-        this.courseId = paramMap.get('course-id');
-      }
-    });
   }
 
-  @Input() set studentCourseId(value: string) {
-    this._postId = value;
-    this.getConversations();
-  }
-
-  get foldedDiscussionsCount(): number { return this.conversations?.length - 1 ?? 0; }
+  get commentsStateId(): string { return `comments-${this.referenceId}-${this.parentId}`; }
   get typeName(): string {
     switch (this.postType) {
         case PostType.Question:
@@ -68,9 +74,10 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
             return 'comments';
     }
   }
+  get isExpanded(): boolean { return this.comments?.length === this.totalCommentsCount; }
 
   ngOnInit(): void {
-    this.getConversations();
+    this.initCommentsAppStates();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -79,10 +86,50 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       }
   }
 
+  private async initCommentsAppStates() {
+    const appStateConfig: AppStateConfig = {
+      [this.commentsStateId]: {
+        load: [this.referenceId, this.parentId, 0, 1],
+        update: { referenceId: this.referenceId, parentId: this.parentId }
+      }
+    };
+    const appStateServices: AppStateServices = {
+      [this.commentsStateId]: {
+          type: CommentsStateService,
+          args: [this._hubService, this._postsServiceProxy]
+      }
+    };
+    await this.pubSubService.start(this, appStateConfig, appStateServices);
+    this.commentsStateService = this.pubSubService.getStateService<CommentsStateService>(this.commentsStateId);
+
+    this.commentsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingComments = loading);
+
+    this.commentsStateService.comments$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+      switch(event.type) {
+        case StateUpdateType.Add:
+          this.comments = [event.data].concat(this.comments);
+          this.totalCommentsCount++;
+          break;
+        case StateUpdateType.Update:
+          this.comments = this.comments.map(c => c.id === event.data.id ? event.data : c);
+          break;
+        case StateUpdateType.Delete:
+          this.comments = this.comments.filter(c => c.id != event.data.id);
+          this.totalCommentsCount--;
+          break;
+      }
+      this.onUpdateEmit.emit();
+      this._cdr.detectChanges();
+    });
+
+    this.comments = this.commentsStateService.getAllComments();
+    this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
+  }
+
   onFormSubmit(message: any, parentId?: string): void {
     this.isPosting = true;
     const model = new CommentDto();
-    model.referenceId = this.postId;
+    model.referenceId = this.referenceId;
     model.parentId = parentId;
     model.body = message.value;
     if (model.body && model.body.trim()) {
@@ -92,16 +139,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
           finalize(() => {
             this.isPosting = false;
           })
-        ).subscribe(newComment => {
-          if (parentId) this.conversations = this.conversations.map(c => {
-            if (c.id === parentId) {
-              c.children.push(newComment);
-              c.replyCount++;
-              this.loadedReplyCount[c.id] = (this.loadedReplyCount[c.id] ?? 0) + 1;
-            }
-            return c;
-          });
-          else this.conversations.unshift(newComment);
+        ).subscribe(() => {
           message.value = '';
           this.notify.success(this.l('SuccessfullyPosted'));
         });
@@ -117,7 +155,6 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       .pipe(
         takeUntil(this.destroyed$),
       ).subscribe(() => {
-        this.getConversations();
         this.notify.success(this.l('SuccessfullyReacted'));
       });
   }
@@ -129,7 +166,6 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
         .pipe(
           takeUntil(this.destroyed$),
         ).subscribe(() => {
-          this.getConversations();
           this.notify.success(this.l('ReactionRemoved'));
         });
     }
@@ -164,58 +200,37 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     }
   }
 
-  onLoadMoreRepliesClick(event: any, parent: CommentDto): void {
-    event.preventDefault();
-    this.getReplies(parent);
-  }
-
-  private getConversations(): void {
-    this._postsServiceProxy.getAllComment(this.postId)
-      .pipe(
-        takeUntil(this.destroyed$),
-      )
-      .subscribe(conversations => {
-        this.conversations = conversations;
-        _.each(this.conversations, comment => {
-          this.loadedReplyCount[comment.id] = 0;
-          this.getReplies(comment);
-        });
-      });
-  }
-
-  private getReplies(comment: CommentDto): void {
-    let count = 0;
-    if (_.isNil(this.skipCount[comment.id])) {
-      this.skipCount[comment.id] = 0;
-      count = 1;
-    } else {
-      const remainingReplyCount = comment.replyCount - this.loadedReplyCount[comment.id];
-      if (remainingReplyCount % this._maxRepliesToLoad === 0)  count = this._maxRepliesToLoad;
-      else count = this._maxRepliesToLoad > 0 ? this._maxRepliesToLoad : remainingReplyCount;
-      this.skipCount[comment.id] += count;
+  onFoldClick(): void {
+    const finalize = () => {
+      this.comments = this.commentsStateService.getAllComments();
+      this.commentsStateService.loading$.next(false);
+      this._cdr.detectChanges();
     }
 
-    this._postsServiceProxy.getAllCommentReplies(
-      comment.id,
-      this.loadedReplyCount[comment.id],
-      count,
-    )
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe(response => {
-      if (this.loadedReplyCount[comment.id] === 0) comment.children = response.items;
-      else comment.children = [...comment.children, ...response.items];
-      this.loadedReplyCount[comment.id] += response.items.length;
-      comment.children = _.sortBy(comment.children, c => c.creationTime);
-    });
+    this.commentsStateService.loading$.next(true);
+    if (!this.isExpanded) {
+      this._postsServiceProxy.getAllCommentsPaged(this.referenceId, this.parentId, this.comments.length, MAX_REPLIES_TO_LOAD)
+        .subscribe(oldComments => {
+          this.commentsStateService.pushMoreComments(oldComments.items);
+          finalize();
+        });
+    } else {
+      this.commentsStateService.removeComments(this.comments.slice(1));
+      finalize();
+    }
   }
 
-  initiateReply(conversation: CommentDto): void {
-    this.conversationReplyId = this.conversationReplyId === conversation.id ? null : conversation.id;
-    if (this.conversationReplyId === conversation.id) {
-      setTimeout(() => {
-        const addReplyEl = this._elRef.nativeElement.querySelector(`#add-reply-${conversation.id}`);
-        if (addReplyEl) addReplyEl.focus();
-      });
+  initiateReply(id: string): void {
+    if (this.level < MAX_COMMENT_LEVELS) {
+      this.commentReplyId = this.commentReplyId === id ? null : id;
+      if (this.commentReplyId === id) {
+        setTimeout(() => {
+          const addReplyEl = this._elRef.nativeElement.querySelector(`#add-reply-${id}`);
+          if (addReplyEl) addReplyEl.focus();
+        });
+      }
+    } else {
+      this.onReplyEmit.emit(this.parentId);
     }
   }
 }
