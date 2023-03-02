@@ -54,7 +54,6 @@
                     *ngIf="!isDiscussion"
                     type="button"
                     class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0"
-                    (click)="showCommentsSection = !showCommentsSection"
                 >
                     <span class="fe fe-thumbs-up"></span>Like
                 </div>
@@ -90,10 +89,10 @@
                 </div>
             </div>
             <div class="post-actions-right flex-grow-1 d-flex justify-content-end align-items-center gap-7">
-                <div *ngIf="isQuickPost" class="post-actions-right-comments cursor-pointer">
+                <div *ngIf="isQuickPost" class="post-actions-right-comments cursor-pointer" (click)="showCommentsSection = !showCommentsSection">
                     {{ data.commentsCount | shortNum: 1  }} comments
                 </div>
-                <div *ngIf="isQuestion" class="post-actions-right-comments cursor-pointer">
+                <div *ngIf="isQuestion" class="post-actions-right-comments cursor-pointer" (click)="showCommentsSection = !showCommentsSection">
                     {{ data.commentsCount | shortNum: 1 }} answers
                 </div>
                 <div *ngIf="isDiscussion" class="post-actions-right-comments cursor-pointer">
@@ -118,6 +117,7 @@
         </div>
     </div>
 
+    <div class="discussions-separator"></div>
     <app-community-discussions
         [show]="showCommentsSection"
         [referenceId]="data?.id"

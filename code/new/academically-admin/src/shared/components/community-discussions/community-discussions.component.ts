@@ -1,16 +1,12 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import {
-  CommentDto, ConversationReactionType,
-  CourseConversationReactionDto, CourseConversationsServiceProxy, PostsServiceProxy, PostType
-} from '@shared/service-proxies/service-proxies';
+import { CommentDto, PostsServiceProxy, PostType } from '@shared/service-proxies/service-proxies';
 import { CommentsStateService } from '@shared/services/comments-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
-import * as _ from 'lodash';
+import { Subject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
 
 export const MAX_REPLIES_TO_LOAD = 5;
@@ -23,14 +19,14 @@ export const MAX_COMMENT_LEVELS = 3;
 })
 export class CommunityDiscussionsComponent extends AppComponentBase implements OnInit, OnChanges {
   @Input() show = false;
-  @Input() isInCourse = true;
-  @Input() isInTutorPortal = false;
   @Input() isChild = false;
   @Input() level = 1;
   @Input() referenceId: string;
   @Input() parentId: string;
   @Input() postType: PostType;
   @Input() ctrlEnterToSubmit = false;
+
+  @Input() foldSubject$ = new Subject();
 
   @Output() onReplyEmit = new EventEmitter<string>();
   @Output() onUpdateEmit = new EventEmitter<string>();
@@ -39,27 +35,20 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   commentsStateService: CommentsStateService;
 
-  ReactionType = ConversationReactionType;
-
   isPosting = false;
   isLoadingComments = false;
 
   comments: CommentDto[] = [];
   totalCommentsCount: number;
+
   commentReplyId: string;
   inputLength = 0;
-
-  loadedReplyCount: number[] = [];
-  skipCount: number[] = [];
-
-
 
   constructor(
     injector: Injector,
     private _cdr: ChangeDetectorRef,
     private _elRef: ElementRef,
     private _hubService: HubService,
-    private _courseConversationsService: CourseConversationsServiceProxy,
     private _postsServiceProxy: PostsServiceProxy
   ) {
     super(injector);
@@ -78,11 +67,13 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   ngOnInit(): void {
     this.initCommentsAppStates();
+    this.initSubscriptions();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-      if ('show' in changes && changes?.show?.previousValue !== changes?.show?.currentValue && this.show) {
-        setTimeout(() => this.addCommentEl.nativeElement.focus());
+      if ('show' in changes && changes?.show?.previousValue !== changes?.show?.currentValue) {
+        if (this.show) setTimeout(() => this.addCommentEl.nativeElement.focus());
+        else this.foldSubject$.next();
       }
   }
 
@@ -122,8 +113,17 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       this._cdr.detectChanges();
     });
 
-    this.comments = this.commentsStateService.getAllComments({ direction: this.isChild ? 'asc' : 'desc' });
+    this.comments = this.isChild ? [] : this.commentsStateService.getAllComments({ direction: this.isChild ? 'asc' : 'desc' });
     this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
+  }
+
+  private initSubscriptions(): void {
+    this.foldSubject$
+      .subscribe(() => {
+        this.commentsStateService.removeComments(this.comments.slice(1));
+        this.comments = this.isChild ? [] : this.commentsStateService.getAllComments({ direction: this.isChild ? 'asc' : 'desc' });
+        this._cdr.detectChanges();
+      });
   }
 
   onFormSubmit(message: any, parentId?: string): void {
@@ -146,77 +146,27 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     }
   }
 
-  onReactClick(type: ConversationReactionType, conversationId: string): void {
-    const model = new CourseConversationReactionDto();
-    model.type = type;
-    model.courseConversationId = conversationId;
-    model.creatorUserId = this.appSession.userId;
-    this._courseConversationsService.createReaction(model)
-      .pipe(
-        takeUntil(this.destroyed$),
-      ).subscribe(() => {
-        this.notify.success(this.l('SuccessfullyReacted'));
-      });
-  }
-
-  onUnreactClick(conversationReactions: CourseConversationReactionDto[], type: ConversationReactionType): void {
-    const conversationReaction = conversationReactions.find(e => e.creatorUserId === this.appSession.userId && e.type === type);
-    if (conversationReaction) {
-      this._courseConversationsService.deleteReaction(conversationReaction.id)
-        .pipe(
-          takeUntil(this.destroyed$),
-        ).subscribe(() => {
-          this.notify.success(this.l('ReactionRemoved'));
-        });
-    }
-  }
-
-  hasUserReacted(conversationReactions: CourseConversationReactionDto[]): boolean {
-    return conversationReactions?.filter(e => e.creatorUserId === this.appSession.userId).length > 0;
-  }
-
-  isMyReaction(conversationReactions: CourseConversationReactionDto[], type: ConversationReactionType): boolean {
-    return conversationReactions?.filter(e => e.creatorUserId === this.appSession.userId && e.type === type).length > 0;
-  }
-
-  getReactionCount(conversationReactions: CourseConversationReactionDto[], type: ConversationReactionType): number {
-    return 0;
-  }
-
-  getViewCount(comment: CommentDto): number {
-    const skipCount = this.loadedReplyCount[comment.id];
-    return comment.replyCount - (skipCount == 0 ? 1 : skipCount);
-  }
-
   onMessageKeydown(event: any, form: NgForm, post?: any): void {
     if (event.keyCode === 13 && (!this.ctrlEnterToSubmit || (this.ctrlEnterToSubmit && event.ctrlKey))) {
       form.ngSubmit.emit();
       event.preventDefault();
     }
-    if (post) {
-      setTimeout(() => {
-        this.inputLength = post.value.length;
-      });
-    }
+    if (post) setTimeout(() => this.inputLength = post.value.length);
   }
 
   onFoldClick(): void {
-    const finalize = () => {
-      this.comments = this.commentsStateService.getAllComments({ direction: this.isChild ? 'asc' : 'desc' });
-      this.commentsStateService.loading$.next(false);
-      this._cdr.detectChanges();
-    }
-
     this.commentsStateService.loading$.next(true);
     if (!this.isExpanded) {
       this._postsServiceProxy.getAllCommentsPaged(this.referenceId, this.parentId, this.comments.length, MAX_REPLIES_TO_LOAD)
         .subscribe(oldComments => {
           this.commentsStateService.pushMoreComments(oldComments.items);
-          finalize();
+          this.comments = this.commentsStateService.getAllComments({ direction: this.isChild ? 'asc' : 'desc' });
+          this.commentsStateService.loading$.next(false);
+          this._cdr.detectChanges();
         });
     } else {
-      this.commentsStateService.removeComments(this.comments.slice(1));
-      finalize();
+      this.commentsStateService.loading$.next(false);
+      this.foldSubject$.next();
     }
   }
 

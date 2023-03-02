@@ -1,4 +1,4 @@
-<ng-container *ngIf="show || comments?.length">
+<ng-container *ngIf="show">
   <div class="discussions-container" [class.p-0]="isChild">
 
     <div *ngIf="!isChild" class="discussions-top">
@@ -75,7 +75,6 @@
       </ng-container>
     </ng-container>
 
-
     <div *ngIf="comments?.length" class="discussions">
       <div *ngFor="let comment of comments" class="discussion">
         <div class="comment tier-1-comment">
@@ -126,12 +125,13 @@
               <!-- Comment Actions | END -->
 
               <app-community-discussions
-                [show]="showCommentsSection && comment.children?.length"
+                [show]="show"
                 [referenceId]="referenceId"
                 [parentId]="comment.id"
                 [postType]="postType"
                 [isChild]="true"
                 [level]="level + 1"
+                [foldSubject$]="foldSubject$"
                 (onReplyEmit)="initiateReply($event)"
                 (onUpdateEmit)="onUpdateEmit.emit()"
               ></app-community-discussions>
