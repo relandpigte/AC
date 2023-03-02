@@ -67,9 +67,17 @@
       </div>
     </div>
 
+    <ng-container *ngIf="isChild">
+      <ng-container *ngIf="totalCommentsCount > 1 && !isExpanded">
+        <div class="discussions-expander-child cursor-pointer" (click)="onFoldClick()">
+          <span>View {{ totalCommentsCount - comments.length }} replies</span>
+        </div>
+      </ng-container>
+    </ng-container>
+
 
     <div *ngIf="comments?.length" class="discussions">
-      <div *ngFor="let comment of comments" class="discussion" [style.marginTop.px]="20">
+      <div *ngFor="let comment of comments" class="discussion">
         <div class="comment tier-1-comment">
           <div class="row gap-15 m-0">
             <div class="col-auto p-0">
@@ -90,7 +98,7 @@
                     <time class="comment-time" [title]="comment.creationTime | date:'short'">{{ convertMomentToDateAgo(comment.creationTime) }}</time>
                   </div>
                 </div>
-                <p class="comment-text" [innerHTML]="comment.body"></p>
+                <p class="comment-text m-0" [innerHTML]="comment.body"></p>
               </div>
               <!-- Comment Body | END -->
 
@@ -117,8 +125,19 @@
               </div>
               <!-- Comment Actions | END -->
 
+              <app-community-discussions
+                [show]="showCommentsSection && comment.children?.length"
+                [referenceId]="referenceId"
+                [parentId]="comment.id"
+                [postType]="postType"
+                [isChild]="true"
+                [level]="level + 1"
+                (onReplyEmit)="initiateReply($event)"
+                (onUpdateEmit)="onUpdateEmit.emit()"
+              ></app-community-discussions>
+
               <!-- Reply section -->
-              <div class="row gap-15 m-0" *ngIf="commentReplyId === comment.id" [style.marginTop.px]="20">
+              <div class="row gap-15 mx-0" *ngIf="commentReplyId === comment.id" [style.marginBottom.px]="15">
                 <div class="col-auto p-0 d-flex align-items-center">
                   <!-- Avatar | START -->
                   <div class="avatar avatar-sm avatar-current-user">
@@ -159,30 +178,12 @@
                 </div>
               </div>
 
-              <app-community-discussions
-                [show]="showCommentsSection && comment.children?.length"
-                [referenceId]="referenceId"
-                [parentId]="comment.id"
-                [postType]="postType"
-                [isChild]="true"
-                [level]="level + 1"
-                (onReplyEmit)="initiateReply($event)"
-                (onUpdateEmit)="onUpdateEmit.emit()"
-              ></app-community-discussions>
-
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <ng-container *ngIf="isChild">
-      <ng-container *ngIf="totalCommentsCount > 1 && !isExpanded">
-        <div class="discussions-expander-child cursor-pointer" (click)="onFoldClick()">
-          <span>View {{ totalCommentsCount - comments.length }} replies</span>
-        </div>
-      </ng-container>
-    </ng-container>
     <ng-container *ngIf="!isChild">
       <ng-container *ngIf="totalCommentsCount > 1">
         <div class="discussions-expander cursor-pointer">

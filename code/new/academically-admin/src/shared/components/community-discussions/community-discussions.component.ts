@@ -107,7 +107,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     this.commentsStateService.comments$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
       switch(event.type) {
         case StateUpdateType.Add:
-          this.comments = [event.data].concat(this.comments);
+          this.comments = this.isChild ? this.comments.concat(event.data) : [event.data].concat(this.comments);
           this.totalCommentsCount++;
           break;
         case StateUpdateType.Update:
@@ -122,7 +122,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       this._cdr.detectChanges();
     });
 
-    this.comments = this.commentsStateService.getAllComments();
+    this.comments = this.commentsStateService.getAllComments({ direction: this.isChild ? 'asc' : 'desc' });
     this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
   }
 
@@ -202,7 +202,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   onFoldClick(): void {
     const finalize = () => {
-      this.comments = this.commentsStateService.getAllComments();
+      this.comments = this.commentsStateService.getAllComments({ direction: this.isChild ? 'asc' : 'desc' });
       this.commentsStateService.loading$.next(false);
       this._cdr.detectChanges();
     }
