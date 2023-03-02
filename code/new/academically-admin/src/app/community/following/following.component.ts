@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CourseDto, CoursesServiceProxy, DateGrains, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CourseDto, CoursesServiceProxy, DateGrains, PostDto, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { PostsStateService } from '@shared/services/posts-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
@@ -130,5 +130,9 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
 
   handleSortingChange(sort: PostSorting): void {
     this.selectedSorting = sort;
+  }
+
+  handleChildrenUpdate(post: PostDto) {
+    this.postsStateService.updateChildrenCount(post);
   }
 }
