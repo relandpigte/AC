@@ -1,8 +1,9 @@
 import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
+import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CourseDto, CoursesServiceProxy, DateGrains, PostDto, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CourseDto, CoursesServiceProxy, DateGrains, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { PostsStateService } from '@shared/services/posts-state.service';
-import { AppStateConfig, AppStateServices, AppStateType } from '@shared/services/pub-sub.service';
+import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { takeUntil } from 'rxjs/operators';
 
@@ -25,11 +26,9 @@ enum PostSorting {
   styleUrls: ['./following.component.less']
 })
 export class FollowingComponent extends AppComponentBase implements OnInit, OnDestroy {
-  posts: any[] = [];
+  postsStateService: PostsStateService;
 
-  appStateConfig: AppStateConfig = { post: { load: true, update: true }};
-  appStateServices: AppStateServices = { post: { type: PostsStateService, args: [this._postsService] } };
-  postStateService: PostsStateService;
+  posts: any[] = [];
 
   usersYouMayKnow: UserDto[] = Array(5).fill([]).map(() => this.generateRandomUser()) as UserDto[];
   recommendedCourses: CourseDto[] = Array(4).fill([]).map(() => this.generateRandomCourse()) as CourseDto[];
@@ -47,9 +46,12 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
   selectedFiltering: PostFiltering = PostFiltering.All;
   selectedSorting: PostSorting = PostSorting.Latest;
 
+  postsHub: any;
+
   constructor(
     injector: Injector,
     private _cdr: ChangeDetectorRef,
+    private _hubService: HubService,
     private _usersService: UserServiceProxy,
     private _coursesService: CoursesServiceProxy,
     private _postsService: PostsServiceProxy,
@@ -57,6 +59,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     super(injector);
   }
 
+  get postsStateId(): string { return 'posts'; }
   get postTypeFilter(): PostType {
     switch(this.selectedFiltering) {
       case PostFiltering.All:
@@ -81,12 +84,14 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
   }
 
   private async initPostsAppStates() {
-    await this.pubSubService.start(this, this.appStateConfig, this.appStateServices);
-    this.postStateService = this.pubSubService.getStateService<PostsStateService>(AppStateType.Post);
+    const appStateConfig: AppStateConfig = { [this.postsStateId]: { load: true, update: true } };
+    const appStateServices: AppStateServices = { [this.postsStateId]: { type: PostsStateService, args: [this._hubService, this._postsService] } };
+    await this.pubSubService.start(this, appStateConfig, appStateServices);
+    this.postsStateService = this.pubSubService.getStateService<PostsStateService>(this.postsStateId);
 
-    this.postStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingPosts = loading);
+    this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingPosts = loading);
 
-    this.postStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+    this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
       if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) return;
       switch(event.type) {
         case StateUpdateType.Add:
@@ -102,7 +107,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
       this._cdr.detectChanges();
     });
 
-    this.posts = this.postStateService.getAllPosts();
+    this.posts = this.postsStateService.getAllPosts();
   }
 
   handleRecommendedCoursesRequestData(skipCount: number): void {
@@ -120,7 +125,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
 
   handleFilteringChange(filter: PostFiltering): void {
     this.selectedFiltering = filter;
-    this.posts = this.postStateService.getPostsByType(this.postTypeFilter);
+    this.posts = this.postsStateService.getPostsByType(this.postTypeFilter);
   }
 
   handleSortingChange(sort: PostSorting): void {

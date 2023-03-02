@@ -94,7 +94,7 @@
                     {{ data.commentsCount | shortNum: 1  }} comments
                 </div>
                 <div *ngIf="isQuestion" class="post-actions-right-comments cursor-pointer">
-                    {{ 5 }} answers
+                    {{ data.commentsCount | shortNum: 1 }} answers
                 </div>
                 <div *ngIf="isDiscussion" class="post-actions-right-comments cursor-pointer">
                     {{ data.children.length | shortNum: 1  }} posts
@@ -118,7 +118,12 @@
         </div>
     </div>
 
-    <app-community-discussions [show]="showCommentsSection" [postId]="data?.id" [postType]="data?.type"></app-community-discussions>
+    <app-community-discussions
+        [show]="showCommentsSection"
+        [referenceId]="data?.id"
+        [postType]="data?.type"
+        (onUpdateEmit)="handleCommentUpdates()"
+    ></app-community-discussions>
 </div>
 
 <div class="post" *ngIf="isHiding && isHidden">

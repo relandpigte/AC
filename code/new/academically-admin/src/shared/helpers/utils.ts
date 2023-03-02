@@ -69,4 +69,10 @@ export class Utils {
 
       slider.on('created', () => slider.container.addEventListener('wheel', eventWheel, { passive: false }));
     }
+
+    static generateUrlParams(params?: Record<string, any>): string {
+      return params ? Object.keys(params)
+            .map(key => `${encodeURIComponent(key)}=${encodeURIComponent([].concat(params[key] as any).join(','))}`)
+            .join('&') : null;
+    }
 }

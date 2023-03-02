@@ -5,7 +5,23 @@
     padding: 10px;
     margin-top: 10px;
 
+    &:empty {
+      display: none;
+    }
+
+    &-child {
+      padding: 10px;
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 17px;
+      color: #3B516C;
+    }
+
     &-fold {
+      &:empty {
+        display: none;
+      }
+
       font-weight: 400;
       font-size: 13px;
       line-height: 17px;
@@ -200,6 +216,7 @@
     color: #6E84A3;
     margin-top: 5px;
     margin-bottom: 15px;
+    margin-left: 15px;
 
     &-reactions {
       font-weight: 400;

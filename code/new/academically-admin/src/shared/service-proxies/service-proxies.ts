@@ -3846,13 +3846,18 @@ export class CommentsServiceProxy {
     }
 
     /**
+     * @param referenceIdFilter (optional) 
      * @param parentIdFilter (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllReplies(parentIdFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
+    getAllReplies(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Comments/GetAllReplies?";
+        if (referenceIdFilter === null)
+            throw new Error("The parameter 'referenceIdFilter' cannot be null.");
+        else if (referenceIdFilter !== undefined)
+            url_ += "ReferenceIdFilter=" + encodeURIComponent("" + referenceIdFilter) + "&";
         if (parentIdFilter === null)
             throw new Error("The parameter 'parentIdFilter' cannot be null.");
         else if (parentIdFilter !== undefined)
@@ -13314,6 +13319,77 @@ export class PostsServiceProxy {
     }
 
     /**
+     * @param referenceIdFilter (optional) 
+     * @param parentIdFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAllCommentsPaged(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/GetAllCommentsPaged?";
+        if (referenceIdFilter === null)
+            throw new Error("The parameter 'referenceIdFilter' cannot be null.");
+        else if (referenceIdFilter !== undefined)
+            url_ += "ReferenceIdFilter=" + encodeURIComponent("" + referenceIdFilter) + "&";
+        if (parentIdFilter === null)
+            throw new Error("The parameter 'parentIdFilter' cannot be null.");
+        else if (parentIdFilter !== undefined)
+            url_ += "ParentIdFilter=" + encodeURIComponent("" + parentIdFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllCommentsPaged(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllCommentsPaged(<any>response_);
+                } catch (e) {
+                    return <Observable<CommentDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CommentDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllCommentsPaged(response: HttpResponseBase): Observable<CommentDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CommentDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CommentDtoPagedResultDto>(<any>null);
+    }
+
+    /**
      * @param referenceId (optional) 
      * @return Success
      */
@@ -13377,13 +13453,18 @@ export class PostsServiceProxy {
     }
 
     /**
+     * @param referenceIdFilter (optional) 
      * @param parentIdFilter (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllCommentReplies(parentIdFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
+    getAllCommentReplies(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Posts/GetAllCommentReplies?";
+        if (referenceIdFilter === null)
+            throw new Error("The parameter 'referenceIdFilter' cannot be null.");
+        else if (referenceIdFilter !== undefined)
+            url_ += "ReferenceIdFilter=" + encodeURIComponent("" + referenceIdFilter) + "&";
         if (parentIdFilter === null)
             throw new Error("The parameter 'parentIdFilter' cannot be null.");
         else if (parentIdFilter !== undefined)
@@ -13440,6 +13521,62 @@ export class PostsServiceProxy {
             }));
         }
         return _observableOf<CommentDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    getCommentsCount(referenceId: string | undefined): Observable<number> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/GetCommentsCount?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCommentsCount(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCommentsCount(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetCommentsCount(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
     }
 
     /**
@@ -20789,6 +20926,57 @@ export class TestDataGeneratorServiceProxy {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    exposeHubEvent(): Observable<TestDto> {
+        let url_ = this.baseUrl + "/api/services/app/TestDataGenerator/ExposeHubEvent";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processExposeHubEvent(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processExposeHubEvent(<any>response_);
+                } catch (e) {
+                    return <Observable<TestDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TestDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processExposeHubEvent(response: HttpResponseBase): Observable<TestDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TestDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TestDto>(<any>null);
     }
 }
 
@@ -38755,6 +38943,25 @@ export interface IGroupedPermissionDtoListResultDto {
     items: GroupedPermissionDto[] | undefined;
 }
 
+/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted */
+export enum HubEvent {
+    PostCreated = 0,
+    PostUpdated = 1,
+    PostDeleted = 2,
+    UserTopicCreated = 3,
+    UserTopicUpdated = 4,
+    UserTopicDeleted = 5,
+    ServiceCreated = 6,
+    ServiceUpdated = 7,
+    ServiceDeleted = 8,
+    CommentCreated = 9,
+    CommentUpdated = 10,
+    CommentDeleted = 11,
+    CommentReactionCreated = 12,
+    CommentReactionUpdated = 13,
+    CommentReactionDeleted = 14,
+}
+
 export class ICustomAttributeProvider implements IICustomAttributeProvider {
 
     constructor(data?: IICustomAttributeProvider) {
@@ -44559,6 +44766,49 @@ export interface ITenantNotification {
     entityId: any | undefined;
     severity: NotificationSeverity;
     creationTime: moment.Moment;
+}
+
+export class TestDto implements ITestDto {
+    hubEvent: HubEvent;
+
+    constructor(data?: ITestDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hubEvent = _data["hubEvent"];
+        }
+    }
+
+    static fromJS(data: any): TestDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TestDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["hubEvent"] = this.hubEvent;
+        return data; 
+    }
+
+    clone(): TestDto {
+        const json = this.toJSON();
+        let result = new TestDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITestDto {
+    hubEvent: HubEvent;
 }
 
 export class TimeZoneDto implements ITimeZoneDto {

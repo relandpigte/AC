@@ -21,6 +21,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
 
     @Output() refresh = new EventEmitter();
     @Output() onUpdate = new EventEmitter();
+    @Output() onChildrenUpdate = new EventEmitter();
 
     fileAttachment: File;
     serviceAttachment: AvailableServiceDto;
@@ -180,5 +181,9 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         this.isHidden = true;
         this.data.isHidden = true;
         this.onUpdate.emit(this.data);
+    }
+
+    handleCommentUpdates(): void {
+        this.onChildrenUpdate.emit();
     }
 }

@@ -1,10 +1,5 @@
 import { Subject, Subscription } from 'rxjs';
-import { NotificationName } from './pub-sub.service';
-
-export interface EventNotification {
-    name: NotificationName;
-    key: string;
-}
+import { AppStateActionNames} from './pub-sub.service';
 
 export interface StateUpdate<T> {
     data: T;
@@ -19,16 +14,13 @@ export enum StateUpdateType {
 
 export abstract class StateServiceBase {
     private subscriptions: Subscription[] = [];
-    private eventFn = (event) => this.eventNotification$.next({
-        name: event.notification.notificationName,
-        key: event.notification.data.properties.PostId
-    });
+    actionArgs: { [key in AppStateActionNames]?: any };
 
-    eventNotification$ = new Subject<EventNotification>();
-
-    abstract loadData(component: any, userId: number, fnArgs?: any[]): Promise<void>;
+    abstract loadData(component: any, userId: number): Promise<void>;
     protected abstract setupSubscriptions(component: any, userId: number): Promise<Subscription | Subscription[]>;
-    protected abstract closeSubscriptions(): Promise<void>;
+
+    get loadArgs() { return [].concat(!this.actionArgs?.['load'] || typeof this.actionArgs['load'] === 'boolean' ? [] : this.actionArgs['load']); }
+    get updateArgs() { return [].concat(!this.actionArgs?.['update'] || typeof this.actionArgs['update'] === 'boolean' ? [] : this.actionArgs['update']); }
 
     async start(component: any, userId: number, ): Promise<void> {
         await this.startSubscriptions(component, userId);
@@ -41,13 +33,10 @@ export abstract class StateServiceBase {
 
     async startSubscriptions(component: any, userId: number): Promise<void> {
         await this.stopSubscriptions();
-        abp.event.on('abp.notifications.received', this.eventFn);
         this.subscriptions = [].concat(await this.setupSubscriptions(component, userId)).filter(s => s);
     }
 
     async stopSubscriptions(): Promise<void> {
-        abp.event.off('abp.notifications.received', this.eventFn);
-        await this.closeSubscriptions();
         this.subscriptions?.forEach(s => s.unsubscribe());
         this.subscriptions = [];
     }
