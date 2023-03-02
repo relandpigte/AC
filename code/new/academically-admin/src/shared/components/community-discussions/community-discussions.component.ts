@@ -72,7 +72,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   ngOnChanges(changes: SimpleChanges): void {
       if ('show' in changes && changes?.show?.previousValue !== changes?.show?.currentValue) {
-        if (this.show) setTimeout(() => this.addCommentEl.nativeElement.focus());
+        if (this.show) setTimeout(() => this.addCommentEl?.nativeElement.focus());
         else this.foldSubject$.next();
       }
   }

@@ -119,7 +119,7 @@
 
     <div class="discussions-separator"></div>
     <app-community-discussions
-        [show]="showCommentsSection"
+        [show]="!isDiscussion && showCommentsSection"
         [referenceId]="data?.id"
         [postType]="data?.type"
         (onUpdateEmit)="handleCommentUpdates()"
