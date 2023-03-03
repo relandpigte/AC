@@ -183,9 +183,8 @@
         </div>
       </div>
     </div>
-
     <ng-container *ngIf="!isChild">
-      <ng-container *ngIf="totalCommentsCount > 1 || hasChildren">
+      <ng-container *ngIf="totalCommentsCount || hasChildren">
         <ng-container *ngIf="!isExpanded && hiddenCommentsCount">
           <div class="discussions-expander cursor-pointer">
             <div class="discussions-expander-fold" (click)="onFoldClick()">

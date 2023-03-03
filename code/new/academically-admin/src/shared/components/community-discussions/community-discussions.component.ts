@@ -65,7 +65,8 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     }
   }
   get hiddenCommentsCount(): number { return this.totalCommentsCount - this.comments.length; }
-  get isExpanded(): boolean { return this.comments?.length === this.totalCommentsCount && this.childDiscussions.toArray().every(c => c.isExpanded); }
+  get isExpanded(): boolean { return (this.totalCommentsCount > 1 && this.comments?.length === this.totalCommentsCount) || (this.totalCommentsCount === 1 && this.childDiscussions.toArray().some(c => c.isPartiallyExpanded)); }
+  get isPartiallyExpanded(): boolean { return this.comments.length > 0 && this.totalCommentsCount >= this.comments.length; }
   get hasChildren(): boolean { return this.comments?.some(c => c.children?.length); }
 
   ngOnInit(): void {
