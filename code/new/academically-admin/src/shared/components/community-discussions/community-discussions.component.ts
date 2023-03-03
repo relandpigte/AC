@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -32,6 +32,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   @Output() onUpdateEmit = new EventEmitter<string>();
 
   @ViewChild('addCommentEl', { static: false }) addCommentEl: ElementRef;
+  @ViewChildren(CommunityDiscussionsComponent) childDiscussions: QueryList<CommunityDiscussionsComponent>;
 
   commentsStateService: CommentsStateService;
 
@@ -63,7 +64,9 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
             return 'comments';
     }
   }
-  get isExpanded(): boolean { return this.comments?.length === this.totalCommentsCount; }
+  get hiddenCommentsCount(): number { return this.totalCommentsCount - this.comments.length; }
+  get isExpanded(): boolean { return this.comments?.length === this.totalCommentsCount && this.childDiscussions.toArray().every(c => c.isExpanded); }
+  get hasChildren(): boolean { return this.comments?.some(c => c.children?.length); }
 
   ngOnInit(): void {
     this.initCommentsAppStates();

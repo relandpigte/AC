@@ -68,9 +68,9 @@
     </div>
 
     <ng-container *ngIf="isChild">
-      <ng-container *ngIf="totalCommentsCount > 1 && !isExpanded">
+      <ng-container *ngIf="totalCommentsCount && !isExpanded && hiddenCommentsCount">
         <div class="discussions-expander-child cursor-pointer" (click)="onFoldClick()">
-          <span>View {{ totalCommentsCount - comments.length }} replies</span>
+          <span>View {{ hiddenCommentsCount }} replies</span>
         </div>
       </ng-container>
     </ng-container>
@@ -185,13 +185,21 @@
     </div>
 
     <ng-container *ngIf="!isChild">
-      <ng-container *ngIf="totalCommentsCount > 1">
-        <div class="discussions-expander cursor-pointer">
-          <div class="discussions-expander-fold" (click)="onFoldClick()">
-            <span *ngIf="!isExpanded">View {{ totalCommentsCount - comments.length }} more {{ typeName }}</span>
-            <span *ngIf="isExpanded">Fold {{ typeName }}</span>
+      <ng-container *ngIf="totalCommentsCount > 1 || hasChildren">
+        <ng-container *ngIf="!isExpanded && hiddenCommentsCount">
+          <div class="discussions-expander cursor-pointer">
+            <div class="discussions-expander-fold" (click)="onFoldClick()">
+              <span>View {{ hiddenCommentsCount }} more {{ typeName }}</span>
+            </div>
           </div>
-        </div>
+        </ng-container>
+        <ng-container *ngIf="isExpanded">
+          <div class="discussions-expander cursor-pointer">
+            <div class="discussions-expander-fold" (click)="onFoldClick()">
+              <span>Fold {{ typeName }}</span>
+            </div>
+          </div>
+        </ng-container>
       </ng-container>
     </ng-container>
 
