@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angu
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { CourseDto, CoursesServiceProxy, DateGrains, PostDto, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
-import { PostsStateService } from '@shared/services/posts-state.service';
+import { MAX_POSTS_TO_LOAD, PostsStateService } from '@shared/services/posts-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { takeUntil } from 'rxjs/operators';
@@ -29,6 +29,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
   postsStateService: PostsStateService;
 
   posts: any[] = [];
+  totalPostsCount: number;
 
   usersYouMayKnow: UserDto[] = Array(5).fill([]).map(() => this.generateRandomUser()) as UserDto[];
   recommendedCourses: CourseDto[] = Array(4).fill([]).map(() => this.generateRandomCourse()) as CourseDto[];
@@ -72,6 +73,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
         return PostType.Discussion;
     }
   }
+  get hiddenPostsCount(): number { return this.totalPostsCount - this.posts.length; }
 
   async ngOnInit() {
     this.loadInfiniteData(this._usersService, 'getAll', ['', true, 'creationTime desc', 0, 6], 'usersYouMayKnow');
@@ -84,7 +86,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
   }
 
   private async initPostsAppStates() {
-    const appStateConfig: AppStateConfig = { [this.postsStateId]: { load: true, update: true } };
+    const appStateConfig: AppStateConfig = { [this.postsStateId]: { load: [undefined, undefined, undefined, 0, MAX_POSTS_TO_LOAD], update: true } };
     const appStateServices: AppStateServices = { [this.postsStateId]: { type: PostsStateService, args: [this._hubService, this._postsService] } };
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.postsStateService = this.pubSubService.getStateService<PostsStateService>(this.postsStateId);
@@ -96,18 +98,21 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
       switch(event.type) {
         case StateUpdateType.Add:
           this.posts = [event.data].concat(this.posts);
+          this.totalPostsCount++;
           break;
         case StateUpdateType.Update:
           this.posts = this.posts.map(p => p.id === event.data.id ? event.data : p);
           break;
         case StateUpdateType.Delete:
           this.posts = this.posts.filter(p => p.id != event.data.id);
+          this.totalPostsCount--;
           break;
       }
       this._cdr.detectChanges();
     });
 
     this.posts = this.postsStateService.getAllPosts();
+    this.totalPostsCount = this.postsStateService.totalPostsCount;
   }
 
   handleRecommendedCoursesRequestData(skipCount: number): void {
@@ -134,5 +139,17 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
 
   handleChildrenUpdate(post: PostDto) {
     this.postsStateService.updateChildrenCount(post);
+  }
+
+  onLoadMore(): void {
+    this.postsStateService.loading$.next(true);
+    const lastPostCreationTime = this.posts?.[this.posts.length - 1]?.creationTime;
+    this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, 0, MAX_POSTS_TO_LOAD)
+        .subscribe(posts => {
+          this.postsStateService.pushMorePosts(posts.items);
+          this.posts = this.postsStateService.getAllPosts();
+          this.postsStateService.loading$.next(false);
+          this._cdr.detectChanges();
+        });
   }
 }

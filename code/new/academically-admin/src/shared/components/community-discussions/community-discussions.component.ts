@@ -3,14 +3,11 @@ import { NgForm } from '@angular/forms';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { CommentDto, PostsServiceProxy, PostType } from '@shared/service-proxies/service-proxies';
-import { CommentsStateService } from '@shared/services/comments-state.service';
+import { CommentsStateService, MAX_COMMENT_LEVELS, MAX_REPLIES_TO_LOAD } from '@shared/services/comments-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { Subject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
-
-export const MAX_REPLIES_TO_LOAD = 5;
-export const MAX_COMMENT_LEVELS = 3;
 
 @Component({
   selector: 'app-community-discussions',
@@ -19,6 +16,7 @@ export const MAX_COMMENT_LEVELS = 3;
 })
 export class CommunityDiscussionsComponent extends AppComponentBase implements OnInit, OnChanges {
   @Input() show = false;
+  @Input() showAddComment = false;
   @Input() isChild = false;
   @Input() level = 1;
   @Input() referenceId: string;

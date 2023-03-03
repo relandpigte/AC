@@ -91,6 +91,10 @@
       </div>
     </ng-container>
 
+    <div *ngIf="hiddenPostsCount" class="card community-content-post-load-more" (click)="onLoadMore()">
+        <span>Load {{ hiddenPostsCount }} more...</span>
+    </div>
+
     <div *ngIf="usersYouMayKnow?.length > 0" class="card community-content-post">
         <div class="row align-items-center community-content-post-title">
           <div class="col d-flex flex-wrap align-items-center justify-content-between">

@@ -7,6 +7,8 @@ import { HubService } from '@app/_shared/services/hub.service';
 import * as _ from 'lodash';
 import { finalize } from 'rxjs/operators';
 
+export const MAX_POSTS_TO_LOAD = 15;
+
 export enum pageType {
     all = 'all',
     discussion = 'discussion'
@@ -14,13 +16,15 @@ export enum pageType {
 
 export class PostsStateService extends StateServiceBase {
   posts: Map<string, PostDto> = new Map();
+  totalPostsCount: number;
+
   posts$: Subject<StateUpdate<PostDto>> = new Subject();
   loading$: Subject<boolean> = new BehaviorSubject(false);
 
   type: pageType;
   fns = {
-    [pageType.all]: 'getAllPosts',
-    [pageType.discussion]: 'getAllPosts',
+    [pageType.all]: 'getAllPostsPaged',
+    [pageType.discussion]: 'getAllPostsPaged',
   };
 
   constructor(
@@ -48,7 +52,8 @@ export class PostsStateService extends StateServiceBase {
     this.loading$.next(true);
     try {
       const posts = await this._postsService[this.fns[this.type ?? pageType.all]](...this.loadArgs).toPromise();
-      this.posts = Utils.toMap(posts);
+      this.posts = Utils.toMap(posts.items);
+      this.totalPostsCount = posts.totalCount;
     } catch (err) {
       console.error(err);
     }
@@ -84,5 +89,14 @@ export class PostsStateService extends StateServiceBase {
     this._postsService.getCommentsCount(post.id)
       .pipe(finalize(() => this.loading$.next(false)))
       .subscribe(count => post.commentsCount = count)
+  }
+
+  pushMorePosts(posts: PostDto[]) {
+    this.posts = Utils.toMap([...Array.from(this.posts.values()), ...posts]);
+  }
+
+  removePosts(posts: PostDto[]) {
+    const removedPosts = posts.map(c => c.id);
+    this.posts = Utils.toMap([...Array.from(this.posts.values()).filter(p => !removedPosts.includes(p.id))]);
   }
 }

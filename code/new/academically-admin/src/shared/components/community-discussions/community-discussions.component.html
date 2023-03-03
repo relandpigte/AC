@@ -1,9 +1,10 @@
-<ng-container *ngIf="show">
+<ng-container *ngIf="show && (showAddComment || comments?.length )">
+  <div *ngIf="!isChild" class="discussions-separator"></div>
   <div class="discussions-container" [class.p-0]="isChild">
 
     <div *ngIf="!isChild" class="discussions-top">
       <div class="discussion">
-        <div class="row gap-15 m-0">
+        <div *ngIf="showAddComment" class="row gap-15 m-0">
           <div class="col-auto p-0 d-flex align-items-center">
             <!-- Avatar | START -->
             <div class="avatar avatar-sm avatar-current-user">

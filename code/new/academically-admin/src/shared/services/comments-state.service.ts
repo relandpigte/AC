@@ -7,6 +7,9 @@ import * as _ from 'lodash';
 
 import { HubService } from '@app/_shared/services/hub.service';
 
+export const MAX_REPLIES_TO_LOAD = 5;
+export const MAX_COMMENT_LEVELS = 3;
+
 export class CommentsStateService extends StateServiceBase {
   comments: Map<string, CommentDto> = new Map();
   totalCommentsCount: number;

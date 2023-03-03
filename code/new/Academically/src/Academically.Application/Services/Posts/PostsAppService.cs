@@ -122,6 +122,51 @@ namespace Academically.Services.Posts
             return result;
         }
 
+        public async Task<PagedResultDto<PostDto>> GetAllPostsPaged(PagedGetAllPostsDto request)
+        {
+            var userId = AbpSession.UserId.Value;
+            var userHiddenPost = _postVisibilityRepository.GetAll()
+                                                          .Where(w => w.IsHidden && w.CreatorUserId == userId)
+                                                          .Select(s => s.PostId).ToList();
+            var query = _postRepository.GetAll()
+                                   .Include(p => p.CreatorUser)
+                                   .Include(p => p.Children)
+                                   .Include(e => e.Parent)
+                                   .Include(p => p.PostAttachments)
+                                     .ThenInclude(a => a.Document)
+                                   .Include(p => p.PostTopics)
+                                     .ThenInclude(t => t.DisciplineTaxonomy)
+                                   .Include(p => p.PostNotification)
+                                   .Where(e => !e.IsDeleted)
+                                   .WhereIf(request.Type.HasValue, p => p.Type == request.Type)
+                                   .WhereIf(request.ParentId.HasValue, p => p.ParentId == request.ParentId)
+                                   .WhereIf(!request.ParentId.HasValue, p => p.ParentId == null)
+                                   .WhereIf(request.CreationTime.HasValue, p => p.CreationTime < request.CreationTime)
+                                   .Where(e => e.IsHidden == false && !userHiddenPost.Contains(e.Id))
+                                   .OrderByDescending(p => p.CreationTime);
+            var totalCount = await query.CountAsync();
+            var result = await query.PageBy(request)
+                                   .Select(p => ObjectMapper.Map<PostDto>(p))
+                                   .ToListAsync();
+            foreach (var item in result)
+            {
+                if (item.ServiceId.HasValue)
+                {
+                    var param = new PagedGetAvailableServicesRequestDto() { Keyword = item.ServiceId.Value.ToString() };
+                    item.Service = this.GetAvailableServices(param).Result.Items.FirstOrDefault();
+                }
+
+                foreach (var attachment in item.PostAttachments)
+                {
+                    attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
+                }
+
+                item.CommentsCount = await this.GetCommentsCountAsync(item.Id.ToString());
+            }
+
+            return new PagedResultDto<PostDto>(totalCount, result);
+        }
+
         [AbpAuthorize(PermissionNames.Pages_Posts_Create)]
         public async Task Create([FromForm] CreatePostDto input)
         {

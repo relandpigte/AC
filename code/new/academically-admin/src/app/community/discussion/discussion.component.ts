@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, UserDto } from '@shared/service-proxies/service-proxies';
-import { PostsStateService } from '@shared/services/posts-state.service';
+import { MAX_POSTS_TO_LOAD, PostsStateService } from '@shared/services/posts-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import * as _ from 'lodash';
@@ -40,6 +40,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
 
     private discussion: PostDto;
     children: PostDto[] = [];
+    totalChildrenCount: number;
 
     creator: UserDto;
     discussionTopics: DisciplineTaxonomyDto[];
@@ -105,6 +106,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     }
     get participantsCount(): number { return this.participants?.length ?? 0 + 1; }
     get postsCount(): number { return this.children?.length ?? 0; }
+    get hiddenChildrenCount(): number { return this.totalChildrenCount - this.children.length; }
 
     async ngOnInit() {
         this.isLoadingPost = true;
@@ -132,7 +134,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     private async initPostsAppStates() {
         const appStateConfig: AppStateConfig = {
             [this.postsStateId]: {
-                load: [undefined, this.discussionId],
+                load: [undefined, this.discussionId, undefined, 0, MAX_POSTS_TO_LOAD],
                 update: { postId: this.discussionId }
             }
         };
@@ -152,17 +154,20 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
             switch(event.type) {
             case StateUpdateType.Add:
                 this.children = [event.data].concat(this.children);
+                this.totalChildrenCount++;
                 break;
             case StateUpdateType.Update:
                 this.children = this.children.map(p => p.id === event.data.id ? event.data : p);
                 break;
             case StateUpdateType.Delete:
                 this.children = this.children.filter(p => p.id != event.data.id);
+                this.totalChildrenCount--;
                 break;
             }
             this._cdr.detectChanges();
         });
         this.children = this.postsStateService.getAllPosts();
+        this.totalChildrenCount = this.postsStateService.totalPostsCount;
     }
 
     private async loadOtherInfo() {
@@ -271,4 +276,16 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     handleChildrenUpdate(post: PostDto) {
         this.postsStateService.updateChildrenCount(post);
     }
+
+    onLoadMore(): void {
+        this.postsStateService.loading$.next(true);
+        const lastPostCreationTime = this.children?.[this.children.length - 1]?.creationTime;
+        this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, 0, MAX_POSTS_TO_LOAD)
+            .subscribe(posts => {
+              this.postsStateService.pushMorePosts(posts.items);
+              this.children = this.postsStateService.getAllPosts();
+              this.postsStateService.loading$.next(false);
+              this._cdr.detectChanges();
+            });
+      }
 }
