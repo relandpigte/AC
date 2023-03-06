@@ -30,7 +30,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     isHiding = false;
     hideTimer: any;
     showComments = true;
-    showAddComment = false;
+    showAddComment = true;
 
     constructor(
         injector: Injector,
