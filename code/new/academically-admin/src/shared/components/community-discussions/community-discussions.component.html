@@ -38,12 +38,19 @@
                     <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Add emoticon" [class.disabled]="true">
                       <i class="fas fa-smile"></i>
                     </a>
+                    <a class="cursor-pointer" data-toggle="tooltip" title="" data-original-title="Add service" [class.disabled]="false" (click)="toggleServicePicker()">
+                      <i class="fe fe-plus"></i>
+                    </a>
                   </div>
                 </div>
                 <!-- Icons | END -->
               </div>
             </div>
           </div>
+        </div>
+
+        <div *ngIf="selectedService && !commentReplyId" class="row gap-15 mx-0">
+          <app-service-preview [service]="selectedService" [canRemove]="true" (onRemove)="selectedService = null"></app-service-preview>
         </div>
 
         <div *ngIf="comments?.length" class="row sorting-section">
@@ -99,6 +106,9 @@
                   </div>
                 </div>
                 <p class="comment-text m-0" [innerHTML]="comment.body"></p>
+              </div>
+              <div *ngIf="hasAttachedService(comment)" class="comment-attachment d-flex flex-wrap flex-row" [style.marginTop.px]="5">
+                <app-service-preview-lite [service]="getAttachedService(comment)" [canRemove]="false"></app-service-preview-lite>
               </div>
               <!-- Comment Body | END -->
 
@@ -171,12 +181,19 @@
                           <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Add emoticon" [class.disabled]="true">
                             <i class="fas fa-smile"></i>
                           </a>
+                          <a class="cursor-pointer" data-toggle="tooltip" title="" data-original-title="Add service" [class.disabled]="false" (click)="toggleServicePicker()">
+                            <i class="fe fe-plus"></i>
+                          </a>
                         </div>
                       </div>
                       <!-- Icons | END -->
                     </div>
                   </div>
                 </div>
+              </div>
+
+              <div *ngIf="selectedService && commentReplyId === comment.id" class="row gap-15 mx-0">
+                <app-service-preview [service]="selectedService" [canRemove]="true" (onRemove)="selectedService = null"></app-service-preview>
               </div>
 
             </div>
@@ -187,15 +204,15 @@
     <ng-container *ngIf="!isChild">
       <ng-container *ngIf="totalCommentsCount || hasChildren">
         <ng-container *ngIf="!isExpanded && hiddenCommentsCount">
-          <div class="discussions-expander cursor-pointer">
-            <div class="discussions-expander-fold" (click)="onFoldClick()">
+          <div class="discussions-expander cursor-pointer" (click)="onFoldClick()">
+            <div class="discussions-expander-fold">
               <span>View {{ hiddenCommentsCount }} more {{ typeName }}</span>
             </div>
           </div>
         </ng-container>
         <ng-container *ngIf="isExpanded">
-          <div class="discussions-expander cursor-pointer">
-            <div class="discussions-expander-fold" (click)="onFoldClick()">
+          <div class="discussions-expander cursor-pointer" (click)="onFoldClick()">
+            <div class="discussions-expander-fold">
               <span>Fold {{ typeName }}</span>
             </div>
           </div>

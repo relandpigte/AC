@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, UserTopicDto, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
+import { DisciplineTaxonomyDto, UserTopicDto, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 
 import { SortOption } from '@shared/components/search/search.component';
@@ -8,11 +8,11 @@ import { TopicSorting } from '@shared/components/topic/topic.component';
 import * as _ from 'lodash';
 
 @Component({
-    selector: 'app-following-topics',
-    templateUrl: './following-topics.component.html',
-    styleUrls: ['./following-topics.component.scss']
+    selector: 'app-topics-following',
+    templateUrl: './topics-following.component.html',
+    styleUrls: ['./topics-following.component.scss']
 })
-export class FollowingTopicsComponent extends AppComponentBase implements OnInit {
+export class TopicsFollowingComponent extends AppComponentBase implements OnInit {
 
     userTopics: UserTopicDto[];
     displayedUserTopics: DisciplineTaxonomyDto[];
@@ -33,7 +33,6 @@ export class FollowingTopicsComponent extends AppComponentBase implements OnInit
     constructor(
         injector: Injector,
         private _userTopics: UserTopicsServiceProxy,
-        private _taxonomyService: DisciplineTaxonomiesServiceProxy,
     ) {
         super(injector);
     }

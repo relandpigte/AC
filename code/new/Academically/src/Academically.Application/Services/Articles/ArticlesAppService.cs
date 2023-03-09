@@ -286,11 +286,12 @@ namespace Academically.Services.Articles
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<IEnumerable<AvailableServiceDto>> GetArticlesByKeyword(string keyword)
+        public async Task<IEnumerable<AvailableServiceDto>> GetArticlesByKeyword(string keyword, long? creatorUserId)
         {
             return await _articlesRepository.GetAll().Where(w => w.ParentId == null && w.IsVisible && w.Status == ArticleStatus.Published)
                                       .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Price.ToString().Contains(keyword)
                                                || x.Id.ToString().Equals(keyword))
+                                      .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
                                       .AsNoTracking()
                                       .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                                       .ToListAsync();

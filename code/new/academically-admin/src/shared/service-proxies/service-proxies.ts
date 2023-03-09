@@ -13850,100 +13850,6 @@ export class PostsServiceProxy {
         }
         return _observableOf<void>(<any>null);
     }
-
-    /**
-     * @return Success
-     */
-    subscribePostChanges(): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/Posts/SubscribePostChanges";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSubscribePostChanges(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processSubscribePostChanges(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processSubscribePostChanges(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
-
-    /**
-     * @return Success
-     */
-    unsubscribePostChanges(): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/Posts/UnsubscribePostChanges";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUnsubscribePostChanges(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUnsubscribePostChanges(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processUnsubscribePostChanges(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
 }
 
 @Injectable()
@@ -31761,11 +31667,19 @@ export class CommentDto implements ICommentDto {
     parentId: string | undefined;
     referenceId: string | undefined;
     creationTime: moment.Moment;
+    serviceId: string | undefined;
+    serviceType: ServicesType;
     replyCount: number;
     parent: CommentDto;
     creatorUser: UserDto;
     children: CommentDto[] | undefined;
     commentReactions: CommentReactionDto[] | undefined;
+    article: ArticleDto;
+    event: EventDto;
+    course: CourseDto;
+    video: VideoDto;
+    coaching: CoachingDto;
+    workshop: WorkshopDto;
 
     constructor(data?: ICommentDto) {
         if (data) {
@@ -31783,6 +31697,8 @@ export class CommentDto implements ICommentDto {
             this.parentId = _data["parentId"];
             this.referenceId = _data["referenceId"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.serviceId = _data["serviceId"];
+            this.serviceType = _data["serviceType"];
             this.replyCount = _data["replyCount"];
             this.parent = _data["parent"] ? CommentDto.fromJS(_data["parent"]) : <any>undefined;
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
@@ -31796,6 +31712,12 @@ export class CommentDto implements ICommentDto {
                 for (let item of _data["commentReactions"])
                     this.commentReactions.push(CommentReactionDto.fromJS(item));
             }
+            this.article = _data["article"] ? ArticleDto.fromJS(_data["article"]) : <any>undefined;
+            this.event = _data["event"] ? EventDto.fromJS(_data["event"]) : <any>undefined;
+            this.course = _data["course"] ? CourseDto.fromJS(_data["course"]) : <any>undefined;
+            this.video = _data["video"] ? VideoDto.fromJS(_data["video"]) : <any>undefined;
+            this.coaching = _data["coaching"] ? CoachingDto.fromJS(_data["coaching"]) : <any>undefined;
+            this.workshop = _data["workshop"] ? WorkshopDto.fromJS(_data["workshop"]) : <any>undefined;
         }
     }
 
@@ -31813,6 +31735,8 @@ export class CommentDto implements ICommentDto {
         data["parentId"] = this.parentId;
         data["referenceId"] = this.referenceId;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["serviceId"] = this.serviceId;
+        data["serviceType"] = this.serviceType;
         data["replyCount"] = this.replyCount;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
@@ -31826,6 +31750,12 @@ export class CommentDto implements ICommentDto {
             for (let item of this.commentReactions)
                 data["commentReactions"].push(item.toJSON());
         }
+        data["article"] = this.article ? this.article.toJSON() : <any>undefined;
+        data["event"] = this.event ? this.event.toJSON() : <any>undefined;
+        data["course"] = this.course ? this.course.toJSON() : <any>undefined;
+        data["video"] = this.video ? this.video.toJSON() : <any>undefined;
+        data["coaching"] = this.coaching ? this.coaching.toJSON() : <any>undefined;
+        data["workshop"] = this.workshop ? this.workshop.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -31843,11 +31773,19 @@ export interface ICommentDto {
     parentId: string | undefined;
     referenceId: string | undefined;
     creationTime: moment.Moment;
+    serviceId: string | undefined;
+    serviceType: ServicesType;
     replyCount: number;
     parent: CommentDto;
     creatorUser: UserDto;
     children: CommentDto[] | undefined;
     commentReactions: CommentReactionDto[] | undefined;
+    article: ArticleDto;
+    event: EventDto;
+    course: CourseDto;
+    video: VideoDto;
+    coaching: CoachingDto;
+    workshop: WorkshopDto;
 }
 
 export class CommentDtoPagedResultDto implements ICommentDtoPagedResultDto {

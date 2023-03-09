@@ -73,11 +73,12 @@ namespace Academically.Services.Workshops
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<IEnumerable<AvailableServiceDto>> GetWorkshopByKeyword(string keyword)
+        public async Task<IEnumerable<AvailableServiceDto>> GetWorkshopByKeyword(string keyword, long? creatorUserId)
         {
             return await Repository.GetAll()
                              .WhereIf(!keyword.IsNullOrWhiteSpace(),
                                 x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword) || x.Id.ToString().Equals(keyword))
+                             .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
                              .AsNoTracking()
                              .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                              .ToListAsync();

@@ -1,0 +1,59 @@
+.service {
+    &-preview {
+        border-radius: 10px;
+        border: 1px solid #E4EBF6;
+        padding: 11px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.05);
+
+        &-remove {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            z-index: 2;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #12263F;
+            color: white;
+            opacity: 0.5;
+            backdrop-filter: blur(2px);
+        }
+
+        &-image {
+            width: 60px;
+            height: 44px;
+            border-radius: 5px;
+            overflow: hidden;
+
+            img {
+                display: block;
+                width: 100vw;
+                height: 100vh;
+                max-height: 100%;
+                max-width: 100%;
+                object-fit: cover;
+            }
+        }
+
+        &-info {
+            &-identity {
+                &-name {
+                    font-weight: 400;
+                    font-size: 15px;
+                    line-height: 19px;
+                    letter-spacing: -0.01em;
+                    color: #1F2D3D;
+                }
+
+                &-type {
+                    font-weight: 400;
+                    font-size: 13px;
+                    line-height: 17px;
+                    letter-spacing: -0.01em;
+                    color: #95AAC9;
+                }
+            }
+        }
+    }
+}

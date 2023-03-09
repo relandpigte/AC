@@ -5,15 +5,15 @@ import { TopicSorting } from '@shared/components/topic/topic.component';
 import { Utils } from '@shared/helpers/utils';
 import { CreateUserTopicDto, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, SearchDisciplineTaxonomyRequestDto, UserTopicDto, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
 
-import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash';
+import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
-    selector: 'app-more-topics',
-    templateUrl: './more-topics.component.html',
-    styleUrls: ['./more-topics.component.scss']
+    selector: 'app-topics-more',
+    templateUrl: './topics-more.component.html',
+    styleUrls: ['./topics-more.component.scss']
 })
-export class MoreTopicsComponent extends AppComponentBase implements OnInit {
+export class TopicsMoreComponent extends AppComponentBase implements OnInit {
 
     topics: Map<string, DisciplineTaxonomyDto> = new Map();
     topicInFocus: string;

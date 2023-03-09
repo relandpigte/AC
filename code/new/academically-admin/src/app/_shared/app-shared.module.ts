@@ -51,10 +51,15 @@ import { SearchComponent } from '@shared/components/search/search.component';
 import { ServiceCardComponent } from '@shared/components/service-card/service-card.component';
 import { ServicePickerComponent } from '@shared/components/service-picker/service-picker.component';
 import { ServicePreviewComponent } from '@shared/components/service-preview/service-preview.component';
+import { ServicePreviewLiteComponent } from '@shared/components/service-preview-lite/service-preview-lite.component';
 import { CommunitySideCardComponent } from '@shared/components/side-card/side-card.component';
 import { TopicCardComponent } from '@shared/components/topic/topic.component';
+import { TopicsFollowingComponent } from '@shared/components/topics-following/topics-following.component';
+import { TopicsMoreComponent } from '@shared/components/topics-more/topics-more.component';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
+import { AddServiceComponent } from '@shared/modals/add-service/add-service.component';
 import { AddTopicsComponent } from '@shared/modals/add-topics/add-topics.component';
+
 import { KeysPipe } from '@shared/pipes/keys.pipe';
 
 @NgModule({
@@ -68,6 +73,8 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     SearchComponent,
     ServiceCardComponent,
     TopicCardComponent,
+    TopicsFollowingComponent,
+    TopicsMoreComponent,
     CardClusterComponent,
     ColorPickerComponent,
     WhiteboardComponent,
@@ -83,10 +90,12 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     AutocompleteComponent,
     PillPickerComponent,
     UpsertPostComponent,
+    AddServiceComponent,
     AddTopicsComponent,
     AttachmentPreviewComponent,
     ServicePickerComponent,
     ServicePreviewComponent,
+    ServicePreviewLiteComponent,
     CommunityComposerComponent,
     CommunityPostComponent,
     CommunityPostCardComponent,
@@ -149,6 +158,8 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     SearchComponent,
     ServiceCardComponent,
     TopicCardComponent,
+    TopicsFollowingComponent,
+    TopicsMoreComponent,
     ColorPickerComponent,
     WhiteboardComponent,
     CalendarModule,
@@ -158,12 +169,14 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     FeaturedCarouselComponent,
     KeysPipe,
     UpsertPostComponent,
+    AddServiceComponent,
     AddTopicsComponent,
     AutocompleteComponent,
     PillPickerComponent,
     AttachmentPreviewComponent,
     ServicePickerComponent,
     ServicePreviewComponent,
+    ServicePreviewLiteComponent,
     CommunityComposerComponent,
     CommunityPostComponent,
     CommunityPostCardComponent,

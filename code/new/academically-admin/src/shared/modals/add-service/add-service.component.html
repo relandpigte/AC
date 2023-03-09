@@ -1,0 +1,12 @@
+<div class="modal-card card">
+    <div class="card-body p-0">
+        <app-service-picker
+            [selectedService]="selectedService"
+            [isShown]="true"
+            [class.show]="true"
+            (onClose)="onCloseClick()"
+            (onBack)="onCloseClick()"
+            (onAdd)="onAddService($event)"
+        ></app-service-picker>
+    </div>
+</div>

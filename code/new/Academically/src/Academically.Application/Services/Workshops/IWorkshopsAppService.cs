@@ -13,7 +13,7 @@ namespace Academically.Services.Workshops
     public interface IWorkshopsAppService : IAsyncCrudAppService<WorkshopDto, Guid, PagedWorkshopResultRequestDto, CreateWorkshopDto, UpdateWorkshopDto>
     {
         Task<IEnumerable<AvailableServiceDto>> GetAllWorkshop();
-        Task<IEnumerable<AvailableServiceDto>> GetWorkshopByKeyword(string keyword);
+        Task<IEnumerable<AvailableServiceDto>> GetWorkshopByKeyword(string keyword, long? creatorUserId);
         Task UpdateStatusAsync(Guid id, WorkshopStatus status);
         Task InvitePresenterAsync(CreateWorkshopPresenterDto input);
         Task UpdatePresenterTypeAsync(UpdateWorkshopPresenterTypeDto input);

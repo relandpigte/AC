@@ -6,5 +6,6 @@ namespace Academically.Services.Posts.Dto
     {
         public string Keyword { get; set; }
         public int? Take { get; set; }
+        public long? CreatorUserId { get; set; }
     }
 }

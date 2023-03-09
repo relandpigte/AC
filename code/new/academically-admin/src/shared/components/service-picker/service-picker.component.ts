@@ -2,6 +2,7 @@ import { Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChan
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { AvailableServiceDto, PostsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 
 
@@ -14,6 +15,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 export class ServicePickerComponent extends AppComponentBase implements OnChanges {
     @Input() selectedService: AvailableServiceDto;
     @Input() isShown = false;
+    @Input() isShowBack = true;
 
     @Output() onBack = new EventEmitter<any>();
     @Output() onClose = new EventEmitter<any>();
